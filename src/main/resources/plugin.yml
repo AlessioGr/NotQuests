@@ -1,0 +1,23 @@
+name: NotQuests
+version: ${project.version}
+main: notquests.notquests.NotQuests
+depend: [ Citizens ]
+api-version: 1.16
+authors: [ NoeX ]
+softdepend: [ PlaceholderAPI, Vault ]
+commands:
+  notquestsadmin:
+    description: Edit quests
+    usage: /notquestsadmin
+    aliases: [ nquestsadmin, nquestadmin, notquestadmin, qadmin, questadmin, questsadmin, qa, qag ]
+    permission: notnot.quests.admin
+  notquests:
+    description: Accept quests
+    usage: /notquests
+    aliases: [ nquests, nquest, notquest, quest, quests, q, qg ]
+    permission: notnot.quests.use
+permissions:
+  notnot.quests.use:
+    default: op
+  notnot.quests.admin:
+    default: op
