@@ -6,6 +6,7 @@ I created it for my own server, mc.notnot.pro and planned to keep it private. Ho
 You have to build this yourself and change the MySQL Database details (required) in Datamanager - it's hard-coded at the moment.
 
 **Images**
+
 Quest Giver NPC:
 
 ![image](https://user-images.githubusercontent.com/70709113/131539574-ef73ddfb-1dcd-4ab8-a85c-9b38d2f95a8d.png)
