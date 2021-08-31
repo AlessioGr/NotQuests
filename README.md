@@ -3,7 +3,7 @@ NotQuests is a Minecraft 1.17.1 plugin for Paper.
 
 I created it for my own server, mc.notnot.pro and planned to keep it private. However, I don't have enough time to maintain it myself, so I just made it public.
 
-You have to build this yourself and change the MySQL Database details (required) in Datamanager - it's hard-coded at the moment.
+You have to build this yourself and change the MySQL Database details (required) in Datamanager - it's hard-coded at the moment. Don't worry, there's not NMS. Opening the pom.xml file in your IDE should be enough.
 
 **Images**
 
