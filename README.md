@@ -48,4 +48,9 @@ You have to build this yourself and change the MySQL Database details (required)
 - Vault
 - Citizens
 
+**Future Plans**
+- Complete GUI for Admin Commands
+- Make Citizens optional
+- Customized Armor Stands instead of Citizen NPCs for better performance. They will also contain the quests assigned to them directly in a PDC. Both Armor Stands and NPCs will be usable.
+
 I'm not a professional programmer and made this just for fun. Code quality is close to 0. You won't find any comments or javadocs either. I just decided to publish it because, why not.
