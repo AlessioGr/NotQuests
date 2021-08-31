@@ -1,3 +1,8 @@
+/**
+ * This is the entry point of NotQuests. All kinds of managers, commands and other shit is reistered here.
+ *
+ * @author Alessio Gravili
+ */
 package notquests.notquests;
 
 
@@ -26,68 +31,103 @@ import java.util.logging.Level;
 
 public final class NotQuests extends JavaPlugin {
 
+    //Managers
     private DataManager dataManager;
     private QuestManager questManager;
     private QuestPlayerManager questPlayerManager;
+
+    //Vault
     private Economy econ = null;
     private Permission perms = null;
     private Chat chat = null;
 
-
+    /**
+     * Called when the plugin is enabled. A bunch of stuff is initialized here
+     */
     @Override
     public void onEnable() {
         getLogger().log(Level.INFO, "§aNotQuests > NotQuests is starting...");
 
-
+        //Vault is needed for NotQuests to function. If it's not found, NotQuests will be disabled.
         if (!setupEconomy()) {
             getLogger().log(Level.SEVERE, String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
-
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
         setupPermissions();
         setupChat();
 
-
+        //Create a new instance of the Data Manager which will be re-used everywhere
         dataManager = new DataManager(this);
+
+        //Create a new instance of the Quest Manager which will be re-used everywhere
         questManager = new QuestManager(this);
+
+        /*
+         * Tell the Data Manager: Hey, NPCs have not been loaded yet. If this is set to false, the plugin will
+         * try to load NPCs once Citizens is re-loaded or enabled
+         */
         getDataManager().setAlreadyLoadedNPCs(false);
+
+        //Create a new instance of the QuestPlayer Manager which will be re-used everywhere
         questPlayerManager = new QuestPlayerManager(this);
 
-
+        //The plugin "Citizens" is currently required for NotQuests to run properly. If it's not found, NotQuests will be disabled.
         if (getServer().getPluginManager().getPlugin("Citizens") == null || !Objects.requireNonNull(getServer().getPluginManager().getPlugin("Citizens")).isEnabled()) {
             getLogger().log(Level.SEVERE, "§cNotQuests > Citizens 2.0 not found or not enabled");
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
+
+        //Registering the nquestgiver Trait here has been commented out. I think I'm currently doing that somewhere else atm. So, this isn't needed at the moment.
         //net.citizensnpcs.api.CitizensAPI.getTraitFactory().registerTrait(net.citizensnpcs.api.trait.TraitInfo.create(QuestGiverNPCTrait.class).withName("nquestgiver"));
 
 
+        //Register the notquestsadmin command & tab completer. This command will be used by Admins
         CommandNotQuestsAdmin commandNotQuestsAdmin = new CommandNotQuestsAdmin(this);
         this.getCommand("notquestsadmin").setExecutor(commandNotQuestsAdmin);
         this.getCommand("notquestsadmin").setTabCompleter(commandNotQuestsAdmin);
 
+        //Register the notquests command & tab completer. This command will be used by Players
         CommandNotQuests commandNotQuests = new CommandNotQuests(this);
         this.getCommand("notquests").setExecutor(commandNotQuests);
         this.getCommand("notquests").setTabCompleter(commandNotQuests);
 
+        //Register the Event Listeners in QuestEvents
         getServer().getPluginManager().registerEvents(new QuestEvents(this), this);
 
+        //This finally starts loading all Config-, Quest-, and Player Data. Reload = Load
         dataManager.reloadData();
 
+        //This registers all PlaceholderAPI placeholders
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
             new QuestPlaceholders(this).register();
         }
 
-
     }
 
+    /**
+     * Called when the plugin is disabled or reloaded via ServerUtils / PlugMan
+     */
     @Override
     public void onDisable() {
         getLogger().log(Level.INFO, "§aNotQuests > NotQuests is shutting down...");
 
+        //Save all kinds of data
         dataManager.saveData();
+
+        /* This is kind of useful for compatibility with ServerUtils or Plugman.
+         * If this is false, the plugin will try to load NPCs again if the Citizens plugin is reloaded or enabled.
+         * Might not be necessary.
+         */
         getDataManager().setAlreadyLoadedNPCs(false);
+
+
+        /*
+         * All Citizen NPCs which have quests attached to them have the Citizens NPC trait "nquestgiver".
+         * When the plugin is disabled right here, this piece of code will try removing this trait from all+
+         * NPCs which currently have this trait.
+         */
         final ArrayList<Trait> traitsToRemove = new ArrayList<>();
         for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
             for (final Trait trait : npc.getTraits()) {
@@ -99,13 +139,16 @@ public final class NotQuests extends JavaPlugin {
             for (final Trait traitToRemove : traitsToRemove) {
                 npc.removeTrait(traitToRemove.getClass());
                 getLogger().log(Level.INFO, "§aNotQuests > Removed nquestgiver trait from NPC with the ID §b" + npc.getId());
-
             }
+            traitsToRemove.clear();
 
         }
+
+        /*
+         * Next, the nquestgiver trait itself which is registered via the Citizens API on startup is being
+         * de-registered.
+         */
         getLogger().log(Level.INFO, "§aNotQuests > Deregistering nquestgiver trait...");
-
-
         final ArrayList<TraitInfo> toDeregister = new ArrayList<>();
         for (final TraitInfo traitInfo : net.citizensnpcs.api.CitizensAPI.getTraitFactory().getRegisteredTraits()) {
             if (traitInfo.getTraitName().equals("nquestgiver")) {
@@ -113,26 +156,45 @@ public final class NotQuests extends JavaPlugin {
 
             }
         }
+        //Actual nquestgiver trait de-registering happens here, to prevent a ConcurrentModificationException
         for (final TraitInfo traitInfo : toDeregister) {
             net.citizensnpcs.api.CitizensAPI.getTraitFactory().deregisterTrait(traitInfo);
         }
 
     }
 
-
+    /**
+     * Returns an instance of the QuestManager which handles the saving and loading of configured Quests
+     *
+     * @return an instance of the Quest Manager
+     */
     public final QuestManager getQuestManager() {
         return questManager;
     }
 
+    /**
+     * Returns an instance of the QuestPlayer Manager which handles the saving and loading of player data
+     *
+     * @return an instance of the QuestPlayer Manager
+     */
     public final QuestPlayerManager getQuestPlayerManager() {
         return questPlayerManager;
     }
 
+    /**
+     * Returns an instance of the Data Manager which handles all kinds of MySQL & configuration loading and saving
+     *
+     * @return an instance of the Data Manager
+     */
     public final DataManager getDataManager() {
         return dataManager;
     }
 
-
+    /**
+     * Sets up the Economy from the Vault plugin.
+     *
+     * @return if the economy has been set up successfully and if Vault has been found
+     */
     private boolean setupEconomy() {
         if (getServer().getPluginManager().getPlugin("Vault") == null) {
             return false;
@@ -145,18 +207,34 @@ public final class NotQuests extends JavaPlugin {
         return econ != null;
     }
 
+
+    /**
+     * Sets up the Chat from the Vault plugin.
+     *
+     * @return if vault chat has been set up successfully
+     */
     private boolean setupChat() {
         RegisteredServiceProvider<Chat> rsp = getServer().getServicesManager().getRegistration(Chat.class);
         chat = rsp.getProvider();
         return chat != null;
     }
 
+    /**
+     * Sets up the Permissions from the Vault plugin.
+     *
+     * @return if permissions from the vault plugin have been set up successfully
+     */
     private boolean setupPermissions() {
         RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
         perms = rsp.getProvider();
         return perms != null;
     }
 
+    /**
+     * Returns an instance of Economy which has been set up in setupEconomy()
+     *
+     * @return an instance of Economy which has been set up in setupEconomy()
+     */
     public final Economy getEconomy() {
         return econ;
     }
