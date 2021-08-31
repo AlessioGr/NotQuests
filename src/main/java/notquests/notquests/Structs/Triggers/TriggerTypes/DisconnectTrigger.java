@@ -9,7 +9,7 @@ public class DisconnectTrigger extends Trigger {
     private final NotQuests main;
 
     public DisconnectTrigger(final NotQuests main, Action action, int applyOn, String worldName) {
-        super(action, TriggerType.DISCONNECT, applyOn, worldName, 1);
+        super(main, action, TriggerType.DISCONNECT, applyOn, worldName, 1);
         this.main = main;
     }
 

@@ -10,7 +10,7 @@ public class WorldLeaveTrigger extends Trigger {
     private final String worldToLeaveName;
 
     public WorldLeaveTrigger(final NotQuests main, Action action, int applyOn, String worldName, long amountNeeded, String worldToLeaveName) {
-        super(action, TriggerType.WORLDLEAVE, applyOn, worldName, amountNeeded);
+        super(main, action, TriggerType.WORLDLEAVE, applyOn, worldName, amountNeeded);
         this.main = main;
         this.worldToLeaveName = worldToLeaveName;
 

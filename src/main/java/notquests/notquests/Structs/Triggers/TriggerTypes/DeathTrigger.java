@@ -10,7 +10,7 @@ public class DeathTrigger extends Trigger {
 
 
     public DeathTrigger(final NotQuests main, Action action, int applyOn, String worldName, long amountNeeded) {
-        super(action, TriggerType.DEATH, applyOn, worldName, amountNeeded);
+        super(main, action, TriggerType.DEATH, applyOn, worldName, amountNeeded);
         this.main = main;
     }
 

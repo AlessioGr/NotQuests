@@ -4,6 +4,7 @@ import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import notquests.notquests.NotQuests;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
@@ -24,15 +25,15 @@ import java.util.logging.Level;
 public class DataManager {
 
     //Completions
-    public final List<String> completions = new ArrayList<String>(); //makes a ArrayList
-    public final List<String> standardPlayerCompletions = new ArrayList<String>(); //makes a ArrayList
-    public final List<String> standardEntityTypeCompletions = new ArrayList<String>(); //makes a ArrayList
-    public final List<String> numberCompletions = new ArrayList<String>(); //makes a ArrayList
-    public final List<String> numberPositiveCompletions = new ArrayList<String>(); //makes a ArrayList
-    public final List<String> partialCompletions = new ArrayList<String>(); //makes a ArrayList
+    public final List<String> completions = new ArrayList<String>();
+    public final List<String> standardPlayerCompletions = new ArrayList<String>();
+    public final List<String> standardEntityTypeCompletions = new ArrayList<String>();
+    public final List<String> numberCompletions = new ArrayList<String>();
+    public final List<String> numberPositiveCompletions = new ArrayList<String>();
+    public final List<String> partialCompletions = new ArrayList<String>();
     private final NotQuests main;
     //MySQL Database stuff
-    private final String host, port, database, username, password;
+    private String host, port, database, username, password;
     private FileConfiguration questsData;
     private File questsDataFile = null;
     private Connection connection;
@@ -40,16 +41,12 @@ public class DataManager {
     private boolean savingEnabled = true;
     private boolean alreadyLoadedNPCs = false;
 
+    //General Config
+    private File generalConfigFile = null;
+    private FileConfiguration generalConfig;
 
     public DataManager(NotQuests main) {
         this.main = main;
-
-        host = "jackrussell.bloom.host";
-        port = "3306";
-        database = "s2229_NotQuests";
-        username = "u2229_kncRqfusjs";
-        password = "bT5+rTWWCh4D4Sd1aXpDbjK.";
-
 
         for (int i = -1; i <= 12; i++) {
             numberCompletions.add("" + i);
@@ -61,6 +58,83 @@ public class DataManager {
             standardEntityTypeCompletions.add(entityType.toString());
         }
 
+    }
+
+    public final void loadGeneralConfig() {
+        main.getLogger().log(Level.INFO, "§aNotQuests > Loading general config");
+        if (generalConfigFile == null) {
+            generalConfigFile = new File(main.getDataFolder(), "general.yml");
+
+            if (!generalConfigFile.exists()) {
+                try {
+                    generalConfigFile.createNewFile();
+
+                } catch (IOException ioexception) {
+                    ioexception.printStackTrace();
+                }
+            }
+
+            generalConfig = new YamlConfiguration();
+            try {
+                generalConfig.load(generalConfigFile);
+            } catch (IOException | InvalidConfigurationException e) {
+                e.printStackTrace();
+            }
+        } else {
+            generalConfig = YamlConfiguration.loadConfiguration(generalConfigFile);
+        }
+
+
+        host = getGeneralConfig().getString("storage.database.host", "");
+        port = getGeneralConfig().getString("storage.database.port", "");
+        database = getGeneralConfig().getString("storage.database.database", "");
+        username = getGeneralConfig().getString("storage.database.username", "");
+        password = getGeneralConfig().getString("storage.database.password", "");
+
+        boolean errored = false;
+
+        if (host.equals("")) {
+            getGeneralConfig().set("storage.database.host", "");
+            errored = true;
+        }
+        if (port.equals("")) {
+            getGeneralConfig().set("storage.database.port", "");
+            errored = true;
+        }
+        if (database.equals("")) {
+            getGeneralConfig().set("storage.database.database", "");
+            errored = true;
+        }
+        if (username.equals("")) {
+            getGeneralConfig().set("storage.database.username", "");
+            errored = true;
+        }
+        if (password.equals("")) {
+            getGeneralConfig().set("storage.database.password", "");
+            errored = true;
+
+        }
+        saveGeneralConfig();
+        if (errored) {
+            disablePluginAndSaving("Please specify your database information");
+        }
+
+
+    }
+
+    public void saveGeneralConfig() {
+        try {
+            getGeneralConfig().save(generalConfigFile);
+
+        } catch (IOException ioException) {
+            main.getLogger().log(Level.SEVERE, "§cNotQuests > General Config file could not be saved.");
+        }
+    }
+
+    public void disablePluginAndSaving(final String reason) {
+        main.getLogger().log(Level.SEVERE, "§cNotQuests > Plugin and saving disabled. Reason: " + reason);
+        main.getDataManager().setSavingEnabled(false);
+        main.getServer().getPluginManager().disablePlugin(main);
     }
 
     public void saveData() {
@@ -123,6 +197,7 @@ public class DataManager {
 
     public void reloadData() {
 
+        loadGeneralConfig();
         if (Bukkit.isPrimaryThread()) {
             Bukkit.getScheduler().runTaskAsynchronously(main, () -> {
                 try {
@@ -267,6 +342,13 @@ public class DataManager {
             reloadData();
         }
         return questsData;
+    }
+
+    public final FileConfiguration getGeneralConfig() {
+        if (generalConfig == null) {
+            loadGeneralConfig();
+        }
+        return generalConfig;
     }
 
 

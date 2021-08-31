@@ -10,7 +10,7 @@ public class WorldEnterTrigger extends Trigger {
     private final String worldToEnterName;
 
     public WorldEnterTrigger(final NotQuests main, Action action, int applyOn, String worldName, long amountNeeded, String worldToEnterName) {
-        super(action, TriggerType.WORLDENTER, applyOn, worldName, amountNeeded);
+        super(main, action, TriggerType.WORLDENTER, applyOn, worldName, amountNeeded);
         this.main = main;
         this.worldToEnterName = worldToEnterName;
 

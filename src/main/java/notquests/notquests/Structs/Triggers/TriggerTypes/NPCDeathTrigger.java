@@ -10,7 +10,7 @@ public class NPCDeathTrigger extends Trigger {
     private final int npcToDieID;
 
     public NPCDeathTrigger(final NotQuests main, Action action, int applyOn, String worldName, long amountNeeded, int npcToDieID) {
-        super(action, TriggerType.NPCDEATH, applyOn, worldName, amountNeeded);
+        super(main, action, TriggerType.NPCDEATH, applyOn, worldName, amountNeeded);
         this.main = main;
         this.npcToDieID = npcToDieID;
 

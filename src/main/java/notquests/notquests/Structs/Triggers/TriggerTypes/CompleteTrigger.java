@@ -9,7 +9,7 @@ public class CompleteTrigger extends Trigger {
     private final NotQuests main;
 
     public CompleteTrigger(final NotQuests main, Action action, int applyOn, String worldName) {
-        super(action, TriggerType.COMPLETE, applyOn, worldName, 1);
+        super(main, action, TriggerType.COMPLETE, applyOn, worldName, 1);
         this.main = main;
     }
 
