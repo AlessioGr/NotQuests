@@ -15,6 +15,7 @@ import notquests.notquests.Structs.Triggers.TriggerTypes.WorldEnterTrigger;
 import notquests.notquests.Structs.Triggers.TriggerTypes.WorldLeaveTrigger;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 public class Quest {
     private final NotQuests main;
@@ -98,46 +99,39 @@ public class Quest {
                 main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".progressNeeded", objective.getProgressNeeded());
 
 
-                if (objective instanceof BreakBlocksObjective) {
-                    final BreakBlocksObjective breakBlocksObjective = (BreakBlocksObjective) objective;
+                if (objective instanceof final BreakBlocksObjective breakBlocksObjective) {
                     main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.blockToBreak.material", breakBlocksObjective.getBlockToBreak().toString());
                     main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.deductIfBlockPlaced", breakBlocksObjective.willDeductIfBlockPlaced());
-                } else if (objective instanceof CollectItemsObjective) {
-                    final CollectItemsObjective collectItemsObjective = (CollectItemsObjective) objective;
+                } else if (objective instanceof final CollectItemsObjective collectItemsObjective) {
                     main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.itemToCollect.itemstack", collectItemsObjective.getItemToCollect());
-                } else if (objective instanceof TriggerCommandObjective) {
-                    final TriggerCommandObjective triggerCommandObjective = (TriggerCommandObjective) objective;
+                } else if (objective instanceof final TriggerCommandObjective triggerCommandObjective) {
                     main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.triggerName", triggerCommandObjective.getTriggerName());
 
-                } else if (objective instanceof OtherQuestObjective) {
-                    final OtherQuestObjective otherQuestObjective = (OtherQuestObjective) objective;
+                } else if (objective instanceof final OtherQuestObjective otherQuestObjective) {
                     main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.otherQuestName", otherQuestObjective.getOtherQuestName());
                     main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.countPreviousCompletions", otherQuestObjective.isCountPreviousCompletions());
-                } else if (objective instanceof KillMobsObjective) {
-                    final KillMobsObjective otherQuestObjective = (KillMobsObjective) objective;
+                } else if (objective instanceof final KillMobsObjective otherQuestObjective) {
                     main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.mobToKill", otherQuestObjective.getMobToKill().toString());
                     main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.amountToKill", otherQuestObjective.getAmountToKill());
-                } else if (objective instanceof ConsumeItemsObjective) {
-                    final ConsumeItemsObjective consumeItemObjective = (ConsumeItemsObjective) objective;
+                } else if (objective instanceof final ConsumeItemsObjective consumeItemObjective) {
                     main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.itemToConsume.itemstack", consumeItemObjective.getItemToConsume());
-                } else if (objective instanceof DeliverItemsObjective) {
-                    final DeliverItemsObjective deliverItemsObjective = (DeliverItemsObjective) objective;
+                } else if (objective instanceof final DeliverItemsObjective deliverItemsObjective) {
                     main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.itemToCollect.itemstack", deliverItemsObjective.getItemToCollect());
                     main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.recipientNPCID", deliverItemsObjective.getRecipientNPCID());
-                } else if (objective instanceof TalkToNPCObjective) {
-                    final TalkToNPCObjective talkToNPCObjective = (TalkToNPCObjective) objective;
+                } else if (objective instanceof final TalkToNPCObjective talkToNPCObjective) {
                     main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.NPCtoTalkID", talkToNPCObjective.getNPCtoTalkID());
-                } else if (objective instanceof EscortNPCObjective) {
-                    final EscortNPCObjective escortNPCObjective = (EscortNPCObjective) objective;
+                } else if (objective instanceof final EscortNPCObjective escortNPCObjective) {
                     main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.NPCToEscortID", escortNPCObjective.getNpcToEscortID());
                     main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.destinationNPCID", escortNPCObjective.getNpcToEscortToID());
                 } else {
-                    System.out.println("§cNotQuests > ERROR: Objective could not be saved, because the objective type was not recognized.");
+                    main.getLogger().log(Level.WARNING, "§cNotQuests > ERROR: Objective could not be saved, because the objective type was not recognized.");
+
                 }
             }
 
         } else {
-            System.out.println("§cNotQuests > ERROR: Tried to add objective to quest §b" + getQuestName() + " §cwith the ID §b" + objective.getObjectiveID() + " §cbut the ID was a DUPLICATE!");
+            main.getLogger().log(Level.WARNING, "§cNotQuests > ERROR: Tried to add objective to quest §b" + getQuestName() + " §cwith the ID §b" + objective.getObjectiveID() + " §cbut the ID was a DUPLICATE!");
+
         }
 
 
@@ -281,19 +275,19 @@ public class Quest {
     }
 
     public void removeNPC(final NPC npc) {
-        System.out.println("§e-2");
+        // System.out.println("§e-2");
         if (attachedNPCsWithoutQuestShowing.contains(npc) || attachedNPCsWithQuestShowing.contains(npc)) {
 
             final ArrayList<NPC> arrayList = new ArrayList<>(attachedNPCsWithQuestShowing);
             arrayList.addAll(attachedNPCsWithoutQuestShowing);
             final ArrayList<Trait> npcTraitsToRemove = new ArrayList<>();
             for (final NPC attachedNPC : arrayList) {
-                System.out.println("§e-1");
+                // System.out.println("§e-1");
                 if (attachedNPC.equals(npc)) {
-                    System.out.println("§e0");
+                    // System.out.println("§e0");
                     if (main.getQuestManager().getQuestsAttachedToNPC(npc).size() == 1) {
                         //npc.removeTrait(QuestGiverNPCTrait.class);
-                        System.out.println("§e1");
+                        // System.out.println("§e1");
                         for (final Trait trait : npc.getTraits()) {
                             if (trait.getName().equalsIgnoreCase("nquestgiver")) {
                                 npcTraitsToRemove.add(trait);
@@ -303,7 +297,7 @@ public class Quest {
                 }
                 for (final Trait trait : npcTraitsToRemove) {
                     npc.removeTrait(trait.getClass());
-                    System.out.println("§e2");
+                    // System.out.println("§e2");
                 }
                 npcTraitsToRemove.clear();
             }

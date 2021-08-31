@@ -1,20 +1,25 @@
 package notquests.notquests.Structs.Triggers;
 
 
+import notquests.notquests.NotQuests;
 import notquests.notquests.Structs.ActiveQuest;
 import notquests.notquests.Structs.Triggers.TriggerTypes.TriggerType;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.util.logging.Level;
+
 public class Trigger {
+    private final NotQuests main;
     private final TriggerType triggerType; //Enum
     private final Action action; //Class
     private final int applyOn; // 0 is for the whole quest. Positive numbers = objectives (JUST INTERNALLY HERE, NOT IN THE ADMIN COMMAND)
     private final String worldName;
     private final long amountNeeded; // 0 or 1 means every trigger() triggers it
 
-    public Trigger(Action action, TriggerType triggerType, int applyOn, String worldName, long amountNeeded) {
 
+    public Trigger(final NotQuests main, Action action, TriggerType triggerType, int applyOn, String worldName, long amountNeeded) {
+        this.main = main;
         this.action = action;
         this.triggerType = triggerType;
         this.applyOn = applyOn;
@@ -49,7 +54,8 @@ public class Trigger {
         if (player != null) {
             action.execute(player, activeQuest);
         } else {
-            System.out.println("§eNotQuests > Tried to execute trigger for offline player - ABORTED!");
+            main.getLogger().log(Level.WARNING, "§eNotQuests > Tried to execute trigger for offline player - ABORTED!");
+
         }
 
     }

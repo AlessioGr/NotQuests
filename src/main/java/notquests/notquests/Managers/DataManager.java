@@ -48,7 +48,7 @@ public class DataManager {
         port = "3306";
         database = "s2229_NotQuests";
         username = "u2229_kncRqfusjs";
-        password = "gcNuTML8LA9b8.iSKsL.lkwx";
+        password = "bT5+rTWWCh4D4Sd1aXpDbjK.";
 
 
         for (int i = -1; i <= 12; i++) {
@@ -65,22 +65,23 @@ public class DataManager {
 
     public void saveData() {
         if (isSavingEnabled()) {
-            System.out.println("§aNotQuests > Saving player data...");
+            main.getLogger().log(Level.INFO, "§aNotQuests > Citizens nquestgiver trait has been registered!");
+            main.getLogger().log(Level.INFO, "§aNotQuests > Saving player data...");
             main.getQuestPlayerManager().savePlayerData();
 
             if (questsData == null || questsDataFile == null) {
-                System.out.println("§cNotQuests > Could not save data to quests.yml");
+                main.getLogger().log(Level.SEVERE, "§cNotQuests > Could not save data to quests.yml");
                 return;
             }
             try {
                 getQuestsData().save(questsDataFile);
-                System.out.println("§aNotQuests > Saved Data to quests.yml");
+                main.getLogger().log(Level.INFO, "§aNotQuests > Saved Data to quests.yml");
             } catch (IOException e) {
-                System.out.println("§cNotQuests > Could not save config to §b" + questsDataFile + "§c. Stacktrace:");
+                main.getLogger().log(Level.SEVERE, "§cNotQuests > Could not save config to §b" + questsDataFile + "§c. Stacktrace:");
                 e.printStackTrace();
             }
         } else {
-            System.out.println("§eNotQuests > Saving is disabled => no data has been saved.");
+            main.getLogger().log(Level.WARNING, "§eNotQuests > Saving is disabled => no data has been saved.");
         }
 
 
@@ -134,26 +135,26 @@ public class DataManager {
 
                 //Create tables
                 try {
-                    System.out.println("§9NotQuests > §aCreating database table 'QuestPlayerData' if it doesn't exist yet...");
+                    main.getLogger().log(Level.INFO, "§9NotQuests > §aCreating database table 'QuestPlayerData' if it doesn't exist yet...");
                     statement.executeUpdate("CREATE TABLE IF NOT EXISTS `QuestPlayerData` (`PlayerUUID` varchar(200), `QuestPoints` BIGINT(255), PRIMARY KEY (PlayerUUID))");
 
-                    System.out.println("§9NotQuests > §aCreating database table 'ActiveQuests' if it doesn't exist yet...");
+                    main.getLogger().log(Level.INFO, "§9NotQuests > §aCreating database table 'ActiveQuests' if it doesn't exist yet...");
                     statement.executeUpdate("CREATE TABLE IF NOT EXISTS `ActiveQuests` (`QuestName` varchar(200), `PlayerUUID` varchar(200))");
 
-                    System.out.println("§9NotQuests > §aCreating database table 'CompletedQuests' if it doesn't exist yet...");
+                    main.getLogger().log(Level.INFO, "§9NotQuests > §aCreating database table 'CompletedQuests' if it doesn't exist yet...");
                     statement.executeUpdate("CREATE TABLE IF NOT EXISTS `CompletedQuests` (`QuestName` varchar(200), `PlayerUUID` varchar(200), `TimeCompleted` BIGINT(255))");
 
-
-                    System.out.println("§9NotQuests > §aCreating database table 'ActiveObjectives' if it doesn't exist yet...");
+                    main.getLogger().log(Level.INFO, "§9NotQuests > §aCreating database table 'ActiveObjectives' if it doesn't exist yet...");
                     statement.executeUpdate("CREATE TABLE IF NOT EXISTS `ActiveObjectives` (`ObjectiveType` varchar(200), `QuestName` varchar(200), `PlayerUUID` varchar(200), `CurrentProgress` BIGINT(255), `ObjectiveID` INT(255), `HasBeenCompleted` BOOLEAN)");
 
+                    main.getLogger().log(Level.INFO, "§9NotQuests > §aCreating database table 'ActiveTriggers' if it doesn't exist yet...");
 
-                    System.out.println("§9NotQuests > §aCreating database table 'ActiveTriggers' if it doesn't exist yet...");
                     statement.executeUpdate("CREATE TABLE IF NOT EXISTS `ActiveTriggers` (`TriggerType` varchar(200), `QuestName` varchar(200), `PlayerUUID` varchar(200), `CurrentProgress` BIGINT(255), `TriggerID` INT(255))");
 
 
                 } catch (SQLException e) {
-                    System.out.println("§9NotQuests > §cThere was an error while trying to load MySQL database tables! This is the stacktrace:");
+                    main.getLogger().log(Level.SEVERE, "§9NotQuests > §cThere was an error while trying to load MySQL database tables! This is the stacktrace:");
+
                     e.printStackTrace();
                     main.getLogger().log(Level.SEVERE, "§cNotQuests > Plugin disabled, because there was an error while initializing tables.");
                     main.getDataManager().setSavingEnabled(false);
@@ -161,16 +162,17 @@ public class DataManager {
                 }
 
                 if (isSavingEnabled()) {
-                    System.out.println("§aNotQuests > Loaded player data");
+                    main.getLogger().log(Level.INFO, "§aNotQuests > Loaded player data");
+
                     if (questsDataFile == null) {
                         questsDataFile = new File(main.getDataFolder(), "quests.yml");
                         questsData = YamlConfiguration.loadConfiguration(questsDataFile);
-                        System.out.println("§aNotQuests > First load of quests.yml. Loading data from it...");
+                        main.getLogger().log(Level.INFO, "§aNotQuests > First load of quests.yml. Loading data from it...");
                         main.getQuestManager().loadData();
 
                     } else {
                         questsData = YamlConfiguration.loadConfiguration(questsDataFile);
-                        System.out.println("§aNotQuests > Loading Data from existing quests.yml...");
+                        main.getLogger().log(Level.INFO, "§aNotQuests > Loading Data from existing quests.yml...");
                         main.getQuestManager().loadData();
 
                     }
@@ -201,17 +203,16 @@ public class DataManager {
 
             //Create table
             try {
-                System.out.println("§9NotQuests > §aCreating database table 'QuestPlayerData' if it doesn't exist yet...");
+                main.getLogger().log(Level.INFO, "§9NotQuests > §aCreating database table 'QuestPlayerData' if it doesn't exist yet...");
                 statement.executeUpdate("CREATE TABLE IF NOT EXISTS `QuestPlayerData` (`PlayerUUID` varchar(200), `QuestPoints` BIGINT(255), PRIMARY KEY (PlayerUUID))");
 
-                System.out.println("§9NotQuests > §aCreating database table 'ActiveQuests' if it doesn't exist yet...");
+                main.getLogger().log(Level.INFO, "§9NotQuests > §aCreating database table 'ActiveQuests' if it doesn't exist yet...");
                 statement.executeUpdate("CREATE TABLE IF NOT EXISTS `ActiveQuests` (`QuestName` varchar(200), `PlayerUUID` varchar(200))");
 
-                System.out.println("§9NotQuests > §aCreating database table 'CompletedQuests' if it doesn't exist yet...");
+                main.getLogger().log(Level.INFO, "§9NotQuests > §aCreating database table 'CompletedQuests' if it doesn't exist yet...");
                 statement.executeUpdate("CREATE TABLE IF NOT EXISTS `CompletedQuests` (`QuestName` varchar(200), `PlayerUUID` varchar(200), `TimeCompleted` BIGINT(255))");
 
-
-                System.out.println("§9NotQuests > §aCreating database table 'ActiveObjectives' if it doesn't exist yet...");
+                main.getLogger().log(Level.INFO, "§9NotQuests > §aCreating database table 'ActiveObjectives' if it doesn't exist yet...");
                 statement.executeUpdate("CREATE TABLE IF NOT EXISTS `ActiveObjectives` (`ObjectiveType` varchar(200), `QuestName` varchar(200), `PlayerUUID` varchar(200), `CurrentProgress` BIGINT(255), `ObjectiveID` INT(255), `HasBeenCompleted` BOOLEAN)");
 
       /*  System.out.println("§9NotQuests > §eCreating database table 'CompletedObjectives' if it doesn't exist yet...");
@@ -220,7 +221,8 @@ public class DataManager {
                 // ResultSet res = statement.executeQuery("");
                 // res.next();
             } catch (SQLException e) {
-                System.out.println("§9NotQuests > §cThere was an error while trying to load MySQL database tables! This is the stacktrace:");
+                main.getLogger().log(Level.SEVERE, "§9NotQuests > §cThere was an error while trying to load MySQL database tables! This is the stacktrace:");
+
                 e.printStackTrace();
                 main.getLogger().log(Level.SEVERE, "§cNotQuests > Plugin disabled, because there was an error while initializing tables.");
                 main.getDataManager().setSavingEnabled(false);
@@ -229,17 +231,17 @@ public class DataManager {
 
             if (isSavingEnabled()) {
 
+                main.getLogger().log(Level.INFO, "§aNotQuests > Loaded player data");
 
-                System.out.println("§aNotQuests > Loaded player data");
                 if (questsDataFile == null) {
                     questsDataFile = new File(main.getDataFolder(), "quests.yml");
                     questsData = YamlConfiguration.loadConfiguration(questsDataFile);
                     main.getQuestManager().loadData();
-                    System.out.println("§aNotQuests > First load of quests.yml");
+                    main.getLogger().log(Level.INFO, "§aNotQuests > First load of quests.yml");
                 } else {
                     questsData = YamlConfiguration.loadConfiguration(questsDataFile);
                     main.getQuestManager().loadData();
-                    System.out.println("§aNotQuests > Loading Data from existing quests.yml");
+                    main.getLogger().log(Level.INFO, "§aNotQuests > Loading Data from existing quests.yml");
                 }
 
                 main.getQuestPlayerManager().loadPlayerData();
@@ -301,11 +303,13 @@ public class DataManager {
                     questsDataFile = new File(main.getDataFolder(), "quests.yml");
                     questsData = YamlConfiguration.loadConfiguration(questsDataFile);
                     main.getQuestManager().loadNPCData();
-                    System.out.println("§aNotQuests > First load of quests.yml");
+                    main.getLogger().log(Level.INFO, "§aNotQuests > First load of quests.yml");
+
                 } else {
                     questsData = YamlConfiguration.loadConfiguration(questsDataFile);
                     main.getQuestManager().loadNPCData();
-                    System.out.println("§aNotQuests > Loading Data from existing quests.yml");
+                    main.getLogger().log(Level.INFO, "§aNotQuests > Loading Data from existing quests.yml");
+
                 }
             });
         } else {
@@ -314,11 +318,13 @@ public class DataManager {
                 questsDataFile = new File(main.getDataFolder(), "quests.yml");
                 questsData = YamlConfiguration.loadConfiguration(questsDataFile);
                 main.getQuestManager().loadNPCData();
-                System.out.println("§aNotQuests > First load of quests.yml");
+                main.getLogger().log(Level.INFO, "§aNotQuests > First load of quests.yml");
+
             } else {
                 questsData = YamlConfiguration.loadConfiguration(questsDataFile);
                 main.getQuestManager().loadNPCData();
-                System.out.println("§aNotQuests > Loading Data from existing quests.yml");
+                main.getLogger().log(Level.INFO, "§aNotQuests > Loading Data from existing quests.yml");
+
             }
 
         }

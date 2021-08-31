@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.UUID;
+import java.util.logging.Level;
 
 public class QuestPlayerManager {
     private final NotQuests main;
@@ -36,7 +37,7 @@ public class QuestPlayerManager {
                 final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(UUID.fromString(uuid));
 
                 final long questPoints = result.getLong("QuestPoints");
-                System.out.println("§aNotQuests > Loaded player with uuid §b" + uuid + " and questPoints: " + questPoints);
+                main.getLogger().log(Level.INFO, "§aNotQuests > Loaded player with uuid §b" + uuid + " and questPoints: " + questPoints);
 
                 if (questPlayer != null) {
                     //QuestPoints
@@ -45,7 +46,8 @@ public class QuestPlayerManager {
 
 
                 } else {
-                    System.out.println("§cNotQuests > ERROR: QuestPlayer with the UUID §b" + uuid + " §ccould not be loaded from database");
+                    main.getLogger().log(Level.SEVERE, "§cNotQuests > ERROR: QuestPlayer with the UUID §b" + uuid + " §ccould not be loaded from database");
+
                 }
 
             }
@@ -75,12 +77,14 @@ public class QuestPlayerManager {
 
 
                         } else {
-                            System.out.println("§9NotQuests > §cERROR: TimeCompleted from Quest with name §b" + questName + " §ccould not be loaded from database (requested for loading completed Quests)");
+                            main.getLogger().log(Level.WARNING, "§9NotQuests > §cERROR: TimeCompleted from Quest with name §b" + questName + " §ccould not be loaded from database (requested for loading completed Quests)");
+
 
                         }
 
                     } else {
-                        System.out.println("§9NotQuests > §cERROR: Quest with name §b" + questName + " §ccould not be loaded from database (requested for loading completed Quests)");
+                        main.getLogger().log(Level.WARNING, "§9NotQuests > §cERROR: Quest with name §b" + questName + " §ccould not be loaded from database (requested for loading completed Quests)");
+
                     }
                 }
                 completedQuestsResults.close();
@@ -97,7 +101,8 @@ public class QuestPlayerManager {
                         questPlayer.forceAddActiveQuest(activeQuest, false); //Run begin/accept trigger when plugin reloads if true
 
                     } else {
-                        System.out.println("§9NotQuests > §cERROR: Quest with name §b" + questName + " §ccould not be loaded from database");
+                        main.getLogger().log(Level.WARNING, "§9NotQuests > §cERROR: Quest with name §b" + questName + " §ccould not be loaded from database");
+
                     }
                 }
                 activeQuestsResults.close();
@@ -125,7 +130,8 @@ public class QuestPlayerManager {
 
 
                         } else {
-                            System.out.println("§cNotQuests > ERROR: TriggerType for the Quest §b" + activeQuest.getQuest().getQuestName() + " §ccould not be loaded from database");
+                            main.getLogger().log(Level.WARNING, "§cNotQuests > ERROR: TriggerType for the Quest §b" + activeQuest.getQuest().getQuestName() + " §ccould not be loaded from database");
+
                         }
                     }
                     activeQuestTriggerResults.close();
@@ -168,7 +174,8 @@ public class QuestPlayerManager {
 
 
                         } else {
-                            System.out.println("§cNotQuests > ERROR: ObjectiveType for the Quest §b" + activeQuest.getQuest().getQuestName() + " §ccould not be loaded from database");
+                            main.getLogger().log(Level.WARNING, "§cNotQuests > ERROR: ObjectiveType for the Quest §b" + activeQuest.getQuest().getQuestName() + " §ccould not be loaded from database");
+
                         }
                     }
 
@@ -196,7 +203,8 @@ public class QuestPlayerManager {
 
         //try{
         //if(main.getDataManager().getDatabaseStatement().isClosed()){
-        System.out.println("§aNotQuests > Re-opening database connection...");
+        main.getLogger().log(Level.INFO, "§aNotQuests > Re-opening database connection...");
+
         main.getDataManager().refreshDatabaseConnection(false);
         //}
      /*   }catch(SQLException exception){
@@ -243,12 +251,14 @@ public class QuestPlayerManager {
 
 
             } catch (SQLException sqlException) {
-                System.out.println("§cNotQuests > There was an error saving the playerdata of player with UUID §b" + questPlayer.getUUID() + "§c! Stacktrace:");
+                main.getLogger().log(Level.WARNING, "§cNotQuests > There was an error saving the playerdata of player with UUID §b" + questPlayer.getUUID() + "§c! Stacktrace:");
+
                 sqlException.printStackTrace();
             }
 
         }
-        System.out.println("§aNotQuests > PlayerData saved");
+        main.getLogger().log(Level.INFO, "§aNotQuests > PlayerData saved");
+
     }
 
     public final QuestPlayer getQuestPlayer(UUID uuid) {

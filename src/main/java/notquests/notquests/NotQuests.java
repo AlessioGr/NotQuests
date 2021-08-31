@@ -36,11 +36,12 @@ public final class NotQuests extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        getLogger().log(Level.INFO, "§aNotQuests > NotQuests is starting...");
 
-        System.out.println("§aNotQuests > NotQuests is starting...");
 
         if (!setupEconomy()) {
-            System.out.println(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
+            getLogger().log(Level.SEVERE, String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
+
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
@@ -83,7 +84,8 @@ public final class NotQuests extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        System.out.println("§aNotQuests > NotQuests is shutting down...");
+        getLogger().log(Level.INFO, "§aNotQuests > NotQuests is shutting down...");
+
         dataManager.saveData();
         getDataManager().setAlreadyLoadedNPCs(false);
         final ArrayList<Trait> traitsToRemove = new ArrayList<>();
@@ -96,11 +98,13 @@ public final class NotQuests extends JavaPlugin {
             }
             for (final Trait traitToRemove : traitsToRemove) {
                 npc.removeTrait(traitToRemove.getClass());
-                System.out.println("§aNotQuests > Removed nquestgiver trait from NPC with the ID §b" + npc.getId());
+                getLogger().log(Level.INFO, "§aNotQuests > Removed nquestgiver trait from NPC with the ID §b" + npc.getId());
+
             }
 
         }
-        System.out.println("§aNotQuests > Deregistering nquestgiver trait...");
+        getLogger().log(Level.INFO, "§aNotQuests > Deregistering nquestgiver trait...");
+
 
         final ArrayList<TraitInfo> toDeregister = new ArrayList<>();
         for (final TraitInfo traitInfo : net.citizensnpcs.api.CitizensAPI.getTraitFactory().getRegisteredTraits()) {

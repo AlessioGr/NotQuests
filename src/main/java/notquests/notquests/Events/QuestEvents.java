@@ -37,6 +37,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.logging.Level;
 
 public class QuestEvents implements Listener {
     private final NotQuests main;
@@ -106,8 +107,7 @@ public class QuestEvents implements Listener {
                 for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                     for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
                         if (activeObjective.isUnlocked()) {
-                            if (activeObjective.getObjective() instanceof DeliverItemsObjective) {
-                                final DeliverItemsObjective objective = ((DeliverItemsObjective) activeObjective.getObjective());
+                            if (activeObjective.getObjective() instanceof final DeliverItemsObjective objective) {
                                 if (objective.getRecipientNPCID() == npc.getId()) {
                                     for (final ItemStack itemStack : player.getInventory().getContents()) {
                                         if (itemStack != null) {
@@ -134,15 +134,13 @@ public class QuestEvents implements Listener {
                                     }
 
                                 }
-                            } else if (activeObjective.getObjective() instanceof TalkToNPCObjective) {
-                                final TalkToNPCObjective objective = ((TalkToNPCObjective) activeObjective.getObjective());
+                            } else if (activeObjective.getObjective() instanceof final TalkToNPCObjective objective) {
                                 if (objective.getNPCtoTalkID() == npc.getId()) {
                                     activeObjective.addProgress(1, npc.getId());
                                     player.sendMessage("§aYou talked to §b" + npc.getName());
 
                                 }
-                            } else if (activeObjective.getObjective() instanceof EscortNPCObjective) {
-                                final EscortNPCObjective objective = ((EscortNPCObjective) activeObjective.getObjective());
+                            } else if (activeObjective.getObjective() instanceof final EscortNPCObjective objective) {
                                 if (objective.getNpcToEscortToID() == npc.getId()) {
                                     final NPC npcToEscort = CitizensAPI.getNPCRegistry().getById(objective.getNpcToEscortID());
                                     if (npcToEscort != null) {
@@ -186,8 +184,9 @@ public class QuestEvents implements Listener {
 
     @EventHandler
     private void onCitizensEnable(CitizensEnableEvent e) {
-        System.out.println("§aNotQuests > Processing Citizens Enable Event...");
-        System.out.println("§aNotQuests > Registering Citizens nquestgiver trait...");
+        main.getLogger().log(Level.INFO, "§aNotQuests > Processing Citizens Enable Event...");
+        main.getLogger().log(Level.INFO, "§aNotQuests > Registering Citizens nquestgiver trait...");
+
         final ArrayList<TraitInfo> toDeregister = new ArrayList<>();
         for (final TraitInfo traitInfo : net.citizensnpcs.api.CitizensAPI.getTraitFactory().getRegisteredTraits()) {
             if (traitInfo.getTraitName().equals("nquestgiver")) {
@@ -200,8 +199,7 @@ public class QuestEvents implements Listener {
         }
         net.citizensnpcs.api.CitizensAPI.getTraitFactory().registerTrait(net.citizensnpcs.api.trait.TraitInfo.create(QuestGiverNPCTrait.class).withName("nquestgiver"));
 
-
-        System.out.println("§aNotQuests > Citizens nquestgiver trait has been registered!");
+        main.getLogger().log(Level.INFO, "§aNotQuests > Citizens nquestgiver trait has been registered!");
         if (!main.getDataManager().isAlreadyLoadedNPCs()) {
             main.getDataManager().loadNPCData();
         }
@@ -211,8 +209,9 @@ public class QuestEvents implements Listener {
 
     @EventHandler
     private void onCitizensReload(CitizensReloadEvent e) {
-        System.out.println("§aNotQuests > Processing Citizens Reload Event...");
-        System.out.println("§aNotQuests > Registering Citizens nquestgiver trait...");
+        main.getLogger().log(Level.INFO, "§aNotQuests > Processing Citizens Reload Event...");
+        main.getLogger().log(Level.INFO, "§aNotQuests > Registering Citizens nquestgiver trait...");
+
         final ArrayList<TraitInfo> toDeregister = new ArrayList<>();
         for (final TraitInfo traitInfo : net.citizensnpcs.api.CitizensAPI.getTraitFactory().getRegisteredTraits()) {
             if (traitInfo.getTraitName().equals("nquestgiver")) {
@@ -224,7 +223,7 @@ public class QuestEvents implements Listener {
             net.citizensnpcs.api.CitizensAPI.getTraitFactory().deregisterTrait(traitInfo);
         }
         net.citizensnpcs.api.CitizensAPI.getTraitFactory().registerTrait(net.citizensnpcs.api.trait.TraitInfo.create(QuestGiverNPCTrait.class).withName("nquestgiver"));
-        System.out.println("§aNotQuests > Citizens nquestgiver trait has been registered!");
+        main.getLogger().log(Level.INFO, "§aNotQuests > Citizens nquestgiver trait has been registered!");
         if (!main.getDataManager().isAlreadyLoadedNPCs()) {
             main.getDataManager().loadNPCData();
         }
@@ -284,16 +283,14 @@ public class QuestEvents implements Listener {
     @EventHandler
     private void onPickupItemEvent(EntityPickupItemEvent e) {
         final Entity entity = e.getEntity();
-        if (entity instanceof Player) {
-            final Player player = (Player) entity;
+        if (entity instanceof final Player player) {
             final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
             if (questPlayer != null) {
                 if (questPlayer.getActiveQuests().size() > 0) {
                     for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                         for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
                             if (activeObjective.isUnlocked()) {
-                                if (activeObjective.getObjective() instanceof CollectItemsObjective) {
-                                    final CollectItemsObjective objective = ((CollectItemsObjective) activeObjective.getObjective());
+                                if (activeObjective.getObjective() instanceof final CollectItemsObjective objective) {
                                     if (objective.getItemToCollect().getType().equals(e.getItem().getItemStack().getType()) && objective.getItemToCollect().getItemMeta().equals(e.getItem().getItemStack().getItemMeta())) {
                                         activeObjective.addProgress(e.getItem().getItemStack().getAmount(), -1);
                                     }
@@ -313,16 +310,14 @@ public class QuestEvents implements Listener {
     @EventHandler
     private void onDropItemEvent(EntityDropItemEvent e) { //DEFAULT ENABLED FOR ITEM DROPS UNLIKE FOR BLOCK BREAKS
         final Entity entity = e.getEntity();
-        if (entity instanceof Player) {
-            final Player player = (Player) entity;
+        if (entity instanceof final Player player) {
             final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
             if (questPlayer != null) {
                 if (questPlayer.getActiveQuests().size() > 0) {
                     for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                         for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
                             if (activeObjective.isUnlocked()) {
-                                if (activeObjective.getObjective() instanceof CollectItemsObjective) {
-                                    final CollectItemsObjective objective = ((CollectItemsObjective) activeObjective.getObjective());
+                                if (activeObjective.getObjective() instanceof final CollectItemsObjective objective) {
                                     if (objective.getItemToCollect().getType().equals(e.getItemDrop().getItemStack().getType()) && objective.getItemToCollect().getItemMeta().equals(e.getItemDrop().getItemStack().getItemMeta())) {
                                         activeObjective.removeProgress(e.getItemDrop().getItemStack().getAmount(), false);
                                     }
@@ -344,8 +339,7 @@ public class QuestEvents implements Listener {
     private void onEntityDeath(EntityDeathEvent e) { //KillMobs objectives & Death triggers
 
         //Death Triggers
-        if (e.getEntity() instanceof Player) {
-            final Player player = (Player) e.getEntity();
+        if (e.getEntity() instanceof final Player player) {
             final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
             if (questPlayer != null) {
                 if (questPlayer.getActiveQuests().size() > 0) {

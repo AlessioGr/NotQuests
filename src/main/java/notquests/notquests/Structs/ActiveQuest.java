@@ -182,17 +182,17 @@ public class ActiveQuest {
             for (final ActiveTrigger activeTrigger : activeQuest.getActiveTriggers()) {
                 if (activeTrigger.getTrigger().getTriggerType().equals(TriggerType.FAIL)) {
                     if (activeTrigger.getTrigger().getApplyOn() == 0) { //Quest and not Objective
-                        System.out.println("§eAAA");
+                        //System.out.println("§eAAA");
 
                         if (activeTrigger.getTrigger().getWorldName().equalsIgnoreCase("ALL")) {
                             activeTrigger.addAndCheckTrigger(activeQuest);
-                            System.out.println("§eAAA2");
+                            //System.out.println("§eAAA2");
 
                         } else {
                             final Player player = Bukkit.getPlayer(getQuestPlayer().getUUID());
                             if (player != null && player.getWorld().getName().equalsIgnoreCase(activeTrigger.getTrigger().getWorldName())) {
                                 activeTrigger.addAndCheckTrigger(activeQuest);
-                                System.out.println("§eAAA3");
+                                //System.out.println("§eAAA3");
 
                             }
                         }

@@ -5,6 +5,8 @@ import notquests.notquests.Structs.Quest;
 import notquests.notquests.Structs.QuestPlayer;
 import org.bukkit.entity.Player;
 
+import java.util.logging.Level;
+
 public class QuestPointsReward extends Reward {
 
     private final NotQuests main;
@@ -24,7 +26,8 @@ public class QuestPointsReward extends Reward {
             questPlayer.addQuestPoints(rewardedQuestPoints, true);
 
         } else {
-            System.out.println("§cError giving quest point reward to player §b" + player.getName());
+            main.getLogger().log(Level.WARNING, "§cError giving quest point reward to player §b" + player.getName());
+
             player.sendMessage("§cError giving quest point reward.");
         }
 
