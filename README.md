@@ -7,18 +7,31 @@ You have to build this yourself and change the MySQL Database details (required)
 
 **Images**
 Quest Giver NPC:
+
 ![image](https://user-images.githubusercontent.com/70709113/131539574-ef73ddfb-1dcd-4ab8-a85c-9b38d2f95a8d.png)
+
 What happens when you right click it:
+
 ![image](https://user-images.githubusercontent.com/70709113/131539663-5bd12479-3bc8-4958-81a2-de12a541820f.png)
+
 Quest Accepting GUI:
+
 ![image](https://user-images.githubusercontent.com/70709113/131539715-b055e4cd-2a7e-4a78-8d7a-dc840399c0c0.png)
+
 Quest User GUI:
+
 ![image](https://user-images.githubusercontent.com/70709113/131539761-66be66c2-26d9-4636-bbd5-d69fd11bfeaf.png)
+
 Preview Quests GUI:
+
 ![image](https://user-images.githubusercontent.com/70709113/131539815-48c7de30-a5af-499c-b5c7-8316da5e186b.png)
+
 Admin Commands (for quest creation):
+
 ![image](https://user-images.githubusercontent.com/70709113/131539902-831a541c-7d2c-4e69-9843-2d5943be86cf.png)
+
 Admin Commands - Quest Editing:
+
 ![image](https://user-images.githubusercontent.com/70709113/131539973-8f6586a7-0108-4a92-9017-e06313145a02.png)
 
 
