@@ -39,7 +39,7 @@ You have to build this yourself and change the MySQL Database details (required)
   - NPC dies (good for Escort NPC Quests)
   - Enter World
   - Leave World
-- Probably plenty of more features which I forgot to add
+- There's a lot more, I'll add that later. Triggers are extremely flexible by the way. Each trigger has an option to trigger only for certain objectives if they are active, quests, or worlds.
 
 
 **Requirements to run this:**
@@ -52,5 +52,10 @@ You have to build this yourself and change the MySQL Database details (required)
 - Complete GUI for Admin Commands
 - Make Citizens optional
 - Customized Armor Stands instead of Citizen NPCs for better performance. They will also contain the quests assigned to them directly in a PDC. Both Armor Stands and NPCs will be usable.
+- Quest Timer Trigger
+- MythicMobs Integration (kinda works already if you use Triggers)
+- "Interactions" Plugin Integration
+- Placeholder Requirements
+- Technical: Give Quest NPCs the quests they offer directly (attach the quest names to the npc/to the trait) for performance boost
 
 I'm not a professional programmer and made this just for fun. Code quality is close to 0. You won't find any comments or javadocs either. I just decided to publish it because, why not.
