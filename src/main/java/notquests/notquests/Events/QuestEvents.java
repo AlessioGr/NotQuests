@@ -24,6 +24,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -230,28 +231,31 @@ public class QuestEvents implements Listener {
 
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     private void onBlockBreak(BlockBreakEvent e) {
-        final Player player = e.getPlayer();
-        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
-        if (questPlayer != null) {
-            if (questPlayer.getActiveQuests().size() > 0) {
-                for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-                    for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-                        if (activeObjective.isUnlocked()) {
-                            if (activeObjective.getObjective() instanceof BreakBlocksObjective) {
-                                if (((BreakBlocksObjective) activeObjective.getObjective()).getBlockToBreak().equals(e.getBlock().getType())) {
-                                    activeObjective.addProgress(1, -1);
+        if (!e.isCancelled()) {
+            final Player player = e.getPlayer();
+            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+            if (questPlayer != null) {
+                if (questPlayer.getActiveQuests().size() > 0) {
+                    for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+                        for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
+                            if (activeObjective.isUnlocked()) {
+                                if (activeObjective.getObjective() instanceof BreakBlocksObjective) {
+                                    if (((BreakBlocksObjective) activeObjective.getObjective()).getBlockToBreak().equals(e.getBlock().getType())) {
+                                        activeObjective.addProgress(1, -1);
+                                    }
                                 }
                             }
-                        }
 
+                        }
+                        activeQuest.removeCompletedObjectives(true);
                     }
-                    activeQuest.removeCompletedObjectives(true);
+                    questPlayer.removeCompletedQuests();
                 }
-                questPlayer.removeCompletedQuests();
             }
         }
+
     }
 
     @EventHandler
