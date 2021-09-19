@@ -35,22 +35,51 @@ public class DataManager {
      */
     private final NotQuests main;
     /**
-     * ArrayList for Command Tab Completions. They will be re-used where possible.
+     * ArrayList for Command Tab Completions. They will be re-used where possible. This is sort of like a buffer for completions.
+     * It does not return the real completions, but it's for example used in ObjectivesAdminCommand handleCompletions() which is
+     * called by the real Tab Completer CommandNotQuestsAdmin to split it up a little.
      */
     public final List<String> completions = new ArrayList<>();
+    /**
+     * ArrayList for Command Tab Completions for players. They will be re-used where possible.
+     */
     public final List<String> standardPlayerCompletions = new ArrayList<>();
+    /**
+     * ArrayList for Command Tab Completions for entity types. They will be initialized on startup be re-used where possible.
+     */
     public final List<String> standardEntityTypeCompletions = new ArrayList<>();
+    /**
+     * ArrayList for Command Tab Completions for numbers from -1 to 12. They will be initialized on startup be re-used where possible.
+     */
     public final List<String> numberCompletions = new ArrayList<>();
+    /**
+     * ArrayList for Command Tab Completions for numbers from 1 to 12. They will be initialized on startup be re-used where possible.
+     */
     public final List<String> numberPositiveCompletions = new ArrayList<>();
+    /**
+     * ArrayList for Command Tab Completions. They will be re-used where possible.
+     */
     public final List<String> partialCompletions = new ArrayList<>();
-    //MYSQL Database Connection Information
+    /**
+     * MYSQL Database Connection Information
+     */
     private String host, port, database, username, password;
-    //MYSQL Database Connection Objects
+    /**
+     * MYSQL Database Connection Object
+     */
     private Connection connection;
+    /**
+     * MYSQL Database Connection Object
+     */
     private Statement statement;
 
-    //Quests.yml Configuration
+    /**
+     * Quests.yml Configuration
+     */
     private FileConfiguration questsData;
+    /**
+     * Quests.yml Configuration File
+     */
     private File questsDataFile = null;
 
 
@@ -65,8 +94,13 @@ public class DataManager {
      */
     private boolean alreadyLoadedNPCs = false;
 
-    //General.yml Configuration
+    /**
+     * General.yml Configuration
+     */
     private File generalConfigFile = null;
+    /**
+     * General.yml Configuration File
+     */
     private FileConfiguration generalConfig;
 
     /**
