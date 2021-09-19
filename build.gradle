@@ -1,4 +1,5 @@
 plugins {
+    id 'com.github.johnrengelman.shadow' version '7.0.0'
     id 'java'
 }
 
@@ -38,8 +39,19 @@ dependencies {
     compileOnly 'net.citizensnpcs:citizens-main:2.0.28-SNAPSHOT'
     compileOnly 'me.clip:placeholderapi:2.10.10'
     compileOnly 'com.github.MilkBowl:VaultAPI:1.7'
-    compileOnly 'de.themoep:inventorygui:1.5-SNAPSHOT'
+    implementation 'de.themoep:inventorygui:1.5-SNAPSHOT'
 }
+
+
+shadowJar {
+
+    dependencies {
+        include dependency("de.themoep:inventorygui:1.5-SNAPSHOT")
+    }
+    relocate("de.themoep", "notquests.notquests.shaded.de.themoep")
+    minimize()
+}
+
 
 def targetJavaVersion = 16
 java {
