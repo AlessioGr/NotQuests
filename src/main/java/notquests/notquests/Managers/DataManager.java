@@ -30,12 +30,14 @@ import java.util.logging.Level;
  */
 public class DataManager {
 
-    //ArrayLists for Command Tab Completions. They will be re-used where possible.
-    public final List<String> completions = new ArrayList<>();
     /**
      * Instance of NotQuests is copied over
      */
     private final NotQuests main;
+    /**
+     * ArrayList for Command Tab Completions. They will be re-used where possible.
+     */
+    public final List<String> completions = new ArrayList<>();
     public final List<String> standardPlayerCompletions = new ArrayList<>();
     public final List<String> standardEntityTypeCompletions = new ArrayList<>();
     public final List<String> numberCompletions = new ArrayList<>();
