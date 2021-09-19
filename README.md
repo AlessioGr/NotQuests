@@ -5,11 +5,14 @@
 [![GitHub license](https://img.shields.io/github/license/AlessioGr/NotQuests)](https://github.com/AlessioGr/NotQuests/blob/main/LICENSE)
 <a href="https://quests.notnot.pro/"><img src="https://img.shields.io/badge/JavaDocs-Read%20now-yellow" alt="javadics"></a>
 
-NotQuests is a Minecraft 1.17.1 plugin for Paper.
+![Banner](https://user-images.githubusercontent.com/70709113/133943253-af271d49-441b-473e-8b95-6053fe5d09cb.png)
 
-I created it for my own server, mc.notnot.pro and planned to keep it private. However, I don't have enough time to maintain it myself, so I just made it public.
+NotQuests is a flexible, Minecraft 1.17.1 Quest plugin for Paper, featuring a complete GUI for player interactions, open & trusted source code and flexibility.
+---
 
-You can find the releases here: https://github.com/AlessioGr/NotQuests/releases. A MySQL database connection is required and needs to be specified in the general.yml in order for the plugin to work.
+I created NotQuests for my own server, mc.notnot.pro and planned to keep it private. However, I don't have enough time to maintain it myself, so I just made it public.
+
+You can find the releases here: https://github.com/AlessioGr/NotQuests/releases. A MySQL database connection is recommended and can be specified in the general.yml. Otherwise, SQLite will be used.
 
 **Images**
 
@@ -80,10 +83,14 @@ Admin Commands - Quest Editing:
 
 
 **Requirements to run this:**
-- Paper (Won't work on just spigot)
-- PlaceholderAPI
+- Paper 1.17.1 (Won't work on just spigot)
 - Vault
 - Citizens
+
+**Optional:**
+- MySQL Database (strongly recommended)
+- PlaceholderAPI
+
 
 **Future Plans**
 - Complete GUI for Admin Commands
