@@ -9,9 +9,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -168,16 +168,42 @@ public class DataManager {
          * generalConfig FileConfiguration object.
          */
         if (generalConfigFile == null) {
+
+            //Create the Data Folder if it does not exist yet (the NotQuests folder)
+            if(!main.getDataFolder().exists()){
+                main.getLogger().log(Level.INFO, "§aNotQuests > Data Folder not found. Creating a new one...");
+
+                if (!main.getDataFolder().mkdirs()) {
+                    main.getLogger().log(Level.SEVERE, "§cNotQuests > There was an error creating the NotQuests data folder");
+                    disablePluginAndSaving("There was an error creating the NotQuests data folder.");
+                    return;
+                }
+
+
+            }
+
             generalConfigFile = new File(main.getDataFolder(), "general.yml");
 
             if (!generalConfigFile.exists()) {
+                main.getLogger().log(Level.INFO, "§aNotQuests > General Configuration (general.yml) does not exist. Creating a new one...");
+
+                //Does not work yet, since comments are overridden if something is saved
+                //saveDefaultConfig();
+
+
                 try {
                     //Try to create the general.yml config file, and throw an error if it fails.
+
                     if (!generalConfigFile.createNewFile()) {
-                        main.getLogger().log(Level.SEVERE, "§aNotQuests > There was an error creating the general.yml config file.");
+                        main.getLogger().log(Level.SEVERE, "§cNotQuests > There was an error creating the general.yml config file. (1)");
+                        disablePluginAndSaving("There was an error creating the general.yml config file.");
+                        return;
+
                     }
-                } catch (IOException ioexception) {
-                    ioexception.printStackTrace();
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                    disablePluginAndSaving("There was an error creating the general.yml config file. (2)");
+                    return;
                 }
             }
 
@@ -192,6 +218,8 @@ public class DataManager {
         }
 
         //Load all the MySQL Database Connection information from the general.yml
+        configuration.setMySQLEnabled(getGeneralConfig().getBoolean("storage.database.enabled", false));
+
         configuration.setDatabaseHost(getGeneralConfig().getString("storage.database.host", ""));
         configuration.setDatabasePort(getGeneralConfig().getInt("storage.database.port", -1));
         configuration.setDatabaseName(getGeneralConfig().getString("storage.database.database", ""));
@@ -200,6 +228,13 @@ public class DataManager {
 
         //Verifies that the loaded information is not empty or null.
         boolean errored = false;
+        //For upgrades from older versions who didn't have the enable flag but still used MySQL
+        boolean mysqlstorageenabledbooleannotloadedyet = false;
+
+        if(!getGeneralConfig().isBoolean("storage.database.enabled")){
+            getGeneralConfig().set("storage.database.enabled", false);
+            mysqlstorageenabledbooleannotloadedyet = true;
+        }
 
         if (configuration.getDatabaseHost().equals("")) {
             getGeneralConfig().set("storage.database.host", "");
@@ -223,6 +258,17 @@ public class DataManager {
             errored = true;
         }
 
+        //For upgrades from older versions who didn't have the enable flag but still used MySQL
+        if(mysqlstorageenabledbooleannotloadedyet && !errored){
+            configuration.setMySQLEnabled(true);
+            getGeneralConfig().set("storage.database.enabled", true);
+        }
+
+        if(!configuration.isMySQLEnabled()){
+            //No need to error previous stuff, since SQLite will be used
+            errored = false;
+        }
+
 
 
         //Other values from general.yml
@@ -242,6 +288,62 @@ public class DataManager {
 
 
     }
+
+    /**
+     * Saves the default configuration files (Doesn't replace existing).
+     */
+    public void saveDefaultConfig() {
+        if (!this.generalConfigFile.exists()) {
+            System.out.println("AAA");
+            this.saveResource("general.yml", false);
+        }
+    }
+
+    /**
+     * This is used for the saving of the default config
+     *
+     * @param resourcePath path of the resource
+     * @param replace should replace existing resource file?
+     */
+    public void saveResource(@NotNull String resourcePath, boolean replace) {
+        if (!resourcePath.equals("")) {
+            resourcePath = resourcePath.replace('\\', '/');
+            InputStream in = main.getResource(resourcePath);
+            if (in == null) {
+                throw new IllegalArgumentException("The embedded resource '" + resourcePath + "' cannot be found in " + main.getDataFolder());
+            } else {
+                File outFile = new File(main.getDataFolder(), resourcePath);
+                int lastIndex = resourcePath.lastIndexOf(47);
+                File outDir = new File(main.getDataFolder(), resourcePath.substring(0, lastIndex >= 0 ? lastIndex : 0));
+                if (!outDir.exists()) {
+                    outDir.mkdirs();
+                }
+
+                try {
+                    if (outFile.exists() && !replace) {
+                        main.getLogger().log(Level.WARNING, "Could not save " + outFile.getName() + " to " + outFile + " because " + outFile.getName() + " already exists.");
+                    } else {
+                        OutputStream out = new FileOutputStream(outFile);
+                        byte[] buf = new byte[1024];
+
+                        int len;
+                        while((len = in.read(buf)) > 0) {
+                            out.write(buf, 0, len);
+                        }
+
+                        out.close();
+                        in.close();
+                    }
+                } catch (IOException var10) {
+                    main.getLogger().log(Level.SEVERE, "Could not save " + outFile.getName() + " to " + outFile, var10);
+                }
+
+            }
+        } else {
+            throw new IllegalArgumentException("ResourcePath cannot be null or empty");
+        }
+    }
+
 
     /**
      * This will try to save the general.yml configuration file with the data which is currently in the
@@ -553,15 +655,48 @@ public class DataManager {
      *
      */
     public void openConnection() {
+
+
+
         try {
             if (connection != null && !connection.isClosed()) {
                 return;
             }
-            // Class.forName("com.mysql.jdbc.Driver"); - Use this with old version of the Driver
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            connection = DriverManager.getConnection("jdbc:mysql://"
-                            + configuration.getDatabaseHost() + ":" + configuration.getDatabasePort() + "/" + configuration.getDatabaseName() + "?autoReconnect=true",
-                    configuration.getDatabaseUsername(), configuration.getDatabasePassword());
+
+
+            if(!getConfiguration().isMySQLEnabled()){
+                File dataFolder = new File(main.getDataFolder(), "database_sqlite.db");
+                if (!dataFolder.exists()){
+                    try {
+                        dataFolder.createNewFile();
+                    } catch (IOException e) {
+                        main.getLogger().log(Level.SEVERE, "File write error: database_sqlite.db");
+                    }
+                }
+                try {
+                    if(connection!=null&&!connection.isClosed()){
+                        return;
+                    }
+                    Class.forName("org.sqlite.JDBC");
+                    connection = DriverManager.getConnection("jdbc:sqlite:" + dataFolder);
+                    return;
+                } catch (SQLException ex) {
+                    main.getLogger().log(Level.SEVERE,"SQLite exception on initialize", ex);
+                } catch (ClassNotFoundException ex) {
+                    main.getLogger().log(Level.SEVERE, "You need the SQLite JBDC library. Google it. Put it in /lib folder.");
+                }
+                return;
+            }else{
+                // Class.forName("com.mysql.jdbc.Driver"); - Use this with old version of the Driver
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                connection = DriverManager.getConnection("jdbc:mysql://"
+                                + configuration.getDatabaseHost() + ":" + configuration.getDatabasePort() + "/" + configuration.getDatabaseName() + "?autoReconnect=true",
+                        configuration.getDatabaseUsername(), configuration.getDatabasePassword());
+            }
+
+
+
+
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             disablePluginAndSaving("Could not connect to MySQL Database. Please check the information you entered in the general.yml. A MySQL Database is NECESSARY for this plugin to work (as described on the spigot page).");
@@ -704,4 +839,6 @@ public class DataManager {
     public final Configuration getConfiguration(){
         return configuration;
     }
+
+
 }

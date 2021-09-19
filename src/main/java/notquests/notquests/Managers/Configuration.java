@@ -17,6 +17,7 @@ public class Configuration {
     private int port;
 
     private boolean questPreviewUseGUI = true;
+    private boolean mySQLEnabled = false;
 
     public Configuration(){
 
@@ -68,5 +69,13 @@ public class Configuration {
 
     public void setQuestPreviewUseGUI(final boolean questPreviewUseGUI) {
         this.questPreviewUseGUI = questPreviewUseGUI;
+    }
+
+    public final boolean isMySQLEnabled(){
+        return mySQLEnabled;
+    }
+
+    public void setMySQLEnabled(final boolean mySQLEnabled){
+        this.mySQLEnabled = mySQLEnabled;
     }
 }

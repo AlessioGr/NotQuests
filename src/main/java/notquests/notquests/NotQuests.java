@@ -116,11 +116,13 @@ public final class NotQuests extends JavaPlugin {
             if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
                 new QuestPlaceholders(this).register();
             }
+
+            //bStats statistics
+            final int pluginId = 12824; // <-- Replace with the id of your plugin!
+            metrics = new Metrics(this, pluginId);
         }
 
-        //bStats statistics
-        final int pluginId = 12824; // <-- Replace with the id of your plugin!
-        metrics = new Metrics(this, pluginId);
+
 
 
 
@@ -225,7 +227,7 @@ public final class NotQuests extends JavaPlugin {
             return false;
         }
         econ = rsp.getProvider();
-        return econ != null;
+        return true;
     }
 
 
@@ -236,8 +238,13 @@ public final class NotQuests extends JavaPlugin {
      */
     private boolean setupChat() {
         RegisteredServiceProvider<Chat> rsp = getServer().getServicesManager().getRegistration(Chat.class);
-        chat = rsp.getProvider();
-        return chat != null;
+        if(rsp != null){
+            chat = rsp.getProvider();
+            return true;
+        }else{
+            return false;
+        }
+
     }
 
     /**
@@ -247,8 +254,13 @@ public final class NotQuests extends JavaPlugin {
      */
     private boolean setupPermissions() {
         RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
-        perms = rsp.getProvider();
-        return perms != null;
+        if(rsp != null){
+            perms = rsp.getProvider();
+            return true;
+        }else{
+            return false;
+        }
+
     }
 
     /**

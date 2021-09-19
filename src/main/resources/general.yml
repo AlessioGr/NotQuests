@@ -1,0 +1,13 @@
+storage:
+  database:
+    # If this is set to false, SQLite will be used instead (no configuration needed)
+    enabled: false
+    host: ''
+    port: 3306
+    database: ''
+    username: ''
+    password: ''
+gui:
+  questpreview:
+    # If set to false, clickable text will be used for Quest Previews instead
+    enabled: true
