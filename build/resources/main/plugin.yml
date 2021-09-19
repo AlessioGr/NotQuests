@@ -1,0 +1,29 @@
+name: NotQuests
+version: '1.2.1'
+main: notquests.notquests.NotQuests
+api-version: 1.17
+authors: [ NoeX ]
+description: Flexible, open, GUI Quest Plugin for Minecraft 1.17.1 (Paper)
+website: quests.notnot.pro
+depend: [ Citizens ]
+softdepend: [ PlaceholderAPI, Vault ]
+commands:
+  notquestsadmin:
+    description: Edit quests
+    usage: /notquestsadmin
+    aliases: [ nquestsadmin, nquestadmin, notquestadmin, qadmin, questadmin, questsadmin, qa, qag ]
+    permission: notnot.quests.admin
+  notquests:
+    description: Accept quests
+    usage: /notquests
+    aliases: [ nquests, nquest, notquest, quest, quests, q, qg ]
+    permission: notnot.quests.use
+permissions:
+  notnot.quests.admin:
+    default: op
+    description: Gives the player permission to everything in the plugin.
+    children:
+      notnot.quests.use: true
+  notnot.quests.use:
+    default: op
+    description: Gives the player permission to use the /notquests user command. They can not create new quests or other administrative tasks with just this permission.
