@@ -530,15 +530,19 @@ public class DataManager {
 
                         main.getQuestPlayerManager().loadPlayerData();
 
-                        //IF an NPC exist, try to load NPC data.
-                        boolean foundNPC = false;
-                        for (final NPC ignored : CitizensAPI.getNPCRegistry().sorted()) {
-                            foundNPC = true;
-                            break;
+                        //Citizens stuff if Citizens is enabled
+                        if(main.isCitizensEnabled()){
+                            //IF an NPC exist, try to load NPC data.
+                            boolean foundNPC = false;
+                            for (final NPC ignored : CitizensAPI.getNPCRegistry().sorted()) {
+                                foundNPC = true;
+                                break;
+                            }
+                            if (foundNPC) {
+                                loadNPCData();
+                            }
                         }
-                        if (foundNPC) {
-                            loadNPCData();
-                        }
+
                     }
 
 

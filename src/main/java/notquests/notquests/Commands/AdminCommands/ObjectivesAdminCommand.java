@@ -68,28 +68,43 @@ public class ObjectivesAdminCommand {
                         sender.sendMessage("    §7Items to consume: §f" + ((ConsumeItemsObjective) objective).getItemToConsume().getType() + " (" + ((ConsumeItemsObjective) objective).getItemToConsume().getItemMeta().getDisplayName() + ")" + " §7x " + objective.getProgressNeeded());
                     } else if (objective instanceof DeliverItemsObjective) {
                         sender.sendMessage("    §7Items to deliver: §f" + ((DeliverItemsObjective) objective).getItemToCollect().getType() + " (" + ((DeliverItemsObjective) objective).getItemToCollect().getItemMeta().getDisplayName() + ")" + " §7x " + objective.getProgressNeeded());
-                        final NPC npc = CitizensAPI.getNPCRegistry().getById(((DeliverItemsObjective) objective).getRecipientNPCID());
-                        if (npc != null) {
-                            sender.sendMessage("    §7Deliver it to §f" + npc.getName());
-                        } else {
-                            sender.sendMessage("    §7The delivery NPC is currently not available!");
+                        if(main.isCitizensEnabled()){
+                            final NPC npc = CitizensAPI.getNPCRegistry().getById(((DeliverItemsObjective) objective).getRecipientNPCID());
+                            if (npc != null) {
+                                sender.sendMessage("    §7Deliver it to §f" + npc.getName());
+                            } else {
+                                sender.sendMessage("    §7The delivery NPC is currently not available!");
+                            }
+                        }else{
+                            sender.sendMessage("    §cError: Citizens plugin not installed. Contact an admin.");
                         }
-                    } else if (objective instanceof TalkToNPCObjective) {
-                        final NPC npc = CitizensAPI.getNPCRegistry().getById(((TalkToNPCObjective) objective).getNPCtoTalkID());
-                        if (npc != null) {
-                            sender.sendMessage("    §7Talk to §f" + npc.getName());
-                        } else {
-                            sender.sendMessage("    §7The target NPC is currently not available!");
-                        }
-                    } else if (objective instanceof EscortNPCObjective) {
-                        final NPC npc = CitizensAPI.getNPCRegistry().getById(((EscortNPCObjective) objective).getNpcToEscortID());
-                        final NPC npcDestination = CitizensAPI.getNPCRegistry().getById(((EscortNPCObjective) objective).getNpcToEscortToID());
 
-                        if (npc != null && npcDestination != null) {
-                            sender.sendMessage("    §7Escort §f" + npc.getName() + " §7to §f" + npcDestination.getName());
-                        } else {
-                            sender.sendMessage("    §7The target or destination NPC is currently not available!");
+                    } else if (objective instanceof TalkToNPCObjective) {
+                        if(main.isCitizensEnabled()){
+                            final NPC npc = CitizensAPI.getNPCRegistry().getById(((TalkToNPCObjective) objective).getNPCtoTalkID());
+                            if (npc != null) {
+                                sender.sendMessage("    §7Talk to §f" + npc.getName());
+                            } else {
+                                sender.sendMessage("    §7The target NPC is currently not available!");
+                            }
+                        }else{
+                            sender.sendMessage("    §cError: Citizens plugin not installed. Contact an admin.");
                         }
+
+                    } else if (objective instanceof EscortNPCObjective) {
+                        if(main.isCitizensEnabled()){
+                            final NPC npc = CitizensAPI.getNPCRegistry().getById(((EscortNPCObjective) objective).getNpcToEscortID());
+                            final NPC npcDestination = CitizensAPI.getNPCRegistry().getById(((EscortNPCObjective) objective).getNpcToEscortToID());
+
+                            if (npc != null && npcDestination != null) {
+                                sender.sendMessage("    §7Escort §f" + npc.getName() + " §7to §f" + npcDestination.getName());
+                            } else {
+                                sender.sendMessage("    §7The target or destination NPC is currently not available!");
+                            }
+                        }else{
+                            sender.sendMessage("    §cError: Citizens plugin not installed. Contact an admin.");
+                        }
+
                     }
                     sender.sendMessage("§aObjective DisplayName: §b" + objective.getObjectiveDisplayName());
                     sender.sendMessage("§aObjective Description: §b" + objective.getObjectiveDescription());
@@ -114,6 +129,10 @@ public class ObjectivesAdminCommand {
                 }
             } else if (args[3].equalsIgnoreCase("add")) {
                 if (args[4].equalsIgnoreCase("TalkToNPC")) {
+                    if(!main.isCitizensEnabled()){
+                        sender.sendMessage("§cError: Any kind of NPC stuff has been disabled, because you don't have the Citizens plugin installed on your server. You need to install the Citizens plugin in order for NPC stuff to work.");
+                        return;
+                    }
                     final int NPCID = Integer.parseInt(args[5]);
                     final NPC npc = CitizensAPI.getNPCRegistry().getById(NPCID);
                     if (npc != null) {
@@ -138,6 +157,10 @@ public class ObjectivesAdminCommand {
             showUsage(quest, sender, args);
             if (args[3].equalsIgnoreCase("add")) {
                 if (args[4].equalsIgnoreCase("EscortNPC")) {
+                    if(!main.isCitizensEnabled()){
+                        sender.sendMessage("§cError: Any kind of NPC stuff has been disabled, because you don't have the Citizens plugin installed on your server. You need to install the Citizens plugin in order for NPC stuff to work.");
+                        return;
+                    }
                     final int NPCID = Integer.parseInt(args[5]);
                     final int NPCDestinationID = Integer.parseInt(args[6]);
                     final NPC npc = CitizensAPI.getNPCRegistry().getById(NPCID);
@@ -429,6 +452,10 @@ public class ObjectivesAdminCommand {
 
 
                 } else if (args[4].equalsIgnoreCase("DeliverItems")) {
+                    if(!main.isCitizensEnabled()){
+                        sender.sendMessage("§cError: Any kind of NPC stuff has been disabled, because you don't have the Citizens plugin installed on your server. You need to install the Citizens plugin in order for NPC stuff to work.");
+                        return;
+                    }
                     final int NPCID = Integer.parseInt(args[7]);
                     final NPC npc = CitizensAPI.getNPCRegistry().getById(NPCID);
                     if (npc != null) {

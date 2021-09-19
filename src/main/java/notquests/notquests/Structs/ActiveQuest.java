@@ -236,20 +236,23 @@ public class ActiveQuest {
 
         for (final ActiveObjective activeObjective : getActiveObjectives()) {
             if (activeObjective.getObjective() instanceof EscortNPCObjective) {
-                final NPC npcToEscort = CitizensAPI.getNPCRegistry().getById(((EscortNPCObjective) activeObjective.getObjective()).getNpcToEscortID());
-                if (npcToEscort != null) {
-                    FollowTrait followerTrait = null;
-                    for (final Trait trait : npcToEscort.getTraits()) {
-                        if (trait.getName().toLowerCase().contains("follow")) {
-                            followerTrait = (FollowTrait) trait;
+                if(main.isCitizensEnabled()){
+                    final NPC npcToEscort = CitizensAPI.getNPCRegistry().getById(((EscortNPCObjective) activeObjective.getObjective()).getNpcToEscortID());
+                    if (npcToEscort != null) {
+                        FollowTrait followerTrait = null;
+                        for (final Trait trait : npcToEscort.getTraits()) {
+                            if (trait.getName().toLowerCase().contains("follow")) {
+                                followerTrait = (FollowTrait) trait;
+                            }
                         }
-                    }
-                    if (followerTrait != null) {
-                        npcToEscort.removeTrait(followerTrait.getClass());
-                    }
+                        if (followerTrait != null) {
+                            npcToEscort.removeTrait(followerTrait.getClass());
+                        }
 
-                    npcToEscort.despawn();
+                        npcToEscort.despawn();
+                    }
                 }
+
             }
         }
 

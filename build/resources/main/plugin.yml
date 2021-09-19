@@ -1,12 +1,11 @@
 name: NotQuests
-version: '1.3.0'
+version: '1.3.1'
 main: notquests.notquests.NotQuests
 api-version: 1.17
 authors: [ NoeX ]
 description: Flexible, open, GUI Quest Plugin for Minecraft 1.17.1 (Paper)
 website: quests.notnot.pro
-depend: [ Citizens ]
-softdepend: [ PlaceholderAPI, Vault ]
+softdepend: [ Citizens, Vault, PlaceholderAPI ]
 commands:
   notquestsadmin:
     description: Edit quests

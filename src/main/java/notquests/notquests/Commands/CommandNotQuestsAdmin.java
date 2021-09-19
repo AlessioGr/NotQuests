@@ -756,6 +756,10 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                             if (args[3].equalsIgnoreCase("add")) {
                                 sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6npcs add §3[NPCS ID] [ShowInNPC (yes/no)]");
                             } else if (args[3].equalsIgnoreCase("list")) {
+                                if(!main.isCitizensEnabled()){
+                                    sender.sendMessage("§cError: Any kind of NPC stuff has been disabled, because you don't have the Citizens plugin installed on your server. You need to install the Citizens plugin in order for NPC stuff to work.");
+                                    return true;
+                                }
                                 sender.sendMessage("§9NPCs bound to quest  §b" + quest.getQuestName() + "§9 with quest showing:");
                                 int counter = 1;
                                 for (NPC npc : quest.getAttachedNPCsWithQuestShowing()) {
@@ -768,6 +772,10 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                     counter++;
                                 }
                             } else if (args[3].equalsIgnoreCase("clear")) {
+                                if(!main.isCitizensEnabled()){
+                                    sender.sendMessage("§cError: Any kind of NPC stuff has been disabled, because you don't have the Citizens plugin installed on your server. You need to install the Citizens plugin in order for NPC stuff to work.");
+                                    return true;
+                                }
                                 quest.removeAllNPCs();
                                 sender.sendMessage("§aAll NPCs of quest §b" + quest.getQuestName() + " §ahave been removed!");
                             } else {
@@ -1068,6 +1076,10 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                             }
                         } else if (args[2].equalsIgnoreCase("npcs")) {
                             if (args[3].equalsIgnoreCase("add")) {
+                                if(!main.isCitizensEnabled()){
+                                    sender.sendMessage("§cError: Any kind of NPC stuff has been disabled, because you don't have the Citizens plugin installed on your server. You need to install the Citizens plugin in order for NPC stuff to work.");
+                                    return true;
+                                }
                                 int npcID = Integer.parseInt(args[4]);
 
                                 boolean showQuest = true;
@@ -1474,6 +1486,10 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                         if (args[2].equalsIgnoreCase("triggers")) {
                             if (args[3].equalsIgnoreCase("add")) {
                                 if (args[5].equalsIgnoreCase("NPCDEATH")) {
+                                    if(!main.isCitizensEnabled()){
+                                        sender.sendMessage("§cError: Any kind of NPC stuff has been disabled, because you don't have the Citizens plugin installed on your server. You need to install the Citizens plugin in order for NPC stuff to work.");
+                                        return true;
+                                    }
                                     final Action action = main.getQuestManager().getAction(args[4]);
                                     if (action != null) {
                                         int applyOn = -1;
@@ -1981,9 +1997,13 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                 if (args[0].equalsIgnoreCase("edit")) {
                     if (args[2].equalsIgnoreCase("triggers") && args[3].equalsIgnoreCase("add")) {
                         if (args[5].equalsIgnoreCase("NPCDEATH")) {
-                            for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
-                                main.getDataManager().completions.add("" + npc.getId());
+
+                            if(main.isCitizensEnabled()){
+                                for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
+                                    main.getDataManager().completions.add("" + npc.getId());
+                                }
                             }
+
                             StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
                             return main.getDataManager().partialCompletions;
 

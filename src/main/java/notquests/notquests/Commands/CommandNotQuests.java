@@ -492,27 +492,30 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                 }
 
                             } else {
-
-                                for (final NPC npc : main.getQuestManager().getAllNPCsAttackedToQuest(quest)) {
-                                    final Location npcLocation = npc.getEntity().getLocation();
-                                    if (npcLocation.getWorld().equals(((Player) sender).getWorld())) {
-                                        if (npcLocation.distance(((Player) sender).getLocation()) < 6) {
-                                            final String result = main.getQuestPlayerManager().acceptQuest(player, quest, true, true);
-                                            if (!result.equals("accepted")) {
-                                                sender.sendMessage(result);
-                                            } else {
-                                                sender.sendMessage("§aYou have successfully accepted the Quest §b" + quest.getQuestName() + "§a.");
-                                                if (!quest.getQuestDescription().equals("")) {
-                                                    sender.sendMessage("§eQuest description: §7" + quest.getQuestDescription());
+                                if(main.isCitizensEnabled()){
+                                    for (final NPC npc : main.getQuestManager().getAllNPCsAttackedToQuest(quest)) {
+                                        final Location npcLocation = npc.getEntity().getLocation();
+                                        if (npcLocation.getWorld().equals(((Player) sender).getWorld())) {
+                                            if (npcLocation.distance(((Player) sender).getLocation()) < 6) {
+                                                final String result = main.getQuestPlayerManager().acceptQuest(player, quest, true, true);
+                                                if (!result.equals("accepted")) {
+                                                    sender.sendMessage(result);
                                                 } else {
-                                                    sender.sendMessage("§eThis quest has no quest description.");
+                                                    sender.sendMessage("§aYou have successfully accepted the Quest §b" + quest.getQuestName() + "§a.");
+                                                    if (!quest.getQuestDescription().equals("")) {
+                                                        sender.sendMessage("§eQuest description: §7" + quest.getQuestDescription());
+                                                    } else {
+                                                        sender.sendMessage("§eThis quest has no quest description.");
+                                                    }
                                                 }
+                                                return true;
                                             }
-                                            return true;
                                         }
-                                    }
 
+                                    }
                                 }
+
+
                                 sender.sendMessage("§cAccepting the quest §b" + quest.getQuestName() + " §cis disabled with the /nquests take command.");
                             }
 
@@ -704,106 +707,109 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
 
                                 return true;
                             } else {
-                                for (NPC npc : main.getQuestManager().getAllNPCsAttackedToQuest(quest)) {
-                                    final Location npcLocation = npc.getEntity().getLocation();
-                                    if (npcLocation.getWorld().equals(((Player) sender).getWorld())) {
-                                        if (npcLocation.distance(((Player) sender).getLocation()) < 6) {
-                                            if (guiEnabled) {
-                                                String[] guiSetup = {
-                                                        "zxxxxxxxx",
-                                                        "x0123456x",
-                                                        "x789abcdx",
-                                                        "xefghijkx",
-                                                        "xlmnopqrx",
-                                                        "xxxxxxxxx"
-                                                };
+                                if(main.isCitizensEnabled()){
+                                    for (NPC npc : main.getQuestManager().getAllNPCsAttackedToQuest(quest)) {
+                                        final Location npcLocation = npc.getEntity().getLocation();
+                                        if (npcLocation.getWorld().equals(((Player) sender).getWorld())) {
+                                            if (npcLocation.distance(((Player) sender).getLocation()) < 6) {
+                                                if (guiEnabled) {
+                                                    String[] guiSetup = {
+                                                            "zxxxxxxxx",
+                                                            "x0123456x",
+                                                            "x789abcdx",
+                                                            "xefghijkx",
+                                                            "xlmnopqrx",
+                                                            "xxxxxxxxx"
+                                                    };
 
-                                                String displayName = quest.getQuestName();
-                                                if (!quest.getQuestDisplayName().equals("")) {
-                                                    displayName = quest.getQuestDisplayName();
+                                                    String displayName = quest.getQuestName();
+                                                    if (!quest.getQuestDisplayName().equals("")) {
+                                                        displayName = quest.getQuestDisplayName();
+                                                    }
+
+                                                    InventoryGui gui = new InventoryGui(main, player, "§9Preview for Quest §b" + displayName, guiSetup);
+                                                    gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
+
+
+                                                    String description = "§8???";
+                                                    if (!quest.getQuestDescription().equals("")) {
+                                                        description = "§8" + quest.getQuestDescription();
+                                                    }
+                                                    gui.addElement(new StaticGuiElement('1',
+                                                            new ItemStack(Material.BOOKSHELF),
+                                                            1, // Display a number as the item count
+                                                            click -> {
+
+                                                                return true; // returning true will cancel the click event and stop taking the item
+
+                                                            },
+                                                            "§eDescription",
+                                                            description
+
+
+                                                    ));
+
+                                                    String requirements = main.getQuestManager().getQuestRequirements(quest);
+
+
+                                                    gui.addElement(new StaticGuiElement('5',
+                                                            new ItemStack(Material.IRON_BARS),
+                                                            1, // Display a number as the item count
+                                                            click -> {
+
+                                                                return true; // returning true will cancel the click event and stop taking the item
+
+                                                            },
+                                                            "§cRequirements",
+                                                            requirements
+
+
+                                                    ));
+
+                                                    String finalDisplayName = displayName;
+                                                    gui.addElement(new StaticGuiElement('g',
+                                                            new ItemStack(Material.GREEN_WOOL),
+                                                            1, // Display a number as the item count
+                                                            click -> {
+                                                                player.chat("/q take " + quest.getQuestName());
+
+                                                                //click.getEvent().getWhoClicked().sendMessage(ChatColor.RED + "I am Redstone!");
+                                                                gui.close();
+                                                                return true; // returning true will cancel the click event and stop taking the item
+
+                                                            },
+                                                            "§b" + finalDisplayName,
+                                                            "§aClick to take the quest §b" + finalDisplayName + "§c!"
+
+
+                                                    ));
+                                                    gui.addElement(new StaticGuiElement('i',
+                                                            new ItemStack(Material.RED_WOOL),
+                                                            1, // Display a number as the item count
+                                                            click -> {
+                                                                gui.close();
+                                                                //click.getEvent().getWhoClicked().sendMessage(ChatColor.RED + "I am Redstone!");
+                                                                return true; // returning true will cancel the click event and stop taking the item
+
+                                                            },
+                                                            "§cClick to NOT take this quest",
+                                                            "§cand cancel this action"
+
+
+                                                    ));
+
+
+                                                    gui.show(player);
+                                                } else {
+                                                    main.getQuestManager().sendSingleQuestPreview((Player) sender, quest);
                                                 }
-
-                                                InventoryGui gui = new InventoryGui(main, player, "§9Preview for Quest §b" + displayName, guiSetup);
-                                                gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
-
-
-                                                String description = "§8???";
-                                                if (!quest.getQuestDescription().equals("")) {
-                                                    description = "§8" + quest.getQuestDescription();
-                                                }
-                                                gui.addElement(new StaticGuiElement('1',
-                                                        new ItemStack(Material.BOOKSHELF),
-                                                        1, // Display a number as the item count
-                                                        click -> {
-
-                                                            return true; // returning true will cancel the click event and stop taking the item
-
-                                                        },
-                                                        "§eDescription",
-                                                        description
-
-
-                                                ));
-
-                                                String requirements = main.getQuestManager().getQuestRequirements(quest);
-
-
-                                                gui.addElement(new StaticGuiElement('5',
-                                                        new ItemStack(Material.IRON_BARS),
-                                                        1, // Display a number as the item count
-                                                        click -> {
-
-                                                            return true; // returning true will cancel the click event and stop taking the item
-
-                                                        },
-                                                        "§cRequirements",
-                                                        requirements
-
-
-                                                ));
-
-                                                String finalDisplayName = displayName;
-                                                gui.addElement(new StaticGuiElement('g',
-                                                        new ItemStack(Material.GREEN_WOOL),
-                                                        1, // Display a number as the item count
-                                                        click -> {
-                                                            player.chat("/q take " + quest.getQuestName());
-
-                                                            //click.getEvent().getWhoClicked().sendMessage(ChatColor.RED + "I am Redstone!");
-                                                            gui.close();
-                                                            return true; // returning true will cancel the click event and stop taking the item
-
-                                                        },
-                                                        "§b" + finalDisplayName,
-                                                        "§aClick to take the quest §b" + finalDisplayName + "§c!"
-
-
-                                                ));
-                                                gui.addElement(new StaticGuiElement('i',
-                                                        new ItemStack(Material.RED_WOOL),
-                                                        1, // Display a number as the item count
-                                                        click -> {
-                                                            gui.close();
-                                                            //click.getEvent().getWhoClicked().sendMessage(ChatColor.RED + "I am Redstone!");
-                                                            return true; // returning true will cancel the click event and stop taking the item
-
-                                                        },
-                                                        "§cClick to NOT take this quest",
-                                                        "§cand cancel this action"
-
-
-                                                ));
-
-
-                                                gui.show(player);
-                                            } else {
-                                                main.getQuestManager().sendSingleQuestPreview((Player) sender, quest);
+                                                return true;
                                             }
-                                            return true;
                                         }
-                                    }
 
+                                    }
                                 }
+
                                 sender.sendMessage("§cPreviewing the quest §b" + quest.getQuestName() + " §cis disabled with the /nquests take command.");
                             }
                         } else {

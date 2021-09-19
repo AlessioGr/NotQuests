@@ -10,6 +10,7 @@ import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import notquests.notquests.Commands.CommandNotQuests;
 import notquests.notquests.Commands.CommandNotQuestsAdmin;
+import notquests.notquests.Events.CitizensEvents;
 import notquests.notquests.Events.QuestEvents;
 import notquests.notquests.Managers.DataManager;
 import notquests.notquests.Managers.QuestManager;
@@ -47,6 +48,7 @@ public final class NotQuests extends JavaPlugin {
 
     //Enabled Features
     private boolean vaultEnabled = false;
+    private boolean citizensEnabled = false;
 
     /**
      * Called when the plugin is enabled. A bunch of stuff is initialized here
@@ -55,7 +57,7 @@ public final class NotQuests extends JavaPlugin {
     public void onEnable() {
         getLogger().log(Level.INFO, "§aNotQuests > NotQuests is starting...");
 
-        //Vault is needed for NotQuests to function. If it's not found, NotQuests will be disabled.
+        //Vault is needed for NotQuests to function. If it's not found, NotQuests will be disabled. EDIT: Now it will just disable some features
         if (!setupEconomy()) {
             getLogger().log(Level.INFO, "§cVault Dependency not found! Some features have been disabled. I recommend you to install Vault for the best experience.");
             //getServer().getPluginManager().disablePlugin(this);
@@ -82,11 +84,15 @@ public final class NotQuests extends JavaPlugin {
         //Create a new instance of the QuestPlayer Manager which will be re-used everywhere
         questPlayerManager = new QuestPlayerManager(this);
 
-        //The plugin "Citizens" is currently required for NotQuests to run properly. If it's not found, NotQuests will be disabled.
+        //The plugin "Citizens" is currently required for NotQuests to run properly. If it's not found, NotQuests will be disabled. EDIT: Now it will just disable some features
         if (getServer().getPluginManager().getPlugin("Citizens") == null || !Objects.requireNonNull(getServer().getPluginManager().getPlugin("Citizens")).isEnabled()) {
-            getLogger().log(Level.SEVERE, "§cNotQuests > Citizens 2.0 not found or not enabled");
-            getServer().getPluginManager().disablePlugin(this);
-            return;
+            getLogger().log(Level.INFO, "§cCitizens Dependency not found! Some features regarding NPCs have been disabled. I recommend you to install Citizens for the best experience.");
+
+            //getLogger().log(Level.SEVERE, "§cNotQuests > Citizens 2.0 not found or not enabled");
+            //getServer().getPluginManager().disablePlugin(this);
+            //return;
+        }else{
+            citizensEnabled = true;
         }
 
         //Registering the nquestgiver Trait here has been commented out. I think I'm currently doing that somewhere else atm. So, this isn't needed at the moment.
@@ -113,6 +119,11 @@ public final class NotQuests extends JavaPlugin {
 
         //Register the Event Listeners in QuestEvents
         getServer().getPluginManager().registerEvents(new QuestEvents(this), this);
+
+        //Register the Event Listeners in CitizensEvents, if Citizens integration is enabled
+        if(isCitizensEnabled()){
+            getServer().getPluginManager().registerEvents(new CitizensEvents(this), this);
+        }
 
         //This finally starts loading all Config-, Quest-, and Player Data. Reload = Load
         dataManager.reloadData();
@@ -152,43 +163,49 @@ public final class NotQuests extends JavaPlugin {
         getDataManager().setAlreadyLoadedNPCs(false);
 
 
-        /*
-         * All Citizen NPCs which have quests attached to them have the Citizens NPC trait "nquestgiver".
-         * When the plugin is disabled right here, this piece of code will try removing this trait from all+
-         * NPCs which currently have this trait.
-         */
-        final ArrayList<Trait> traitsToRemove = new ArrayList<>();
-        for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
-            for (final Trait trait : npc.getTraits()) {
-                if (trait.getName().equalsIgnoreCase("nquestgiver")) {
-                    traitsToRemove.add(trait);
+       //Do Citizens stuff if the Citizens integration is enabled
+        if(isCitizensEnabled()){
+            /*
+             * All Citizen NPCs which have quests attached to them have the Citizens NPC trait "nquestgiver".
+             * When the plugin is disabled right here, this piece of code will try removing this trait from all+
+             * NPCs which currently have this trait.
+             */
+            final ArrayList<Trait> traitsToRemove = new ArrayList<>();
+            for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
+                for (final Trait trait : npc.getTraits()) {
+                    if (trait.getName().equalsIgnoreCase("nquestgiver")) {
+                        traitsToRemove.add(trait);
+
+                    }
+                }
+                for (final Trait traitToRemove : traitsToRemove) {
+                    npc.removeTrait(traitToRemove.getClass());
+                    getLogger().log(Level.INFO, "§aNotQuests > Removed nquestgiver trait from NPC with the ID §b" + npc.getId());
+                }
+                traitsToRemove.clear();
+
+            }
+
+            /*
+             * Next, the nquestgiver trait itself which is registered via the Citizens API on startup is being
+             * de-registered.
+             */
+            getLogger().log(Level.INFO, "§aNotQuests > Deregistering nquestgiver trait...");
+            final ArrayList<TraitInfo> toDeregister = new ArrayList<>();
+            for (final TraitInfo traitInfo : net.citizensnpcs.api.CitizensAPI.getTraitFactory().getRegisteredTraits()) {
+                if (traitInfo.getTraitName().equals("nquestgiver")) {
+                    toDeregister.add(traitInfo);
 
                 }
             }
-            for (final Trait traitToRemove : traitsToRemove) {
-                npc.removeTrait(traitToRemove.getClass());
-                getLogger().log(Level.INFO, "§aNotQuests > Removed nquestgiver trait from NPC with the ID §b" + npc.getId());
-            }
-            traitsToRemove.clear();
-
-        }
-
-        /*
-         * Next, the nquestgiver trait itself which is registered via the Citizens API on startup is being
-         * de-registered.
-         */
-        getLogger().log(Level.INFO, "§aNotQuests > Deregistering nquestgiver trait...");
-        final ArrayList<TraitInfo> toDeregister = new ArrayList<>();
-        for (final TraitInfo traitInfo : net.citizensnpcs.api.CitizensAPI.getTraitFactory().getRegisteredTraits()) {
-            if (traitInfo.getTraitName().equals("nquestgiver")) {
-                toDeregister.add(traitInfo);
-
+            //Actual nquestgiver trait de-registering happens here, to prevent a ConcurrentModificationException
+            for (final TraitInfo traitInfo : toDeregister) {
+                net.citizensnpcs.api.CitizensAPI.getTraitFactory().deregisterTrait(traitInfo);
             }
         }
-        //Actual nquestgiver trait de-registering happens here, to prevent a ConcurrentModificationException
-        for (final TraitInfo traitInfo : toDeregister) {
-            net.citizensnpcs.api.CitizensAPI.getTraitFactory().deregisterTrait(traitInfo);
-        }
+
+
+
 
     }
 
@@ -289,7 +306,7 @@ public final class NotQuests extends JavaPlugin {
      *
      * @return bStats Metrics object
      */
-    public final Metrics getMetrics() {
+    public Metrics getMetrics() {
         return metrics;
     }
 
@@ -298,8 +315,17 @@ public final class NotQuests extends JavaPlugin {
      *
      * @return if Vault is enabled
      */
-    public final boolean isVaultEnabled(){
+    public boolean isVaultEnabled(){
         return vaultEnabled;
+    }
+
+    /**
+     * Returns if Citizens integration is enabled or not. It's usually disabled when Citizens is not found on the Server.
+     *
+     * @return if Citizens is enabled
+     */
+    public boolean isCitizensEnabled(){
+        return citizensEnabled;
     }
 
 }
