@@ -1,9 +1,11 @@
 name: NotQuests
-version: ${project.version}
+version: '${version}'
 main: notquests.notquests.NotQuests
-depend: [ Citizens ]
 api-version: 1.17
 authors: [ NoeX ]
+description: Flexible, open, GUI Quest Plugin for Minecraft 1.17.1 (Paper)
+website: quests.notnot.pro
+depend: [ Citizens ]
 softdepend: [ PlaceholderAPI, Vault ]
 commands:
   notquestsadmin:
