@@ -122,12 +122,11 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                 questPointsAdminCommand.handleQuestPointsAdminCommand(sender, args);
             } else if (args.length == 1) {
                 if (args[0].equalsIgnoreCase("load") || args[0].equalsIgnoreCase("reload")) {
-                    main.getDataManager().reloadData();
-                    sender.sendMessage("§aNotQuests configuration has been loaded");
-                }
-                if (args[0].equalsIgnoreCase("save")) {
+                    main.getDataManager().loadGeneralConfig();
+                    sender.sendMessage("§aNotQuests general.yml configuration has been re-loaded. §7If you want to reload more, please use the ServerUtils plugin (available on spigot) or restart the server. This reload command is not finished yet and does not reload the quests file or the database.");
+                }else if (args[0].equalsIgnoreCase("save")) {
                     main.getDataManager().saveData();
-                    sender.sendMessage("§aNotQuests configuration has been saved");
+                    sender.sendMessage("§aNotQuests configuration and player data has been saved");
                 } else if (args[0].equalsIgnoreCase("listobjectivetypes")) {
                     sender.sendMessage("§eObjective Types:");
                     sender.sendMessage("§bBreakBlocks");

@@ -476,10 +476,9 @@ public class QuestManager {
     }
 
     public void sendQuestsPreviewOfQuestShownNPCs(NPC npc, Player player) {
-        final boolean guiEnabled = true;
         final ArrayList<Quest> questsAttachedToNPC = getQuestsAttachedToNPCWithShowing(npc);
 
-        if (guiEnabled) {
+        if (main.getDataManager().getConfiguration().isQuestPreviewUseGUI()) {
             String[] guiSetup = {
                     "xxxxxxxxx",
                     "xgggggggx",

@@ -60,10 +60,7 @@ public class DataManager {
      * ArrayList for Command Tab Completions. They will be re-used where possible.
      */
     public final List<String> partialCompletions = new ArrayList<>();
-    /**
-     * MYSQL Database Connection Information
-     */
-    private String host, port, database, username, password;
+
     /**
      * MYSQL Database Connection Object
      */
@@ -90,6 +87,12 @@ public class DataManager {
     private boolean savingEnabled = true;
 
     /**
+     * loadingEnabled is true by default. It will be set to false if any error happens when data is loaded from the Database.
+     * When this is set to false, no data will be loaded. This is to prevent trying to load data while the plugin is shutting down.
+     */
+    private boolean loadingEnabled = true;
+
+    /**
      * If this is set to false, the plugin will try to load NPCs once Citizens is re-loaded or enabled
      */
     private boolean alreadyLoadedNPCs = false;
@@ -104,6 +107,11 @@ public class DataManager {
     private FileConfiguration generalConfig;
 
     /**
+     * Configuration objects which contains values from General.yml
+     */
+    private Configuration configuration;
+
+    /**
      * The Data Manager is initialized here. This mainly creates some
      * Array List for generic Tab Completions for various commands.
      * <p>
@@ -113,6 +121,9 @@ public class DataManager {
      */
     public DataManager(NotQuests main) {
         this.main = main;
+
+        // create an instance of the Configuration object
+        configuration = new Configuration();
 
         /*
          * Fill up the numberCompletions Array List from 0-12 which will be
@@ -181,36 +192,47 @@ public class DataManager {
         }
 
         //Load all the MySQL Database Connection information from the general.yml
-        host = getGeneralConfig().getString("storage.database.host", "");
-        port = getGeneralConfig().getString("storage.database.port", "");
-        database = getGeneralConfig().getString("storage.database.database", "");
-        username = getGeneralConfig().getString("storage.database.username", "");
-        password = getGeneralConfig().getString("storage.database.password", "");
+        configuration.setDatabaseHost(getGeneralConfig().getString("storage.database.host", ""));
+        configuration.setDatabasePort(getGeneralConfig().getInt("storage.database.port", -1));
+        configuration.setDatabaseName(getGeneralConfig().getString("storage.database.database", ""));
+        configuration.setDatabaseUsername(getGeneralConfig().getString("storage.database.username", ""));
+        configuration.setDatabasePassword(getGeneralConfig().getString("storage.database.password", ""));
 
         //Verifies that the loaded information is not empty or null.
         boolean errored = false;
 
-        if (host.equals("")) {
+        if (configuration.getDatabaseHost().equals("")) {
             getGeneralConfig().set("storage.database.host", "");
             errored = true;
         }
-        if (port.equals("")) {
-            getGeneralConfig().set("storage.database.port", "");
-            errored = true;
+        if (configuration.getDatabasePort() == -1) {
+            getGeneralConfig().set("storage.database.port", 3306);
+            //errored = true;
+            configuration.setDatabasePort(3306);
         }
-        if (database.equals("")) {
+        if (configuration.getDatabaseName().equals("")) {
             getGeneralConfig().set("storage.database.database", "");
             errored = true;
         }
-        if (username.equals("")) {
+        if (configuration.getDatabaseUsername().equals("")) {
             getGeneralConfig().set("storage.database.username", "");
             errored = true;
         }
-        if (password.equals("")) {
+        if (configuration.getDatabasePassword().equals("")) {
             getGeneralConfig().set("storage.database.password", "");
             errored = true;
-
         }
+
+
+
+        //Other values from general.yml
+        if(!getGeneralConfig().isBoolean("gui.questpreview.enabled")){
+            getGeneralConfig().set("gui.questpreview.enabled", true);
+        }
+        configuration.setQuestPreviewUseGUI(getGeneralConfig().getBoolean("gui.questpreview.enabled"));
+
+
+
         saveGeneralConfig();
 
         //If there was an error loading data from general.yml, the plugin will be disabled
@@ -241,8 +263,9 @@ public class DataManager {
      * @param reason the reason for disabling saving and the plugin. Will be shown in the console error message
      */
     public void disablePluginAndSaving(final String reason) {
-        main.getLogger().log(Level.SEVERE, "§cNotQuests > Plugin and saving disabled. Reason: " + reason);
-        main.getDataManager().setSavingEnabled(false);
+        main.getLogger().log(Level.SEVERE, "§cNotQuests > Plugin, saving and loading has been disabled. Reason: " + reason);
+        setSavingEnabled(false);
+        setLoadingEnabled(false);
         main.getServer().getPluginManager().disablePlugin(main);
     }
 
@@ -294,30 +317,30 @@ public class DataManager {
         if (newTask) {
             if (Bukkit.isPrimaryThread()) {
                 Bukkit.getScheduler().runTaskAsynchronously(main, () -> {
+                    openConnection();
                     try {
-                        openConnection();
                         statement = connection.createStatement();
-                    } catch (ClassNotFoundException | SQLException e) {
+                    } catch (SQLException e) {
                         e.printStackTrace();
                     }
 
 
                 });
             } else {
+                openConnection();
                 try {
-                    openConnection();
                     statement = connection.createStatement();
-                } catch (ClassNotFoundException | SQLException e) {
+                } catch (SQLException e) {
                     e.printStackTrace();
                 }
 
 
             }
         } else {
+            openConnection();
             try {
-                openConnection();
                 statement = connection.createStatement();
-            } catch (ClassNotFoundException | SQLException e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
@@ -334,15 +357,102 @@ public class DataManager {
      * (5) Then it will try to load the Data from Citizens NPCs
      */
     public void reloadData() {
+        if(isLoadingEnabled()){
+            loadGeneralConfig();
 
-        loadGeneralConfig();
-        if (Bukkit.isPrimaryThread()) {
-            Bukkit.getScheduler().runTaskAsynchronously(main, () -> {
-                try {
+            //Check for isLoadingEnabled again, in case it changed during loading of the general config
+            if(!isLoadingEnabled()){
+                main.getLogger().log(Level.SEVERE, "§cNotQuests > Data loading has been skipped, because it has been disabled. This is because there was an error loading from the general config.");
+                return;
+            }
+
+            if (Bukkit.isPrimaryThread()) {
+                Bukkit.getScheduler().runTaskAsynchronously(main, () -> {
                     openConnection();
+                    if(connection == null){
+                        main.getLogger().log(Level.SEVERE, "§cNotQuests > There was a database error, so loading has been disabled.");
+                        return;
+                    }
+                    try {
+                        statement = connection.createStatement();
+                    } catch (SQLException e) {
+                        main.getLogger().log(Level.SEVERE, "§cNotQuests > There was a database error, so loading has been disabled.");
+                        e.printStackTrace();
+                        return;
+                    }
+
+
+                    //Create Database tables if they don't exist yet
+                    try {
+                        main.getLogger().log(Level.INFO, "§9NotQuests > §aCreating database table 'QuestPlayerData' if it doesn't exist yet...");
+                        statement.executeUpdate("CREATE TABLE IF NOT EXISTS `QuestPlayerData` (`PlayerUUID` varchar(200), `QuestPoints` BIGINT(255), PRIMARY KEY (PlayerUUID))");
+
+                        main.getLogger().log(Level.INFO, "§9NotQuests > §aCreating database table 'ActiveQuests' if it doesn't exist yet...");
+                        statement.executeUpdate("CREATE TABLE IF NOT EXISTS `ActiveQuests` (`QuestName` varchar(200), `PlayerUUID` varchar(200))");
+
+                        main.getLogger().log(Level.INFO, "§9NotQuests > §aCreating database table 'CompletedQuests' if it doesn't exist yet...");
+                        statement.executeUpdate("CREATE TABLE IF NOT EXISTS `CompletedQuests` (`QuestName` varchar(200), `PlayerUUID` varchar(200), `TimeCompleted` BIGINT(255))");
+
+                        main.getLogger().log(Level.INFO, "§9NotQuests > §aCreating database table 'ActiveObjectives' if it doesn't exist yet...");
+                        statement.executeUpdate("CREATE TABLE IF NOT EXISTS `ActiveObjectives` (`ObjectiveType` varchar(200), `QuestName` varchar(200), `PlayerUUID` varchar(200), `CurrentProgress` BIGINT(255), `ObjectiveID` INT(255), `HasBeenCompleted` BOOLEAN)");
+
+                        main.getLogger().log(Level.INFO, "§9NotQuests > §aCreating database table 'ActiveTriggers' if it doesn't exist yet...");
+
+                        statement.executeUpdate("CREATE TABLE IF NOT EXISTS `ActiveTriggers` (`TriggerType` varchar(200), `QuestName` varchar(200), `PlayerUUID` varchar(200), `CurrentProgress` BIGINT(255), `TriggerID` INT(255))");
+
+
+                    } catch (SQLException e) {
+                        main.getLogger().log(Level.SEVERE, "§9NotQuests > §cThere was an error while trying to load MySQL database tables! This is the stacktrace:");
+
+                        e.printStackTrace();
+                        main.getLogger().log(Level.SEVERE, "§cNotQuests > Plugin disabled, because there was an error while initializing tables.");
+                        main.getDataManager().setSavingEnabled(false);
+                        main.getServer().getPluginManager().disablePlugin(main);
+                    }
+
+                    if (isSavingEnabled()) {
+                        main.getLogger().log(Level.INFO, "§aNotQuests > Loaded player data");
+
+                        if (questsDataFile == null) {
+                            questsDataFile = new File(main.getDataFolder(), "quests.yml");
+                            questsData = YamlConfiguration.loadConfiguration(questsDataFile);
+                            main.getLogger().log(Level.INFO, "§aNotQuests > First load of quests.yml. Loading data from it...");
+                            main.getQuestManager().loadData();
+
+                        } else {
+                            questsData = YamlConfiguration.loadConfiguration(questsDataFile);
+                            main.getLogger().log(Level.INFO, "§aNotQuests > Loading Data from existing quests.yml...");
+                            main.getQuestManager().loadData();
+
+                        }
+
+                        main.getQuestPlayerManager().loadPlayerData();
+
+                        //IF an NPC exist, try to load NPC data.
+                        boolean foundNPC = false;
+                        for (final NPC ignored : CitizensAPI.getNPCRegistry().sorted()) {
+                            foundNPC = true;
+                            break;
+                        }
+                        if (foundNPC) {
+                            loadNPCData();
+                        }
+                    }
+
+
+                });
+            } else { //If this is already an asynchronous thread, this else{ thingy does not try to create a new asynchronous thread for better performance. The contents of this else section is identical.2
+                openConnection();
+                if(connection == null){
+                    main.getLogger().log(Level.SEVERE, "§cNotQuests > There was a database error, so loading has been disabled.");
+                    return;
+                }
+                try {
                     statement = connection.createStatement();
-                } catch (ClassNotFoundException | SQLException e) {
+                } catch (SQLException e) {
                     e.printStackTrace();
+                    main.getLogger().log(Level.SEVERE, "§cNotQuests > There was a database error, so loading has been disabled.");
+                    return;
                 }
 
 
@@ -360,11 +470,6 @@ public class DataManager {
                     main.getLogger().log(Level.INFO, "§9NotQuests > §aCreating database table 'ActiveObjectives' if it doesn't exist yet...");
                     statement.executeUpdate("CREATE TABLE IF NOT EXISTS `ActiveObjectives` (`ObjectiveType` varchar(200), `QuestName` varchar(200), `PlayerUUID` varchar(200), `CurrentProgress` BIGINT(255), `ObjectiveID` INT(255), `HasBeenCompleted` BOOLEAN)");
 
-                    main.getLogger().log(Level.INFO, "§9NotQuests > §aCreating database table 'ActiveTriggers' if it doesn't exist yet...");
-
-                    statement.executeUpdate("CREATE TABLE IF NOT EXISTS `ActiveTriggers` (`TriggerType` varchar(200), `QuestName` varchar(200), `PlayerUUID` varchar(200), `CurrentProgress` BIGINT(255), `TriggerID` INT(255))");
-
-
                 } catch (SQLException e) {
                     main.getLogger().log(Level.SEVERE, "§9NotQuests > §cThere was an error while trying to load MySQL database tables! This is the stacktrace:");
 
@@ -375,19 +480,18 @@ public class DataManager {
                 }
 
                 if (isSavingEnabled()) {
+
                     main.getLogger().log(Level.INFO, "§aNotQuests > Loaded player data");
 
                     if (questsDataFile == null) {
                         questsDataFile = new File(main.getDataFolder(), "quests.yml");
                         questsData = YamlConfiguration.loadConfiguration(questsDataFile);
-                        main.getLogger().log(Level.INFO, "§aNotQuests > First load of quests.yml. Loading data from it...");
                         main.getQuestManager().loadData();
-
+                        main.getLogger().log(Level.INFO, "§aNotQuests > First load of quests.yml");
                     } else {
                         questsData = YamlConfiguration.loadConfiguration(questsDataFile);
-                        main.getLogger().log(Level.INFO, "§aNotQuests > Loading Data from existing quests.yml...");
                         main.getQuestManager().loadData();
-
+                        main.getLogger().log(Level.INFO, "§aNotQuests > Loading Data from existing quests.yml");
                     }
 
                     main.getQuestPlayerManager().loadPlayerData();
@@ -401,71 +505,14 @@ public class DataManager {
                     if (foundNPC) {
                         loadNPCData();
                     }
+
                 }
-
-
-            });
-        } else { //If this is already an asynchronous thread, this else{ thingy does not try to create a new asynchronous thread for better performance. The contents of this else section is identical.2
-            try {
-                openConnection();
-                statement = connection.createStatement();
-            } catch (ClassNotFoundException | SQLException e) {
-                e.printStackTrace();
             }
+        }else{
+            main.getLogger().log(Level.SEVERE, "§cNotQuests > Data loading has been skipped, because it has been disabled. This might be caused because of an error during plugin startup earlier.");
 
-
-            //Create Database tables if they don't exist yet
-            try {
-                main.getLogger().log(Level.INFO, "§9NotQuests > §aCreating database table 'QuestPlayerData' if it doesn't exist yet...");
-                statement.executeUpdate("CREATE TABLE IF NOT EXISTS `QuestPlayerData` (`PlayerUUID` varchar(200), `QuestPoints` BIGINT(255), PRIMARY KEY (PlayerUUID))");
-
-                main.getLogger().log(Level.INFO, "§9NotQuests > §aCreating database table 'ActiveQuests' if it doesn't exist yet...");
-                statement.executeUpdate("CREATE TABLE IF NOT EXISTS `ActiveQuests` (`QuestName` varchar(200), `PlayerUUID` varchar(200))");
-
-                main.getLogger().log(Level.INFO, "§9NotQuests > §aCreating database table 'CompletedQuests' if it doesn't exist yet...");
-                statement.executeUpdate("CREATE TABLE IF NOT EXISTS `CompletedQuests` (`QuestName` varchar(200), `PlayerUUID` varchar(200), `TimeCompleted` BIGINT(255))");
-
-                main.getLogger().log(Level.INFO, "§9NotQuests > §aCreating database table 'ActiveObjectives' if it doesn't exist yet...");
-                statement.executeUpdate("CREATE TABLE IF NOT EXISTS `ActiveObjectives` (`ObjectiveType` varchar(200), `QuestName` varchar(200), `PlayerUUID` varchar(200), `CurrentProgress` BIGINT(255), `ObjectiveID` INT(255), `HasBeenCompleted` BOOLEAN)");
-
-            } catch (SQLException e) {
-                main.getLogger().log(Level.SEVERE, "§9NotQuests > §cThere was an error while trying to load MySQL database tables! This is the stacktrace:");
-
-                e.printStackTrace();
-                main.getLogger().log(Level.SEVERE, "§cNotQuests > Plugin disabled, because there was an error while initializing tables.");
-                main.getDataManager().setSavingEnabled(false);
-                main.getServer().getPluginManager().disablePlugin(main);
-            }
-
-            if (isSavingEnabled()) {
-
-                main.getLogger().log(Level.INFO, "§aNotQuests > Loaded player data");
-
-                if (questsDataFile == null) {
-                    questsDataFile = new File(main.getDataFolder(), "quests.yml");
-                    questsData = YamlConfiguration.loadConfiguration(questsDataFile);
-                    main.getQuestManager().loadData();
-                    main.getLogger().log(Level.INFO, "§aNotQuests > First load of quests.yml");
-                } else {
-                    questsData = YamlConfiguration.loadConfiguration(questsDataFile);
-                    main.getQuestManager().loadData();
-                    main.getLogger().log(Level.INFO, "§aNotQuests > Loading Data from existing quests.yml");
-                }
-
-                main.getQuestPlayerManager().loadPlayerData();
-
-                //IF an NPC exist, try to load NPC data.
-                boolean foundNPC = false;
-                for (final NPC ignored : CitizensAPI.getNPCRegistry().sorted()) {
-                    foundNPC = true;
-                    break;
-                }
-                if (foundNPC) {
-                    loadNPCData();
-                }
-
-            }
         }
+
 
 
     }
@@ -504,19 +551,22 @@ public class DataManager {
      * <p>
      * This is where it tries to log-in to the Database.
      *
-     * @throws SQLException
-     * @throws ClassNotFoundException
      */
-    public void openConnection() throws SQLException,
-            ClassNotFoundException {
-        if (connection != null && !connection.isClosed()) {
-            return;
+    public void openConnection() {
+        try {
+            if (connection != null && !connection.isClosed()) {
+                return;
+            }
+            // Class.forName("com.mysql.jdbc.Driver"); - Use this with old version of the Driver
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connection = DriverManager.getConnection("jdbc:mysql://"
+                            + configuration.getDatabaseHost() + ":" + configuration.getDatabasePort() + "/" + configuration.getDatabaseName() + "?autoReconnect=true",
+                    configuration.getDatabaseUsername(), configuration.getDatabasePassword());
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            disablePluginAndSaving("Could not connect to MySQL Database. Please check the information you entered in the general.yml. A MySQL Database is NECESSARY for this plugin to work (as described on the spigot page).");
         }
-        // Class.forName("com.mysql.jdbc.Driver"); - Use this with old version of the Driver
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        connection = DriverManager.getConnection("jdbc:mysql://"
-                        + this.host + ":" + this.port + "/" + this.database + "?autoReconnect=true",
-                this.username, this.password);
+
     }
 
 
@@ -533,7 +583,7 @@ public class DataManager {
     /**
      * @return if the plugin will try to save data once it's disabled.
      * This should be true unless a severe error occurred during data
-     * loading-
+     * loading
      */
     public final boolean isSavingEnabled() {
         return savingEnabled;
@@ -542,10 +592,25 @@ public class DataManager {
     /**
      * @param savingEnabled sets if data saving should be enabled or disabled
      */
-    public void setSavingEnabled(boolean savingEnabled) {
+    public void setSavingEnabled(final boolean savingEnabled) {
         this.savingEnabled = savingEnabled;
     }
 
+    /**
+     * @return if the plugin will try to load data.
+     * This should be true unless a severe error occurred during data
+     * loading
+     */
+    public final boolean isLoadingEnabled() {
+        return loadingEnabled;
+    }
+
+    /**
+     * @param loadingEnabled sets if data loading should be enabled or disabled
+     */
+    public void setLoadingEnabled(final boolean loadingEnabled) {
+        this.loadingEnabled = loadingEnabled;
+    }
 
     /**
      * This will load the Data from Citizens NPCs asynchronously. It will also make sure
@@ -631,5 +696,12 @@ public class DataManager {
      */
     public final UUID getOfflineUUID(final String playerName) {
         return Bukkit.getOfflinePlayer(playerName).getUniqueId();
+    }
+
+    /**
+     * @return the configuration object which contains values from the General.yml
+     */
+    public final Configuration getConfiguration(){
+        return configuration;
     }
 }

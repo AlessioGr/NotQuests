@@ -107,10 +107,13 @@ public final class NotQuests extends JavaPlugin {
         //This finally starts loading all Config-, Quest-, and Player Data. Reload = Load
         dataManager.reloadData();
 
-        //This registers all PlaceholderAPI placeholders
-        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            new QuestPlaceholders(this).register();
+        //This registers all PlaceholderAPI placeholders, if loading is enabled
+        if(getDataManager().isLoadingEnabled()){
+            if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+                new QuestPlaceholders(this).register();
+            }
         }
+
 
     }
 
