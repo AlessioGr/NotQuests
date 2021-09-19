@@ -13,6 +13,10 @@ repositories {
         url = 'https://papermc.io/repo/repository/maven-public/'
     }
     maven {
+        name = 'spigot repo (bstats)'
+        url = 'https://hub.spigotmc.org/nexus/content/groups/public/'
+    }
+    maven {
         name = 'sonatype'
         url = 'https://oss.sonatype.org/content/groups/public/'
     }
@@ -36,6 +40,7 @@ repositories {
 
 dependencies {
     compileOnly 'io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT'
+    implementation 'org.bstats:bstats-bukkit:2.2.1'
     compileOnly 'net.citizensnpcs:citizens-main:2.0.28-SNAPSHOT'
     compileOnly 'me.clip:placeholderapi:2.10.10'
     compileOnly 'com.github.MilkBowl:VaultAPI:1.7'
@@ -47,9 +52,18 @@ shadowJar {
 
     dependencies {
         include dependency("de.themoep:inventorygui:1.5-SNAPSHOT")
+        include dependency('org.bstats:bstats-bukkit')
+        include dependency('org.bstats:bstats-base')
     }
-    relocate("de.themoep", "notquests.notquests.shaded.de.themoep")
-    minimize()
+    dependencies {
+        relocate("de.themoep", "notquests.notquests.shaded.de.themoep")
+        relocate("org.bstats.bukkit", "notquests.notquests.shaded.org.bstats")
+        relocate("org.bstats", "notquests.notquests.shaded.org.bstats")
+
+    }
+    archiveClassifier.set(null)
+
+
 }
 
 

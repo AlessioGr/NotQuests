@@ -15,6 +15,7 @@ import notquests.notquests.Managers.DataManager;
 import notquests.notquests.Managers.QuestManager;
 import notquests.notquests.Managers.QuestPlayerManager;
 import notquests.notquests.Placeholders.QuestPlaceholders;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -40,6 +41,9 @@ public final class NotQuests extends JavaPlugin {
     private Economy econ = null;
     private Permission perms = null;
     private Chat chat = null;
+
+    //Metrics
+    private Metrics metrics;
 
     /**
      * Called when the plugin is enabled. A bunch of stuff is initialized here
@@ -113,6 +117,12 @@ public final class NotQuests extends JavaPlugin {
                 new QuestPlaceholders(this).register();
             }
         }
+
+        //bStats statistics
+        final int pluginId = 12824; // <-- Replace with the id of your plugin!
+        metrics = new Metrics(this, pluginId);
+
+
 
 
     }
@@ -248,5 +258,15 @@ public final class NotQuests extends JavaPlugin {
      */
     public Economy getEconomy() {
         return econ;
+    }
+
+
+    /**
+     * Returns an instance of the bStats Metrics object
+     *
+     * @return bStats Metrics object
+     */
+    public final Metrics getMetrics() {
+        return metrics;
     }
 }
