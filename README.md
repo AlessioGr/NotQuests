@@ -83,7 +83,7 @@ Admin Commands - Quest Editing:
 
 
 **Requirements to run this:**
-- Paper 1.17.1 (Won't work on just spigot)
+- Paper 1.17.1 (Won't work on just spigot because the native Paper Kyori ChatComponents are used)
 
 
 **Optional:**
