@@ -1,10 +1,5 @@
-/**
- * This is the entry point of NotQuests. All kinds of managers, commands and other shit is reistered here.
- *
- * @author Alessio Gravili
- */
-package notquests.notquests;
 
+package notquests.notquests;
 
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
@@ -21,6 +16,7 @@ import notquests.notquests.Managers.QuestManager;
 import notquests.notquests.Managers.QuestPlayerManager;
 import notquests.notquests.Placeholders.QuestPlaceholders;
 import org.bukkit.Bukkit;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -28,7 +24,11 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.logging.Level;
 
-
+/**
+ * This is the entry point of NotQuests. All kinds of managers, commands and other shit is reistered here.
+ *
+ * @author Alessio Gravili
+ */
 public final class NotQuests extends JavaPlugin {
 
     //Managers
@@ -84,14 +84,22 @@ public final class NotQuests extends JavaPlugin {
 
 
         //Register the notquestsadmin command & tab completer. This command will be used by Admins
-        CommandNotQuestsAdmin commandNotQuestsAdmin = new CommandNotQuestsAdmin(this);
-        this.getCommand("notquestsadmin").setExecutor(commandNotQuestsAdmin);
-        this.getCommand("notquestsadmin").setTabCompleter(commandNotQuestsAdmin);
+        final PluginCommand notQuestsAdminCommand = getCommand("notquestsadmin");
+        if (notQuestsAdminCommand != null) {
+            final CommandNotQuestsAdmin commandNotQuestsAdmin = new CommandNotQuestsAdmin(this);
+            notQuestsAdminCommand.setTabCompleter(commandNotQuestsAdmin);
+            notQuestsAdminCommand.setExecutor(commandNotQuestsAdmin);
+        }
+
 
         //Register the notquests command & tab completer. This command will be used by Players
-        CommandNotQuests commandNotQuests = new CommandNotQuests(this);
-        this.getCommand("notquests").setExecutor(commandNotQuests);
-        this.getCommand("notquests").setTabCompleter(commandNotQuests);
+        final PluginCommand notQuestsCommand = getCommand("notquests");
+        if (notQuestsCommand != null) {
+            final CommandNotQuests commandNotQuests = new CommandNotQuests(this);
+            notQuestsCommand.setExecutor(commandNotQuests);
+            notQuestsCommand.setTabCompleter(commandNotQuests);
+        }
+
 
         //Register the Event Listeners in QuestEvents
         getServer().getPluginManager().registerEvents(new QuestEvents(this), this);
@@ -168,7 +176,7 @@ public final class NotQuests extends JavaPlugin {
      *
      * @return an instance of the Quest Manager
      */
-    public final QuestManager getQuestManager() {
+    public QuestManager getQuestManager() {
         return questManager;
     }
 
@@ -177,7 +185,7 @@ public final class NotQuests extends JavaPlugin {
      *
      * @return an instance of the QuestPlayer Manager
      */
-    public final QuestPlayerManager getQuestPlayerManager() {
+    public QuestPlayerManager getQuestPlayerManager() {
         return questPlayerManager;
     }
 
@@ -186,7 +194,7 @@ public final class NotQuests extends JavaPlugin {
      *
      * @return an instance of the Data Manager
      */
-    public final DataManager getDataManager() {
+    public DataManager getDataManager() {
         return dataManager;
     }
 
@@ -235,7 +243,7 @@ public final class NotQuests extends JavaPlugin {
      *
      * @return an instance of Economy which has been set up in setupEconomy()
      */
-    public final Economy getEconomy() {
+    public Economy getEconomy() {
         return econ;
     }
 }

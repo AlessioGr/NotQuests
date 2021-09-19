@@ -1,10 +1,3 @@
-/**
- * This is the Data Manager which handles loading and saving Player Data, Quest Data and Configurations.
- * The Configuration files 'quests.yml' and 'general.yml' are created here.
- * The MySQL Database is also created here.
- *
- * @author Alessio Gravili
- */
 package notquests.notquests.Managers;
 
 import net.citizensnpcs.api.CitizensAPI;
@@ -28,20 +21,26 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 
-
+/**
+ * This is the Data Manager which handles loading and saving Player Data, Quest Data and Configurations.
+ * The Configuration files 'quests.yml' and 'general.yml' are created here.
+ * The MySQL Database is also created here.
+ *
+ * @author Alessio Gravili
+ */
 public class DataManager {
 
     //ArrayLists for Command Tab Completions. They will be re-used where possible.
-    public final List<String> completions = new ArrayList<String>();
+    public final List<String> completions = new ArrayList<>();
     /**
      * Instance of NotQuests is copied over
      */
     private final NotQuests main;
-    public final List<String> standardPlayerCompletions = new ArrayList<String>();
-    public final List<String> standardEntityTypeCompletions = new ArrayList<String>();
-    public final List<String> numberCompletions = new ArrayList<String>();
-    public final List<String> numberPositiveCompletions = new ArrayList<String>();
-    public final List<String> partialCompletions = new ArrayList<String>();
+    public final List<String> standardPlayerCompletions = new ArrayList<>();
+    public final List<String> standardEntityTypeCompletions = new ArrayList<>();
+    public final List<String> numberCompletions = new ArrayList<>();
+    public final List<String> numberPositiveCompletions = new ArrayList<>();
+    public final List<String> partialCompletions = new ArrayList<>();
     //MYSQL Database Connection Information
     private String host, port, database, username, password;
     //MYSQL Database Connection Objects
@@ -126,8 +125,10 @@ public class DataManager {
 
             if (!generalConfigFile.exists()) {
                 try {
-                    generalConfigFile.createNewFile();
-
+                    //Try to create the general.yml config file, and throw an error if it fails.
+                    if (!generalConfigFile.createNewFile()) {
+                        main.getLogger().log(Level.SEVERE, "§aNotQuests > There was an error creating the general.yml config file.");
+                    }
                 } catch (IOException ioexception) {
                     ioexception.printStackTrace();
                 }

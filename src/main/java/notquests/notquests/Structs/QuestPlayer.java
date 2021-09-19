@@ -17,6 +17,14 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * The QuestPlayer Object is initialized for every player, once they join the server - loading its data from the database.
+ * It contains all kinds of player data for that player, like active quests, completed quests and quest points.
+ * Completed Quests are saved too, for things like Quest History (Future feature), or handling the maxAccepts per quest /
+ * the quest cooldown.
+ *
+ * @author Alessio Gravili
+ */
 public class QuestPlayer {
     private final NotQuests main;
 

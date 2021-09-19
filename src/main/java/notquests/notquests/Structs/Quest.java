@@ -17,6 +17,15 @@ import notquests.notquests.Structs.Triggers.TriggerTypes.WorldLeaveTrigger;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
+/**
+ * The Quest object is loaded at the start from whatever is defined in the quests.yml. It contains all data which defines
+ * a quest, but no data of active quests (like the progress). The data it contains consists of the name, rewards, objectives,
+ * requirements, triggers, quest npcs and much more - basically everything which can be configured in the /questsadmin command.
+ * <p>
+ * This data is saved into the quests.yml - not into the database.
+ *
+ * @author Alessio Gravili
+ */
 public class Quest {
     private final NotQuests main;
     private final String questName;
@@ -55,11 +64,9 @@ public class Quest {
         rewards.add(reward);
         main.getDataManager().getQuestsData().set("quests." + questName + ".rewards." + rewards.size() + ".rewardType", reward.getRewardType().toString());
 
-        if (reward instanceof CommandReward) {
-            CommandReward commandReward = (CommandReward) reward;
+        if (reward instanceof CommandReward commandReward) {
             main.getDataManager().getQuestsData().set("quests." + questName + ".rewards." + rewards.size() + ".specifics.consoleCommand", commandReward.getConsoleCommand());
-        } else if (reward instanceof QuestPointsReward) {
-            QuestPointsReward commandReward = (QuestPointsReward) reward;
+        } else if (reward instanceof QuestPointsReward commandReward) {
             main.getDataManager().getQuestsData().set("quests." + questName + ".rewards." + rewards.size() + ".specifics.rewardedQuestPoints", commandReward.getRewardedQuestPoints());
         }
 
@@ -88,6 +95,7 @@ public class Quest {
         for (Objective objective1 : objectives) {
             if (objective.getObjectiveID() == objective1.getObjectiveID()) {
                 dupeID = true;
+                break;
             }
         }
 
@@ -224,7 +232,7 @@ public class Quest {
     }
 
     public void removeAllNPCs() {
-        final ArrayList<NPC> arrayList = new ArrayList<NPC>(attachedNPCsWithQuestShowing);
+        final ArrayList<NPC> arrayList = new ArrayList<>(attachedNPCsWithQuestShowing);
         arrayList.addAll(attachedNPCsWithoutQuestShowing);
         for (NPC npc : arrayList) {
             if (main.getQuestManager().getQuestsAttachedToNPC(npc).size() == 1) {
@@ -253,6 +261,7 @@ public class Quest {
         for (Trait trait : npc.getTraits()) {
             if (trait.getName().contains("questgiver")) {
                 hasTrait = true;
+                break;
             }
         }
         if (!npc.hasTrait(QuestGiverNPCTrait.class) && !hasTrait) {

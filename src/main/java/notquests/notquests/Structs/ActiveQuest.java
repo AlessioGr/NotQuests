@@ -17,6 +17,15 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 
+/**
+ * This is a special object for active quests. Apart from the Quest itself, it stores additional objects to track the quest progress.
+ * This includes the active objectives and completed objectives, as well as triggers and the quest player who accepted the Quest.
+ * <p>
+ * All this information is saved in the Database, so the Player can continue from where they left off if the server or the plugin
+ * restarts.
+ *
+ * @author Alessio Gravili
+ */
 public class ActiveQuest {
     private final NotQuests main;
 

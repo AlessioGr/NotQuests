@@ -17,6 +17,16 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
+/**
+ * This is a special object for active objectives. Apart from the main Objective object which stores information about what defines the objective itself,
+ * it contains other information like the ActiveQuest for which the objective is (the ActiveQuest object ALSO stores this ActiveObjective object, so they
+ * can access each other).
+ * <p>
+ * It also contains the progress and information about if this active objective has been completed - because there is NO CompletedObjective object. Completed
+ * objectives will still be instances of the ActiveObjective class.
+ *
+ * @author Alessio Gravili
+ */
 public class ActiveObjective {
     private final NotQuests main;
     private final Objective objective;

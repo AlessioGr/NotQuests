@@ -10,6 +10,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.plugin.java.JavaPlugin;
 
+/**
+ * This handles the QuestGiver NPC Trait which is given directly to Citizens NPCs via their API.
+ * A lot of things from this ugly class have been copy-and-pasted from their wiki.
+ * <p>
+ * Only NPCs which have quests attached to them should have this trait. There are several methods in the plugin which remove the trait
+ * from NPCs which do not have Quests stored on them - for example that cleanup runs when the plugin restarts.
+ * <p>
+ * Note: TODO: The available Quests are not stored in the NPC directly. Instead, each quest object stores the NPC. Because of this, it has to loop through. This should be improved in the future for better performance.
+ *
+ * @author Alessio Gravili
+ */
 public class QuestGiverNPCTrait extends Trait {
 
     NotQuests plugin = null;
@@ -37,7 +48,13 @@ public class QuestGiverNPCTrait extends Trait {
         // key.setInt("SomeSetting",SomeSetting);
     }
 
-    // An example event handler. All traits will be registered automatically as Bukkit Listeners.
+    /**
+     * Called when a player clicks on the NPC. This will send the quest preview GUI / Text to the player, which lists
+     * all available Quests for this NPC.
+     * <p>
+     * The available Quests are not stored in the NPC directly. Instead, each quest object stores the NPC. Because of this, it has
+     * to loop through. This should be improved in the future for better performance.
+     */
     @EventHandler
     public void click(net.citizensnpcs.api.event.NPCRightClickEvent event) {
         //Handle a click on a NPC. The event has a getNPC() method.
@@ -50,7 +67,10 @@ public class QuestGiverNPCTrait extends Trait {
 
     }
 
-    // Called every tick
+    /**
+     * Called every tick. This spawns a particle above an NPCs head which has this Trait, showcasing to the player
+     * that they have Quests and can be clicked.
+     */
     @Override
     public void run() {
         if (npc.isSpawned()) {
@@ -69,9 +89,11 @@ public class QuestGiverNPCTrait extends Trait {
 
     }
 
-    //Run code when your trait is attached to a NPC.
-    //This is called BEFORE onSpawn, so npc.getEntity() will return null
-    //This would be a good place to load configurable defaults for new NPCs.
+
+    /**
+     * Run code when your trait is attached to a NPC. This is called BEFORE onSpawn, so npc.getEntity() will return null
+     * This will just splurt out a debug message, so we know when the trait has been attached to the NPC.
+     */
     @Override
     public void onAttach() {
         plugin.getServer().getLogger().info("§aNotQuests > NPC with the ID §b" + npc.getId() + " §aand name §b" + npc.getName() + " §ahas been assigned the Quest Giver trait!");
@@ -89,7 +111,12 @@ public class QuestGiverNPCTrait extends Trait {
 
     }
 
-    //run code when the NPC is removed. Use this to tear down any repeating tasks.
+    /**
+     * Run code when the NPC is removed. This will also remove from the Quest object that the NPC is attached to it - since the NPC does not exist anymore. Otherwise,
+     * the plugin would try giving a non-existent NPC the NPC trait.
+     * <p>
+     * This method is not called when the NPC is just despawned, but when it's completely removed and thus won't exist anymore.
+     */
     @Override
     public void onRemove() {
         //REMOVEEEE FROM QUEST
