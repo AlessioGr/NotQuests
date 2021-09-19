@@ -519,7 +519,11 @@ public class DataManager {
                 this.username, this.password);
     }
 
+
     /**
+     * This returns the MySQL Database Statement, with which Database operations can be
+     * performed / executed.
+     *
      * @return the MySQL Database Statement
      */
     public final Statement getDatabaseStatement() {

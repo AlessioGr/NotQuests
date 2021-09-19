@@ -2,7 +2,7 @@ name: NotQuests
 version: ${project.version}
 main: notquests.notquests.NotQuests
 depend: [ Citizens ]
-api-version: 1.16
+api-version: 1.17
 authors: [ NoeX ]
 softdepend: [ PlaceholderAPI, Vault ]
 commands:
@@ -17,7 +17,11 @@ commands:
     aliases: [ nquests, nquest, notquest, quest, quests, q, qg ]
     permission: notnot.quests.use
 permissions:
-  notnot.quests.use:
-    default: op
   notnot.quests.admin:
     default: op
+    description: Gives the player permission to everything in the plugin.
+    children:
+      notnot.quests.use: true
+  notnot.quests.use:
+    default: op
+    description: Gives the player permission to use the /notquests user command. They can not create new quests or other administrative tasks with just this permission.
