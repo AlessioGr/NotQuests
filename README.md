@@ -9,7 +9,7 @@ NotQuests is a Minecraft 1.17.1 plugin for Paper.
 
 I created it for my own server, mc.notnot.pro and planned to keep it private. However, I don't have enough time to maintain it myself, so I just made it public.
 
-You can find the releases here: https://github.com/AlessioGr/NotQuests/releases. A MySQL database connection is required and needs to be specified in the general.yml in order for the plugin to work.
+You can find the releases here: https://github.com/AlessioGr/NotQuests/releases. A MySQL database connection is recommended and can be specified in the general.yml. Otherwise, SQLite will be used.
 
 **Images**
 
@@ -80,10 +80,14 @@ Admin Commands - Quest Editing:
 
 
 **Requirements to run this:**
-- Paper (Won't work on just spigot)
-- PlaceholderAPI
+- Paper 1.17.1 (Won't work on just spigot)
 - Vault
 - Citizens
+
+**Optional:**
+- MySQL Database (strongly recommended)
+- PlaceholderAPI
+
 
 **Future Plans**
 - Complete GUI for Admin Commands
