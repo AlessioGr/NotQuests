@@ -1,4 +1,10 @@
 # NotQuests
+
+[![GitHub issues](https://img.shields.io/github/issues/AlessioGr/NotQuests)](https://github.com/AlessioGr/NotQuests/issues)
+[![GitHub stars](https://img.shields.io/github/stars/AlessioGr/NotQuests)](https://github.com/AlessioGr/NotQuests/stargazers)
+[![GitHub license](https://img.shields.io/github/license/AlessioGr/NotQuests)](https://github.com/AlessioGr/NotQuests/blob/main/LICENSE)
+<a href="https://quests.notnot.pro/"><img src="https://img.shields.io/badge/JavaDocs-Read%20now-yellow" alt="javadics"></a>
+
 NotQuests is a Minecraft 1.17.1 plugin for Paper.
 
 I created it for my own server, mc.notnot.pro and planned to keep it private. However, I don't have enough time to maintain it myself, so I just made it public.
