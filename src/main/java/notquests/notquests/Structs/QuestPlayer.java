@@ -224,7 +224,7 @@ public class QuestPlayer {
 
         if (triggerAcceptQuestTrigger) {
             for (final ActiveTrigger activeTrigger : activeQuest.getActiveTriggers()) {
-                if (activeTrigger.getTrigger().getTriggerType().equals(TriggerType.BEGIN)) { //Start the quest
+                if (activeTrigger.getTrigger().getTriggerType() == TriggerType.BEGIN) { //Start the quest
                     if (activeTrigger.getTrigger().getApplyOn() == 0) { //Quest and not objective
 
                         if (activeTrigger.getTrigger().getWorldName().equalsIgnoreCase("ALL")) {
@@ -300,7 +300,7 @@ public class QuestPlayer {
 
     public void forceActiveQuestCompleted(ActiveQuest activeQuest) {
         for (final ActiveTrigger activeTrigger : activeQuest.getActiveTriggers()) {
-            if (activeTrigger.getTrigger().getTriggerType().equals(TriggerType.COMPLETE)) { //Complete the quest
+            if (activeTrigger.getTrigger().getTriggerType() == TriggerType.COMPLETE) { //Complete the quest
                 if (activeTrigger.getTrigger().getApplyOn() == 0) { //Quest and not objective
 
                     if (activeTrigger.getTrigger().getWorldName().equalsIgnoreCase("ALL")) {
@@ -347,7 +347,7 @@ public class QuestPlayer {
 
     public void notifyActiveQuestCompleted(ActiveQuest activeQuest) {
         for (final ActiveTrigger activeTrigger : activeQuest.getActiveTriggers()) {
-            if (activeTrigger.getTrigger().getTriggerType().equals(TriggerType.COMPLETE)) { //Complete the quest
+            if (activeTrigger.getTrigger().getTriggerType() == TriggerType.COMPLETE) { //Complete the quest
                 if (activeTrigger.getTrigger().getApplyOn() == 0) { //Quest and not objective
 
                     if (activeTrigger.getTrigger().getWorldName().equalsIgnoreCase("ALL")) {

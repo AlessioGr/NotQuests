@@ -129,7 +129,7 @@ public class ActiveQuest {
     public void notifyActiveObjectiveCompleted(final ActiveObjective activeObjective, final boolean silent, final int NPCID) {
         if (activeObjective.isCompleted(NPCID)) {
             for (final ActiveTrigger activeTrigger : getActiveTriggers()) {
-                if (activeTrigger.getTrigger().getTriggerType().equals(TriggerType.COMPLETE)) { //Complete the quest
+                if (activeTrigger.getTrigger().getTriggerType() == TriggerType.COMPLETE) { //Complete the quest
                     if (activeTrigger.getTrigger().getApplyOn() >= 1) { //Objective and not Quest
                         if (activeObjective.getObjectiveID() == activeTrigger.getTrigger().getApplyOn()) {
 
@@ -189,7 +189,7 @@ public class ActiveQuest {
             // for(final ActiveQuest activeQuest : activeQuestsCopy){
             final ActiveQuest activeQuest = this;
             for (final ActiveTrigger activeTrigger : activeQuest.getActiveTriggers()) {
-                if (activeTrigger.getTrigger().getTriggerType().equals(TriggerType.FAIL)) {
+                if (activeTrigger.getTrigger().getTriggerType() == TriggerType.FAIL) {
                     if (activeTrigger.getTrigger().getApplyOn() == 0) { //Quest and not Objective
                         //System.out.println("§eAAA");
 

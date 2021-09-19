@@ -187,24 +187,24 @@ public class QuestManager {
                             }
                             if (foundAction != null) {
                                 Trigger trigger = null;
-                                if (triggerType.equals(TriggerType.COMPLETE)) {
+                                if (triggerType == TriggerType.COMPLETE) {
                                     trigger = new CompleteTrigger(main, foundAction, applyOn, worldName);
-                                } else if (triggerType.equals(TriggerType.BEGIN)) {
+                                } else if (triggerType == TriggerType.BEGIN) {
                                     trigger = new BeginTrigger(main, foundAction, applyOn, worldName);
-                                } else if (triggerType.equals(TriggerType.DEATH)) {
+                                } else if (triggerType == TriggerType.DEATH) {
 
                                     trigger = new DeathTrigger(main, foundAction, applyOn, worldName, amountNeeded);
-                                } else if (triggerType.equals(TriggerType.FAIL)) {
+                                } else if (triggerType == TriggerType.FAIL) {
                                     trigger = new FailTrigger(main, foundAction, applyOn, worldName);
-                                } else if (triggerType.equals(TriggerType.DISCONNECT)) {
+                                } else if (triggerType == TriggerType.DISCONNECT) {
                                     trigger = new DisconnectTrigger(main, foundAction, applyOn, worldName);
-                                } else if (triggerType.equals(TriggerType.NPCDEATH)) {
+                                } else if (triggerType == TriggerType.NPCDEATH) {
                                     final int npcToDie = main.getDataManager().getQuestsData().getInt("quests." + questName + ".triggers." + triggerNumber + ".specifics.npcToDie");
                                     trigger = new NPCDeathTrigger(main, foundAction, applyOn, worldName, amountNeeded, npcToDie);
-                                } else if (triggerType.equals(TriggerType.WORLDENTER)) {
+                                } else if (triggerType == TriggerType.WORLDENTER) {
                                     final String worldToEnter = main.getDataManager().getQuestsData().getString("quests." + questName + ".triggers." + triggerNumber + ".specifics.worldToEnter", "ALL");
                                     trigger = new WorldEnterTrigger(main, foundAction, applyOn, worldName, amountNeeded, worldToEnter);
-                                } else if (triggerType.equals(TriggerType.WORLDLEAVE)) {
+                                } else if (triggerType == TriggerType.WORLDLEAVE) {
                                     final String worldToLeave = main.getDataManager().getQuestsData().getString("quests." + questName + ".triggers." + triggerNumber + ".specifics.worldToLeave", "ALL");
                                     trigger = new WorldLeaveTrigger(main, foundAction, applyOn, worldName, amountNeeded, worldToLeave);
                                 } else {

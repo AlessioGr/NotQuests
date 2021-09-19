@@ -51,7 +51,7 @@ public class ActiveObjective {
             if (unlocked) {
                 if (triggerAcceptQuestTrigger) {
                     for (final ActiveTrigger activeTrigger : getActiveQuest().getActiveTriggers()) {
-                        if (activeTrigger.getTrigger().getTriggerType().equals(TriggerType.BEGIN)) { //Start the quest
+                        if (activeTrigger.getTrigger().getTriggerType() == TriggerType.BEGIN) { //Start the quest
                             if (activeTrigger.getTrigger().getApplyOn() >= 1) { //Objective and not Quest
                                 if (getObjectiveID() == activeTrigger.getTrigger().getApplyOn()) {
                                     if (activeTrigger.getTrigger().getWorldName().equalsIgnoreCase("ALL")) {

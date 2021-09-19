@@ -56,7 +56,7 @@ public class QuestEvents implements Listener {
             if (questPlayer.getActiveQuests().size() > 0) {
                 for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                     for (final ActiveTrigger activeTrigger : activeQuest.getActiveTriggers()) {
-                        if (activeTrigger.getTrigger().getTriggerType().equals(TriggerType.NPCDEATH)) {
+                        if (activeTrigger.getTrigger().getTriggerType() == TriggerType.NPCDEATH) {
                             if (((NPCDeathTrigger) activeTrigger.getTrigger()).getNpcToDieID() == npc.getId()) {
                                 if (activeTrigger.getTrigger().getApplyOn() == 0) { //Quest and not Objective
 
@@ -353,7 +353,7 @@ public class QuestEvents implements Listener {
                     for (int i = 0; i < questPlayer.getActiveQuests().size(); i++) {
                         final ActiveQuest activeQuest = questPlayer.getActiveQuests().get(i);
                         for (final ActiveTrigger activeTrigger : activeQuest.getActiveTriggers()) {
-                            if (activeTrigger.getTrigger().getTriggerType().equals(TriggerType.DEATH)) {
+                            if (activeTrigger.getTrigger().getTriggerType() == TriggerType.DEATH) {
                                 if (activeTrigger.getTrigger().getApplyOn() == 0) { //Quest and not Objective
                                     if (activeTrigger.getTrigger().getWorldName().equalsIgnoreCase("ALL")) {
                                         activeTrigger.addAndCheckTrigger(activeQuest);
@@ -458,7 +458,7 @@ public class QuestEvents implements Listener {
                 for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
 
                     for (final ActiveTrigger activeTrigger : activeQuest.getActiveTriggers()) {
-                        if (activeTrigger.getTrigger().getTriggerType().equals(TriggerType.DISCONNECT)) {
+                        if (activeTrigger.getTrigger().getTriggerType() == TriggerType.DISCONNECT) {
                             if (activeTrigger.getTrigger().getApplyOn() == 0) {//Quest and not Objective
 
                                 if (activeTrigger.getTrigger().getWorldName().equalsIgnoreCase("ALL")) {
@@ -505,7 +505,7 @@ public class QuestEvents implements Listener {
                 for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
 
                     for (final ActiveTrigger activeTrigger : activeQuest.getActiveTriggers()) {
-                        if (activeTrigger.getTrigger().getTriggerType().equals(TriggerType.WORLDENTER)) {
+                        if (activeTrigger.getTrigger().getTriggerType() == TriggerType.WORLDENTER) {
                             if (e.getPlayer().getWorld().getName().equals(((WorldEnterTrigger) activeTrigger.getTrigger()).getWorldToEnterName())) {
                                 if (activeTrigger.getTrigger().getApplyOn() == 0) {//Quest and not Objective
 
@@ -533,7 +533,7 @@ public class QuestEvents implements Listener {
                                 }
                             }
 
-                        } else if (activeTrigger.getTrigger().getTriggerType().equals(TriggerType.WORLDLEAVE)) {
+                        } else if (activeTrigger.getTrigger().getTriggerType() == TriggerType.WORLDLEAVE) {
                             if (e.getFrom().getName().equals(((WorldEnterTrigger) activeTrigger.getTrigger()).getWorldToEnterName())) {
                                 if (activeTrigger.getTrigger().getApplyOn() == 0) {//Quest and not Objective
 

@@ -787,11 +787,11 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                 for (Trigger trigger : quest.getTriggers()) {
 
                                     sender.sendMessage("§e" + counter + ". Type: §b" + trigger.getTriggerType().toString());
-                                    if (trigger.getTriggerType().equals(TriggerType.NPCDEATH)) {
+                                    if (trigger.getTriggerType() == TriggerType.NPCDEATH) {
                                         sender.sendMessage("§7-- NPC to die ID: §f" + ((NPCDeathTrigger) trigger).getNpcToDieID());
-                                    } else if (trigger.getTriggerType().equals(TriggerType.WORLDENTER)) {
+                                    } else if (trigger.getTriggerType() == TriggerType.WORLDENTER) {
                                         sender.sendMessage("§7-- World to enter: §f" + ((WorldEnterTrigger) trigger).getWorldToEnterName());
-                                    } else if (trigger.getTriggerType().equals(TriggerType.WORLDLEAVE)) {
+                                    } else if (trigger.getTriggerType() ==TriggerType.WORLDLEAVE ) {
                                         sender.sendMessage("§7-- World to leave: §f" + ((WorldLeaveTrigger) trigger).getWorldToLeaveName());
                                     }
                                     sender.sendMessage("§7--- Action Name: §f" + trigger.getTriggerAction().getActionName());
