@@ -349,7 +349,7 @@ public class DataManager {
 
 
     /**
-     * THis will LOAD the following data:
+     * This will LOAD the following data:
      * (1) general.yml General Configuration - in whatever Thread
      * (2) CREATE all the necessary MySQL Database tables if they don't exist yet - in an asynchronous Thread (forced)
      * (3) Load all the Quests Data from the quests.yml - in an asynchronous Thread (forced)
