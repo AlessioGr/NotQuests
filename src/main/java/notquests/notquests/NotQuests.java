@@ -45,6 +45,9 @@ public final class NotQuests extends JavaPlugin {
     //Metrics
     private Metrics metrics;
 
+    //Enabled Features
+    private boolean vaultEnabled = false;
+
     /**
      * Called when the plugin is enabled. A bunch of stuff is initialized here
      */
@@ -54,12 +57,15 @@ public final class NotQuests extends JavaPlugin {
 
         //Vault is needed for NotQuests to function. If it's not found, NotQuests will be disabled.
         if (!setupEconomy()) {
-            getLogger().log(Level.SEVERE, String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
-            getServer().getPluginManager().disablePlugin(this);
-            return;
+            getLogger().log(Level.INFO, "§cVault Dependency not found! Some features have been disabled. I recommend you to install Vault for the best experience.");
+            //getServer().getPluginManager().disablePlugin(this);
+            //return;
+        }else{
+            setupPermissions();
+            setupChat();
+            vaultEnabled = true;
         }
-        setupPermissions();
-        setupChat();
+
 
         //Create a new instance of the Data Manager which will be re-used everywhere
         dataManager = new DataManager(this);
@@ -269,6 +275,11 @@ public final class NotQuests extends JavaPlugin {
      * @return an instance of Economy which has been set up in setupEconomy()
      */
     public Economy getEconomy() {
+        if(!isVaultEnabled()){
+            getLogger().log(Level.SEVERE, "§cError: Tried to load Economy when Vault is not enabled. Please report this to the plugin author (and I also recommend you installing Vault for money stuff to work)");
+
+            return null;
+        }
         return econ;
     }
 
@@ -281,4 +292,14 @@ public final class NotQuests extends JavaPlugin {
     public final Metrics getMetrics() {
         return metrics;
     }
+
+    /**
+     * Returns if Vault integration is enabled or not. It's usually disabled when Vault is not found on the Server.
+     *
+     * @return if Vault is enabled
+     */
+    public final boolean isVaultEnabled(){
+        return vaultEnabled;
+    }
+
 }

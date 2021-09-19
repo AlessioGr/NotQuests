@@ -1200,6 +1200,13 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                         didntSpecify = false;
                                     }
                                     if (!didntSpecify) {
+
+                                        //Cancel if Vault is not found
+                                        if(!main.isVaultEnabled()){
+                                            sender.sendMessage("§cError: cannot add a money requirement because Vault (needed for money stuff to work) is not installed on the server.");
+                                            return true;
+                                        }
+
                                         MoneyRequirement moneyRequirement = new MoneyRequirement(main, moneyNeeded, deductMoney);
                                         quest.addRequirement(moneyRequirement);
                                         sender.sendMessage("§aRequirement successfully added to quest §b" + quest.getQuestName() + "§a!");

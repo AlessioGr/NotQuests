@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 
 /**
  * The QuestPlayer Object is initialized for every player, once they join the server - loading its data from the database.
@@ -117,7 +118,9 @@ public class QuestPlayer {
                         final boolean deductMoney = moneyRequirement.isDeductMoney();
                         final Player player = Bukkit.getPlayer(getUUID());
                         if (player != null) {
-                            if (main.getEconomy().getBalance(player, player.getWorld().getName()) < moneyRequirementAmount) {
+                            if(!main.isVaultEnabled()){
+                                requirementsStillNeeded.append("\n§eError: The server does not have vault enabled. Please ask the Owner to install Vault for money stuff to work.");
+                            }else if (main.getEconomy().getBalance(player, player.getWorld().getName()) < moneyRequirementAmount) {
                                 requirementsStillNeeded.append("\n§eYou need §b").append(moneyRequirementAmount - main.getEconomy().getBalance(player, player.getWorld().getName())).append(" §emore money.");
                             } else {
                                 if (deductMoney) {
@@ -154,7 +157,13 @@ public class QuestPlayer {
                 if (moneyToDeduct > 0) {
                     final Player player = Bukkit.getPlayer(getUUID());
                     if (player != null) {
-                        removeMoney(player, player.getWorld().getName(), moneyToDeduct, true);
+                        if(main.isVaultEnabled()){
+                            removeMoney(player, player.getWorld().getName(), moneyToDeduct, true);
+                        }else{
+                            main.getLogger().log(Level.WARNING, "§eWarning: Could not deduct money, because Vault was not found. Please install Vault for money stuff to work.");
+                            main.getLogger().log(Level.WARNING, "§cError: Tried to load Economy when Vault is not enabled. Please report this to the plugin author (and I also recommend you installing Vault for money stuff to work)");
+                            return "§cError deducting money, because Vault has not been found. Report this to an Admin.";
+                        }
                     } else {
                         return "§cError getting player data from your UUID. Report this to an Admin.";
                     }
@@ -425,6 +434,10 @@ public class QuestPlayer {
     }
 
     private void removeMoney(final Player player, final String worldName, final long moneyToDeduct, final boolean notifyPlayer) {
+        if(!main.isVaultEnabled() || main.getEconomy() == null){
+            main.getLogger().log(Level.WARNING, "§eWarning: Could not deduct money, because Vault was not found. Please install Vault for money stuff to work.");
+            return;
+        }
         main.getEconomy().withdrawPlayer(player, worldName, moneyToDeduct);
         if (notifyPlayer) {
             player.sendMessage("§b-" + moneyToDeduct + " §c$!");
