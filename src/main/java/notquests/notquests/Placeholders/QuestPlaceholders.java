@@ -106,7 +106,7 @@ public class QuestPlaceholders extends PlaceholderExpansion {
             if (questPlayer != null) {
                 return "" + questPlayer.getQuestPoints();
             }
-            return "";
+            return "0";
 
         }
 
