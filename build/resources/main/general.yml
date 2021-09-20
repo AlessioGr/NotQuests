@@ -16,6 +16,8 @@ gui:
 placeholders:
   player_active_quests_list_horizontal:
     separator: "|"
-    limit: -1
+    limit: -1 #-1 for unlimited
+    use-displayname-if-available: true
   player_active_quests_list_vertical:
-    limit: -1
+    limit: -1 #-1 for unlimited
+    use-displayname-if-available: true

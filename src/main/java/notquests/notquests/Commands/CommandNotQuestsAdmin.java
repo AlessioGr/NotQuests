@@ -670,7 +670,10 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                     } else {
                         StringBuilder displayName = new StringBuilder();
                         for (int start = 3; start < args.length; start++) {
-                            displayName.append(args[start]).append(" ");
+                            displayName.append(args[start]);
+                            if(start < args.length-1){
+                                displayName.append(" ");
+                            }
                         }
 
                         quest.setQuestDisplayName(displayName.toString());
