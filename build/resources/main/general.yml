@@ -13,3 +13,9 @@ gui:
     enabled: true
   usercommands:
     enabled: true
+placeholders:
+  player_active_quests_list_horizontal:
+    separator: "|"
+    limit: -1
+  player_active_quests_list_vertical:
+    limit: -1

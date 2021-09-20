@@ -283,6 +283,33 @@ public class DataManager {
         configuration.setUserCommandsUseGUI(getGeneralConfig().getBoolean("gui.usercommands.enabled"));
 
 
+        if(!getGeneralConfig().isString("placeholders.player_active_quests_list_horizontal.separator")){
+            getGeneralConfig().set("placeholders.player_active_quests_list_horizontal.separator", " | ");
+        }
+        configuration.placeholder_player_active_quests_list_horizontal_separator = getGeneralConfig().getString("placeholders.player_active_quests_list_horizontal.separator");
+
+        if(!getGeneralConfig().isInt("placeholders.player_active_quests_list_horizontal.limit")){
+            getGeneralConfig().set("placeholders.player_active_quests_list_horizontal.limit", -1);
+        }
+        configuration.placeholder_player_active_quests_list_horizontal_limit = getGeneralConfig().getInt("placeholders.player_active_quests_list_horizontal.limit");
+
+        if(!getGeneralConfig().isInt("placeholders.player_active_quests_list_vertical.limit")){
+            getGeneralConfig().set("placeholders.player_active_quests_list_vertical.limit", -1);
+        }
+        configuration.placeholder_player_active_quests_list_vertical_limit = getGeneralConfig().getInt("placeholders.player_active_quests_list_vertical.limit");
+
+
+        if(!getGeneralConfig().isBoolean("placeholders.player_active_quests_list_horizontal.use-displayname-if-available")){
+            getGeneralConfig().set("placeholders.player_active_quests_list_horizontal.use-displayname-if-available", true);
+        }
+        configuration.placeholder_player_active_quests_list_horizontal_use_displayname_if_available = getGeneralConfig().getBoolean("placeholders.player_active_quests_list_horizontal.use-displayname-if-available");
+
+        if(!getGeneralConfig().isBoolean("placeholders.player_active_quests_list_vertical.use-displayname-if-available")){
+            getGeneralConfig().set("placeholders.player_active_quests_list_vertical.use-displayname-if-available", true);
+        }
+        configuration.placeholder_player_active_quests_list_vertical_use_displayname_if_available = getGeneralConfig().getBoolean("placeholders.player_active_quests_list_vertical.use-displayname-if-available");
+
+
 
         saveGeneralConfig();
 

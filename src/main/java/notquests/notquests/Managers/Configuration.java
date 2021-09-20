@@ -20,6 +20,15 @@ public class Configuration {
     private boolean userCommandsUseGUI = true;
     private boolean mySQLEnabled = false;
 
+    public String placeholder_player_active_quests_list_horizontal_separator = " | ";
+
+    public int placeholder_player_active_quests_list_horizontal_limit = -1;
+    public int placeholder_player_active_quests_list_vertical_limit = -1;
+
+    public boolean placeholder_player_active_quests_list_horizontal_use_displayname_if_available = true;
+    public boolean placeholder_player_active_quests_list_vertical_use_displayname_if_available = true;
+
+
     public Configuration(){
 
     }
