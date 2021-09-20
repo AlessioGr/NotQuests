@@ -14,7 +14,9 @@ I created NotQuests for my own server, mc.notnot.pro and planned to keep it priv
 
 You can find the releases here: https://github.com/AlessioGr/NotQuests/releases. A MySQL database connection is recommended and can be specified in the general.yml. Otherwise, SQLite will be used.
 
-**Images**
+
+
+![Banner_Images](https://user-images.githubusercontent.com/70709113/133997397-fbe14d0b-22fe-4ede-98e2-4d7a2cbcb489.png)
 
 Quest Giver NPC:
 
@@ -45,7 +47,9 @@ Admin Commands - Quest Editing:
 ![image](https://user-images.githubusercontent.com/70709113/131539973-8f6586a7-0108-4a92-9017-e06313145a02.png)
 
 
-**Features**
+
+![Banner_Features](https://user-images.githubusercontent.com/70709113/133997198-bbc020b6-69c5-454b-b5b5-5f1bec0bab0d.png)
+
 - Bind Quests to NPCs
 - Complete GUI for the user interface
 - Player data is saved in MySQL, quest configuration data in a configuration file
@@ -84,6 +88,7 @@ Admin Commands - Quest Editing:
 
 **Requirements to run this:**
 - Paper 1.17.1 (Won't work on just spigot because the native Paper Kyori ChatComponents are used)
+- Java 16
 
 
 **Optional:**
@@ -93,7 +98,22 @@ Admin Commands - Quest Editing:
 - PlaceholderAPI
 
 
-**Future Plans**
+
+![Banner_Placeholders](https://user-images.githubusercontent.com/70709113/133997368-44c2bdb3-4ad9-483b-b2db-a5221d3d8a5a.png)
+
+Player Placeholders:
+
+%notquests_player_has_completed_quest_QUESTNAME%
+%notquests_player_has_current_active_quest_QUESTNAME%
+%notquests_player_is_objective_unlocked_and_active_OBJECTIVEID_from_active_quest_QUESTNAME%
+%notquests_player_is_objective_unlocked_OBJECTIVEID_from_active_quest_QUESTNAME%
+%notquests_player_is_objective_completed_OBJECTIVEID_from_active_quest_QUESTNAME%
+%notquests_player_questpoints%
+
+
+
+![Banner_Future_Plans](https://user-images.githubusercontent.com/70709113/133997163-a98072a9-db72-4bf4-a0eb-b27ec67ad566.png)
+
 - Load Player Data only when the player joins
 - Complete GUI for Admin Commands
 - Make Citizens optional
