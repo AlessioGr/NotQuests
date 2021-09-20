@@ -101,6 +101,15 @@ public class QuestPlaceholders extends PlaceholderExpansion {
             return "";
         }
 
+        if (identifier.startsWith("player_questpoints")) {
+            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+            if (questPlayer != null) {
+                return "" + questPlayer.getQuestPoints();
+            }
+            return "";
+
+        }
+
         if (identifier.startsWith("player_has_completed_quest_")) {
             final String questName = identifier.replace("player_has_completed_quest_", "");
             final Quest quest = main.getQuestManager().getQuest(questName);
@@ -134,7 +143,7 @@ public class QuestPlaceholders extends PlaceholderExpansion {
 
         }
 
-        if (identifier.startsWith("player_iss_objective_unlocked_and_active") && identifier.contains("_from_active_quest_")) {
+        if (identifier.startsWith("player_is_objective_unlocked_and_active") && identifier.contains("_from_active_quest_")) {
             String objectiveIDName = identifier.replace("player_is_objective_unlocked_and_active_", "");
             objectiveIDName = objectiveIDName.substring(0, objectiveIDName.indexOf("_from_active_quest_"));
             final int objectiveID = Integer.parseInt(objectiveIDName);
