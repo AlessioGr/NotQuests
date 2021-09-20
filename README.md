@@ -109,7 +109,8 @@ Player Placeholders:
 %notquests_player_is_objective_unlocked_OBJECTIVEID_from_active_quest_QUESTNAME%
 %notquests_player_is_objective_completed_OBJECTIVEID_from_active_quest_QUESTNAME%
 %notquests_player_questpoints%
-
+%notquests_player_active_quests_list_horizontal%
+%notquests_player_active_quests_list_vertical%
 
 
 ![Banner_Future_Plans](https://user-images.githubusercontent.com/70709113/133997163-a98072a9-db72-4bf4-a0eb-b27ec67ad566.png)
