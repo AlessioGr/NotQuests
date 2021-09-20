@@ -65,11 +65,11 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (sender instanceof Player player) {
-            boolean guiEnabled = true;
-            if (label.equalsIgnoreCase("qg")) {
-                guiEnabled = false;
+            boolean guiEnabled = main.getDataManager().getConfiguration().isUserCommandsUseGUI();
+            //if (label.equalsIgnoreCase("qg")) {
+                //guiEnabled = false;
                 //player.sendMessage("§aOpening NotQuests GUI §1[BETA]");
-            }
+            //}
             if (sender.hasPermission("notnot.quests.use")) {
                 QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer((player.getUniqueId()));
                 sender.sendMessage("");

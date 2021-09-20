@@ -277,6 +277,11 @@ public class DataManager {
         }
         configuration.setQuestPreviewUseGUI(getGeneralConfig().getBoolean("gui.questpreview.enabled"));
 
+        if(!getGeneralConfig().isBoolean("gui.usercommands.enabled")){
+            getGeneralConfig().set("gui.usercommands.enabled", true);
+        }
+        configuration.setUserCommandsUseGUI(getGeneralConfig().getBoolean("gui.usercommands.enabled"));
+
 
 
         saveGeneralConfig();

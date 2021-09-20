@@ -11,3 +11,5 @@ gui:
   questpreview:
     # If set to false, clickable text will be used for Quest Previews instead
     enabled: true
+  usercommands:
+    enabled: true
