@@ -83,7 +83,7 @@ Admin Commands - Quest Editing:
 
 
 **Requirements to run this:**
-- Paper 1.17.1 (Won't work on just spigot)
+- Paper 1.17.1 (Won't work on just spigot because the native Paper Kyori ChatComponents are used)
 
 
 **Optional:**
@@ -94,6 +94,7 @@ Admin Commands - Quest Editing:
 
 
 **Future Plans**
+- Load Player Data only when the player joins
 - Complete GUI for Admin Commands
 - Make Citizens optional
 - Customized Armor Stands instead of Citizen NPCs for better performance. They will also contain the quests assigned to them directly in a PDC. Both Armor Stands and NPCs will be usable.
