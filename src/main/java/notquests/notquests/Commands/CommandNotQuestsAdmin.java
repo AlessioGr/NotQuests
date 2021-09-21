@@ -2060,10 +2060,10 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                 }
                 if (requestedActiveQuest != null) {
 
-                    sender.sendMessage("§eCompleted Objectives for Quest §b" + requestedActiveQuest.getQuest().getQuestName() + " §eof player §b" + playerName + " §c(offline)§e:");
+                    sender.sendMessage("§eCompleted Objectives for Quest §b" + requestedActiveQuest.getQuest().getQuestName() + " §eof player §b" + playerName + " §a(online)§e:");
                     main.getQuestManager().sendCompletedObjectivesAndProgress(sender, requestedActiveQuest);
 
-                    sender.sendMessage("§eActive Objectives for Quest §b" + requestedActiveQuest.getQuest().getQuestName() + " §eof player §b" + playerName + " §c(offline)§e:");
+                    sender.sendMessage("§eActive Objectives for Quest §b" + requestedActiveQuest.getQuest().getQuestName() + " §eof player §b" + playerName + " §a(online)§e:");
                     main.getQuestManager().sendActiveObjectivesAndProgress(sender, requestedActiveQuest);
 
 
