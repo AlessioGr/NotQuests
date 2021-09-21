@@ -7,6 +7,7 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import notquests.notquests.Commands.AdminCommands.ArmorstandsAdminCommand;
 import notquests.notquests.Commands.AdminCommands.ObjectivesAdminCommand;
 import notquests.notquests.Commands.AdminCommands.QuestPointsAdminCommand;
 import notquests.notquests.NotQuests;
@@ -41,6 +42,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
     private final NotQuests main;
     private final QuestPointsAdminCommand questPointsAdminCommand;
     private final ObjectivesAdminCommand objectivesAdminCommand;
+    private final ArmorstandsAdminCommand armorstandsAdminCommand;
 
     private final SimpleDateFormat simpleDateFormat;
     private final Date resultDate;
@@ -109,6 +111,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
 
         questPointsAdminCommand = new QuestPointsAdminCommand(main);
         objectivesAdminCommand = new ObjectivesAdminCommand(main);
+        armorstandsAdminCommand = new ArmorstandsAdminCommand(main);
     }
 
     @Override
@@ -306,6 +309,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                         sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives");
                         sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards");
                         sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6npcs");
+                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6armorstands [WIP]");
                         sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6triggers");
 
                         sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6maxAccepts §3[Amount] §7| Sets the maximum amount of times you can start/accept this quest. Set to -1 for unlimited (default)");
@@ -410,6 +414,13 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                 final Quest quest = main.getQuestManager().getQuest(args[1]);
                 if (quest != null) {
                     objectivesAdminCommand.handleObjectivesAdminCommand(sender, args, quest);
+                } else {
+                    sender.sendMessage("§cQuest §b" + args[1] + " §cdoes not exist");
+                }
+            }else if(args.length >= 3 && args[2].equalsIgnoreCase("armorstands")){
+                final Quest quest = main.getQuestManager().getQuest(args[1]);
+                if (quest != null) {
+                    armorstandsAdminCommand.handleArmorstandsAdminCommand(sender, args, quest);
                 } else {
                     sender.sendMessage("§cQuest §b" + args[1] + " §cdoes not exist");
                 }
@@ -1701,6 +1712,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                     main.getDataManager().completions.add("rewards");
                     main.getDataManager().completions.add("requirements");
                     main.getDataManager().completions.add("npcs");
+                    main.getDataManager().completions.add("armorstands");
                     main.getDataManager().completions.add("triggers");
                     main.getDataManager().completions.add("maxAccepts");
                     main.getDataManager().completions.add("takeEnabled");

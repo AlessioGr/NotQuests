@@ -5,11 +5,13 @@ import notquests.notquests.NotQuests;
 import notquests.notquests.Structs.ActiveObjective;
 import notquests.notquests.Structs.ActiveQuest;
 import notquests.notquests.Structs.Objectives.*;
+import notquests.notquests.Structs.Quest;
 import notquests.notquests.Structs.QuestPlayer;
 import notquests.notquests.Structs.Triggers.ActiveTrigger;
 import notquests.notquests.Structs.Triggers.TriggerTypes.TriggerType;
 import notquests.notquests.Structs.Triggers.TriggerTypes.WorldEnterTrigger;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -22,9 +24,12 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityDropItemEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -374,6 +379,37 @@ public class QuestEvents implements Listener {
                     }
 
 
+                }
+            }
+        }
+    }
+
+
+    @EventHandler
+    private void onArmorstandHit(PlayerInteractAtEntityEvent event){
+
+        final Player player = event.getPlayer();
+
+        if(event.getRightClicked().getType() == EntityType.ARMOR_STAND) {
+            final ItemStack heldItem = event.getPlayer().getInventory().getItemInMainHand();
+
+            final PersistentDataContainer container = heldItem.getItemMeta().getPersistentDataContainer();
+
+            final NamespacedKey key = new NamespacedKey(main, "notquests-item");
+
+            if(container.has(key, PersistentDataType.INTEGER)){
+                int id = container.get(key, PersistentDataType.INTEGER);
+
+                final NamespacedKey questsKey = new NamespacedKey(main, "notquests-questname");
+
+                final String questName =  container.get(questsKey, PersistentDataType.STRING);;
+
+                if(id == 0){ //Add
+                    player.sendMessage("§aQuest with the name §b" + questName + " §awas added to this poor little armorstand!");
+                }else if(id == 1){ //Remove
+                    player.sendMessage("§2Quest with the name §b" + questName + " §2was removed from this armorstand!");
+                }else{ //???
+                    return;
                 }
             }
         }
