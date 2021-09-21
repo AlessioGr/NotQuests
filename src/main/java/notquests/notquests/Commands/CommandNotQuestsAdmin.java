@@ -52,7 +52,8 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
         this.main = main;
         simpleDateFormat = new SimpleDateFormat("MMM dd,yyyy HH:mm");
 
-        firstLevelCommands = Component.text("NotQuests Admin Commands:", NamedTextColor.BLUE, TextDecoration.BOLD)
+
+        firstLevelCommands = Component.text("NotQuests §b§lv" + main.getDescription().getVersion() + " §9§lAdmin Commands:", NamedTextColor.BLUE, TextDecoration.BOLD)
                 .append(Component.newline())
                 .append(Component.text("/qadmin §6create §3[Quest Name]", NamedTextColor.YELLOW).clickEvent(ClickEvent.suggestCommand("/qadmin create ")).hoverEvent(HoverEvent.showText(Component.text("Create a Quest", NamedTextColor.GREEN))))
                 .append(Component.newline())
