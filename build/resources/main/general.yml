@@ -7,6 +7,9 @@ storage:
     database: ''
     username: ''
     password: ''
+general:
+  #The maximum amount of active quests a player can have at the same time. -1 = unlimited (default)
+  max-active-quests-per-player: -1
 gui:
   questpreview:
     # If set to false, clickable text will be used for Quest Previews instead
