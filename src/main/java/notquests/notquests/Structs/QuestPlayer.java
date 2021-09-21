@@ -49,6 +49,11 @@ public class QuestPlayer {
     }
 
     public String addActiveQuest(final ActiveQuest quest, final boolean triggerAcceptQuestTrigger, final boolean sendQuestInfo) {
+        //Configuration Option: general.max-active-quests-per-player
+        if(main.getDataManager().getConfiguration().getMaxActiveQuestsPerPlayer() != -1 && activeQuests.size() >= main.getDataManager().getConfiguration().getMaxActiveQuestsPerPlayer()){
+            return "§cYou can not accept more than §b" + main.getDataManager().getConfiguration().getMaxActiveQuestsPerPlayer() + " §cQuests.";
+        }
+
         for (ActiveQuest activeQuest : activeQuests) {
             if (activeQuest.getQuest().equals(quest.getQuest())) {
                 return "§cQuest already accepted.";

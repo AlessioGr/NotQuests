@@ -310,6 +310,11 @@ public class DataManager {
         configuration.placeholder_player_active_quests_list_vertical_use_displayname_if_available = getGeneralConfig().getBoolean("placeholders.player_active_quests_list_vertical.use-displayname-if-available");
 
 
+        if(!getGeneralConfig().isInt("general.max-active-quests-per-player")){
+            getGeneralConfig().set("general.max-active-quests-per-player", -1);
+        }
+        configuration.setMaxActiveQuestsPerPlayer(getGeneralConfig().getInt("general.max-active-quests-per-player"));
+
 
         saveGeneralConfig();
 

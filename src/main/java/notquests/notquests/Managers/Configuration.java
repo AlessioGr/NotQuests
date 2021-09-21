@@ -28,6 +28,8 @@ public class Configuration {
     public boolean placeholder_player_active_quests_list_horizontal_use_displayname_if_available = true;
     public boolean placeholder_player_active_quests_list_vertical_use_displayname_if_available = true;
 
+    private int maxActiveQuestsPerPlayer = -1;
+
 
     public Configuration(){
 
@@ -96,5 +98,13 @@ public class Configuration {
 
     public void setUserCommandsUseGUI(final boolean userCommandsUseGUI) {
         this.userCommandsUseGUI = userCommandsUseGUI;
+    }
+
+    public final int getMaxActiveQuestsPerPlayer() {
+        return maxActiveQuestsPerPlayer;
+    }
+
+    public void setMaxActiveQuestsPerPlayer(int maxActiveQuestsPerPlayer) {
+        this.maxActiveQuestsPerPlayer = maxActiveQuestsPerPlayer;
     }
 }
