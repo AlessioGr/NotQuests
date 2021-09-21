@@ -49,8 +49,8 @@ Admin Commands - Quest Editing:
 
 
 ![Banner_Features](https://user-images.githubusercontent.com/70709113/133997198-bbc020b6-69c5-454b-b5b5-5f1bec0bab0d.png)
-
-- Bind Quests to NPCs
+- Quests can be bound to Citizens NPCs
+- **Quests can also be bound to Armor Stands ⇒ 10000x better performance because Citizens is a laggy plugin**. Especially if your armor stands are optimized in your paper configuration.
 - Complete GUI for the user interface
 - Player data is saved in MySQL, quest configuration data in a configuration file
 - Quest Points
@@ -92,7 +92,7 @@ Admin Commands - Quest Editing:
 
 
 **Optional:**
-- Citizens
+- Citizens (Needed for Citizens NPC stuff to work. You can also use Armor Stands without Citizens, though)
 - Vault
 - MySQL Database (strongly recommended)
 - PlaceholderAPI
