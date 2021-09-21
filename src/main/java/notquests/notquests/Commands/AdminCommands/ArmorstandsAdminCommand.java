@@ -37,8 +37,59 @@ public class ArmorstandsAdminCommand {
     public void handleArmorstandsAdminCommand(final CommandSender sender, final String[] args, final Quest quest) {
         if (args.length == 3) {
             showUsage(quest, sender, args);
-        } else if (args.length == 4) {
+        }else if (args.length == 4) {
+            if (args[3].equalsIgnoreCase("check")) {
+                if(sender instanceof Player player){
+                    ItemStack itemStack = new ItemStack(Material.LEATHER, 1);
+                    //give a specialitem. clicking an armorstand with that special item will remove the pdb.
+
+                    NamespacedKey key = new NamespacedKey(main, "notquests-item");
+
+                    ItemMeta itemMeta = itemStack.getItemMeta();
+                    List<Component> lore = new ArrayList<>();
+
+
+                    itemMeta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, 4);
+                    itemMeta.displayName(Component.text("§dCheck Armor Stand", NamedTextColor.LIGHT_PURPLE));
+                    lore.add(Component.text("§fRight-click an Armor Stand to see which Quests are attached to it."));
+
+                    itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+
+
+
+                    itemMeta.lore(lore);
+
+                    itemStack.setItemMeta(itemMeta);
+
+                    player.getInventory().addItem(itemStack);
+
+                    player.sendMessage("§aYou have been given an item with which you can check armor stands!");
+
+
+                }else{
+                    sender.sendMessage("§cMust be a player!");
+                    showUsage(quest, sender, args);
+                }
+            }else{
+                showUsage(quest, sender, args);
+            }
+
+        } else if (args.length == 5) {
             if (args[3].equalsIgnoreCase("add")) {
+                boolean showing = true;
+                boolean chosenIfShowing = false;
+                if(args[4].equalsIgnoreCase("no") || args[4].equalsIgnoreCase("false")){
+                    showing = false;
+                    chosenIfShowing = true;
+                }else if(args[4].equalsIgnoreCase("yes") || args[4].equalsIgnoreCase("true")){
+                    showing = true;
+                    chosenIfShowing = true;
+                }
+                if(!chosenIfShowing){
+                    sender.sendMessage("§cWrong last argument!");
+                    return;
+                }
+
                 if(sender instanceof Player player){
                     ItemStack itemStack = new ItemStack(Material.GHAST_TEAR, 1);
                     //give a specialitem. clicking an armorstand with that special item will give it the pdb.
@@ -47,14 +98,24 @@ public class ArmorstandsAdminCommand {
                     NamespacedKey QuestNameKey = new NamespacedKey(main, "notquests-questname");
                     ItemMeta itemMeta = itemStack.getItemMeta();
 
-                    itemMeta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, 0);
+                    List<Component> lore = new ArrayList<>();
+                    if(showing){
+                        itemMeta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, 0);
+                        itemMeta.displayName(Component.text("§6Add showing Quest §b" + quest.getQuestName() + " §6to Armor Stand", NamedTextColor.GOLD));
+                        lore.add(Component.text("§fHit an armor stand to add the showing Quest §b" + quest.getQuestName() + " §fto it."));
+
+                    }else{
+                        itemMeta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, 1);
+                        itemMeta.displayName(Component.text("§6Add non-showing Quest §b" + quest.getQuestName() + " §6to Armor Stand", NamedTextColor.GOLD));
+                        lore.add(Component.text("§fHit an armor stand to add the non-showing Quest §b" + quest.getQuestName() + " §fto it."));
+
+                    }
                     itemMeta.getPersistentDataContainer().set(QuestNameKey, PersistentDataType.STRING, quest.getQuestName());
 
                     itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
-                    itemMeta.displayName(Component.text("§6Add Quest §b" + quest.getQuestName() + " §6to Armor Stand", NamedTextColor.GOLD));
-                    List<Component> lore = new ArrayList<>();
-                    lore.add(Component.text("§fHit an armor stand to add the Quest §b" + quest.getQuestName() + " §fto it."));
+
+
                     itemMeta.lore(lore);
 
                     itemStack.setItemMeta(itemMeta);
@@ -71,6 +132,19 @@ public class ArmorstandsAdminCommand {
 
 
             } else if (args[3].equalsIgnoreCase("remove")) {
+                boolean showing = true;
+                boolean chosenIfShowing = false;
+                if(args[4].equalsIgnoreCase("no") || args[4].equalsIgnoreCase("false")){
+                    showing = false;
+                    chosenIfShowing = true;
+                }else if(args[4].equalsIgnoreCase("yes") || args[4].equalsIgnoreCase("true")){
+                    showing = true;
+                    chosenIfShowing = true;
+                }
+                if(!chosenIfShowing){
+                    sender.sendMessage("§cWrong last argument!");
+                    return;
+                }
                 if(sender instanceof Player player){
                     ItemStack itemStack = new ItemStack(Material.NETHER_STAR, 1);
                     //give a specialitem. clicking an armorstand with that special item will remove the pdb.
@@ -79,15 +153,22 @@ public class ArmorstandsAdminCommand {
                     NamespacedKey QuestNameKey = new NamespacedKey(main, "notquests-questname");
 
                     ItemMeta itemMeta = itemStack.getItemMeta();
+                    List<Component> lore = new ArrayList<>();
 
-                    itemMeta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, 1);
-                    itemMeta.getPersistentDataContainer().set(QuestNameKey, PersistentDataType.STRING, quest.getQuestName());
-
+                    if(showing){
+                        itemMeta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, 2);
+                        itemMeta.displayName(Component.text("§cRemove showing Quest §b" + quest.getQuestName() + " §cfrom Armor Stand", NamedTextColor.RED));
+                        lore.add(Component.text("§fHit an armor stand to remove the showing Quest §b" + quest.getQuestName() + " §ffrom it."));
+                    }else{
+                        itemMeta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, 3);
+                        itemMeta.displayName(Component.text("§cRemove non-showing Quest §b" + quest.getQuestName() + " §cfrom Armor Stand", NamedTextColor.RED));
+                        lore.add(Component.text("§fHit an armor stand to remove the non-showing Quest §b" + quest.getQuestName() + " §ffrom it."));
+                    }
                     itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
-                    itemMeta.displayName(Component.text("§cRemove Quest §b" + quest.getQuestName() + " §cfrom Armor Stand", NamedTextColor.RED));
-                    List<Component> lore = new ArrayList<>();
-                    lore.add(Component.text("§fHit an armor stand to remove the Quest §b" + quest.getQuestName() + " §ffrom it."));
+                    itemMeta.getPersistentDataContainer().set(QuestNameKey, PersistentDataType.STRING, quest.getQuestName());
+
+
                     itemMeta.lore(lore);
 
                     itemStack.setItemMeta(itemMeta);
@@ -122,22 +203,44 @@ public class ArmorstandsAdminCommand {
 
         final Quest quest = main.getQuestManager().getQuest(args[1]);
         if (quest != null) {
+            if (args.length == 4) {
+                main.getDataManager().completions.add("add");
+                main.getDataManager().completions.add("remove");
+                main.getDataManager().completions.add("check");
 
+                main.getDataManager().completions.add("list");
+                main.getDataManager().completions.add("clear");
+                return main.getDataManager().completions;
+            }else if(args.length == 5){
+                if (args[3].equalsIgnoreCase("add")) {
+                    main.getDataManager().completions.add("yes");
+                    main.getDataManager().completions.add("no");
+                    return main.getDataManager().completions;
+                }else if (args[3].equalsIgnoreCase("remove")) {
+                    main.getDataManager().completions.add("yes");
+                    main.getDataManager().completions.add("no");
+                    return main.getDataManager().completions;
+                }
+            }
         }
         return main.getDataManager().completions;
     }
 
     private void showUsage(final Quest quest, final CommandSender sender, final String[] args) {
         if (args.length == 3) {
-            sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6armorstands add §3...");
-            sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6armorstands remove §3...");
-            sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6armorstands list");
-            sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6armorstands clear");
+            sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6armorstands add §3 §3[ShowInArmorstand (yes/no)]");
+            sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6armorstands remove §3[ShowInArmorstand (yes/no)]");
+            sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6armorstands check");
+
+            sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6armorstands list [WIP]");
+            sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6armorstands clear [WIP]");
         }else{
-            sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6armorstands add §3...");
-            sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6armorstands remove §3...");
-            sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6armorstands list");
-            sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6armorstands clear");
+            sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6armorstands add §3 §3[ShowInArmorstand (yes/no)]");
+            sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6armorstands remove §3[ShowInArmorstand (yes/no)]");
+            sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6armorstands check");
+
+            sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6armorstands list [WIP]");
+            sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6armorstands clear [WIP]");
         }
     }
 

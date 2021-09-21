@@ -239,7 +239,7 @@ public class Quest {
         final ArrayList<NPC> arrayList = new ArrayList<>(attachedNPCsWithQuestShowing);
         arrayList.addAll(attachedNPCsWithoutQuestShowing);
         for (NPC npc : arrayList) {
-            if (main.getQuestManager().getQuestsAttachedToNPC(npc).size() == 1) {
+            if (main.getQuestManager().getAllQuestsAttachedToNPC(npc).size() == 1) {
                 npc.removeTrait(QuestGiverNPCTrait.class);
             }
 
@@ -305,7 +305,7 @@ public class Quest {
                 // System.out.println("§e-1");
                 if (attachedNPC.equals(npc)) {
                     // System.out.println("§e0");
-                    if (main.getQuestManager().getQuestsAttachedToNPC(npc).size() == 1) {
+                    if (main.getQuestManager().getAllQuestsAttachedToNPC(npc).size() == 1) {
                         //npc.removeTrait(QuestGiverNPCTrait.class);
                         // System.out.println("§e1");
                         for (final Trait trait : npc.getTraits()) {

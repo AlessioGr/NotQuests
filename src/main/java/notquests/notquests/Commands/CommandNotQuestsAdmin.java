@@ -1034,12 +1034,12 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                 final Quest quest = main.getQuestManager().getQuest(args[1]);
                 if (quest != null) {
                     StringBuilder rewardCommand = new StringBuilder();
-                    for (int start = 4; start < args.length; start++) {
+                    for (int start = 5; start < args.length; start++) {
                         rewardCommand.append(args[start]).append(" ");
                     }
                     CommandReward commandReward = new CommandReward(main, rewardCommand.toString());
                     quest.addReward(commandReward);
-                    sender.sendMessage("§aReward successfully added to quest §b" + quest.getQuestName() + "§a!");
+                    sender.sendMessage("§aReward successfully added to quest §b" + quest.getQuestName() + "§a! Reward command: §e" + rewardCommand.toString());
 
                 } else {
                     sender.sendMessage("§cQuest §b" + args[1] + " §cdoes not exist");
@@ -1813,7 +1813,16 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                     return null;
                 }
 
-            } else if (args.length == 4) {
+            } else if (args.length >= 4 && args[0].equalsIgnoreCase("edit") && args[2].equalsIgnoreCase("armorstands")) {
+                final List<String> completions = armorstandsAdminCommand.handleCompletions(sender, args);
+                if (completions != null) {
+                    StringUtil.copyPartialMatches(args[args.length - 1], completions, main.getDataManager().partialCompletions);
+                    return main.getDataManager().partialCompletions;
+                } else {
+                    return null;
+                }
+
+            }else if (args.length == 4) {
                 if (args[0].equalsIgnoreCase("edit")) {
                     if (args[2].equalsIgnoreCase("maxAccepts")) {
                         StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().numberCompletions, main.getDataManager().partialCompletions);

@@ -32,12 +32,18 @@ import notquests.notquests.Structs.Triggers.Action;
 import notquests.notquests.Structs.Triggers.Trigger;
 import notquests.notquests.Structs.Triggers.TriggerTypes.*;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -434,27 +440,102 @@ public class QuestManager {
     }
 
 
-    public final ArrayList<Quest> getQuestsAttachedToNPC(final NPC npc) {
-        final ArrayList<Quest> questsattached = new ArrayList<>();
+    public final ArrayList<Quest> getAllQuestsAttachedToArmorstand(final ArmorStand armorstand) {
+        return new ArrayList<>() {{
+            PersistentDataContainer armorstandPDB = armorstand.getPersistentDataContainer();
+            NamespacedKey attachedShowingQuestsKey = new NamespacedKey(main, "notquests-attachedQuests-showing");
+            NamespacedKey attachedNonShowingQuestsKey = new NamespacedKey(main, "notquests-attachedQuests-nonshowing");
+
+            //Showing
+            if (armorstandPDB.has(attachedShowingQuestsKey, PersistentDataType.STRING)) {
+                String existingAttachedQuests = armorstandPDB.get(attachedShowingQuestsKey, PersistentDataType.STRING);
+                if (existingAttachedQuests != null && existingAttachedQuests.length() >= 1) {
+                    for (String split : existingAttachedQuests.split("°")) {
+                        final Quest foundQuest = getQuest(split);
+                        if (foundQuest != null) {
+                            add(foundQuest);
+                        }
+                    }
+                }
+            }
+
+            //Nonshowing
+            if (armorstandPDB.has(attachedNonShowingQuestsKey, PersistentDataType.STRING)) {
+                String existingAttachedQuests = armorstandPDB.get(attachedNonShowingQuestsKey, PersistentDataType.STRING);
+                if (existingAttachedQuests != null && existingAttachedQuests.length() >= 1) {
+                    for (String split : existingAttachedQuests.split("°")) {
+                        final Quest foundQuest = getQuest(split);
+                        if (foundQuest != null) {
+                            add(foundQuest);
+                        }
+                    }
+                }
+            }
+
+        }};
+
+    }
+    public final ArrayList<Quest> getQuestsAttachedToArmorstandWithShowing(final ArmorStand armorstand) {
+        return new ArrayList<>() {{
+            PersistentDataContainer armorstandPDB = armorstand.getPersistentDataContainer();
+            NamespacedKey attachedQuestsKey = new NamespacedKey(main, "notquests-attachedQuests-showing");
+
+            if (armorstandPDB.has(attachedQuestsKey, PersistentDataType.STRING)) {
+                String existingAttachedQuests = armorstandPDB.get(attachedQuestsKey, PersistentDataType.STRING);
+                if (existingAttachedQuests != null && existingAttachedQuests.length() >= 1) {
+                    for (String split : existingAttachedQuests.split("°")) {
+                        final Quest foundQuest = getQuest(split);
+                        if (foundQuest != null) {
+                            add(foundQuest);
+                        }
+                    }
+                }
+            }
+        }};
+
+    }
+    public final ArrayList<Quest> getQuestsAttachedToArmorstandWithoutShowing(final ArmorStand armorstand) {
+        return new ArrayList<>() {{
+            PersistentDataContainer armorstandPDB = armorstand.getPersistentDataContainer();
+            NamespacedKey attachedQuestsKey = new NamespacedKey(main, "notquests-attachedQuests-nonshowing");
+
+            if (armorstandPDB.has(attachedQuestsKey, PersistentDataType.STRING)) {
+                String existingAttachedQuests = armorstandPDB.get(attachedQuestsKey, PersistentDataType.STRING);
+                if (existingAttachedQuests != null && existingAttachedQuests.length() >= 1) {
+                    for (String split : existingAttachedQuests.split("°")) {
+                        final Quest foundQuest = getQuest(split);
+                        if (foundQuest != null) {
+                            add(foundQuest);
+                        }
+                    }
+                }
+            }
+        }};
+    }
+
+    public final ArrayList<Quest> getAllQuestsAttachedToNPC(final NPC npc) {
+        final ArrayList<Quest> questsAttached = new ArrayList<>();
         for (Quest quest : quests) {
             if (quest.getAttachedNPCsWithQuestShowing().contains(npc) || quest.getAttachedNPCsWithoutQuestShowing().contains(npc)) {
-                questsattached.add(quest);
+                questsAttached.add(quest);
             }
         }
         // System.out.println("§esize: " + questsattached.size());
-        return questsattached;
+        return questsAttached;
     }
 
     public final ArrayList<Quest> getQuestsAttachedToNPCWithShowing(final NPC npc) {
-        final ArrayList<Quest> questsattached = new ArrayList<>();
+        final ArrayList<Quest> questsAttached = new ArrayList<>();
         for (Quest quest : quests) {
             if (quest.getAttachedNPCsWithQuestShowing().contains(npc)) {
-                questsattached.add(quest);
+                questsAttached.add(quest);
             }
         }
         // System.out.println("§esize: " + questsattached.size());
-        return questsattached;
+        return questsAttached;
     }
+
+
 
     public final ArrayList<Quest> getQuestsAttachedToNPCWithoutShowing(final NPC npc) {
         final ArrayList<Quest> questsattached = new ArrayList<>();
@@ -467,20 +548,138 @@ public class QuestManager {
         return questsattached;
     }
 
-    public final ArrayList<NPC> getAllNPCsAttackedToQuest(final Quest quest) {
+    public final ArrayList<NPC> getAllNPCsAttachedToQuest(final Quest quest) {
         final ArrayList<NPC> npcsAttached = new ArrayList<>();
         npcsAttached.addAll(quest.getAttachedNPCsWithQuestShowing());
         npcsAttached.addAll(quest.getAttachedNPCsWithoutQuestShowing());
         return npcsAttached;
     }
 
-    public final ArrayList<NPC> getNPCsAttackedToQuestWithShowing(final Quest quest) {
+    public final ArrayList<NPC> getNPCsAttachedToQuestWithShowing(final Quest quest) {
         return quest.getAttachedNPCsWithQuestShowing();
     }
 
-    public final ArrayList<NPC> getNPCsAttackedToQuestWithoutShowing(final Quest quest) {
+    public final ArrayList<NPC> getNPCsAttachedToQuestWithoutShowing(final Quest quest) {
         return quest.getAttachedNPCsWithoutQuestShowing();
     }
+
+
+    public void sendQuestsPreviewOfQuestShownArmorstands(ArmorStand armorStand, Player player) {
+        final ArrayList<Quest> questsAttachedToNPC = getQuestsAttachedToArmorstandWithShowing(armorStand);
+
+        //No quests attached or all quests are set to not showing (more likely). THen nothing should show. That should make it work with Interactions plugin and takeEnabled = false.
+        if(questsAttachedToNPC.size() == 0){
+            return;
+        }
+
+        if (main.getDataManager().getConfiguration().isQuestPreviewUseGUI()) {
+            String[] guiSetup = {
+                    "xxxxxxxxx",
+                    "xgggggggx",
+                    "xgggggggx",
+                    "xgggggggx",
+                    "xgggggggx",
+                    "pxxxxxxxn"
+            };
+            InventoryGui gui = new InventoryGui(main, player, "          §9Available Quests", guiSetup);
+            gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
+
+            int count = 0;
+            GuiElementGroup group = new GuiElementGroup('g');
+
+            for (final Quest quest : questsAttachedToNPC) {
+                final Material materialToUse = Material.BOOK;
+
+                String displayName = quest.getQuestName();
+                if (!quest.getQuestDisplayName().equals("")) {
+                    displayName = quest.getQuestDisplayName();
+                }
+                displayName = "§b" + displayName;
+                QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer((player.getUniqueId()));
+
+                if (questPlayer != null && questPlayer.hasAcceptedQuest(quest)) {
+                    displayName += " §a[ACCEPTED]";
+                }
+                String description = "";
+                if (!quest.getQuestDescription().equals("")) {
+                    description = "§8" + quest.getQuestDescription();
+                }
+                count++;
+
+
+                group.addElement(new StaticGuiElement('e',
+                        new ItemStack(materialToUse),
+                        count, // Display a number as the item count
+                        click -> {
+                            player.chat("/q preview " + quest.getQuestName());
+                            //click.getEvent().getWhoClicked().sendMessage(ChatColor.RED + "I am Redstone!");
+                            return true; // returning true will cancel the click event and stop taking the item
+
+                        },
+                        displayName,
+                        description,
+                        "§aClick to open Quest"
+                ));
+
+            }
+
+
+            gui.addElement(group);
+
+            // Previous page
+            gui.addElement(new GuiPageElement('p', new ItemStack(Material.SPECTRAL_ARROW), GuiPageElement.PageAction.PREVIOUS, "Go to previous page (%prevpage%)"));
+
+            // Next page
+            gui.addElement(new GuiPageElement('n', new ItemStack(Material.ARROW), GuiPageElement.PageAction.NEXT, "Go to next page (%nextpage%)"));
+
+            gui.addElement(new StaticGuiElement('x',
+                    new ItemStack(Material.BLACK_STAINED_GLASS_PANE),
+                    0, // Display a number as the item count
+                    click -> {
+
+                        return true; // returning true will cancel the click event and stop taking the item
+
+                    },
+                    " "
+            ));
+
+
+            gui.show(player);
+        } else {
+            main.getLogger().log(Level.INFO, "§7NotQuests > All quest count: " + quests.size());
+
+            player.sendMessage("");
+            player.sendMessage("§9" + questsAttachedToNPC.size() + " Available Quests:");
+            int counter = 1;
+
+            for (Quest quest : questsAttachedToNPC) {
+
+
+                BaseComponent component;
+
+
+                BaseComponent acceptComponent = new TextComponent("§a§l[CHOOSE]");
+                acceptComponent.setClickEvent(new net.md_5.bungee.api.chat.ClickEvent(net.md_5.bungee.api.chat.ClickEvent.Action.RUN_COMMAND, "/nquests preview " + quest.getQuestName()));
+                if (quest.getQuestDisplayName().length() >= 1) {
+                    acceptComponent.setHoverEvent(new net.md_5.bungee.api.chat.HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aClick to preview/choose the quest §b" + quest.getQuestDisplayName()).create()));
+                    component = new TextComponent("§e" + counter + ". §b" + quest.getQuestDisplayName() + " ");
+                } else {
+                    acceptComponent.setHoverEvent(new net.md_5.bungee.api.chat.HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aClick to preview/choose the quest §b" + quest.getQuestName()).create()));
+                    component = new TextComponent("§e" + counter + ". §b" + quest.getQuestName() + " ");
+                }
+
+                component.addExtra(acceptComponent);
+
+                player.sendMessage(component);
+
+
+                counter++;
+            }
+            //getQuestsAttachedToNPC(npc);
+        }
+
+    }
+
 
     public void sendQuestsPreviewOfQuestShownNPCs(NPC npc, Player player) {
         final ArrayList<Quest> questsAttachedToNPC = getQuestsAttachedToNPCWithShowing(npc);
@@ -831,7 +1030,7 @@ public class QuestManager {
         final ArrayList<Trait> traitsToRemove = new ArrayList<>();
         for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
             allNPCsFound += 1;
-            if (getQuestsAttachedToNPC(npc).size() == 0) {
+            if (getAllQuestsAttachedToNPC(npc).size() == 0) {
                 for (final Trait trait : npc.getTraits()) {
                     if (trait.getName().contains("questgiver")) {
                         traitsToRemove.add(trait);
@@ -861,7 +1060,7 @@ public class QuestManager {
             } else {
                 //TODO: Remove debug shit or improve performance
                 final ArrayList<String> attachedQuestNames = new ArrayList<>();
-                for (final Quest attachedQuest : getQuestsAttachedToNPC(npc)) {
+                for (final Quest attachedQuest : getAllQuestsAttachedToNPC(npc)) {
                     attachedQuestNames.add(attachedQuest.getQuestName());
                 }
                 main.getLogger().log(Level.INFO, "§aNotQuests > NPC with the ID: §b" + npc.getId() + " §ais not bugged, because it has the following quests attached: §b" + attachedQuestNames);
@@ -1384,4 +1583,47 @@ public class QuestManager {
 
 
     }
+
+
+    /**
+     * Checks if the player is close to a Citizens NPC or Armor Stand which has the specified Quest attached to it
+     *
+     * @param player the player who should be close to the Citizens NPC or Armor Stand
+     * @param quest the Quest which needs to be attached to the Citizens NPC or Armor Stand
+     * @return if the player is close to a Citizens NPC or Armor Stand which has the specified Quest attached to it
+     */
+    public final boolean isPlayerCloseToCitizenOrArmorstandWithQuest(final Player player, final Quest quest){
+        final int closenessCheckDistance = 6;
+
+        //First check Armor stands since I think that check is probably faster - especially if the user has a lot of Citizen NPCs
+        for(final Entity entity : player.getNearbyEntities(closenessCheckDistance, closenessCheckDistance, closenessCheckDistance)){
+            if(entity instanceof ArmorStand armorStand){
+                if(getAllQuestsAttachedToArmorstand(armorStand).contains(quest)){
+                    return true;
+                }
+            }
+        }
+
+
+        //Then Citizens
+        if(main.isCitizensEnabled()){
+            for (NPC npc : getAllNPCsAttachedToQuest(quest)) {
+                if (npc == null || npc.getEntity() == null) {
+                    main.getLogger().warning("§cA quest has an invalid npc attached to it, which should be removed. Report it to an admin. Quest name: §b" + quest.getQuestName());
+                    continue;
+                }
+                final Location npcLocation = npc.getEntity().getLocation();
+                if (npcLocation.getWorld().equals(player.getWorld())) {
+                    if (npcLocation.distance(player.getLocation()) < closenessCheckDistance) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+
+
+    }
+
 }

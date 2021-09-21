@@ -121,7 +121,7 @@ public class QuestGiverNPCTrait extends Trait {
     public void onRemove() {
         //REMOVEEEE FROM QUEST
         plugin.getServer().getLogger().info("§aNotQuests > NPC with the ID §b" + npc.getId() + " §aand name §b" + npc.getName() + " §ahas been removed!");
-        for (Quest quest : plugin.getQuestManager().getQuestsAttachedToNPC(getNPC())) {
+        for (Quest quest : plugin.getQuestManager().getAllQuestsAttachedToNPC(getNPC())) {
             quest.removeNPC(getNPC());
         }
     }

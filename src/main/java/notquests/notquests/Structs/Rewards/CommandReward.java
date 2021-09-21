@@ -28,6 +28,8 @@ public class CommandReward extends Reward {
         rewardConsoleCommand = rewardConsoleCommand.replace("{QUEST}", "" + quest.getQuestName());
         ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
 
+        //DEBUG: main.getLogger().info("Giving reward command: §b" + consoleCommand);
+
         if (Bukkit.isPrimaryThread()) {
             Bukkit.dispatchCommand(console, rewardConsoleCommand);
         } else {

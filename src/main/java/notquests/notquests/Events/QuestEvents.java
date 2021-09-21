@@ -387,7 +387,7 @@ public class QuestEvents implements Listener {
 
 
     @EventHandler
-    private void onArmorstandHit(PlayerInteractAtEntityEvent event){
+    private void onArmorstandClick(PlayerInteractAtEntityEvent event){
 
         final Player player = event.getPlayer();
 
@@ -396,100 +396,190 @@ public class QuestEvents implements Listener {
 
             final ItemStack heldItem = event.getPlayer().getInventory().getItemInMainHand();
 
-            final PersistentDataContainer container = heldItem.getItemMeta().getPersistentDataContainer();
+            if(heldItem != null && heldItem.getItemMeta() != null){
+                final PersistentDataContainer container = heldItem.getItemMeta().getPersistentDataContainer();
 
-            final NamespacedKey key = new NamespacedKey(main, "notquests-item");
+                final NamespacedKey specialItemKey = new NamespacedKey(main, "notquests-item");
 
-            if(container.has(key, PersistentDataType.INTEGER)){
-                int id = container.get(key, PersistentDataType.INTEGER);
+                if(container.has(specialItemKey, PersistentDataType.INTEGER)){
+                    int id = container.get(specialItemKey, PersistentDataType.INTEGER);
 
-                final NamespacedKey questsKey = new NamespacedKey(main, "notquests-questname");
+                    final NamespacedKey questsKey = new NamespacedKey(main, "notquests-questname");
 
-                final String questName =  container.get(questsKey, PersistentDataType.STRING);
+                    final String questName =  container.get(questsKey, PersistentDataType.STRING);
 
-                if(questName == null){
-                    player.sendMessage("§cError: Your item has no valid quest attached to it.");
-                    return;
-                }
+                    if(questName == null && id >= 0 && id <= 3){
+                        player.sendMessage("§cError: Your item has no valid quest attached to it.");
+                        return;
+                    }
 
-                if(id == 0){ //Add
-                    PersistentDataContainer armorstandPDB = armorstand.getPersistentDataContainer();
-                    NamespacedKey attachedQuestsKey = new NamespacedKey(main, "notquests-attachedQuests");
-
-                    if(armorstandPDB.has(attachedQuestsKey, PersistentDataType.STRING)){
-                        String existingAttachedQuests = armorstandPDB.get(attachedQuestsKey, PersistentDataType.STRING);
-
-
-                        if(existingAttachedQuests != null ){
-                           // boolean condition2 =  (existingAttachedQuests.contains("°"+questName) && (   ( (existingAttachedQuests.indexOf("°" + questName)-1) + ("°"+questName).length())  == existingAttachedQuests.length()-1  )  ) ;
-                            //boolean condition3 =  (existingAttachedQuests.contains(questName + "°") &&  existingAttachedQuests.indexOf(questName+"°")  == 0 )   ;
-
-                            //player.sendMessage("" + ( (existingAttachedQuests.indexOf("°" + questName)-1) + ("°"+questName).length()));
-                            //player.sendMessage("" + (existingAttachedQuests.length()-1) );
+                    if(id == 0 || id == 1){ //Add
+                        PersistentDataContainer armorstandPDB = armorstand.getPersistentDataContainer();
+                        NamespacedKey attachedQuestsKey;
+                        if(id == 0){ //showing
+                            attachedQuestsKey  = new NamespacedKey(main, "notquests-attachedQuests-showing");
+                        }else{
+                            attachedQuestsKey  = new NamespacedKey(main, "notquests-attachedQuests-nonshowing");
+                        }
+                        if(armorstandPDB.has(attachedQuestsKey, PersistentDataType.STRING)){
+                            String existingAttachedQuests = armorstandPDB.get(attachedQuestsKey, PersistentDataType.STRING);
 
 
-                            if( existingAttachedQuests.equals(questName) || existingAttachedQuests.contains("°" + questName+"°") ){
-                                player.sendMessage("§cError: That armor stand already has the Quest §b" + questName + " §cattached to it!");
-                                player.sendMessage("§cAttached Quests: §b" + existingAttachedQuests);
-                                return;
+                            if(existingAttachedQuests != null ){
+                                // boolean condition2 =  (existingAttachedQuests.contains("°"+questName) && (   ( (existingAttachedQuests.indexOf("°" + questName)-1) + ("°"+questName).length())  == existingAttachedQuests.length()-1  )  ) ;
+                                //boolean condition3 =  (existingAttachedQuests.contains(questName + "°") &&  existingAttachedQuests.indexOf(questName+"°")  == 0 )   ;
+
+                                //player.sendMessage("" + ( (existingAttachedQuests.indexOf("°" + questName)-1) + ("°"+questName).length()));
+                                //player.sendMessage("" + (existingAttachedQuests.length()-1) );
+
+
+                                if( existingAttachedQuests.equals(questName) || existingAttachedQuests.contains("°" + questName+"°") ){
+                                    player.sendMessage("§cError: That armor stand already has the Quest §b" + questName + " §cattached to it!");
+                                    player.sendMessage("§cAttached Quests: §b" + existingAttachedQuests);
+                                    return;
+                                }
+
                             }
 
-                        }
+                            if(existingAttachedQuests != null && existingAttachedQuests.length() >= 1){
+                                if(   existingAttachedQuests.charAt(existingAttachedQuests.length()-1) == '°' ){
+                                    existingAttachedQuests += (questName+"°") ;
+                                }else{
+                                    existingAttachedQuests += "°"+questName+"°";
+                                }
 
-                        if(existingAttachedQuests != null && existingAttachedQuests.length() >= 1){
-                            if(   existingAttachedQuests.charAt(existingAttachedQuests.length()-1) == '°' ){
-                                existingAttachedQuests += (questName+"°") ;
                             }else{
                                 existingAttachedQuests += "°"+questName+"°";
                             }
 
-                        }else{
-                            existingAttachedQuests += "°"+questName+"°";
-                        }
-
-                        armorstandPDB.set(attachedQuestsKey, PersistentDataType.STRING, existingAttachedQuests);
-
-                        player.sendMessage("§aQuest with the name §b" + questName + " §awas added to this poor little armorstand!");
-                        player.sendMessage("§2Attached Quests: §b" + existingAttachedQuests);
-
-
-                    }else{
-                        armorstandPDB.set(attachedQuestsKey, PersistentDataType.STRING, "°"+questName+"°");
-                        player.sendMessage("§aQuest with the name §b" + questName + " §awas added to this poor little armorstand!");
-                        player.sendMessage("§2Attached Quests: §b" + questName);
-                    }
-
-
-                }else if(id == 1){ //Remove
-                    PersistentDataContainer armorstandPDB = armorstand.getPersistentDataContainer();
-                    NamespacedKey attachedQuestsKey = new NamespacedKey(main, "notquests-attachedQuests");
-                    if(armorstandPDB.has(attachedQuestsKey, PersistentDataType.STRING)){
-                        String existingAttachedQuests = armorstandPDB.get(attachedQuestsKey, PersistentDataType.STRING);
-                        if(existingAttachedQuests != null && existingAttachedQuests.contains("°"+questName+"°")){
-
-
-                            existingAttachedQuests = existingAttachedQuests.replaceAll("°" + questName+"°", "°");
-
                             armorstandPDB.set(attachedQuestsKey, PersistentDataType.STRING, existingAttachedQuests);
-                            player.sendMessage("§2Quest with the name §b" + questName + " §2was removed from this armor stand!");
+
+                            player.sendMessage("§aQuest with the name §b" + questName + " §awas added to this poor little armorstand!");
                             player.sendMessage("§2Attached Quests: §b" + existingAttachedQuests);
                             return;
 
                         }else{
-                            player.sendMessage("§cError: That armor stand does not have the Quest §b" + questName + " §cattached to it!");
-                            player.sendMessage("§2Attached Quests: §b" + existingAttachedQuests);
+                            armorstandPDB.set(attachedQuestsKey, PersistentDataType.STRING, "°"+questName+"°");
+                            player.sendMessage("§aQuest with the name §b" + questName + " §awas added to this poor little armorstand!");
+                            player.sendMessage("§2Attached Quests: §b" + "°"+questName+"°");
                             return;
                         }
-                    }else{
-                        player.sendMessage("§cThis armor stand has no quests attached to it!");
+
+
+                    }else if(id == 2 || id == 3){ //Remove
+                        PersistentDataContainer armorstandPDB = armorstand.getPersistentDataContainer();
+
+                        NamespacedKey attachedQuestsKey;
+
+                        if(id == 2){ //showing
+                            attachedQuestsKey  = new NamespacedKey(main, "notquests-attachedQuests-showing");
+                        }else{
+                            attachedQuestsKey  = new NamespacedKey(main, "notquests-attachedQuests-nonshowing");
+                        }
+
+                        if(armorstandPDB.has(attachedQuestsKey, PersistentDataType.STRING)){
+                            String existingAttachedQuests = armorstandPDB.get(attachedQuestsKey, PersistentDataType.STRING);
+                            if(existingAttachedQuests != null && existingAttachedQuests.contains("°"+questName+"°")){
+
+
+                                existingAttachedQuests = existingAttachedQuests.replaceAll("°" + questName+"°", "°");
+
+                                //So it can go fully empty again
+                                boolean foundNonSeparator = false;
+                                for (int i = 0; i < existingAttachedQuests.length(); i++){
+                                    char c = existingAttachedQuests.charAt(i);
+                                    if(c != '°'){
+                                        foundNonSeparator = true;
+                                    }
+                                }
+                                if(!foundNonSeparator){
+                                    existingAttachedQuests = "";
+                                }
+
+                                armorstandPDB.set(attachedQuestsKey, PersistentDataType.STRING, existingAttachedQuests);
+                                player.sendMessage("§2Quest with the name §b" + questName + " §2was removed from this armor stand!");
+                                player.sendMessage("§2Attached Quests: §b" + existingAttachedQuests);
+                                return;
+
+                            }else{
+                                player.sendMessage("§cError: That armor stand does not have the Quest §b" + questName + " §cattached to it!");
+                                player.sendMessage("§2Attached Quests: §b" + existingAttachedQuests);
+                                return;
+                            }
+                        }else{
+                            player.sendMessage("§cThis armor stand has no quests attached to it!");
+                            return;
+                        }
+
+
+                    }else if(id == 4){ //Check
+                        //Get all Quests attached to this armor stand:
+                        PersistentDataContainer armorstandPDB = armorstand.getPersistentDataContainer();
+                        NamespacedKey attachedQuestsShowingKey = new NamespacedKey(main, "notquests-attachedQuests-showing");
+                        NamespacedKey attachedQuestsNonShowingKey = new NamespacedKey(main, "notquests-attachedQuests-nonshowing");
+
+                        final ArrayList<String> showingQuests = new ArrayList<>();
+                        final ArrayList<String> nonShowingQuests = new ArrayList<>();
+
+
+                        if(armorstandPDB.has(attachedQuestsShowingKey, PersistentDataType.STRING)){
+                            String existingAttachedQuests = armorstandPDB.get(attachedQuestsShowingKey, PersistentDataType.STRING);
+                            if(existingAttachedQuests != null && existingAttachedQuests.length() >= 1){
+                                for(String split : existingAttachedQuests.split("°")){
+                                    showingQuests.add(split);
+                                }
+                            }
+                        }
+                        if(armorstandPDB.has(attachedQuestsNonShowingKey, PersistentDataType.STRING)){
+                            String existingAttachedQuests = armorstandPDB.get(attachedQuestsNonShowingKey, PersistentDataType.STRING);
+                            if(existingAttachedQuests != null && existingAttachedQuests.length() >= 1){
+                                for(String split : existingAttachedQuests.split("°")){
+                                    nonShowingQuests.add(split);
+                                }
+                            }
+                        }
+
+                        if(showingQuests.size() == 0){
+                            player.sendMessage("§9All attached showing Quests: §7None");
+                        }else{
+                            player.sendMessage("§9All " + showingQuests.size() + " attached showing Quests:");
+                            int counter=0;
+                            for(final String questNameInList : showingQuests){
+                                if(questNameInList.isBlank()){ //empty or null or only whitespaces
+                                    counter++;
+                                    player.sendMessage("§7" + counter + ". §e" + questNameInList);
+                                }
+
+                            }
+                        }
+
+                        if(nonShowingQuests.size() == 0){
+                            player.sendMessage("§9All attached non-showing Quests: §7None");
+                        }else{
+                            player.sendMessage("§9All " + nonShowingQuests.size() + " attached non-showing Quests:");
+                            int counter=0;
+                            for(final String questNameInList : nonShowingQuests){
+                                if(questNameInList.isBlank()){ //empty or null or only whitespaces
+                                    counter++;
+                                    player.sendMessage("§7" + counter + ". §e" + questNameInList);
+                                }
+
+                            }
+                        }
+
+                    }else{ //???
                         return;
                     }
-
-
-                }else{ //???
-                    return;
+                }else{
+                    //Show quests
+                    main.getQuestManager().sendQuestsPreviewOfQuestShownArmorstands(armorstand, player);
                 }
+            }else{
+                //Show quests
+                main.getQuestManager().sendQuestsPreviewOfQuestShownArmorstands(armorstand, player);
             }
+
+
         }
     }
 
