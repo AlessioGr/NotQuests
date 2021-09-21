@@ -1867,7 +1867,13 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                         StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
                         return main.getDataManager().partialCompletions;
                     } else if (args[2].equalsIgnoreCase("npcs") && args[3].equalsIgnoreCase("add")) {
-                        StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().numberPositiveCompletions, main.getDataManager().partialCompletions);
+                        if(main.isCitizensEnabled()){
+                            for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
+                                main.getDataManager().completions.add("" + npc.getId());
+                            }
+                        }
+
+                        StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
                         return main.getDataManager().partialCompletions;
                     } else if (args[2].equalsIgnoreCase("triggers") && args[3].equalsIgnoreCase("add")) {
                         for (final Action action : main.getQuestManager().getAllActions()) {
@@ -1879,7 +1885,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                         final Quest quest = main.getQuestManager().getQuest(args[1]);
                         if (quest != null) {
                             int i = 1;
-                            for (final Trigger trigger : quest.getTriggers()) {
+                            for (final Trigger ignored : quest.getTriggers()) {
                                 main.getDataManager().completions.add("" + i);
                                 i++;
                             }
