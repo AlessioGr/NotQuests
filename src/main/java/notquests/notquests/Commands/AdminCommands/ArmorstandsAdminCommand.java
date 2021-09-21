@@ -10,6 +10,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -49,7 +50,9 @@ public class ArmorstandsAdminCommand {
                     itemMeta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, 0);
                     itemMeta.getPersistentDataContainer().set(QuestNameKey, PersistentDataType.STRING, quest.getQuestName());
 
-                    itemMeta.displayName(Component.text("Add Quest to Armor Stand", NamedTextColor.GOLD));
+                    itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+
+                    itemMeta.displayName(Component.text("§6Add Quest §b" + quest.getQuestName() + " §6to Armor Stand", NamedTextColor.GOLD));
                     List<Component> lore = new ArrayList<>();
                     lore.add(Component.text("§fHit an armor stand to add the Quest §b" + quest.getQuestName() + " §fto it."));
                     itemMeta.lore(lore);
@@ -80,8 +83,9 @@ public class ArmorstandsAdminCommand {
                     itemMeta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, 1);
                     itemMeta.getPersistentDataContainer().set(QuestNameKey, PersistentDataType.STRING, quest.getQuestName());
 
+                    itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
-                    itemMeta.displayName(Component.text("Remove Quest from Armor Stand", NamedTextColor.RED));
+                    itemMeta.displayName(Component.text("§cRemove Quest §b" + quest.getQuestName() + " §cfrom Armor Stand", NamedTextColor.RED));
                     List<Component> lore = new ArrayList<>();
                     lore.add(Component.text("§fHit an armor stand to remove the Quest §b" + quest.getQuestName() + " §ffrom it."));
                     itemMeta.lore(lore);

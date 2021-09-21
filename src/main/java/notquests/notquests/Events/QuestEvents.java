@@ -12,6 +12,7 @@ import notquests.notquests.Structs.Triggers.TriggerTypes.TriggerType;
 import notquests.notquests.Structs.Triggers.TriggerTypes.WorldEnterTrigger;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -391,6 +392,8 @@ public class QuestEvents implements Listener {
         final Player player = event.getPlayer();
 
         if(event.getRightClicked().getType() == EntityType.ARMOR_STAND) {
+            ArmorStand armorstand = (ArmorStand) event.getRightClicked();
+
             final ItemStack heldItem = event.getPlayer().getInventory().getItemInMainHand();
 
             final PersistentDataContainer container = heldItem.getItemMeta().getPersistentDataContainer();
@@ -402,12 +405,87 @@ public class QuestEvents implements Listener {
 
                 final NamespacedKey questsKey = new NamespacedKey(main, "notquests-questname");
 
-                final String questName =  container.get(questsKey, PersistentDataType.STRING);;
+                final String questName =  container.get(questsKey, PersistentDataType.STRING);
+
+                if(questName == null){
+                    player.sendMessage("§cError: Your item has no valid quest attached to it.");
+                    return;
+                }
 
                 if(id == 0){ //Add
-                    player.sendMessage("§aQuest with the name §b" + questName + " §awas added to this poor little armorstand!");
+                    PersistentDataContainer armorstandPDB = armorstand.getPersistentDataContainer();
+                    NamespacedKey attachedQuestsKey = new NamespacedKey(main, "notquests-attachedQuests");
+
+                    if(armorstandPDB.has(attachedQuestsKey, PersistentDataType.STRING)){
+                        String existingAttachedQuests = armorstandPDB.get(attachedQuestsKey, PersistentDataType.STRING);
+
+
+                        if(existingAttachedQuests != null ){
+                           // boolean condition2 =  (existingAttachedQuests.contains("°"+questName) && (   ( (existingAttachedQuests.indexOf("°" + questName)-1) + ("°"+questName).length())  == existingAttachedQuests.length()-1  )  ) ;
+                            //boolean condition3 =  (existingAttachedQuests.contains(questName + "°") &&  existingAttachedQuests.indexOf(questName+"°")  == 0 )   ;
+
+                            //player.sendMessage("" + ( (existingAttachedQuests.indexOf("°" + questName)-1) + ("°"+questName).length()));
+                            //player.sendMessage("" + (existingAttachedQuests.length()-1) );
+
+
+                            if( existingAttachedQuests.equals(questName) || existingAttachedQuests.contains("°" + questName+"°") ){
+                                player.sendMessage("§cError: That armor stand already has the Quest §b" + questName + " §cattached to it!");
+                                player.sendMessage("§cAttached Quests: §b" + existingAttachedQuests);
+                                return;
+                            }
+
+                        }
+
+                        if(existingAttachedQuests != null && existingAttachedQuests.length() >= 1){
+                            if(   existingAttachedQuests.charAt(existingAttachedQuests.length()-1) == '°' ){
+                                existingAttachedQuests += (questName+"°") ;
+                            }else{
+                                existingAttachedQuests += "°"+questName+"°";
+                            }
+
+                        }else{
+                            existingAttachedQuests += "°"+questName+"°";
+                        }
+
+                        armorstandPDB.set(attachedQuestsKey, PersistentDataType.STRING, existingAttachedQuests);
+
+                        player.sendMessage("§aQuest with the name §b" + questName + " §awas added to this poor little armorstand!");
+                        player.sendMessage("§2Attached Quests: §b" + existingAttachedQuests);
+
+
+                    }else{
+                        armorstandPDB.set(attachedQuestsKey, PersistentDataType.STRING, "°"+questName+"°");
+                        player.sendMessage("§aQuest with the name §b" + questName + " §awas added to this poor little armorstand!");
+                        player.sendMessage("§2Attached Quests: §b" + questName);
+                    }
+
+
                 }else if(id == 1){ //Remove
-                    player.sendMessage("§2Quest with the name §b" + questName + " §2was removed from this armorstand!");
+                    PersistentDataContainer armorstandPDB = armorstand.getPersistentDataContainer();
+                    NamespacedKey attachedQuestsKey = new NamespacedKey(main, "notquests-attachedQuests");
+                    if(armorstandPDB.has(attachedQuestsKey, PersistentDataType.STRING)){
+                        String existingAttachedQuests = armorstandPDB.get(attachedQuestsKey, PersistentDataType.STRING);
+                        if(existingAttachedQuests != null && existingAttachedQuests.contains("°"+questName+"°")){
+
+
+                            existingAttachedQuests = existingAttachedQuests.replaceAll("°" + questName+"°", "°");
+
+                            armorstandPDB.set(attachedQuestsKey, PersistentDataType.STRING, existingAttachedQuests);
+                            player.sendMessage("§2Quest with the name §b" + questName + " §2was removed from this armor stand!");
+                            player.sendMessage("§2Attached Quests: §b" + existingAttachedQuests);
+                            return;
+
+                        }else{
+                            player.sendMessage("§cError: That armor stand does not have the Quest §b" + questName + " §cattached to it!");
+                            player.sendMessage("§2Attached Quests: §b" + existingAttachedQuests);
+                            return;
+                        }
+                    }else{
+                        player.sendMessage("§cThis armor stand has no quests attached to it!");
+                        return;
+                    }
+
+
                 }else{ //???
                     return;
                 }

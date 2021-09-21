@@ -62,6 +62,9 @@ public class QuestManager {
 
     public final String createQuest(String questName) {
         if (getQuest(questName) == null) {
+            if(questName.contains("°")){
+                return "The symbol ° cannot be used, because it's used for some important, plugin-internal stuff.";
+            }
             Quest newQuest = new Quest(main, questName);
             quests.add(newQuest);
             main.getDataManager().getQuestsData().set("quests." + questName, "");
