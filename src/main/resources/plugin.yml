@@ -10,12 +10,12 @@ commands:
   notquestsadmin:
     description: Edit quests
     usage: /notquestsadmin
-    aliases: [ nquestsadmin, nquestadmin, notquestadmin, qadmin, questadmin, questsadmin, qa, qag ]
+    aliases: [ nquestsadmin, nquestadmin, notquestadmin, qadmin, questadmin, questsadmin, qa, qag, nqa ]
     permission: notnot.quests.admin
   notquests:
     description: Accept quests
     usage: /notquests
-    aliases: [ nquests, nquest, notquest, quest, quests, q, qg ]
+    aliases: [ nquests, nquest, notquest, quest, quests, q, qg, nq ]
     permission: notnot.quests.use
 permissions:
   notnot.quests.admin:
