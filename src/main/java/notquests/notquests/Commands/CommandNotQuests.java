@@ -494,6 +494,10 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                             } else {
                                 if(main.isCitizensEnabled()){
                                     for (final NPC npc : main.getQuestManager().getAllNPCsAttackedToQuest(quest)) {
+                                        if(npc == null || npc.getEntity() == null){
+                                            sender.sendMessage("§cThis quest has an invalid npc attached to it, which should be removed. Report it to an admin. Quest name: §b" + quest.getQuestName());
+                                            continue;
+                                        }
                                         final Location npcLocation = npc.getEntity().getLocation();
                                         if (npcLocation.getWorld().equals(((Player) sender).getWorld())) {
                                             if (npcLocation.distance(((Player) sender).getLocation()) < 6) {
@@ -709,6 +713,10 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                             } else {
                                 if(main.isCitizensEnabled()){
                                     for (NPC npc : main.getQuestManager().getAllNPCsAttackedToQuest(quest)) {
+                                        if(npc == null || npc.getEntity() == null ){
+                                            sender.sendMessage("§cThis quest has an invalid npc attached to it, which should be removed. Report it to an admin. Quest name: §b" + quest.getQuestName());
+                                            continue;
+                                        }
                                         final Location npcLocation = npc.getEntity().getLocation();
                                         if (npcLocation.getWorld().equals(((Player) sender).getWorld())) {
                                             if (npcLocation.distance(((Player) sender).getLocation()) < 6) {

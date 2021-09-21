@@ -482,6 +482,11 @@ public class QuestManager {
     public void sendQuestsPreviewOfQuestShownNPCs(NPC npc, Player player) {
         final ArrayList<Quest> questsAttachedToNPC = getQuestsAttachedToNPCWithShowing(npc);
 
+        //No quests attached or all quests are set to not showing (more likely). THen nothing should show. That should make it work with Interactions plugin and takeEnabled = false.
+        if(questsAttachedToNPC.size() == 0){
+            return;
+        }
+
         if (main.getDataManager().getConfiguration().isQuestPreviewUseGUI()) {
             String[] guiSetup = {
                     "xxxxxxxxx",
