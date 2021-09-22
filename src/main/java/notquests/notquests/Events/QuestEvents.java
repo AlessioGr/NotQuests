@@ -38,6 +38,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.logging.Level;
 
@@ -521,6 +522,9 @@ public class QuestEvents implements Listener {
 
 
                     }else if(id == 4){ //Check
+
+                        player.sendMessage("§7Armor Stand Entity ID: §f" + armorstand.getEntityId());
+
                         //Get all Quests attached to this armor stand:
                         PersistentDataContainer armorstandPDB = armorstand.getPersistentDataContainer();
                         NamespacedKey attachedQuestsShowingKey = new NamespacedKey(main, "notquests-attachedQuests-showing");
@@ -533,17 +537,13 @@ public class QuestEvents implements Listener {
                         if(armorstandPDB.has(attachedQuestsShowingKey, PersistentDataType.STRING)){
                             String existingAttachedQuests = armorstandPDB.get(attachedQuestsShowingKey, PersistentDataType.STRING);
                             if(existingAttachedQuests != null && existingAttachedQuests.length() >= 1){
-                                for(String split : existingAttachedQuests.split("°")){
-                                    showingQuests.add(split);
-                                }
+                                showingQuests.addAll(Arrays.asList(existingAttachedQuests.split("°")));
                             }
                         }
                         if(armorstandPDB.has(attachedQuestsNonShowingKey, PersistentDataType.STRING)){
                             String existingAttachedQuests = armorstandPDB.get(attachedQuestsNonShowingKey, PersistentDataType.STRING);
                             if(existingAttachedQuests != null && existingAttachedQuests.length() >= 1){
-                                for(String split : existingAttachedQuests.split("°")){
-                                    nonShowingQuests.add(split);
-                                }
+                                nonShowingQuests.addAll(Arrays.asList(existingAttachedQuests.split("°")));
                             }
                         }
 
