@@ -124,7 +124,7 @@ public class Quest {
                 } else if (objective instanceof final ConsumeItemsObjective consumeItemObjective) {
                     main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.itemToConsume.itemstack", consumeItemObjective.getItemToConsume());
                 } else if (objective instanceof final DeliverItemsObjective deliverItemsObjective) {
-                    main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.itemToCollect.itemstack", deliverItemsObjective.getItemToCollect());
+                    main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.itemToCollect.itemstack", deliverItemsObjective.getItemToDeliver());
                     main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.recipientNPCID", deliverItemsObjective.getRecipientNPCID());
                 } else if (objective instanceof final TalkToNPCObjective talkToNPCObjective) {
                     main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.NPCtoTalkID", talkToNPCObjective.getNPCtoTalkID());

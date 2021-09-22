@@ -285,6 +285,9 @@ public class QuestManager {
                                 } else if (objectiveType == ObjectiveType.CollectItems) {
                                     final ItemStack itemToCollect = main.getDataManager().getQuestsData().getItemStack("quests." + questName + ".objectives." + objectiveNumber + ".specifics.itemToCollect.itemstack");
                                     objective = new CollectItemsObjective(main, quest, objectiveID, itemToCollect, progressNeeded);
+                                } else if (objectiveType == ObjectiveType.CraftItems) {
+                                    final ItemStack itemToCraft = main.getDataManager().getQuestsData().getItemStack("quests." + questName + ".objectives." + objectiveNumber + ".specifics.itemToCraft.itemstack");
+                                    objective = new CraftItemsObjective(main, quest, objectiveID, itemToCraft, progressNeeded);
                                 } else if (objectiveType == ObjectiveType.TriggerCommand) {
                                     final String triggerName = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.triggerName");
                                     objective = new TriggerCommandObjective(main, quest, objectiveID, triggerName, progressNeeded);
@@ -1141,22 +1144,24 @@ public class QuestManager {
 
     public final String getCompletedObjectiveDescription(final ActiveObjective activeObjective) {
         String toReturn = "";
-        if (activeObjective.getObjective() instanceof BreakBlocksObjective) {
-            toReturn = "    §7§mBlock to break: §f§m" + ((BreakBlocksObjective) activeObjective.getObjective()).getBlockToBreak().toString();
-        } else if (activeObjective.getObjective() instanceof CollectItemsObjective) {
-            toReturn = "    §7§mItems to collect: §f§m" + ((CollectItemsObjective) activeObjective.getObjective()).getItemToCollect().getType() + " (" + ((CollectItemsObjective) activeObjective.getObjective()).getItemToCollect().getItemMeta().getDisplayName() + ")";
-        } else if (activeObjective.getObjective() instanceof TriggerCommandObjective) {
-            toReturn = "    §7§mGoal: §f§m" + ((TriggerCommandObjective) activeObjective.getObjective()).getTriggerName();
-        } else if (activeObjective.getObjective() instanceof OtherQuestObjective) {
-            toReturn = "    §7§mQuest completion: §f§m" + ((OtherQuestObjective) activeObjective.getObjective()).getOtherQuest().getQuestName();
-        } else if (activeObjective.getObjective() instanceof KillMobsObjective) {
-            toReturn = "    §7§mMob to kill: §f§m" + ((KillMobsObjective) activeObjective.getObjective()).getMobToKill().toString();
-        } else if (activeObjective.getObjective() instanceof ConsumeItemsObjective) {
-            toReturn = "    §7§mItems to consume: §f§m" + ((ConsumeItemsObjective) activeObjective.getObjective()).getItemToConsume().getType() + " (" + ((ConsumeItemsObjective) activeObjective.getObjective()).getItemToConsume().getItemMeta().getDisplayName() + ")";
-        } else if (activeObjective.getObjective() instanceof DeliverItemsObjective) {
-            toReturn = "    §7§mItems to deliver: §f§m" + ((DeliverItemsObjective) activeObjective.getObjective()).getItemToCollect().getType() + " (" + ((DeliverItemsObjective) activeObjective.getObjective()).getItemToCollect().getItemMeta().getDisplayName() + ")\n";
+        if (activeObjective.getObjective() instanceof BreakBlocksObjective breakBlocksObjective) {
+            toReturn = "    §7§mBlock to break: §f§m" + breakBlocksObjective.getBlockToBreak().toString();
+        } else if (activeObjective.getObjective() instanceof CollectItemsObjective collectItemsObjective) {
+            toReturn = "    §7§mItems to collect: §f§m" + collectItemsObjective.getItemToCollect().getType() + " (" + collectItemsObjective.getItemToCollect().getItemMeta().getDisplayName() + ")";
+        } else if (activeObjective.getObjective() instanceof CraftItemsObjective craftItemsObjective) {
+            toReturn = "    §7§mItems to craft: §f§m" + craftItemsObjective.getItemToCraft().getType() + " (" + craftItemsObjective.getItemToCraft().getItemMeta().getDisplayName() + ")";
+        } else if (activeObjective.getObjective() instanceof TriggerCommandObjective triggerCommandObjective) {
+            toReturn = "    §7§mGoal: §f§m" + triggerCommandObjective.getTriggerName();
+        } else if (activeObjective.getObjective() instanceof OtherQuestObjective otherQuestObjective) {
+            toReturn = "    §7§mQuest completion: §f§m" + otherQuestObjective.getOtherQuest().getQuestName();
+        } else if (activeObjective.getObjective() instanceof KillMobsObjective killMobsObjective) {
+            toReturn = "    §7§mMob to kill: §f§m" + killMobsObjective.getMobToKill().toString();
+        } else if (activeObjective.getObjective() instanceof ConsumeItemsObjective consumeItemsObjective) {
+            toReturn = "    §7§mItems to consume: §f§m" + consumeItemsObjective.getItemToConsume().getType() + " (" + consumeItemsObjective.getItemToConsume().getItemMeta().getDisplayName() + ")";
+        } else if (activeObjective.getObjective() instanceof DeliverItemsObjective deliverItemsObjective) {
+            toReturn = "    §7§mItems to deliver: §f§m" + deliverItemsObjective.getItemToDeliver().getType() + " (" + deliverItemsObjective.getItemToDeliver().getItemMeta().getDisplayName() + ")\n";
             if(main.isCitizensEnabled()){
-                final NPC npc = CitizensAPI.getNPCRegistry().getById(((DeliverItemsObjective) activeObjective.getObjective()).getRecipientNPCID());
+                final NPC npc = CitizensAPI.getNPCRegistry().getById(deliverItemsObjective.getRecipientNPCID());
                 if (npc != null) {
                     toReturn += "    §7§mDeliver it to §f§m" + npc.getName();
                 } else {
@@ -1166,9 +1171,9 @@ public class QuestManager {
                 toReturn += "    §cError: Citizens plugin not installed. Contact an admin.";
             }
 
-        } else if (activeObjective.getObjective() instanceof TalkToNPCObjective) {
+        } else if (activeObjective.getObjective() instanceof TalkToNPCObjective talkToNPCObjective) {
             if(main.isCitizensEnabled()){
-                final NPC npc = CitizensAPI.getNPCRegistry().getById(((TalkToNPCObjective) activeObjective.getObjective()).getNPCtoTalkID());
+                final NPC npc = CitizensAPI.getNPCRegistry().getById(talkToNPCObjective.getNPCtoTalkID());
                 if (npc != null) {
                     toReturn = "    §7§mTalk to §f§m" + npc.getName();
                 } else {
@@ -1178,10 +1183,10 @@ public class QuestManager {
                 toReturn += "    §cError: Citizens plugin not installed. Contact an admin.";
             }
 
-        } else if (activeObjective.getObjective() instanceof EscortNPCObjective) {
+        } else if (activeObjective.getObjective() instanceof EscortNPCObjective escortNPCObjective) {
             if(main.isCitizensEnabled()){
-                final NPC npc = CitizensAPI.getNPCRegistry().getById(((EscortNPCObjective) activeObjective.getObjective()).getNpcToEscortID());
-                final NPC npcDestination = CitizensAPI.getNPCRegistry().getById(((EscortNPCObjective) activeObjective.getObjective()).getNpcToEscortToID());
+                final NPC npc = CitizensAPI.getNPCRegistry().getById(escortNPCObjective.getNpcToEscortID());
+                final NPC npcDestination = CitizensAPI.getNPCRegistry().getById(escortNPCObjective.getNpcToEscortToID());
 
                 if (npc != null && npcDestination != null) {
                     toReturn = "    §7§mEscort §f§m" + npc.getName() + " §7§mto §f§m" + npcDestination.getName();
@@ -1212,22 +1217,24 @@ public class QuestManager {
 
     public final String getActiveObjectiveDescription(final ActiveObjective activeObjective) {
         String toReturn = "";
-        if (activeObjective.getObjective() instanceof BreakBlocksObjective) {
-            toReturn = "    §7Block to break: §f" + ((BreakBlocksObjective) activeObjective.getObjective()).getBlockToBreak().toString();
-        } else if (activeObjective.getObjective() instanceof CollectItemsObjective) {
-            toReturn = "    §7Items to collect: §f" + ((CollectItemsObjective) activeObjective.getObjective()).getItemToCollect().getType() + " (" + ((CollectItemsObjective) activeObjective.getObjective()).getItemToCollect().getItemMeta().getDisplayName() + ")";
-        } else if (activeObjective.getObjective() instanceof TriggerCommandObjective) {
-            toReturn = "    §7Goal: §f" + ((TriggerCommandObjective) activeObjective.getObjective()).getTriggerName();
-        } else if (activeObjective.getObjective() instanceof OtherQuestObjective) {
-            toReturn = "    §7Quest completion: §f" + ((OtherQuestObjective) activeObjective.getObjective()).getOtherQuest().getQuestName();
-        } else if (activeObjective.getObjective() instanceof KillMobsObjective) {
-            toReturn = "    §7Mob to kill: §f" + ((KillMobsObjective) activeObjective.getObjective()).getMobToKill().toString();
-        } else if (activeObjective.getObjective() instanceof ConsumeItemsObjective) {
-            toReturn = "    §7Items to consume: §f" + ((ConsumeItemsObjective) activeObjective.getObjective()).getItemToConsume().getType() + " (" + ((ConsumeItemsObjective) activeObjective.getObjective()).getItemToConsume().getItemMeta().getDisplayName() + ")";
-        } else if (activeObjective.getObjective() instanceof DeliverItemsObjective) {
-            toReturn = "    §7Items to deliver: §f" + ((DeliverItemsObjective) activeObjective.getObjective()).getItemToCollect().getType() + " (" + ((DeliverItemsObjective) activeObjective.getObjective()).getItemToCollect().getItemMeta().getDisplayName() + ")\n";
+        if (activeObjective.getObjective() instanceof BreakBlocksObjective breakBlocksObjective) {
+            toReturn = "    §7Block to break: §f" + breakBlocksObjective.getBlockToBreak().toString();
+        } else if (activeObjective.getObjective() instanceof CollectItemsObjective collectItemsObjective) {
+            toReturn = "    §7Items to collect: §f" + collectItemsObjective.getItemToCollect().getType() + " (" + collectItemsObjective.getItemToCollect().getItemMeta().getDisplayName() + ")";
+        }else if (activeObjective.getObjective() instanceof CraftItemsObjective craftItemsObjective) {
+            toReturn = "    §7Items to craft: §f" + craftItemsObjective.getItemToCraft().getType() + " (" + craftItemsObjective.getItemToCraft().getItemMeta().getDisplayName() + ")";
+        } else if (activeObjective.getObjective() instanceof TriggerCommandObjective triggerCommandObjective) {
+            toReturn = "    §7Goal: §f" + triggerCommandObjective.getTriggerName();
+        } else if (activeObjective.getObjective() instanceof OtherQuestObjective otherQuestObjective) {
+            toReturn = "    §7Quest completion: §f" + otherQuestObjective.getOtherQuest().getQuestName();
+        } else if (activeObjective.getObjective() instanceof KillMobsObjective killMobsObjective) {
+            toReturn = "    §7Mob to kill: §f" + killMobsObjective.getMobToKill().toString();
+        } else if (activeObjective.getObjective() instanceof ConsumeItemsObjective consumeItemsObjective) {
+            toReturn = "    §7Items to consume: §f" + consumeItemsObjective.getItemToConsume().getType() + " (" + consumeItemsObjective.getItemToConsume().getItemMeta().getDisplayName() + ")";
+        } else if (activeObjective.getObjective() instanceof DeliverItemsObjective deliverItemsObjective) {
+            toReturn = "    §7Items to deliver: §f" + deliverItemsObjective.getItemToDeliver().getType() + " (" + deliverItemsObjective.getItemToDeliver().getItemMeta().getDisplayName() + ")\n";
             if(main.isCitizensEnabled()){
-                final NPC npc = CitizensAPI.getNPCRegistry().getById(((DeliverItemsObjective) activeObjective.getObjective()).getRecipientNPCID());
+                final NPC npc = CitizensAPI.getNPCRegistry().getById(deliverItemsObjective.getRecipientNPCID());
                 if (npc != null) {
                     toReturn += "    §7Deliver it to §f" + npc.getName();
                 } else {
@@ -1237,9 +1244,9 @@ public class QuestManager {
                 toReturn += "    §cError: Citizens plugin not installed. Contact an admin.";
             }
 
-        } else if (activeObjective.getObjective() instanceof TalkToNPCObjective) {
+        } else if (activeObjective.getObjective() instanceof TalkToNPCObjective talkToNPCObjective) {
             if(main.isCitizensEnabled()){
-                final NPC npc = CitizensAPI.getNPCRegistry().getById(((TalkToNPCObjective) activeObjective.getObjective()).getNPCtoTalkID());
+                final NPC npc = CitizensAPI.getNPCRegistry().getById(talkToNPCObjective.getNPCtoTalkID());
                 if (npc != null) {
                     toReturn = "    §7Talk to §f" + npc.getName();
                 } else {
@@ -1249,10 +1256,10 @@ public class QuestManager {
                 toReturn += "    §cError: Citizens plugin not installed. Contact an admin.";
             }
 
-        } else if (activeObjective.getObjective() instanceof EscortNPCObjective) {
+        } else if (activeObjective.getObjective() instanceof EscortNPCObjective escortNPCObjective) {
             if(main.isCitizensEnabled()){
-                final NPC npc = CitizensAPI.getNPCRegistry().getById(((EscortNPCObjective) activeObjective.getObjective()).getNpcToEscortID());
-                final NPC npcDestination = CitizensAPI.getNPCRegistry().getById(((EscortNPCObjective) activeObjective.getObjective()).getNpcToEscortToID());
+                final NPC npc = CitizensAPI.getNPCRegistry().getById(escortNPCObjective.getNpcToEscortID());
+                final NPC npcDestination = CitizensAPI.getNPCRegistry().getById(escortNPCObjective.getNpcToEscortToID());
 
                 if (npc != null && npcDestination != null) {
                     toReturn = "    §7Escort §f" + npc.getName() + " §7to §f" + npcDestination.getName();
@@ -1323,22 +1330,24 @@ public class QuestManager {
                 sender.sendMessage("   §9Description: §6" + objectiveDescription);
             }
 
-            if (objective instanceof BreakBlocksObjective) {
-                sender.sendMessage("    §7Break Blocks: §f" + ((BreakBlocksObjective) objective).getBlockToBreak().toString() + " §7x " + objective.getProgressNeeded());
-            } else if (objective instanceof CollectItemsObjective) {
-                sender.sendMessage("    §7Collect Items: §f" + ((CollectItemsObjective) objective).getItemToCollect().getType() + " (" + ((CollectItemsObjective) objective).getItemToCollect().getItemMeta().getDisplayName() + ")" + " §7x " + objective.getProgressNeeded());
-            } else if (objective instanceof TriggerCommandObjective) {
-                sender.sendMessage("    §7Reach Goal: §f" + ((TriggerCommandObjective) objective).getTriggerName() + " §7x " + objective.getProgressNeeded());
-            } else if (objective instanceof OtherQuestObjective) {
-                sender.sendMessage("    §7Complete Quest: §f" + ((OtherQuestObjective) objective).getOtherQuest().getQuestName() + " §7x " + objective.getProgressNeeded());
-            } else if (objective instanceof KillMobsObjective) {
-                sender.sendMessage("    §7Kill Mob: §f" + ((KillMobsObjective) objective).getMobToKill().toString() + " §7x " + objective.getProgressNeeded());
-            } else if (objective instanceof ConsumeItemsObjective) {
-                sender.sendMessage("    §7Consume Item: §f" + ((ConsumeItemsObjective) objective).getItemToConsume().getType() + " (" + ((ConsumeItemsObjective) objective).getItemToConsume().getItemMeta().getDisplayName() + ")" + " §7x " + objective.getProgressNeeded());
-            } else if (objective instanceof DeliverItemsObjective) {
-                sender.sendMessage("    §7Items to deliver: §f" + ((DeliverItemsObjective) objective).getItemToCollect().getType() + " (" + ((DeliverItemsObjective) objective).getItemToCollect().getItemMeta().getDisplayName() + ")");
+            if (objective instanceof BreakBlocksObjective breakBlocksObjective) {
+                sender.sendMessage("    §7Break Blocks: §f" + breakBlocksObjective.getBlockToBreak().toString() + " §7x " + objective.getProgressNeeded());
+            } else if (objective instanceof CollectItemsObjective collectItemsObjective) {
+                sender.sendMessage("    §7Collect Items: §f" + collectItemsObjective.getItemToCollect().getType() + " (" + collectItemsObjective.getItemToCollect().getItemMeta().getDisplayName() + ")" + " §7x " + objective.getProgressNeeded());
+            }else if (objective instanceof CraftItemsObjective craftItemsObjective) {
+                sender.sendMessage("    §7Craft Items: §f" + craftItemsObjective.getItemToCraft().getType() + " (" + craftItemsObjective.getItemToCraft().getItemMeta().getDisplayName() + ")" + " §7x " + objective.getProgressNeeded());
+            } else if (objective instanceof TriggerCommandObjective triggerCommandObjective) {
+                sender.sendMessage("    §7Reach Goal: §f" + triggerCommandObjective.getTriggerName() + " §7x " + objective.getProgressNeeded());
+            } else if (objective instanceof OtherQuestObjective otherQuestObjective) {
+                sender.sendMessage("    §7Complete Quest: §f" + otherQuestObjective.getOtherQuest().getQuestName() + " §7x " + objective.getProgressNeeded());
+            } else if (objective instanceof KillMobsObjective killMobsObjective) {
+                sender.sendMessage("    §7Kill Mob: §f" + killMobsObjective.getMobToKill().toString() + " §7x " + objective.getProgressNeeded());
+            } else if (objective instanceof ConsumeItemsObjective consumeItemsObjective) {
+                sender.sendMessage("    §7Consume Item: §f" + consumeItemsObjective.getItemToConsume().getType() + " (" + ((ConsumeItemsObjective) objective).getItemToConsume().getItemMeta().getDisplayName() + ")" + " §7x " + objective.getProgressNeeded());
+            } else if (objective instanceof DeliverItemsObjective deliverItemsObjective) {
+                sender.sendMessage("    §7Items to deliver: §f" + deliverItemsObjective.getItemToDeliver().getType() + " (" + deliverItemsObjective.getItemToDeliver().getItemMeta().getDisplayName() + ")");
                 if(main.isCitizensEnabled()){
-                    final NPC npc = CitizensAPI.getNPCRegistry().getById(((DeliverItemsObjective) objective).getRecipientNPCID());
+                    final NPC npc = CitizensAPI.getNPCRegistry().getById(deliverItemsObjective.getRecipientNPCID());
                     if (npc != null) {
                         sender.sendMessage("    §7Deliver it to §f" + npc.getName());
                     } else {
@@ -1348,9 +1357,9 @@ public class QuestManager {
                     sender.sendMessage("    §cError: Citizens plugin not installed. Contact an admin.");
                 }
 
-            } else if (objective instanceof TalkToNPCObjective) {
+            } else if (objective instanceof TalkToNPCObjective talkToNPCObjective) {
                 if(main.isCitizensEnabled()){
-                    final NPC npc = CitizensAPI.getNPCRegistry().getById(((TalkToNPCObjective) objective).getNPCtoTalkID());
+                    final NPC npc = CitizensAPI.getNPCRegistry().getById(talkToNPCObjective.getNPCtoTalkID());
                     if (npc != null) {
                         sender.sendMessage("    §7Talk to §f" + npc.getName());
                     } else {
@@ -1360,10 +1369,10 @@ public class QuestManager {
                     sender.sendMessage("    §cError: Citizens plugin not installed. Contact an admin.");
                 }
 
-            } else if (objective instanceof EscortNPCObjective) {
+            } else if (objective instanceof EscortNPCObjective escortNPCObjective) {
                 if(main.isCitizensEnabled()){
-                    final NPC npc = CitizensAPI.getNPCRegistry().getById(((EscortNPCObjective) objective).getNpcToEscortID());
-                    final NPC npcDestination = CitizensAPI.getNPCRegistry().getById(((EscortNPCObjective) objective).getNpcToEscortToID());
+                    final NPC npc = CitizensAPI.getNPCRegistry().getById(escortNPCObjective.getNpcToEscortID());
+                    final NPC npcDestination = CitizensAPI.getNPCRegistry().getById(escortNPCObjective.getNpcToEscortToID());
 
                     if (npc != null && npcDestination != null) {
                         sender.sendMessage("    §7Escort §f" + npc.getName() + " §7to §f" + npcDestination.getName());
@@ -1421,22 +1430,24 @@ public class QuestManager {
             }
 
 
-            if (objective instanceof BreakBlocksObjective) {
-                sender.sendMessage("    §7Break Blocks: §f" + ((BreakBlocksObjective) objective).getBlockToBreak().toString() + " §7x " + objective.getProgressNeeded());
-            } else if (objective instanceof CollectItemsObjective) {
-                sender.sendMessage("    §7Collect Items: §f" + ((CollectItemsObjective) objective).getItemToCollect().getType() + " (" + ((CollectItemsObjective) objective).getItemToCollect().getItemMeta().getDisplayName() + ")" + " §7x " + objective.getProgressNeeded());
-            } else if (objective instanceof TriggerCommandObjective) {
-                sender.sendMessage("    §7Reach Goal: §f" + ((TriggerCommandObjective) objective).getTriggerName() + " §7x " + objective.getProgressNeeded());
-            } else if (objective instanceof OtherQuestObjective) {
-                sender.sendMessage("    §7Complete Quest: §f" + ((OtherQuestObjective) objective).getOtherQuest().getQuestName() + " §7x " + objective.getProgressNeeded());
-            } else if (objective instanceof KillMobsObjective) {
-                sender.sendMessage("    §7Kill Mob: §f" + ((KillMobsObjective) objective).getMobToKill().toString() + " §7x " + objective.getProgressNeeded());
-            } else if (objective instanceof ConsumeItemsObjective) {
-                sender.sendMessage("    §7Consume Item: §f" + ((ConsumeItemsObjective) objective).getItemToConsume().getType() + " (" + ((ConsumeItemsObjective) objective).getItemToConsume().getItemMeta().getDisplayName() + ")" + " §7x " + objective.getProgressNeeded());
-            } else if (objective instanceof DeliverItemsObjective) {
-                sender.sendMessage("    §7Items to deliver: §f" + ((DeliverItemsObjective) objective).getItemToCollect().getType() + " (" + ((DeliverItemsObjective) objective).getItemToCollect().getItemMeta().getDisplayName() + ")");
+            if (objective instanceof BreakBlocksObjective breakBlocksObjective) {
+                sender.sendMessage("    §7Break Blocks: §f" + breakBlocksObjective.getBlockToBreak().toString() + " §7x " + objective.getProgressNeeded());
+            } else if (objective instanceof CollectItemsObjective collectItemsObjective) {
+                sender.sendMessage("    §7Collect Items: §f" + collectItemsObjective.getItemToCollect().getType() + " (" + collectItemsObjective.getItemToCollect().getItemMeta().getDisplayName() + ")" + " §7x " + objective.getProgressNeeded());
+            } else if (objective instanceof CraftItemsObjective craftItemsObjective) {
+                sender.sendMessage("    §7Craft Items: §f" + craftItemsObjective.getItemToCraft().getType() + " (" + craftItemsObjective.getItemToCraft().getItemMeta().getDisplayName() + ")" + " §7x " + objective.getProgressNeeded());
+            } else if (objective instanceof TriggerCommandObjective triggerCommandObjective) {
+                sender.sendMessage("    §7Reach Goal: §f" + triggerCommandObjective.getTriggerName() + " §7x " + objective.getProgressNeeded());
+            } else if (objective instanceof OtherQuestObjective otherQuestObjective) {
+                sender.sendMessage("    §7Complete Quest: §f" + otherQuestObjective.getOtherQuest().getQuestName() + " §7x " + objective.getProgressNeeded());
+            } else if (objective instanceof KillMobsObjective killMobsObjective) {
+                sender.sendMessage("    §7Kill Mob: §f" + killMobsObjective.getMobToKill().toString() + " §7x " + objective.getProgressNeeded());
+            } else if (objective instanceof ConsumeItemsObjective consumeItemsObjective) {
+                sender.sendMessage("    §7Consume Item: §f" + consumeItemsObjective.getItemToConsume().getType() + " (" + consumeItemsObjective.getItemToConsume().getItemMeta().getDisplayName() + ")" + " §7x " + objective.getProgressNeeded());
+            } else if (objective instanceof DeliverItemsObjective deliverItemsObjective) {
+                sender.sendMessage("    §7Items to deliver: §f" + deliverItemsObjective.getItemToDeliver().getType() + " (" + deliverItemsObjective.getItemToDeliver().getItemMeta().getDisplayName() + ")");
                 if(main.isCitizensEnabled()){
-                    final NPC npc = CitizensAPI.getNPCRegistry().getById(((DeliverItemsObjective) objective).getRecipientNPCID());
+                    final NPC npc = CitizensAPI.getNPCRegistry().getById(deliverItemsObjective.getRecipientNPCID());
                     if (npc != null) {
                         sender.sendMessage("    §7Deliver it to §f" + npc.getName());
                     } else {
@@ -1446,9 +1457,9 @@ public class QuestManager {
                     sender.sendMessage("    §cError: Citizens plugin not installed. Contact an admin.");
                 }
 
-            } else if (objective instanceof TalkToNPCObjective) {
+            } else if (objective instanceof TalkToNPCObjective talkToNPCObjective) {
                 if(main.isCitizensEnabled()){
-                    final NPC npc = CitizensAPI.getNPCRegistry().getById(((TalkToNPCObjective) objective).getNPCtoTalkID());
+                    final NPC npc = CitizensAPI.getNPCRegistry().getById(talkToNPCObjective.getNPCtoTalkID());
                     if (npc != null) {
                         sender.sendMessage("    §7Talk to §f" + npc.getName());
                     } else {
@@ -1458,10 +1469,10 @@ public class QuestManager {
                     sender.sendMessage("    §cError: Citizens plugin not installed. Contact an admin.");
                 }
 
-            } else if (objective instanceof EscortNPCObjective) {
+            } else if (objective instanceof EscortNPCObjective escortNPCObjective) {
                 if(main.isCitizensEnabled()){
-                    final NPC npc = CitizensAPI.getNPCRegistry().getById(((EscortNPCObjective) objective).getNpcToEscortID());
-                    final NPC npcDestination = CitizensAPI.getNPCRegistry().getById(((EscortNPCObjective) objective).getNpcToEscortToID());
+                    final NPC npc = CitizensAPI.getNPCRegistry().getById(escortNPCObjective.getNpcToEscortID());
+                    final NPC npcDestination = CitizensAPI.getNPCRegistry().getById(escortNPCObjective.getNpcToEscortToID());
 
                     if (npc != null && npcDestination != null) {
                         sender.sendMessage("    §7Escort §f" + npc.getName() + " §7to §f" + npcDestination.getName());
@@ -1507,22 +1518,24 @@ public class QuestManager {
                 sender.sendMessage("   §9Description: §6" + objectiveDescription);
             }
 
-            if (activeObjective.getObjective() instanceof BreakBlocksObjective) {
-                sender.sendMessage("    §7Block to break: §f" + ((BreakBlocksObjective) activeObjective.getObjective()).getBlockToBreak().toString());
-            } else if (activeObjective.getObjective() instanceof CollectItemsObjective) {
-                sender.sendMessage("    §7Items to collect: §f" + ((CollectItemsObjective) activeObjective.getObjective()).getItemToCollect().getType() + " (" + ((CollectItemsObjective) activeObjective.getObjective()).getItemToCollect().getItemMeta().getDisplayName() + ")");
-            } else if (activeObjective.getObjective() instanceof TriggerCommandObjective) {
-                sender.sendMessage("    §7Goal: §f" + ((TriggerCommandObjective) activeObjective.getObjective()).getTriggerName());
-            } else if (activeObjective.getObjective() instanceof OtherQuestObjective) {
-                sender.sendMessage("    §7Quest completion: §f" + ((OtherQuestObjective) activeObjective.getObjective()).getOtherQuest().getQuestName());
-            } else if (activeObjective.getObjective() instanceof KillMobsObjective) {
-                sender.sendMessage("    §7Mob to kill: §f" + ((KillMobsObjective) activeObjective.getObjective()).getMobToKill().toString());
-            } else if (activeObjective.getObjective() instanceof ConsumeItemsObjective) {
-                sender.sendMessage("    §7Items to consume: §f" + ((ConsumeItemsObjective) activeObjective.getObjective()).getItemToConsume().getType() + " (" + ((ConsumeItemsObjective) activeObjective.getObjective()).getItemToConsume().getItemMeta().getDisplayName() + ")");
-            } else if (activeObjective.getObjective() instanceof DeliverItemsObjective) {
-                sender.sendMessage("    §7Items to deliver: §f" + ((DeliverItemsObjective) activeObjective.getObjective()).getItemToCollect().getType() + " (" + ((DeliverItemsObjective) activeObjective.getObjective()).getItemToCollect().getItemMeta().getDisplayName() + ")");
+            if (activeObjective.getObjective() instanceof BreakBlocksObjective breakBlocksObjective) {
+                sender.sendMessage("    §7Block to break: §f" + breakBlocksObjective.getBlockToBreak().toString());
+            } else if (activeObjective.getObjective() instanceof CollectItemsObjective collectItemsObjective) {
+                sender.sendMessage("    §7Items to collect: §f" + collectItemsObjective.getItemToCollect().getType() + " (" + collectItemsObjective.getItemToCollect().getItemMeta().getDisplayName() + ")");
+            } else if (activeObjective.getObjective() instanceof CraftItemsObjective craftItemsObjective) {
+                sender.sendMessage("    §7Items to craft: §f" + craftItemsObjective.getItemToCraft().getType() + " (" + craftItemsObjective.getItemToCraft().getItemMeta().getDisplayName() + ")");
+            } else if (activeObjective.getObjective() instanceof TriggerCommandObjective triggerCommandObjective) {
+                sender.sendMessage("    §7Goal: §f" + triggerCommandObjective.getTriggerName());
+            } else if (activeObjective.getObjective() instanceof OtherQuestObjective otherQuestObjective) {
+                sender.sendMessage("    §7Quest completion: §f" + otherQuestObjective.getOtherQuest().getQuestName());
+            } else if (activeObjective.getObjective() instanceof KillMobsObjective killMobsObjective) {
+                sender.sendMessage("    §7Mob to kill: §f" + killMobsObjective.getMobToKill().toString());
+            } else if (activeObjective.getObjective() instanceof ConsumeItemsObjective consumeItemsObjective) {
+                sender.sendMessage("    §7Items to consume: §f" + consumeItemsObjective.getItemToConsume().getType() + " (" + consumeItemsObjective.getItemToConsume().getItemMeta().getDisplayName() + ")");
+            } else if (activeObjective.getObjective() instanceof DeliverItemsObjective deliverItemsObjective) {
+                sender.sendMessage("    §7Items to deliver: §f" + deliverItemsObjective.getItemToDeliver().getType() + " (" + deliverItemsObjective.getItemToDeliver().getItemMeta().getDisplayName() + ")");
                 if(main.isCitizensEnabled()){
-                    final NPC npc = CitizensAPI.getNPCRegistry().getById(((DeliverItemsObjective) activeObjective.getObjective()).getRecipientNPCID());
+                    final NPC npc = CitizensAPI.getNPCRegistry().getById(deliverItemsObjective.getRecipientNPCID());
                     if (npc != null) {
                         sender.sendMessage("    §7Deliver it to §f" + npc.getName());
                     } else {
@@ -1532,9 +1545,9 @@ public class QuestManager {
                     sender.sendMessage("    §cError: Citizens plugin not installed. Contact an admin.");
                 }
 
-            } else if (activeObjective.getObjective() instanceof TalkToNPCObjective) {
+            } else if (activeObjective.getObjective() instanceof TalkToNPCObjective talkToNPCObjective) {
                 if(main.isCitizensEnabled()){
-                    final NPC npc = CitizensAPI.getNPCRegistry().getById(((TalkToNPCObjective) activeObjective.getObjective()).getNPCtoTalkID());
+                    final NPC npc = CitizensAPI.getNPCRegistry().getById(talkToNPCObjective.getNPCtoTalkID());
                     if (npc != null) {
                         sender.sendMessage("    §7Talk to §f" + npc.getName());
                     } else {
@@ -1544,10 +1557,10 @@ public class QuestManager {
                     sender.sendMessage("    §cError: Citizens plugin not installed. Contact an admin.");
                 }
 
-            } else if (activeObjective.getObjective() instanceof EscortNPCObjective) {
+            } else if (activeObjective.getObjective() instanceof EscortNPCObjective escortNPCObjective) {
                 if(main.isCitizensEnabled()){
-                    final NPC npc = CitizensAPI.getNPCRegistry().getById(((EscortNPCObjective) activeObjective.getObjective()).getNpcToEscortID());
-                    final NPC npcDestination = CitizensAPI.getNPCRegistry().getById(((EscortNPCObjective) activeObjective.getObjective()).getNpcToEscortToID());
+                    final NPC npc = CitizensAPI.getNPCRegistry().getById(escortNPCObjective.getNpcToEscortID());
+                    final NPC npcDestination = CitizensAPI.getNPCRegistry().getById(escortNPCObjective.getNpcToEscortToID());
 
                     if (npc != null && npcDestination != null) {
                         sender.sendMessage("    §7Escort §f" + npc.getName() + " §7to §f" + npcDestination.getName());

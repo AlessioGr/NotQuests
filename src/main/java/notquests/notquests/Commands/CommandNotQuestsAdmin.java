@@ -135,6 +135,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                     sender.sendMessage("§eObjective Types:");
                     sender.sendMessage("§bBreakBlocks");
                     sender.sendMessage("§bCollectItems");
+                    sender.sendMessage("§bCraftItems");
                     sender.sendMessage("§bKillMobs");
                     sender.sendMessage("§bTriggerCommand");
                     sender.sendMessage("§bOtherQuest");

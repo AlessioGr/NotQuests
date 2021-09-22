@@ -11,7 +11,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -55,22 +54,24 @@ public class ObjectivesAdminCommand {
                     sender.sendMessage("§eInformation of objective with the ID §b" + objectiveID + " §efrom quest §b" + quest.getQuestName() + "§e:");
                     sender.sendMessage("§aObjective Type: §b" + objective.getObjectiveType().toString());
                     sender.sendMessage("§aObjective Content: ");
-                    if (objective instanceof BreakBlocksObjective) {
-                        sender.sendMessage("    §7Block to break: §f" + ((BreakBlocksObjective) objective).getBlockToBreak().toString() + " §7x " + objective.getProgressNeeded());
-                    } else if (objective instanceof CollectItemsObjective) {
-                        sender.sendMessage("    §7Items to collect: §f" + ((CollectItemsObjective) objective).getItemToCollect().getType() + " (" + ((CollectItemsObjective) objective).getItemToCollect().getItemMeta().getDisplayName() + ")" + " §7x " + objective.getProgressNeeded());
-                    } else if (objective instanceof TriggerCommandObjective) {
-                        sender.sendMessage("    §7Goal: §f" + ((TriggerCommandObjective) objective).getTriggerName() + " §7x " + objective.getProgressNeeded());
-                    } else if (objective instanceof OtherQuestObjective) {
-                        sender.sendMessage("    §7Quest completion: §f" + ((OtherQuestObjective) objective).getOtherQuest().getQuestName() + " §7x " + objective.getProgressNeeded());
-                    } else if (objective instanceof KillMobsObjective) {
-                        sender.sendMessage("    §7Mob to kill: §f" + ((KillMobsObjective) objective).getMobToKill().toString() + " §7x " + objective.getProgressNeeded());
-                    } else if (objective instanceof ConsumeItemsObjective) {
-                        sender.sendMessage("    §7Items to consume: §f" + ((ConsumeItemsObjective) objective).getItemToConsume().getType() + " (" + ((ConsumeItemsObjective) objective).getItemToConsume().getItemMeta().getDisplayName() + ")" + " §7x " + objective.getProgressNeeded());
-                    } else if (objective instanceof DeliverItemsObjective) {
-                        sender.sendMessage("    §7Items to deliver: §f" + ((DeliverItemsObjective) objective).getItemToCollect().getType() + " (" + ((DeliverItemsObjective) objective).getItemToCollect().getItemMeta().getDisplayName() + ")" + " §7x " + objective.getProgressNeeded());
+                    if (objective instanceof BreakBlocksObjective breakBlocksObjective) {
+                        sender.sendMessage("    §7Block to break: §f" + breakBlocksObjective.getBlockToBreak().toString() + " §7x " + objective.getProgressNeeded());
+                    } else if (objective instanceof CollectItemsObjective collectItemsObjective) {
+                        sender.sendMessage("    §7Items to collect: §f" + collectItemsObjective.getItemToCollect().getType() + " (" + collectItemsObjective.getItemToCollect().getItemMeta().getDisplayName() + ")" + " §7x " + objective.getProgressNeeded());
+                    }else if (objective instanceof CraftItemsObjective craftItemsObjective) {
+                        sender.sendMessage("    §7Items to craft: §f" + craftItemsObjective.getItemToCraft().getType() + " (" + craftItemsObjective.getItemToCraft().getItemMeta().getDisplayName() + ")" + " §7x " + objective.getProgressNeeded());
+                    } else if (objective instanceof TriggerCommandObjective triggerCommandObjective) {
+                        sender.sendMessage("    §7Goal: §f" + triggerCommandObjective.getTriggerName() + " §7x " + objective.getProgressNeeded());
+                    } else if (objective instanceof OtherQuestObjective otherQuestObjective) {
+                        sender.sendMessage("    §7Quest completion: §f" + otherQuestObjective.getOtherQuest().getQuestName() + " §7x " + objective.getProgressNeeded());
+                    } else if (objective instanceof KillMobsObjective killMobsObjective) {
+                        sender.sendMessage("    §7Mob to kill: §f" + killMobsObjective.getMobToKill().toString() + " §7x " + objective.getProgressNeeded());
+                    } else if (objective instanceof ConsumeItemsObjective consumeItemsObjective) {
+                        sender.sendMessage("    §7Items to consume: §f" + consumeItemsObjective.getItemToConsume().getType() + " (" + consumeItemsObjective.getItemToConsume().getItemMeta().getDisplayName() + ")" + " §7x " + objective.getProgressNeeded());
+                    } else if (objective instanceof DeliverItemsObjective deliverItemsObjective) {
+                        sender.sendMessage("    §7Items to deliver: §f" + deliverItemsObjective.getItemToDeliver().getType() + " (" + deliverItemsObjective.getItemToDeliver().getItemMeta().getDisplayName() + ")" + " §7x " + objective.getProgressNeeded());
                         if(main.isCitizensEnabled()){
-                            final NPC npc = CitizensAPI.getNPCRegistry().getById(((DeliverItemsObjective) objective).getRecipientNPCID());
+                            final NPC npc = CitizensAPI.getNPCRegistry().getById(deliverItemsObjective.getRecipientNPCID());
                             if (npc != null) {
                                 sender.sendMessage("    §7Deliver it to §f" + npc.getName());
                             } else {
@@ -80,9 +81,9 @@ public class ObjectivesAdminCommand {
                             sender.sendMessage("    §cError: Citizens plugin not installed. Contact an admin.");
                         }
 
-                    } else if (objective instanceof TalkToNPCObjective) {
+                    } else if (objective instanceof TalkToNPCObjective talkToNPCObjective) {
                         if(main.isCitizensEnabled()){
-                            final NPC npc = CitizensAPI.getNPCRegistry().getById(((TalkToNPCObjective) objective).getNPCtoTalkID());
+                            final NPC npc = CitizensAPI.getNPCRegistry().getById(talkToNPCObjective.getNPCtoTalkID());
                             if (npc != null) {
                                 sender.sendMessage("    §7Talk to §f" + npc.getName());
                             } else {
@@ -92,10 +93,10 @@ public class ObjectivesAdminCommand {
                             sender.sendMessage("    §cError: Citizens plugin not installed. Contact an admin.");
                         }
 
-                    } else if (objective instanceof EscortNPCObjective) {
+                    } else if (objective instanceof EscortNPCObjective escortNPCObjective) {
                         if(main.isCitizensEnabled()){
-                            final NPC npc = CitizensAPI.getNPCRegistry().getById(((EscortNPCObjective) objective).getNpcToEscortID());
-                            final NPC npcDestination = CitizensAPI.getNPCRegistry().getById(((EscortNPCObjective) objective).getNpcToEscortToID());
+                            final NPC npc = CitizensAPI.getNPCRegistry().getById(escortNPCObjective.getNpcToEscortID());
+                            final NPC npcDestination = CitizensAPI.getNPCRegistry().getById(escortNPCObjective.getNpcToEscortToID());
 
                             if (npc != null && npcDestination != null) {
                                 sender.sendMessage("    §7Escort §f" + npc.getName() + " §7to §f" + npcDestination.getName());
@@ -188,8 +189,7 @@ public class ObjectivesAdminCommand {
 
                 } else if (args[4].equalsIgnoreCase("CollectItems")) {
                     if (args[5].equalsIgnoreCase("hand")) {
-                        if (sender instanceof Player) {
-                            Player player = (Player) sender;
+                        if (sender instanceof Player player) {
                             ItemStack holdingItem = player.getInventory().getItemInMainHand();
                             int amountToCollect = Integer.parseInt(args[6]);
 
@@ -209,6 +209,37 @@ public class ObjectivesAdminCommand {
 
                             CollectItemsObjective collectItemsObjective = new CollectItemsObjective(main, quest, quest.getObjectives().size() + 1, itemStack, amountToCollect);
                             quest.addObjective(collectItemsObjective, true);
+                            sender.sendMessage("§aObjective successfully added to quest §b" + quest.getQuestName() + "§a!");
+
+
+                        } else {
+                            sender.sendMessage("§cItem §b" + args[5] + " §cnot found!");
+                        }
+                    }
+
+
+                }else if (args[4].equalsIgnoreCase("CraftItems")) {
+                    if (args[5].equalsIgnoreCase("hand")) {
+                        if (sender instanceof Player player) {
+                            ItemStack holdingItem = player.getInventory().getItemInMainHand();
+                            int amountToCollect = Integer.parseInt(args[6]);
+
+                            CraftItemsObjective craftItemsObjective = new CraftItemsObjective(main, quest, quest.getObjectives().size() + 1, holdingItem, amountToCollect);
+                            quest.addObjective(craftItemsObjective, true);
+                            sender.sendMessage("§aObjective successfully added to quest §b" + quest.getQuestName() + "§a!");
+
+                        } else {
+                            sender.sendMessage("§cThis command can only be run as a player.");
+                        }
+                    } else {
+                        Material itemMaterial = Material.getMaterial(args[5]);
+                        if (itemMaterial != null) {
+                            ItemStack itemStack = new ItemStack(itemMaterial, 1);
+                            int amountToCollect = Integer.parseInt(args[6]);
+
+
+                            CraftItemsObjective craftItemsObjective = new CraftItemsObjective(main, quest, quest.getObjectives().size() + 1, itemStack, amountToCollect);
+                            quest.addObjective(craftItemsObjective, true);
                             sender.sendMessage("§aObjective successfully added to quest §b" + quest.getQuestName() + "§a!");
 
 
@@ -589,6 +620,7 @@ public class ObjectivesAdminCommand {
                 if (args[3].equalsIgnoreCase("add")) {
                     main.getDataManager().completions.add("BreakBlocks");
                     main.getDataManager().completions.add("CollectItems");
+                    main.getDataManager().completions.add("CraftItems");
                     main.getDataManager().completions.add("KillMobs");
                     main.getDataManager().completions.add("TriggerCommand");
                     main.getDataManager().completions.add("OtherQuest");
@@ -612,6 +644,12 @@ public class ObjectivesAdminCommand {
                         }
                         return main.getDataManager().completions;
                     } else if (args[4].equalsIgnoreCase("CollectItems")) {
+                        for (Material material : Material.values()) {
+                            main.getDataManager().completions.add(material.toString());
+                        }
+                        main.getDataManager().completions.add("hand");
+                        return main.getDataManager().completions;
+                    }else if (args[4].equalsIgnoreCase("CraftItems")) {
                         for (Material material : Material.values()) {
                             main.getDataManager().completions.add(material.toString());
                         }
@@ -673,6 +711,8 @@ public class ObjectivesAdminCommand {
                     if (args[4].equalsIgnoreCase("BreakBlocks")) {
                         return main.getDataManager().numberPositiveCompletions;
                     } else if (args[4].equalsIgnoreCase("CollectItems")) {
+                        return main.getDataManager().numberPositiveCompletions;
+                    }else if (args[4].equalsIgnoreCase("CraftItems")) {
                         return main.getDataManager().numberPositiveCompletions;
                     } else if (args[4].equalsIgnoreCase("TriggerCommand")) {
                         return main.getDataManager().numberPositiveCompletions;
@@ -804,6 +844,7 @@ public class ObjectivesAdminCommand {
                 sender.sendMessage("§eObjective Types:");
                 sender.sendMessage("§bBreakBlocks");
                 sender.sendMessage("§bCollectItems");
+                sender.sendMessage("§bCraftItems");
                 sender.sendMessage("§bKillMobs");
                 sender.sendMessage("§bTriggerCommand");
                 sender.sendMessage("§bOtherQuest");
@@ -832,6 +873,9 @@ public class ObjectivesAdminCommand {
                 } else if (args[4].equalsIgnoreCase("CollectItems")) {
                     sender.sendMessage("§cMissing 6. argument §3[Item Name]§c. Specify the §bitem§c the player has to collect.");
                     sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2CollectItems §3[Item Name/hand] [Amount To Collect]");
+                }else if (args[4].equalsIgnoreCase("CraftItems")) {
+                    sender.sendMessage("§cMissing 6. argument §3[Item Name]§c. Specify the §bitem§c the player has to craft.");
+                    sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2CraftItems §3[Item Name/hand] [Amount To Craft]");
                 } else if (args[4].equalsIgnoreCase("TriggerCommand")) {
                     sender.sendMessage("§cMissing 6. argument §3[Trigger Name]§c. Specify the §bname§c of the trigger to complete the objective.");
                     sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2TriggerCommand §3[Trigger Name] [Amount To Trigger]");
@@ -843,7 +887,7 @@ public class ObjectivesAdminCommand {
                     sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2KillMobs §3[Mob Name] §3[amount of kills needed]");
                 } else if (args[4].equalsIgnoreCase("ConsumeItems")) {
                     sender.sendMessage("§cMissing 6. argument §3[Item Name/hand]§c. Specify the §bitem§c the player has to consume.");
-                    sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2CollectItems §3[Item Name/hand] [Amount To Consume]");
+                    sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2ConsumeItems §3[Item Name/hand] [Amount To Consume]");
                 } else if (args[4].equalsIgnoreCase("DeliverItems")) {
                     sender.sendMessage("§cMissing 6. argument §3[Item Name]§c. Specify the §bitem§c the player has to deliver.");
                     sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2DeliverItems §3[Item Name/hand] [Amount To Collect] [Recipient NPC ID]");
@@ -858,6 +902,7 @@ public class ObjectivesAdminCommand {
                     sender.sendMessage("§eObjective Types:");
                     sender.sendMessage("§bBreakBlocks");
                     sender.sendMessage("§bCollectItems");
+                    sender.sendMessage("§bCraftItems");
                     sender.sendMessage("§bKillMobs");
                     sender.sendMessage("§bTriggerCommand");
                     sender.sendMessage("§bOtherQuest");
@@ -910,16 +955,18 @@ public class ObjectivesAdminCommand {
                 } else if (args[4].equalsIgnoreCase("CollectItems")) {
                     sender.sendMessage("§cMissing 7. argument §3[Amount To Collect]§c. Specify the §bamount of items§c the player has to collect.");
                     sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2CollectItems §3[Item Name/hand] [Amount To Collect]");
-
+                } else if (args[4].equalsIgnoreCase("CraftItems")) {
+                    sender.sendMessage("§cMissing 7. argument §3[Amount To Craft]§c. Specify the §bamount of items§c the player has to craft.");
+                    sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2CraftItems §3[Item Name/hand] [Amount To Craft]");
                 } else if (args[4].equalsIgnoreCase("KillMobs")) {
                     sender.sendMessage("§cMissing 7. argument §3[amount of kills needed]§c. Specify the §bamount of times§c the player has to kill the mob.");
                     sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2KillMobs §3[Mob Name] §3[amount of kills needed]");
                 } else if (args[4].equalsIgnoreCase("ConsumeItems")) {
                     sender.sendMessage("§cMissing 7. argument §3[Amount To Consume]§c. Specify the bamount of items§c the player has to consume.");
-                    sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2CollectItems §3[Item Name/hand] [Amount To Consume]");
+                    sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2ConsumeItems §3[Item Name/hand] [Amount To Consume]");
                 } else if (args[4].equalsIgnoreCase("DeliverItems")) {
                     sender.sendMessage("§cMissing 7. argument §3[Amount To Deliver]§c. Specify the §bamount of items§c the player has to deliver.");
-                    sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2CollectItems §3[Item Name/hand] [Amount To Collect] [Recipient NPC ID]");
+                    sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2DeliverItems §3[Item Name/hand] [Amount To Deliver] [Recipient NPC ID]");
 
                 } else if (args[4].equalsIgnoreCase("EscortNPC")) {
                     sender.sendMessage("§cMissing 7. argument §3[Destination NPC ID]§c. Specify the §bID of the NPC§c where the player has to escort the escort NPC to.");
@@ -983,7 +1030,7 @@ public class ObjectivesAdminCommand {
                     sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2BreakBlocks §3[Block Name] [AmountToBreak] [deductIfBlockIsPlaced?: yes/no]");
                 } else if (args[4].equalsIgnoreCase("DeliverItems")) {
                     sender.sendMessage("§cMissing last argument §3[Recipient NPC ID]§c. Enter the §bID of the NPC§c to whom the player has to deliver the items to.");
-                    sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2CollectItems §3[Item Name/hand] [Amount To Collect] [Recipient NPC ID]");
+                    sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2DeliverItems §3[Item Name/hand] [Amount To Deliver] [Recipient NPC ID]");
 
                 }
             } else if (args[3].equalsIgnoreCase("edit")) {

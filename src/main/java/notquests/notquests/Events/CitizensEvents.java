@@ -102,7 +102,7 @@ public class CitizensEvents implements Listener {
                                 if (objective.getRecipientNPCID() == npc.getId()) {
                                     for (final ItemStack itemStack : player.getInventory().getContents()) {
                                         if (itemStack != null) {
-                                            if (objective.getItemToCollect().getType().equals(itemStack.getType()) && objective.getItemToCollect().getItemMeta().equals(itemStack.getItemMeta())) {
+                                            if (objective.getItemToDeliver().getType().equals(itemStack.getType()) && objective.getItemToDeliver().getItemMeta().equals(itemStack.getItemMeta())) {
 
                                                 final long progressLeft = activeObjective.getProgressNeeded() - activeObjective.getCurrentProgress();
                                                 //player.sendMessage("§6Progress Needed: §b" + activeObjective.getProgressNeeded());
