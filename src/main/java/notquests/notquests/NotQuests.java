@@ -15,6 +15,7 @@ import notquests.notquests.Events.QuestEvents;
 import notquests.notquests.Managers.DataManager;
 import notquests.notquests.Managers.QuestManager;
 import notquests.notquests.Managers.QuestPlayerManager;
+import notquests.notquests.Managers.UpdateChecker;
 import notquests.notquests.Placeholders.QuestPlaceholders;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -132,6 +133,20 @@ public final class NotQuests extends JavaPlugin {
         if(getDataManager().isLoadingEnabled()){
             if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
                 new QuestPlaceholders(this).register();
+            }
+
+            //Update Checker
+            try {
+                final UpdateChecker updateChecker = new UpdateChecker(this, 95872);
+                if (updateChecker.checkForUpdates()){
+                    getLogger().info("§6The version §e" + getDescription().getVersion()
+                            + " §6is not the latest version! Please update the plugin here: §bhttps://www.spigotmc.org/resources/95872/");
+                }else{
+                    getLogger().info("NotQuests seems to be up to date! :)");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                getLogger().info("Unable to check for updates ('" + e.getMessage() + "').");
             }
 
             //bStats statistics

@@ -4,6 +4,7 @@ import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import notquests.notquests.NotQuests;
 import org.bukkit.Bukkit;
+import org.bukkit.Particle;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -314,6 +315,18 @@ public class DataManager {
             getGeneralConfig().set("general.max-active-quests-per-player", -1);
         }
         configuration.setMaxActiveQuestsPerPlayer(getGeneralConfig().getInt("general.max-active-quests-per-player"));
+
+
+        if(!getGeneralConfig().isString("visual.quest-giver-indicator-particle.type")){
+            getGeneralConfig().set("visual.quest-giver-indicator-particle.type", "VILLAGER_ANGRY");
+        }
+        configuration.setQuestGiverIndicatorParticleSpawnType(Particle.valueOf(getGeneralConfig().getString("visual.quest-giver-indicator-particle.type")));
+
+        if(!getGeneralConfig().isInt("visual.quest-giver-indicator-particle.spawn-interval")){
+            getGeneralConfig().set("visual.quest-giver-indicator-particle.spawn-interval", 10);
+        }
+        configuration.setQuestGiverIndicatorParticleSpawnInterval(getGeneralConfig().getInt("visual.quest-giver-indicator-particle.spawn-interval"));
+
 
 
         saveGeneralConfig();

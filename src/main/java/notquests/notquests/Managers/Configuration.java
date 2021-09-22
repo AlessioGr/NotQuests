@@ -1,5 +1,7 @@
 package notquests.notquests.Managers;
 
+import org.bukkit.Particle;
+
 /**
  * This is the Configuration Class which contains the settings which can be configured in the General.conf
  *
@@ -29,6 +31,9 @@ public class Configuration {
     public boolean placeholder_player_active_quests_list_vertical_use_displayname_if_available = true;
 
     private int maxActiveQuestsPerPlayer = -1;
+
+    private int questGiverIndicatorParticleSpawnInterval = 10;
+    private Particle questGiverIndicatorParticleSpawnType = Particle.VILLAGER_ANGRY;
 
 
     public Configuration(){
@@ -106,5 +111,21 @@ public class Configuration {
 
     public void setMaxActiveQuestsPerPlayer(int maxActiveQuestsPerPlayer) {
         this.maxActiveQuestsPerPlayer = maxActiveQuestsPerPlayer;
+    }
+
+    public final int getQuestGiverIndicatorParticleSpawnInterval() {
+        return questGiverIndicatorParticleSpawnInterval;
+    }
+
+    public void setQuestGiverIndicatorParticleSpawnInterval(final int questGiverIndicatorParticleSpawnInterval) {
+        this.questGiverIndicatorParticleSpawnInterval = questGiverIndicatorParticleSpawnInterval;
+    }
+
+    public final Particle getQuestGiverIndicatorParticleSpawnType() {
+        return questGiverIndicatorParticleSpawnType;
+    }
+
+    public void setQuestGiverIndicatorParticleSpawnType(final Particle questGiverIndicatorParticleSpawnType) {
+        this.questGiverIndicatorParticleSpawnType = questGiverIndicatorParticleSpawnType;
     }
 }

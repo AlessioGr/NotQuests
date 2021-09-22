@@ -10,6 +10,10 @@ storage:
 general:
   #The maximum amount of active quests a player can have at the same time. -1 = unlimited (default)
   max-active-quests-per-player: -1
+visual:
+  quest-giver-indicator-particle:
+    type: "VILLAGER_ANGRY"
+    spawn-interval: 10
 gui:
   questpreview:
     # If set to false, clickable text will be used for Quest Previews instead
