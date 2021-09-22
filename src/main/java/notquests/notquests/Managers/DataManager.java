@@ -327,6 +327,11 @@ public class DataManager {
         }
         configuration.setQuestGiverIndicatorParticleSpawnInterval(getGeneralConfig().getInt("visual.quest-giver-indicator-particle.spawn-interval"));
 
+        if(!getGeneralConfig().isInt("visual.quest-giver-indicator-particle.count")){
+            getGeneralConfig().set("visual.quest-giver-indicator-particle.count", 1);
+        }
+        configuration.setQuestGiverIndicatorParticleCount(getGeneralConfig().getInt("visual.quest-giver-indicator-particle.count"));
+
 
 
         saveGeneralConfig();

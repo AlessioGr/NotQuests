@@ -33,6 +33,8 @@ public class Configuration {
     private int maxActiveQuestsPerPlayer = -1;
 
     private int questGiverIndicatorParticleSpawnInterval = 10;
+    private int questGiverIndicatorParticleCount = 1;
+
     private Particle questGiverIndicatorParticleSpawnType = Particle.VILLAGER_ANGRY;
 
 
@@ -127,5 +129,13 @@ public class Configuration {
 
     public void setQuestGiverIndicatorParticleSpawnType(final Particle questGiverIndicatorParticleSpawnType) {
         this.questGiverIndicatorParticleSpawnType = questGiverIndicatorParticleSpawnType;
+    }
+
+    public final int getQuestGiverIndicatorParticleCount() {
+        return questGiverIndicatorParticleCount;
+    }
+
+    public void setQuestGiverIndicatorParticleCount(final int questGiverIndicatorParticleCount) {
+        this.questGiverIndicatorParticleCount = questGiverIndicatorParticleCount;
     }
 }
