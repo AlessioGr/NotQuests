@@ -3,6 +3,7 @@ package notquests.notquests.Managers;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import notquests.notquests.NotQuests;
+import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Particle;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -568,9 +569,9 @@ public class DataManager {
                         main.getLogger().log(Level.SEVERE, "§9NotQuests > §cThere was an error while trying to load MySQL database tables! This is the stacktrace:");
 
                         e.printStackTrace();
-                        main.getLogger().log(Level.SEVERE, "§cNotQuests > Plugin disabled, because there was an error while initializing tables.");
-                        main.getDataManager().setSavingEnabled(false);
-                        main.getServer().getPluginManager().disablePlugin(main);
+
+                        disablePluginAndSaving("Plugin disabled, because there was an error while initializing tables.");
+                        return;
                     }
 
                     if (isSavingEnabled()) {
@@ -578,13 +579,28 @@ public class DataManager {
 
                         if (questsDataFile == null) {
                             questsDataFile = new File(main.getDataFolder(), "quests.yml");
-                            questsData = YamlConfiguration.loadConfiguration(questsDataFile);
-                            main.getLogger().log(Level.INFO, "§aNotQuests > First load of quests.yml. Loading data from it...");
+                            main.getLogger().log(Level.INFO, "§aNotQuests > First load of quests.yml. Loading data from it... - reloadData");
+
+                            try{
+                                questsData = loadYAMLConfiguration(questsDataFile);
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+
+                                disablePluginAndSaving("Plugin disabled, because there was an error loading data from quests.yml.");
+                                return;
+                            }
                             main.getQuestManager().loadData();
 
                         } else {
-                            questsData = YamlConfiguration.loadConfiguration(questsDataFile);
-                            main.getLogger().log(Level.INFO, "§aNotQuests > Loading Data from existing quests.yml...");
+                            main.getLogger().log(Level.INFO, "§aNotQuests > Loading Data from existing quests.yml... - reloadData");
+                            try{
+                                questsData = loadYAMLConfiguration(questsDataFile);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                disablePluginAndSaving("Plugin disabled, because there was an error loading data from quests.yml.");
+                                return;
+                            }
                             main.getQuestManager().loadData();
 
                         }
@@ -641,9 +657,8 @@ public class DataManager {
                     main.getLogger().log(Level.SEVERE, "§9NotQuests > §cThere was an error while trying to load MySQL database tables! This is the stacktrace:");
 
                     e.printStackTrace();
-                    main.getLogger().log(Level.SEVERE, "§cNotQuests > Plugin disabled, because there was an error while initializing tables.");
-                    main.getDataManager().setSavingEnabled(false);
-                    main.getServer().getPluginManager().disablePlugin(main);
+                    disablePluginAndSaving("Plugin disabled, because there was an error while initializing tables.");
+                    return;
                 }
 
                 if (isSavingEnabled()) {
@@ -652,13 +667,25 @@ public class DataManager {
 
                     if (questsDataFile == null) {
                         questsDataFile = new File(main.getDataFolder(), "quests.yml");
-                        questsData = YamlConfiguration.loadConfiguration(questsDataFile);
+                        main.getLogger().log(Level.INFO, "§aNotQuests > First load of quests.yml...");
+                        try{
+                            questsData = loadYAMLConfiguration(questsDataFile);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            disablePluginAndSaving("Plugin disabled, because there was an error loading data from quests.yml.");
+                            return;
+                        }
                         main.getQuestManager().loadData();
-                        main.getLogger().log(Level.INFO, "§aNotQuests > First load of quests.yml");
                     } else {
-                        questsData = YamlConfiguration.loadConfiguration(questsDataFile);
+                        main.getLogger().log(Level.INFO, "§aNotQuests > Loading Data from existing quests.yml...");
+                        try{
+                            questsData = loadYAMLConfiguration(questsDataFile);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            disablePluginAndSaving("Plugin disabled, because there was an error loading data from quests.yml.");
+                            return;
+                        }
                         main.getQuestManager().loadData();
-                        main.getLogger().log(Level.INFO, "§aNotQuests > Loading Data from existing quests.yml");
                     }
 
                     main.getQuestPlayerManager().loadPlayerData();
@@ -826,14 +853,22 @@ public class DataManager {
 
                 if (questsDataFile == null) {
                     questsDataFile = new File(main.getDataFolder(), "quests.yml");
-                    questsData = YamlConfiguration.loadConfiguration(questsDataFile);
+                    main.getLogger().log(Level.INFO, "§aNotQuests > First load of quests.yml - loadNPCData");
+                    try{
+                        questsData = loadYAMLConfiguration(questsDataFile);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+
+                        disablePluginAndSaving("Plugin disabled, because there was an error loading data from quests.yml.");
+                        return;
+                    }
+
                     main.getQuestManager().loadNPCData();
-                    main.getLogger().log(Level.INFO, "§aNotQuests > First load of quests.yml");
 
                 } else {
-                    questsData = YamlConfiguration.loadConfiguration(questsDataFile);
+                    //Unnecessary?main.getLogger().log(Level.INFO, "§aNotQuests > Loading Data from existing quests.yml - loadNPCData");
+                    //Unnecessary?questsData = YamlConfiguration.loadConfiguration(questsDataFile); //Why necessary?
                     main.getQuestManager().loadNPCData();
-                    main.getLogger().log(Level.INFO, "§aNotQuests > Loading Data from existing quests.yml");
 
                 }
             });
@@ -841,20 +876,28 @@ public class DataManager {
 
             if (questsDataFile == null) {
                 questsDataFile = new File(main.getDataFolder(), "quests.yml");
-                questsData = YamlConfiguration.loadConfiguration(questsDataFile);
+                main.getLogger().log(Level.INFO, "§aNotQuests > First load of quests.yml - loadNPCData");
+                try{
+                    questsData = loadYAMLConfiguration(questsDataFile);
+                } catch (Exception e) {
+                    e.printStackTrace();
+
+                    disablePluginAndSaving("Plugin disabled, because there was an error loading data from quests.yml.");
+                    return;
+                }
                 main.getQuestManager().loadNPCData();
-                main.getLogger().log(Level.INFO, "§aNotQuests > First load of quests.yml");
 
             } else {
-                questsData = YamlConfiguration.loadConfiguration(questsDataFile);
+                //Unnecessary?main.getLogger().log(Level.INFO, "§aNotQuests > Loading Data from existing quests.yml - loadNPCData");
+                //Unnecessary?questsData = YamlConfiguration.loadConfiguration(questsDataFile); //Why necessary?
                 main.getQuestManager().loadNPCData();
-                main.getLogger().log(Level.INFO, "§aNotQuests > Loading Data from existing quests.yml");
 
             }
 
         }
 
     }
+
 
     /**
      * @return if Citizen NPCs have been already successfully loaded by the plugin
@@ -905,5 +948,34 @@ public class DataManager {
         return configuration;
     }
 
+
+
+
+    /**
+     *
+     * (Taken from API, but this method also throws errors)
+     *
+     * Creates a new {@link YamlConfiguration}, loading from the given file.
+     * <p>
+     * Any errors loading the Configuration will be logged and then ignored.
+     * If the specified input is not a valid config, a blank config will be
+     * returned.
+     * <p>
+     * The encoding used may follow the system dependent default.
+     *
+     * @param file Input file
+     * @return Resulting configuration
+     * @throws IllegalArgumentException Thrown if file is null
+     */
+    public static YamlConfiguration loadYAMLConfiguration(File file) throws IOException, InvalidConfigurationException {
+        Validate.notNull(file, "File cannot be null");
+
+        YamlConfiguration config = new YamlConfiguration();
+
+        config.load(file);
+
+
+        return config;
+    }
 
 }

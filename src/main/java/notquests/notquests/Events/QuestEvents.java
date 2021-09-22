@@ -24,6 +24,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityDropItemEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
@@ -112,6 +113,34 @@ public class QuestEvents implements Listener {
                                 if (activeObjective.getObjective() instanceof final CollectItemsObjective objective) {
                                     if (objective.getItemToCollect().getType().equals(e.getItem().getItemStack().getType()) && objective.getItemToCollect().getItemMeta().equals(e.getItem().getItemStack().getItemMeta())) {
                                         activeObjective.addProgress(e.getItem().getItemStack().getAmount(), -1);
+                                    }
+                                }
+                            }
+
+                        }
+                        activeQuest.removeCompletedObjectives(true);
+                    }
+                    questPlayer.removeCompletedQuests();
+                }
+            }
+        }
+
+    }
+
+
+    @EventHandler
+    private void onPickupItemEvent(CraftItemEvent e) {
+        final Entity entity = e.getWhoClicked();
+        if (entity instanceof final Player player && e.getInventory().getResult() != null) {
+            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+            if (questPlayer != null) {
+                if (questPlayer.getActiveQuests().size() > 0) {
+                    for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+                        for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
+                            if (activeObjective.isUnlocked()) {
+                                if (activeObjective.getObjective() instanceof final CraftItemsObjective objective) {
+                                    if (objective.getItemToCraft().getType().equals(e.getInventory().getResult().getType()) && objective.getItemToCraft().getItemMeta().equals(e.getInventory().getResult().getItemMeta())) {
+                                        activeObjective.addProgress(e.getInventory().getResult().getAmount(), -1);
                                     }
                                 }
                             }

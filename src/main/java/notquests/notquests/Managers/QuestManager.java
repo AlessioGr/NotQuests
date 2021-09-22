@@ -278,42 +278,52 @@ public class QuestManager {
 
                                 Objective objective = null;
 
-                                if (objectiveType == ObjectiveType.BreakBlocks) {
-                                    final Material blockToBreak = Material.valueOf(main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.blockToBreak.material"));
-                                    final boolean deductIfBlockPlaced = main.getDataManager().getQuestsData().getBoolean("quests." + questName + ".objectives." + objectiveNumber + ".specifics.deductIfBlockPlaced");
-                                    objective = new BreakBlocksObjective(main, quest, objectiveID, blockToBreak, progressNeeded, deductIfBlockPlaced);
-                                } else if (objectiveType == ObjectiveType.CollectItems) {
-                                    final ItemStack itemToCollect = main.getDataManager().getQuestsData().getItemStack("quests." + questName + ".objectives." + objectiveNumber + ".specifics.itemToCollect.itemstack");
-                                    objective = new CollectItemsObjective(main, quest, objectiveID, itemToCollect, progressNeeded);
-                                } else if (objectiveType == ObjectiveType.CraftItems) {
-                                    final ItemStack itemToCraft = main.getDataManager().getQuestsData().getItemStack("quests." + questName + ".objectives." + objectiveNumber + ".specifics.itemToCraft.itemstack");
-                                    objective = new CraftItemsObjective(main, quest, objectiveID, itemToCraft, progressNeeded);
-                                } else if (objectiveType == ObjectiveType.TriggerCommand) {
-                                    final String triggerName = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.triggerName");
-                                    objective = new TriggerCommandObjective(main, quest, objectiveID, triggerName, progressNeeded);
-                                } else if (objectiveType == ObjectiveType.OtherQuest) {
-                                    final String otherQuestName = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.otherQuestName");
-                                    final boolean countPreviousCompletions = main.getDataManager().getQuestsData().getBoolean("quests." + questName + ".objectives." + objectiveNumber + ".specifics.countPreviousCompletions");
-                                    objective = new OtherQuestObjective(main, quest, objectiveID, otherQuestName, progressNeeded, countPreviousCompletions);
-                                } else if (objectiveType == ObjectiveType.KillMobs) {
-                                    final EntityType mobToKill = EntityType.valueOf(main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.mobToKill"));
-                                    final int amountToKill = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.amountToKill");
-                                    objective = new KillMobsObjective(main, quest, objectiveID, mobToKill, amountToKill);
-                                } else if (objectiveType == ObjectiveType.ConsumeItems) {
-                                    final ItemStack itemToConsume = main.getDataManager().getQuestsData().getItemStack("quests." + questName + ".objectives." + objectiveNumber + ".specifics.itemToConsume.itemstack");
-                                    objective = new ConsumeItemsObjective(main, quest, objectiveID, itemToConsume, progressNeeded);
-                                } else if (objectiveType == ObjectiveType.DeliverItems) {
-                                    final ItemStack itemToCollect = main.getDataManager().getQuestsData().getItemStack("quests." + questName + ".objectives." + objectiveNumber + ".specifics.itemToCollect.itemstack");
-                                    final int recipientNPCID = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.recipientNPCID");
-                                    objective = new DeliverItemsObjective(main, quest, objectiveID, itemToCollect, progressNeeded, recipientNPCID);
-                                } else if (objectiveType == ObjectiveType.TalkToNPC) {
-                                    final int NPCtoTalkID = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.NPCtoTalkID");
-                                    objective = new TalkToNPCObjective(main, quest, objectiveID, NPCtoTalkID);
-                                } else if (objectiveType == ObjectiveType.EscortNPC) {
-                                    final int NPCtoEscortID = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.NPCToEscortID");
-                                    final int destinationNPCID = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.destinationNPCID");
-                                    objective = new EscortNPCObjective(main, quest, objectiveID, NPCtoEscortID, destinationNPCID);
+                                try {
+                                    if (objectiveType == ObjectiveType.BreakBlocks) {
+                                        final Material blockToBreak = Material.valueOf(main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.blockToBreak.material"));
+                                        final boolean deductIfBlockPlaced = main.getDataManager().getQuestsData().getBoolean("quests." + questName + ".objectives." + objectiveNumber + ".specifics.deductIfBlockPlaced");
+                                        objective = new BreakBlocksObjective(main, quest, objectiveID, blockToBreak, progressNeeded, deductIfBlockPlaced);
+                                    } else if (objectiveType == ObjectiveType.CollectItems) {
+                                        final ItemStack itemToCollect = main.getDataManager().getQuestsData().getItemStack("quests." + questName + ".objectives." + objectiveNumber + ".specifics.itemToCollect.itemstack");
+                                        objective = new CollectItemsObjective(main, quest, objectiveID, itemToCollect, progressNeeded);
+                                    } else if (objectiveType == ObjectiveType.CraftItems) {
+                                        final ItemStack itemToCraft = main.getDataManager().getQuestsData().getItemStack("quests." + questName + ".objectives." + objectiveNumber + ".specifics.itemToCraft.itemstack");
+                                        objective = new CraftItemsObjective(main, quest, objectiveID, itemToCraft, progressNeeded);
+                                    } else if (objectiveType == ObjectiveType.TriggerCommand) {
+                                        final String triggerName = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.triggerName");
+                                        objective = new TriggerCommandObjective(main, quest, objectiveID, triggerName, progressNeeded);
+                                    } else if (objectiveType == ObjectiveType.OtherQuest) {
+                                        final String otherQuestName = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.otherQuestName");
+                                        final boolean countPreviousCompletions = main.getDataManager().getQuestsData().getBoolean("quests." + questName + ".objectives." + objectiveNumber + ".specifics.countPreviousCompletions");
+                                        objective = new OtherQuestObjective(main, quest, objectiveID, otherQuestName, progressNeeded, countPreviousCompletions);
+                                    } else if (objectiveType == ObjectiveType.KillMobs) {
+                                        final EntityType mobToKill = EntityType.valueOf(main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.mobToKill"));
+                                        final int amountToKill = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.amountToKill");
+                                        objective = new KillMobsObjective(main, quest, objectiveID, mobToKill, amountToKill);
+                                    } else if (objectiveType == ObjectiveType.ConsumeItems) {
+                                        final ItemStack itemToConsume = main.getDataManager().getQuestsData().getItemStack("quests." + questName + ".objectives." + objectiveNumber + ".specifics.itemToConsume.itemstack");
+                                        objective = new ConsumeItemsObjective(main, quest, objectiveID, itemToConsume, progressNeeded);
+                                    } else if (objectiveType == ObjectiveType.DeliverItems) {
+                                        final ItemStack itemToCollect = main.getDataManager().getQuestsData().getItemStack("quests." + questName + ".objectives." + objectiveNumber + ".specifics.itemToCollect.itemstack");
+                                        final int recipientNPCID = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.recipientNPCID");
+                                        objective = new DeliverItemsObjective(main, quest, objectiveID, itemToCollect, progressNeeded, recipientNPCID);
+                                    } else if (objectiveType == ObjectiveType.TalkToNPC) {
+                                        final int NPCtoTalkID = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.NPCtoTalkID");
+                                        objective = new TalkToNPCObjective(main, quest, objectiveID, NPCtoTalkID);
+                                    } else if (objectiveType == ObjectiveType.EscortNPC) {
+                                        final int NPCtoEscortID = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.NPCToEscortID");
+                                        final int destinationNPCID = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.destinationNPCID");
+                                        objective = new EscortNPCObjective(main, quest, objectiveID, NPCtoEscortID, destinationNPCID);
+                                    }                                } catch (java.lang.NullPointerException ex) {
+                                    main.getLogger().log(Level.SEVERE, "§cNotQuests > Error parsing objective Type of objective with ID §b" + objectiveNumber + "§c and Quest §b" + quest.getQuestName() + "§c. Objective creation skipped...");
+
+                                    ex.printStackTrace();
+                                    main.getLogger().log(Level.SEVERE, "§cNotQuests > Plugin disabled, because there was an error while loading quests objective Type data.");
+                                    main.getDataManager().setSavingEnabled(false);
+                                    main.getServer().getPluginManager().disablePlugin(main);
                                 }
+
+
 
 
                                 if (objective != null) {

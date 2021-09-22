@@ -112,6 +112,8 @@ public class Quest {
                     main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.deductIfBlockPlaced", breakBlocksObjective.willDeductIfBlockPlaced());
                 } else if (objective instanceof final CollectItemsObjective collectItemsObjective) {
                     main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.itemToCollect.itemstack", collectItemsObjective.getItemToCollect());
+                } else if (objective instanceof final CraftItemsObjective craftItemsObjective) {
+                    main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.itemToCraft.itemstack", craftItemsObjective.getObjectiveType());
                 } else if (objective instanceof final TriggerCommandObjective triggerCommandObjective) {
                     main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.triggerName", triggerCommandObjective.getTriggerName());
 
