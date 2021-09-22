@@ -11,6 +11,7 @@ import notquests.notquests.Structs.Triggers.ActiveTrigger;
 import notquests.notquests.Structs.Triggers.TriggerTypes.TriggerType;
 import notquests.notquests.Structs.Triggers.TriggerTypes.WorldEnterTrigger;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
@@ -24,11 +25,14 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityDropItemEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.CraftingInventory;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
@@ -128,32 +132,7 @@ public class QuestEvents implements Listener {
     }
 
 
-    @EventHandler
-    private void onPickupItemEvent(CraftItemEvent e) {
-        final Entity entity = e.getWhoClicked();
-        if (entity instanceof final Player player && e.getInventory().getResult() != null) {
-            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
-            if (questPlayer != null) {
-                if (questPlayer.getActiveQuests().size() > 0) {
-                    for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-                        for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-                            if (activeObjective.isUnlocked()) {
-                                if (activeObjective.getObjective() instanceof final CraftItemsObjective objective) {
-                                    if (objective.getItemToCraft().getType().equals(e.getInventory().getResult().getType()) && objective.getItemToCraft().getItemMeta().equals(e.getInventory().getResult().getItemMeta())) {
-                                        activeObjective.addProgress(e.getInventory().getResult().getAmount(), -1);
-                                    }
-                                }
-                            }
 
-                        }
-                        activeQuest.removeCompletedObjectives(true);
-                    }
-                    questPlayer.removeCompletedQuests();
-                }
-            }
-        }
-
-    }
 
     @EventHandler
     private void onDropItemEvent(EntityDropItemEvent e) { //DEFAULT ENABLED FOR ITEM DROPS UNLIKE FOR BLOCK BREAKS
@@ -610,6 +589,119 @@ public class QuestEvents implements Listener {
 
 
         }
+    }
+
+
+
+
+    @EventHandler
+    private void onCraftItemEvent(CraftItemEvent e) {
+        final Entity entity = e.getWhoClicked();
+        if (entity instanceof final Player player && e.getInventory().getResult() != null) {
+            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+            if (questPlayer != null) {
+                if (questPlayer.getActiveQuests().size() > 0) {
+                    for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+                        for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
+                            if (activeObjective.isUnlocked()) {
+                                if (activeObjective.getObjective() instanceof final CraftItemsObjective objective) {
+                                    if (objective.getItemToCraft().getType().equals(e.getInventory().getResult().getType()) && objective.getItemToCraft().getItemMeta().equals(e.getInventory().getResult().getItemMeta())) {
+
+
+
+                                        //Now we gotta figure out the real amount of items which have been crafted, which is trickier than expected:
+                                        ClickType click = e.getClick();
+
+                                        int recipeAmount = e.getRecipe().getResult().getAmount();
+
+                                        switch (click) {
+                                            case NUMBER_KEY:
+                                                //If the hotbar is full, the item will not be crafted but it will still trigger this event for some reason. That's
+                                                //why we manually have to set the amount to 0 here
+                                                if (e.getWhoClicked().getInventory().getItem(e.getHotbarButton()) != null){
+                                                    recipeAmount = 0;
+                                                }
+                                                break;
+
+                                            case DROP:
+                                            case CONTROL_DROP:
+                                                // If we are holding items, craft-via-drop fails (vanilla behavior)
+                                                ItemStack cursor = e.getCursor();
+                                                // Cursor is either null or AIR
+                                                if(! (cursor == null || cursor.getType() == Material.AIR)){
+                                                    recipeAmount = 0;
+                                                }
+
+                                                break;
+
+                                            case SHIFT_RIGHT:
+                                            case SHIFT_LEFT:
+                                                if (recipeAmount == 0)
+                                                    break;
+
+                                                int maxCraftable = getMaxCraftAmount(e.getInventory());
+                                                int capacity = fits(e.getRecipe().getResult(), e.getView().getBottomInventory());
+
+                                                // If we can't fit everything, increase "space" to include the items dropped by
+                                                // crafting
+                                                // (Think: Uncrafting 8 iron blocks into 1 slot)
+                                                if (capacity < maxCraftable)
+                                                    maxCraftable = ((capacity + recipeAmount - 1) / recipeAmount) * recipeAmount;
+
+                                                recipeAmount = maxCraftable;
+                                                break;
+                                            default:
+                                        }
+
+                                        // No use continuing if we haven't actually crafted a thing
+                                        if (recipeAmount == 0)
+                                            return;
+
+                                        activeObjective.addProgress(recipeAmount, -1);
+
+
+
+
+                                    }
+                                }
+                            }
+
+                        }
+                        activeQuest.removeCompletedObjectives(true);
+                    }
+                    questPlayer.removeCompletedQuests();
+                }
+            }
+        }
+
+    }
+
+
+    private int getMaxCraftAmount(CraftingInventory inv) {
+        if (inv.getResult() == null)
+            return 0;
+
+        int resultCount = inv.getResult().getAmount();
+        int materialCount = Integer.MAX_VALUE;
+
+        for (ItemStack is : inv.getMatrix())
+            if (is != null && is.getAmount() < materialCount)
+                materialCount = is.getAmount();
+
+        return resultCount * materialCount;
+    }
+
+    private int fits(ItemStack stack, Inventory inv) {
+        ItemStack[] contents = inv.getContents();
+        int result = 0;
+
+        for (ItemStack is : contents)
+            if (is == null)
+                result += stack.getMaxStackSize();
+            else if (is.isSimilar(stack))
+                result += Math.max(stack.getMaxStackSize() - is.getAmount(), 0);
+
+        return result;
     }
 
 
