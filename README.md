@@ -60,6 +60,7 @@ Admin Commands - Quest Editing:
   - Break Blocks
   - Collect Items
   - Consume Items
+  - Craft Items
   - Deliver Items to NPC
   - Escort NPC
   - Kill Mobs
