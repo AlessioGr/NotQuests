@@ -12,6 +12,7 @@ general:
   max-active-quests-per-player: -1
 visual:
   quest-giver-indicator-particle:
+    enabled: true
     type: "VILLAGER_ANGRY"
     spawn-interval: 10
     count: 1

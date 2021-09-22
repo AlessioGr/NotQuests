@@ -648,8 +648,7 @@ public class ObjectivesAdminCommand {
                             }
                         }
 
-                        StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                        return main.getDataManager().partialCompletions;
+                        return main.getDataManager().completions;
                     } else if (args[4].equalsIgnoreCase("EscortNPC")) {
                         if(main.isCitizensEnabled()){
                             for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
@@ -657,8 +656,7 @@ public class ObjectivesAdminCommand {
                             }
                         }
 
-                        StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                        return main.getDataManager().partialCompletions;
+                        return main.getDataManager().completions;
                     }
                 } else if (args[3].equalsIgnoreCase("edit")) {
                     main.getDataManager().completions.add("info");
@@ -745,8 +743,7 @@ public class ObjectivesAdminCommand {
                             }
                         }
 
-                        StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                        return main.getDataManager().partialCompletions;
+                        return main.getDataManager().completions;
                     }
                 } else if (args[3].equalsIgnoreCase("edit")) {
                     if (args[5].equalsIgnoreCase("dependencies")) {
@@ -780,9 +777,7 @@ public class ObjectivesAdminCommand {
                                         main.getDataManager().completions.add("" + npc.getId());
                                     }
                                 }
-
-                                StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                                return main.getDataManager().partialCompletions;
+                                return main.getDataManager().completions;
                             }
 
 

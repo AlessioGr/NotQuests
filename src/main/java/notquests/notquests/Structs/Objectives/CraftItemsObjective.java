@@ -17,11 +17,11 @@ public class CraftItemsObjective extends Objective {
         this.amountToCraft = amountToCraft;
     }
 
-    public final ItemStack getItemToCollect() {
+    public final ItemStack getItemToCraft() {
         return itemToCraft;
     }
 
-    public final int getAmountToCollect() {
+    public final int getAmountToCraft() {
         return amountToCraft;
     }
 
