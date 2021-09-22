@@ -59,6 +59,7 @@ Admin Commands - Quest Editing:
 - Multiple Quest Objectives:
   - Break Blocks
   - Collect Items
+  - Craft Items
   - Consume Items
   - Deliver Items to NPC
   - Escort NPC
