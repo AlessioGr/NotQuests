@@ -317,10 +317,16 @@ public class DataManager {
         configuration.setMaxActiveQuestsPerPlayer(getGeneralConfig().getInt("general.max-active-quests-per-player"));
 
 
+
+        if(!getGeneralConfig().isBoolean("visual.quest-giver-indicator-particle.enabled")){
+            getGeneralConfig().set("visual.quest-giver-indicator-particle.enabled", true);
+        }
+        configuration.setQuestGiverIndicatorParticleEnabled(getGeneralConfig().getBoolean("visual.quest-giver-indicator-particle.enabled"));
+
         if(!getGeneralConfig().isString("visual.quest-giver-indicator-particle.type")){
             getGeneralConfig().set("visual.quest-giver-indicator-particle.type", "VILLAGER_ANGRY");
         }
-        configuration.setQuestGiverIndicatorParticleSpawnType(Particle.valueOf(getGeneralConfig().getString("visual.quest-giver-indicator-particle.type")));
+        configuration.setQuestGiverIndicatorParticleType(Particle.valueOf(getGeneralConfig().getString("visual.quest-giver-indicator-particle.type")));
 
         if(!getGeneralConfig().isInt("visual.quest-giver-indicator-particle.spawn-interval")){
             getGeneralConfig().set("visual.quest-giver-indicator-particle.spawn-interval", 10);

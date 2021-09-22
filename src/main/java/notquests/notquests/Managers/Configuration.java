@@ -35,7 +35,9 @@ public class Configuration {
     private int questGiverIndicatorParticleSpawnInterval = 10;
     private int questGiverIndicatorParticleCount = 1;
 
-    private Particle questGiverIndicatorParticleSpawnType = Particle.VILLAGER_ANGRY;
+    private Particle questGiverIndicatorParticleType = Particle.VILLAGER_ANGRY;
+
+    private boolean questGiverIndicatorParticleEnabled = true;
 
 
     public Configuration(){
@@ -123,12 +125,12 @@ public class Configuration {
         this.questGiverIndicatorParticleSpawnInterval = questGiverIndicatorParticleSpawnInterval;
     }
 
-    public final Particle getQuestGiverIndicatorParticleSpawnType() {
-        return questGiverIndicatorParticleSpawnType;
+    public final Particle getQuestGiverIndicatorParticleType() {
+        return questGiverIndicatorParticleType;
     }
 
-    public void setQuestGiverIndicatorParticleSpawnType(final Particle questGiverIndicatorParticleSpawnType) {
-        this.questGiverIndicatorParticleSpawnType = questGiverIndicatorParticleSpawnType;
+    public void setQuestGiverIndicatorParticleType(final Particle questGiverIndicatorParticleType) {
+        this.questGiverIndicatorParticleType = questGiverIndicatorParticleType;
     }
 
     public final int getQuestGiverIndicatorParticleCount() {
@@ -137,5 +139,13 @@ public class Configuration {
 
     public void setQuestGiverIndicatorParticleCount(final int questGiverIndicatorParticleCount) {
         this.questGiverIndicatorParticleCount = questGiverIndicatorParticleCount;
+    }
+
+    public final boolean isQuestGiverIndicatorParticleEnabled() {
+        return questGiverIndicatorParticleEnabled;
+    }
+
+    public final void setQuestGiverIndicatorParticleEnabled(boolean questGiverIndicatorParticleEnabled) {
+        this.questGiverIndicatorParticleEnabled = questGiverIndicatorParticleEnabled;
     }
 }
