@@ -11,6 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -641,9 +642,23 @@ public class ObjectivesAdminCommand {
                         main.getDataManager().completions.add("hand");
                         return main.getDataManager().completions;
                     } else if (args[4].equalsIgnoreCase("TalkToNPC")) {
-                        return main.getDataManager().numberPositiveCompletions;
+                        if(main.isCitizensEnabled()){
+                            for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
+                                main.getDataManager().completions.add("" + npc.getId());
+                            }
+                        }
+
+                        StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
+                        return main.getDataManager().partialCompletions;
                     } else if (args[4].equalsIgnoreCase("EscortNPC")) {
-                        return main.getDataManager().numberPositiveCompletions;
+                        if(main.isCitizensEnabled()){
+                            for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
+                                main.getDataManager().completions.add("" + npc.getId());
+                            }
+                        }
+
+                        StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
+                        return main.getDataManager().partialCompletions;
                     }
                 } else if (args[3].equalsIgnoreCase("edit")) {
                     main.getDataManager().completions.add("info");
@@ -724,7 +739,14 @@ public class ObjectivesAdminCommand {
                         return main.getDataManager().completions;
                     } else if (args[4].equalsIgnoreCase("DeliverItems")) {
 
-                        return main.getDataManager().numberPositiveCompletions;
+                        if(main.isCitizensEnabled()){
+                            for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
+                                main.getDataManager().completions.add("" + npc.getId());
+                            }
+                        }
+
+                        StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
+                        return main.getDataManager().partialCompletions;
                     }
                 } else if (args[3].equalsIgnoreCase("edit")) {
                     if (args[5].equalsIgnoreCase("dependencies")) {
@@ -753,7 +775,14 @@ public class ObjectivesAdminCommand {
                             final Objective objective = quest.getObjectiveFromID(Integer.parseInt(args[4]));
                             if (objective != null) {
 
-                                return main.getDataManager().numberPositiveCompletions;
+                                if(main.isCitizensEnabled()){
+                                    for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
+                                        main.getDataManager().completions.add("" + npc.getId());
+                                    }
+                                }
+
+                                StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
+                                return main.getDataManager().partialCompletions;
                             }
 
 
