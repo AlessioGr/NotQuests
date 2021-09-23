@@ -102,91 +102,91 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
 
 
         TextComponent line1 = new TextComponent("§e/qadmin §6create §3[Quest Name]\n");
-        line1.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/nquests create "));
+        line1.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/qadmin create "));
         line1.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aCreate a Quest").create()));
 
         TextComponent line2 = new TextComponent("§e/qadmin §6delete §3[Quest Name]\n");
-        line2.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/nquests delete "));
+        line2.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/qadmin delete "));
         line2.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aDelete a Quest").create()));
 
         TextComponent line3 = new TextComponent("§e/qadmin §6edit §3[Quest Name] §3...\n");
-        line3.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/nquests edit "));
+        line3.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/qadmin edit "));
         line3.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aEdit a Quest").create()));
 
         TextComponent line4 = new TextComponent("§e/qadmin §6actions §3...\n");
-        line4.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/nquests actions "));
+        line4.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/qadmin actions "));
         line4.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aManage Actions").create()));
 
         TextComponent line5 = new TextComponent("§e/qadmin §6give §3[Player Name] [Quest Name]\n");
-        line5.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/nquests give "));
+        line5.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/qadmin give "));
         line5.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aMake another player accept a Quest").create()));
 
         TextComponent line6 = new TextComponent("§e/qadmin §6forcegive §3[Player Name] [Quest Name]\n");
-        line6.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/nquests forcegive "));
+        line6.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/qadmin forcegive "));
         line6.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aSame as give, but bypasses max accepts, cooldown & requirements").create()));
 
         TextComponent line7 = new TextComponent("§e/qadmin §6questPoints §3[Player Name]\n");
-        line7.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/nquests questPoints "));
+        line7.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/qadmin questPoints "));
         line6.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aManages the Quest Points of another player").create()));
 
         TextComponent line8 = new TextComponent("§e/qadmin §6activeQuests §3[Player Name]\n");
-        line8.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/nquests activeQuests "));
+        line8.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/qadmin activeQuests "));
         line8.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aShows active quests of another player").create()));
 
         TextComponent line9 = new TextComponent("§e/qadmin §6completedQuests §3[Player Name]\n");
-        line9.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/nquests completedQuests "));
+        line9.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/qadmin completedQuests "));
         line9.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aShows completed quests of another player").create()));
 
         TextComponent line10 = new TextComponent("§e/qadmin §6progress §3[Player Name] [Quest Name]\n");
-        line10.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/nquests progress "));
+        line10.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/qadmin progress "));
         line10.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aShows progress for a quest of another player").create()));
 
         TextComponent line11 = new TextComponent("§e/qadmin §6failQuest §3[Player Name] [Active Quest Name]\n");
-        line11.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/nquests failQuest "));
+        line11.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/qadmin failQuest "));
         line11.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aFails an active quest for set player").create()));
 
         TextComponent line12 = new TextComponent("§e/qadmin §6completeQuest §3[Player Name] [Active Quest Name]\n");
-        line12.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/nquests completeQuest "));
+        line12.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/qadmin completeQuest "));
         line12.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aForce-completes an active quest for set player no matter if the objectives are completed").create()));
 
         TextComponent line13 = new TextComponent("§e/qadmin §6listObjectiveTypes\n");
-        line13.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nquests listObjectiveTypes"));
+        line13.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/qadmin listObjectiveTypes"));
         line13.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aShows you a list of all available Objective Types").create()));
 
         TextComponent line14 = new TextComponent("§e/qadmin §6listRewardTypes\n");
-        line14.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nquests listRewardTypes"));
+        line14.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/qadmin listRewardTypes"));
         line14.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aShows you a list of all available Reward Types").create()));
 
         TextComponent line15 = new TextComponent("§e/qadmin §6listRequirementTypes\n");
-        line15.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nquests listRequirementTypes"));
+        line15.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/qadmin listRequirementTypes"));
         line15.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aShows you a list of all available Requirement Types").create()));
 
         TextComponent line16 = new TextComponent("§e//qadmin §6listAllQuests\n");
-        line16.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nquests listAllQuests"));
+        line16.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/qadmin listAllQuests"));
         line16.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aShows you a list of all created Quests").create()));
 
         TextComponent line17 = new TextComponent("§e/qadmin §6listPlaceholders\n");
-        line17.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nquests listPlaceholders"));
+        line17.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/qadmin listPlaceholders"));
         line17.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aShows you a list of all available Placeholders which can be used in Trigger or Action commands").create()));
 
         TextComponent line18 = new TextComponent("§e/qadmin §6triggerObjective §3[triggerName] [playerName]\n");
-        line18.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/nquests triggerObjective"));
+        line18.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/qadmin triggerObjective"));
         line18.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aThis triggers the Trigger Command which is needed to complete a TriggerObjective (don't mistake it with Triggers & actions)").create()));
 
         TextComponent line19 = new TextComponent("§e/qadmin §6resetAndRemoveQuestForAllPlayers §3[Quest Name]\n");
-        line19.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/nquests resetAndRemoveQuestForAllPlayers "));
+        line19.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/qadmin resetAndRemoveQuestForAllPlayers "));
         line19.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aRemoves the quest from all players, removes it from completed quests, resets the accept cooldown and basically everything else").create()));
 
         TextComponent line20 = new TextComponent("§e/qadmin §6resetAndFailQuestForAllPlayers §3[Quest Name]\n");
-        line20.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/nquests resetAndFailQuestForAllPlayers "));
+        line20.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/qadmin resetAndFailQuestForAllPlayers "));
         line20.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aFails the quest from all players, removes it from completed quests, resets the accept cooldown and basically everything else").create()));
 
         TextComponent line21 = new TextComponent("§e/qadmin §6load\n");
-        line21.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nquests load"));
+        line21.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/qadmin load"));
         line21.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aLoads from the NotQuests configuration file").create()));
 
         TextComponent line22 = new TextComponent("§e/qadmin §6save\n");
-        line22.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nquests save"));
+        line22.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/qadmin save"));
         line22.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aSaves the NotQuests configuration file").create()));
 
 
