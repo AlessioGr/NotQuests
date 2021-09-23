@@ -18,3 +18,34 @@ titles:
   quest-failed:
     title: '&cQuest gescheitert'
     subtitle: <#b617ff>%QUESTNAME%
+gui:
+  main:
+    title: '                &9Quests'
+    button:
+      questpoints:
+        text: |-
+          &6Questpunkte
+          &eAnzahl: &b%QUESTPOINTS%
+      takequest:
+        text: |-
+          &aQuest starten
+          &7Starte eine neue Quest!
+
+          &8Manche Quests können so
+          &8nicht gestartet werden.
+      abortquest:
+        text: |-
+          &cQuest abbrechen
+          &7Dies kann zu
+          &7Konsequenzen führen.
+      previewquest:
+        text: |-
+          &9Quest Vorschau (Quest Info)
+          &7Zeigt dir weitere Infos
+          &7über eine Quest an.
+      activequests:
+        text: |-
+          &3Aktive Quests
+          &7Zeigt dir alle Quests,
+          &7die bei dir gerade
+          &7aktiv sind.

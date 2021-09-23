@@ -174,6 +174,27 @@ public class LanguageManager {
         if (!getLanguageConfig().isString("titles.quest-failed.subtitle")) {
             getLanguageConfig().set("titles.quest-failed.subtitle", "<#b617ff>%QUESTNAME%");
         }
+
+        //user /q gui - Main
+        if (!getLanguageConfig().isString("gui.main.title")) {
+            getLanguageConfig().set("gui.main.title", "                &9Quests");
+        }
+        if (!getLanguageConfig().isString("gui.main.button.questpoints.text")) {
+            getLanguageConfig().set("gui.main.button.questpoints.text", "&6Quest Points\n&eCurrent quest points: &b%QUESTPOINTS%");
+        }
+        if (!getLanguageConfig().isString("gui.main.button.takequest.text")) {
+            getLanguageConfig().set("gui.main.button.takequest.text", "&aTake a Quest\n&7Start a new Quest!\n\n&8Some Quests cannot be\n&8started like this.");
+        }
+        if (!getLanguageConfig().isString("gui.main.button.abortquest.text")) {
+            getLanguageConfig().set("gui.main.button.abortquest.text", "&cAbort a Quest\n&7Aborting a Quest may\n&7lead to punishments.");
+        }
+        if (!getLanguageConfig().isString("gui.main.button.previewquest.text")) {
+            getLanguageConfig().set("gui.main.button.previewquest.text", "&9Preview Quest (Quest Info)\n&7Show more information\n&7about a Quest.");
+        }
+        if (!getLanguageConfig().isString("gui.main.button.activequests.text")) {
+            getLanguageConfig().set("gui.main.button.activequests.text", "&3Active Quests\n&7Shows all of your\n&7active Quests.");
+        }
+
     }
 
 

@@ -1,8 +1,13 @@
-THIS IS INCOMPLETE. Ill complete it when this file will actually be useful.
 chat:
   quest-successfully-accepted: '&aYou have successfully accepted the Quest &b%QUESTNAME%&a.'
   quest-already-accepted: '&cQuest already accepted.'
   quest-failed: '&eYou have &c&lFAILED &ethe Quest &b%QUESTNAME%&e!'
+  quest-aborted: '&aThe active quest &b%QUESTNAME% &ahas been aborted!'
+  quest-completed-and-rewards-given: '&aYou have completed the quest &b%QUESTNAME%
+    &aand received your rewards!!!'
+  missing-quest-description: '&eThis quest has no quest description.'
+  objectives-label-after-quest-accepting: '&9Objectives:'
+  questpoints: '&eYou currently have &b%QUESTPOINTS% &equest points.'
 titles:
   quest-accepted:
     title: '&fQuest accepted'
@@ -13,4 +18,33 @@ titles:
   quest-failed:
     title: '&cQuest Failed'
     subtitle: <#b617ff>%QUESTNAME%
-  THIS IS INCOMPLETE. Ill complete it when this file will actually be useful.
+gui:
+  main:
+    title: '                &9Quests'
+    button:
+      questpoints:
+        text: |-
+          &6Quest Points
+          &eCurrent quest points: &b%QUESTPOINTS%
+      takequest:
+        text: |-
+          &aTake a Quest
+          &7Start a new Quest!
+
+          &8Some Quests cannot be
+          &8started like this.
+      abortquest:
+        text: |-
+          &cAbort a Quest
+          &7Aborting a Quest may
+          &7lead to punishments.
+      previewquest:
+        text: |-
+          &9Preview Quest (Quest Info)
+          &7Show more information
+          &7about a Quest.
+      activequests:
+        text: |-
+          &3Active Quests
+          &7Shows all of your
+          &7active Quests.

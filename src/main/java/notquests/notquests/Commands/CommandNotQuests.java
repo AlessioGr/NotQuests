@@ -111,7 +111,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                 "xlmnopqrx",
                                 "xxxxxxxxx"
                         };
-                        InventoryGui gui = new InventoryGui(main, player, "                §9Quests", guiSetup);
+                        InventoryGui gui = new InventoryGui(main, player, main.getLanguageManager().getString("gui.main.title"), guiSetup);
                         gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
 
                         gui.addElement(new StaticGuiElement('8',
@@ -122,11 +122,8 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
 
                                     return true; // returning true will cancel the click event and stop taking the item
                                 },
-                                "§aTake a Quest",
-                                "§7Start a new quest!",
-                                " ",
-                                "§8Some quests cannot be",
-                                "§8started like this."
+                                main.getLanguageManager().getString("gui.main.button.takequest.text")
+
                         ));
                         gui.addElement(new StaticGuiElement('a',
                                 new ItemStack(Material.REDSTONE_BLOCK),
@@ -136,9 +133,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                     gui.close();
                                     return true; // returning true will cancel the click event and stop taking the item
                                 },
-                                "§cAbort a Quest",
-                                "§7Aborting a quest may",
-                                "§7lead to punishments."
+                                main.getLanguageManager().getString("gui.main.button.abortquest.text")
                         ));
                         gui.addElement(new StaticGuiElement('c',
                                 new ItemStack(Material.SPYGLASS),
@@ -148,9 +143,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                     gui.close();
                                     return true; // returning true will cancel the click event and stop taking the item
                                 },
-                                "§9Preview Quest (Quest Info)",
-                                "§7Show more information",
-                                "§7about this quest"
+                                main.getLanguageManager().getString("gui.main.button.previewquest.text")
                         ));
 
                         gui.addElement(new StaticGuiElement('o',
@@ -160,9 +153,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                     player.chat("/q activeQuests");
                                     return true; // returning true will cancel the click event and stop taking the item
                                 },
-                                "§3Active Quests",
-                                "§7Shows all of your",
-                                "§7active quests"
+                                main.getLanguageManager().getString("gui.main.button.activequests.text")
                         ));
                         if (questPlayer != null) {
                             gui.addElement(new StaticGuiElement('z',
@@ -171,8 +162,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                     click -> {
                                         return true; // returning true will cancel the click event and stop taking the item
                                     },
-                                    "§6Quest Points",
-                                    "§eCurrent quest points: §b" + questPlayer.getQuestPoints()
+                                    main.getLanguageManager().getString("gui.main.button.questpoints.text").replaceAll("%QUESTPOINTS%", "" + questPlayer.getQuestPoints())
                             ));
                         } else {
                             gui.addElement(new StaticGuiElement('z',
@@ -181,8 +171,8 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                     click -> {
                                         return true; // returning true will cancel the click event and stop taking the item
                                     },
-                                    "§6Quest Points",
-                                    "§eCurrent quest points: §b??"
+                                    main.getLanguageManager().getString("gui.main.button.questpoints.text").replaceAll("%QUESTPOINTS%", "??")
+
                             ));
                         }
 
