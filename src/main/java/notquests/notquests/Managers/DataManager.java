@@ -152,6 +152,65 @@ public class DataManager {
 
     }
 
+    public final void loadQuestsConfig(){
+        main.getLogger().log(Level.INFO, "§aNotQuests > Loading quests.yml config");
+
+        /*
+         * If the generalConfigFile Object doesn't exist yet, this will load the file
+         * or create a new general.yml file if it does not exist yet and load it into the
+         * generalConfig FileConfiguration object.
+         */
+        if (questsDataFile == null) {
+
+            //Create the Data Folder if it does not exist yet (the NotQuests folder)
+            if(!main.getDataFolder().exists()){
+                main.getLogger().log(Level.INFO, "§aNotQuests > Data Folder not found. Creating a new one...");
+
+                if (!main.getDataFolder().mkdirs()) {
+                    main.getLogger().log(Level.SEVERE, "§cNotQuests > There was an error creating the NotQuests data folder");
+                    disablePluginAndSaving("There was an error creating the NotQuests data folder.");
+                    return;
+                }
+
+
+            }
+
+            questsDataFile = new File(main.getDataFolder(), "quests.yml");
+
+            if (!questsDataFile.exists()) {
+                main.getLogger().log(Level.INFO, "§aNotQuests > Quests Configuration (quests.yml) does not exist. Creating a new one...");
+
+                //Does not work yet, since comments are overridden if something is saved
+                //saveDefaultConfig();
+
+
+                try {
+                    //Try to create the general.yml config file, and throw an error if it fails.
+
+                    if (!questsDataFile.createNewFile()) {
+                        main.getLogger().log(Level.SEVERE, "§cNotQuests > There was an error creating the quests.yml config file. (1)");
+                        disablePluginAndSaving("There was an error creating the quests.yml config file.");
+                        return;
+
+                    }
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                    disablePluginAndSaving("There was an error creating the quests.yml config file. (2)");
+                    return;
+                }
+            }
+
+            questsData = new YamlConfiguration();
+            try {
+                questsData.load(questsDataFile);
+            } catch (IOException | InvalidConfigurationException e) {
+                e.printStackTrace();
+            }
+        } else {
+            questsData = YamlConfiguration.loadConfiguration(questsDataFile);
+        }
+    }
+
     /**
      * The general.yml configuration file is initialized here. This will create the
      * general.yml config file if it hasn't been created yet. It will also create all
@@ -578,18 +637,7 @@ public class DataManager {
                         main.getLogger().log(Level.INFO, "§aNotQuests > Loaded player data");
 
                         if (questsDataFile == null) {
-                            questsDataFile = new File(main.getDataFolder(), "quests.yml");
-                            main.getLogger().log(Level.INFO, "§aNotQuests > First load of quests.yml. Loading data from it... - reloadData");
-
-                            try{
-                                questsData = loadYAMLConfiguration(questsDataFile);
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-
-                                disablePluginAndSaving("Plugin disabled, because there was an error loading data from quests.yml.");
-                                return;
-                            }
+                            loadQuestsConfig();
                             main.getQuestManager().loadData();
 
                         } else {
@@ -852,16 +900,7 @@ public class DataManager {
             Bukkit.getScheduler().runTaskAsynchronously(main, () -> {
 
                 if (questsDataFile == null) {
-                    questsDataFile = new File(main.getDataFolder(), "quests.yml");
-                    main.getLogger().log(Level.INFO, "§aNotQuests > First load of quests.yml - loadNPCData");
-                    try{
-                        questsData = loadYAMLConfiguration(questsDataFile);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-
-                        disablePluginAndSaving("Plugin disabled, because there was an error loading data from quests.yml.");
-                        return;
-                    }
+                    loadQuestsConfig();
 
                     main.getQuestManager().loadNPCData();
 
@@ -875,16 +914,7 @@ public class DataManager {
         } else {
 
             if (questsDataFile == null) {
-                questsDataFile = new File(main.getDataFolder(), "quests.yml");
-                main.getLogger().log(Level.INFO, "§aNotQuests > First load of quests.yml - loadNPCData");
-                try{
-                    questsData = loadYAMLConfiguration(questsDataFile);
-                } catch (Exception e) {
-                    e.printStackTrace();
-
-                    disablePluginAndSaving("Plugin disabled, because there was an error loading data from quests.yml.");
-                    return;
-                }
+                loadQuestsConfig();
                 main.getQuestManager().loadNPCData();
 
             } else {
