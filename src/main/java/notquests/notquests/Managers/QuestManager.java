@@ -8,14 +8,7 @@ import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitInfo;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.event.HoverEvent;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.*;
 import notquests.notquests.NotQuests;
 import notquests.notquests.QuestGiverNPCTrait;
 import notquests.notquests.Structs.ActiveObjective;
@@ -683,7 +676,7 @@ public class QuestManager {
 
                 component.addExtra(acceptComponent);
 
-                player.sendMessage(component);
+                player.spigot().sendMessage(component);
 
 
                 counter++;
@@ -800,7 +793,7 @@ public class QuestManager {
 
                 component.addExtra(acceptComponent);
 
-                player.sendMessage(component);
+                player.spigot().sendMessage(component);
 
 
                 counter++;
@@ -862,13 +855,21 @@ public class QuestManager {
 
         player.sendMessage(getQuestRequirements(quest));
 
-        Component acceptQuestComponent = Component.text("[ACCEPT THIS QUEST]", NamedTextColor.GREEN, TextDecoration.BOLD)
+
+        BaseComponent acceptComponent = new TextComponent("§a§l[ACCEPT THIS QUEST]");
+        acceptComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nquests take " + quest.getQuestName()));
+        acceptComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aClick to accept this quest").create()));
+
+
+
+       /*Paper only Component acceptQuestComponent = Component.text("[ACCEPT THIS QUEST]", NamedTextColor.GREEN, TextDecoration.BOLD)
                 .clickEvent(ClickEvent.runCommand("/nquests take " + quest.getQuestName()))
-                .hoverEvent(HoverEvent.showText(Component.text("Click to accept this quest", NamedTextColor.GREEN)));
+                .hoverEvent(HoverEvent.showText(Component.text("Click to accept this quest", NamedTextColor.GREEN)));*/
 
 
         player.sendMessage("");
-        player.sendMessage(acceptQuestComponent);
+        //only paper player.sendMessage(acceptQuestComponent);
+        player.spigot().sendMessage(acceptComponent);
         player.sendMessage("§7-----------------------------------");
 
 

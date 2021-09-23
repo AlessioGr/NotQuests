@@ -11,7 +11,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -605,7 +604,7 @@ public class ObjectivesAdminCommand {
         }
     }
 
-    public @Nullable List<String> handleCompletions(final CommandSender sender, final String[] args) {
+    public List<String> handleCompletions(final CommandSender sender, final String[] args) {
         main.getDataManager().completions.clear();
 
         final Quest quest = main.getQuestManager().getQuest(args[1]);

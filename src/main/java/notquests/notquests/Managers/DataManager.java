@@ -11,7 +11,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.sql.Connection;
@@ -111,7 +110,7 @@ public class DataManager {
     /**
      * Configuration objects which contains values from General.yml
      */
-    private Configuration configuration;
+    private final Configuration configuration;
 
     /**
      * The Data Manager is initialized here. This mainly creates some
@@ -424,9 +423,9 @@ public class DataManager {
      * This is used for the saving of the default config
      *
      * @param resourcePath path of the resource
-     * @param replace should replace existing resource file?
+     * @param replace      should replace existing resource file?
      */
-    public void saveResource(@NotNull String resourcePath, boolean replace) {
+    public void saveResource(String resourcePath, boolean replace) {
         if (!resourcePath.equals("")) {
             resourcePath = resourcePath.replace('\\', '/');
             InputStream in = main.getResource(resourcePath);

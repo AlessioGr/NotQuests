@@ -51,6 +51,7 @@ public final class NotQuests extends JavaPlugin {
     private boolean vaultEnabled = false;
     private boolean citizensEnabled = false;
 
+
     /**
      * Called when the plugin is enabled. A bunch of stuff is initialized here
      */
@@ -68,6 +69,7 @@ public final class NotQuests extends JavaPlugin {
             setupChat();
             vaultEnabled = true;
         }
+
 
 
         //Create a new instance of the Data Manager which will be re-used everywhere
@@ -171,6 +173,8 @@ public final class NotQuests extends JavaPlugin {
         //Save all kinds of data
         dataManager.saveData();
 
+
+
         /* This is kind of useful for compatibility with ServerUtils or Plugman.
          * If this is false, the plugin will try to load NPCs again if the Citizens plugin is reloaded or enabled.
          * Might not be necessary.
@@ -218,7 +222,6 @@ public final class NotQuests extends JavaPlugin {
                 net.citizensnpcs.api.CitizensAPI.getTraitFactory().deregisterTrait(traitInfo);
             }
         }
-
 
 
 

@@ -6,7 +6,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -62,7 +61,7 @@ public class QuestPointsAdminCommand {
         }
     }
 
-    public @Nullable List<String> handleCompletions(final CommandSender commandSender, final String[] args) {
+    public List<String> handleCompletions(final CommandSender commandSender, final String[] args) {
         main.getDataManager().completions.clear();
         if (args.length == 2) {
             return main.getDataManager().standardPlayerCompletions;

@@ -11,6 +11,8 @@ general:
   #The maximum amount of active quests a player can have at the same time. -1 = unlimited (default)
   max-active-quests-per-player: -1
 visual:
+  #Sets which language to use. Default is languages/en.yml
+  language: "en"
   quest-giver-indicator-particle:
     enabled: true
     type: "VILLAGER_ANGRY"
