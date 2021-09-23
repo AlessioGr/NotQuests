@@ -232,7 +232,7 @@ public class ActiveQuest {
             //  }
         }
 
-        questPlayer.sendMessage("§eYou have §c§lFAILED§e the Quest §b" + getQuest().getQuestName() + "§e!");
+        questPlayer.sendMessage(main.getLanguageManager().getString("chat.quest-failed").replaceAll("%QUESTNAME%", getQuest().getQuestName()));
 
         for (final ActiveObjective activeObjective : getActiveObjectives()) {
             if (activeObjective.getObjective() instanceof EscortNPCObjective) {

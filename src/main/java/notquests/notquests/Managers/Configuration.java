@@ -39,8 +39,10 @@ public class Configuration {
 
     private boolean questGiverIndicatorParticleEnabled = true;
 
+    private String languageCode = "en";
 
-    public Configuration(){
+
+    public Configuration() {
 
     }
 
@@ -147,5 +149,13 @@ public class Configuration {
 
     public final void setQuestGiverIndicatorParticleEnabled(boolean questGiverIndicatorParticleEnabled) {
         this.questGiverIndicatorParticleEnabled = questGiverIndicatorParticleEnabled;
+    }
+
+    public final String getLanguageCode() {
+        return languageCode;
+    }
+
+    public void setLanguageCode(final String languageCode) {
+        this.languageCode = languageCode;
     }
 }

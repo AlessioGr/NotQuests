@@ -1,0 +1,20 @@
+chat:
+  quest-successfully-accepted: '&aDu hast die Quest &b%QUESTNAME% &aerfolgreich akzeptiert.'
+  quest-already-accepted: '&cQuest wurde schon akzeptiert.'
+  quest-failed: '&eDie Quest &b%QUESTNAME% &eist &c&lGESCHEITERT&e.'
+  quest-aborted: '&aDie Quest &b%QUESTNAME% &awurde abgebrochen!'
+  quest-completed-and-rewards-given: '&aDu hast die Quest &b%QUESTNAME% &aabgeschlossen
+    und deine Belohnungen bekommen!!!'
+  missing-quest-description: '&eDiese Quest hat keine Beschreibung'
+  objectives-label-after-quest-accepting: '&9Aufgaben:'
+  questpoints: '&eDu hast zurzeit &b%QUESTPOINTS% &eQuestpunkte.'
+titles:
+  quest-accepted:
+    title: '&fQuest akzeptiert'
+    subtitle: <#b617ff>%QUESTNAME%
+  quest-completed:
+    title: '&aQuest abgeschlossen'
+    subtitle: <#b617ff>%QUESTNAME%
+  quest-failed:
+    title: '&cQuest gescheitert'
+    subtitle: <#b617ff>%QUESTNAME%

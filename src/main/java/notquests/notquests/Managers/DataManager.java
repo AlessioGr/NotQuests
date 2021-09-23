@@ -324,79 +324,81 @@ public class DataManager {
             getGeneralConfig().set("storage.database.enabled", true);
         }
 
-        if(!configuration.isMySQLEnabled()){
+        if (!configuration.isMySQLEnabled()) {
             //No need to error previous stuff, since SQLite will be used
             errored = false;
         }
 
 
-
         //Other values from general.yml
-        if(!getGeneralConfig().isBoolean("gui.questpreview.enabled")){
-            getGeneralConfig().set("gui.questpreview.enabled", true);
-        }
-        configuration.setQuestPreviewUseGUI(getGeneralConfig().getBoolean("gui.questpreview.enabled"));
-
-        if(!getGeneralConfig().isBoolean("gui.usercommands.enabled")){
-            getGeneralConfig().set("gui.usercommands.enabled", true);
-        }
-        configuration.setUserCommandsUseGUI(getGeneralConfig().getBoolean("gui.usercommands.enabled"));
-
-
-        if(!getGeneralConfig().isString("placeholders.player_active_quests_list_horizontal.separator")){
-            getGeneralConfig().set("placeholders.player_active_quests_list_horizontal.separator", " | ");
-        }
-        configuration.placeholder_player_active_quests_list_horizontal_separator = getGeneralConfig().getString("placeholders.player_active_quests_list_horizontal.separator");
-
-        if(!getGeneralConfig().isInt("placeholders.player_active_quests_list_horizontal.limit")){
-            getGeneralConfig().set("placeholders.player_active_quests_list_horizontal.limit", -1);
-        }
-        configuration.placeholder_player_active_quests_list_horizontal_limit = getGeneralConfig().getInt("placeholders.player_active_quests_list_horizontal.limit");
-
-        if(!getGeneralConfig().isInt("placeholders.player_active_quests_list_vertical.limit")){
-            getGeneralConfig().set("placeholders.player_active_quests_list_vertical.limit", -1);
-        }
-        configuration.placeholder_player_active_quests_list_vertical_limit = getGeneralConfig().getInt("placeholders.player_active_quests_list_vertical.limit");
-
-
-        if(!getGeneralConfig().isBoolean("placeholders.player_active_quests_list_horizontal.use-displayname-if-available")){
-            getGeneralConfig().set("placeholders.player_active_quests_list_horizontal.use-displayname-if-available", true);
-        }
-        configuration.placeholder_player_active_quests_list_horizontal_use_displayname_if_available = getGeneralConfig().getBoolean("placeholders.player_active_quests_list_horizontal.use-displayname-if-available");
-
-        if(!getGeneralConfig().isBoolean("placeholders.player_active_quests_list_vertical.use-displayname-if-available")){
-            getGeneralConfig().set("placeholders.player_active_quests_list_vertical.use-displayname-if-available", true);
-        }
-        configuration.placeholder_player_active_quests_list_vertical_use_displayname_if_available = getGeneralConfig().getBoolean("placeholders.player_active_quests_list_vertical.use-displayname-if-available");
-
-
-        if(!getGeneralConfig().isInt("general.max-active-quests-per-player")){
+        if (!getGeneralConfig().isInt("general.max-active-quests-per-player")) {
             getGeneralConfig().set("general.max-active-quests-per-player", -1);
         }
         configuration.setMaxActiveQuestsPerPlayer(getGeneralConfig().getInt("general.max-active-quests-per-player"));
 
 
+        if (!getGeneralConfig().isString("visual.language")) {
+            getGeneralConfig().set("visual.language", "en");
+        }
+        configuration.setLanguageCode(getGeneralConfig().getString("visual.language"));
 
-        if(!getGeneralConfig().isBoolean("visual.quest-giver-indicator-particle.enabled")){
+        if (!getGeneralConfig().isBoolean("visual.quest-giver-indicator-particle.enabled")) {
             getGeneralConfig().set("visual.quest-giver-indicator-particle.enabled", true);
         }
         configuration.setQuestGiverIndicatorParticleEnabled(getGeneralConfig().getBoolean("visual.quest-giver-indicator-particle.enabled"));
 
-        if(!getGeneralConfig().isString("visual.quest-giver-indicator-particle.type")){
+        if (!getGeneralConfig().isString("visual.quest-giver-indicator-particle.type")) {
             getGeneralConfig().set("visual.quest-giver-indicator-particle.type", "VILLAGER_ANGRY");
         }
         configuration.setQuestGiverIndicatorParticleType(Particle.valueOf(getGeneralConfig().getString("visual.quest-giver-indicator-particle.type")));
 
-        if(!getGeneralConfig().isInt("visual.quest-giver-indicator-particle.spawn-interval")){
+        if (!getGeneralConfig().isInt("visual.quest-giver-indicator-particle.spawn-interval")) {
             getGeneralConfig().set("visual.quest-giver-indicator-particle.spawn-interval", 10);
         }
         configuration.setQuestGiverIndicatorParticleSpawnInterval(getGeneralConfig().getInt("visual.quest-giver-indicator-particle.spawn-interval"));
 
-        if(!getGeneralConfig().isInt("visual.quest-giver-indicator-particle.count")){
+        if (!getGeneralConfig().isInt("visual.quest-giver-indicator-particle.count")) {
             getGeneralConfig().set("visual.quest-giver-indicator-particle.count", 1);
         }
         configuration.setQuestGiverIndicatorParticleCount(getGeneralConfig().getInt("visual.quest-giver-indicator-particle.count"));
 
+
+        if (!getGeneralConfig().isBoolean("gui.questpreview.enabled")) {
+            getGeneralConfig().set("gui.questpreview.enabled", true);
+        }
+        configuration.setQuestPreviewUseGUI(getGeneralConfig().getBoolean("gui.questpreview.enabled"));
+
+        if (!getGeneralConfig().isBoolean("gui.usercommands.enabled")) {
+            getGeneralConfig().set("gui.usercommands.enabled", true);
+        }
+        configuration.setUserCommandsUseGUI(getGeneralConfig().getBoolean("gui.usercommands.enabled"));
+
+
+        if (!getGeneralConfig().isString("placeholders.player_active_quests_list_horizontal.separator")) {
+            getGeneralConfig().set("placeholders.player_active_quests_list_horizontal.separator", " | ");
+        }
+        configuration.placeholder_player_active_quests_list_horizontal_separator = getGeneralConfig().getString("placeholders.player_active_quests_list_horizontal.separator");
+
+        if (!getGeneralConfig().isInt("placeholders.player_active_quests_list_horizontal.limit")) {
+            getGeneralConfig().set("placeholders.player_active_quests_list_horizontal.limit", -1);
+        }
+        configuration.placeholder_player_active_quests_list_horizontal_limit = getGeneralConfig().getInt("placeholders.player_active_quests_list_horizontal.limit");
+
+        if (!getGeneralConfig().isInt("placeholders.player_active_quests_list_vertical.limit")) {
+            getGeneralConfig().set("placeholders.player_active_quests_list_vertical.limit", -1);
+        }
+        configuration.placeholder_player_active_quests_list_vertical_limit = getGeneralConfig().getInt("placeholders.player_active_quests_list_vertical.limit");
+
+
+        if (!getGeneralConfig().isBoolean("placeholders.player_active_quests_list_horizontal.use-displayname-if-available")) {
+            getGeneralConfig().set("placeholders.player_active_quests_list_horizontal.use-displayname-if-available", true);
+        }
+        configuration.placeholder_player_active_quests_list_horizontal_use_displayname_if_available = getGeneralConfig().getBoolean("placeholders.player_active_quests_list_horizontal.use-displayname-if-available");
+
+        if (!getGeneralConfig().isBoolean("placeholders.player_active_quests_list_vertical.use-displayname-if-available")) {
+            getGeneralConfig().set("placeholders.player_active_quests_list_vertical.use-displayname-if-available", true);
+        }
+        configuration.placeholder_player_active_quests_list_vertical_use_displayname_if_available = getGeneralConfig().getBoolean("placeholders.player_active_quests_list_vertical.use-displayname-if-available");
 
 
         saveGeneralConfig();
@@ -581,6 +583,7 @@ public class DataManager {
     public void reloadData() {
         if(isLoadingEnabled()){
             loadGeneralConfig();
+            main.getLanguageManager().loadLanguageConfig();
 
             //Check for isLoadingEnabled again, in case it changed during loading of the general config
             if(!isLoadingEnabled()){

@@ -493,7 +493,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                         sender.sendMessage("§e/nquests §6progress §3[Quest Name]");
                     } else if (args[0].equalsIgnoreCase("questPoints")) {
                         if (questPlayer != null) {
-                            sender.sendMessage("§eYou currently have §b" + questPlayer.getQuestPoints() + " §equest points.");
+                            sender.sendMessage(main.getLanguageManager().getString("chat.questpoints").replaceAll("%QUESTPOINTS%", "" + questPlayer.getQuestPoints()));
                         } else {
                             sender.sendMessage("§cSeems like you don't have any quest points!");
                         }
@@ -509,12 +509,12 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                 if (!result.equals("accepted")) {
                                     sender.sendMessage(result);
                                 } else {
-                                    sender.sendMessage("§aYou have successfully accepted the Quest §b" + quest.getQuestName() + "§a.");
+                                    sender.sendMessage(main.getLanguageManager().getString("chat.quest-successfully-accepted").replaceAll("%QUESTNAME%", quest.getQuestName()));
                                     if (!quest.getQuestDescription().equals("")) {
                                         sender.sendMessage("§eQuest description: §7" + quest.getQuestDescription());
 
                                     } else {
-                                        sender.sendMessage("§eThis quest has no quest description.");
+                                        sender.sendMessage(main.getLanguageManager().getString("chat.missing-quest-description"));
                                     }
 
 
@@ -527,11 +527,11 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                     if (!result.equals("accepted")) {
                                         sender.sendMessage(result);
                                     } else {
-                                        sender.sendMessage("§aYou have successfully accepted the Quest §b" + quest.getQuestName() + "§a.");
+                                        sender.sendMessage(main.getLanguageManager().getString("chat.quest-successfully-accepted").replaceAll("%QUESTNAME%", quest.getQuestName()));
                                         if (!quest.getQuestDescription().equals("")) {
                                             sender.sendMessage("§eQuest description: §7" + quest.getQuestDescription());
                                         } else {
-                                            sender.sendMessage("§eThis quest has no quest description.");
+                                            sender.sendMessage(main.getLanguageManager().getString("chat.missing-quest-description"));
                                         }
                                     }
                                     return true;
@@ -585,7 +585,8 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                             if (!failedSuccessfully.get()) {
                                                 sender.sendMessage("§cError: §b" + finalDisplayName + " §cis not an active Quest!");
                                             }
-                                            sender.sendMessage("§aThe active quest §b" + finalDisplayName + " §ahas been aborted!");
+                                            sender.sendMessage(main.getLanguageManager().getString("chat.quest-aborted").replaceAll("%QUESTNAME%", finalDisplayName));
+
                                             //click.getEvent().getWhoClicked().sendMessage(ChatColor.RED + "I am Redstone!");
                                             gui.close();
                                             return true; // returning true will cancel the click event and stop taking the item
@@ -619,7 +620,8 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                 for (final ActiveQuest activeQuest : questsToFail) {
                                     questPlayer.failQuest(activeQuest);
                                     failedSuccessfully.set(true);
-                                    sender.sendMessage("§aThe active quest §b" + activeQuest.getQuest().getQuestName() + " §ahas been aborted!");
+                                    sender.sendMessage(main.getLanguageManager().getString("chat.quest-aborted").replaceAll("%QUESTNAME%", activeQuest.getQuest().getQuestName()));
+
                                 }
                                 questsToFail.clear();
                                 if (!failedSuccessfully.get()) {

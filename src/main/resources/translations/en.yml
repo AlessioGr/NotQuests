@@ -1,0 +1,16 @@
+THIS IS INCOMPLETE. Ill complete it when this file will actually be useful.
+chat:
+  quest-successfully-accepted: '&aYou have successfully accepted the Quest &b%QUESTNAME%&a.'
+  quest-already-accepted: '&cQuest already accepted.'
+  quest-failed: '&eYou have &c&lFAILED &ethe Quest &b%QUESTNAME%&e!'
+titles:
+  quest-accepted:
+    title: '&fQuest accepted'
+    subtitle: <#b617ff>%QUESTNAME%
+  quest-completed:
+    title: '&aQuest Completed'
+    subtitle: <#b617ff>%QUESTNAME%
+  quest-failed:
+    title: '&cQuest Failed'
+    subtitle: <#b617ff>%QUESTNAME%
+  THIS IS INCOMPLETE. Ill complete it when this file will actually be useful.

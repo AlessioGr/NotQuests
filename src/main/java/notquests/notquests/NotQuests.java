@@ -12,10 +12,7 @@ import notquests.notquests.Commands.CommandNotQuests;
 import notquests.notquests.Commands.CommandNotQuestsAdmin;
 import notquests.notquests.Events.CitizensEvents;
 import notquests.notquests.Events.QuestEvents;
-import notquests.notquests.Managers.DataManager;
-import notquests.notquests.Managers.QuestManager;
-import notquests.notquests.Managers.QuestPlayerManager;
-import notquests.notquests.Managers.UpdateChecker;
+import notquests.notquests.Managers.*;
 import notquests.notquests.Placeholders.QuestPlaceholders;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -38,6 +35,7 @@ public final class NotQuests extends JavaPlugin {
     private DataManager dataManager;
     private QuestManager questManager;
     private QuestPlayerManager questPlayerManager;
+    private LanguageManager languageManager;
 
     //Vault
     private Economy econ = null;
@@ -71,12 +69,13 @@ public final class NotQuests extends JavaPlugin {
         }
 
 
-
         //Create a new instance of the Data Manager which will be re-used everywhere
         dataManager = new DataManager(this);
 
         //Create a new instance of the Quest Manager which will be re-used everywhere
         questManager = new QuestManager(this);
+
+        languageManager = new LanguageManager(this);
 
         /*
          * Tell the Data Manager: Hey, NPCs have not been loaded yet. If this is set to false, the plugin will
@@ -342,8 +341,12 @@ public final class NotQuests extends JavaPlugin {
      *
      * @return if Citizens is enabled
      */
-    public boolean isCitizensEnabled(){
+    public boolean isCitizensEnabled() {
         return citizensEnabled;
+    }
+
+    public LanguageManager getLanguageManager() {
+        return languageManager;
     }
 
 }

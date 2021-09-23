@@ -161,7 +161,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
         line15.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/qadmin listRequirementTypes"));
         line15.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aShows you a list of all available Requirement Types").create()));
 
-        TextComponent line16 = new TextComponent("§e//qadmin §6listAllQuests\n");
+        TextComponent line16 = new TextComponent("§e/qadmin §6listAllQuests\n");
         line16.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/qadmin listAllQuests"));
         line16.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aShows you a list of all created Quests").create()));
 
@@ -236,7 +236,8 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
             } else if (args.length == 1) {
                 if (args[0].equalsIgnoreCase("load") || args[0].equalsIgnoreCase("reload")) {
                     main.getDataManager().loadGeneralConfig();
-                    sender.sendMessage("§aNotQuests general.yml configuration has been re-loaded. §7If you want to reload more, please use the ServerUtils plugin (available on spigot) or restart the server. This reload command is not finished yet and does not reload the quests file or the database.");
+                    main.getLanguageManager().loadLanguageConfig();
+                    sender.sendMessage("§aNotQuests general.yml and language configuration have been re-loaded. §7If you want to reload more, please use the ServerUtils plugin (available on spigot) or restart the server. This reload command is not finished yet and does not reload the quests file or the database.");
                 }else if (args[0].equalsIgnoreCase("save")) {
                     main.getDataManager().saveData();
                     sender.sendMessage("§aNotQuests configuration and player data has been saved");
@@ -1736,7 +1737,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
 
 
             if (args.length == 1) {
-                main.getDataManager().completions.addAll(Arrays.asList("create", "delete", "edit", "actions", "give", "forcegive", "questPoints", "activeQuests", "completedQuests", "progress", "failQuest", "completeQuest", "listObjectiveTypes", "listRewardTypes", "listRequirementTypes", "listAllQuests", "triggerObjective", "load", "save", "listPlaceholders", "resetAndRemoveQuestForAllPlayers", "resetAndFailQuestForAllPlayers"));
+                main.getDataManager().completions.addAll(Arrays.asList("create", "delete", "edit", "actions", "give", "forcegive", "questPoints", "activeQuests", "completedQuests", "progress", "failQuest", "completeQuest", "listObjectiveTypes", "listRewardTypes", "listRequirementTypes", "listAllQuests", "triggerObjective", "load", "reload", "save", "listPlaceholders", "resetAndRemoveQuestForAllPlayers", "resetAndFailQuestForAllPlayers"));
                 StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
                 return main.getDataManager().partialCompletions;
 

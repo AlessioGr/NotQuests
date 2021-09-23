@@ -56,7 +56,7 @@ public class QuestPlayer {
 
         for (ActiveQuest activeQuest : activeQuests) {
             if (activeQuest.getQuest().equals(quest.getQuest())) {
-                return "§cQuest already accepted.";
+                return main.getLanguageManager().getString("chat.quest-already-accepted");
             }
         }
         int completedAmount = 0;
@@ -184,13 +184,13 @@ public class QuestPlayer {
                 if (sendQuestInfo) {
                     final Player player = Bukkit.getPlayer(uuid);
                     if (player != null) {
-                        player.sendMessage("§9Objectives:");
+                        player.sendMessage(main.getLanguageManager().getString("chat.objectives-label-after-quest-accepting"));
                         main.getQuestManager().sendActiveObjectivesAndProgress(player, quest);
 
                         if (!quest.getQuest().getQuestDisplayName().equals("")) {
-                            player.sendTitle("§fQuest accepted", net.md_5.bungee.api.ChatColor.of("#b617ff") + quest.getQuest().getQuestDisplayName(), 2, 60, 8);
+                            player.sendTitle(main.getLanguageManager().getString("titles.quest-accepted.title"), main.getLanguageManager().getString("titles.quest-accepted.subtitle").replaceAll("%QUESTNAME%", quest.getQuest().getQuestDisplayName()), 2, 60, 8);
                         } else {
-                            player.sendTitle("§fQuest accepted", net.md_5.bungee.api.ChatColor.of("#b617ff") + quest.getQuest().getQuestName(), 2, 60, 8);
+                            player.sendTitle(main.getLanguageManager().getString("titles.quest-accepted.title"), main.getLanguageManager().getString("titles.quest-accepted.subtitle").replaceAll("%QUESTNAME%", quest.getQuest().getQuestName()), 2, 60, 8);
                         }
                         player.playSound(player.getLocation(), Sound.ENTITY_EVOKER_PREPARE_SUMMON, SoundCategory.MASTER, 100, 2);
 
@@ -262,7 +262,7 @@ public class QuestPlayer {
     public String forceAddActiveQuest(final ActiveQuest quest, boolean triggerAcceptQuestTrigger) { //ignores max amount, cooldown and requirements
         for (ActiveQuest activeQuest : activeQuests) {
             if (activeQuest.getQuest().equals(quest.getQuest())) {
-                return "§cQuest already accepted.";
+                return main.getLanguageManager().getString("chat.quest-already-accepted");
             }
         }
         finishAddingQuest(quest, triggerAcceptQuestTrigger, false);
@@ -297,7 +297,8 @@ public class QuestPlayer {
         for (Reward reward : quest.getRewards()) {
             reward.giveReward(Bukkit.getPlayer(uuid), quest);
         }
-        Objects.requireNonNull(Bukkit.getPlayer(uuid)).sendMessage("§aYou have completed the quest §b" + quest.getQuestName() + " §aand received your rewards!!!");
+        Objects.requireNonNull(Bukkit.getPlayer(uuid)).sendMessage(main.getLanguageManager().getString("chat.quest-completed-and-rewards-given").replaceAll("%QUESTNAME%", quest.getQuestName()));
+
     }
 
     public void sendMessage(String message) {
@@ -336,9 +337,9 @@ public class QuestPlayer {
         final Player player = Bukkit.getPlayer(uuid);
         if (player != null) {
             if (!activeQuest.getQuest().getQuestDisplayName().equals("")) {
-                player.sendTitle("§aQuest Completed", net.md_5.bungee.api.ChatColor.of("#b617ff") + activeQuest.getQuest().getQuestDisplayName(), 2, 60, 8);
+                player.sendTitle(main.getLanguageManager().getString("titles.quest-completed.title"), main.getLanguageManager().getString("titles.quest-accepted.subtitle").replaceAll("%QUESTNAME%", activeQuest.getQuest().getQuestDisplayName()), 2, 60, 8);
             } else {
-                player.sendTitle("§aQuest Completed", net.md_5.bungee.api.ChatColor.of("#b617ff") + activeQuest.getQuest().getQuestName(), 2, 60, 8);
+                player.sendTitle(main.getLanguageManager().getString("titles.quest-completed.title"), main.getLanguageManager().getString("titles.quest-accepted.subtitle").replaceAll("%QUESTNAME%", activeQuest.getQuest().getQuestName()), 2, 60, 8);
             }
             player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.MASTER, 100, 40);
 
@@ -382,9 +383,9 @@ public class QuestPlayer {
             final Player player = Bukkit.getPlayer(uuid);
             if (player != null) {
                 if (!activeQuest.getQuest().getQuestDisplayName().equals("")) {
-                    player.sendTitle("§aQuest Completed", net.md_5.bungee.api.ChatColor.of("#b617ff") + activeQuest.getQuest().getQuestDisplayName(), 2, 60, 8);
+                    player.sendTitle(main.getLanguageManager().getString("titles.quest-completed.title"), main.getLanguageManager().getString("titles.quest-accepted.subtitle").replaceAll("%QUESTNAME%", activeQuest.getQuest().getQuestDisplayName()), 2, 60, 8);
                 } else {
-                    player.sendTitle("§aQuest Completed", net.md_5.bungee.api.ChatColor.of("#b617ff") + activeQuest.getQuest().getQuestName(), 2, 60, 8);
+                    player.sendTitle(main.getLanguageManager().getString("titles.quest-completed.title"), main.getLanguageManager().getString("titles.quest-accepted.subtitle").replaceAll("%QUESTNAME%", activeQuest.getQuest().getQuestName()), 2, 60, 8);
                 }
                 player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.MASTER, 100, 40);
 
@@ -481,11 +482,13 @@ public class QuestPlayer {
                 final Player player = Bukkit.getPlayer(uuid);
 
                 if (player != null) {
+
                     if (!activeQuestToFail.getQuest().getQuestDisplayName().equals("")) {
-                        player.sendTitle("§cQuest Failed", net.md_5.bungee.api.ChatColor.of("#b617ff") + activeQuestToFail.getQuest().getQuestDisplayName(), 2, 60, 8);
+                        player.sendTitle(main.getLanguageManager().getString("titles.quest-failed.title"), main.getLanguageManager().getString("titles.quest-failed.subtitle").replaceAll("%QUESTNAME%", activeQuestToFail.getQuest().getQuestDisplayName()), 2, 60, 8);
                     } else {
-                        player.sendTitle("§cQuest Failed", net.md_5.bungee.api.ChatColor.of("#b617ff") + activeQuestToFail.getQuest().getQuestName(), 2, 60, 8);
+                        player.sendTitle(main.getLanguageManager().getString("titles.quest-failed.title"), main.getLanguageManager().getString("titles.quest-failed.subtitle").replaceAll("%QUESTNAME%", activeQuestToFail.getQuest().getQuestName()), 2, 60, 8);
                     }
+
                     player.playSound(player.getLocation(), Sound.ENTITY_RAVAGER_DEATH, SoundCategory.MASTER, 100, 1);
 
                 }
