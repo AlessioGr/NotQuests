@@ -2,12 +2,13 @@ package notquests.notquests.Managers;
 
 import net.md_5.bungee.api.ChatColor;
 import notquests.notquests.NotQuests;
+import org.apache.commons.io.IOUtils;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -38,10 +39,72 @@ public class LanguageManager {
     }
 
 
+    public void loadMissingDefaultLanguageFiles() {
+        final ArrayList<String> languageFiles = new ArrayList<>();
+        languageFiles.add("en.yml");
+        languageFiles.add("de.yml");
+
+        //Create the Language Data Folder if it does not exist yet (the NotQuests/languages folder)
+        File languageFolder = new File(main.getDataFolder().getPath() + "/languages/");
+        if (!languageFolder.exists()) {
+            main.getLogger().log(Level.INFO, "§aNotQuests > Languages Folder not found. Creating a new one...");
+
+            if (!languageFolder.mkdirs()) {
+                main.getLogger().log(Level.SEVERE, "§cNotQuests > There was an error creating the NotQuests languages folder");
+                main.getDataManager().disablePluginAndSaving("There was an error creating the NotQuests languages folder.");
+                return;
+            }
+
+        }
+
+        for (final String fileName : languageFiles) {
+            try {
+                main.getLogger().log(Level.INFO, "§aCreating the §b" + fileName + " §alanguage file...");
+
+                File file = new File(languageFolder, fileName);
+
+                if (!file.exists()) {
+                    if (!file.createNewFile()) {
+                        main.getLogger().log(Level.SEVERE, "§cNotQuests > There was an error creating the " + fileName + " language file. (3)");
+                        main.getDataManager().disablePluginAndSaving("There was an error creating the " + fileName + " language file. (3)");
+                        return;
+                    }
+
+                    InputStream inputStream = main.getResource("translations/" + fileName);
+                    //Instead of creating a new language file, we will copy the one from inside of the plugin jar into the plugin folder:
+                    if (inputStream != null) {
+
+
+                        try (OutputStream outputStream = new FileOutputStream(file)) {
+                            IOUtils.copy(inputStream, outputStream);
+                        } catch (Exception e) {
+                            main.getLogger().log(Level.SEVERE, "§cNotQuests > There was an error creating the " + fileName + " language file. (4)");
+                            main.getDataManager().disablePluginAndSaving("There was an error creating the " + fileName + " language file. (4)");
+                            return;
+                        }
+
+
+                    }
+                }
+
+
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+                main.getDataManager().disablePluginAndSaving("There was an error creating the " + fileName + " language file. (3)");
+                return;
+            }
+        }
+
+
+    }
+
+
     /**
      * Load language configs
      */
     public final void loadLanguageConfig() {
+        loadMissingDefaultLanguageFiles();
+
         final String languageCode = main.getDataManager().getConfiguration().getLanguageCode();
         main.getLogger().log(Level.INFO, "§5NotQuests > Loading language config §b" + languageCode + ".yml");
 
@@ -114,86 +177,112 @@ public class LanguageManager {
         }
 
 
-        setupDefaultStrings();
-        saveLanguageConfig();
+        if (setupDefaultStrings()) {
+            main.getLogger().info("§5Language Configuration §b" + languageCode + ".yml §5was updated with new values! Saving it...");
+            saveLanguageConfig();
+        }
+
 
         currentLanguage = languageCode;
 
     }
 
-    public void setupDefaultStrings() {
+    public boolean setupDefaultStrings() {
         //Set default values
+
+        boolean valueChanged = false;
 
 
         if (!getLanguageConfig().isString("chat.quest-successfully-accepted")) {
             getLanguageConfig().set("chat.quest-successfully-accepted", "&aYou have successfully accepted the Quest &b%QUESTNAME%&a.");
+            valueChanged = true;
         }
         if (!getLanguageConfig().isString("chat.quest-already-accepted")) {
             getLanguageConfig().set("chat.quest-already-accepted", "&cQuest already accepted.");
+            valueChanged = true;
         }
         if (!getLanguageConfig().isString("chat.quest-failed")) {
             getLanguageConfig().set("chat.quest-failed", "&eYou have &c&lFAILED &ethe Quest &b%QUESTNAME%&e!");
+            valueChanged = true;
         }
         if (!getLanguageConfig().isString("chat.quest-aborted")) {
             getLanguageConfig().set("chat.quest-aborted", "&aThe active quest &b%QUESTNAME% &ahas been aborted!");
+            valueChanged = true;
         }
         if (!getLanguageConfig().isString("chat.quest-completed-and-rewards-given")) {
             getLanguageConfig().set("chat.quest-completed-and-rewards-given", "&aYou have completed the quest &b%QUESTNAME% &aand received your rewards!!!");
+            valueChanged = true;
         }
 
         if (!getLanguageConfig().isString("chat.missing-quest-description")) {
             getLanguageConfig().set("chat.missing-quest-description", "&eThis quest has no quest description.");
+            valueChanged = true;
         }
 
         if (!getLanguageConfig().isString("chat.objectives-label-after-quest-accepting")) {
             getLanguageConfig().set("chat.objectives-label-after-quest-accepting", "&9Objectives:");
+            valueChanged = true;
         }
 
         if (!getLanguageConfig().isString("chat.questpoints")) {
             getLanguageConfig().set("chat.questpoints", "&eYou currently have &b%QUESTPOINTS% &equest points.");
+            valueChanged = true;
         }
 
 
         if (!getLanguageConfig().isString("titles.quest-accepted.title")) {
             getLanguageConfig().set("titles.quest-accepted.title", "&fQuest accepted");
+            valueChanged = true;
         }
         if (!getLanguageConfig().isString("titles.quest-accepted.subtitle")) {
             getLanguageConfig().set("titles.quest-accepted.subtitle", "<#b617ff>%QUESTNAME%");
+            valueChanged = true;
         }
 
         if (!getLanguageConfig().isString("titles.quest-completed.title")) {
             getLanguageConfig().set("titles.quest-completed.title", "&aQuest Completed");
+            valueChanged = true;
         }
         if (!getLanguageConfig().isString("titles.quest-completed.subtitle")) {
             getLanguageConfig().set("titles.quest-completed.subtitle", "<#b617ff>%QUESTNAME%");
+            valueChanged = true;
         }
 
         if (!getLanguageConfig().isString("titles.quest-failed.title")) {
             getLanguageConfig().set("titles.quest-failed.title", "&cQuest Failed");
+            valueChanged = true;
         }
         if (!getLanguageConfig().isString("titles.quest-failed.subtitle")) {
             getLanguageConfig().set("titles.quest-failed.subtitle", "<#b617ff>%QUESTNAME%");
+            valueChanged = true;
         }
 
         //user /q gui - Main
         if (!getLanguageConfig().isString("gui.main.title")) {
             getLanguageConfig().set("gui.main.title", "                &9Quests");
+            valueChanged = true;
         }
         if (!getLanguageConfig().isString("gui.main.button.questpoints.text")) {
             getLanguageConfig().set("gui.main.button.questpoints.text", "&6Quest Points\n&eCurrent quest points: &b%QUESTPOINTS%");
+            valueChanged = true;
         }
         if (!getLanguageConfig().isString("gui.main.button.takequest.text")) {
             getLanguageConfig().set("gui.main.button.takequest.text", "&aTake a Quest\n&7Start a new Quest!\n\n&8Some Quests cannot be\n&8started like this.");
+            valueChanged = true;
         }
         if (!getLanguageConfig().isString("gui.main.button.abortquest.text")) {
             getLanguageConfig().set("gui.main.button.abortquest.text", "&cAbort a Quest\n&7Aborting a Quest may\n&7lead to punishments.");
+            valueChanged = true;
         }
         if (!getLanguageConfig().isString("gui.main.button.previewquest.text")) {
             getLanguageConfig().set("gui.main.button.previewquest.text", "&9Preview Quest (Quest Info)\n&7Show more information\n&7about a Quest.");
+            valueChanged = true;
         }
         if (!getLanguageConfig().isString("gui.main.button.activequests.text")) {
             getLanguageConfig().set("gui.main.button.activequests.text", "&3Active Quests\n&7Shows all of your\n&7active Quests.");
+            valueChanged = true;
         }
+        return valueChanged;
 
     }
 

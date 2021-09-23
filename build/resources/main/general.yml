@@ -12,10 +12,10 @@ general:
   max-active-quests-per-player: -1
 visual:
   #Sets which language to use. Default is languages/en.yml
-  language: "en"
+  language: en
   quest-giver-indicator-particle:
     enabled: true
-    type: "VILLAGER_ANGRY"
+    type: VILLAGER_ANGRY
     spawn-interval: 10
     count: 1
 gui:
@@ -26,7 +26,7 @@ gui:
     enabled: true
 placeholders:
   player_active_quests_list_horizontal:
-    separator: "|"
+    separator: '|'
     limit: -1 #-1 for unlimited
     use-displayname-if-available: true
   player_active_quests_list_vertical:

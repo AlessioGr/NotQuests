@@ -3,6 +3,7 @@ package notquests.notquests.Managers;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import notquests.notquests.NotQuests;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Particle;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
+
 
 /**
  * This is the Data Manager which handles loading and saving Player Data, Quest Data and Configurations.
@@ -186,6 +188,7 @@ public class DataManager {
                 try {
                     //Try to create the general.yml config file, and throw an error if it fails.
 
+
                     if (!questsDataFile.createNewFile()) {
                         main.getLogger().log(Level.SEVERE, "§cNotQuests > There was an error creating the quests.yml config file. (1)");
                         disablePluginAndSaving("There was an error creating the quests.yml config file.");
@@ -256,10 +259,28 @@ public class DataManager {
 
                     if (!generalConfigFile.createNewFile()) {
                         main.getLogger().log(Level.SEVERE, "§cNotQuests > There was an error creating the general.yml config file. (1)");
-                        disablePluginAndSaving("There was an error creating the general.yml config file.");
+                        disablePluginAndSaving("There was an error creating the general.yml config file (1).");
                         return;
+                    }
+                    main.getLogger().log(Level.INFO, "§5Loading default §bgeneral.yml§5...");
+
+                    InputStream inputStream = main.getResource("general.yml");
+                    //Instead of creating a new general.yml file, we will copy the one from inside of the plugin jar into the plugin folder:
+                    if (inputStream != null) {
+
+
+                        try (OutputStream outputStream = new FileOutputStream(generalConfigFile)) {
+                            IOUtils.copy(inputStream, outputStream);
+                        } catch (Exception e) {
+                            main.getLogger().log(Level.SEVERE, "§cNotQuests > There was an error creating the general.yml config file. (2)");
+                            disablePluginAndSaving("There was an error creating the general.yml config file (2).");
+                            return;
+                        }
+
 
                     }
+
+
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                     disablePluginAndSaving("There was an error creating the general.yml config file. (2)");
@@ -291,31 +312,39 @@ public class DataManager {
         //For upgrades from older versions who didn't have the enable flag but still used MySQL
         boolean mysqlstorageenabledbooleannotloadedyet = false;
 
-        if(!getGeneralConfig().isBoolean("storage.database.enabled")){
+        boolean valueChanged = false;
+
+        if (!getGeneralConfig().isBoolean("storage.database.enabled")) {
             getGeneralConfig().set("storage.database.enabled", false);
             mysqlstorageenabledbooleannotloadedyet = true;
+            valueChanged = true;
         }
 
-        if (configuration.getDatabaseHost().equals("")) {
+        if (!getGeneralConfig().isString("storage.database.host")) {
             getGeneralConfig().set("storage.database.host", "");
             errored = true;
+            valueChanged = true;
         }
-        if (configuration.getDatabasePort() == -1) {
+        if (!getGeneralConfig().isInt("storage.database.port")) {
             getGeneralConfig().set("storage.database.port", 3306);
             //errored = true;
             configuration.setDatabasePort(3306);
+            valueChanged = true;
         }
-        if (configuration.getDatabaseName().equals("")) {
+        if (!getGeneralConfig().isString("storage.database.database")) {
             getGeneralConfig().set("storage.database.database", "");
             errored = true;
+            valueChanged = true;
         }
-        if (configuration.getDatabaseUsername().equals("")) {
+        if (!getGeneralConfig().isString("storage.database.username")) {
             getGeneralConfig().set("storage.database.username", "");
             errored = true;
+            valueChanged = true;
         }
-        if (configuration.getDatabasePassword().equals("")) {
+        if (!getGeneralConfig().isString("storage.database.password")) {
             getGeneralConfig().set("storage.database.password", "");
             errored = true;
+            valueChanged = true;
         }
 
         //For upgrades from older versions who didn't have the enable flag but still used MySQL
@@ -333,75 +362,91 @@ public class DataManager {
         //Other values from general.yml
         if (!getGeneralConfig().isInt("general.max-active-quests-per-player")) {
             getGeneralConfig().set("general.max-active-quests-per-player", -1);
+            valueChanged = true;
         }
         configuration.setMaxActiveQuestsPerPlayer(getGeneralConfig().getInt("general.max-active-quests-per-player"));
 
 
         if (!getGeneralConfig().isString("visual.language")) {
             getGeneralConfig().set("visual.language", "en");
+            valueChanged = true;
         }
         configuration.setLanguageCode(getGeneralConfig().getString("visual.language"));
 
         if (!getGeneralConfig().isBoolean("visual.quest-giver-indicator-particle.enabled")) {
             getGeneralConfig().set("visual.quest-giver-indicator-particle.enabled", true);
+            valueChanged = true;
         }
         configuration.setQuestGiverIndicatorParticleEnabled(getGeneralConfig().getBoolean("visual.quest-giver-indicator-particle.enabled"));
 
         if (!getGeneralConfig().isString("visual.quest-giver-indicator-particle.type")) {
             getGeneralConfig().set("visual.quest-giver-indicator-particle.type", "VILLAGER_ANGRY");
+            valueChanged = true;
         }
         configuration.setQuestGiverIndicatorParticleType(Particle.valueOf(getGeneralConfig().getString("visual.quest-giver-indicator-particle.type")));
 
         if (!getGeneralConfig().isInt("visual.quest-giver-indicator-particle.spawn-interval")) {
             getGeneralConfig().set("visual.quest-giver-indicator-particle.spawn-interval", 10);
+            valueChanged = true;
         }
         configuration.setQuestGiverIndicatorParticleSpawnInterval(getGeneralConfig().getInt("visual.quest-giver-indicator-particle.spawn-interval"));
 
         if (!getGeneralConfig().isInt("visual.quest-giver-indicator-particle.count")) {
             getGeneralConfig().set("visual.quest-giver-indicator-particle.count", 1);
+            valueChanged = true;
         }
         configuration.setQuestGiverIndicatorParticleCount(getGeneralConfig().getInt("visual.quest-giver-indicator-particle.count"));
 
 
         if (!getGeneralConfig().isBoolean("gui.questpreview.enabled")) {
             getGeneralConfig().set("gui.questpreview.enabled", true);
+            valueChanged = true;
         }
         configuration.setQuestPreviewUseGUI(getGeneralConfig().getBoolean("gui.questpreview.enabled"));
 
         if (!getGeneralConfig().isBoolean("gui.usercommands.enabled")) {
             getGeneralConfig().set("gui.usercommands.enabled", true);
+            valueChanged = true;
         }
         configuration.setUserCommandsUseGUI(getGeneralConfig().getBoolean("gui.usercommands.enabled"));
 
 
         if (!getGeneralConfig().isString("placeholders.player_active_quests_list_horizontal.separator")) {
             getGeneralConfig().set("placeholders.player_active_quests_list_horizontal.separator", " | ");
+            valueChanged = true;
         }
         configuration.placeholder_player_active_quests_list_horizontal_separator = getGeneralConfig().getString("placeholders.player_active_quests_list_horizontal.separator");
 
         if (!getGeneralConfig().isInt("placeholders.player_active_quests_list_horizontal.limit")) {
             getGeneralConfig().set("placeholders.player_active_quests_list_horizontal.limit", -1);
+            valueChanged = true;
         }
         configuration.placeholder_player_active_quests_list_horizontal_limit = getGeneralConfig().getInt("placeholders.player_active_quests_list_horizontal.limit");
 
         if (!getGeneralConfig().isInt("placeholders.player_active_quests_list_vertical.limit")) {
             getGeneralConfig().set("placeholders.player_active_quests_list_vertical.limit", -1);
+            valueChanged = true;
         }
         configuration.placeholder_player_active_quests_list_vertical_limit = getGeneralConfig().getInt("placeholders.player_active_quests_list_vertical.limit");
 
 
         if (!getGeneralConfig().isBoolean("placeholders.player_active_quests_list_horizontal.use-displayname-if-available")) {
             getGeneralConfig().set("placeholders.player_active_quests_list_horizontal.use-displayname-if-available", true);
+            valueChanged = true;
         }
         configuration.placeholder_player_active_quests_list_horizontal_use_displayname_if_available = getGeneralConfig().getBoolean("placeholders.player_active_quests_list_horizontal.use-displayname-if-available");
 
         if (!getGeneralConfig().isBoolean("placeholders.player_active_quests_list_vertical.use-displayname-if-available")) {
             getGeneralConfig().set("placeholders.player_active_quests_list_vertical.use-displayname-if-available", true);
+            valueChanged = true;
         }
         configuration.placeholder_player_active_quests_list_vertical_use_displayname_if_available = getGeneralConfig().getBoolean("placeholders.player_active_quests_list_vertical.use-displayname-if-available");
 
+        if (valueChanged) {
+            main.getLogger().info("§5General.yml Configuration was updated with new values! Saving it...");
+            saveGeneralConfig();
+        }
 
-        saveGeneralConfig();
 
         //If there was an error loading data from general.yml, the plugin will be disabled
         if (errored) {

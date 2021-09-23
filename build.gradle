@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'notquests'
-version = '1.4.3'
+version = '1.4.4'
 
 repositories {
     mavenCentral()
@@ -47,6 +47,7 @@ dependencies {
     compileOnly 'me.clip:placeholderapi:2.10.10'
     compileOnly 'com.github.MilkBowl:VaultAPI:1.7'
     implementation 'de.themoep:inventorygui:1.5-SNAPSHOT'
+    implementation 'commons-io:commons-io:2.11.0'
 }
 
 
@@ -56,6 +57,7 @@ shadowJar {
         include dependency("de.themoep:inventorygui:1.5-SNAPSHOT")
         include dependency('org.bstats:bstats-bukkit')
         include dependency('org.bstats:bstats-base')
+        include dependency('commons-io:commons-io')
         //does not work include(dependency('net.kyori.adventure.platform.bukkit:.*'))
 
 
@@ -68,6 +70,8 @@ shadowJar {
         relocate("de.themoep", "notquests.notquests.shaded.de.themoep")
         relocate("org.bstats.bukkit", "notquests.notquests.shaded.org.bstats.bukkit")
         relocate("org.bstats", "notquests.notquests.shaded.org.bstats")
+        relocate("commons.io", "notquests.notquests.shaded.commons.io")
+
     }
 
 
