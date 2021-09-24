@@ -123,9 +123,9 @@ public class QuestPlayer {
                         final boolean deductMoney = moneyRequirement.isDeductMoney();
                         final Player player = Bukkit.getPlayer(getUUID());
                         if (player != null) {
-                            if(!main.isVaultEnabled()){
+                            if (!main.isVaultEnabled() || main.getEconomy() == null) {
                                 requirementsStillNeeded.append("\n§eError: The server does not have vault enabled. Please ask the Owner to install Vault for money stuff to work.");
-                            }else if (main.getEconomy().getBalance(player, player.getWorld().getName()) < moneyRequirementAmount) {
+                            } else if (main.getEconomy().getBalance(player, player.getWorld().getName()) < moneyRequirementAmount) {
                                 requirementsStillNeeded.append("\n§eYou need §b").append(moneyRequirementAmount - main.getEconomy().getBalance(player, player.getWorld().getName())).append(" §emore money.");
                             } else {
                                 if (deductMoney) {
