@@ -76,6 +76,7 @@ Admin Commands - Quest Editing:
   - Command
   - Quest Points
   - Item
+  - Money
 - Multiple Triggers: (Triggers run console commands (= Actions) when activated. Triggers are set per-quest)
   - Begin Quest or Objective
   - Complete Quest or Objective
@@ -127,4 +128,4 @@ Player Placeholders:
 - Placeholder Requirements
 - Technical: Give Quest NPCs the quests they offer directly (attach the quest names to the npc/to the trait) for performance boost
 
-I'm not a professional programmer and made this just for fun. Code quality is close to 0. You won't find any comments or javadocs either. I just decided to publish it because, why not.
+I'm not a professional programmer and made this just for fun. You won't find many comments or javadocs either - I will add them gradually.
