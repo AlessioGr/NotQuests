@@ -17,10 +17,7 @@ import notquests.notquests.Structs.Objectives.*;
 import notquests.notquests.Structs.Quest;
 import notquests.notquests.Structs.QuestPlayer;
 import notquests.notquests.Structs.Requirements.*;
-import notquests.notquests.Structs.Rewards.CommandReward;
-import notquests.notquests.Structs.Rewards.QuestPointsReward;
-import notquests.notquests.Structs.Rewards.Reward;
-import notquests.notquests.Structs.Rewards.RewardType;
+import notquests.notquests.Structs.Rewards.*;
 import notquests.notquests.Structs.Triggers.Action;
 import notquests.notquests.Structs.Triggers.Trigger;
 import notquests.notquests.Structs.Triggers.TriggerTypes.*;
@@ -372,6 +369,9 @@ public class QuestManager {
                             } else if (rewardType == RewardType.QuestPoints) {
                                 long rewardedQuestPoints = main.getDataManager().getQuestsData().getLong("quests." + questName + ".rewards." + rewardNumber + ".specifics.rewardedQuestPoints");
                                 reward = new QuestPointsReward(main, rewardedQuestPoints);
+                            } else if (rewardType == RewardType.Item) {
+                                ItemStack rewardItem = main.getDataManager().getQuestsData().getItemStack("quests." + questName + ".rewards." + rewardNumber + ".specifics.rewardItem");
+                                reward = new ItemReward(main, rewardItem);
                             }
 
                             if (reward != null) {

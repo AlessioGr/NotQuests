@@ -7,6 +7,7 @@ import notquests.notquests.QuestGiverNPCTrait;
 import notquests.notquests.Structs.Objectives.*;
 import notquests.notquests.Structs.Requirements.*;
 import notquests.notquests.Structs.Rewards.CommandReward;
+import notquests.notquests.Structs.Rewards.ItemReward;
 import notquests.notquests.Structs.Rewards.QuestPointsReward;
 import notquests.notquests.Structs.Rewards.Reward;
 import notquests.notquests.Structs.Triggers.Trigger;
@@ -63,11 +64,12 @@ public class Quest {
     public void addReward(Reward reward) {
         rewards.add(reward);
         main.getDataManager().getQuestsData().set("quests." + questName + ".rewards." + rewards.size() + ".rewardType", reward.getRewardType().toString());
-
         if (reward instanceof CommandReward commandReward) {
             main.getDataManager().getQuestsData().set("quests." + questName + ".rewards." + rewards.size() + ".specifics.consoleCommand", commandReward.getConsoleCommand());
         } else if (reward instanceof QuestPointsReward commandReward) {
             main.getDataManager().getQuestsData().set("quests." + questName + ".rewards." + rewards.size() + ".specifics.rewardedQuestPoints", commandReward.getRewardedQuestPoints());
+        } else if (reward instanceof ItemReward itemReward) {
+            main.getDataManager().getQuestsData().set("quests." + questName + ".rewards." + rewards.size() + ".specifics.rewardItem", itemReward.getItemReward());
         }
 
     }
