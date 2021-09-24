@@ -1,0 +1,64 @@
+quests:
+  TheVirus:
+    displayName: A Deadly Virus
+    description: A deadly virus has infected the people of Winterfell. You have to
+      murder the infected villagers to prevent the virus from spreading further.
+    requirements:
+      '1':
+        requirementType: QuestPoints
+        progressNeeded: 10
+        specifics:
+          questPointRequirement: 10
+          deductQuestPoints: false
+    objectives:
+      '1':
+        objectiveType: BreakBlocks
+        progressNeeded: 64
+        specifics:
+          blockToBreak:
+            material: DIRT
+          deductIfBlockPlaced: true
+        description: The infected Zombies shat on the street. Clean it up by breaking
+          64 dirt blocks!
+        displayName: Stinky Street
+      '2':
+        objectiveType: KillMobs
+        progressNeeded: 15
+        specifics:
+          mobToKill: ZOMBIE_VILLAGER
+          amountToKill: 15
+        description: You can see the infected villagers in front of you! Murder them
+          all to stop the virus from spreading!
+        displayName: Zombies ahead!
+        dependantObjectives:
+          '1':
+            objectiveID: 1
+    triggers:
+      '1':
+        triggerType: BEGIN
+        triggerActionName: Spawn15ZombieVillagers
+        applyOn: 2
+        amountNeeded: 1
+        worldName: ALL
+    rewards:
+      '1':
+        rewardType: QuestPoints
+        specifics:
+          rewardedQuestPoints: 2
+      '2':
+        rewardType: Item
+        specifics:
+          rewardItem:
+            ==: org.bukkit.inventory.ItemStack
+            v: 2730
+            type: WOODEN_SWORD
+            amount: 2
+      '3':
+        rewardType: ConsoleCommand
+        specifics:
+          consoleCommand: 'eco give {PLAYER} 300 '
+    acceptCooldown: 1200
+    maxAccepts: 10
+actions:
+  Spawn15ZombieVillagers:
+    consoleCommand: spawnmob zombievillager 15 {PLAYER}

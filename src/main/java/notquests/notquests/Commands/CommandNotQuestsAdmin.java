@@ -2143,7 +2143,9 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                 main.getDataManager().completions.add(material.toString());
                             }
                             main.getDataManager().completions.add("hand");
-                            return main.getDataManager().completions;
+
+                            StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
+                            return main.getDataManager().partialCompletions;
                         }
                     } else if (args[2].equalsIgnoreCase("npcs") && args[3].equalsIgnoreCase("add")) {
                         main.getDataManager().completions.add("Yes");
