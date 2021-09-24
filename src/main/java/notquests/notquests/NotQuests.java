@@ -141,7 +141,7 @@ public final class NotQuests extends JavaPlugin {
                 final UpdateChecker updateChecker = new UpdateChecker(this, 95872);
                 if (updateChecker.checkForUpdates()){
                     getLogger().info("§6The version §e" + getDescription().getVersion()
-                            + " §6is not the latest version! Please update the plugin here: §bhttps://www.spigotmc.org/resources/95872/");
+                            + " §6is not the latest version (§a" + updateChecker.getLatestVersion() + "§6)! Please update the plugin here: §bhttps://www.spigotmc.org/resources/95872/");
                 }else{
                     getLogger().info("NotQuests seems to be up to date! :)");
                 }
