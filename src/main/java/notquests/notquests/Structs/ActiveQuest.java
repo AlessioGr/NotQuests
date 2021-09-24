@@ -1,9 +1,6 @@
 package notquests.notquests.Structs;
 
-import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.npc.NPC;
-import net.citizensnpcs.api.trait.Trait;
-import net.citizensnpcs.trait.FollowTrait;
+
 import notquests.notquests.NotQuests;
 import notquests.notquests.Structs.Objectives.EscortNPCObjective;
 import notquests.notquests.Structs.Objectives.Objective;
@@ -38,6 +35,8 @@ public class ActiveQuest {
 
     private final QuestPlayer questPlayer;
 
+    private CitizensHandler citizensHandler;
+
 
     public ActiveQuest(NotQuests main, Quest quest, QuestPlayer questPlayer) {
         this.main = main;
@@ -47,6 +46,11 @@ public class ActiveQuest {
         toRemove = new ArrayList<>();
         completedObjectives = new ArrayList<>();
         activeTriggers = new ArrayList<>();
+
+        if (main.isCitizensEnabled()) {
+            citizensHandler = new CitizensHandler(main);
+        }
+
 
         int triggerID = 1;
         for (final Trigger trigger : quest.getTriggers()) {
@@ -61,6 +65,7 @@ public class ActiveQuest {
             activeObjectives.add(activeObjective);
             objectiveID++;
         }
+
 
     }
 
@@ -234,23 +239,13 @@ public class ActiveQuest {
 
         questPlayer.sendMessage(main.getLanguageManager().getString("chat.quest-failed").replaceAll("%QUESTNAME%", getQuest().getQuestName()));
 
+
         for (final ActiveObjective activeObjective : getActiveObjectives()) {
             if (activeObjective.getObjective() instanceof EscortNPCObjective) {
-                if(main.isCitizensEnabled()){
-                    final NPC npcToEscort = CitizensAPI.getNPCRegistry().getById(((EscortNPCObjective) activeObjective.getObjective()).getNpcToEscortID());
-                    if (npcToEscort != null) {
-                        FollowTrait followerTrait = null;
-                        for (final Trait trait : npcToEscort.getTraits()) {
-                            if (trait.getName().toLowerCase().contains("follow")) {
-                                followerTrait = (FollowTrait) trait;
-                            }
-                        }
-                        if (followerTrait != null) {
-                            npcToEscort.removeTrait(followerTrait.getClass());
-                        }
+                if (main.isCitizensEnabled() && citizensHandler != null) {
+                    citizensHandler.handleEscortObjective(activeObjective);
 
-                        npcToEscort.despawn();
-                    }
+
                 }
 
             }
@@ -271,5 +266,9 @@ public class ActiveQuest {
             }
         }
         return null;
+    }
+
+    public final CitizensHandler getCitizensHandler() {
+        return citizensHandler;
     }
 }
