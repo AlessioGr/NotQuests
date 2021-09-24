@@ -43,10 +43,22 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
 
     private final BaseComponent firstLevelCommands;
 
+    private final ArrayList<String> placeholders;
 
     public CommandNotQuestsAdmin(NotQuests main) {
         this.main = main;
         simpleDateFormat = new SimpleDateFormat("MMM dd,yyyy HH:mm");
+
+        placeholders = new ArrayList<>();
+
+        placeholders.add("{PLAYER}");
+        placeholders.add("{PLAYERUUID}");
+        placeholders.add("{PLAYERX}");
+        placeholders.add("{PLAYERY}");
+        placeholders.add("{PLAYERZ}");
+        placeholders.add("{WORLD}");
+        placeholders.add("{QUEST}");
+
 
 
       /*  firstLevelCommands = Component.text("NotQuests §b§lv" + main.getDescription().getVersion() + " §9§lAdmin Commands:", NamedTextColor.BLUE, TextDecoration.BOLD)
@@ -1902,7 +1914,13 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
             } else if (args.length >= 4 && ((args[0].equalsIgnoreCase("edit") && args[2].equalsIgnoreCase("description")) || (args[0].equalsIgnoreCase("actions") && args[1].equalsIgnoreCase("add")))) {
                 if (args[0].equalsIgnoreCase("actions")) {
                     if (args[1].equalsIgnoreCase("add")) {
-                        main.getDataManager().completions.add("<Enter Console Command>");
+                        final String argToCheck = args[args.length - 1];
+                        if (argToCheck.startsWith("{")) {
+                            main.getDataManager().completions.addAll(placeholders);
+                        } else {
+                            main.getDataManager().completions.add("<Enter Console Command>");
+                        }
+
                         StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
                         return main.getDataManager().partialCompletions;
                     }
@@ -2029,7 +2047,12 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                     }
                 }
             } else if (args.length >= 6 && args[2].equalsIgnoreCase("rewards") && args[3].equalsIgnoreCase("add") && args[4].equalsIgnoreCase("ConsoleCommand")) {
-                main.getDataManager().completions.add("<Enter Console Command>");
+                final String argToCheck = args[args.length - 1];
+                if (argToCheck.startsWith("{")) {
+                    main.getDataManager().completions.addAll(placeholders);
+                } else {
+                    main.getDataManager().completions.add("<Enter Console Command>");
+                }
                 StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
                 return main.getDataManager().partialCompletions;
             } else if (args.length == 6) {
