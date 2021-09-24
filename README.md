@@ -75,6 +75,7 @@ Admin Commands - Quest Editing:
 - Multiple Quest Completion Rewards:
   - Command
   - Quest Points
+  - Item
 - Multiple Triggers: (Triggers run console commands (= Actions) when activated. Triggers are set per-quest)
   - Begin Quest or Objective
   - Complete Quest or Objective
