@@ -11,10 +11,7 @@ import notquests.notquests.Structs.*;
 import notquests.notquests.Structs.Objectives.Objective;
 import notquests.notquests.Structs.Objectives.TriggerCommandObjective;
 import notquests.notquests.Structs.Requirements.*;
-import notquests.notquests.Structs.Rewards.CommandReward;
-import notquests.notquests.Structs.Rewards.ItemReward;
-import notquests.notquests.Structs.Rewards.QuestPointsReward;
-import notquests.notquests.Structs.Rewards.Reward;
+import notquests.notquests.Structs.Rewards.*;
 import notquests.notquests.Structs.Triggers.Action;
 import notquests.notquests.Structs.Triggers.Trigger;
 import notquests.notquests.Structs.Triggers.TriggerTypes.*;
@@ -273,6 +270,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                     sender.sendMessage("§bConsoleCommand");
                     sender.sendMessage("§bQuestPoints");
                     sender.sendMessage("§bItem");
+                    sender.sendMessage("§bMoney");
                 } else if (args[0].equalsIgnoreCase("resetAndRemoveQuestForAllPlayers")) {
                     sender.sendMessage("§cMissing 2. argument §3[Quest Name]§c. Specify the §bname of the quest§c which should be reset and removed.");
                     sender.sendMessage("§e/qadmin §6resetAndRemoveQuestForAllPlayers §3[Quest Name] §7| Resets & removes specified quest for all players");
@@ -874,6 +872,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                 sender.sendMessage("§bConsoleCommand");
                                 sender.sendMessage("§bQuestPoints");
                                 sender.sendMessage("§bItem");
+                                sender.sendMessage("§bMoney");
                             } else if (args[3].equalsIgnoreCase("list")) {
                                 sender.sendMessage("§9Rewards for quest §b" + quest.getQuestName() + "§9:");
                                 int counter = 1;
@@ -885,6 +884,8 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                         sender.sendMessage("§7-- Quest points amount: " + questPointsReward.getRewardedQuestPoints());
                                     } else if (reward instanceof ItemReward itemReward) {
                                         sender.sendMessage("§7-- Item: " + itemReward.getItemReward());
+                                    } else if (reward instanceof MoneyReward moneyReward) {
+                                        sender.sendMessage("§7-- Money: " + moneyReward.getRewardedMoney());
                                     }
 
                                     counter += 1;
@@ -1111,17 +1112,24 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                         } else if (args[2].equalsIgnoreCase("rewards")) {
                             if (args[3].equalsIgnoreCase("add")) {
                                 if (args[4].equalsIgnoreCase("ConsoleCommand")) {
+                                    sender.sendMessage("§cMissing 6. argument §3[Console Command]§c. Specify the §bcommand §cwhich will be executed from the console as a reward. A '/' at the beginning is not required.");
                                     sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards add §2ConsoleCommand §3[Console Command]");
                                 } else if (args[4].equalsIgnoreCase("QuestPoints")) {
+                                    sender.sendMessage("§cMissing 6. argument §3[Quest point reward amount]§c. Specify the §bamount of quest points §cthe player should receive.");
                                     sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards add §2QuestPoints §3[Quest point reward amount]");
                                 } else if (args[4].equalsIgnoreCase("Item")) {
+                                    sender.sendMessage("§cMissing 6. argument §3[Item Name/hand]§c. Specify the §bitem type §cthe player should receive. If you use 'name'. the item you are holding in your main hand will be used.");
                                     sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards add §2Item §3[Item Name/hand] [Amount]");
+                                } else if (args[4].equalsIgnoreCase("Money")) {
+                                    sender.sendMessage("§cMissing 6. argument §3[Amount]§c. Specify the §bamount of money §cthe player should receive.");
+                                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards add §2Money §3[Amount]");
                                 } else {
                                     sender.sendMessage("§cInvalid Reward Type");
                                     sender.sendMessage("§eReward Types:");
                                     sender.sendMessage("§bConsoleCommand");
                                     sender.sendMessage("§bQuestPoints");
                                     sender.sendMessage("§bItem");
+                                    sender.sendMessage("§bMoney");
                                 }
                             } else {
                                 sender.sendMessage("§cWrong command usage");
@@ -1214,12 +1222,23 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
 
                                     QuestPointsReward questPointsReward = new QuestPointsReward(main, questPointRewardAmount);
                                     quest.addReward(questPointsReward);
-                                    sender.sendMessage("§aReward successfully added to quest §b" + quest.getQuestName() + "§a!");
+                                    sender.sendMessage("§bQuest Points Reward §asuccessfully added to quest §b" + quest.getQuestName() + "§a!");
 
                                 } else if (args[4].equalsIgnoreCase("Item")) {
                                     sender.sendMessage("§cMissing 7. argument §3[Amount]§c. Specify the §bamount §cthe player should get from specified item.");
 
                                     sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards add §2Item §3[Item Name/hand] [Amount]");
+                                } else if (args[4].equalsIgnoreCase("Money")) {
+                                    if (!main.isVaultEnabled()) {
+                                        sender.sendMessage("§cError: cannot create a money reward because Vault (needed for money stuff to work) is not installed on the server.");
+
+                                        return true;
+                                    }
+                                    final long moneyRewardAmount = Long.parseLong(args[5]);
+
+                                    MoneyReward moneyReward = new MoneyReward(main, moneyRewardAmount);
+                                    quest.addReward(moneyReward);
+                                    sender.sendMessage("§bMoney Reward §asuccessfully added to quest §b" + quest.getQuestName() + "§a!");
                                 } else {
                                     sender.sendMessage("§cWrong command usage!");
                                 }
@@ -2073,6 +2092,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                         main.getDataManager().completions.add("ConsoleCommand");
                         main.getDataManager().completions.add("QuestPoints");
                         main.getDataManager().completions.add("Item");
+                        main.getDataManager().completions.add("Money");
                         StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
                         return main.getDataManager().partialCompletions;
                     } else if (args[2].equalsIgnoreCase("npcs") && args[3].equalsIgnoreCase("add")) {
@@ -2145,6 +2165,9 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                             main.getDataManager().completions.add("hand");
 
                             StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
+                            return main.getDataManager().partialCompletions;
+                        } else if (args[4].equalsIgnoreCase("Money")) {
+                            StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().numberPositiveCompletions, main.getDataManager().partialCompletions);
                             return main.getDataManager().partialCompletions;
                         }
                     } else if (args[2].equalsIgnoreCase("npcs") && args[3].equalsIgnoreCase("add")) {

@@ -372,6 +372,9 @@ public class QuestManager {
                             } else if (rewardType == RewardType.Item) {
                                 ItemStack rewardItem = main.getDataManager().getQuestsData().getItemStack("quests." + questName + ".rewards." + rewardNumber + ".specifics.rewardItem");
                                 reward = new ItemReward(main, rewardItem);
+                            } else if (rewardType == RewardType.Money) {
+                                long rewardedMoneyAmount = main.getDataManager().getQuestsData().getLong("quests." + questName + ".rewards." + rewardNumber + ".specifics.rewardedMoneyAmount");
+                                reward = new MoneyReward(main, rewardedMoneyAmount);
                             }
 
                             if (reward != null) {

@@ -1,5 +1,5 @@
 package notquests.notquests.Structs.Rewards;
 
 public enum RewardType {
-    ConsoleCommand, QuestPoints, Item
+    ConsoleCommand, QuestPoints, Item, Money
 }

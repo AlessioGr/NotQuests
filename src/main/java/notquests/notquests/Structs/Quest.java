@@ -6,10 +6,7 @@ import notquests.notquests.NotQuests;
 import notquests.notquests.QuestGiverNPCTrait;
 import notquests.notquests.Structs.Objectives.*;
 import notquests.notquests.Structs.Requirements.*;
-import notquests.notquests.Structs.Rewards.CommandReward;
-import notquests.notquests.Structs.Rewards.ItemReward;
-import notquests.notquests.Structs.Rewards.QuestPointsReward;
-import notquests.notquests.Structs.Rewards.Reward;
+import notquests.notquests.Structs.Rewards.*;
 import notquests.notquests.Structs.Triggers.Trigger;
 import notquests.notquests.Structs.Triggers.TriggerTypes.NPCDeathTrigger;
 import notquests.notquests.Structs.Triggers.TriggerTypes.WorldEnterTrigger;
@@ -70,6 +67,8 @@ public class Quest {
             main.getDataManager().getQuestsData().set("quests." + questName + ".rewards." + rewards.size() + ".specifics.rewardedQuestPoints", commandReward.getRewardedQuestPoints());
         } else if (reward instanceof ItemReward itemReward) {
             main.getDataManager().getQuestsData().set("quests." + questName + ".rewards." + rewards.size() + ".specifics.rewardItem", itemReward.getItemReward());
+        } else if (reward instanceof MoneyReward moneyReward) {
+            main.getDataManager().getQuestsData().set("quests." + questName + ".rewards." + rewards.size() + ".specifics.rewardedMoneyAmount", moneyReward.getRewardedMoney());
         }
 
     }
