@@ -26,7 +26,7 @@ public class MoneyReward extends Reward {
         if (rewardedMoney > 0) {
             main.getEconomy().depositPlayer(player, rewardedMoney);
         } else if (rewardedMoney < 0) {
-            main.getEconomy().withdrawPlayer(player, rewardedMoney);
+            main.getEconomy().withdrawPlayer(player, Math.abs(rewardedMoney));
         }
     }
 
