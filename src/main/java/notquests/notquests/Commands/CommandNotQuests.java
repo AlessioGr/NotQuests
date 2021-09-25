@@ -769,7 +769,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                                             .replaceAll("%ACTIVEOBJECTIVEID%", "" + activeObjective.getObjectiveID())
                                                             .replaceAll("%OBJECTIVENAME%", nameToDisplay)
                                                             .replaceAll("%OBJECTIVEDESCRIPTION%", descriptionToDisplay)
-                                                            .replaceAll("%ACTIVEOBJECTIVEDESCRIPTION%", main.getQuestManager().getActiveObjectiveDescription(activeObjective))
+                                                            .replaceAll("%ACTIVEOBJECTIVEDESCRIPTION%", main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective()))
                                                             .replaceAll("%ACTIVEOBJECTIVEPROGRESS%", "" + activeObjective.getCurrentProgress())
                                                             .replaceAll("%OBJECTIVEPROGRESSNEEDED%", "" + activeObjective.getProgressNeeded())
 

@@ -53,60 +53,10 @@ public class ObjectivesAdminCommand {
                     sender.sendMessage("§eInformation of objective with the ID §b" + objectiveID + " §efrom quest §b" + quest.getQuestName() + "§e:");
                     sender.sendMessage("§aObjective Type: §b" + objective.getObjectiveType().toString());
                     sender.sendMessage("§aObjective Content: ");
-                    if (objective instanceof BreakBlocksObjective breakBlocksObjective) {
-                        sender.sendMessage("    §7Block to break: §f" + breakBlocksObjective.getBlockToBreak().toString() + " §7x " + objective.getProgressNeeded());
-                    } else if (objective instanceof CollectItemsObjective collectItemsObjective) {
-                        sender.sendMessage("    §7Items to collect: §f" + collectItemsObjective.getItemToCollect().getType() + " (" + collectItemsObjective.getItemToCollect().getItemMeta().getDisplayName() + ")" + " §7x " + objective.getProgressNeeded());
-                    }else if (objective instanceof CraftItemsObjective craftItemsObjective) {
-                        sender.sendMessage("    §7Items to craft: §f" + craftItemsObjective.getItemToCraft().getType() + " (" + craftItemsObjective.getItemToCraft().getItemMeta().getDisplayName() + ")" + " §7x " + objective.getProgressNeeded());
-                    } else if (objective instanceof TriggerCommandObjective triggerCommandObjective) {
-                        sender.sendMessage("    §7Goal: §f" + triggerCommandObjective.getTriggerName() + " §7x " + objective.getProgressNeeded());
-                    } else if (objective instanceof OtherQuestObjective otherQuestObjective) {
-                        sender.sendMessage("    §7Quest completion: §f" + otherQuestObjective.getOtherQuest().getQuestName() + " §7x " + objective.getProgressNeeded());
-                    } else if (objective instanceof KillMobsObjective killMobsObjective) {
-                        sender.sendMessage("    §7Mob to kill: §f" + killMobsObjective.getMobToKill().toString() + " §7x " + objective.getProgressNeeded());
-                    } else if (objective instanceof ConsumeItemsObjective consumeItemsObjective) {
-                        sender.sendMessage("    §7Items to consume: §f" + consumeItemsObjective.getItemToConsume().getType() + " (" + consumeItemsObjective.getItemToConsume().getItemMeta().getDisplayName() + ")" + " §7x " + objective.getProgressNeeded());
-                    } else if (objective instanceof DeliverItemsObjective deliverItemsObjective) {
-                        sender.sendMessage("    §7Items to deliver: §f" + deliverItemsObjective.getItemToDeliver().getType() + " (" + deliverItemsObjective.getItemToDeliver().getItemMeta().getDisplayName() + ")" + " §7x " + objective.getProgressNeeded());
-                        if(main.isCitizensEnabled()){
-                            final NPC npc = CitizensAPI.getNPCRegistry().getById(deliverItemsObjective.getRecipientNPCID());
-                            if (npc != null) {
-                                sender.sendMessage("    §7Deliver it to §f" + npc.getName());
-                            } else {
-                                sender.sendMessage("    §7The delivery NPC is currently not available!");
-                            }
-                        }else{
-                            sender.sendMessage("    §cError: Citizens plugin not installed. Contact an admin.");
-                        }
 
-                    } else if (objective instanceof TalkToNPCObjective talkToNPCObjective) {
-                        if(main.isCitizensEnabled()){
-                            final NPC npc = CitizensAPI.getNPCRegistry().getById(talkToNPCObjective.getNPCtoTalkID());
-                            if (npc != null) {
-                                sender.sendMessage("    §7Talk to §f" + npc.getName());
-                            } else {
-                                sender.sendMessage("    §7The target NPC is currently not available!");
-                            }
-                        }else{
-                            sender.sendMessage("    §cError: Citizens plugin not installed. Contact an admin.");
-                        }
+                    sender.sendMessage(main.getQuestManager().getObjectiveTaskDescription(objective));
 
-                    } else if (objective instanceof EscortNPCObjective escortNPCObjective) {
-                        if(main.isCitizensEnabled()){
-                            final NPC npc = CitizensAPI.getNPCRegistry().getById(escortNPCObjective.getNpcToEscortID());
-                            final NPC npcDestination = CitizensAPI.getNPCRegistry().getById(escortNPCObjective.getNpcToEscortToID());
 
-                            if (npc != null && npcDestination != null) {
-                                sender.sendMessage("    §7Escort §f" + npc.getName() + " §7to §f" + npcDestination.getName());
-                            } else {
-                                sender.sendMessage("    §7The target or destination NPC is currently not available!");
-                            }
-                        }else{
-                            sender.sendMessage("    §cError: Citizens plugin not installed. Contact an admin.");
-                        }
-
-                    }
                     sender.sendMessage("§aObjective DisplayName: §b" + objective.getObjectiveDisplayName());
                     sender.sendMessage("§aObjective Description: §b" + objective.getObjectiveDescription());
                     sender.sendMessage("§aObjective Dependencies:");
@@ -260,8 +210,7 @@ public class ObjectivesAdminCommand {
 
                 } else if (args[4].equalsIgnoreCase("ConsumeItems")) {
                     if (args[5].equalsIgnoreCase("hand")) {
-                        if (sender instanceof Player) {
-                            Player player = (Player) sender;
+                        if (sender instanceof Player player) {
                             ItemStack holdingItem = player.getInventory().getItemInMainHand();
                             int amountToConsume = Integer.parseInt(args[6]);
 
