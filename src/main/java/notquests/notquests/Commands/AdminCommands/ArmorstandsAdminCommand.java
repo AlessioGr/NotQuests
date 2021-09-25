@@ -207,7 +207,7 @@ public class ArmorstandsAdminCommand {
             }
         }else {
 
-            sender.sendMessage("§cWrong command usage!");
+            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
             showUsage(quest, sender, args);
         }
 

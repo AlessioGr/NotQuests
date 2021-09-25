@@ -193,7 +193,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                         "xgggggggx",
                                         "pxxxxxxxn"
                                 };
-                                InventoryGui gui = new InventoryGui(main, player, "             §9Active Quests", guiSetup);
+                                InventoryGui gui = new InventoryGui(main, player, main.getLanguageManager().getString("gui.activeQuests.title"), guiSetup);
                                 gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
 
 
@@ -225,9 +225,10 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                                 return true; // returning true will cancel the click event and stop taking the item
 
                                             },
-                                            "§b" + displayName + " §a[ACTIVE]",
-                                            "§7Progress: §a" + activeQuest.getCompletedObjectives().size() + " §f/ " + activeQuest.getQuest().getObjectives().size(),
-                                            "§fClick to see details!"
+                                            main.getLanguageManager().getString("gui.activeQuests.button.activeQuestButton.text")
+                                                    .replaceAll("%QUESTNAME%", displayName)
+                                                    .replaceAll("%COMPLETEDOBJECTIVESCOUNT%", "" + activeQuest.getCompletedObjectives().size())
+                                                    .replaceAll("%ALLOBJECTIVESCOUNT%", "" + activeQuest.getQuest().getObjectives().size())
 
 
                                     ));
@@ -246,7 +247,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
 
                                 gui.show(player);
                             } else {
-                                sender.sendMessage("§eActive quests:");
+                                sender.sendMessage(main.getLanguageManager().getString("chat.active-quests-label"));
                                 int counter = 1;
                                 for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                                     sender.sendMessage("§a" + counter + ". §e" + activeQuest.getQuest().getQuestName());
@@ -255,7 +256,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                             }
 
                         } else {
-                            sender.sendMessage("§cSeems like you did not accept any active quests!");
+                            sender.sendMessage(main.getLanguageManager().getString("chat.no-quests-accepted"));
                         }
                     } else if (args[0].equalsIgnoreCase("take")) {
                         if (guiEnabled) {
@@ -267,7 +268,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                     "xgggggggx",
                                     "pxxxxxxxn"
                             };
-                            InventoryGui gui = new InventoryGui(main, player, "§9Which Quest do you want to take?", guiSetup);
+                            InventoryGui gui = new InventoryGui(main, player, main.getLanguageManager().getString("gui.takeQuestChoose.title"), guiSetup);
                             gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
 
                             int count = 0;
@@ -284,14 +285,14 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                     if (!quest.getQuestDisplayName().equals("")) {
                                         displayName = quest.getQuestDisplayName();
                                     }
-                                    displayName = "§b" + displayName;
+                                    displayName = main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.questNamePrefix") + displayName;
 
                                     if (questPlayer != null && questPlayer.hasAcceptedQuest(quest)) {
-                                        displayName += " §a[ACCEPTED]";
+                                        displayName += main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.acceptedSuffix");
                                     }
                                     String description = "";
                                     if (!quest.getQuestDescription().equals("")) {
-                                        description = "§8" + quest.getQuestDescription();
+                                        description = main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.questDescriptionPrefix") + quest.getQuestDescription();
                                     }
 
                                     group.addElement(new StaticGuiElement('e',
@@ -305,7 +306,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                             },
                                             displayName,
                                             description,
-                                            "§aClick to preview Quest!"
+                                            main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.bottomText")
 
 
                                     ));
@@ -342,7 +343,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                         "xgggggggx",
                                         "pxxxxxxxn"
                                 };
-                                InventoryGui gui = new InventoryGui(main, player, "  §9Active Quests you can abort", guiSetup);
+                                InventoryGui gui = new InventoryGui(main, player, main.getLanguageManager().getString("gui.abortQuestChoose.title"), guiSetup);
                                 gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
 
                                 GuiElementGroup group = new GuiElementGroup('g');
@@ -375,9 +376,10 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                                 return true; // returning true will cancel the click event and stop taking the item
 
                                             },
-                                            "§b" + displayName + " §a[ACTIVE]",
-                                            "§7Progress: §a" + activeQuest.getCompletedObjectives().size() + " §f/ " + activeQuest.getQuest().getObjectives().size(),
-                                            "§cClick to abort Quest!"
+                                            main.getLanguageManager().getString("gui.abortQuestChoose.button.abortQuestPreview.text")
+                                                    .replaceAll("%QUESTNAME%", displayName)
+                                                    .replaceAll("%COMPLETEDOBJECTIVESCOUNT%", "" + activeQuest.getCompletedObjectives().size())
+                                                    .replaceAll("%ALLOBJECTIVESCOUNT%", "" + activeQuest.getQuest().getObjectives().size())
 
 
                                     ));
@@ -401,7 +403,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                 sender.sendMessage("§e/nquests §6abort §3[Quest Name]");
                             }
                         } else {
-                            sender.sendMessage("§cSeems like you did not accept any active quests!");
+                            sender.sendMessage(main.getLanguageManager().getString("chat.no-quests-accepted"));
                         }
 
 
@@ -415,7 +417,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                     "xgggggggx",
                                     "pxxxxxxxn"
                             };
-                            InventoryGui gui = new InventoryGui(main, player, "§9Choose Quest to preview", guiSetup);
+                            InventoryGui gui = new InventoryGui(main, player, main.getLanguageManager().getString("gui.previewQuestChoose.title"), guiSetup);
                             gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
 
                             int count = 0;
@@ -432,14 +434,14 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                     if (!quest.getQuestDisplayName().equals("")) {
                                         displayName = quest.getQuestDisplayName();
                                     }
-                                    displayName = "§b" + displayName;
+                                    displayName = main.getLanguageManager().getString("gui.previewQuestChoose.button.questPreview.questNamePrefix") + displayName;
 
                                     if (questPlayer != null && questPlayer.hasAcceptedQuest(quest)) {
-                                        displayName += " §a[ACCEPTED]";
+                                        displayName += main.getLanguageManager().getString("gui.previewQuestChoose.button.questPreview.acceptedSuffix");
                                     }
                                     String description = "";
                                     if (!quest.getQuestDescription().equals("")) {
-                                        description = "§8" + quest.getQuestDescription();
+                                        description = main.getLanguageManager().getString("gui.previewQuestChoose.button.questPreview.questDescriptionPrefix") + quest.getQuestDescription();
                                     }
 
                                     group.addElement(new StaticGuiElement('e',
@@ -453,7 +455,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                             },
                                             displayName,
                                             description,
-                                            "§aClick to preview Quest!"
+                                            main.getLanguageManager().getString("gui.previewQuestChoose.button.questPreview.bottomText")
 
 
                                     ));
@@ -483,57 +485,37 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                         sender.sendMessage("§e/nquests §6progress §3[Quest Name]");
                     } else if (args[0].equalsIgnoreCase("questPoints")) {
                         if (questPlayer != null) {
-                            sender.sendMessage(main.getLanguageManager().getString("chat.questpoints").replaceAll("%QUESTPOINTS%", "" + questPlayer.getQuestPoints()));
+                            sender.sendMessage(main.getLanguageManager().getString("chat.questpoints.query").replaceAll("%QUESTPOINTS%", "" + questPlayer.getQuestPoints()));
                         } else {
-                            sender.sendMessage("§cSeems like you don't have any quest points!");
+                            sender.sendMessage(main.getLanguageManager().getString("chat.questpoints.none"));
                         }
                     } else {
-                        sender.sendMessage("§cWrong command usage!");
+                        sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
                     }
                 } else if (args.length == 2) {
                     if (args[0].equalsIgnoreCase("take")) {
                         final Quest quest = main.getQuestManager().getQuest(args[1]);
                         if (quest != null) {
-                            if (quest.isTakeEnabled()) {
-                                final String result = main.getQuestPlayerManager().acceptQuest(player, quest, true, true);
-                                if (!result.equals("accepted")) {
-                                    sender.sendMessage(result);
-                                } else {
-                                    sender.sendMessage(main.getLanguageManager().getString("chat.quest-successfully-accepted").replaceAll("%QUESTNAME%", quest.getQuestName()));
-                                    if (!quest.getQuestDescription().equals("")) {
-                                        sender.sendMessage("§eQuest description: §7" + quest.getQuestDescription());
 
-                                    } else {
-                                        sender.sendMessage(main.getLanguageManager().getString("chat.missing-quest-description"));
-                                    }
-
-
-                                }
-
-                            } else {
-                                if(main.getQuestManager().isPlayerCloseToCitizenOrArmorstandWithQuest(player, quest)){
-
-                                    final String result = main.getQuestPlayerManager().acceptQuest(player, quest, true, true);
-                                    if (!result.equals("accepted")) {
-                                        sender.sendMessage(result);
-                                    } else {
-                                        sender.sendMessage(main.getLanguageManager().getString("chat.quest-successfully-accepted").replaceAll("%QUESTNAME%", quest.getQuestName()));
-                                        if (!quest.getQuestDescription().equals("")) {
-                                            sender.sendMessage("§eQuest description: §7" + quest.getQuestDescription());
-                                        } else {
-                                            sender.sendMessage(main.getLanguageManager().getString("chat.missing-quest-description"));
-                                        }
-                                    }
-                                    return true;
-
-                                }
-
-
-                                sender.sendMessage("§cAccepting the quest §b" + quest.getQuestName() + " §cis disabled with the /nquests take command.");
+                            if (!quest.isTakeEnabled() && !main.getQuestManager().isPlayerCloseToCitizenOrArmorstandWithQuest(player, quest)) {
+                                sender.sendMessage(main.getLanguageManager().getString("chat.take-disabled-accept").replaceAll("%QUESTNAME%", quest.getQuestName()));
+                                return true;
                             }
+                            final String result = main.getQuestPlayerManager().acceptQuest(player, quest, true, true);
+                            if (!result.equals("accepted")) {
+                                sender.sendMessage(result);
+                            } else {
+                                sender.sendMessage(main.getLanguageManager().getString("chat.quest-successfully-accepted").replaceAll("%QUESTNAME%", quest.getQuestName()));
+                                if (!quest.getQuestDescription().equals("")) {
+                                    sender.sendMessage(main.getLanguageManager().getString("chat.quest-description").replaceAll("%QUESTDESCRIPTION%", quest.getQuestDescription()));
+                                } else {
+                                    sender.sendMessage(main.getLanguageManager().getString("chat.missing-quest-description"));
+                                }
+                            }
+                            return true;
 
                         } else {
-                            sender.sendMessage("§cQuest does not exist!");
+                            sender.sendMessage(main.getLanguageManager().getString("chat.quest-does-not-exist").replaceAll("%QUESTNAME%", args[1]));
                         }
                     } else if (args[0].equalsIgnoreCase("abort")) {
 
@@ -620,209 +602,114 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                             }
 
                         } else {
-                            sender.sendMessage("§cYou don't seem to not have accepted any quests!");
+                            sender.sendMessage(main.getLanguageManager().getString("chat.no-quests-accepted"));
                         }
 
 
                     } else if (args[0].equalsIgnoreCase("preview")) {
                         Quest quest = main.getQuestManager().getQuest(args[1]);
                         if (quest != null) {
-                            if (quest.isTakeEnabled()) {
-                                if (guiEnabled) {
-                                    String[] guiSetup = {
-                                            "zxxxxxxxx",
-                                            "x0123456x",
-                                            "x789abcdx",
-                                            "xefghijkx",
-                                            "xlmnopqrx",
-                                            "xxxxxxxxx"
-                                    };
 
-                                    String displayName = quest.getQuestName();
-                                    if (!quest.getQuestDisplayName().equals("")) {
-                                        displayName = quest.getQuestDisplayName();
-                                    }
-
-                                    InventoryGui gui = new InventoryGui(main, player, "§9Preview for Quest §b" + displayName, guiSetup);
-                                    gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
-
-
-                                    String description = "§8???";
-                                    if (!quest.getQuestDescription().equals("")) {
-                                        description = "§8" + quest.getQuestDescription();
-                                    }
-                                    gui.addElement(new StaticGuiElement('1',
-                                            new ItemStack(Material.BOOKSHELF),
-                                            1, // Display a number as the item count
-                                            click -> {
-
-                                                return true; // returning true will cancel the click event and stop taking the item
-
-                                            },
-                                            "§eDescription",
-                                            description
-
-
-                                    ));
-
-                                    String requirements = main.getQuestManager().getQuestRequirements(quest);
-
-
-                                    gui.addElement(new StaticGuiElement('5',
-                                            new ItemStack(Material.IRON_BARS),
-                                            1, // Display a number as the item count
-                                            click -> {
-
-                                                return true; // returning true will cancel the click event and stop taking the item
-
-                                            },
-                                            "§cRequirements",
-                                            requirements
-
-
-                                    ));
-
-                                    String finalDisplayName = displayName;
-                                    gui.addElement(new StaticGuiElement('g',
-                                            new ItemStack(Material.GREEN_WOOL),
-                                            1, // Display a number as the item count
-                                            click -> {
-                                                player.chat("/q take " + quest.getQuestName());
-
-                                                //click.getEvent().getWhoClicked().sendMessage(ChatColor.RED + "I am Redstone!");
-                                                gui.close();
-                                                return true; // returning true will cancel the click event and stop taking the item
-
-                                            },
-                                            "§b" + finalDisplayName,
-                                            "§aClick to take the quest §b" + finalDisplayName + "§c!"
-
-
-                                    ));
-                                    gui.addElement(new StaticGuiElement('i',
-                                            new ItemStack(Material.RED_WOOL),
-                                            1, // Display a number as the item count
-                                            click -> {
-                                                gui.close();
-                                                //click.getEvent().getWhoClicked().sendMessage(ChatColor.RED + "I am Redstone!");
-                                                return true; // returning true will cancel the click event and stop taking the item
-
-                                            },
-                                            "§cClick to NOT take this quest",
-                                            "§cand cancel this action"
-
-
-                                    ));
-
-
-                                    gui.show(player);
-                                } else {
-                                    main.getQuestManager().sendSingleQuestPreview((Player) sender, quest);
-                                }
-
+                            if (!quest.isTakeEnabled() && !main.getQuestManager().isPlayerCloseToCitizenOrArmorstandWithQuest(player, quest)) {
+                                sender.sendMessage(main.getLanguageManager().getString("chat.take-disabled-preview").replaceAll("%QUESTNAME%", quest.getQuestName()));
                                 return true;
-                            } else {
+                            }
+                            if (guiEnabled) {
+                                String[] guiSetup = {
+                                        "zxxxxxxxx",
+                                        "x0123456x",
+                                        "x789abcdx",
+                                        "xefghijkx",
+                                        "xlmnopqrx",
+                                        "xxxxxxxxx"
+                                };
 
-                                if(main.getQuestManager().isPlayerCloseToCitizenOrArmorstandWithQuest(player, quest)){
-                                    if (guiEnabled) {
-                                        String[] guiSetup = {
-                                                "zxxxxxxxx",
-                                                "x0123456x",
-                                                "x789abcdx",
-                                                "xefghijkx",
-                                                "xlmnopqrx",
-                                                "xxxxxxxxx"
-                                        };
-
-                                        String displayName = quest.getQuestName();
-                                        if (!quest.getQuestDisplayName().equals("")) {
-                                            displayName = quest.getQuestDisplayName();
-                                        }
-
-                                        InventoryGui gui = new InventoryGui(main, player, "§9Preview for Quest §b" + displayName, guiSetup);
-                                        gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
-
-
-                                        String description = "§8???";
-                                        if (!quest.getQuestDescription().equals("")) {
-                                            description = "§8" + quest.getQuestDescription();
-                                        }
-                                        gui.addElement(new StaticGuiElement('1',
-                                                new ItemStack(Material.BOOKSHELF),
-                                                1, // Display a number as the item count
-                                                click -> {
-
-                                                    return true; // returning true will cancel the click event and stop taking the item
-
-                                                },
-                                                "§eDescription",
-                                                description
-
-
-                                        ));
-
-                                        String requirements = main.getQuestManager().getQuestRequirements(quest);
-
-
-                                        gui.addElement(new StaticGuiElement('5',
-                                                new ItemStack(Material.IRON_BARS),
-                                                1, // Display a number as the item count
-                                                click -> {
-
-                                                    return true; // returning true will cancel the click event and stop taking the item
-
-                                                },
-                                                "§cRequirements",
-                                                requirements
-
-
-                                        ));
-
-                                        String finalDisplayName = displayName;
-                                        gui.addElement(new StaticGuiElement('g',
-                                                new ItemStack(Material.GREEN_WOOL),
-                                                1, // Display a number as the item count
-                                                click -> {
-                                                    player.chat("/q take " + quest.getQuestName());
-
-                                                    //click.getEvent().getWhoClicked().sendMessage(ChatColor.RED + "I am Redstone!");
-                                                    gui.close();
-                                                    return true; // returning true will cancel the click event and stop taking the item
-
-                                                },
-                                                "§b" + finalDisplayName,
-                                                "§aClick to take the quest §b" + finalDisplayName + "§c!"
-
-
-                                        ));
-                                        gui.addElement(new StaticGuiElement('i',
-                                                new ItemStack(Material.RED_WOOL),
-                                                1, // Display a number as the item count
-                                                click -> {
-                                                    gui.close();
-                                                    //click.getEvent().getWhoClicked().sendMessage(ChatColor.RED + "I am Redstone!");
-                                                    return true; // returning true will cancel the click event and stop taking the item
-
-                                                },
-                                                "§cClick to NOT take this quest",
-                                                "§cand cancel this action"
-
-
-                                        ));
-
-
-                                        gui.show(player);
-                                    } else {
-                                        main.getQuestManager().sendSingleQuestPreview((Player) sender, quest);
-                                    }
-                                    return true;
-
+                                String displayName = quest.getQuestName();
+                                if (!quest.getQuestDisplayName().equals("")) {
+                                    displayName = quest.getQuestDisplayName();
                                 }
 
-                                sender.sendMessage("§cPreviewing the quest §b" + quest.getQuestName() + " §cis disabled with the /nquests take command.");
+                                InventoryGui gui = new InventoryGui(main, player, "§9Preview for Quest §b" + displayName, guiSetup);
+                                gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
+
+
+                                String description = "§8???";
+                                if (!quest.getQuestDescription().equals("")) {
+                                    description = "§8" + quest.getQuestDescription();
+                                }
+                                gui.addElement(new StaticGuiElement('1',
+                                        new ItemStack(Material.BOOKSHELF),
+                                        1, // Display a number as the item count
+                                        click -> {
+
+                                            return true; // returning true will cancel the click event and stop taking the item
+
+                                        },
+                                        "§eDescription",
+                                        description
+
+
+                                ));
+
+                                String requirements = main.getQuestManager().getQuestRequirements(quest);
+
+
+                                gui.addElement(new StaticGuiElement('5',
+                                        new ItemStack(Material.IRON_BARS),
+                                        1, // Display a number as the item count
+                                        click -> {
+
+                                            return true; // returning true will cancel the click event and stop taking the item
+
+                                        },
+                                        "§cRequirements",
+                                        requirements
+
+
+                                ));
+
+                                String finalDisplayName = displayName;
+                                gui.addElement(new StaticGuiElement('g',
+                                        new ItemStack(Material.GREEN_WOOL),
+                                        1, // Display a number as the item count
+                                        click -> {
+                                            player.chat("/q take " + quest.getQuestName());
+
+                                            //click.getEvent().getWhoClicked().sendMessage(ChatColor.RED + "I am Redstone!");
+                                            gui.close();
+                                            return true; // returning true will cancel the click event and stop taking the item
+
+                                        },
+                                        "§b" + finalDisplayName,
+                                        "§aClick to take the quest §b" + finalDisplayName + "§c!"
+
+
+                                ));
+                                gui.addElement(new StaticGuiElement('i',
+                                        new ItemStack(Material.RED_WOOL),
+                                        1, // Display a number as the item count
+                                        click -> {
+                                            gui.close();
+                                            //click.getEvent().getWhoClicked().sendMessage(ChatColor.RED + "I am Redstone!");
+                                            return true; // returning true will cancel the click event and stop taking the item
+
+                                        },
+                                        "§cClick to NOT take this quest",
+                                        "§cand cancel this action"
+
+
+                                ));
+
+
+                                gui.show(player);
+                            } else {
+                                main.getQuestManager().sendSingleQuestPreview((Player) sender, quest);
                             }
+
+                            return true;
+
                         } else {
-                            sender.sendMessage("§cQuest does not exist!");
+                            sender.sendMessage(main.getLanguageManager().getString("chat.quest-does-not-exist").replaceAll("%QUESTNAME%", args[1]));
                         }
                     } else if (args[0].equalsIgnoreCase("progress")) {
                         ActiveQuest requestedActiveQuest = null;
@@ -968,8 +855,8 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                 }
 
                             } else {
-                                sender.sendMessage("§cQuest §b" + args[1] + " §cnot found or not active!");
-                                sender.sendMessage("§cActive quests:");
+                                sender.sendMessage(main.getLanguageManager().getString("chat.quest-not-found-or-does-not-exist").replaceAll("%QUESTNAME%", args[1]));
+                                sender.sendMessage(main.getLanguageManager().getString("chat.active-quests-label"));
                                 int counter = 1;
                                 for (ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                                     sender.sendMessage("§a" + counter + ". §e" + activeQuest.getQuest().getQuestName());
@@ -977,18 +864,18 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                 }
                             }
                         } else {
-                            sender.sendMessage("§cSeems like you did not accept any active quests!");
+                            sender.sendMessage(main.getLanguageManager().getString("chat.no-quests-accepted"));
                         }
 
                     } else {
-                        sender.sendMessage("§cWrong command usage!");
+                        sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
                     }
 
                 } else {
-                    sender.sendMessage("§cToo many arguments!");
+                    sender.sendMessage(main.getLanguageManager().getString("chat.too-many-arguments"));
                 }
             } else {
-                sender.sendMessage("§cNo permission! Required permission node: §enotnot.quests.use");
+                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage").replaceAll("%PERMISSION%", "notnot.quests.use"));
             }
         } else {
             sender.sendMessage("§cOnly players can run this command! Try §b/notquestsadmin§c.");

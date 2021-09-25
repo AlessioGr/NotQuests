@@ -1,5 +1,9 @@
 chat:
+  wrong-command-usage: '&cWrong command usage!'
+  missing-permission: '&cNo permission! Required permission node: &e%PERMISSION%'
+  too-many-arguments: '&cToo many arguments!'
   quest-successfully-accepted: '&aYou have successfully accepted the Quest &b%QUESTNAME%&a.'
+  quest-description: '&eQuest description: &7%QUESTDESCRIPTION%'
   quest-already-accepted: '&cQuest already accepted.'
   quest-failed: '&eYou have &c&lFAILED &ethe Quest &b%QUESTNAME%&e!'
   quest-aborted: '&aThe active quest &b%QUESTNAME% &ahas been aborted!'
@@ -7,7 +11,15 @@ chat:
     &aand received your rewards!!!'
   missing-quest-description: '&eThis quest has no quest description.'
   objectives-label-after-quest-accepting: '&9Objectives:'
-  questpoints: '&eYou currently have &b%QUESTPOINTS% &equest points.'
+  questpoints:
+    query: '&eYou currently have &b%QUESTPOINTS% &equest points.'
+    none: '&cSeems like you don''t have any quest points!'
+  no-quests-accepted: '&cSeems like you don''t have any active quests!'
+  quest-does-not-exist: '&cQuest &b%QUESTNAME% &cdoes not exist!'
+  quest-not-found-or-does-not-exist: '&cQuest &b%QUESTNAME% &cnot found or not active!'
+  active-quests-label: '&eActive quests:'
+  take-disabled-preview: '&cPreviewing the quest &b%QUESTNAME% &cis disabled with the &e/nquests preview &ccommand.'
+  take-disabled-accept: '&cAccepting the quest &b%QUESTNAME% &cis disabled with the &e/nquests take &ccommand.'
 titles:
   quest-accepted:
     title: '&fQuest accepted'
@@ -48,3 +60,35 @@ gui:
           &3Active Quests
           &7Shows all of your
           &7active Quests.
+  activeQuests:
+    title: '             &9Active Quests'
+    button:
+      activeQuestButton:
+        text: |-
+          &b%QUESTNAME% &a[ACTIVE]
+          &7Progress: &a%COMPLETEDOBJECTIVESCOUNT% &f/ %ALLOBJECTIVESCOUNT%
+          &fClick to see details!
+  takeQuestChoose:
+    title: '&9Which Quest do you want to take?'
+    button:
+      questPreview:
+        acceptedSuffix: ' &a[ACCEPTED]'
+        questNamePrefix: '&b'
+        questDescriptionPrefix: '&8'
+        bottomText: '&aClick to preview Quest!'
+  abortQuestChoose:
+    title: '  &9Active Quests you can abort'
+    button:
+      abortQuestPreview:
+        text: |-
+          &b%QUESTNAME% &a[ACTIVE]
+          &7Progress: &a%COMPLETEDOBJECTIVESCOUNT% &f/ %ALLOBJECTIVESCOUNT%
+          &cClick to abort Quest!
+  previewQuestChoose:
+    title: '     &9Choose Quest to preview'
+    button:
+      questPreview:
+        acceptedSuffix: ' &a[ACCEPTED]'
+        questNamePrefix: '&b'
+        questDescriptionPrefix: '&8'
+        bottomText: '&aClick to preview Quest!'
