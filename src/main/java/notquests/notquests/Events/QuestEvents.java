@@ -113,9 +113,23 @@ public class QuestEvents implements Listener {
                         for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
                             if (activeObjective.isUnlocked()) {
                                 if (activeObjective.getObjective() instanceof final CollectItemsObjective objective) {
-                                    if (objective.getItemToCollect().getType().equals(e.getItem().getItemStack().getType()) && objective.getItemToCollect().getItemMeta().equals(e.getItem().getItemStack().getItemMeta())) {
-                                        activeObjective.addProgress(e.getItem().getItemStack().getAmount(), -1);
+
+
+                                    //Check if the Material of the collected item is equal to the Material needed in the CollectItemsObjective
+                                    if (!objective.getItemToCollect().getType().equals(e.getItem().getItemStack().getType())) {
+                                        return;
                                     }
+
+                                    //If the objective-item which needs to be collected has an ItemMeta...
+                                    if (objective.getItemToCollect().getItemMeta() != null) {
+                                        //then check if the ItemMeta of the collected item is equal to the ItemMeta needed in the CollectItemsObjective
+                                        if (!objective.getItemToCollect().getItemMeta().equals(e.getItem().getItemStack().getItemMeta())) {
+                                            return;
+                                        }
+                                    }
+
+                                    activeObjective.addProgress(e.getItem().getItemStack().getAmount(), -1);
+
                                 }
                             }
 
@@ -141,9 +155,22 @@ public class QuestEvents implements Listener {
                         for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
                             if (activeObjective.isUnlocked()) {
                                 if (activeObjective.getObjective() instanceof final CollectItemsObjective objective) {
-                                    if (objective.getItemToCollect().getType().equals(e.getItemDrop().getItemStack().getType()) && objective.getItemToCollect().getItemMeta().equals(e.getItemDrop().getItemStack().getItemMeta())) {
-                                        activeObjective.removeProgress(e.getItemDrop().getItemStack().getAmount(), false);
+
+                                    //Check if the Material of the collected item is equal to the Material needed in the CollectItemsObjective
+                                    if (!objective.getItemToCollect().getType().equals(e.getItemDrop().getItemStack().getType())) {
+                                        return;
                                     }
+
+                                    //If the objective-item which needs to be collected has an ItemMeta...
+                                    if (objective.getItemToCollect().getItemMeta() != null) {
+                                        //then check if the ItemMeta of the collected item is equal to the ItemMeta needed in the CollectItemsObjective
+                                        if (!objective.getItemToCollect().getItemMeta().equals(e.getItemDrop().getItemStack().getItemMeta())) {
+                                            return;
+                                        }
+                                    }
+
+                                    activeObjective.removeProgress(e.getItemDrop().getItemStack().getAmount(), false);
+
                                 }
                             }
 
