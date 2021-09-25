@@ -9,6 +9,7 @@ import notquests.notquests.Structs.QuestPlayer;
 import notquests.notquests.Structs.Triggers.ActiveTrigger;
 import notquests.notquests.Structs.Triggers.TriggerTypes.TriggerType;
 import notquests.notquests.Structs.Triggers.TriggerTypes.WorldEnterTrigger;
+import notquests.notquests.Structs.Triggers.TriggerTypes.WorldLeaveTrigger;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -38,7 +39,6 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 
 public class QuestEvents implements Listener {
     private final NotQuests main;
@@ -58,8 +58,8 @@ public class QuestEvents implements Listener {
                     for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                         for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
                             if (activeObjective.isUnlocked()) {
-                                if (activeObjective.getObjective() instanceof BreakBlocksObjective) {
-                                    if (((BreakBlocksObjective) activeObjective.getObjective()).getBlockToBreak().equals(e.getBlock().getType())) {
+                                if (activeObjective.getObjective() instanceof BreakBlocksObjective breakBlocksObjective) {
+                                    if (breakBlocksObjective.getBlockToBreak().equals(e.getBlock().getType())) {
                                         activeObjective.addProgress(1, -1);
                                     }
                                 }
@@ -84,9 +84,10 @@ public class QuestEvents implements Listener {
                 for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                     for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
                         if (activeObjective.isUnlocked()) {
-                            if (activeObjective.getObjective() instanceof BreakBlocksObjective) {
-                                if (((BreakBlocksObjective) activeObjective.getObjective()).getBlockToBreak().equals(e.getBlock().getType())) {
-                                    if (((BreakBlocksObjective) activeObjective.getObjective()).willDeductIfBlockPlaced()) {
+                            //This is for the BreakBlocksObjective. It should deduct the progress if the player placed the same block again (if willDeductIfBlockPlaced() is set to true)
+                            if (activeObjective.getObjective() instanceof BreakBlocksObjective breakBlocksObjective) {
+                                if (breakBlocksObjective.getBlockToBreak().equals(e.getBlock().getType())) {
+                                    if (breakBlocksObjective.willDeductIfBlockPlaced()) {
                                         activeObjective.removeProgress(1, false);
                                     }
                                 }
@@ -166,7 +167,7 @@ public class QuestEvents implements Listener {
             if (questPlayer != null) {
                 if (questPlayer.getActiveQuests().size() > 0) {
 
-                    Iterator<ActiveQuest> iter = questPlayer.getActiveQuests().iterator();
+                    //Iterator<ActiveQuest> iter = questPlayer.getActiveQuests().iterator(); //Why was that needed?
 
                     for (int i = 0; i < questPlayer.getActiveQuests().size(); i++) {
                         final ActiveQuest activeQuest = questPlayer.getActiveQuests().get(i);
@@ -226,9 +227,22 @@ public class QuestEvents implements Listener {
                         if (activeObjective.getObjective() instanceof ConsumeItemsObjective) {
                             if (activeObjective.isUnlocked()) {
                                 final ConsumeItemsObjective objective = ((ConsumeItemsObjective) activeObjective.getObjective());
-                                if (objective.getItemToConsume().getType().equals(e.getItem().getType()) && objective.getItemToConsume().getItemMeta().equals(e.getItem().getItemMeta())) {
-                                    activeObjective.addProgress(1, -1);
+
+                                //Check if the Material of the consumed item is equal to the Material needed in the ConsumeItemsObjective
+                                if (!objective.getItemToConsume().getType().equals(e.getItem().getType())) {
+                                    return;
                                 }
+
+                                //If the objectiv-item which needs to be crafted has an ItemMeta...
+                                if (objective.getItemToConsume().getItemMeta() != null) {
+                                    //then check if the ItemMeta of the consumed item is equal to the ItemMeta needed in the ConsumeItemsObjective
+                                    if (!objective.getItemToConsume().getItemMeta().equals(e.getItem().getItemMeta())) {
+                                        return;
+                                    }
+                                }
+
+                                activeObjective.addProgress(1, -1);
+
                             }
 
                         }
@@ -272,60 +286,15 @@ public class QuestEvents implements Listener {
                 for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
 
                     for (final ActiveTrigger activeTrigger : activeQuest.getActiveTriggers()) {
-                        if (activeTrigger.getTrigger().getTriggerType() == TriggerType.WORLDENTER) {
-                            if (e.getPlayer().getWorld().getName().equals(((WorldEnterTrigger) activeTrigger.getTrigger()).getWorldToEnterName())) {
-                                if (activeTrigger.getTrigger().getApplyOn() == 0) {//Quest and not Objective
+                        if (activeTrigger.getTrigger() instanceof WorldEnterTrigger worldEnterTrigger) {
+                            if (e.getPlayer().getWorld().getName().equals(worldEnterTrigger.getWorldToEnterName())) {
+                                handleGeneralTrigger(questPlayer, activeTrigger);
 
-                                    if (activeTrigger.getTrigger().getWorldName().equalsIgnoreCase("ALL")) {
-                                        activeTrigger.addAndCheckTrigger(activeQuest);
-                                    } else {
-                                        if (e.getFrom().getName().equalsIgnoreCase(activeTrigger.getTrigger().getWorldName())) {
-                                            activeTrigger.addAndCheckTrigger(activeQuest);
-                                        }
-                                    }
-
-                                } else if (activeTrigger.getTrigger().getApplyOn() >= 1) { //Objective and not Quest
-                                    final ActiveObjective activeObjective = activeQuest.getActiveObjectiveFromID(activeTrigger.getTrigger().getApplyOn());
-                                    if (activeObjective != null && activeObjective.isUnlocked()) {
-
-                                        if (activeTrigger.getTrigger().getWorldName().equalsIgnoreCase("ALL")) {
-                                            activeTrigger.addAndCheckTrigger(activeQuest);
-                                        } else {
-                                            if (e.getFrom().getName().equalsIgnoreCase(activeTrigger.getTrigger().getWorldName())) {
-                                                activeTrigger.addAndCheckTrigger(activeQuest);
-                                            }
-                                        }
-
-                                    }
-                                }
                             }
 
-                        } else if (activeTrigger.getTrigger().getTriggerType() == TriggerType.WORLDLEAVE) {
-                            if (e.getFrom().getName().equals(((WorldEnterTrigger) activeTrigger.getTrigger()).getWorldToEnterName())) {
-                                if (activeTrigger.getTrigger().getApplyOn() == 0) {//Quest and not Objective
-
-                                    if (activeTrigger.getTrigger().getWorldName().equalsIgnoreCase("ALL")) {
-                                        activeTrigger.addAndCheckTrigger(activeQuest);
-                                    } else {
-                                        if (e.getPlayer().getWorld().getName().equalsIgnoreCase(activeTrigger.getTrigger().getWorldName())) {
-                                            activeTrigger.addAndCheckTrigger(activeQuest);
-                                        }
-                                    }
-
-                                } else if (activeTrigger.getTrigger().getApplyOn() >= 1) { //Objective and not Quest
-                                    final ActiveObjective activeObjective = activeQuest.getActiveObjectiveFromID(activeTrigger.getTrigger().getApplyOn());
-                                    if (activeObjective != null && activeObjective.isUnlocked()) {
-
-                                        if (activeTrigger.getTrigger().getWorldName().equalsIgnoreCase("ALL")) {
-                                            activeTrigger.addAndCheckTrigger(activeQuest);
-                                        } else {
-                                            if (e.getPlayer().getWorld().getName().equalsIgnoreCase(activeTrigger.getTrigger().getWorldName())) {
-                                                activeTrigger.addAndCheckTrigger(activeQuest);
-                                            }
-                                        }
-
-                                    }
-                                }
+                        } else if (activeTrigger.getTrigger() instanceof WorldLeaveTrigger worldLeaveTrigger) {
+                            if (e.getFrom().getName().equals(worldLeaveTrigger.getWorldToLeaveName())) {
+                                handleGeneralTrigger(questPlayer, activeTrigger);
                             }
 
                         }
@@ -348,19 +317,20 @@ public class QuestEvents implements Listener {
 
             final ItemStack heldItem = event.getPlayer().getInventory().getItemInMainHand();
 
-            if(heldItem != null && heldItem.getItemMeta() != null){
+            if (heldItem.getType() != Material.AIR && heldItem.getItemMeta() != null) {
                 final PersistentDataContainer container = heldItem.getItemMeta().getPersistentDataContainer();
 
                 final NamespacedKey specialItemKey = new NamespacedKey(main, "notquests-item");
 
-                if(container.has(specialItemKey, PersistentDataType.INTEGER)){
-                    int id = container.get(specialItemKey, PersistentDataType.INTEGER);
+                if (container.has(specialItemKey, PersistentDataType.INTEGER)) {
+
+                    int id = container.get(specialItemKey, PersistentDataType.INTEGER); //Not null, because we check for it in container.has()
 
                     final NamespacedKey questsKey = new NamespacedKey(main, "notquests-questname");
 
-                    final String questName =  container.get(questsKey, PersistentDataType.STRING);
+                    final String questName = container.get(questsKey, PersistentDataType.STRING);
 
-                    if(questName == null && id >= 0 && id <= 3){
+                    if (questName == null && id >= 0 && id <= 3) {
                         player.sendMessage("§cError: Your item has no valid quest attached to it.");
                         return;
                     }
@@ -408,13 +378,11 @@ public class QuestEvents implements Listener {
 
                             player.sendMessage("§aQuest with the name §b" + questName + " §awas added to this poor little armorstand!");
                             player.sendMessage("§2Attached Quests: §b" + existingAttachedQuests);
-                            return;
 
                         }else{
                             armorstandPDB.set(attachedQuestsKey, PersistentDataType.STRING, "°"+questName+"°");
                             player.sendMessage("§aQuest with the name §b" + questName + " §awas added to this poor little armorstand!");
                             player.sendMessage("§2Attached Quests: §b" + "°"+questName+"°");
-                            return;
                         }
 
 
@@ -440,8 +408,9 @@ public class QuestEvents implements Listener {
                                 boolean foundNonSeparator = false;
                                 for (int i = 0; i < existingAttachedQuests.length(); i++){
                                     char c = existingAttachedQuests.charAt(i);
-                                    if(c != '°'){
+                                    if (c != '°') {
                                         foundNonSeparator = true;
+                                        break;
                                     }
                                 }
                                 if(!foundNonSeparator){
@@ -451,16 +420,13 @@ public class QuestEvents implements Listener {
                                 armorstandPDB.set(attachedQuestsKey, PersistentDataType.STRING, existingAttachedQuests);
                                 player.sendMessage("§2Quest with the name §b" + questName + " §2was removed from this armor stand!");
                                 player.sendMessage("§2Attached Quests: §b" + existingAttachedQuests);
-                                return;
 
                             }else{
                                 player.sendMessage("§cError: That armor stand does not have the Quest §b" + questName + " §cattached to it!");
                                 player.sendMessage("§2Attached Quests: §b" + existingAttachedQuests);
-                                return;
                             }
                         }else{
                             player.sendMessage("§cThis armor stand has no quests attached to it!");
-                            return;
                         }
 
 
@@ -518,8 +484,6 @@ public class QuestEvents implements Listener {
                             }
                         }
 
-                    }else{ //???
-                        return;
                     }
                 }else{
                     //Show quests
@@ -546,61 +510,71 @@ public class QuestEvents implements Listener {
                         for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
                             if (activeObjective.isUnlocked()) {
                                 if (activeObjective.getObjective() instanceof final CraftItemsObjective objective) {
-                                    if (objective.getItemToCraft().getType().equals(e.getInventory().getResult().getType()) && objective.getItemToCraft().getItemMeta().equals(e.getInventory().getResult().getItemMeta())) {
 
-
-                                        //Now we gotta figure out the real amount of items which have been crafted, which is trickier than expected:
-                                        ClickType click = e.getClick();
-
-                                        int recipeAmount = e.getRecipe().getResult().getAmount();
-
-                                        switch (click) {
-                                            case NUMBER_KEY:
-                                                //If the hotbar is full, the item will not be crafted but it will still trigger this event for some reason. That's
-                                                //why we manually have to set the amount to 0 here
-                                                if (e.getWhoClicked().getInventory().getItem(e.getHotbarButton()) != null){
-                                                    recipeAmount = 0;
-                                                }
-                                                break;
-
-                                            case DROP:
-                                            case CONTROL_DROP:
-                                                // If we are holding items, craft-via-drop fails (vanilla behavior)
-                                                ItemStack cursor = e.getCursor();
-                                                // Cursor is either null or AIR
-                                                if(! (cursor == null || cursor.getType() == Material.AIR)){
-                                                    recipeAmount = 0;
-                                                }
-
-                                                break;
-
-                                            case SHIFT_RIGHT:
-                                            case SHIFT_LEFT:
-                                                if (recipeAmount == 0)
-                                                    break;
-
-                                                int maxCraftable = getMaxCraftAmount(e.getInventory());
-                                                int capacity = fits(e.getRecipe().getResult(), e.getView().getBottomInventory());
-
-                                                // If we can't fit everything, increase "space" to include the items dropped by
-                                                // crafting
-                                                // (Think: Uncrafting 8 iron blocks into 1 slot)
-                                                if (capacity < maxCraftable)
-                                                    maxCraftable = ((capacity + recipeAmount - 1) / recipeAmount) * recipeAmount;
-
-                                                recipeAmount = maxCraftable;
-                                                break;
-                                            default:
-                                        }
-
-                                        // No use continuing if we haven't actually crafted a thing
-                                        if (recipeAmount == 0)
-                                            return;
-
-                                        activeObjective.addProgress(recipeAmount, -1);
-
-
+                                    //Check if the Material of the crafted item is equal to the Material needed in the CraftItemsObjective
+                                    if (!objective.getItemToCraft().getType().equals(e.getInventory().getResult().getType())) {
+                                        return;
                                     }
+
+                                    //If the objectiv-item which needs to be crafted has an ItemMeta...
+                                    if (objective.getItemToCraft().getItemMeta() != null) {
+                                        //then check if the ItemMeta of the crafted item is equal to the ItemMeta needed in the CraftItemsObjective
+                                        if (!objective.getItemToCraft().getItemMeta().equals(e.getInventory().getResult().getItemMeta())) {
+                                            return;
+                                        }
+                                    }
+
+                                    //Now we gotta figure out the real amount of items which have been crafted, which is trickier than expected:
+                                    ClickType click = e.getClick();
+
+                                    int recipeAmount = e.getRecipe().getResult().getAmount();
+
+                                    switch (click) {
+                                        case NUMBER_KEY:
+                                            //If the hotbar is full, the item will not be crafted but it will still trigger this event for some reason. That's
+                                            //why we manually have to set the amount to 0 here
+                                            if (e.getWhoClicked().getInventory().getItem(e.getHotbarButton()) != null) {
+                                                recipeAmount = 0;
+                                            }
+                                            break;
+
+                                        case DROP:
+                                        case CONTROL_DROP:
+                                            // If we are holding items, craft-via-drop fails (vanilla behavior)
+                                            ItemStack cursor = e.getCursor();
+                                            // Cursor is either null or AIR
+                                            if (!(cursor == null || cursor.getType() == Material.AIR)) {
+                                                recipeAmount = 0;
+                                            }
+
+                                            break;
+
+                                        case SHIFT_RIGHT:
+                                        case SHIFT_LEFT:
+                                            if (recipeAmount == 0)
+                                                break;
+
+                                            int maxCraftable = getMaxCraftAmount(e.getInventory());
+                                            int capacity = fits(e.getRecipe().getResult(), e.getView().getBottomInventory());
+
+                                            // If we can't fit everything, increase "space" to include the items dropped by
+                                            // crafting
+                                            // (Think: Uncrafting 8 iron blocks into 1 slot)
+                                            if (capacity < maxCraftable)
+                                                maxCraftable = ((capacity + recipeAmount - 1) / recipeAmount) * recipeAmount;
+
+                                            recipeAmount = maxCraftable;
+                                            break;
+                                        default:
+                                    }
+
+                                    // No use continuing if we haven't actually crafted a thing
+                                    if (recipeAmount == 0)
+                                        return;
+
+                                    activeObjective.addProgress(recipeAmount, -1);
+
+
                                 }
                             }
 
@@ -644,7 +618,8 @@ public class QuestEvents implements Listener {
 
 
     /**
-     * This method handles the most commonly used type of trigger, which should simply add to the progress
+     * This method handles the most commonly used type of trigger, which should simply add to the progress.
+     * Apart from adding the progress, this method checks for the triggers applyOn and the triggers worldName
      *
      * @param questPlayer   is the QuestPlayer object, used to check the world of the player
      * @param activeTrigger is the trigger which we need in order to add progress to it
