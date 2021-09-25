@@ -445,6 +445,42 @@ public class LanguageManager {
         }
 
 
+        //user /q progress questname
+        if (!getLanguageConfig().isString("gui.progress.title")) {
+            getLanguageConfig().set("gui.progress.title", "&9Details for Quest &b%QUESTNAME%");
+            valueChanged = true;
+        }
+
+        if (!getLanguageConfig().isString("gui.progress.button.unlockedObjective.text")) {
+            getLanguageConfig().set("gui.progress.button.unlockedObjective.text", "&e%ACTIVEOBJECTIVEID%. &b%OBJECTIVENAME%\n&6&lACTIVE\n&8%OBJECTIVEDESCRIPTION%\n%ACTIVEOBJECTIVEDESCRIPTION%\n\n&7Progress: &a%ACTIVEOBJECTIVEPROGRESS% &f/ %OBJECTIVEPROGRESSNEEDED%");
+            valueChanged = true;
+        }
+        if (!getLanguageConfig().isString("gui.progress.button.unlockedObjective.description-empty")) {
+            getLanguageConfig().set("gui.progress.button.unlockedObjective.description-empty", "No Description");
+            valueChanged = true;
+        }
+        if (!getLanguageConfig().isString("gui.progress.button.lockedObjective.text")) {
+            getLanguageConfig().set("gui.progress.button.lockedObjective.text", "&e%ACTIVEOBJECTIVEID%. &7&l[HIDDEN]\n&eThis objective has not yet\n&ebeen unlocked!");
+            valueChanged = true;
+        }
+        if (!getLanguageConfig().isString("gui.progress.button.completedObjective.text")) {
+            getLanguageConfig().set("gui.progress.button.completedObjective.text", "&a&m%ACTIVEOBJECTIVEID%. &2&m%OBJECTIVENAME%\n&a&lCOMPLETED\n&8&m%OBJECTIVEDESCRIPTION%\n%COMPLETEDOBJECTIVEDESCRIPTION%\n\n&7&mProgress: &a&m%ACTIVEOBJECTIVEPROGRESS% &f&m/ %OBJECTIVEPROGRESSNEEDED%");
+            valueChanged = true;
+        }
+        if (!getLanguageConfig().isString("gui.progress.button.completedObjective.description-empty")) {
+            getLanguageConfig().set("gui.progress.button.completedObjective.description-empty", "No Description");
+            valueChanged = true;
+        }
+        if (!getLanguageConfig().isString("gui.progress.button.previousPage.text")) {
+            getLanguageConfig().set("gui.progress.button.previousPage.text", "Go to previous page (%prevpage%)");
+            valueChanged = true;
+        }
+        if (!getLanguageConfig().isString("gui.progress.button.nextPage.text")) {
+            getLanguageConfig().set("gui.progress.button.nextPage.text", "Go to next page (%nextpage%)");
+            valueChanged = true;
+        }
+
+
         return valueChanged;
 
     }

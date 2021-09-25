@@ -126,3 +126,33 @@ gui:
         text: |-
           &cClick to NOT take this quest
           &cand cancel this action
+  progress:
+    title: '&9Details for Quest &b%QUESTNAME%'
+    button:
+      unlockedObjective:
+        text: |-
+          &e%ACTIVEOBJECTIVEID%. &b%OBJECTIVENAME%
+          &6&lACTIVE
+          &8%OBJECTIVEDESCRIPTION%
+          %ACTIVEOBJECTIVEDESCRIPTION%
+
+          &7Progress: &a%ACTIVEOBJECTIVEPROGRESS% &f/ %OBJECTIVEPROGRESSNEEDED%
+        description-empty: No Description
+      lockedObjective:
+        text: |-
+          &e%ACTIVEOBJECTIVEID%. &7&l[HIDDEN]
+          &eThis objective has not yet
+          &ebeen unlocked!
+      completedObjective:
+        text: |-
+          &a&m%ACTIVEOBJECTIVEID%. &2&m%OBJECTIVENAME%
+          &a&lCOMPLETED
+          &8&m%OBJECTIVEDESCRIPTION%
+          %COMPLETEDOBJECTIVEDESCRIPTION%
+
+          &7&mProgress: &a&m%ACTIVEOBJECTIVEPROGRESS% &f&m/ %OBJECTIVEPROGRESSNEEDED%
+        description-empty: No Description
+      previousPage:
+        text: Go to previous page (%prevpage%)
+      nextPage:
+        text: Go to next page (%nextpage%)

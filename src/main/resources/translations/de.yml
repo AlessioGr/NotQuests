@@ -127,3 +127,33 @@ gui:
         text: |-
           &cKlicke, um die Quest NICHT anzunehmen
           &cund diese Aktion zu beenden
+  progress:
+    title: '&9Details für Quest &b%QUESTNAME%'
+    button:
+      unlockedObjective:
+        text: |-
+          &e%ACTIVEOBJECTIVEID%. &b%OBJECTIVENAME%
+          &6&lAKTIV
+          &8%OBJECTIVEDESCRIPTION%
+          %ACTIVEOBJECTIVEDESCRIPTION%
+
+          &7Fortschritt: &a%ACTIVEOBJECTIVEPROGRESS% &f/ %OBJECTIVEPROGRESSNEEDED%
+        description-empty: Keine Beschreibung
+      lockedObjective:
+        text: |-
+          &e%ACTIVEOBJECTIVEID%. &7&l[VERBORGEN]
+          &eDiese Aufgabe wurde noch nicht
+          &efreigeschaltet!
+      completedObjective:
+        text: |-
+          &a&m%ACTIVEOBJECTIVEID%. &2&m%OBJECTIVENAME%
+          &a&lABGESCHLOSSEN
+          &8&m%OBJECTIVEDESCRIPTION%
+          %COMPLETEDOBJECTIVEDESCRIPTION%
+
+          &7&mFortschritt: &a&m%ACTIVEOBJECTIVEPROGRESS% &f&m/ %OBJECTIVEPROGRESSNEEDED%
+        description-empty: Keine Beschreibung
+      previousPage:
+        text: Gehe zur vorherigen Seite (%prevpage%)
+      nextPage:
+        text: Gehe zur nächsten Seite (%nextpage%)

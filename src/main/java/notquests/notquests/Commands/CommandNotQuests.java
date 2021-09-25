@@ -735,7 +735,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                     if (!requestedActiveQuest.getQuest().getQuestDisplayName().isBlank()) {
                                         displayName = requestedActiveQuest.getQuest().getQuestDisplayName();
                                     }
-                                    InventoryGui gui = new InventoryGui(main, player, "§9Details for Quest §b" + displayName, guiSetup);
+                                    InventoryGui gui = new InventoryGui(main, player, main.getLanguageManager().getString("gui.progress.title").replaceAll("%QUESTNAME%", displayName), guiSetup);
                                     gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
 
 
@@ -748,13 +748,13 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
 
                                         count++;
                                         if (activeObjective.isUnlocked()) {
-                                            String nameToDisplay = "";
+                                            String nameToDisplay;
                                             if (!activeObjective.getObjective().getObjectiveDisplayName().isBlank()) {
                                                 nameToDisplay = activeObjective.getObjective().getObjectiveDisplayName();
                                             } else {
                                                 nameToDisplay = activeObjective.getObjective().getObjectiveType().toString();
                                             }
-                                            String descriptionToDisplay = "";
+                                            String descriptionToDisplay = main.getLanguageManager().getString("gui.progress.button.unlockedObjective.description-empty");
                                             if (!activeObjective.getObjective().getObjectiveDescription().isBlank()) {
                                                 descriptionToDisplay = activeObjective.getObjective().getObjectiveDescription();
                                             }
@@ -767,12 +767,13 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                                         return true; // returning true will cancel the click event and stop taking the item
 
                                                     },
-                                                    "§e" + activeObjective.getObjectiveID() + ". §b" + nameToDisplay,
-                                                    "§6§lACTIVE",
-                                                    "§8" + descriptionToDisplay,
-                                                    main.getQuestManager().getActiveObjectiveDescription(activeObjective),
-                                                    "",
-                                                    "§7Progress: §a" + activeObjective.getCurrentProgress() + " §f/ " + activeObjective.getProgressNeeded()
+                                                    main.getLanguageManager().getString("gui.progress.button.unlockedObjective.text")
+                                                            .replaceAll("%ACTIVEOBJECTIVEID%", "" + activeObjective.getObjectiveID())
+                                                            .replaceAll("%OBJECTIVENAME%", nameToDisplay)
+                                                            .replaceAll("%OBJECTIVEDESCRIPTION%", descriptionToDisplay)
+                                                            .replaceAll("%ACTIVEOBJECTIVEDESCRIPTION%", main.getQuestManager().getActiveObjectiveDescription(activeObjective))
+                                                            .replaceAll("%ACTIVEOBJECTIVEPROGRESS%", "" + activeObjective.getCurrentProgress())
+                                                            .replaceAll("%OBJECTIVEPROGRESSNEEDED%", "" + activeObjective.getProgressNeeded())
 
 
                                             ));
@@ -787,9 +788,8 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                                         return true; // returning true will cancel the click event and stop taking the item
 
                                                     },
-                                                    "§e" + activeObjective.getObjectiveID() + ". §7§l[HIDDEN]",
-                                                    "§eThis objective has not yet",
-                                                    "§ebeen unlocked!"
+                                                    main.getLanguageManager().getString("gui.progress.button.lockedObjective.text")
+                                                            .replaceAll("%ACTIVEOBJECTIVEID%", "" + activeObjective.getObjectiveID())
 
 
                                             ));
@@ -805,13 +805,13 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                         count++;
 
 
-                                        String nameToDisplay = "";
+                                        String nameToDisplay;
                                         if (!activeObjective.getObjective().getObjectiveDisplayName().isBlank()) {
                                             nameToDisplay = activeObjective.getObjective().getObjectiveDisplayName();
                                         } else {
                                             nameToDisplay = activeObjective.getObjective().getObjectiveType().toString();
                                         }
-                                        String descriptionToDisplay = "";
+                                        String descriptionToDisplay = main.getLanguageManager().getString("gui.progress.button.completedObjective.description-empty");
                                         if (!activeObjective.getObjective().getObjectiveDescription().isBlank()) {
                                             descriptionToDisplay = activeObjective.getObjective().getObjectiveDescription();
                                         }
@@ -825,12 +825,13 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                                     return true; // returning true will cancel the click event and stop taking the item
 
                                                 },
-                                                "§a§m" + activeObjective.getObjectiveID() + ". §2§m" + nameToDisplay,
-                                                "§a§lCOMPLETED",
-                                                "§8§m" + descriptionToDisplay,
-                                                main.getQuestManager().getCompletedObjectiveDescription(activeObjective),
-                                                "",
-                                                "§7§mProgress: §a§m" + activeObjective.getCurrentProgress() + " §f§m/ " + activeObjective.getProgressNeeded()
+                                                main.getLanguageManager().getString("gui.progress.button.completedObjective.text")
+                                                        .replaceAll("%ACTIVEOBJECTIVEID%", "" + activeObjective.getObjectiveID())
+                                                        .replaceAll("%OBJECTIVENAME%", nameToDisplay)
+                                                        .replaceAll("%OBJECTIVEDESCRIPTION%", descriptionToDisplay)
+                                                        .replaceAll("%COMPLETEDOBJECTIVEDESCRIPTION%", main.getQuestManager().getCompletedObjectiveDescription(activeObjective))
+                                                        .replaceAll("%ACTIVEOBJECTIVEPROGRESS%", "" + activeObjective.getCurrentProgress())
+                                                        .replaceAll("%OBJECTIVEPROGRESSNEEDED%", "" + activeObjective.getProgressNeeded())
 
 
                                         ));
@@ -842,10 +843,10 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                     gui.addElement(group);
 
                                     // Previous page
-                                    gui.addElement(new GuiPageElement('p', new ItemStack(Material.SPECTRAL_ARROW), GuiPageElement.PageAction.PREVIOUS, "Go to previous page (%prevpage%)"));
+                                    gui.addElement(new GuiPageElement('p', new ItemStack(Material.SPECTRAL_ARROW), GuiPageElement.PageAction.PREVIOUS, main.getLanguageManager().getString("gui.progress.button.previousPage.text")));
 
                                     // Next page
-                                    gui.addElement(new GuiPageElement('n', new ItemStack(Material.ARROW), GuiPageElement.PageAction.NEXT, "Go to next page (%nextpage%)"));
+                                    gui.addElement(new GuiPageElement('n', new ItemStack(Material.ARROW), GuiPageElement.PageAction.NEXT, main.getLanguageManager().getString("gui.progress.button.nextPage.text")));
 
 
                                     gui.show(player);
