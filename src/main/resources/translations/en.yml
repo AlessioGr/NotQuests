@@ -20,6 +20,7 @@ chat:
   active-quests-label: '&eActive quests:'
   take-disabled-preview: '&cPreviewing the quest &b%QUESTNAME% &cis disabled with the &e/nquests preview &ccommand.'
   take-disabled-accept: '&cAccepting the quest &b%QUESTNAME% &cis disabled with the &e/nquests take &ccommand.'
+  quest-not-active-error: '&cError: &b%QUESTNAME% &cis not an active Quest!'
 titles:
   quest-accepted:
     title: '&fQuest accepted'
@@ -92,3 +93,36 @@ gui:
         questNamePrefix: '&b'
         questDescriptionPrefix: '&8'
         bottomText: '&aClick to preview Quest!'
+  abortQuest:
+    title: '         &cAbort Confirmation'
+    button:
+      confirmAbort:
+        text: |-
+          &b%QUESTNAME% &a[ACTIVE]
+          &7Progress: &a%COMPLETEDOBJECTIVESCOUNT% &f/ %ALLOBJECTIVESCOUNT%
+          &cClick to abort the quest &b%QUESTNAME%&c!
+      cancelAbort:
+        text: |-
+          &aClick to NOT abort this quest
+          &aand cancel this action
+  previewQuest:
+    title: '&9Preview for Quest &b%QUESTNAME%'
+    button:
+      description:
+        text: |-
+          &eDescription
+          &8%QUESTDESCRIPTION%
+        empty: ???
+      requirements:
+        text: |-
+          &cRequirements
+          &f%QUESTREQUIREMENTS%
+        empty: '&8-'
+      confirmTake:
+        text: |-
+          &b%QUESTNAME%
+          &aClick to take the quest &b%QUESTNAME%&a!
+      cancelTake:
+        text: |-
+          &cClick to NOT take this quest
+          &cand cancel this action

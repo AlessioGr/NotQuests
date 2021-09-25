@@ -213,7 +213,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                     count++;
 
                                     String displayName = activeQuest.getQuest().getQuestName();
-                                    if (!activeQuest.getQuest().getQuestDisplayName().equals("")) {
+                                    if (!activeQuest.getQuest().getQuestDisplayName().isBlank()) {
                                         displayName = activeQuest.getQuest().getQuestDisplayName();
                                     }
                                     group.addElement(new StaticGuiElement('e',
@@ -282,7 +282,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                     count++;
 
                                     String displayName = quest.getQuestName();
-                                    if (!quest.getQuestDisplayName().equals("")) {
+                                    if (!quest.getQuestDisplayName().isBlank()) {
                                         displayName = quest.getQuestDisplayName();
                                     }
                                     displayName = main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.questNamePrefix") + displayName;
@@ -291,7 +291,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                         displayName += main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.acceptedSuffix");
                                     }
                                     String description = "";
-                                    if (!quest.getQuestDescription().equals("")) {
+                                    if (!quest.getQuestDescription().isBlank()) {
                                         description = main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.questDescriptionPrefix") + quest.getQuestDescription();
                                     }
 
@@ -364,7 +364,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                     count++;
 
                                     String displayName = activeQuest.getQuest().getQuestName();
-                                    if (!activeQuest.getQuest().getQuestDisplayName().equals("")) {
+                                    if (!activeQuest.getQuest().getQuestDisplayName().isBlank()) {
                                         displayName = activeQuest.getQuest().getQuestDisplayName();
                                     }
                                     group.addElement(new StaticGuiElement('e',
@@ -431,7 +431,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                     count++;
 
                                     String displayName = quest.getQuestName();
-                                    if (!quest.getQuestDisplayName().equals("")) {
+                                    if (!quest.getQuestDisplayName().isBlank()) {
                                         displayName = quest.getQuestDisplayName();
                                     }
                                     displayName = main.getLanguageManager().getString("gui.previewQuestChoose.button.questPreview.questNamePrefix") + displayName;
@@ -440,7 +440,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                         displayName += main.getLanguageManager().getString("gui.previewQuestChoose.button.questPreview.acceptedSuffix");
                                     }
                                     String description = "";
-                                    if (!quest.getQuestDescription().equals("")) {
+                                    if (!quest.getQuestDescription().isBlank()) {
                                         description = main.getLanguageManager().getString("gui.previewQuestChoose.button.questPreview.questDescriptionPrefix") + quest.getQuestDescription();
                                     }
 
@@ -506,7 +506,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                 sender.sendMessage(result);
                             } else {
                                 sender.sendMessage(main.getLanguageManager().getString("chat.quest-successfully-accepted").replaceAll("%QUESTNAME%", quest.getQuestName()));
-                                if (!quest.getQuestDescription().equals("")) {
+                                if (!quest.getQuestDescription().isBlank()) {
                                     sender.sendMessage(main.getLanguageManager().getString("chat.quest-description").replaceAll("%QUESTDESCRIPTION%", quest.getQuestDescription()));
                                 } else {
                                     sender.sendMessage(main.getLanguageManager().getString("chat.missing-quest-description"));
@@ -537,13 +537,13 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                         "xlmnopqrx",
                                         "xxxxxxxxx"
                                 };
-                                InventoryGui gui = new InventoryGui(main, player, "         §cAbort Confirmation", guiSetup);
+                                InventoryGui gui = new InventoryGui(main, player, main.getLanguageManager().getString("gui.abortQuest.title"), guiSetup);
                                 gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
 
                                 final ActiveQuest activeQuest = questsToFail.get(0);
 
                                 String displayName = activeQuest.getQuest().getQuestName();
-                                if (!activeQuest.getQuest().getQuestDisplayName().equals("")) {
+                                if (!activeQuest.getQuest().getQuestDisplayName().isBlank()) {
                                     displayName = activeQuest.getQuest().getQuestDisplayName();
                                 }
                                 String finalDisplayName = displayName;
@@ -555,7 +555,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                             failedSuccessfully.set(true);
                                             questsToFail.clear();
                                             if (!failedSuccessfully.get()) {
-                                                sender.sendMessage("§cError: §b" + finalDisplayName + " §cis not an active Quest!");
+                                                sender.sendMessage(main.getLanguageManager().getString("chat.quest-not-active-error").replaceAll("%QUESTNAME%", finalDisplayName));
                                             }
                                             sender.sendMessage(main.getLanguageManager().getString("chat.quest-aborted").replaceAll("%QUESTNAME%", finalDisplayName));
 
@@ -564,9 +564,10 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                             return true; // returning true will cancel the click event and stop taking the item
 
                                         },
-                                        "§b" + finalDisplayName + " §a[ACTIVE]",
-                                        "§7Progress: §a" + activeQuest.getCompletedObjectives().size() + " §f/ " + activeQuest.getQuest().getObjectives().size(),
-                                        "§cClick to abort the quest §b" + finalDisplayName + "§c!"
+                                        main.getLanguageManager().getString("gui.abortQuest.button.confirmAbort.text")
+                                                .replaceAll("%QUESTNAME%", displayName)
+                                                .replaceAll("%COMPLETEDOBJECTIVESCOUNT%", "" + activeQuest.getCompletedObjectives().size())
+                                                .replaceAll("%ALLOBJECTIVESCOUNT%", "" + activeQuest.getQuest().getObjectives().size())
 
 
                                 ));
@@ -579,8 +580,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                             return true; // returning true will cancel the click event and stop taking the item
 
                                         },
-                                        "§aClick to NOT abort this quest",
-                                        "§aand cancel this action"
+                                        main.getLanguageManager().getString("gui.abortQuest.button.cancelAbort.text")
 
 
                                 ));
@@ -597,7 +597,8 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                 }
                                 questsToFail.clear();
                                 if (!failedSuccessfully.get()) {
-                                    sender.sendMessage("§cError: §b" + activeQuestName + " §cis not an active Quest!");
+                                    sender.sendMessage(main.getLanguageManager().getString("chat.quest-not-active-error").replaceAll("%QUESTNAME%", activeQuestName));
+
                                 }
                             }
 
@@ -625,17 +626,17 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                 };
 
                                 String displayName = quest.getQuestName();
-                                if (!quest.getQuestDisplayName().equals("")) {
+                                if (!quest.getQuestDisplayName().isBlank()) {
                                     displayName = quest.getQuestDisplayName();
                                 }
 
-                                InventoryGui gui = new InventoryGui(main, player, "§9Preview for Quest §b" + displayName, guiSetup);
+                                InventoryGui gui = new InventoryGui(main, player, main.getLanguageManager().getString("gui.previewQuest.title").replaceAll("%QUESTNAME%", displayName), guiSetup);
                                 gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
 
 
-                                String description = "§8???";
-                                if (!quest.getQuestDescription().equals("")) {
-                                    description = "§8" + quest.getQuestDescription();
+                                String description = main.getLanguageManager().getString("gui.previewQuest.button.description.empty");
+                                if (!quest.getQuestDescription().isBlank()) {
+                                    description = quest.getQuestDescription();
                                 }
                                 gui.addElement(new StaticGuiElement('1',
                                         new ItemStack(Material.BOOKSHELF),
@@ -645,13 +646,17 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                             return true; // returning true will cancel the click event and stop taking the item
 
                                         },
-                                        "§eDescription",
-                                        description
+                                        main.getLanguageManager().getString("gui.previewQuest.button.description.text")
+                                                .replaceAll("%QUESTDESCRIPTION%", description)
 
 
                                 ));
 
+
                                 String requirements = main.getQuestManager().getQuestRequirements(quest);
+                                if (requirements.isBlank()) {
+                                    requirements = main.getLanguageManager().getString("gui.previewQuest.button.requirements.empty");
+                                }
 
 
                                 gui.addElement(new StaticGuiElement('5',
@@ -662,8 +667,8 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                             return true; // returning true will cancel the click event and stop taking the item
 
                                         },
-                                        "§cRequirements",
-                                        requirements
+                                        main.getLanguageManager().getString("gui.previewQuest.button.requirements.text")
+                                                .replaceAll("%QUESTREQUIREMENTS%", requirements)
 
 
                                 ));
@@ -680,9 +685,8 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                             return true; // returning true will cancel the click event and stop taking the item
 
                                         },
-                                        "§b" + finalDisplayName,
-                                        "§aClick to take the quest §b" + finalDisplayName + "§c!"
-
+                                        main.getLanguageManager().getString("gui.previewQuest.button.confirmTake.text")
+                                                .replaceAll("%QUESTNAME%", finalDisplayName)
 
                                 ));
                                 gui.addElement(new StaticGuiElement('i',
@@ -694,9 +698,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                             return true; // returning true will cancel the click event and stop taking the item
 
                                         },
-                                        "§cClick to NOT take this quest",
-                                        "§cand cancel this action"
-
+                                        main.getLanguageManager().getString("gui.previewQuest.button.cancelTake.text")
 
                                 ));
 
@@ -730,7 +732,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                             "pxxxxxxxn"
                                     };
                                     String displayName = requestedActiveQuest.getQuest().getQuestName();
-                                    if (!requestedActiveQuest.getQuest().getQuestDisplayName().equals("")) {
+                                    if (!requestedActiveQuest.getQuest().getQuestDisplayName().isBlank()) {
                                         displayName = requestedActiveQuest.getQuest().getQuestDisplayName();
                                     }
                                     InventoryGui gui = new InventoryGui(main, player, "§9Details for Quest §b" + displayName, guiSetup);
@@ -747,13 +749,13 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                         count++;
                                         if (activeObjective.isUnlocked()) {
                                             String nameToDisplay = "";
-                                            if (!activeObjective.getObjective().getObjectiveDisplayName().equals("")) {
+                                            if (!activeObjective.getObjective().getObjectiveDisplayName().isBlank()) {
                                                 nameToDisplay = activeObjective.getObjective().getObjectiveDisplayName();
                                             } else {
                                                 nameToDisplay = activeObjective.getObjective().getObjectiveType().toString();
                                             }
                                             String descriptionToDisplay = "";
-                                            if (!activeObjective.getObjective().getObjectiveDescription().equals("")) {
+                                            if (!activeObjective.getObjective().getObjectiveDescription().isBlank()) {
                                                 descriptionToDisplay = activeObjective.getObjective().getObjectiveDescription();
                                             }
 
@@ -804,13 +806,13 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
 
 
                                         String nameToDisplay = "";
-                                        if (!activeObjective.getObjective().getObjectiveDisplayName().equals("")) {
+                                        if (!activeObjective.getObjective().getObjectiveDisplayName().isBlank()) {
                                             nameToDisplay = activeObjective.getObjective().getObjectiveDisplayName();
                                         } else {
                                             nameToDisplay = activeObjective.getObjective().getObjectiveType().toString();
                                         }
                                         String descriptionToDisplay = "";
-                                        if (!activeObjective.getObjective().getObjectiveDescription().equals("")) {
+                                        if (!activeObjective.getObjective().getObjectiveDescription().isBlank()) {
                                             descriptionToDisplay = activeObjective.getObjective().getObjectiveDescription();
                                         }
 

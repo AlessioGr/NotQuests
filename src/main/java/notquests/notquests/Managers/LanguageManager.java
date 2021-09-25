@@ -272,6 +272,10 @@ public class LanguageManager {
             getLanguageConfig().set("chat.take-disabled-accept", "&cAccepting the quest &b%QUESTNAME% &cis disabled with the &e/nquests take &ccommand.");
             valueChanged = true;
         }
+        if (!getLanguageConfig().isString("chat.quest-not-active-error")) {
+            getLanguageConfig().set("chat.quest-not-active-error", "&cError: &b%QUESTNAME% &cis not an active Quest!");
+            valueChanged = true;
+        }
 
 
         if (!getLanguageConfig().isString("titles.quest-accepted.title")) {
@@ -389,6 +393,54 @@ public class LanguageManager {
         }
         if (!getLanguageConfig().isString("gui.previewQuestChoose.button.questPreview.bottomText")) {
             getLanguageConfig().set("gui.previewQuestChoose.button.questPreview.bottomText", "&aClick to preview Quest!");
+            valueChanged = true;
+        }
+
+
+        //user /q abort questname
+        if (!getLanguageConfig().isString("gui.abortQuest.title")) {
+            getLanguageConfig().set("gui.abortQuest.title", "         &cAbort Confirmation");
+            valueChanged = true;
+        }
+        if (!getLanguageConfig().isString("gui.abortQuest.button.confirmAbort.text")) {
+            getLanguageConfig().set("gui.abortQuest.button.confirmAbort.text", "&b%QUESTNAME% &a[ACTIVE]\n&7Progress: &a%COMPLETEDOBJECTIVESCOUNT% &f/ %ALLOBJECTIVESCOUNT%\n&cClick to abort the quest &b%QUESTNAME%&c!");
+            valueChanged = true;
+        }
+        if (!getLanguageConfig().isString("gui.abortQuest.button.cancelAbort.text")) {
+            getLanguageConfig().set("gui.abortQuest.button.cancelAbort.text", "&aClick to NOT abort this quest\n&aand cancel this action");
+            valueChanged = true;
+        }
+
+        //user /q preview questname
+        if (!getLanguageConfig().isString("gui.previewQuest.title")) {
+            getLanguageConfig().set("gui.previewQuest.title", "&9Preview for Quest &b%QUESTNAME%");
+            valueChanged = true;
+        }
+
+        if (!getLanguageConfig().isString("gui.previewQuest.button.description.text")) {
+            getLanguageConfig().set("gui.previewQuest.button.description.text", "&eDescription\n&8%QUESTDESCRIPTION%");
+            valueChanged = true;
+        }
+        if (!getLanguageConfig().isString("gui.previewQuest.button.description.empty")) {
+            getLanguageConfig().set("gui.previewQuest.button.description.empty", "???");
+            valueChanged = true;
+        }
+
+        if (!getLanguageConfig().isString("gui.previewQuest.button.requirements.text")) {
+            getLanguageConfig().set("gui.previewQuest.button.requirements.text", "&cRequirements\n&f%QUESTREQUIREMENTS%");
+            valueChanged = true;
+        }
+        if (!getLanguageConfig().isString("gui.previewQuest.button.requirements.empty")) {
+            getLanguageConfig().set("gui.previewQuest.button.requirements.empty", "&8-");
+            valueChanged = true;
+        }
+
+        if (!getLanguageConfig().isString("gui.previewQuest.button.confirmTake.text")) {
+            getLanguageConfig().set("gui.previewQuest.button.confirmTake.text", "&b%QUESTNAME%\n&aClick to take the quest &b%QUESTNAME%&a!");
+            valueChanged = true;
+        }
+        if (!getLanguageConfig().isString("gui.previewQuest.button.cancelTake.text")) {
+            getLanguageConfig().set("gui.previewQuest.button.cancelTake.text", "&cClick to NOT take this quest\n&cand cancel this action");
             valueChanged = true;
         }
 

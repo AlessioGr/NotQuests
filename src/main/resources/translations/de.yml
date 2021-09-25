@@ -20,6 +20,7 @@ chat:
   active-quests-label: '&eAktive Quests:'
   take-disabled-preview: '&cDas Ansehen der Vorschau von der Quest &b%QUESTNAME% &cmit dem &e/nquests preview &cCommand wurde deaktiviert.'
   take-disabled-accept: '&cDas Akzeptieren der Quest &b%QUESTNAME% &cmit dem &e/nquests take &cCommand wurde deaktiviert.'
+  quest-not-active-error: '&cFehler: &b%QUESTNAME% &cist keine aktive Quest!'
 titles:
   quest-accepted:
     title: '&fQuest akzeptiert'
@@ -93,3 +94,36 @@ gui:
         questNamePrefix: '&b'
         questDescriptionPrefix: '&8'
         bottomText: '&aKlicke für eine Vorschau!'
+  abortQuest:
+    title: '       &cAbbruch-Bestätigung'
+    button:
+      confirmAbort:
+        text: |-
+          &b%QUESTNAME% &a[AKTIV]
+          &7Fortschritt: &a%COMPLETEDOBJECTIVESCOUNT% &f/ %ALLOBJECTIVESCOUNT%
+          &cKlicke, um die Quest &b%QUESTNAME% &cabzubrechen!
+      cancelAbort:
+        text: |-
+          &aKlicke, um die Quest NICHT abzubrechen
+          &aund diese Aktion zu beenden
+  previewQuest:
+    title: '&9Vorschau der Quest &b%QUESTNAME%'
+    button:
+      description:
+        text: |-
+          &eBeschreibung
+          &8%QUESTDESCRIPTION%
+        empty: ???
+      requirements:
+        text: |-
+          &cAnforderungen
+          &f%QUESTREQUIREMENTS%
+        empty: '&8-'
+      confirmTake:
+        text: |-
+          &b%QUESTNAME%
+          &aKlicke, um die Quest &b%QUESTNAME% &aanzunehmen!
+      cancelTake:
+        text: |-
+          &cKlicke, um die Quest NICHT anzunehmen
+          &cund diese Aktion zu beenden
