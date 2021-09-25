@@ -5,7 +5,6 @@ import notquests.notquests.NotQuests;
 import notquests.notquests.Structs.ActiveObjective;
 import notquests.notquests.Structs.ActiveQuest;
 import notquests.notquests.Structs.Objectives.*;
-import notquests.notquests.Structs.Quest;
 import notquests.notquests.Structs.QuestPlayer;
 import notquests.notquests.Structs.Triggers.ActiveTrigger;
 import notquests.notquests.Structs.Triggers.TriggerTypes.TriggerType;
@@ -40,7 +39,6 @@ import org.bukkit.persistence.PersistentDataType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.logging.Level;
 
 public class QuestEvents implements Listener {
     private final NotQuests main;
@@ -48,8 +46,6 @@ public class QuestEvents implements Listener {
     public QuestEvents(NotQuests main) {
         this.main = main;
     }
-
-
 
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -133,8 +129,6 @@ public class QuestEvents implements Listener {
     }
 
 
-
-
     @EventHandler
     private void onDropItemEvent(EntityDropItemEvent e) { //DEFAULT ENABLED FOR ITEM DROPS UNLIKE FOR BLOCK BREAKS
         final Entity entity = e.getEntity();
@@ -178,33 +172,7 @@ public class QuestEvents implements Listener {
                         final ActiveQuest activeQuest = questPlayer.getActiveQuests().get(i);
                         for (final ActiveTrigger activeTrigger : activeQuest.getActiveTriggers()) {
                             if (activeTrigger.getTrigger().getTriggerType() == TriggerType.DEATH) {
-                                if (activeTrigger.getTrigger().getApplyOn() == 0) { //Quest and not Objective
-                                    if (activeTrigger.getTrigger().getWorldName().equalsIgnoreCase("ALL")) {
-                                        activeTrigger.addAndCheckTrigger(activeQuest);
-                                    } else {
-                                        final Player qPlayer = Bukkit.getPlayer(questPlayer.getUUID());
-                                        if (qPlayer != null && qPlayer.getWorld().getName().equalsIgnoreCase(activeTrigger.getTrigger().getWorldName())) {
-                                            activeTrigger.addAndCheckTrigger(activeQuest);
-                                        }
-                                    }
-
-
-                                } else if (activeTrigger.getTrigger().getApplyOn() >= 1) { //Objective and not Quest
-                                    final ActiveObjective activeObjective = activeQuest.getActiveObjectiveFromID(activeTrigger.getTrigger().getApplyOn());
-                                    if (activeObjective != null && activeObjective.isUnlocked()) {
-
-                                        if (activeTrigger.getTrigger().getWorldName().equalsIgnoreCase("ALL")) {
-                                            activeTrigger.addAndCheckTrigger(activeQuest);
-                                        } else {
-                                            final Player qPlayer = Bukkit.getPlayer(questPlayer.getUUID());
-                                            if (qPlayer != null && qPlayer.getWorld().getName().equalsIgnoreCase(activeTrigger.getTrigger().getWorldName())) {
-                                                activeTrigger.addAndCheckTrigger(activeQuest);
-                                            }
-                                        }
-
-                                    }
-
-                                }
+                                handleGeneralTrigger(questPlayer, activeTrigger);
 
                             }
                         }
@@ -283,32 +251,7 @@ public class QuestEvents implements Listener {
 
                     for (final ActiveTrigger activeTrigger : activeQuest.getActiveTriggers()) {
                         if (activeTrigger.getTrigger().getTriggerType() == TriggerType.DISCONNECT) {
-                            if (activeTrigger.getTrigger().getApplyOn() == 0) {//Quest and not Objective
-
-                                if (activeTrigger.getTrigger().getWorldName().equalsIgnoreCase("ALL")) {
-                                    activeTrigger.addAndCheckTrigger(activeQuest);
-                                } else {
-                                    final Player qPlayer = Bukkit.getPlayer(questPlayer.getUUID());
-                                    if (qPlayer != null && qPlayer.getWorld().getName().equalsIgnoreCase(activeTrigger.getTrigger().getWorldName())) {
-                                        activeTrigger.addAndCheckTrigger(activeQuest);
-                                    }
-                                }
-
-                            } else if (activeTrigger.getTrigger().getApplyOn() >= 1) { //Objective and not Quest
-                                final ActiveObjective activeObjective = activeQuest.getActiveObjectiveFromID(activeTrigger.getTrigger().getApplyOn());
-                                if (activeObjective != null && activeObjective.isUnlocked()) {
-
-                                    if (activeTrigger.getTrigger().getWorldName().equalsIgnoreCase("ALL")) {
-                                        activeTrigger.addAndCheckTrigger(activeQuest);
-                                    } else {
-                                        final Player qPlayer = Bukkit.getPlayer(questPlayer.getUUID());
-                                        if (qPlayer != null && qPlayer.getWorld().getName().equalsIgnoreCase(activeTrigger.getTrigger().getWorldName())) {
-                                            activeTrigger.addAndCheckTrigger(activeQuest);
-                                        }
-                                    }
-
-                                }
-                            }
+                            handleGeneralTrigger(questPlayer, activeTrigger);
                         }
                     }
 
@@ -592,8 +535,6 @@ public class QuestEvents implements Listener {
     }
 
 
-
-
     @EventHandler
     private void onCraftItemEvent(CraftItemEvent e) {
         final Entity entity = e.getWhoClicked();
@@ -606,7 +547,6 @@ public class QuestEvents implements Listener {
                             if (activeObjective.isUnlocked()) {
                                 if (activeObjective.getObjective() instanceof final CraftItemsObjective objective) {
                                     if (objective.getItemToCraft().getType().equals(e.getInventory().getResult().getType()) && objective.getItemToCraft().getItemMeta().equals(e.getInventory().getResult().getItemMeta())) {
-
 
 
                                         //Now we gotta figure out the real amount of items which have been crafted, which is trickier than expected:
@@ -660,8 +600,6 @@ public class QuestEvents implements Listener {
                                         activeObjective.addProgress(recipeAmount, -1);
 
 
-
-
                                     }
                                 }
                             }
@@ -702,6 +640,40 @@ public class QuestEvents implements Listener {
                 result += Math.max(stack.getMaxStackSize() - is.getAmount(), 0);
 
         return result;
+    }
+
+
+    /**
+     * This method handles the most commonly used type of trigger, which should simply add to the progress
+     *
+     * @param questPlayer   is the QuestPlayer object, used to check the world of the player
+     * @param activeTrigger is the trigger which we need in order to add progress to it
+     */
+    private void handleGeneralTrigger(final QuestPlayer questPlayer, final ActiveTrigger activeTrigger) { //TODO: implement this for other events as well
+
+        //Handle Trigger applyOn
+        if (activeTrigger.getTrigger().getApplyOn() >= 1) { //Trigger applies to a specific objective of the Quest and not the Quest itself
+            //Get the active Objective for which the trigger applies to
+            final ActiveObjective activeObjective = activeTrigger.getActiveQuest().getActiveObjectiveFromID(activeTrigger.getTrigger().getApplyOn());
+            //Return, if the active objective which the trigger needs doesn't exist or is not yet unlocked (so hidden)
+            if (activeObjective == null || !activeObjective.isUnlocked()) {
+                return;
+            }
+        }
+
+        //Handle Trigger World Name
+        if (!activeTrigger.getTrigger().getWorldName().equalsIgnoreCase("ALL")) {
+            final Player qPlayer = Bukkit.getPlayer(questPlayer.getUUID());
+            //If the player is not in the world which the Trigger needs, cancel.
+            if (qPlayer == null || !qPlayer.getWorld().getName().equalsIgnoreCase(activeTrigger.getTrigger().getWorldName())) {
+                return;
+            }
+        }
+
+        //Finally, we can add to the trigger and check if it can trigger now if the progress is full
+        activeTrigger.addAndCheckTrigger(activeTrigger.getActiveQuest());
+
+
     }
 
 

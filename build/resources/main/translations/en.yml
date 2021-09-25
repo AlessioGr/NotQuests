@@ -1,0 +1,158 @@
+chat:
+  wrong-command-usage: '&cWrong command usage!'
+  missing-permission: '&cNo permission! Required permission node: &e%PERMISSION%'
+  too-many-arguments: '&cToo many arguments!'
+  quest-successfully-accepted: '&aYou have successfully accepted the Quest &b%QUESTNAME%&a.'
+  quest-description: '&eQuest description: &7%QUESTDESCRIPTION%'
+  quest-already-accepted: '&cQuest already accepted.'
+  quest-failed: '&eYou have &c&lFAILED &ethe Quest &b%QUESTNAME%&e!'
+  quest-aborted: '&aThe active quest &b%QUESTNAME% &ahas been aborted!'
+  quest-completed-and-rewards-given: '&aYou have completed the quest &b%QUESTNAME%
+    &aand received your rewards!!!'
+  missing-quest-description: '&eThis quest has no quest description.'
+  objectives-label-after-quest-accepting: '&9Objectives:'
+  questpoints:
+    query: '&eYou currently have &b%QUESTPOINTS% &equest points.'
+    none: '&cSeems like you don''t have any quest points!'
+  no-quests-accepted: '&cSeems like you don''t have any active quests!'
+  quest-does-not-exist: '&cQuest &b%QUESTNAME% &cdoes not exist!'
+  quest-not-found-or-does-not-exist: '&cQuest &b%QUESTNAME% &cnot found or not active!'
+  active-quests-label: '&eActive quests:'
+  take-disabled-preview: '&cPreviewing the quest &b%QUESTNAME% &cis disabled with the &e/nquests preview &ccommand.'
+  take-disabled-accept: '&cAccepting the quest &b%QUESTNAME% &cis disabled with the &e/nquests take &ccommand.'
+  quest-not-active-error: '&cError: &b%QUESTNAME% &cis not an active Quest!'
+titles:
+  quest-accepted:
+    title: '&fQuest accepted'
+    subtitle: <#b617ff>%QUESTNAME%
+  quest-completed:
+    title: '&aQuest Completed'
+    subtitle: <#b617ff>%QUESTNAME%
+  quest-failed:
+    title: '&cQuest Failed'
+    subtitle: <#b617ff>%QUESTNAME%
+gui:
+  main:
+    title: '                &9Quests'
+    button:
+      questpoints:
+        text: |-
+          &6Quest Points
+          &eCurrent quest points: &b%QUESTPOINTS%
+      takequest:
+        text: |-
+          &aTake a Quest
+          &7Start a new Quest!
+
+          &8Some Quests cannot be
+          &8started like this.
+      abortquest:
+        text: |-
+          &cAbort a Quest
+          &7Aborting a Quest may
+          &7lead to punishments.
+      previewquest:
+        text: |-
+          &9Preview Quest (Quest Info)
+          &7Show more information
+          &7about a Quest.
+      activequests:
+        text: |-
+          &3Active Quests
+          &7Shows all of your
+          &7active Quests.
+  activeQuests:
+    title: '             &9Active Quests'
+    button:
+      activeQuestButton:
+        text: |-
+          &b%QUESTNAME% &a[ACTIVE]
+          &7Progress: &a%COMPLETEDOBJECTIVESCOUNT% &f/ %ALLOBJECTIVESCOUNT%
+          &fClick to see details!
+  takeQuestChoose:
+    title: '&9Which Quest do you want to take?'
+    button:
+      questPreview:
+        acceptedSuffix: ' &a[ACCEPTED]'
+        questNamePrefix: '&b'
+        questDescriptionPrefix: '&8'
+        bottomText: '&aClick to preview Quest!'
+  abortQuestChoose:
+    title: '  &9Active Quests you can abort'
+    button:
+      abortQuestPreview:
+        text: |-
+          &b%QUESTNAME% &a[ACTIVE]
+          &7Progress: &a%COMPLETEDOBJECTIVESCOUNT% &f/ %ALLOBJECTIVESCOUNT%
+          &cClick to abort Quest!
+  previewQuestChoose:
+    title: '     &9Choose Quest to preview'
+    button:
+      questPreview:
+        acceptedSuffix: ' &a[ACCEPTED]'
+        questNamePrefix: '&b'
+        questDescriptionPrefix: '&8'
+        bottomText: '&aClick to preview Quest!'
+  abortQuest:
+    title: '         &cAbort Confirmation'
+    button:
+      confirmAbort:
+        text: |-
+          &b%QUESTNAME% &a[ACTIVE]
+          &7Progress: &a%COMPLETEDOBJECTIVESCOUNT% &f/ %ALLOBJECTIVESCOUNT%
+          &cClick to abort the quest &b%QUESTNAME%&c!
+      cancelAbort:
+        text: |-
+          &aClick to NOT abort this quest
+          &aand cancel this action
+  previewQuest:
+    title: '&9Preview for Quest &b%QUESTNAME%'
+    button:
+      description:
+        text: |-
+          &eDescription
+          &8%QUESTDESCRIPTION%
+        empty: ???
+      requirements:
+        text: |-
+          &cRequirements
+          &f%QUESTREQUIREMENTS%
+        empty: '&8-'
+      confirmTake:
+        text: |-
+          &b%QUESTNAME%
+          &aClick to take the quest &b%QUESTNAME%&a!
+      cancelTake:
+        text: |-
+          &cClick to NOT take this quest
+          &cand cancel this action
+  progress:
+    title: '&9Details for Quest &b%QUESTNAME%'
+    button:
+      unlockedObjective:
+        text: |-
+          &e%ACTIVEOBJECTIVEID%. &b%OBJECTIVENAME%
+          &6&lACTIVE
+          &8%OBJECTIVEDESCRIPTION%
+          %ACTIVEOBJECTIVEDESCRIPTION%
+
+          &7Progress: &a%ACTIVEOBJECTIVEPROGRESS% &f/ %OBJECTIVEPROGRESSNEEDED%
+        description-empty: No Description
+      lockedObjective:
+        text: |-
+          &e%ACTIVEOBJECTIVEID%. &7&l[HIDDEN]
+          &eThis objective has not yet
+          &ebeen unlocked!
+      completedObjective:
+        text: |-
+          &a&m%ACTIVEOBJECTIVEID%. &2&m%OBJECTIVENAME%
+          &a&lCOMPLETED
+          &8&m%OBJECTIVEDESCRIPTION%
+          %COMPLETEDOBJECTIVEDESCRIPTION%
+
+          &7&mProgress: &a&m%ACTIVEOBJECTIVEPROGRESS% &f&m/ %OBJECTIVEPROGRESSNEEDED%
+        description-empty: No Description
+      previousPage:
+        text: Go to previous page (%prevpage%)
+      nextPage:
+        text: Go to next page (%nextpage%)
