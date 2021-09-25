@@ -55,6 +55,7 @@ Admin Commands - Quest Editing:
 - Player data is saved in MySQL, quest configuration data in a configuration file
 - Quest Points
 - Smart Command Tab Completions for all User and Admin commands
+- Smart translation system
 - Re-usable Actions for Triggers
 - Multiple Quest Objectives:
   - Break Blocks
