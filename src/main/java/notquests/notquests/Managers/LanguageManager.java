@@ -18,7 +18,6 @@ public class LanguageManager {
     /**
      * Configuration objects which contains values from General.yml
      */
-    private final Configuration configuration;
     private final Pattern hexPattern = Pattern.compile("<#([A-Fa-f0-9]){6}>");
     /**
      * General.yml Configuration
@@ -33,9 +32,6 @@ public class LanguageManager {
 
     public LanguageManager(final NotQuests main) {
         this.main = main;
-
-        // create an instance of the Configuration object
-        configuration = new Configuration();
     }
 
 
