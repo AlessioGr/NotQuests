@@ -10,7 +10,6 @@ import notquests.notquests.Structs.ActiveObjective;
 import notquests.notquests.Structs.ActiveQuest;
 import notquests.notquests.Structs.Quest;
 import notquests.notquests.Structs.QuestPlayer;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -29,7 +28,6 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
     private final NotQuests main;
 
     private final List<String> completions = new ArrayList<String>(); //makes a ArrayList
-    private final List<String> standardPlayerCompletions = new ArrayList<String>(); //makes a ArrayList
 
     private final BaseComponent firstLevelCommands;
 
@@ -522,7 +520,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                         if (questPlayer != null && questPlayer.getActiveQuests().size() > 0) {
                             final String activeQuestName = args[1];
                             AtomicBoolean failedSuccessfully = new AtomicBoolean(false);
-                            final ArrayList<ActiveQuest> questsToFail = new ArrayList<ActiveQuest>();
+                            final ArrayList<ActiveQuest> questsToFail = new ArrayList<>();
                             for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                                 if (activeQuest.getQuest().getQuestName().equalsIgnoreCase(activeQuestName)) {
                                     questsToFail.add(activeQuest);
@@ -739,14 +737,14 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                     gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
 
 
-                                    int count = 0;
+                                    //int count = 0;
                                     GuiElementGroup group = new GuiElementGroup('g');
 
                                     for (final ActiveObjective activeObjective : requestedActiveQuest.getActiveObjectives()) {
 
                                         final Material materialToUse = Material.PAPER;
 
-                                        count++;
+                                        //count++;
                                         if (activeObjective.isUnlocked()) {
                                             String nameToDisplay;
                                             if (!activeObjective.getObjective().getObjectiveDisplayName().isBlank()) {
@@ -797,12 +795,12 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
 
 
                                     }
-                                    count++;
+                                    //count++;
                                     for (final ActiveObjective activeObjective : requestedActiveQuest.getCompletedObjectives()) {
 
                                         final Material materialToUse = Material.FILLED_MAP;
 
-                                        count++;
+                                        //count++;
 
 
                                         String nameToDisplay;
@@ -891,14 +889,11 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         completions.clear();
-        standardPlayerCompletions.clear();
         main.getDataManager().partialCompletions.clear();
 
         if (sender instanceof Player) {
             if (sender.hasPermission("notnot.quests.use")) {
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    standardPlayerCompletions.add(player.getName());
-                }
+
 
                 if (args.length == 1) {
                     completions.addAll(Arrays.asList("take", "abort", "preview", "activeQuests", "progress", "questPoints"));
