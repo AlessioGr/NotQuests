@@ -48,11 +48,45 @@ public class QuestManager {
 
     private boolean questDataLoaded = false;
 
+    private final String objectiveTypesList, rewardTypesList, requirementsTypesList;
+
 
     public QuestManager(NotQuests main) {
         this.main = main;
         quests = new ArrayList<>();
         actions = new ArrayList<>();
+
+        objectiveTypesList = """
+                §eObjective Types:
+                §bBreakBlocks
+                §bCollectItems
+                §bCraftItems
+                §bKillMobs
+                §bTriggerCommand
+                §bOtherQuest
+                §bConsumeItems
+                §bDeliverItems
+                §bTalkToNPC
+                §bEscortNPC
+                """;
+
+        rewardTypesList = """
+                §eReward Types:
+                §bConsoleCommand
+                §bQuestPoints
+                §bItem
+                §bMoney
+                """;
+
+        requirementsTypesList = """
+                §eRequirement Types:
+                §bOtherQuest
+                §bQuestPoints
+                §bPermission
+                §bPlaceholder (WIP)
+                §bMoney (WIP)
+                §bKarma (WIP)
+                """;
     }
 
 
@@ -1453,6 +1487,18 @@ public class QuestManager {
         return false;
 
 
+    }
+
+    public final String getObjectiveTypesList() {
+        return objectiveTypesList;
+    }
+
+    public final String getRewardTypesList() {
+        return rewardTypesList;
+    }
+
+    public final String getRequirementsTypesList() {
+        return requirementsTypesList;
     }
 
 }

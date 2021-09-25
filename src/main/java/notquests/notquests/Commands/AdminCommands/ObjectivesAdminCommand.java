@@ -552,7 +552,7 @@ public class ObjectivesAdminCommand {
         }
     }
 
-    public List<String> handleCompletions(final CommandSender sender, final String[] args) {
+    public List<String> handleCompletions(final String[] args) {
         main.getDataManager().completions.clear();
 
         final Quest quest = main.getQuestManager().getQuest(args[1]);
@@ -788,17 +788,8 @@ public class ObjectivesAdminCommand {
         } else if (args.length == 4) {
             if (args[2].equalsIgnoreCase("add")) {
                 sender.sendMessage("§cPlease specify an objective type!");
-                sender.sendMessage("§eObjective Types:");
-                sender.sendMessage("§bBreakBlocks");
-                sender.sendMessage("§bCollectItems");
-                sender.sendMessage("§bCraftItems");
-                sender.sendMessage("§bKillMobs");
-                sender.sendMessage("§bTriggerCommand");
-                sender.sendMessage("§bOtherQuest");
-                sender.sendMessage("§bConsumeItems");
-                sender.sendMessage("§bDeliverItems");
-                sender.sendMessage("§bTalkToNPC");
-                sender.sendMessage("§bEscortNPC");
+                sender.sendMessage(main.getQuestManager().getObjectiveTypesList());
+
                 sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §3[Objective Type] ...");
             } else if (args[2].equalsIgnoreCase("edit")) {
                 sender.sendMessage("§cPlease specify the Objective ID.");
@@ -846,17 +837,7 @@ public class ObjectivesAdminCommand {
                     sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2EscortNPC §3[NPC to escort ID] [Destination NPC ID]");
                 } else {
                     sender.sendMessage("§cInvalid ObjectiveType.");
-                    sender.sendMessage("§eObjective Types:");
-                    sender.sendMessage("§bBreakBlocks");
-                    sender.sendMessage("§bCollectItems");
-                    sender.sendMessage("§bCraftItems");
-                    sender.sendMessage("§bKillMobs");
-                    sender.sendMessage("§bTriggerCommand");
-                    sender.sendMessage("§bOtherQuest");
-                    sender.sendMessage("§bConsumeItems");
-                    sender.sendMessage("§bDeliverItems");
-                    sender.sendMessage("§bTalkToNPC");
-                    sender.sendMessage("§bEscortNPC");
+                    sender.sendMessage(main.getQuestManager().getObjectiveTypesList());
                 }
             } else if (args[3].equalsIgnoreCase("edit")) {
                 try {

@@ -27,7 +27,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.StringUtil;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -38,16 +37,15 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
     private final ObjectivesAdminCommand objectivesAdminCommand;
     private final ArmorstandsAdminCommand armorstandsAdminCommand;
 
-    private final SimpleDateFormat simpleDateFormat;
     private final Date resultDate;
 
     private final BaseComponent firstLevelCommands;
 
     private final ArrayList<String> placeholders;
 
+
     public CommandNotQuestsAdmin(NotQuests main) {
         this.main = main;
-        simpleDateFormat = new SimpleDateFormat("MMM dd,yyyy HH:mm");
 
         placeholders = new ArrayList<>();
 
@@ -254,23 +252,9 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                     main.getDataManager().saveData();
                     sender.sendMessage("§aNotQuests configuration and player data has been saved");
                 } else if (args[0].equalsIgnoreCase("listobjectivetypes")) {
-                    sender.sendMessage("§eObjective Types:");
-                    sender.sendMessage("§bBreakBlocks");
-                    sender.sendMessage("§bCollectItems");
-                    sender.sendMessage("§bCraftItems");
-                    sender.sendMessage("§bKillMobs");
-                    sender.sendMessage("§bTriggerCommand");
-                    sender.sendMessage("§bOtherQuest");
-                    sender.sendMessage("§bConsumeItems");
-                    sender.sendMessage("§bDeliverItems");
-                    sender.sendMessage("§bTalkToNPC");
-                    sender.sendMessage("§bEscortNPC");
+                    sender.sendMessage(main.getQuestManager().getObjectiveTypesList());
                 } else if (args[0].equalsIgnoreCase("listrewardtypes")) {
-                    sender.sendMessage("§eReward Types:");
-                    sender.sendMessage("§bConsoleCommand");
-                    sender.sendMessage("§bQuestPoints");
-                    sender.sendMessage("§bItem");
-                    sender.sendMessage("§bMoney");
+                    sender.sendMessage(main.getQuestManager().getRewardTypesList());
                 } else if (args[0].equalsIgnoreCase("resetAndRemoveQuestForAllPlayers")) {
                     sender.sendMessage("§cMissing 2. argument §3[Quest Name]§c. Specify the §bname of the quest§c which should be reset and removed.");
                     sender.sendMessage("§e/qadmin §6resetAndRemoveQuestForAllPlayers §3[Quest Name] §7| Resets & removes specified quest for all players");
@@ -278,13 +262,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                     sender.sendMessage("§cMissing 2. argument §3[Quest Name]§c. Specify the §bname of the quest§c which should be reset and failed.");
                     sender.sendMessage("§e/qadmin §6resetAndFailQuestForAllPlayers §3[Quest Name] §7| Resets & fails specified quest for all players");
                 } else if (args[0].equalsIgnoreCase("listrequirementtypes")) {
-                    sender.sendMessage("§eRequirement Types:");
-                    sender.sendMessage("§bOtherQuest");
-                    sender.sendMessage("§bQuestPoints");
-                    sender.sendMessage("§bPermission");
-                    sender.sendMessage("§bPlaceholder (WIP)");
-                    sender.sendMessage("§bMoney (WIP)");
-                    sender.sendMessage("§bKarma (WIP)");
+                    sender.sendMessage(main.getQuestManager().getRequirementsTypesList());
                 } else if (args[0].equalsIgnoreCase("listallquests")) {
                     int counter = 1;
                     sender.sendMessage("§eAll Quests:");
@@ -830,13 +808,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                             if (args[3].equalsIgnoreCase("add")) {
                                 sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6requirements add §3[Requirement Type] ...");
                                 sender.sendMessage("§cPlease specify a requirement type!");
-                                sender.sendMessage("§eRequirement Types:");
-                                sender.sendMessage("§bOtherQuest");
-                                sender.sendMessage("§bQuestPoints");
-                                sender.sendMessage("§bPermission");
-                                sender.sendMessage("§bMoney");
-                                sender.sendMessage("§bPlaceholder (WIP");
-                                sender.sendMessage("§bKarma (WIP)");
+                                sender.sendMessage(main.getQuestManager().getRequirementsTypesList());
                             } else if (args[3].equalsIgnoreCase("list")) {
                                 sender.sendMessage("§9Requirements for quest §b" + quest.getQuestName() + "§9:");
                                 int counter = 1;
@@ -868,11 +840,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                             if (args[3].equalsIgnoreCase("add")) {
                                 sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards add §3[Reward Type] ...");
                                 sender.sendMessage("§cPlease specify a reward type!");
-                                sender.sendMessage("§eReward Types:");
-                                sender.sendMessage("§bConsoleCommand");
-                                sender.sendMessage("§bQuestPoints");
-                                sender.sendMessage("§bItem");
-                                sender.sendMessage("§bMoney");
+                                sender.sendMessage(main.getQuestManager().getRewardTypesList());
                             } else if (args[3].equalsIgnoreCase("list")) {
                                 sender.sendMessage("§9Rewards for quest §b" + quest.getQuestName() + "§9:");
                                 int counter = 1;
@@ -1124,12 +1092,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                     sender.sendMessage("§cMissing 6. argument §3[Amount]§c. Specify the §bamount of money §cthe player should receive.");
                                     sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards add §2Money §3[Amount]");
                                 } else {
-                                    sender.sendMessage("§cInvalid Reward Type");
-                                    sender.sendMessage("§eReward Types:");
-                                    sender.sendMessage("§bConsoleCommand");
-                                    sender.sendMessage("§bQuestPoints");
-                                    sender.sendMessage("§bItem");
-                                    sender.sendMessage("§bMoney");
+                                    sender.sendMessage(main.getQuestManager().getRewardTypesList());
                                 }
                             } else {
                                 sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
@@ -2011,7 +1974,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                 StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
                 return main.getDataManager().partialCompletions;
             } else if (args.length >= 4 && args[0].equalsIgnoreCase("edit") && args[2].equalsIgnoreCase("objectives")) {
-                final List<String> completions = objectivesAdminCommand.handleCompletions(sender, args);
+                final List<String> completions = objectivesAdminCommand.handleCompletions(args);
                 if (completions != null) {
                     StringUtil.copyPartialMatches(args[args.length - 1], completions, main.getDataManager().partialCompletions);
                     return main.getDataManager().partialCompletions;
