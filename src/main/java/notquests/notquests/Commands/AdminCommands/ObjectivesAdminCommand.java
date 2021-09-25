@@ -1070,13 +1070,11 @@ public class ObjectivesAdminCommand {
 
                         }
                     } else if (args[5].equalsIgnoreCase("completionNPC")) {
-                        if (args[6].equalsIgnoreCase("show") || args[6].equalsIgnoreCase("view")) {
-
-                        } else if (args[6].equalsIgnoreCase("set")) {
+                        if (args[6].equalsIgnoreCase("set")) {
                             sender.sendMessage("§cMissing 8. argument <CompletionNPC ID> ");
                             sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3completionNPC set <CompletionNPC ID> §7 | Sets the completion NPC ID (-1 = default = complete automatically)");
 
-                        } else {
+                        } else if (!args[6].equalsIgnoreCase("show") && !args[6].equalsIgnoreCase("view")) {
                             sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
 
                         }
