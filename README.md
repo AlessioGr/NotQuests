@@ -40,11 +40,11 @@ Preview Quests GUI:
 
 Admin Commands (for quest creation):
 
-![image](https://user-images.githubusercontent.com/70709113/131539902-831a541c-7d2c-4e69-9843-2d5943be86cf.png)
+![image](https://i.imgur.com/mAyL08w.png)
 
 Admin Commands - Quest Editing:
 
-![image](https://user-images.githubusercontent.com/70709113/131539973-8f6586a7-0108-4a92-9017-e06313145a02.png)
+![image](https://i.imgur.com/WKYvJ4V.png)
 
 
 
