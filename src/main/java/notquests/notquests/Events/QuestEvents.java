@@ -651,7 +651,7 @@ public class QuestEvents implements Listener {
      * @param questPlayer   is the QuestPlayer object, used to check the world of the player
      * @param activeTrigger is the trigger which we need in order to add progress to it
      */
-    private void handleGeneralTrigger(final QuestPlayer questPlayer, final ActiveTrigger activeTrigger) { //TODO: implement this for other events as well
+    private void handleGeneralTrigger(final QuestPlayer questPlayer, final ActiveTrigger activeTrigger) {
 
         //Handle Trigger applyOn
         if (activeTrigger.getTrigger().getApplyOn() >= 1) { //Trigger applies to a specific objective of the Quest and not the Quest itself
