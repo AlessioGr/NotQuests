@@ -441,8 +441,7 @@ public class ObjectivesAdminCommand {
                     if (npc != null) {
 
                         if (args[5].equalsIgnoreCase("hand")) {
-                            if (sender instanceof Player) {
-                                Player player = (Player) sender;
+                            if (sender instanceof Player player) {
                                 ItemStack holdingItem = player.getInventory().getItemInMainHand();
                                 int amountToCollect = Integer.parseInt(args[6]);
 

@@ -1891,8 +1891,8 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                 } else if (args[0].equalsIgnoreCase("triggerObjective")) {
                     for (Quest quest : main.getQuestManager().getAllQuests()) {
                         for (Objective objective : quest.getObjectives()) {
-                            if (objective instanceof TriggerCommandObjective) {
-                                main.getDataManager().completions.add(((TriggerCommandObjective) objective).getTriggerName());
+                            if (objective instanceof TriggerCommandObjective triggerCommandObjective) {
+                                main.getDataManager().completions.add(triggerCommandObjective.getTriggerName());
                             }
                         }
                     }

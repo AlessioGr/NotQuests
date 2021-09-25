@@ -703,7 +703,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
 
                                 gui.show(player);
                             } else {
-                                main.getQuestManager().sendSingleQuestPreview((Player) sender, quest);
+                                main.getQuestManager().sendSingleQuestPreview(player, quest);
                             }
 
                             return true;
@@ -891,7 +891,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
         completions.clear();
         main.getDataManager().partialCompletions.clear();
 
-        if (sender instanceof Player) {
+        if (sender instanceof Player player) {
             if (sender.hasPermission("notnot.quests.use")) {
 
 
@@ -910,7 +910,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                         StringUtil.copyPartialMatches(args[args.length - 1], completions, main.getDataManager().partialCompletions);
                         return main.getDataManager().partialCompletions;
                     } else if (args[0].equalsIgnoreCase("abort")) {
-                        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(((Player) sender).getUniqueId());
+                        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
                         if (questPlayer != null) {
                             for (final ActiveQuest quest : questPlayer.getActiveQuests()) {
                                 completions.add(quest.getQuest().getQuestName());
@@ -928,7 +928,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                         StringUtil.copyPartialMatches(args[args.length - 1], completions, main.getDataManager().partialCompletions);
                         return main.getDataManager().partialCompletions;
                     } else if (args[0].equalsIgnoreCase("progress")) {
-                        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(((Player) sender).getUniqueId());
+                        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
                         if (questPlayer != null) {
                             for (ActiveQuest quest : questPlayer.getActiveQuests()) {
                                 completions.add(quest.getQuest().getQuestName());

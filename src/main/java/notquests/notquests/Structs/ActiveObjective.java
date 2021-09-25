@@ -75,10 +75,10 @@ public class ActiveObjective {
 
 
                 //TODO: What?
-                if (objective instanceof OtherQuestObjective) {
-                    if (((OtherQuestObjective) objective).isCountPreviousCompletions()) {
+                if (objective instanceof OtherQuestObjective otherQuestObjective) {
+                    if (otherQuestObjective.isCountPreviousCompletions()) {
                         for (CompletedQuest completedQuest : getQuestPlayer().getCompletedQuests()) {
-                            if (completedQuest.getQuest().equals(((OtherQuestObjective) objective).getOtherQuest())) {
+                            if (completedQuest.getQuest().equals(otherQuestObjective.getOtherQuest())) {
                                 addProgress(1, -1);
                             }
                         }
