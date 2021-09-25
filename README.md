@@ -3,7 +3,8 @@
 [![GitHub issues](https://img.shields.io/github/issues/AlessioGr/NotQuests)](https://github.com/AlessioGr/NotQuests/issues)
 [![GitHub stars](https://img.shields.io/github/stars/AlessioGr/NotQuests)](https://github.com/AlessioGr/NotQuests/stargazers)
 [![GitHub license](https://img.shields.io/github/license/AlessioGr/NotQuests)](https://github.com/AlessioGr/NotQuests/blob/main/LICENSE)
-<a href="https://quests.notnot.pro/"><img src="https://img.shields.io/badge/JavaDocs-Read%20now-yellow" alt="javadics"></a>
+<a href="https://quests.notnot.pro/"><img src="https://img.shields.io/badge/JavaDocs-Read%20now-yellow" alt="javadocs"></a>
+[![CodeFactor](https://www.codefactor.io/repository/github/alessiogr/notquests/badge)](https://www.codefactor.io/repository/github/alessiogr/notquests)
 
 ![Banner](https://user-images.githubusercontent.com/70709113/133943253-af271d49-441b-473e-8b95-6053fe5d09cb.png)
 
@@ -40,11 +41,11 @@ Preview Quests GUI:
 
 Admin Commands (for quest creation):
 
-![image](https://user-images.githubusercontent.com/70709113/131539902-831a541c-7d2c-4e69-9843-2d5943be86cf.png)
+![image](https://i.imgur.com/mAyL08w.png)
 
 Admin Commands - Quest Editing:
 
-![image](https://user-images.githubusercontent.com/70709113/131539973-8f6586a7-0108-4a92-9017-e06313145a02.png)
+![image](https://i.imgur.com/WKYvJ4V.png)
 
 
 
@@ -55,6 +56,7 @@ Admin Commands - Quest Editing:
 - Player data is saved in MySQL, quest configuration data in a configuration file
 - Quest Points
 - Smart Command Tab Completions for all User and Admin commands
+- Smart translation system
 - Re-usable Actions for Triggers
 - Multiple Quest Objectives:
   - Break Blocks
