@@ -112,18 +112,18 @@ public class QuestEvents implements Listener {
                     for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                         for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
                             if (activeObjective.isUnlocked()) {
-                                if (activeObjective.getObjective() instanceof final CollectItemsObjective objective) {
+                                if (activeObjective.getObjective() instanceof final CollectItemsObjective collectItemsObjective) {
 
 
                                     //Check if the Material of the collected item is equal to the Material needed in the CollectItemsObjective
-                                    if (!objective.getItemToCollect().getType().equals(e.getItem().getItemStack().getType())) {
+                                    if (!collectItemsObjective.getItemToCollect().getType().equals(e.getItem().getItemStack().getType())) {
                                         return;
                                     }
 
                                     //If the objective-item which needs to be collected has an ItemMeta...
-                                    if (objective.getItemToCollect().getItemMeta() != null) {
+                                    if (collectItemsObjective.getItemToCollect().getItemMeta() != null) {
                                         //then check if the ItemMeta of the collected item is equal to the ItemMeta needed in the CollectItemsObjective
-                                        if (!objective.getItemToCollect().getItemMeta().equals(e.getItem().getItemStack().getItemMeta())) {
+                                        if (!collectItemsObjective.getItemToCollect().getItemMeta().equals(e.getItem().getItemStack().getItemMeta())) {
                                             return;
                                         }
                                     }
@@ -154,17 +154,17 @@ public class QuestEvents implements Listener {
                     for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                         for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
                             if (activeObjective.isUnlocked()) {
-                                if (activeObjective.getObjective() instanceof final CollectItemsObjective objective) {
+                                if (activeObjective.getObjective() instanceof final CollectItemsObjective collectItemsObjective) {
 
                                     //Check if the Material of the collected item is equal to the Material needed in the CollectItemsObjective
-                                    if (!objective.getItemToCollect().getType().equals(e.getItemDrop().getItemStack().getType())) {
+                                    if (!collectItemsObjective.getItemToCollect().getType().equals(e.getItemDrop().getItemStack().getType())) {
                                         return;
                                     }
 
                                     //If the objective-item which needs to be collected has an ItemMeta...
-                                    if (objective.getItemToCollect().getItemMeta() != null) {
+                                    if (collectItemsObjective.getItemToCollect().getItemMeta() != null) {
                                         //then check if the ItemMeta of the collected item is equal to the ItemMeta needed in the CollectItemsObjective
-                                        if (!objective.getItemToCollect().getItemMeta().equals(e.getItemDrop().getItemStack().getItemMeta())) {
+                                        if (!collectItemsObjective.getItemToCollect().getItemMeta().equals(e.getItemDrop().getItemStack().getItemMeta())) {
                                             return;
                                         }
                                     }
@@ -220,10 +220,10 @@ public class QuestEvents implements Listener {
                 if (questPlayer.getActiveQuests().size() > 0) {
                     for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                         for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-                            if (activeObjective.getObjective() instanceof KillMobsObjective) {
+                            if (activeObjective.getObjective() instanceof KillMobsObjective killMobsObjective) {
                                 if (activeObjective.isUnlocked()) {
                                     final EntityType killedMob = e.getEntity().getType();
-                                    if (((KillMobsObjective) activeObjective.getObjective()).getMobToKill().equals(killedMob)) {
+                                    if (killMobsObjective.getMobToKill().equals(killedMob)) {
                                         if (e.getEntity() != e.getEntity().getKiller()) { //Suicide prevention
                                             activeObjective.addProgress(1, -1);
                                         }
@@ -251,19 +251,18 @@ public class QuestEvents implements Listener {
             if (questPlayer.getActiveQuests().size() > 0) {
                 for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                     for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-                        if (activeObjective.getObjective() instanceof ConsumeItemsObjective) {
+                        if (activeObjective.getObjective() instanceof ConsumeItemsObjective consumeItemsObjective) {
                             if (activeObjective.isUnlocked()) {
-                                final ConsumeItemsObjective objective = ((ConsumeItemsObjective) activeObjective.getObjective());
 
                                 //Check if the Material of the consumed item is equal to the Material needed in the ConsumeItemsObjective
-                                if (!objective.getItemToConsume().getType().equals(e.getItem().getType())) {
+                                if (!consumeItemsObjective.getItemToConsume().getType().equals(e.getItem().getType())) {
                                     return;
                                 }
 
                                 //If the objectiv-item which needs to be crafted has an ItemMeta...
-                                if (objective.getItemToConsume().getItemMeta() != null) {
+                                if (consumeItemsObjective.getItemToConsume().getItemMeta() != null) {
                                     //then check if the ItemMeta of the consumed item is equal to the ItemMeta needed in the ConsumeItemsObjective
-                                    if (!objective.getItemToConsume().getItemMeta().equals(e.getItem().getItemMeta())) {
+                                    if (!consumeItemsObjective.getItemToConsume().getItemMeta().equals(e.getItem().getItemMeta())) {
                                         return;
                                     }
                                 }
@@ -536,17 +535,17 @@ public class QuestEvents implements Listener {
                     for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                         for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
                             if (activeObjective.isUnlocked()) {
-                                if (activeObjective.getObjective() instanceof final CraftItemsObjective objective) {
+                                if (activeObjective.getObjective() instanceof final CraftItemsObjective craftItemsObjective) {
 
                                     //Check if the Material of the crafted item is equal to the Material needed in the CraftItemsObjective
-                                    if (!objective.getItemToCraft().getType().equals(e.getInventory().getResult().getType())) {
+                                    if (!craftItemsObjective.getItemToCraft().getType().equals(e.getInventory().getResult().getType())) {
                                         return;
                                     }
 
                                     //If the objectiv-item which needs to be crafted has an ItemMeta...
-                                    if (objective.getItemToCraft().getItemMeta() != null) {
+                                    if (craftItemsObjective.getItemToCraft().getItemMeta() != null) {
                                         //then check if the ItemMeta of the crafted item is equal to the ItemMeta needed in the CraftItemsObjective
-                                        if (!objective.getItemToCraft().getItemMeta().equals(e.getInventory().getResult().getItemMeta())) {
+                                        if (!craftItemsObjective.getItemToCraft().getItemMeta().equals(e.getInventory().getResult().getItemMeta())) {
                                             return;
                                         }
                                     }
