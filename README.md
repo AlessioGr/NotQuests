@@ -3,7 +3,8 @@
 [![GitHub issues](https://img.shields.io/github/issues/AlessioGr/NotQuests)](https://github.com/AlessioGr/NotQuests/issues)
 [![GitHub stars](https://img.shields.io/github/stars/AlessioGr/NotQuests)](https://github.com/AlessioGr/NotQuests/stargazers)
 [![GitHub license](https://img.shields.io/github/license/AlessioGr/NotQuests)](https://github.com/AlessioGr/NotQuests/blob/main/LICENSE)
-<a href="https://quests.notnot.pro/"><img src="https://img.shields.io/badge/JavaDocs-Read%20now-yellow" alt="javadics"></a>
+<a href="https://quests.notnot.pro/"><img src="https://img.shields.io/badge/JavaDocs-Read%20now-yellow" alt="javadocs"></a>
+[![CodeFactor](https://www.codefactor.io/repository/github/alessiogr/notquests/badge)](https://www.codefactor.io/repository/github/alessiogr/notquests)
 
 ![Banner](https://user-images.githubusercontent.com/70709113/133943253-af271d49-441b-473e-8b95-6053fe5d09cb.png)
 
