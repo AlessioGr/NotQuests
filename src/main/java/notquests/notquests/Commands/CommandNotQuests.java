@@ -4,7 +4,11 @@ import de.themoep.inventorygui.GuiElementGroup;
 import de.themoep.inventorygui.GuiPageElement;
 import de.themoep.inventorygui.InventoryGui;
 import de.themoep.inventorygui.StaticGuiElement;
-import net.md_5.bungee.api.chat.*;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import notquests.notquests.NotQuests;
 import notquests.notquests.Structs.ActiveObjective;
 import notquests.notquests.Structs.ActiveQuest;
@@ -18,6 +22,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.StringUtil;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,12 +34,12 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
 
     private final List<String> completions = new ArrayList<String>(); //makes a ArrayList
 
-    private final BaseComponent firstLevelCommands;
+    private final Component firstLevelCommands;
 
     public CommandNotQuests(NotQuests main) {
         this.main = main;
 
-       /* firstLevelCommands = Component.text("NotQuests Player Commands:", NamedTextColor.BLUE, TextDecoration.BOLD)
+        firstLevelCommands = Component.text("NotQuests Player Commands:", NamedTextColor.BLUE, TextDecoration.BOLD)
                 .append(Component.newline())
                 .append(Component.text("/nquests §6take §3[Quest Name]", NamedTextColor.YELLOW).clickEvent(ClickEvent.suggestCommand("/nquests take ")).hoverEvent(HoverEvent.showText(Component.text("Takes/Starts a Quest", NamedTextColor.GREEN))))
                 .append(Component.newline())
@@ -49,47 +54,15 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                 .append(Component.text("/nquests §6questPoints", NamedTextColor.YELLOW).clickEvent(ClickEvent.runCommand("/nquests questPoints")).hoverEvent(HoverEvent.showText(Component.text("Shows how many Quest Points you have", NamedTextColor.GREEN))))
                 .append(Component.newline()
 
-                );*/ //Paper only
-
-        firstLevelCommands = new TextComponent("§9§lNotQuests Player Commands:\n");
+                );
 
 
-        TextComponent line1 = new TextComponent("§e/nquests §6take §3[Quest Name]\n");
-        line1.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/nquests take "));
-        line1.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aTakes/Starts a Quest").create()));
-
-        TextComponent line2 = new TextComponent("§e/nquests §6abort §3[Quest Name]\n");
-        line2.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/nquests abort "));
-        line2.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aFails a Quest").create()));
-
-        TextComponent line3 = new TextComponent("§e/nquests §6preview §3[Quest Name]\n");
-        line3.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/nquests preview "));
-        line3.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aShows more information about a Quest").create()));
-
-        TextComponent line4 = new TextComponent("§e/nquests §6activeQuests\n");
-        line4.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nquests activeQuests"));
-        line4.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aShows all your active Quests").create()));
-
-        TextComponent line5 = new TextComponent("§e/nquests §6progress §3[Quest Name]\n");
-        line5.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/nquests progress"));
-        line5.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aShows the progress of an active Quest").create()));
-
-        TextComponent line6 = new TextComponent("§e/nquests §6questPoints");
-        line6.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nquests questPoints"));
-        line6.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aShows how many Quest Points you have").create()));
-
-        firstLevelCommands.addExtra(line1);
-        firstLevelCommands.addExtra(line2);
-        firstLevelCommands.addExtra(line3);
-        firstLevelCommands.addExtra(line4);
-        firstLevelCommands.addExtra(line5);
-        firstLevelCommands.addExtra(line6);
 
 
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (sender instanceof Player player) {
             boolean guiEnabled = main.getDataManager().getConfiguration().isUserCommandsUseGUI();
             //if (label.equalsIgnoreCase("qg")) {
@@ -176,8 +149,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
 
                         gui.show(player);
                     } else {
-                        //only paper sender.sendMessage(firstLevelCommands);
-                        sender.spigot().sendMessage(firstLevelCommands);
+                        main.adventure().sender(sender).sendMessage(firstLevelCommands);
                     }
                 } else if (args.length == 1) {
                     if (args[0].equalsIgnoreCase("activequests")) {
