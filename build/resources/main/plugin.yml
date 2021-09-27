@@ -24,5 +24,5 @@ permissions:
     children:
       notnot.quests.use: true
   notnot.quests.use:
-    default: op
+    default: true
     description: Gives the player permission to use the /notquests user command. They can not create new quests or other administrative tasks with just this permission.
