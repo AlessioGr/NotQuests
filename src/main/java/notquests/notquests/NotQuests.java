@@ -33,11 +33,13 @@ import java.util.logging.Level;
 public final class NotQuests extends JavaPlugin {
 
     //Managers
+    private UtilManager utilManager;
     private LogManager logManager;
     private DataManager dataManager;
     private QuestManager questManager;
     private QuestPlayerManager questPlayerManager;
     private LanguageManager languageManager;
+
 
     //Vault
     private Economy econ = null;
@@ -67,6 +69,9 @@ public final class NotQuests extends JavaPlugin {
     public void onEnable() {
         // Initialize an audiences instance for the plugin
         this.adventure = BukkitAudiences.create(this);
+
+        //Create a new instance of the Util Manager which will be re-used everywhere
+        utilManager = new UtilManager(this);
 
         //Create a new instance of the Log Manager which will be re-used everywhere
         logManager = new LogManager(this);
@@ -375,4 +380,7 @@ public final class NotQuests extends JavaPlugin {
         return logManager;
     }
 
+    public UtilManager getUtilManager() {
+        return utilManager;
+    }
 }
