@@ -175,8 +175,8 @@ public class CitizensEvents implements Listener {
 
     @EventHandler
     private void onCitizensEnable(CitizensEnableEvent e) {
-        main.getLogger().log(Level.INFO, "§aNotQuests > Processing Citizens Enable Event...");
-        main.getLogger().log(Level.INFO, "§aNotQuests > Registering Citizens nquestgiver trait...");
+        main.getLogManager().log(Level.INFO, "Processing Citizens Enable Event...");
+        main.getLogManager().log(Level.INFO, "Registering Citizens nquestgiver trait...");
 
         final ArrayList<TraitInfo> toDeregister = new ArrayList<>();
         for (final TraitInfo traitInfo : net.citizensnpcs.api.CitizensAPI.getTraitFactory().getRegisteredTraits()) {
@@ -190,7 +190,7 @@ public class CitizensEvents implements Listener {
         }
         net.citizensnpcs.api.CitizensAPI.getTraitFactory().registerTrait(net.citizensnpcs.api.trait.TraitInfo.create(QuestGiverNPCTrait.class).withName("nquestgiver"));
 
-        main.getLogger().log(Level.INFO, "§aNotQuests > Citizens nquestgiver trait has been registered!");
+        main.getLogManager().log(Level.INFO, "Citizens nquestgiver trait has been registered!");
         if (!main.getDataManager().isAlreadyLoadedNPCs()) {
             main.getDataManager().loadNPCData();
         }
@@ -200,8 +200,8 @@ public class CitizensEvents implements Listener {
 
     @EventHandler
     private void onCitizensReload(CitizensReloadEvent e) {
-        main.getLogger().log(Level.INFO, "§aNotQuests > Processing Citizens Reload Event...");
-        main.getLogger().log(Level.INFO, "§aNotQuests > Registering Citizens nquestgiver trait...");
+        main.getLogManager().log(Level.INFO, "Processing Citizens Reload Event...");
+        main.getLogManager().log(Level.INFO, "Registering Citizens nquestgiver trait...");
 
         final ArrayList<TraitInfo> toDeregister = new ArrayList<>();
         for (final TraitInfo traitInfo : net.citizensnpcs.api.CitizensAPI.getTraitFactory().getRegisteredTraits()) {
@@ -214,7 +214,7 @@ public class CitizensEvents implements Listener {
             net.citizensnpcs.api.CitizensAPI.getTraitFactory().deregisterTrait(traitInfo);
         }
         net.citizensnpcs.api.CitizensAPI.getTraitFactory().registerTrait(net.citizensnpcs.api.trait.TraitInfo.create(QuestGiverNPCTrait.class).withName("nquestgiver"));
-        main.getLogger().log(Level.INFO, "§aNotQuests > Citizens nquestgiver trait has been registered!");
+        main.getLogManager().log(Level.INFO, "Citizens nquestgiver trait has been registered!");
         if (!main.getDataManager().isAlreadyLoadedNPCs()) {
             main.getDataManager().loadNPCData();
         }

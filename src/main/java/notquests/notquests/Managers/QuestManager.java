@@ -132,7 +132,7 @@ public class QuestManager {
     public void loadData() {
 
         if(main.isCitizensEnabled()){
-            main.getLogger().log(Level.INFO, "§aNotQuests > Registering Citizens nquestgiver trait...");
+            main.getLogManager().log(Level.INFO, "Registering Citizens nquestgiver trait...");
 
             final ArrayList<TraitInfo> toDeregister = new ArrayList<>();
             for (final TraitInfo traitInfo : net.citizensnpcs.api.CitizensAPI.getTraitFactory().getRegisteredTraits()) {
@@ -146,12 +146,12 @@ public class QuestManager {
             }
 
             net.citizensnpcs.api.CitizensAPI.getTraitFactory().registerTrait(net.citizensnpcs.api.trait.TraitInfo.create(QuestGiverNPCTrait.class).withName("nquestgiver"));
-            main.getLogger().log(Level.INFO, "§aNotQuests > Citizens nquestgiver trait has been registered!");
+            main.getLogManager().log(Level.INFO, "Citizens nquestgiver trait has been registered!");
         }
 
 
         try {
-            main.getLogger().log(Level.INFO, "§aLoading Quests data...");
+            main.getLogManager().log(Level.INFO, "Loading Quests data...");
 
             quests.clear();
 
@@ -161,7 +161,7 @@ public class QuestManager {
                 for (final String actionName : actionsConfigurationSection.getKeys(false)) {
                     final String consoleCommand = main.getDataManager().getQuestsData().getString("actions." + actionName + ".consoleCommand", "");
                     if (consoleCommand.equalsIgnoreCase("")) {
-                        main.getLogger().log(Level.WARNING, "§cNotQuests > Action has an empty console command. This should NOT be possible! Creating an action with an empty console command... Action name: §b" + actionName);
+                        main.getLogManager().log(Level.WARNING, "Action has an empty console command. This should NOT be possible! Creating an action with an empty console command... Action name: §b" + actionName);
 
                     }
                     boolean nameAlreadyExists = false;
@@ -177,9 +177,9 @@ public class QuestManager {
                         actions.add(newAction);
                         main.getDataManager().getQuestsData().set("actions." + actionName + ".consoleCommand", consoleCommand);
                     } else {
-                        main.getLogger().log(Level.WARNING, "§eNotQuests > Action already exists. This should NOT be possible! Skipping action creation... Action name: §b" + actionName);
+                        main.getLogManager().log(Level.WARNING, "§eNotQuests > Action already exists. This should NOT be possible! Skipping action creation... Action name: §b" + actionName);
 
-                        main.getLogger().log(Level.SEVERE, "§cNotQuests > Plugin disabled, because there was an error while loading quests action data.");
+                        main.getLogManager().log(Level.SEVERE, "Plugin disabled, because there was an error while loading quests action data.");
                         main.getDataManager().setSavingEnabled(false);
                         main.getServer().getPluginManager().disablePlugin(main);
                     }
@@ -245,9 +245,9 @@ public class QuestManager {
                                     final String worldToLeave = main.getDataManager().getQuestsData().getString("quests." + questName + ".triggers." + triggerNumber + ".specifics.worldToLeave", "ALL");
                                     trigger = new WorldLeaveTrigger(main, foundAction, applyOn, worldName, amountNeeded, worldToLeave);
                                 } else {
-                                    main.getLogger().log(Level.SEVERE, "§cNotQuests > ERROR when loading trigger with the triggerNumber §b" + triggerNumber + " §c: TriggerType is unknown. Trigger creation SKIPPED!");
+                                    main.getLogManager().log(Level.SEVERE, "ERROR when loading trigger with the triggerNumber §b" + triggerNumber + " §c: TriggerType is unknown. Trigger creation SKIPPED!");
 
-                                    main.getLogger().log(Level.SEVERE, "§cNotQuests > Plugin disabled, because there was an error while loading quests trigger data.");
+                                    main.getLogManager().log(Level.SEVERE, "Plugin disabled, because there was an error while loading quests trigger data.");
                                     main.getDataManager().setSavingEnabled(false);
                                     main.getServer().getPluginManager().disablePlugin(main);
                                 }
@@ -256,9 +256,9 @@ public class QuestManager {
                                 }
 
                             } else {
-                                main.getLogger().log(Level.SEVERE, "§cNotQuests > ERROR when loading trigger with the triggerNumber §b" + triggerNumber + " §c: Action could not be loaded. Trigger creation SKIPPED!");
+                                main.getLogManager().log(Level.SEVERE, "ERROR when loading trigger with the triggerNumber §b" + triggerNumber + " §c: Action could not be loaded. Trigger creation SKIPPED!");
 
-                                main.getLogger().log(Level.SEVERE, "§cNotQuests > Plugin disabled, because there was an error while loading quests trigger data.");
+                                main.getLogManager().log(Level.SEVERE, "Plugin disabled, because there was an error while loading quests trigger data.");
                                 main.getDataManager().setSavingEnabled(false);
                                 main.getServer().getPluginManager().disablePlugin(main);
                             }
@@ -276,10 +276,10 @@ public class QuestManager {
                             try {
                                 objectiveType = ObjectiveType.valueOf(main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".objectiveType"));
                             } catch (java.lang.NullPointerException ex) {
-                                main.getLogger().log(Level.SEVERE, "§cNotQuests > Error parsing objective Type of objective with ID §b" + objectiveNumber + "§c and Quest §b" + quest.getQuestName() + "§c. Objective creation skipped...");
+                                main.getLogManager().log(Level.SEVERE, "Error parsing objective Type of objective with ID §b" + objectiveNumber + "§c and Quest §b" + quest.getQuestName() + "§c. Objective creation skipped...");
 
                                 ex.printStackTrace();
-                                main.getLogger().log(Level.SEVERE, "§cNotQuests > Plugin disabled, because there was an error while loading quests objective Type data.");
+                                main.getLogManager().log(Level.SEVERE, "Plugin disabled, because there was an error while loading quests objective Type data.");
                                 main.getDataManager().setSavingEnabled(false);
                                 main.getServer().getPluginManager().disablePlugin(main);
                             }
@@ -290,10 +290,10 @@ public class QuestManager {
                             try {
                                 objectiveID = Integer.parseInt(objectiveNumber);
                             } catch (java.lang.NumberFormatException ex) {
-                                main.getLogger().log(Level.SEVERE, "§cNotQuests > Error parsing loaded objective ID §b" + objectiveNumber + "§c. Objective creation skipped...");
+                                main.getLogManager().log(Level.SEVERE, "Error parsing loaded objective ID §b" + objectiveNumber + "§c. Objective creation skipped...");
 
                                 validObjectiveID = false;
-                                main.getLogger().log(Level.SEVERE, "§cNotQuests > Plugin disabled, because there was an error while loading quests objective ID data.");
+                                main.getLogManager().log(Level.SEVERE, "Plugin disabled, because there was an error while loading quests objective ID data.");
                                 main.getDataManager().setSavingEnabled(false);
                                 main.getServer().getPluginManager().disablePlugin(main);
                             }
@@ -339,10 +339,10 @@ public class QuestManager {
                                         final int destinationNPCID = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.destinationNPCID");
                                         objective = new EscortNPCObjective(main, quest, objectiveID, NPCtoEscortID, destinationNPCID);
                                     }                                } catch (java.lang.NullPointerException ex) {
-                                    main.getLogger().log(Level.SEVERE, "§cNotQuests > Error parsing objective Type of objective with ID §b" + objectiveNumber + "§c and Quest §b" + quest.getQuestName() + "§c. Objective creation skipped...");
+                                    main.getLogManager().log(Level.SEVERE, "Error parsing objective Type of objective with ID §b" + objectiveNumber + "§c and Quest §b" + quest.getQuestName() + "§c. Objective creation skipped...");
 
                                     ex.printStackTrace();
-                                    main.getLogger().log(Level.SEVERE, "§cNotQuests > Plugin disabled, because there was an error while loading quests objective Type data.");
+                                    main.getLogManager().log(Level.SEVERE, "Plugin disabled, because there was an error while loading quests objective Type data.");
                                     main.getDataManager().setSavingEnabled(false);
                                     main.getServer().getPluginManager().disablePlugin(main);
                                 }
@@ -361,15 +361,15 @@ public class QuestManager {
                                     objective.setCompletionNPCID(completionNPCID, false);
                                     quest.addObjective(objective, false);
                                 } else {
-                                    main.getLogger().log(Level.SEVERE, "§cNotQuests > Error loading objective");
+                                    main.getLogManager().log(Level.SEVERE, "Error loading objective");
 
-                                    main.getLogger().log(Level.SEVERE, "§cNotQuests > Plugin disabled, because there was an error while loading quests objective data.");
+                                    main.getLogManager().log(Level.SEVERE, "Plugin disabled, because there was an error while loading quests objective data.");
                                     main.getDataManager().setSavingEnabled(false);
                                     main.getServer().getPluginManager().disablePlugin(main);
                                 }
 
                             } else {
-                                main.getLogger().log(Level.SEVERE, "§cNotQuests > Plugin disabled, because there was an error while loading quests objective data (2).");
+                                main.getLogManager().log(Level.SEVERE, "Plugin disabled, because there was an error while loading quests objective data (2).");
                                 main.getDataManager().setSavingEnabled(false);
                                 main.getServer().getPluginManager().disablePlugin(main);
                             }
@@ -414,9 +414,9 @@ public class QuestManager {
                             if (reward != null) {
                                 quest.addReward(reward);
                             } else {
-                                main.getLogger().log(Level.SEVERE, "§cNotQuests > Error loading reward");
+                                main.getLogManager().log(Level.SEVERE, "Error loading reward");
 
-                                main.getLogger().log(Level.SEVERE, "§cNotQuests > Plugin disabled, because there was an error while loading quests reward data.");
+                                main.getLogManager().log(Level.SEVERE, "Plugin disabled, because there was an error while loading quests reward data.");
                                 main.getDataManager().setSavingEnabled(false);
                                 main.getServer().getPluginManager().disablePlugin(main);
                             }
@@ -454,9 +454,9 @@ public class QuestManager {
                             if (requirement != null) {
                                 quest.addRequirement(requirement);
                             } else {
-                                main.getLogger().log(Level.SEVERE, "§cNotQuests > Error loading requirement");
+                                main.getLogManager().log(Level.SEVERE, "Error loading requirement");
 
-                                main.getLogger().log(Level.SEVERE, "§cNotQuests > Plugin disabled, because there was an error while loading quests requirement data.");
+                                main.getLogManager().log(Level.SEVERE, "Plugin disabled, because there was an error while loading quests requirement data.");
                                 main.getDataManager().setSavingEnabled(false);
                                 main.getServer().getPluginManager().disablePlugin(main);
                             }
@@ -473,7 +473,7 @@ public class QuestManager {
             setQuestDataLoaded(true);
         } catch (Exception e) {
             e.printStackTrace();
-            main.getLogger().log(Level.SEVERE, "§cNotQuests > Plugin disabled, because there was an exception while loading quests data.");
+            main.getLogManager().log(Level.SEVERE, "Plugin disabled, because there was an exception while loading quests data.");
             main.getDataManager().setSavingEnabled(false);
             main.getServer().getPluginManager().disablePlugin(main);
             //return;
@@ -689,7 +689,7 @@ public class QuestManager {
 
             gui.show(player);
         } else {
-            main.getLogger().log(Level.INFO, "§7NotQuests > All quest count: " + quests.size());
+            main.getLogManager().log(Level.INFO, "§7NotQuests > All quest count: " + quests.size());
 
             player.sendMessage("");
             player.sendMessage("§9" + questsAttachedToNPC.size() + " Available Quests:");
@@ -806,7 +806,7 @@ public class QuestManager {
 
             gui.show(player);
         } else {
-            main.getLogger().log(Level.INFO, "§7NotQuests > All quest count: " + quests.size());
+            main.getLogManager().log(Level.INFO, "§7NotQuests > All quest count: " + quests.size());
 
             player.sendMessage("");
             player.sendMessage("§9" + questsAttachedToNPC.size() + " Available Quests:");
@@ -913,10 +913,10 @@ public class QuestManager {
     }
 
     public void loadNPCData() {
-        main.getLogger().log(Level.INFO, "§aLoading NPC data...");
+        main.getLogManager().log(Level.INFO, "Loading NPC data...");
 
         if(!main.isCitizensEnabled()){
-            main.getLogger().log(Level.WARNING, "§eNPC data loading has been cancelled, because Citizens is not installed. Install the Citizens plugin if you want NPC stuff to work.");
+            main.getLogManager().log(Level.WARNING, "§eNPC data loading has been cancelled, because Citizens is not installed. Install the Citizens plugin if you want NPC stuff to work.");
             return;
         }
 
@@ -948,18 +948,18 @@ public class QuestManager {
 
 
                                                     // call the callback with the result
-                                                    main.getLogger().log(Level.INFO, "§aNotQuests > attaching quest with the name §b" + quest.getQuestName() + " §ato NPC with the ID §b" + npc.getId() + " §aand name §b" + npc.getName());
+                                                    main.getLogManager().log(Level.INFO, "attaching quest with the name §b" + quest.getQuestName() + " §ato NPC with the ID §b" + npc.getId() + " §aand name §b" + npc.getName());
 
                                                     quest.removeNPC(npc);
                                                     quest.bindToNPC(npc, questShowing);
 
 
                                                 } else {
-                                                    main.getLogger().log(Level.WARNING, "§cNotQuests > Error attaching npc with ID §b" + main.getDataManager().getQuestsData().getInt("quests." + questName + ".npcs." + npcNumber + ".npcID") + " to quest - NPC not found.");
+                                                    main.getLogManager().log(Level.WARNING, "Error attaching npc with ID §b" + main.getDataManager().getQuestsData().getInt("quests." + questName + ".npcs." + npcNumber + ".npcID") + " to quest - NPC not found.");
 
                                                 }
                                             } else {
-                                                main.getLogger().log(Level.WARNING, "§cNotQuests > Error: quests data is null");
+                                                main.getLogManager().log(Level.WARNING, "Error: quests data is null");
 
 
                                             }
@@ -970,11 +970,11 @@ public class QuestManager {
 
                                     }
                                 } else {
-                                    main.getLogger().log(Level.WARNING, "§cNotQuests > Error: Quest not found while trying to load NPC");
+                                    main.getLogManager().log(Level.WARNING, "Error: Quest not found while trying to load NPC");
 
                                 }
                             }
-                            main.getLogger().log(Level.INFO, "§aNotQuests > Requesting cleaning of bugged NPCs in loadNPCData()...");
+                            main.getLogManager().log(Level.INFO, "Requesting cleaning of bugged NPCs in loadNPCData()...");
 
                             cleanupBuggedNPCs();
                         });
@@ -994,26 +994,26 @@ public class QuestManager {
                                         if (npc != null) {
 
                                             // call the callback with the result
-                                            main.getLogger().log(Level.INFO, "§aNotQuests > attaching quest with the name §b" + quest.getQuestName() + " §ato NPC with the ID §b" + npc.getId() + " §aand name §b" + npc.getName());
+                                            main.getLogManager().log(Level.INFO, "attaching quest with the name §b" + quest.getQuestName() + " §ato NPC with the ID §b" + npc.getId() + " §aand name §b" + npc.getName());
 
                                             quest.removeNPC(npc);
                                             quest.bindToNPC(npc, questShowing);
 
 
                                         } else {
-                                            main.getLogger().log(Level.WARNING, "§cNotQuests > Error attaching npc with ID §b" + main.getDataManager().getQuestsData().getInt("quests." + questName + ".npcs." + npcNumber + ".npcID") + " to quest - NPC not found.");
+                                            main.getLogManager().log(Level.WARNING, "Error attaching npc with ID §b" + main.getDataManager().getQuestsData().getInt("quests." + questName + ".npcs." + npcNumber + ".npcID") + " to quest - NPC not found.");
 
                                         }
 
                                     }
-                                    main.getLogger().log(Level.INFO, "§aNotQuests > Requesting cleaning of bugged NPCs in loadNPCData()...");
+                                    main.getLogManager().log(Level.INFO, "Requesting cleaning of bugged NPCs in loadNPCData()...");
 
                                     cleanupBuggedNPCs();
 
 
                                 }
                             } else {
-                                main.getLogger().log(Level.WARNING, "§cNotQuests > Error: Quest not found while trying to load NPC");
+                                main.getLogManager().log(Level.WARNING, "Error: Quest not found while trying to load NPC");
 
                             }
 
@@ -1023,10 +1023,10 @@ public class QuestManager {
 
 
                 } else {
-                    main.getLogger().log(Level.INFO, "§cNotQuests > Skipped loading NPC data because questsConfigurationSetting was null.");
+                    main.getLogManager().log(Level.INFO, "Skipped loading NPC data because questsConfigurationSetting was null.");
 
                 }
-                main.getLogger().log(Level.INFO, "§aNpc data loaded!");
+                main.getLogManager().log(Level.INFO, "Npc data loaded!");
 
 
                 main.getDataManager().setAlreadyLoadedNPCs(true);
@@ -1035,17 +1035,17 @@ public class QuestManager {
             } catch (Exception e) {
                 e.printStackTrace();
 
-                main.getLogger().log(Level.SEVERE, "§cNotQuests > Plugin disabled, because there was an exception while loading quests NPC data.");
+                main.getLogManager().log(Level.SEVERE, "Plugin disabled, because there was an exception while loading quests NPC data.");
                 main.getDataManager().setSavingEnabled(false);
                 main.getServer().getPluginManager().disablePlugin(main);
                 //return;
             }
 
         } else {
-            main.getLogger().log(Level.INFO, "§eNotQuests > Tried to load NPC data before quest data was loaded. skipping scheduling another load...");
+            main.getLogManager().log(Level.INFO, "§eNotQuests > Tried to load NPC data before quest data was loaded. skipping scheduling another load...");
 
             Bukkit.getScheduler().runTaskLaterAsynchronously(main, () -> {
-                main.getLogger().log(Level.INFO, "§eNotQuests > Trying to load NPC quest data again...");
+                main.getLogManager().log(Level.INFO, "§eNotQuests > Trying to load NPC quest data again...");
 
                 main.getDataManager().loadNPCData();
             }, 40);
@@ -1061,7 +1061,7 @@ public class QuestManager {
     public void setQuestDataLoaded(boolean questDataLoaded) {
         this.questDataLoaded = questDataLoaded;
         if (questDataLoaded) {
-            main.getLogger().log(Level.INFO, "§aQuests data loaded!");
+            main.getLogManager().log(Level.INFO, "Quests data loaded!");
 
         }
     }
@@ -1069,11 +1069,11 @@ public class QuestManager {
 
     public void cleanupBuggedNPCs() {
         if(!main.isCitizensEnabled()){
-            main.getLogger().log(Level.WARNING, "§eChecking for bugged NPCs has been cancelled, because Citizens is not installed on your server. The Citizens plugin is needed for NPC stuff to work.");
+            main.getLogManager().log(Level.WARNING, "§eChecking for bugged NPCs has been cancelled, because Citizens is not installed on your server. The Citizens plugin is needed for NPC stuff to work.");
 
             return;
         }
-        main.getLogger().log(Level.INFO, "§aNotQuests > Checking for bugged NPCs...");
+        main.getLogManager().log(Level.INFO, "Checking for bugged NPCs...");
 
         int buggedNPCsFound = 0;
         int allNPCsFound = 0;
@@ -1103,7 +1103,7 @@ public class QuestManager {
 
                 if (!traitsToRemove.isEmpty()) {
                     buggedNPCsFound += 1;
-                    main.getLogger().log(Level.INFO, "§eNotQuests > Bugged trait removed from npc with ID §b" + npc.getId() + " §eand name §b" + npc.getName() + " §e!");
+                    main.getLogManager().log(Level.INFO, "§eNotQuests > Bugged trait removed from npc with ID §b" + npc.getId() + " §eand name §b" + npc.getName() + " §e!");
 
                 }
 
@@ -1114,17 +1114,17 @@ public class QuestManager {
                 for (final Quest attachedQuest : getAllQuestsAttachedToNPC(npc)) {
                     attachedQuestNames.add(attachedQuest.getQuestName());
                 }
-                main.getLogger().log(Level.INFO, "§aNotQuests > NPC with the ID: §b" + npc.getId() + " §ais not bugged, because it has the following quests attached: §b" + attachedQuestNames);
+                main.getLogManager().log(Level.INFO, "NPC with the ID: §b" + npc.getId() + " §ais not bugged, because it has the following quests attached: §b" + attachedQuestNames);
 
             }
             traitsToRemove.clear();
 
         }
         if (buggedNPCsFound == 0) {
-            main.getLogger().log(Level.INFO, "§aNotQuests > No bugged NPCs found! Amount of checked NPCs: §b" + allNPCsFound);
+            main.getLogManager().log(Level.INFO, "No bugged NPCs found! Amount of checked NPCs: §b" + allNPCsFound);
 
         } else {
-            main.getLogger().log(Level.INFO, "§eNotQuests > §b" + buggedNPCsFound + " §ebugged NPCs have  been found and removed! Amount of checked NPCs: §b" + allNPCsFound);
+            main.getLogManager().log(Level.INFO, "§eNotQuests > §b" + buggedNPCsFound + " §ebugged NPCs have  been found and removed! Amount of checked NPCs: §b" + allNPCsFound);
 
         }
     }
@@ -1472,7 +1472,7 @@ public class QuestManager {
         if(main.isCitizensEnabled()){
             for (NPC npc : getAllNPCsAttachedToQuest(quest)) {
                 if (npc == null || npc.getEntity() == null) {
-                    main.getLogger().warning("§cA quest has an invalid npc attached to it, which should be removed. Report it to an admin. Quest name: §b" + quest.getQuestName());
+                    main.getLogManager().warn("§cA quest has an invalid npc attached to it, which should be removed. Report it to an admin. Quest name: §b" + quest.getQuestName());
                     continue;
                 }
                 final Location npcLocation = npc.getEntity().getLocation();

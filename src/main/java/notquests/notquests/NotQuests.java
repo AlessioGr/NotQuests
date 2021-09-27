@@ -5,6 +5,7 @@ import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitInfo;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
@@ -32,6 +33,7 @@ import java.util.logging.Level;
 public final class NotQuests extends JavaPlugin {
 
     //Managers
+    private LogManager logManager;
     private DataManager dataManager;
     private QuestManager questManager;
     private QuestPlayerManager questPlayerManager;
@@ -49,24 +51,39 @@ public final class NotQuests extends JavaPlugin {
     private boolean vaultEnabled = false;
     private boolean citizensEnabled = false;
 
+    private BukkitAudiences adventure;
+
+    public final BukkitAudiences adventure() {
+        if (this.adventure == null) {
+            throw new IllegalStateException("Tried to access Adventure when the plugin was disabled!");
+        }
+        return this.adventure;
+    }
 
     /**
      * Called when the plugin is enabled. A bunch of stuff is initialized here
      */
     @Override
     public void onEnable() {
-        getLogger().log(Level.INFO, "§aNotQuests > NotQuests is starting...");
+        // Initialize an audiences instance for the plugin
+        this.adventure = BukkitAudiences.create(this);
+
+        //Create a new instance of the Log Manager which will be re-used everywhere
+        logManager = new LogManager(this);
+
+        getLogManager().log(Level.INFO, "NotQuests is starting...");
 
         //Vault is needed for NotQuests to function. If it's not found, NotQuests will be disabled. EDIT: Now it will just disable some features
         if (!setupEconomy()) {
-            getLogger().log(Level.INFO, "§cVault Dependency not found! Some features have been disabled. I recommend you to install Vault for the best experience.");
+            getLogManager().log(Level.WARNING, "Vault Dependency not found! Some features have been disabled. I recommend you to install Vault for the best experience.");
             //getServer().getPluginManager().disablePlugin(this);
             //return;
-        }else{
+        } else {
             setupPermissions();
             setupChat();
             vaultEnabled = true;
         }
+
 
 
         //Create a new instance of the Data Manager which will be re-used everywhere
@@ -88,9 +105,9 @@ public final class NotQuests extends JavaPlugin {
 
         //The plugin "Citizens" is currently required for NotQuests to run properly. If it's not found, NotQuests will be disabled. EDIT: Now it will just disable some features
         if (getServer().getPluginManager().getPlugin("Citizens") == null || !Objects.requireNonNull(getServer().getPluginManager().getPlugin("Citizens")).isEnabled()) {
-            getLogger().log(Level.INFO, "§cCitizens Dependency not found! Some features regarding NPCs have been disabled. I recommend you to install Citizens for the best experience.");
+            getLogManager().log(Level.WARNING, "Citizens Dependency not found! Some features regarding NPCs have been disabled. I recommend you to install Citizens for the best experience.");
 
-            //getLogger().log(Level.SEVERE, "§cNotQuests > Citizens 2.0 not found or not enabled");
+            //getLogManager().log(Level.SEVERE, "Citizens 2.0 not found or not enabled");
             //getServer().getPluginManager().disablePlugin(this);
             //return;
         }else{
@@ -139,15 +156,15 @@ public final class NotQuests extends JavaPlugin {
             //Update Checker
             try {
                 final UpdateChecker updateChecker = new UpdateChecker(this, 95872);
-                if (updateChecker.checkForUpdates()){
-                    getLogger().info("§6The version §e" + getDescription().getVersion()
-                            + " §6is not the latest version (§a" + updateChecker.getLatestVersion() + "§6)! Please update the plugin here: §bhttps://www.spigotmc.org/resources/95872/ §8(If your version is newer, the spigot API might not be updated yet).");
+                if (updateChecker.checkForUpdates()) {
+                    getLogManager().info("<GOLD>The version <Yellow>" + getDescription().getVersion()
+                            + " <GOLD>is not the latest version (<Green>" + updateChecker.getLatestVersion() + "<GOLD>)! Please update the plugin here: <Aqua>https://www.spigotmc.org/resources/95872/ <DARK_GRAY>(If your version is newer, the spigot API might not be updated yet).");
                 }else{
-                    getLogger().info("NotQuests seems to be up to date! :)");
+                    getLogManager().info("NotQuests seems to be up to date! :)");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                getLogger().info("Unable to check for updates ('" + e.getMessage() + "').");
+                getLogManager().info("Unable to check for updates ('" + e.getMessage() + "').");
             }
 
             //bStats statistics
@@ -167,7 +184,7 @@ public final class NotQuests extends JavaPlugin {
      */
     @Override
     public void onDisable() {
-        getLogger().log(Level.INFO, "§aNotQuests > NotQuests is shutting down...");
+        getLogManager().log(Level.INFO, "NotQuests is shutting down...");
 
         //Save all kinds of data
         dataManager.saveData();
@@ -198,7 +215,7 @@ public final class NotQuests extends JavaPlugin {
                 }
                 for (final Trait traitToRemove : traitsToRemove) {
                     npc.removeTrait(traitToRemove.getClass());
-                    getLogger().log(Level.INFO, "§aNotQuests > Removed nquestgiver trait from NPC with the ID §b" + npc.getId());
+                    getLogManager().log(Level.INFO, "Removed nquestgiver trait from NPC with the ID §b" + npc.getId());
                 }
                 traitsToRemove.clear();
 
@@ -208,7 +225,7 @@ public final class NotQuests extends JavaPlugin {
              * Next, the nquestgiver trait itself which is registered via the Citizens API on startup is being
              * de-registered.
              */
-            getLogger().log(Level.INFO, "§aNotQuests > Deregistering nquestgiver trait...");
+            getLogManager().log(Level.INFO, "Deregistering nquestgiver trait...");
             final ArrayList<TraitInfo> toDeregister = new ArrayList<>();
             for (final TraitInfo traitInfo : net.citizensnpcs.api.CitizensAPI.getTraitFactory().getRegisteredTraits()) {
                 if (traitInfo.getTraitName().equals("nquestgiver")) {
@@ -222,6 +239,11 @@ public final class NotQuests extends JavaPlugin {
             }
         }
 
+
+        if (this.adventure != null) {
+            this.adventure.close();
+            this.adventure = null;
+        }
 
 
     }
@@ -310,7 +332,7 @@ public final class NotQuests extends JavaPlugin {
      */
     public Economy getEconomy() {
         if(!isVaultEnabled()){
-            getLogger().log(Level.SEVERE, "§cError: Tried to load Economy when Vault is not enabled. Please report this to the plugin author (and I also recommend you installing Vault for money stuff to work)");
+            getLogManager().log(Level.SEVERE, "§cError: Tried to load Economy when Vault is not enabled. Please report this to the plugin author (and I also recommend you installing Vault for money stuff to work)");
 
             return null;
         }
@@ -347,6 +369,10 @@ public final class NotQuests extends JavaPlugin {
 
     public LanguageManager getLanguageManager() {
         return languageManager;
+    }
+
+    public LogManager getLogManager() {
+        return logManager;
     }
 
 }

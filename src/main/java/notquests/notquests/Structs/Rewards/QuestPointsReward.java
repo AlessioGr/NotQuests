@@ -26,7 +26,7 @@ public class QuestPointsReward extends Reward {
             questPlayer.addQuestPoints(rewardedQuestPoints, true);
 
         } else {
-            main.getLogger().log(Level.WARNING, "§cError giving quest point reward to player §b" + player.getName());
+            main.getLogManager().log(Level.WARNING, "§cError giving quest point reward to player §b" + player.getName());
 
             player.sendMessage("§cError giving quest point reward.");
         }

@@ -73,33 +73,33 @@ public class CitizensHandler {
 
                     player.sendMessage("§aEscort quest started! Please escort §b" + npcToEscort.getName() + " §ato §b" + destinationNPC.getName() + "§a.");
                 } else {
-                    main.getLogger().log(Level.WARNING, "§cNotQuests > Error: The escort objective could not be started, because the player with the UUID §b" + activeQuest.getQuestPlayer().getActiveQuests() + " §cwas not found!");
+                    main.getLogManager().log(Level.WARNING, "Error: The escort objective could not be started, because the player with the UUID §b" + activeQuest.getQuestPlayer().getActiveQuests() + " §cwas not found!");
 
 
                 }
             } else {
                 final Player player = Bukkit.getPlayer(activeQuest.getQuestPlayer().getUUID());
                 if (player != null) {
-                    player.sendMessage("§cNotQuests > The NPC you have to escort is not configured properly. Please consult an admin.");
+                    player.sendMessage("The NPC you have to escort is not configured properly. Please consult an admin.");
                 }
-                main.getLogger().log(Level.WARNING, "§cNotQuests > Error: The escort NPC with the ID §b" + npcToEscortID + " §cis not configured properly (Follow trait not found)!");
+                main.getLogManager().log(Level.WARNING, "Error: The escort NPC with the ID §b" + npcToEscortID + " §cis not configured properly (Follow trait not found)!");
 
             }
         } else {
             if (destinationNPC == null) {
                 final Player player = Bukkit.getPlayer(activeQuest.getQuestPlayer().getUUID());
                 if (player != null) {
-                    player.sendMessage("§cNotQuests > The Destination NPC does not exist. Please consult an admin.");
+                    player.sendMessage("The Destination NPC does not exist. Please consult an admin.");
                 }
-                main.getLogger().log(Level.WARNING, "§cNotQuests > Error: The destination NPC with the ID §b" + npcToEscortID + " §cwas not found!");
+                main.getLogManager().log(Level.WARNING, "Error: The destination NPC with the ID §b" + npcToEscortID + " §cwas not found!");
 
             }
             if (npcToEscort == null) {
                 final Player player = Bukkit.getPlayer(activeQuest.getQuestPlayer().getUUID());
                 if (player != null) {
-                    player.sendMessage("§cNotQuests > The NPC you have to escort does not exist. Please consult an admin.");
+                    player.sendMessage("The NPC you have to escort does not exist. Please consult an admin.");
                 }
-                main.getLogger().log(Level.WARNING, "§cNotQuests > Error: The escort NPC with the ID §b" + npcToEscortID + " §cwas not found!");
+                main.getLogManager().log(Level.WARNING, "Error: The escort NPC with the ID §b" + npcToEscortID + " §cwas not found!");
 
             }
 

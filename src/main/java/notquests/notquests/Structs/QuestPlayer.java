@@ -165,8 +165,8 @@ public class QuestPlayer {
                         if(main.isVaultEnabled()){
                             removeMoney(player, player.getWorld().getName(), moneyToDeduct, true);
                         }else{
-                            main.getLogger().log(Level.WARNING, "§eWarning: Could not deduct money, because Vault was not found. Please install Vault for money stuff to work.");
-                            main.getLogger().log(Level.WARNING, "§cError: Tried to load Economy when Vault is not enabled. Please report this to the plugin author (and I also recommend you installing Vault for money stuff to work)");
+                            main.getLogManager().log(Level.WARNING, "§eWarning: Could not deduct money, because Vault was not found. Please install Vault for money stuff to work.");
+                            main.getLogManager().log(Level.WARNING, "§cError: Tried to load Economy when Vault is not enabled. Please report this to the plugin author (and I also recommend you installing Vault for money stuff to work)");
                             return "§cError deducting money, because Vault has not been found. Report this to an Admin.";
                         }
                     } else {
@@ -441,7 +441,7 @@ public class QuestPlayer {
 
     private void removeMoney(final Player player, final String worldName, final long moneyToDeduct, final boolean notifyPlayer) {
         if(!main.isVaultEnabled() || main.getEconomy() == null){
-            main.getLogger().log(Level.WARNING, "§eWarning: Could not deduct money, because Vault was not found. Please install Vault for money stuff to work.");
+            main.getLogManager().log(Level.WARNING, "§eWarning: Could not deduct money, because Vault was not found. Please install Vault for money stuff to work.");
             return;
         }
         main.getEconomy().withdrawPlayer(player, worldName, moneyToDeduct);

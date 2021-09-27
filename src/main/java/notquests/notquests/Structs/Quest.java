@@ -135,13 +135,13 @@ public class Quest {
                     main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.NPCToEscortID", escortNPCObjective.getNpcToEscortID());
                     main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.destinationNPCID", escortNPCObjective.getNpcToEscortToID());
                 } else {
-                    main.getLogger().log(Level.WARNING, "§cNotQuests > ERROR: Objective could not be saved, because the objective type was not recognized.");
+                    main.getLogManager().log(Level.WARNING, "ERROR: Objective could not be saved, because the objective type was not recognized.");
 
                 }
             }
 
         } else {
-            main.getLogger().log(Level.WARNING, "§cNotQuests > ERROR: Tried to add objective to quest §b" + getQuestName() + " §cwith the ID §b" + objective.getObjectiveID() + " §cbut the ID was a DUPLICATE!");
+            main.getLogManager().log(Level.WARNING, "ERROR: Tried to add objective to quest §b" + getQuestName() + " §cwith the ID §b" + objective.getObjectiveID() + " §cbut the ID was a DUPLICATE!");
 
         }
 
@@ -236,7 +236,7 @@ public class Quest {
 
     public void removeAllNPCs() {
         if(!main.isCitizensEnabled()){
-            main.getLogger().log(Level.SEVERE, "§cThe removal of all NPCs from Quest " + questName + " §chas been cancelled, because the Citizens plugin is not installed on this server. You will need the Citizens plugin to do NPC stuff.");
+            main.getLogManager().log(Level.SEVERE, "§cThe removal of all NPCs from Quest " + questName + " §chas been cancelled, because the Citizens plugin is not installed on this server. You will need the Citizens plugin to do NPC stuff.");
             return;
         }
         final ArrayList<NPC> arrayList = new ArrayList<>(attachedNPCsWithQuestShowing);
@@ -254,7 +254,7 @@ public class Quest {
 
     public void bindToNPC(NPC npc, boolean showQuest) {
         if(!main.isCitizensEnabled()){
-            main.getLogger().log(Level.SEVERE, "§cThe binding to NPC in Quest " + questName + " §chas been cancelled, because the Citizens plugin is not installed on this server. You will need the Citizens plugin to do NPC stuff.");
+            main.getLogManager().log(Level.SEVERE, "§cThe binding to NPC in Quest " + questName + " §chas been cancelled, because the Citizens plugin is not installed on this server. You will need the Citizens plugin to do NPC stuff.");
             return;
         }
         if (!attachedNPCsWithQuestShowing.contains(npc) && !attachedNPCsWithoutQuestShowing.contains(npc)) {
@@ -295,7 +295,7 @@ public class Quest {
 
     public void removeNPC(final NPC npc) {
         if(!main.isCitizensEnabled()){
-            main.getLogger().log(Level.SEVERE, "§cThe NPC removal in Quest " + questName + " §chas been cancelled, because the Citizens plugin is not installed on this server. You will need the Citizens plugin to do NPC stuff.");
+            main.getLogManager().log(Level.SEVERE, "§cThe NPC removal in Quest " + questName + " §chas been cancelled, because the Citizens plugin is not installed on this server. You will need the Citizens plugin to do NPC stuff.");
             return;
         }
         // System.out.println("§e-2");
