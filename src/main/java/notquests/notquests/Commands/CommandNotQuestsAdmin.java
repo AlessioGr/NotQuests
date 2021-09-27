@@ -7,7 +7,7 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import notquests.notquests.Commands.AdminCommands.ArmorstandsAdminCommand;
+import notquests.notquests.Commands.AdminCommands.ArmorStandsAdminCommand;
 import notquests.notquests.Commands.AdminCommands.ObjectivesAdminCommand;
 import notquests.notquests.Commands.AdminCommands.QuestPointsAdminCommand;
 import notquests.notquests.NotQuests;
@@ -40,7 +40,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
     private final NotQuests main;
     private final QuestPointsAdminCommand questPointsAdminCommand;
     private final ObjectivesAdminCommand objectivesAdminCommand;
-    private final ArmorstandsAdminCommand armorstandsAdminCommand;
+    private final ArmorStandsAdminCommand armorStandsAdminCommand;
 
     private final Date resultDate;
 
@@ -118,7 +118,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
 
         questPointsAdminCommand = new QuestPointsAdminCommand(main);
         objectivesAdminCommand = new ObjectivesAdminCommand(main);
-        armorstandsAdminCommand = new ArmorstandsAdminCommand(main);
+        armorStandsAdminCommand = new ArmorStandsAdminCommand(main);
     }
 
     @Override
@@ -411,7 +411,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
             } else if(args[2].equalsIgnoreCase("armorstands")){ //args >= 3
                 final Quest quest = main.getQuestManager().getQuest(args[1]);
                 if (quest != null) {
-                    armorstandsAdminCommand.handleArmorstandsAdminCommand(sender, args, quest);
+                    armorStandsAdminCommand.handleArmorStandsAdminCommand(sender, args, quest);
                 } else {
                     sender.sendMessage("§cQuest §b" + args[1] + " §cdoes not exist");
                 }
@@ -1870,7 +1870,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                 }
 
             } else if (args.length >= 4 && args[0].equalsIgnoreCase("edit") && args[2].equalsIgnoreCase("armorstands")) {
-                final List<String> completions = armorstandsAdminCommand.handleCompletions(sender, args);
+                final List<String> completions = armorStandsAdminCommand.handleCompletions(sender, args);
                 if (completions != null) {
                     StringUtil.copyPartialMatches(args[args.length - 1], completions, main.getDataManager().partialCompletions);
                     return main.getDataManager().partialCompletions;

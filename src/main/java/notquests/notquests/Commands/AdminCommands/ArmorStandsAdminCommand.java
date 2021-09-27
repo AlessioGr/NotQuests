@@ -21,15 +21,15 @@ import java.util.List;
  *
  * @author Alessio Gravili
  */
-public class ArmorstandsAdminCommand {
+public class ArmorStandsAdminCommand {
 
     private final NotQuests main;
 
-    public ArmorstandsAdminCommand(final NotQuests main) {
+    public ArmorStandsAdminCommand(final NotQuests main) {
         this.main = main;
     }
 
-    public void handleArmorstandsAdminCommand(final CommandSender sender, final String[] args, final Quest quest) {
+    public void handleArmorStandsAdminCommand(final CommandSender sender, final String[] args, final Quest quest) {
         if (args.length == 3) {
             showUsage(quest, sender, args);
         }else if (args.length == 4) {
