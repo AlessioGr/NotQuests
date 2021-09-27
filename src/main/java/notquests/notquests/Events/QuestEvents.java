@@ -458,7 +458,8 @@ public class QuestEvents implements Listener {
 
                     }else if(id == 4){ //Check
 
-                        player.sendMessage("§7Armor Stand Entity ID: §f" + armorstand.getEntityId());
+                        player.sendMessage("§7Armor Stand Entity ID: §f" + armorstand.getUniqueId().toString());
+
 
                         //Get all Quests attached to this armor stand:
                         PersistentDataContainer armorstandPDB = armorstand.getPersistentDataContainer();
