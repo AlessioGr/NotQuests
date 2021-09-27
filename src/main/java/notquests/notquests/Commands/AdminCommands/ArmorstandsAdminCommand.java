@@ -44,6 +44,9 @@ public class ArmorstandsAdminCommand {
                     //Only paper List<Component> lore = new ArrayList<>();
                     List<String> lore = new ArrayList<>();
 
+                    assert itemMeta != null;
+
+
 
                     itemMeta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, 4);
 
@@ -82,7 +85,6 @@ public class ArmorstandsAdminCommand {
                     showing = false;
                     chosenIfShowing = true;
                 }else if(args[4].equalsIgnoreCase("yes") || args[4].equalsIgnoreCase("true")){
-                    showing = true;
                     chosenIfShowing = true;
                 }
                 if(!chosenIfShowing){
@@ -97,6 +99,11 @@ public class ArmorstandsAdminCommand {
                     NamespacedKey key = new NamespacedKey(main, "notquests-item");
                     NamespacedKey QuestNameKey = new NamespacedKey(main, "notquests-questname");
                     ItemMeta itemMeta = itemStack.getItemMeta();
+
+                    if(itemMeta == null){
+                        sender.sendMessage("§cError: ItemMeta is null");
+                        return;
+                    }
 
                     //only paper List<Component> lore = new ArrayList<>();
                     List<String> lore = new ArrayList<>();
@@ -147,7 +154,6 @@ public class ArmorstandsAdminCommand {
                     showing = false;
                     chosenIfShowing = true;
                 }else if(args[4].equalsIgnoreCase("yes") || args[4].equalsIgnoreCase("true")){
-                    showing = true;
                     chosenIfShowing = true;
                 }
                 if(!chosenIfShowing){
@@ -162,6 +168,12 @@ public class ArmorstandsAdminCommand {
                     NamespacedKey QuestNameKey = new NamespacedKey(main, "notquests-questname");
 
                     ItemMeta itemMeta = itemStack.getItemMeta();
+
+                    if(itemMeta == null){
+                        sender.sendMessage("§cError: ItemMeta is null");
+                        return;
+                    }
+
                     //only paper List<Component> lore = new ArrayList<>();
                     List<String> lore = new ArrayList<>();
 

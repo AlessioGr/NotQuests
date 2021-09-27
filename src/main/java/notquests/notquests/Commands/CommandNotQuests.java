@@ -32,7 +32,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class CommandNotQuests implements CommandExecutor, TabCompleter {
     private final NotQuests main;
 
-    private final List<String> completions = new ArrayList<String>(); //makes a ArrayList
+    private final List<String> completions = new ArrayList<>();
 
     private final Component firstLevelCommands;
 
@@ -65,10 +65,6 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (sender instanceof Player player) {
             boolean guiEnabled = main.getDataManager().getConfiguration().isUserCommandsUseGUI();
-            //if (label.equalsIgnoreCase("qg")) {
-            //guiEnabled = false;
-            //player.sendMessage("§aOpening NotQuests GUI §1[BETA]");
-            //}
             if (sender.hasPermission("notnot.quests.use")) {
                 QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer((player.getUniqueId()));
                 sender.sendMessage("");
@@ -859,7 +855,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
 
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
         completions.clear();
         main.getDataManager().partialCompletions.clear();
 
