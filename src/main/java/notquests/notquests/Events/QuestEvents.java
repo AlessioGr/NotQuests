@@ -440,11 +440,16 @@ public class QuestEvents implements Listener {
                                         break;
                                     }
                                 }
+
                                 if(!foundNonSeparator){
+                                    //It consists only of separators - no quests. Thus, we set this to "" and remove the PDB
                                     existingAttachedQuests = "";
+                                    armorstandPDB.remove(attachedQuestsKey);
+                                }else{
+                                    armorstandPDB.set(attachedQuestsKey, PersistentDataType.STRING, existingAttachedQuests);
                                 }
 
-                                armorstandPDB.set(attachedQuestsKey, PersistentDataType.STRING, existingAttachedQuests);
+
                                 player.sendMessage("§2Quest with the name §b" + questName + " §2was removed from this armor stand!");
                                 player.sendMessage("§2Attached Quests: §b" + existingAttachedQuests);
 
