@@ -470,22 +470,31 @@ public class QuestEvents implements Listener {
                         final ArrayList<String> showingQuests = new ArrayList<>();
                         final ArrayList<String> nonShowingQuests = new ArrayList<>();
 
+                        boolean hasShowingQuestsPDBKey = false;
+                        boolean hasNonShowingQuestsPDBKey = false;
+
 
                         if(armorstandPDB.has(attachedQuestsShowingKey, PersistentDataType.STRING)){
                             String existingAttachedQuests = armorstandPDB.get(attachedQuestsShowingKey, PersistentDataType.STRING);
+                            hasShowingQuestsPDBKey = true;
                             if(existingAttachedQuests != null && existingAttachedQuests.length() >= 1){
                                 showingQuests.addAll(Arrays.asList(existingAttachedQuests.split("°")));
                             }
                         }
                         if(armorstandPDB.has(attachedQuestsNonShowingKey, PersistentDataType.STRING)){
                             String existingAttachedQuests = armorstandPDB.get(attachedQuestsNonShowingKey, PersistentDataType.STRING);
+                            hasNonShowingQuestsPDBKey = true;
                             if(existingAttachedQuests != null && existingAttachedQuests.length() >= 1){
                                 nonShowingQuests.addAll(Arrays.asList(existingAttachedQuests.split("°")));
                             }
                         }
 
                         if(showingQuests.size() == 0){
-                            player.sendMessage("§9All attached showing Quests: §7None");
+                            if(hasShowingQuestsPDBKey){
+                                player.sendMessage("§9All attached showing Quests: §7Empty");
+                            }else{
+                                player.sendMessage("§9All attached showing Quests: §7None");
+                            }
                         }else{
                             player.sendMessage("§9All " + showingQuests.size() + " attached showing Quests:");
                             int counter=0;
@@ -499,7 +508,12 @@ public class QuestEvents implements Listener {
                         }
 
                         if(nonShowingQuests.size() == 0){
-                            player.sendMessage("§9All attached non-showing Quests: §7None");
+                            if(hasNonShowingQuestsPDBKey){
+                                player.sendMessage("§9All attached non-showing Quests: §7Empty");
+                            }else{
+                                player.sendMessage("§9All attached non-showing Quests: §7None");
+                            }
+
                         }else{
                             player.sendMessage("§9All " + nonShowingQuests.size() + " attached non-showing Quests:");
                             int counter=0;
