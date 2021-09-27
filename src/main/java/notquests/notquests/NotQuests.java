@@ -39,7 +39,7 @@ public final class NotQuests extends JavaPlugin {
     private QuestManager questManager;
     private QuestPlayerManager questPlayerManager;
     private LanguageManager languageManager;
-
+    private ArmorstandManager armorstandManager;
 
     //Vault
     private Economy econ = null;
@@ -107,6 +107,9 @@ public final class NotQuests extends JavaPlugin {
 
         //Create a new instance of the QuestPlayer Manager which will be re-used everywhere
         questPlayerManager = new QuestPlayerManager(this);
+
+        //Create a new instance of the Armorstand Manager which will be re-used everywhere
+        armorstandManager = new ArmorstandManager(this);
 
         //The plugin "Citizens" is currently required for NotQuests to run properly. If it's not found, NotQuests will be disabled. EDIT: Now it will just disable some features
         if (getServer().getPluginManager().getPlugin("Citizens") == null || !Objects.requireNonNull(getServer().getPluginManager().getPlugin("Citizens")).isEnabled()) {
@@ -382,5 +385,9 @@ public final class NotQuests extends JavaPlugin {
 
     public UtilManager getUtilManager() {
         return utilManager;
+    }
+
+    public ArmorstandManager getArmorstandManager(){
+        return armorstandManager;
     }
 }

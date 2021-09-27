@@ -348,6 +348,7 @@ public class QuestEvents implements Listener {
 
                 final NamespacedKey specialItemKey = new NamespacedKey(main, "notquests-item");
 
+
                 if (container.has(specialItemKey, PersistentDataType.INTEGER)) {
 
                     int id = container.get(specialItemKey, PersistentDataType.INTEGER); //Not null, because we check for it in container.has()
@@ -489,7 +490,7 @@ public class QuestEvents implements Listener {
                             player.sendMessage("§9All " + showingQuests.size() + " attached showing Quests:");
                             int counter=0;
                             for(final String questNameInList : showingQuests){
-                                if(questNameInList.isBlank()){ //empty or null or only whitespaces
+                                if(!questNameInList.isBlank()){ //empty or null or only whitespaces
                                     counter++;
                                     player.sendMessage("§7" + counter + ". §e" + questNameInList);
                                 }
@@ -503,7 +504,7 @@ public class QuestEvents implements Listener {
                             player.sendMessage("§9All " + nonShowingQuests.size() + " attached non-showing Quests:");
                             int counter=0;
                             for(final String questNameInList : nonShowingQuests){
-                                if(questNameInList.isBlank()){ //empty or null or only whitespaces
+                                if(!questNameInList.isBlank()){ //empty or null or only whitespaces
                                     counter++;
                                     player.sendMessage("§7" + counter + ". §e" + questNameInList);
                                 }
