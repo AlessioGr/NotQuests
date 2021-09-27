@@ -5,12 +5,12 @@ import org.bukkit.entity.ArmorStand;
 
 import java.util.ArrayList;
 
-public class ArmorstandManager {
+public class ArmorStandManager {
     private final NotQuests main;
 
     private final ArrayList<ArmorStand> armorStandsWithQuestsAttachedToThem;
 
-    public ArmorstandManager(NotQuests main) {
+    public ArmorStandManager(NotQuests main) {
         this.main = main;
         armorStandsWithQuestsAttachedToThem = new ArrayList<>();
     }

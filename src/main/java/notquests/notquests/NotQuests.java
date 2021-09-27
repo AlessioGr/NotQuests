@@ -11,6 +11,7 @@ import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import notquests.notquests.Commands.CommandNotQuests;
 import notquests.notquests.Commands.CommandNotQuestsAdmin;
+import notquests.notquests.Events.ArmorStandEvents;
 import notquests.notquests.Events.CitizensEvents;
 import notquests.notquests.Events.QuestEvents;
 import notquests.notquests.Managers.*;
@@ -39,7 +40,7 @@ public final class NotQuests extends JavaPlugin {
     private QuestManager questManager;
     private QuestPlayerManager questPlayerManager;
     private LanguageManager languageManager;
-    private ArmorstandManager armorstandManager;
+    private ArmorStandManager armorStandManager;
 
     //Vault
     private Economy econ = null;
@@ -109,7 +110,7 @@ public final class NotQuests extends JavaPlugin {
         questPlayerManager = new QuestPlayerManager(this);
 
         //Create a new instance of the Armorstand Manager which will be re-used everywhere
-        armorstandManager = new ArmorstandManager(this);
+        armorStandManager = new ArmorStandManager(this);
 
         //The plugin "Citizens" is currently required for NotQuests to run properly. If it's not found, NotQuests will be disabled. EDIT: Now it will just disable some features
         if (getServer().getPluginManager().getPlugin("Citizens") == null || !Objects.requireNonNull(getServer().getPluginManager().getPlugin("Citizens")).isEnabled()) {
@@ -146,6 +147,9 @@ public final class NotQuests extends JavaPlugin {
 
         //Register the Event Listeners in QuestEvents
         getServer().getPluginManager().registerEvents(new QuestEvents(this), this);
+
+        //Register the Event Listeners in ArmorStandEvents
+        getServer().getPluginManager().registerEvents(new ArmorStandEvents(this), this);
 
         //Register the Event Listeners in CitizensEvents, if Citizens integration is enabled
         if(isCitizensEnabled()){
@@ -387,7 +391,7 @@ public final class NotQuests extends JavaPlugin {
         return utilManager;
     }
 
-    public ArmorstandManager getArmorstandManager(){
-        return armorstandManager;
+    public ArmorStandManager getArmorStandManager(){
+        return armorStandManager;
     }
 }
