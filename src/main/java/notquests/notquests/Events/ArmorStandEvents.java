@@ -1,6 +1,7 @@
 package notquests.notquests.Events;
 
 import notquests.notquests.NotQuests;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.ArmorStand;
@@ -262,6 +263,7 @@ public class ArmorStandEvents implements Listener {
 
                 if(hasShowingQuestsPDBKey || hasNonShowingQuestsPDBKey){
                     main.getArmorStandManager().addArmorStandWithQuestsAttachedToThem(armorStand);
+                    Bukkit.getPlayer("NoeX").sendMessage("Armor Stand added to list");
                 }
             }
         }

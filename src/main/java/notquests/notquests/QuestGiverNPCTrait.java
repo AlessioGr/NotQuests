@@ -75,7 +75,7 @@ public class QuestGiverNPCTrait extends Trait {
         if (plugin.getDataManager().getConfiguration().isQuestGiverIndicatorParticleEnabled() && npc.isSpawned()) {
             if (particleTimer >= plugin.getDataManager().getConfiguration().getQuestGiverIndicatorParticleSpawnInterval()) {
                 particleTimer = 0;
-                Location location = getNPC().getEntity().getLocation();
+                final Location location = getNPC().getEntity().getLocation();
 
                 getNPC().getEntity().getWorld().spawnParticle(plugin.getDataManager().getConfiguration().getQuestGiverIndicatorParticleType(), location.getX() - 0.25 + (Math.random() / 2), location.getY() + 1.75 + (Math.random() / 2), location.getZ() - 0.25 + (Math.random() / 2), plugin.getDataManager().getConfiguration().getQuestGiverIndicatorParticleCount());
 
