@@ -158,7 +158,7 @@ public class ArmorStandEvents implements Listener {
 
                     }else if(id == 4){ //Check
 
-                        player.sendMessage("§7Armor Stand Entity ID: §f" + armorstand.getUniqueId().toString());
+                        player.sendMessage("§7Armor Stand Entity ID: §f" + armorstand.getUniqueId());
 
 
                         //Get all Quests attached to this armor stand:
@@ -243,7 +243,7 @@ public class ArmorStandEvents implements Listener {
 
     @EventHandler
     private void onArmorStandLoad(EntitiesLoadEvent event){
-        if (!main.getDataManager().getConfiguration().isQuestGiverIndicatorParticleEnabled()){
+        if (!main.getDataManager().getConfiguration().isArmorStandQuestGiverIndicatorParticleEnabled()) {
             return;
         }
         for(final Entity entity : event.getEntities()){
@@ -271,7 +271,7 @@ public class ArmorStandEvents implements Listener {
     }
     @EventHandler
     private void onArmorStandUnload(EntitiesUnloadEvent event) {
-        if (!main.getDataManager().getConfiguration().isQuestGiverIndicatorParticleEnabled()) {
+        if (!main.getDataManager().getConfiguration().isArmorStandQuestGiverIndicatorParticleEnabled()) {
             return;
         }
         for (final Entity entity : event.getEntities()) {

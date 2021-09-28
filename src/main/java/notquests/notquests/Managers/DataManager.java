@@ -373,29 +373,72 @@ public class DataManager {
         }
         configuration.setLanguageCode(getGeneralConfig().getString("visual.language"));
 
-        if (!getGeneralConfig().isBoolean("visual.quest-giver-indicator-particle.enabled")) {
-            getGeneralConfig().set("visual.quest-giver-indicator-particle.enabled", true);
-            valueChanged = true;
-        }
-        configuration.setQuestGiverIndicatorParticleEnabled(getGeneralConfig().getBoolean("visual.quest-giver-indicator-particle.enabled"));
 
-        if (!getGeneralConfig().isString("visual.quest-giver-indicator-particle.type")) {
-            getGeneralConfig().set("visual.quest-giver-indicator-particle.type", "VILLAGER_ANGRY");
+        //Particles Citizens
+        if (!getGeneralConfig().isBoolean("visual.citizensnpc.quest-giver-indicator-particle.enabled")) {
+            getGeneralConfig().set("visual.citizensnpc.quest-giver-indicator-particle.enabled", true);
             valueChanged = true;
         }
-        configuration.setQuestGiverIndicatorParticleType(Particle.valueOf(getGeneralConfig().getString("visual.quest-giver-indicator-particle.type")));
+        configuration.setCitizensNPCQuestGiverIndicatorParticleEnabled(getGeneralConfig().getBoolean("visual.citizensnpc.quest-giver-indicator-particle.enabled"));
 
-        if (!getGeneralConfig().isInt("visual.quest-giver-indicator-particle.spawn-interval")) {
-            getGeneralConfig().set("visual.quest-giver-indicator-particle.spawn-interval", 10);
-            valueChanged = true;
-        }
-        configuration.setQuestGiverIndicatorParticleSpawnInterval(getGeneralConfig().getInt("visual.quest-giver-indicator-particle.spawn-interval"));
 
-        if (!getGeneralConfig().isInt("visual.quest-giver-indicator-particle.count")) {
-            getGeneralConfig().set("visual.quest-giver-indicator-particle.count", 1);
+        if (!getGeneralConfig().isString("visual.citizensnpc.quest-giver-indicator-particle.type")) {
+            getGeneralConfig().set("visual.citizensnpc.quest-giver-indicator-particle.type", "VILLAGER_ANGRY");
             valueChanged = true;
         }
-        configuration.setQuestGiverIndicatorParticleCount(getGeneralConfig().getInt("visual.quest-giver-indicator-particle.count"));
+
+        configuration.setCitizensNPCQuestGiverIndicatorParticleType(Particle.valueOf(getGeneralConfig().getString("visual.citizensnpc.quest-giver-indicator-particle.type")));
+
+        if (!getGeneralConfig().isInt("visual.citizensnpc.quest-giver-indicator-particle.spawn-interval")) {
+            getGeneralConfig().set("visual.citizensnpc.quest-giver-indicator-particle.spawn-interval", 10);
+            valueChanged = true;
+        }
+        configuration.setCitizensNPCQuestGiverIndicatorParticleSpawnInterval(getGeneralConfig().getInt("visual.citizensnpc.quest-giver-indicator-particle.spawn-interval"));
+
+        if (!getGeneralConfig().isInt("visual.citizensnpc.quest-giver-indicator-particle.count")) {
+            getGeneralConfig().set("visual.citizensnpc.quest-giver-indicator-particle.count", 1);
+            valueChanged = true;
+        }
+        configuration.setCitizensNPCQuestGiverIndicatorParticleCount(getGeneralConfig().getInt("visual.citizensnpc.quest-giver-indicator-particle.count"));
+
+        if (!getGeneralConfig().isDouble("visual.citizensnpc.quest-giver-indicator-particle.disable-if-tps-below")) {
+            getGeneralConfig().set("visual.citizensnpc.quest-giver-indicator-particle.disable-if-tps-below", -1d);
+            valueChanged = true;
+        }
+        configuration.setCitizensNPCQuestGiverIndicatorParticleDisableIfTPSBelow(getGeneralConfig().getInt("visual.citizensnpc.quest-giver-indicator-particle.disable-if-tps-below"));
+
+
+        //Particles ArmorStands
+        if (!getGeneralConfig().isBoolean("visual.armorstands.quest-giver-indicator-particle.enabled")) {
+            getGeneralConfig().set("visual.armorstands.quest-giver-indicator-particle.enabled", true);
+            valueChanged = true;
+        }
+        configuration.setArmorStandQuestGiverIndicatorParticleEnabled(getGeneralConfig().getBoolean("visual.armorstands.quest-giver-indicator-particle.enabled"));
+
+        if (!getGeneralConfig().isString("visual.armorstands.quest-giver-indicator-particle.type")) {
+            getGeneralConfig().set("visual.armorstands.quest-giver-indicator-particle.type", "VILLAGER_ANGRY");
+            valueChanged = true;
+        }
+
+        configuration.setArmorStandQuestGiverIndicatorParticleType(Particle.valueOf(getGeneralConfig().getString("visual.armorstands.quest-giver-indicator-particle.type")));
+
+        if (!getGeneralConfig().isInt("visual.armorstands.quest-giver-indicator-particle.spawn-interval")) {
+            getGeneralConfig().set("visual.armorstands.quest-giver-indicator-particle.spawn-interval", 10);
+            valueChanged = true;
+        }
+        configuration.setArmorStandQuestGiverIndicatorParticleSpawnInterval(getGeneralConfig().getInt("visual.armorstands.quest-giver-indicator-particle.spawn-interval"));
+
+        if (!getGeneralConfig().isInt("visual.armorstands.quest-giver-indicator-particle.count")) {
+            getGeneralConfig().set("visual.armorstands.quest-giver-indicator-particle.count", 1);
+            valueChanged = true;
+        }
+        configuration.setArmorStandQuestGiverIndicatorParticleCount(getGeneralConfig().getInt("visual.armorstands.quest-giver-indicator-particle.count"));
+
+        if (!getGeneralConfig().isDouble("visual.armorstands.quest-giver-indicator-particle.disable-if-tps-below")) {
+            getGeneralConfig().set("visual.armorstands.quest-giver-indicator-particle.disable-if-tps-below", -1d);
+            valueChanged = true;
+        }
+        configuration.setArmorStandQuestGiverIndicatorParticleDisableIfTPSBelow(getGeneralConfig().getInt("visual.armorstands.quest-giver-indicator-particle.disable-if-tps-below"));
 
 
         if (!getGeneralConfig().isBoolean("gui.questpreview.enabled")) {

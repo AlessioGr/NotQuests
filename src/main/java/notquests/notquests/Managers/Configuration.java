@@ -32,12 +32,20 @@ public class Configuration {
 
     private int maxActiveQuestsPerPlayer = -1;
 
-    private int questGiverIndicatorParticleSpawnInterval = 10;
-    private int questGiverIndicatorParticleCount = 1;
 
-    private Particle questGiverIndicatorParticleType = Particle.VILLAGER_ANGRY;
+    //Particles
+    private int citizensNPCQuestGiverIndicatorParticleSpawnInterval = 10;
+    private int citizensNPCQuestGiverIndicatorParticleCount = 1;
+    private Particle citizensNPCQuestGiverIndicatorParticleType = Particle.VILLAGER_ANGRY;
+    private boolean citizensNPCQuestGiverIndicatorParticleEnabled = true;
+    private double citizensNPCQuestGiverIndicatorParticleDisableIfTPSBelow = -1;
 
-    private boolean questGiverIndicatorParticleEnabled = true;
+    private int armorStandQuestGiverIndicatorParticleSpawnInterval = 10;
+    private int armorStandQuestGiverIndicatorParticleCount = 1;
+    private Particle armorStandQuestGiverIndicatorParticleType = Particle.VILLAGER_ANGRY;
+    private boolean armorStandQuestGiverIndicatorParticleEnabled = true;
+    private double armorStandQuestGiverIndicatorParticleDisableIfTPSBelow = -1;
+
 
     private String languageCode = "en";
 
@@ -119,37 +127,90 @@ public class Configuration {
         this.maxActiveQuestsPerPlayer = maxActiveQuestsPerPlayer;
     }
 
-    public final int getQuestGiverIndicatorParticleSpawnInterval() {
-        return questGiverIndicatorParticleSpawnInterval;
+
+    //Particles Citizens
+    public final int getCitizensNPCQuestGiverIndicatorParticleSpawnInterval() {
+        return citizensNPCQuestGiverIndicatorParticleSpawnInterval;
     }
 
-    public void setQuestGiverIndicatorParticleSpawnInterval(final int questGiverIndicatorParticleSpawnInterval) {
-        this.questGiverIndicatorParticleSpawnInterval = questGiverIndicatorParticleSpawnInterval;
+    public void setCitizensNPCQuestGiverIndicatorParticleSpawnInterval(final int citizensNPCQuestGiverIndicatorParticleSpawnInterval) {
+        this.citizensNPCQuestGiverIndicatorParticleSpawnInterval = citizensNPCQuestGiverIndicatorParticleSpawnInterval;
     }
 
-    public final Particle getQuestGiverIndicatorParticleType() {
-        return questGiverIndicatorParticleType;
+    public final Particle getCitizensNPCQuestGiverIndicatorParticleType() {
+        return citizensNPCQuestGiverIndicatorParticleType;
     }
 
-    public void setQuestGiverIndicatorParticleType(final Particle questGiverIndicatorParticleType) {
-        this.questGiverIndicatorParticleType = questGiverIndicatorParticleType;
+    public void setCitizensNPCQuestGiverIndicatorParticleType(final Particle citizensNPCQuestGiverIndicatorParticleType) {
+        this.citizensNPCQuestGiverIndicatorParticleType = citizensNPCQuestGiverIndicatorParticleType;
     }
 
-    public final int getQuestGiverIndicatorParticleCount() {
-        return questGiverIndicatorParticleCount;
+    public final int getCitizensNPCQuestGiverIndicatorParticleCount() {
+        return citizensNPCQuestGiverIndicatorParticleCount;
     }
 
-    public void setQuestGiverIndicatorParticleCount(final int questGiverIndicatorParticleCount) {
-        this.questGiverIndicatorParticleCount = questGiverIndicatorParticleCount;
+    public void setCitizensNPCQuestGiverIndicatorParticleCount(final int citizensNPCQuestGiverIndicatorParticleCount) {
+        this.citizensNPCQuestGiverIndicatorParticleCount = citizensNPCQuestGiverIndicatorParticleCount;
     }
 
-    public final boolean isQuestGiverIndicatorParticleEnabled() {
-        return questGiverIndicatorParticleEnabled;
+    public final boolean isCitizensNPCQuestGiverIndicatorParticleEnabled() {
+        return citizensNPCQuestGiverIndicatorParticleEnabled;
     }
 
-    public final void setQuestGiverIndicatorParticleEnabled(boolean questGiverIndicatorParticleEnabled) {
-        this.questGiverIndicatorParticleEnabled = questGiverIndicatorParticleEnabled;
+    public final void setCitizensNPCQuestGiverIndicatorParticleEnabled(boolean citizensNPCQuestGiverIndicatorParticleEnabled) {
+        this.citizensNPCQuestGiverIndicatorParticleEnabled = citizensNPCQuestGiverIndicatorParticleEnabled;
     }
+
+    public final double getCitizensNPCQuestGiverIndicatorParticleDisableIfTPSBelow() {
+        return citizensNPCQuestGiverIndicatorParticleDisableIfTPSBelow;
+    }
+
+    public final void setCitizensNPCQuestGiverIndicatorParticleDisableIfTPSBelow(double disableIfTPSBelow) {
+        this.citizensNPCQuestGiverIndicatorParticleDisableIfTPSBelow = disableIfTPSBelow;
+    }
+
+
+    //Particles ArmorStands
+    public final int getArmorStandQuestGiverIndicatorParticleSpawnInterval() {
+        return armorStandQuestGiverIndicatorParticleSpawnInterval;
+    }
+
+    public void setArmorStandQuestGiverIndicatorParticleSpawnInterval(final int armorStandQuestGiverIndicatorParticleSpawnInterval) {
+        this.armorStandQuestGiverIndicatorParticleSpawnInterval = armorStandQuestGiverIndicatorParticleSpawnInterval;
+    }
+
+    public final Particle getArmorStandQuestGiverIndicatorParticleType() {
+        return armorStandQuestGiverIndicatorParticleType;
+    }
+
+    public void setArmorStandQuestGiverIndicatorParticleType(final Particle armorStandQuestGiverIndicatorParticleType) {
+        this.armorStandQuestGiverIndicatorParticleType = armorStandQuestGiverIndicatorParticleType;
+    }
+
+    public final int getArmorStandQuestGiverIndicatorParticleCount() {
+        return armorStandQuestGiverIndicatorParticleCount;
+    }
+
+    public void setArmorStandQuestGiverIndicatorParticleCount(final int armorStandQuestGiverIndicatorParticleCount) {
+        this.armorStandQuestGiverIndicatorParticleCount = armorStandQuestGiverIndicatorParticleCount;
+    }
+
+    public final boolean isArmorStandQuestGiverIndicatorParticleEnabled() {
+        return armorStandQuestGiverIndicatorParticleEnabled;
+    }
+
+    public final void setArmorStandQuestGiverIndicatorParticleEnabled(boolean armorStandQuestGiverIndicatorParticleEnabled) {
+        this.armorStandQuestGiverIndicatorParticleEnabled = armorStandQuestGiverIndicatorParticleEnabled;
+    }
+
+    public final double getArmorStandQuestGiverIndicatorParticleDisableIfTPSBelow() {
+        return armorStandQuestGiverIndicatorParticleDisableIfTPSBelow;
+    }
+
+    public final void setArmorStandQuestGiverIndicatorParticleDisableIfTPSBelow(double disableIfTPSBelow) {
+        this.armorStandQuestGiverIndicatorParticleDisableIfTPSBelow = disableIfTPSBelow;
+    }
+
 
     public final String getLanguageCode() {
         return languageCode;

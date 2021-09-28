@@ -72,6 +72,7 @@ dependencies {
     implementation 'commons-io:commons-io:2.11.0'
 
     //Shaded
+    implementation 'io.papermc:paperlib:1.0.6'
     implementation "net.kyori:adventure-text-minimessage:4.2.0-SNAPSHOT"
     implementation 'net.kyori:adventure-platform-bukkit:4.0.0'
 }
@@ -81,10 +82,12 @@ dependencies {
  */
 shadowJar {
     minimize()
+    relocate 'io.papermc.lib', 'notquests.notquests.shaded.paper'
     relocate 'net.kyori', 'notquests.notquests.shaded.kyori'
     relocate("org.bstats", "notquests.notquests.shaded.bstats")
 
     dependencies {
+        include(dependency('io.papermc:paperlib'))
         include dependency("de.themoep:inventorygui:1.5-SNAPSHOT")
         include dependency('commons-io:')
         include dependency('org.bstats:')

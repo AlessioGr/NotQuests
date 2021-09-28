@@ -4,7 +4,9 @@ import notquests.notquests.NotQuests;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
+import org.bukkit.World;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.LivingEntity;
 
 import java.util.ArrayList;
 
@@ -22,7 +24,7 @@ public class ArmorStandManager {
         attachedQuestsShowingKey = new NamespacedKey(main, "notquests-attachedQuests-showing");
         attachedQuestsNonShowingKey = new NamespacedKey(main, "notquests-attachedQuests-nonshowing");
 
-        if (main.getDataManager().getConfiguration().isQuestGiverIndicatorParticleEnabled()) {
+        if (main.getDataManager().getConfiguration().isArmorStandQuestGiverIndicatorParticleEnabled()) {
             startQuestGiverIndicatorParticleRunnable();
         }
     }
@@ -35,27 +37,43 @@ public class ArmorStandManager {
         return attachedQuestsNonShowingKey;
     }
 
-    public void addArmorStandWithQuestsAttachedToThem(final ArmorStand armorStand){
+    public void addArmorStandWithQuestsAttachedToThem(final ArmorStand armorStand) {
         this.armorStandsWithQuestsAttachedToThem.add(armorStand);
     }
 
-    public void removeArmorStandWithQuestsAttachedToThem(final ArmorStand armorStand){
+    public void removeArmorStandWithQuestsAttachedToThem(final ArmorStand armorStand) {
         this.armorStandsWithQuestsAttachedToThem.remove(armorStand);
     }
 
-
-    public void startQuestGiverIndicatorParticleRunnable(){
-        Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(main, new Runnable() {
-            @Override
-            public void run() {
-                for(final ArmorStand armorStand : armorStandsWithQuestsAttachedToThem){
-                    final Location location = armorStand.getLocation();
-
-                    armorStand.getWorld().spawnParticle(main.getDataManager().getConfiguration().getQuestGiverIndicatorParticleType(), location.getX() - 0.25 + (Math.random() / 2), location.getY() + 1.75 + (Math.random() / 2), location.getZ() - 0.25 + (Math.random() / 2), main.getDataManager().getConfiguration().getQuestGiverIndicatorParticleCount());
+    public void loadAllArmorStandsFromLoadedChunks() {
+        for (final World world : Bukkit.getWorlds()) {
+            for (LivingEntity entity : world.getLivingEntities()) {
+                if (entity instanceof ArmorStand armorStand) {
 
                 }
             }
-        }, main.getDataManager().getConfiguration().getQuestGiverIndicatorParticleSpawnInterval(), main.getDataManager().getConfiguration().getQuestGiverIndicatorParticleSpawnInterval());
+        }
+    }
+
+
+    public void startQuestGiverIndicatorParticleRunnable() {
+        Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(main, () -> {
+
+            //Disable if Server TPS is too low
+            double minimumTPS = main.getDataManager().getConfiguration().getArmorStandQuestGiverIndicatorParticleDisableIfTPSBelow();
+            if (minimumTPS >= 0) {
+                if (main.getPerformanceManager().getTPS() < minimumTPS) {
+                    return;
+                }
+            }
+
+            for (final ArmorStand armorStand : armorStandsWithQuestsAttachedToThem) {
+                final Location location = armorStand.getLocation();
+
+                armorStand.getWorld().spawnParticle(main.getDataManager().getConfiguration().getArmorStandQuestGiverIndicatorParticleType(), location.getX() - 0.25 + (Math.random() / 2), location.getY() + 1.75 + (Math.random() / 2), location.getZ() - 0.25 + (Math.random() / 2), main.getDataManager().getConfiguration().getArmorStandQuestGiverIndicatorParticleCount());
+
+            }
+        }, main.getDataManager().getConfiguration().getArmorStandQuestGiverIndicatorParticleSpawnInterval(), main.getDataManager().getConfiguration().getArmorStandQuestGiverIndicatorParticleSpawnInterval());
     }
 
 }

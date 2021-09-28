@@ -72,12 +72,21 @@ public class QuestGiverNPCTrait extends Trait {
      */
     @Override
     public void run() {
-        if (plugin.getDataManager().getConfiguration().isQuestGiverIndicatorParticleEnabled() && npc.isSpawned()) {
-            if (particleTimer >= plugin.getDataManager().getConfiguration().getQuestGiverIndicatorParticleSpawnInterval()) {
+
+        //Disable if Server TPS is too low
+        double minimumTPS = plugin.getDataManager().getConfiguration().getCitizensNPCQuestGiverIndicatorParticleDisableIfTPSBelow();
+        if (minimumTPS >= 0) {
+            if (plugin.getPerformanceManager().getTPS() < minimumTPS) {
+                return;
+            }
+        }
+
+        if (plugin.getDataManager().getConfiguration().isCitizensNPCQuestGiverIndicatorParticleEnabled() && npc.isSpawned()) {
+            if (particleTimer >= plugin.getDataManager().getConfiguration().getCitizensNPCQuestGiverIndicatorParticleSpawnInterval()) {
                 particleTimer = 0;
                 final Location location = getNPC().getEntity().getLocation();
 
-                getNPC().getEntity().getWorld().spawnParticle(plugin.getDataManager().getConfiguration().getQuestGiverIndicatorParticleType(), location.getX() - 0.25 + (Math.random() / 2), location.getY() + 1.75 + (Math.random() / 2), location.getZ() - 0.25 + (Math.random() / 2), plugin.getDataManager().getConfiguration().getQuestGiverIndicatorParticleCount());
+                getNPC().getEntity().getWorld().spawnParticle(plugin.getDataManager().getConfiguration().getCitizensNPCQuestGiverIndicatorParticleType(), location.getX() - 0.25 + (Math.random() / 2), location.getY() + 1.75 + (Math.random() / 2), location.getZ() - 0.25 + (Math.random() / 2), plugin.getDataManager().getConfiguration().getCitizensNPCQuestGiverIndicatorParticleCount());
 
                 //System.out.println("§eSpawned particle!");
             }

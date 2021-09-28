@@ -1,5 +1,6 @@
 package notquests.notquests.Managers;
 
+import io.papermc.lib.PaperLib;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -13,22 +14,13 @@ public class LogManager {
     private final Audience consoleSender;
     private final Component prefix;
     private final String prefixText;
-    private boolean isPaper = false;
-
 
     public LogManager(final NotQuests main) {
         this.main = main;
         consoleSender = main.adventure().sender(Bukkit.getConsoleSender());
 
 
-        try {
-            // Paper-only method
-            Class.forName("com.destroystokyo.paper.ParticleBuilder");
-            isPaper = true;
-        } catch (ClassNotFoundException ignored) {
-        }
-
-        if (isPaper) {
+        if (PaperLib.isPaper()) {
             prefixText = "<#393e46>[<gradient:#E0EAFC:#CFDEF3>NotQuests<#393e46>]<#636c73>: ";
             prefix = MiniMessage.miniMessage().parse(prefixText);
         } else {
@@ -48,7 +40,7 @@ public class LogManager {
 
         String afterPrefixSuffix = "<WHITE>";
         if (level == Level.INFO) {
-            if (isPaper) {
+            if (PaperLib.isPaper()) {
                 afterPrefixSuffix = "<gradient:#37a659:#56B4D3>";
             } else {
                 afterPrefixSuffix = "<GREEN>";
@@ -69,7 +61,7 @@ public class LogManager {
         String afterPrefixSuffix = "<WHITE>";
         if (level == Level.INFO) {
             if (logCategory == LogCategory.DEFAULT) {
-                if (isPaper) {
+                if (PaperLib.isPaper()) {
                     afterPrefixSuffix = "<gradient:#37a659:#56B4D3>";
 
                 } else {
@@ -77,7 +69,7 @@ public class LogManager {
                 }
 
             } else if (logCategory == LogCategory.DATA) {
-                if (isPaper) {
+                if (PaperLib.isPaper()) {
                     afterPrefixSuffix = "<gradient:#1FA2FF:#12D8FA:#A6FFCB>";
 
                 } else {
@@ -85,7 +77,7 @@ public class LogManager {
                 }
 
             } else if (logCategory == LogCategory.LANGUAGE) {
-                if (isPaper) {
+                if (PaperLib.isPaper()) {
                     afterPrefixSuffix = "<gradient:#AA076B:#61045F>";
 
                 } else {

@@ -1,6 +1,7 @@
 
 package notquests.notquests;
 
+import io.papermc.lib.PaperLib;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
@@ -41,6 +42,7 @@ public final class NotQuests extends JavaPlugin {
     private QuestPlayerManager questPlayerManager;
     private LanguageManager languageManager;
     private ArmorStandManager armorStandManager;
+    private PerformanceManager performanceManager;
 
     //Vault
     private Economy econ = null;
@@ -71,11 +73,18 @@ public final class NotQuests extends JavaPlugin {
         // Initialize an audiences instance for the plugin
         this.adventure = BukkitAudiences.create(this);
 
+        //PaperLib for paper-specific methods (like getting TPS)
+        PaperLib.suggestPaper(this);
+
         //Create a new instance of the Util Manager which will be re-used everywhere
         utilManager = new UtilManager(this);
 
         //Create a new instance of the Log Manager which will be re-used everywhere
         logManager = new LogManager(this);
+
+        //Create a new instance of the Performance Manager which will be re-used everywhere
+        performanceManager = new PerformanceManager(this);
+
 
         getLogManager().log(Level.INFO, "NotQuests is starting...");
 
@@ -112,6 +121,8 @@ public final class NotQuests extends JavaPlugin {
         //Create a new instance of the Armorstand Manager which will be re-used everywhere
         armorStandManager = new ArmorStandManager(this);
 
+        armorStandManager.loadAllArmorStandsFromLoadedChunks();
+
         //The plugin "Citizens" is currently required for NotQuests to run properly. If it's not found, NotQuests will be disabled. EDIT: Now it will just disable some features
         if (getServer().getPluginManager().getPlugin("Citizens") == null || !Objects.requireNonNull(getServer().getPluginManager().getPlugin("Citizens")).isEnabled()) {
             getLogManager().log(Level.WARNING, "Citizens Dependency not found! Some features regarding NPCs have been disabled. I recommend you to install Citizens for the best experience.");
@@ -119,7 +130,7 @@ public final class NotQuests extends JavaPlugin {
             //getLogManager().log(Level.SEVERE, "Citizens 2.0 not found or not enabled");
             //getServer().getPluginManager().disablePlugin(this);
             //return;
-        }else{
+        } else {
             citizensEnabled = true;
         }
 
@@ -183,9 +194,6 @@ public final class NotQuests extends JavaPlugin {
             final int pluginId = 12824; // <-- Replace with the id of your plugin!
             metrics = new Metrics(this, pluginId);
         }
-
-
-
 
 
 
@@ -391,7 +399,11 @@ public final class NotQuests extends JavaPlugin {
         return utilManager;
     }
 
-    public ArmorStandManager getArmorStandManager(){
+    public ArmorStandManager getArmorStandManager() {
         return armorStandManager;
+    }
+
+    public PerformanceManager getPerformanceManager() {
+        return performanceManager;
     }
 }
