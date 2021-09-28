@@ -19,21 +19,28 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set up JDK 11
+    - name: Set up JDK 16
       uses: actions/setup-java@v2
       with:
-        java-version: '11'
+        java-version: '16'
         distribution: 'adopt'
         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
         settings-path: ${{ github.workspace }} # location for the settings.xml file
 
     - name: Build with Gradle
       run: gradle build
+      
+    - name: Shadow with Gradle
+      run: gradle shadowJar
 
-    # The USERNAME and TOKEN need to correspond to the credentials environment variables used in
-    # the publishing section of your build.gradle
-    - name: Publish to GitHub Packages
-      run: gradle publish
-      env:
-        USERNAME: ${{ github.actor }}
-        TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v2.2.4
+      with:
+    # Artifact name
+        name: artifact # optional, default is artifact
+    # A file, directory or wildcard pattern that describes what to upload
+        path: build/notquests-1.4.8.jar
+
+        if-no-files-found: warn
+
+        retention-days: 90 # optional
