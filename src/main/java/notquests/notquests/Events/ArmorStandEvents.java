@@ -1,7 +1,6 @@
 package notquests.notquests.Events;
 
 import notquests.notquests.NotQuests;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.ArmorStand;
@@ -10,6 +9,8 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.world.EntitiesLoadEvent;
 import org.bukkit.event.world.EntitiesUnloadEvent;
@@ -33,7 +34,7 @@ public class ArmorStandEvents implements Listener {
         final Player player = event.getPlayer();
 
         if(event.getRightClicked().getType() == EntityType.ARMOR_STAND) {
-            ArmorStand armorstand = (ArmorStand) event.getRightClicked();
+            ArmorStand armorStand = (ArmorStand) event.getRightClicked();
 
             final ItemStack heldItem = event.getPlayer().getInventory().getItemInMainHand();
 
@@ -56,19 +57,19 @@ public class ArmorStandEvents implements Listener {
                         return;
                     }
 
-                    if(id == 0 || id == 1){ //Add
-                        PersistentDataContainer armorstandPDB = armorstand.getPersistentDataContainer();
+                    if(id == 0 || id == 1) { //Add
+                        PersistentDataContainer armorStandPDB = armorStand.getPersistentDataContainer();
                         final NamespacedKey attachedQuestsKey;
-                        if(id == 0){ //showing
-                            attachedQuestsKey  = main.getArmorStandManager().getAttachedQuestsShowingKey();
-                        }else{
-                            attachedQuestsKey  = main.getArmorStandManager().getAttachedQuestsNonShowingKey();
+                        if (id == 0) { //showing
+                            attachedQuestsKey = main.getArmorStandManager().getAttachedQuestsShowingKey();
+                        } else {
+                            attachedQuestsKey = main.getArmorStandManager().getAttachedQuestsNonShowingKey();
                         }
-                        if(armorstandPDB.has(attachedQuestsKey, PersistentDataType.STRING)){
-                            String existingAttachedQuests = armorstandPDB.get(attachedQuestsKey, PersistentDataType.STRING);
+                        if (armorStandPDB.has(attachedQuestsKey, PersistentDataType.STRING)) {
+                            String existingAttachedQuests = armorStandPDB.get(attachedQuestsKey, PersistentDataType.STRING);
 
 
-                            if(existingAttachedQuests != null ){
+                            if (existingAttachedQuests != null) {
                                 // boolean condition2 =  (existingAttachedQuests.contains("°"+questName) && (   ( (existingAttachedQuests.indexOf("°" + questName)-1) + ("°"+questName).length())  == existingAttachedQuests.length()-1  )  ) ;
                                 //boolean condition3 =  (existingAttachedQuests.contains(questName + "°") &&  existingAttachedQuests.indexOf(questName+"°")  == 0 )   ;
 
@@ -95,20 +96,24 @@ public class ArmorStandEvents implements Listener {
                                 existingAttachedQuests += "°"+questName+"°";
                             }
 
-                            armorstandPDB.set(attachedQuestsKey, PersistentDataType.STRING, existingAttachedQuests);
+                            armorStandPDB.set(attachedQuestsKey, PersistentDataType.STRING, existingAttachedQuests);
 
                             player.sendMessage("§aQuest with the name §b" + questName + " §awas added to this poor little armorstand!");
                             player.sendMessage("§2Attached Quests: §b" + existingAttachedQuests);
 
-                        }else{
-                            armorstandPDB.set(attachedQuestsKey, PersistentDataType.STRING, "°"+questName+"°");
+                        }else {
+                            armorStandPDB.set(attachedQuestsKey, PersistentDataType.STRING, "°" + questName + "°");
                             player.sendMessage("§aQuest with the name §b" + questName + " §awas added to this poor little armorstand!");
-                            player.sendMessage("§2Attached Quests: §b" + "°"+questName+"°");
+                            player.sendMessage("§2Attached Quests: §b" + "°" + questName + "°");
+
+                            //Since this is the first Quest added to it:
+                            main.getArmorStandManager().addArmorStandWithQuestsAttachedToThem(armorStand);
+
                         }
 
 
                     }else if(id == 2 || id == 3){ //Remove
-                        PersistentDataContainer armorstandPDB = armorstand.getPersistentDataContainer();
+                        PersistentDataContainer armorstandPDB = armorStand.getPersistentDataContainer();
 
                         final NamespacedKey attachedQuestsKey;
 
@@ -139,6 +144,7 @@ public class ArmorStandEvents implements Listener {
                                     //It consists only of separators - no quests. Thus, we set this to "" and remove the PDB
                                     existingAttachedQuests = "";
                                     armorstandPDB.remove(attachedQuestsKey);
+                                    main.getArmorStandManager().removeArmorStandWithQuestsAttachedToThem(armorStand);
                                 }else{
                                     armorstandPDB.set(attachedQuestsKey, PersistentDataType.STRING, existingAttachedQuests);
                                 }
@@ -158,11 +164,11 @@ public class ArmorStandEvents implements Listener {
 
                     }else if(id == 4){ //Check
 
-                        player.sendMessage("§7Armor Stand Entity ID: §f" + armorstand.getUniqueId());
+                        player.sendMessage("§7Armor Stand Entity ID: §f" + armorStand.getUniqueId());
 
 
                         //Get all Quests attached to this armor stand:
-                        PersistentDataContainer armorstandPDB = armorstand.getPersistentDataContainer();
+                        PersistentDataContainer armorstandPDB = armorStand.getPersistentDataContainer();
 
                         final ArrayList<String> showingQuests = new ArrayList<>();
                         final ArrayList<String> nonShowingQuests = new ArrayList<>();
@@ -226,11 +232,11 @@ public class ArmorStandEvents implements Listener {
                     }
                 }else{
                     //Show quests
-                    main.getQuestManager().sendQuestsPreviewOfQuestShownArmorstands(armorstand, player);
+                    main.getQuestManager().sendQuestsPreviewOfQuestShownArmorstands(armorStand, player);
                 }
             }else{
                 //Show quests
-                main.getQuestManager().sendQuestsPreviewOfQuestShownArmorstands(armorstand, player);
+                main.getQuestManager().sendQuestsPreviewOfQuestShownArmorstands(armorStand, player);
             }
 
 
@@ -263,7 +269,6 @@ public class ArmorStandEvents implements Listener {
 
                 if(hasShowingQuestsPDBKey || hasNonShowingQuestsPDBKey){
                     main.getArmorStandManager().addArmorStandWithQuestsAttachedToThem(armorStand);
-                    Bukkit.getPlayer("NoeX").sendMessage("Armor Stand added to list");
                 }
             }
         }
@@ -292,15 +297,66 @@ public class ArmorStandEvents implements Listener {
 
                 if (hasShowingQuestsPDBKey || hasNonShowingQuestsPDBKey) {
                     main.getArmorStandManager().removeArmorStandWithQuestsAttachedToThem(armorStand);
+
                 }
             }
         }
     }
 
 
+    //This probably will never happen and is not really needed, because armor stands are not spawned immediately with the PDB - you have to assign it to them first
+    @EventHandler
+    public void onArmorStandSpawn(EntitySpawnEvent event) {
+        if (event.getEntity() instanceof ArmorStand armorStand) {
+            if (!main.getDataManager().getConfiguration().isArmorStandQuestGiverIndicatorParticleEnabled()) {
+                return;
+            }
+            final PersistentDataContainer armorStandPDB = armorStand.getPersistentDataContainer();
+
+            boolean hasShowingQuestsPDBKey = false;
+            boolean hasNonShowingQuestsPDBKey = false;
 
 
+            if (armorStandPDB.has(main.getArmorStandManager().getAttachedQuestsShowingKey(), PersistentDataType.STRING)) {
+                hasShowingQuestsPDBKey = true;
+            }
+            if (armorStandPDB.has(main.getArmorStandManager().getAttachedQuestsNonShowingKey(), PersistentDataType.STRING)) {
+                hasNonShowingQuestsPDBKey = true;
+            }
 
+            if (hasShowingQuestsPDBKey || hasNonShowingQuestsPDBKey) {
+                main.getArmorStandManager().addArmorStandWithQuestsAttachedToThem(armorStand);
+            }
+        }
+
+    }
+
+
+    @EventHandler
+    public void onArmorStandSpawn(EntityDeathEvent event) {
+        if (event.getEntity() instanceof ArmorStand armorStand) {
+            if (!main.getDataManager().getConfiguration().isArmorStandQuestGiverIndicatorParticleEnabled()) {
+                return;
+            }
+            final PersistentDataContainer armorStandPDB = armorStand.getPersistentDataContainer();
+
+            boolean hasShowingQuestsPDBKey = false;
+            boolean hasNonShowingQuestsPDBKey = false;
+
+
+            if (armorStandPDB.has(main.getArmorStandManager().getAttachedQuestsShowingKey(), PersistentDataType.STRING)) {
+                hasShowingQuestsPDBKey = true;
+            }
+            if (armorStandPDB.has(main.getArmorStandManager().getAttachedQuestsNonShowingKey(), PersistentDataType.STRING)) {
+                hasNonShowingQuestsPDBKey = true;
+            }
+
+            if (hasShowingQuestsPDBKey || hasNonShowingQuestsPDBKey) {
+                main.getArmorStandManager().removeArmorStandWithQuestsAttachedToThem(armorStand);
+            }
+        }
+
+    }
 
 
 }

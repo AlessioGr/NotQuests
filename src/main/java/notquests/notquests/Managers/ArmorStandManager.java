@@ -7,6 +7,8 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 
@@ -49,7 +51,22 @@ public class ArmorStandManager {
         for (final World world : Bukkit.getWorlds()) {
             for (LivingEntity entity : world.getLivingEntities()) {
                 if (entity instanceof ArmorStand armorStand) {
+                    final PersistentDataContainer armorStandPDB = armorStand.getPersistentDataContainer();
 
+                    boolean hasShowingQuestsPDBKey = false;
+                    boolean hasNonShowingQuestsPDBKey = false;
+
+
+                    if (armorStandPDB.has(main.getArmorStandManager().getAttachedQuestsShowingKey(), PersistentDataType.STRING)) {
+                        hasShowingQuestsPDBKey = true;
+                    }
+                    if (armorStandPDB.has(main.getArmorStandManager().getAttachedQuestsNonShowingKey(), PersistentDataType.STRING)) {
+                        hasNonShowingQuestsPDBKey = true;
+                    }
+
+                    if (hasShowingQuestsPDBKey || hasNonShowingQuestsPDBKey) {
+                        main.getArmorStandManager().addArmorStandWithQuestsAttachedToThem(armorStand);
+                    }
                 }
             }
         }
@@ -69,7 +86,6 @@ public class ArmorStandManager {
 
             for (final ArmorStand armorStand : armorStandsWithQuestsAttachedToThem) {
                 final Location location = armorStand.getLocation();
-
                 armorStand.getWorld().spawnParticle(main.getDataManager().getConfiguration().getArmorStandQuestGiverIndicatorParticleType(), location.getX() - 0.25 + (Math.random() / 2), location.getY() + 1.75 + (Math.random() / 2), location.getZ() - 0.25 + (Math.random() / 2), main.getDataManager().getConfiguration().getArmorStandQuestGiverIndicatorParticleCount());
 
             }
