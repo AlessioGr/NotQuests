@@ -113,3 +113,4 @@ buildNumber.properties
 run/
 /.gradle/
 .gradle
+/build/tmp/
