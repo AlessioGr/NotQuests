@@ -31,5 +31,5 @@ jobs:
     - name: Upload build artifacts
       uses: actions/upload-artifact@v1
       with:
-        name: build-artifacts
+        name: NotQuests-dev-build.jar
         path: build/libs
