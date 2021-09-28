@@ -405,7 +405,7 @@ public class DataManager {
             getGeneralConfig().set("visual.citizensnpc.quest-giver-indicator-particle.disable-if-tps-below", -1d);
             valueChanged = true;
         }
-        configuration.setCitizensNPCQuestGiverIndicatorParticleDisableIfTPSBelow(getGeneralConfig().getInt("visual.citizensnpc.quest-giver-indicator-particle.disable-if-tps-below"));
+        configuration.setCitizensNPCQuestGiverIndicatorParticleDisableIfTPSBelow(getGeneralConfig().getDouble("visual.citizensnpc.quest-giver-indicator-particle.disable-if-tps-below"));
 
 
         //Particles ArmorStands
@@ -438,7 +438,7 @@ public class DataManager {
             getGeneralConfig().set("visual.armorstands.quest-giver-indicator-particle.disable-if-tps-below", -1d);
             valueChanged = true;
         }
-        configuration.setArmorStandQuestGiverIndicatorParticleDisableIfTPSBelow(getGeneralConfig().getInt("visual.armorstands.quest-giver-indicator-particle.disable-if-tps-below"));
+        configuration.setArmorStandQuestGiverIndicatorParticleDisableIfTPSBelow(getGeneralConfig().getDouble("visual.armorstands.quest-giver-indicator-particle.disable-if-tps-below"));
 
 
         if (!getGeneralConfig().isBoolean("gui.questpreview.enabled")) {

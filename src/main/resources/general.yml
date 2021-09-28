@@ -13,11 +13,20 @@ general:
 visual:
   #Sets which language to use. Default is languages/en.yml
   language: en
-  quest-giver-indicator-particle:
-    enabled: true
-    type: VILLAGER_ANGRY
-    spawn-interval: 10
-    count: 1
+  citizensnpc:
+    quest-giver-indicator-particle:
+      enabled: true
+      type: VILLAGER_ANGRY
+      spawn-interval: 10
+      count: 1
+      disable-if-tps-below: -1.0
+  armorstands:
+    quest-giver-indicator-particle:
+      enabled: true
+      type: VILLAGER_ANGRY
+      spawn-interval: 10
+      count: 1
+      disable-if-tps-below: -1.0
 gui:
   questpreview:
     # If set to false, clickable text will be used for Quest Previews instead

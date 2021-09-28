@@ -79,6 +79,7 @@ public class ArmorStandManager {
             //Disable if Server TPS is too low
             double minimumTPS = main.getDataManager().getConfiguration().getArmorStandQuestGiverIndicatorParticleDisableIfTPSBelow();
             if (minimumTPS >= 0) {
+                System.out.println("mintps: " + minimumTPS + " §ecurtps: " + main.getPerformanceManager().getTPS());
                 if (main.getPerformanceManager().getTPS() < minimumTPS) {
                     return;
                 }
