@@ -168,6 +168,7 @@ public class DataManager {
 
     }
 
+
     public final void loadQuestsConfig(){
         main.getLogManager().log(Level.INFO, "Loading quests.yml config");
 
@@ -508,6 +509,38 @@ public class DataManager {
         }
         configuration.placeholder_player_active_quests_list_vertical_use_displayname_if_available = getGeneralConfig().getBoolean("placeholders.player_active_quests_list_vertical.use-displayname-if-available");
 
+
+        if (!getGeneralConfig().isBoolean("integrations.citizens.enabled")) {
+            getGeneralConfig().set("integrations.citizens.enabled", true);
+            valueChanged = true;
+        }
+        configuration.setIntegrationCitizensEnabled(getGeneralConfig().getBoolean("integrations.citizens.enabled"));
+
+        if (!getGeneralConfig().isBoolean("integrations.vault.enabled")) {
+            getGeneralConfig().set("integrations.vault.enabled", true);
+            valueChanged = true;
+        }
+        configuration.setIntegrationVaultEnabled(getGeneralConfig().getBoolean("integrations.vault.enabled"));
+
+        if (!getGeneralConfig().isBoolean("integrations.placeholderapi.enabled")) {
+            getGeneralConfig().set("integrations.placeholderapi.enabled", true);
+            valueChanged = true;
+        }
+        configuration.setIntegrationPlaceholderAPIEnabled(getGeneralConfig().getBoolean("integrations.placeholderapi.enabled"));
+
+        if (!getGeneralConfig().isBoolean("integrations.mythicmobs.enabled")) {
+            getGeneralConfig().set("integrations.mythicmobs.enabled", true);
+            valueChanged = true;
+        }
+        configuration.setIntegrationMythicMobsEnabled(getGeneralConfig().getBoolean("integrations.mythicmobs.enabled"));
+
+        if (!getGeneralConfig().isBoolean("integrations.elitemobs.enabled")) {
+            getGeneralConfig().set("integrations.elitemobs.enabled", true);
+            valueChanged = true;
+        }
+        configuration.setIntegrationEliteMobsEnabled(getGeneralConfig().getBoolean("integrations.elitemobs.enabled"));
+
+
         if (valueChanged) {
             main.getLogManager().info("§5General.yml Configuration was updated with new values! Saving it...");
             saveGeneralConfig();
@@ -694,7 +727,7 @@ public class DataManager {
      */
     public void reloadData() {
         if(isLoadingEnabled()){
-            loadGeneralConfig();
+
             main.getLanguageManager().loadLanguageConfig();
 
             //Check for isLoadingEnabled again, in case it changed during loading of the general config

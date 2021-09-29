@@ -94,37 +94,60 @@ public final class NotQuests extends JavaPlugin {
         //Create a new instance of the Performance Manager which will be re-used everywhere
         performanceManager = new PerformanceManager(this);
 
+        //Create a new instance of the Data Manager which will be re-used everywhere
+        dataManager = new DataManager(this);
+
+        //Load general config first, because we'll need it for the integrations
+        dataManager.loadGeneralConfig();
+
 
         getLogManager().log(Level.INFO, "NotQuests is starting...");
 
-        //Vault is needed for NotQuests to function. If it's not found, NotQuests will be disabled. EDIT: Now it will just disable some features
-        if (!setupEconomy()) {
-            getLogManager().log(Level.WARNING, "Vault Dependency not found! Some features have been disabled. I recommend you to install Vault for the best experience.");
-            //getServer().getPluginManager().disablePlugin(this);
-            //return;
-        } else {
-            setupPermissions();
-            setupChat();
-            vaultEnabled = true;
-            getLogManager().info("Vault found! Enabling Vault support...");
+
+        //Vault Hook
+        if (getDataManager().getConfiguration().isIntegrationVaultEnabled()) {
+            //Vault is needed for NotQuests to function. If it's not found, NotQuests will be disabled. EDIT: Now it will just disable some features
+            if (!setupEconomy()) {
+                getLogManager().log(Level.WARNING, "Vault Dependency not found! Some features have been disabled. I recommend you to install Vault for the best experience.");
+                //getServer().getPluginManager().disablePlugin(this);
+                //return;
+            } else {
+                setupPermissions();
+                setupChat();
+                vaultEnabled = true;
+                getLogManager().info("Vault found! Enabling Vault support...");
+            }
         }
 
         //MythicMobs Hook
-        if (getServer().getPluginManager().getPlugin("MythicMobs") != null && Objects.requireNonNull(getServer().getPluginManager().getPlugin("MythicMobs")).isEnabled()) {
-            mythicMobsEnabled = true;
-            getLogManager().info("MythicMobs found! Enabling MythicMobs support...");
-            this.mythicMobs = MythicMobs.inst();
+        if (getDataManager().getConfiguration().isIntegrationMythicMobsEnabled()) {
+            if (getServer().getPluginManager().getPlugin("MythicMobs") != null && Objects.requireNonNull(getServer().getPluginManager().getPlugin("MythicMobs")).isEnabled()) {
+                mythicMobsEnabled = true;
+                getLogManager().info("MythicMobs found! Enabling MythicMobs support...");
+                this.mythicMobs = MythicMobs.inst();
+            }
         }
+
 
         //EliteMobs Hook
-        if (getServer().getPluginManager().getPlugin("EliteMobs") != null && Objects.requireNonNull(getServer().getPluginManager().getPlugin("EliteMobs")).isEnabled()) {
-            eliteMobsEnabled = true;
-            getLogManager().info("EliteMobs found! Enabling EliteMobs support...");
+        if (getDataManager().getConfiguration().isIntegrationEliteMobsEnabled()) {
+            if (getServer().getPluginManager().getPlugin("EliteMobs") != null && Objects.requireNonNull(getServer().getPluginManager().getPlugin("EliteMobs")).isEnabled()) {
+                eliteMobsEnabled = true;
+                getLogManager().info("EliteMobs found! Enabling EliteMobs support...");
+            }
         }
 
+        //Enable 'Citizens' integration. If it's not found, it will just disable some NPC features which can mostly be replaced by armor stands
+        if (getDataManager().getConfiguration().isIntegrationCitizensEnabled()) {
+            if (getServer().getPluginManager().getPlugin("Citizens") == null || !Objects.requireNonNull(getServer().getPluginManager().getPlugin("Citizens")).isEnabled()) {
+                getLogManager().log(Level.INFO, "Citizens Dependency not found! Congratulations! In NotQuests, you can use armor stands instead of Citizens NPCs");
 
-        //Create a new instance of the Data Manager which will be re-used everywhere
-        dataManager = new DataManager(this);
+            } else {
+                citizensEnabled = true;
+                getLogManager().info("Citizens found! Enabling Citizens support...");
+            }
+        }
+
 
         //Create a new instance of the Quest Manager which will be re-used everywhere
         questManager = new QuestManager(this);
@@ -145,14 +168,8 @@ public final class NotQuests extends JavaPlugin {
 
         armorStandManager.loadAllArmorStandsFromLoadedChunks();
 
-        //The plugin "Citizens" is currently required for NotQuests to run properly. If it's not found, NotQuests will be disabled. EDIT: Now it will just disable some features
-        if (getServer().getPluginManager().getPlugin("Citizens") == null || !Objects.requireNonNull(getServer().getPluginManager().getPlugin("Citizens")).isEnabled()) {
-            getLogManager().log(Level.INFO, "Citizens Dependency not found! Congratulations! In NotQuests, you can use armor stands instead of Citizens NPCs");
 
-        } else {
-            citizensEnabled = true;
-            getLogManager().info("Citizens found! Enabling Citizens support...");
-        }
+
 
 
         //Registering the nquestgiver Trait here has been commented out. I think I'm currently doing that somewhere else atm. So, this isn't needed at the moment.
@@ -203,9 +220,13 @@ public final class NotQuests extends JavaPlugin {
 
         //This registers all PlaceholderAPI placeholders, if loading is enabled
         if (getDataManager().isLoadingEnabled()) {
-            if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-                new QuestPlaceholders(this).register();
+
+            if (getDataManager().getConfiguration().isIntegrationPlaceholderAPIEnabled()) {
+                if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+                    new QuestPlaceholders(this).register();
+                }
             }
+
 
             //Update Checker
             try {
@@ -213,7 +234,7 @@ public final class NotQuests extends JavaPlugin {
                 if (updateChecker.checkForUpdates()) {
                     getLogManager().info("<GOLD>The version <Yellow>" + getDescription().getVersion()
                             + " <GOLD>is not the latest version (<Green>" + updateChecker.getLatestVersion() + "<GOLD>)! Please update the plugin here: <Aqua>https://www.spigotmc.org/resources/95872/ <DARK_GRAY>(If your version is newer, the spigot API might not be updated yet).");
-                }else{
+                } else {
                     getLogManager().info("NotQuests seems to be up to date! :)");
                 }
             } catch (Exception e) {

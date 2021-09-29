@@ -43,3 +43,14 @@ placeholders:
   player_active_quests_list_vertical:
     limit: -1 #-1 for unlimited
     use-displayname-if-available: true
+integrations: #These should usually be left to true. These integrations will only be used, if you have the respective plugin installed.
+  citizens:
+    enabled: true
+  vault:
+    enabled: true
+  placeholderapi:
+    enabled: true
+  mythicmobs:
+    enabled: true
+  elitemobs:
+    enabled: true

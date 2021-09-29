@@ -52,6 +52,13 @@ public class Configuration {
 
     private String languageCode = "en";
 
+    //Integrations
+    private boolean integrationCitizensEnabled = true;
+    private boolean integrationVaultEnabled = true;
+    private boolean integrationPlaceholderAPIEnabled = true;
+    private boolean integrationMythicMobsEnabled = true;
+    private boolean integrationEliteMobsEnabled = true;
+
 
     public Configuration() {
 
@@ -229,5 +236,47 @@ public class Configuration {
 
     public void setArmorStandPreventEditing(final boolean armorStandPreventEditing) {
         this.armorStandPreventEditing = armorStandPreventEditing;
+    }
+
+
+    //Integrations
+    public final boolean isIntegrationCitizensEnabled() {
+        return integrationCitizensEnabled;
+    }
+
+    public void setIntegrationCitizensEnabled(final boolean integrationCitizensEnabled) {
+        this.integrationCitizensEnabled = integrationCitizensEnabled;
+    }
+
+    public final boolean isIntegrationVaultEnabled() {
+        return integrationVaultEnabled;
+    }
+
+    public void setIntegrationVaultEnabled(final boolean integrationVaultEnabled) {
+        this.integrationVaultEnabled = integrationVaultEnabled;
+    }
+
+    public final boolean isIntegrationPlaceholderAPIEnabled() {
+        return integrationPlaceholderAPIEnabled;
+    }
+
+    public void setIntegrationPlaceholderAPIEnabled(final boolean integrationPlaceholderAPIEnabled) {
+        this.integrationPlaceholderAPIEnabled = integrationPlaceholderAPIEnabled;
+    }
+
+    public final boolean isIntegrationMythicMobsEnabled() {
+        return integrationMythicMobsEnabled;
+    }
+
+    public void setIntegrationMythicMobsEnabled(final boolean integrationMythicMobsEnabled) {
+        this.integrationMythicMobsEnabled = integrationMythicMobsEnabled;
+    }
+
+    public final boolean isIntegrationEliteMobsEnabled() {
+        return integrationEliteMobsEnabled;
+    }
+
+    public void setIntegrationEliteMobsEnabled(final boolean integrationEliteMobsEnabled) {
+        this.integrationEliteMobsEnabled = integrationEliteMobsEnabled;
     }
 }
