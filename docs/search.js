@@ -229,7 +229,7 @@ function rankMatch(match, category) {
 function doSearch(request, response) {
     var result = [];
     searchPattern = createSearchPattern(request.term);
-    fallbackPattern = createSearchPattern(request.term.toLowerCase());
+    fallbackPattern = createSearchPattern(request.term.toLowerCase(Locale.ROOT));
     if (searchPattern === "") {
         return this.close();
     }

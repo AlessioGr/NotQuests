@@ -11,6 +11,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
+import java.util.Locale;
+
 public class EliteMobsEvents implements Listener {
     private final NotQuests main;
 
@@ -31,6 +33,29 @@ public class EliteMobsEvents implements Listener {
                             if (activeObjective.getObjective() instanceof KillEliteMobsObjective killEliteMobsObjective) {
                                 if (activeObjective.isUnlocked()) {
 
+                                    //Check conditions
+
+                                    if (!killEliteMobsObjective.getEliteMobToKillContainsName().isBlank() && !eliteMob.getName().toLowerCase(Locale.ROOT).contains(killEliteMobsObjective.getEliteMobToKillContainsName().toLowerCase(Locale.ROOT))) {
+                                        continue;
+                                    }
+
+                                    if (killEliteMobsObjective.getMinimumLevel() >= 0 && eliteMob.getLevel() < killEliteMobsObjective.getMinimumLevel()) {
+                                        continue;
+                                    }
+
+                                    if (killEliteMobsObjective.getMaximumLevel() >= 0 && eliteMob.getLevel() > killEliteMobsObjective.getMaximumLevel()) {
+                                        continue;
+                                    }
+
+                                    if (eliteMob.getDamagers().get(player) < killEliteMobsObjective.getMinimumDamagePercentage()) {
+                                        continue;
+                                    }
+
+                                    if (!killEliteMobsObjective.getSpawnReason().isBlank() && !eliteMob.getSpawnReason().toString().toLowerCase(Locale.ROOT).equalsIgnoreCase(killEliteMobsObjective.getSpawnReason().toLowerCase(Locale.ROOT))) {
+                                        continue;
+                                    }
+
+                                    activeObjective.addProgress(1, -1);
 
                                 }
 

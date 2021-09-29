@@ -9,6 +9,7 @@ import notquests.notquests.Structs.Objectives.EscortNPCObjective;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.util.Locale;
 import java.util.logging.Level;
 
 public class CitizensHandler {
@@ -23,7 +24,7 @@ public class CitizensHandler {
         if (npcToEscort != null) {
             FollowTrait followerTrait = null;
             for (final Trait trait : npcToEscort.getTraits()) {
-                if (trait.getName().toLowerCase().contains("follow")) {
+                if (trait.getName().toLowerCase(Locale.ROOT).contains("follow")) {
                     followerTrait = (FollowTrait) trait;
                 }
             }
@@ -43,7 +44,7 @@ public class CitizensHandler {
         if (npcToEscort != null && destinationNPC != null) {
             FollowTrait followerTrait = null;
             for (final Trait trait : npcToEscort.getTraits()) {
-                if (trait.getName().toLowerCase().contains("follow")) {
+                if (trait.getName().toLowerCase(Locale.ROOT).contains("follow")) {
                     followerTrait = (FollowTrait) trait;
                 }
             }

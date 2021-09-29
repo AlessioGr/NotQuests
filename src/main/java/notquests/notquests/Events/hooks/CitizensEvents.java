@@ -27,6 +27,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.logging.Level;
 
 public class CitizensEvents implements Listener {
@@ -146,7 +147,7 @@ public class CitizensEvents implements Listener {
 
                                             FollowTrait followerTrait = null;
                                             for (final Trait trait : npcToEscort.getTraits()) {
-                                                if (trait.getName().toLowerCase().contains("follow")) {
+                                                if (trait.getName().toLowerCase(Locale.ROOT).contains("follow")) {
                                                     followerTrait = (FollowTrait) trait;
                                                 }
                                             }
