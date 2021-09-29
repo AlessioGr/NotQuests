@@ -86,7 +86,6 @@ public class QuestManager {
                 §bPermission
                 §bPlaceholder (WIP)
                 §bMoney (WIP)
-                §bKarma (WIP)
                 """;
     }
 
