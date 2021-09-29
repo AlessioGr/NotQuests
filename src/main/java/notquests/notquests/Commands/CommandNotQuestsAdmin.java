@@ -124,7 +124,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 
-        if (sender.hasPermission("notnot.quests.admin")) {
+        if (sender.hasPermission("notquests.admin")) {
             sender.sendMessage("");
             if (args.length == 0) {
                 main.adventure().sender(sender).sendMessage(firstLevelCommands);
@@ -1656,7 +1656,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
             }
 
         } else {
-            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage").replaceAll("%PERMISSION%", "notnot.quests.admin"));
+            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage").replaceAll("%PERMISSION%", "notquests.admin"));
         }
         return true;
     }
@@ -1668,7 +1668,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
         main.getDataManager().standardPlayerCompletions.clear();
         main.getDataManager().partialCompletions.clear();
 
-        if (sender.hasPermission("notnot.quests.admin")) {
+        if (sender.hasPermission("notquests.admin")) {
 
             for (Player player : Bukkit.getOnlinePlayers()) {
                 main.getDataManager().standardPlayerCompletions.add(player.getName());

@@ -65,7 +65,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (sender instanceof Player player) {
             boolean guiEnabled = main.getDataManager().getConfiguration().isUserCommandsUseGUI();
-            if (sender.hasPermission("notnot.quests.use")) {
+            if (sender.hasPermission("notquests.use")) {
                 QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer((player.getUniqueId()));
                 sender.sendMessage("");
                 if (args.length == 0) {
@@ -844,7 +844,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                     sender.sendMessage(main.getLanguageManager().getString("chat.too-many-arguments"));
                 }
             } else {
-                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage").replaceAll("%PERMISSION%", "notnot.quests.use"));
+                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage").replaceAll("%PERMISSION%", "notquests.use"));
             }
         } else {
             sender.sendMessage("§cOnly players can run this command! Try §b/notquestsadmin§c.");
@@ -860,7 +860,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
         main.getDataManager().partialCompletions.clear();
 
         if (sender instanceof Player player) {
-            if (sender.hasPermission("notnot.quests.use")) {
+            if (sender.hasPermission("notquests.use")) {
 
 
                 if (args.length == 1) {
