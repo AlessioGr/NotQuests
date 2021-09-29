@@ -278,7 +278,7 @@ public class DataManager {
                         disablePluginAndSaving("There was an error creating the general.yml config file (1).");
                         return;
                     }
-                    main.getLogManager().log(Level.INFO, "§5Loading default §bgeneral.yml§5...");
+                    main.getLogManager().log(Level.INFO, "Loading default <AQUA>general.yml</AQUA>...");
 
                     InputStream inputStream = main.getResource("general.yml");
                     //Instead of creating a new general.yml file, we will copy the one from inside of the plugin jar into the plugin folder:
@@ -542,7 +542,7 @@ public class DataManager {
 
 
         if (valueChanged) {
-            main.getLogManager().info("§5General.yml Configuration was updated with new values! Saving it...");
+            main.getLogManager().info("<AQUA>General.yml</AQUA> Configuration was updated with new values! Saving it...");
             saveGeneralConfig();
         }
 
@@ -659,7 +659,7 @@ public class DataManager {
                 getQuestsData().save(questsDataFile);
                 main.getLogManager().log(Level.INFO, "Saved Data to quests.yml");
             } catch (IOException e) {
-                main.getLogManager().log(Level.SEVERE, "Could not save config to §b" + questsDataFile + "§c. Stacktrace:");
+                main.getLogManager().log(Level.SEVERE, "Could not save config to <AQUA>" + questsDataFile + "</AQUA>. Stacktrace:");
                 e.printStackTrace();
             }
         } else {
