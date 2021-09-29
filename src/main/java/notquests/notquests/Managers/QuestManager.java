@@ -367,6 +367,11 @@ public class QuestManager {
                                     final String objectiveDisplayName = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".displayName", "");
                                     final String objectiveDescription = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".description", "");
                                     final int completionNPCID = main.getDataManager().getQuestsData().getInt("quests." + quest.getQuestName() + ".objectives." + objectiveNumber + ".completionNPCID", -1);
+                                    final String completionArmorStandUUIDString = main.getDataManager().getQuestsData().getString("quests." + quest.getQuestName() + ".objectives." + objectiveNumber + ".completionArmorStandUUID", null);
+                                    if (completionArmorStandUUIDString != null) {
+                                        final UUID completionArmorStandUUID = UUID.fromString(completionArmorStandUUIDString);
+                                        objective.setCompletionArmorStandUUID(completionArmorStandUUID, false);
+                                    }
 
                                     objective.setObjectiveDisplayName(objectiveDisplayName, false);
                                     objective.setObjectiveDescription(objectiveDescription, false);
@@ -619,12 +624,12 @@ public class QuestManager {
     }
 
 
-    public void sendQuestsPreviewOfQuestShownArmorstands(ArmorStand armorStand, Player player) {
+    public boolean sendQuestsPreviewOfQuestShownArmorstands(ArmorStand armorStand, Player player) {
         final ArrayList<Quest> questsAttachedToNPC = getQuestsAttachedToArmorstandWithShowing(armorStand);
 
         //No quests attached or all quests are set to not showing (more likely). THen nothing should show. That should make it work with Interactions plugin and takeEnabled = false.
-        if(questsAttachedToNPC.size() == 0){
-            return;
+        if (questsAttachedToNPC.size() == 0) {
+            return false;
         }
 
         if (main.getDataManager().getConfiguration().isQuestPreviewUseGUI()) {
@@ -732,6 +737,8 @@ public class QuestManager {
             }
             //getQuestsAttachedToNPC(npc);
         }
+
+        return true;
 
     }
 
@@ -1277,12 +1284,15 @@ public class QuestManager {
                 } else {
                     toReturn += "\n    §7§mTo complete: Talk to NPC with ID §b§m" + activeObjective.getObjective().getCompletionNPCID() + " §c§m[Currently not available]";
                 }
-            }else{
+            } else {
                 toReturn += "    §cError: Citizens plugin not installed. Contact an admin.";
             }
-
-
         }
+
+        if (activeObjective.getObjective().getCompletionArmorStandUUID() != null) {
+            toReturn += "\n    §7§mTo complete: Talk to §b§m" + main.getArmorStandManager().getArmorStandName(activeObjective.getObjective().getCompletionArmorStandUUID());
+        }
+
         return toReturn;
     }
 
@@ -1362,8 +1372,9 @@ public class QuestManager {
             } else {
                 toReturn += "    §cError: Citizens plugin not installed. Contact an admin.";
             }
-
-
+        }
+        if (objective.getCompletionArmorStandUUID() != null) {
+            toReturn += "\n    §7To complete: Talk to §b" + main.getArmorStandManager().getArmorStandName(objective.getCompletionArmorStandUUID());
         }
         return toReturn;
     }

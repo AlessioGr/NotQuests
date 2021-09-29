@@ -11,6 +11,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * This is a special object for active objectives. Apart from the main Objective object which stores information about what defines the objective itself,
@@ -154,11 +155,21 @@ public class ActiveObjective {
         return currentProgress;
     }
 
+    //For Citizens NPCs
     public void addProgress(long i, final int NPCID) {
         currentProgress += i;
         if (isCompleted(NPCID)) {
             setHasBeenCompleted(true);
             activeQuest.notifyActiveObjectiveCompleted(this, false, NPCID);
+        }
+    }
+
+    //For Armor Stands
+    public void addProgress(long i, final UUID armorStandUUID) {
+        currentProgress += i;
+        if (isCompleted(armorStandUUID)) {
+            setHasBeenCompleted(true);
+            activeQuest.notifyActiveObjectiveCompleted(this, false, armorStandUUID);
         }
     }
 
@@ -187,8 +198,19 @@ public class ActiveObjective {
 
     }
 
+    //For Citizens NPCs
     public final boolean isCompleted(final int NPCID) {
         if (getObjective().getCompletionNPCID() == -1 || getObjective().getCompletionNPCID() == NPCID) {
+            return currentProgress >= objective.getProgressNeeded();
+        } else {
+            return false;
+        }
+
+    }
+
+    //For Armor Stands
+    public final boolean isCompleted(final UUID armorStandUUID) {
+        if (getObjective().getCompletionArmorStandUUID() == null || getObjective().getCompletionArmorStandUUID().equals(armorStandUUID)) {
             return currentProgress >= objective.getProgressNeeded();
         } else {
             return false;

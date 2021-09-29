@@ -21,6 +21,8 @@ visual:
       count: 1
       disable-if-tps-below: -1.0
   armorstands:
+    #If set to true, you cannot edit the equipments of an armor stand by right-clicking it if it has quests or ACTIVE objectives attached to it
+    prevent-editing: true
     quest-giver-indicator-particle:
       enabled: true
       type: VILLAGER_ANGRY

@@ -4,6 +4,7 @@ import notquests.notquests.NotQuests;
 import notquests.notquests.Structs.Quest;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class Objective {
     private final ObjectiveType objectiveType;
@@ -15,6 +16,7 @@ public class Objective {
     private String objectiveDisplayName = "";
     private String objectiveDescription = "";
     private int completionNPCID = -1;
+    private UUID completionArmorStandUUID = null;
 
     public Objective(NotQuests main, Quest quest, int objectiveID, ObjectiveType objectiveType, int progressNeeded) {
         this.main = main;
@@ -29,10 +31,21 @@ public class Objective {
         return completionNPCID;
     }
 
+    public final UUID getCompletionArmorStandUUID() {
+        return completionArmorStandUUID;
+    }
+
     public final void setCompletionNPCID(final int completionNPCID, final boolean save) {
         this.completionNPCID = completionNPCID;
         if (save) {
             main.getDataManager().getQuestsData().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".completionNPCID", completionNPCID);
+        }
+    }
+
+    public final void setCompletionArmorStandUUID(final UUID completionArmorStandUUID, final boolean save) {
+        this.completionArmorStandUUID = completionArmorStandUUID;
+        if (save) {
+            main.getDataManager().getQuestsData().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".completionArmorStandUUID", completionArmorStandID.toString());
         }
     }
 

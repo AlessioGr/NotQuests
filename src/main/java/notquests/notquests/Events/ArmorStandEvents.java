@@ -274,7 +274,7 @@ public class ArmorStandEvents implements Listener {
                     for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
                         if (activeObjective.isUnlocked()) {
                             if (activeObjective.getObjective() instanceof final TalkToNPCObjective objective) {
-                                if (objective.getNPCtoTalkID() == -1 && (objective.getArmorStandUUID() == armorStand.getUniqueId())) {
+                                if (objective.getNPCtoTalkID() == -1 && (objective.getArmorStandUUID().equals(armorStand.getUniqueId()))) {
                                     activeObjective.addProgress(1, armorStand.getUniqueId());
                                     player.sendMessage("§aYou talked to §b" + main.getArmorStandManager().getArmorStandName(armorStand));
                                     handledObjective = true;
@@ -296,11 +296,15 @@ public class ArmorStandEvents implements Listener {
 
         //Show quests
         if (handledObjective) {
+            if (main.getDataManager().getConfiguration().isArmorStandPreventEditing()) {
+                event.setCancelled(true);
+            }
             return;
         }
-        main.getQuestManager().sendQuestsPreviewOfQuestShownArmorstands(armorStand, player);
 
-        if (main.getDataManager().getConfiguration().isArmorStandPreventEditing()) {
+
+        //If Armor Stand has Quests attached to it and it prevent-editing is true in the config
+        if (main.getQuestManager().sendQuestsPreviewOfQuestShownArmorstands(armorStand, player) && main.getDataManager().getConfiguration().isArmorStandPreventEditing()) {
             event.setCancelled(true);
         }
     }
