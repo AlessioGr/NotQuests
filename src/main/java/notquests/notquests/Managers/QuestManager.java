@@ -1204,122 +1204,41 @@ public class QuestManager {
                 sender.sendMessage("   §7§mDescription: §f§m" + objectiveDescription);
             }
 
-            sender.sendMessage(getCompletedObjectiveDescription(activeObjective));
+            sender.sendMessage(getObjectiveTaskDescription(activeObjective.getObjective(), true));
             sender.sendMessage("   §7§mProgress: §f§m" + activeObjective.getCurrentProgress() + " / " + activeObjective.getProgressNeeded());
         }
     }
 
-    public final String getCompletedObjectiveDescription(final ActiveObjective activeObjective) {
+
+    public final String getObjectiveTaskDescription(final Objective objective, boolean completed) {
         String toReturn = "";
-
-        //This is a little bit different. I cannot easily replace it with sendObjectiveTaskDescription
-        if (activeObjective.getObjective() instanceof BreakBlocksObjective breakBlocksObjective) {
-            toReturn = "    §7§mBlock to break: §f§m" + breakBlocksObjective.getBlockToBreak().toString();
-        } else if (activeObjective.getObjective() instanceof CollectItemsObjective collectItemsObjective) {
-            toReturn = "    §7§mItems to collect: §f§m" + collectItemsObjective.getItemToCollect().getType() + " (" + collectItemsObjective.getItemToCollect().getItemMeta().getDisplayName() + ")";
-        } else if (activeObjective.getObjective() instanceof CraftItemsObjective craftItemsObjective) {
-            toReturn = "    §7§mItems to craft: §f§m" + craftItemsObjective.getItemToCraft().getType() + " (" + craftItemsObjective.getItemToCraft().getItemMeta().getDisplayName() + ")";
-        } else if (activeObjective.getObjective() instanceof TriggerCommandObjective triggerCommandObjective) {
-            toReturn = "    §7§mGoal: §f§m" + triggerCommandObjective.getTriggerName();
-        } else if (activeObjective.getObjective() instanceof OtherQuestObjective otherQuestObjective) {
-            toReturn = "    §7§mQuest completion: §f§m" + otherQuestObjective.getOtherQuest().getQuestName();
-        } else if (activeObjective.getObjective() instanceof KillMobsObjective killMobsObjective) {
-            toReturn = "    §7§mMob to kill: §f§m" + killMobsObjective.getMobToKill().toString();
-        } else if (activeObjective.getObjective() instanceof ConsumeItemsObjective consumeItemsObjective) {
-            toReturn = "    §7§mItems to consume: §f§m" + consumeItemsObjective.getItemToConsume().getType() + " (" + consumeItemsObjective.getItemToConsume().getItemMeta().getDisplayName() + ")";
-        } else if (activeObjective.getObjective() instanceof DeliverItemsObjective deliverItemsObjective) {
-            toReturn = "    §7§mItems to deliver: §f§m" + deliverItemsObjective.getItemToDeliver().getType() + " (" + deliverItemsObjective.getItemToDeliver().getItemMeta().getDisplayName() + ")\n";
-            if(main.isCitizensEnabled()){
-                final NPC npc = CitizensAPI.getNPCRegistry().getById(deliverItemsObjective.getRecipientNPCID());
-                if (npc != null) {
-                    toReturn += "    §7§mDeliver it to §f§m" + npc.getName();
-                } else {
-                    toReturn += "    §7§mThe delivery NPC is currently not available!";
-                }
-            }else{
-                toReturn += "    §cError: Citizens plugin not installed. Contact an admin.";
-            }
-
-        } else if (activeObjective.getObjective() instanceof TalkToNPCObjective talkToNPCObjective) {
-            if (main.isCitizensEnabled() && talkToNPCObjective.getNPCtoTalkID() != -1) {
-                final NPC npc = CitizensAPI.getNPCRegistry().getById(talkToNPCObjective.getNPCtoTalkID());
-                if (npc != null) {
-                    toReturn = "    §7§mTalk to §f§m" + npc.getName();
-                } else {
-                    toReturn = "    §7§mThe target NPC is currently not available!";
-                }
-            } else {
-                if (talkToNPCObjective.getNPCtoTalkID() != -1) {
-                    toReturn += "    §cError: Citizens plugin not installed. Contact an admin.";
-                } else { //ArmorStands
-                    final UUID armorStandUUID = talkToNPCObjective.getArmorStandUUID();
-                    if (armorStandUUID != null) {
-                        toReturn = "    §7§mTalk to §f§m" + main.getArmorStandManager().getArmorStandName(armorStandUUID);
-                    } else {
-                        toReturn += "    §7§mThe target Armor Stand is currently not available!";
-                    }
-                }
-            }
-
-        } else if (activeObjective.getObjective() instanceof EscortNPCObjective escortNPCObjective) {
-            if(main.isCitizensEnabled()){
-                final NPC npc = CitizensAPI.getNPCRegistry().getById(escortNPCObjective.getNpcToEscortID());
-                final NPC npcDestination = CitizensAPI.getNPCRegistry().getById(escortNPCObjective.getNpcToEscortToID());
-
-                if (npc != null && npcDestination != null) {
-                    toReturn = "    §7§mEscort §f§m" + npc.getName() + " §7§mto §f§m" + npcDestination.getName();
-                } else {
-                    toReturn = "    §7§mThe target or destination NPC is currently not available!";
-                }
-            }else{
-                toReturn += "    §cError: Citizens plugin not installed. Contact an admin.";
-            }
-
-        }
-        if (activeObjective.getObjective().getCompletionNPCID() != -1) {
-            if(main.isCitizensEnabled()){
-                final NPC npc = CitizensAPI.getNPCRegistry().getById((activeObjective.getObjective()).getCompletionNPCID());
-                if (npc != null) {
-                    toReturn += "\n    §7§mTo complete: Talk to §b§m" + npc.getName();
-                } else {
-                    toReturn += "\n    §7§mTo complete: Talk to NPC with ID §b§m" + activeObjective.getObjective().getCompletionNPCID() + " §c§m[Currently not available]";
-                }
-            } else {
-                toReturn += "    §cError: Citizens plugin not installed. Contact an admin.";
-            }
+        String eventualColor = "";
+        if (completed) {
+            eventualColor = "§m";
         }
 
-        if (activeObjective.getObjective().getCompletionArmorStandUUID() != null) {
-            toReturn += "\n    §7§mTo complete: Talk to §b§m" + main.getArmorStandManager().getArmorStandName(activeObjective.getObjective().getCompletionArmorStandUUID());
-        }
-
-        return toReturn;
-    }
-
-    public final String getObjectiveTaskDescription(final Objective objective) {
-        String toReturn = "";
         if (objective instanceof BreakBlocksObjective breakBlocksObjective) {
-            toReturn = "    §7Block to break: §f" + breakBlocksObjective.getBlockToBreak().toString();
+            toReturn = "    §7" + eventualColor + "Block to break: §f" + eventualColor + breakBlocksObjective.getBlockToBreak().toString();
         } else if (objective instanceof CollectItemsObjective collectItemsObjective) {
-            toReturn = "    §7Items to collect: §f" + collectItemsObjective.getItemToCollect().getType() + " (" + collectItemsObjective.getItemToCollect().getItemMeta().getDisplayName() + ")";
+            toReturn = "    §7" + eventualColor + "Items to collect: §f" + eventualColor + collectItemsObjective.getItemToCollect().getType() + " (" + collectItemsObjective.getItemToCollect().getItemMeta().getDisplayName() + ")";
         } else if (objective instanceof CraftItemsObjective craftItemsObjective) {
-            toReturn = "    §7Items to craft: §f" + craftItemsObjective.getItemToCraft().getType() + " (" + craftItemsObjective.getItemToCraft().getItemMeta().getDisplayName() + ")";
+            toReturn = "    §7" + eventualColor + "Items to craft: §f" + eventualColor + craftItemsObjective.getItemToCraft().getType() + " (" + craftItemsObjective.getItemToCraft().getItemMeta().getDisplayName() + ")";
         } else if (objective instanceof TriggerCommandObjective triggerCommandObjective) {
-            toReturn = "    §7Goal: §f" + triggerCommandObjective.getTriggerName();
+            toReturn = "    §7" + eventualColor + "Goal: §f" + eventualColor + triggerCommandObjective.getTriggerName();
         } else if (objective instanceof OtherQuestObjective otherQuestObjective) {
-            toReturn = "    §7Quest completion: §f" + otherQuestObjective.getOtherQuest().getQuestName();
+            toReturn = "    §7" + eventualColor + "Quest completion: §f" + eventualColor + otherQuestObjective.getOtherQuest().getQuestName();
         } else if (objective instanceof KillMobsObjective killMobsObjective) {
-            toReturn = "    §7Mob to kill: §f" + killMobsObjective.getMobToKill().toString();
+            toReturn = "    §7" + eventualColor + "Mob to kill: §f" + eventualColor + killMobsObjective.getMobToKill().toString();
         } else if (objective instanceof ConsumeItemsObjective consumeItemsObjective) {
-            toReturn = "    §7Items to consume: §f" + consumeItemsObjective.getItemToConsume().getType() + " (" + consumeItemsObjective.getItemToConsume().getItemMeta().getDisplayName() + ")";
+            toReturn = "    §7" + eventualColor + "Items to consume: §f" + eventualColor + consumeItemsObjective.getItemToConsume().getType() + " (" + consumeItemsObjective.getItemToConsume().getItemMeta().getDisplayName() + ")";
         } else if (objective instanceof DeliverItemsObjective deliverItemsObjective) {
-            toReturn = "    §7Items to deliver: §f" + deliverItemsObjective.getItemToDeliver().getType() + " (" + deliverItemsObjective.getItemToDeliver().getItemMeta().getDisplayName() + ")\n";
+            toReturn = "    §7" + eventualColor + "Items to deliver: §f" + eventualColor + deliverItemsObjective.getItemToDeliver().getType() + " (" + deliverItemsObjective.getItemToDeliver().getItemMeta().getDisplayName() + ")\n";
             if (main.isCitizensEnabled()) {
                 final NPC npc = CitizensAPI.getNPCRegistry().getById(deliverItemsObjective.getRecipientNPCID());
                 if (npc != null) {
-                    toReturn += "    §7Deliver it to §f" + npc.getName();
+                    toReturn += "    §7" + eventualColor + "Deliver it to §f" + eventualColor + npc.getName();
                 } else {
-                    toReturn += "    §7The delivery NPC is currently not available!";
+                    toReturn += "    §7" + eventualColor + "The delivery NPC is currently not available!";
                 }
             } else {
                 toReturn += "    §cError: Citizens plugin not installed. Contact an admin.";
@@ -1329,9 +1248,9 @@ public class QuestManager {
             if (main.isCitizensEnabled() && talkToNPCObjective.getNPCtoTalkID() != -1) {
                 final NPC npc = CitizensAPI.getNPCRegistry().getById(talkToNPCObjective.getNPCtoTalkID());
                 if (npc != null) {
-                    toReturn = "    §7Talk to §f" + npc.getName();
+                    toReturn = "    §7" + eventualColor + "Talk to §f" + eventualColor + npc.getName();
                 } else {
-                    toReturn = "    §7The target NPC is currently not available!";
+                    toReturn = "    §7" + eventualColor + "The target NPC is currently not available!";
                 }
             } else {
                 if (talkToNPCObjective.getNPCtoTalkID() != -1) {
@@ -1339,9 +1258,9 @@ public class QuestManager {
                 } else { //ArmorStands
                     final UUID armorStandUUID = talkToNPCObjective.getArmorStandUUID();
                     if (armorStandUUID != null) {
-                        toReturn = "    §7Talk to §f" + main.getArmorStandManager().getArmorStandName(armorStandUUID);
+                        toReturn = "    §7" + eventualColor + "Talk to §f" + eventualColor + main.getArmorStandManager().getArmorStandName(armorStandUUID);
                     } else {
-                        toReturn += "    §7The target Armor Stand is currently not available!";
+                        toReturn += "    §7" + eventualColor + "The target Armor Stand is currently not available!";
                     }
                 }
             }
@@ -1352,9 +1271,9 @@ public class QuestManager {
                 final NPC npcDestination = CitizensAPI.getNPCRegistry().getById(escortNPCObjective.getNpcToEscortToID());
 
                 if (npc != null && npcDestination != null) {
-                    toReturn = "    §7Escort §f" + npc.getName() + " §7to §f" + npcDestination.getName();
+                    toReturn = "    §7" + eventualColor + "Escort §f" + eventualColor + npc.getName() + " §7" + eventualColor + "to §f" + eventualColor + npcDestination.getName();
                 } else {
-                    toReturn = "    §7The target or destination NPC is currently not available!";
+                    toReturn = "    §7" + eventualColor + "The target or destination NPC is currently not available!";
                 }
             } else {
                 toReturn += "    §cError: Citizens plugin not installed. Contact an admin.";
@@ -1365,16 +1284,16 @@ public class QuestManager {
             if (main.isCitizensEnabled()) {
                 final NPC npc = CitizensAPI.getNPCRegistry().getById(objective.getCompletionNPCID());
                 if (npc != null) {
-                    toReturn += "\n    §7To complete: Talk to §b" + npc.getName();
+                    toReturn += "\n    §7" + eventualColor + "To complete: Talk to §b" + eventualColor + npc.getName();
                 } else {
-                    toReturn += "\n    §7To complete: Talk to NPC with ID §b" + objective.getCompletionNPCID() + " §c[Currently not available]";
+                    toReturn += "\n    §7" + eventualColor + "To complete: Talk to NPC with ID §b" + eventualColor + objective.getCompletionNPCID() + " §c" + eventualColor + "[Currently not available]";
                 }
             } else {
                 toReturn += "    §cError: Citizens plugin not installed. Contact an admin.";
             }
         }
         if (objective.getCompletionArmorStandUUID() != null) {
-            toReturn += "\n    §7To complete: Talk to §b" + main.getArmorStandManager().getArmorStandName(objective.getCompletionArmorStandUUID());
+            toReturn += "\n    §7" + eventualColor + "To complete: Talk to §b" + eventualColor + "" + main.getArmorStandManager().getArmorStandName(objective.getCompletionArmorStandUUID());
         }
         return toReturn;
     }
@@ -1396,7 +1315,7 @@ public class QuestManager {
                     sender.sendMessage("   §9Description: §6" + objectiveDescription);
                 }
 
-                sender.sendMessage(getObjectiveTaskDescription(activeObjective.getObjective()));
+                sender.sendMessage(getObjectiveTaskDescription(activeObjective.getObjective(), false));
 
                 sender.sendMessage("   §7Progress: §f" + activeObjective.getCurrentProgress() + " / " + activeObjective.getProgressNeeded());
             } else {
@@ -1421,7 +1340,7 @@ public class QuestManager {
                 sender.sendMessage("   §9Description: §6" + objectiveDescription);
             }
 
-            sender.sendMessage(getObjectiveTaskDescription(objective));
+            sender.sendMessage(getObjectiveTaskDescription(objective, false));
 
 
         }
@@ -1454,7 +1373,7 @@ public class QuestManager {
                 sender.sendMessage("      §8No depending objectives found!");
             }
 
-            sender.sendMessage(getObjectiveTaskDescription(objective));
+            sender.sendMessage(getObjectiveTaskDescription(objective, false));
 
         }
     }
@@ -1475,7 +1394,7 @@ public class QuestManager {
                 sender.sendMessage("   §9Description: §6" + objectiveDescription);
             }
 
-            sender.sendMessage(getObjectiveTaskDescription(activeObjective.getObjective()));
+            sender.sendMessage(getObjectiveTaskDescription(activeObjective.getObjective(), false));
 
 
 

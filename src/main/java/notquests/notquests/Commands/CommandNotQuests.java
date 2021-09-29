@@ -737,7 +737,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                                             .replaceAll("%ACTIVEOBJECTIVEID%", "" + activeObjective.getObjectiveID())
                                                             .replaceAll("%OBJECTIVENAME%", nameToDisplay)
                                                             .replaceAll("%OBJECTIVEDESCRIPTION%", descriptionToDisplay)
-                                                            .replaceAll("%ACTIVEOBJECTIVEDESCRIPTION%", main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective()))
+                                                            .replaceAll("%ACTIVEOBJECTIVEDESCRIPTION%", main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), false))
                                                             .replaceAll("%ACTIVEOBJECTIVEPROGRESS%", "" + activeObjective.getCurrentProgress())
                                                             .replaceAll("%OBJECTIVEPROGRESSNEEDED%", "" + activeObjective.getProgressNeeded())
 
@@ -795,7 +795,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                                         .replaceAll("%ACTIVEOBJECTIVEID%", "" + activeObjective.getObjectiveID())
                                                         .replaceAll("%OBJECTIVENAME%", nameToDisplay)
                                                         .replaceAll("%OBJECTIVEDESCRIPTION%", descriptionToDisplay)
-                                                        .replaceAll("%COMPLETEDOBJECTIVEDESCRIPTION%", main.getQuestManager().getCompletedObjectiveDescription(activeObjective))
+                                                        .replaceAll("%COMPLETEDOBJECTIVEDESCRIPTION%", main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), true))
                                                         .replaceAll("%ACTIVEOBJECTIVEPROGRESS%", "" + activeObjective.getCurrentProgress())
                                                         .replaceAll("%OBJECTIVEPROGRESSNEEDED%", "" + activeObjective.getProgressNeeded())
 
