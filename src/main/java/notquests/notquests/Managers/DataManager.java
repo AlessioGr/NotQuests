@@ -12,6 +12,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.io.*;
 import java.sql.Connection;
@@ -19,6 +20,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -114,6 +116,13 @@ public class DataManager {
      */
     private final Configuration configuration;
 
+
+    /*
+     * ItemStack Cache used for 'storing ItemStacks to PDBs' (used for attaching Objectives To Armor Stands)
+     */
+    private final HashMap<Integer, ItemStack> itemStackCache;
+
+
     /**
      * The Data Manager is initialized here. This mainly creates some
      * Array List for generic Tab Completions for various commands.
@@ -124,6 +133,9 @@ public class DataManager {
      */
     public DataManager(NotQuests main) {
         this.main = main;
+
+        itemStackCache = new HashMap<>();
+
 
         // create an instance of the Configuration object
         configuration = new Configuration();
@@ -1108,4 +1120,8 @@ public class DataManager {
         return config;
     }
 
+
+    public HashMap<Integer, ItemStack> getItemStackCache() {
+        return itemStackCache;
+    }
 }

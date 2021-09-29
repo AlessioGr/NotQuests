@@ -18,10 +18,12 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class ObjectivesAdminCommand {
 
     private final NotQuests main;
+
 
     public ObjectivesAdminCommand(final NotQuests main) {
         this.main = main;
@@ -483,47 +485,118 @@ public class ObjectivesAdminCommand {
 
 
                 } else if (args[4].equalsIgnoreCase("DeliverItems")) {
-                    if(!main.isCitizensEnabled()){
-                        sender.sendMessage("§cError: Any kind of NPC stuff has been disabled, because you don't have the Citizens plugin installed on your server. You need to install the Citizens plugin in order for NPC stuff to work.");
-                        return;
-                    }
-                    final int NPCID = Integer.parseInt(args[7]);
-                    final NPC npc = CitizensAPI.getNPCRegistry().getById(NPCID);
-                    if (npc != null) {
 
-                        if (args[5].equalsIgnoreCase("hand")) {
-                            if (sender instanceof Player player) {
-                                ItemStack holdingItem = player.getInventory().getItemInMainHand();
-                                int amountToDeliver = Integer.parseInt(args[6]);
-
-                                DeliverItemsObjective deliverItemsObjective = new DeliverItemsObjective(main, quest, quest.getObjectives().size() + 1, holdingItem, amountToDeliver, NPCID);
-                                quest.addObjective(deliverItemsObjective, true);
-                                sender.sendMessage("§aObjective successfully added to quest §b" + quest.getQuestName() + "§a!");
-
-                            } else {
-                                sender.sendMessage("§cThis command can only be run as a player.");
-                            }
-                        } else {
-                            Material itemMaterial = Material.getMaterial(args[5]);
-                            if (itemMaterial != null) {
-                                ItemStack itemStack = new ItemStack(itemMaterial, 1);
-                                int amountToDeliver = Integer.parseInt(args[6]);
-
-
-                                DeliverItemsObjective deliverItemsObjective = new DeliverItemsObjective(main, quest, quest.getObjectives().size() + 1, itemStack, amountToDeliver, NPCID);
-                                quest.addObjective(deliverItemsObjective, true);
-                                sender.sendMessage("§aObjective successfully added to quest §b" + quest.getQuestName() + "§a!");
-
-
-                            } else {
-                                sender.sendMessage("§cItem §b" + args[5] + " §cnot found!");
-                            }
+                    if (!args[7].equalsIgnoreCase("armorstand")) {
+                        if (!main.isCitizensEnabled()) {
+                            sender.sendMessage("§cError: Any kind of NPC stuff has been disabled, because you don't have the Citizens plugin installed on your server. You need to install the Citizens plugin in order for NPC stuff to work.");
+                            return;
                         }
+                        final int NPCID = Integer.parseInt(args[7]);
+                        final NPC npc = CitizensAPI.getNPCRegistry().getById(NPCID);
+                        if (npc != null) {
+                            if (args[5].equalsIgnoreCase("hand")) {
+                                if (sender instanceof Player player) {
+                                    ItemStack holdingItem = player.getInventory().getItemInMainHand();
+                                    int amountToDeliver = Integer.parseInt(args[6]);
+
+                                    DeliverItemsObjective deliverItemsObjective = new DeliverItemsObjective(main, quest, quest.getObjectives().size() + 1, holdingItem, amountToDeliver, NPCID);
+                                    quest.addObjective(deliverItemsObjective, true);
+                                    sender.sendMessage("§aObjective successfully added to quest §b" + quest.getQuestName() + "§a!");
+
+                                } else {
+                                    sender.sendMessage("§cThis command can only be run as a player.");
+                                }
+                            } else {
+                                Material itemMaterial = Material.getMaterial(args[5]);
+                                if (itemMaterial != null) {
+                                    ItemStack itemStack = new ItemStack(itemMaterial, 1);
+                                    int amountToDeliver = Integer.parseInt(args[6]);
 
 
-                    } else {
-                        sender.sendMessage("§cError: NPC with the ID §b" + NPCID + " §cwas not found!");
+                                    DeliverItemsObjective deliverItemsObjective = new DeliverItemsObjective(main, quest, quest.getObjectives().size() + 1, itemStack, amountToDeliver, NPCID);
+                                    quest.addObjective(deliverItemsObjective, true);
+                                    sender.sendMessage("§aObjective successfully added to quest §b" + quest.getQuestName() + "§a!");
+
+
+                                } else {
+                                    sender.sendMessage("§cItem §b" + args[5] + " §cnot found!");
+                                }
+                            }
+
+
+                        } else {
+                            sender.sendMessage("§cError: NPC with the ID §b" + NPCID + " §cwas not found!");
+                        }
+                    } else { //Armor Stands
+                        if (sender instanceof Player player) {
+
+                            final ItemStack itemToDeliver;
+                            int amountToDeliver = Integer.parseInt(args[6]);
+                            if (args[5].equalsIgnoreCase("hand")) {
+                                itemToDeliver = player.getInventory().getItemInMainHand();
+                            } else {
+                                final Material itemMaterial = Material.getMaterial(args[5]);
+                                if (itemMaterial != null) {
+                                    itemToDeliver = new ItemStack(itemMaterial, 1);
+                                } else {
+                                    sender.sendMessage("§cItem §b" + args[5] + " §cnot found!");
+                                    return;
+                                }
+                            }
+
+                            Random rand = new Random();
+                            int randomNum = rand.nextInt((1000000 - 1) + 1) + 1;
+
+                            main.getDataManager().getItemStackCache().put(randomNum, itemToDeliver);
+
+
+                            ItemStack itemStack = new ItemStack(Material.PAPER, 1);
+                            //give a specialitem. clicking an armorstand with that special item will remove the pdb.
+
+                            NamespacedKey key = new NamespacedKey(main, "notquests-item");
+                            NamespacedKey QuestNameKey = new NamespacedKey(main, "notquests-questname");
+
+                            NamespacedKey ItemStackKey = new NamespacedKey(main, "notquests-itemstackcache");
+                            NamespacedKey ItemStackAmountKey = new NamespacedKey(main, "notquests-itemstackamount");
+
+                            ItemMeta itemMeta = itemStack.getItemMeta();
+                            //Only paper List<Component> lore = new ArrayList<>();
+                            List<String> lore = new ArrayList<>();
+
+                            assert itemMeta != null;
+
+                            itemMeta.getPersistentDataContainer().set(QuestNameKey, PersistentDataType.STRING, quest.getQuestName());
+                            itemMeta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, 7);
+
+
+                            itemMeta.getPersistentDataContainer().set(ItemStackKey, PersistentDataType.INTEGER, randomNum);
+                            itemMeta.getPersistentDataContainer().set(ItemStackAmountKey, PersistentDataType.INTEGER, amountToDeliver);
+
+
+                            //Only paper itemMeta.displayName(Component.text("§dCheck Armor Stand", NamedTextColor.LIGHT_PURPLE));
+                            itemMeta.setDisplayName("§dAdd DeliverItems Objective to Armor Stand");
+                            //Only paper lore.add(Component.text("§fRight-click an Armor Stand to see which Quests are attached to it."));
+                            lore.add("§fRight-click an Armor Stand to add the following objective to it:");
+                            lore.add("§eDeliverItems §fObjective of Quest §b" + quest.getQuestName() + "§f.");
+
+                            itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+                            //Only paper itemMeta.lore(lore);
+
+                            itemMeta.setLore(lore);
+                            itemStack.setItemMeta(itemMeta);
+
+                            player.getInventory().addItem(itemStack);
+
+                            player.sendMessage("§aYou have been given an item with which you can add the DeliverItems Objective to an armor stand. Check your inventory!");
+
+
+                        } else {
+                            sender.sendMessage("§cMust be a player!");
+                            showUsage(quest, sender, args);
+                        }
                     }
+
+
                 } else {
                     sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
                 }
@@ -834,7 +907,7 @@ public class ObjectivesAdminCommand {
                                 main.getDataManager().completions.add("" + npc.getId());
                             }
                         }
-
+                        main.getDataManager().completions.add("armorstand");
                         return main.getDataManager().completions;
                     }
                 } else if (args[3].equalsIgnoreCase("edit")) {
@@ -935,7 +1008,7 @@ public class ObjectivesAdminCommand {
                     sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2ConsumeItems §3[Item Name/hand] [Amount To Consume]");
                 } else if (args[4].equalsIgnoreCase("DeliverItems")) {
                     sender.sendMessage("§cMissing 6. argument §3[Item Name]§c. Specify the §bitem§c the player has to deliver.");
-                    sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2DeliverItems §3[Item Name/hand] [Amount To Collect] [Recipient NPC ID]");
+                    sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2DeliverItems §3[Item Name/hand] [Amount To Collect] [Recipient NPC ID / 'armorstand']");
                 } else if (args[4].equalsIgnoreCase("TalkToNPC")) {
                     sender.sendMessage("§cMissing 6. argument §3[Item Name]§c. Specify the §bID of the NPC§c who the player has to talk to.");
                     sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2TalkToNPC §3[Target NPC ID / armorstand]");
@@ -1001,7 +1074,7 @@ public class ObjectivesAdminCommand {
                     sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2ConsumeItems §3[Item Name/hand] [Amount To Consume]");
                 } else if (args[4].equalsIgnoreCase("DeliverItems")) {
                     sender.sendMessage("§cMissing 7. argument §3[Amount To Deliver]§c. Specify the §bamount of items§c the player has to deliver.");
-                    sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2DeliverItems §3[Item Name/hand] [Amount To Deliver] [Recipient NPC ID]");
+                    sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2DeliverItems §3[Item Name/hand] [Amount To Deliver] [Recipient NPC ID / 'armorstand']");
 
                 } else if (args[4].equalsIgnoreCase("EscortNPC")) {
                     sender.sendMessage("§cMissing 7. argument §3[Destination NPC ID]§c. Specify the §bID of the NPC§c where the player has to escort the escort NPC to.");
@@ -1064,8 +1137,8 @@ public class ObjectivesAdminCommand {
                     sender.sendMessage("§cMissing last argument §3[deductIfBlockIsPlaced?: yes/no]§c. Specify §bYes §cor §b No");
                     sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2BreakBlocks §3[Block Name] [AmountToBreak] [deductIfBlockIsPlaced?: yes/no]");
                 } else if (args[4].equalsIgnoreCase("DeliverItems")) {
-                    sender.sendMessage("§cMissing last argument §3[Recipient NPC ID]§c. Enter the §bID of the NPC§c to whom the player has to deliver the items to.");
-                    sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2DeliverItems §3[Item Name/hand] [Amount To Deliver] [Recipient NPC ID]");
+                    sender.sendMessage("§cMissing last argument §3[Recipient NPC ID]§c. Enter the §bID of the NPC§c to whom the player has to deliver the items to. Alternatively, you can enter 'armorstand' to use armor stands instead of Citizens NPCs.");
+                    sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2DeliverItems §3[Item Name/hand] [Amount To Deliver] [Recipient NPC ID / 'armorstand']");
 
                 }
             } else if (args[3].equalsIgnoreCase("edit")) {

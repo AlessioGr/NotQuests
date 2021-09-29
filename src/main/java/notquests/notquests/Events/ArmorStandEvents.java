@@ -59,9 +59,12 @@ public class ArmorStandEvents implements Listener {
                     final String questName = container.get(questsKey, PersistentDataType.STRING);
 
                     final NamespacedKey objectiveIDKey = new NamespacedKey(main, "notquests-objectiveid");
-                    final int objectiveID = container.get(objectiveIDKey, PersistentDataType.INTEGER);
+                    int objectiveID = -1;
+                    if (container.has(objectiveIDKey, PersistentDataType.INTEGER)) {
+                        objectiveID = container.get(objectiveIDKey, PersistentDataType.INTEGER);
+                    }
 
-                    if (questName == null && ((id >= 0 && id <= 3) || id == 5 || id == 6)) {
+                    if (questName == null && ((id >= 0 && id <= 3) || id == 5 || id == 6 || id == 7)) {
                         player.sendMessage("§cError: Your item has no valid quest attached to it.");
                         return;
                     }
@@ -269,6 +272,32 @@ public class ArmorStandEvents implements Listener {
                         }
 
 
+                    } else if (id == 7) { //Add Objective DeliverItems
+
+
+                        final Quest quest = main.getQuestManager().getQuest(questName);
+                        if (quest != null) {
+                            final NamespacedKey amountToDeliverKey = new NamespacedKey(main, "notquests-itemstackamount");
+                            final int amountToDeliver = container.get(amountToDeliverKey, PersistentDataType.INTEGER);
+
+                            final NamespacedKey itemStackCacheKey = new NamespacedKey(main, "notquests-itemstackcache");
+                            final int itemStackCache = container.get(itemStackCacheKey, PersistentDataType.INTEGER);
+
+                            final ItemStack itemToDeliver = main.getDataManager().getItemStackCache().get(itemStackCache);
+
+                            if (itemToDeliver != null) {
+                                DeliverItemsObjective deliverItemsObjective = new DeliverItemsObjective(main, quest, quest.getObjectives().size() + 1, itemToDeliver, amountToDeliver, armorStand.getUniqueId());
+                                quest.addObjective(deliverItemsObjective, true);
+                                player.sendMessage("§aObjective successfully added to quest §b" + quest.getQuestName() + "§a!");
+                            } else {
+                                player.sendMessage("§cItemStack is not cached anymore! This item won't work after a server restart.");
+                            }
+
+
+                        } else {
+                            player.sendMessage("§cError: Quest §b" + questName + " §cdoes not exist.");
+                        }
+
                     }
                 }else {
                     showQuestOrHandleObjectivesOfArmorStands(player, armorStand, event);
@@ -304,6 +333,10 @@ public class ArmorStandEvents implements Listener {
                                                     continue;
                                                 }
                                                 final long progressLeft = activeObjective.getProgressNeeded() - activeObjective.getCurrentProgress();
+
+                                                if (progressLeft == 0) {
+                                                    return;
+                                                }
 
                                                 if (progressLeft < itemStack.getAmount()) { //We can finish it with this itemStack
                                                     itemStack.setAmount((itemStack.getAmount() - (int) progressLeft));

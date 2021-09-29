@@ -110,6 +110,10 @@ public class CitizensEvents implements Listener {
 
                                                 final long progressLeft = activeObjective.getProgressNeeded() - activeObjective.getCurrentProgress();
 
+                                                if (progressLeft == 0) {
+                                                    return;
+                                                }
+
                                                 if (progressLeft < itemStack.getAmount()) { //We can finish it with this itemStack
                                                     itemStack.setAmount((itemStack.getAmount() - (int) progressLeft));
                                                     activeObjective.addProgress(progressLeft, npc.getId());
