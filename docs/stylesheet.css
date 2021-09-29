@@ -186,7 +186,7 @@ ul.nav-list li {
 }
 .sub-nav .nav-list-search {
     float:right;
-    margin:0;
+    margin:0 0 0 0;
     padding:5px 6px;
     clear:none;
 }
@@ -236,10 +236,10 @@ ul.sub-nav-list li {
     margin:10px 0;
 }
 .sub-title {
-    margin:5px 0 0;
+    margin:5px 0 0 0;
 }
 .header ul {
-    margin:0 0 15px;
+    margin:0 0 15px 0;
     padding:0;
 }
 .header ul li, .footer ul li {
@@ -277,11 +277,11 @@ dl.notes > dt {
     font-family: 'DejaVu Sans', Arial, Helvetica, sans-serif;
     font-size:12px;
     font-weight:bold;
-    margin:10px 0 0;
+    margin:10px 0 0 0;
     color:#4E4E4E;
 }
 dl.notes > dd {
-    margin:5px 0 10px;
+    margin:5px 0 10px 0;
     font-size:14px;
     font-family:'DejaVu Serif', Georgia, "Times New Roman", Times, serif;
 }
@@ -317,7 +317,7 @@ ul.block-list,
 ul.details-list,
 ul.member-list,
 ul.summary-list {
-    margin:10px 0;
+    margin:10px 0 10px 0;
     padding:0;
 }
 ul.block-list > li,
@@ -353,10 +353,10 @@ ul.summary-list > li {
     font-weight:bold;
     clear:none;
     overflow:hidden;
-    padding:0;
+    padding:0px;
     padding-top:10px;
     padding-left:1px;
-    margin:0;
+    margin:0px;
     white-space:pre;
 }
 .caption a:link, .caption a:visited {
@@ -382,7 +382,7 @@ ul.summary-list > li {
 div.table-tabs > button {
    border: none;
    cursor: pointer;
-   padding: 5px 12px 7px;
+   padding: 5px 12px 7px 12px;
    font-weight: bold;
    margin-right: 3px;
 }
@@ -616,7 +616,7 @@ ul.ui-autocomplete  li {
     position:relative;
     left:-4px;
     top:-4px;
-    font-size:0;
+    font-size:0px;
 }
 .watermark {
     color:#545454;
@@ -642,14 +642,14 @@ ul.ui-autocomplete  li {
     z-index: 1;
 }
 .inherited-list {
-    margin: 10px 0;
+    margin: 10px 0 10px 0;
 }
 section.description {
     line-height: 1.4;
 }
 .summary section[class$="-summary"], .details section[class$="-details"],
 .class-uses .detail, .serialized-class-details {
-    padding: 0 20px 5px 10px;
+    padding: 0px 20px 5px 10px;
     border: 1px solid #ededed;
     background-color: #f8f8f8;
 }
@@ -803,7 +803,7 @@ table.striped > tbody > tr > th {
     }
     .summary section[class$="-summary"], .details section[class$="-details"],
     .class-uses .detail, .serialized-class-details {
-        padding: 0 8px 5px;
+        padding: 0 8px 5px 8px;
     }
     body {
         -webkit-text-size-adjust: none;
