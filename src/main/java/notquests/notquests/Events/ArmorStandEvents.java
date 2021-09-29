@@ -3,6 +3,7 @@ package notquests.notquests.Events;
 import notquests.notquests.NotQuests;
 import notquests.notquests.Structs.ActiveObjective;
 import notquests.notquests.Structs.ActiveQuest;
+import notquests.notquests.Structs.Objectives.DeliverItemsObjective;
 import notquests.notquests.Structs.Objectives.Objective;
 import notquests.notquests.Structs.Objectives.TalkToNPCObjective;
 import notquests.notquests.Structs.Quest;
@@ -293,8 +294,35 @@ public class ArmorStandEvents implements Listener {
                 for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                     for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
                         if (activeObjective.isUnlocked()) {
-                            if (activeObjective.getObjective() instanceof final TalkToNPCObjective objective) {
-                                if (objective.getNPCtoTalkID() == -1 && (objective.getArmorStandUUID().equals(armorStand.getUniqueId()))) {
+
+                            if (activeObjective.getObjective() instanceof final DeliverItemsObjective deliverItemsObjective) {
+                                if (deliverItemsObjective.getRecipientNPCID() == -1 && deliverItemsObjective.getRecipientArmorStandUUID().equals(armorStand.getUniqueId())) {
+                                    for (final ItemStack itemStack : player.getInventory().getContents()) {
+                                        if (itemStack != null) {
+                                            if (deliverItemsObjective.getItemToDeliver().getType().equals(itemStack.getType())) {
+                                                if (deliverItemsObjective.getItemToDeliver().getItemMeta() != null && !deliverItemsObjective.getItemToDeliver().getItemMeta().equals(itemStack.getItemMeta())) {
+                                                    continue;
+                                                }
+                                                final long progressLeft = activeObjective.getProgressNeeded() - activeObjective.getCurrentProgress();
+
+                                                if (progressLeft < itemStack.getAmount()) { //We can finish it with this itemStack
+                                                    itemStack.setAmount((itemStack.getAmount() - (int) progressLeft));
+                                                    activeObjective.addProgress(progressLeft, armorStand.getUniqueId());
+                                                    player.sendMessage("§aYou have delivered §b" + progressLeft + " §aitems to §b" + main.getArmorStandManager().getArmorStandName(armorStand));
+                                                    break;
+                                                } else {
+                                                    player.getInventory().removeItem(itemStack);
+                                                    activeObjective.addProgress(itemStack.getAmount(), armorStand.getUniqueId());
+                                                    player.sendMessage("§aYou have delivered §b" + itemStack.getAmount() + " §aitems to §b" + main.getArmorStandManager().getArmorStandName(armorStand));
+                                                }
+                                            }
+                                        }
+
+                                    }
+
+                                }
+                            } else if (activeObjective.getObjective() instanceof final TalkToNPCObjective talkToNPCObjective) {
+                                if (talkToNPCObjective.getNPCtoTalkID() == -1 && (talkToNPCObjective.getArmorStandUUID().equals(armorStand.getUniqueId()))) {
                                     activeObjective.addProgress(1, armorStand.getUniqueId());
                                     player.sendMessage("§aYou talked to §b" + main.getArmorStandManager().getArmorStandName(armorStand));
                                     handledObjective = true;

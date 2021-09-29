@@ -98,18 +98,19 @@ public class CitizensEvents implements Listener {
                 for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                     for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
                         if (activeObjective.isUnlocked()) {
-                            if (activeObjective.getObjective() instanceof final DeliverItemsObjective objective) {
-                                if (objective.getRecipientNPCID() == npc.getId()) {
+                            if (activeObjective.getObjective() instanceof final DeliverItemsObjective deliverItemsObjective) {
+                                if (deliverItemsObjective.getRecipientNPCID() == npc.getId()) {
                                     for (final ItemStack itemStack : player.getInventory().getContents()) {
                                         if (itemStack != null) {
-                                            if (objective.getItemToDeliver().getType().equals(itemStack.getType()) && objective.getItemToDeliver().getItemMeta().equals(itemStack.getItemMeta())) {
+
+                                            if (deliverItemsObjective.getItemToDeliver().getType().equals(itemStack.getType())) {
+                                                if (deliverItemsObjective.getItemToDeliver().getItemMeta() != null && !deliverItemsObjective.getItemToDeliver().getItemMeta().equals(itemStack.getItemMeta())) {
+                                                    continue;
+                                                }
 
                                                 final long progressLeft = activeObjective.getProgressNeeded() - activeObjective.getCurrentProgress();
-                                                //player.sendMessage("§6Progress Needed: §b" + activeObjective.getProgressNeeded());
-                                                //player.sendMessage("§6Progress left: §b" + progressLeft);
-                                                //player.sendMessage("§6ItemStack amount: §b" + itemStack.getAmount());
-                                                if (progressLeft < itemStack.getAmount()) {
-                                                    //player.sendMessage("§6new amount: " + (itemStack.getAmount() - (int)progressLeft));
+
+                                                if (progressLeft < itemStack.getAmount()) { //We can finish it with this itemStack
                                                     itemStack.setAmount((itemStack.getAmount() - (int) progressLeft));
                                                     activeObjective.addProgress(progressLeft, npc.getId());
                                                     player.sendMessage("§aYou have delivered §b" + progressLeft + " §aitems to §b" + npc.getName());
@@ -125,15 +126,15 @@ public class CitizensEvents implements Listener {
                                     }
 
                                 }
-                            } else if (activeObjective.getObjective() instanceof final TalkToNPCObjective objective) {
-                                if (objective.getNPCtoTalkID() != -1 && objective.getNPCtoTalkID() == npc.getId()) {
+                            } else if (activeObjective.getObjective() instanceof final TalkToNPCObjective talkToNPCObjective) {
+                                if (talkToNPCObjective.getNPCtoTalkID() != -1 && talkToNPCObjective.getNPCtoTalkID() == npc.getId()) {
                                     activeObjective.addProgress(1, npc.getId());
                                     player.sendMessage("§aYou talked to §b" + npc.getName());
 
                                 }
-                            } else if (activeObjective.getObjective() instanceof final EscortNPCObjective objective) {
-                                if (objective.getNpcToEscortToID() == npc.getId()) {
-                                    final NPC npcToEscort = CitizensAPI.getNPCRegistry().getById(objective.getNpcToEscortID());
+                            } else if (activeObjective.getObjective() instanceof final EscortNPCObjective escortNPCObjective) {
+                                if (escortNPCObjective.getNpcToEscortToID() == npc.getId()) {
+                                    final NPC npcToEscort = CitizensAPI.getNPCRegistry().getById(escortNPCObjective.getNpcToEscortID());
                                     if (npcToEscort != null) {
                                         if (npcToEscort.isSpawned() && (npcToEscort.getEntity().getLocation().distance(player.getLocation()) < 6)) {
                                             activeObjective.addProgress(1, npc.getId());
