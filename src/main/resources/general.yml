@@ -13,6 +13,7 @@ general:
 visual:
   #Sets which language to use. Default is languages/en.yml
   language: en
+  #This controls the particle above the heads of Citizen NPCs with Quests attached to them
   citizensnpc:
     quest-giver-indicator-particle:
       enabled: true
@@ -23,6 +24,7 @@ visual:
   armorstands:
     #If set to true, you cannot edit the equipments of an armor stand by right-clicking it if it has quests or ACTIVE objectives attached to it
     prevent-editing: true
+    #This controls the particle above the heads of Armor Stands with Quests attached to them
     quest-giver-indicator-particle:
       enabled: true
       type: VILLAGER_ANGRY
@@ -34,6 +36,7 @@ gui:
     # If set to false, clickable text will be used for Quest Previews instead
     enabled: true
   usercommands:
+    # If set to false, clickable text will be used for all the other /q commands instead
     enabled: true
 placeholders:
   player_active_quests_list_horizontal:
