@@ -1263,7 +1263,7 @@ public class ObjectivesAdminCommand {
             }
 
             final int maximumLevel;
-            if (args[6].equalsIgnoreCase("any")) {
+            if (args[7].equalsIgnoreCase("any")) {
                 maximumLevel = -1;
             } else {
                 maximumLevel = Integer.parseInt(args[7]);
