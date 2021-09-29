@@ -335,7 +335,7 @@ public class ArmorStandEvents implements Listener {
                                                 final long progressLeft = activeObjective.getProgressNeeded() - activeObjective.getCurrentProgress();
 
                                                 if (progressLeft == 0) {
-                                                    return;
+                                                    continue;
                                                 }
 
                                                 if (progressLeft < itemStack.getAmount()) { //We can finish it with this itemStack
