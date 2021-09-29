@@ -194,7 +194,7 @@ public final class NotQuests extends JavaPlugin {
         }
 
         //Register the Event Listeners in EliteMobsEvents, if EliteMobs integration is enabled
-        if (isMythicMobsEnabled()) {
+        if (isEliteMobsEnabled()) {
             getServer().getPluginManager().registerEvents(new EliteMobsEvents(this), this);
         }
 

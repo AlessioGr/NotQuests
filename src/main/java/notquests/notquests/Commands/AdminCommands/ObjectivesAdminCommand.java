@@ -765,6 +765,9 @@ public class ObjectivesAdminCommand {
                     main.getDataManager().completions.add("DeliverItems");
                     main.getDataManager().completions.add("TalkToNPC");
                     main.getDataManager().completions.add("EscortNPC");
+                    if (main.isEliteMobsEnabled()) {
+                        main.getDataManager().completions.add("KillEliteMobs");
+                    }
                     return main.getDataManager().completions;
                 } else if (args[3].equalsIgnoreCase("edit")) {
                     for (final Objective objective : quest.getObjectives()) {

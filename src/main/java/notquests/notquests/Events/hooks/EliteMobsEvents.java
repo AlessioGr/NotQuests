@@ -19,7 +19,7 @@ public class EliteMobsEvents implements Listener {
         final EliteEntity eliteMob = event.getEliteEntity();
 
         for (final Player player : eliteMob.getDamagers().keySet()) {
-            player.sendMessage("You killed: " + eliteMob.getName());
+           // player.sendMessage("You killed: " + eliteMob.getName());
 
         }
     }

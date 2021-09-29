@@ -48,7 +48,8 @@ public class QuestManager {
 
     private boolean questDataLoaded = false;
 
-    private final String objectiveTypesList, rewardTypesList, requirementsTypesList;
+    private final String rewardTypesList, requirementsTypesList;
+    private String objectiveTypesList;
 
 
     public QuestManager(NotQuests main) {
@@ -70,6 +71,10 @@ public class QuestManager {
                 §bEscortNPC
                 """;
 
+        if (main.isEliteMobsEnabled()) {
+            objectiveTypesList += "\n§9KillEliteMobs §7[Special Integration]";
+        }
+
         rewardTypesList = """
                 §eReward Types:
                 §bConsoleCommand
@@ -83,8 +88,8 @@ public class QuestManager {
                 §bOtherQuest
                 §bQuestPoints
                 §bPermission
+                §bMoney
                 §bPlaceholder (WIP)
-                §bMoney (WIP)
                 """;
     }
 
