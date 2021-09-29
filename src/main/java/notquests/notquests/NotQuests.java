@@ -1,6 +1,7 @@
 
 package notquests.notquests;
 
+import com.magmaguy.elitemobs.EliteMobs;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.papermc.lib.PaperLib;
 import net.citizensnpcs.api.CitizensAPI;
@@ -16,6 +17,7 @@ import notquests.notquests.Commands.CommandNotQuestsAdmin;
 import notquests.notquests.Events.ArmorStandEvents;
 import notquests.notquests.Events.QuestEvents;
 import notquests.notquests.Events.hooks.CitizensEvents;
+import notquests.notquests.Events.hooks.EliteMobsEvents;
 import notquests.notquests.Events.hooks.MythicMobsEvents;
 import notquests.notquests.Managers.*;
 import notquests.notquests.Placeholders.QuestPlaceholders;
@@ -62,6 +64,10 @@ public final class NotQuests extends JavaPlugin {
     private boolean mythicMobsEnabled = false;
     private MythicMobs mythicMobs;
 
+    //Enabled Hooks
+    private boolean eliteMobsEnabled = false;
+    private EliteMobs eliteMobs;
+
     private BukkitAudiences adventure;
 
     public final BukkitAudiences adventure() {
@@ -103,13 +109,22 @@ public final class NotQuests extends JavaPlugin {
             setupPermissions();
             setupChat();
             vaultEnabled = true;
+            getLogManager().info("Vault found! Enabling Vault support...");
         }
 
         //MythicMobs Hook
         if (getServer().getPluginManager().getPlugin("MythicMobs") != null && Objects.requireNonNull(getServer().getPluginManager().getPlugin("MythicMobs")).isEnabled()) {
             mythicMobsEnabled = true;
+            getLogManager().info("MythicMobs found! Enabling MythicMobs support...");
             this.mythicMobs = MythicMobs.inst();
         }
+
+        //EliteMobs Hook
+        if (getServer().getPluginManager().getPlugin("EliteMobs") != null && Objects.requireNonNull(getServer().getPluginManager().getPlugin("EliteMobs")).isEnabled()) {
+            eliteMobsEnabled = true;
+            getLogManager().info("EliteMobs found! Enabling EliteMobs support...");
+        }
+
 
         //Create a new instance of the Data Manager which will be re-used everywhere
         dataManager = new DataManager(this);
@@ -139,6 +154,7 @@ public final class NotQuests extends JavaPlugin {
 
         } else {
             citizensEnabled = true;
+            getLogManager().info("Citizens found! Enabling Citizens support...");
         }
 
 
@@ -178,6 +194,11 @@ public final class NotQuests extends JavaPlugin {
         //Register the Event Listeners in MythicMobsEvents, if MythicMobs integration is enabled
         if (isMythicMobsEnabled()) {
             getServer().getPluginManager().registerEvents(new MythicMobsEvents(this), this);
+        }
+
+        //Register the Event Listeners in EliteMobsEvents, if EliteMobs integration is enabled
+        if (isMythicMobsEnabled()) {
+            getServer().getPluginManager().registerEvents(new EliteMobsEvents(this), this);
         }
 
         //This finally starts loading all Config-, Quest-, and Player Data. Reload = Load
@@ -404,6 +425,10 @@ public final class NotQuests extends JavaPlugin {
         return mythicMobsEnabled;
     }
 
+    public boolean isEliteMobsEnabled() {
+        return eliteMobsEnabled;
+    }
+
 
     public LanguageManager getLanguageManager() {
         return languageManager;
@@ -425,7 +450,9 @@ public final class NotQuests extends JavaPlugin {
         return performanceManager;
     }
 
-    public final MythicMobs getMythicMobs() {
+    public MythicMobs getMythicMobs() {
         return mythicMobs;
     }
+
+
 }
