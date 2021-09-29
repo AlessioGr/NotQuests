@@ -191,7 +191,7 @@ public final class NotQuests extends JavaPlugin {
             }
 
             //bStats statistics
-            final int pluginId = 12824; // <- Plugin ID (on spigot)
+            final int pluginId = 12824; // <- Plugin ID (on bstats)
             metrics = new Metrics(this, pluginId);
         }
 

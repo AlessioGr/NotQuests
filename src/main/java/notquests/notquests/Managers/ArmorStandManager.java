@@ -11,6 +11,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class ArmorStandManager {
     private final NotQuests main;
@@ -90,6 +91,14 @@ public class ArmorStandManager {
 
             }
         }, main.getDataManager().getConfiguration().getArmorStandQuestGiverIndicatorParticleSpawnInterval(), main.getDataManager().getConfiguration().getArmorStandQuestGiverIndicatorParticleSpawnInterval());
+    }
+
+    public final String getArmorStandName(final UUID armorStandUUID) {
+        if (Bukkit.getEntity(armorStandUUID) instanceof ArmorStand armorStand) {
+            return armorStand.getName();
+        } else {
+            return "unknown";
+        }
     }
 
 }

@@ -126,7 +126,7 @@ public class CitizensEvents implements Listener {
 
                                 }
                             } else if (activeObjective.getObjective() instanceof final TalkToNPCObjective objective) {
-                                if (objective.getNPCtoTalkID() == npc.getId()) {
+                                if (objective.getNPCtoTalkID() != -1 && objective.getNPCtoTalkID() == npc.getId()) {
                                     activeObjective.addProgress(1, npc.getId());
                                     player.sendMessage("§aYou talked to §b" + npc.getName());
 

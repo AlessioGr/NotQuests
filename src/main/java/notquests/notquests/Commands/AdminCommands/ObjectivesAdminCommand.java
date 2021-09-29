@@ -7,11 +7,16 @@ import notquests.notquests.NotQuests;
 import notquests.notquests.Structs.Objectives.*;
 import notquests.notquests.Structs.Quest;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ObjectivesAdminCommand {
@@ -80,23 +85,62 @@ public class ObjectivesAdminCommand {
                 }
             } else if (args[3].equalsIgnoreCase("add")) {
                 if (args[4].equalsIgnoreCase("TalkToNPC")) {
-                    if(!main.isCitizensEnabled()){
-                        sender.sendMessage("§cError: Any kind of NPC stuff has been disabled, because you don't have the Citizens plugin installed on your server. You need to install the Citizens plugin in order for NPC stuff to work.");
-                        return;
+                    if (!args[5].equalsIgnoreCase("armorstand")) {
+                        if (!main.isCitizensEnabled()) {
+                            sender.sendMessage("§cError: Any kind of NPC stuff has been disabled, because you don't have the Citizens plugin installed on your server. You need to install the Citizens plugin in order to use Citizen NPCs. You can, however, use armor stands as an alternative. To do that, just enter 'armorstand' instead of the NPC ID.");
+                            return;
+                        }
+                        final int NPCID = Integer.parseInt(args[5]);
+                        final NPC npc = CitizensAPI.getNPCRegistry().getById(NPCID);
+                        if (npc != null) {
+
+
+                            TalkToNPCObjective talkToNPCObjective = new TalkToNPCObjective(main, quest, quest.getObjectives().size() + 1, NPCID);
+                            quest.addObjective(talkToNPCObjective, true);
+                            sender.sendMessage("§aObjective successfully added to quest §b" + quest.getQuestName() + "§a!");
+
+
+                        } else {
+                            sender.sendMessage("§cError: NPC with the ID §b" + NPCID + " §cwas not found!");
+                        }
+                    } else { //Armor Stands
+                        if (sender instanceof Player player) {
+                            ItemStack itemStack = new ItemStack(Material.PAPER, 1);
+                            //give a specialitem. clicking an armorstand with that special item will remove the pdb.
+
+                            NamespacedKey key = new NamespacedKey(main, "notquests-item");
+
+                            ItemMeta itemMeta = itemStack.getItemMeta();
+                            //Only paper List<Component> lore = new ArrayList<>();
+                            List<String> lore = new ArrayList<>();
+
+                            assert itemMeta != null;
+
+                            itemMeta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, 5);
+
+                            //Only paper itemMeta.displayName(Component.text("§dCheck Armor Stand", NamedTextColor.LIGHT_PURPLE));
+                            itemMeta.setDisplayName("§dAdd TalkToNPC Objective to Armor Stand");
+                            //Only paper lore.add(Component.text("§fRight-click an Armor Stand to see which Quests are attached to it."));
+                            lore.add("§fRight-click an Armor Stand to add the following objective to it:");
+                            lore.add("§eTalkToNPC §fObjective of Quest §b" + quest.getQuestName() + "§f.");
+
+                            itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+                            //Only paper itemMeta.lore(lore);
+
+                            itemMeta.setLore(lore);
+                            itemStack.setItemMeta(itemMeta);
+
+                            player.getInventory().addItem(itemStack);
+
+                            player.sendMessage("§aYou have been given an item with which you can add the TalkToNPC Objective to an armor stand. Check your inventory!");
+
+
+                        } else {
+                            sender.sendMessage("§cMust be a player!");
+                            showUsage(quest, sender, args);
+                        }
                     }
-                    final int NPCID = Integer.parseInt(args[5]);
-                    final NPC npc = CitizensAPI.getNPCRegistry().getById(NPCID);
-                    if (npc != null) {
 
-
-                        TalkToNPCObjective talkToNPCObjective = new TalkToNPCObjective(main, quest, quest.getObjectives().size() + 1, NPCID);
-                        quest.addObjective(talkToNPCObjective, true);
-                        sender.sendMessage("§aObjective successfully added to quest §b" + quest.getQuestName() + "§a!");
-
-
-                    } else {
-                        sender.sendMessage("§cError: NPC with the ID §b" + NPCID + " §cwas not found!");
-                    }
                 } else {
                     showUsage(quest, sender, args);
                 }
@@ -627,11 +671,13 @@ public class ObjectivesAdminCommand {
                         main.getDataManager().completions.add("hand");
                         return main.getDataManager().completions;
                     } else if (args[4].equalsIgnoreCase("TalkToNPC")) {
-                        if(main.isCitizensEnabled()){
+                        if (main.isCitizensEnabled()) {
                             for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
                                 main.getDataManager().completions.add("" + npc.getId());
                             }
                         }
+                        main.getDataManager().completions.add("armorstand");
+
 
                         return main.getDataManager().completions;
                     } else if (args[4].equalsIgnoreCase("EscortNPC")) {
@@ -831,7 +877,7 @@ public class ObjectivesAdminCommand {
                     sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2DeliverItems §3[Item Name/hand] [Amount To Collect] [Recipient NPC ID]");
                 } else if (args[4].equalsIgnoreCase("TalkToNPC")) {
                     sender.sendMessage("§cMissing 6. argument §3[Item Name]§c. Specify the §bID of the NPC§c who the player has to talk to.");
-                    sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2TalkToNPC §3[Target NPC ID]");
+                    sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2TalkToNPC §3[Target NPC ID / armorstand]");
                 } else if (args[4].equalsIgnoreCase("EscortNPC")) {
                     sender.sendMessage("§cMissing 6. argument §3[NPC to escort ID]§c. Specify the §bID of the NPC§c the player has to escort.");
                     sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2EscortNPC §3[NPC to escort ID] [Destination NPC ID]");

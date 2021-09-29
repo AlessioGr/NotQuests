@@ -36,6 +36,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
+import java.util.UUID;
 import java.util.logging.Level;
 
 
@@ -332,8 +333,19 @@ public class QuestManager {
                                         final int recipientNPCID = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.recipientNPCID");
                                         objective = new DeliverItemsObjective(main, quest, objectiveID, itemToCollect, progressNeeded, recipientNPCID);
                                     } else if (objectiveType == ObjectiveType.TalkToNPC) {
-                                        final int NPCtoTalkID = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.NPCtoTalkID");
-                                        objective = new TalkToNPCObjective(main, quest, objectiveID, NPCtoTalkID);
+                                        final int NPCtoTalkID = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.NPCtoTalkID", -1);
+                                        if (NPCtoTalkID != -1) {
+                                            objective = new TalkToNPCObjective(main, quest, objectiveID, NPCtoTalkID);
+                                        } else {
+                                            final String armorStandUUIDString = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.ArmorStandToTalkUUID");
+                                            if (armorStandUUIDString != null) {
+                                                final UUID armorStandUUID = UUID.fromString(armorStandUUIDString);
+                                                objective = new TalkToNPCObjective(main, quest, objectiveID, armorStandUUID);
+                                            } else {
+                                                objective = new TalkToNPCObjective(main, quest, objectiveID, NPCtoTalkID);
+                                            }
+
+                                        }
                                     } else if (objectiveType == ObjectiveType.EscortNPC) {
                                         final int NPCtoEscortID = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.NPCToEscortID");
                                         final int destinationNPCID = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.destinationNPCID");
@@ -1222,15 +1234,24 @@ public class QuestManager {
             }
 
         } else if (activeObjective.getObjective() instanceof TalkToNPCObjective talkToNPCObjective) {
-            if(main.isCitizensEnabled()){
+            if (main.isCitizensEnabled() && talkToNPCObjective.getNPCtoTalkID() != -1) {
                 final NPC npc = CitizensAPI.getNPCRegistry().getById(talkToNPCObjective.getNPCtoTalkID());
                 if (npc != null) {
                     toReturn = "    §7§mTalk to §f§m" + npc.getName();
                 } else {
                     toReturn = "    §7§mThe target NPC is currently not available!";
                 }
-            }else{
-                toReturn += "    §cError: Citizens plugin not installed. Contact an admin.";
+            } else {
+                if (talkToNPCObjective.getNPCtoTalkID() != -1) {
+                    toReturn += "    §cError: Citizens plugin not installed. Contact an admin.";
+                } else { //ArmorStands
+                    final UUID armorStandUUID = talkToNPCObjective.getArmorStandUUID();
+                    if (armorStandUUID != null) {
+                        toReturn = "    §7§mTalk to §f§m" + main.getArmorStandManager().getArmorStandName(armorStandUUID);
+                    } else {
+                        toReturn += "    §7§mThe target Armor Stand is currently not available!";
+                    }
+                }
             }
 
         } else if (activeObjective.getObjective() instanceof EscortNPCObjective escortNPCObjective) {
@@ -1295,7 +1316,7 @@ public class QuestManager {
             }
 
         } else if (objective instanceof TalkToNPCObjective talkToNPCObjective) {
-            if (main.isCitizensEnabled()) {
+            if (main.isCitizensEnabled() && talkToNPCObjective.getNPCtoTalkID() != -1) {
                 final NPC npc = CitizensAPI.getNPCRegistry().getById(talkToNPCObjective.getNPCtoTalkID());
                 if (npc != null) {
                     toReturn = "    §7Talk to §f" + npc.getName();
@@ -1303,7 +1324,16 @@ public class QuestManager {
                     toReturn = "    §7The target NPC is currently not available!";
                 }
             } else {
-                toReturn += "    §cError: Citizens plugin not installed. Contact an admin.";
+                if (talkToNPCObjective.getNPCtoTalkID() != -1) {
+                    toReturn += "    §cError: Citizens plugin not installed. Contact an admin.";
+                } else { //ArmorStands
+                    final UUID armorStandUUID = talkToNPCObjective.getArmorStandUUID();
+                    if (armorStandUUID != null) {
+                        toReturn = "    §7Talk to §f" + main.getArmorStandManager().getArmorStandName(armorStandUUID);
+                    } else {
+                        toReturn += "    §7The target Armor Stand is currently not available!";
+                    }
+                }
             }
 
         } else if (objective instanceof EscortNPCObjective escortNPCObjective) {
