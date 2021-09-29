@@ -1,4 +1,4 @@
-package notquests.notquests.Events;
+package notquests.notquests.Events.hooks;
 
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.event.CitizensEnableEvent;

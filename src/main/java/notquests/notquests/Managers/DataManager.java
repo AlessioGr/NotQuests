@@ -162,6 +162,9 @@ public class DataManager {
         for (EntityType entityType : EntityType.values()) {
             standardEntityTypeCompletions.add(entityType.toString());
         }
+        if (main.isMythicMobsEnabled()) {
+            standardEntityTypeCompletions.addAll(main.getMythicMobs().getMobManager().getMobNames());
+        }
 
     }
 

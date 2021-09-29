@@ -29,7 +29,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -321,7 +320,7 @@ public class QuestManager {
                                         final boolean countPreviousCompletions = main.getDataManager().getQuestsData().getBoolean("quests." + questName + ".objectives." + objectiveNumber + ".specifics.countPreviousCompletions");
                                         objective = new OtherQuestObjective(main, quest, objectiveID, otherQuestName, progressNeeded, countPreviousCompletions);
                                     } else if (objectiveType == ObjectiveType.KillMobs) {
-                                        final EntityType mobToKill = EntityType.valueOf(main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.mobToKill"));
+                                        final String mobToKill = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.mobToKill");
                                         final int amountToKill = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.amountToKill");
                                         objective = new KillMobsObjective(main, quest, objectiveID, mobToKill, amountToKill);
                                     } else if (objectiveType == ObjectiveType.ConsumeItems) {
@@ -1238,7 +1237,7 @@ public class QuestManager {
         } else if (objective instanceof OtherQuestObjective otherQuestObjective) {
             toReturn = "    §7" + eventualColor + "Quest completion: §f" + eventualColor + otherQuestObjective.getOtherQuest().getQuestName();
         } else if (objective instanceof KillMobsObjective killMobsObjective) {
-            toReturn = "    §7" + eventualColor + "Mob to kill: §f" + eventualColor + killMobsObjective.getMobToKill().toString();
+            toReturn = "    §7" + eventualColor + "Mob to kill: §f" + eventualColor + killMobsObjective.getMobToKill();
         } else if (objective instanceof ConsumeItemsObjective consumeItemsObjective) {
             toReturn = "    §7" + eventualColor + "Items to consume: §f" + eventualColor + consumeItemsObjective.getItemToConsume().getType() + " (" + consumeItemsObjective.getItemToConsume().getItemMeta().getDisplayName() + ")";
         } else if (objective instanceof DeliverItemsObjective deliverItemsObjective) {

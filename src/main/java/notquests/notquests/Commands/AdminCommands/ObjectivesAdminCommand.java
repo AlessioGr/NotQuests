@@ -9,7 +9,6 @@ import notquests.notquests.Structs.Quest;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -18,6 +17,7 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 public class ObjectivesAdminCommand {
@@ -247,11 +247,25 @@ public class ObjectivesAdminCommand {
 
 
                 } else if (args[4].equalsIgnoreCase("KillMobs")) {
-                    EntityType entityType = EntityType.valueOf(args[5]);
+                    final String mobEntityType = args[5];
+                    if (!main.getDataManager().standardEntityTypeCompletions.contains(mobEntityType)) {
+
+                    }
+                    boolean foundValidMob = false;
+                    for (final String validMob : main.getDataManager().standardEntityTypeCompletions) {
+                        if (validMob.toLowerCase(Locale.ROOT).equalsIgnoreCase(mobEntityType.toLowerCase(Locale.ROOT))) {
+                            foundValidMob = true;
+                        }
+                    }
+                    if (!foundValidMob) {
+                        sender.sendMessage("§cError: the mob type §b" + mobEntityType + " §cwas not found!");
+                        return;
+                    }
+
                     int amountToKill = Integer.parseInt(args[6]);
 
 
-                    KillMobsObjective killMobsObjective = new KillMobsObjective(main, quest, quest.getObjectives().size() + 1, entityType, amountToKill);
+                    KillMobsObjective killMobsObjective = new KillMobsObjective(main, quest, quest.getObjectives().size() + 1, mobEntityType, amountToKill);
                     quest.addObjective(killMobsObjective, true);
                     sender.sendMessage("§aObjective successfully added to quest §b" + quest.getQuestName() + "§a!");
 

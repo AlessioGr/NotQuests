@@ -1,6 +1,7 @@
 
 package notquests.notquests;
 
+import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.papermc.lib.PaperLib;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
@@ -13,8 +14,9 @@ import net.milkbowl.vault.permission.Permission;
 import notquests.notquests.Commands.CommandNotQuests;
 import notquests.notquests.Commands.CommandNotQuestsAdmin;
 import notquests.notquests.Events.ArmorStandEvents;
-import notquests.notquests.Events.CitizensEvents;
 import notquests.notquests.Events.QuestEvents;
+import notquests.notquests.Events.hooks.CitizensEvents;
+import notquests.notquests.Events.hooks.MythicMobsEvents;
 import notquests.notquests.Managers.*;
 import notquests.notquests.Placeholders.QuestPlaceholders;
 import org.bstats.bukkit.Metrics;
@@ -55,6 +57,10 @@ public final class NotQuests extends JavaPlugin {
     //Enabled Features
     private boolean vaultEnabled = false;
     private boolean citizensEnabled = false;
+
+    //Enabled Hooks
+    private boolean mythicMobsEnabled = false;
+    private MythicMobs mythicMobs;
 
     private BukkitAudiences adventure;
 
@@ -99,7 +105,11 @@ public final class NotQuests extends JavaPlugin {
             vaultEnabled = true;
         }
 
-
+        //MythicMobs Hook
+        if (getServer().getPluginManager().getPlugin("MythicMobs") != null && Objects.requireNonNull(getServer().getPluginManager().getPlugin("MythicMobs")).isEnabled()) {
+            mythicMobsEnabled = true;
+            this.mythicMobs = MythicMobs.inst();
+        }
 
         //Create a new instance of the Data Manager which will be re-used everywhere
         dataManager = new DataManager(this);
@@ -127,12 +137,10 @@ public final class NotQuests extends JavaPlugin {
         if (getServer().getPluginManager().getPlugin("Citizens") == null || !Objects.requireNonNull(getServer().getPluginManager().getPlugin("Citizens")).isEnabled()) {
             getLogManager().log(Level.WARNING, "Citizens Dependency not found! Some features regarding NPCs have been disabled. I recommend you to install Citizens for the best experience.");
 
-            //getLogManager().log(Level.SEVERE, "Citizens 2.0 not found or not enabled");
-            //getServer().getPluginManager().disablePlugin(this);
-            //return;
         } else {
             citizensEnabled = true;
         }
+
 
         //Registering the nquestgiver Trait here has been commented out. I think I'm currently doing that somewhere else atm. So, this isn't needed at the moment.
         //net.citizensnpcs.api.CitizensAPI.getTraitFactory().registerTrait(net.citizensnpcs.api.trait.TraitInfo.create(QuestGiverNPCTrait.class).withName("nquestgiver"));
@@ -163,15 +171,20 @@ public final class NotQuests extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ArmorStandEvents(this), this);
 
         //Register the Event Listeners in CitizensEvents, if Citizens integration is enabled
-        if(isCitizensEnabled()){
+        if (isCitizensEnabled()) {
             getServer().getPluginManager().registerEvents(new CitizensEvents(this), this);
+        }
+
+        //Register the Event Listeners in MythicMobsEvents, if MythicMobs integration is enabled
+        if (isMythicMobsEnabled()) {
+            getServer().getPluginManager().registerEvents(new MythicMobsEvents(this), this);
         }
 
         //This finally starts loading all Config-, Quest-, and Player Data. Reload = Load
         dataManager.reloadData();
 
         //This registers all PlaceholderAPI placeholders, if loading is enabled
-        if(getDataManager().isLoadingEnabled()){
+        if (getDataManager().isLoadingEnabled()) {
             if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
                 new QuestPlaceholders(this).register();
             }
@@ -387,6 +400,11 @@ public final class NotQuests extends JavaPlugin {
         return citizensEnabled;
     }
 
+    public boolean isMythicMobsEnabled() {
+        return mythicMobsEnabled;
+    }
+
+
     public LanguageManager getLanguageManager() {
         return languageManager;
     }
@@ -405,5 +423,9 @@ public final class NotQuests extends JavaPlugin {
 
     public PerformanceManager getPerformanceManager() {
         return performanceManager;
+    }
+
+    public final MythicMobs getMythicMobs() {
+        return mythicMobs;
     }
 }

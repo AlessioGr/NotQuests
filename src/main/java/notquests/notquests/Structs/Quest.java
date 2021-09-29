@@ -122,7 +122,7 @@ public class Quest {
                     main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.otherQuestName", otherQuestObjective.getOtherQuestName());
                     main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.countPreviousCompletions", otherQuestObjective.isCountPreviousCompletions());
                 } else if (objective instanceof final KillMobsObjective otherQuestObjective) {
-                    main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.mobToKill", otherQuestObjective.getMobToKill().toString());
+                    main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.mobToKill", otherQuestObjective.getMobToKill());
                     main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.amountToKill", otherQuestObjective.getAmountToKill());
                 } else if (objective instanceof final ConsumeItemsObjective consumeItemObjective) {
                     main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.itemToConsume.itemstack", consumeItemObjective.getItemToConsume());
