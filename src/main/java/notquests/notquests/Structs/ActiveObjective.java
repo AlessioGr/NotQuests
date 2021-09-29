@@ -173,11 +173,21 @@ public class ActiveObjective {
         }
     }
 
+    //For Citizens NPCs
     public void addProgressSilent(long i, final int NPCID) {
         currentProgress += i;
         if (isCompleted(NPCID)) {
             setHasBeenCompleted(true);
             activeQuest.notifyActiveObjectiveCompleted(this, true, NPCID);
+        }
+    }
+
+    //For Armor Stands
+    public void addProgressSilent(long i, final UUID armorStandUUID) {
+        currentProgress += i;
+        if (isCompleted(armorStandUUID)) {
+            setHasBeenCompleted(true);
+            activeQuest.notifyActiveObjectiveCompleted(this, true, armorStandUUID);
         }
     }
 

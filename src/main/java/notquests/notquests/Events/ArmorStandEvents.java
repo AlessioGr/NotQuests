@@ -3,6 +3,7 @@ package notquests.notquests.Events;
 import notquests.notquests.NotQuests;
 import notquests.notquests.Structs.ActiveObjective;
 import notquests.notquests.Structs.ActiveQuest;
+import notquests.notquests.Structs.Objectives.Objective;
 import notquests.notquests.Structs.Objectives.TalkToNPCObjective;
 import notquests.notquests.Structs.Quest;
 import notquests.notquests.Structs.QuestPlayer;
@@ -54,15 +55,17 @@ public class ArmorStandEvents implements Listener {
                     int id = container.get(specialItemKey, PersistentDataType.INTEGER); //Not null, because we check for it in container.has()
 
                     final NamespacedKey questsKey = new NamespacedKey(main, "notquests-questname");
-
                     final String questName = container.get(questsKey, PersistentDataType.STRING);
 
-                    if (questName == null && ((id >= 0 && id <= 3) || id == 5)) {
+                    final NamespacedKey objectiveIDKey = new NamespacedKey(main, "notquests-objectiveid");
+                    final int objectiveID = container.get(objectiveIDKey, PersistentDataType.INTEGER);
+
+                    if (questName == null && ((id >= 0 && id <= 3) || id == 5 || id == 6)) {
                         player.sendMessage("§cError: Your item has no valid quest attached to it.");
                         return;
                     }
 
-                    if(id == 0 || id == 1) { //Add
+                    if (id == 0 || id == 1) { //Add
                         PersistentDataContainer armorStandPDB = armorStand.getPersistentDataContainer();
                         final NamespacedKey attachedQuestsKey;
                         if (id == 0) { //showing
@@ -247,6 +250,23 @@ public class ArmorStandEvents implements Listener {
                             player.sendMessage("§cError: Quest §b" + questName + " §cdoes not exist.");
                         }
 
+                    } else if (id == 6) { //Set as completionNPC to an objective of a Quest
+                        final Quest quest = main.getQuestManager().getQuest(questName);
+                        if (quest != null) {
+                            final Objective objective = quest.getObjectiveFromID(objectiveID);
+                            if (objective != null) {
+                                objective.setCompletionArmorStandUUID(armorStand.getUniqueId(), true);
+                                player.sendMessage("§aThe completionArmorStandUUID of the objective with the ID §b" + objectiveID + " §ahas been set to the Armor Stand with the UUID §b" + armorStand.getUniqueId() + "§a and name §b" + main.getArmorStandManager().getArmorStandName(armorStand) + "§a!");
+
+                            } else {
+                                player.sendMessage("§cError: Objective with the ID §b" + objectiveID + " §cwas not found for quest §b" + quest.getQuestName() + "§c!");
+                            }
+
+
+                        } else {
+                            player.sendMessage("§cError: Quest §b" + questName + " §cdoes not exist.");
+                        }
+
 
                     }
                 }else {
@@ -280,10 +300,11 @@ public class ArmorStandEvents implements Listener {
                                     handledObjective = true;
                                 }
                             }
-                            //Eventually trigger CompletionNPC Objective Completion if the objective is not set to complete automatically (so, if getCompletionNPCID() is not -1)
-                            // if (activeObjective.getObjective().getCompletionNPCID() != -1) {
-                            //     activeObjective.addProgress(0, npc.getId());
-                            // }
+                            //Eventually trigger CompletionNPC Objective Completion if the objective is not set to complete automatically (so, if getCompletionArmorStandUUID() is not null)
+                            if (activeObjective.getObjective().getCompletionArmorStandUUID() != null) {
+
+                                activeObjective.addProgress(0, armorStand.getUniqueId());
+                            }
                         }
 
                     }

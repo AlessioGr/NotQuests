@@ -375,6 +375,11 @@ public class ObjectivesAdminCommand {
                     if (objective != null) {
 
                         sender.sendMessage("§aThe completionNPCID of the objective with the ID §b" + objectiveID + " §ais §b" + objective.getCompletionNPCID() + "§a!");
+                        if (objective.getCompletionArmorStandUUID() != null) {
+                            sender.sendMessage("§aThe completionNPCUUID (for armor stands) of the objective with the ID §b" + objectiveID + " §ais §b" + objective.getCompletionArmorStandUUID() + "§a!");
+                        } else {
+                            sender.sendMessage("§aThe completionNPCUUID (for armor stands) of the objective with the ID §b" + objectiveID + " §ais §bnull§a!");
+                        }
 
 
                     } else {
@@ -575,10 +580,62 @@ public class ObjectivesAdminCommand {
                     final Objective objective = quest.getObjectiveFromID(objectiveID);
                     if (objective != null) {
 
-                        final int completionNPCID = Integer.parseInt(args[7]);
+                        if (args[7].equalsIgnoreCase("-1")) {
 
-                        objective.setCompletionNPCID(completionNPCID, true);
-                        sender.sendMessage("§aThe completionNPCID of the objective with the ID §b" + objectiveID + " §ahas been set to the NPC with the ID §b" + completionNPCID + "§a!");
+                            objective.setCompletionNPCID(-1, true);
+                            objective.setCompletionArmorStandUUID(null, true);
+                            sender.sendMessage("§aThe completionNPC of the objective with the ID §b" + objectiveID + " §ahas been removed!");
+
+                        } else if (!args[7].equalsIgnoreCase("armorstand")) {
+                            final int completionNPCID = Integer.parseInt(args[7]);
+
+                            objective.setCompletionNPCID(completionNPCID, true);
+                            sender.sendMessage("§aThe completionNPCID of the objective with the ID §b" + objectiveID + " §ahas been set to the NPC with the ID §b" + completionNPCID + "§a!");
+
+                        } else { //Armor Stands
+
+                            if (sender instanceof Player player) {
+                                ItemStack itemStack = new ItemStack(Material.PAPER, 1);
+                                //give a specialitem. clicking an armorstand with that special item will remove the pdb.
+
+                                NamespacedKey key = new NamespacedKey(main, "notquests-item");
+                                NamespacedKey QuestNameKey = new NamespacedKey(main, "notquests-questname");
+                                NamespacedKey ObjectiveIDKey = new NamespacedKey(main, "notquests-objectiveid");
+
+                                ItemMeta itemMeta = itemStack.getItemMeta();
+                                //Only paper List<Component> lore = new ArrayList<>();
+                                List<String> lore = new ArrayList<>();
+
+                                assert itemMeta != null;
+
+                                itemMeta.getPersistentDataContainer().set(QuestNameKey, PersistentDataType.STRING, quest.getQuestName());
+                                itemMeta.getPersistentDataContainer().set(ObjectiveIDKey, PersistentDataType.INTEGER, objectiveID);
+                                itemMeta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, 6);
+
+
+                                //Only paper itemMeta.displayName(Component.text("§dCheck Armor Stand", NamedTextColor.LIGHT_PURPLE));
+                                itemMeta.setDisplayName("§dSet completionNPC of Quest §b" + quest.getQuestName() + " §dto this Armor Stand");
+                                //Only paper lore.add(Component.text("§fRight-click an Armor Stand to see which Quests are attached to it."));
+                                lore.add("§fRight-click an Armor Stand to set it as the completionNPC of Quest §b" + quest.getQuestName() + " §fand ObjectiveID §b" + objectiveID + "§f.");
+
+                                itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+                                //Only paper itemMeta.lore(lore);
+
+                                itemMeta.setLore(lore);
+                                itemStack.setItemMeta(itemMeta);
+
+                                player.getInventory().addItem(itemStack);
+
+                                player.sendMessage("§aYou have been given an item with which you can add the completionNPC of this Objective to an armor stand. Check your inventory!");
+
+
+                            } else {
+                                sender.sendMessage("§cMust be a player!");
+                                showUsage(quest, sender, args);
+                            }
+
+
+                        }
 
 
                     } else {
@@ -807,11 +864,13 @@ public class ObjectivesAdminCommand {
                             final Objective objective = quest.getObjectiveFromID(Integer.parseInt(args[4]));
                             if (objective != null) {
 
-                                if(main.isCitizensEnabled()){
+                                if (main.isCitizensEnabled()) {
                                     for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
                                         main.getDataManager().completions.add("" + npc.getId());
                                     }
                                 }
+                                main.getDataManager().completions.add("-1");
+                                main.getDataManager().completions.add("armorstand");
                                 return main.getDataManager().completions;
                             }
 
@@ -974,7 +1033,7 @@ public class ObjectivesAdminCommand {
                         sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3dependencies clear  §7 | Removes all objective dependencies from this objective");
                     } else if (args[5].equalsIgnoreCase("completionNPC")) {
                         sender.sendMessage("§cMissing 7. argument!");
-                        sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3completionNPC set <CompletionNPC ID> §7 | Sets the completion NPC ID (-1 = default = complete automatically)");
+                        sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3completionNPC set <CompletionNPC ID / armorstand> §7 | Sets the completion NPC ID (-1 = default = complete automatically)");
                         sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3completionNPC show §7 | Shows the current completion NPC ID (-1 = default = complete automatically)");
 
                     } else {
@@ -1048,8 +1107,8 @@ public class ObjectivesAdminCommand {
                         }
                     } else if (args[5].equalsIgnoreCase("completionNPC")) {
                         if (args[6].equalsIgnoreCase("set")) {
-                            sender.sendMessage("§cMissing 8. argument <CompletionNPC ID> ");
-                            sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3completionNPC set <CompletionNPC ID> §7 | Sets the completion NPC ID (-1 = default = complete automatically)");
+                            sender.sendMessage("§cMissing 8. argument <CompletionNPC ID / armorstand> ");
+                            sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3completionNPC set <CompletionNPC ID / armorstand> §7 | Sets the completion NPC ID (-1 = default = complete automatically)");
 
                         } else if (!args[6].equalsIgnoreCase("show") && !args[6].equalsIgnoreCase("view")) {
                             sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));

@@ -155,7 +155,18 @@ public class QuestPlayerManager {
                                     //System.out.println("§4§lHAS BEEN COMPLETED: §b" + hasBeenCompleted + " §c- ID: §b" + objectiveID);
                                     activeObjective.setHasBeenCompleted(hasBeenCompleted);
                                     if (activeObjective.getObjective().getCompletionNPCID() == -1) { //Complete automatically
-                                        activeObjective.addProgressSilent(currentProgress, -1);
+                                        if (activeObjective.getObjective().getCompletionArmorStandUUID() != null) { //Only complete if player has talked to the completion Armor Stand
+                                            if (activeObjective.hasBeenCompleted()) {
+                                                activeObjective.addProgressSilent(currentProgress, activeObjective.getObjective().getCompletionArmorStandUUID());
+
+                                            } else {
+                                                activeObjective.addProgressSilent(currentProgress, null);
+
+                                            }
+                                        } else {
+                                            activeObjective.addProgressSilent(currentProgress, -1);
+                                        }
+
                                     } else { //Only complete if player has talked to the completion NPC
                                         //System.out.println("§4§lTHIS IS WHAT I WANNA SEE FIRST");
                                         if (activeObjective.hasBeenCompleted()) {

@@ -45,7 +45,11 @@ public class Objective {
     public final void setCompletionArmorStandUUID(final UUID completionArmorStandUUID, final boolean save) {
         this.completionArmorStandUUID = completionArmorStandUUID;
         if (save) {
-            main.getDataManager().getQuestsData().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".completionArmorStandUUID", completionArmorStandID.toString());
+            if (completionArmorStandUUID != null) {
+                main.getDataManager().getQuestsData().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".completionArmorStandUUID", completionArmorStandUUID.toString());
+            } else {
+                main.getDataManager().getQuestsData().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".completionArmorStandUUID", null);
+            }
         }
     }
 
