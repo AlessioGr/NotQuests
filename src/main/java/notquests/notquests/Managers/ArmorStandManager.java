@@ -101,4 +101,7 @@ public class ArmorStandManager {
         }
     }
 
+    public final String getArmorStandName(final ArmorStand armorStand) {
+        return armorStand.getName();
+    }
 }

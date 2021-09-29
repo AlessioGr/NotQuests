@@ -408,6 +408,14 @@ public class DataManager {
         configuration.setCitizensNPCQuestGiverIndicatorParticleDisableIfTPSBelow(getGeneralConfig().getDouble("visual.citizensnpc.quest-giver-indicator-particle.disable-if-tps-below"));
 
 
+        //Prevent armorstand editing
+        if (!getGeneralConfig().isBoolean("visual.armorstands.prevent-editing")) {
+            getGeneralConfig().set("visual.armorstands.prevent-editing", true);
+            valueChanged = true;
+        }
+        configuration.setArmorStandPreventEditing(getGeneralConfig().getBoolean("visual.armorstands.prevent-editing"));
+
+
         //Particles ArmorStands
         if (!getGeneralConfig().isBoolean("visual.armorstands.quest-giver-indicator-particle.enabled")) {
             getGeneralConfig().set("visual.armorstands.quest-giver-indicator-particle.enabled", true);

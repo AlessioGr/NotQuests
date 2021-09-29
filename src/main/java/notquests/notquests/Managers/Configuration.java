@@ -33,6 +33,9 @@ public class Configuration {
     private int maxActiveQuestsPerPlayer = -1;
 
 
+    private boolean armorStandPreventEditing = true;
+
+
     //Particles
     private int citizensNPCQuestGiverIndicatorParticleSpawnInterval = 10;
     private int citizensNPCQuestGiverIndicatorParticleCount = 1;
@@ -218,5 +221,13 @@ public class Configuration {
 
     public void setLanguageCode(final String languageCode) {
         this.languageCode = languageCode;
+    }
+
+    public final boolean isArmorStandPreventEditing() {
+        return armorStandPreventEditing;
+    }
+
+    public void setArmorStandPreventEditing(final boolean armorStandPreventEditing) {
+        this.armorStandPreventEditing = armorStandPreventEditing;
     }
 }

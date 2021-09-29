@@ -11,18 +11,22 @@ commands:
     description: Edit quests
     usage: /notquestsadmin
     aliases: [ nquestsadmin, nquestadmin, notquestadmin, qadmin, questadmin, questsadmin, qa, qag, nqa ]
-    permission: notnot.quests.admin
+    permission: notquests.admin
   notquests:
     description: Accept quests
     usage: /notquests
     aliases: [ nquests, nquest, notquest, quest, quests, q, qg, nq ]
-    permission: notnot.quests.use
+    permission: notquests.use
 permissions:
-  notnot.quests.admin:
+  notquests.admin:
     default: op
     description: Gives the player permission to everything in the plugin.
     children:
-      notnot.quests.use: true
-  notnot.quests.use:
+      notquests.admin.armorstandeditingitems: true
+      notquests.use: true
+  notquests.admin.armorstandeditingitems:
+    default: op
+    description: Gives the player permission to use quest editing items for armor stands.
+  notquests.use:
     default: true
     description: Gives the player permission to use the /notquests user command. They can not create new quests or other administrative tasks with just this permission.

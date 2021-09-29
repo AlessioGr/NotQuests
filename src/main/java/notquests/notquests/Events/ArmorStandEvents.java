@@ -1,8 +1,11 @@
 package notquests.notquests.Events;
 
 import notquests.notquests.NotQuests;
+import notquests.notquests.Structs.ActiveObjective;
+import notquests.notquests.Structs.ActiveQuest;
 import notquests.notquests.Structs.Objectives.TalkToNPCObjective;
 import notquests.notquests.Structs.Quest;
+import notquests.notquests.Structs.QuestPlayer;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.ArmorStand;
@@ -246,13 +249,12 @@ public class ArmorStandEvents implements Listener {
 
 
                     }
-                }else{
-                    //Show quests
-                    main.getQuestManager().sendQuestsPreviewOfQuestShownArmorstands(armorStand, player);
+                }else {
+                    showQuestOrHandleObjectivesOfArmorStands(player, armorStand, event);
+
                 }
-            }else{
-                //Show quests
-                main.getQuestManager().sendQuestsPreviewOfQuestShownArmorstands(armorStand, player);
+            } else {
+                showQuestOrHandleObjectivesOfArmorStands(player, armorStand, event);
             }
 
 
@@ -260,11 +262,52 @@ public class ArmorStandEvents implements Listener {
     }
 
 
+    public void showQuestOrHandleObjectivesOfArmorStands(final Player player, final ArmorStand armorStand, final PlayerInteractAtEntityEvent event) {
+        //Handle Objectives
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
 
+        boolean handledObjective = false;
+
+        if (questPlayer != null) {
+            if (questPlayer.getActiveQuests().size() > 0) {
+                for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+                    for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
+                        if (activeObjective.isUnlocked()) {
+                            if (activeObjective.getObjective() instanceof final TalkToNPCObjective objective) {
+                                if (objective.getNPCtoTalkID() == -1 && (objective.getArmorStandUUID() == armorStand.getUniqueId())) {
+                                    activeObjective.addProgress(1, armorStand.getUniqueId());
+                                    player.sendMessage("§aYou talked to §b" + main.getArmorStandManager().getArmorStandName(armorStand));
+                                    handledObjective = true;
+                                }
+                            }
+                            //Eventually trigger CompletionNPC Objective Completion if the objective is not set to complete automatically (so, if getCompletionNPCID() is not -1)
+                            // if (activeObjective.getObjective().getCompletionNPCID() != -1) {
+                            //     activeObjective.addProgress(0, npc.getId());
+                            // }
+                        }
+
+                    }
+                    activeQuest.removeCompletedObjectives(true);
+                }
+                questPlayer.removeCompletedQuests();
+            }
+        }
+
+
+        //Show quests
+        if (handledObjective) {
+            return;
+        }
+        main.getQuestManager().sendQuestsPreviewOfQuestShownArmorstands(armorStand, player);
+
+        if (main.getDataManager().getConfiguration().isArmorStandPreventEditing()) {
+            event.setCancelled(true);
+        }
+    }
 
 
     @EventHandler
-    private void onArmorStandLoad(EntitiesLoadEvent event){
+    private void onArmorStandLoad(EntitiesLoadEvent event) {
         if (!main.getDataManager().getConfiguration().isArmorStandQuestGiverIndicatorParticleEnabled()) {
             return;
         }
