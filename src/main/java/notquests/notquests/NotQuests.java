@@ -1,7 +1,6 @@
 
 package notquests.notquests;
 
-import com.magmaguy.elitemobs.EliteMobs;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.papermc.lib.PaperLib;
 import net.citizensnpcs.api.CitizensAPI;
@@ -66,8 +65,6 @@ public final class NotQuests extends JavaPlugin {
 
     //Enabled Hooks
     private boolean eliteMobsEnabled = false;
-    private EliteMobs eliteMobs;
-
     private BukkitAudiences adventure;
 
     public final BukkitAudiences adventure() {
@@ -150,7 +147,7 @@ public final class NotQuests extends JavaPlugin {
 
         //The plugin "Citizens" is currently required for NotQuests to run properly. If it's not found, NotQuests will be disabled. EDIT: Now it will just disable some features
         if (getServer().getPluginManager().getPlugin("Citizens") == null || !Objects.requireNonNull(getServer().getPluginManager().getPlugin("Citizens")).isEnabled()) {
-            getLogManager().log(Level.WARNING, "Citizens Dependency not found! Some features regarding NPCs have been disabled. I recommend you to install Citizens for the best experience.");
+            getLogManager().log(Level.INFO, "Citizens Dependency not found! Congratulations! In NotQuests, you can use armor stands instead of Citizens NPCs");
 
         } else {
             citizensEnabled = true;
