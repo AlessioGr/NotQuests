@@ -67,6 +67,11 @@ public class DataManager {
     public final List<String> partialCompletions = new ArrayList<>();
 
     /**
+     * ArrayList for Command Tab Completions for elitemob entity types. They will be initialized on startup if the elitemobs integration is enabled and will be re-used where possible.
+     */
+    public final List<String> standardEliteMobNamesCompletions = new ArrayList<>();
+
+    /**
      * MYSQL Database Connection Object
      */
     private Connection connection;
@@ -140,31 +145,6 @@ public class DataManager {
         // create an instance of the Configuration object
         configuration = new Configuration();
 
-        /*
-         * Fill up the numberCompletions Array List from 0-12 which will be
-         * re-used whenever a command accepts a number
-         */
-        for (int i = -1; i <= 12; i++) {
-            numberCompletions.add("" + i);
-        }
-
-        /*
-         * Same as for numberCompletions, but this one only goes from 1-12
-         */
-        for (int i = 1; i <= 12; i++) {
-            numberPositiveCompletions.add("" + i);
-        }
-
-        /*
-         * Fill up the standardEntityTypeCompletions Array List with all the
-         * Entities which are in the game.
-         */
-        for (EntityType entityType : EntityType.values()) {
-            standardEntityTypeCompletions.add(entityType.toString());
-        }
-        if (main.isMythicMobsEnabled()) {
-            standardEntityTypeCompletions.addAll(main.getMythicMobs().getMobManager().getMobNames());
-        }
 
     }
 
@@ -1159,5 +1139,76 @@ public class DataManager {
 
     public HashMap<Integer, ItemStack> getItemStackCache() {
         return itemStackCache;
+    }
+
+    /**
+     * Load values of the standard tab-completion lists. This is done in a separate method,
+     * because some lists are dependent on the integrations being loaded first.
+     */
+    public void loadStandardCompletions() {
+        /*
+         * Fill up the numberCompletions Array List from 0-12 which will be
+         * re-used whenever a command accepts a number
+         */
+        for (int i = -1; i <= 12; i++) {
+            numberCompletions.add("" + i);
+        }
+
+        /*
+         * Same as for numberCompletions, but this one only goes from 1-12
+         */
+        for (int i = 1; i <= 12; i++) {
+            numberPositiveCompletions.add("" + i);
+        }
+
+        /*
+         * Fill up the standardEntityTypeCompletions Array List with all the
+         * Entities which are in the game.
+         */
+        for (EntityType entityType : EntityType.values()) {
+            standardEntityTypeCompletions.add(entityType.toString());
+        }
+        //Add extra Mythic Mobs, if enabled
+        if (main.isMythicMobsEnabled()) {
+            standardEntityTypeCompletions.addAll(main.getMythicMobs().getMobManager().getMobNames());
+        }
+
+        //Fill up standardEliteMobNamesCompletions if EliteMo
+        if (main.isEliteMobsEnabled()) {
+            standardEliteMobNamesCompletions.add("Elite_Blaze");
+            standardEliteMobNamesCompletions.add("Elite_Cave_Spider");
+            standardEliteMobNamesCompletions.add("Elite_Creeper");
+            standardEliteMobNamesCompletions.add("Elite_Drowned");
+            standardEliteMobNamesCompletions.add("Elite_Elder_Guardian");
+            standardEliteMobNamesCompletions.add("Elite_Enderman");
+            standardEliteMobNamesCompletions.add("Elite_Endermite");
+            standardEliteMobNamesCompletions.add("Elite_Evoker");
+            standardEliteMobNamesCompletions.add("Elite_Ghast");
+            standardEliteMobNamesCompletions.add("Elite_Guardian");
+            standardEliteMobNamesCompletions.add("Elite_Hoglin");
+            standardEliteMobNamesCompletions.add("Elite_Husk");
+            standardEliteMobNamesCompletions.add("Elite_Illusioner");
+            standardEliteMobNamesCompletions.add("Elite_Iron_Golem");
+            standardEliteMobNamesCompletions.add("Elite_Phantom");
+            standardEliteMobNamesCompletions.add("Elite_Piglin");
+            standardEliteMobNamesCompletions.add("Elite_Piglin_Brute");
+            standardEliteMobNamesCompletions.add("Elite_Pillager");
+            standardEliteMobNamesCompletions.add("Elite_Polar_Bear");
+            standardEliteMobNamesCompletions.add("Elite_Killer_Rabbit");
+            standardEliteMobNamesCompletions.add("Elite_Ravager");
+            standardEliteMobNamesCompletions.add("Elite_Shulker");
+            standardEliteMobNamesCompletions.add("Elite_Silverfish");
+            standardEliteMobNamesCompletions.add("Elite_Skeleton");
+            standardEliteMobNamesCompletions.add("Elite_Spider");
+            standardEliteMobNamesCompletions.add("Elite_Stray");
+            standardEliteMobNamesCompletions.add("Elite_Vex");
+            standardEliteMobNamesCompletions.add("Elite_Vindicator");
+            standardEliteMobNamesCompletions.add("Elite_Witch");
+            standardEliteMobNamesCompletions.add("Elite_Wither_Skeleton");
+            standardEliteMobNamesCompletions.add("Elite_Wolf");
+            standardEliteMobNamesCompletions.add("Elite_Zoglin");
+            standardEliteMobNamesCompletions.add("Elite_Zombie");
+            standardEliteMobNamesCompletions.add("Elite_Zombified_Piglin");
+        }
     }
 }

@@ -14,6 +14,7 @@ import notquests.notquests.QuestGiverNPCTrait;
 import notquests.notquests.Structs.ActiveObjective;
 import notquests.notquests.Structs.ActiveQuest;
 import notquests.notquests.Structs.Objectives.*;
+import notquests.notquests.Structs.Objectives.hooks.KillEliteMobsObjective;
 import notquests.notquests.Structs.Quest;
 import notquests.notquests.Structs.QuestPlayer;
 import notquests.notquests.Structs.Requirements.*;
@@ -364,7 +365,17 @@ public class QuestManager {
                                         final int NPCtoEscortID = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.NPCToEscortID");
                                         final int destinationNPCID = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.destinationNPCID");
                                         objective = new EscortNPCObjective(main, quest, objectiveID, NPCtoEscortID, destinationNPCID);
-                                    }                                } catch (java.lang.NullPointerException ex) {
+                                    } else if (objectiveType == ObjectiveType.KillEliteMobs) {
+                                        final String eliteMobToKill = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.eliteMobToKill");
+                                        final int minimumLevel = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.minimumLevel");
+                                        final int maximumLevel = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.maximumLevel");
+                                        final String spawnReason = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.spawnReason");
+                                        final int minimumDamagePercentage = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.minimumDamagePercentage");
+                                        final int amountToKill = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.amountToKill");
+
+                                        objective = new KillEliteMobsObjective(main, quest, objectiveID, eliteMobToKill, minimumLevel, maximumLevel, spawnReason, minimumDamagePercentage, amountToKill);
+                                    }
+                                } catch (java.lang.NullPointerException ex) {
                                     main.getLogManager().log(Level.SEVERE, "Error parsing objective Type of objective with ID §b" + objectiveNumber + "§c and Quest §b" + quest.getQuestName() + "§c. Objective creation skipped...");
 
                                     ex.printStackTrace();
@@ -1302,6 +1313,32 @@ public class QuestManager {
                 }
             } else {
                 toReturn += "    §cError: Citizens plugin not installed. Contact an admin.";
+            }
+
+        } else if (objective instanceof KillEliteMobsObjective killEliteMobsObjective) {
+            if (!killEliteMobsObjective.getEliteMobToKillContainsName().isBlank()) {
+                toReturn = "    §7" + eventualColor + "Kill Elite Mob: §f" + eventualColor + killEliteMobsObjective.getEliteMobToKillContainsName();
+            } else {
+                toReturn = "    §7" + eventualColor + "Kill any Elite Mob!";
+            }
+            if (killEliteMobsObjective.getMinimumLevel() != -1) {
+                if (killEliteMobsObjective.getMaximumLevel() != -1) {
+                    toReturn += "\n        §7" + eventualColor + "Level: §f" + eventualColor + killEliteMobsObjective.getMinimumLevel() + "-" + killEliteMobsObjective.getMaximumLevel();
+                } else {
+                    toReturn += "\n        §7" + eventualColor + "Minimum Level: §f" + eventualColor + killEliteMobsObjective.getMinimumLevel();
+                }
+            } else {
+                if (killEliteMobsObjective.getMaximumLevel() != -1) {
+                    toReturn += "\n        §7" + eventualColor + "Maximum Level: §f" + eventualColor + killEliteMobsObjective.getMaximumLevel();
+                }
+            }
+
+            if (!killEliteMobsObjective.getSpawnReason().isBlank()) {
+                toReturn += "\n        §7" + eventualColor + "Spawned from: §f" + eventualColor + killEliteMobsObjective.getSpawnReason();
+            }
+
+            if (killEliteMobsObjective.getMinimumDamagePercentage() != -1) {
+                toReturn += "\n        §7" + eventualColor + "Inflict minimum damage: §f" + eventualColor + killEliteMobsObjective.getMinimumDamagePercentage() + "%";
             }
 
         }

@@ -5,6 +5,7 @@ import net.citizensnpcs.api.trait.Trait;
 import notquests.notquests.NotQuests;
 import notquests.notquests.QuestGiverNPCTrait;
 import notquests.notquests.Structs.Objectives.*;
+import notquests.notquests.Structs.Objectives.hooks.KillEliteMobsObjective;
 import notquests.notquests.Structs.Requirements.*;
 import notquests.notquests.Structs.Rewards.*;
 import notquests.notquests.Structs.Triggers.Trigger;
@@ -121,9 +122,9 @@ public class Quest {
                 } else if (objective instanceof final OtherQuestObjective otherQuestObjective) {
                     main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.otherQuestName", otherQuestObjective.getOtherQuestName());
                     main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.countPreviousCompletions", otherQuestObjective.isCountPreviousCompletions());
-                } else if (objective instanceof final KillMobsObjective otherQuestObjective) {
-                    main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.mobToKill", otherQuestObjective.getMobToKill());
-                    main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.amountToKill", otherQuestObjective.getAmountToKill());
+                } else if (objective instanceof final KillMobsObjective killMobsObjective) {
+                    main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.mobToKill", killMobsObjective.getMobToKill());
+                    main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.amountToKill", killMobsObjective.getAmountToKill());
                 } else if (objective instanceof final ConsumeItemsObjective consumeItemObjective) {
                     main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.itemToConsume.itemstack", consumeItemObjective.getItemToConsume());
                 } else if (objective instanceof final DeliverItemsObjective deliverItemsObjective) {
@@ -146,6 +147,14 @@ public class Quest {
                 } else if (objective instanceof final EscortNPCObjective escortNPCObjective) {
                     main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.NPCToEscortID", escortNPCObjective.getNpcToEscortID());
                     main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.destinationNPCID", escortNPCObjective.getNpcToEscortToID());
+                } else if (objective instanceof final KillEliteMobsObjective killEliteMobsObjective) {
+                    main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.eliteMobToKill", killEliteMobsObjective.getEliteMobToKillContainsName());
+                    main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.minimumLevel", killEliteMobsObjective.getMinimumLevel());
+                    main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.maximumLevel", killEliteMobsObjective.getMaximumLevel());
+                    main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.spawnReason", killEliteMobsObjective.getSpawnReason());
+                    main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.minimumDamagePercentage", killEliteMobsObjective.getMinimumDamagePercentage());
+                    main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.amountToKill", killEliteMobsObjective.getAmountToKill());
+
                 } else {
                     main.getLogManager().log(Level.WARNING, "ERROR: Objective could not be saved, because the objective type was not recognized.");
 

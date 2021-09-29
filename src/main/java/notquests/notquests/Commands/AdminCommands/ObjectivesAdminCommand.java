@@ -5,11 +5,13 @@ import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import notquests.notquests.NotQuests;
 import notquests.notquests.Structs.Objectives.*;
+import notquests.notquests.Structs.Objectives.hooks.KillEliteMobsObjective;
 import notquests.notquests.Structs.Quest;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -49,6 +51,8 @@ public class ObjectivesAdminCommand {
             } else {
                 showUsage(quest, sender, args);
             }
+        } else if (args.length >= 5 && args[3].equalsIgnoreCase("add") && args[4].equalsIgnoreCase("KillEliteMobs")) {
+            handleCommandsKillEliteMobsObjective(sender, args, quest);
         } else if (args.length == 5) {
             showUsage(quest, sender, args);
 
@@ -248,9 +252,7 @@ public class ObjectivesAdminCommand {
 
                 } else if (args[4].equalsIgnoreCase("KillMobs")) {
                     final String mobEntityType = args[5];
-                    if (!main.getDataManager().standardEntityTypeCompletions.contains(mobEntityType)) {
 
-                    }
                     boolean foundValidMob = false;
                     for (final String validMob : main.getDataManager().standardEntityTypeCompletions) {
                         if (validMob.toLowerCase(Locale.ROOT).equalsIgnoreCase(mobEntityType.toLowerCase(Locale.ROOT))) {
@@ -464,7 +466,7 @@ public class ObjectivesAdminCommand {
                             sender.sendMessage("§aObjective successfully added to quest §b" + quest.getQuestName() + "§a!");
                         } else {
                             sender.sendMessage("§cWrong last argument. Specify §bYes §cor §b No");
-                            sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2OtherQuest §3[Other Quest Name] §3[amount of completions needed] [countPreviouslyCompletedQuests?: yes/no]");
+                            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2OtherQuest §3[Other Quest Name] §3[amount of completions needed] [countPreviouslyCompletedQuests?: yes/no]");
                         }
 
 
@@ -776,6 +778,8 @@ public class ObjectivesAdminCommand {
                     return main.getDataManager().completions;
                 }
 
+            } else if (args.length >= 6 && args[3].equalsIgnoreCase("add") && args[4].equalsIgnoreCase("KillEliteMobs")) {
+                return handleCompletionsKillEliteMobsObjective(args);
             } else if (args.length == 6) {
                 if (args[3].equalsIgnoreCase("add")) {
                     if (args[4].equalsIgnoreCase("BreakBlocks")) {
@@ -978,25 +982,25 @@ public class ObjectivesAdminCommand {
 
     private void showUsage(final Quest quest, final CommandSender sender, final String[] args) {
         if (args.length == 3) {
-            sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §3[Objective Type] ...");
-            sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives edit §3[Objective ID] ...");
-            sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives list");
-            sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives clear");
+            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §3[Objective Type] ...");
+            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives edit §3[Objective ID] ...");
+            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives list");
+            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives clear");
         } else if (args.length == 4) {
             if (args[2].equalsIgnoreCase("add")) {
                 sender.sendMessage("§cPlease specify an objective type!");
                 sender.sendMessage(main.getQuestManager().getObjectiveTypesList());
 
-                sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §3[Objective Type] ...");
+                sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §3[Objective Type] ...");
             } else if (args[2].equalsIgnoreCase("edit")) {
                 sender.sendMessage("§cPlease specify the Objective ID.");
-                sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives edit §3[Objective ID] ...");
+                sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives edit §3[Objective ID] ...");
             } else {
                 sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
-                sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §3[Objective Type] ...");
-                sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives edit §3[Objective ID] ...");
-                sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives list");
-                sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives clear");
+                sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §3[Objective Type] ...");
+                sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives edit §3[Objective ID] ...");
+                sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives list");
+                sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives clear");
             }
 
 
@@ -1004,34 +1008,34 @@ public class ObjectivesAdminCommand {
             if (args[3].equalsIgnoreCase("add")) {
                 if (args[4].equalsIgnoreCase("BreakBlocks")) {
                     sender.sendMessage("§cMissing 6. argument §3[Block Name]§c. Specify the §bblock§c the player has to break.");
-                    sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2BreakBlocks §3[Block Name] [AmountToBreak] [deductIfBlockIsPlaced?: yes/no]");
+                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2BreakBlocks §3[Block Name] [AmountToBreak] [deductIfBlockIsPlaced?: yes/no]");
                 } else if (args[4].equalsIgnoreCase("CollectItems")) {
                     sender.sendMessage("§cMissing 6. argument §3[Item Name]§c. Specify the §bitem§c the player has to collect.");
-                    sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2CollectItems §3[Item Name/hand] [Amount To Collect]");
+                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2CollectItems §3[Item Name/hand] [Amount To Collect]");
                 }else if (args[4].equalsIgnoreCase("CraftItems")) {
                     sender.sendMessage("§cMissing 6. argument §3[Item Name]§c. Specify the §bitem§c the player has to craft.");
-                    sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2CraftItems §3[Item Name/hand] [Amount To Craft]");
+                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2CraftItems §3[Item Name/hand] [Amount To Craft]");
                 } else if (args[4].equalsIgnoreCase("TriggerCommand")) {
                     sender.sendMessage("§cMissing 6. argument §3[Trigger Name]§c. Specify the §bname§c of the trigger to complete the objective.");
-                    sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2TriggerCommand §3[Trigger Name] [Amount To Trigger]");
+                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2TriggerCommand §3[Trigger Name] [Amount To Trigger]");
                 } else if (args[4].equalsIgnoreCase("OtherQuest")) {
                     sender.sendMessage("§cMissing 6. argument §3[Other Quest Name]§c. Specify the §bname§c of the other quests which needs to be completed to complete the objective.");
-                    sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2OtherQuest §3[Other Quest Name] §3[amount of completions needed] [countPreviouslyCompletedQuests?: yes/no]");
+                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2OtherQuest §3[Other Quest Name] §3[amount of completions needed] [countPreviouslyCompletedQuests?: yes/no]");
                 } else if (args[4].equalsIgnoreCase("KillMobs")) {
                     sender.sendMessage("§cMissing 6. argument §3[Mob Name]§c. Specify the §bname§c of the mob the player needs to kill to complete the objective.");
-                    sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2KillMobs §3[Mob Name] §3[amount of kills needed]");
+                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2KillMobs §3[Mob Name] §3[amount of kills needed]");
                 } else if (args[4].equalsIgnoreCase("ConsumeItems")) {
                     sender.sendMessage("§cMissing 6. argument §3[Item Name/hand]§c. Specify the §bitem§c the player has to consume.");
-                    sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2ConsumeItems §3[Item Name/hand] [Amount To Consume]");
+                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2ConsumeItems §3[Item Name/hand] [Amount To Consume]");
                 } else if (args[4].equalsIgnoreCase("DeliverItems")) {
                     sender.sendMessage("§cMissing 6. argument §3[Item Name]§c. Specify the §bitem§c the player has to deliver.");
-                    sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2DeliverItems §3[Item Name/hand] [Amount To Collect] [Recipient NPC ID / 'armorstand']");
+                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2DeliverItems §3[Item Name/hand] [Amount To Collect] [Recipient NPC ID / 'armorstand']");
                 } else if (args[4].equalsIgnoreCase("TalkToNPC")) {
                     sender.sendMessage("§cMissing 6. argument §3[Item Name]§c. Specify the §bID of the NPC§c who the player has to talk to.");
-                    sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2TalkToNPC §3[Target NPC ID / armorstand]");
+                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2TalkToNPC §3[Target NPC ID / armorstand]");
                 } else if (args[4].equalsIgnoreCase("EscortNPC")) {
                     sender.sendMessage("§cMissing 6. argument §3[NPC to escort ID]§c. Specify the §bID of the NPC§c the player has to escort.");
-                    sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2EscortNPC §3[NPC to escort ID] [Destination NPC ID]");
+                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2EscortNPC §3[NPC to escort ID] [Destination NPC ID]");
                 } else {
                     sender.sendMessage("§cInvalid ObjectiveType.");
                     sender.sendMessage(main.getQuestManager().getObjectiveTypesList());
@@ -1042,12 +1046,12 @@ public class ObjectivesAdminCommand {
                     if (quest.getObjectives().size() >= objectiveID && objectiveID > 0) {
                         final Objective objective = quest.getObjectiveFromID(objectiveID);
                         if (objective != null) {
-                            sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3info §7 | Shows everything there is to know about this objective");
-                            sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3description ... §7 | Manages the description of the objective");
-                            sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3displayName ... §7 | Manages the display name of the objective");
-                            sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3dependencies ... §7 | Manage objective dependencies (objectives which need to be completed before this objective)");
-                            sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3completionNPC ... §7 | Manage completion NPC ID (-1 = default = complete automatically)");
-                            sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3remove §7 | Remove the objective from the quest");
+                            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3info §7 | Shows everything there is to know about this objective");
+                            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3description ... §7 | Manages the description of the objective");
+                            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3displayName ... §7 | Manages the display name of the objective");
+                            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3dependencies ... §7 | Manage objective dependencies (objectives which need to be completed before this objective)");
+                            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3completionNPC ... §7 | Manage completion NPC ID (-1 = default = complete automatically)");
+                            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3remove §7 | Remove the objective from the quest");
 
                         } else {
                             sender.sendMessage("§cError: Objective with the ID §b" + objectiveID + " §cwas not found for quest §b" + quest.getQuestName() + "§c!");
@@ -1067,35 +1071,35 @@ public class ObjectivesAdminCommand {
             if (args[3].equalsIgnoreCase("add")) {
                 if (args[4].equalsIgnoreCase("OtherQuest")) {
                     sender.sendMessage("§cMissing 7. argument §3[amount of completions needed]§c. Specify the §bamount of completionens§c needed for the other quests which needs to be completed to complete the objective.");
-                    sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2OtherQuest §3[Other Quest Name] §3[amount of completions needed] [countPreviouslyCompletedQuests?: yes/no]");
+                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2OtherQuest §3[Other Quest Name] §3[amount of completions needed] [countPreviouslyCompletedQuests?: yes/no]");
                 } else if (args[4].equalsIgnoreCase("TriggerCommand")) {
 
                     sender.sendMessage("§cMissing 7. argument §3[AmountToTrigger]§c. Specify the §bamount of times§c the trigger needs to be triggered to complete the objective.");
-                    sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2TriggerCommand §3[Trigger Name] [AmountToTrigger]");
+                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2TriggerCommand §3[Trigger Name] [AmountToTrigger]");
 
                 } else if (args[4].equalsIgnoreCase("BreakBlocks")) {
                     sender.sendMessage("§cMissing 7. argument §3[AmountToBreak]§c. Specify the §bamount of blocks§c the player has to break.");
-                    sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2BreakBlocks §3[Block Name] [AmountToBreak] [deductIfBlockIsPlaced?: yes/no]");
+                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2BreakBlocks §3[Block Name] [AmountToBreak] [deductIfBlockIsPlaced?: yes/no]");
 
                 } else if (args[4].equalsIgnoreCase("CollectItems")) {
                     sender.sendMessage("§cMissing 7. argument §3[Amount To Collect]§c. Specify the §bamount of items§c the player has to collect.");
-                    sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2CollectItems §3[Item Name/hand] [Amount To Collect]");
+                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2CollectItems §3[Item Name/hand] [Amount To Collect]");
                 } else if (args[4].equalsIgnoreCase("CraftItems")) {
                     sender.sendMessage("§cMissing 7. argument §3[Amount To Craft]§c. Specify the §bamount of items§c the player has to craft.");
-                    sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2CraftItems §3[Item Name/hand] [Amount To Craft]");
+                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2CraftItems §3[Item Name/hand] [Amount To Craft]");
                 } else if (args[4].equalsIgnoreCase("KillMobs")) {
                     sender.sendMessage("§cMissing 7. argument §3[amount of kills needed]§c. Specify the §bamount of times§c the player has to kill the mob.");
-                    sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2KillMobs §3[Mob Name] §3[amount of kills needed]");
+                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2KillMobs §3[Mob Name] §3[amount of kills needed]");
                 } else if (args[4].equalsIgnoreCase("ConsumeItems")) {
                     sender.sendMessage("§cMissing 7. argument §3[Amount To Consume]§c. Specify the bamount of items§c the player has to consume.");
-                    sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2ConsumeItems §3[Item Name/hand] [Amount To Consume]");
+                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2ConsumeItems §3[Item Name/hand] [Amount To Consume]");
                 } else if (args[4].equalsIgnoreCase("DeliverItems")) {
                     sender.sendMessage("§cMissing 7. argument §3[Amount To Deliver]§c. Specify the §bamount of items§c the player has to deliver.");
-                    sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2DeliverItems §3[Item Name/hand] [Amount To Deliver] [Recipient NPC ID / 'armorstand']");
+                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2DeliverItems §3[Item Name/hand] [Amount To Deliver] [Recipient NPC ID / 'armorstand']");
 
                 } else if (args[4].equalsIgnoreCase("EscortNPC")) {
                     sender.sendMessage("§cMissing 7. argument §3[Destination NPC ID]§c. Specify the §bID of the NPC§c where the player has to escort the escort NPC to.");
-                    sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2EscortNPC " + args[5] + " §3[Destination NPC ID]");
+                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2EscortNPC " + args[5] + " §3[Destination NPC ID]");
                 } else {
                     sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
                 }
@@ -1105,35 +1109,35 @@ public class ObjectivesAdminCommand {
                 if (objective != null) {
                     if (args[5].equalsIgnoreCase("description")) {
                         sender.sendMessage("§cMissing 7. argument!");
-                        sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3description set <New Description> §7 | Sets new objective description");
-                        sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3description remove §7 | Removes current objective description");
-                        sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3description show §7 | Show current objective description");
+                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3description set <New Description> §7 | Sets new objective description");
+                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3description remove §7 | Removes current objective description");
+                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3description show §7 | Show current objective description");
 
                     } else if (args[5].equalsIgnoreCase("displayName")) {
                         sender.sendMessage("§cMissing 7. argument!");
-                        sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3displayName set <New DisplayName> §7 | Sets new objective Display Name");
-                        sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3displayName remove §7 | Removes current objective Display Name");
-                        sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3displayName show §7 | Shows current objective Display Name");
+                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3displayName set <New DisplayName> §7 | Sets new objective Display Name");
+                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3displayName remove §7 | Removes current objective Display Name");
+                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3displayName show §7 | Shows current objective Display Name");
 
                     } else if (args[5].equalsIgnoreCase("dependencies")) {
                         sender.sendMessage("§cMissing 7. argument!");
-                        sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3dependencies add <Objective ID> §7 | Adds an objective as a dependency (needs to be completed before this one)");
-                        sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3dependencies remove <Objective ID> §7 | Removes an objective from a dependency (needs to be completed before this one)");
-                        sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3dependencies list  §7 | Lists all objective dependencies of this objective");
-                        sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3dependencies clear  §7 | Removes all objective dependencies from this objective");
+                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3dependencies add <Objective ID> §7 | Adds an objective as a dependency (needs to be completed before this one)");
+                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3dependencies remove <Objective ID> §7 | Removes an objective from a dependency (needs to be completed before this one)");
+                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3dependencies list  §7 | Lists all objective dependencies of this objective");
+                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3dependencies clear  §7 | Removes all objective dependencies from this objective");
                     } else if (args[5].equalsIgnoreCase("completionNPC")) {
                         sender.sendMessage("§cMissing 7. argument!");
-                        sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3completionNPC set <CompletionNPC ID / armorstand> §7 | Sets the completion NPC ID (-1 = default = complete automatically)");
-                        sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3completionNPC show §7 | Shows the current completion NPC ID (-1 = default = complete automatically)");
+                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3completionNPC set <CompletionNPC ID / armorstand> §7 | Sets the completion NPC ID (-1 = default = complete automatically)");
+                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3completionNPC show §7 | Shows the current completion NPC ID (-1 = default = complete automatically)");
 
                     } else {
                         sender.sendMessage("§cMissing 7. argument!");
-                        sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3info §7 | Shows everything there is to know about this objective");
-                        sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3description ... §7 | Manages the description of the objective");
-                        sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3displayName ... §7 | Manages the display name of the objective");
-                        sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3dependencies ... §7 | Manage objective dependencies (objectives which need to be completed before this objective)");
-                        sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3completionNPC ... §7 | Manage completion NPC ID (-1 = default = complete automatically)");
-                        sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3remove §7 | Remove the objective from the quest");
+                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3info §7 | Shows everything there is to know about this objective");
+                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3description ... §7 | Manages the description of the objective");
+                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3displayName ... §7 | Manages the display name of the objective");
+                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3dependencies ... §7 | Manage objective dependencies (objectives which need to be completed before this objective)");
+                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3completionNPC ... §7 | Manage completion NPC ID (-1 = default = complete automatically)");
+                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3remove §7 | Remove the objective from the quest");
                     }
                 } else {
                     sender.sendMessage("§cError: Objective with the ID §b" + objectiveID + " §c was not found for quest §b" + quest.getQuestName() + "§c!");
@@ -1148,14 +1152,14 @@ public class ObjectivesAdminCommand {
                 if (args[4].equalsIgnoreCase("OtherQuest")) {
 
                     sender.sendMessage("§cMissing 9. argument §3[countPreviouslyCompletedQuests?: yes/no]§c. Specify the §byes§c or §bno§c depending on if you want previously completed quests to count.");
-                    sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2OtherQuest §3[Other Quest Name] §3[amount of completions needed] [countPreviouslyCompletedQuests?: yes/no]");
+                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2OtherQuest §3[Other Quest Name] §3[amount of completions needed] [countPreviouslyCompletedQuests?: yes/no]");
 
                 } else if (args[4].equalsIgnoreCase("BreakBlocks")) {
                     sender.sendMessage("§cMissing last argument §3[deductIfBlockIsPlaced?: yes/no]§c. Specify §bYes §cor §b No");
-                    sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2BreakBlocks §3[Block Name] [AmountToBreak] [deductIfBlockIsPlaced?: yes/no]");
+                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2BreakBlocks §3[Block Name] [AmountToBreak] [deductIfBlockIsPlaced?: yes/no]");
                 } else if (args[4].equalsIgnoreCase("DeliverItems")) {
                     sender.sendMessage("§cMissing last argument §3[Recipient NPC ID]§c. Enter the §bID of the NPC§c to whom the player has to deliver the items to. Alternatively, you can enter 'armorstand' to use armor stands instead of Citizens NPCs.");
-                    sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives add §2DeliverItems §3[Item Name/hand] [Amount To Deliver] [Recipient NPC ID / 'armorstand']");
+                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2DeliverItems §3[Item Name/hand] [Amount To Deliver] [Recipient NPC ID / 'armorstand']");
 
                 }
             } else if (args[3].equalsIgnoreCase("edit")) {
@@ -1166,7 +1170,7 @@ public class ObjectivesAdminCommand {
                     if (args[5].equalsIgnoreCase("description")) {
                         if (args[6].equalsIgnoreCase("set")) {
                             sender.sendMessage("§cMissing argument <New Description>");
-                            sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3description set <New Description> §7 | Sets new objective description");
+                            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3description set <New Description> §7 | Sets new objective description");
 
                         } else if (!args[6].equalsIgnoreCase("show") && !args[6].equalsIgnoreCase("remove")) {
                             sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
@@ -1175,7 +1179,7 @@ public class ObjectivesAdminCommand {
                     } else if (args[5].equalsIgnoreCase("displayName")) {
                         if (args[6].equalsIgnoreCase("set")) {
                             sender.sendMessage("§cMissing argument <New DisplayName>");
-                            sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3displayName set <New DisplayName> §7 | Sets new objective Display Name");
+                            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3displayName set <New DisplayName> §7 | Sets new objective Display Name");
 
                         } else if (!args[6].equalsIgnoreCase("show") && !args[6].equalsIgnoreCase("remove")) {
                             sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
@@ -1184,11 +1188,11 @@ public class ObjectivesAdminCommand {
                         if (!args[6].equalsIgnoreCase("list") && !args[6].equalsIgnoreCase("clear")) {
                             if (args[6].equalsIgnoreCase("add")) {
                                 sender.sendMessage("§cMissing 8. argument <Objective ID>");
-                                sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3dependencies add <Objective ID> §7 | Adds an objective as a dependency (needs to be completed before this one)");
+                                sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3dependencies add <Objective ID> §7 | Adds an objective as a dependency (needs to be completed before this one)");
 
                             } else if (args[6].equalsIgnoreCase("remove") || args[6].equalsIgnoreCase("delete")) {
                                 sender.sendMessage("§cMissing 8. argument <Objective ID>");
-                                sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3dependencies remove <Objective ID> §7 | Removes an objective from a dependency (needs to be completed before this one)");
+                                sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3dependencies remove <Objective ID> §7 | Removes an objective from a dependency (needs to be completed before this one)");
 
                             } else {
                                 sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
@@ -1198,7 +1202,7 @@ public class ObjectivesAdminCommand {
                     } else if (args[5].equalsIgnoreCase("completionNPC")) {
                         if (args[6].equalsIgnoreCase("set")) {
                             sender.sendMessage("§cMissing 8. argument <CompletionNPC ID / armorstand> ");
-                            sender.sendMessage("§e/nquestsadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3completionNPC set <CompletionNPC ID / armorstand> §7 | Sets the completion NPC ID (-1 = default = complete automatically)");
+                            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3completionNPC set <CompletionNPC ID / armorstand> §7 | Sets the completion NPC ID (-1 = default = complete automatically)");
 
                         } else if (!args[6].equalsIgnoreCase("show") && !args[6].equalsIgnoreCase("view")) {
                             sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
@@ -1215,12 +1219,134 @@ public class ObjectivesAdminCommand {
                 sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
             }
         } else {
-            sender.sendMessage("§e/nquestsadmin §6edit §3 [Quest Name] §6objectives add §3[Objective Type] ...");
-            sender.sendMessage("§e/nquestsadmin §6edit §3 [Quest Name] §6objectives edit §3[Objective ID] ...");
-            sender.sendMessage("§e/nquestsadmin §6edit §3 [Quest Name] §6objectives list");
-            sender.sendMessage("§e/nquestsadmin §6edit §3 [Quest Name] §6objectives clear");
+            sender.sendMessage("§e/qadmin §6edit §3 [Quest Name] §6objectives add §3[Objective Type] ...");
+            sender.sendMessage("§e/qadmin §6edit §3 [Quest Name] §6objectives edit §3[Objective ID] ...");
+            sender.sendMessage("§e/qadmin §6edit §3 [Quest Name] §6objectives list");
+            sender.sendMessage("§e/qadmin §6edit §3 [Quest Name] §6objectives clear");
         }
 
+    }
+
+
+    public void handleCommandsKillEliteMobsObjective(final CommandSender sender, final String[] args, final Quest quest) { //qa edit xxx objectives add KillMobsObjective
+        if (args.length == 5) {
+            sender.sendMessage("§cMissing 6. argument §3[Mob Name contains / any]§c. Specify the §bname§c of the elite mob the player needs to kill to complete the objective. This can be just part of its name, like 'Elite Zombie'. Use 'any' if the kind of mob doesn't matter.");
+            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2KillEliteMobs §3[Mob Name contains / any] [Minimum Level / any] [Maximum Level / any] [Spawn Reason / any] [Minimum Damage Percentage / any] [Amount to kill]");
+        } else if (args.length == 6) {
+            sender.sendMessage("§cMissing 7. argument §3[Minimum Level / any]§c. Specify the §bminimum level§c the elite mob which the player needs to kill should have. Use 'any' if the minimum level doesn't matter.");
+            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2KillEliteMobs §2" + args[5] + " §3[Minimum Level / any] [Maximum Level / any] [Spawn Reason / any] [Minimum Damage Percentage / any] [Amount to kill]");
+        } else if (args.length == 7) {
+            sender.sendMessage("§cMissing 8. argument §3[Maximum Level / any]§c. Specify the §bmaximum level§c the elite mob which the player needs to kill can have. Use 'any' if the maximum level doesn't matter.");
+            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2KillEliteMobs §2" + args[5] + " " + args[6] + " §3[Maximum Level / any] [Spawn Reason / any] [Minimum Damage Percentage / any] [Amount to kill]");
+        } else if (args.length == 8) {
+            sender.sendMessage("§cMissing 9. argument §3[Spawn Reason / any]§c. Specify the §bspawn reason§c which spawned the elite mob. Use 'any' if the spawn reason doesn't matter.");
+            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2KillEliteMobs §2" + args[5] + " " + args[6] + " " + args[7] + " §3[Spawn Reason / any] [Minimum Damage Percentage / any] [Amount to kill]");
+        } else if (args.length == 9) {
+            sender.sendMessage("§cMissing 10. argument §3[Minimum Damage Percentage / any]§c. Specify the §bminimum damage in percent§c which the player needs to have inflicted on the elite mob in order for it to count as a kill. Use 'any' if it doesn't matter - no matter how much damage the player does to the elite mob, as long as the player just damages it once.");
+            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2KillEliteMobs §2" + args[5] + " " + args[6] + " " + args[7] + " " + args[8] + " §3[Minimum Damage Percentage / any] [Amount to kill]");
+        } else if (args.length == 10) {
+            sender.sendMessage("§cMissing 11. argument §3[Amount to kill]§c. Specify the §bamount of times§c the player needs to kill the elite mob in order to complete this objective.");
+            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2KillEliteMobs §2" + args[5] + " " + args[6] + " " + args[7] + " " + args[8] + " " + args[9] + " §3[Amount to kill]");
+        } else if (args.length == 11) {
+            //Input data
+            final String eliteMobName;
+            if (args[5].equalsIgnoreCase("any")) {
+                eliteMobName = "";
+            } else {
+                eliteMobName = args[5].replaceAll("_", " ");
+            }
+            final int minimumLevel;
+            if (args[6].equalsIgnoreCase("any")) {
+                minimumLevel = -1;
+            } else {
+                minimumLevel = Integer.parseInt(args[6]);
+            }
+
+            final int maximumLevel;
+            if (args[6].equalsIgnoreCase("any")) {
+                maximumLevel = -1;
+            } else {
+                maximumLevel = Integer.parseInt(args[7]);
+            }
+            final String spawnReason;
+            if (args[8].equalsIgnoreCase("any")) {
+                spawnReason = "";
+            } else {
+                spawnReason = args[8];
+            }
+            final int minimumDamagePercentage;
+            if (args[9].equalsIgnoreCase("any")) {
+                minimumDamagePercentage = -1;
+            } else {
+                minimumDamagePercentage = Integer.parseInt(args[9].replaceAll("%", ""));
+            }
+
+            final int amountToKill = Integer.parseInt(args[10]);
+
+            //Input data validation
+            if (!main.isEliteMobsEnabled()) {
+                sender.sendMessage("§cError: The Elite Mobs integration is not enabled. Thus, you cannot create an EliteMobs Objective.");
+                return;
+            }
+
+            if (!spawnReason.isBlank()) { //'any' is being set to ""
+                try {
+                    CreatureSpawnEvent.SpawnReason.valueOf(spawnReason);
+                } catch (IllegalArgumentException exception) {
+                    sender.sendMessage("§cError: Invalid Spawn Reason.");
+                    return;
+                }
+            }
+
+
+            if (maximumLevel > 0 && minimumLevel > maximumLevel) {
+                sender.sendMessage("§cError: [Minimum Level / any] needs to be smaller than [Maximum Level / any]");
+            }
+
+            if (amountToKill < 0) {
+                sender.sendMessage("§cError: [Amount to kill] needs to be at least 1.");
+                return;
+            }
+
+
+            //Create Objective
+            KillEliteMobsObjective killEliteMobsObjective = new KillEliteMobsObjective(main, quest, quest.getObjectives().size() + 1, eliteMobName, minimumLevel, maximumLevel, spawnReason, minimumDamagePercentage, amountToKill);
+            quest.addObjective(killEliteMobsObjective, true);
+            sender.sendMessage("§aKillEliteMobs Objective successfully added to quest §b" + quest.getQuestName() + "§a!");
+
+        } else {
+            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+        }
+    }
+
+    public final List<String> handleCompletionsKillEliteMobsObjective(final String[] args) {
+        if (args.length == 6) { //[Mob Name contains / any]
+            main.getDataManager().completions.add("any");
+            if (main.isEliteMobsEnabled()) {
+                main.getDataManager().completions.addAll(main.getDataManager().standardEliteMobNamesCompletions);
+            }
+
+        } else if (args.length == 7) { //[Minimum Level / any]
+            main.getDataManager().completions.add("any");
+            main.getDataManager().completions.addAll(main.getDataManager().numberPositiveCompletions);
+        } else if (args.length == 8) { //[Maximum Level / any]
+            main.getDataManager().completions.add("any");
+            main.getDataManager().completions.addAll(main.getDataManager().numberPositiveCompletions);
+        } else if (args.length == 9) { //[Spawn Reason / any]
+            main.getDataManager().completions.add("any");
+            for (final CreatureSpawnEvent.SpawnReason spawnReason : CreatureSpawnEvent.SpawnReason.values()) {
+                main.getDataManager().completions.add(spawnReason.toString());
+            }
+        } else if (args.length == 10) { //[Minimum Damage Percentage / any]
+            main.getDataManager().completions.add("any");
+            for (int i = 50; i <= 100; i++) {
+                main.getDataManager().completions.add("" + i);
+            }
+        } else if (args.length == 11) { //[Amount to kill]
+            return main.getDataManager().numberPositiveCompletions;
+        }
+
+        return main.getDataManager().completions;
     }
 
 

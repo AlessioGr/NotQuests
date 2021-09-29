@@ -8,10 +8,10 @@ import notquests.notquests.Structs.Quest;
 public class KillEliteMobsObjective extends Objective {
 
     private final NotQuests main;
-    private final String eliteMobToKillContainsName;
-    private final int minimumLevel, maximumLevel;
-    private final String spawnReason; //Optional. If null, any spawn reason will be used
-    private final int minimumDamagePercentage; //How much damage the player has to do to the mob minimum
+    private final String eliteMobToKillContainsName; //Blank: doesn't matter
+    private final int minimumLevel, maximumLevel; //-1: doesn't matter
+    private final String spawnReason; //Optional. If blank, any spawn reason will be used
+    private final int minimumDamagePercentage; //How much damage the player has to do to the mob minimum. -1: Doesn't matter
     private final int amountToKill;
 
     public KillEliteMobsObjective(NotQuests main, final Quest quest, final int objectiveID, String eliteMobToKillContainsName, int minimumLevel, int maximumLevel, String spawnReason, int minimumDamagePercentage, int amountToKill) {

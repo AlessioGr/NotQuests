@@ -85,11 +85,16 @@ public final class NotQuests extends JavaPlugin {
         //PaperLib for paper-specific methods (like getting TPS)
         PaperLib.suggestPaper(this);
 
+
         //Create a new instance of the Util Manager which will be re-used everywhere
         utilManager = new UtilManager(this);
 
+
         //Create a new instance of the Log Manager which will be re-used everywhere
         logManager = new LogManager(this);
+
+        getLogManager().log(Level.INFO, "NotQuests is starting...");
+
 
         //Create a new instance of the Performance Manager which will be re-used everywhere
         performanceManager = new PerformanceManager(this);
@@ -101,7 +106,6 @@ public final class NotQuests extends JavaPlugin {
         dataManager.loadGeneralConfig();
 
 
-        getLogManager().log(Level.INFO, "NotQuests is starting...");
 
 
         //Vault Hook
@@ -147,6 +151,8 @@ public final class NotQuests extends JavaPlugin {
                 getLogManager().info("Citizens found! Enabling Citizens support...");
             }
         }
+
+        dataManager.loadStandardCompletions();
 
 
         //Create a new instance of the Quest Manager which will be re-used everywhere

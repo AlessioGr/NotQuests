@@ -25,6 +25,7 @@ public class EliteMobsEvents implements Listener {
         final EliteEntity eliteMob = event.getEliteEntity();
 
         for (final Player player : eliteMob.getDamagers().keySet()) {
+            player.sendMessage("§eEliteMob Name: §f" + eliteMob.getName());
             final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
             if (questPlayer != null) {
                 if (questPlayer.getActiveQuests().size() > 0) {
@@ -35,8 +36,16 @@ public class EliteMobsEvents implements Listener {
 
                                     //Check conditions
 
-                                    if (!killEliteMobsObjective.getEliteMobToKillContainsName().isBlank() && !eliteMob.getName().toLowerCase(Locale.ROOT).contains(killEliteMobsObjective.getEliteMobToKillContainsName().toLowerCase(Locale.ROOT))) {
-                                        continue;
+                                    if (!killEliteMobsObjective.getEliteMobToKillContainsName().isBlank()) {
+                                        boolean foundOneNotFitting = false;
+                                        for (final String namePart : killEliteMobsObjective.getEliteMobToKillContainsName().toLowerCase(Locale.ROOT).split(" ")) {
+                                            if (!eliteMob.getName().toLowerCase(Locale.ROOT).contains(namePart)) {
+                                                foundOneNotFitting = true;
+                                            }
+                                        }
+                                        if (foundOneNotFitting) {
+                                            continue;
+                                        }
                                     }
 
                                     if (killEliteMobsObjective.getMinimumLevel() >= 0 && eliteMob.getLevel() < killEliteMobsObjective.getMinimumLevel()) {
@@ -47,7 +56,7 @@ public class EliteMobsEvents implements Listener {
                                         continue;
                                     }
 
-                                    if (eliteMob.getDamagers().get(player) < killEliteMobsObjective.getMinimumDamagePercentage()) {
+                                    if (killEliteMobsObjective.getMinimumDamagePercentage() != -1 && eliteMob.getDamagers().get(player) < killEliteMobsObjective.getMinimumDamagePercentage()) {
                                         continue;
                                     }
 
