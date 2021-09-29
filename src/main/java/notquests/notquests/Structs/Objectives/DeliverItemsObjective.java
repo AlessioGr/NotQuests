@@ -38,6 +38,7 @@ public class DeliverItemsObjective extends Objective {
         return itemToDeliver;
     }
 
+    //Probably never used, because we use the objective progress instead
     public final int getAmountToDeliver() {
         return amountToDeliver;
     }

@@ -494,9 +494,9 @@ public class ObjectivesAdminCommand {
                         if (args[5].equalsIgnoreCase("hand")) {
                             if (sender instanceof Player player) {
                                 ItemStack holdingItem = player.getInventory().getItemInMainHand();
-                                int amountToCollect = Integer.parseInt(args[6]);
+                                int amountToDeliver = Integer.parseInt(args[6]);
 
-                                DeliverItemsObjective deliverItemsObjective = new DeliverItemsObjective(main, quest, quest.getObjectives().size() + 1, holdingItem, amountToCollect, NPCID);
+                                DeliverItemsObjective deliverItemsObjective = new DeliverItemsObjective(main, quest, quest.getObjectives().size() + 1, holdingItem, amountToDeliver, NPCID);
                                 quest.addObjective(deliverItemsObjective, true);
                                 sender.sendMessage("§aObjective successfully added to quest §b" + quest.getQuestName() + "§a!");
 
@@ -507,10 +507,10 @@ public class ObjectivesAdminCommand {
                             Material itemMaterial = Material.getMaterial(args[5]);
                             if (itemMaterial != null) {
                                 ItemStack itemStack = new ItemStack(itemMaterial, 1);
-                                int amountToCollect = Integer.parseInt(args[6]);
+                                int amountToDeliver = Integer.parseInt(args[6]);
 
 
-                                DeliverItemsObjective deliverItemsObjective = new DeliverItemsObjective(main, quest, quest.getObjectives().size() + 1, itemStack, amountToCollect, NPCID);
+                                DeliverItemsObjective deliverItemsObjective = new DeliverItemsObjective(main, quest, quest.getObjectives().size() + 1, itemStack, amountToDeliver, NPCID);
                                 quest.addObjective(deliverItemsObjective, true);
                                 sender.sendMessage("§aObjective successfully added to quest §b" + quest.getQuestName() + "§a!");
 

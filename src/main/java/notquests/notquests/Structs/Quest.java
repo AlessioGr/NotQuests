@@ -128,16 +128,20 @@ public class Quest {
                     main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.itemToConsume.itemstack", consumeItemObjective.getItemToConsume());
                 } else if (objective instanceof final DeliverItemsObjective deliverItemsObjective) {
                     main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.itemToCollect.itemstack", deliverItemsObjective.getItemToDeliver());
+
                     main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.recipientNPCID", deliverItemsObjective.getRecipientNPCID());
-                } else if (objective instanceof final TalkToNPCObjective talkToNPCObjective) {
-                    if (talkToNPCObjective.getNPCtoTalkID() != -1) {
-                        main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.NPCtoTalkID", talkToNPCObjective.getNPCtoTalkID());
+                    if (deliverItemsObjective.getRecipientArmorStandUUID() != null) {
+                        main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.recipientArmorStandID", deliverItemsObjective.getRecipientArmorStandUUID().toString());
                     } else {
-                        if (talkToNPCObjective.getArmorStandUUID() != null) {
-                            main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.ArmorStandToTalkUUID", talkToNPCObjective.getArmorStandUUID().toString());
-                        } else { //Backup, in case something goes wrong. This should optimally never run, though.
-                            main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.NPCtoTalkID", -1);
-                        }
+                        main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.recipientArmorStandID", null);
+                    }
+
+                } else if (objective instanceof final TalkToNPCObjective talkToNPCObjective) {
+                    main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.NPCtoTalkID", talkToNPCObjective.getNPCtoTalkID());
+                    if (talkToNPCObjective.getArmorStandUUID() != null) {
+                        main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.ArmorStandToTalkUUID", talkToNPCObjective.getArmorStandUUID().toString());
+                    } else {
+                        main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.ArmorStandToTalkUUID", null);
                     }
                 } else if (objective instanceof final EscortNPCObjective escortNPCObjective) {
                     main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.NPCToEscortID", escortNPCObjective.getNpcToEscortID());

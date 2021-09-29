@@ -331,7 +331,18 @@ public class QuestManager {
                                     } else if (objectiveType == ObjectiveType.DeliverItems) {
                                         final ItemStack itemToCollect = main.getDataManager().getQuestsData().getItemStack("quests." + questName + ".objectives." + objectiveNumber + ".specifics.itemToCollect.itemstack");
                                         final int recipientNPCID = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.recipientNPCID");
-                                        objective = new DeliverItemsObjective(main, quest, objectiveID, itemToCollect, progressNeeded, recipientNPCID);
+
+                                        if (recipientNPCID != -1) {
+                                            objective = new DeliverItemsObjective(main, quest, objectiveID, itemToCollect, progressNeeded, recipientNPCID);
+                                        } else {
+                                            final String armorStandUUIDString = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.recipientArmorStandID");
+                                            if (armorStandUUIDString != null) {
+                                                final UUID armorStandUUID = UUID.fromString(armorStandUUIDString);
+                                                objective = new DeliverItemsObjective(main, quest, objectiveID, itemToCollect, progressNeeded, armorStandUUID);
+                                            } else {
+                                                objective = new DeliverItemsObjective(main, quest, objectiveID, itemToCollect, progressNeeded, recipientNPCID);
+                                            }
+                                        }
                                     } else if (objectiveType == ObjectiveType.TalkToNPC) {
                                         final int NPCtoTalkID = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.NPCtoTalkID", -1);
                                         if (NPCtoTalkID != -1) {
@@ -1233,7 +1244,7 @@ public class QuestManager {
             toReturn = "    §7" + eventualColor + "Items to consume: §f" + eventualColor + consumeItemsObjective.getItemToConsume().getType() + " (" + consumeItemsObjective.getItemToConsume().getItemMeta().getDisplayName() + ")";
         } else if (objective instanceof DeliverItemsObjective deliverItemsObjective) {
             toReturn = "    §7" + eventualColor + "Items to deliver: §f" + eventualColor + deliverItemsObjective.getItemToDeliver().getType() + " (" + deliverItemsObjective.getItemToDeliver().getItemMeta().getDisplayName() + ")\n";
-            if (main.isCitizensEnabled()) {
+            if (main.isCitizensEnabled() && deliverItemsObjective.getRecipientNPCID() != -1) {
                 final NPC npc = CitizensAPI.getNPCRegistry().getById(deliverItemsObjective.getRecipientNPCID());
                 if (npc != null) {
                     toReturn += "    §7" + eventualColor + "Deliver it to §f" + eventualColor + npc.getName();
@@ -1241,7 +1252,18 @@ public class QuestManager {
                     toReturn += "    §7" + eventualColor + "The delivery NPC is currently not available!";
                 }
             } else {
-                toReturn += "    §cError: Citizens plugin not installed. Contact an admin.";
+
+                if (deliverItemsObjective.getRecipientNPCID() != -1) {
+                    toReturn += "    §cError: Citizens plugin not installed. Contact an admin.";
+                } else { //Armor Stands
+                    final UUID armorStandUUID = deliverItemsObjective.getRecipientArmorStandUUID();
+                    if (armorStandUUID != null) {
+                        toReturn += "    §7" + eventualColor + "Deliver it to §f" + eventualColor + main.getArmorStandManager().getArmorStandName(armorStandUUID);
+                    } else {
+                        toReturn += "    §7" + eventualColor + "The target Armor Stand is currently not available!";
+                    }
+                }
+
             }
 
         } else if (objective instanceof TalkToNPCObjective talkToNPCObjective) {
@@ -1255,7 +1277,7 @@ public class QuestManager {
             } else {
                 if (talkToNPCObjective.getNPCtoTalkID() != -1) {
                     toReturn += "    §cError: Citizens plugin not installed. Contact an admin.";
-                } else { //ArmorStands
+                } else { //Armor Stands
                     final UUID armorStandUUID = talkToNPCObjective.getArmorStandUUID();
                     if (armorStandUUID != null) {
                         toReturn = "    §7" + eventualColor + "Talk to §f" + eventualColor + main.getArmorStandManager().getArmorStandName(armorStandUUID);
