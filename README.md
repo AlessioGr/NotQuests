@@ -50,6 +50,8 @@ Admin Commands - Quest Editing:
 
 
 ![Banner_Features](https://user-images.githubusercontent.com/70709113/133997198-bbc020b6-69c5-454b-b5b5-5f1bec0bab0d.png)
+- MythicMobs integration
+- EliteMobs integration
 - Quests can be bound to Citizens NPCs
 - **Quests can also be bound to Armor Stands ⇒ 10000x better performance because Citizens is a laggy plugin**. Especially if your armor stands are optimized in your paper configuration.
 - Complete GUI for the user interface
@@ -69,6 +71,7 @@ Admin Commands - Quest Editing:
   - Complete Other Quest
   - Talk to NPC
   - Command Triggers (to finish the objective)
+  - KillEliteMobs (if you're using EliteMobs)
 - Multiple Quest Accept Requirements:
   -  Money
   -  Other Quest
@@ -120,14 +123,11 @@ Player Placeholders:
 
 ![Banner_Future_Plans](https://user-images.githubusercontent.com/70709113/133997163-a98072a9-db72-4bf4-a0eb-b27ec67ad566.png)
 
-- Load Player Data only when the player joins
 - Complete GUI for Admin Commands
-- Make Citizens optional
-- Customized Armor Stands instead of Citizen NPCs for better performance. They will also contain the quests assigned to them directly in a PDC. Both Armor Stands and NPCs will be usable.
 - Quest Timer Trigger
-- MythicMobs Integration (kinda works already if you use Triggers)
-- "Interactions" Plugin Integration
+- "Interactions" Plugin Integration (works with Triggers already)
 - Placeholder Requirements
-- Technical: Give Quest NPCs the quests they offer directly (attach the quest names to the npc/to the trait) for performance boost
+
+These future plans might me inaccurate. You can find my full to-do list on my discord.
 
 I'm not a professional programmer and made this just for fun. You won't find many comments or javadocs either - I will add them gradually.
