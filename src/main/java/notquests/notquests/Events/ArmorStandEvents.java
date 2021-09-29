@@ -1,6 +1,8 @@
 package notquests.notquests.Events;
 
 import notquests.notquests.NotQuests;
+import notquests.notquests.Structs.Objectives.TalkToNPCObjective;
+import notquests.notquests.Structs.Quest;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.ArmorStand;
@@ -52,7 +54,7 @@ public class ArmorStandEvents implements Listener {
 
                     final String questName = container.get(questsKey, PersistentDataType.STRING);
 
-                    if (questName == null && id >= 0 && id <= 3) {
+                    if (questName == null && ((id >= 0 && id <= 3) || id == 5)) {
                         player.sendMessage("§cError: Your item has no valid quest attached to it.");
                         return;
                     }
@@ -153,16 +155,16 @@ public class ArmorStandEvents implements Listener {
                                 player.sendMessage("§2Quest with the name §b" + questName + " §2was removed from this armor stand!");
                                 player.sendMessage("§2Attached Quests: §b" + existingAttachedQuests);
 
-                            }else{
+                            } else {
                                 player.sendMessage("§cError: That armor stand does not have the Quest §b" + questName + " §cattached to it!");
                                 player.sendMessage("§2Attached Quests: §b" + existingAttachedQuests);
                             }
-                        }else{
+                        } else {
                             player.sendMessage("§cThis armor stand has no quests attached to it!");
                         }
 
 
-                    }else if(id == 4){ //Check
+                    } else if (id == 4) { //Check
 
                         player.sendMessage("§7Armor Stand Entity ID: §f" + armorStand.getUniqueId());
 
@@ -219,15 +221,29 @@ public class ArmorStandEvents implements Listener {
 
                         }else{
                             player.sendMessage("§9All " + nonShowingQuests.size() + " attached non-showing Quests:");
-                            int counter=0;
-                            for(final String questNameInList : nonShowingQuests){
-                                if(!questNameInList.isBlank()){ //empty or null or only whitespaces
+                            int counter = 0;
+                            for (final String questNameInList : nonShowingQuests) {
+                                if (!questNameInList.isBlank()) { //empty or null or only whitespaces
                                     counter++;
                                     player.sendMessage("§7" + counter + ". §e" + questNameInList);
                                 }
 
                             }
                         }
+
+                    } else if (id == 5) { //Add Objective TalkToNPC
+
+
+                        final Quest quest = main.getQuestManager().getQuest(questName);
+                        if (quest != null) {
+                            TalkToNPCObjective talkToNPCObjective = new TalkToNPCObjective(main, quest, quest.getObjectives().size() + 1, armorStand.getUniqueId());
+                            quest.addObjective(talkToNPCObjective, true);
+                            player.sendMessage("§aObjective successfully added to quest §b" + quest.getQuestName() + "§a!");
+
+                        } else {
+                            player.sendMessage("§cError: Quest §b" + questName + " §cdoes not exist.");
+                        }
+
 
                     }
                 }else{

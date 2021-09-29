@@ -109,6 +109,7 @@ public class ObjectivesAdminCommand {
                             //give a specialitem. clicking an armorstand with that special item will remove the pdb.
 
                             NamespacedKey key = new NamespacedKey(main, "notquests-item");
+                            NamespacedKey QuestNameKey = new NamespacedKey(main, "notquests-questname");
 
                             ItemMeta itemMeta = itemStack.getItemMeta();
                             //Only paper List<Component> lore = new ArrayList<>();
@@ -116,6 +117,7 @@ public class ObjectivesAdminCommand {
 
                             assert itemMeta != null;
 
+                            itemMeta.getPersistentDataContainer().set(QuestNameKey, PersistentDataType.STRING, quest.getQuestName());
                             itemMeta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, 5);
 
                             //Only paper itemMeta.displayName(Component.text("§dCheck Armor Stand", NamedTextColor.LIGHT_PURPLE));
