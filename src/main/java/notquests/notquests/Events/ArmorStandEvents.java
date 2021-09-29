@@ -34,11 +34,11 @@ public class ArmorStandEvents implements Listener {
         final Player player = event.getPlayer();
 
         if(event.getRightClicked().getType() == EntityType.ARMOR_STAND) {
-            ArmorStand armorStand = (ArmorStand) event.getRightClicked();
 
+            final ArmorStand armorStand = (ArmorStand) event.getRightClicked();
             final ItemStack heldItem = event.getPlayer().getInventory().getItemInMainHand();
 
-            if (heldItem.getType() != Material.AIR && heldItem.getItemMeta() != null) {
+            if (player.hasPermission("notquests.admin.armorstandeditingitems") && heldItem.getType() != Material.AIR && heldItem.getItemMeta() != null) {
                 final PersistentDataContainer container = heldItem.getItemMeta().getPersistentDataContainer();
 
                 final NamespacedKey specialItemKey = new NamespacedKey(main, "notquests-item");

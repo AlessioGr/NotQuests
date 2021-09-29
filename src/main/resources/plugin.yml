@@ -22,9 +22,9 @@ permissions:
     default: op
     description: Gives the player permission to everything in the plugin.
     children:
-      notquests.admin.armorstands: true
+      notquests.admin.armorstandeditingitems: true
       notquests.use: true
-  notquests.admin.armorstands:
+  notquests.admin.armorstandeditingitems:
     default: op
     description: Gives the player permission to use quest editing items for armor stands.
   notquests.use:
