@@ -60,6 +60,10 @@ public class Configuration {
     private boolean integrationEliteMobsEnabled = true;
 
 
+    //Other
+    private boolean actionBarCommandCompletionEnabled = true;
+
+
     public Configuration() {
 
     }
@@ -278,5 +282,13 @@ public class Configuration {
 
     public void setIntegrationEliteMobsEnabled(final boolean integrationEliteMobsEnabled) {
         this.integrationEliteMobsEnabled = integrationEliteMobsEnabled;
+    }
+
+    public final boolean isActionBarCommandCompletionEnabled() {
+        return actionBarCommandCompletionEnabled;
+    }
+
+    public void setActionBarCommandCompletionEnabled(final boolean actionBarCommandCompletionEnabled) {
+        this.actionBarCommandCompletionEnabled = actionBarCommandCompletionEnabled;
     }
 }

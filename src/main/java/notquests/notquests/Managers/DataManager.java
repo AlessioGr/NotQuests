@@ -521,6 +521,13 @@ public class DataManager {
         configuration.setIntegrationEliteMobsEnabled(getGeneralConfig().getBoolean("integrations.elitemobs.enabled"));
 
 
+        if (!getGeneralConfig().isBoolean("visual.fancy-actionbar-command-completion.enabled")) {
+            getGeneralConfig().set("visual.fancy-actionbar-command-completion.enabled", true);
+            valueChanged = true;
+        }
+        configuration.setActionBarCommandCompletionEnabled(getGeneralConfig().getBoolean("visual.fancy-actionbar-command-completion.enabled"));
+
+
         if (valueChanged) {
             main.getLogManager().info("<AQUA>General.yml</AQUA> Configuration was updated with new values! Saving it...");
             saveGeneralConfig();

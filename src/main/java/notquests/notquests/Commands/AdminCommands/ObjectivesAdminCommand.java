@@ -3,6 +3,7 @@ package notquests.notquests.Commands.AdminCommands;
 
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
+import net.kyori.adventure.audience.Audience;
 import notquests.notquests.NotQuests;
 import notquests.notquests.Structs.Objectives.*;
 import notquests.notquests.Structs.Objectives.hooks.KillEliteMobsObjective;
@@ -744,7 +745,7 @@ public class ObjectivesAdminCommand {
         }
     }
 
-    public List<String> handleCompletions(final String[] args) {
+    public List<String> handleCompletions(final String[] args, final CommandSender sender) {
         main.getDataManager().completions.clear();
 
         final Quest quest = main.getQuestManager().getQuest(args[1]);
@@ -779,7 +780,7 @@ public class ObjectivesAdminCommand {
                 }
 
             } else if (args.length >= 6 && args[3].equalsIgnoreCase("add") && args[4].equalsIgnoreCase("KillEliteMobs")) {
-                return handleCompletionsKillEliteMobsObjective(args);
+                return handleCompletionsKillEliteMobsObjective(args, sender);
             } else if (args.length == 6) {
                 if (args[3].equalsIgnoreCase("add")) {
                     if (args[4].equalsIgnoreCase("BreakBlocks")) {
@@ -1319,30 +1320,47 @@ public class ObjectivesAdminCommand {
         }
     }
 
-    public final List<String> handleCompletionsKillEliteMobsObjective(final String[] args) {
+    public final List<String> handleCompletionsKillEliteMobsObjective(final String[] args, final CommandSender sender) {
+        final Audience audience = main.adventure().sender(sender);
         if (args.length == 6) { //[Mob Name contains / any]
             main.getDataManager().completions.add("any");
             if (main.isEliteMobsEnabled()) {
                 main.getDataManager().completions.addAll(main.getDataManager().standardEliteMobNamesCompletions);
             }
 
+            main.getUtilManager().sendFancyActionBar(audience, args, "[Mob Name contains / any]", "[Minimum Level / any]");
+
         } else if (args.length == 7) { //[Minimum Level / any]
             main.getDataManager().completions.add("any");
             main.getDataManager().completions.addAll(main.getDataManager().numberPositiveCompletions);
+            main.getUtilManager().sendFancyActionBar(audience, args, "[Minimum Level / any]", "[Maximum Level / any]");
+
         } else if (args.length == 8) { //[Maximum Level / any]
             main.getDataManager().completions.add("any");
             main.getDataManager().completions.addAll(main.getDataManager().numberPositiveCompletions);
+
+            main.getUtilManager().sendFancyActionBar(audience, args, "[Maximum Level / any]", "[Spawn Reason / any]");
+
         } else if (args.length == 9) { //[Spawn Reason / any]
             main.getDataManager().completions.add("any");
             for (final CreatureSpawnEvent.SpawnReason spawnReason : CreatureSpawnEvent.SpawnReason.values()) {
                 main.getDataManager().completions.add(spawnReason.toString());
             }
+
+            main.getUtilManager().sendFancyActionBar(audience, args, "[Spawn Reason / any]", "[Minimum Damage Percentage / any]");
+
         } else if (args.length == 10) { //[Minimum Damage Percentage / any]
             main.getDataManager().completions.add("any");
             for (int i = 50; i <= 100; i++) {
                 main.getDataManager().completions.add("" + i);
             }
+
+            main.getUtilManager().sendFancyActionBar(audience, args, "[Minimum Damage Percentage / any]", "[Amount to kill]");
+
         } else if (args.length == 11) { //[Amount to kill]
+
+            main.getUtilManager().sendFancyActionBar(audience, args, "[Amount to kill]", "");
+
             return main.getDataManager().numberPositiveCompletions;
         }
 

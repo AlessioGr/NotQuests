@@ -1861,7 +1861,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                 StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
                 return main.getDataManager().partialCompletions;
             } else if (args.length >= 4 && args[0].equalsIgnoreCase("edit") && args[2].equalsIgnoreCase("objectives")) {
-                final List<String> completions = objectivesAdminCommand.handleCompletions(args);
+                final List<String> completions = objectivesAdminCommand.handleCompletions(args, sender);
                 if (completions != null) {
                     StringUtil.copyPartialMatches(args[args.length - 1], completions, main.getDataManager().partialCompletions);
                     return main.getDataManager().partialCompletions;
