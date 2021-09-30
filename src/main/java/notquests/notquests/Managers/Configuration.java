@@ -62,6 +62,7 @@ public class Configuration {
 
     //Other
     private boolean actionBarCommandCompletionEnabled = true;
+    private int actionBarCommandCompletionMaxPreviousArgumentsDisplayed = 2;
 
 
     public Configuration() {
@@ -290,5 +291,13 @@ public class Configuration {
 
     public void setActionBarCommandCompletionEnabled(final boolean actionBarCommandCompletionEnabled) {
         this.actionBarCommandCompletionEnabled = actionBarCommandCompletionEnabled;
+    }
+
+    public final int getActionBarCommandCompletionMaxPreviousArgumentsDisplayed() {
+        return actionBarCommandCompletionMaxPreviousArgumentsDisplayed;
+    }
+
+    public void setActionBarCommandCompletionMaxPreviousArgumentsDisplayed(final int actionBarCommandCompletionMaxPreviousArgumentsDisplayed) {
+        this.actionBarCommandCompletionMaxPreviousArgumentsDisplayed = actionBarCommandCompletionMaxPreviousArgumentsDisplayed;
     }
 }

@@ -13,6 +13,9 @@ general:
 visual:
   #Sets which language to use. Default is languages/en.yml
   language: en
+  #Sets if it should show the fancy, helpful hints above your health bar when typing some commands
+  fancy-actionbar-command-completion:
+    enabled: true
   #This controls the particle above the heads of Citizen NPCs with Quests attached to them
   citizensnpc:
     quest-giver-indicator-particle:
@@ -31,6 +34,7 @@ visual:
       spawn-interval: 10
       count: 1
       disable-if-tps-below: -1.0
+
 gui:
   questpreview:
     # If set to false, clickable text will be used for Quest Previews instead

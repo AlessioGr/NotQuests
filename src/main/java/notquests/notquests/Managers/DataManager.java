@@ -528,6 +528,13 @@ public class DataManager {
         configuration.setActionBarCommandCompletionEnabled(getGeneralConfig().getBoolean("visual.fancy-actionbar-command-completion.enabled"));
 
 
+        if (!getGeneralConfig().isInt("visual.fancy-actionbar-command-completion.max-previous-arguments-displayed")) {
+            getGeneralConfig().set("visual.fancy-actionbar-command-completion.max-previous-arguments-displayed", 2);
+            valueChanged = true;
+        }
+        configuration.setActionBarCommandCompletionMaxPreviousArgumentsDisplayed(getGeneralConfig().getInt("visual.fancy-actionbar-command-completion.max-previous-arguments-displayed"));
+
+
         if (valueChanged) {
             main.getLogManager().info("<AQUA>General.yml</AQUA> Configuration was updated with new values! Saving it...");
             saveGeneralConfig();
