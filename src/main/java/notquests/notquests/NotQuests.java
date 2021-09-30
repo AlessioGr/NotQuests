@@ -1,4 +1,22 @@
 
+/*
+ * NotQuests - A Questing plugin for Minecraft Servers
+ * Copyright (C) 2021 Alessio Gravili
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package notquests.notquests;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
@@ -106,8 +124,6 @@ public final class NotQuests extends JavaPlugin {
         dataManager.loadGeneralConfig();
 
 
-
-
         //Vault Hook
         if (getDataManager().getConfiguration().isIntegrationVaultEnabled()) {
             //Vault is needed for NotQuests to function. If it's not found, NotQuests will be disabled. EDIT: Now it will just disable some features
@@ -173,9 +189,6 @@ public final class NotQuests extends JavaPlugin {
         armorStandManager = new ArmorStandManager(this);
 
         armorStandManager.loadAllArmorStandsFromLoadedChunks();
-
-
-
 
 
         //Registering the nquestgiver Trait here has been commented out. I think I'm currently doing that somewhere else atm. So, this isn't needed at the moment.
@@ -254,7 +267,6 @@ public final class NotQuests extends JavaPlugin {
         }
 
 
-
     }
 
     /**
@@ -276,7 +288,7 @@ public final class NotQuests extends JavaPlugin {
         getDataManager().setAlreadyLoadedNPCs(false);
 
 
-       //Do Citizens stuff if the Citizens integration is enabled
+        //Do Citizens stuff if the Citizens integration is enabled
         if(isCitizensEnabled()){
             /*
              * All Citizen NPCs which have quests attached to them have the Citizens NPC trait "nquestgiver".

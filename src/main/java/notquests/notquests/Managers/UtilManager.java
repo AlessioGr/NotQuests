@@ -1,3 +1,21 @@
+/*
+ * NotQuests - A Questing plugin for Minecraft Servers
+ * Copyright (C) 2021 Alessio Gravili
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package notquests.notquests.Managers;
 
 import net.kyori.adventure.audience.Audience;
@@ -31,6 +49,7 @@ public class UtilManager {
 
 
         for (int i = -1; i < args.length - 1; i++) {
+
             if (cutoff == 0) {
                 if (i == -1) {
                     argsTogether.append("/qa ");
@@ -39,9 +58,13 @@ public class UtilManager {
                 }
 
             } else {
-                cutoff -= 1;
-            }
+                if (cutoff > 0) {
+                    cutoff -= 1;
+                } else { //Just 1 arg
+                    argsTogether.append("/qa ");
+                }
 
+            }
         }
 
         if (initialCutoff > 0) {

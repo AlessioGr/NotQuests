@@ -1,3 +1,21 @@
+/*
+ * NotQuests - A Questing plugin for Minecraft Servers
+ * Copyright (C) 2021 Alessio Gravili
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package notquests.notquests.Managers;
 
 import de.themoep.inventorygui.GuiElementGroup;
@@ -385,8 +403,6 @@ public class QuestManager {
                                 }
 
 
-
-
                                 if (objective != null) {
 
                                     final String objectiveDisplayName = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".displayName", "");
@@ -560,6 +576,7 @@ public class QuestManager {
         }};
 
     }
+
     public final ArrayList<Quest> getQuestsAttachedToArmorstandWithShowing(final ArmorStand armorstand) {
         return new ArrayList<>() {{
             PersistentDataContainer armorstandPDB = armorstand.getPersistentDataContainer();
@@ -579,6 +596,7 @@ public class QuestManager {
         }};
 
     }
+
     public final ArrayList<Quest> getQuestsAttachedToArmorstandWithoutShowing(final ArmorStand armorstand) {
         return new ArrayList<>() {{
             PersistentDataContainer armorstandPDB = armorstand.getPersistentDataContainer();
@@ -619,7 +637,6 @@ public class QuestManager {
         // System.out.println("§esize: " + questsattached.size());
         return questsAttached;
     }
-
 
 
     public final ArrayList<Quest> getQuestsAttachedToNPCWithoutShowing(final NPC npc) {
@@ -1457,7 +1474,6 @@ public class QuestManager {
             }
 
             sender.sendMessage(getObjectiveTaskDescription(activeObjective.getObjective(), false));
-
 
 
             sender.sendMessage("   §7Progress: §f" + activeObjective.getCurrentProgress() + " / " + activeObjective.getProgressNeeded());

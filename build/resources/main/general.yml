@@ -16,6 +16,7 @@ visual:
   #Sets if it should show the fancy, helpful hints above your health bar when typing some commands
   fancy-actionbar-command-completion:
     enabled: true
+    max-previous-arguments-displayed: 2
   #This controls the particle above the heads of Citizen NPCs with Quests attached to them
   citizensnpc:
     quest-giver-indicator-particle:

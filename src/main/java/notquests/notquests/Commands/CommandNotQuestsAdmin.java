@@ -1,7 +1,26 @@
+/*
+ * NotQuests - A Questing plugin for Minecraft Servers
+ * Copyright (C) 2021 Alessio Gravili
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package notquests.notquests.Commands;
 
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -61,7 +80,6 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
         placeholders.add("{PLAYERZ}");
         placeholders.add("{WORLD}");
         placeholders.add("{QUEST}");
-
 
 
         firstLevelCommands = Component.text("NotQuests §b§lv" + main.getDescription().getVersion() + " §9§lAdmin Commands:", NamedTextColor.BLUE, TextDecoration.BOLD)
@@ -1661,493 +1679,6 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
         return true;
     }
 
-
-    @Override
-    public List<String> onTabComplete(CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
-        main.getDataManager().completions.clear();
-        main.getDataManager().standardPlayerCompletions.clear();
-        main.getDataManager().partialCompletions.clear();
-
-        if (sender.hasPermission("notquests.admin")) {
-
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                main.getDataManager().standardPlayerCompletions.add(player.getName());
-            }
-
-
-            if (args.length == 1) {
-                main.getDataManager().completions.addAll(Arrays.asList("create", "delete", "edit", "actions", "give", "forcegive", "questPoints", "activeQuests", "completedQuests", "progress", "failQuest", "completeQuest", "listObjectiveTypes", "listRewardTypes", "listRequirementTypes", "listAllQuests", "triggerObjective", "load", "reload", "save", "listPlaceholders", "resetAndRemoveQuestForAllPlayers", "resetAndFailQuestForAllPlayers"));
-                StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                return main.getDataManager().partialCompletions;
-
-            } else if (args.length > 1 && args[0].equalsIgnoreCase("questPoints")) {
-                final List<String> completions = questPointsAdminCommand.handleCompletions(sender, args);
-                if (completions != null) {
-                    StringUtil.copyPartialMatches(args[args.length - 1], completions, main.getDataManager().partialCompletions);
-                    return main.getDataManager().partialCompletions;
-                } else {
-                    return null;
-                }
-
-            } else if (args.length == 2) {
-                if (args[0].equalsIgnoreCase("create")) {
-                    main.getDataManager().completions.add("<Enter new Quest Name>");
-                    return main.getDataManager().completions;
-                } else if (args[0].equalsIgnoreCase("delete")) {
-                    for (Quest quest : main.getQuestManager().getAllQuests()) {
-                        main.getDataManager().completions.add(quest.getQuestName());
-                    }
-                    StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                    return main.getDataManager().partialCompletions;
-                } else if (args[0].equalsIgnoreCase("resetAndRemoveQuestForAllPlayers")) {
-                    for (Quest quest : main.getQuestManager().getAllQuests()) {
-                        main.getDataManager().completions.add(quest.getQuestName());
-                    }
-                    StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                    return main.getDataManager().partialCompletions;
-                } else if (args[0].equalsIgnoreCase("resetAndFailQuestForAllPlayers")) {
-                    for (Quest quest : main.getQuestManager().getAllQuests()) {
-                        main.getDataManager().completions.add(quest.getQuestName());
-                    }
-                    StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                    return main.getDataManager().partialCompletions;
-                } else if (args[0].equalsIgnoreCase("edit")) {
-                    for (Quest quest : main.getQuestManager().getAllQuests()) {
-                        main.getDataManager().completions.add(quest.getQuestName());
-                    }
-                    StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                    return main.getDataManager().partialCompletions;
-                } else if (args[0].equalsIgnoreCase("actions")) {
-                    main.getDataManager().completions.add("add");
-                    main.getDataManager().completions.add("edit");
-                    main.getDataManager().completions.add("list");
-                    StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                    return main.getDataManager().partialCompletions;
-                } else if (args[0].equalsIgnoreCase("give")) {
-                    StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().standardPlayerCompletions, main.getDataManager().partialCompletions);
-                    return main.getDataManager().partialCompletions;
-                } else if (args[0].equalsIgnoreCase("activeQuests")) {
-                    StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().standardPlayerCompletions, main.getDataManager().partialCompletions);
-                    return main.getDataManager().partialCompletions;
-                } else if (args[0].equalsIgnoreCase("completedQuests")) {
-                    StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().standardPlayerCompletions, main.getDataManager().partialCompletions);
-                    return main.getDataManager().partialCompletions;
-                } else if (args[0].equalsIgnoreCase("progress")) {
-                    StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().standardPlayerCompletions, main.getDataManager().partialCompletions);
-                    return main.getDataManager().partialCompletions;
-                } else if (args[0].equalsIgnoreCase("forcegive")) {
-                    StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().standardPlayerCompletions, main.getDataManager().partialCompletions);
-                    return main.getDataManager().partialCompletions;
-                } else if (args[0].equalsIgnoreCase("triggerObjective")) {
-                    for (Quest quest : main.getQuestManager().getAllQuests()) {
-                        for (Objective objective : quest.getObjectives()) {
-                            if (objective instanceof TriggerCommandObjective triggerCommandObjective) {
-                                main.getDataManager().completions.add(triggerCommandObjective.getTriggerName());
-                            }
-                        }
-                    }
-                    StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                    return main.getDataManager().partialCompletions;
-                } else if (args[0].equalsIgnoreCase("failQuest")) {
-                    StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().standardPlayerCompletions, main.getDataManager().partialCompletions);
-                    return main.getDataManager().standardPlayerCompletions;
-                } else if (args[0].equalsIgnoreCase("completeQuest")) {
-                    StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().standardPlayerCompletions, main.getDataManager().partialCompletions);
-                    return main.getDataManager().standardPlayerCompletions;
-                }
-
-            } else if (args.length == 3) {
-                if (args[0].equalsIgnoreCase("edit")) {
-                    main.getDataManager().completions.add("objectives");
-                    main.getDataManager().completions.add("rewards");
-                    main.getDataManager().completions.add("requirements");
-                    main.getDataManager().completions.add("npcs");
-                    main.getDataManager().completions.add("armorstands");
-                    main.getDataManager().completions.add("triggers");
-                    main.getDataManager().completions.add("maxAccepts");
-                    main.getDataManager().completions.add("takeEnabled");
-                    main.getDataManager().completions.add("acceptCooldown");
-                    main.getDataManager().completions.add("description");
-                    main.getDataManager().completions.add("displayName");
-                    StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                    return main.getDataManager().partialCompletions;
-                } else if (args[0].equalsIgnoreCase("actions")) {
-                    if (args[1].equalsIgnoreCase("add")) {
-                        main.getDataManager().completions.add("<Enter new, unique Action name>");
-                        StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                        return main.getDataManager().partialCompletions;
-                    } else if (args[1].equalsIgnoreCase("edit")) {
-                        for (final Action action : main.getQuestManager().getAllActions()) {
-                            main.getDataManager().completions.add(action.getActionName());
-                        }
-                        StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                        return main.getDataManager().partialCompletions;
-                    }
-
-                } else if (args[0].equalsIgnoreCase("give")) {
-                    for (Quest quest : main.getQuestManager().getAllQuests()) {
-                        main.getDataManager().completions.add(quest.getQuestName());
-                    }
-                    StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                    return main.getDataManager().partialCompletions;
-                } else if (args[0].equalsIgnoreCase("progress")) {
-                    for (Quest quest : main.getQuestManager().getAllQuests()) {
-                        main.getDataManager().completions.add(quest.getQuestName());
-                    }
-                    StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                    return main.getDataManager().partialCompletions;
-                } else if (args[0].equalsIgnoreCase("forcegive")) {
-                    for (Quest quest : main.getQuestManager().getAllQuests()) {
-                        main.getDataManager().completions.add(quest.getQuestName());
-                    }
-                    StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                    return main.getDataManager().partialCompletions;
-                } else if (args[0].equalsIgnoreCase("triggerObjective")) {
-                    StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().standardPlayerCompletions, main.getDataManager().partialCompletions);
-                    return main.getDataManager().partialCompletions;
-                } else if (args[0].equalsIgnoreCase("failQuest")) {
-                    final UUID uuid;
-                    final Player player = Bukkit.getPlayer(args[1]);
-                    if (player != null) {
-                        uuid = player.getUniqueId();
-                    } else {
-                        uuid = main.getUtilManager().getOfflinePlayer(args[1]).getUniqueId();
-                    }
-                    final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(uuid);
-                    if (questPlayer != null) {
-                        for (ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-                            main.getDataManager().completions.add(activeQuest.getQuest().getQuestName());
-                        }
-                        StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                        return main.getDataManager().partialCompletions;
-                    }
-                } else if (args[0].equalsIgnoreCase("completeQuest")) {
-                    final UUID uuid;
-                    final Player player = Bukkit.getPlayer(args[1]);
-                    if (player != null) {
-                        uuid = player.getUniqueId();
-                    } else {
-                        uuid = main.getUtilManager().getOfflinePlayer(args[1]).getUniqueId();
-                    }
-                    final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(uuid);
-                    if (questPlayer != null) {
-                        for (ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-                            main.getDataManager().completions.add(activeQuest.getQuest().getQuestName());
-                        }
-                        StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                        return main.getDataManager().partialCompletions;
-                    }
-                }
-            } else if (args.length >= 4 && ((args[0].equalsIgnoreCase("edit") && args[2].equalsIgnoreCase("description")) || (args[0].equalsIgnoreCase("actions") && args[1].equalsIgnoreCase("add")))) {
-                if (args[0].equalsIgnoreCase("actions")) {
-                    if (args[1].equalsIgnoreCase("add")) {
-                        final String argToCheck = args[args.length - 1];
-                        if (argToCheck.startsWith("{")) {
-                            main.getDataManager().completions.addAll(placeholders);
-                        } else {
-                            main.getDataManager().completions.add("<Enter Console Command>");
-                        }
-
-                        StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                        return main.getDataManager().partialCompletions;
-                    }
-                } else if (args[0].equalsIgnoreCase("edit")) {
-                    main.getDataManager().completions.add("<Enter new Quest description>");
-                    StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                    return main.getDataManager().partialCompletions;
-                }
-            } else if (args.length >= 4 && args[2].equalsIgnoreCase("displayName")) {
-                main.getDataManager().completions.add("<Enter new Quest display name>");
-                StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                return main.getDataManager().partialCompletions;
-            } else if (args.length >= 4 && args[0].equalsIgnoreCase("edit") && args[2].equalsIgnoreCase("objectives")) {
-                final List<String> completions = objectivesAdminCommand.handleCompletions(args, sender);
-                if (completions != null) {
-                    StringUtil.copyPartialMatches(args[args.length - 1], completions, main.getDataManager().partialCompletions);
-                    return main.getDataManager().partialCompletions;
-                } else {
-                    return null;
-                }
-
-            } else if (args.length >= 4 && args[0].equalsIgnoreCase("edit") && args[2].equalsIgnoreCase("armorstands")) {
-                final List<String> completions = armorStandsAdminCommand.handleCompletions(sender, args);
-                if (completions != null) {
-                    StringUtil.copyPartialMatches(args[args.length - 1], completions, main.getDataManager().partialCompletions);
-                    return main.getDataManager().partialCompletions;
-                } else {
-                    return null;
-                }
-
-            }else if (args.length == 4) {
-                if (args[0].equalsIgnoreCase("edit")) {
-                    if (args[2].equalsIgnoreCase("maxAccepts")) {
-                        StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().numberCompletions, main.getDataManager().partialCompletions);
-                        return main.getDataManager().partialCompletions;
-                    } else if (args[2].equalsIgnoreCase("acceptCooldown")) {
-                        StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().numberCompletions, main.getDataManager().partialCompletions);
-                        return main.getDataManager().partialCompletions;
-                    } else if (args[2].equalsIgnoreCase("takeEnabled")) {
-                        main.getDataManager().completions.add("Yes");
-                        main.getDataManager().completions.add("No");
-                        StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                        return main.getDataManager().partialCompletions;
-                    } else if (args[2].equalsIgnoreCase("requirements")) {
-                        main.getDataManager().completions.add("add");
-                        main.getDataManager().completions.add("list");
-                        main.getDataManager().completions.add("clear");
-                        StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                        return main.getDataManager().partialCompletions;
-                    } else if (args[2].equalsIgnoreCase("rewards")) {
-                        main.getDataManager().completions.add("add");
-                        main.getDataManager().completions.add("list");
-                        main.getDataManager().completions.add("clear");
-                        StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                        return main.getDataManager().partialCompletions;
-                    } else if (args[2].equalsIgnoreCase("npcs")) {
-                        main.getDataManager().completions.add("add");
-                        main.getDataManager().completions.add("list");
-                        main.getDataManager().completions.add("clear");
-                        StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                        return main.getDataManager().partialCompletions;
-                    } else if (args[2].equalsIgnoreCase("triggers")) {
-                        main.getDataManager().completions.add("add");
-                        main.getDataManager().completions.add("remove");
-                        main.getDataManager().completions.add("list");
-                        main.getDataManager().completions.add("clear");
-                        StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                        return main.getDataManager().partialCompletions;
-                    }
-                } else if (args[0].equalsIgnoreCase("actions")) {
-                    if (args[1].equalsIgnoreCase("edit")) {
-                        main.getDataManager().completions.add("setCommand");
-                        main.getDataManager().completions.add("delete");
-                        StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                        return main.getDataManager().partialCompletions;
-                    }
-                }
-            } else if (args.length >= 5 && args[0].equalsIgnoreCase("actions") && args[1].equalsIgnoreCase("edit") && args[3].equalsIgnoreCase("setCommand")) {
-                main.getDataManager().completions.add("<Enter new Console Command");
-                StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                return main.getDataManager().partialCompletions;
-            } else if (args.length == 5) {
-                if (args[0].equalsIgnoreCase("edit")) {
-                    if (args[2].equalsIgnoreCase("requirements") && args[3].equalsIgnoreCase("add")) {
-                        main.getDataManager().completions.add("OtherQuest");
-                        main.getDataManager().completions.add("QuestPoints");
-                        main.getDataManager().completions.add("Money");
-                        main.getDataManager().completions.add("Permission");
-                        StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                        return main.getDataManager().partialCompletions;
-                    } else if (args[2].equalsIgnoreCase("rewards") && args[3].equalsIgnoreCase("add")) {
-                        main.getDataManager().completions.add("ConsoleCommand");
-                        main.getDataManager().completions.add("QuestPoints");
-                        main.getDataManager().completions.add("Item");
-                        main.getDataManager().completions.add("Money");
-                        StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                        return main.getDataManager().partialCompletions;
-                    } else if (args[2].equalsIgnoreCase("npcs") && args[3].equalsIgnoreCase("add")) {
-                        if(main.isCitizensEnabled()){
-                            for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
-                                main.getDataManager().completions.add("" + npc.getId());
-                            }
-                        }
-
-                        StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                        return main.getDataManager().partialCompletions;
-                    } else if (args[2].equalsIgnoreCase("triggers") && args[3].equalsIgnoreCase("add")) {
-                        for (final Action action : main.getQuestManager().getAllActions()) {
-                            main.getDataManager().completions.add(action.getActionName());
-                        }
-                        StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                        return main.getDataManager().partialCompletions;
-                    } else if (args[2].equalsIgnoreCase("triggers") && args[3].equalsIgnoreCase("remove")) {
-                        final Quest quest = main.getQuestManager().getQuest(args[1]);
-                        if (quest != null) {
-                            int i = 1;
-                            for (final Trigger ignored : quest.getTriggers()) {
-                                main.getDataManager().completions.add("" + i);
-                                i++;
-                            }
-                            StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                            return main.getDataManager().partialCompletions;
-                        }
-
-
-                    }
-                }
-            } else if (args.length >= 6 && args[2].equalsIgnoreCase("rewards") && args[3].equalsIgnoreCase("add") && args[4].equalsIgnoreCase("ConsoleCommand")) {
-                final String argToCheck = args[args.length - 1];
-                if (argToCheck.startsWith("{")) {
-                    main.getDataManager().completions.addAll(placeholders);
-                } else {
-                    main.getDataManager().completions.add("<Enter Console Command>");
-                }
-                StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                return main.getDataManager().partialCompletions;
-            } else if (args.length == 6) {
-                if (args[0].equalsIgnoreCase("edit")) {
-                    if (args[2].equalsIgnoreCase("requirements") && args[3].equalsIgnoreCase("add")) {
-                        if (args[4].equalsIgnoreCase("OtherQuest")) {
-                            for (Quest quest : main.getQuestManager().getAllQuests()) {
-                                main.getDataManager().completions.add(quest.getQuestName());
-                            }
-                            StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                            return main.getDataManager().partialCompletions;
-                        } else if (args[4].equalsIgnoreCase("QuestPoints")) {
-                            StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().numberPositiveCompletions, main.getDataManager().partialCompletions);
-                            return main.getDataManager().partialCompletions;
-                        } else if (args[4].equalsIgnoreCase("Money")) {
-                            StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().numberPositiveCompletions, main.getDataManager().partialCompletions);
-                            return main.getDataManager().partialCompletions;
-                        } else if (args[4].equalsIgnoreCase("Permission")) {
-                            main.getDataManager().completions.add("<Enter required Permission node>");
-                            StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                            return main.getDataManager().partialCompletions;
-                        }
-                    } else if (args[2].equalsIgnoreCase("rewards") && args[3].equalsIgnoreCase("add")) {
-                        if (args[4].equalsIgnoreCase("QuestPoints")) {
-                            StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().numberPositiveCompletions, main.getDataManager().partialCompletions);
-                            return main.getDataManager().partialCompletions;
-                        } else if (args[4].equalsIgnoreCase("Item")) {
-                            for (Material material : Material.values()) {
-                                main.getDataManager().completions.add(material.toString());
-                            }
-                            main.getDataManager().completions.add("hand");
-
-                            StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                            return main.getDataManager().partialCompletions;
-                        } else if (args[4].equalsIgnoreCase("Money")) {
-                            StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().numberPositiveCompletions, main.getDataManager().partialCompletions);
-                            return main.getDataManager().partialCompletions;
-                        }
-                    } else if (args[2].equalsIgnoreCase("npcs") && args[3].equalsIgnoreCase("add")) {
-                        main.getDataManager().completions.add("Yes");
-                        main.getDataManager().completions.add("No");
-                        StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                        return main.getDataManager().partialCompletions;
-                    } else if (args[2].equalsIgnoreCase("triggers") && args[3].equalsIgnoreCase("add")) {
-                        main.getDataManager().completions.add("DEATH");
-                        main.getDataManager().completions.add("NPCDEATH");
-                        main.getDataManager().completions.add("FAIL");
-                        main.getDataManager().completions.add("COMPLETE");
-                        main.getDataManager().completions.add("BEGIN");
-                        main.getDataManager().completions.add("DISCONNECT");
-                        main.getDataManager().completions.add("WORLDENTER");
-                        main.getDataManager().completions.add("WORLDLEAVE");
-                        StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                        return main.getDataManager().partialCompletions;
-                    }
-                }
-            } else if (args.length == 7) {
-                if (args[0].equalsIgnoreCase("edit")) {
-                    if (args[2].equalsIgnoreCase("requirements") && args[3].equalsIgnoreCase("add")) {
-                        if (args[4].equalsIgnoreCase("OtherQuest")) {
-                            StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().numberPositiveCompletions, main.getDataManager().partialCompletions);
-                            return main.getDataManager().partialCompletions;
-                        } else if (args[4].equalsIgnoreCase("QuestPoints")) {
-                            main.getDataManager().completions.add("Yes");
-                            main.getDataManager().completions.add("No");
-                            StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                            return main.getDataManager().partialCompletions;
-                        } else if (args[4].equalsIgnoreCase("Money")) {
-                            main.getDataManager().completions.add("Yes");
-                            main.getDataManager().completions.add("No");
-                            StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                            return main.getDataManager().partialCompletions;
-                        }
-                    } else if (args[2].equalsIgnoreCase("triggers") && args[3].equalsIgnoreCase("add")) {
-                        final Quest quest = main.getQuestManager().getQuest(args[1]);
-                        main.getDataManager().completions.add("Quest");
-                        if (quest != null) {
-                            final int objectiveCount = quest.getObjectives().size();
-                            for (int i = 1; i <= objectiveCount; i++) {
-                                main.getDataManager().completions.add("O" + i);
-                            }
-                        }
-                        StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                        return main.getDataManager().partialCompletions;
-                    } else if (args[2].equalsIgnoreCase("rewards") && args[3].equalsIgnoreCase("add")) {
-                        if (args[4].equalsIgnoreCase("Item")) {
-                            StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().numberPositiveCompletions, main.getDataManager().partialCompletions);
-                            return main.getDataManager().partialCompletions;
-                        }
-                    }
-                }
-            } else if (args.length == 8) {
-                if (args[0].equalsIgnoreCase("edit")) {
-                    if (args[2].equalsIgnoreCase("triggers") && args[3].equalsIgnoreCase("add")) {
-                        main.getDataManager().completions.add("ALL");
-
-                        for (final World world : Bukkit.getWorlds()) {
-                            main.getDataManager().completions.add(world.getName());
-                        }
-                        StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                        return main.getDataManager().partialCompletions;
-                    }
-                }
-            } else if (args.length == 9) {
-                if (args[0].equalsIgnoreCase("edit")) {
-                    if (args[2].equalsIgnoreCase("triggers") && args[3].equalsIgnoreCase("add")) {
-                        if (args[5].equalsIgnoreCase("DEATH")) {
-                            StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().numberPositiveCompletions, main.getDataManager().partialCompletions);
-                            return main.getDataManager().partialCompletions;
-                        } else if (args[5].equalsIgnoreCase("NPCDEATH")) {
-                            StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().numberPositiveCompletions, main.getDataManager().partialCompletions);
-                            return main.getDataManager().partialCompletions;
-                        } else if (args[5].equalsIgnoreCase("WORLDENTER")) {
-                            StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().numberPositiveCompletions, main.getDataManager().partialCompletions);
-                            return main.getDataManager().partialCompletions;
-                        } else if (args[5].equalsIgnoreCase("WORLDLEAVE")) {
-                            StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().numberPositiveCompletions, main.getDataManager().partialCompletions);
-                            return main.getDataManager().partialCompletions;
-                        }
-                    }
-                }
-            } else if (args.length == 10) {
-                if (args[0].equalsIgnoreCase("edit")) {
-                    if (args[2].equalsIgnoreCase("triggers") && args[3].equalsIgnoreCase("add")) {
-                        if (args[5].equalsIgnoreCase("NPCDEATH")) {
-
-                            if(main.isCitizensEnabled()){
-                                for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
-                                    main.getDataManager().completions.add("" + npc.getId());
-                                }
-                            }
-
-                            StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                            return main.getDataManager().partialCompletions;
-
-                        } else if (args[5].equalsIgnoreCase("WORLDENTER")) {
-                            main.getDataManager().completions.add("ALL");
-                            for (final World world : Bukkit.getWorlds()) {
-                                main.getDataManager().completions.add("" + world.getName());
-                            }
-                            StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                            return main.getDataManager().partialCompletions;
-
-                        } else if (args[5].equalsIgnoreCase("WORLDLEAVE")) {
-                            main.getDataManager().completions.add("ALL");
-                            for (final World world : Bukkit.getWorlds()) {
-                                main.getDataManager().completions.add("" + world.getName());
-                            }
-                            StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                            return main.getDataManager().partialCompletions;
-
-                        }
-                    }
-                }
-            }
-
-        }
-
-
-        StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-        return main.getDataManager().partialCompletions; //returns the possibility's to the client
-
-
-    }
-
-
     public void getProgress(CommandSender sender, String playerName, String questName) {
 
         final Player player = Bukkit.getPlayer(playerName);
@@ -2225,6 +1756,476 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
             }
         }
 
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
+        main.getDataManager().completions.clear();
+        main.getDataManager().standardPlayerCompletions.clear();
+        main.getDataManager().partialCompletions.clear();
+
+        if (sender.hasPermission("notquests.admin")) {
+
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                main.getDataManager().standardPlayerCompletions.add(player.getName());
+            }
+            final Audience audience = main.adventure().sender(sender);
+
+
+            if (args.length == 1) {
+                main.getDataManager().completions.addAll(Arrays.asList("create", "delete", "edit", "actions", "give", "forcegive", "questPoints", "activeQuests", "completedQuests", "progress", "failQuest", "completeQuest", "listObjectiveTypes", "listRewardTypes", "listRequirementTypes", "listAllQuests", "triggerObjective", "load", "reload", "save", "listPlaceholders", "resetAndRemoveQuestForAllPlayers", "resetAndFailQuestForAllPlayers"));
+
+                main.getUtilManager().sendFancyActionBar(audience, args, "[What do you want to do?]", "...");
+
+
+                StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
+                return main.getDataManager().partialCompletions;
+
+            } else if (args.length > 1 && args[0].equalsIgnoreCase("edit")) {
+                final List<String> completions = handleCompletionsEdit(args, sender);
+                if (completions != null) {
+                    StringUtil.copyPartialMatches(args[args.length - 1], completions, main.getDataManager().partialCompletions);
+                    return main.getDataManager().partialCompletions;
+                } else {
+                    return null;
+                }
+
+            } else if (args.length > 1 && args[0].equalsIgnoreCase("actions")) {
+                final List<String> completions = handleCompletionsActions(args, sender);
+                if (completions != null) {
+                    StringUtil.copyPartialMatches(args[args.length - 1], completions, main.getDataManager().partialCompletions);
+                    return main.getDataManager().partialCompletions;
+                } else {
+                    return null;
+                }
+
+            } else if (args.length > 1 && args[0].equalsIgnoreCase("questPoints")) {
+                final List<String> completions = questPointsAdminCommand.handleCompletions(sender, args);
+                if (completions != null) {
+                    StringUtil.copyPartialMatches(args[args.length - 1], completions, main.getDataManager().partialCompletions);
+                    return main.getDataManager().partialCompletions;
+                } else {
+                    return null;
+                }
+
+            } else if (args.length == 2) {
+                if (args[0].equalsIgnoreCase("create")) {
+                    main.getDataManager().completions.add("<Enter new Quest Name>");
+
+                    main.getUtilManager().sendFancyActionBar(audience, args, "<Enter new Quest Name>", "");
+
+                    return main.getDataManager().completions;
+                } else if (args[0].equalsIgnoreCase("delete")) {
+                    for (Quest quest : main.getQuestManager().getAllQuests()) {
+                        main.getDataManager().completions.add(quest.getQuestName());
+                    }
+                    StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
+                    return main.getDataManager().partialCompletions;
+                } else if (args[0].equalsIgnoreCase("resetAndRemoveQuestForAllPlayers")) {
+                    for (Quest quest : main.getQuestManager().getAllQuests()) {
+                        main.getDataManager().completions.add(quest.getQuestName());
+                    }
+                    StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
+                    return main.getDataManager().partialCompletions;
+                } else if (args[0].equalsIgnoreCase("resetAndFailQuestForAllPlayers")) {
+                    for (Quest quest : main.getQuestManager().getAllQuests()) {
+                        main.getDataManager().completions.add(quest.getQuestName());
+                    }
+                    StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
+                    return main.getDataManager().partialCompletions;
+                } else if (args[0].equalsIgnoreCase("give")) {
+                    StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().standardPlayerCompletions, main.getDataManager().partialCompletions);
+                    return main.getDataManager().partialCompletions;
+                } else if (args[0].equalsIgnoreCase("activeQuests")) {
+                    StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().standardPlayerCompletions, main.getDataManager().partialCompletions);
+                    return main.getDataManager().partialCompletions;
+                } else if (args[0].equalsIgnoreCase("completedQuests")) {
+                    StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().standardPlayerCompletions, main.getDataManager().partialCompletions);
+                    return main.getDataManager().partialCompletions;
+                } else if (args[0].equalsIgnoreCase("progress")) {
+                    StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().standardPlayerCompletions, main.getDataManager().partialCompletions);
+                    return main.getDataManager().partialCompletions;
+                } else if (args[0].equalsIgnoreCase("forcegive")) {
+                    StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().standardPlayerCompletions, main.getDataManager().partialCompletions);
+                    return main.getDataManager().partialCompletions;
+                } else if (args[0].equalsIgnoreCase("triggerObjective")) {
+                    for (Quest quest : main.getQuestManager().getAllQuests()) {
+                        for (Objective objective : quest.getObjectives()) {
+                            if (objective instanceof TriggerCommandObjective triggerCommandObjective) {
+                                main.getDataManager().completions.add(triggerCommandObjective.getTriggerName());
+                            }
+                        }
+                    }
+                    StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
+                    return main.getDataManager().partialCompletions;
+                } else if (args[0].equalsIgnoreCase("failQuest")) {
+                    StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().standardPlayerCompletions, main.getDataManager().partialCompletions);
+                    return main.getDataManager().standardPlayerCompletions;
+                } else if (args[0].equalsIgnoreCase("completeQuest")) {
+                    StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().standardPlayerCompletions, main.getDataManager().partialCompletions);
+                    return main.getDataManager().standardPlayerCompletions;
+                }
+
+            } else if (args.length == 3) {
+                if (args[0].equalsIgnoreCase("give")) {
+                    for (Quest quest : main.getQuestManager().getAllQuests()) {
+                        main.getDataManager().completions.add(quest.getQuestName());
+                    }
+                    StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
+                    return main.getDataManager().partialCompletions;
+                } else if (args[0].equalsIgnoreCase("progress")) {
+                    for (Quest quest : main.getQuestManager().getAllQuests()) {
+                        main.getDataManager().completions.add(quest.getQuestName());
+                    }
+                    StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
+                    return main.getDataManager().partialCompletions;
+                } else if (args[0].equalsIgnoreCase("forcegive")) {
+                    for (Quest quest : main.getQuestManager().getAllQuests()) {
+                        main.getDataManager().completions.add(quest.getQuestName());
+                    }
+                    StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
+                    return main.getDataManager().partialCompletions;
+                } else if (args[0].equalsIgnoreCase("triggerObjective")) {
+                    StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().standardPlayerCompletions, main.getDataManager().partialCompletions);
+                    return main.getDataManager().partialCompletions;
+                } else if (args[0].equalsIgnoreCase("failQuest")) {
+                    final UUID uuid;
+                    final Player player = Bukkit.getPlayer(args[1]);
+                    if (player != null) {
+                        uuid = player.getUniqueId();
+                    } else {
+                        uuid = main.getUtilManager().getOfflinePlayer(args[1]).getUniqueId();
+                    }
+                    final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(uuid);
+                    if (questPlayer != null) {
+                        for (ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+                            main.getDataManager().completions.add(activeQuest.getQuest().getQuestName());
+                        }
+                        StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
+                        return main.getDataManager().partialCompletions;
+                    }
+                } else if (args[0].equalsIgnoreCase("completeQuest")) {
+                    final UUID uuid;
+                    final Player player = Bukkit.getPlayer(args[1]);
+                    if (player != null) {
+                        uuid = player.getUniqueId();
+                    } else {
+                        uuid = main.getUtilManager().getOfflinePlayer(args[1]).getUniqueId();
+                    }
+                    final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(uuid);
+                    if (questPlayer != null) {
+                        for (ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+                            main.getDataManager().completions.add(activeQuest.getQuest().getQuestName());
+                        }
+                        StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
+                        return main.getDataManager().partialCompletions;
+                    }
+                }
+            } else if (args.length >= 4 && args[2].equalsIgnoreCase("displayName")) {
+                main.getDataManager().completions.add("<Enter new Quest display name>");
+                StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
+                return main.getDataManager().partialCompletions;
+            }
+
+        }
+
+
+        StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
+        return main.getDataManager().partialCompletions; //returns the possibility's to the client
+
+
+    }
+
+
+    //Command Completion Handlers
+
+    public final List<String> handleCompletionsActions(final String[] args, final CommandSender sender) {
+        final Audience audience = main.adventure().sender(sender);
+
+        if (args.length == 2) {
+            main.getDataManager().completions.add("add");
+            main.getDataManager().completions.add("edit");
+            main.getDataManager().completions.add("list");
+        } else if (args.length == 3) {
+            if (args[1].equalsIgnoreCase("add")) {
+                main.getDataManager().completions.add("<Enter new, unique Action name>");
+            } else if (args[1].equalsIgnoreCase("edit")) {
+                for (final Action action : main.getQuestManager().getAllActions()) {
+                    main.getDataManager().completions.add(action.getActionName());
+                }
+            }
+        } else if (args.length == 4) {
+            if (args[1].equalsIgnoreCase("edit")) {
+                main.getDataManager().completions.add("setCommand");
+                main.getDataManager().completions.add("delete");
+            }
+        } else if (args.length >= 5 && args[1].equalsIgnoreCase("edit") && args[3].equalsIgnoreCase("setCommand")) {
+            main.getDataManager().completions.add("<Enter new Console Command");
+
+        }
+
+        return main.getDataManager().completions;
+    }
+
+    public final List<String> handleCompletionsEdit(final String[] args, final CommandSender sender) {
+        final Audience audience = main.adventure().sender(sender);
+
+        if (args.length == 2) {
+            for (Quest quest : main.getQuestManager().getAllQuests()) {
+                main.getDataManager().completions.add(quest.getQuestName());
+            }
+
+            main.getUtilManager().sendFancyActionBar(audience, args, "[Quest Name]", "...");
+
+        } else if (args.length == 3) {
+            main.getDataManager().completions.add("objectives");
+            main.getDataManager().completions.add("rewards");
+            main.getDataManager().completions.add("requirements");
+            main.getDataManager().completions.add("npcs");
+            main.getDataManager().completions.add("armorstands");
+            main.getDataManager().completions.add("triggers");
+            main.getDataManager().completions.add("maxAccepts");
+            main.getDataManager().completions.add("takeEnabled");
+            main.getDataManager().completions.add("acceptCooldown");
+            main.getDataManager().completions.add("description");
+            main.getDataManager().completions.add("displayName");
+            main.getUtilManager().sendFancyActionBar(audience, args, "[What do you want to edit?]", "...");
+
+        } else if (args.length >= 4 && ((args[2].equalsIgnoreCase("description")) || (args[0].equalsIgnoreCase("actions") && args[1].equalsIgnoreCase("add")))) {
+            if (args[0].equalsIgnoreCase("actions")) {
+                if (args[1].equalsIgnoreCase("add")) {
+                    final String argToCheck = args[args.length - 1];
+                    if (argToCheck.startsWith("{")) {
+                        main.getDataManager().completions.addAll(placeholders);
+                    } else {
+                        main.getDataManager().completions.add("<Enter Console Command>");
+                    }
+
+
+                }
+            } else if (args[0].equalsIgnoreCase("edit")) {
+                main.getDataManager().completions.add("<Enter new Quest description>");
+
+            }
+        } else if (args.length >= 4 && args[2].equalsIgnoreCase("armorstands")) {
+            final List<String> completions = armorStandsAdminCommand.handleCompletions(sender, args);
+            if (completions != null) {
+                main.getDataManager().completions.addAll(completions);
+            } else {
+                return null;
+            }
+
+        } else if (args.length >= 4 && args[2].equalsIgnoreCase("objectives")) {
+            final List<String> completions = objectivesAdminCommand.handleCompletions(args, sender);
+            if (completions != null) {
+                main.getDataManager().completions.addAll(completions);
+            } else {
+                return null;
+            }
+
+        } else if (args.length == 4) {
+            if (args[2].equalsIgnoreCase("maxAccepts")) {
+                return main.getDataManager().numberCompletions;
+            } else if (args[2].equalsIgnoreCase("acceptCooldown")) {
+                return main.getDataManager().numberCompletions;
+            } else if (args[2].equalsIgnoreCase("takeEnabled")) {
+                main.getDataManager().completions.add("Yes");
+                main.getDataManager().completions.add("No");
+
+            } else if (args[2].equalsIgnoreCase("requirements")) {
+                main.getDataManager().completions.add("add");
+                main.getDataManager().completions.add("list");
+                main.getDataManager().completions.add("clear");
+
+            } else if (args[2].equalsIgnoreCase("rewards")) {
+                main.getDataManager().completions.add("add");
+                main.getDataManager().completions.add("list");
+                main.getDataManager().completions.add("clear");
+
+            } else if (args[2].equalsIgnoreCase("npcs")) {
+                main.getDataManager().completions.add("add");
+                main.getDataManager().completions.add("list");
+                main.getDataManager().completions.add("clear");
+
+            } else if (args[2].equalsIgnoreCase("triggers")) {
+                main.getDataManager().completions.add("add");
+                main.getDataManager().completions.add("remove");
+                main.getDataManager().completions.add("list");
+                main.getDataManager().completions.add("clear");
+
+            }
+        } else if (args.length == 5) {
+            if (args[2].equalsIgnoreCase("requirements") && args[3].equalsIgnoreCase("add")) {
+                main.getDataManager().completions.add("OtherQuest");
+                main.getDataManager().completions.add("QuestPoints");
+                main.getDataManager().completions.add("Money");
+                main.getDataManager().completions.add("Permission");
+
+            } else if (args[2].equalsIgnoreCase("rewards") && args[3].equalsIgnoreCase("add")) {
+                main.getDataManager().completions.add("ConsoleCommand");
+                main.getDataManager().completions.add("QuestPoints");
+                main.getDataManager().completions.add("Item");
+                main.getDataManager().completions.add("Money");
+
+            } else if (args[2].equalsIgnoreCase("npcs") && args[3].equalsIgnoreCase("add")) {
+                if (main.isCitizensEnabled()) {
+                    for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
+                        main.getDataManager().completions.add("" + npc.getId());
+                    }
+                }
+
+            } else if (args[2].equalsIgnoreCase("triggers") && args[3].equalsIgnoreCase("add")) {
+                for (final Action action : main.getQuestManager().getAllActions()) {
+                    main.getDataManager().completions.add(action.getActionName());
+                }
+
+            } else if (args[2].equalsIgnoreCase("triggers") && args[3].equalsIgnoreCase("remove")) {
+                final Quest quest = main.getQuestManager().getQuest(args[1]);
+                if (quest != null) {
+                    int i = 1;
+                    for (final Trigger ignored : quest.getTriggers()) {
+                        main.getDataManager().completions.add("" + i);
+                        i++;
+                    }
+
+                }
+
+
+            }
+        } else if (args.length >= 6 && args[2].equalsIgnoreCase("rewards") && args[3].equalsIgnoreCase("add") && args[4].equalsIgnoreCase("ConsoleCommand")) {
+            final String argToCheck = args[args.length - 1];
+            if (argToCheck.startsWith("{")) {
+                main.getDataManager().completions.addAll(placeholders);
+            } else {
+                main.getDataManager().completions.add("<Enter Console Command>");
+            }
+
+        } else if (args.length == 6) {
+            if (args[2].equalsIgnoreCase("requirements") && args[3].equalsIgnoreCase("add")) {
+                if (args[4].equalsIgnoreCase("OtherQuest")) {
+                    for (Quest quest : main.getQuestManager().getAllQuests()) {
+                        main.getDataManager().completions.add(quest.getQuestName());
+                    }
+
+                } else if (args[4].equalsIgnoreCase("QuestPoints")) {
+                    return main.getDataManager().numberPositiveCompletions;
+                } else if (args[4].equalsIgnoreCase("Money")) {
+                    return main.getDataManager().numberPositiveCompletions;
+                } else if (args[4].equalsIgnoreCase("Permission")) {
+                    main.getDataManager().completions.add("<Enter required Permission node>");
+
+                }
+            } else if (args[2].equalsIgnoreCase("rewards") && args[3].equalsIgnoreCase("add")) {
+                if (args[4].equalsIgnoreCase("QuestPoints")) {
+                    return main.getDataManager().numberPositiveCompletions;
+                } else if (args[4].equalsIgnoreCase("Item")) {
+                    for (Material material : Material.values()) {
+                        main.getDataManager().completions.add(material.toString());
+                    }
+                    main.getDataManager().completions.add("hand");
+
+                } else if (args[4].equalsIgnoreCase("Money")) {
+                    return main.getDataManager().numberPositiveCompletions;
+                }
+            } else if (args[2].equalsIgnoreCase("npcs") && args[3].equalsIgnoreCase("add")) {
+                main.getDataManager().completions.add("Yes");
+                main.getDataManager().completions.add("No");
+
+            } else if (args[2].equalsIgnoreCase("triggers") && args[3].equalsIgnoreCase("add")) {
+                main.getDataManager().completions.add("DEATH");
+                main.getDataManager().completions.add("NPCDEATH");
+                main.getDataManager().completions.add("FAIL");
+                main.getDataManager().completions.add("COMPLETE");
+                main.getDataManager().completions.add("BEGIN");
+                main.getDataManager().completions.add("DISCONNECT");
+                main.getDataManager().completions.add("WORLDENTER");
+                main.getDataManager().completions.add("WORLDLEAVE");
+
+            }
+
+        } else if (args.length == 7) {
+            if (args[2].equalsIgnoreCase("requirements") && args[3].equalsIgnoreCase("add")) {
+                if (args[4].equalsIgnoreCase("OtherQuest")) {
+                    return main.getDataManager().numberPositiveCompletions;
+                } else if (args[4].equalsIgnoreCase("QuestPoints")) {
+                    main.getDataManager().completions.add("Yes");
+                    main.getDataManager().completions.add("No");
+
+                } else if (args[4].equalsIgnoreCase("Money")) {
+                    main.getDataManager().completions.add("Yes");
+                    main.getDataManager().completions.add("No");
+
+                }
+            } else if (args[2].equalsIgnoreCase("triggers") && args[3].equalsIgnoreCase("add")) {
+                final Quest quest = main.getQuestManager().getQuest(args[1]);
+                main.getDataManager().completions.add("Quest");
+                if (quest != null) {
+                    final int objectiveCount = quest.getObjectives().size();
+                    for (int i = 1; i <= objectiveCount; i++) {
+                        main.getDataManager().completions.add("O" + i);
+                    }
+                }
+
+            } else if (args[2].equalsIgnoreCase("rewards") && args[3].equalsIgnoreCase("add")) {
+                if (args[4].equalsIgnoreCase("Item")) {
+                    return main.getDataManager().numberPositiveCompletions;
+                }
+            }
+        } else if (args.length == 8) {
+            if (args[2].equalsIgnoreCase("triggers") && args[3].equalsIgnoreCase("add")) {
+                main.getDataManager().completions.add("ALL");
+
+                for (final World world : Bukkit.getWorlds()) {
+                    main.getDataManager().completions.add(world.getName());
+                }
+
+            }
+        } else if (args.length == 9) {
+            if (args[2].equalsIgnoreCase("triggers") && args[3].equalsIgnoreCase("add")) {
+                if (args[5].equalsIgnoreCase("DEATH")) {
+                    return main.getDataManager().numberPositiveCompletions;
+                } else if (args[5].equalsIgnoreCase("NPCDEATH")) {
+                    return main.getDataManager().numberPositiveCompletions;
+                } else if (args[5].equalsIgnoreCase("WORLDENTER")) {
+                    return main.getDataManager().numberPositiveCompletions;
+                } else if (args[5].equalsIgnoreCase("WORLDLEAVE")) {
+                    return main.getDataManager().numberPositiveCompletions;
+                }
+            }
+
+        } else if (args.length == 10) {
+
+            if (args[2].equalsIgnoreCase("triggers") && args[3].equalsIgnoreCase("add")) {
+                if (args[5].equalsIgnoreCase("NPCDEATH")) {
+
+                    if (main.isCitizensEnabled()) {
+                        for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
+                            main.getDataManager().completions.add("" + npc.getId());
+                        }
+                    }
+
+
+                } else if (args[5].equalsIgnoreCase("WORLDENTER")) {
+                    main.getDataManager().completions.add("ALL");
+                    for (final World world : Bukkit.getWorlds()) {
+                        main.getDataManager().completions.add("" + world.getName());
+                    }
+
+
+                } else if (args[5].equalsIgnoreCase("WORLDLEAVE")) {
+                    main.getDataManager().completions.add("ALL");
+                    for (final World world : Bukkit.getWorlds()) {
+                        main.getDataManager().completions.add("" + world.getName());
+                    }
+
+
+                }
+            }
+
+        }
+
+
+        return main.getDataManager().completions;
     }
 
 }
