@@ -83,7 +83,7 @@ public class UtilManager {
         if (!hintNextArgs.isBlank()) {
             //Chop off if too long
             if (hintNextArgs.length() > 15) {
-                hintNextArgs = hintNextArgs.substring(0, 20) + "...";
+                hintNextArgs = hintNextArgs.substring(0, 14) + "...";
             }
 
             return Component.text(argsTogether.toString(), TextColor.fromHexString("#a5c7a6"))

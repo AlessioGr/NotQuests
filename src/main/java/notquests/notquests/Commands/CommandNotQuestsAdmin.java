@@ -2321,7 +2321,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                     for (final World world : Bukkit.getWorlds()) {
                         main.getDataManager().completions.add("" + world.getName());
                     }
-                    main.getUtilManager().sendFancyActionBar(audience, args, "[World to enter name / 'ALL']\"", "");
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[World to enter name / 'ALL']", "");
 
                 } else if (args[5].equalsIgnoreCase("WORLDLEAVE")) {
                     main.getDataManager().completions.add("ALL");

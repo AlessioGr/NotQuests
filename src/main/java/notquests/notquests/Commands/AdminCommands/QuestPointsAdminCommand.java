@@ -18,6 +18,7 @@
 
 package notquests.notquests.Commands.AdminCommands;
 
+import net.kyori.adventure.audience.Audience;
 import notquests.notquests.NotQuests;
 import notquests.notquests.Structs.QuestPlayer;
 import org.bukkit.Bukkit;
@@ -37,6 +38,8 @@ public class QuestPointsAdminCommand {
 
 
     public void handleQuestPointsAdminCommand(final CommandSender sender, final String[] args) {
+
+
         if (args.length == 1) {
             sender.sendMessage("§cPlease enter a player name! Command usage:");
             showUsage(sender, args);
@@ -80,63 +83,86 @@ public class QuestPointsAdminCommand {
     }
 
     public List<String> handleCompletions(final CommandSender commandSender, final String[] args) {
+        final Audience audience = main.adventure().sender(commandSender);
+
         main.getDataManager().completions.clear();
         if (args.length == 2) {
+            main.getUtilManager().sendFancyActionBar(audience, args, "[Player Name]", "[show / add / remove / set]");
             return main.getDataManager().standardPlayerCompletions;
         } else if (args.length == 3) {
             main.getDataManager().completions.add("show");
             main.getDataManager().completions.add("add");
             main.getDataManager().completions.add("remove");
             main.getDataManager().completions.add("set");
+
+
+            //For fancy action bar only
+            final String currentWord = args[args.length - 1];
+            if (currentWord.equalsIgnoreCase("show")) {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[show / add / remove / set]", "");
+            } else if (currentWord.equalsIgnoreCase("add")) {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[show / add / remove / set]", "[Amount to add]");
+            } else if (currentWord.equalsIgnoreCase("remove")) {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[show / add / remove / set]", "[Amount to remove]");
+            } else if (currentWord.equalsIgnoreCase("set")) {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[show / add / remove / set]", "[Amount to set]");
+            } else {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[show / add / remove / set]", "...");
+            }
+
+
             return main.getDataManager().completions;
         } else if (args.length == 4) {
             if (args[2].equalsIgnoreCase("add")) {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[Amount to add]", "");
                 return main.getDataManager().numberPositiveCompletions;
             } else if (args[2].equalsIgnoreCase("remove")) {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[Amount to remove]", "");
                 return main.getDataManager().numberPositiveCompletions;
             } else if (args[2].equalsIgnoreCase("set")) {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[Amount to set]", "");
                 return main.getDataManager().numberPositiveCompletions;
             }
         }
-        return null;
+        return main.getDataManager().completions;
     }
 
 
     private void showUsage(final CommandSender sender, final String[] args) {
         if (args.length == 2) {
-            sender.sendMessage("§e/nquestsadmin §6questpoints §2" + args[1] + " §3show/view");
-            sender.sendMessage("§e/nquestsadmin §6questpoints §2" + args[1] + " §3add [Amount to add]");
-            sender.sendMessage("§e/nquestsadmin §6questpoints §2" + args[1] + " §3remove/deduct [Amount to remove]");
-            sender.sendMessage("§e/nquestsadmin §6questpoints §2" + args[1] + " §3set [New amount]");
+            sender.sendMessage("§e/qadmin §6questpoints §2" + args[1] + " §3show/view");
+            sender.sendMessage("§e/qadmin §6questpoints §2" + args[1] + " §3add [Amount to add]");
+            sender.sendMessage("§e/qadmin §6questpoints §2" + args[1] + " §3remove/deduct [Amount to remove]");
+            sender.sendMessage("§e/qadmin §6questpoints §2" + args[1] + " §3set [New amount]");
         } else if (args.length == 3) {
             if (args[2].equalsIgnoreCase("show") || args[2].equalsIgnoreCase("view") || args[2].equalsIgnoreCase("add") || args[2].equalsIgnoreCase("remove") || args[2].equalsIgnoreCase("deduct") || args[2].equalsIgnoreCase("set")) {
                 if (args[2].equalsIgnoreCase("show") || args[2].equalsIgnoreCase("view")) {
-                    sender.sendMessage("§e/nquestsadmin §6questpoints §2" + args[1] + " " + args[2]);
+                    sender.sendMessage("§e/qadmin §6questpoints §2" + args[1] + " " + args[2]);
                 } else if (args[2].equalsIgnoreCase("add")) {
-                    sender.sendMessage("§e/nquestsadmin §6questpoints §2" + args[1] + " " + args[2] + " §3[Amount to add]");
+                    sender.sendMessage("§e/qadmin §6questpoints §2" + args[1] + " " + args[2] + " §3[Amount to add]");
                 } else if (args[2].equalsIgnoreCase("remove") || args[2].equalsIgnoreCase("deduct")) {
-                    sender.sendMessage("§e/nquestsadmin §6questpoints §2" + args[1] + " " + args[2] + " §3[Amount to remove]");
+                    sender.sendMessage("§e/qadmin §6questpoints §2" + args[1] + " " + args[2] + " §3[Amount to remove]");
                 } else if (args[2].equalsIgnoreCase("set")) {
-                    sender.sendMessage("§e/nquestsadmin §6questpoints §2" + args[1] + " " + args[2] + " §3[New amount]");
+                    sender.sendMessage("§e/qadmin §6questpoints §2" + args[1] + " " + args[2] + " §3[New amount]");
                 } else {
-                    sender.sendMessage("§e/nquestsadmin §6questpoints §2" + args[1] + " " + args[2] + " §3[Amount to add]");
-                    sender.sendMessage("§e/nquestsadmin §6questpoints §2" + args[1] + " " + args[2] + " §3[Amount to remove]");
-                    sender.sendMessage("§e/nquestsadmin §6questpoints §2" + args[1] + " " + args[2] + " §3[New amount]");
+                    sender.sendMessage("§e/qadmin §6questpoints §2" + args[1] + " " + args[2] + " §3[Amount to add]");
+                    sender.sendMessage("§e/qadmin §6questpoints §2" + args[1] + " " + args[2] + " §3[Amount to remove]");
+                    sender.sendMessage("§e/qadmin §6questpoints §2" + args[1] + " " + args[2] + " §3[New amount]");
                 }
 
 
             } else {
-                sender.sendMessage("§e/nquestsadmin §6questpoints §2" + args[1] + " §3show/view");
-                sender.sendMessage("§e/nquestsadmin §6questpoints §2" + args[1] + " §3add [Amount to add]");
-                sender.sendMessage("§e/nquestsadmin §6questpoints §2" + args[1] + " §3remove/deduct [Amount to remove]");
-                sender.sendMessage("§e/nquestsadmin §6questpoints §2" + args[1] + " §3set [New amount]");
+                sender.sendMessage("§e/qadmin §6questpoints §2" + args[1] + " §3show/view");
+                sender.sendMessage("§e/qadmin §6questpoints §2" + args[1] + " §3add [Amount to add]");
+                sender.sendMessage("§e/qadmin §6questpoints §2" + args[1] + " §3remove/deduct [Amount to remove]");
+                sender.sendMessage("§e/qadmin §6questpoints §2" + args[1] + " §3set [New amount]");
             }
 
         } else {
-            sender.sendMessage("§e/nquestsadmin §6questpoints §3[Player Name] show/view");
-            sender.sendMessage("§e/nquestsadmin §6questpoints §3[Player Name] add [Amount to add]");
-            sender.sendMessage("§e/nquestsadmin §6questpoints §3[Player Name] remove/deduct [Amount to remove]");
-            sender.sendMessage("§e/nquestsadmin §6questpoints §3[Player Name] set [New amount]");
+            sender.sendMessage("§e/qadmin §6questpoints §3[Player Name] show/view");
+            sender.sendMessage("§e/qadmin §6questpoints §3[Player Name] add [Amount to add]");
+            sender.sendMessage("§e/qadmin §6questpoints §3[Player Name] remove/deduct [Amount to remove]");
+            sender.sendMessage("§e/qadmin §6questpoints §3[Player Name] set [New amount]");
         }
 
     }
