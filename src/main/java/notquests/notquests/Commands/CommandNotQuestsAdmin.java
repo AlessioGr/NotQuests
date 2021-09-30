@@ -1777,14 +1777,13 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
 
                 main.getUtilManager().sendFancyActionBar(audience, args, "[What do you want to do?]", "...");
 
-
                 StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
                 return main.getDataManager().partialCompletions;
 
             } else if (args.length > 1 && args[0].equalsIgnoreCase("edit")) {
-                final List<String> completions = handleCompletionsEdit(args, sender);
-                if (completions != null) {
-                    StringUtil.copyPartialMatches(args[args.length - 1], completions, main.getDataManager().partialCompletions);
+                final List<String> editCompletions = handleCompletionsEdit(args, sender);
+                if (editCompletions != null) {
+                    StringUtil.copyPartialMatches(args[args.length - 1], editCompletions, main.getDataManager().partialCompletions);
                     return main.getDataManager().partialCompletions;
                 } else {
                     return null;
@@ -1819,33 +1818,47 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                     for (Quest quest : main.getQuestManager().getAllQuests()) {
                         main.getDataManager().completions.add(quest.getQuestName());
                     }
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[Name of the Quest you want to delete]", "");
                     StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
                     return main.getDataManager().partialCompletions;
                 } else if (args[0].equalsIgnoreCase("resetAndRemoveQuestForAllPlayers")) {
                     for (Quest quest : main.getQuestManager().getAllQuests()) {
                         main.getDataManager().completions.add(quest.getQuestName());
                     }
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[Name of the Quest which should be reset and removed (aborted) from all players]", "");
                     StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
                     return main.getDataManager().partialCompletions;
                 } else if (args[0].equalsIgnoreCase("resetAndFailQuestForAllPlayers")) {
                     for (Quest quest : main.getQuestManager().getAllQuests()) {
                         main.getDataManager().completions.add(quest.getQuestName());
                     }
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[Name of the Quest which should be reset and failed from all players]", "");
+
                     StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
                     return main.getDataManager().partialCompletions;
                 } else if (args[0].equalsIgnoreCase("give")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[Player Name (whom should be given the Quest)]", "[Quest Name]");
+
                     StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().standardPlayerCompletions, main.getDataManager().partialCompletions);
                     return main.getDataManager().partialCompletions;
                 } else if (args[0].equalsIgnoreCase("activeQuests")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[Player Name (of whom you want to see the active Quests)]", "");
+
                     StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().standardPlayerCompletions, main.getDataManager().partialCompletions);
                     return main.getDataManager().partialCompletions;
                 } else if (args[0].equalsIgnoreCase("completedQuests")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[Player Name (of whom you want to see the completed Quests)]", "");
+
                     StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().standardPlayerCompletions, main.getDataManager().partialCompletions);
                     return main.getDataManager().partialCompletions;
                 } else if (args[0].equalsIgnoreCase("progress")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[Player Name (of whom want to see the Quest progress)]", "[Quest Name]");
+
                     StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().standardPlayerCompletions, main.getDataManager().partialCompletions);
                     return main.getDataManager().partialCompletions;
                 } else if (args[0].equalsIgnoreCase("forcegive")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[Player Name (whom should be force-given the Quest)]", "[Quest Name]");
+
                     StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().standardPlayerCompletions, main.getDataManager().partialCompletions);
                     return main.getDataManager().partialCompletions;
                 } else if (args[0].equalsIgnoreCase("triggerObjective")) {
@@ -1856,12 +1869,16 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                             }
                         }
                     }
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[Tigger Name]", "[Player Name]");
+
                     StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
                     return main.getDataManager().partialCompletions;
                 } else if (args[0].equalsIgnoreCase("failQuest")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[Player Name]", "[Active Quest Name]");
                     StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().standardPlayerCompletions, main.getDataManager().partialCompletions);
                     return main.getDataManager().standardPlayerCompletions;
                 } else if (args[0].equalsIgnoreCase("completeQuest")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[Player Name]", "[Active Quest Name]");
                     StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().standardPlayerCompletions, main.getDataManager().partialCompletions);
                     return main.getDataManager().standardPlayerCompletions;
                 }
@@ -1871,21 +1888,26 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                     for (Quest quest : main.getQuestManager().getAllQuests()) {
                         main.getDataManager().completions.add(quest.getQuestName());
                     }
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[Quest Name]", "");
                     StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
                     return main.getDataManager().partialCompletions;
                 } else if (args[0].equalsIgnoreCase("progress")) {
                     for (Quest quest : main.getQuestManager().getAllQuests()) {
                         main.getDataManager().completions.add(quest.getQuestName());
                     }
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[Quest Name]", "");
+
                     StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
                     return main.getDataManager().partialCompletions;
                 } else if (args[0].equalsIgnoreCase("forcegive")) {
                     for (Quest quest : main.getQuestManager().getAllQuests()) {
                         main.getDataManager().completions.add(quest.getQuestName());
                     }
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[Quest Name]", "");
                     StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
                     return main.getDataManager().partialCompletions;
                 } else if (args[0].equalsIgnoreCase("triggerObjective")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[Player Name]", "");
                     StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().standardPlayerCompletions, main.getDataManager().partialCompletions);
                     return main.getDataManager().partialCompletions;
                 } else if (args[0].equalsIgnoreCase("failQuest")) {
@@ -1901,6 +1923,8 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                         for (ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                             main.getDataManager().completions.add(activeQuest.getQuest().getQuestName());
                         }
+                        main.getUtilManager().sendFancyActionBar(audience, args, "[Active Quest Name]", "");
+
                         StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
                         return main.getDataManager().partialCompletions;
                     }
@@ -1917,14 +1941,11 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                         for (ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                             main.getDataManager().completions.add(activeQuest.getQuest().getQuestName());
                         }
+                        main.getUtilManager().sendFancyActionBar(audience, args, "[Active Quest Name]", "");
                         StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
                         return main.getDataManager().partialCompletions;
                     }
                 }
-            } else if (args.length >= 4 && args[2].equalsIgnoreCase("displayName")) {
-                main.getDataManager().completions.add("<Enter new Quest display name>");
-                StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
-                return main.getDataManager().partialCompletions;
             }
 
         }
@@ -1946,22 +1967,37 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
             main.getDataManager().completions.add("add");
             main.getDataManager().completions.add("edit");
             main.getDataManager().completions.add("list");
+            main.getUtilManager().sendFancyActionBar(audience, args, "[add/edit/list]", "...");
+
         } else if (args.length == 3) {
             if (args[1].equalsIgnoreCase("add")) {
                 main.getDataManager().completions.add("<Enter new, unique Action name>");
+                main.getUtilManager().sendFancyActionBar(audience, args, "<Enter new, unique Action name>", "<Console Command>");
             } else if (args[1].equalsIgnoreCase("edit")) {
                 for (final Action action : main.getQuestManager().getAllActions()) {
                     main.getDataManager().completions.add(action.getActionName());
                 }
+                main.getUtilManager().sendFancyActionBar(audience, args, "[Action Name]", "[setCommand / delete]");
+
             }
+        } else if (args.length >= 4 && args[1].equalsIgnoreCase("add")) {
+            final String argToCheck = args[args.length - 1];
+            if (argToCheck.startsWith("{")) {
+                main.getDataManager().completions.addAll(placeholders);
+            } else {
+                main.getDataManager().completions.add("<Enter Console Command>");
+            }
+            main.getUtilManager().sendFancyActionBar(audience, args, "<Enter new Console Command>", "");
         } else if (args.length == 4) {
             if (args[1].equalsIgnoreCase("edit")) {
                 main.getDataManager().completions.add("setCommand");
                 main.getDataManager().completions.add("delete");
+                main.getUtilManager().sendFancyActionBar(audience, args, "[setCommand / delete]", "...");
             }
-        } else if (args.length >= 5 && args[1].equalsIgnoreCase("edit") && args[3].equalsIgnoreCase("setCommand")) {
-            main.getDataManager().completions.add("<Enter new Console Command");
 
+        } else if (args.length >= 5 && args[1].equalsIgnoreCase("edit") && args[3].equalsIgnoreCase("setCommand")) {
+            main.getDataManager().completions.add("<Enter new Console Command>");
+            main.getUtilManager().sendFancyActionBar(audience, args, "<Enter new Console Command>", "");
         }
 
         return main.getDataManager().completions;
@@ -1991,21 +2027,10 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
             main.getDataManager().completions.add("displayName");
             main.getUtilManager().sendFancyActionBar(audience, args, "[What do you want to edit?]", "...");
 
-        } else if (args.length >= 4 && ((args[2].equalsIgnoreCase("description")) || (args[0].equalsIgnoreCase("actions") && args[1].equalsIgnoreCase("add")))) {
-            if (args[0].equalsIgnoreCase("actions")) {
-                if (args[1].equalsIgnoreCase("add")) {
-                    final String argToCheck = args[args.length - 1];
-                    if (argToCheck.startsWith("{")) {
-                        main.getDataManager().completions.addAll(placeholders);
-                    } else {
-                        main.getDataManager().completions.add("<Enter Console Command>");
-                    }
-
-
-                }
-            } else if (args[0].equalsIgnoreCase("edit")) {
+        } else if (args.length >= 4 && ((args[2].equalsIgnoreCase("description")))) {
+            if (args[0].equalsIgnoreCase("edit")) {
                 main.getDataManager().completions.add("<Enter new Quest description>");
-
+                main.getUtilManager().sendFancyActionBar(audience, args, "<Enter new Quest description>", "");
             }
         } else if (args.length >= 4 && args[2].equalsIgnoreCase("armorstands")) {
             final List<String> completions = armorStandsAdminCommand.handleCompletions(sender, args);
@@ -2023,63 +2048,183 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                 return null;
             }
 
+        } else if (args.length >= 4 && args[2].equalsIgnoreCase("displayName")) {
+            main.getDataManager().completions.add("<Enter new Quest display name>");
+            main.getUtilManager().sendFancyActionBar(audience, args, "<Enter new Quest display name>", "");
+
+        } else if (args.length >= 4 && args[2].equalsIgnoreCase("triggers")) {
+            return handleCompletionsEditTriggers(args, sender);
+
+        } else if (args.length >= 4 && args[2].equalsIgnoreCase("rewards")) {
+            return handleCompletionsEditRewards(args, sender);
+
+        } else if (args.length >= 4 && args[2].equalsIgnoreCase("requirements")) {
+            return handleCompletionsEditRequirements(args, sender);
+
         } else if (args.length == 4) {
             if (args[2].equalsIgnoreCase("maxAccepts")) {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[Enter Amount of max accepts]", "");
                 return main.getDataManager().numberCompletions;
             } else if (args[2].equalsIgnoreCase("acceptCooldown")) {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[Time in minutes]", "");
                 return main.getDataManager().numberCompletions;
             } else if (args[2].equalsIgnoreCase("takeEnabled")) {
                 main.getDataManager().completions.add("Yes");
                 main.getDataManager().completions.add("No");
-
-            } else if (args[2].equalsIgnoreCase("requirements")) {
-                main.getDataManager().completions.add("add");
-                main.getDataManager().completions.add("list");
-                main.getDataManager().completions.add("clear");
-
-            } else if (args[2].equalsIgnoreCase("rewards")) {
-                main.getDataManager().completions.add("add");
-                main.getDataManager().completions.add("list");
-                main.getDataManager().completions.add("clear");
-
+                main.getUtilManager().sendFancyActionBar(audience, args, "[Yes / No (Sets if players can accept the quest using the command /q take directly)]", "");
             } else if (args[2].equalsIgnoreCase("npcs")) {
                 main.getDataManager().completions.add("add");
                 main.getDataManager().completions.add("list");
                 main.getDataManager().completions.add("clear");
-
-            } else if (args[2].equalsIgnoreCase("triggers")) {
-                main.getDataManager().completions.add("add");
-                main.getDataManager().completions.add("remove");
-                main.getDataManager().completions.add("list");
-                main.getDataManager().completions.add("clear");
+                main.getUtilManager().sendFancyActionBar(audience, args, "[add / list / clear]", "...");
 
             }
         } else if (args.length == 5) {
-            if (args[2].equalsIgnoreCase("requirements") && args[3].equalsIgnoreCase("add")) {
-                main.getDataManager().completions.add("OtherQuest");
-                main.getDataManager().completions.add("QuestPoints");
-                main.getDataManager().completions.add("Money");
-                main.getDataManager().completions.add("Permission");
-
-            } else if (args[2].equalsIgnoreCase("rewards") && args[3].equalsIgnoreCase("add")) {
-                main.getDataManager().completions.add("ConsoleCommand");
-                main.getDataManager().completions.add("QuestPoints");
-                main.getDataManager().completions.add("Item");
-                main.getDataManager().completions.add("Money");
-
-            } else if (args[2].equalsIgnoreCase("npcs") && args[3].equalsIgnoreCase("add")) {
+            if (args[2].equalsIgnoreCase("npcs") && args[3].equalsIgnoreCase("add")) {
                 if (main.isCitizensEnabled()) {
                     for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
                         main.getDataManager().completions.add("" + npc.getId());
                     }
                 }
+                main.getUtilManager().sendFancyActionBar(audience, args, "[ID of the NPC you wish to add]", "[True / false (should show Quest in NPC when right-clicking?)]");
+            }
+        } else if (args.length == 6) {
+            if (args[2].equalsIgnoreCase("npcs") && args[3].equalsIgnoreCase("add")) {
+                main.getDataManager().completions.add("Yes");
+                main.getDataManager().completions.add("No");
+                main.getUtilManager().sendFancyActionBar(audience, args, "[No / Yes (should show Quest in NPC when right-clicking?)]", "");
 
-            } else if (args[2].equalsIgnoreCase("triggers") && args[3].equalsIgnoreCase("add")) {
+            }
+        }
+
+
+        return main.getDataManager().completions;
+    }
+
+
+    public final List<String> handleCompletionsEditRequirements(final String[] args, final CommandSender sender) {
+        final Audience audience = main.adventure().sender(sender);
+        if (args.length == 4) {
+            main.getDataManager().completions.add("add");
+            main.getDataManager().completions.add("list");
+            main.getDataManager().completions.add("clear");
+            main.getUtilManager().sendFancyActionBar(audience, args, "[add / list / clear]", "...");
+
+
+        } else if (args.length == 5) {
+            if (args[3].equalsIgnoreCase("add")) {
+                main.getDataManager().completions.add("OtherQuest");
+                main.getDataManager().completions.add("QuestPoints");
+                main.getDataManager().completions.add("Money");
+                main.getDataManager().completions.add("Permission");
+                main.getUtilManager().sendFancyActionBar(audience, args, "[Requirement Type]", "...");
+            }
+        } else if (args.length == 6) {
+            if (args[3].equalsIgnoreCase("add")) {
+                if (args[4].equalsIgnoreCase("OtherQuest")) {
+                    for (Quest quest : main.getQuestManager().getAllQuests()) {
+                        main.getDataManager().completions.add(quest.getQuestName());
+                    }
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[Other Quest Name]", "[Amount of completions needed]");
+
+                } else if (args[4].equalsIgnoreCase("QuestPoints")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[Quest Point requirement amount]", "[Deduct Quest Points when accepting the Quest?]");
+
+                    return main.getDataManager().numberPositiveCompletions;
+                } else if (args[4].equalsIgnoreCase("Money")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[Money requirement amount]", "[Deduct Money when accepting the Quest?]");
+
+                    return main.getDataManager().numberPositiveCompletions;
+                } else if (args[4].equalsIgnoreCase("Permission")) {
+                    main.getDataManager().completions.add("<Enter required Permission node>");
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[Required permission node]", "");
+                }
+            }
+        } else if (args.length == 7) {
+            if (args[3].equalsIgnoreCase("add")) {
+                if (args[4].equalsIgnoreCase("OtherQuest")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[Amount of completions needed]", "");
+                    return main.getDataManager().numberPositiveCompletions;
+                } else if (args[4].equalsIgnoreCase("QuestPoints")) {
+                    main.getDataManager().completions.add("Yes");
+                    main.getDataManager().completions.add("No");
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[Deduct Quest Points when accepting the Quest?]", "");
+                } else if (args[4].equalsIgnoreCase("Money")) {
+                    main.getDataManager().completions.add("Yes");
+                    main.getDataManager().completions.add("No");
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[Deduct Money when accepting the Quest?]", "");
+                }
+            }
+        }
+        return main.getDataManager().completions;
+    }
+
+    public final List<String> handleCompletionsEditRewards(final String[] args, final CommandSender sender) {
+        final Audience audience = main.adventure().sender(sender);
+        if (args.length == 4) {
+            main.getDataManager().completions.add("add");
+            main.getDataManager().completions.add("list");
+            main.getDataManager().completions.add("clear");
+            main.getUtilManager().sendFancyActionBar(audience, args, "[add / list / clear]", "...");
+
+        } else if (args.length == 5) {
+            if (args[3].equalsIgnoreCase("add")) {
+                main.getDataManager().completions.add("ConsoleCommand");
+                main.getDataManager().completions.add("QuestPoints");
+                main.getDataManager().completions.add("Item");
+                main.getDataManager().completions.add("Money");
+                main.getUtilManager().sendFancyActionBar(audience, args, "[Reward Type]", "...");
+            }
+        } else if (args.length >= 6 && args[3].equalsIgnoreCase("add") && args[4].equalsIgnoreCase("ConsoleCommand")) {
+            final String argToCheck = args[args.length - 1];
+            if (argToCheck.startsWith("{")) {
+                main.getDataManager().completions.addAll(placeholders);
+            } else {
+                main.getDataManager().completions.add("<Enter Console Command>");
+            }
+            main.getUtilManager().sendFancyActionBar(audience, args, "<Enter Console Command.>", "");
+        } else if (args.length == 6) {
+            if (args[3].equalsIgnoreCase("add")) {
+                if (args[4].equalsIgnoreCase("QuestPoints")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[Quest Point reward amount]", "");
+                    return main.getDataManager().numberPositiveCompletions;
+                } else if (args[4].equalsIgnoreCase("Item")) {
+                    for (Material material : Material.values()) {
+                        main.getDataManager().completions.add(material.toString());
+                    }
+                    main.getDataManager().completions.add("hand");
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[Item Material Name / 'hand']", "[Amount]");
+                } else if (args[4].equalsIgnoreCase("Money")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[Amount of Money]", "");
+                    return main.getDataManager().numberPositiveCompletions;
+                }
+            }
+        } else if (args.length == 7) {
+            if (args[3].equalsIgnoreCase("add")) {
+                if (args[4].equalsIgnoreCase("Item")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[Amount]", "");
+                    return main.getDataManager().numberPositiveCompletions;
+                }
+            }
+        }
+        return main.getDataManager().completions;
+    }
+
+    public final List<String> handleCompletionsEditTriggers(final String[] args, final CommandSender sender) {
+        final Audience audience = main.adventure().sender(sender);
+        if (args.length == 4) {
+            main.getDataManager().completions.add("add");
+            main.getDataManager().completions.add("remove");
+            main.getDataManager().completions.add("list");
+            main.getDataManager().completions.add("clear");
+            main.getUtilManager().sendFancyActionBar(audience, args, "[add / remove / list / clear]", "...");
+        } else if (args.length == 5) {
+            if (args[3].equalsIgnoreCase("add")) {
                 for (final Action action : main.getQuestManager().getAllActions()) {
                     main.getDataManager().completions.add(action.getActionName());
                 }
-
-            } else if (args[2].equalsIgnoreCase("triggers") && args[3].equalsIgnoreCase("remove")) {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[Action Name]", "[Trigger Type]");
+            } else if (args[3].equalsIgnoreCase("remove")) {
                 final Quest quest = main.getQuestManager().getQuest(args[1]);
                 if (quest != null) {
                     int i = 1;
@@ -2089,49 +2234,11 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                     }
 
                 }
-
+                main.getUtilManager().sendFancyActionBar(audience, args, "[Trigger ID to remove (check the trigger list to get the ID)]", "");
 
             }
-        } else if (args.length >= 6 && args[2].equalsIgnoreCase("rewards") && args[3].equalsIgnoreCase("add") && args[4].equalsIgnoreCase("ConsoleCommand")) {
-            final String argToCheck = args[args.length - 1];
-            if (argToCheck.startsWith("{")) {
-                main.getDataManager().completions.addAll(placeholders);
-            } else {
-                main.getDataManager().completions.add("<Enter Console Command>");
-            }
-
         } else if (args.length == 6) {
-            if (args[2].equalsIgnoreCase("requirements") && args[3].equalsIgnoreCase("add")) {
-                if (args[4].equalsIgnoreCase("OtherQuest")) {
-                    for (Quest quest : main.getQuestManager().getAllQuests()) {
-                        main.getDataManager().completions.add(quest.getQuestName());
-                    }
-
-                } else if (args[4].equalsIgnoreCase("QuestPoints")) {
-                    return main.getDataManager().numberPositiveCompletions;
-                } else if (args[4].equalsIgnoreCase("Money")) {
-                    return main.getDataManager().numberPositiveCompletions;
-                } else if (args[4].equalsIgnoreCase("Permission")) {
-                    main.getDataManager().completions.add("<Enter required Permission node>");
-
-                }
-            } else if (args[2].equalsIgnoreCase("rewards") && args[3].equalsIgnoreCase("add")) {
-                if (args[4].equalsIgnoreCase("QuestPoints")) {
-                    return main.getDataManager().numberPositiveCompletions;
-                } else if (args[4].equalsIgnoreCase("Item")) {
-                    for (Material material : Material.values()) {
-                        main.getDataManager().completions.add(material.toString());
-                    }
-                    main.getDataManager().completions.add("hand");
-
-                } else if (args[4].equalsIgnoreCase("Money")) {
-                    return main.getDataManager().numberPositiveCompletions;
-                }
-            } else if (args[2].equalsIgnoreCase("npcs") && args[3].equalsIgnoreCase("add")) {
-                main.getDataManager().completions.add("Yes");
-                main.getDataManager().completions.add("No");
-
-            } else if (args[2].equalsIgnoreCase("triggers") && args[3].equalsIgnoreCase("add")) {
+            if (args[3].equalsIgnoreCase("add")) {
                 main.getDataManager().completions.add("DEATH");
                 main.getDataManager().completions.add("NPCDEATH");
                 main.getDataManager().completions.add("FAIL");
@@ -2140,23 +2247,12 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                 main.getDataManager().completions.add("DISCONNECT");
                 main.getDataManager().completions.add("WORLDENTER");
                 main.getDataManager().completions.add("WORLDLEAVE");
+                main.getUtilManager().sendFancyActionBar(audience, args, "[Trigger Type]", "[Apply On]");
 
             }
 
         } else if (args.length == 7) {
-            if (args[2].equalsIgnoreCase("requirements") && args[3].equalsIgnoreCase("add")) {
-                if (args[4].equalsIgnoreCase("OtherQuest")) {
-                    return main.getDataManager().numberPositiveCompletions;
-                } else if (args[4].equalsIgnoreCase("QuestPoints")) {
-                    main.getDataManager().completions.add("Yes");
-                    main.getDataManager().completions.add("No");
-
-                } else if (args[4].equalsIgnoreCase("Money")) {
-                    main.getDataManager().completions.add("Yes");
-                    main.getDataManager().completions.add("No");
-
-                }
-            } else if (args[2].equalsIgnoreCase("triggers") && args[3].equalsIgnoreCase("add")) {
+            if (args[3].equalsIgnoreCase("add")) {
                 final Quest quest = main.getQuestManager().getQuest(args[1]);
                 main.getDataManager().completions.add("Quest");
                 if (quest != null) {
@@ -2165,37 +2261,52 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                         main.getDataManager().completions.add("O" + i);
                     }
                 }
-
-            } else if (args[2].equalsIgnoreCase("rewards") && args[3].equalsIgnoreCase("add")) {
-                if (args[4].equalsIgnoreCase("Item")) {
-                    return main.getDataManager().numberPositiveCompletions;
-                }
+                main.getUtilManager().sendFancyActionBar(audience, args, "[Apply On]", "[World Name / 'ALL']");
             }
         } else if (args.length == 8) {
-            if (args[2].equalsIgnoreCase("triggers") && args[3].equalsIgnoreCase("add")) {
+            if (args[3].equalsIgnoreCase("add")) {
                 main.getDataManager().completions.add("ALL");
 
                 for (final World world : Bukkit.getWorlds()) {
                     main.getDataManager().completions.add(world.getName());
                 }
 
+
+                //For Fancy action bar hintNextArgs only:
+                if (args[5].equalsIgnoreCase("DEATH")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[World Name / 'ALL']", "[Amount of Deaths]");
+                } else if (args[5].equalsIgnoreCase("NPCDEATH")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[World Name / 'ALL']", "[Amount of Deaths]");
+                } else if (args[5].equalsIgnoreCase("WORLDENTER")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[World Name / 'ALL']", "[Amount of Enters]");
+                } else if (args[5].equalsIgnoreCase("WORLDLEAVE")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[World Name / 'ALL']", "[Amount of Leaves]");
+                } else {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[World Name / 'ALL']", "");
+                }
+
+
             }
         } else if (args.length == 9) {
-            if (args[2].equalsIgnoreCase("triggers") && args[3].equalsIgnoreCase("add")) {
+            if (args[3].equalsIgnoreCase("add")) {
                 if (args[5].equalsIgnoreCase("DEATH")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[Amount of Deaths]", "");
                     return main.getDataManager().numberPositiveCompletions;
                 } else if (args[5].equalsIgnoreCase("NPCDEATH")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[Amount of Deaths]", "[NPC ID]");
                     return main.getDataManager().numberPositiveCompletions;
                 } else if (args[5].equalsIgnoreCase("WORLDENTER")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[Amount of Enters]", "[World to enter name / 'ALL']");
                     return main.getDataManager().numberPositiveCompletions;
                 } else if (args[5].equalsIgnoreCase("WORLDLEAVE")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[Amount of Leaves]", "[World to leave name / 'ALL']");
                     return main.getDataManager().numberPositiveCompletions;
                 }
             }
 
         } else if (args.length == 10) {
 
-            if (args[2].equalsIgnoreCase("triggers") && args[3].equalsIgnoreCase("add")) {
+            if (args[3].equalsIgnoreCase("add")) {
                 if (args[5].equalsIgnoreCase("NPCDEATH")) {
 
                     if (main.isCitizensEnabled()) {
@@ -2203,14 +2314,14 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                             main.getDataManager().completions.add("" + npc.getId());
                         }
                     }
-
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[NPC ID]", "");
 
                 } else if (args[5].equalsIgnoreCase("WORLDENTER")) {
                     main.getDataManager().completions.add("ALL");
                     for (final World world : Bukkit.getWorlds()) {
                         main.getDataManager().completions.add("" + world.getName());
                     }
-
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[World to enter name / 'ALL']\"", "");
 
                 } else if (args[5].equalsIgnoreCase("WORLDLEAVE")) {
                     main.getDataManager().completions.add("ALL");
@@ -2218,13 +2329,11 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                         main.getDataManager().completions.add("" + world.getName());
                     }
 
-
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[World to leave name / 'ALL']", "");
                 }
             }
 
         }
-
-
         return main.getDataManager().completions;
     }
 

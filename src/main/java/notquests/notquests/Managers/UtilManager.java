@@ -22,6 +22,7 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import notquests.notquests.NotQuests;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -38,7 +39,7 @@ public class UtilManager {
     }
 
 
-    public Component getFancyActionBarTabCompletion(final String[] args, final String hintCurrentArg, final String hintNextArgs) {
+    public Component getFancyActionBarTabCompletion(final String[] args, final String hintCurrentArg, String hintNextArgs) {
         final int maxPreviousArgs = main.getDataManager().getConfiguration().getActionBarCommandCompletionMaxPreviousArgumentsDisplayed();
 
         final StringBuilder argsTogether = new StringBuilder();
@@ -80,12 +81,24 @@ public class UtilManager {
         }
 
         if (!hintNextArgs.isBlank()) {
-            return Component.text(argsTogether.toString(), TextColor.fromHexString("#616872"))
+            //Chop off if too long
+            if (hintNextArgs.length() > 15) {
+                hintNextArgs = hintNextArgs.substring(0, 20) + "...";
+            }
+
+            return Component.text(argsTogether.toString(), TextColor.fromHexString("#a5c7a6"))
                     .append(currentCompletion)
                     .append(Component.text(" " + hintNextArgs, NamedTextColor.GRAY));
         } else {
-            return Component.text(argsTogether.toString(), TextColor.fromHexString("#616872"))
-                    .append(currentCompletion);
+            if (!args[args.length - 1].isBlank()) { //Command finished
+                return Component.text(argsTogether.toString(), TextColor.fromHexString("#a5c7a6"))
+                        .append(currentCompletion)
+                        .append(Component.text(" ✓", NamedTextColor.GREEN, TextDecoration.BOLD));
+            } else {
+                return Component.text(argsTogether.toString(), TextColor.fromHexString("#a5c7a6"))
+                        .append(currentCompletion);
+            }
+
         }
 
     }
