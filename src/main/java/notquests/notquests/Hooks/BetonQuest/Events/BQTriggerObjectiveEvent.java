@@ -49,7 +49,7 @@ public class BQTriggerObjectiveEvent extends QuestEvent {
      * @throws InstructionParseException when the is an error in the syntax or argument parsing
      */
     public BQTriggerObjectiveEvent(Instruction instruction) throws InstructionParseException {
-        super(instruction, true);
+        super(instruction, false);
         this.triggerName = instruction.getPart(1);
         this.main = NotQuests.getInstance();
 

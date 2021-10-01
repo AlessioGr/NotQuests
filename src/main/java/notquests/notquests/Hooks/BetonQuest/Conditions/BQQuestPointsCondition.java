@@ -18,5 +18,30 @@
 
 package notquests.notquests.Hooks.BetonQuest.Conditions;
 
-public class BQQuestPointsCondition {
+import org.betonquest.betonquest.Instruction;
+import org.betonquest.betonquest.api.Condition;
+import org.betonquest.betonquest.exceptions.InstructionParseException;
+import org.betonquest.betonquest.exceptions.QuestRuntimeException;
+import org.betonquest.betonquest.id.ID;
+
+public class BQQuestPointsCondition extends Condition {
+    /**
+     * Creates new instance of the condition. The condition should parse
+     * instruction string at this point and extract all the data from it. If
+     * anything goes wrong, throw {@link InstructionParseException} with an
+     * error message describing the problem.
+     *
+     * @param instruction the Instruction object; you can get one from ID instance with
+     *                    {@link ID#generateInstruction()
+     *                    ID.generateInstruction()} or create it from an instruction
+     *                    string
+     */
+    public BQQuestPointsCondition(Instruction instruction) throws InstructionParseException {
+        super(instruction, false);
+    }
+
+    @Override
+    protected Boolean execute(String playerID) throws QuestRuntimeException {
+        return null;
+    }
 }

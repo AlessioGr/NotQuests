@@ -47,7 +47,7 @@ public class BQQuestPointsEvent extends QuestEvent {
      * @throws InstructionParseException when the is an error in the syntax or argument parsing
      */
     public BQQuestPointsEvent(Instruction instruction) throws InstructionParseException {
-        super(instruction, true);
+        super(instruction, false);
         this.main = NotQuests.getInstance();
 
         action = instruction.getPart(1);

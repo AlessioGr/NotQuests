@@ -47,7 +47,7 @@ public class BQFailQuestEvent extends QuestEvent {
      * @throws InstructionParseException when the is an error in the syntax or argument parsing
      */
     public BQFailQuestEvent(Instruction instruction) throws InstructionParseException {
-        super(instruction, true);
+        super(instruction, false);
         this.main = NotQuests.getInstance();
 
         final String questName = instruction.getPart(1);

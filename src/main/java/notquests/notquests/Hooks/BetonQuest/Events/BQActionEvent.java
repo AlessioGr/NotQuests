@@ -50,7 +50,7 @@ public class BQActionEvent extends QuestEvent {
      * @throws InstructionParseException when the is an error in the syntax or argument parsing
      */
     public BQActionEvent(Instruction instruction) throws InstructionParseException {
-        super(instruction, true);
+        super(instruction, false);
         this.main = NotQuests.getInstance();
 
         final String actionName = instruction.getPart(1);
