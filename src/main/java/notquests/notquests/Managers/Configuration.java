@@ -76,6 +76,7 @@ public class Configuration {
     private boolean integrationPlaceholderAPIEnabled = true;
     private boolean integrationMythicMobsEnabled = true;
     private boolean integrationEliteMobsEnabled = true;
+    private boolean integrationBetonQuestEnabled = true;
 
 
     //Other
@@ -301,6 +302,14 @@ public class Configuration {
 
     public void setIntegrationEliteMobsEnabled(final boolean integrationEliteMobsEnabled) {
         this.integrationEliteMobsEnabled = integrationEliteMobsEnabled;
+    }
+
+    public final boolean isIntegrationBetonQuestEnabled() {
+        return integrationBetonQuestEnabled;
+    }
+
+    public void setIntegrationBetonQuestEnabled(final boolean integrationBetonQuestEnabled) {
+        this.integrationBetonQuestEnabled = integrationBetonQuestEnabled;
     }
 
     public final boolean isActionBarCommandCompletionEnabled() {

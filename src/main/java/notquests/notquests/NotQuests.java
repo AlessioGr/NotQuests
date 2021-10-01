@@ -83,7 +83,12 @@ public final class NotQuests extends JavaPlugin {
 
     //Enabled Hooks
     private boolean eliteMobsEnabled = false;
+
+    private boolean betonQuestEnabled = false;
+
+
     private BukkitAudiences adventure;
+
 
     public final BukkitAudiences adventure() {
         if (this.adventure == null) {
@@ -154,6 +159,14 @@ public final class NotQuests extends JavaPlugin {
             if (getServer().getPluginManager().getPlugin("EliteMobs") != null && Objects.requireNonNull(getServer().getPluginManager().getPlugin("EliteMobs")).isEnabled()) {
                 eliteMobsEnabled = true;
                 getLogManager().info("EliteMobs found! Enabling EliteMobs support...");
+            }
+        }
+
+        //BetonQuest Hook
+        if (getDataManager().getConfiguration().isIntegrationEliteMobsEnabled()) {
+            if (getServer().getPluginManager().getPlugin("BetonQuest") != null && Objects.requireNonNull(getServer().getPluginManager().getPlugin("BetonQuest")).isEnabled()) {
+                betonQuestEnabled = true;
+                getLogManager().info("BetonQuest found! Enabling BetonQuest support...");
             }
         }
 
@@ -463,6 +476,10 @@ public final class NotQuests extends JavaPlugin {
 
     public boolean isEliteMobsEnabled() {
         return eliteMobsEnabled;
+    }
+
+    public boolean isBetonQuestEnabled() {
+        return betonQuestEnabled;
     }
 
 

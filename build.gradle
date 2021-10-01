@@ -64,6 +64,15 @@ repositories {
             includeGroup 'io.lumine.xikage'
         }
     }
+    maven {
+        url 'https://betonquest.org/nexus/repository/betonquest/'
+        content {
+            includeGroup 'org.betonquest'
+        }
+        metadataSources {
+            artifact() //Look directly for artifact
+        }
+    }
 }
 
 dependencies {
@@ -80,6 +89,7 @@ dependencies {
     implementation 'io.lumine.xikage:MythicMobs:4.12.0'
     compileOnly files('libs/EliteMobs.jar')
 
+    compileOnly 'org.betonquest:betonquest:2.0.0-SNAPSHOT'
 
     //Shaded
     implementation 'io.papermc:paperlib:1.0.6'

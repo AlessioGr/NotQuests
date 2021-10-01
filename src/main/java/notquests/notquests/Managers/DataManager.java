@@ -538,6 +538,12 @@ public class DataManager {
         }
         configuration.setIntegrationEliteMobsEnabled(getGeneralConfig().getBoolean("integrations.elitemobs.enabled"));
 
+        if (!getGeneralConfig().isBoolean("integrations.betonquest.enabled")) {
+            getGeneralConfig().set("integrations.betonquest.enabled", true);
+            valueChanged = true;
+        }
+        configuration.setIntegrationBetonQuestEnabled(getGeneralConfig().getBoolean("integrations.betonquest.enabled"));
+
 
         if (!getGeneralConfig().isBoolean("visual.fancy-actionbar-command-completion.enabled")) {
             getGeneralConfig().set("visual.fancy-actionbar-command-completion.enabled", true);
