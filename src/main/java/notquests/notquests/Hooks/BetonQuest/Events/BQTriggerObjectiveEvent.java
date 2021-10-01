@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package notquests.notquests.Hooks.BetonQuest;
+package notquests.notquests.Hooks.BetonQuest.Events;
 
 import notquests.notquests.NotQuests;
 import notquests.notquests.Structs.ActiveObjective;
@@ -32,7 +32,7 @@ import org.betonquest.betonquest.exceptions.QuestRuntimeException;
 import org.betonquest.betonquest.utils.PlayerConverter;
 import org.bukkit.entity.Player;
 
-public class BQTriggerEvent extends QuestEvent {
+public class BQTriggerObjectiveEvent extends QuestEvent {
 
     private final String triggerName;
     private final NotQuests main;
@@ -48,7 +48,7 @@ public class BQTriggerEvent extends QuestEvent {
      *                    {@link InstructionParseException} if there is anything wrong
      * @throws InstructionParseException when the is an error in the syntax or argument parsing
      */
-    public BQTriggerEvent(Instruction instruction) throws InstructionParseException {
+    public BQTriggerObjectiveEvent(Instruction instruction) throws InstructionParseException {
         super(instruction, true);
         this.triggerName = instruction.getPart(1);
         this.main = NotQuests.getInstance();
@@ -56,9 +56,10 @@ public class BQTriggerEvent extends QuestEvent {
         boolean foundTrigger = false;
         for (Quest quest : main.getQuestManager().getAllQuests()) {
             for (Objective objective : quest.getObjectives()) {
-                if (objective instanceof TriggerCommandObjective triggerCommandObjective) {
+                if (objective instanceof final TriggerCommandObjective triggerCommandObjective) {
                     if (triggerCommandObjective.getTriggerName().equalsIgnoreCase(triggerName)) {
                         foundTrigger = true;
+                        break;
                     }
                 }
             }
@@ -80,10 +81,10 @@ public class BQTriggerEvent extends QuestEvent {
             final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
             if (questPlayer != null) {
                 if (questPlayer.getActiveQuests().size() > 0) {
-                    for (ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-                        for (ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
+                    for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+                        for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
                             if (activeObjective.isUnlocked()) {
-                                if (activeObjective.getObjective() instanceof TriggerCommandObjective triggerCommandObjective) {
+                                if (activeObjective.getObjective() instanceof final TriggerCommandObjective triggerCommandObjective) {
                                     if (triggerCommandObjective.getTriggerName().equalsIgnoreCase(triggerName)) {
                                         activeObjective.addProgress(1, -1);
 
@@ -92,7 +93,9 @@ public class BQTriggerEvent extends QuestEvent {
                             }
 
                         }
+                        activeQuest.removeCompletedObjectives(true);
                     }
+                    questPlayer.removeCompletedQuests();
                 }
             }
 

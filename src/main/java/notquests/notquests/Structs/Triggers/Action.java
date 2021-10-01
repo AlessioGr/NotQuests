@@ -56,6 +56,23 @@ public class Action {
         }
     }
 
+    public void execute(final Player player) {
+        String executeConsoleCommand = consoleCommand.replace("{PLAYER}", player.getName()).replace("{PLAYERUUID}", player.getUniqueId().toString());
+        executeConsoleCommand = executeConsoleCommand.replace("{PLAYERX}", "" + player.getLocation().getX());
+        executeConsoleCommand = executeConsoleCommand.replace("{PLAYERY}", "" + player.getLocation().getY());
+        executeConsoleCommand = executeConsoleCommand.replace("{PLAYERZ}", "" + player.getLocation().getZ());
+        executeConsoleCommand = executeConsoleCommand.replace("{WORLD}", "" + player.getWorld().getName());
+        ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
+        if (Bukkit.isPrimaryThread()) {
+            Bukkit.dispatchCommand(console, executeConsoleCommand);
+        } else {
+            final String finalExecuteConsoleCommand = executeConsoleCommand;
+            Bukkit.getScheduler().runTask(main, () -> {
+                Bukkit.dispatchCommand(console, finalExecuteConsoleCommand);
+            });
+        }
+    }
+
 
     public final String getActionName() {
         return actionName;

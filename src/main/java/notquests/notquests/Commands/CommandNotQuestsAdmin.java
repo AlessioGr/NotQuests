@@ -509,7 +509,9 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                         }
 
                                     }
+                                    activeQuest.removeCompletedObjectives(true);
                                 }
+                                questPlayer.removeCompletedQuests();
                             }
                         }
 

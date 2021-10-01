@@ -72,7 +72,7 @@ public class Trigger {
         if (player != null) {
             action.execute(player, activeQuest);
         } else {
-            main.getLogManager().log(Level.WARNING, "§eNotQuests > Tried to execute trigger for offline player - ABORTED!");
+            main.getLogManager().log(Level.WARNING, "Tried to execute trigger for offline player - ABORTED!");
 
         }
 
