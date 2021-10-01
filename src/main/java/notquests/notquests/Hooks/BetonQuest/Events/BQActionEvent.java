@@ -100,7 +100,7 @@ public class BQActionEvent extends QuestEvent {
 
         //execute action here
         if (player != null && action != null) {
-            if (quest == null) {
+            if (quest != null) {
                 final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
                 if (questPlayer != null) {
                     if (questPlayer.getActiveQuests().size() > 0) {
