@@ -163,7 +163,7 @@ public final class NotQuests extends JavaPlugin {
         }
 
         //BetonQuest Hook
-        if (getDataManager().getConfiguration().isIntegrationEliteMobsEnabled()) {
+        if (getDataManager().getConfiguration().isIntegrationBetonQuestEnabled()) {
             if (getServer().getPluginManager().getPlugin("BetonQuest") != null && Objects.requireNonNull(getServer().getPluginManager().getPlugin("BetonQuest")).isEnabled()) {
                 betonQuestEnabled = true;
                 getLogManager().info("BetonQuest found! Enabling BetonQuest support...");
