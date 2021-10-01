@@ -43,7 +43,6 @@ public class EliteMobsEvents implements Listener {
         final EliteEntity eliteMob = event.getEliteEntity();
 
         for (final Player player : eliteMob.getDamagers().keySet()) {
-            player.sendMessage("§eEliteMob Name: §f" + eliteMob.getName());
             final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
             if (questPlayer != null) {
                 if (questPlayer.getActiveQuests().size() > 0) {
