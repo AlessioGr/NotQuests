@@ -62,3 +62,5 @@ integrations: #These should usually be left to true. These integrations will onl
     enabled: true
   elitemobs:
     enabled: true
+  betonquest:
+    enabled: true
