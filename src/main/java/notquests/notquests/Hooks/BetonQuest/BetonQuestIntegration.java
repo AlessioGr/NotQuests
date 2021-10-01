@@ -40,7 +40,7 @@ public class BetonQuestIntegration {
         betonQuest.registerEvents("notquests_startquest", BQStartQuestEvent.class); //notquests_startquest questname   (optional: -force -silent -notriggers)
         betonQuest.registerEvents("notquests_failquest", BQFailQuestEvent.class); //notquests_failquest questname
         betonQuest.registerEvents("notquests_abortquest", BQAbortQuestEvent.class); //notquests_abortquest questname //Just removes the quest from the player if it's active. Does not fail the quest
-
+        betonQuest.registerEvents("notquests_questpoints", BQQuestPointsEvent.class); //notquests_questpoints action(set/add/remove) amount   (optional: -silent)
 
     }
 
