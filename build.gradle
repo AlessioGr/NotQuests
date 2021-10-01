@@ -70,7 +70,7 @@ repositories {
             includeGroup 'org.betonquest'
         }
         metadataSources {
-            artifact() //Look directly for artifact
+            artifact()
         }
     }
 }

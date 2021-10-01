@@ -500,8 +500,8 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                 for (ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                                     for (ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
                                         if (activeObjective.isUnlocked()) {
-                                            if (activeObjective.getObjective() instanceof TriggerCommandObjective) {
-                                                if (((TriggerCommandObjective) activeObjective.getObjective()).getTriggerName().equalsIgnoreCase(triggerName)) {
+                                            if (activeObjective.getObjective() instanceof TriggerCommandObjective triggerCommandObjective) {
+                                                if (triggerCommandObjective.getTriggerName().equalsIgnoreCase(triggerName)) {
                                                     activeObjective.addProgress(1, -1);
 
                                                 }

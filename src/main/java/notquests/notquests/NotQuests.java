@@ -36,6 +36,7 @@ import notquests.notquests.Events.QuestEvents;
 import notquests.notquests.Events.hooks.CitizensEvents;
 import notquests.notquests.Events.hooks.EliteMobsEvents;
 import notquests.notquests.Events.hooks.MythicMobsEvents;
+import notquests.notquests.Hooks.BetonQuest.BetonQuestIntegration;
 import notquests.notquests.Managers.*;
 import notquests.notquests.Placeholders.QuestPlaceholders;
 import org.bstats.bukkit.Metrics;
@@ -54,6 +55,8 @@ import java.util.logging.Level;
  * @author Alessio Gravili
  */
 public final class NotQuests extends JavaPlugin {
+
+    private static NotQuests instance;
 
     //Managers
     private UtilManager utilManager;
@@ -85,6 +88,7 @@ public final class NotQuests extends JavaPlugin {
     private boolean eliteMobsEnabled = false;
 
     private boolean betonQuestEnabled = false;
+    private BetonQuestIntegration betonQuestIntegration;
 
 
     private BukkitAudiences adventure;
@@ -97,11 +101,17 @@ public final class NotQuests extends JavaPlugin {
         return this.adventure;
     }
 
+    public static NotQuests getInstance() {
+        return instance;
+    }
+
     /**
      * Called when the plugin is enabled. A bunch of stuff is initialized here
      */
     @Override
     public void onEnable() {
+        instance = this;
+
         // Initialize an audiences instance for the plugin
         this.adventure = BukkitAudiences.create(this);
 
@@ -167,10 +177,11 @@ public final class NotQuests extends JavaPlugin {
             if (getServer().getPluginManager().getPlugin("BetonQuest") != null && Objects.requireNonNull(getServer().getPluginManager().getPlugin("BetonQuest")).isEnabled()) {
                 betonQuestEnabled = true;
                 getLogManager().info("BetonQuest found! Enabling BetonQuest support...");
+                betonQuestIntegration = new BetonQuestIntegration(this);
             }
         }
 
-        //Enable 'Citizens' integration. If it's not found, it will just disable some NPC features which can mostly be replaced by armor stands
+        //Enable 'Citizens' integration. If it's not found, it will just disable some NPC features which can mostly be replaced by armor standsw
         if (getDataManager().getConfiguration().isIntegrationCitizensEnabled()) {
             if (getServer().getPluginManager().getPlugin("Citizens") == null || !Objects.requireNonNull(getServer().getPluginManager().getPlugin("Citizens")).isEnabled()) {
                 getLogManager().log(Level.INFO, "Citizens Dependency not found! Congratulations! In NotQuests, you can use armor stands instead of Citizens NPCs");
@@ -508,4 +519,7 @@ public final class NotQuests extends JavaPlugin {
     }
 
 
+    public BetonQuestIntegration getBetonQuestIntegration() {
+        return betonQuestIntegration;
+    }
 }
