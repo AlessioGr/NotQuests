@@ -82,8 +82,8 @@ public class QuestPointsAdminCommand {
         }
     }
 
-    public List<String> handleCompletions(final CommandSender commandSender, final String[] args) {
-        final Audience audience = main.adventure().sender(commandSender);
+    public List<String> handleCompletions(final CommandSender sender, final String[] args) {
+        final Audience audience = main.adventure().sender(sender);
 
         main.getDataManager().completions.clear();
         if (args.length == 2) {
@@ -97,14 +97,14 @@ public class QuestPointsAdminCommand {
 
 
             //For fancy action bar only
-            final String currentWord = args[args.length - 1];
-            if (currentWord.equalsIgnoreCase("show")) {
+            final String currentArg = args[args.length - 1];
+            if (currentArg.equalsIgnoreCase("show")) {
                 main.getUtilManager().sendFancyActionBar(audience, args, "[show / add / remove / set]", "");
-            } else if (currentWord.equalsIgnoreCase("add")) {
+            } else if (currentArg.equalsIgnoreCase("add")) {
                 main.getUtilManager().sendFancyActionBar(audience, args, "[show / add / remove / set]", "[Amount to add]");
-            } else if (currentWord.equalsIgnoreCase("remove")) {
+            } else if (currentArg.equalsIgnoreCase("remove")) {
                 main.getUtilManager().sendFancyActionBar(audience, args, "[show / add / remove / set]", "[Amount to remove]");
-            } else if (currentWord.equalsIgnoreCase("set")) {
+            } else if (currentArg.equalsIgnoreCase("set")) {
                 main.getUtilManager().sendFancyActionBar(audience, args, "[show / add / remove / set]", "[Amount to set]");
             } else {
                 main.getUtilManager().sendFancyActionBar(audience, args, "[show / add / remove / set]", "...");

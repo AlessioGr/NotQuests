@@ -75,9 +75,9 @@ public class UtilManager {
 
         Component currentCompletion;
         if (args[args.length - 1].isBlank()) {
-            currentCompletion = Component.text("" + hintCurrentArg, NamedTextColor.GREEN);
+            currentCompletion = Component.text("" + hintCurrentArg, NamedTextColor.GREEN, TextDecoration.BOLD).decoration(TextDecoration.ITALIC, false);
         } else {
-            currentCompletion = Component.text("" + args[args.length - 1], NamedTextColor.YELLOW);
+            currentCompletion = Component.text("" + args[args.length - 1], NamedTextColor.YELLOW, TextDecoration.BOLD).decoration(TextDecoration.ITALIC, false);
         }
 
         if (!hintNextArgs.isBlank()) {
@@ -86,16 +86,16 @@ public class UtilManager {
                 hintNextArgs = hintNextArgs.substring(0, 14) + "...";
             }
 
-            return Component.text(argsTogether.toString(), TextColor.fromHexString("#a5c7a6"))
+            return Component.text(argsTogether.toString(), TextColor.fromHexString("#a5c7a6"), TextDecoration.ITALIC)
                     .append(currentCompletion)
                     .append(Component.text(" " + hintNextArgs, NamedTextColor.GRAY));
         } else {
             if (!args[args.length - 1].isBlank()) { //Command finished
-                return Component.text(argsTogether.toString(), TextColor.fromHexString("#a5c7a6"))
+                return Component.text(argsTogether.toString(), TextColor.fromHexString("#a5c7a6"), TextDecoration.ITALIC)
                         .append(currentCompletion)
                         .append(Component.text(" ✓", NamedTextColor.GREEN, TextDecoration.BOLD));
             } else {
-                return Component.text(argsTogether.toString(), TextColor.fromHexString("#a5c7a6"))
+                return Component.text(argsTogether.toString(), TextColor.fromHexString("#a5c7a6"), TextDecoration.ITALIC)
                         .append(currentCompletion);
             }
 

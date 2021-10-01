@@ -763,240 +763,7 @@ public class ObjectivesAdminCommand {
         }
     }
 
-    public List<String> handleCompletions(final String[] args, final CommandSender sender) {
-        main.getDataManager().completions.clear();
 
-        final Quest quest = main.getQuestManager().getQuest(args[1]);
-        if (quest != null) {
-            if (args.length == 4) {
-                main.getDataManager().completions.add("add");
-                main.getDataManager().completions.add("edit");
-                main.getDataManager().completions.add("list");
-                main.getDataManager().completions.add("clear");
-                return main.getDataManager().completions;
-            } else if (args.length == 5) {
-                if (args[3].equalsIgnoreCase("add")) {
-                    main.getDataManager().completions.add("BreakBlocks");
-                    main.getDataManager().completions.add("CollectItems");
-                    main.getDataManager().completions.add("CraftItems");
-                    main.getDataManager().completions.add("KillMobs");
-                    main.getDataManager().completions.add("TriggerCommand");
-                    main.getDataManager().completions.add("OtherQuest");
-                    main.getDataManager().completions.add("ConsumeItems");
-                    main.getDataManager().completions.add("DeliverItems");
-                    main.getDataManager().completions.add("TalkToNPC");
-                    main.getDataManager().completions.add("EscortNPC");
-                    if (main.isEliteMobsEnabled()) {
-                        main.getDataManager().completions.add("KillEliteMobs");
-                    }
-                    return main.getDataManager().completions;
-                } else if (args[3].equalsIgnoreCase("edit")) {
-                    for (final Objective objective : quest.getObjectives()) {
-                        main.getDataManager().completions.add("" + objective.getObjectiveID());
-                    }
-                    return main.getDataManager().completions;
-                }
-
-            } else if (args.length >= 6 && args[3].equalsIgnoreCase("add") && args[4].equalsIgnoreCase("KillEliteMobs")) {
-                return handleCompletionsKillEliteMobsObjective(args, sender);
-            } else if (args.length == 6) {
-                if (args[3].equalsIgnoreCase("add")) {
-                    if (args[4].equalsIgnoreCase("BreakBlocks")) {
-                        for (Material material : Material.values()) {
-                            main.getDataManager().completions.add(material.toString());
-                        }
-                        return main.getDataManager().completions;
-                    } else if (args[4].equalsIgnoreCase("CollectItems")) {
-                        for (Material material : Material.values()) {
-                            main.getDataManager().completions.add(material.toString());
-                        }
-                        main.getDataManager().completions.add("hand");
-                        return main.getDataManager().completions;
-                    }else if (args[4].equalsIgnoreCase("CraftItems")) {
-                        for (Material material : Material.values()) {
-                            main.getDataManager().completions.add(material.toString());
-                        }
-                        main.getDataManager().completions.add("hand");
-                        return main.getDataManager().completions;
-                    } else if (args[4].equalsIgnoreCase("TriggerCommand")) {
-                        main.getDataManager().completions.add("<Enter new TriggerCommand name>");
-                        return main.getDataManager().completions;
-                    } else if (args[4].equalsIgnoreCase("OtherQuest")) {
-                        for (Quest oneOfAllQuests : main.getQuestManager().getAllQuests()) {
-                            main.getDataManager().completions.add(oneOfAllQuests.getQuestName());
-                        }
-                        return main.getDataManager().completions;
-                    } else if (args[4].equalsIgnoreCase("KillMobs")) {
-                        return main.getDataManager().standardEntityTypeCompletions;
-                    } else if (args[4].equalsIgnoreCase("ConsumeItems")) {
-                        for (Material material : Material.values()) {
-                            if (material.isEdible()) {
-                                main.getDataManager().completions.add(material.toString());
-                            }
-                        }
-                        main.getDataManager().completions.add("hand");
-                        return main.getDataManager().completions;
-                    } else if (args[4].equalsIgnoreCase("DeliverItems")) {
-                        for (Material material : Material.values()) {
-                            main.getDataManager().completions.add(material.toString());
-                        }
-                        main.getDataManager().completions.add("hand");
-                        return main.getDataManager().completions;
-                    } else if (args[4].equalsIgnoreCase("TalkToNPC")) {
-                        if (main.isCitizensEnabled()) {
-                            for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
-                                main.getDataManager().completions.add("" + npc.getId());
-                            }
-                        }
-                        main.getDataManager().completions.add("armorstand");
-
-
-                        return main.getDataManager().completions;
-                    } else if (args[4].equalsIgnoreCase("EscortNPC")) {
-                        if(main.isCitizensEnabled()){
-                            for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
-                                main.getDataManager().completions.add("" + npc.getId());
-                            }
-                        }
-
-                        return main.getDataManager().completions;
-                    }
-                } else if (args[3].equalsIgnoreCase("edit")) {
-                    main.getDataManager().completions.add("info");
-                    main.getDataManager().completions.add("description");
-                    main.getDataManager().completions.add("displayName");
-                    main.getDataManager().completions.add("dependencies");
-                    main.getDataManager().completions.add("completionNPC");
-                    main.getDataManager().completions.add("remove");
-                    return main.getDataManager().completions;
-                }
-
-            } else if (args.length == 7) {
-                if (args[3].equalsIgnoreCase("add")) {
-                    if (args[4].equalsIgnoreCase("BreakBlocks")) {
-                        return main.getDataManager().numberPositiveCompletions;
-                    } else if (args[4].equalsIgnoreCase("CollectItems")) {
-                        return main.getDataManager().numberPositiveCompletions;
-                    }else if (args[4].equalsIgnoreCase("CraftItems")) {
-                        return main.getDataManager().numberPositiveCompletions;
-                    } else if (args[4].equalsIgnoreCase("TriggerCommand")) {
-                        return main.getDataManager().numberPositiveCompletions;
-                    } else if (args[4].equalsIgnoreCase("OtherQuest")) {
-                        return main.getDataManager().numberPositiveCompletions;
-                    } else if (args[4].equalsIgnoreCase("KillMobs")) {
-                        return main.getDataManager().numberPositiveCompletions;
-                    } else if (args[4].equalsIgnoreCase("ConsumeItems")) {
-                        return main.getDataManager().numberPositiveCompletions;
-                    } else if (args[4].equalsIgnoreCase("DeliverItems")) {
-                        return main.getDataManager().numberPositiveCompletions;
-                    } else if (args[4].equalsIgnoreCase("EscortNPC")) {
-                        return main.getDataManager().numberPositiveCompletions;
-                    }
-                } else if (args[3].equalsIgnoreCase("edit")) {
-                    if (args[5].equalsIgnoreCase("displayName")) {
-                        main.getDataManager().completions.add("set");
-                        main.getDataManager().completions.add("remove");
-                        main.getDataManager().completions.add("show");
-                        return main.getDataManager().completions;
-                    } else if (args[5].equalsIgnoreCase("description")) {
-                        main.getDataManager().completions.add("set");
-                        main.getDataManager().completions.add("remove");
-                        main.getDataManager().completions.add("show");
-                        return main.getDataManager().completions;
-                    } else if (args[5].equalsIgnoreCase("dependencies")) {
-                        main.getDataManager().completions.add("add");
-                        main.getDataManager().completions.add("remove");
-                        main.getDataManager().completions.add("list");
-                        main.getDataManager().completions.add("clear");
-                        return main.getDataManager().completions;
-                    } else if (args[5].equalsIgnoreCase("completionNPC")) {
-                        main.getDataManager().completions.add("set");
-                        main.getDataManager().completions.add("show");
-                        return main.getDataManager().completions;
-                    }
-
-                }
-            } else if (args.length >= 8 && args[3].equalsIgnoreCase("edit") && (args[5].equalsIgnoreCase("displayName") || args[5].equalsIgnoreCase("description"))) {
-                if (args[5].equalsIgnoreCase("displayName")) {
-                    if (args[6].equalsIgnoreCase("set")) {
-                        main.getDataManager().completions.add("<Enter new Display Name for this objective>");
-                        return main.getDataManager().completions;
-                    }
-
-                } else if (args[5].equalsIgnoreCase("description")) {
-                    if (args[6].equalsIgnoreCase("set")) {
-                        main.getDataManager().completions.add("<Enter new description for this objective>");
-                        return main.getDataManager().completions;
-                    }
-                }
-
-            } else if (args.length == 8) {
-                if (args[3].equalsIgnoreCase("add")) {
-                    if (args[4].equalsIgnoreCase("BreakBlocks")) {
-                        main.getDataManager().completions.add("Yes");
-                        main.getDataManager().completions.add("No");
-                        return main.getDataManager().completions;
-                    } else if (args[4].equalsIgnoreCase("OtherQuest")) {
-                        main.getDataManager().completions.add("Yes");
-                        main.getDataManager().completions.add("No");
-                        return main.getDataManager().completions;
-                    } else if (args[4].equalsIgnoreCase("DeliverItems")) {
-
-                        if(main.isCitizensEnabled()){
-                            for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
-                                main.getDataManager().completions.add("" + npc.getId());
-                            }
-                        }
-                        main.getDataManager().completions.add("armorstand");
-                        return main.getDataManager().completions;
-                    }
-                } else if (args[3].equalsIgnoreCase("edit")) {
-                    if (args[5].equalsIgnoreCase("dependencies")) {
-                        final Objective objective = quest.getObjectiveFromID(Integer.parseInt(args[4]));
-                        if (objective != null) {
-                            if (args[6].equalsIgnoreCase("add")) {
-                                for (final Objective questObjective : quest.getObjectives()) {
-                                    if (questObjective.getObjectiveID() != objective.getObjectiveID()) {
-                                        main.getDataManager().completions.add(questObjective.getObjectiveID() + "");
-                                    }
-                                }
-                                return main.getDataManager().completions;
-                            } else if (args[6].equalsIgnoreCase("remove") || args[6].equalsIgnoreCase("delete")) {
-                                for (final Objective dependingObjective : objective.getDependantObjectives()) {
-                                    main.getDataManager().completions.add(dependingObjective.getObjectiveID() + "");
-
-                                }
-                                return main.getDataManager().completions;
-                            }
-                        }
-
-
-                    } else if (args[5].equalsIgnoreCase("completionNPC")) {
-
-                        if (args[6].equalsIgnoreCase("set")) {
-                            final Objective objective = quest.getObjectiveFromID(Integer.parseInt(args[4]));
-                            if (objective != null) {
-
-                                if (main.isCitizensEnabled()) {
-                                    for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
-                                        main.getDataManager().completions.add("" + npc.getId());
-                                    }
-                                }
-                                main.getDataManager().completions.add("-1");
-                                main.getDataManager().completions.add("armorstand");
-                                return main.getDataManager().completions;
-                            }
-
-
-                        }
-                    }
-                }
-            }
-        }
-
-
-        return main.getDataManager().completions;
-    }
 
 
     private void showUsage(final Quest quest, final CommandSender sender, final String[] args) {
@@ -1048,7 +815,7 @@ public class ObjectivesAdminCommand {
                     sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2ConsumeItems §3[Item Name/hand] [Amount To Consume]");
                 } else if (args[4].equalsIgnoreCase("DeliverItems")) {
                     sender.sendMessage("§cMissing 6. argument §3[Item Name]§c. Specify the §bitem§c the player has to deliver.");
-                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2DeliverItems §3[Item Name/hand] [Amount To Collect] [Recipient NPC ID / 'armorstand']");
+                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2DeliverItems §3[Item Name/hand] [Amount To deliver] [Recipient NPC ID / 'armorstand']");
                 } else if (args[4].equalsIgnoreCase("TalkToNPC")) {
                     sender.sendMessage("§cMissing 6. argument §3[Item Name]§c. Specify the §bID of the NPC§c who the player has to talk to.");
                     sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2TalkToNPC §3[Target NPC ID / armorstand]");
@@ -1338,6 +1105,450 @@ public class ObjectivesAdminCommand {
         }
     }
 
+
+    //Completions
+    public List<String> handleCompletions(final String[] args, final CommandSender sender) {
+        final Audience audience = main.adventure().sender(sender);
+        main.getDataManager().completions.clear();
+
+        final Quest quest = main.getQuestManager().getQuest(args[1]);
+        if (quest != null) {
+            if (args.length == 4) {
+                main.getDataManager().completions.add("add");
+                main.getDataManager().completions.add("edit");
+                main.getDataManager().completions.add("list");
+                main.getDataManager().completions.add("clear");
+
+                //For fancy action bar only
+                final String currentArg = args[args.length - 1];
+                if (currentArg.equalsIgnoreCase("add")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[add / edit / list / clear]", "[Objective Type]");
+                } else if (currentArg.equalsIgnoreCase("edit")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[add / edit / list / clear]", "[Objective ID]");
+                } else if (currentArg.equalsIgnoreCase("list")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[add / edit / list / clear]", "");
+                } else if (currentArg.equalsIgnoreCase("clear")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[add / edit / list / clear]", "");
+                } else {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[add / edit / list / clear]", "...");
+                }
+                return main.getDataManager().completions;
+            } else if (args.length == 5) {
+                if (args[3].equalsIgnoreCase("add")) {
+                    main.getDataManager().completions.add("BreakBlocks");
+                    main.getDataManager().completions.add("CollectItems");
+                    main.getDataManager().completions.add("CraftItems");
+                    main.getDataManager().completions.add("KillMobs");
+                    main.getDataManager().completions.add("TriggerCommand");
+                    main.getDataManager().completions.add("OtherQuest");
+                    main.getDataManager().completions.add("ConsumeItems");
+                    main.getDataManager().completions.add("DeliverItems");
+                    main.getDataManager().completions.add("TalkToNPC");
+                    main.getDataManager().completions.add("EscortNPC");
+                    if (main.isEliteMobsEnabled()) {
+                        main.getDataManager().completions.add("KillEliteMobs");
+                    }
+
+                    //For fancy action bar only
+                    final String currentArg = args[args.length - 1];
+                    if (currentArg.equalsIgnoreCase("BreakBlocks")) {
+                        main.getUtilManager().sendFancyActionBar(audience, args, "[Objective Type]", "[Block Name]");
+                    } else if (currentArg.equalsIgnoreCase("CollectItems")) {
+                        main.getUtilManager().sendFancyActionBar(audience, args, "[Objective Type]", "[Item Name / 'hand']");
+                    } else if (currentArg.equalsIgnoreCase("CraftItems")) {
+                        main.getUtilManager().sendFancyActionBar(audience, args, "[Objective Type]", "[Item Name / 'hand']");
+                    } else if (currentArg.equalsIgnoreCase("KillMobs")) {
+                        main.getUtilManager().sendFancyActionBar(audience, args, "[Objective Type]", "[Mob Name]");
+                    } else if (currentArg.equalsIgnoreCase("TriggerCommand")) {
+                        main.getUtilManager().sendFancyActionBar(audience, args, "[Objective Type]", "[Trigger Name]");
+                    } else if (currentArg.equalsIgnoreCase("OtherQuest")) {
+                        main.getUtilManager().sendFancyActionBar(audience, args, "[Objective Type]", "[Other Quest Name]");
+                    } else if (currentArg.equalsIgnoreCase("ConsumeItems")) {
+                        main.getUtilManager().sendFancyActionBar(audience, args, "[Objective Type]", "[Item Name / 'hand']");
+                    } else if (currentArg.equalsIgnoreCase("DeliverItems")) {
+                        main.getUtilManager().sendFancyActionBar(audience, args, "[Objective Type]", "[Item Name / 'hand']");
+                    } else if (currentArg.equalsIgnoreCase("TalkToNPC")) {
+                        main.getUtilManager().sendFancyActionBar(audience, args, "[Objective Type]", "[Target NPC ID / 'armorstand'");
+                    } else if (currentArg.equalsIgnoreCase("EscortNPC")) {
+                        main.getUtilManager().sendFancyActionBar(audience, args, "[Objective Type]", "[NPC to escort ID]");
+                    } else if (main.isEliteMobsEnabled() && currentArg.equalsIgnoreCase("KillEliteMobs")) {
+                        main.getUtilManager().sendFancyActionBar(audience, args, "[Objective Type]", "[Part of elite mob name / 'any']");
+                    } else {
+                        main.getUtilManager().sendFancyActionBar(audience, args, "[Objective Type]", "...");
+                    }
+
+                    return main.getDataManager().completions;
+                } else if (args[3].equalsIgnoreCase("edit")) {
+                    for (final Objective objective : quest.getObjectives()) {
+                        main.getDataManager().completions.add("" + objective.getObjectiveID());
+                    }
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[Objective ID]", "[info / description / displayName / dependencies / completionNPC / remove]");
+                    return main.getDataManager().completions;
+                }
+
+            } else if (args.length >= 6 && args[3].equalsIgnoreCase("add") && args[4].equalsIgnoreCase("BreakBlocks")) {
+                return handleCompletionsBreakBlocksObjective(args, sender);
+            } else if (args.length >= 6 && args[3].equalsIgnoreCase("add") && args[4].equalsIgnoreCase("CollectItems")) {
+                return handleCompletionsCollectItemsObjective(args, sender);
+            } else if (args.length >= 6 && args[3].equalsIgnoreCase("add") && args[4].equalsIgnoreCase("CraftItems")) {
+                return handleCompletionsCraftItemsObjective(args, sender);
+            } else if (args.length >= 6 && args[3].equalsIgnoreCase("add") && args[4].equalsIgnoreCase("KillMobs")) {
+                return handleCompletionsKillMobsObjective(args, sender);
+            } else if (args.length >= 6 && args[3].equalsIgnoreCase("add") && args[4].equalsIgnoreCase("TriggerCommand")) {
+                return handleCompletionsTriggerCommandObjective(args, sender);
+            } else if (args.length >= 6 && args[3].equalsIgnoreCase("add") && args[4].equalsIgnoreCase("OtherQuest")) {
+                return handleCompletionsOtherQuestObjective(args, sender);
+            } else if (args.length >= 6 && args[3].equalsIgnoreCase("add") && args[4].equalsIgnoreCase("ConsumeItems")) {
+                return handleCompletionsConsumeItemsObjective(args, sender);
+            } else if (args.length >= 6 && args[3].equalsIgnoreCase("add") && args[4].equalsIgnoreCase("DeliverItems")) {
+                return handleCompletionsDeliverItemsObjective(args, sender);
+            } else if (args.length >= 6 && args[3].equalsIgnoreCase("add") && args[4].equalsIgnoreCase("TalkToNPC")) {
+                return handleCompletionsTalkToNPCObjective(args, sender);
+            } else if (args.length >= 6 && args[3].equalsIgnoreCase("add") && args[4].equalsIgnoreCase("EscortNPC")) {
+                return handleCompletionsEscortNPCObjective(args, sender);
+            } else if (args.length >= 6 && args[3].equalsIgnoreCase("add") && args[4].equalsIgnoreCase("KillEliteMobs")) {
+                return handleCompletionsKillEliteMobsObjective(args, sender);
+            } else if (args.length >= 6 && args[3].equalsIgnoreCase("edit")) {
+                return handleCompletionsEdit(args, sender, quest);
+            }
+        }
+
+
+        return main.getDataManager().completions;
+    }
+
+
+    public final List<String> handleCompletionsEdit(final String[] args, final CommandSender sender, final Quest quest) {
+        final Audience audience = main.adventure().sender(sender);
+        if (args.length == 6) {
+            main.getDataManager().completions.add("info");
+            main.getDataManager().completions.add("description");
+            main.getDataManager().completions.add("displayName");
+            main.getDataManager().completions.add("dependencies");
+            main.getDataManager().completions.add("completionNPC");
+            main.getDataManager().completions.add("remove");
+
+            //For fancy action bar only
+            final String currentArg = args[args.length - 1];
+            if (currentArg.equalsIgnoreCase("info")) {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[info / description / displayName / dependencies / completionNPC / remove]", "");
+            } else if (currentArg.equalsIgnoreCase("description")) {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[info / description / displayName / dependencies / completionNPC / remove]", "[set / remove / show]");
+            } else if (currentArg.equalsIgnoreCase("displayName")) {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[info / description / displayName / dependencies / completionNPC / remove]", "[set / remove / show]");
+            } else if (currentArg.equalsIgnoreCase("dependencies")) {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[info / description / displayName / dependencies / completionNPC / remove]", "[add / remove / list / clear]");
+            } else if (currentArg.equalsIgnoreCase("completionNPC")) {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[info / description / displayName / dependencies / completionNPC / remove]", "[set / show]");
+            } else if (currentArg.equalsIgnoreCase("remove")) {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[info / description / displayName / dependencies / completionNPC / remove]", "");
+            } else {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[info / description / displayName / dependencies / completionNPC / remove]", "...");
+            }
+
+        } else if (args.length == 7) {
+            if (args[5].equalsIgnoreCase("description")) {
+                main.getDataManager().completions.add("set");
+                main.getDataManager().completions.add("remove");
+                main.getDataManager().completions.add("show");
+
+                //For fancy action bar only
+                final String currentArg = args[args.length - 1];
+                if (currentArg.equalsIgnoreCase("set")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[set / remove / show]", "<Enter new description for this objective>");
+                } else if (currentArg.equalsIgnoreCase("remove")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[set / remove / show]", "");
+                } else if (currentArg.equalsIgnoreCase("show")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[set / remove / show]", "");
+                } else {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[set / remove / show]", "...");
+                }
+
+            } else if (args[5].equalsIgnoreCase("displayName")) {
+                main.getDataManager().completions.add("set");
+                main.getDataManager().completions.add("remove");
+                main.getDataManager().completions.add("show");
+
+                //For fancy action bar only
+                final String currentArg = args[args.length - 1];
+                if (currentArg.equalsIgnoreCase("set")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[set / remove / show]", "<Enter new Display Name for this objective>");
+                } else if (currentArg.equalsIgnoreCase("remove")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[set / remove / show]", "");
+                } else if (currentArg.equalsIgnoreCase("show")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[set / remove / show]", "");
+                } else {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[set / remove / show]", "...");
+                }
+
+            } else if (args[5].equalsIgnoreCase("dependencies")) {
+                main.getDataManager().completions.add("add");
+                main.getDataManager().completions.add("remove");
+                main.getDataManager().completions.add("list");
+                main.getDataManager().completions.add("clear");
+
+                //For fancy action bar only
+                final String currentArg = args[args.length - 1];
+                if (currentArg.equalsIgnoreCase("add")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[add / remove / list / clear]", "[Objective ID]");
+                } else if (currentArg.equalsIgnoreCase("remove")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[add / remove / list / clear]", "[Objective ID]");
+                } else if (currentArg.equalsIgnoreCase("list")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[add / remove / list / clear]", "");
+                } else if (currentArg.equalsIgnoreCase("clear")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[add / remove / list / clear]", "");
+                } else {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[add / remove / list / clear]", "...");
+                }
+
+            } else if (args[5].equalsIgnoreCase("completionNPC")) {
+                main.getDataManager().completions.add("set");
+                main.getDataManager().completions.add("show");
+
+                //For fancy action bar only
+                final String currentArg = args[args.length - 1];
+                if (currentArg.equalsIgnoreCase("set")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[set / show]", "[CompletionNPC ID / 'armorstand']");
+                } else if (currentArg.equalsIgnoreCase("show")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[set / show]", "");
+                } else {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[set / show]", "...");
+                }
+            }
+        } else if (args.length >= 8 && (args[5].equalsIgnoreCase("displayName") || args[5].equalsIgnoreCase("description"))) {
+            if (args[5].equalsIgnoreCase("displayName")) {
+                if (args[6].equalsIgnoreCase("set")) {
+                    main.getDataManager().completions.add("<Enter new Display Name for this objective>");
+
+                    main.getUtilManager().sendFancyActionBar(audience, args, "<Enter new Display Name for this objective>", "");
+                }
+
+            } else if (args[5].equalsIgnoreCase("description")) {
+                if (args[6].equalsIgnoreCase("set")) {
+                    main.getDataManager().completions.add("<Enter new description for this objective>");
+
+                    main.getUtilManager().sendFancyActionBar(audience, args, "<Enter new description for this objective>", "");
+
+                }
+            }
+
+        } else if (args.length == 8) {
+            if (args[5].equalsIgnoreCase("dependencies")) {
+                final Objective objective = quest.getObjectiveFromID(Integer.parseInt(args[4]));
+                if (objective != null) {
+                    if (args[6].equalsIgnoreCase("add")) {
+                        for (final Objective questObjective : quest.getObjectives()) {
+                            if (questObjective.getObjectiveID() != objective.getObjectiveID()) {
+                                main.getDataManager().completions.add(questObjective.getObjectiveID() + "");
+                            }
+                        }
+                        main.getUtilManager().sendFancyActionBar(audience, args, "[Objective ID]", "");
+
+                    } else if (args[6].equalsIgnoreCase("remove") || args[6].equalsIgnoreCase("delete")) {
+                        for (final Objective dependingObjective : objective.getDependantObjectives()) {
+                            main.getDataManager().completions.add(dependingObjective.getObjectiveID() + "");
+                        }
+                        main.getUtilManager().sendFancyActionBar(audience, args, "[Objective ID]", "");
+                    }
+                }
+
+
+            } else if (args[5].equalsIgnoreCase("completionNPC")) {
+
+                if (args[6].equalsIgnoreCase("set")) {
+                    final Objective objective = quest.getObjectiveFromID(Integer.parseInt(args[4]));
+                    if (objective != null) {
+
+                        if (main.isCitizensEnabled()) {
+                            for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
+                                main.getDataManager().completions.add("" + npc.getId());
+                            }
+                        }
+                        main.getDataManager().completions.add("-1");
+                        main.getDataManager().completions.add("armorstand");
+                    }
+
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[CompletionNPC ID / 'armorstand'", "");
+                }
+            }
+
+        }
+        return main.getDataManager().completions;
+    }
+
+
+    public final List<String> handleCompletionsBreakBlocksObjective(final String[] args, final CommandSender sender) {
+        final Audience audience = main.adventure().sender(sender);
+        if (args.length == 6) {
+            for (Material material : Material.values()) {
+                main.getDataManager().completions.add(material.toString());
+            }
+            main.getUtilManager().sendFancyActionBar(audience, args, "[Block Name]", "[Amount to break]");
+
+        } else if (args.length == 7) {
+            main.getUtilManager().sendFancyActionBar(audience, args, "[Amount to break]", "[Yes / No (Remove progress if block is placed?)]");
+            return main.getDataManager().numberPositiveCompletions;
+        } else if (args.length == 8) {
+            main.getDataManager().completions.add("Yes");
+            main.getDataManager().completions.add("No");
+            main.getUtilManager().sendFancyActionBar(audience, args, "[Yes / No (Remove progress if block is placed?)]", "");
+        }
+        return main.getDataManager().completions;
+    }
+
+    public final List<String> handleCompletionsCollectItemsObjective(final String[] args, final CommandSender sender) {
+        final Audience audience = main.adventure().sender(sender);
+        if (args.length == 6) {
+            for (Material material : Material.values()) {
+                main.getDataManager().completions.add(material.toString());
+            }
+            main.getDataManager().completions.add("hand");
+            main.getUtilManager().sendFancyActionBar(audience, args, "[Item Name / 'hand']", "[Amount to collect]");
+        } else if (args.length == 7) {
+            main.getUtilManager().sendFancyActionBar(audience, args, "[Amount to collect]", "");
+            return main.getDataManager().numberPositiveCompletions;
+        }
+        return main.getDataManager().completions;
+    }
+
+    public final List<String> handleCompletionsCraftItemsObjective(final String[] args, final CommandSender sender) {
+        final Audience audience = main.adventure().sender(sender);
+        if (args.length == 6) {
+            for (Material material : Material.values()) {
+                main.getDataManager().completions.add(material.toString());
+            }
+            main.getDataManager().completions.add("hand");
+            main.getUtilManager().sendFancyActionBar(audience, args, "[Item Name / 'hand']", "[Amount to craft]");
+        } else if (args.length == 7) {
+            main.getUtilManager().sendFancyActionBar(audience, args, "[Amount to craft]", "");
+            return main.getDataManager().numberPositiveCompletions;
+        }
+        return main.getDataManager().completions;
+    }
+
+    public final List<String> handleCompletionsKillMobsObjective(final String[] args, final CommandSender sender) {
+        final Audience audience = main.adventure().sender(sender);
+        if (args.length == 6) {
+            main.getUtilManager().sendFancyActionBar(audience, args, "[Mob Name]", "[Amount of kills needed]");
+            return main.getDataManager().standardEntityTypeCompletions;
+        } else if (args.length == 7) {
+            main.getUtilManager().sendFancyActionBar(audience, args, "[Amount of kills needed]", "");
+            return main.getDataManager().numberPositiveCompletions;
+        }
+        return main.getDataManager().completions;
+    }
+
+    public final List<String> handleCompletionsTriggerCommandObjective(final String[] args, final CommandSender sender) {
+        final Audience audience = main.adventure().sender(sender);
+        if (args.length == 6) {
+            main.getDataManager().completions.add("<Enter new TriggerCommand name>");
+            main.getUtilManager().sendFancyActionBar(audience, args, "[New Trigger Name]", "[Amount of triggers needed]");
+        } else if (args.length == 7) {
+            main.getUtilManager().sendFancyActionBar(audience, args, "[Amount of triggers needed]", "");
+            return main.getDataManager().numberPositiveCompletions;
+        }
+        return main.getDataManager().completions;
+    }
+
+    public final List<String> handleCompletionsOtherQuestObjective(final String[] args, final CommandSender sender) {
+        final Audience audience = main.adventure().sender(sender);
+        if (args.length == 6) {
+            for (final Quest oneOfAllQuests : main.getQuestManager().getAllQuests()) {
+                main.getDataManager().completions.add(oneOfAllQuests.getQuestName());
+            }
+            main.getUtilManager().sendFancyActionBar(audience, args, "[Other Quest Name]", "[Amount of completions needed]");
+        } else if (args.length == 7) {
+            main.getUtilManager().sendFancyActionBar(audience, args, "[Amount of completions needed]", "[Yes / No (Count previously-completed Quests?)]");
+            return main.getDataManager().numberPositiveCompletions;
+        } else if (args.length == 8) {
+            main.getDataManager().completions.add("Yes");
+            main.getDataManager().completions.add("No");
+            main.getUtilManager().sendFancyActionBar(audience, args, "[Yes / No (Count previously-completed Quests?)]", "");
+        }
+        return main.getDataManager().completions;
+    }
+
+    public final List<String> handleCompletionsConsumeItemsObjective(final String[] args, final CommandSender sender) {
+        final Audience audience = main.adventure().sender(sender);
+
+        if (args.length == 6) {
+            for (Material material : Material.values()) {
+                if (material.isEdible()) {
+                    main.getDataManager().completions.add(material.toString());
+                }
+            }
+            main.getDataManager().completions.add("hand");
+            main.getUtilManager().sendFancyActionBar(audience, args, "[Item Name / 'hand']", "[Amount to consume]");
+        } else if (args.length == 7) {
+            main.getUtilManager().sendFancyActionBar(audience, args, "[Amount to consume]", "");
+            return main.getDataManager().numberPositiveCompletions;
+        }
+
+        return main.getDataManager().completions;
+    }
+
+    public final List<String> handleCompletionsDeliverItemsObjective(final String[] args, final CommandSender sender) {
+        final Audience audience = main.adventure().sender(sender);
+
+        if (args.length == 6) {
+            for (Material material : Material.values()) {
+                main.getDataManager().completions.add(material.toString());
+            }
+            main.getDataManager().completions.add("hand");
+
+            main.getUtilManager().sendFancyActionBar(audience, args, "[Item Name / 'hand']", "[Amount to deliver]");
+        } else if (args.length == 7) {
+            main.getUtilManager().sendFancyActionBar(audience, args, "[Amount to deliver]", "[Recipient NPC ID / 'armorstand]");
+            return main.getDataManager().numberPositiveCompletions;
+        } else if (args.length == 8) {
+            if (main.isCitizensEnabled()) {
+                for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
+                    main.getDataManager().completions.add("" + npc.getId());
+                }
+            }
+            main.getDataManager().completions.add("armorstand");
+
+            main.getUtilManager().sendFancyActionBar(audience, args, "[Recipient NPC ID / 'armorstand]", "");
+
+        }
+
+        return main.getDataManager().completions;
+    }
+
+    public final List<String> handleCompletionsTalkToNPCObjective(final String[] args, final CommandSender sender) {
+        final Audience audience = main.adventure().sender(sender);
+
+        if (args.length == 6) {
+            if (main.isCitizensEnabled()) {
+                for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
+                    main.getDataManager().completions.add("" + npc.getId());
+                }
+            }
+            main.getDataManager().completions.add("armorstand");
+
+            main.getUtilManager().sendFancyActionBar(audience, args, "[NPC ID / 'armorstand']", "");
+        }
+
+        return main.getDataManager().completions;
+    }
+
+    public final List<String> handleCompletionsEscortNPCObjective(final String[] args, final CommandSender sender) {
+        final Audience audience = main.adventure().sender(sender);
+        if (args.length == 6) {
+            if (main.isCitizensEnabled()) {
+                for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
+                    main.getDataManager().completions.add("" + npc.getId());
+                }
+            }
+
+            main.getUtilManager().sendFancyActionBar(audience, args, "[NPC to escort ID]", "[Destination NPC ID]");
+        } else if (args.length == 7) {
+            main.getUtilManager().sendFancyActionBar(audience, args, "[Destination NPC ID]", "");
+            return main.getDataManager().numberPositiveCompletions;
+        }
+        return main.getDataManager().completions;
+    }
+
     public final List<String> handleCompletionsKillEliteMobsObjective(final String[] args, final CommandSender sender) {
         final Audience audience = main.adventure().sender(sender);
         if (args.length == 6) { //[Mob Name contains / any]
@@ -1346,7 +1557,7 @@ public class ObjectivesAdminCommand {
                 main.getDataManager().completions.addAll(main.getDataManager().standardEliteMobNamesCompletions);
             }
 
-            main.getUtilManager().sendFancyActionBar(audience, args, "[Mob Name contains / any]", "[Minimum Level / any]");
+            main.getUtilManager().sendFancyActionBar(audience, args, "[Part of Elite Mob Name / any]", "[Minimum Level / any]");
 
         } else if (args.length == 7) { //[Minimum Level / any]
             main.getDataManager().completions.add("any");

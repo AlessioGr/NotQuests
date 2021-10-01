@@ -1775,7 +1775,57 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 main.getDataManager().completions.addAll(Arrays.asList("create", "delete", "edit", "actions", "give", "forcegive", "questPoints", "activeQuests", "completedQuests", "progress", "failQuest", "completeQuest", "listObjectiveTypes", "listRewardTypes", "listRequirementTypes", "listAllQuests", "triggerObjective", "load", "reload", "save", "listPlaceholders", "resetAndRemoveQuestForAllPlayers", "resetAndFailQuestForAllPlayers"));
 
-                main.getUtilManager().sendFancyActionBar(audience, args, "[What do you want to do?]", "...");
+
+                //For fancy action bar only
+                final String currentArg = args[args.length - 1];
+                if (currentArg.equalsIgnoreCase("create")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[What do you want to do?]", "<Enter new Quest Name>");
+                } else if (currentArg.equalsIgnoreCase("delete")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[What do you want to do?]", "[Name of the Quest you want to delete]");
+                } else if (currentArg.equalsIgnoreCase("edit")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[What do you want to do?]", "[Quest Name]");
+                } else if (currentArg.equalsIgnoreCase("give")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[What do you want to do?]", "[Player Name (whom should be given the Quest)]");
+                } else if (currentArg.equalsIgnoreCase("forcegive")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[What do you want to do?]", "[Player Name (whom should be force-given the Quest)]");
+                } else if (currentArg.equalsIgnoreCase("questPoints")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[What do you want to do?]", "[Player Name]");
+                } else if (currentArg.equalsIgnoreCase("activeQuests")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[What do you want to do?]", "[Player Name (of whom you want to see the active Quests)]");
+                } else if (currentArg.equalsIgnoreCase("completedQuests")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[What do you want to do?]", "[Player Name (of whom you want to see the completed Quests)]");
+                } else if (currentArg.equalsIgnoreCase("progress")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[What do you want to do?]", "[Player Name (of whom want to see the Quest progress)]");
+                } else if (currentArg.equalsIgnoreCase("failQuest")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[What do you want to do?]", "[Player Name]");
+                } else if (currentArg.equalsIgnoreCase("completeQuest")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[What do you want to do?]", "[Player Name]");
+                } else if (currentArg.equalsIgnoreCase("listObjectiveTypes")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[What do you want to do?]", "");
+                } else if (currentArg.equalsIgnoreCase("listRewardTypes")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[What do you want to do?]", "");
+                } else if (currentArg.equalsIgnoreCase("listRequirementTypes")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[What do you want to do?]", "");
+                } else if (currentArg.equalsIgnoreCase("listAllQuests")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[What do you want to do?]", "");
+                } else if (currentArg.equalsIgnoreCase("triggerObjective")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[What do you want to do?]", "[Tigger Name]");
+                } else if (currentArg.equalsIgnoreCase("load")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[What do you want to do?]", "");
+                } else if (currentArg.equalsIgnoreCase("reload")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[What do you want to do?]", "");
+                } else if (currentArg.equalsIgnoreCase("save")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[What do you want to do?]", "");
+                } else if (currentArg.equalsIgnoreCase("listPlaceholders")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[What do you want to do?]", "");
+                } else if (currentArg.equalsIgnoreCase("resetAndRemoveQuestForAllPlayers")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[What do you want to do?]", "[Name of the Quest which should be reset and removed (aborted) from all players]");
+                } else if (currentArg.equalsIgnoreCase("resetAndFailQuestForAllPlayers")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[What do you want to do?]", "[Name of the Quest which should be reset and failed from all players]");
+                } else {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[What do you want to do?]", "...");
+                }
+
 
                 StringUtil.copyPartialMatches(args[args.length - 1], main.getDataManager().completions, main.getDataManager().partialCompletions);
                 return main.getDataManager().partialCompletions;
@@ -1967,7 +2017,20 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
             main.getDataManager().completions.add("add");
             main.getDataManager().completions.add("edit");
             main.getDataManager().completions.add("list");
-            main.getUtilManager().sendFancyActionBar(audience, args, "[add/edit/list]", "...");
+
+
+            //For fancy action bar only
+            final String currentArg = args[args.length - 1];
+            if (currentArg.equalsIgnoreCase("add")) {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[add/edit/list]", "<Enter new, unique Action name>");
+            } else if (currentArg.equalsIgnoreCase("edit")) {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[add/edit/list]", "[Action Name]");
+            } else if (currentArg.equalsIgnoreCase("list")) {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[add/edit/list]", "");
+            } else {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[add/edit/list]", "...");
+            }
+
 
         } else if (args.length == 3) {
             if (args[1].equalsIgnoreCase("add")) {
@@ -1992,7 +2055,18 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
             if (args[1].equalsIgnoreCase("edit")) {
                 main.getDataManager().completions.add("setCommand");
                 main.getDataManager().completions.add("delete");
-                main.getUtilManager().sendFancyActionBar(audience, args, "[setCommand / delete]", "...");
+
+                //For fancy action bar only
+                final String currentArg = args[args.length - 1];
+                if (currentArg.equalsIgnoreCase("setCommand")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[setCommand / delete]", "<Enter new Console Command>");
+                } else if (currentArg.equalsIgnoreCase("delete")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[setCommand / delete]", "");
+                } else {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[setCommand / delete]", "...");
+                }
+
+
             }
 
         } else if (args.length >= 5 && args[1].equalsIgnoreCase("edit") && args[3].equalsIgnoreCase("setCommand")) {
@@ -2011,7 +2085,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                 main.getDataManager().completions.add(quest.getQuestName());
             }
 
-            main.getUtilManager().sendFancyActionBar(audience, args, "[Quest Name]", "...");
+            main.getUtilManager().sendFancyActionBar(audience, args, "[Quest Name]", "[What do you want to edit?]");
 
         } else if (args.length == 3) {
             main.getDataManager().completions.add("objectives");
@@ -2025,7 +2099,35 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
             main.getDataManager().completions.add("acceptCooldown");
             main.getDataManager().completions.add("description");
             main.getDataManager().completions.add("displayName");
-            main.getUtilManager().sendFancyActionBar(audience, args, "[What do you want to edit?]", "...");
+
+            //For fancy action bar only
+            final String currentArg = args[args.length - 1];
+            if (currentArg.equalsIgnoreCase("objectives")) {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[What do you want to edit?]", "[add / edit / list / clear]");
+            } else if (currentArg.equalsIgnoreCase("rewards")) {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[What do you want to edit?]", "[add / list / clear]");
+            } else if (currentArg.equalsIgnoreCase("requirements")) {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[What do you want to edit?]", "[add / list / clear]");
+            } else if (currentArg.equalsIgnoreCase("npcs")) {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[What do you want to edit?]", "[add / list / clear]");
+            } else if (currentArg.equalsIgnoreCase("armorstands")) {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[What do you want to edit?]", "[add / check / list / clear / remove]");
+            } else if (currentArg.equalsIgnoreCase("triggers")) {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[What do you want to edit?]", "[add / list / clear / remove]");
+            } else if (currentArg.equalsIgnoreCase("maxAccepts")) {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[What do you want to edit?]", "[Enter Amount of max accepts]");
+            } else if (currentArg.equalsIgnoreCase("takeEnabled")) {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[What do you want to edit?]", "[Yes / No (Sets if players can accept the quest using the command /q take directly)]");
+            } else if (currentArg.equalsIgnoreCase("acceptCooldown")) {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[What do you want to edit?]", "[Time in minutes]");
+            } else if (currentArg.equalsIgnoreCase("description")) {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[What do you want to edit?]", "<Enter new Quest description>");
+            } else if (currentArg.equalsIgnoreCase("displayName")) {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[What do you want to edit?]", "<Enter new Quest display name>");
+            } else {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[What do you want to edit?]", "...");
+            }
+
 
         } else if (args.length >= 4 && ((args[2].equalsIgnoreCase("description")))) {
             if (args[0].equalsIgnoreCase("edit")) {
@@ -2076,7 +2178,19 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                 main.getDataManager().completions.add("add");
                 main.getDataManager().completions.add("list");
                 main.getDataManager().completions.add("clear");
-                main.getUtilManager().sendFancyActionBar(audience, args, "[add / list / clear]", "...");
+
+                //For fancy action bar only
+                final String currentArg = args[args.length - 1];
+                if (currentArg.equalsIgnoreCase("add")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[add / list / clear]", "[ID of the NPC you wish to add]");
+                } else if (currentArg.equalsIgnoreCase("list")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[add / list / clear]", "");
+                } else if (currentArg.equalsIgnoreCase("clear")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[add / list / clear]", "");
+                } else {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[add / list / clear]", "...");
+                }
+
 
             }
         } else if (args.length == 5) {
@@ -2108,7 +2222,18 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
             main.getDataManager().completions.add("add");
             main.getDataManager().completions.add("list");
             main.getDataManager().completions.add("clear");
-            main.getUtilManager().sendFancyActionBar(audience, args, "[add / list / clear]", "...");
+
+            //For fancy action bar only
+            final String currentArg = args[args.length - 1];
+            if (currentArg.equalsIgnoreCase("add")) {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[add / list / clear]", "[Requirement Type]");
+            } else if (currentArg.equalsIgnoreCase("list")) {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[add / list / clear]", "");
+            } else if (currentArg.equalsIgnoreCase("clear")) {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[add / list / clear]", "");
+            } else {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[add / list / clear]", "...");
+            }
 
 
         } else if (args.length == 5) {
@@ -2117,7 +2242,21 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                 main.getDataManager().completions.add("QuestPoints");
                 main.getDataManager().completions.add("Money");
                 main.getDataManager().completions.add("Permission");
-                main.getUtilManager().sendFancyActionBar(audience, args, "[Requirement Type]", "...");
+
+                //For fancy action bar only
+                final String currentArg = args[args.length - 1];
+                if (currentArg.equalsIgnoreCase("OtherQuest")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[Requirement Type]", "[Other Quest Name]");
+                } else if (currentArg.equalsIgnoreCase("QuestPoints")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[Requirement Type]", "[Quest Point requirement amount]");
+                } else if (currentArg.equalsIgnoreCase("Money")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[Requirement Type]", "[Money requirement amount]");
+                } else if (currentArg.equalsIgnoreCase("Permission")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[Requirement Type]", "[Required permission node]");
+                } else {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[Requirement Type]", "...");
+                }
+
             }
         } else if (args.length == 6) {
             if (args[3].equalsIgnoreCase("add")) {
@@ -2165,7 +2304,18 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
             main.getDataManager().completions.add("add");
             main.getDataManager().completions.add("list");
             main.getDataManager().completions.add("clear");
-            main.getUtilManager().sendFancyActionBar(audience, args, "[add / list / clear]", "...");
+
+            //For fancy action bar only
+            final String currentArg = args[args.length - 1];
+            if (currentArg.equalsIgnoreCase("add")) {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[add / list / clear]", "[Reward Type]");
+            } else if (currentArg.equalsIgnoreCase("list")) {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[add / list / clear]", "");
+            } else if (currentArg.equalsIgnoreCase("clear")) {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[add / list / clear]", "");
+            } else {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[add / list / clear]", "...");
+            }
 
         } else if (args.length == 5) {
             if (args[3].equalsIgnoreCase("add")) {
@@ -2173,6 +2323,21 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                 main.getDataManager().completions.add("QuestPoints");
                 main.getDataManager().completions.add("Item");
                 main.getDataManager().completions.add("Money");
+
+                //For fancy action bar only
+                final String currentArg = args[args.length - 1];
+                if (currentArg.equalsIgnoreCase("ConsoleCommand")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[add / list / clear]", "<Enter Console Command>");
+                } else if (currentArg.equalsIgnoreCase("QuestPoints")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[add / list / clear]", "[Quest Point reward amount]");
+                } else if (currentArg.equalsIgnoreCase("Item")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[add / list / clear]", "[Item Material Name / 'hand']");
+                } else if (currentArg.equalsIgnoreCase("Money")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[add / list / clear]", "[Amount of Money]");
+                } else {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[add / list / clear]", "...");
+                }
+
                 main.getUtilManager().sendFancyActionBar(audience, args, "[Reward Type]", "...");
             }
         } else if (args.length >= 6 && args[3].equalsIgnoreCase("add") && args[4].equalsIgnoreCase("ConsoleCommand")) {
@@ -2182,7 +2347,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
             } else {
                 main.getDataManager().completions.add("<Enter Console Command>");
             }
-            main.getUtilManager().sendFancyActionBar(audience, args, "<Enter Console Command.>", "");
+            main.getUtilManager().sendFancyActionBar(audience, args, "<Enter Console Command>", "");
         } else if (args.length == 6) {
             if (args[3].equalsIgnoreCase("add")) {
                 if (args[4].equalsIgnoreCase("QuestPoints")) {
@@ -2217,7 +2382,21 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
             main.getDataManager().completions.add("remove");
             main.getDataManager().completions.add("list");
             main.getDataManager().completions.add("clear");
-            main.getUtilManager().sendFancyActionBar(audience, args, "[add / remove / list / clear]", "...");
+
+            //For fancy action bar only
+            final String currentArg = args[args.length - 1];
+            if (currentArg.equalsIgnoreCase("add")) {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[add / remove / list / clear]", "[Action Name]");
+            } else if (currentArg.equalsIgnoreCase("remove")) {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[add / remove / list / clear]", "[Trigger ID to remove (check the trigger list to get the ID)]");
+            } else if (currentArg.equalsIgnoreCase("list")) {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[add / remove / list / clear]", "");
+            } else if (currentArg.equalsIgnoreCase("clear")) {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[add / remove / list / clear]", "");
+            } else {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[add / remove / list / clear]", "...");
+            }
+
         } else if (args.length == 5) {
             if (args[3].equalsIgnoreCase("add")) {
                 for (final Action action : main.getQuestManager().getAllActions()) {
