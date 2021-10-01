@@ -101,7 +101,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                 new ItemStack(Material.CHEST),
                                 0, // Display a number as the item count
                                 click -> {
-                                    player.chat("/q take");
+                                    player.chat("/notquests take");
 
                                     return true; // returning true will cancel the click event and stop taking the item
                                 },
@@ -112,7 +112,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                 new ItemStack(Material.REDSTONE_BLOCK),
                                 0, // Display a number as the item count
                                 click -> {
-                                    player.chat("/q abort");
+                                    player.chat("/notquests abort");
                                     gui.close();
                                     return true; // returning true will cancel the click event and stop taking the item
                                 },
@@ -122,7 +122,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                 new ItemStack(Material.SPYGLASS),
                                 0, // Display a number as the item count
                                 click -> {
-                                    player.chat("/q preview");
+                                    player.chat("/notquests preview");
                                     gui.close();
                                     return true; // returning true will cancel the click event and stop taking the item
                                 },
@@ -133,7 +133,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                 new ItemStack(Material.LADDER),
                                 0, // Display a number as the item count
                                 click -> {
-                                    player.chat("/q activeQuests");
+                                    player.chat("/notquests activeQuests");
                                     return true; // returning true will cancel the click event and stop taking the item
                                 },
                                 main.getLanguageManager().getString("gui.main.button.activequests.text")
@@ -202,7 +202,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                             new ItemStack(materialToUse),
                                             count, // Display a number as the item count
                                             click -> {
-                                                player.chat("/q progress " + activeQuest.getQuest().getQuestName());
+                                                player.chat("/notquests progress " + activeQuest.getQuest().getQuestName());
                                                 //click.getEvent().getWhoClicked().sendMessage(ChatColor.RED + "I am Redstone!");
                                                 return true; // returning true will cancel the click event and stop taking the item
 
@@ -281,7 +281,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                             new ItemStack(materialToUse),
                                             count, // Display a number as the item count
                                             click -> {
-                                                player.chat("/q preview " + quest.getQuestName());
+                                                player.chat("/notquests preview " + quest.getQuestName());
                                                 //click.getEvent().getWhoClicked().sendMessage(ChatColor.RED + "I am Redstone!");
                                                 return true; // returning true will cancel the click event and stop taking the item
 
@@ -353,7 +353,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                             new ItemStack(materialToUse),
                                             count, // Display a number as the item count
                                             click -> {
-                                                player.chat("/q abort " + activeQuest.getQuest().getQuestName());
+                                                player.chat("/notquests abort " + activeQuest.getQuest().getQuestName());
                                                 //click.getEvent().getWhoClicked().sendMessage(ChatColor.RED + "I am Redstone!");
                                                 return true; // returning true will cancel the click event and stop taking the item
 
@@ -430,7 +430,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                             new ItemStack(materialToUse),
                                             count, // Display a number as the item count
                                             click -> {
-                                                player.chat("/q preview " + quest.getQuestName());
+                                                player.chat("/notquests preview " + quest.getQuestName());
                                                 //click.getEvent().getWhoClicked().sendMessage(ChatColor.RED + "I am Redstone!");
                                                 return true; // returning true will cancel the click event and stop taking the item
 
@@ -660,7 +660,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                         new ItemStack(Material.GREEN_WOOL),
                                         1, // Display a number as the item count
                                         click -> {
-                                            player.chat("/q take " + quest.getQuestName());
+                                            player.chat("/notquests take " + quest.getQuestName());
 
                                             //click.getEvent().getWhoClicked().sendMessage(ChatColor.RED + "I am Redstone!");
                                             gui.close();

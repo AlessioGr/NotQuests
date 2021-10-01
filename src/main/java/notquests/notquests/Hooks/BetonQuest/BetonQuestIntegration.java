@@ -18,6 +18,7 @@
 
 package notquests.notquests.Hooks.BetonQuest;
 
+import notquests.notquests.Hooks.BetonQuest.Events.BQActionEvent;
 import notquests.notquests.Hooks.BetonQuest.Events.BQTriggerObjectiveEvent;
 import notquests.notquests.NotQuests;
 import org.betonquest.betonquest.BetonQuest;
@@ -36,7 +37,7 @@ public class BetonQuestIntegration {
     public void initialize() {
         //Register events
         betonQuest.registerEvents("notquests_triggerobjective", BQTriggerObjectiveEvent.class); //notquests_triggerobjective triggername
-        betonQuest.registerEvents("notquests_action", BQTriggerObjectiveEvent.class); //notquests_action actionname questname(optional)
+        betonQuest.registerEvents("notquests_action", BQActionEvent.class); //notquests_action actionname questname(optional)
 
     }
 
