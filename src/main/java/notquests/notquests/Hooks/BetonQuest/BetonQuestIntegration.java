@@ -18,8 +18,7 @@
 
 package notquests.notquests.Hooks.BetonQuest;
 
-import notquests.notquests.Hooks.BetonQuest.Events.BQActionEvent;
-import notquests.notquests.Hooks.BetonQuest.Events.BQTriggerObjectiveEvent;
+import notquests.notquests.Hooks.BetonQuest.Events.*;
 import notquests.notquests.NotQuests;
 import org.betonquest.betonquest.BetonQuest;
 
@@ -37,7 +36,11 @@ public class BetonQuestIntegration {
     public void initialize() {
         //Register events
         betonQuest.registerEvents("notquests_triggerobjective", BQTriggerObjectiveEvent.class); //notquests_triggerobjective triggername
-        betonQuest.registerEvents("notquests_action", BQActionEvent.class); //notquests_action actionname questname(optional)
+        betonQuest.registerEvents("notquests_action", BQActionEvent.class); //notquests_action actionname questname(optional - only used for {QUEST} placeholder in the action)
+        betonQuest.registerEvents("notquests_startquest", BQStartQuestEvent.class); //notquests_startquest questname   (optional: -force -silent -notriggers)
+        betonQuest.registerEvents("notquests_failquest", BQFailQuestEvent.class); //notquests_failquest questname
+        betonQuest.registerEvents("notquests_abortquest", BQAbortQuestEvent.class); //notquests_abortquest questname //Just removes the quest from the player if it's active. Does not fail the quest
+
 
     }
 
