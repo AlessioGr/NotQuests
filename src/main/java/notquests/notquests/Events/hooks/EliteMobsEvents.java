@@ -51,6 +51,7 @@ public class EliteMobsEvents implements Listener {
                             if (activeObjective.getObjective() instanceof KillEliteMobsObjective killEliteMobsObjective) {
                                 if (activeObjective.isUnlocked()) {
 
+
                                     //Check conditions
 
                                     if (!killEliteMobsObjective.getEliteMobToKillContainsName().isBlank()) {
@@ -64,23 +65,21 @@ public class EliteMobsEvents implements Listener {
                                             continue;
                                         }
                                     }
-
                                     if (killEliteMobsObjective.getMinimumLevel() >= 0 && eliteMob.getLevel() < killEliteMobsObjective.getMinimumLevel()) {
                                         continue;
                                     }
-
                                     if (killEliteMobsObjective.getMaximumLevel() >= 0 && eliteMob.getLevel() > killEliteMobsObjective.getMaximumLevel()) {
                                         continue;
                                     }
+                                    double damagePercentage = (eliteMob.getDamagers().get(player)) / eliteMob.getMaxHealth();
 
-                                    if (killEliteMobsObjective.getMinimumDamagePercentage() != -1 && eliteMob.getDamagers().get(player) < killEliteMobsObjective.getMinimumDamagePercentage()) {
+
+                                    if (killEliteMobsObjective.getMinimumDamagePercentage() != -1 && damagePercentage * 100 < killEliteMobsObjective.getMinimumDamagePercentage()) {
                                         continue;
                                     }
-
                                     if (!killEliteMobsObjective.getSpawnReason().isBlank() && !eliteMob.getSpawnReason().toString().toLowerCase(Locale.ROOT).equalsIgnoreCase(killEliteMobsObjective.getSpawnReason().toLowerCase(Locale.ROOT))) {
                                         continue;
                                     }
-
                                     activeObjective.addProgress(1, -1);
 
                                 }
