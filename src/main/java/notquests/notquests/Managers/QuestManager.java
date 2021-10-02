@@ -713,7 +713,7 @@ public class QuestManager {
                         new ItemStack(materialToUse),
                         count, // Display a number as the item count
                         click -> {
-                            player.chat("/q preview " + quest.getQuestName());
+                            player.chat("/notquests preview " + quest.getQuestName());
                             //click.getEvent().getWhoClicked().sendMessage(ChatColor.RED + "I am Redstone!");
                             return true; // returning true will cancel the click event and stop taking the item
 
@@ -832,7 +832,7 @@ public class QuestManager {
                         new ItemStack(materialToUse),
                         count, // Display a number as the item count
                         click -> {
-                            player.chat("/q preview " + quest.getQuestName());
+                            player.chat("/notquests preview " + quest.getQuestName());
                             //click.getEvent().getWhoClicked().sendMessage(ChatColor.RED + "I am Redstone!");
                             return true; // returning true will cancel the click event and stop taking the item
 
