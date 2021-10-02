@@ -73,6 +73,16 @@ repositories {
             artifact()
         }
     }
+
+    maven {
+        url 'https://maven.enginehub.org/repo/'
+        content {
+            includeGroup 'com.sk89q.worldedit'
+        }
+        metadataSources {
+            artifact()
+        }
+    }
 }
 
 dependencies {
@@ -90,6 +100,9 @@ dependencies {
     compileOnly files('libs/EliteMobs.jar')
 
     compileOnly 'org.betonquest:betonquest:2.0.0-SNAPSHOT'
+
+    compileOnly 'com.sk89q.worldedit:worldedit-core:7.3.0-SNAPSHOT'
+    compileOnly 'com.sk89q.worldedit:worldedit-bukkit:7.3.0-SNAPSHOT'
 
     //Shaded
     implementation 'io.papermc:paperlib:1.0.6'

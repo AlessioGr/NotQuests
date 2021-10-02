@@ -173,6 +173,11 @@ public class Quest {
                     main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.minimumDamagePercentage", killEliteMobsObjective.getMinimumDamagePercentage());
                     main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.amountToKill", killEliteMobsObjective.getAmountToKill());
 
+                } else if (objective instanceof final ReachLocationObjective reachLocationObjective) {
+                    main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.minLocation", reachLocationObjective.getMinLocation());
+                    main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.maxLocation", reachLocationObjective.getMaxLocation());
+                    main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.locationName", reachLocationObjective.getLocationName());
+
                 } else {
                     main.getLogManager().log(Level.WARNING, "ERROR: Objective could not be saved, because the objective type was not recognized.");
 

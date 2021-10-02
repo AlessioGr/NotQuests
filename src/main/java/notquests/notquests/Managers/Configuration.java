@@ -77,11 +77,13 @@ public class Configuration {
     private boolean integrationMythicMobsEnabled = true;
     private boolean integrationEliteMobsEnabled = true;
     private boolean integrationBetonQuestEnabled = true;
+    private boolean integrationWorldEditEnabled = true;
 
 
     //Other
     private boolean actionBarCommandCompletionEnabled = true;
     private int actionBarCommandCompletionMaxPreviousArgumentsDisplayed = 2;
+    private boolean moveEventEnabled = true;
 
 
     public Configuration() {
@@ -312,6 +314,14 @@ public class Configuration {
         this.integrationBetonQuestEnabled = integrationBetonQuestEnabled;
     }
 
+    public final boolean isIntegrationWorldEditEnabled() {
+        return integrationWorldEditEnabled;
+    }
+
+    public void setIntegrationWorldEditEnabled(final boolean integrationWorldEditEnabled) {
+        this.integrationWorldEditEnabled = integrationWorldEditEnabled;
+    }
+
     public final boolean isActionBarCommandCompletionEnabled() {
         return actionBarCommandCompletionEnabled;
     }
@@ -326,5 +336,13 @@ public class Configuration {
 
     public void setActionBarCommandCompletionMaxPreviousArgumentsDisplayed(final int actionBarCommandCompletionMaxPreviousArgumentsDisplayed) {
         this.actionBarCommandCompletionMaxPreviousArgumentsDisplayed = actionBarCommandCompletionMaxPreviousArgumentsDisplayed;
+    }
+
+    public final boolean isMoveEventEnabled() {
+        return moveEventEnabled;
+    }
+
+    public void setMoveEventEnabled(final boolean moveEventEnabled) {
+        this.moveEventEnabled = moveEventEnabled;
     }
 }

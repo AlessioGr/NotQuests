@@ -35,19 +35,22 @@ public class BetonQuestIntegration {
     }
 
     public void initialize() {
-        //Register events
-        betonQuest.registerEvents("notquests_triggerobjective", BQTriggerObjectiveEvent.class); //notquests_triggerobjective triggername
-        betonQuest.registerEvents("notquests_action", BQActionEvent.class); //notquests_action actionname questname(optional - only used for {QUEST} placeholder in the action)
-        betonQuest.registerEvents("notquests_startquest", BQStartQuestEvent.class); //notquests_startquest questname   (optional: -force -silent -notriggers)
-        betonQuest.registerEvents("notquests_failquest", BQFailQuestEvent.class); //notquests_failquest questname
-        betonQuest.registerEvents("notquests_abortquest", BQAbortQuestEvent.class); //notquests_abortquest questname //Just removes the quest from the player if it's active. Does not fail the quest
-        betonQuest.registerEvents("notquests_questpoints", BQQuestPointsEvent.class); //notquests_questpoints action(set/add/remove) amount   (optional: -silent)
+        if (main.isBetonQuestEnabled()) {
+            //Register events
+            betonQuest.registerEvents("notquests_triggerobjective", BQTriggerObjectiveEvent.class); //notquests_triggerobjective triggername
+            betonQuest.registerEvents("notquests_action", BQActionEvent.class); //notquests_action actionname questname(optional - only used for {QUEST} placeholder in the action)
+            betonQuest.registerEvents("notquests_startquest", BQStartQuestEvent.class); //notquests_startquest questname   (optional: -force -silent -notriggers)
+            betonQuest.registerEvents("notquests_failquest", BQFailQuestEvent.class); //notquests_failquest questname
+            betonQuest.registerEvents("notquests_abortquest", BQAbortQuestEvent.class); //notquests_abortquest questname //Just removes the quest from the player if it's active. Does not fail the quest
+            betonQuest.registerEvents("notquests_questpoints", BQQuestPointsEvent.class); //notquests_questpoints action(set/add/remove) amount   (optional: -silent)
 
-        //Register conditions
-        betonQuest.registerConditions("notquests_requirement", BQRequirementsCondition.class); //notquests_requirement requirementtype string int
-        betonQuest.registerConditions("notquests_is_quest_active", BQQuestActiveCondition.class); //notquests_is_quest_active questname
-        betonQuest.registerConditions("notquests_active_quest_is_objective_unlocked", BQActiveQuestObjectiveUnlocked.class); //notquests_active_quest_is_objective_unlocked questname objectiveid
-        betonQuest.registerConditions("notquests_active_quest_is_objective_completed", BQActiveQuestObjectiveCompleted.class); //notquests_active_quest_is_objective_completed questname objectiveid
+            //Register conditions
+            betonQuest.registerConditions("notquests_requirement", BQRequirementsCondition.class); //notquests_requirement requirementtype string int
+            betonQuest.registerConditions("notquests_is_quest_active", BQQuestActiveCondition.class); //notquests_is_quest_active questname
+            betonQuest.registerConditions("notquests_active_quest_is_objective_unlocked", BQActiveQuestObjectiveUnlocked.class); //notquests_active_quest_is_objective_unlocked questname objectiveid
+            betonQuest.registerConditions("notquests_active_quest_is_objective_completed", BQActiveQuestObjectiveCompleted.class); //notquests_active_quest_is_objective_completed questname objectiveid
+
+        }
 
     }
 

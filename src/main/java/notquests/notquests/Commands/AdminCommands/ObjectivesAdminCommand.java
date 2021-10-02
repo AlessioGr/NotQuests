@@ -19,6 +19,12 @@
 package notquests.notquests.Commands.AdminCommands;
 
 
+import com.sk89q.worldedit.IncompleteRegionException;
+import com.sk89q.worldedit.LocalSession;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.bukkit.BukkitPlayer;
+import com.sk89q.worldedit.regions.Region;
+import com.sk89q.worldedit.session.SessionManager;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.kyori.adventure.audience.Audience;
@@ -26,6 +32,7 @@ import notquests.notquests.NotQuests;
 import notquests.notquests.Structs.Objectives.*;
 import notquests.notquests.Structs.Objectives.hooks.KillEliteMobsObjective;
 import notquests.notquests.Structs.Quest;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
@@ -72,6 +79,8 @@ public class ObjectivesAdminCommand {
             }
         } else if (args.length >= 5 && args[3].equalsIgnoreCase("add") && args[4].equalsIgnoreCase("KillEliteMobs")) {
             handleCommandsKillEliteMobsObjective(sender, args, quest);
+        } else if (args.length >= 5 && args[3].equalsIgnoreCase("add") && args[4].equalsIgnoreCase("ReachLocation")) {
+            handleCommandsReachLocationObjective(sender, args, quest);
         } else if (args.length == 5) {
             showUsage(quest, sender, args);
 
@@ -1013,7 +1022,62 @@ public class ObjectivesAdminCommand {
 
     }
 
+    public void handleCommandsReachLocationObjective(final CommandSender sender, final String[] args, final Quest quest) { //qa edit xxx objectives add ReachLocation
+        if (args.length == 5) {
+            sender.sendMessage("§cMissing 6. argument §3[Region to enter detection mode]§c. Specify §bhow the region the player needs to enter / reach should be determined.§c. Recommended argument: 'worldeditselection'. This takes your current worldedit selection.");
+            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2ReachLocation §3[Region to enter detection mode] <Location Name>");
+        } else if (args.length == 6) {
+            sender.sendMessage("§cMissing 7. argument §3<Location Name>§c. Specify §bthe name of the location §c. This can be anything. It doesn't matter. Be creative!");
+            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2ReachLocation §3[Region to enter detection mode] <Location Name>");
 
+        } else if (args.length >= 7) {
+            if (args[5].equalsIgnoreCase("worldeditselection")) {
+                if (sender instanceof final Player player) {
+                    if (!main.isWorldEditEnabled()) {
+                        sender.sendMessage("§cError: The plugin 'WorldEdit' needs to be enabled in order to use this feature.");
+                        return;
+                    }
+
+
+                    final StringBuilder locationName = new StringBuilder();
+                    for (int start = 6; start < args.length; start++) {
+                        locationName.append(args[start]);
+                        if (start < args.length - 1) {
+                            locationName.append(" ");
+                        }
+                    }
+
+                    BukkitPlayer actor = BukkitAdapter.adapt(player); // WorldEdit's native Player class extends Actor
+                    SessionManager manager = main.getWorldEdit().getWorldEdit().getSessionManager();
+                    LocalSession localSession = manager.get(actor);
+
+
+                    Region region;
+                    com.sk89q.worldedit.world.World selectionWorld = localSession.getSelectionWorld();
+                    try {
+                        if (selectionWorld == null) throw new IncompleteRegionException();
+                        region = localSession.getSelection(selectionWorld);
+                        final Location min = new Location(BukkitAdapter.adapt(selectionWorld), region.getMinimumPoint().getX(), region.getMinimumPoint().getY(), region.getMinimumPoint().getZ());
+                        final Location max = new Location(BukkitAdapter.adapt(selectionWorld), region.getMaximumPoint().getX(), region.getMaximumPoint().getY(), region.getMaximumPoint().getZ());
+
+                        //Create Objective
+                        ReachLocationObjective reachLocationObjective = new ReachLocationObjective(main, quest, quest.getObjectives().size() + 1, min, max, locationName.toString());
+                        quest.addObjective(reachLocationObjective, true);
+                        sender.sendMessage("§aReach Location Objective successfully added to quest §b" + quest.getQuestName() + "§a!");
+
+                    } catch (IncompleteRegionException ex) {
+                        sender.sendMessage("§cPlease make a region selection using WorldEdit first.");
+                    }
+
+
+                } else {
+                    sender.sendMessage("§cThis command can only be run as a player!");
+                }
+            } else {
+                sender.sendMessage("§cInvalid region detection mode. Valid options: §b'worldeditselection'");
+            }
+        }
+    }
     public void handleCommandsKillEliteMobsObjective(final CommandSender sender, final String[] args, final Quest quest) { //qa edit xxx objectives add KillMobsObjective
         if (args.length == 5) {
             sender.sendMessage("§cMissing 6. argument §3[Mob Name contains / any]§c. Specify the §bname§c of the elite mob the player needs to kill to complete the objective. This can be just part of its name, like 'Elite Zombie'. Use 'any' if the kind of mob doesn't matter.");
@@ -1148,6 +1212,9 @@ public class ObjectivesAdminCommand {
                     if (main.isEliteMobsEnabled()) {
                         main.getDataManager().completions.add("KillEliteMobs");
                     }
+                    if (main.isWorldEditEnabled()) {
+                        main.getDataManager().completions.add("ReachLocation");
+                    }
 
                     //For fancy action bar only
                     final String currentArg = args[args.length - 1];
@@ -1173,6 +1240,8 @@ public class ObjectivesAdminCommand {
                         main.getUtilManager().sendFancyActionBar(audience, args, "[Objective Type]", "[NPC to escort ID]");
                     } else if (main.isEliteMobsEnabled() && currentArg.equalsIgnoreCase("KillEliteMobs")) {
                         main.getUtilManager().sendFancyActionBar(audience, args, "[Objective Type]", "[Part of elite mob name / 'any']");
+                    } else if (main.isEliteMobsEnabled() && currentArg.equalsIgnoreCase("ReachLocation")) {
+                        main.getUtilManager().sendFancyActionBar(audience, args, "[Objective Type]", "[mode]");
                     } else {
                         main.getUtilManager().sendFancyActionBar(audience, args, "[Objective Type]", "...");
                     }
@@ -1208,6 +1277,8 @@ public class ObjectivesAdminCommand {
                 return handleCompletionsEscortNPCObjective(args, sender);
             } else if (args.length >= 6 && args[3].equalsIgnoreCase("add") && args[4].equalsIgnoreCase("KillEliteMobs")) {
                 return handleCompletionsKillEliteMobsObjective(args, sender);
+            } else if (args.length >= 6 && args[3].equalsIgnoreCase("add") && args[4].equalsIgnoreCase("ReachLocation")) {
+                return handleCompletionsReachLocationObjective(args, sender);
             } else if (args.length >= 6 && args[3].equalsIgnoreCase("edit")) {
                 return handleCompletionsEdit(args, sender, quest);
             }
@@ -1596,5 +1667,23 @@ public class ObjectivesAdminCommand {
         return main.getDataManager().completions;
     }
 
+
+    public final List<String> handleCompletionsReachLocationObjective(final String[] args, final CommandSender sender) {
+        final Audience audience = main.adventure().sender(sender);
+        if (args.length == 6) {
+
+            if (main.isWorldEditEnabled()) {
+                main.getDataManager().completions.add("worldeditselection");
+            }
+
+            main.getUtilManager().sendFancyActionBar(audience, args, "[region selection mode]", "<Location name>");
+        } else if (args.length >= 7) {
+
+            main.getDataManager().completions.add("<Enter Location name>");
+
+            main.getUtilManager().sendFancyActionBar(audience, args, "<Location name>", "");
+        }
+        return main.getDataManager().completions;
+    }
 
 }

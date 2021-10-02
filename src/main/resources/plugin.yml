@@ -5,7 +5,7 @@ api-version: 1.17
 authors: [ NoeX ]
 description: Flexible, open, GUI Quest Plugin for Minecraft 1.17.1
 website: quests.notnot.pro
-softdepend: [ Citizens, Vault, PlaceholderAPI, MythicMobs, EliteMobs, BetonQuest ]
+softdepend: [ Citizens, Vault, PlaceholderAPI, MythicMobs, EliteMobs, BetonQuest, WorldEdit ]
 commands:
   notquestsadmin:
     description: Edit quests

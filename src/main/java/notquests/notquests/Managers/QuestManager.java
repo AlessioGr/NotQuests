@@ -92,6 +92,15 @@ public class QuestManager {
 
         if (main.isEliteMobsEnabled()) {
             objectiveTypesList += "\n§9KillEliteMobs §7[Special Integration]";
+        } else {
+            objectiveTypesList += "\n§7§mKillEliteMobs §c[DISABLED]";
+
+        }
+        if (main.isWorldEditEnabled()) {
+            objectiveTypesList += "\n§9ReachLocation §7[Special Integration]";
+        } else {
+            objectiveTypesList += "\n§7§mReachLocation §c[DISABLED]";
+
         }
 
         rewardTypesList = """
@@ -392,6 +401,13 @@ public class QuestManager {
                                         final int amountToKill = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.amountToKill");
 
                                         objective = new KillEliteMobsObjective(main, quest, objectiveID, eliteMobToKill, minimumLevel, maximumLevel, spawnReason, minimumDamagePercentage, amountToKill);
+                                    } else if (objectiveType == ObjectiveType.ReachLocation) {
+                                        final Location minLocation = main.getDataManager().getQuestsData().getLocation("quests." + questName + ".objectives." + objectiveNumber + ".specifics.minLocation");
+                                        final Location maxLocation = main.getDataManager().getQuestsData().getLocation("quests." + questName + ".objectives." + objectiveNumber + ".specifics.maxLocation");
+                                        final String locationName = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.locationName");
+
+
+                                        objective = new ReachLocationObjective(main, quest, objectiveID, minLocation, maxLocation, locationName);
                                     }
                                 } catch (java.lang.NullPointerException ex) {
                                     main.getLogManager().log(Level.SEVERE, "Error parsing objective Type of objective with ID §b" + objectiveNumber + "§c and Quest §b" + quest.getQuestName() + "§c. Objective creation skipped...");
@@ -1357,6 +1373,9 @@ public class QuestManager {
             if (killEliteMobsObjective.getMinimumDamagePercentage() != -1) {
                 toReturn += "\n        §7" + eventualColor + "Inflict minimum damage: §f" + eventualColor + killEliteMobsObjective.getMinimumDamagePercentage() + "%";
             }
+
+        } else if (objective instanceof ReachLocationObjective reachLocationObjective) {
+            toReturn = "    §7" + eventualColor + "Reach Location: §f" + eventualColor + reachLocationObjective.getLocationName();
 
         }
         if (objective.getCompletionNPCID() != -1) {

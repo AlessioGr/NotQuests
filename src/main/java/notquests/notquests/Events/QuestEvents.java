@@ -29,6 +29,7 @@ import notquests.notquests.Structs.Triggers.TriggerTypes.TriggerType;
 import notquests.notquests.Structs.Triggers.TriggerTypes.WorldEnterTrigger;
 import notquests.notquests.Structs.Triggers.TriggerTypes.WorldLeaveTrigger;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -45,6 +46,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.Inventory;
@@ -494,6 +496,60 @@ public class QuestEvents implements Listener {
         activeTrigger.addAndCheckTrigger(activeTrigger.getActiveQuest());
 
 
+    }
+
+    //For ReachLocation
+    @EventHandler
+    public void onMove(PlayerMoveEvent e) {
+        if (!main.getDataManager().getConfiguration().isMoveEventEnabled()) {
+            return;
+        }
+
+
+        if (e.getTo() == null) return;
+
+        if (e.getFrom().getBlockX() != e.getTo().getBlockX() || e.getFrom().getBlockY() != e.getTo().getBlockY() || e.getFrom().getBlockZ() != e.getTo().getBlockZ()) {
+            checkIfInReachLocation(e);
+        }
+
+    }
+
+    public void checkIfInReachLocation(final PlayerMoveEvent e) {
+        if (!e.isCancelled()) {
+            final Player player = e.getPlayer();
+            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+            if (questPlayer != null) {
+                if (questPlayer.getActiveQuests().size() > 0) {
+                    for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+                        for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
+                            if (activeObjective.isUnlocked()) {
+                                if (activeObjective.getObjective() instanceof ReachLocationObjective reachLocationObjective) {
+                                    final Location currentLocation = e.getTo();
+                                    if (currentLocation == null) {
+                                        return;
+                                    }
+                                    final Location minLocation = reachLocationObjective.getMinLocation();
+                                    if (minLocation.getWorld() != null && currentLocation.getWorld() != null && !currentLocation.getWorld().equals(minLocation.getWorld())) {
+                                        return;
+                                    }
+                                    final Location maxLocation = reachLocationObjective.getMaxLocation();
+                                    if (currentLocation.getX() >= minLocation.getX() && currentLocation.getX() <= maxLocation.getX()) {
+                                        if (currentLocation.getZ() >= minLocation.getZ() && currentLocation.getZ() <= maxLocation.getZ()) {
+                                            if (currentLocation.getY() >= minLocation.getY() && currentLocation.getY() <= maxLocation.getY()) {
+                                                activeObjective.addProgress(1, -1);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+                        activeQuest.removeCompletedObjectives(true);
+                    }
+                    questPlayer.removeCompletedQuests();
+                }
+            }
+        }
     }
 
 

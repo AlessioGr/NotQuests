@@ -10,6 +10,8 @@ storage:
 general:
   #The maximum amount of active quests a player can have at the same time. -1 = unlimited (default)
   max-active-quests-per-player: -1
+  #If set to false, Reach Location Objective will not work anymore - for better performance
+  enable-move-event: true
 visual:
   #Sets which language to use. Default is languages/en.yml
   language: en
@@ -63,4 +65,6 @@ integrations: #These should usually be left to true. These integrations will onl
   elitemobs:
     enabled: true
   betonquest:
+    enabled: true
+  worldedit:
     enabled: true

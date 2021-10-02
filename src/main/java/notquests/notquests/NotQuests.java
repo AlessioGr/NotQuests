@@ -19,6 +19,7 @@
 
 package notquests.notquests;
 
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.papermc.lib.PaperLib;
 import net.citizensnpcs.api.CitizensAPI;
@@ -89,6 +90,9 @@ public final class NotQuests extends JavaPlugin {
 
     private boolean betonQuestEnabled = false;
     private BetonQuestIntegration betonQuestIntegration;
+
+    private boolean worldEditEnabled = false;
+    private WorldEditPlugin worldEditPlugin;
 
 
     private BukkitAudiences adventure;
@@ -181,6 +185,20 @@ public final class NotQuests extends JavaPlugin {
             }
         }
 
+
+        //WorldEdit
+        if (getDataManager().getConfiguration().isIntegrationWorldEditEnabled()) {
+            worldEditPlugin = (WorldEditPlugin) Bukkit.getServer().getPluginManager().getPlugin("WorldEdit");
+            if (worldEditPlugin == null) {
+                worldEditEnabled = false;
+
+            } else {
+                getLogManager().info("WorldEdit found! Enabling WorldEdit support...");
+                worldEditEnabled = true;
+            }
+        }
+
+
         //Enable 'Citizens' integration. If it's not found, it will just disable some NPC features which can mostly be replaced by armor standsw
         if (getDataManager().getConfiguration().isIntegrationCitizensEnabled()) {
             if (getServer().getPluginManager().getPlugin("Citizens") == null || !Objects.requireNonNull(getServer().getPluginManager().getPlugin("Citizens")).isEnabled()) {
@@ -191,6 +209,7 @@ public final class NotQuests extends JavaPlugin {
                 getLogManager().info("Citizens found! Enabling Citizens support...");
             }
         }
+
 
         dataManager.loadStandardCompletions();
 
@@ -493,6 +512,10 @@ public final class NotQuests extends JavaPlugin {
         return betonQuestEnabled;
     }
 
+    public boolean isWorldEditEnabled() {
+        return betonQuestEnabled;
+    }
+
 
     public LanguageManager getLanguageManager() {
         return languageManager;
@@ -521,5 +544,9 @@ public final class NotQuests extends JavaPlugin {
 
     public BetonQuestIntegration getBetonQuestIntegration() {
         return betonQuestIntegration;
+    }
+
+    public WorldEditPlugin getWorldEdit() {
+        return worldEditPlugin;
     }
 }

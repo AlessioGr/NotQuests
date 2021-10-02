@@ -544,6 +544,12 @@ public class DataManager {
         }
         configuration.setIntegrationBetonQuestEnabled(getGeneralConfig().getBoolean("integrations.betonquest.enabled"));
 
+        if (!getGeneralConfig().isBoolean("integrations.worldedit.enabled")) {
+            getGeneralConfig().set("integrations.worldedit.enabled", true);
+            valueChanged = true;
+        }
+        configuration.setIntegrationWorldEditEnabled(getGeneralConfig().getBoolean("integrations.worldedit.enabled"));
+
 
         if (!getGeneralConfig().isBoolean("visual.fancy-actionbar-command-completion.enabled")) {
             getGeneralConfig().set("visual.fancy-actionbar-command-completion.enabled", true);
@@ -557,6 +563,13 @@ public class DataManager {
             valueChanged = true;
         }
         configuration.setActionBarCommandCompletionMaxPreviousArgumentsDisplayed(getGeneralConfig().getInt("visual.fancy-actionbar-command-completion.max-previous-arguments-displayed"));
+
+
+        if (!getGeneralConfig().isBoolean("general.enable-move-event")) {
+            getGeneralConfig().set("general.enable-move-event", true);
+            valueChanged = true;
+        }
+        configuration.setMoveEventEnabled(getGeneralConfig().getBoolean("general.enable-move-event"));
 
 
         if (valueChanged) {
