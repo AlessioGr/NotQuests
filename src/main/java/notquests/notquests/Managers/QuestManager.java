@@ -906,26 +906,26 @@ public class QuestManager {
         int counter = 1;
         for (Requirement requirement : quest.getRequirements()) {
             requirements = "§a" + counter + ". §e" + requirement.getRequirementType().toString() + "\n";
-            if (requirement instanceof OtherQuestRequirement) {
-                requirements += "§7-- Finish Quest first: " + ((OtherQuestRequirement) requirement).getOtherQuestName();
-            } else if (requirement instanceof QuestPointsRequirement) {
-                requirements += "§7-- Quest points needed: " + ((QuestPointsRequirement) requirement).getQuestPointRequirement() + "\n";
+            if (requirement instanceof OtherQuestRequirement otherQuestRequirement) {
+                requirements += "§7-- Finish Quest first: " + otherQuestRequirement.getOtherQuestName();
+            } else if (requirement instanceof QuestPointsRequirement questPointsRequirement) {
+                requirements += "§7-- Quest points needed: " + questPointsRequirement.getQuestPointRequirement() + "\n";
                 if (((QuestPointsRequirement) requirement).isDeductQuestPoints()) {
                     requirements += "§7--- §cQuest points WILL BE DEDUCTED!";
                 } else {
                     requirements += "§7--- Will quest points be deducted?: No";
                 }
 
-            } else if (requirement instanceof MoneyRequirement) {
-                requirements += "§7-- Money needed: " + ((MoneyRequirement) requirement).getMoneyRequirement() + "\n";
+            } else if (requirement instanceof MoneyRequirement moneyRequirement) {
+                requirements += "§7-- Money needed: " + moneyRequirement.getMoneyRequirement() + "\n";
                 if (((MoneyRequirement) requirement).isDeductMoney()) {
                     requirements += "§7--- §cMoney WILL BE DEDUCTED!";
                 } else {
                     requirements += "§7--- Will money be deducted?: No";
                 }
 
-            } else if (requirement instanceof PermissionRequirement) {
-                requirements += "§7-- Permission needed: " + ((PermissionRequirement) requirement).getRequiredPermission();
+            } else if (requirement instanceof PermissionRequirement permissionRequirement) {
+                requirements += "§7-- Permission needed: " + permissionRequirement.getRequiredPermission();
             }
 
             counter += 1;
@@ -1175,17 +1175,17 @@ public class QuestManager {
                 for (final Quest attachedQuest : getAllQuestsAttachedToNPC(npc)) {
                     attachedQuestNames.add(attachedQuest.getQuestName());
                 }
-                main.getLogManager().log(Level.INFO, "NPC with the ID: §b" + npc.getId() + " §ais not bugged, because it has the following quests attached: §b" + attachedQuestNames);
+                main.getLogManager().log(Level.INFO, "NPC with the ID: <AQUA>" + npc.getId() + "</AQUA> is not bugged, because it has the following quests attached: <AQUA>" + attachedQuestNames + "</AQUA>");
 
             }
             traitsToRemove.clear();
 
         }
         if (buggedNPCsFound == 0) {
-            main.getLogManager().log(Level.INFO, "No bugged NPCs found! Amount of checked NPCs: §b" + allNPCsFound);
+            main.getLogManager().log(Level.INFO, "No bugged NPCs found! Amount of checked NPCs: <AQUA>" + allNPCsFound + "</AQUA>");
 
         } else {
-            main.getLogManager().log(Level.INFO, "§eNotQuests > §b" + buggedNPCsFound + " §ebugged NPCs have  been found and removed! Amount of checked NPCs: §b" + allNPCsFound);
+            main.getLogManager().log(Level.INFO, "<YELLOW><AQUA>" + buggedNPCsFound + "</AQUA> bugged NPCs have been found and removed! Amount of checked NPCs: <AQUA>" + allNPCsFound + "</AQUA>");
 
         }
     }

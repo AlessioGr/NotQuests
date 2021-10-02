@@ -18,6 +18,7 @@
 
 package notquests.notquests.Hooks.BetonQuest;
 
+import notquests.notquests.Hooks.BetonQuest.Conditions.BQRequirementsCondition;
 import notquests.notquests.Hooks.BetonQuest.Events.*;
 import notquests.notquests.NotQuests;
 import org.betonquest.betonquest.BetonQuest;
@@ -42,6 +43,8 @@ public class BetonQuestIntegration {
         betonQuest.registerEvents("notquests_abortquest", BQAbortQuestEvent.class); //notquests_abortquest questname //Just removes the quest from the player if it's active. Does not fail the quest
         betonQuest.registerEvents("notquests_questpoints", BQQuestPointsEvent.class); //notquests_questpoints action(set/add/remove) amount   (optional: -silent)
 
+        //Register conditions
+        betonQuest.registerConditions("notquests_requirement", BQRequirementsCondition.class); //notquests_requirement requirementtype string int
     }
 
     public BetonQuest getBetonQuest() {

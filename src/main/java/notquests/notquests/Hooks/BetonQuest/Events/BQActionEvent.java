@@ -104,10 +104,15 @@ public class BQActionEvent extends QuestEvent {
                 final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
                 if (questPlayer != null) {
                     if (questPlayer.getActiveQuests().size() > 0) {
+                        ActiveQuest foundActiveQuest = null;
                         for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                             if (activeQuest.getQuest().getQuestName().equalsIgnoreCase(this.quest.getQuestName())) {
-                                action.execute(player, activeQuest);
+                                foundActiveQuest = activeQuest;
+                                break;
                             }
+                        }
+                        if (foundActiveQuest != null) {
+                            action.execute(player, foundActiveQuest);
                         }
                     }
                 }

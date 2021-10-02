@@ -722,16 +722,16 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                 int counter = 1;
                                 for (Requirement requirement : quest.getRequirements()) {
                                     sender.sendMessage("§a" + counter + ". §e" + requirement.getRequirementType().toString());
-                                    if (requirement instanceof OtherQuestRequirement) {
-                                        sender.sendMessage("§7-- Finish Quest first: " + ((OtherQuestRequirement) requirement).getOtherQuestName());
-                                    } else if (requirement instanceof QuestPointsRequirement) {
-                                        sender.sendMessage("§7-- Quest points needed: " + ((QuestPointsRequirement) requirement).getQuestPointRequirement());
-                                        sender.sendMessage("§7--- Will quest points be deducted?: " + ((QuestPointsRequirement) requirement).isDeductQuestPoints());
+                                    if (requirement instanceof OtherQuestRequirement otherQuestRequirement) {
+                                        sender.sendMessage("§7-- Finish Quest first: " + otherQuestRequirement.getOtherQuestName());
+                                    } else if (requirement instanceof QuestPointsRequirement questPointsRequirement) {
+                                        sender.sendMessage("§7-- Quest points needed: " + questPointsRequirement.getQuestPointRequirement());
+                                        sender.sendMessage("§7--- Will quest points be deducted?: " + questPointsRequirement.isDeductQuestPoints());
                                     } else if (requirement instanceof MoneyRequirement moneyRequirement) {
                                         sender.sendMessage("§7-- Money needed: " + moneyRequirement.getMoneyRequirement());
                                         sender.sendMessage("§7--- Will money be deducted?: " + moneyRequirement.isDeductMoney());
-                                    } else if (requirement instanceof PermissionRequirement) {
-                                        sender.sendMessage("§7-- Permission needed: " + ((PermissionRequirement) requirement).getRequiredPermission());
+                                    } else if (requirement instanceof PermissionRequirement permissionRequirement) {
+                                        sender.sendMessage("§7-- Permission needed: " + permissionRequirement.getRequiredPermission());
                                     }
 
                                     counter += 1;

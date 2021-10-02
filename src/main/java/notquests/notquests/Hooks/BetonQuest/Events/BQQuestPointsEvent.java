@@ -32,7 +32,7 @@ public class BQQuestPointsEvent extends QuestEvent {
     private final NotQuests main;
     boolean silent = false;
     private String action = "";
-    private long amount = 0;
+    private final long amount;
 
 
     /**
@@ -51,7 +51,13 @@ public class BQQuestPointsEvent extends QuestEvent {
         this.main = NotQuests.getInstance();
 
         action = instruction.getPart(1);
-        amount = instruction.getLong();
+        try {
+            amount = Long.parseLong(instruction.getPart(2));
+        } catch (NumberFormatException e) {
+            throw new InstructionParseException("Invalid QuestPoints amount. It has to be a number.");
+
+        }
+
 
         if (instruction.getInstruction().contains("-silent")) {
             silent = true;
