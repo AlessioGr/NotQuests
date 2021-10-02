@@ -93,13 +93,13 @@ public class QuestManager {
         if (main.isEliteMobsEnabled()) {
             objectiveTypesList += "\n§9KillEliteMobs §7[Special Integration]";
         } else {
-            objectiveTypesList += "\n§7§mKillEliteMobs §c[DISABLED]";
+            objectiveTypesList += "\n§7§mKillEliteMobs§c [EliteMobs needed]";
 
         }
         if (main.isWorldEditEnabled()) {
             objectiveTypesList += "\n§9ReachLocation §7[Special Integration]";
         } else {
-            objectiveTypesList += "\n§7§mReachLocation §c[DISABLED]";
+            objectiveTypesList += "\n§7§mReachLocation§c [WorldEdit needed]";
 
         }
 

@@ -37,6 +37,7 @@ import notquests.notquests.Events.QuestEvents;
 import notquests.notquests.Events.hooks.CitizensEvents;
 import notquests.notquests.Events.hooks.EliteMobsEvents;
 import notquests.notquests.Events.hooks.MythicMobsEvents;
+import notquests.notquests.Events.hooks.WorldEditHook;
 import notquests.notquests.Hooks.BetonQuest.BetonQuestIntegration;
 import notquests.notquests.Managers.*;
 import notquests.notquests.Placeholders.QuestPlaceholders;
@@ -93,6 +94,7 @@ public final class NotQuests extends JavaPlugin {
 
     private boolean worldEditEnabled = false;
     private WorldEditPlugin worldEditPlugin;
+    private WorldEditHook worldEditHook;
 
 
     private BukkitAudiences adventure;
@@ -195,6 +197,7 @@ public final class NotQuests extends JavaPlugin {
             } else {
                 getLogManager().info("WorldEdit found! Enabling WorldEdit support...");
                 worldEditEnabled = true;
+                worldEditHook = new WorldEditHook(this);
             }
         }
 
@@ -513,7 +516,7 @@ public final class NotQuests extends JavaPlugin {
     }
 
     public boolean isWorldEditEnabled() {
-        return betonQuestEnabled;
+        return worldEditEnabled;
     }
 
 
@@ -548,5 +551,9 @@ public final class NotQuests extends JavaPlugin {
 
     public WorldEditPlugin getWorldEdit() {
         return worldEditPlugin;
+    }
+
+    public WorldEditHook getWorldEditHook() {
+        return worldEditHook;
     }
 }

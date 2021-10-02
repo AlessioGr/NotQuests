@@ -19,12 +19,6 @@
 package notquests.notquests.Commands.AdminCommands;
 
 
-import com.sk89q.worldedit.IncompleteRegionException;
-import com.sk89q.worldedit.LocalSession;
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldedit.bukkit.BukkitPlayer;
-import com.sk89q.worldedit.regions.Region;
-import com.sk89q.worldedit.session.SessionManager;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.kyori.adventure.audience.Audience;
@@ -32,7 +26,6 @@ import notquests.notquests.NotQuests;
 import notquests.notquests.Structs.Objectives.*;
 import notquests.notquests.Structs.Objectives.hooks.KillEliteMobsObjective;
 import notquests.notquests.Structs.Quest;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
@@ -125,7 +118,7 @@ public class ObjectivesAdminCommand {
                             return;
                         }
                         final int NPCID = Integer.parseInt(args[5]);
-                        final NPC npc = CitizensAPI.getNPCRegistry().getById(NPCID);
+                        final NPC npc = net.citizensnpcs.api.CitizensAPI.getNPCRegistry().getById(NPCID);
                         if (npc != null) {
 
 
@@ -1047,27 +1040,7 @@ public class ObjectivesAdminCommand {
                         }
                     }
 
-                    BukkitPlayer actor = BukkitAdapter.adapt(player); // WorldEdit's native Player class extends Actor
-                    SessionManager manager = main.getWorldEdit().getWorldEdit().getSessionManager();
-                    LocalSession localSession = manager.get(actor);
-
-
-                    Region region;
-                    com.sk89q.worldedit.world.World selectionWorld = localSession.getSelectionWorld();
-                    try {
-                        if (selectionWorld == null) throw new IncompleteRegionException();
-                        region = localSession.getSelection(selectionWorld);
-                        final Location min = new Location(BukkitAdapter.adapt(selectionWorld), region.getMinimumPoint().getX(), region.getMinimumPoint().getY(), region.getMinimumPoint().getZ());
-                        final Location max = new Location(BukkitAdapter.adapt(selectionWorld), region.getMaximumPoint().getX(), region.getMaximumPoint().getY(), region.getMaximumPoint().getZ());
-
-                        //Create Objective
-                        ReachLocationObjective reachLocationObjective = new ReachLocationObjective(main, quest, quest.getObjectives().size() + 1, min, max, locationName.toString());
-                        quest.addObjective(reachLocationObjective, true);
-                        sender.sendMessage("§aReach Location Objective successfully added to quest §b" + quest.getQuestName() + "§a!");
-
-                    } catch (IncompleteRegionException ex) {
-                        sender.sendMessage("§cPlease make a region selection using WorldEdit first.");
-                    }
+                    main.getWorldEditHook().handleReachLocationObjectiveCreation(player, quest, locationName.toString());
 
 
                 } else {
@@ -1078,6 +1051,8 @@ public class ObjectivesAdminCommand {
             }
         }
     }
+
+
     public void handleCommandsKillEliteMobsObjective(final CommandSender sender, final String[] args, final Quest quest) { //qa edit xxx objectives add KillMobsObjective
         if (args.length == 5) {
             sender.sendMessage("§cMissing 6. argument §3[Mob Name contains / any]§c. Specify the §bname§c of the elite mob the player needs to kill to complete the objective. This can be just part of its name, like 'Elite Zombie'. Use 'any' if the kind of mob doesn't matter.");
