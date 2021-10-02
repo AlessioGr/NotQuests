@@ -45,6 +45,10 @@ public class BetonQuestIntegration {
 
         //Register conditions
         betonQuest.registerConditions("notquests_requirement", BQRequirementsCondition.class); //notquests_requirement requirementtype string int
+        betonQuest.registerConditions("notquests_is_quest_active", BQQuestActiveCondition.class); //notquests_is_quest_active questname
+        betonQuest.registerConditions("notquests_active_quest_is_objective_unlocked", BQActiveQuestObjectiveUnlocked.class); //notquests_active_quest_is_objective_unlocked questname objectiveid
+        betonQuest.registerConditions("notquests_active_quest_is_objective_completed", BQActiveQuestObjectiveCompleted.class); //notquests_active_quest_is_objective_completed questname objectiveid
+
     }
 
     public BetonQuest getBetonQuest() {
