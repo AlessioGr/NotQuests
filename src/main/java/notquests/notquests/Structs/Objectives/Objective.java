@@ -138,7 +138,20 @@ public class Objective {
      * @return the description of the objective with proper line-breaks
      */
     public final String getObjectiveDescription(final int maxLengthPerLine) {
-        return objectiveDescription;
+
+        StringBuilder descriptionWithLineBreaks = new StringBuilder();
+        int count = 0;
+        for (char character : objectiveDescription.toCharArray()) {
+            count++;
+            if (count > maxLengthPerLine) {
+                count = 0;
+                descriptionWithLineBreaks.append("\n§8");
+            } else {
+                descriptionWithLineBreaks.append(character);
+            }
+        }
+
+        return descriptionWithLineBreaks.toString();
     }
 
 

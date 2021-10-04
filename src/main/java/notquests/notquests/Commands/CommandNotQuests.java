@@ -738,7 +738,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                             }
                                             String descriptionToDisplay = main.getLanguageManager().getString("gui.progress.button.unlockedObjective.description-empty");
                                             if (!activeObjective.getObjective().getObjectiveDescription().isBlank()) {
-                                                descriptionToDisplay = activeObjective.getObjective().getObjectiveDescription();
+                                                descriptionToDisplay = activeObjective.getObjective().getObjectiveDescription(50);
                                             }
 
                                             group.addElement(new StaticGuiElement('e',
@@ -795,7 +795,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                         }
                                         String descriptionToDisplay = main.getLanguageManager().getString("gui.progress.button.completedObjective.description-empty");
                                         if (!activeObjective.getObjective().getObjectiveDescription().isBlank()) {
-                                            descriptionToDisplay = activeObjective.getObjective().getObjectiveDescription();
+                                            descriptionToDisplay = activeObjective.getObjective().getObjectiveDescription(50);
                                         }
 
 
