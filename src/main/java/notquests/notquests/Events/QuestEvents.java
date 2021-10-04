@@ -48,6 +48,7 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -550,6 +551,16 @@ public class QuestEvents implements Listener {
                 }
             }
         }
+    }
+
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    protected void onPluginEnable(final PluginEnableEvent event) {
+        if (event.getPlugin().getName().equals("MythicMobs") && !main.isMythicMobsEnabled()) {
+            // Turn on support for the plugin
+            main.enableMythicMobs();
+        }
+
     }
 
 

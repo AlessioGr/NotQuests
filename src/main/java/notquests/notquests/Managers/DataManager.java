@@ -1191,6 +1191,11 @@ public class DataManager {
      * because some lists are dependent on the integrations being loaded first.
      */
     public void loadStandardCompletions() {
+        numberCompletions.clear();
+        numberPositiveCompletions.clear();
+        standardEntityTypeCompletions.clear();
+        standardEliteMobNamesCompletions.clear();
+
         /*
          * Fill up the numberCompletions Array List from 0-12 which will be
          * re-used whenever a command accepts a number

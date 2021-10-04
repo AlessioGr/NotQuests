@@ -315,6 +315,7 @@ public final class NotQuests extends JavaPlugin {
 
     }
 
+
     /**
      * Called when the plugin is disabled or reloaded via ServerUtils / PlugMan
      */
@@ -555,5 +556,17 @@ public final class NotQuests extends JavaPlugin {
 
     public WorldEditHook getWorldEditHook() {
         return worldEditHook;
+    }
+
+    public void enableMythicMobs() {
+        if (getDataManager().getConfiguration().isIntegrationMythicMobsEnabled()) {
+            mythicMobsEnabled = true;
+            getLogManager().info("MythicMobs found! Enabling MythicMobs support (late)...");
+            this.mythicMobs = MythicMobs.inst();
+            getServer().getPluginManager().registerEvents(new MythicMobsEvents(this), this);
+
+            dataManager.loadStandardCompletions();
+        }
+
     }
 }
