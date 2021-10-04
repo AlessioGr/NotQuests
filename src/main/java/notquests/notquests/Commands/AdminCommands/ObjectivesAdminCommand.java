@@ -272,18 +272,22 @@ public class ObjectivesAdminCommand {
 
 
                 } else if (args[4].equalsIgnoreCase("KillMobs")) {
-                    final String mobEntityType = args[5];
+                    String mobEntityType = args[5];
 
-                    boolean foundValidMob = false;
-                    for (final String validMob : main.getDataManager().standardEntityTypeCompletions) {
-                        if (validMob.toLowerCase(Locale.ROOT).equalsIgnoreCase(mobEntityType.toLowerCase(Locale.ROOT))) {
-                            foundValidMob = true;
+
+                    if (!args[5].equalsIgnoreCase("any")) {
+                        boolean foundValidMob = false;
+                        for (final String validMob : main.getDataManager().standardEntityTypeCompletions) {
+                            if (validMob.toLowerCase(Locale.ROOT).equalsIgnoreCase(mobEntityType.toLowerCase(Locale.ROOT))) {
+                                foundValidMob = true;
+                            }
+                        }
+                        if (!foundValidMob) {
+                            sender.sendMessage("§cError: the mob type §b" + mobEntityType + " §cwas not found!");
+                            return;
                         }
                     }
-                    if (!foundValidMob) {
-                        sender.sendMessage("§cError: the mob type §b" + mobEntityType + " §cwas not found!");
-                        return;
-                    }
+
 
                     int amountToKill = Integer.parseInt(args[6]);
 
@@ -810,8 +814,8 @@ public class ObjectivesAdminCommand {
                     sender.sendMessage("§cMissing 6. argument §3[Other Quest Name]§c. Specify the §bname§c of the other quests which needs to be completed to complete the objective.");
                     sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2OtherQuest §3[Other Quest Name] §3[amount of completions needed] [countPreviouslyCompletedQuests?: yes/no]");
                 } else if (args[4].equalsIgnoreCase("KillMobs")) {
-                    sender.sendMessage("§cMissing 6. argument §3[Mob Name]§c. Specify the §bname§c of the mob the player needs to kill to complete the objective.");
-                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2KillMobs §3[Mob Name] §3[amount of kills needed]");
+                    sender.sendMessage("§cMissing 6. argument §3[Mob Name / 'any']]§c. Specify the §bname§c of the mob the player needs to kill to complete the objective. Or, use 'any' if every entity should count.");
+                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2KillMobs §3[Mob Name / 'any'] §3[amount of kills needed]");
                 } else if (args[4].equalsIgnoreCase("ConsumeItems")) {
                     sender.sendMessage("§cMissing 6. argument §3[Item Name/hand]§c. Specify the §bitem§c the player has to consume.");
                     sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2ConsumeItems §3[Item Name/hand] [Amount To Consume]");
@@ -877,7 +881,7 @@ public class ObjectivesAdminCommand {
                     sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2CraftItems §3[Item Name/hand] [Amount To Craft]");
                 } else if (args[4].equalsIgnoreCase("KillMobs")) {
                     sender.sendMessage("§cMissing 7. argument §3[amount of kills needed]§c. Specify the §bamount of times§c the player has to kill the mob.");
-                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2KillMobs §3[Mob Name] §3[amount of kills needed]");
+                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2KillMobs §3[Mob Name / 'any'] §3[amount of kills needed]");
                 } else if (args[4].equalsIgnoreCase("ConsumeItems")) {
                     sender.sendMessage("§cMissing 7. argument §3[Amount To Consume]§c. Specify the bamount of items§c the player has to consume.");
                     sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2ConsumeItems §3[Item Name/hand] [Amount To Consume]");
@@ -1200,7 +1204,7 @@ public class ObjectivesAdminCommand {
                     } else if (currentArg.equalsIgnoreCase("CraftItems")) {
                         main.getUtilManager().sendFancyActionBar(audience, args, "[Objective Type]", "[Item Name / 'hand']");
                     } else if (currentArg.equalsIgnoreCase("KillMobs")) {
-                        main.getUtilManager().sendFancyActionBar(audience, args, "[Objective Type]", "[Mob Name]");
+                        main.getUtilManager().sendFancyActionBar(audience, args, "[Objective Type]", "[Mob Name / 'any']");
                     } else if (currentArg.equalsIgnoreCase("TriggerCommand")) {
                         main.getUtilManager().sendFancyActionBar(audience, args, "[Objective Type]", "[Trigger Name]");
                     } else if (currentArg.equalsIgnoreCase("OtherQuest")) {
@@ -1475,7 +1479,10 @@ public class ObjectivesAdminCommand {
     public final List<String> handleCompletionsKillMobsObjective(final String[] args, final CommandSender sender) {
         final Audience audience = main.adventure().sender(sender);
         if (args.length == 6) {
-            main.getUtilManager().sendFancyActionBar(audience, args, "[Mob Name]", "[Amount of kills needed]");
+            main.getDataManager().completions.add("any");
+            main.getDataManager().completions.addAll(main.getDataManager().standardEntityTypeCompletions);
+
+            main.getUtilManager().sendFancyActionBar(audience, args, "[Mob Name / 'any']", "[Amount of kills needed]");
             return main.getDataManager().standardEntityTypeCompletions;
         } else if (args.length == 7) {
             main.getUtilManager().sendFancyActionBar(audience, args, "[Amount of kills needed]", "");

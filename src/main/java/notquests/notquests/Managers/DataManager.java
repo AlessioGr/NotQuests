@@ -1218,12 +1218,12 @@ public class DataManager {
         for (EntityType entityType : EntityType.values()) {
             standardEntityTypeCompletions.add(entityType.toString());
         }
-        //Add extra Mythic Mobs, if enabled
+        //Add extra Mythic Mobs completions, if enabled
         if (main.isMythicMobsEnabled()) {
             standardEntityTypeCompletions.addAll(main.getMythicMobs().getMobManager().getMobNames());
         }
 
-        //Fill up standardEliteMobNamesCompletions if EliteMo
+        //Fill up standardEliteMobNamesCompletions if the EliteMobs integration is enabled
         if (main.isEliteMobsEnabled()) {
             standardEliteMobNamesCompletions.add("Elite_Blaze");
             standardEliteMobNamesCompletions.add("Elite_Cave_Spider");

@@ -237,7 +237,7 @@ public class QuestEvents implements Listener {
                             if (activeObjective.getObjective() instanceof KillMobsObjective killMobsObjective) {
                                 if (activeObjective.isUnlocked()) {
                                     final EntityType killedMob = e.getEntity().getType();
-                                    if (killMobsObjective.getMobToKill().equalsIgnoreCase(killedMob.toString())) {
+                                    if (killMobsObjective.getMobToKill().equalsIgnoreCase("any") || killMobsObjective.getMobToKill().equalsIgnoreCase(killedMob.toString())) {
                                         if (e.getEntity() != e.getEntity().getKiller()) { //Suicide prevention
                                             activeObjective.addProgress(1, -1);
                                         }
