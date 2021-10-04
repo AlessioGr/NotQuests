@@ -72,6 +72,7 @@ Admin Commands - Quest Editing:
   - Talk to NPC
   - Command Triggers (to finish the objective)
   - KillEliteMobs (if you're using EliteMobs)
+  - ReachLocation (WorldEdit required for objective creation)
 - Multiple Quest Accept Requirements:
   -  Money
   -  Other Quest
