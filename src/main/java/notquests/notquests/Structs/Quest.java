@@ -229,6 +229,23 @@ public class Quest {
         return description;
     }
 
+    public final String getQuestDescription(final int maxLengthPerLine) {
+        final StringBuilder descriptionWithLineBreaks = new StringBuilder();
+        int count = 0;
+        for (char character : description.toCharArray()) {
+            count++;
+            if (count > maxLengthPerLine) {
+                count = 0;
+                descriptionWithLineBreaks.append("\n§8");
+            } else {
+                descriptionWithLineBreaks.append(character);
+            }
+        }
+
+        return descriptionWithLineBreaks.toString();
+    }
+
+
     public void setQuestDescription(String newQuestDescription) {
         this.description = newQuestDescription;
         main.getDataManager().getQuestsData().set("quests." + questName + ".description", newQuestDescription);

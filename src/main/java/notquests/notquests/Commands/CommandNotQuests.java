@@ -274,7 +274,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                     }
                                     String description = "";
                                     if (!quest.getQuestDescription().isBlank()) {
-                                        description = main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.questDescriptionPrefix") + quest.getQuestDescription();
+                                        description = main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.questDescriptionPrefix") + quest.getQuestDescription(50);
                                     }
 
                                     group.addElement(new StaticGuiElement('e',
@@ -423,7 +423,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                     }
                                     String description = "";
                                     if (!quest.getQuestDescription().isBlank()) {
-                                        description = main.getLanguageManager().getString("gui.previewQuestChoose.button.questPreview.questDescriptionPrefix") + quest.getQuestDescription();
+                                        description = main.getLanguageManager().getString("gui.previewQuestChoose.button.questPreview.questDescriptionPrefix") + quest.getQuestDescription(50);
                                     }
 
                                     group.addElement(new StaticGuiElement('e',
@@ -618,7 +618,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
 
                                 String description = main.getLanguageManager().getString("gui.previewQuest.button.description.empty");
                                 if (!quest.getQuestDescription().isBlank()) {
-                                    description = quest.getQuestDescription();
+                                    description = quest.getQuestDescription(50);
                                 }
                                 gui.addElement(new StaticGuiElement('1',
                                         new ItemStack(Material.BOOKSHELF),

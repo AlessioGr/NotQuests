@@ -139,7 +139,7 @@ public class Objective {
      */
     public final String getObjectiveDescription(final int maxLengthPerLine) {
 
-        StringBuilder descriptionWithLineBreaks = new StringBuilder();
+        final StringBuilder descriptionWithLineBreaks = new StringBuilder();
         int count = 0;
         for (char character : objectiveDescription.toCharArray()) {
             count++;
