@@ -16,11 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package notquests.notquests;
+package notquests.notquests.Hooks.Citizens;
 
 import net.citizensnpcs.api.persistence.Persist;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.util.DataKey;
+import notquests.notquests.NotQuests;
 import notquests.notquests.Structs.Quest;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

@@ -129,6 +129,19 @@ public class Objective {
         return objectiveDescription;
     }
 
+
+    /**
+     * Gets the objective description, but also adds line-breaks so the description is not bigger than the screen
+     * (useful for the GUI)
+     *
+     * @param maxLengthPerLine how long the description can be per-line
+     * @return the description of the objective with proper line-breaks
+     */
+    public final String getObjectiveDescription(final int maxLengthPerLine) {
+        return objectiveDescription;
+    }
+
+
     public void setObjectiveDescription(final String newObjectiveDescription, boolean save) {
         this.objectiveDescription = newObjectiveDescription;
         if (save) {

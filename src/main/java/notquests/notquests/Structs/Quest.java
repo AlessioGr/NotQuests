@@ -20,8 +20,8 @@ package notquests.notquests.Structs;
 
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
+import notquests.notquests.Hooks.Citizens.QuestGiverNPCTrait;
 import notquests.notquests.NotQuests;
-import notquests.notquests.QuestGiverNPCTrait;
 import notquests.notquests.Structs.Objectives.*;
 import notquests.notquests.Structs.Objectives.hooks.KillEliteMobsObjective;
 import notquests.notquests.Structs.Requirements.*;
