@@ -2,10 +2,16 @@ notquests.notquests
 notquests.notquests.Commands
 notquests.notquests.Commands.AdminCommands
 notquests.notquests.Events
+notquests.notquests.Events.hooks
+notquests.notquests.Hooks.BetonQuest
+notquests.notquests.Hooks.BetonQuest.Conditions
+notquests.notquests.Hooks.BetonQuest.Events
+notquests.notquests.Hooks.Citizens
 notquests.notquests.Managers
 notquests.notquests.Placeholders
 notquests.notquests.Structs
 notquests.notquests.Structs.Objectives
+notquests.notquests.Structs.Objectives.hooks
 notquests.notquests.Structs.Requirements
 notquests.notquests.Structs.Rewards
 notquests.notquests.Structs.Triggers
