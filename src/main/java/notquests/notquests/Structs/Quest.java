@@ -145,8 +145,8 @@ public class Quest {
                     main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.amountToKill", killMobsObjective.getAmountToKill());
 
                     //Extra args
-                    if (!killMobsObjective.getNameTagContains().isBlank()) {
-                        main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".extras.nameTagContains", killMobsObjective.getNameTagContains());
+                    if (!killMobsObjective.getNameTagContainsAny().isBlank()) {
+                        main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".extras.nameTagContainsAny", killMobsObjective.getNameTagContainsAny());
                     }
                     if (!killMobsObjective.getNameTagEquals().isBlank()) {
                         main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".extras.nameTagEquals", killMobsObjective.getNameTagEquals());

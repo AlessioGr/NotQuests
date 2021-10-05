@@ -1,5 +1,5 @@
 name: NotQuests
-version: '1.5.5'
+version: '1.5.6'
 main: notquests.notquests.NotQuests
 api-version: 1.17
 authors: [ NoeX ]

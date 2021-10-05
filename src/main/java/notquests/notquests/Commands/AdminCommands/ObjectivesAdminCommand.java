@@ -1021,13 +1021,13 @@ public class ObjectivesAdminCommand {
             KillMobsObjective killMobsObjective = new KillMobsObjective(main, quest, quest.getObjectives().size() + 1, mobEntityType, amountToKill);
 
 
-            //Handle extra args like -nametag_contains
+            //Handle extra args like -nametag_containsany
             for (final Map.Entry<String, String> entry : extraArgs.entrySet()) {
                 final String identifier = entry.getKey();
                 final String content = entry.getValue();
 
-                if (identifier.equalsIgnoreCase("nametag_contains")) {
-                    killMobsObjective.setNameTagContains(content);
+                if (identifier.equalsIgnoreCase("nametag_containsany")) {
+                    killMobsObjective.setNameTagContainsAny(content);
                     sender.sendMessage("§7Set NameTagContains to §b" + content);
                 }
                 if (identifier.equalsIgnoreCase("nametag_equals")) {
@@ -1514,7 +1514,7 @@ public class ObjectivesAdminCommand {
         } else if (args.length >= 7) {
             final String argToCheck = args[args.length - 1];
             if (argToCheck.startsWith("-")) {
-                main.getDataManager().completions.add("-nametag_contains");
+                main.getDataManager().completions.add("-nametag_containsany");
                 main.getDataManager().completions.add("-nametag_equals");
 
             }

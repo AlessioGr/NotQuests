@@ -358,9 +358,9 @@ public class QuestManager {
                                         objective = new KillMobsObjective(main, quest, objectiveID, mobToKill, amountToKill);
 
                                         //Extras
-                                        final String nameTagContains = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".extras.nameTagContains", "");
+                                        final String nameTagContains = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".extras.nameTagContainsAny", "");
                                         if (!nameTagContains.isBlank()) {
-                                            ((KillMobsObjective) objective).setNameTagContains(nameTagContains);
+                                            ((KillMobsObjective) objective).setNameTagContainsAny(nameTagContains);
                                         }
 
                                         final String nameTagEquals = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".extras.nameTagEquals", "");

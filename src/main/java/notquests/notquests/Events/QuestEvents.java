@@ -243,12 +243,12 @@ public class QuestEvents implements Listener {
                                         if (e.getEntity() != e.getEntity().getKiller()) { //Suicide prevention
 
                                             //Extra Flags
-                                            if (!killMobsObjective.getNameTagContains().isBlank()) {
+                                            if (!killMobsObjective.getNameTagContainsAny().isBlank()) {
                                                 if (e.getEntity().getCustomName() == null || e.getEntity().getCustomName().isBlank()) {
                                                     continue;
                                                 }
                                                 boolean foundOneNotFitting = false;
-                                                for (final String namePart : killMobsObjective.getNameTagContains().toLowerCase(Locale.ROOT).split(" ")) {
+                                                for (final String namePart : killMobsObjective.getNameTagContainsAny().toLowerCase(Locale.ROOT).split(" ")) {
                                                     if (!e.getEntity().getCustomName().toLowerCase(Locale.ROOT).contains(namePart)) {
                                                         foundOneNotFitting = true;
                                                     }
