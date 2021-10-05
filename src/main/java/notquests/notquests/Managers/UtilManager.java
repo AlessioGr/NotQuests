@@ -27,6 +27,8 @@ import notquests.notquests.NotQuests;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
+import java.util.HashMap;
+
 public class UtilManager {
     private final NotQuests main;
 
@@ -109,6 +111,57 @@ public class UtilManager {
             audience.sendActionBar(main.getUtilManager().getFancyActionBarTabCompletion(args, hintCurrentArg, hintNextArgs));
         }
 
+    }
+
+    public final HashMap<String, String> getExtraArguments(final String argumentString) {
+        return new HashMap<>() {{
+
+            String currentIdentifier = "";
+            String currentContent = "";
+
+            boolean identifierMode = true;
+
+            for (int i = 0; i < argumentString.length(); i++) {
+                char curChar = argumentString.charAt(i);
+                if (curChar == '-') {
+                    identifierMode = true;
+                    if (!currentIdentifier.isBlank() && !currentContent.isBlank()) {
+                        put(currentIdentifier, currentContent);
+                    }
+                    currentIdentifier = "";
+                    currentContent = "";
+                } else if (curChar == ' ') {
+                    if (!identifierMode) {
+                        currentContent += ' ';
+                    }
+
+                    identifierMode = false;
+                } else {
+                    if (identifierMode) {
+                        currentIdentifier += curChar;
+                    } else {
+                        currentContent += curChar;
+                    }
+                }
+            }
+
+            if (!currentIdentifier.isBlank() && !currentContent.isBlank()) {
+                put(currentIdentifier, currentContent);
+            }
+        }};
+    }
+
+    public final HashMap<String, String> getExtraArguments(final String[] args, final int startAt) {
+        StringBuilder extraArgsString = new StringBuilder();
+        if (args.length > startAt) {
+            for (int i = startAt; i < args.length; i++) {
+                if (i > startAt) {
+                    extraArgsString.append(" ");
+                }
+                extraArgsString.append(args[i]);
+            }
+        }
+        return getExtraArguments(extraArgsString.toString());
     }
 
 }

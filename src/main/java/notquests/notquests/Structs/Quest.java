@@ -143,6 +143,14 @@ public class Quest {
                 } else if (objective instanceof final KillMobsObjective killMobsObjective) {
                     main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.mobToKill", killMobsObjective.getMobToKill());
                     main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.amountToKill", killMobsObjective.getAmountToKill());
+
+                    //Extra args
+                    if (!killMobsObjective.getNameTagContains().isBlank()) {
+                        main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".extras.nameTagContains", killMobsObjective.getNameTagContains());
+                    }
+                    if (!killMobsObjective.getNameTagEquals().isBlank()) {
+                        main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".extras.nameTagEquals", killMobsObjective.getNameTagEquals());
+                    }
                 } else if (objective instanceof final ConsumeItemsObjective consumeItemObjective) {
                     main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.itemToConsume.itemstack", consumeItemObjective.getItemToConsume());
                 } else if (objective instanceof final DeliverItemsObjective deliverItemsObjective) {

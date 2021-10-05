@@ -356,6 +356,17 @@ public class QuestManager {
                                         final String mobToKill = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.mobToKill");
                                         final int amountToKill = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.amountToKill");
                                         objective = new KillMobsObjective(main, quest, objectiveID, mobToKill, amountToKill);
+
+                                        //Extras
+                                        final String nameTagContains = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".extras.nameTagContains", "");
+                                        if (!nameTagContains.isBlank()) {
+                                            ((KillMobsObjective) objective).setNameTagContains(nameTagContains);
+                                        }
+
+                                        final String nameTagEquals = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".extras.nameTagEquals", "");
+                                        if (!nameTagEquals.isBlank()) {
+                                            ((KillMobsObjective) objective).setNameTagEquals(nameTagEquals);
+                                        }
                                     } else if (objectiveType == ObjectiveType.ConsumeItems) {
                                         final ItemStack itemToConsume = main.getDataManager().getQuestsData().getItemStack("quests." + questName + ".objectives." + objectiveNumber + ".specifics.itemToConsume.itemstack");
                                         objective = new ConsumeItemsObjective(main, quest, objectiveID, itemToConsume, progressNeeded);

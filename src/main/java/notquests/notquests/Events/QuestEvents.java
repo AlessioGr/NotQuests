@@ -53,6 +53,8 @@ import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Locale;
+
 
 public class QuestEvents implements Listener {
     private final NotQuests main;
@@ -239,6 +241,28 @@ public class QuestEvents implements Listener {
                                     final EntityType killedMob = e.getEntity().getType();
                                     if (killMobsObjective.getMobToKill().equalsIgnoreCase("any") || killMobsObjective.getMobToKill().equalsIgnoreCase(killedMob.toString())) {
                                         if (e.getEntity() != e.getEntity().getKiller()) { //Suicide prevention
+
+                                            //Extra Flags
+                                            if (!killMobsObjective.getNameTagContains().isBlank()) {
+                                                if (e.getEntity().getCustomName() == null || e.getEntity().getCustomName().isBlank()) {
+                                                    continue;
+                                                }
+                                                boolean foundOneNotFitting = false;
+                                                for (final String namePart : killMobsObjective.getNameTagContains().toLowerCase(Locale.ROOT).split(" ")) {
+                                                    if (!e.getEntity().getCustomName().toLowerCase(Locale.ROOT).contains(namePart)) {
+                                                        foundOneNotFitting = true;
+                                                    }
+                                                }
+                                                if (foundOneNotFitting) {
+                                                    continue;
+                                                }
+                                            }
+                                            if (!killMobsObjective.getNameTagEquals().isBlank()) {
+                                                if (e.getEntity().getCustomName() == null || e.getEntity().getCustomName().isBlank() || !e.getEntity().getCustomName().equalsIgnoreCase(killMobsObjective.getNameTagEquals())) {
+                                                    continue;
+                                                }
+                                            }
+
                                             activeObjective.addProgress(1, -1);
                                         }
 

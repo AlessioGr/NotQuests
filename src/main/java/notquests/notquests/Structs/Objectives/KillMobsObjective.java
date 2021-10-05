@@ -26,6 +26,8 @@ public class KillMobsObjective extends Objective {
     private final NotQuests main;
     private final String mobToKillType;
     private final int amountToKill;
+    private String nameTagContains = "";
+    private String nameTagEquals = "";
 
     public KillMobsObjective(NotQuests main, final Quest quest, final int objectiveID, String mobToKill, int amountToKill) {
         super(main, quest, objectiveID, ObjectiveType.KillMobs, amountToKill);
@@ -42,5 +44,22 @@ public class KillMobsObjective extends Objective {
         return amountToKill;
     }
 
+
+    //Extra args
+    public final String getNameTagContains() {
+        return nameTagContains;
+    }
+
+    public void setNameTagContains(final String nameTagContains) {
+        this.nameTagContains = nameTagContains;
+    }
+
+    public final String getNameTagEquals() {
+        return nameTagEquals;
+    }
+
+    public void setNameTagEquals(final String nameTagEquals) {
+        this.nameTagEquals = nameTagEquals;
+    }
 
 }
