@@ -543,8 +543,7 @@ public class QuestEvents implements Listener {
 
     public void checkIfInReachLocation(final PlayerMoveEvent e, final Location currentLocation) {
         if (!e.isCancelled()) {
-            final Player player = e.getPlayer();
-            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(e.getPlayer().getUniqueId());
             if (questPlayer != null) {
                 if (questPlayer.getActiveQuests().size() > 0) {
                     for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
