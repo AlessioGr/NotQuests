@@ -18,7 +18,6 @@
 
 package notquests.notquests.Hooks.Citizens;
 
-import net.citizensnpcs.api.persistence.Persist;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.util.DataKey;
 import notquests.notquests.NotQuests;
@@ -42,10 +41,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class QuestGiverNPCTrait extends Trait {
 
     NotQuests plugin = null;
-    boolean SomeSetting = false;
-    // see the 'Persistence API' section
-    @Persist("mysettingname")
-    boolean automaticallyPersistedSetting = false;
+
     private int particleTimer = 0;
 
     public QuestGiverNPCTrait() {
@@ -123,7 +119,7 @@ public class QuestGiverNPCTrait extends Trait {
      */
     @Override
     public void onAttach() {
-        plugin.getLogManager().info("NPC with the ID §b" + npc.getId() + " §aand name §b" + npc.getName() + " §ahas been assigned the Quest Giver trait!");
+        plugin.getLogManager().info("NPC with the ID <AQUA>" + npc.getId() + " </AQUA>and name <AQUA>" + npc.getName() + " </AQUA>has been assigned the Quest Giver trait!");
     }
 
     // Run code when the NPC is despawned. This is called before the entity actually despawns so npc.getEntity() is still valid.
@@ -147,7 +143,7 @@ public class QuestGiverNPCTrait extends Trait {
     @Override
     public void onRemove() {
         //REMOVEEEE FROM QUEST
-        plugin.getLogManager().info("NPC with the ID §b" + npc.getId() + " §aand name §b" + npc.getName() + " §ahas been removed!");
+        plugin.getLogManager().info("NPC with the ID <AQUA>" + npc.getId() + " </AQUA>and name <AQUA>" + npc.getName() + " </AQUA>has been removed!");
         for (Quest quest : plugin.getQuestManager().getAllQuestsAttachedToNPC(getNPC())) {
             quest.removeNPC(getNPC());
         }
