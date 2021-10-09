@@ -28,6 +28,7 @@ import org.bukkit.entity.Player;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -35,18 +36,15 @@ import java.util.logging.Level;
 public class QuestPlayerManager {
     private final NotQuests main;
 
-    private final ArrayList<QuestPlayer> questPlayers;
 
     private final HashMap<UUID, QuestPlayer> questPlayersAndUUIDs;
 
     public QuestPlayerManager(NotQuests notQuests) {
         this.main = notQuests;
-        questPlayers = new ArrayList<>();
         questPlayersAndUUIDs = new HashMap<>();
     }
 
     public void loadPlayerData() {
-        questPlayers.clear();
         questPlayersAndUUIDs.clear();
 
 
@@ -81,7 +79,7 @@ public class QuestPlayerManager {
         final ArrayList<ActiveQuest> activeQuests = new ArrayList<>();
         try {
 
-            for (final QuestPlayer questPlayer : questPlayers) {
+            for (final QuestPlayer questPlayer : questPlayersAndUUIDs.values()) {
                 activeQuests.clear();
 
 
@@ -246,7 +244,7 @@ public class QuestPlayerManager {
         }*/
 
 
-        for (QuestPlayer questPlayer : questPlayers) {
+        for (QuestPlayer questPlayer : questPlayersAndUUIDs.values()) {
             final long questPoints = questPlayer.getQuestPoints();
             final UUID questPlayerUUID = questPlayer.getUUID();
             try {
@@ -297,15 +295,14 @@ public class QuestPlayerManager {
         return questPlayersAndUUIDs.get(uuid);
     }
 
-    public final ArrayList<QuestPlayer> getQuestPlayers() {
-        return questPlayers;
+    public final Collection<QuestPlayer> getQuestPlayers() {
+        return questPlayersAndUUIDs.values();
     }
 
     public String acceptQuest(final Player player, final Quest quest, final boolean triggerAcceptQuestTrigger, final boolean sendQuestInfo) {
         QuestPlayer questPlayer = getQuestPlayer(player.getUniqueId());
         if (questPlayer == null) {
             questPlayer = new QuestPlayer(main, player.getUniqueId());
-            questPlayers.add(questPlayer);
             questPlayersAndUUIDs.put(player.getUniqueId(), questPlayer);
         }
         final ActiveQuest newActiveQuest = new ActiveQuest(main, quest, questPlayer);
@@ -317,7 +314,6 @@ public class QuestPlayerManager {
         QuestPlayer questPlayer = getQuestPlayer(uuid);
         if (questPlayer == null) {
             questPlayer = new QuestPlayer(main, uuid);
-            questPlayers.add(questPlayer);
             questPlayersAndUUIDs.put(uuid, questPlayer);
             return "§aQuest player with uuid §b" + uuid + " §ahas been created successfully!";
 
@@ -330,7 +326,6 @@ public class QuestPlayerManager {
         QuestPlayer questPlayer = getQuestPlayer(uuid);
         if (questPlayer == null) {
             questPlayer = new QuestPlayer(main, uuid);
-            questPlayers.add(questPlayer);
             questPlayersAndUUIDs.put(uuid, questPlayer);
         }
         return questPlayer.forceAddActiveQuest(new ActiveQuest(main, quest, questPlayer), true);
