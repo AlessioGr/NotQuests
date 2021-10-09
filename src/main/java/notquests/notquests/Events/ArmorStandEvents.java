@@ -416,23 +416,15 @@ public class ArmorStandEvents implements Listener {
             return;
         }
         for(final Entity entity : event.getEntities()){
-            if(entity instanceof ArmorStand armorStand){
+            if (entity instanceof final ArmorStand armorStand) {
                 final PersistentDataContainer armorStandPDB = armorStand.getPersistentDataContainer();
 
-                boolean hasShowingQuestsPDBKey = false;
-                boolean hasNonShowingQuestsPDBKey = false;
-
-
-                if(armorStandPDB.has(main.getArmorStandManager().getAttachedQuestsShowingKey(), PersistentDataType.STRING)){
-                    hasShowingQuestsPDBKey = true;
-                }
-                if(armorStandPDB.has(main.getArmorStandManager().getAttachedQuestsNonShowingKey(), PersistentDataType.STRING)) {
-                    hasNonShowingQuestsPDBKey = true;
+                if (!armorStandPDB.has(main.getArmorStandManager().getAttachedQuestsShowingKey(), PersistentDataType.STRING) && !armorStandPDB.has(main.getArmorStandManager().getAttachedQuestsNonShowingKey(), PersistentDataType.STRING)) {
+                    return;
                 }
 
-                if(hasShowingQuestsPDBKey || hasNonShowingQuestsPDBKey){
-                    main.getArmorStandManager().addArmorStandWithQuestsAttachedToThem(armorStand);
-                }
+                main.getArmorStandManager().addArmorStandWithQuestsAttachedToThem(armorStand);
+
             }
         }
 
@@ -461,53 +453,37 @@ public class ArmorStandEvents implements Listener {
     //This probably will never happen and is not really needed, because armor stands are not spawned immediately with the PDB - you have to assign it to them first
     @EventHandler
     public void onArmorStandSpawn(EntitySpawnEvent event) {
-        if (event.getEntity() instanceof ArmorStand armorStand) {
+        if (event.getEntity() instanceof final ArmorStand armorStand) {
             if (!main.getDataManager().getConfiguration().isArmorStandQuestGiverIndicatorParticleEnabled()) {
                 return;
             }
             final PersistentDataContainer armorStandPDB = armorStand.getPersistentDataContainer();
 
-            boolean hasShowingQuestsPDBKey = false;
-            boolean hasNonShowingQuestsPDBKey = false;
-
-
-            if (armorStandPDB.has(main.getArmorStandManager().getAttachedQuestsShowingKey(), PersistentDataType.STRING)) {
-                hasShowingQuestsPDBKey = true;
+            if (!armorStandPDB.has(main.getArmorStandManager().getAttachedQuestsShowingKey(), PersistentDataType.STRING) && !armorStandPDB.has(main.getArmorStandManager().getAttachedQuestsNonShowingKey(), PersistentDataType.STRING)) {
+                return;
             }
-            if (armorStandPDB.has(main.getArmorStandManager().getAttachedQuestsNonShowingKey(), PersistentDataType.STRING)) {
-                hasNonShowingQuestsPDBKey = true;
-            }
+            main.getArmorStandManager().addArmorStandWithQuestsAttachedToThem(armorStand);
 
-            if (hasShowingQuestsPDBKey || hasNonShowingQuestsPDBKey) {
-                main.getArmorStandManager().addArmorStandWithQuestsAttachedToThem(armorStand);
-            }
         }
 
     }
 
 
     @EventHandler
-    public void onArmorStandSpawn(EntityDeathEvent event) {
-        if (event.getEntity() instanceof ArmorStand armorStand) {
+    public void onArmorStandDeath(EntityDeathEvent event) {
+        if (event.getEntity() instanceof final ArmorStand armorStand) {
             if (!main.getDataManager().getConfiguration().isArmorStandQuestGiverIndicatorParticleEnabled()) {
                 return;
             }
             final PersistentDataContainer armorStandPDB = armorStand.getPersistentDataContainer();
 
-            boolean hasShowingQuestsPDBKey = false;
-            boolean hasNonShowingQuestsPDBKey = false;
 
-
-            if (armorStandPDB.has(main.getArmorStandManager().getAttachedQuestsShowingKey(), PersistentDataType.STRING)) {
-                hasShowingQuestsPDBKey = true;
-            }
-            if (armorStandPDB.has(main.getArmorStandManager().getAttachedQuestsNonShowingKey(), PersistentDataType.STRING)) {
-                hasNonShowingQuestsPDBKey = true;
+            if (!armorStandPDB.has(main.getArmorStandManager().getAttachedQuestsShowingKey(), PersistentDataType.STRING) && !armorStandPDB.has(main.getArmorStandManager().getAttachedQuestsNonShowingKey(), PersistentDataType.STRING)) {
+                return;
             }
 
-            if (hasShowingQuestsPDBKey || hasNonShowingQuestsPDBKey) {
-                main.getArmorStandManager().removeArmorStandWithQuestsAttachedToThem(armorStand);
-            }
+            main.getArmorStandManager().removeArmorStandWithQuestsAttachedToThem(armorStand);
+
         }
 
     }
