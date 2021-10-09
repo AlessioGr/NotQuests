@@ -531,15 +531,17 @@ public class QuestEvents implements Listener {
         }
 
 
-        if (e.getTo() == null) return;
+        if (e.getTo() == null) {
+            return;
+        }
 
         if (e.getFrom().getBlockX() != e.getTo().getBlockX() || e.getFrom().getBlockY() != e.getTo().getBlockY() || e.getFrom().getBlockZ() != e.getTo().getBlockZ()) {
-            checkIfInReachLocation(e);
+            checkIfInReachLocation(e, e.getTo());
         }
 
     }
 
-    public void checkIfInReachLocation(final PlayerMoveEvent e) {
+    public void checkIfInReachLocation(final PlayerMoveEvent e, final Location currentLocation) {
         if (!e.isCancelled()) {
             final Player player = e.getPlayer();
             final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
@@ -548,11 +550,8 @@ public class QuestEvents implements Listener {
                     for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                         for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
                             if (activeObjective.isUnlocked()) {
-                                if (activeObjective.getObjective() instanceof ReachLocationObjective reachLocationObjective) {
-                                    final Location currentLocation = e.getTo();
-                                    if (currentLocation == null) {
-                                        return;
-                                    }
+                                if (activeObjective.getObjective() instanceof final ReachLocationObjective reachLocationObjective) {
+
                                     final Location minLocation = reachLocationObjective.getMinLocation();
                                     if (minLocation.getWorld() != null && currentLocation.getWorld() != null && !currentLocation.getWorld().equals(minLocation.getWorld())) {
                                         return;
