@@ -475,9 +475,12 @@ public class QuestPlayer {
     }
 
     public void removeCompletedQuests() {
+        if (questsToComplete.size() == 0) {
+            return;
+        }
         activeQuests.removeAll(questsToComplete);
         activeQuestsCopy.removeAll(questsToComplete);
-        for (ActiveQuest activeQuest2 : questsToComplete) {
+        for (final ActiveQuest activeQuest2 : questsToComplete) {
             completedQuests.add(new CompletedQuest(activeQuest2.getQuest(), this));
         }
 

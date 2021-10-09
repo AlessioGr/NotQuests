@@ -220,10 +220,11 @@ public class ActiveQuest {
 
 
     public void removeCompletedObjectives(final boolean notifyPlayer) {
-
-        activeObjectives.removeAll(toRemove);
-        completedObjectives.addAll(toRemove);
-        toRemove.clear();
+        if (toRemove.size() != 0) {
+            activeObjectives.removeAll(toRemove);
+            completedObjectives.addAll(toRemove);
+            toRemove.clear();
+        }
 
 
         for (final ActiveObjective activeObjectiveToCheckForIfUnlocked : activeObjectives) {
