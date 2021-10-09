@@ -122,7 +122,7 @@ public class QuestGiverNPCTrait extends Trait {
      */
     @Override
     public void onAttach() {
-        plugin.getLogManager().info("NPC with the ID <AQUA>" + npc.getId() + " </AQUA>and name <AQUA>" + npc.getName() + " </AQUA>has been assigned the Quest Giver trait!");
+        plugin.getLogManager().info("NPC with the ID <AQUA>" + npc.getId() + "</AQUA> and name <AQUA>" + npc.getName() + "</AQUA> has been assigned the Quest Giver trait!");
     }
 
     // Run code when the NPC is despawned. This is called before the entity actually despawns so npc.getEntity() is still valid.
