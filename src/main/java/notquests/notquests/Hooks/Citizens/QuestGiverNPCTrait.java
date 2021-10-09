@@ -23,6 +23,7 @@ import net.citizensnpcs.api.util.DataKey;
 import notquests.notquests.NotQuests;
 import notquests.notquests.Structs.Quest;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -99,9 +100,11 @@ public class QuestGiverNPCTrait extends Trait {
         if (plugin.getDataManager().getConfiguration().isCitizensNPCQuestGiverIndicatorParticleEnabled() && npc.isSpawned()) {
             if (particleTimer >= plugin.getDataManager().getConfiguration().getCitizensNPCQuestGiverIndicatorParticleSpawnInterval()) {
                 particleTimer = 0;
-                final Location location = getNPC().getEntity().getLocation();
 
-                getNPC().getEntity().getWorld().spawnParticle(plugin.getDataManager().getConfiguration().getCitizensNPCQuestGiverIndicatorParticleType(), location.getX() - 0.25 + (Math.random() / 2), location.getY() + 1.75 + (Math.random() / 2), location.getZ() - 0.25 + (Math.random() / 2), plugin.getDataManager().getConfiguration().getCitizensNPCQuestGiverIndicatorParticleCount());
+                final Entity npcEntity = getNPC().getEntity();
+                final Location location = npcEntity.getLocation();
+
+                npcEntity.getWorld().spawnParticle(plugin.getDataManager().getConfiguration().getCitizensNPCQuestGiverIndicatorParticleType(), location.getX() - 0.25 + (Math.random() / 2), location.getY() + 1.75 + (Math.random() / 2), location.getZ() - 0.25 + (Math.random() / 2), plugin.getDataManager().getConfiguration().getCitizensNPCQuestGiverIndicatorParticleCount());
 
                 //System.out.println("§eSpawned particle!");
             }
