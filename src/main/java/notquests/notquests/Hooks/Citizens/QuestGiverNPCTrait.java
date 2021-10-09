@@ -89,7 +89,7 @@ public class QuestGiverNPCTrait extends Trait {
     public void run() {
 
         //Disable if Server TPS is too low
-        double minimumTPS = plugin.getDataManager().getConfiguration().getCitizensNPCQuestGiverIndicatorParticleDisableIfTPSBelow();
+        final double minimumTPS = plugin.getDataManager().getConfiguration().getCitizensNPCQuestGiverIndicatorParticleDisableIfTPSBelow();
         if (minimumTPS >= 0) {
             if (plugin.getPerformanceManager().getTPS() < minimumTPS) {
                 return;
