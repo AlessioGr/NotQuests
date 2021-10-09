@@ -352,7 +352,7 @@ public final class NotQuests extends JavaPlugin {
                 }
                 for (final Trait traitToRemove : traitsToRemove) {
                     npc.removeTrait(traitToRemove.getClass());
-                    getLogManager().log(Level.INFO, "Removed nquestgiver trait from NPC with the ID §b" + npc.getId());
+                    getLogManager().log(Level.INFO, "Removed nquestgiver trait from NPC with the ID <AQUA>" + npc.getId());
                 }
                 traitsToRemove.clear();
 
