@@ -1036,7 +1036,7 @@ public class QuestManager {
 
 
                                                     // call the callback with the result
-                                                    main.getLogManager().log(Level.INFO, "attaching quest with the name §b" + quest.getQuestName() + " §ato NPC with the ID §b" + npc.getId() + " §aand name §b" + npc.getName());
+                                                    main.getLogManager().log(Level.INFO, "Attaching Quest with the name <AQUA>" + quest.getQuestName() + " </AQUA>to NPC with the ID <AQUA>" + npc.getId() + " </AQUA>and name <AQUA>" + npc.getName());
 
                                                     quest.removeNPC(npc);
                                                     quest.bindToNPC(npc, questShowing);
@@ -1082,7 +1082,7 @@ public class QuestManager {
                                         if (npc != null) {
 
                                             // call the callback with the result
-                                            main.getLogManager().log(Level.INFO, "attaching quest with the name §b" + quest.getQuestName() + " §ato NPC with the ID §b" + npc.getId() + " §aand name §b" + npc.getName());
+                                            main.getLogManager().log(Level.INFO, "Attaching Quest with the name <AQUA>" + quest.getQuestName() + " </AQUA>to NPC with the ID <AQUA>" + npc.getId() + " </AQUA>and name <AQUA>" + npc.getName());
 
                                             quest.removeNPC(npc);
                                             quest.bindToNPC(npc, questShowing);

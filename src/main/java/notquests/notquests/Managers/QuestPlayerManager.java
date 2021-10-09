@@ -49,15 +49,14 @@ public class QuestPlayerManager {
         questPlayers.clear();
         questPlayersAndUUIDs.clear();
 
-        final ArrayList<QuestPlayer> questPlayers = new ArrayList<>();
 
         //Quest Players
         try {
             ResultSet result = main.getDataManager().getDatabaseStatement().executeQuery("SELECT * FROM QuestPlayerData");
             while (result.next()) {
-                final String uuid = result.getString("PlayerUUID");
-                createQuestPlayer(UUID.fromString(uuid));
-                final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(UUID.fromString(uuid));
+                final UUID uuid = UUID.fromString(result.getString("PlayerUUID"));
+                createQuestPlayer(uuid);
+                final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(uuid);
 
                 final long questPoints = result.getLong("QuestPoints");
                 main.getLogManager().log(Level.INFO, "Loaded player with uuid <AQUA>" + uuid + "</AQUA> and questPoints: " + questPoints);
@@ -65,7 +64,6 @@ public class QuestPlayerManager {
                 if (questPlayer != null) {
                     //QuestPoints
                     questPlayer.setQuestPoints(questPoints, false);
-                    questPlayers.add(questPlayer);
 
 
                 } else {
@@ -285,7 +283,7 @@ public class QuestPlayerManager {
 
 
             } catch (SQLException sqlException) {
-                main.getLogManager().log(Level.WARNING, "There was an error saving the playerdata of player with UUID §b" + questPlayer.getUUID() + "§c! Stacktrace:");
+                main.getLogManager().log(Level.WARNING, "There was an error saving the playerdata of player with UUID <AQUA>" + questPlayer.getUUID() + "</AQUA>! Stacktrace:");
 
                 sqlException.printStackTrace();
             }
