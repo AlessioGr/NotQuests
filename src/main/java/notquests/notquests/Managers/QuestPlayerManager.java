@@ -28,6 +28,7 @@ import org.bukkit.entity.Player;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 import java.util.logging.Level;
 
@@ -36,13 +37,17 @@ public class QuestPlayerManager {
 
     private final ArrayList<QuestPlayer> questPlayers;
 
+    private final HashMap<UUID, QuestPlayer> questPlayersAndUUIDs;
+
     public QuestPlayerManager(NotQuests notQuests) {
         this.main = notQuests;
         questPlayers = new ArrayList<>();
+        questPlayersAndUUIDs = new HashMap<>();
     }
 
     public void loadPlayerData() {
         questPlayers.clear();
+        questPlayersAndUUIDs.clear();
 
         final ArrayList<QuestPlayer> questPlayers = new ArrayList<>();
 
@@ -290,13 +295,8 @@ public class QuestPlayerManager {
 
     }
 
-    public final QuestPlayer getQuestPlayer(UUID uuid) {
-        for (QuestPlayer questPlayer : questPlayers) {
-            if (uuid.equals(questPlayer.getUUID())) {
-                return questPlayer;
-            }
-        }
-        return null;
+    public final QuestPlayer getQuestPlayer(final UUID uuid) {
+        return questPlayersAndUUIDs.get(uuid);
     }
 
     public final ArrayList<QuestPlayer> getQuestPlayers() {
@@ -308,6 +308,7 @@ public class QuestPlayerManager {
         if (questPlayer == null) {
             questPlayer = new QuestPlayer(main, player.getUniqueId());
             questPlayers.add(questPlayer);
+            questPlayersAndUUIDs.put(player.getUniqueId(), questPlayer);
         }
         final ActiveQuest newActiveQuest = new ActiveQuest(main, quest, questPlayer);
 
@@ -319,6 +320,7 @@ public class QuestPlayerManager {
         if (questPlayer == null) {
             questPlayer = new QuestPlayer(main, uuid);
             questPlayers.add(questPlayer);
+            questPlayersAndUUIDs.put(uuid, questPlayer);
             return "§aQuest player with uuid §b" + uuid + " §ahas been created successfully!";
 
         } else {
@@ -331,6 +333,7 @@ public class QuestPlayerManager {
         if (questPlayer == null) {
             questPlayer = new QuestPlayer(main, uuid);
             questPlayers.add(questPlayer);
+            questPlayersAndUUIDs.put(uuid, questPlayer);
         }
         return questPlayer.forceAddActiveQuest(new ActiveQuest(main, quest, questPlayer), true);
     }
