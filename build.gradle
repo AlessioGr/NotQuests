@@ -83,6 +83,8 @@ repositories {
             artifact()
         }
     }
+
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
@@ -108,6 +110,7 @@ dependencies {
     implementation 'io.papermc:paperlib:1.0.6'
     implementation "net.kyori:adventure-text-minimessage:4.2.0-SNAPSHOT"
     implementation 'net.kyori:adventure-platform-bukkit:4.0.0'
+
 }
 
 /**
