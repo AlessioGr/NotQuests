@@ -57,6 +57,7 @@ public class LanguageManager {
         final ArrayList<String> languageFiles = new ArrayList<>();
         languageFiles.add("en.yml");
         languageFiles.add("de.yml");
+        languageFiles.add("zh-CN.yml");
 
         //Create the Language Data Folder if it does not exist yet (the NotQuests/languages folder)
         File languageFolder = new File(main.getDataFolder().getPath() + "/languages/");
