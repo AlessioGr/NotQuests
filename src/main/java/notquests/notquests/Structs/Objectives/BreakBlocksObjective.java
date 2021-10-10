@@ -26,26 +26,47 @@ public class BreakBlocksObjective extends Objective {
 
     private final NotQuests main;
     private final Material blockToBreak;
-    private final int amountToBreak;
     private final boolean deductIfBlockIsPlaced;
 
     public BreakBlocksObjective(NotQuests main, final Quest quest, final int objectiveID, Material blockToBreak, int amountToBreak, boolean deductIfBlockIsPlaced) {
-        super(main, quest, objectiveID, ObjectiveType.BreakBlocks, amountToBreak);
+        super(main, quest, objectiveID, amountToBreak);
         this.main = main;
         this.blockToBreak = blockToBreak;
-        this.amountToBreak = amountToBreak;
         this.deductIfBlockIsPlaced = deductIfBlockIsPlaced;
+    }
+
+    public BreakBlocksObjective(NotQuests main, Quest quest, int objectiveNumber, int progressNeeded) {
+        super(main, quest, objectiveNumber, progressNeeded);
+        final String questName = quest.getQuestName();
+
+        this.main = main;
+        blockToBreak = Material.valueOf(main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.blockToBreak.material"));
+        deductIfBlockIsPlaced = main.getDataManager().getQuestsData().getBoolean("quests." + questName + ".objectives." + objectiveNumber + ".specifics.deductIfBlockPlaced");
+    }
+
+    @Override
+    public String getObjectiveTaskDescription(final String eventualColor) {
+        return "    §7" + eventualColor + "Block to break: §f" + eventualColor + getBlockToBreak().toString();
+
+    }
+
+    @Override
+    public void save() {
+        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.blockToBreak.material", getBlockToBreak().toString());
+        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName()  + ".objectives." + getObjectiveID() + ".specifics.deductIfBlockPlaced", willDeductIfBlockPlaced());
+
     }
 
     public final Material getBlockToBreak() {
         return blockToBreak;
     }
 
-    public final int getAmountToBreak() {
-        return amountToBreak;
+    public final long getAmountToBreak() {
+        return super.getProgressNeeded();
     }
 
     public final boolean willDeductIfBlockPlaced() {
         return deductIfBlockIsPlaced;
     }
+
 }

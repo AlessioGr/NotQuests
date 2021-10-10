@@ -304,9 +304,9 @@ public class QuestManager {
                     final ConfigurationSection objectivesConfigurationSection = main.getDataManager().getQuestsData().getConfigurationSection("quests." + questName + ".objectives");
                     if (objectivesConfigurationSection != null) {
                         for (final String objectiveNumber : objectivesConfigurationSection.getKeys(false)) {
-                            ObjectiveType objectiveType = null;
+                            Class<? extends Objective> objectiveType = null;
                             try {
-                                objectiveType = ObjectiveType.valueOf(main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".objectiveType"));
+                                objectiveType = main.getObjectiveManager().getObjectiveClass(main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".objectiveType"));
                             } catch (java.lang.NullPointerException ex) {
                                 main.getLogManager().log(Level.SEVERE, "Error parsing objective Type of objective with ID §b" + objectiveNumber + "§c and Quest §b" + quest.getQuestName() + "§c. Objective creation skipped...");
 
@@ -315,7 +315,7 @@ public class QuestManager {
                                 main.getDataManager().setSavingEnabled(false);
                                 main.getServer().getPluginManager().disablePlugin(main);
                             }
-                            final int progressNeeded = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".progressNeeded");
+                            final int progressNeeded = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".progressNeeded", 1);
 
                             int objectiveID = -1;
                             boolean validObjectiveID = true;
@@ -335,92 +335,9 @@ public class QuestManager {
                                 Objective objective = null;
 
                                 try {
-                                    if (objectiveType == ObjectiveType.BreakBlocks) {
-                                        final Material blockToBreak = Material.valueOf(main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.blockToBreak.material"));
-                                        final boolean deductIfBlockPlaced = main.getDataManager().getQuestsData().getBoolean("quests." + questName + ".objectives." + objectiveNumber + ".specifics.deductIfBlockPlaced");
-                                        objective = new BreakBlocksObjective(main, quest, objectiveID, blockToBreak, progressNeeded, deductIfBlockPlaced);
-                                    } else if (objectiveType == ObjectiveType.CollectItems) {
-                                        final ItemStack itemToCollect = main.getDataManager().getQuestsData().getItemStack("quests." + questName + ".objectives." + objectiveNumber + ".specifics.itemToCollect.itemstack");
-                                        objective = new CollectItemsObjective(main, quest, objectiveID, itemToCollect, progressNeeded);
-                                    } else if (objectiveType == ObjectiveType.CraftItems) {
-                                        final ItemStack itemToCraft = main.getDataManager().getQuestsData().getItemStack("quests." + questName + ".objectives." + objectiveNumber + ".specifics.itemToCraft.itemstack");
-                                        objective = new CraftItemsObjective(main, quest, objectiveID, itemToCraft, progressNeeded);
-                                    } else if (objectiveType == ObjectiveType.TriggerCommand) {
-                                        final String triggerName = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.triggerName");
-                                        objective = new TriggerCommandObjective(main, quest, objectiveID, triggerName, progressNeeded);
-                                    } else if (objectiveType == ObjectiveType.OtherQuest) {
-                                        final String otherQuestName = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.otherQuestName");
-                                        final boolean countPreviousCompletions = main.getDataManager().getQuestsData().getBoolean("quests." + questName + ".objectives." + objectiveNumber + ".specifics.countPreviousCompletions");
-                                        objective = new OtherQuestObjective(main, quest, objectiveID, otherQuestName, progressNeeded, countPreviousCompletions);
-                                    } else if (objectiveType == ObjectiveType.KillMobs) {
-                                        final String mobToKill = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.mobToKill");
-                                        final int amountToKill = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.amountToKill");
-                                        objective = new KillMobsObjective(main, quest, objectiveID, mobToKill, amountToKill);
+                                    objective = objectiveType.getDeclaredConstructor(NotQuests.class, Quest.class, int.class, int.class).newInstance(main, quest, objectiveID, progressNeeded);
 
-                                        //Extras
-                                        final String nameTagContains = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".extras.nameTagContainsAny", "");
-                                        if (!nameTagContains.isBlank()) {
-                                            ((KillMobsObjective) objective).setNameTagContainsAny(nameTagContains);
-                                        }
-
-                                        final String nameTagEquals = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".extras.nameTagEquals", "");
-                                        if (!nameTagEquals.isBlank()) {
-                                            ((KillMobsObjective) objective).setNameTagEquals(nameTagEquals);
-                                        }
-                                    } else if (objectiveType == ObjectiveType.ConsumeItems) {
-                                        final ItemStack itemToConsume = main.getDataManager().getQuestsData().getItemStack("quests." + questName + ".objectives." + objectiveNumber + ".specifics.itemToConsume.itemstack");
-                                        objective = new ConsumeItemsObjective(main, quest, objectiveID, itemToConsume, progressNeeded);
-                                    } else if (objectiveType == ObjectiveType.DeliverItems) {
-                                        final ItemStack itemToCollect = main.getDataManager().getQuestsData().getItemStack("quests." + questName + ".objectives." + objectiveNumber + ".specifics.itemToCollect.itemstack");
-                                        final int recipientNPCID = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.recipientNPCID");
-
-                                        if (recipientNPCID != -1) {
-                                            objective = new DeliverItemsObjective(main, quest, objectiveID, itemToCollect, progressNeeded, recipientNPCID);
-                                        } else {
-                                            final String armorStandUUIDString = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.recipientArmorStandID");
-                                            if (armorStandUUIDString != null) {
-                                                final UUID armorStandUUID = UUID.fromString(armorStandUUIDString);
-                                                objective = new DeliverItemsObjective(main, quest, objectiveID, itemToCollect, progressNeeded, armorStandUUID);
-                                            } else {
-                                                objective = new DeliverItemsObjective(main, quest, objectiveID, itemToCollect, progressNeeded, recipientNPCID);
-                                            }
-                                        }
-                                    } else if (objectiveType == ObjectiveType.TalkToNPC) {
-                                        final int NPCtoTalkID = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.NPCtoTalkID", -1);
-                                        if (NPCtoTalkID != -1) {
-                                            objective = new TalkToNPCObjective(main, quest, objectiveID, NPCtoTalkID);
-                                        } else {
-                                            final String armorStandUUIDString = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.ArmorStandToTalkUUID");
-                                            if (armorStandUUIDString != null) {
-                                                final UUID armorStandUUID = UUID.fromString(armorStandUUIDString);
-                                                objective = new TalkToNPCObjective(main, quest, objectiveID, armorStandUUID);
-                                            } else {
-                                                objective = new TalkToNPCObjective(main, quest, objectiveID, NPCtoTalkID);
-                                            }
-
-                                        }
-                                    } else if (objectiveType == ObjectiveType.EscortNPC) {
-                                        final int NPCtoEscortID = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.NPCToEscortID");
-                                        final int destinationNPCID = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.destinationNPCID");
-                                        objective = new EscortNPCObjective(main, quest, objectiveID, NPCtoEscortID, destinationNPCID);
-                                    } else if (objectiveType == ObjectiveType.KillEliteMobs) {
-                                        final String eliteMobToKill = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.eliteMobToKill");
-                                        final int minimumLevel = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.minimumLevel");
-                                        final int maximumLevel = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.maximumLevel");
-                                        final String spawnReason = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.spawnReason");
-                                        final int minimumDamagePercentage = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.minimumDamagePercentage");
-                                        final int amountToKill = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.amountToKill");
-
-                                        objective = new KillEliteMobsObjective(main, quest, objectiveID, eliteMobToKill, minimumLevel, maximumLevel, spawnReason, minimumDamagePercentage, amountToKill);
-                                    } else if (objectiveType == ObjectiveType.ReachLocation) {
-                                        final Location minLocation = main.getDataManager().getQuestsData().getLocation("quests." + questName + ".objectives." + objectiveNumber + ".specifics.minLocation");
-                                        final Location maxLocation = main.getDataManager().getQuestsData().getLocation("quests." + questName + ".objectives." + objectiveNumber + ".specifics.maxLocation");
-                                        final String locationName = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.locationName");
-
-
-                                        objective = new ReachLocationObjective(main, quest, objectiveID, minLocation, maxLocation, locationName);
-                                    }
-                                } catch (java.lang.NullPointerException ex) {
+                                } catch (Exception ex) {
                                     main.getLogManager().log(Level.SEVERE, "Error parsing objective Type of objective with ID §b" + objectiveNumber + "§c and Quest §b" + quest.getQuestName() + "§c. Objective creation skipped...");
 
                                     ex.printStackTrace();
@@ -1266,7 +1183,7 @@ public class QuestManager {
             if (!objectiveDisplayName.equals("")) {
                 sender.sendMessage("§7§m" + activeObjective.getObjective().getObjectiveID() + ". " + activeObjective.getObjective().getObjectiveDisplayName() + ":");
             } else {
-                sender.sendMessage("§7§m" + activeObjective.getObjective().getObjectiveID() + ". " + activeObjective.getObjective().getObjectiveType().toString() + ":");
+                sender.sendMessage("§7§m" + activeObjective.getObjective().getObjectiveID() + ". " + main.getObjectiveManager().getObjectiveType(activeObjective.getObjective().getClass()) + ":");
             }
 
             if (!objectiveDescription.equals("")) {
@@ -1285,110 +1202,8 @@ public class QuestManager {
         if (completed) {
             eventualColor = "§m";
         }
+        toReturn += objective.getObjectiveTaskDescription(eventualColor);
 
-        if (objective instanceof BreakBlocksObjective breakBlocksObjective) {
-            toReturn = "    §7" + eventualColor + "Block to break: §f" + eventualColor + breakBlocksObjective.getBlockToBreak().toString();
-        } else if (objective instanceof CollectItemsObjective collectItemsObjective) {
-            toReturn = "    §7" + eventualColor + "Items to collect: §f" + eventualColor + collectItemsObjective.getItemToCollect().getType() + " (" + collectItemsObjective.getItemToCollect().getItemMeta().getDisplayName() + ")";
-        } else if (objective instanceof CraftItemsObjective craftItemsObjective) {
-            toReturn = "    §7" + eventualColor + "Items to craft: §f" + eventualColor + craftItemsObjective.getItemToCraft().getType() + " (" + craftItemsObjective.getItemToCraft().getItemMeta().getDisplayName() + ")";
-        } else if (objective instanceof TriggerCommandObjective triggerCommandObjective) {
-            toReturn = "    §7" + eventualColor + "Goal: §f" + eventualColor + triggerCommandObjective.getTriggerName();
-        } else if (objective instanceof OtherQuestObjective otherQuestObjective) {
-            toReturn = "    §7" + eventualColor + "Quest completion: §f" + eventualColor + otherQuestObjective.getOtherQuest().getQuestName();
-        } else if (objective instanceof KillMobsObjective killMobsObjective) {
-            toReturn = "    §7" + eventualColor + "Mob to kill: §f" + eventualColor + killMobsObjective.getMobToKill();
-        } else if (objective instanceof ConsumeItemsObjective consumeItemsObjective) {
-            toReturn = "    §7" + eventualColor + "Items to consume: §f" + eventualColor + consumeItemsObjective.getItemToConsume().getType() + " (" + consumeItemsObjective.getItemToConsume().getItemMeta().getDisplayName() + ")";
-        } else if (objective instanceof DeliverItemsObjective deliverItemsObjective) {
-            toReturn = "    §7" + eventualColor + "Items to deliver: §f" + eventualColor + deliverItemsObjective.getItemToDeliver().getType() + " (" + deliverItemsObjective.getItemToDeliver().getItemMeta().getDisplayName() + ")\n";
-            if (main.isCitizensEnabled() && deliverItemsObjective.getRecipientNPCID() != -1) {
-                final NPC npc = CitizensAPI.getNPCRegistry().getById(deliverItemsObjective.getRecipientNPCID());
-                if (npc != null) {
-                    toReturn += "    §7" + eventualColor + "Deliver it to §f" + eventualColor + npc.getName();
-                } else {
-                    toReturn += "    §7" + eventualColor + "The delivery NPC is currently not available!";
-                }
-            } else {
-
-                if (deliverItemsObjective.getRecipientNPCID() != -1) {
-                    toReturn += "    §cError: Citizens plugin not installed. Contact an admin.";
-                } else { //Armor Stands
-                    final UUID armorStandUUID = deliverItemsObjective.getRecipientArmorStandUUID();
-                    if (armorStandUUID != null) {
-                        toReturn += "    §7" + eventualColor + "Deliver it to §f" + eventualColor + main.getArmorStandManager().getArmorStandName(armorStandUUID);
-                    } else {
-                        toReturn += "    §7" + eventualColor + "The target Armor Stand is currently not available!";
-                    }
-                }
-
-            }
-
-        } else if (objective instanceof TalkToNPCObjective talkToNPCObjective) {
-            if (main.isCitizensEnabled() && talkToNPCObjective.getNPCtoTalkID() != -1) {
-                final NPC npc = CitizensAPI.getNPCRegistry().getById(talkToNPCObjective.getNPCtoTalkID());
-                if (npc != null) {
-                    toReturn = "    §7" + eventualColor + "Talk to §f" + eventualColor + npc.getName();
-                } else {
-                    toReturn = "    §7" + eventualColor + "The target NPC is currently not available!";
-                }
-            } else {
-                if (talkToNPCObjective.getNPCtoTalkID() != -1) {
-                    toReturn += "    §cError: Citizens plugin not installed. Contact an admin.";
-                } else { //Armor Stands
-                    final UUID armorStandUUID = talkToNPCObjective.getArmorStandUUID();
-                    if (armorStandUUID != null) {
-                        toReturn = "    §7" + eventualColor + "Talk to §f" + eventualColor + main.getArmorStandManager().getArmorStandName(armorStandUUID);
-                    } else {
-                        toReturn += "    §7" + eventualColor + "The target Armor Stand is currently not available!";
-                    }
-                }
-            }
-
-        } else if (objective instanceof EscortNPCObjective escortNPCObjective) {
-            if (main.isCitizensEnabled()) {
-                final NPC npc = CitizensAPI.getNPCRegistry().getById(escortNPCObjective.getNpcToEscortID());
-                final NPC npcDestination = CitizensAPI.getNPCRegistry().getById(escortNPCObjective.getNpcToEscortToID());
-
-                if (npc != null && npcDestination != null) {
-                    toReturn = "    §7" + eventualColor + "Escort §f" + eventualColor + npc.getName() + " §7" + eventualColor + "to §f" + eventualColor + npcDestination.getName();
-                } else {
-                    toReturn = "    §7" + eventualColor + "The target or destination NPC is currently not available!";
-                }
-            } else {
-                toReturn += "    §cError: Citizens plugin not installed. Contact an admin.";
-            }
-
-        } else if (objective instanceof KillEliteMobsObjective killEliteMobsObjective) {
-            if (!killEliteMobsObjective.getEliteMobToKillContainsName().isBlank()) {
-                toReturn = "    §7" + eventualColor + "Kill Elite Mob: §f" + eventualColor + killEliteMobsObjective.getEliteMobToKillContainsName();
-            } else {
-                toReturn = "    §7" + eventualColor + "Kill any Elite Mob!";
-            }
-            if (killEliteMobsObjective.getMinimumLevel() != -1) {
-                if (killEliteMobsObjective.getMaximumLevel() != -1) {
-                    toReturn += "\n        §7" + eventualColor + "Level: §f" + eventualColor + killEliteMobsObjective.getMinimumLevel() + "-" + killEliteMobsObjective.getMaximumLevel();
-                } else {
-                    toReturn += "\n        §7" + eventualColor + "Minimum Level: §f" + eventualColor + killEliteMobsObjective.getMinimumLevel();
-                }
-            } else {
-                if (killEliteMobsObjective.getMaximumLevel() != -1) {
-                    toReturn += "\n        §7" + eventualColor + "Maximum Level: §f" + eventualColor + killEliteMobsObjective.getMaximumLevel();
-                }
-            }
-
-            if (!killEliteMobsObjective.getSpawnReason().isBlank()) {
-                toReturn += "\n        §7" + eventualColor + "Spawned from: §f" + eventualColor + killEliteMobsObjective.getSpawnReason();
-            }
-
-            if (killEliteMobsObjective.getMinimumDamagePercentage() != -1) {
-                toReturn += "\n        §7" + eventualColor + "Inflict minimum damage: §f" + eventualColor + killEliteMobsObjective.getMinimumDamagePercentage() + "%";
-            }
-
-        } else if (objective instanceof ReachLocationObjective reachLocationObjective) {
-            toReturn = "    §7" + eventualColor + "Reach Location: §f" + eventualColor + reachLocationObjective.getLocationName();
-
-        }
         if (objective.getCompletionNPCID() != -1) {
             if (main.isCitizensEnabled()) {
                 final NPC npc = CitizensAPI.getNPCRegistry().getById(objective.getCompletionNPCID());
@@ -1417,7 +1232,7 @@ public class QuestManager {
                 if (!objectiveDisplayName.equals("")) {
                     sender.sendMessage("§e" + activeObjective.getObjective().getObjectiveID() + ". " + activeObjective.getObjective().getObjectiveDisplayName() + ":");
                 } else {
-                    sender.sendMessage("§e" + activeObjective.getObjective().getObjectiveID() + ". " + activeObjective.getObjective().getObjectiveType().toString() + ":");
+                    sender.sendMessage("§e" + activeObjective.getObjective().getObjectiveID() + ". " + main.getObjectiveManager().getObjectiveType(activeObjective.getObjective().getClass()) + ":");
                 }
 
                 if (!objectiveDescription.equals("")) {
@@ -1442,7 +1257,7 @@ public class QuestManager {
             if (!objectiveDisplayName.equals("")) {
                 sender.sendMessage("§a" + objective.getObjectiveID() + ". §e" + objectiveDisplayName);
             } else {
-                sender.sendMessage("§a" + objective.getObjectiveID() + ". §e" + objective.getObjectiveType().toString());
+                sender.sendMessage("§a" + objective.getObjectiveID() + ". §e" + main.getObjectiveManager().getObjectiveType(objective.getClass()) );
             }
 
             if (!objectiveDisplayName.equals("")) {
@@ -1464,7 +1279,7 @@ public class QuestManager {
             if (!objectiveDisplayName.equals("")) {
                 sender.sendMessage("§a" + objective.getObjectiveID() + ". §e" + objectiveDisplayName);
             } else {
-                sender.sendMessage("§a" + objective.getObjectiveID() + ". §e" + objective.getObjectiveType().toString());
+                sender.sendMessage("§a" + objective.getObjectiveID() + ". §e" + main.getObjectiveManager().getObjectiveType(objective.getClass()) );
             }
 
             if (!objectiveDisplayName.equals("")) {
@@ -1496,7 +1311,7 @@ public class QuestManager {
             if (!objectiveDisplayName.equals("")) {
                 sender.sendMessage("§e" + activeObjective.getObjective().getObjectiveID() + ". " + activeObjective.getObjective().getObjectiveDisplayName() + ":");
             } else {
-                sender.sendMessage("§e" + activeObjective.getObjective().getObjectiveID() + ". " + activeObjective.getObjective().getObjectiveType().toString() + ":");
+                sender.sendMessage("§e" + activeObjective.getObjective().getObjectiveID() + ". " + main.getObjectiveManager().getObjectiveType(activeObjective.getObjective().getClass()) + ":");
             }
 
             if (!objectiveDisplayName.equals("")) {

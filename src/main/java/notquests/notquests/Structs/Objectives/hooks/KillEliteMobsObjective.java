@@ -20,7 +20,6 @@ package notquests.notquests.Structs.Objectives.hooks;
 
 import notquests.notquests.NotQuests;
 import notquests.notquests.Structs.Objectives.Objective;
-import notquests.notquests.Structs.Objectives.ObjectiveType;
 import notquests.notquests.Structs.Quest;
 
 public class KillEliteMobsObjective extends Objective {
@@ -33,7 +32,7 @@ public class KillEliteMobsObjective extends Objective {
     private final int amountToKill;
 
     public KillEliteMobsObjective(NotQuests main, final Quest quest, final int objectiveID, String eliteMobToKillContainsName, int minimumLevel, int maximumLevel, String spawnReason, int minimumDamagePercentage, int amountToKill) {
-        super(main, quest, objectiveID, ObjectiveType.KillEliteMobs, amountToKill);
+        super(main, quest, objectiveID, amountToKill);
         this.main = main;
         this.eliteMobToKillContainsName = eliteMobToKillContainsName;
         this.minimumLevel = minimumLevel;
@@ -41,6 +40,61 @@ public class KillEliteMobsObjective extends Objective {
         this.spawnReason = spawnReason;
         this.minimumDamagePercentage = minimumDamagePercentage;
         this.amountToKill = amountToKill;
+    }
+
+    public KillEliteMobsObjective(NotQuests main, Quest quest, int objectiveNumber, int progressNeeded) {
+        super(main, quest, objectiveNumber, progressNeeded);
+        final String questName = quest.getQuestName();
+
+        this.main = main;
+        eliteMobToKillContainsName = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.eliteMobToKill");
+        minimumLevel = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.minimumLevel");
+        maximumLevel = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.maximumLevel");
+        spawnReason = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.spawnReason");
+        minimumDamagePercentage = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.minimumDamagePercentage");
+        amountToKill = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.amountToKill");
+
+    }
+
+    @Override
+    public String getObjectiveTaskDescription(String eventualColor) {
+        String toReturn = "";
+        if (!getEliteMobToKillContainsName().isBlank()) {
+            toReturn = "    §7" + eventualColor + "Kill Elite Mob: §f" + eventualColor + getEliteMobToKillContainsName();
+        } else {
+            toReturn = "    §7" + eventualColor + "Kill any Elite Mob!";
+        }
+        if (getMinimumLevel() != -1) {
+            if (getMaximumLevel() != -1) {
+                toReturn += "\n        §7" + eventualColor + "Level: §f" + eventualColor + getMinimumLevel() + "-" + getMaximumLevel();
+            } else {
+                toReturn += "\n        §7" + eventualColor + "Minimum Level: §f" + eventualColor + getMinimumLevel();
+            }
+        } else {
+            if (getMaximumLevel() != -1) {
+                toReturn += "\n        §7" + eventualColor + "Maximum Level: §f" + eventualColor + getMaximumLevel();
+            }
+        }
+
+        if (!getSpawnReason().isBlank()) {
+            toReturn += "\n        §7" + eventualColor + "Spawned from: §f" + eventualColor + getSpawnReason();
+        }
+
+        if (getMinimumDamagePercentage() != -1) {
+            toReturn += "\n        §7" + eventualColor + "Inflict minimum damage: §f" + eventualColor + getMinimumDamagePercentage() + "%";
+        }
+        return toReturn;
+    }
+
+    @Override
+    public void save() {
+        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.eliteMobToKill", getEliteMobToKillContainsName());
+        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.minimumLevel", getMinimumLevel());
+        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.maximumLevel", getMaximumLevel());
+        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.spawnReason", getSpawnReason());
+        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.minimumDamagePercentage", getMinimumDamagePercentage());
+        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.amountToKill", getAmountToKill());
+
     }
 
     public final String getEliteMobToKillContainsName() {

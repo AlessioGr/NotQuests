@@ -69,6 +69,7 @@ public final class NotQuests extends JavaPlugin {
     private LanguageManager languageManager;
     private ArmorStandManager armorStandManager;
     private PerformanceManager performanceManager;
+    private ObjectiveManager objectiveManager;
 
     //Vault
     private Economy econ = null;
@@ -219,6 +220,8 @@ public final class NotQuests extends JavaPlugin {
 
         //Create a new instance of the Quest Manager which will be re-used everywhere
         questManager = new QuestManager(this);
+
+        objectiveManager = new ObjectiveManager(this);
 
         languageManager = new LanguageManager(this);
 
@@ -539,6 +542,10 @@ public final class NotQuests extends JavaPlugin {
 
     public PerformanceManager getPerformanceManager() {
         return performanceManager;
+    }
+
+    public ObjectiveManager getObjectiveManager() {
+        return objectiveManager;
     }
 
     public MythicMobs getMythicMobs() {

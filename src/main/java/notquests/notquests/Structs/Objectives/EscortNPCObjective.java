@@ -18,8 +18,12 @@
 
 package notquests.notquests.Structs.Objectives;
 
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.npc.NPC;
 import notquests.notquests.NotQuests;
 import notquests.notquests.Structs.Quest;
+
+import java.util.UUID;
 
 public class EscortNPCObjective extends Objective {
 
@@ -28,10 +32,44 @@ public class EscortNPCObjective extends Objective {
     private final int npcToEscortToID;
 
     public EscortNPCObjective(NotQuests main, final Quest quest, final int objectiveID, final int npcToEscortID, final int npcToEscortToID) {
-        super(main, quest, objectiveID, ObjectiveType.EscortNPC, 1);
+        super(main, quest, objectiveID, 1);
         this.main = main;
         this.npcToEscortID = npcToEscortID;
         this.npcToEscortToID = npcToEscortToID;
+    }
+
+    public EscortNPCObjective(NotQuests main, Quest quest, int objectiveNumber, int progressNeeded) {
+        super(main, quest, objectiveNumber, progressNeeded);
+        final String questName = quest.getQuestName();
+        this.main = main;
+
+        npcToEscortID = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.NPCToEscortID");
+        npcToEscortToID = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.destinationNPCID");
+
+    }
+
+    @Override
+    public String getObjectiveTaskDescription(String eventualColor) {
+        String toReturn = "";
+        if (main.isCitizensEnabled()) {
+            final NPC npc = CitizensAPI.getNPCRegistry().getById(getNpcToEscortID());
+            final NPC npcDestination = CitizensAPI.getNPCRegistry().getById(getNpcToEscortToID());
+
+            if (npc != null && npcDestination != null) {
+                toReturn = "    §7" + eventualColor + "Escort §f" + eventualColor + npc.getName() + " §7" + eventualColor + "to §f" + eventualColor + npcDestination.getName();
+            } else {
+                toReturn = "    §7" + eventualColor + "The target or destination NPC is currently not available!";
+            }
+        } else {
+            toReturn += "    §cError: Citizens plugin not installed. Contact an admin.";
+        }
+        return toReturn;
+    }
+
+    @Override
+    public void save() {
+        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.NPCToEscortID", getNpcToEscortID());
+        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.destinationNPCID", getNpcToEscortToID());
     }
 
     public final int getNpcToEscortID() {

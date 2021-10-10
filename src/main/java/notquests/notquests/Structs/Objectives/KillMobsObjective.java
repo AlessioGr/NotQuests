@@ -25,23 +25,59 @@ public class KillMobsObjective extends Objective {
 
     private final NotQuests main;
     private final String mobToKillType;
-    private final int amountToKill;
     private String nameTagContainsAny = "";
     private String nameTagEquals = "";
 
     public KillMobsObjective(NotQuests main, final Quest quest, final int objectiveID, String mobToKill, int amountToKill) {
-        super(main, quest, objectiveID, ObjectiveType.KillMobs, amountToKill);
+        super(main, quest, objectiveID, amountToKill);
         this.main = main;
-        this.amountToKill = amountToKill;
         this.mobToKillType = mobToKill;
+    }
+
+    public KillMobsObjective(NotQuests main, Quest quest, int objectiveNumber, int progressNeeded) {
+        super(main, quest, objectiveNumber, progressNeeded);
+        final String questName = quest.getQuestName();
+
+        this.main = main;
+        mobToKillType = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.mobToKill");
+
+        //Extras
+        final String nameTagContains = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".extras.nameTagContainsAny", "");
+        if (!nameTagContains.isBlank()) {
+            setNameTagContainsAny(nameTagContains);
+        }
+
+        final String nameTagEquals = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".extras.nameTagEquals", "");
+        if (!nameTagEquals.isBlank()) {
+            setNameTagEquals(nameTagEquals);
+        }
+    }
+
+    @Override
+    public String getObjectiveTaskDescription(String eventualColor) {
+        return "    §7" + eventualColor + "Mob to kill: §f" + eventualColor + getMobToKill();
+    }
+
+    @Override
+    public void save() {
+        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.mobToKill", getMobToKill());
+        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.amountToKill", getAmountToKill());
+
+        //Extra args
+        if (!getNameTagContainsAny().isBlank()) {
+            main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".extras.nameTagContainsAny", getNameTagContainsAny());
+        }
+        if (!getNameTagEquals().isBlank()) {
+            main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".extras.nameTagEquals", getNameTagEquals());
+        }
     }
 
     public final String getMobToKill() {
         return mobToKillType;
     }
 
-    public final int getAmountToKill() {
-        return amountToKill;
+    public final long getAmountToKill() {
+        return super.getProgressNeeded();
     }
 
 

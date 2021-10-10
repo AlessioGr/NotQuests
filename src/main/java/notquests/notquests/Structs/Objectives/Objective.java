@@ -24,8 +24,7 @@ import notquests.notquests.Structs.Quest;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class Objective {
-    private final ObjectiveType objectiveType;
+public abstract class Objective {
     private final ArrayList<Objective> dependantObjectives;
     private final long progressNeeded;
     private final Quest quest;
@@ -36,14 +35,16 @@ public class Objective {
     private int completionNPCID = -1;
     private UUID completionArmorStandUUID = null;
 
-    public Objective(NotQuests main, Quest quest, int objectiveID, ObjectiveType objectiveType, int progressNeeded) {
+    public Objective(NotQuests main, Quest quest, int objectiveID, int progressNeeded) {
         this.main = main;
         this.quest = quest;
         this.objectiveID = objectiveID;
-        this.objectiveType = objectiveType;
         this.progressNeeded = progressNeeded;
         dependantObjectives = new ArrayList<>();
     }
+
+
+
 
     public final int getCompletionNPCID() {
         return completionNPCID;
@@ -73,10 +74,6 @@ public class Objective {
 
     public final int getObjectiveID() {
         return objectiveID;
-    }
-
-    public final ObjectiveType getObjectiveType() {
-        return objectiveType;
     }
 
     public final long getProgressNeeded() {
@@ -172,6 +169,10 @@ public class Objective {
     public final Quest getQuest() {
         return quest;
     }
+
+    public abstract String getObjectiveTaskDescription(final String eventualColor);
+
+    public abstract void save();
 
 
 }

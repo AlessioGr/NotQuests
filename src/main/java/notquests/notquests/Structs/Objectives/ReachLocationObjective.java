@@ -28,11 +28,34 @@ public class ReachLocationObjective extends Objective {
     private final String locationName;
 
     public ReachLocationObjective(NotQuests main, final Quest quest, final int objectiveID, final Location minLocation, final Location maxLocation, final String locationName) {
-        super(main, quest, objectiveID, ObjectiveType.ReachLocation, 1);
+        super(main, quest, objectiveID, 1);
         this.main = main;
         this.min = minLocation;
         this.max = maxLocation;
         this.locationName = locationName;
+    }
+
+    public ReachLocationObjective(NotQuests main, Quest quest, int objectiveNumber, int progressNeeded) {
+        super(main, quest, objectiveNumber, progressNeeded);
+        final String questName = quest.getQuestName();
+        this.main = main;
+
+        min = main.getDataManager().getQuestsData().getLocation("quests." + questName + ".objectives." + objectiveNumber + ".specifics.minLocation");
+        max = main.getDataManager().getQuestsData().getLocation("quests." + questName + ".objectives." + objectiveNumber + ".specifics.maxLocation");
+        locationName = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.locationName");
+
+    }
+
+    @Override
+    public String getObjectiveTaskDescription(String eventualColor) {
+        return "    §7" + eventualColor + "Reach Location: §f" + eventualColor + getLocationName();
+    }
+
+    @Override
+    public void save() {
+        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.minLocation", getMinLocation());
+        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.maxLocation", getMaxLocation());
+        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.locationName", getLocationName());
     }
 
     public final Location getMinLocation() {

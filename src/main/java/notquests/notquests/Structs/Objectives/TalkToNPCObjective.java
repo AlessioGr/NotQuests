@@ -18,6 +18,8 @@
 
 package notquests.notquests.Structs.Objectives;
 
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.npc.NPC;
 import notquests.notquests.NotQuests;
 import notquests.notquests.Structs.Quest;
 
@@ -30,18 +32,68 @@ public class TalkToNPCObjective extends Objective {
 
     private final UUID armorStandUUID;
 
-    public TalkToNPCObjective(NotQuests main, final Quest quest, final int objectiveID, final int NPCtoTalkID) {
-        super(main, quest, objectiveID, ObjectiveType.TalkToNPC, 1);
+    public TalkToNPCObjective(NotQuests main, final Quest quest, final int objectiveID, final int NPCtoTalkID, final UUID armorStandUUID) {
+        super(main, quest, objectiveID, 1);
         this.main = main;
         this.NPCtoTalkID = NPCtoTalkID;
-        this.armorStandUUID = null;
+        this.armorStandUUID = armorStandUUID;
     }
 
-    public TalkToNPCObjective(NotQuests main, final Quest quest, final int objectiveID, final UUID armorStandUUID) {
-        super(main, quest, objectiveID, ObjectiveType.TalkToNPC, 1);
+
+
+
+    public TalkToNPCObjective(NotQuests main, Quest quest, int objectiveNumber, int progressNeeded) {
+        super(main, quest, objectiveNumber, progressNeeded);
+        final String questName = quest.getQuestName();
         this.main = main;
-        this.NPCtoTalkID = -1;
-        this.armorStandUUID = armorStandUUID;
+
+        NPCtoTalkID = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.NPCtoTalkID", -1);
+        if (NPCtoTalkID != -1) {
+            armorStandUUID = null;
+        } else {
+            final String armorStandUUIDString = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.ArmorStandToTalkUUID");
+            if (armorStandUUIDString != null) {
+                armorStandUUID = UUID.fromString(armorStandUUIDString);
+            } else {
+                armorStandUUID = null;
+            }
+
+        }
+    }
+
+    @Override
+    public String getObjectiveTaskDescription(String eventualColor) {
+        String toReturn = "";
+        if (main.isCitizensEnabled() && getNPCtoTalkID() != -1) {
+            final NPC npc = CitizensAPI.getNPCRegistry().getById(getNPCtoTalkID());
+            if (npc != null) {
+                toReturn = "    §7" + eventualColor + "Talk to §f" + eventualColor + npc.getName();
+            } else {
+                toReturn = "    §7" + eventualColor + "The target NPC is currently not available!";
+            }
+        } else {
+            if (getNPCtoTalkID() != -1) {
+                toReturn += "    §cError: Citizens plugin not installed. Contact an admin.";
+            } else { //Armor Stands
+                final UUID armorStandUUID = getArmorStandUUID();
+                if (armorStandUUID != null) {
+                    toReturn = "    §7" + eventualColor + "Talk to §f" + eventualColor + main.getArmorStandManager().getArmorStandName(armorStandUUID);
+                } else {
+                    toReturn += "    §7" + eventualColor + "The target Armor Stand is currently not available!";
+                }
+            }
+        }
+        return toReturn;
+    }
+
+    @Override
+    public void save() {
+        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.NPCtoTalkID", getNPCtoTalkID());
+        if (getArmorStandUUID() != null) {
+            main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.ArmorStandToTalkUUID", getArmorStandUUID().toString());
+        } else {
+            main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.ArmorStandToTalkUUID", null);
+        }
     }
 
 

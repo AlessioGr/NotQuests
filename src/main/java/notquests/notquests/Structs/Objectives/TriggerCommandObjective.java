@@ -29,9 +29,28 @@ public class TriggerCommandObjective extends Objective {
 
 
     public TriggerCommandObjective(NotQuests main, final Quest quest, final int objectiveID, String triggerName, int amountToTrigger) {
-        super(main, quest, objectiveID, ObjectiveType.TriggerCommand, amountToTrigger);
+        super(main, quest, objectiveID, amountToTrigger);
         this.triggerName = triggerName;
         this.main = main;
+    }
+
+    public TriggerCommandObjective(NotQuests main, Quest quest, int objectiveNumber, int progressNeeded) {
+        super(main, quest, objectiveNumber, progressNeeded);
+        final String questName = quest.getQuestName();
+
+        this.main = main;
+        triggerName = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.triggerName");
+
+    }
+
+    @Override
+    public String getObjectiveTaskDescription(String eventualColor) {
+        return "    §7" + eventualColor + "Goal: §f" + eventualColor + getTriggerName();
+    }
+
+    @Override
+    public void save() {
+        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.triggerName", getTriggerName());
     }
 
     public final String getTriggerName() {

@@ -22,25 +22,44 @@ import notquests.notquests.NotQuests;
 import notquests.notquests.Structs.Quest;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.UUID;
+
 public class ConsumeItemsObjective extends Objective {
 
     private final NotQuests main;
     private final ItemStack itemToConsume;
-    private final int amountToConsume;
 
     public ConsumeItemsObjective(NotQuests main, final Quest quest, final int objectiveID, ItemStack itemToConsume, int amountToConsume) {
-        super(main, quest, objectiveID, ObjectiveType.ConsumeItems, amountToConsume);
+        super(main, quest, objectiveID, amountToConsume);
         this.main = main;
         this.itemToConsume = itemToConsume;
-        this.amountToConsume = amountToConsume;
+    }
+
+    public ConsumeItemsObjective(NotQuests main, Quest quest, int objectiveNumber, int progressNeeded) {
+        super(main, quest, objectiveNumber, progressNeeded);
+        final String questName = quest.getQuestName();
+
+        this.main = main;
+        itemToConsume = main.getDataManager().getQuestsData().getItemStack("quests." + questName + ".objectives." + objectiveNumber + ".specifics.itemToConsume.itemstack");
+
+    }
+
+    @Override
+    public String getObjectiveTaskDescription(String eventualColor) {
+        return "    §7" + eventualColor + "Items to consume: §f" + eventualColor + getItemToConsume().getType() + " (" + getItemToConsume().getItemMeta().getDisplayName() + ")";
+    }
+
+    @Override
+    public void save() {
+        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.itemToConsume.itemstack", getItemToConsume());
     }
 
     public final ItemStack getItemToConsume() {
         return itemToConsume;
     }
 
-    public final int getAmountToConsume() {
-        return amountToConsume;
+    public final long getAmountToConsume() {
+        return super.getProgressNeeded();
     }
 
 

@@ -20,27 +20,44 @@ package notquests.notquests.Structs.Objectives;
 
 import notquests.notquests.NotQuests;
 import notquests.notquests.Structs.Quest;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 public class CollectItemsObjective extends Objective {
 
     private final NotQuests main;
     private final ItemStack itemToCollect;
-    private final int amountToCollect;
 
     public CollectItemsObjective(NotQuests main, final Quest quest, final int objectiveID, ItemStack itemToCollect, int amountToCollect) {
-        super(main, quest, objectiveID, ObjectiveType.CollectItems, amountToCollect);
+        super(main, quest, objectiveID, amountToCollect);
         this.main = main;
         this.itemToCollect = itemToCollect;
-        this.amountToCollect = amountToCollect;
+    }
+
+    public CollectItemsObjective(NotQuests main, Quest quest, int objectiveNumber, int progressNeeded) {
+        super(main, quest, objectiveNumber, progressNeeded);
+        final String questName = quest.getQuestName();
+
+        this.main = main;
+        itemToCollect = main.getDataManager().getQuestsData().getItemStack("quests." + questName + ".objectives." + objectiveNumber + ".specifics.itemToCollect.itemstack");
+   }
+
+    @Override
+    public String getObjectiveTaskDescription(String eventualColor) {
+        return "    §7" + eventualColor + "Items to collect: §f" + eventualColor + getItemToCollect().getType() + " (" + getItemToCollect().getItemMeta().getDisplayName() + ")";
+    }
+
+    @Override
+    public void save() {
+        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.itemToCollect.itemstack", getItemToCollect());
     }
 
     public final ItemStack getItemToCollect() {
         return itemToCollect;
     }
 
-    public final int getAmountToCollect() {
-        return amountToCollect;
+    public final long getAmountToCollect() {
+        return super.getProgressNeeded();
     }
 
 

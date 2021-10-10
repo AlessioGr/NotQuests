@@ -20,7 +20,6 @@ package notquests.notquests.Managers;
 
 import notquests.notquests.NotQuests;
 import notquests.notquests.Structs.*;
-import notquests.notquests.Structs.Objectives.ObjectiveType;
 import notquests.notquests.Structs.Triggers.ActiveTrigger;
 import notquests.notquests.Structs.Triggers.TriggerTypes.TriggerType;
 import org.bukkit.entity.Player;
@@ -164,13 +163,12 @@ public class QuestPlayerManager {
                         final boolean hasBeenCompleted = activeQuestObjectiveResults.getBoolean("HasBeenCompleted");
 
                         if (objectiveTypeString != null) {
-                            final ObjectiveType objectiveType = ObjectiveType.valueOf(objectiveTypeString);
                             final int objectiveID = activeQuestObjectiveResults.getInt("ObjectiveID");
 
 
                             //So the active objectives are already there - we just need to fill them with progress data.
                             for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-                                if (activeObjective.getObjective().getObjectiveType().equals(objectiveType) && activeObjective.getObjectiveID() == objectiveID) {
+                                if (activeObjective.getObjective().getClass() == main.getObjectiveManager().getObjectiveClass(objectiveTypeString) && activeObjective.getObjectiveID() == objectiveID) {
                                     //System.out.println("§4§lHAS BEEN COMPLETED: §b" + hasBeenCompleted + " §c- ID: §b" + objectiveID);
                                     activeObjective.setHasBeenCompleted(hasBeenCompleted);
                                     if (activeObjective.getObjective().getCompletionNPCID() == -1) { //Complete automatically
@@ -264,11 +262,11 @@ public class QuestPlayerManager {
 
                     //Active Objectives
                     for (ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-                        main.getDataManager().getDatabaseStatement().executeUpdate("INSERT INTO ActiveObjectives (ObjectiveType, QuestName, PlayerUUID, CurrentProgress, ObjectiveID, HasBeenCompleted) VALUES ('" + activeObjective.getObjective().getObjectiveType().toString() + "', '" + activeObjective.getActiveQuest().getQuest().getQuestName() + "', '" + questPlayerUUID + "', " + activeObjective.getCurrentProgress() + ", " + activeObjective.getObjectiveID() + ", " + activeObjective.hasBeenCompleted() + ");");
+                        main.getDataManager().getDatabaseStatement().executeUpdate("INSERT INTO ActiveObjectives (ObjectiveType, QuestName, PlayerUUID, CurrentProgress, ObjectiveID, HasBeenCompleted) VALUES ('" + main.getObjectiveManager().getObjectiveType(activeObjective.getObjective().getClass()) + "', '" + activeObjective.getActiveQuest().getQuest().getQuestName() + "', '" + questPlayerUUID + "', " + activeObjective.getCurrentProgress() + ", " + activeObjective.getObjectiveID() + ", " + activeObjective.hasBeenCompleted() + ");");
                     }
                     //Active Objectives from completed Objective list
                     for (ActiveObjective completedObjective : activeQuest.getCompletedObjectives()) {
-                        main.getDataManager().getDatabaseStatement().executeUpdate("INSERT INTO ActiveObjectives (ObjectiveType, QuestName, PlayerUUID, CurrentProgress, ObjectiveID, HasBeenCompleted) VALUES ('" + completedObjective.getObjective().getObjectiveType().toString() + "', '" + completedObjective.getActiveQuest().getQuest().getQuestName() + "', '" + questPlayerUUID + "', " + completedObjective.getCurrentProgress() + ", " + completedObjective.getObjectiveID() + ", " + completedObjective.hasBeenCompleted() + ");");
+                        main.getDataManager().getDatabaseStatement().executeUpdate("INSERT INTO ActiveObjectives (ObjectiveType, QuestName, PlayerUUID, CurrentProgress, ObjectiveID, HasBeenCompleted) VALUES ('" + main.getObjectiveManager().getObjectiveType(completedObjective.getObjective().getClass()) + "', '" + completedObjective.getActiveQuest().getQuest().getQuestName() + "', '" + questPlayerUUID + "', " + completedObjective.getCurrentProgress() + ", " + completedObjective.getObjectiveID() + ", " + completedObjective.hasBeenCompleted() + ");");
                     }
                 }
 

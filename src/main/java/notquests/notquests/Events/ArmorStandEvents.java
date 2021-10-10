@@ -264,7 +264,7 @@ public class ArmorStandEvents implements Listener {
 
                         final Quest quest = main.getQuestManager().getQuest(questName);
                         if (quest != null) {
-                            TalkToNPCObjective talkToNPCObjective = new TalkToNPCObjective(main, quest, quest.getObjectives().size() + 1, armorStand.getUniqueId());
+                            TalkToNPCObjective talkToNPCObjective = new TalkToNPCObjective(main, quest, quest.getObjectives().size() + 1, -1, armorStand.getUniqueId());
                             quest.addObjective(talkToNPCObjective, true);
                             player.sendMessage("§aObjective successfully added to quest §b" + quest.getQuestName() + "§a!");
 

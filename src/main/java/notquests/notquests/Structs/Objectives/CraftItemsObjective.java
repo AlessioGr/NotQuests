@@ -26,21 +26,38 @@ public class CraftItemsObjective extends Objective {
 
     private final NotQuests main;
     private final ItemStack itemToCraft;
-    private final int amountToCraft;
 
     public CraftItemsObjective(NotQuests main, final Quest quest, final int objectiveID, ItemStack itemToCraft, int amountToCraft) {
-        super(main, quest, objectiveID, ObjectiveType.CraftItems, amountToCraft);
+        super(main, quest, objectiveID, amountToCraft);
         this.main = main;
         this.itemToCraft = itemToCraft;
-        this.amountToCraft = amountToCraft;
+    }
+
+    public CraftItemsObjective(NotQuests main, Quest quest, int objectiveNumber, int progressNeeded) {
+        super(main, quest, objectiveNumber, progressNeeded);
+        final String questName = quest.getQuestName();
+
+        this.main = main;
+        itemToCraft = main.getDataManager().getQuestsData().getItemStack("quests." + questName + ".objectives." + objectiveNumber + ".specifics.itemToCraft.itemstack");
+
+    }
+
+    @Override
+    public String getObjectiveTaskDescription(String eventualColor) {
+        return "    §7" + eventualColor + "Items to craft: §f" + eventualColor + getItemToCraft().getType() + " (" + getItemToCraft().getItemMeta().getDisplayName() + ")";
+    }
+
+    @Override
+    public void save() {
+        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.itemToCraft.itemstack", getItemToCraft());
     }
 
     public final ItemStack getItemToCraft() {
         return itemToCraft;
     }
 
-    public final int getAmountToCraft() {
-        return amountToCraft;
+    public final long getAmountToCraft() {
+        return super.getProgressNeeded();
     }
 
 

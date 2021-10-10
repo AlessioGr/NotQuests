@@ -123,73 +123,13 @@ public class Quest {
             objectives.add(objective);
 
             if (save) {
-                main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".objectiveType", objective.getObjectiveType().toString());
+                objective.save();
+
+                main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".objectiveType", main.getObjectiveManager().getObjectiveType(objective.getClass()));
                 main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".progressNeeded", objective.getProgressNeeded());
 
 
-                if (objective instanceof final BreakBlocksObjective breakBlocksObjective) {
-                    main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.blockToBreak.material", breakBlocksObjective.getBlockToBreak().toString());
-                    main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.deductIfBlockPlaced", breakBlocksObjective.willDeductIfBlockPlaced());
-                } else if (objective instanceof final CollectItemsObjective collectItemsObjective) {
-                    main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.itemToCollect.itemstack", collectItemsObjective.getItemToCollect());
-                } else if (objective instanceof final CraftItemsObjective craftItemsObjective) {
-                    main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.itemToCraft.itemstack", craftItemsObjective.getItemToCraft());
-                } else if (objective instanceof final TriggerCommandObjective triggerCommandObjective) {
-                    main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.triggerName", triggerCommandObjective.getTriggerName());
 
-                } else if (objective instanceof final OtherQuestObjective otherQuestObjective) {
-                    main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.otherQuestName", otherQuestObjective.getOtherQuestName());
-                    main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.countPreviousCompletions", otherQuestObjective.isCountPreviousCompletions());
-                } else if (objective instanceof final KillMobsObjective killMobsObjective) {
-                    main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.mobToKill", killMobsObjective.getMobToKill());
-                    main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.amountToKill", killMobsObjective.getAmountToKill());
-
-                    //Extra args
-                    if (!killMobsObjective.getNameTagContainsAny().isBlank()) {
-                        main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".extras.nameTagContainsAny", killMobsObjective.getNameTagContainsAny());
-                    }
-                    if (!killMobsObjective.getNameTagEquals().isBlank()) {
-                        main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".extras.nameTagEquals", killMobsObjective.getNameTagEquals());
-                    }
-                } else if (objective instanceof final ConsumeItemsObjective consumeItemObjective) {
-                    main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.itemToConsume.itemstack", consumeItemObjective.getItemToConsume());
-                } else if (objective instanceof final DeliverItemsObjective deliverItemsObjective) {
-                    main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.itemToCollect.itemstack", deliverItemsObjective.getItemToDeliver());
-
-                    main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.recipientNPCID", deliverItemsObjective.getRecipientNPCID());
-                    if (deliverItemsObjective.getRecipientArmorStandUUID() != null) {
-                        main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.recipientArmorStandID", deliverItemsObjective.getRecipientArmorStandUUID().toString());
-                    } else {
-                        main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.recipientArmorStandID", null);
-                    }
-
-                } else if (objective instanceof final TalkToNPCObjective talkToNPCObjective) {
-                    main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.NPCtoTalkID", talkToNPCObjective.getNPCtoTalkID());
-                    if (talkToNPCObjective.getArmorStandUUID() != null) {
-                        main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.ArmorStandToTalkUUID", talkToNPCObjective.getArmorStandUUID().toString());
-                    } else {
-                        main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.ArmorStandToTalkUUID", null);
-                    }
-                } else if (objective instanceof final EscortNPCObjective escortNPCObjective) {
-                    main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.NPCToEscortID", escortNPCObjective.getNpcToEscortID());
-                    main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.destinationNPCID", escortNPCObjective.getNpcToEscortToID());
-                } else if (objective instanceof final KillEliteMobsObjective killEliteMobsObjective) {
-                    main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.eliteMobToKill", killEliteMobsObjective.getEliteMobToKillContainsName());
-                    main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.minimumLevel", killEliteMobsObjective.getMinimumLevel());
-                    main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.maximumLevel", killEliteMobsObjective.getMaximumLevel());
-                    main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.spawnReason", killEliteMobsObjective.getSpawnReason());
-                    main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.minimumDamagePercentage", killEliteMobsObjective.getMinimumDamagePercentage());
-                    main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.amountToKill", killEliteMobsObjective.getAmountToKill());
-
-                } else if (objective instanceof final ReachLocationObjective reachLocationObjective) {
-                    main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.minLocation", reachLocationObjective.getMinLocation());
-                    main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.maxLocation", reachLocationObjective.getMaxLocation());
-                    main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".specifics.locationName", reachLocationObjective.getLocationName());
-
-                } else {
-                    main.getLogManager().log(Level.WARNING, "ERROR: Objective could not be saved, because the objective type was not recognized.");
-
-                }
             }
 
         } else {

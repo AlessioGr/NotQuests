@@ -82,7 +82,7 @@ public class ObjectivesAdminCommand {
                 final Objective objective = quest.getObjectiveFromID(objectiveID);
                 if (objective != null) {
                     sender.sendMessage("§eInformation of objective with the ID §b" + objectiveID + " §efrom quest §b" + quest.getQuestName() + "§e:");
-                    sender.sendMessage("§aObjective Type: §b" + objective.getObjectiveType().toString());
+                    sender.sendMessage("§aObjective Type: §b" + main.getObjectiveManager().getObjectiveType(objective.getClass()) );
                     sender.sendMessage("§aObjective Content: ");
 
                     sender.sendMessage(main.getQuestManager().getObjectiveTaskDescription(objective, false));
@@ -93,7 +93,7 @@ public class ObjectivesAdminCommand {
                     sender.sendMessage("§aObjective Dependencies:");
                     int counter = 1;
                     for (final Objective dependantObjective : objective.getDependantObjectives()) {
-                        sender.sendMessage("    §e" + counter + ". Type: §f" + dependantObjective.getObjectiveType() + " §eQuest Name: §f" + quest.getQuestName() + " §eID: §f" + dependantObjective.getObjectiveID());
+                        sender.sendMessage("    §e" + counter + ". Type: §f" + main.getObjectiveManager().getObjectiveType(dependantObjective.getClass()) + " §eQuest Name: §f" + quest.getQuestName() + " §eID: §f" + dependantObjective.getObjectiveID());
                         counter++;
                     }
 
@@ -121,7 +121,7 @@ public class ObjectivesAdminCommand {
                         if (npc != null) {
 
 
-                            TalkToNPCObjective talkToNPCObjective = new TalkToNPCObjective(main, quest, quest.getObjectives().size() + 1, NPCID);
+                            TalkToNPCObjective talkToNPCObjective = new TalkToNPCObjective(main, quest, quest.getObjectives().size() + 1, NPCID, null);
                             quest.addObjective(talkToNPCObjective, true);
                             sender.sendMessage("§aObjective successfully added to quest §b" + quest.getQuestName() + "§a!");
 

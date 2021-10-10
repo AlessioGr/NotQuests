@@ -734,7 +734,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                             if (!activeObjective.getObjective().getObjectiveDisplayName().isBlank()) {
                                                 nameToDisplay = activeObjective.getObjective().getObjectiveDisplayName();
                                             } else {
-                                                nameToDisplay = activeObjective.getObjective().getObjectiveType().toString();
+                                                nameToDisplay = main.getObjectiveManager().getObjectiveType(activeObjective.getObjective().getClass());
                                             }
                                             String descriptionToDisplay = main.getLanguageManager().getString("gui.progress.button.unlockedObjective.description-empty");
                                             if (!activeObjective.getObjective().getObjectiveDescription().isBlank()) {
@@ -791,7 +791,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                         if (!activeObjective.getObjective().getObjectiveDisplayName().isBlank()) {
                                             nameToDisplay = activeObjective.getObjective().getObjectiveDisplayName();
                                         } else {
-                                            nameToDisplay = activeObjective.getObjective().getObjectiveType().toString();
+                                            nameToDisplay = main.getObjectiveManager().getObjectiveType(activeObjective.getObjective().getClass());
                                         }
                                         String descriptionToDisplay = main.getLanguageManager().getString("gui.progress.button.completedObjective.description-empty");
                                         if (!activeObjective.getObjective().getObjectiveDescription().isBlank()) {

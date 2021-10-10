@@ -21,7 +21,7 @@ package notquests.notquests.Structs.Rewards;
 import notquests.notquests.Structs.Quest;
 import org.bukkit.entity.Player;
 
-public class Reward {
+public abstract class Reward {
     private final RewardType rewardType;
 
     public Reward(final RewardType rewardType) {
@@ -32,7 +32,5 @@ public class Reward {
         return rewardType;
     }
 
-    public void giveReward(final Player player, final Quest quest) {
-
-    }
+    public abstract void giveReward(final Player player, final Quest quest);
 }
