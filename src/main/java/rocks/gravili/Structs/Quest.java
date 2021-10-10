@@ -22,16 +22,13 @@ import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
 import rocks.gravili.Hooks.Citizens.QuestGiverNPCTrait;
 import rocks.gravili.NotQuests;
-import rocks.gravili.Structs.Objectives.*;
+import rocks.gravili.Structs.Objectives.Objective;
 import rocks.gravili.Structs.Requirements.*;
 import rocks.gravili.Structs.Rewards.*;
 import rocks.gravili.Structs.Triggers.Trigger;
 import rocks.gravili.Structs.Triggers.TriggerTypes.NPCDeathTrigger;
 import rocks.gravili.Structs.Triggers.TriggerTypes.WorldEnterTrigger;
 import rocks.gravili.Structs.Triggers.TriggerTypes.WorldLeaveTrigger;
-import rocks.gravili.Structs.Objectives.Objective;
-import rocks.gravili.Structs.Requirements.*;
-import rocks.gravili.Structs.Rewards.*;
 
 import java.util.ArrayList;
 import java.util.logging.Level;
