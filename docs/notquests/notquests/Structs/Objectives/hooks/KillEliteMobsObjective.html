@@ -7,7 +7,7 @@
     <meta content="width=device-width, initial-scale=1" name="viewport">
     <meta content="text/html; charset=utf8" http-equiv="Content-Type">
     <meta content="2021-10-04" name="dc.created">
-    <meta content="declaration: package: notquests.notquests.Structs.Objectives.hooks, class: KillEliteMobsObjective"
+    <meta content="declaration: package: rocks.gravili.Structs.Objectives.hooks, class: KillEliteMobsObjective"
           name="description">
     <meta content="javadoc/ClassWriterImpl" name="generator">
     <link href="../../../../../stylesheet.css" rel="stylesheet" title="Style" type="text/css">
@@ -76,15 +76,15 @@ loadScripts(document, 'script');
             <!-- ======== START OF CLASS DATA ======== -->
             <div class="header">
                 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a
-                        href="package-summary.html">notquests.notquests.Structs.Objectives.hooks</a></div>
+                        href="package-summary.html">rocks.gravili.Structs.Objectives.hooks</a></div>
                 <h1 class="title" title="Class KillEliteMobsObjective">Class KillEliteMobsObjective</h1>
             </div>
             <div class="inheritance" title="Inheritance Tree"><a class="external-link"
                                                                  href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html"
                                                                  title="class or interface in java.lang">java.lang.Object</a>
                 <div class="inheritance"><a href="../Objective.html"
-                                            title="class in notquests.notquests.Structs.Objectives">notquests.notquests.Structs.Objectives.Objective</a>
-                    <div class="inheritance">notquests.notquests.Structs.Objectives.hooks.KillEliteMobsObjective</div>
+                                            title="class in rocks.gravili.Structs.Objectives">Objective</a>
+                    <div class="inheritance">KillEliteMobsObjective</div>
                 </div>
             </div>
             <section class="description">
@@ -92,7 +92,7 @@ loadScripts(document, 'script');
                 <div class="type-signature"><span class="modifiers">public class </span><span
                         class="element-name type-name-label">KillEliteMobsObjective</span>
                     <span class="extends-implements">extends <a href="../Objective.html"
-                                                                title="class in notquests.notquests.Structs.Objectives">Objective</a></span>
+                                                                title="class in rocks.gravili.Structs.Objectives">Objective</a></span>
                 </div>
             </section>
             <section class="summary">
@@ -155,10 +155,10 @@ loadScripts(document, 'script');
                                 <div class="table-header col-first">Constructor</div>
                                 <div class="table-header col-last">Description</div>
                                 <div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a
-                                        href="#%3Cinit%3E(notquests.notquests.NotQuests,notquests.notquests.Structs.Quest,int,java.lang.String,int,int,java.lang.String,int,int)">KillEliteMobsObjective</a></span>&#8203;(<a
+                                        href="#%3Cinit%3E(NotQuests,Quest,int,java.lang.String,int,int,java.lang.String,int,int)">KillEliteMobsObjective</a></span>&#8203;(<a
                                         href="../../../NotQuests.html"
                                         title="class in notquests.notquests">NotQuests</a>&nbsp;main,
-                                    <a href="../../Quest.html" title="class in notquests.notquests.Structs">Quest</a>&nbsp;quest,
+                                    <a href="../../Quest.html" title="class in rocks.gravili.Structs">Quest</a>&nbsp;quest,
                                     int&nbsp;objectiveID,
                                     <a class="external-link"
                                        href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html"
@@ -260,12 +260,12 @@ loadScripts(document, 'script');
                                 </div>
                             </div>
                             <div class="inherited-list">
-                                <h3 id="methods.inherited.from.class.notquests.notquests.Structs.Objectives.Objective">
-                                    Methods inherited from class&nbsp;notquests.notquests.Structs.Objectives.<a
+                                <h3 id="methods.inherited.from.class.Objective">
+                                    Methods inherited from class&nbsp;rocks.gravili.Structs.Objectives.<a
                                         href="../Objective.html"
-                                        title="class in notquests.notquests.Structs.Objectives">Objective</a></h3>
+                                        title="class in rocks.gravili.Structs.Objectives">Objective</a></h3>
                                 <code><a
-                                        href="../Objective.html#addDependantObjective(notquests.notquests.Structs.Objectives.Objective,boolean)">addDependantObjective</a>,
+                                        href="../Objective.html#addDependantObjective(Objective,boolean)">addDependantObjective</a>,
                                     <a href="../Objective.html#clearDependantObjectives()">clearDependantObjectives</a>,
                                     <a href="../Objective.html#getCompletionArmorStandUUID()">getCompletionArmorStandUUID</a>,
                                     <a href="../Objective.html#getCompletionNPCID()">getCompletionNPCID</a>, <a
@@ -277,7 +277,7 @@ loadScripts(document, 'script');
                                             href="../Objective.html#getObjectiveType()">getObjectiveType</a>, <a
                                             href="../Objective.html#getProgressNeeded()">getProgressNeeded</a>, <a
                                             href="../Objective.html#getQuest()">getQuest</a>, <a
-                                            href="../Objective.html#removeDependantObjective(notquests.notquests.Structs.Objectives.Objective,boolean)">removeDependantObjective</a>,
+                                            href="../Objective.html#removeDependantObjective(Objective,boolean)">removeDependantObjective</a>,
                                     <a href="../Objective.html#removeObjectiveDescription(boolean)">removeObjectiveDescription</a>,
                                     <a href="../Objective.html#removeObjectiveDisplayName(boolean)">removeObjectiveDisplayName</a>,
                                     <a href="../Objective.html#setCompletionArmorStandUUID(java.util.UUID,boolean)">setCompletionArmorStandUUID</a>,
@@ -400,13 +400,13 @@ loadScripts(document, 'script');
                             <ul class="member-list">
                                 <li>
                                     <section class="detail"
-                                             id="&lt;init&gt;(notquests.notquests.NotQuests,notquests.notquests.Structs.Quest,int,java.lang.String,int,int,java.lang.String,int,int)">
+                                             id="&lt;init&gt;(NotQuests,Quest,int,java.lang.String,int,int,java.lang.String,int,int)">
                                         <h3>KillEliteMobsObjective</h3>
                                         <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span
                                                 class="element-name">KillEliteMobsObjective</span>&#8203;<span
                                                 class="parameters">(<a href="../../../NotQuests.html"
                                                                        title="class in notquests.notquests">NotQuests</a>&nbsp;main,
- <a href="../../Quest.html" title="class in notquests.notquests.Structs">Quest</a>&nbsp;quest,
+ <a href="../../Quest.html" title="class in rocks.gravili.Structs">Quest</a>&nbsp;quest,
  int&nbsp;objectiveID,
  <a class="external-link" href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html"
     title="class or interface in java.lang">String</a>&nbsp;eliteMobToKillContainsName,

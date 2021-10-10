@@ -115,9 +115,9 @@ dependencies {
  */
 shadowJar {
     minimize()
-    relocate 'io.papermc.lib', 'notquests.notquests.shaded.paper'
-    relocate 'net.kyori', 'notquests.notquests.shaded.kyori'
-    relocate("org.bstats", "notquests.notquests.shaded.bstats")
+    relocate 'io.papermc.lib', 'rocks.gravili.shaded.paper'
+    relocate 'net.kyori', 'rocks.gravili.shaded.kyori'
+    relocate("org.bstats", "rocks.gravili.shaded.bstats")
 
     dependencies {
         include(dependency('io.papermc:paperlib'))
@@ -128,10 +128,10 @@ shadowJar {
     }
 
     dependencies {
-        relocate("de.themoep", "notquests.notquests.shaded.de.themoep")
-        //relocate("org.bstats.bukkit", "notquests.notquests.shaded.bstats.bukkit")
-        //relocate("org.bstats", "notquests.notquests.shaded.bstats")
-        relocate("commons.io", "notquests.notquests.shaded.commons.io")
+        relocate("de.themoep", "rocks.gravili.shaded.de.themoep")
+        //relocate("org.bstats.bukkit", "rocks.gravili.shaded.bstats.bukkit")
+        //relocate("org.bstats", "rocks.gravili.shaded.bstats")
+        relocate("commons.io", "rocks.gravili.shaded.commons.io")
 
     }
 

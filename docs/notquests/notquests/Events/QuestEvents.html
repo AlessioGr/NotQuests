@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=utf8">
     <meta content="2021-10-04" name="dc.created">
-<meta name="description" content="declaration: package: notquests.notquests.Events, class: QuestEvents">
+<meta name="description" content="declaration: package: rocks.gravili.Events, class: QuestEvents">
 <meta name="generator" content="javadoc/ClassWriterImpl">
 <link rel="stylesheet" type="text/css" href="../../../stylesheet.css" title="Style">
 <link rel="stylesheet" type="text/css" href="../../../script-dir/jquery-ui.min.css" title="Style">
@@ -72,11 +72,11 @@ loadScripts(document, 'script');</script>
 <main role="main">
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
-<div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">notquests.notquests.Events</a></div>
+<div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">rocks.gravili.Events</a></div>
 <h1 title="Class QuestEvents" class="title">Class QuestEvents</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
-<div class="inheritance">notquests.notquests.Events.QuestEvents</div>
+<div class="inheritance">QuestEvents</div>
 </div>
 <section class="description">
 <dl class="notes">
@@ -113,7 +113,7 @@ implements org.bukkit.event.Listener</span></div>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(notquests.notquests.NotQuests)">QuestEvents</a></span>&#8203;(<a href="../NotQuests.html" title="class in notquests.notquests">NotQuests</a>&nbsp;main)</code></div>
+<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(NotQuests)">QuestEvents</a></span>&#8203;(<a href="../NotQuests.html" title="class in notquests.notquests">NotQuests</a>&nbsp;main)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -159,9 +159,9 @@ implements org.bukkit.event.Listener</span></div>
             <code>private void</code></div>
         <div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
             <code><span class="member-name-link"><a
-                    href="#handleGeneralTrigger(notquests.notquests.Structs.QuestPlayer,notquests.notquests.Structs.Triggers.ActiveTrigger)">handleGeneralTrigger</a></span>&#8203;(<a
-                    href="../Structs/QuestPlayer.html" title="class in notquests.notquests.Structs">QuestPlayer</a>&nbsp;questPlayer,
-                <a href="../Structs/Triggers/ActiveTrigger.html" title="class in notquests.notquests.Structs.Triggers">ActiveTrigger</a>&nbsp;activeTrigger)</code>
+                    href="#handleGeneralTrigger(QuestPlayer,ActiveTrigger)">handleGeneralTrigger</a></span>&#8203;(<a
+                    href="../Structs/QuestPlayer.html" title="class in rocks.gravili.Structs">QuestPlayer</a>&nbsp;questPlayer,
+                <a href="../Structs/Triggers/ActiveTrigger.html" title="class in rocks.gravili.Structs.Triggers">ActiveTrigger</a>&nbsp;activeTrigger)</code>
         </div>
         <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
             <div class="block">This method handles the most commonly used type of trigger, which should simply add to
@@ -293,7 +293,7 @@ implements org.bukkit.event.Listener</span></div>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(notquests.notquests.NotQuests)">
+<section class="detail" id="&lt;init&gt;(NotQuests)">
 <h3>QuestEvents</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">QuestEvents</span>&#8203;<span class="parameters">(<a href="../NotQuests.html" title="class in notquests.notquests">NotQuests</a>&nbsp;main)</span></div>
 </section>
@@ -379,14 +379,14 @@ implements org.bukkit.event.Listener</span></div>
     </li>
     <li>
         <section class="detail"
-                 id="handleGeneralTrigger(notquests.notquests.Structs.QuestPlayer,notquests.notquests.Structs.Triggers.ActiveTrigger)">
+                 id="handleGeneralTrigger(QuestPlayer,ActiveTrigger)">
             <h3>handleGeneralTrigger</h3>
             <div class="member-signature"><span class="modifiers">private</span>&nbsp;<span
                     class="return-type">void</span>&nbsp;<span
                     class="element-name">handleGeneralTrigger</span>&#8203;<span class="parameters">(<a
-                    href="../Structs/QuestPlayer.html" title="class in notquests.notquests.Structs">QuestPlayer</a>&nbsp;questPlayer,
+                    href="../Structs/QuestPlayer.html" title="class in rocks.gravili.Structs">QuestPlayer</a>&nbsp;questPlayer,
  <a href="../Structs/Triggers/ActiveTrigger.html"
-    title="class in notquests.notquests.Structs.Triggers">ActiveTrigger</a>&nbsp;activeTrigger)</span></div>
+    title="class in rocks.gravili.Structs.Triggers">ActiveTrigger</a>&nbsp;activeTrigger)</span></div>
             <div class="block">This method handles the most commonly used type of trigger, which should simply add to
                 the progress.
                 Apart from adding the progress, this method checks for the triggers applyOn and the triggers worldName
