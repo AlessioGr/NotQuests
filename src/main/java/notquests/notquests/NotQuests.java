@@ -567,6 +567,16 @@ public final class NotQuests extends JavaPlugin {
 
             dataManager.loadStandardCompletions();
         }
+    }
+
+    public void enableCitizens() {
+        if (getDataManager().getConfiguration().isIntegrationCitizensEnabled()) {
+            citizensEnabled = true;
+            getLogManager().info("Citizens found! Enabling Citizens support (late)...");
+            getDataManager().setAlreadyLoadedNPCs(false);
+            getServer().getPluginManager().registerEvents(new CitizensEvents(this), this);
+            getDataManager().loadNPCData();
+        }
 
     }
 }

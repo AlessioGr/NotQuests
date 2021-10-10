@@ -581,6 +581,9 @@ public class QuestEvents implements Listener {
         if (event.getPlugin().getName().equals("MythicMobs") && !main.isMythicMobsEnabled()) {
             // Turn on support for the plugin
             main.enableMythicMobs();
+        } else if (event.getPlugin().getName().equals("Citizens") && !main.isCitizensEnabled()) {
+            // Turn on support for the plugin
+            main.enableCitizens();
         }
 
     }
