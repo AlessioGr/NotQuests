@@ -2,6 +2,7 @@ package rocks.gravili.Managers;
 
 import rocks.gravili.NotQuests;
 import rocks.gravili.Structs.Objectives.*;
+import rocks.gravili.Structs.Objectives.hooks.KillEliteMobsObjective;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -39,16 +40,13 @@ public class ObjectiveManager {
         registerObjective("TalkToNPC", TalkToNPCObjective.class);
         registerObjective("EscortNPC", EscortNPCObjective.class);
         registerObjective("CraftItems", CraftItemsObjective.class);
-        registerObjective("KillEliteMobs", KillMobsObjective.class); //TODO: only if EliteMobs enabled?
+        registerObjective("KillEliteMobs", KillEliteMobsObjective.class); //TODO: only if EliteMobs enabled?
         registerObjective("ReachLocation", ReachLocationObjective.class);
 
 
         //registerObjectiveCommandCompletionHandler("KillMobs", this::eee);
     }
 
-    public String eee(){
-        return "";
-    }
 
    /* public void registerObjectiveCommandCompletionHandler(final String identifier, final String commandCompletionHandler){
         main.getLogManager().info("Registering command completions for objective <AQUA>" + identifier);
