@@ -74,6 +74,8 @@ public class ObjectivesAdminCommand {
             handleCommandsReachLocationObjective(sender, args, quest);
         } else if (args.length >= 5 && args[3].equalsIgnoreCase("add") && args[4].equalsIgnoreCase("KillMobs")) {
             handleCommandsKillMobsObjective(sender, args, quest);
+        } else if (args.length >= 5 && args[3].equalsIgnoreCase("add") && args[4].equalsIgnoreCase("BreedMobs")) {
+            handleCommandsBreedMobsObjective(sender, args, quest);
         } else if (args.length == 5) {
             showUsage(quest, sender, args);
 
@@ -987,6 +989,46 @@ public class ObjectivesAdminCommand {
 
     }
 
+    public void handleCommandsBreedMobsObjective(final CommandSender sender, final String[] args, final Quest quest) { //qa edit xxx objectives add KillMobs
+        if (args.length == 5) {
+            sender.sendMessage("§cMissing 6. argument §3[Mob Name / 'any']]§c. Specify the §bname§c of the mob the player needs to breed to complete the objective. Or, use 'any' if every entity should count.");
+            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2BreedMobs §3[Mob Name / 'any'] §3[amount of breeds needed]");
+        } else if (args.length == 6) {
+            sender.sendMessage("§cMissing 7. argument §3[amount of breeds needed]§c. Specify the §bamount of times§c the player has to breed the mob.");
+            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2BreedMobs §3[Mob Name / 'any'] §3[amount of breeds needed]");
+        } else if (args.length == 7) {
+
+
+            final String mobEntityType = args[5];
+
+            if (!args[5].equalsIgnoreCase("any")) {
+                boolean foundValidMob = false;
+                for (final String validMob : main.getDataManager().standardEntityTypeCompletions) {
+                    if (validMob.toLowerCase(Locale.ROOT).equalsIgnoreCase(mobEntityType.toLowerCase(Locale.ROOT))) {
+                        foundValidMob = true;
+                    }
+                }
+                if (!foundValidMob) {
+                    sender.sendMessage("§cError: the mob type §b" + mobEntityType + " §cwas not found!");
+                    return;
+                }
+            }
+
+
+            int amountToBreed = Integer.parseInt(args[6]);
+
+
+            BreedObjective breedObjective = new BreedObjective(main, quest, quest.getObjectives().size() + 1, amountToBreed, mobEntityType);
+
+
+
+            quest.addObjective(breedObjective, true);
+            sender.sendMessage("§aObjective successfully added to quest §b" + quest.getQuestName() + "§a!");
+
+
+        }
+    }
+
     public void handleCommandsKillMobsObjective(final CommandSender sender, final String[] args, final Quest quest) { //qa edit xxx objectives add KillMobs
         if (args.length == 5) {
             sender.sendMessage("§cMissing 6. argument §3[Mob Name / 'any']]§c. Specify the §bname§c of the mob the player needs to kill to complete the objective. Or, use 'any' if every entity should count.");
@@ -1283,6 +1325,8 @@ public class ObjectivesAdminCommand {
                 return handleCompletionsKillEliteMobsObjective(args, sender);
             } else if (args.length >= 6 && args[3].equalsIgnoreCase("add") && args[4].equalsIgnoreCase("ReachLocation")) {
                 return handleCompletionsReachLocationObjective(args, sender);
+            } else if (args.length >= 6 && args[3].equalsIgnoreCase("add") && args[4].equalsIgnoreCase("BreedMobs")) {
+                return handleCompletionsBreedMobsObjective(args, sender);
             } else if (args.length >= 6 && args[3].equalsIgnoreCase("edit")) {
                 return handleCompletionsEdit(args, sender, quest);
             }
@@ -1696,6 +1740,21 @@ public class ObjectivesAdminCommand {
             main.getDataManager().completions.add("<Enter Location name>");
 
             main.getUtilManager().sendFancyActionBar(audience, args, "<Location name>", "");
+        }
+        return main.getDataManager().completions;
+    }
+
+    public final List<String> handleCompletionsBreedMobsObjective(final String[] args, final CommandSender sender) {
+        final Audience audience = main.adventure().sender(sender);
+        if (args.length == 6) {
+            main.getDataManager().completions.add("any");
+            main.getDataManager().completions.addAll(main.getDataManager().standardEntityTypeCompletions);
+
+            main.getUtilManager().sendFancyActionBar(audience, args, "[Mob Name / 'any']", "[Amount of breeds needed]");
+            return main.getDataManager().standardEntityTypeCompletions;
+        } else if (args.length == 7) {
+            main.getUtilManager().sendFancyActionBar(audience, args, "[Amount of breeds needed]", "");
+            return main.getDataManager().numberPositiveCompletions;
         }
         return main.getDataManager().completions;
     }

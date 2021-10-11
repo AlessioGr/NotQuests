@@ -41,6 +41,7 @@ public class ObjectiveManager {
         registerObjective("CraftItems", CraftItemsObjective.class);
         registerObjective("KillEliteMobs", KillMobsObjective.class); //TODO: only if EliteMobs enabled?
         registerObjective("ReachLocation", ReachLocationObjective.class);
+        registerObjective("BreedMobs", BreedObjective.class);
 
 
         //registerObjectiveCommandCompletionHandler("KillMobs", this::eee);

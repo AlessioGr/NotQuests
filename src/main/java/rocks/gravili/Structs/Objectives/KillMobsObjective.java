@@ -61,7 +61,6 @@ public class KillMobsObjective extends Objective {
     @Override
     public void save() {
         main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.mobToKill", getMobToKill());
-        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.amountToKill", getAmountToKill());
 
         //Extra args
         if (!getNameTagContainsAny().isBlank()) {

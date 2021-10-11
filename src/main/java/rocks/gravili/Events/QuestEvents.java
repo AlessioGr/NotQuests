@@ -19,6 +19,7 @@
 package rocks.gravili.Events;
 
 
+import org.bukkit.event.entity.EntityBreedEvent;
 import rocks.gravili.NotQuests;
 import rocks.gravili.Structs.ActiveObjective;
 import rocks.gravili.Structs.ActiveQuest;
@@ -62,6 +63,39 @@ public class QuestEvents implements Listener {
 
     public QuestEvents(NotQuests main) {
         this.main = main;
+    }
+
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    private void onEntityBreed(EntityBreedEvent e){
+        if (!e.isCancelled()) {
+            if(e.getBreeder() instanceof final Player player){
+                final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                if(questPlayer == null){
+                    return;
+                }
+                if (questPlayer.getActiveQuests().size() == 0) {
+                    return;
+                }
+
+                for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+                    for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
+                        if (activeObjective.isUnlocked()) {
+                            if (activeObjective.getObjective() instanceof BreedObjective breedObjective) {
+                                if(breedObjective.getEntityToBreedType().equalsIgnoreCase("any") ||  breedObjective.getEntityToBreedType().equalsIgnoreCase(e.getEntityType().toString())){
+                                    activeObjective.addProgress(1, -1);
+                                }
+
+                            }
+                        }
+
+                    }
+                    activeQuest.removeCompletedObjectives(true);
+                }
+                questPlayer.removeCompletedQuests();
+
+            }
+        }
     }
 
 
