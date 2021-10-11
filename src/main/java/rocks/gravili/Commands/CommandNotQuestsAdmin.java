@@ -1634,7 +1634,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
             sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards list");
             sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards edit §3[Reward ID] ...");
             sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards clear");
-        }else if(args.length == 4){
+        } else if(args.length == 4){
             if (args[3].equalsIgnoreCase("add")) {
                 sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards add §3[Reward Type] ...");
                 sender.sendMessage("§cPlease specify a reward type!");

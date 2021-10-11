@@ -1249,6 +1249,7 @@ public class ObjectivesAdminCommand {
                     main.getDataManager().completions.add("CollectItems");
                     main.getDataManager().completions.add("CraftItems");
                     main.getDataManager().completions.add("KillMobs");
+                    main.getDataManager().completions.add("BreedMobs");
                     main.getDataManager().completions.add("TriggerCommand");
                     main.getDataManager().completions.add("OtherQuest");
                     main.getDataManager().completions.add("ConsumeItems");
