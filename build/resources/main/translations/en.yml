@@ -113,6 +113,11 @@ gui:
           &eDescription
           &8%QUESTDESCRIPTION%
         empty: ???
+      rewards:
+        text: |-
+          &aRewards
+          &f%QUESTREWARDS%
+        empty: '&8None or hidden'
       requirements:
         text: |-
           &cRequirements

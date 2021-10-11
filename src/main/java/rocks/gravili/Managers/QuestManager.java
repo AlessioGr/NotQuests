@@ -874,6 +874,9 @@ public class QuestManager {
         StringBuilder requirements = new StringBuilder();
         int counter = 1;
         for (final Requirement requirement : quest.getRequirements()) {
+            if(counter != 1){
+                requirements.append("\n");
+            }
             requirements.append("§a").append(counter).append(". §e").append(requirement.getRequirementType().toString()).append("\n");
             if (requirement instanceof OtherQuestRequirement otherQuestRequirement) {
                 requirements.append("§7-- Finish Quest first: ").append(otherQuestRequirement.getOtherQuestName());
