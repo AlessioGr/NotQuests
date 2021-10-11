@@ -635,6 +635,27 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                 ));
 
 
+
+
+                                String rewards = main.getQuestManager().getQuestRewards(quest);
+                                if (rewards.isBlank()) {
+                                    rewards = main.getLanguageManager().getString("gui.previewQuest.button.rewards.empty");
+                                }
+
+                                gui.addElement(new StaticGuiElement('3',
+                                        new ItemStack(Material.EMERALD),
+                                        1, // Display a number as the item count
+                                        click -> {
+
+                                            return true; // returning true will cancel the click event and stop taking the item
+
+                                        },
+                                        main.getLanguageManager().getString("gui.previewQuest.button.rewards.text")
+                                                .replaceAll("%QUESTREWARDS%", rewards)
+
+
+                                ));
+
                                 String requirements = main.getQuestManager().getQuestRequirements(quest);
                                 if (requirements.isBlank()) {
                                     requirements = main.getLanguageManager().getString("gui.previewQuest.button.requirements.empty");

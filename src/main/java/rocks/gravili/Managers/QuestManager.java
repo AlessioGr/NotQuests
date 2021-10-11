@@ -433,6 +433,8 @@ public class QuestManager {
                                 }
 
                                 if (reward != null) {
+                                    final String rewardDisplayName = main.getDataManager().getQuestsData().getString("quests." + questName + ".rewards." + rewardNumber + ".displayName", "");
+                                    reward.setRewardDisplayName(rewardDisplayName);
                                     quest.addReward(reward);
                                 } else {
                                     main.getLogManager().log(Level.SEVERE, "Error loading reward");
@@ -869,35 +871,54 @@ public class QuestManager {
     }
 
     public final String getQuestRequirements(final Quest quest) {
-        String requirements = "";
+        StringBuilder requirements = new StringBuilder();
         int counter = 1;
-        for (Requirement requirement : quest.getRequirements()) {
-            requirements = "§a" + counter + ". §e" + requirement.getRequirementType().toString() + "\n";
+        for (final Requirement requirement : quest.getRequirements()) {
+            requirements.append("§a").append(counter).append(". §e").append(requirement.getRequirementType().toString()).append("\n");
             if (requirement instanceof OtherQuestRequirement otherQuestRequirement) {
-                requirements += "§7-- Finish Quest first: " + otherQuestRequirement.getOtherQuestName();
+                requirements.append("§7-- Finish Quest first: ").append(otherQuestRequirement.getOtherQuestName());
             } else if (requirement instanceof QuestPointsRequirement questPointsRequirement) {
-                requirements += "§7-- Quest points needed: " + questPointsRequirement.getQuestPointRequirement() + "\n";
+                requirements.append("§7-- Quest points needed: ").append(questPointsRequirement.getQuestPointRequirement()).append("\n");
                 if (((QuestPointsRequirement) requirement).isDeductQuestPoints()) {
-                    requirements += "§7--- §cQuest points WILL BE DEDUCTED!";
+                    requirements.append("§7--- §cQuest points WILL BE DEDUCTED!");
                 } else {
-                    requirements += "§7--- Will quest points be deducted?: No";
+                    requirements.append("§7--- Will quest points be deducted?: No");
                 }
 
             } else if (requirement instanceof MoneyRequirement moneyRequirement) {
-                requirements += "§7-- Money needed: " + moneyRequirement.getMoneyRequirement() + "\n";
+                requirements.append("§7-- Money needed: ").append(moneyRequirement.getMoneyRequirement()).append("\n");
                 if (((MoneyRequirement) requirement).isDeductMoney()) {
-                    requirements += "§7--- §cMoney WILL BE DEDUCTED!";
+                    requirements.append("§7--- §cMoney WILL BE DEDUCTED!");
                 } else {
-                    requirements += "§7--- Will money be deducted?: No";
+                    requirements.append("§7--- Will money be deducted?: No");
                 }
 
             } else if (requirement instanceof PermissionRequirement permissionRequirement) {
-                requirements += "§7-- Permission needed: " + permissionRequirement.getRequiredPermission();
+                requirements.append("§7-- Permission needed: ").append(permissionRequirement.getRequiredPermission());
             }
 
             counter += 1;
         }
-        return requirements;
+        return requirements.toString();
+    }
+
+    public final String getQuestRewards(final Quest quest) {
+        StringBuilder rewards = new StringBuilder();
+        int counter = 1;
+        for (final Reward reward : quest.getRewards()) {
+            if(counter != 1){
+                rewards.append("\n");
+            }
+            if(!reward.getRewardDisplayName().isBlank()){
+                rewards.append("§a").append(counter).append(". §9").append(reward.getRewardDisplayName());
+            }else{
+                rewards.append("§a").append(counter).append(". §7[HIDDEN]");
+
+            }
+            counter += 1;
+
+        }
+        return rewards.toString();
     }
 
     public void sendSingleQuestPreview(Player player, Quest quest) {
@@ -919,6 +940,10 @@ public class QuestManager {
         player.sendMessage("§9Quest Requirements:");
 
         player.sendMessage(getQuestRequirements(quest));
+
+        player.sendMessage("§9Quest Rewards:");
+
+        player.sendMessage(getQuestRewards(quest));
 
 
         BaseComponent acceptComponent = new TextComponent("§a§l[ACCEPT THIS QUEST]");

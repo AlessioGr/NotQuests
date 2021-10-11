@@ -79,15 +79,18 @@ public class Quest {
 
     public void addReward(Reward reward) {
         rewards.add(reward);
-        main.getDataManager().getQuestsData().set("quests." + questName + ".rewards." + rewards.size() + ".rewardType", reward.getRewardType().toString());
+        main.getDataManager().getQuestsData().set("quests." + questName + ".rewards." + reward.getRewardID() + ".rewardType", reward.getRewardType().toString());
+        if(!reward.getRewardDisplayName().isBlank()){
+            main.getDataManager().getQuestsData().set("quests." + questName + ".rewards." + reward.getRewardID()  + ".displayName", reward.getRewardDisplayName());
+        }
         if (reward instanceof CommandReward commandReward) {
-            main.getDataManager().getQuestsData().set("quests." + questName + ".rewards." + rewards.size() + ".specifics.consoleCommand", commandReward.getConsoleCommand());
+            main.getDataManager().getQuestsData().set("quests." + questName + ".rewards." + reward.getRewardID()  + ".specifics.consoleCommand", commandReward.getConsoleCommand());
         } else if (reward instanceof QuestPointsReward commandReward) {
-            main.getDataManager().getQuestsData().set("quests." + questName + ".rewards." + rewards.size() + ".specifics.rewardedQuestPoints", commandReward.getRewardedQuestPoints());
+            main.getDataManager().getQuestsData().set("quests." + questName + ".rewards." + reward.getRewardID()  + ".specifics.rewardedQuestPoints", commandReward.getRewardedQuestPoints());
         } else if (reward instanceof ItemReward itemReward) {
-            main.getDataManager().getQuestsData().set("quests." + questName + ".rewards." + rewards.size() + ".specifics.rewardItem", itemReward.getItemReward());
+            main.getDataManager().getQuestsData().set("quests." + questName + ".rewards." + reward.getRewardID()  + ".specifics.rewardItem", itemReward.getItemReward());
         } else if (reward instanceof MoneyReward moneyReward) {
-            main.getDataManager().getQuestsData().set("quests." + questName + ".rewards." + rewards.size() + ".specifics.rewardedMoneyAmount", moneyReward.getRewardedMoney());
+            main.getDataManager().getQuestsData().set("quests." + questName + ".rewards." + reward.getRewardID()  + ".specifics.rewardedMoneyAmount", moneyReward.getRewardedMoney());
         }
 
     }

@@ -24,6 +24,8 @@ import org.bukkit.entity.Player;
 public abstract class Reward {
     private final RewardType rewardType;
     private final int rewardID;
+    private String rewardDisplayName = "";
+
 
     public Reward(final RewardType rewardType, int rewardID) {
         this.rewardType = rewardType;
@@ -38,5 +40,19 @@ public abstract class Reward {
 
     public final int getRewardID(){
         return rewardID;
+    }
+
+    public final String getRewardDisplayName() {
+        return rewardDisplayName;
+    }
+
+    public void setRewardDisplayName(final String newRewardDisplayName) {
+        this.rewardDisplayName = newRewardDisplayName;
+
+    }
+
+    public void removeRewardDisplayName() {
+        this.rewardDisplayName = "";
+
     }
 }

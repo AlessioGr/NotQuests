@@ -424,7 +424,7 @@ public class ObjectivesAdminCommand {
 
                 if (args[5].equalsIgnoreCase("displayName")) {
                     objective.setObjectiveDisplayName(descriptionOrDisplayName.toString(), true);
-                    sender.sendMessage("§aDisplay Name successfully added to objective with ID §b" + objectiveID + "§a! New description: §e" + objective.getObjectiveDisplayName());
+                    sender.sendMessage("§aDisplay Name successfully added to objective with ID §b" + objectiveID + "§a! New display name: §e" + objective.getObjectiveDisplayName());
                 } else if (args[5].equalsIgnoreCase("description")) {
                     objective.setObjectiveDescription(descriptionOrDisplayName.toString(), true);
                     sender.sendMessage("§aDescription successfully added to objective with ID §b" + objectiveID + "§a! New description: §e" + objective.getObjectiveDescription());

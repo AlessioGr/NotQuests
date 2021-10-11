@@ -441,6 +441,15 @@ public class LanguageManager {
             valueChanged = true;
         }
 
+        if (!getLanguageConfig().isString("gui.previewQuest.button.rewards.text")) {
+            getLanguageConfig().set("gui.previewQuest.button.rewards.text", "&aRewards\n&f%QUESTREWARDS%");
+            valueChanged = true;
+        }
+        if (!getLanguageConfig().isString("gui.previewQuest.button.rewards.empty")) {
+            getLanguageConfig().set("gui.previewQuest.button.rewards.empty", "&8None or hidden");
+            valueChanged = true;
+        }
+
         if (!getLanguageConfig().isString("gui.previewQuest.button.requirements.text")) {
             getLanguageConfig().set("gui.previewQuest.button.requirements.text", "&cRequirements\n&f%QUESTREQUIREMENTS%");
             valueChanged = true;

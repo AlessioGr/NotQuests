@@ -1746,7 +1746,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                 if (reward != null) {
                     if (args[5].equalsIgnoreCase("displayName")) {
                         sender.sendMessage("§cMissing 7. argument!");
-                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards edit §2" + rewardID + " §3displayName set <New DisplayName> §7 | Sets new reward Display Name. Only rewards with a display name set will be displayed.");
+                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards edit §2" + rewardID + " §3displayName set <New Display Name> §7 | Sets new reward Display Name. Only rewards with a display name set will be displayed.");
                         sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards edit §2" + rewardID + " §3displayName remove §7 | Removes current reward Display Name");
                         sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards edit §2" + rewardID + " §3displayName show §7 | Shows current reward Display Name");
 
@@ -1821,6 +1821,63 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
 
                 } else {
                     sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                }
+            } else if (args[3].equalsIgnoreCase("edit")) {
+                final int rewardID = Integer.parseInt(args[4]);
+                final Reward reward = quest.getRewardFromID(rewardID);
+                if (reward != null) {
+                    if (args[5].equalsIgnoreCase("displayName")) {
+                        if(args[6].equalsIgnoreCase("remove") || args[6].equalsIgnoreCase("delete")){
+                            reward.removeRewardDisplayName();
+                            main.getDataManager().getQuestsData().set("quests." + quest.getQuestName() + ".rewards." + reward.getRewardID() + ".displayName", null);
+                            sender.sendMessage("§aDisplay Name of reward with the ID §b" + rewardID + " §ahas been removed successfully.");
+                        } else if(args[6].equalsIgnoreCase("show")){
+                            if(reward.getRewardDisplayName().isBlank()){
+                                sender.sendMessage("§9This reward has no display name set.");
+                            }else{
+                                sender.sendMessage("§9Reward display name: §b" + reward.getRewardDisplayName());
+                            }
+                        } else if(args[6].equalsIgnoreCase("set")){
+                            sender.sendMessage("§cMissing 8. argument <new Display Name>!");
+                            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards edit §2" + rewardID + " §3displayName set <New Display Name> §7 | Sets new reward Display Name. Only rewards with a display name set will be displayed.");
+                        } else {
+                            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                        }
+                    } else{
+                        sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                    }
+                } else {
+                    sender.sendMessage("§cError: Reward with the ID §b" + rewardID + " §c was not found for quest §b" + quest.getQuestName() + "§c!");
+                }
+            } else {
+                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+            }
+        } else { //args.length >= 8
+            if (args[3].equalsIgnoreCase("edit")) {
+                final int rewardID = Integer.parseInt(args[4]);
+                final Reward reward = quest.getRewardFromID(rewardID);
+                if (reward != null) {
+                    if (args[5].equalsIgnoreCase("displayName")) {
+                        if(args[6].equalsIgnoreCase("set")){
+                            final StringBuilder newRewardDisplayName = new StringBuilder();
+                            for (int start = 7; start < args.length; start++) {
+                                newRewardDisplayName.append(args[start]);
+                                if (start < args.length - 1) {
+                                    newRewardDisplayName.append(" ");
+                                }
+                            }
+
+                            reward.setRewardDisplayName(newRewardDisplayName.toString());
+                            main.getDataManager().getQuestsData().set("quests." + quest.getQuestName() + ".rewards." + reward.getRewardID() + ".displayName", newRewardDisplayName.toString());
+                            sender.sendMessage("§aDisplay Name successfully added to reward with ID §b" + reward.getRewardID() + "§a! New display name: §e" + reward.getRewardDisplayName());
+                        } else {
+                            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                        }
+                    } else{
+                        sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                    }
+                } else {
+                    sender.sendMessage("§cError: Reward with the ID §b" + rewardID + " §c was not found for quest §b" + quest.getQuestName() + "§c!");
                 }
             } else {
                 sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));

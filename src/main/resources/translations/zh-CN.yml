@@ -113,6 +113,11 @@ gui:
           &e描述
           &8%QUESTDESCRIPTION%
         empty: ???
+      rewards:
+        text: |-
+          &a奖励
+          &f%QUESTREWARDS%
+        empty: '&8无或隐藏'
       requirements:
         text: |-
           &c要求
