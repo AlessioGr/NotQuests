@@ -68,6 +68,7 @@ Admin Commands - Quest Editing:
   - Deliver Items to NPC
   - Escort NPC
   - Kill Mobs
+  - Breed Mobs
   - Complete Other Quest
   - Talk to NPC
   - Command Triggers (to finish the objective)
