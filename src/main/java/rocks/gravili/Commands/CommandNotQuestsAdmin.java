@@ -2373,19 +2373,22 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
         final Audience audience = main.adventure().sender(sender);
         if (args.length == 4) {
             main.getDataManager().completions.add("add");
+            main.getDataManager().completions.add("edit");
             main.getDataManager().completions.add("list");
             main.getDataManager().completions.add("clear");
 
             //For fancy action bar only
             final String currentArg = args[args.length - 1];
             if (currentArg.equalsIgnoreCase("add")) {
-                main.getUtilManager().sendFancyActionBar(audience, args, "[add / list / clear]", "[Reward Type]");
+                main.getUtilManager().sendFancyActionBar(audience, args, "[add / edit / list / clear]", "[Reward Type]");
             } else if (currentArg.equalsIgnoreCase("list")) {
-                main.getUtilManager().sendFancyActionBar(audience, args, "[add / list / clear]", "");
+                main.getUtilManager().sendFancyActionBar(audience, args, "[add / edit / list / clear]", "");
             } else if (currentArg.equalsIgnoreCase("clear")) {
-                main.getUtilManager().sendFancyActionBar(audience, args, "[add / list / clear]", "");
+                main.getUtilManager().sendFancyActionBar(audience, args, "[add / edit / list / clear]", "");
+            } else if (currentArg.equalsIgnoreCase("edit")) {
+                main.getUtilManager().sendFancyActionBar(audience, args, "[add / edit / list / clear]", "[Reward ID]");
             } else {
-                main.getUtilManager().sendFancyActionBar(audience, args, "[add / list / clear]", "...");
+                main.getUtilManager().sendFancyActionBar(audience, args, "[add / edit / list / clear]", "...");
             }
 
         } else if (args.length == 5) {
@@ -2410,6 +2413,16 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                 }
 
                 main.getUtilManager().sendFancyActionBar(audience, args, "[Reward Type]", "...");
+            } else if (args[3].equalsIgnoreCase("edit")) {
+                final Quest quest = main.getQuestManager().getQuest(args[1]);
+                if(quest != null){
+                    for(final Reward reward : quest.getRewards()){
+                        main.getDataManager().completions.add(""+reward.getRewardID());
+                    }
+                }
+                //For fancy action bar only
+                main.getUtilManager().sendFancyActionBar(audience, args, "[Reward ID]", "[info / displayName / remove]");
+
             }
         } else if (args.length >= 6 && args[3].equalsIgnoreCase("add") && args[4].equalsIgnoreCase("ConsoleCommand")) {
             final String argToCheck = args[args.length - 1];
@@ -2434,6 +2447,22 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                     main.getUtilManager().sendFancyActionBar(audience, args, "[Amount of Money]", "");
                     return main.getDataManager().numberPositiveCompletions;
                 }
+            } else if (args[3].equalsIgnoreCase("edit")) {
+                main.getDataManager().completions.add("info");
+                main.getDataManager().completions.add("displayName");
+                main.getDataManager().completions.add("remove");
+
+                //For fancy action bar only
+                final String currentArg = args[args.length - 1];
+                if (currentArg.equalsIgnoreCase("info")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[info / displayName / remove]", "");
+                } else if (currentArg.equalsIgnoreCase("displayName")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[info / displayName / remove]", "[set / show / remove]");
+                } else if (currentArg.equalsIgnoreCase("remove")) {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[info / displayName / remove]", "");
+                }else {
+                    main.getUtilManager().sendFancyActionBar(audience, args, "[info / displayName / remove]", "...");
+                }
             }
         } else if (args.length == 7) {
             if (args[3].equalsIgnoreCase("add")) {
@@ -2441,6 +2470,30 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                     main.getUtilManager().sendFancyActionBar(audience, args, "[Amount]", "");
                     return main.getDataManager().numberPositiveCompletions;
                 }
+            } else if (args[3].equalsIgnoreCase("edit")) {
+                if(args[5].equalsIgnoreCase("displayName")){
+                    main.getDataManager().completions.add("set");
+                    main.getDataManager().completions.add("show");
+                    main.getDataManager().completions.add("remove");
+
+                    //For fancy action bar only
+                    final String currentArg = args[args.length - 1];
+                    if (currentArg.equalsIgnoreCase("set")) {
+                        main.getUtilManager().sendFancyActionBar(audience, args, "[set / show / remove]", "<Enter new Reward Display Name>");
+                    } else if (currentArg.equalsIgnoreCase("show")) {
+                        main.getUtilManager().sendFancyActionBar(audience, args, "[set / show / remove]", "");
+                    } else if (currentArg.equalsIgnoreCase("remove")) {
+                        main.getUtilManager().sendFancyActionBar(audience, args, "[set / show / remove]", "");
+                    }else {
+                        main.getUtilManager().sendFancyActionBar(audience, args, "[set / show / remove]", "...");
+                    }
+                }
+
+            }
+        } else if (args.length >= 8 && args[3].equalsIgnoreCase("edit") && args[5].equalsIgnoreCase("displayName")){
+            if(args[6].equalsIgnoreCase("set")) {
+                main.getDataManager().completions.add("<Enter new Reward Display Name>");
+                main.getUtilManager().sendFancyActionBar(audience, args, "<Enter new Reward Display Name>", "");
             }
         }
         return main.getDataManager().completions;

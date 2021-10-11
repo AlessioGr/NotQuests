@@ -20,6 +20,7 @@ package rocks.gravili.Structs;
 
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
+import org.bukkit.Bukkit;
 import rocks.gravili.Hooks.Citizens.QuestGiverNPCTrait;
 import rocks.gravili.NotQuests;
 import rocks.gravili.Structs.Objectives.Objective;
