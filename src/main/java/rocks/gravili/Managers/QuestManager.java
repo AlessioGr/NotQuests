@@ -85,6 +85,7 @@ public class QuestManager {
                 §bCollectItems
                 §bCraftItems
                 §bKillMobs
+                §bBreedMobs
                 §bTriggerCommand
                 §bOtherQuest
                 §bConsumeItems

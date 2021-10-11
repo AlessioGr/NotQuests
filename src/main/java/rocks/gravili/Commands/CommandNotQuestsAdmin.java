@@ -437,7 +437,15 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                 } else {
                     sender.sendMessage("§cQuest §b" + args[1] + " §cdoes not exist");
                 }
-            } else if (args.length == 3) {
+            } else if (args[0].equalsIgnoreCase("edit") && args[2].equalsIgnoreCase("rewards")) {
+                final Quest quest = main.getQuestManager().getQuest(args[1]);
+                if (quest != null) {
+                    handleCommandsEditRewards(sender, args, quest);
+                } else {
+                    sender.sendMessage("§cQuest §b" + args[1] + " §cdoes not exist");
+                }
+            }
+            else if (args.length == 3) {
                 if (args[0].equalsIgnoreCase("actions")) {
                     if (args[1].equalsIgnoreCase("add")) {
                         sender.sendMessage("§cMissing 3. argument §3<Console Command>§c. Specify the §bcommand which will be executed from the Console§c of your new Action.");
@@ -457,10 +465,6 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                             sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6requirements add §3[Requirement Type] ...");
                             sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6requirements list");
                             sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6requirements clear");
-                        } else if (args[2].equalsIgnoreCase("rewards")) {
-                            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards add §3[Reward Type] ...");
-                            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards list");
-                            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards clear");
                         } else if (args[2].equalsIgnoreCase("npcs")) {
                             sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6npcs add §3[NPCS ID] [ShowInNPC (true/false)]");
                             sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6npcs list");
@@ -748,36 +752,6 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                             }
 
 
-                        } else if (args[2].equalsIgnoreCase("rewards")) {
-                            if (args[3].equalsIgnoreCase("add")) {
-                                sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards add §3[Reward Type] ...");
-                                sender.sendMessage("§cPlease specify a reward type!");
-                                sender.sendMessage(main.getQuestManager().getRewardTypesList());
-                            } else if (args[3].equalsIgnoreCase("list")) {
-                                sender.sendMessage("§9Rewards for quest §b" + quest.getQuestName() + "§9:");
-                                int counter = 1;
-                                for (Reward reward : quest.getRewards()) {
-                                    sender.sendMessage("§a" + counter + ". §e" + reward.getRewardType().toString());
-                                    if (reward instanceof CommandReward commandReward) {
-                                        sender.sendMessage("§7-- Reward Command: " + commandReward.getConsoleCommand());
-                                    } else if (reward instanceof QuestPointsReward questPointsReward) {
-                                        sender.sendMessage("§7-- Quest points amount: " + questPointsReward.getRewardedQuestPoints());
-                                    } else if (reward instanceof ItemReward itemReward) {
-                                        sender.sendMessage("§7-- Item: " + itemReward.getItemReward());
-                                    } else if (reward instanceof MoneyReward moneyReward) {
-                                        sender.sendMessage("§7-- Money: " + moneyReward.getRewardedMoney());
-                                    }
-
-                                    counter += 1;
-                                }
-                            } else if (args[3].equalsIgnoreCase("clear")) {
-                                quest.removeAllRewards();
-                                sender.sendMessage("§aAll rewards of quest §b" + quest.getQuestName() + " §ahave been removed!");
-                            } else {
-                                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
-                            }
-
-
                         } else if (args[2].equalsIgnoreCase("npcs")) {
                             if (args[3].equalsIgnoreCase("add")) {
                                 sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6npcs add §3[NPCS ID] [ShowInNPC (yes/no)]");
@@ -988,26 +962,6 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                             } else {
                                 sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
                             }
-                        } else if (args[2].equalsIgnoreCase("rewards")) {
-                            if (args[3].equalsIgnoreCase("add")) {
-                                if (args[4].equalsIgnoreCase("ConsoleCommand")) {
-                                    sender.sendMessage("§cMissing 6. argument §3[Console Command]§c. Specify the §bcommand §cwhich will be executed from the console as a reward. A '/' at the beginning is not required.");
-                                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards add §2ConsoleCommand §3[Console Command]");
-                                } else if (args[4].equalsIgnoreCase("QuestPoints")) {
-                                    sender.sendMessage("§cMissing 6. argument §3[Quest point reward amount]§c. Specify the §bamount of quest points §cthe player should receive.");
-                                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards add §2QuestPoints §3[Quest point reward amount]");
-                                } else if (args[4].equalsIgnoreCase("Item")) {
-                                    sender.sendMessage("§cMissing 6. argument §3[Item Name/hand]§c. Specify the §bitem type §cthe player should receive. If you use 'name'. the item you are holding in your main hand will be used.");
-                                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards add §2Item §3[Item Name/hand] [Amount]");
-                                } else if (args[4].equalsIgnoreCase("Money")) {
-                                    sender.sendMessage("§cMissing 6. argument §3[Amount]§c. Specify the §bamount of money §cthe player should receive.");
-                                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards add §2Money §3[Amount]");
-                                } else {
-                                    sender.sendMessage(main.getQuestManager().getRewardTypesList());
-                                }
-                            } else {
-                                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
-                            }
                         } else if (args[2].equalsIgnoreCase("npcs")) {
                             if (args[3].equalsIgnoreCase("add")) {
                                 sender.sendMessage("§cError: Missing last argument §b[ShowInNPC (yes/no)]§c. Specify if the quest should auto-show when a player right clicks the NPC.");
@@ -1045,22 +999,6 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                 } else {
                     sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
                 }
-            } else if (args[2].equalsIgnoreCase("rewards") && args[3].equalsIgnoreCase("add") && args[4].equalsIgnoreCase("ConsoleCommand")) { //args >= 5
-                final Quest quest = main.getQuestManager().getQuest(args[1]);
-                if (quest != null) {
-                    StringBuilder rewardCommand = new StringBuilder();
-                    for (int start = 5; start < args.length; start++) {
-                        rewardCommand.append(args[start]).append(" ");
-                    }
-                    CommandReward commandReward = new CommandReward(main, rewardCommand.toString());
-                    quest.addReward(commandReward);
-                    sender.sendMessage("§aReward successfully added to quest §b" + quest.getQuestName() + "§a! Reward command: §e" + rewardCommand);
-
-                } else {
-                    sender.sendMessage("§cQuest §b" + args[1] + " §cdoes not exist");
-                }
-
-
             } else if (args.length == 6) {
                 if (args[0].equalsIgnoreCase("edit")) {
                     final Quest quest = main.getQuestManager().getQuest(args[1]);
@@ -1088,38 +1026,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                 sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
                             }
 
-                        } else if (args[2].equalsIgnoreCase("rewards")) {
-                            if (args[3].equalsIgnoreCase("add")) {
-                                if (args[4].equalsIgnoreCase("QuestPoints")) {
-
-                                    final long questPointRewardAmount = Long.parseLong(args[5]);
-
-                                    QuestPointsReward questPointsReward = new QuestPointsReward(main, questPointRewardAmount);
-                                    quest.addReward(questPointsReward);
-                                    sender.sendMessage("§bQuest Points Reward §asuccessfully added to quest §b" + quest.getQuestName() + "§a!");
-
-                                } else if (args[4].equalsIgnoreCase("Item")) {
-                                    sender.sendMessage("§cMissing 7. argument §3[Amount]§c. Specify the §bamount §cthe player should get from specified item.");
-
-                                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards add §2Item §3[Item Name/hand] [Amount]");
-                                } else if (args[4].equalsIgnoreCase("Money")) {
-                                    if (!main.isVaultEnabled()) {
-                                        sender.sendMessage("§cError: cannot create a money reward because Vault (needed for money stuff to work) is not installed on the server.");
-
-                                        return true;
-                                    }
-                                    final long moneyRewardAmount = Long.parseLong(args[5]);
-
-                                    MoneyReward moneyReward = new MoneyReward(main, moneyRewardAmount);
-                                    quest.addReward(moneyReward);
-                                    sender.sendMessage("§bMoney Reward §asuccessfully added to quest §b" + quest.getQuestName() + "§a!");
-                                } else {
-                                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
-                                }
-                            } else {
-                                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
-                            }
-                        } else if (args[2].equalsIgnoreCase("npcs")) {
+                        }else if (args[2].equalsIgnoreCase("npcs")) {
                             if (args[3].equalsIgnoreCase("add")) {
                                 if(!main.isCitizensEnabled()){
                                     sender.sendMessage("§cError: Any kind of NPC stuff has been disabled, because you don't have the Citizens plugin installed on your server. You need to install the Citizens plugin in order for NPC stuff to work.");
@@ -1216,51 +1123,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                 if (args[0].equalsIgnoreCase("edit")) {
                     final Quest quest = main.getQuestManager().getQuest(args[1]);
                     if (quest != null) {
-                        if (args[2].equalsIgnoreCase("rewards")) {
-                            if (args[3].equalsIgnoreCase("add")) {
-                                if (args[4].equalsIgnoreCase("Item")) {
-
-
-                                    final int itemRewardAmount = Integer.parseInt(args[6]);
-
-
-                                    if (args[5].equalsIgnoreCase("hand")) {
-                                        if (sender instanceof Player player) {
-                                            ItemStack holdingItem = player.getInventory().getItemInMainHand().clone();
-                                            holdingItem.setAmount(itemRewardAmount);
-
-                                            ItemReward itemReward = new ItemReward(main, holdingItem);
-                                            quest.addReward(itemReward);
-                                            sender.sendMessage("§aReward successfully added to quest §b" + quest.getQuestName() + "§a!");
-
-
-                                        } else {
-                                            sender.sendMessage("§cThis command can only be run as a player.");
-                                        }
-                                    } else {
-                                        Material itemMaterial = Material.getMaterial(args[5]);
-                                        if (itemMaterial != null) {
-                                            ItemStack itemStack = new ItemStack(itemMaterial, itemRewardAmount);
-
-
-                                            ItemReward itemReward = new ItemReward(main, itemStack);
-                                            quest.addReward(itemReward);
-                                            sender.sendMessage("§aReward successfully added to quest §b" + quest.getQuestName() + "§a!");
-
-
-                                        } else {
-                                            sender.sendMessage("§cItem §b" + args[5] + " §cnot found!");
-                                        }
-                                    }
-
-
-                                } else {
-                                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
-                                }
-                            } else {
-                                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
-                            }
-                        } else if (args[2].equalsIgnoreCase("requirements")) {
+                        if (args[2].equalsIgnoreCase("requirements")) {
                             if (args[3].equalsIgnoreCase("add")) {
                                 if (args[4].equalsIgnoreCase("OtherQuest")) {
                                     String otherQuestName = args[5];
@@ -1764,7 +1627,153 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
 
     }
 
-    @Override
+
+    public void handleCommandsEditRewards(final CommandSender sender, final String[] args, final Quest quest) { //qa edit xxx rewards ...
+        if(args.length == 3){
+            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards add §3[Reward Type] ...");
+            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards list");
+            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards edit §3[Reward ID] ...");
+            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards clear");
+        }else if(args.length == 4){
+            if (args[3].equalsIgnoreCase("add")) {
+                sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards add §3[Reward Type] ...");
+                sender.sendMessage("§cPlease specify a reward type!");
+                sender.sendMessage(main.getQuestManager().getRewardTypesList());
+            } else if (args[3].equalsIgnoreCase("list")) {
+                sender.sendMessage("§9Rewards for quest §b" + quest.getQuestName() + "§9:");
+                int counter = 1;
+                for (final Reward reward : quest.getRewards()) {
+                    sender.sendMessage("§a" + counter + ". §e" + reward.getRewardType().toString());
+                    if (reward instanceof CommandReward commandReward) {
+                        sender.sendMessage("§7-- Reward Command: " + commandReward.getConsoleCommand());
+                    } else if (reward instanceof QuestPointsReward questPointsReward) {
+                        sender.sendMessage("§7-- Quest points amount: " + questPointsReward.getRewardedQuestPoints());
+                    } else if (reward instanceof ItemReward itemReward) {
+                        sender.sendMessage("§7-- Item: " + itemReward.getItemReward());
+                    } else if (reward instanceof MoneyReward moneyReward) {
+                        sender.sendMessage("§7-- Money: " + moneyReward.getRewardedMoney());
+                    }
+
+                    counter += 1;
+                }
+            } else if (args[3].equalsIgnoreCase("clear")) {
+                quest.removeAllRewards();
+                sender.sendMessage("§aAll rewards of quest §b" + quest.getQuestName() + " §ahave been removed!");
+            } else if (args[3].equalsIgnoreCase("edit")) {
+                sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards edit §3[Reward ID] ...");
+                sender.sendMessage("§cPlease specify the reward ID you want to edit!");
+                sender.sendMessage(main.getQuestManager().getRewardTypesList());
+            } else {
+                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+            }
+        } else if(args.length == 5){
+            if (args[3].equalsIgnoreCase("add")) {
+                if (args[4].equalsIgnoreCase("ConsoleCommand")) {
+                    sender.sendMessage("§cMissing 6. argument §3[Console Command]§c. Specify the §bcommand §cwhich will be executed from the console as a reward. A '/' at the beginning is not required.");
+                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards add §2ConsoleCommand §3[Console Command]");
+                } else if (args[4].equalsIgnoreCase("QuestPoints")) {
+                    sender.sendMessage("§cMissing 6. argument §3[Quest point reward amount]§c. Specify the §bamount of quest points §cthe player should receive.");
+                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards add §2QuestPoints §3[Quest point reward amount]");
+                } else if (args[4].equalsIgnoreCase("Item")) {
+                    sender.sendMessage("§cMissing 6. argument §3[Item Name/hand]§c. Specify the §bitem type §cthe player should receive. If you use 'name'. the item you are holding in your main hand will be used.");
+                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards add §2Item §3[Item Name/hand] [Amount]");
+                } else if (args[4].equalsIgnoreCase("Money")) {
+                    sender.sendMessage("§cMissing 6. argument §3[Amount]§c. Specify the §bamount of money §cthe player should receive.");
+                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards add §2Money §3[Amount]");
+                } else {
+                    sender.sendMessage(main.getQuestManager().getRewardTypesList());
+                }
+            } else {
+                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+            }
+        } else if (args[3].equalsIgnoreCase("add") && args[4].equalsIgnoreCase("ConsoleCommand")) { //args >= 5
+            StringBuilder rewardCommand = new StringBuilder();
+            for (int start = 5; start < args.length; start++) {
+                rewardCommand.append(args[start]).append(" ");
+            }
+            CommandReward commandReward = new CommandReward(main, rewardCommand.toString());
+            quest.addReward(commandReward);
+            sender.sendMessage("§aReward successfully added to quest §b" + quest.getQuestName() + "§a! Reward command: §e" + rewardCommand);
+
+        } else if(args.length == 6){
+            if (args[3].equalsIgnoreCase("add")) {
+                if (args[4].equalsIgnoreCase("QuestPoints")) {
+
+                    final long questPointRewardAmount = Long.parseLong(args[5]);
+
+                    QuestPointsReward questPointsReward = new QuestPointsReward(main, questPointRewardAmount);
+                    quest.addReward(questPointsReward);
+                    sender.sendMessage("§bQuest Points Reward §asuccessfully added to quest §b" + quest.getQuestName() + "§a!");
+
+                } else if (args[4].equalsIgnoreCase("Item")) {
+                    sender.sendMessage("§cMissing 7. argument §3[Amount]§c. Specify the §bamount §cthe player should get from specified item.");
+
+                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards add §2Item §3[Item Name/hand] [Amount]");
+                } else if (args[4].equalsIgnoreCase("Money")) {
+                    if (!main.isVaultEnabled()) {
+                        sender.sendMessage("§cError: cannot create a money reward because Vault (needed for money stuff to work) is not installed on the server.");
+
+                        return;
+                    }
+                    final long moneyRewardAmount = Long.parseLong(args[5]);
+
+                    MoneyReward moneyReward = new MoneyReward(main, moneyRewardAmount);
+                    quest.addReward(moneyReward);
+                    sender.sendMessage("§bMoney Reward §asuccessfully added to quest §b" + quest.getQuestName() + "§a!");
+                } else {
+                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                }
+            } else {
+                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+            }
+        } else if(args.length == 7){
+            if (args[3].equalsIgnoreCase("add")) {
+                if (args[4].equalsIgnoreCase("Item")) {
+
+
+                    final int itemRewardAmount = Integer.parseInt(args[6]);
+
+
+                    if (args[5].equalsIgnoreCase("hand")) {
+                        if (sender instanceof Player player) {
+                            ItemStack holdingItem = player.getInventory().getItemInMainHand().clone();
+                            holdingItem.setAmount(itemRewardAmount);
+
+                            ItemReward itemReward = new ItemReward(main, holdingItem);
+                            quest.addReward(itemReward);
+                            sender.sendMessage("§aReward successfully added to quest §b" + quest.getQuestName() + "§a!");
+
+
+                        } else {
+                            sender.sendMessage("§cThis command can only be run as a player.");
+                        }
+                    } else {
+                        Material itemMaterial = Material.getMaterial(args[5]);
+                        if (itemMaterial != null) {
+                            ItemStack itemStack = new ItemStack(itemMaterial, itemRewardAmount);
+
+
+                            ItemReward itemReward = new ItemReward(main, itemStack);
+                            quest.addReward(itemReward);
+                            sender.sendMessage("§aReward successfully added to quest §b" + quest.getQuestName() + "§a!");
+
+
+                        } else {
+                            sender.sendMessage("§cItem §b" + args[5] + " §cnot found!");
+                        }
+                    }
+
+
+                } else {
+                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                }
+            } else {
+                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+            }
+        }
+    }
+
+        @Override
     public List<String> onTabComplete(CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
         main.getDataManager().completions.clear();
         main.getDataManager().standardPlayerCompletions.clear();
@@ -2222,7 +2231,8 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
     }
 
 
-    public final List<String> handleCompletionsEditRequirements(final String[] args, final CommandSender sender) {
+
+        public final List<String> handleCompletionsEditRequirements(final String[] args, final CommandSender sender) {
         final Audience audience = main.adventure().sender(sender);
         if (args.length == 4) {
             main.getDataManager().completions.add("add");

@@ -989,7 +989,7 @@ public class ObjectivesAdminCommand {
 
     }
 
-    public void handleCommandsBreedMobsObjective(final CommandSender sender, final String[] args, final Quest quest) { //qa edit xxx objectives add KillMobs
+    public void handleCommandsBreedMobsObjective(final CommandSender sender, final String[] args, final Quest quest) { //qa edit xxx objectives add BreedMobs
         if (args.length == 5) {
             sender.sendMessage("§cMissing 6. argument §3[Mob Name / 'any']]§c. Specify the §bname§c of the mob the player needs to breed to complete the objective. Or, use 'any' if every entity should count.");
             sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2BreedMobs §3[Mob Name / 'any'] §3[amount of breeds needed]");
