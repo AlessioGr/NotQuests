@@ -1641,9 +1641,8 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                 sender.sendMessage(main.getQuestManager().getRewardTypesList());
             } else if (args[3].equalsIgnoreCase("list")) {
                 sender.sendMessage("§9Rewards for quest §b" + quest.getQuestName() + "§9:");
-                int counter = 1;
                 for (final Reward reward : quest.getRewards()) {
-                    sender.sendMessage("§a" + counter + ". §e" + reward.getRewardType().toString());
+                    sender.sendMessage("§a" + reward.getRewardID() + ". §e" + reward.getRewardType().toString());
                     if (reward instanceof CommandReward commandReward) {
                         sender.sendMessage("§7-- Reward Command: " + commandReward.getConsoleCommand());
                     } else if (reward instanceof QuestPointsReward questPointsReward) {
@@ -1654,15 +1653,13 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                         sender.sendMessage("§7-- Money: " + moneyReward.getRewardedMoney());
                     }
 
-                    counter += 1;
                 }
             } else if (args[3].equalsIgnoreCase("clear")) {
                 quest.removeAllRewards();
                 sender.sendMessage("§aAll rewards of quest §b" + quest.getQuestName() + " §ahave been removed!");
             } else if (args[3].equalsIgnoreCase("edit")) {
                 sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards edit §3[Reward ID] ...");
-                sender.sendMessage("§cPlease specify the reward ID you want to edit!");
-                sender.sendMessage(main.getQuestManager().getRewardTypesList());
+                sender.sendMessage("§cPlease specify the reward ID you want to edit! You can list the rewards and their IDs via /qa ... rewards list.");
             } else {
                 sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
             }
@@ -1683,6 +1680,26 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                 } else {
                     sender.sendMessage(main.getQuestManager().getRewardTypesList());
                 }
+            } else if (args[3].equalsIgnoreCase("edit")) {
+                try {
+                    final int rewardID = Integer.parseInt(args[4]);
+                    if (quest.getRewards().size() >= rewardID && rewardID > 0) {
+                        final Reward reward = quest.getRewardFromID(rewardID);
+                        if (reward != null) {
+                            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards edit §2" + rewardID + " §3info §7 | Shows everything there is to know about this reward");
+                            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards edit §2" + rewardID + " §3displayName ... §7 | Manages the display name of the reward");
+                            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards edit §2" + rewardID + " §3remove §7 | Removes the reward from the quest");
+
+                        } else {
+                            sender.sendMessage("§cError: Reward with the ID §b" + reward + " §cwas not found for quest §b" + quest.getQuestName() + "§c!");
+                        }
+                    } else {
+                        sender.sendMessage("§cError: Reward with the ID §b" + rewardID + " §cwas not found for quest §b" + quest.getQuestName() + "§c!");
+                    }
+                } catch (java.lang.NumberFormatException ex) {
+                    sender.sendMessage("§cInvalid reward ID §b'" + args[4] + "'§c.");
+                }
+
             } else {
                 sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
             }
@@ -1691,7 +1708,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
             for (int start = 5; start < args.length; start++) {
                 rewardCommand.append(args[start]).append(" ");
             }
-            CommandReward commandReward = new CommandReward(main, rewardCommand.toString());
+            CommandReward commandReward = new CommandReward(main, rewardCommand.toString(), quest.getRewards().size() + 1);
             quest.addReward(commandReward);
             sender.sendMessage("§aReward successfully added to quest §b" + quest.getQuestName() + "§a! Reward command: §e" + rewardCommand);
 
@@ -1701,7 +1718,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
 
                     final long questPointRewardAmount = Long.parseLong(args[5]);
 
-                    QuestPointsReward questPointsReward = new QuestPointsReward(main, questPointRewardAmount);
+                    QuestPointsReward questPointsReward = new QuestPointsReward(main, questPointRewardAmount, quest.getRewards().size() + 1);
                     quest.addReward(questPointsReward);
                     sender.sendMessage("§bQuest Points Reward §asuccessfully added to quest §b" + quest.getQuestName() + "§a!");
 
@@ -1717,13 +1734,51 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                     }
                     final long moneyRewardAmount = Long.parseLong(args[5]);
 
-                    MoneyReward moneyReward = new MoneyReward(main, moneyRewardAmount);
+                    MoneyReward moneyReward = new MoneyReward(main, moneyRewardAmount, quest.getRewards().size() + 1);
                     quest.addReward(moneyReward);
                     sender.sendMessage("§bMoney Reward §asuccessfully added to quest §b" + quest.getQuestName() + "§a!");
                 } else {
                     sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
                 }
-            } else {
+            } else if (args[3].equalsIgnoreCase("edit")) {
+                final int rewardID = Integer.parseInt(args[4]);
+                final Reward reward = quest.getRewardFromID(rewardID);
+                if (reward != null) {
+                    if (args[5].equalsIgnoreCase("displayName")) {
+                        sender.sendMessage("§cMissing 7. argument!");
+                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards edit §2" + rewardID + " §3displayName set <New DisplayName> §7 | Sets new reward Display Name. Only rewards with a display name set will be displayed.");
+                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards edit §2" + rewardID + " §3displayName remove §7 | Removes current reward Display Name");
+                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards edit §2" + rewardID + " §3displayName show §7 | Shows current reward Display Name");
+
+                    } else if (args[5].equalsIgnoreCase("info")) {
+                        sender.sendMessage("§9Reward §a" + rewardID + " §9for quest §b" + quest.getQuestName() + "§9:");
+                            if (reward instanceof CommandReward commandReward) {
+                                sender.sendMessage("§7-- Reward Command: " + commandReward.getConsoleCommand());
+                            } else if (reward instanceof QuestPointsReward questPointsReward) {
+                                sender.sendMessage("§7-- Quest points amount: " + questPointsReward.getRewardedQuestPoints());
+                            } else if (reward instanceof ItemReward itemReward) {
+                                sender.sendMessage("§7-- Item: " + itemReward.getItemReward());
+                            } else if (reward instanceof MoneyReward moneyReward) {
+                                sender.sendMessage("§7-- Money: " + moneyReward.getRewardedMoney());
+                            }
+
+
+                    } else if (args[5].equalsIgnoreCase("remove") || args[5].equalsIgnoreCase("delete")) {
+
+                        quest.removeReward(reward);
+                        sender.sendMessage("§aThe reward with the ID §b" + rewardID + " §ahas been removed from the Quest §b" + quest.getQuestName() + "§a!");
+
+                    } else {
+                        sender.sendMessage("§cMissing 7. argument!");
+                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards edit §2" + rewardID + " §3info §7 | Shows everything there is to know about this reward");
+                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards edit §2" + rewardID + " §3displayName ... §7 | Manages the display name of the reward");
+                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards edit §2" + rewardID + " §3remove §7 | Removes the reward from the quest");
+
+                    }
+                } else {
+                    sender.sendMessage("§cError: Reward with the ID §b" + rewardID + " §c was not found for quest §b" + quest.getQuestName() + "§c!");
+                }
+            } else{
                 sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
             }
         } else if(args.length == 7){
@@ -1739,7 +1794,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                             ItemStack holdingItem = player.getInventory().getItemInMainHand().clone();
                             holdingItem.setAmount(itemRewardAmount);
 
-                            ItemReward itemReward = new ItemReward(main, holdingItem);
+                            ItemReward itemReward = new ItemReward(main, holdingItem, quest.getRewards().size() + 1);
                             quest.addReward(itemReward);
                             sender.sendMessage("§aReward successfully added to quest §b" + quest.getQuestName() + "§a!");
 
@@ -1753,7 +1808,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                             ItemStack itemStack = new ItemStack(itemMaterial, itemRewardAmount);
 
 
-                            ItemReward itemReward = new ItemReward(main, itemStack);
+                            ItemReward itemReward = new ItemReward(main, itemStack, quest.getRewards().size() + 1);
                             quest.addReward(itemReward);
                             sender.sendMessage("§aReward successfully added to quest §b" + quest.getQuestName() + "§a!");
 

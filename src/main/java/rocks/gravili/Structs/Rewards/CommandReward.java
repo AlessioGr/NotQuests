@@ -29,8 +29,8 @@ public class CommandReward extends Reward {
     private final NotQuests main;
     private final String consoleCommand;
 
-    public CommandReward(final NotQuests main, String consoleCommand) {
-        super(RewardType.ConsoleCommand);
+    public CommandReward(final NotQuests main, String consoleCommand, final int rewardID) {
+        super(RewardType.ConsoleCommand, rewardID);
         this.main = main;
         this.consoleCommand = consoleCommand;
 

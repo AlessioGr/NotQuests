@@ -399,33 +399,52 @@ public class QuestManager {
                     if (rewardsConfigurationSection != null) {
                         for (String rewardNumber : rewardsConfigurationSection.getKeys(false)) {
 
-                            RewardType rewardType = RewardType.valueOf(main.getDataManager().getQuestsData().getString("quests." + questName + ".rewards." + rewardNumber + ".rewardType"));
 
-                            Reward reward = null;
+                            int rewardID = -1;
+                            boolean validRewardID = true;
+                            try {
+                                rewardID = Integer.parseInt(rewardNumber);
+                            } catch (java.lang.NumberFormatException ex) {
+                                main.getLogManager().log(Level.SEVERE, "Error parsing loaded reward ID §b" + rewardNumber + "§c. Reward creation skipped...");
 
-                            if (rewardType == RewardType.ConsoleCommand) {
-                                String consoleCommand = main.getDataManager().getQuestsData().getString("quests." + questName + ".rewards." + rewardNumber + ".specifics.consoleCommand");
-                                reward = new CommandReward(main, consoleCommand);
-                            } else if (rewardType == RewardType.QuestPoints) {
-                                long rewardedQuestPoints = main.getDataManager().getQuestsData().getLong("quests." + questName + ".rewards." + rewardNumber + ".specifics.rewardedQuestPoints");
-                                reward = new QuestPointsReward(main, rewardedQuestPoints);
-                            } else if (rewardType == RewardType.Item) {
-                                ItemStack rewardItem = main.getDataManager().getQuestsData().getItemStack("quests." + questName + ".rewards." + rewardNumber + ".specifics.rewardItem");
-                                reward = new ItemReward(main, rewardItem);
-                            } else if (rewardType == RewardType.Money) {
-                                long rewardedMoneyAmount = main.getDataManager().getQuestsData().getLong("quests." + questName + ".rewards." + rewardNumber + ".specifics.rewardedMoneyAmount");
-                                reward = new MoneyReward(main, rewardedMoneyAmount);
-                            }
-
-                            if (reward != null) {
-                                quest.addReward(reward);
-                            } else {
-                                main.getLogManager().log(Level.SEVERE, "Error loading reward");
-
-                                main.getLogManager().log(Level.SEVERE, "Plugin disabled, because there was an error while loading quests reward data.");
+                                validRewardID = false;
+                                main.getLogManager().log(Level.SEVERE, "Plugin disabled, because there was an error while loading quests reward ID data.");
                                 main.getDataManager().setSavingEnabled(false);
                                 main.getServer().getPluginManager().disablePlugin(main);
                             }
+
+                            RewardType rewardType = RewardType.valueOf(main.getDataManager().getQuestsData().getString("quests." + questName + ".rewards." + rewardNumber + ".rewardType"));
+
+                            if (validRewardID && rewardID > 0 && rewardType != null) {
+                                Reward reward = null;
+
+                                if (rewardType == RewardType.ConsoleCommand) {
+                                    String consoleCommand = main.getDataManager().getQuestsData().getString("quests." + questName + ".rewards." + rewardNumber + ".specifics.consoleCommand");
+                                    reward = new CommandReward(main, consoleCommand, rewardID);
+                                } else if (rewardType == RewardType.QuestPoints) {
+                                    long rewardedQuestPoints = main.getDataManager().getQuestsData().getLong("quests." + questName + ".rewards." + rewardNumber + ".specifics.rewardedQuestPoints");
+                                    reward = new QuestPointsReward(main, rewardedQuestPoints, rewardID);
+                                } else if (rewardType == RewardType.Item) {
+                                    ItemStack rewardItem = main.getDataManager().getQuestsData().getItemStack("quests." + questName + ".rewards." + rewardNumber + ".specifics.rewardItem");
+                                    reward = new ItemReward(main, rewardItem, rewardID);
+                                } else if (rewardType == RewardType.Money) {
+                                    long rewardedMoneyAmount = main.getDataManager().getQuestsData().getLong("quests." + questName + ".rewards." + rewardNumber + ".specifics.rewardedMoneyAmount");
+                                    reward = new MoneyReward(main, rewardedMoneyAmount, rewardID);
+                                }
+
+                                if (reward != null) {
+                                    quest.addReward(reward);
+                                } else {
+                                    main.getLogManager().log(Level.SEVERE, "Error loading reward");
+
+                                    main.getLogManager().log(Level.SEVERE, "Plugin disabled, because there was an error while loading quests reward data.");
+                                    main.getDataManager().setSavingEnabled(false);
+                                    main.getServer().getPluginManager().disablePlugin(main);
+                                }
+                            }
+
+
+
 
                         }
                     }

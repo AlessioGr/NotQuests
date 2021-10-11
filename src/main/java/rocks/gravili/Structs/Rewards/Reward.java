@@ -23,9 +23,11 @@ import org.bukkit.entity.Player;
 
 public abstract class Reward {
     private final RewardType rewardType;
+    private final int rewardID;
 
-    public Reward(final RewardType rewardType) {
+    public Reward(final RewardType rewardType, int rewardID) {
         this.rewardType = rewardType;
+        this.rewardID = rewardID;
     }
 
     public final RewardType getRewardType() {
@@ -33,4 +35,8 @@ public abstract class Reward {
     }
 
     public abstract void giveReward(final Player player, final Quest quest);
+
+    public final int getRewardID(){
+        return rewardID;
+    }
 }

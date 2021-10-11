@@ -29,8 +29,8 @@ public class ItemReward extends Reward {
     private final NotQuests main;
     private final ItemStack item;
 
-    public ItemReward(final NotQuests main, ItemStack item) {
-        super(RewardType.Item);
+    public ItemReward(final NotQuests main, ItemStack item, final int rewardID) {
+        super(RewardType.Item, rewardID);
         this.main = main;
         this.item = item;
 

@@ -28,8 +28,8 @@ public class MoneyReward extends Reward {
     private final NotQuests main;
     private final long rewardedMoney;
 
-    public MoneyReward(final NotQuests main, long rewardedMoney) {
-        super(RewardType.Money);
+    public MoneyReward(final NotQuests main, long rewardedMoney, final int rewardID) {
+        super(RewardType.Money, rewardID);
         this.main = main;
         this.rewardedMoney = rewardedMoney;
 

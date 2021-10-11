@@ -109,6 +109,15 @@ public class Quest {
         return null;
     }
 
+    public final Reward getRewardFromID(final int rewardID) {
+        for (final Reward reward : rewards) {
+            if (reward.getRewardID() == rewardID) {
+                return reward;
+            }
+        }
+        return null;
+    }
+
     public void addObjective(Objective objective, boolean save) {
         boolean dupeID = false;
         for (Objective objective1 : objectives) {
@@ -381,6 +390,11 @@ public class Quest {
     public void removeObjective(final int objectiveID) {
         objectives.remove(objectiveID);
         main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objectiveID, null);
+    }
+
+    public void removeReward(final Reward reward) {
+        rewards.remove(reward);
+        main.getDataManager().getQuestsData().set("quests." + questName + ".rewards." + reward.getRewardID(), null);
     }
 
     public String removeTrigger(int triggerID) {

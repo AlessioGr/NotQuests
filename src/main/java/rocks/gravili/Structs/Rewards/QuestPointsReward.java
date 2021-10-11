@@ -30,8 +30,8 @@ public class QuestPointsReward extends Reward {
     private final NotQuests main;
     private final long rewardedQuestPoints;
 
-    public QuestPointsReward(final NotQuests main, long rewardedQuestPoints) {
-        super(RewardType.QuestPoints);
+    public QuestPointsReward(final NotQuests main, long rewardedQuestPoints, final int rewardID) {
+        super(RewardType.QuestPoints, rewardID);
         this.main = main;
         this.rewardedQuestPoints = rewardedQuestPoints;
 
