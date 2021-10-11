@@ -387,10 +387,7 @@ public class Quest {
         main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID(), null);
     }
 
-    public void removeObjective(final int objectiveID) {
-        objectives.remove(objectiveID);
-        main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objectiveID, null);
-    }
+
 
     public void removeReward(final Reward reward) {
         rewards.remove(reward);

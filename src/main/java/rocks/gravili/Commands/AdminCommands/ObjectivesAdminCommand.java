@@ -107,7 +107,7 @@ public class ObjectivesAdminCommand {
                 final int objectiveID = Integer.parseInt(args[4]);
                 final Objective objective = quest.getObjectiveFromID(objectiveID);
                 if (objective != null) {
-                    quest.removeObjective(objectiveID - 1);
+                    quest.removeObjective(objective);
                     sender.sendMessage("§aObjective with the ID §b" + objectiveID + " §ahas successfully been removed from Quest §b" + quest.getQuestName());
                 } else {
                     sender.sendMessage("§cError: Objective with the ID §b" + objectiveID + " §cwas not found for quest §b" + quest.getQuestName() + "§c!");
