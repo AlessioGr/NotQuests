@@ -463,11 +463,49 @@ public class DataManager {
         configuration.setArmorStandQuestGiverIndicatorParticleDisableIfTPSBelow(getGeneralConfig().getDouble("visual.armorstands.quest-giver-indicator-particle.disable-if-tps-below"));
 
 
+        //GUI
+
         if (!getGeneralConfig().isBoolean("gui.questpreview.enabled")) {
             getGeneralConfig().set("gui.questpreview.enabled", true);
             valueChanged = true;
         }
         configuration.setQuestPreviewUseGUI(getGeneralConfig().getBoolean("gui.questpreview.enabled"));
+
+        //Description
+        if (!getGeneralConfig().isBoolean("gui.questpreview.description.enabled")) {
+            getGeneralConfig().set("gui.questpreview.description.enabled", true);
+            valueChanged = true;
+        }
+        configuration.setGuiQuestPreviewDescription_enabled(getGeneralConfig().getBoolean("gui.questpreview.description.enabled"));
+        if (!getGeneralConfig().isString("gui.questpreview.description.slot")) {
+            getGeneralConfig().set("gui.questpreview.description.slot", '1');
+            valueChanged = true;
+        }
+        configuration.setGuiQuestPreviewDescription_slot(getGeneralConfig().getString("gui.questpreview.description.slot").charAt(0));
+
+        //Rewards
+        if (!getGeneralConfig().isBoolean("gui.questpreview.rewards.enabled")) {
+            getGeneralConfig().set("gui.questpreview.rewards.enabled", true);
+            valueChanged = true;
+        }
+        configuration.setGuiQuestPreviewRewards_enabled(getGeneralConfig().getBoolean("gui.questpreview.rewards.enabled"));
+        if (!getGeneralConfig().isString("gui.questpreview.rewards.slot")) {
+            getGeneralConfig().set("gui.questpreview.rewards.slot", '3');
+            valueChanged = true;
+        }
+        configuration.setGuiQuestPreviewRewards_slot(getGeneralConfig().getString("gui.questpreview.rewards.slot").charAt(0));
+        //Requirements
+        if (!getGeneralConfig().isBoolean("gui.questpreview.requirements.enabled")) {
+            getGeneralConfig().set("gui.questpreview.requirements.enabled", true);
+            valueChanged = true;
+        }
+        configuration.setGuiQuestPreviewRequirements_enabled(getGeneralConfig().getBoolean("gui.questpreview.requirements.enabled"));
+        if (!getGeneralConfig().isString("gui.questpreview.requirements.slot")) {
+            getGeneralConfig().set("gui.questpreview.requirements.slot", '5');
+            valueChanged = true;
+        }
+        configuration.setGuiQuestPreviewRequirements_slot(getGeneralConfig().getString("gui.questpreview.requirements.slot").charAt(0));
+
 
         if (!getGeneralConfig().isBoolean("gui.usercommands.enabled")) {
             getGeneralConfig().set("gui.usercommands.enabled", true);

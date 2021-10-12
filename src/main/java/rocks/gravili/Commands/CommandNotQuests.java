@@ -27,11 +27,6 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import rocks.gravili.NotQuests;
-import rocks.gravili.Structs.ActiveObjective;
-import rocks.gravili.Structs.ActiveQuest;
-import rocks.gravili.Structs.Quest;
-import rocks.gravili.Structs.QuestPlayer;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -41,6 +36,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
+import rocks.gravili.NotQuests;
+import rocks.gravili.Structs.ActiveObjective;
+import rocks.gravili.Structs.ActiveQuest;
+import rocks.gravili.Structs.Quest;
+import rocks.gravili.Structs.QuestPlayer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -616,65 +616,70 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                 gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
 
 
-                                String description = main.getLanguageManager().getString("gui.previewQuest.button.description.empty");
-                                if (!quest.getQuestDescription().isBlank()) {
-                                    description = quest.getQuestDescription(50);
-                                }
-                                gui.addElement(new StaticGuiElement('1',
-                                        new ItemStack(Material.BOOKSHELF),
-                                        1, // Display a number as the item count
-                                        click -> {
+                                if (main.getDataManager().getConfiguration().isGuiQuestPreviewDescription_enabled()) {
+                                    String description = main.getLanguageManager().getString("gui.previewQuest.button.description.empty");
+                                    if (!quest.getQuestDescription().isBlank()) {
+                                        description = quest.getQuestDescription(50);
+                                    }
+                                    gui.addElement(new StaticGuiElement(main.getDataManager().getConfiguration().getGuiQuestPreviewDescription_slot(),
+                                            new ItemStack(Material.BOOKSHELF),
+                                            1, // Display a number as the item count
+                                            click -> {
 
-                                            return true; // returning true will cancel the click event and stop taking the item
+                                                return true; // returning true will cancel the click event and stop taking the item
 
-                                        },
-                                        main.getLanguageManager().getString("gui.previewQuest.button.description.text")
-                                                .replaceAll("%QUESTDESCRIPTION%", description)
-
-
-                                ));
+                                            },
+                                            main.getLanguageManager().getString("gui.previewQuest.button.description.text")
+                                                    .replaceAll("%QUESTDESCRIPTION%", description)
 
 
-
-
-                                String rewards = main.getQuestManager().getQuestRewards(quest);
-                                if (rewards.isBlank()) {
-                                    rewards = main.getLanguageManager().getString("gui.previewQuest.button.rewards.empty");
-                                }
-
-                                gui.addElement(new StaticGuiElement('3',
-                                        new ItemStack(Material.EMERALD),
-                                        1, // Display a number as the item count
-                                        click -> {
-
-                                            return true; // returning true will cancel the click event and stop taking the item
-
-                                        },
-                                        main.getLanguageManager().getString("gui.previewQuest.button.rewards.text")
-                                                .replaceAll("%QUESTREWARDS%", rewards)
-
-
-                                ));
-
-                                String requirements = main.getQuestManager().getQuestRequirements(quest);
-                                if (requirements.isBlank()) {
-                                    requirements = main.getLanguageManager().getString("gui.previewQuest.button.requirements.empty");
+                                    ));
                                 }
 
 
-                                gui.addElement(new StaticGuiElement('5',
-                                        new ItemStack(Material.IRON_BARS),
-                                        1, // Display a number as the item count
-                                        click -> {
+                                if (main.getDataManager().getConfiguration().isGuiQuestPreviewRewards_enabled()) {
+                                    String rewards = main.getQuestManager().getQuestRewards(quest);
+                                    if (rewards.isBlank()) {
+                                        rewards = main.getLanguageManager().getString("gui.previewQuest.button.rewards.empty");
+                                    }
 
-                                            return true; // returning true will cancel the click event and stop taking the item
+                                    gui.addElement(new StaticGuiElement(main.getDataManager().getConfiguration().getGuiQuestPreviewRewards_slot(),
+                                            new ItemStack(Material.EMERALD),
+                                            1, // Display a number as the item count
+                                            click -> {
 
-                                        },
-                                        main.getLanguageManager().getString("gui.previewQuest.button.requirements.text")
-                                                .replaceAll("%QUESTREQUIREMENTS%", requirements)
+                                                return true; // returning true will cancel the click event and stop taking the item
+
+                                            },
+                                            main.getLanguageManager().getString("gui.previewQuest.button.rewards.text")
+                                                    .replaceAll("%QUESTREWARDS%", rewards)
 
 
-                                ));
+                                    ));
+                                }
+
+
+                                if (main.getDataManager().getConfiguration().isGuiQuestPreviewRequirements_enabled()) {
+                                    String requirements = main.getQuestManager().getQuestRequirements(quest);
+                                    if (requirements.isBlank()) {
+                                        requirements = main.getLanguageManager().getString("gui.previewQuest.button.requirements.empty");
+                                    }
+
+                                    gui.addElement(new StaticGuiElement(main.getDataManager().getConfiguration().getGuiQuestPreviewRequirements_slot(),
+                                            new ItemStack(Material.IRON_BARS),
+                                            1, // Display a number as the item count
+                                            click -> {
+
+                                                return true; // returning true will cancel the click event and stop taking the item
+
+                                            },
+                                            main.getLanguageManager().getString("gui.previewQuest.button.requirements.text")
+                                                    .replaceAll("%QUESTREQUIREMENTS%", requirements)
+
+
+                                    ));
+                                }
+
 
                                 String finalDisplayName = displayName;
                                 gui.addElement(new StaticGuiElement('g',
