@@ -19,21 +19,25 @@
 package rocks.gravili.Managers;
 
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import rocks.gravili.NotQuests;
+import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import rocks.gravili.NotQuests;
 
 import java.util.HashMap;
 
 public class UtilManager {
     private final NotQuests main;
+    private final HashMap<Audience, BossBar> playersAndBossBars;
 
     public UtilManager(NotQuests main) {
         this.main = main;
+        playersAndBossBars = new HashMap<>();
     }
 
     public final OfflinePlayer getOfflinePlayer(final String playerName) {
@@ -41,8 +45,8 @@ public class UtilManager {
     }
 
 
-    public Component getFancyActionBarTabCompletion(final String[] args, final String hintCurrentArg, String hintNextArgs) {
-        final int maxPreviousArgs = main.getDataManager().getConfiguration().getActionBarCommandCompletionMaxPreviousArgumentsDisplayed();
+    private Component getFancyCommandTabCompletion(final String[] args, final String hintCurrentArg, String hintNextArgs) {
+        final int maxPreviousArgs = main.getDataManager().getConfiguration().getFancyCommandCompletionMaxPreviousArgumentsDisplayed();
 
         final StringBuilder argsTogether = new StringBuilder();
 
@@ -106,9 +110,32 @@ public class UtilManager {
     }
 
 
-    public void sendFancyActionBar(final Audience audience, final String[] args, final String hintCurrentArg, final String hintNextArgs) {
-        if (main.getDataManager().getConfiguration().isActionBarCommandCompletionEnabled()) {
-            audience.sendActionBar(main.getUtilManager().getFancyActionBarTabCompletion(args, hintCurrentArg, hintNextArgs));
+    public void sendFancyCommandCompletion(final Audience audience, final String[] args, final String hintCurrentArg, final String hintNextArgs) {
+        if (!main.getDataManager().getConfiguration().isActionBarFancyCommandCompletionEnabled() && !main.getDataManager().getConfiguration().isTitleFancyCommandCompletionEnabled() && !main.getDataManager().getConfiguration().isBossBarFancyCommandCompletionEnabled()) {
+            return;
+        }
+
+        final Component fancyTabCompletion = getFancyCommandTabCompletion(args, hintCurrentArg, hintNextArgs);
+        if (main.getDataManager().getConfiguration().isActionBarFancyCommandCompletionEnabled()) {
+            audience.sendActionBar(fancyTabCompletion);
+        }
+        if (main.getDataManager().getConfiguration().isTitleFancyCommandCompletionEnabled()) {
+            audience.showTitle(Title.title(Component.text(""), fancyTabCompletion));
+        }
+        if (main.getDataManager().getConfiguration().isBossBarFancyCommandCompletionEnabled()) {
+
+            final BossBar oldBossBar = playersAndBossBars.get(audience);
+            if (oldBossBar != null) {
+                oldBossBar.name(fancyTabCompletion);
+                playersAndBossBars.replace(audience, oldBossBar);
+                audience.showBossBar(oldBossBar);
+
+            } else {
+                BossBar bossBarToShow = BossBar.bossBar(fancyTabCompletion, 1.0f, BossBar.Color.BLUE, BossBar.Overlay.PROGRESS);
+                playersAndBossBars.put(audience, bossBarToShow);
+                audience.showBossBar(bossBarToShow);
+            }
+
         }
 
     }

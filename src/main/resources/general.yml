@@ -15,9 +15,11 @@ general:
 visual:
   #Sets which language to use. Default is languages/en.yml
   language: en
-  #Sets if it should show the fancy, helpful hints above your health bar when typing some commands
-  fancy-actionbar-command-completion:
-    enabled: true
+  #Sets if it should show the fancy, helpful hints above your health bar, title or bossbar when typing some commands
+  fancy-command-completion:
+    actionbar-enabled: true
+    title-enabled: false
+    bossbar-enabled: false
     max-previous-arguments-displayed: 2
   #This controls the particle above the heads of Citizen NPCs with Quests attached to them
   citizensnpc:
@@ -42,6 +44,15 @@ gui:
   questpreview:
     # If set to false, clickable text will be used for Quest Previews instead
     enabled: true
+    description:
+      enabled: true
+      slot: 1
+    rewards:
+      enabled: true
+      slot: 3
+    requirements:
+      enabled: true
+      slot: 5
   usercommands:
     # If set to false, clickable text will be used for all the other /q commands instead
     enabled: true

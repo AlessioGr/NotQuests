@@ -81,9 +81,20 @@ public class Configuration {
 
 
     //Other
-    private boolean actionBarCommandCompletionEnabled = true;
-    private int actionBarCommandCompletionMaxPreviousArgumentsDisplayed = 2;
+    private boolean actionBarFancyCommandCompletionEnabled = true;
+    private boolean titleFancyCommandCompletionEnabled = false;
+    private boolean bossBarFancyCommandCompletionEnabled = false;
+    private int fancyCommandCompletionMaxPreviousArgumentsDisplayed = 2;
     private boolean moveEventEnabled = true;
+
+
+    //GUI
+    private boolean guiQuestPreviewDescription_enabled = true;
+    private boolean guiQuestPreviewRewards_enabled = true;
+    private boolean guiQuestPreviewRequirements_enabled = true;
+    private char guiQuestPreviewDescription_slot = '1';
+    private char guiQuestPreviewRewards_slot = '3';
+    private char guiQuestPreviewRequirements_slot = '5';
 
 
     public Configuration() {
@@ -322,20 +333,37 @@ public class Configuration {
         this.integrationWorldEditEnabled = integrationWorldEditEnabled;
     }
 
-    public final boolean isActionBarCommandCompletionEnabled() {
-        return actionBarCommandCompletionEnabled;
+    public final boolean isActionBarFancyCommandCompletionEnabled() {
+        return actionBarFancyCommandCompletionEnabled;
     }
 
-    public void setActionBarCommandCompletionEnabled(final boolean actionBarCommandCompletionEnabled) {
-        this.actionBarCommandCompletionEnabled = actionBarCommandCompletionEnabled;
+    public void setActionBarFancyCommandCompletionEnabled(final boolean actionBarFancyCommandCompletionEnabled) {
+        this.actionBarFancyCommandCompletionEnabled = actionBarFancyCommandCompletionEnabled;
     }
 
-    public final int getActionBarCommandCompletionMaxPreviousArgumentsDisplayed() {
-        return actionBarCommandCompletionMaxPreviousArgumentsDisplayed;
+    public final boolean isTitleFancyCommandCompletionEnabled() {
+        return titleFancyCommandCompletionEnabled;
     }
 
-    public void setActionBarCommandCompletionMaxPreviousArgumentsDisplayed(final int actionBarCommandCompletionMaxPreviousArgumentsDisplayed) {
-        this.actionBarCommandCompletionMaxPreviousArgumentsDisplayed = actionBarCommandCompletionMaxPreviousArgumentsDisplayed;
+    public void setTitleFancyCommandCompletionEnabled(final boolean titleFancyCommandCompletionEnabled) {
+        this.titleFancyCommandCompletionEnabled = titleFancyCommandCompletionEnabled;
+    }
+
+    public final boolean isBossBarFancyCommandCompletionEnabled() {
+        return bossBarFancyCommandCompletionEnabled;
+    }
+
+    public void setBossBarFancyCommandCompletionEnabled(final boolean bossBarFancyCommandCompletionEnabled) {
+        this.bossBarFancyCommandCompletionEnabled = bossBarFancyCommandCompletionEnabled;
+    }
+
+
+    public final int getFancyCommandCompletionMaxPreviousArgumentsDisplayed() {
+        return fancyCommandCompletionMaxPreviousArgumentsDisplayed;
+    }
+
+    public void setFancyCommandCompletionMaxPreviousArgumentsDisplayed(final int fancyCommandCompletionMaxPreviousArgumentsDisplayed) {
+        this.fancyCommandCompletionMaxPreviousArgumentsDisplayed = fancyCommandCompletionMaxPreviousArgumentsDisplayed;
     }
 
     public final boolean isMoveEventEnabled() {
@@ -344,5 +372,53 @@ public class Configuration {
 
     public void setMoveEventEnabled(final boolean moveEventEnabled) {
         this.moveEventEnabled = moveEventEnabled;
+    }
+
+    public boolean isGuiQuestPreviewDescription_enabled() {
+        return guiQuestPreviewDescription_enabled;
+    }
+
+    public void setGuiQuestPreviewDescription_enabled(boolean guiQuestPreviewDescription_enabled) {
+        this.guiQuestPreviewDescription_enabled = guiQuestPreviewDescription_enabled;
+    }
+
+    public boolean isGuiQuestPreviewRewards_enabled() {
+        return guiQuestPreviewRewards_enabled;
+    }
+
+    public void setGuiQuestPreviewRewards_enabled(boolean guiQuestPreviewRewards_enabled) {
+        this.guiQuestPreviewRewards_enabled = guiQuestPreviewRewards_enabled;
+    }
+
+    public boolean isGuiQuestPreviewRequirements_enabled() {
+        return guiQuestPreviewRequirements_enabled;
+    }
+
+    public void setGuiQuestPreviewRequirements_enabled(boolean guiQuestPreviewRequirements_enabled) {
+        this.guiQuestPreviewRequirements_enabled = guiQuestPreviewRequirements_enabled;
+    }
+
+    public char getGuiQuestPreviewDescription_slot() {
+        return guiQuestPreviewDescription_slot;
+    }
+
+    public void setGuiQuestPreviewDescription_slot(char guiQuestPreviewDescription_slot) {
+        this.guiQuestPreviewDescription_slot = guiQuestPreviewDescription_slot;
+    }
+
+    public char getGuiQuestPreviewRewards_slot() {
+        return guiQuestPreviewRewards_slot;
+    }
+
+    public void setGuiQuestPreviewRewards_slot(char guiQuestPreviewRewards_slot) {
+        this.guiQuestPreviewRewards_slot = guiQuestPreviewRewards_slot;
+    }
+
+    public char getGuiQuestPreviewRequirements_slot() {
+        return guiQuestPreviewRequirements_slot;
+    }
+
+    public void setGuiQuestPreviewRequirements_slot(char guiQuestPreviewRequirements_slot) {
+        this.guiQuestPreviewRequirements_slot = guiQuestPreviewRequirements_slot;
     }
 }

@@ -19,12 +19,12 @@
 package rocks.gravili.Commands.AdminCommands;
 
 import net.kyori.adventure.audience.Audience;
-import rocks.gravili.NotQuests;
-import rocks.gravili.Structs.QuestPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import rocks.gravili.NotQuests;
+import rocks.gravili.Structs.QuestPlayer;
 
 import java.util.List;
 
@@ -87,7 +87,7 @@ public class QuestPointsAdminCommand {
 
         main.getDataManager().completions.clear();
         if (args.length == 2) {
-            main.getUtilManager().sendFancyActionBar(audience, args, "[Player Name]", "[show / add / remove / set]");
+            main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Player Name]", "[show / add / remove / set]");
             return main.getDataManager().standardPlayerCompletions;
         } else if (args.length == 3) {
             main.getDataManager().completions.add("show");
@@ -99,28 +99,28 @@ public class QuestPointsAdminCommand {
             //For fancy action bar only
             final String currentArg = args[args.length - 1];
             if (currentArg.equalsIgnoreCase("show")) {
-                main.getUtilManager().sendFancyActionBar(audience, args, "[show / add / remove / set]", "");
+                main.getUtilManager().sendFancyCommandCompletion(audience, args, "[show / add / remove / set]", "");
             } else if (currentArg.equalsIgnoreCase("add")) {
-                main.getUtilManager().sendFancyActionBar(audience, args, "[show / add / remove / set]", "[Amount to add]");
+                main.getUtilManager().sendFancyCommandCompletion(audience, args, "[show / add / remove / set]", "[Amount to add]");
             } else if (currentArg.equalsIgnoreCase("remove")) {
-                main.getUtilManager().sendFancyActionBar(audience, args, "[show / add / remove / set]", "[Amount to remove]");
+                main.getUtilManager().sendFancyCommandCompletion(audience, args, "[show / add / remove / set]", "[Amount to remove]");
             } else if (currentArg.equalsIgnoreCase("set")) {
-                main.getUtilManager().sendFancyActionBar(audience, args, "[show / add / remove / set]", "[Amount to set]");
+                main.getUtilManager().sendFancyCommandCompletion(audience, args, "[show / add / remove / set]", "[Amount to set]");
             } else {
-                main.getUtilManager().sendFancyActionBar(audience, args, "[show / add / remove / set]", "...");
+                main.getUtilManager().sendFancyCommandCompletion(audience, args, "[show / add / remove / set]", "...");
             }
 
 
             return main.getDataManager().completions;
         } else if (args.length == 4) {
             if (args[2].equalsIgnoreCase("add")) {
-                main.getUtilManager().sendFancyActionBar(audience, args, "[Amount to add]", "");
+                main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Amount to add]", "");
                 return main.getDataManager().numberPositiveCompletions;
             } else if (args[2].equalsIgnoreCase("remove")) {
-                main.getUtilManager().sendFancyActionBar(audience, args, "[Amount to remove]", "");
+                main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Amount to remove]", "");
                 return main.getDataManager().numberPositiveCompletions;
             } else if (args[2].equalsIgnoreCase("set")) {
-                main.getUtilManager().sendFancyActionBar(audience, args, "[Amount to set]", "");
+                main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Amount to set]", "");
                 return main.getDataManager().numberPositiveCompletions;
             }
         }

@@ -20,8 +20,6 @@ package rocks.gravili.Commands.AdminCommands;
 
 
 import net.kyori.adventure.audience.Audience;
-import rocks.gravili.NotQuests;
-import rocks.gravili.Structs.Quest;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
@@ -30,6 +28,8 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+import rocks.gravili.NotQuests;
+import rocks.gravili.Structs.Quest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -261,17 +261,17 @@ public class ArmorStandsAdminCommand {
                 //For fancy action bar only
                 final String currentArg = args[args.length - 1];
                 if (currentArg.equalsIgnoreCase("add")) {
-                    main.getUtilManager().sendFancyActionBar(audience, args, "[add / remove / check / list / clear]", "[Show in Armor Stand (yes / no)]");
+                    main.getUtilManager().sendFancyCommandCompletion(audience, args, "[add / remove / check / list / clear]", "[Show in Armor Stand (yes / no)]");
                 } else if (currentArg.equalsIgnoreCase("remove")) {
-                    main.getUtilManager().sendFancyActionBar(audience, args, "[add / remove / check / list / clear]", "[Show in Armor Stand (yes / no)]");
+                    main.getUtilManager().sendFancyCommandCompletion(audience, args, "[add / remove / check / list / clear]", "[Show in Armor Stand (yes / no)]");
                 } else if (currentArg.equalsIgnoreCase("check")) {
-                    main.getUtilManager().sendFancyActionBar(audience, args, "[add / remove / check / list / clear]", "");
+                    main.getUtilManager().sendFancyCommandCompletion(audience, args, "[add / remove / check / list / clear]", "");
                 } else if (currentArg.equalsIgnoreCase("list")) {
-                    main.getUtilManager().sendFancyActionBar(audience, args, "[add / remove / check / list / clear]", "");
+                    main.getUtilManager().sendFancyCommandCompletion(audience, args, "[add / remove / check / list / clear]", "");
                 } else if (currentArg.equalsIgnoreCase("clear")) {
-                    main.getUtilManager().sendFancyActionBar(audience, args, "[add / remove / check / list / clear]", "");
+                    main.getUtilManager().sendFancyCommandCompletion(audience, args, "[add / remove / check / list / clear]", "");
                 } else {
-                    main.getUtilManager().sendFancyActionBar(audience, args, "[add / remove / check / list / clear]", "...");
+                    main.getUtilManager().sendFancyCommandCompletion(audience, args, "[add / remove / check / list / clear]", "...");
                 }
 
 
@@ -281,14 +281,14 @@ public class ArmorStandsAdminCommand {
                     main.getDataManager().completions.add("yes");
                     main.getDataManager().completions.add("no");
 
-                    main.getUtilManager().sendFancyActionBar(audience, args, "[Show in Armor Stand (yes / no)]", "");
+                    main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Show in Armor Stand (yes / no)]", "");
 
                     return main.getDataManager().completions;
                 }else if (args[3].equalsIgnoreCase("remove")) {
                     main.getDataManager().completions.add("yes");
                     main.getDataManager().completions.add("no");
 
-                    main.getUtilManager().sendFancyActionBar(audience, args, "[Show in Armor Stand (yes / no)]", "");
+                    main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Show in Armor Stand (yes / no)]", "");
                     return main.getDataManager().completions;
                 }
             }

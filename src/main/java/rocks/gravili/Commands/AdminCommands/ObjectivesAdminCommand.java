@@ -22,11 +22,6 @@ package rocks.gravili.Commands.AdminCommands;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.kyori.adventure.audience.Audience;
-import rocks.gravili.NotQuests;
-import rocks.gravili.Structs.Objectives.*;
-import rocks.gravili.Structs.Objectives.*;
-import rocks.gravili.Structs.Objectives.hooks.KillEliteMobsObjective;
-import rocks.gravili.Structs.Quest;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
@@ -36,6 +31,10 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+import rocks.gravili.NotQuests;
+import rocks.gravili.Structs.Objectives.*;
+import rocks.gravili.Structs.Objectives.hooks.KillEliteMobsObjective;
+import rocks.gravili.Structs.Quest;
 
 import java.util.*;
 
@@ -1232,15 +1231,15 @@ public class ObjectivesAdminCommand {
                 //For fancy action bar only
                 final String currentArg = args[args.length - 1];
                 if (currentArg.equalsIgnoreCase("add")) {
-                    main.getUtilManager().sendFancyActionBar(audience, args, "[add / edit / list / clear]", "[Objective Type]");
+                    main.getUtilManager().sendFancyCommandCompletion(audience, args, "[add / edit / list / clear]", "[Objective Type]");
                 } else if (currentArg.equalsIgnoreCase("edit")) {
-                    main.getUtilManager().sendFancyActionBar(audience, args, "[add / edit / list / clear]", "[Objective ID]");
+                    main.getUtilManager().sendFancyCommandCompletion(audience, args, "[add / edit / list / clear]", "[Objective ID]");
                 } else if (currentArg.equalsIgnoreCase("list")) {
-                    main.getUtilManager().sendFancyActionBar(audience, args, "[add / edit / list / clear]", "");
+                    main.getUtilManager().sendFancyCommandCompletion(audience, args, "[add / edit / list / clear]", "");
                 } else if (currentArg.equalsIgnoreCase("clear")) {
-                    main.getUtilManager().sendFancyActionBar(audience, args, "[add / edit / list / clear]", "");
+                    main.getUtilManager().sendFancyCommandCompletion(audience, args, "[add / edit / list / clear]", "");
                 } else {
-                    main.getUtilManager().sendFancyActionBar(audience, args, "[add / edit / list / clear]", "...");
+                    main.getUtilManager().sendFancyCommandCompletion(audience, args, "[add / edit / list / clear]", "...");
                 }
                 return main.getDataManager().completions;
             } else if (args.length == 5) {
@@ -1266,31 +1265,31 @@ public class ObjectivesAdminCommand {
                     //For fancy action bar only
                     final String currentArg = args[args.length - 1];
                     if (currentArg.equalsIgnoreCase("BreakBlocks")) {
-                        main.getUtilManager().sendFancyActionBar(audience, args, "[Objective Type]", "[Block Name]");
+                        main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Objective Type]", "[Block Name]");
                     } else if (currentArg.equalsIgnoreCase("CollectItems")) {
-                        main.getUtilManager().sendFancyActionBar(audience, args, "[Objective Type]", "[Item Name / 'hand']");
+                        main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Objective Type]", "[Item Name / 'hand']");
                     } else if (currentArg.equalsIgnoreCase("CraftItems")) {
-                        main.getUtilManager().sendFancyActionBar(audience, args, "[Objective Type]", "[Item Name / 'hand']");
+                        main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Objective Type]", "[Item Name / 'hand']");
                     } else if (currentArg.equalsIgnoreCase("KillMobs")) {
-                        main.getUtilManager().sendFancyActionBar(audience, args, "[Objective Type]", "[Mob Name / 'any']");
+                        main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Objective Type]", "[Mob Name / 'any']");
                     } else if (currentArg.equalsIgnoreCase("TriggerCommand")) {
-                        main.getUtilManager().sendFancyActionBar(audience, args, "[Objective Type]", "[Trigger Name]");
+                        main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Objective Type]", "[Trigger Name]");
                     } else if (currentArg.equalsIgnoreCase("OtherQuest")) {
-                        main.getUtilManager().sendFancyActionBar(audience, args, "[Objective Type]", "[Other Quest Name]");
+                        main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Objective Type]", "[Other Quest Name]");
                     } else if (currentArg.equalsIgnoreCase("ConsumeItems")) {
-                        main.getUtilManager().sendFancyActionBar(audience, args, "[Objective Type]", "[Item Name / 'hand']");
+                        main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Objective Type]", "[Item Name / 'hand']");
                     } else if (currentArg.equalsIgnoreCase("DeliverItems")) {
-                        main.getUtilManager().sendFancyActionBar(audience, args, "[Objective Type]", "[Item Name / 'hand']");
+                        main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Objective Type]", "[Item Name / 'hand']");
                     } else if (currentArg.equalsIgnoreCase("TalkToNPC")) {
-                        main.getUtilManager().sendFancyActionBar(audience, args, "[Objective Type]", "[Target NPC ID / 'armorstand'");
+                        main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Objective Type]", "[Target NPC ID / 'armorstand'");
                     } else if (currentArg.equalsIgnoreCase("EscortNPC")) {
-                        main.getUtilManager().sendFancyActionBar(audience, args, "[Objective Type]", "[NPC to escort ID]");
+                        main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Objective Type]", "[NPC to escort ID]");
                     } else if (main.isEliteMobsEnabled() && currentArg.equalsIgnoreCase("KillEliteMobs")) {
-                        main.getUtilManager().sendFancyActionBar(audience, args, "[Objective Type]", "[Part of elite mob name / 'any']");
+                        main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Objective Type]", "[Part of elite mob name / 'any']");
                     } else if (main.isEliteMobsEnabled() && currentArg.equalsIgnoreCase("ReachLocation")) {
-                        main.getUtilManager().sendFancyActionBar(audience, args, "[Objective Type]", "[mode]");
+                        main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Objective Type]", "[mode]");
                     } else {
-                        main.getUtilManager().sendFancyActionBar(audience, args, "[Objective Type]", "...");
+                        main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Objective Type]", "...");
                     }
 
                     return main.getDataManager().completions;
@@ -1298,7 +1297,7 @@ public class ObjectivesAdminCommand {
                     for (final Objective objective : quest.getObjectives()) {
                         main.getDataManager().completions.add("" + objective.getObjectiveID());
                     }
-                    main.getUtilManager().sendFancyActionBar(audience, args, "[Objective ID]", "[info / description / displayName / dependencies / completionNPC / remove]");
+                    main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Objective ID]", "[info / description / displayName / dependencies / completionNPC / remove]");
                     return main.getDataManager().completions;
                 }
 
@@ -1351,19 +1350,19 @@ public class ObjectivesAdminCommand {
             //For fancy action bar only
             final String currentArg = args[args.length - 1];
             if (currentArg.equalsIgnoreCase("info")) {
-                main.getUtilManager().sendFancyActionBar(audience, args, "[info / description / displayName / dependencies / completionNPC / remove]", "");
+                main.getUtilManager().sendFancyCommandCompletion(audience, args, "[info / description / displayName / dependencies / completionNPC / remove]", "");
             } else if (currentArg.equalsIgnoreCase("description")) {
-                main.getUtilManager().sendFancyActionBar(audience, args, "[info / description / displayName / dependencies / completionNPC / remove]", "[set / remove / show]");
+                main.getUtilManager().sendFancyCommandCompletion(audience, args, "[info / description / displayName / dependencies / completionNPC / remove]", "[set / remove / show]");
             } else if (currentArg.equalsIgnoreCase("displayName")) {
-                main.getUtilManager().sendFancyActionBar(audience, args, "[info / description / displayName / dependencies / completionNPC / remove]", "[set / remove / show]");
+                main.getUtilManager().sendFancyCommandCompletion(audience, args, "[info / description / displayName / dependencies / completionNPC / remove]", "[set / remove / show]");
             } else if (currentArg.equalsIgnoreCase("dependencies")) {
-                main.getUtilManager().sendFancyActionBar(audience, args, "[info / description / displayName / dependencies / completionNPC / remove]", "[add / remove / list / clear]");
+                main.getUtilManager().sendFancyCommandCompletion(audience, args, "[info / description / displayName / dependencies / completionNPC / remove]", "[add / remove / list / clear]");
             } else if (currentArg.equalsIgnoreCase("completionNPC")) {
-                main.getUtilManager().sendFancyActionBar(audience, args, "[info / description / displayName / dependencies / completionNPC / remove]", "[set / show]");
+                main.getUtilManager().sendFancyCommandCompletion(audience, args, "[info / description / displayName / dependencies / completionNPC / remove]", "[set / show]");
             } else if (currentArg.equalsIgnoreCase("remove")) {
-                main.getUtilManager().sendFancyActionBar(audience, args, "[info / description / displayName / dependencies / completionNPC / remove]", "");
+                main.getUtilManager().sendFancyCommandCompletion(audience, args, "[info / description / displayName / dependencies / completionNPC / remove]", "");
             } else {
-                main.getUtilManager().sendFancyActionBar(audience, args, "[info / description / displayName / dependencies / completionNPC / remove]", "...");
+                main.getUtilManager().sendFancyCommandCompletion(audience, args, "[info / description / displayName / dependencies / completionNPC / remove]", "...");
             }
 
         } else if (args.length == 7) {
@@ -1375,13 +1374,13 @@ public class ObjectivesAdminCommand {
                 //For fancy action bar only
                 final String currentArg = args[args.length - 1];
                 if (currentArg.equalsIgnoreCase("set")) {
-                    main.getUtilManager().sendFancyActionBar(audience, args, "[set / remove / show]", "<Enter new description for this objective>");
+                    main.getUtilManager().sendFancyCommandCompletion(audience, args, "[set / remove / show]", "<Enter new description for this objective>");
                 } else if (currentArg.equalsIgnoreCase("remove")) {
-                    main.getUtilManager().sendFancyActionBar(audience, args, "[set / remove / show]", "");
+                    main.getUtilManager().sendFancyCommandCompletion(audience, args, "[set / remove / show]", "");
                 } else if (currentArg.equalsIgnoreCase("show")) {
-                    main.getUtilManager().sendFancyActionBar(audience, args, "[set / remove / show]", "");
+                    main.getUtilManager().sendFancyCommandCompletion(audience, args, "[set / remove / show]", "");
                 } else {
-                    main.getUtilManager().sendFancyActionBar(audience, args, "[set / remove / show]", "...");
+                    main.getUtilManager().sendFancyCommandCompletion(audience, args, "[set / remove / show]", "...");
                 }
 
             } else if (args[5].equalsIgnoreCase("displayName")) {
@@ -1392,13 +1391,13 @@ public class ObjectivesAdminCommand {
                 //For fancy action bar only
                 final String currentArg = args[args.length - 1];
                 if (currentArg.equalsIgnoreCase("set")) {
-                    main.getUtilManager().sendFancyActionBar(audience, args, "[set / remove / show]", "<Enter new Display Name for this objective>");
+                    main.getUtilManager().sendFancyCommandCompletion(audience, args, "[set / remove / show]", "<Enter new Display Name for this objective>");
                 } else if (currentArg.equalsIgnoreCase("remove")) {
-                    main.getUtilManager().sendFancyActionBar(audience, args, "[set / remove / show]", "");
+                    main.getUtilManager().sendFancyCommandCompletion(audience, args, "[set / remove / show]", "");
                 } else if (currentArg.equalsIgnoreCase("show")) {
-                    main.getUtilManager().sendFancyActionBar(audience, args, "[set / remove / show]", "");
+                    main.getUtilManager().sendFancyCommandCompletion(audience, args, "[set / remove / show]", "");
                 } else {
-                    main.getUtilManager().sendFancyActionBar(audience, args, "[set / remove / show]", "...");
+                    main.getUtilManager().sendFancyCommandCompletion(audience, args, "[set / remove / show]", "...");
                 }
 
             } else if (args[5].equalsIgnoreCase("dependencies")) {
@@ -1410,15 +1409,15 @@ public class ObjectivesAdminCommand {
                 //For fancy action bar only
                 final String currentArg = args[args.length - 1];
                 if (currentArg.equalsIgnoreCase("add")) {
-                    main.getUtilManager().sendFancyActionBar(audience, args, "[add / remove / list / clear]", "[Objective ID]");
+                    main.getUtilManager().sendFancyCommandCompletion(audience, args, "[add / remove / list / clear]", "[Objective ID]");
                 } else if (currentArg.equalsIgnoreCase("remove")) {
-                    main.getUtilManager().sendFancyActionBar(audience, args, "[add / remove / list / clear]", "[Objective ID]");
+                    main.getUtilManager().sendFancyCommandCompletion(audience, args, "[add / remove / list / clear]", "[Objective ID]");
                 } else if (currentArg.equalsIgnoreCase("list")) {
-                    main.getUtilManager().sendFancyActionBar(audience, args, "[add / remove / list / clear]", "");
+                    main.getUtilManager().sendFancyCommandCompletion(audience, args, "[add / remove / list / clear]", "");
                 } else if (currentArg.equalsIgnoreCase("clear")) {
-                    main.getUtilManager().sendFancyActionBar(audience, args, "[add / remove / list / clear]", "");
+                    main.getUtilManager().sendFancyCommandCompletion(audience, args, "[add / remove / list / clear]", "");
                 } else {
-                    main.getUtilManager().sendFancyActionBar(audience, args, "[add / remove / list / clear]", "...");
+                    main.getUtilManager().sendFancyCommandCompletion(audience, args, "[add / remove / list / clear]", "...");
                 }
 
             } else if (args[5].equalsIgnoreCase("completionNPC")) {
@@ -1428,11 +1427,11 @@ public class ObjectivesAdminCommand {
                 //For fancy action bar only
                 final String currentArg = args[args.length - 1];
                 if (currentArg.equalsIgnoreCase("set")) {
-                    main.getUtilManager().sendFancyActionBar(audience, args, "[set / show]", "[CompletionNPC ID / 'armorstand']");
+                    main.getUtilManager().sendFancyCommandCompletion(audience, args, "[set / show]", "[CompletionNPC ID / 'armorstand']");
                 } else if (currentArg.equalsIgnoreCase("show")) {
-                    main.getUtilManager().sendFancyActionBar(audience, args, "[set / show]", "");
+                    main.getUtilManager().sendFancyCommandCompletion(audience, args, "[set / show]", "");
                 } else {
-                    main.getUtilManager().sendFancyActionBar(audience, args, "[set / show]", "...");
+                    main.getUtilManager().sendFancyCommandCompletion(audience, args, "[set / show]", "...");
                 }
             }
         } else if (args.length >= 8 && (args[5].equalsIgnoreCase("displayName") || args[5].equalsIgnoreCase("description"))) {
@@ -1440,14 +1439,14 @@ public class ObjectivesAdminCommand {
                 if (args[6].equalsIgnoreCase("set")) {
                     main.getDataManager().completions.add("<Enter new Display Name for this objective>");
 
-                    main.getUtilManager().sendFancyActionBar(audience, args, "<Enter new Display Name for this objective>", "");
+                    main.getUtilManager().sendFancyCommandCompletion(audience, args, "<Enter new Display Name for this objective>", "");
                 }
 
             } else if (args[5].equalsIgnoreCase("description")) {
                 if (args[6].equalsIgnoreCase("set")) {
                     main.getDataManager().completions.add("<Enter new description for this objective>");
 
-                    main.getUtilManager().sendFancyActionBar(audience, args, "<Enter new description for this objective>", "");
+                    main.getUtilManager().sendFancyCommandCompletion(audience, args, "<Enter new description for this objective>", "");
 
                 }
             }
@@ -1462,13 +1461,13 @@ public class ObjectivesAdminCommand {
                                 main.getDataManager().completions.add(questObjective.getObjectiveID() + "");
                             }
                         }
-                        main.getUtilManager().sendFancyActionBar(audience, args, "[Objective ID]", "");
+                        main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Objective ID]", "");
 
                     } else if (args[6].equalsIgnoreCase("remove") || args[6].equalsIgnoreCase("delete")) {
                         for (final Objective dependingObjective : objective.getDependantObjectives()) {
                             main.getDataManager().completions.add(dependingObjective.getObjectiveID() + "");
                         }
-                        main.getUtilManager().sendFancyActionBar(audience, args, "[Objective ID]", "");
+                        main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Objective ID]", "");
                     }
                 }
 
@@ -1488,7 +1487,7 @@ public class ObjectivesAdminCommand {
                         main.getDataManager().completions.add("armorstand");
                     }
 
-                    main.getUtilManager().sendFancyActionBar(audience, args, "[CompletionNPC ID / 'armorstand'", "");
+                    main.getUtilManager().sendFancyCommandCompletion(audience, args, "[CompletionNPC ID / 'armorstand'", "");
                 }
             }
 
@@ -1503,15 +1502,15 @@ public class ObjectivesAdminCommand {
             for (Material material : Material.values()) {
                 main.getDataManager().completions.add(material.toString());
             }
-            main.getUtilManager().sendFancyActionBar(audience, args, "[Block Name]", "[Amount to break]");
+            main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Block Name]", "[Amount to break]");
 
         } else if (args.length == 7) {
-            main.getUtilManager().sendFancyActionBar(audience, args, "[Amount to break]", "[Yes / No (Remove progress if block is placed?)]");
+            main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Amount to break]", "[Yes / No (Remove progress if block is placed?)]");
             return main.getDataManager().numberPositiveCompletions;
         } else if (args.length == 8) {
             main.getDataManager().completions.add("Yes");
             main.getDataManager().completions.add("No");
-            main.getUtilManager().sendFancyActionBar(audience, args, "[Yes / No (Remove progress if block is placed?)]", "");
+            main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Yes / No (Remove progress if block is placed?)]", "");
         }
         return main.getDataManager().completions;
     }
@@ -1523,9 +1522,9 @@ public class ObjectivesAdminCommand {
                 main.getDataManager().completions.add(material.toString());
             }
             main.getDataManager().completions.add("hand");
-            main.getUtilManager().sendFancyActionBar(audience, args, "[Item Name / 'hand']", "[Amount to collect]");
+            main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Item Name / 'hand']", "[Amount to collect]");
         } else if (args.length == 7) {
-            main.getUtilManager().sendFancyActionBar(audience, args, "[Amount to collect]", "");
+            main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Amount to collect]", "");
             return main.getDataManager().numberPositiveCompletions;
         }
         return main.getDataManager().completions;
@@ -1538,9 +1537,9 @@ public class ObjectivesAdminCommand {
                 main.getDataManager().completions.add(material.toString());
             }
             main.getDataManager().completions.add("hand");
-            main.getUtilManager().sendFancyActionBar(audience, args, "[Item Name / 'hand']", "[Amount to craft]");
+            main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Item Name / 'hand']", "[Amount to craft]");
         } else if (args.length == 7) {
-            main.getUtilManager().sendFancyActionBar(audience, args, "[Amount to craft]", "");
+            main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Amount to craft]", "");
             return main.getDataManager().numberPositiveCompletions;
         }
         return main.getDataManager().completions;
@@ -1552,10 +1551,10 @@ public class ObjectivesAdminCommand {
             main.getDataManager().completions.add("any");
             main.getDataManager().completions.addAll(main.getDataManager().standardEntityTypeCompletions);
 
-            main.getUtilManager().sendFancyActionBar(audience, args, "[Mob Name / 'any']", "[Amount of kills needed]");
+            main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Mob Name / 'any']", "[Amount of kills needed]");
             return main.getDataManager().standardEntityTypeCompletions;
         } else if (args.length == 7) {
-            main.getUtilManager().sendFancyActionBar(audience, args, "[Amount of kills needed]", "");
+            main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Amount of kills needed]", "");
             return main.getDataManager().numberPositiveCompletions;
         } else if (args.length >= 7) {
             final String argToCheck = args[args.length - 1];
@@ -1572,9 +1571,9 @@ public class ObjectivesAdminCommand {
         final Audience audience = main.adventure().sender(sender);
         if (args.length == 6) {
             main.getDataManager().completions.add("<Enter new TriggerCommand name>");
-            main.getUtilManager().sendFancyActionBar(audience, args, "[New Trigger Name]", "[Amount of triggers needed]");
+            main.getUtilManager().sendFancyCommandCompletion(audience, args, "[New Trigger Name]", "[Amount of triggers needed]");
         } else if (args.length == 7) {
-            main.getUtilManager().sendFancyActionBar(audience, args, "[Amount of triggers needed]", "");
+            main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Amount of triggers needed]", "");
             return main.getDataManager().numberPositiveCompletions;
         }
         return main.getDataManager().completions;
@@ -1586,14 +1585,14 @@ public class ObjectivesAdminCommand {
             for (final Quest oneOfAllQuests : main.getQuestManager().getAllQuests()) {
                 main.getDataManager().completions.add(oneOfAllQuests.getQuestName());
             }
-            main.getUtilManager().sendFancyActionBar(audience, args, "[Other Quest Name]", "[Amount of completions needed]");
+            main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Other Quest Name]", "[Amount of completions needed]");
         } else if (args.length == 7) {
-            main.getUtilManager().sendFancyActionBar(audience, args, "[Amount of completions needed]", "[Yes / No (Count previously-completed Quests?)]");
+            main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Amount of completions needed]", "[Yes / No (Count previously-completed Quests?)]");
             return main.getDataManager().numberPositiveCompletions;
         } else if (args.length == 8) {
             main.getDataManager().completions.add("Yes");
             main.getDataManager().completions.add("No");
-            main.getUtilManager().sendFancyActionBar(audience, args, "[Yes / No (Count previously-completed Quests?)]", "");
+            main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Yes / No (Count previously-completed Quests?)]", "");
         }
         return main.getDataManager().completions;
     }
@@ -1608,9 +1607,9 @@ public class ObjectivesAdminCommand {
                 }
             }
             main.getDataManager().completions.add("hand");
-            main.getUtilManager().sendFancyActionBar(audience, args, "[Item Name / 'hand']", "[Amount to consume]");
+            main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Item Name / 'hand']", "[Amount to consume]");
         } else if (args.length == 7) {
-            main.getUtilManager().sendFancyActionBar(audience, args, "[Amount to consume]", "");
+            main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Amount to consume]", "");
             return main.getDataManager().numberPositiveCompletions;
         }
 
@@ -1626,9 +1625,9 @@ public class ObjectivesAdminCommand {
             }
             main.getDataManager().completions.add("hand");
 
-            main.getUtilManager().sendFancyActionBar(audience, args, "[Item Name / 'hand']", "[Amount to deliver]");
+            main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Item Name / 'hand']", "[Amount to deliver]");
         } else if (args.length == 7) {
-            main.getUtilManager().sendFancyActionBar(audience, args, "[Amount to deliver]", "[Recipient NPC ID / 'armorstand]");
+            main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Amount to deliver]", "[Recipient NPC ID / 'armorstand]");
             return main.getDataManager().numberPositiveCompletions;
         } else if (args.length == 8) {
             if (main.isCitizensEnabled()) {
@@ -1638,7 +1637,7 @@ public class ObjectivesAdminCommand {
             }
             main.getDataManager().completions.add("armorstand");
 
-            main.getUtilManager().sendFancyActionBar(audience, args, "[Recipient NPC ID / 'armorstand]", "");
+            main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Recipient NPC ID / 'armorstand]", "");
 
         }
 
@@ -1656,7 +1655,7 @@ public class ObjectivesAdminCommand {
             }
             main.getDataManager().completions.add("armorstand");
 
-            main.getUtilManager().sendFancyActionBar(audience, args, "[NPC ID / 'armorstand']", "");
+            main.getUtilManager().sendFancyCommandCompletion(audience, args, "[NPC ID / 'armorstand']", "");
         }
 
         return main.getDataManager().completions;
@@ -1671,9 +1670,9 @@ public class ObjectivesAdminCommand {
                 }
             }
 
-            main.getUtilManager().sendFancyActionBar(audience, args, "[NPC to escort ID]", "[Destination NPC ID]");
+            main.getUtilManager().sendFancyCommandCompletion(audience, args, "[NPC to escort ID]", "[Destination NPC ID]");
         } else if (args.length == 7) {
-            main.getUtilManager().sendFancyActionBar(audience, args, "[Destination NPC ID]", "");
+            main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Destination NPC ID]", "");
             return main.getDataManager().numberPositiveCompletions;
         }
         return main.getDataManager().completions;
@@ -1687,18 +1686,18 @@ public class ObjectivesAdminCommand {
                 main.getDataManager().completions.addAll(main.getDataManager().standardEliteMobNamesCompletions);
             }
 
-            main.getUtilManager().sendFancyActionBar(audience, args, "[Part of Elite Mob Name / any]", "[Minimum Level / any]");
+            main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Part of Elite Mob Name / any]", "[Minimum Level / any]");
 
         } else if (args.length == 7) { //[Minimum Level / any]
             main.getDataManager().completions.add("any");
             main.getDataManager().completions.addAll(main.getDataManager().numberPositiveCompletions);
-            main.getUtilManager().sendFancyActionBar(audience, args, "[Minimum Level / any]", "[Maximum Level / any]");
+            main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Minimum Level / any]", "[Maximum Level / any]");
 
         } else if (args.length == 8) { //[Maximum Level / any]
             main.getDataManager().completions.add("any");
             main.getDataManager().completions.addAll(main.getDataManager().numberPositiveCompletions);
 
-            main.getUtilManager().sendFancyActionBar(audience, args, "[Maximum Level / any]", "[Spawn Reason / any]");
+            main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Maximum Level / any]", "[Spawn Reason / any]");
 
         } else if (args.length == 9) { //[Spawn Reason / any]
             main.getDataManager().completions.add("any");
@@ -1706,7 +1705,7 @@ public class ObjectivesAdminCommand {
                 main.getDataManager().completions.add(spawnReason.toString());
             }
 
-            main.getUtilManager().sendFancyActionBar(audience, args, "[Spawn Reason / any]", "[Minimum Damage Percentage / any]");
+            main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Spawn Reason / any]", "[Minimum Damage Percentage / any]");
 
         } else if (args.length == 10) { //[Minimum Damage Percentage / any]
             main.getDataManager().completions.add("any");
@@ -1714,11 +1713,11 @@ public class ObjectivesAdminCommand {
                 main.getDataManager().completions.add("" + i);
             }
 
-            main.getUtilManager().sendFancyActionBar(audience, args, "[Minimum Damage Percentage / any]", "[Amount to kill]");
+            main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Minimum Damage Percentage / any]", "[Amount to kill]");
 
         } else if (args.length == 11) { //[Amount to kill]
 
-            main.getUtilManager().sendFancyActionBar(audience, args, "[Amount to kill]", "");
+            main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Amount to kill]", "");
 
             return main.getDataManager().numberPositiveCompletions;
         }
@@ -1735,12 +1734,12 @@ public class ObjectivesAdminCommand {
                 main.getDataManager().completions.add("worldeditselection");
             }
 
-            main.getUtilManager().sendFancyActionBar(audience, args, "[region selection mode]", "<Location name>");
+            main.getUtilManager().sendFancyCommandCompletion(audience, args, "[region selection mode]", "<Location name>");
         } else if (args.length >= 7) {
 
             main.getDataManager().completions.add("<Enter Location name>");
 
-            main.getUtilManager().sendFancyActionBar(audience, args, "<Location name>", "");
+            main.getUtilManager().sendFancyCommandCompletion(audience, args, "<Location name>", "");
         }
         return main.getDataManager().completions;
     }
@@ -1751,10 +1750,10 @@ public class ObjectivesAdminCommand {
             main.getDataManager().completions.add("any");
             main.getDataManager().completions.addAll(main.getDataManager().standardEntityTypeCompletions);
 
-            main.getUtilManager().sendFancyActionBar(audience, args, "[Mob Name / 'any']", "[Amount of breeds needed]");
+            main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Mob Name / 'any']", "[Amount of breeds needed]");
             return main.getDataManager().standardEntityTypeCompletions;
         } else if (args.length == 7) {
-            main.getUtilManager().sendFancyActionBar(audience, args, "[Amount of breeds needed]", "");
+            main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Amount of breeds needed]", "");
             return main.getDataManager().numberPositiveCompletions;
         }
         return main.getDataManager().completions;

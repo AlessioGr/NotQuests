@@ -20,7 +20,6 @@ package rocks.gravili.Managers;
 
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
-import rocks.gravili.NotQuests;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
@@ -31,6 +30,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import rocks.gravili.NotQuests;
 
 import java.io.*;
 import java.sql.Connection;
@@ -551,18 +551,30 @@ public class DataManager {
         configuration.setIntegrationWorldEditEnabled(getGeneralConfig().getBoolean("integrations.worldedit.enabled"));
 
 
-        if (!getGeneralConfig().isBoolean("visual.fancy-actionbar-command-completion.enabled")) {
-            getGeneralConfig().set("visual.fancy-actionbar-command-completion.enabled", true);
+        if (!getGeneralConfig().isBoolean("visual.fancy-command-completion.actionbar-enabled")) {
+            getGeneralConfig().set("visual.fancy-command-completion.actionbar-enabled", true);
             valueChanged = true;
         }
-        configuration.setActionBarCommandCompletionEnabled(getGeneralConfig().getBoolean("visual.fancy-actionbar-command-completion.enabled"));
+        configuration.setActionBarFancyCommandCompletionEnabled(getGeneralConfig().getBoolean("visual.fancy-command-completion.actionbar-enabled"));
 
-
-        if (!getGeneralConfig().isInt("visual.fancy-actionbar-command-completion.max-previous-arguments-displayed")) {
-            getGeneralConfig().set("visual.fancy-actionbar-command-completion.max-previous-arguments-displayed", 2);
+        if (!getGeneralConfig().isBoolean("visual.fancy-command-completion.title-enabled")) {
+            getGeneralConfig().set("visual.fancy-command-completion.title-enabled", false);
             valueChanged = true;
         }
-        configuration.setActionBarCommandCompletionMaxPreviousArgumentsDisplayed(getGeneralConfig().getInt("visual.fancy-actionbar-command-completion.max-previous-arguments-displayed"));
+        configuration.setTitleFancyCommandCompletionEnabled(getGeneralConfig().getBoolean("visual.fancy-command-completion.title-enabled"));
+
+        if (!getGeneralConfig().isBoolean("visual.fancy-command-completion.bossbar-enabled")) {
+            getGeneralConfig().set("visual.fancy-command-completion.bossbar-enabled", false);
+            valueChanged = true;
+        }
+        configuration.setBossBarFancyCommandCompletionEnabled(getGeneralConfig().getBoolean("visual.fancy-command-completion.bossbar-enabled"));
+
+
+        if (!getGeneralConfig().isInt("visual.fancy-command-completion.max-previous-arguments-displayed")) {
+            getGeneralConfig().set("visual.fancy-command-completion.max-previous-arguments-displayed", 2);
+            valueChanged = true;
+        }
+        configuration.setFancyCommandCompletionMaxPreviousArgumentsDisplayed(getGeneralConfig().getInt("visual.fancy-command-completion.max-previous-arguments-displayed"));
 
 
         if (!getGeneralConfig().isBoolean("general.enable-move-event")) {
