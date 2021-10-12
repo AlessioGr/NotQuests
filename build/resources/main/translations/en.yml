@@ -7,8 +7,11 @@ chat:
   quest-already-accepted: '&cQuest already accepted.'
   quest-failed: '&eYou have &c&lFAILED &ethe Quest &b%QUESTNAME%&e!'
   quest-aborted: '&aThe active quest &b%QUESTNAME% &ahas been aborted!'
-  quest-completed-and-rewards-given: '&aYou have completed the quest &b%QUESTNAME%
-    &aand received your rewards!!!'
+  quest-completed-and-rewards-given: |2+
+
+    <CENTER>&a[Quest Completed]
+    <CENTER>&b&l%QUESTNAME%
+    <EMPTY>
   missing-quest-description: '&eThis quest has no quest description.'
   objectives-label-after-quest-accepting: '&9Objectives:'
   questpoints:

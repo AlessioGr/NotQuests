@@ -194,44 +194,40 @@ public class UtilManager {
     }
 
 
-    public final String getCenteredMessage(String fullMessage) {
-        final StringBuilder finalString = new StringBuilder();
+    public final String getCenteredMessage(final String message) {
+        String[] lines = message.split("\n", 40);
+        StringBuilder returnMessage = new StringBuilder();
 
-        for (final String message : fullMessage.split("\n")) {
+
+        for (String line : lines) {
             int messagePxSize = 0;
             boolean previousCode = false;
             boolean isBold = false;
 
-            for (char c : message.toCharArray()) {
+            for (char c : line.toCharArray()) {
                 if (c == '§') {
                     previousCode = true;
-                    continue;
                 } else if (previousCode) {
                     previousCode = false;
-                    if (c == 'l' || c == 'L') {
-                        isBold = true;
-                        continue;
-                    } else isBold = false;
+                    isBold = c == 'l';
                 } else {
                     DefaultFontInfo dFI = DefaultFontInfo.getDefaultFontInfo(c);
-                    messagePxSize += isBold ? dFI.getBoldLength() : dFI.getLength();
+                    messagePxSize = isBold ? messagePxSize + dFI.getBoldLength() : messagePxSize + dFI.getLength();
                     messagePxSize++;
                 }
             }
-
-            int halvedMessageSize = messagePxSize / 2;
-            int toCompensate = CENTER_PX - halvedMessageSize;
+            int toCompensate = CENTER_PX - messagePxSize / 2;
             int spaceLength = DefaultFontInfo.SPACE.getLength() + 1;
             int compensated = 0;
-            StringBuilder sb = new StringBuilder();
+            final StringBuilder sb = new StringBuilder();
             while (compensated < toCompensate) {
                 sb.append(" ");
                 compensated += spaceLength;
             }
-            finalString.append(sb.append(message).append("\n"));
+            returnMessage.append(sb).append(line).append("\n");
         }
 
-        return finalString.toString();
+        return returnMessage.toString();
     }
 
 }
