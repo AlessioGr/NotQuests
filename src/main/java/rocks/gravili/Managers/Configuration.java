@@ -97,6 +97,12 @@ public class Configuration {
     private char guiQuestPreviewRequirements_slot = '5';
 
 
+    //Visual
+    public boolean visualTitleQuestSuccessfullyAccepted_enabled = true;
+    public boolean visualTitleQuestFailed_enabled = true;
+    public boolean visualTitleQuestCompleted_enabled = true;
+
+
     public Configuration() {
 
     }

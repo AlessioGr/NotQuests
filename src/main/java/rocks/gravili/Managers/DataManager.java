@@ -328,6 +328,8 @@ public class DataManager {
 
         boolean valueChanged = false;
 
+        String key = "";
+
         if (!getGeneralConfig().isBoolean("storage.database.enabled")) {
             getGeneralConfig().set("storage.database.enabled", false);
             mysqlstorageenabledbooleannotloadedyet = true;
@@ -461,6 +463,27 @@ public class DataManager {
             valueChanged = true;
         }
         configuration.setArmorStandQuestGiverIndicatorParticleDisableIfTPSBelow(getGeneralConfig().getDouble("visual.armorstands.quest-giver-indicator-particle.disable-if-tps-below"));
+
+
+        //Visual More
+        key = "visual.titles.quest-successfully-accepted.enabled";
+        if (!getGeneralConfig().isBoolean(key)) {
+            getGeneralConfig().set(key, true);
+            valueChanged = true;
+        }
+        configuration.visualTitleQuestSuccessfullyAccepted_enabled = getGeneralConfig().getBoolean(key);
+        key = "visual.titles.quest-failed.enabled";
+        if (!getGeneralConfig().isBoolean(key)) {
+            getGeneralConfig().set(key, true);
+            valueChanged = true;
+        }
+        configuration.visualTitleQuestFailed_enabled = getGeneralConfig().getBoolean(key);
+        key = "visual.titles.quest-completed.enabled";
+        if (!getGeneralConfig().isBoolean(key)) {
+            getGeneralConfig().set(key, true);
+            valueChanged = true;
+        }
+        configuration.visualTitleQuestCompleted_enabled = getGeneralConfig().getBoolean(key);
 
 
         //GUI

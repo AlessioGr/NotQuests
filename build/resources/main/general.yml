@@ -39,6 +39,13 @@ visual:
       spawn-interval: 10
       count: 1
       disable-if-tps-below: -1.0
+  titles:
+    quest-successfully-accepted:
+      enabled: true
+    quest-failed:
+      enabled: true
+    quest-completed:
+      enabled: true
 
 gui:
   questpreview:

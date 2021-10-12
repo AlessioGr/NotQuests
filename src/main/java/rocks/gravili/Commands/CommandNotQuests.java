@@ -475,6 +475,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                         sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
                     }
                 } else if (args.length == 2) {
+                    //Accept Quest
                     if (args[0].equalsIgnoreCase("take")) {
                         final Quest quest = main.getQuestManager().getQuest(args[1]);
                         if (quest != null) {
