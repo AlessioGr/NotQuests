@@ -174,7 +174,7 @@ public class ActiveQuest {
 
             toRemove.add(activeObjective);
             if (!silent) {
-                questPlayer.sendMessage("§aYou have successfully completed the objective §e" + activeObjective.getObjective().getObjectiveFinalName() + "§a for quest §b" + quest.getQuestName() + "§a!");
+                questPlayer.sendMessage("§aYou have successfully completed the objective §e" + activeObjective.getObjective().getObjectiveFinalName() + "§a for quest §b" + quest.getQuestFinalName() + "§a!");
                 final Player player = Bukkit.getPlayer(questPlayer.getUUID());
                 if (player != null) {
                     player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, SoundCategory.MASTER, 75, 1.4f);
@@ -208,7 +208,7 @@ public class ActiveQuest {
 
             toRemove.add(activeObjective);
             if (!silent) {
-                questPlayer.sendMessage("§aYou have successfully completed the objective §e" + activeObjective.getObjective().getObjectiveFinalName() + "§a for quest §b" + quest.getQuestName() + "§a!");
+                questPlayer.sendMessage("§aYou have successfully completed the objective §e" + activeObjective.getObjective().getObjectiveFinalName() + "§a for quest §b" + quest.getQuestFinalName() + "§a!");
                 final Player player = Bukkit.getPlayer(questPlayer.getUUID());
                 if (player != null) {
                     player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, SoundCategory.MASTER, 75, 1.4f);
