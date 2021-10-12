@@ -1864,7 +1864,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                             }
 
                             reward.setRewardDisplayName(newRewardDisplayName.toString());
-                            main.getDataManager().getQuestsData().set("quests." + quest.getQuestName() + ".rewards." + reward.getRewardID() + ".displayName", newRewardDisplayName.toString());
+                            main.getDataManager().getQuestsData().set("quests." + quest.getQuestName() + ".rewards." + reward.getRewardID() + ".displayName", reward.getRewardDisplayName());
                             sender.sendMessage("§aDisplay Name successfully added to reward with ID §b" + reward.getRewardID() + "§a! New display name: §e" + reward.getRewardDisplayName());
                         } else {
                             sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));

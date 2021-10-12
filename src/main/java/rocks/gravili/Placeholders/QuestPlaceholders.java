@@ -19,9 +19,8 @@
 package rocks.gravili.Placeholders;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import rocks.gravili.NotQuests;
-import rocks.gravili.Structs.*;
 import org.bukkit.entity.Player;
+import rocks.gravili.NotQuests;
 import rocks.gravili.Structs.*;
 
 /**
@@ -143,7 +142,7 @@ public class QuestPlaceholders extends PlaceholderExpansion {
 
                     String nameToAdd = activeQuest.getQuest().getQuestName();
                     if(main.getDataManager().getConfiguration().placeholder_player_active_quests_list_horizontal_use_displayname_if_available){
-                        if(!activeQuest.getQuest().getQuestDisplayName().equals("")){
+                        if (!activeQuest.getQuest().getQuestDisplayName().isBlank()) {
                             nameToAdd = activeQuest.getQuest().getQuestDisplayName();
                         }
                     }
@@ -174,7 +173,7 @@ public class QuestPlaceholders extends PlaceholderExpansion {
 
                     String nameToAdd = activeQuest.getQuest().getQuestName();
                     if(main.getDataManager().getConfiguration().placeholder_player_active_quests_list_vertical_use_displayname_if_available){
-                        if(!activeQuest.getQuest().getQuestDisplayName().equals("")){
+                        if (!activeQuest.getQuest().getQuestDisplayName().isBlank()) {
                             nameToAdd = activeQuest.getQuest().getQuestDisplayName();
                         }
                     }

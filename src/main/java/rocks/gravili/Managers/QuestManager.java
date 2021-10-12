@@ -27,21 +27,6 @@ import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitInfo;
 import net.md_5.bungee.api.chat.*;
-import rocks.gravili.Hooks.Citizens.QuestGiverNPCTrait;
-import rocks.gravili.NotQuests;
-import rocks.gravili.Structs.ActiveObjective;
-import rocks.gravili.Structs.ActiveQuest;
-import rocks.gravili.Structs.Objectives.*;
-import rocks.gravili.Structs.Objectives.Objective;
-import rocks.gravili.Structs.Quest;
-import rocks.gravili.Structs.QuestPlayer;
-import rocks.gravili.Structs.Requirements.*;
-import rocks.gravili.Structs.Rewards.*;
-import rocks.gravili.Structs.Requirements.*;
-import rocks.gravili.Structs.Rewards.*;
-import rocks.gravili.Structs.Triggers.Action;
-import rocks.gravili.Structs.Triggers.Trigger;
-import rocks.gravili.Structs.Triggers.TriggerTypes.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -54,6 +39,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import rocks.gravili.Hooks.Citizens.QuestGiverNPCTrait;
+import rocks.gravili.NotQuests;
+import rocks.gravili.Structs.ActiveObjective;
+import rocks.gravili.Structs.ActiveQuest;
+import rocks.gravili.Structs.Objectives.Objective;
+import rocks.gravili.Structs.Quest;
+import rocks.gravili.Structs.QuestPlayer;
+import rocks.gravili.Structs.Requirements.*;
+import rocks.gravili.Structs.Rewards.*;
+import rocks.gravili.Structs.Triggers.Action;
+import rocks.gravili.Structs.Triggers.Trigger;
 import rocks.gravili.Structs.Triggers.TriggerTypes.*;
 
 import java.util.ArrayList;
@@ -661,10 +657,8 @@ public class QuestManager {
             for (final Quest quest : questsAttachedToNPC) {
                 final Material materialToUse = Material.BOOK;
 
-                String displayName = quest.getQuestName();
-                if (!quest.getQuestDisplayName().equals("")) {
-                    displayName = quest.getQuestDisplayName();
-                }
+                String displayName = quest.getQuestFinalName();
+
                 displayName = "§b" + displayName;
                 QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer((player.getUniqueId()));
 
@@ -731,13 +725,8 @@ public class QuestManager {
 
                 BaseComponent acceptComponent = new TextComponent("§a§l[CHOOSE]");
                 acceptComponent.setClickEvent(new net.md_5.bungee.api.chat.ClickEvent(net.md_5.bungee.api.chat.ClickEvent.Action.RUN_COMMAND, "/nquests preview " + quest.getQuestName()));
-                if (quest.getQuestDisplayName().length() >= 1) {
-                    acceptComponent.setHoverEvent(new net.md_5.bungee.api.chat.HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aClick to preview/choose the quest §b" + quest.getQuestDisplayName()).create()));
-                    component = new TextComponent("§e" + counter + ". §b" + quest.getQuestDisplayName() + " ");
-                } else {
-                    acceptComponent.setHoverEvent(new net.md_5.bungee.api.chat.HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aClick to preview/choose the quest §b" + quest.getQuestName()).create()));
-                    component = new TextComponent("§e" + counter + ". §b" + quest.getQuestName() + " ");
-                }
+                acceptComponent.setHoverEvent(new net.md_5.bungee.api.chat.HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aClick to preview/choose the quest §b" + quest.getQuestFinalName()).create()));
+                component = new TextComponent("§e" + counter + ". §b" + quest.getQuestFinalName() + " ");
 
                 component.addExtra(acceptComponent);
 
@@ -780,10 +769,8 @@ public class QuestManager {
             for (final Quest quest : questsAttachedToNPC) {
                 final Material materialToUse = Material.BOOK;
 
-                String displayName = quest.getQuestName();
-                if (!quest.getQuestDisplayName().equals("")) {
-                    displayName = quest.getQuestDisplayName();
-                }
+                String displayName = quest.getQuestFinalName();
+
                 displayName = "§b" + displayName;
                 QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer((player.getUniqueId()));
 
@@ -850,13 +837,8 @@ public class QuestManager {
 
                 BaseComponent acceptComponent = new TextComponent("§a§l[CHOOSE]");
                 acceptComponent.setClickEvent(new net.md_5.bungee.api.chat.ClickEvent(net.md_5.bungee.api.chat.ClickEvent.Action.RUN_COMMAND, "/nquests preview " + quest.getQuestName()));
-                if (quest.getQuestDisplayName().length() >= 1) {
-                    acceptComponent.setHoverEvent(new net.md_5.bungee.api.chat.HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aClick to preview/choose the quest §b" + quest.getQuestDisplayName()).create()));
-                    component = new TextComponent("§e" + counter + ". §b" + quest.getQuestDisplayName() + " ");
-                } else {
-                    acceptComponent.setHoverEvent(new net.md_5.bungee.api.chat.HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aClick to preview/choose the quest §b" + quest.getQuestName()).create()));
-                    component = new TextComponent("§e" + counter + ". §b" + quest.getQuestName() + " ");
-                }
+                acceptComponent.setHoverEvent(new net.md_5.bungee.api.chat.HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aClick to preview/choose the quest §b" + quest.getQuestFinalName()).create()));
+                component = new TextComponent("§e" + counter + ". §b" + quest.getQuestFinalName() + " ");
 
                 component.addExtra(acceptComponent);
 
@@ -927,11 +909,7 @@ public class QuestManager {
     public void sendSingleQuestPreview(Player player, Quest quest) {
         player.sendMessage("");
         player.sendMessage("§7-----------------------------------");
-        if (!quest.getQuestDisplayName().equals("")) {
-            player.sendMessage("§9Quest Preview for Quest §b" + quest.getQuestDisplayName() + "§9:");
-        } else {
-            player.sendMessage("§9Quest Preview for Quest §b" + quest.getQuestName() + "§9:");
-        }
+        player.sendMessage("§9Quest Preview for Quest §b" + quest.getQuestFinalName() + "§9:");
 
 
         if (quest.getQuestDescription().length() >= 1) {

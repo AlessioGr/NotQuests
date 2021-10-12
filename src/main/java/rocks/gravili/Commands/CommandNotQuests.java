@@ -194,10 +194,8 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
 
                                     count++;
 
-                                    String displayName = activeQuest.getQuest().getQuestName();
-                                    if (!activeQuest.getQuest().getQuestDisplayName().isBlank()) {
-                                        displayName = activeQuest.getQuest().getQuestDisplayName();
-                                    }
+                                    String displayName = activeQuest.getQuest().getQuestFinalName();
+
                                     group.addElement(new StaticGuiElement('e',
                                             new ItemStack(materialToUse),
                                             count, // Display a number as the item count
@@ -232,7 +230,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                 sender.sendMessage(main.getLanguageManager().getString("chat.active-quests-label"));
                                 int counter = 1;
                                 for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-                                    sender.sendMessage("§a" + counter + ". §e" + activeQuest.getQuest().getQuestName());
+                                    sender.sendMessage("§a" + counter + ". §e" + activeQuest.getQuest().getQuestFinalName());
                                     counter += 1;
                                 }
                             }
@@ -263,10 +261,8 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
 
                                     count++;
 
-                                    String displayName = quest.getQuestName();
-                                    if (!quest.getQuestDisplayName().isBlank()) {
-                                        displayName = quest.getQuestDisplayName();
-                                    }
+                                    String displayName = quest.getQuestFinalName();
+
                                     displayName = main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.questNamePrefix") + displayName;
 
                                     if (questPlayer != null && questPlayer.hasAcceptedQuest(quest)) {
@@ -345,10 +341,8 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
 
                                     count++;
 
-                                    String displayName = activeQuest.getQuest().getQuestName();
-                                    if (!activeQuest.getQuest().getQuestDisplayName().isBlank()) {
-                                        displayName = activeQuest.getQuest().getQuestDisplayName();
-                                    }
+                                    String displayName = activeQuest.getQuest().getQuestFinalName();
+
                                     group.addElement(new StaticGuiElement('e',
                                             new ItemStack(materialToUse),
                                             count, // Display a number as the item count
@@ -412,10 +406,8 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
 
                                     count++;
 
-                                    String displayName = quest.getQuestName();
-                                    if (!quest.getQuestDisplayName().isBlank()) {
-                                        displayName = quest.getQuestDisplayName();
-                                    }
+                                    String displayName = quest.getQuestFinalName();
+
                                     displayName = main.getLanguageManager().getString("gui.previewQuestChoose.button.questPreview.questNamePrefix") + displayName;
 
                                     if (questPlayer != null && questPlayer.hasAcceptedQuest(quest)) {
@@ -481,14 +473,14 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                         if (quest != null) {
 
                             if (!quest.isTakeEnabled() && !main.getQuestManager().isPlayerCloseToCitizenOrArmorstandWithQuest(player, quest)) {
-                                sender.sendMessage(main.getLanguageManager().getString("chat.take-disabled-accept").replaceAll("%QUESTNAME%", quest.getQuestName()));
+                                sender.sendMessage(main.getLanguageManager().getString("chat.take-disabled-accept").replaceAll("%QUESTNAME%", quest.getQuestFinalName()));
                                 return true;
                             }
                             final String result = main.getQuestPlayerManager().acceptQuest(player, quest, true, true);
                             if (!result.equals("accepted")) {
                                 sender.sendMessage(result);
                             } else {
-                                sender.sendMessage(main.getLanguageManager().getString("chat.quest-successfully-accepted").replaceAll("%QUESTNAME%", quest.getQuestName()));
+                                sender.sendMessage(main.getLanguageManager().getString("chat.quest-successfully-accepted").replaceAll("%QUESTNAME%", quest.getQuestFinalName()));
                                 if (!quest.getQuestDescription().isBlank()) {
                                     sender.sendMessage(main.getLanguageManager().getString("chat.quest-description").replaceAll("%QUESTDESCRIPTION%", quest.getQuestDescription()));
                                 } else {
@@ -525,11 +517,8 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
 
                                 final ActiveQuest activeQuest = questsToFail.get(0);
 
-                                String displayName = activeQuest.getQuest().getQuestName();
-                                if (!activeQuest.getQuest().getQuestDisplayName().isBlank()) {
-                                    displayName = activeQuest.getQuest().getQuestDisplayName();
-                                }
-                                String finalDisplayName = displayName;
+                                String displayName = activeQuest.getQuest().getQuestFinalName();
+
                                 gui.addElement(new StaticGuiElement('9',
                                         new ItemStack(Material.GREEN_WOOL),
                                         1, // Display a number as the item count
@@ -538,9 +527,9 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                             failedSuccessfully.set(true);
                                             questsToFail.clear();
                                             if (!failedSuccessfully.get()) {
-                                                sender.sendMessage(main.getLanguageManager().getString("chat.quest-not-active-error").replaceAll("%QUESTNAME%", finalDisplayName));
+                                                sender.sendMessage(main.getLanguageManager().getString("chat.quest-not-active-error").replaceAll("%QUESTNAME%", displayName));
                                             }
-                                            sender.sendMessage(main.getLanguageManager().getString("chat.quest-aborted").replaceAll("%QUESTNAME%", finalDisplayName));
+                                            sender.sendMessage(main.getLanguageManager().getString("chat.quest-aborted").replaceAll("%QUESTNAME%", displayName));
 
                                             //click.getEvent().getWhoClicked().sendMessage(ChatColor.RED + "I am Redstone!");
                                             gui.close();
@@ -575,7 +564,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                 for (final ActiveQuest activeQuest : questsToFail) {
                                     questPlayer.failQuest(activeQuest);
                                     failedSuccessfully.set(true);
-                                    sender.sendMessage(main.getLanguageManager().getString("chat.quest-aborted").replaceAll("%QUESTNAME%", activeQuest.getQuest().getQuestName()));
+                                    sender.sendMessage(main.getLanguageManager().getString("chat.quest-aborted").replaceAll("%QUESTNAME%", activeQuest.getQuest().getQuestFinalName()));
 
                                 }
                                 questsToFail.clear();
@@ -595,7 +584,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                         if (quest != null) {
 
                             if (!quest.isTakeEnabled() && !main.getQuestManager().isPlayerCloseToCitizenOrArmorstandWithQuest(player, quest)) {
-                                sender.sendMessage(main.getLanguageManager().getString("chat.take-disabled-preview").replaceAll("%QUESTNAME%", quest.getQuestName()));
+                                sender.sendMessage(main.getLanguageManager().getString("chat.take-disabled-preview").replaceAll("%QUESTNAME%", quest.getQuestFinalName()));
                                 return true;
                             }
                             if (guiEnabled) {
@@ -608,10 +597,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                         "xxxxxxxxx"
                                 };
 
-                                String displayName = quest.getQuestName();
-                                if (!quest.getQuestDisplayName().isBlank()) {
-                                    displayName = quest.getQuestDisplayName();
-                                }
+                                String displayName = quest.getQuestFinalName();
 
                                 InventoryGui gui = new InventoryGui(main, player, main.getLanguageManager().getString("gui.previewQuest.title").replaceAll("%QUESTNAME%", displayName), guiSetup);
                                 gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
@@ -740,10 +726,8 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                             "xgggggggx",
                                             "pxxxxxxxn"
                                     };
-                                    String displayName = requestedActiveQuest.getQuest().getQuestName();
-                                    if (!requestedActiveQuest.getQuest().getQuestDisplayName().isBlank()) {
-                                        displayName = requestedActiveQuest.getQuest().getQuestDisplayName();
-                                    }
+                                    String displayName = requestedActiveQuest.getQuest().getQuestFinalName();
+
                                     InventoryGui gui = new InventoryGui(main, player, main.getLanguageManager().getString("gui.progress.title").replaceAll("%QUESTNAME%", displayName), guiSetup);
                                     gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
 
@@ -860,9 +844,9 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
 
                                     gui.show(player);
                                 } else {
-                                    sender.sendMessage("§aCompleted Objectives for Quest §b" + requestedActiveQuest.getQuest().getQuestName() + "§e:");
+                                    sender.sendMessage("§aCompleted Objectives for Quest §b" + requestedActiveQuest.getQuest().getQuestFinalName() + "§e:");
                                     main.getQuestManager().sendCompletedObjectivesAndProgress(sender, requestedActiveQuest);
-                                    sender.sendMessage("§eActive Objectives for Quest §b" + requestedActiveQuest.getQuest().getQuestName() + "§e:");
+                                    sender.sendMessage("§eActive Objectives for Quest §b" + requestedActiveQuest.getQuest().getQuestFinalName() + "§e:");
                                     main.getQuestManager().sendActiveObjectivesAndProgress(sender, requestedActiveQuest);
                                 }
 
@@ -871,7 +855,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                 sender.sendMessage(main.getLanguageManager().getString("chat.active-quests-label"));
                                 int counter = 1;
                                 for (ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-                                    sender.sendMessage("§a" + counter + ". §e" + activeQuest.getQuest().getQuestName());
+                                    sender.sendMessage("§a" + counter + ". §e" + activeQuest.getQuest().getQuestFinalName());
                                     counter += 1;
                                 }
                             }

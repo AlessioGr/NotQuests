@@ -20,7 +20,6 @@ package rocks.gravili.Structs;
 
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
-import org.bukkit.Bukkit;
 import rocks.gravili.Hooks.Citizens.QuestGiverNPCTrait;
 import rocks.gravili.NotQuests;
 import rocks.gravili.Structs.Objectives.Objective;
@@ -214,6 +213,20 @@ public class Quest {
 
     public final String getQuestDisplayName() {
         return displayName;
+    }
+
+
+    /**
+     * Returns the Quest displayname if it's not blank. Otherwise, it just returns the Quest Name
+     *
+     * @return either the displayname or the quest name
+     */
+    public final String getQuestFinalName() {
+        if (!displayName.isBlank()) {
+            return displayName;
+        } else {
+            return questName;
+        }
     }
 
     public void setQuestDisplayName(String newQuestDisplayName) {

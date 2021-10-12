@@ -206,11 +206,9 @@ public class QuestPlayer {
                         main.getQuestManager().sendActiveObjectivesAndProgress(player, quest);
 
                         if (main.getDataManager().getConfiguration().visualTitleQuestSuccessfullyAccepted_enabled) {
-                            if (!quest.getQuest().getQuestDisplayName().equals("")) {
-                                player.sendTitle(main.getLanguageManager().getString("titles.quest-accepted.title"), main.getLanguageManager().getString("titles.quest-accepted.subtitle").replaceAll("%QUESTNAME%", quest.getQuest().getQuestDisplayName()), 2, 60, 8);
-                            } else {
-                                player.sendTitle(main.getLanguageManager().getString("titles.quest-accepted.title"), main.getLanguageManager().getString("titles.quest-accepted.subtitle").replaceAll("%QUESTNAME%", quest.getQuest().getQuestName()), 2, 60, 8);
-                            }
+
+                            player.sendTitle(main.getLanguageManager().getString("titles.quest-accepted.title"), main.getLanguageManager().getString("titles.quest-accepted.subtitle").replaceAll("%QUESTNAME%", quest.getQuest().getQuestFinalName()), 2, 60, 8);
+
 
                         }
 
@@ -320,7 +318,7 @@ public class QuestPlayer {
         for (Reward reward : quest.getRewards()) {
             reward.giveReward(Bukkit.getPlayer(uuid), quest);
         }
-        Objects.requireNonNull(Bukkit.getPlayer(uuid)).sendMessage(main.getLanguageManager().getString("chat.quest-completed-and-rewards-given").replaceAll("%QUESTNAME%", quest.getQuestName()));
+        Objects.requireNonNull(Bukkit.getPlayer(uuid)).sendMessage(main.getLanguageManager().getString("chat.quest-completed-and-rewards-given").replaceAll("%QUESTNAME%", quest.getQuestFinalName()));
 
     }
 
@@ -360,11 +358,8 @@ public class QuestPlayer {
         final Player player = Bukkit.getPlayer(uuid);
         if (player != null) {
             if (main.getDataManager().getConfiguration().visualTitleQuestCompleted_enabled) {
-                if (!activeQuest.getQuest().getQuestDisplayName().equals("")) {
-                    player.sendTitle(main.getLanguageManager().getString("titles.quest-completed.title"), main.getLanguageManager().getString("titles.quest-accepted.subtitle").replaceAll("%QUESTNAME%", activeQuest.getQuest().getQuestDisplayName()), 2, 60, 8);
-                } else {
-                    player.sendTitle(main.getLanguageManager().getString("titles.quest-completed.title"), main.getLanguageManager().getString("titles.quest-accepted.subtitle").replaceAll("%QUESTNAME%", activeQuest.getQuest().getQuestName()), 2, 60, 8);
-                }
+                player.sendTitle(main.getLanguageManager().getString("titles.quest-completed.title"), main.getLanguageManager().getString("titles.quest-accepted.subtitle").replaceAll("%QUESTNAME%", activeQuest.getQuest().getQuestFinalName()), 2, 60, 8);
+
             }
 
             player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.MASTER, 100, 40);
@@ -409,11 +404,8 @@ public class QuestPlayer {
             final Player player = Bukkit.getPlayer(uuid);
             if (player != null) {
                 if (main.getDataManager().getConfiguration().visualTitleQuestCompleted_enabled) {
-                    if (!activeQuest.getQuest().getQuestDisplayName().equals("")) {
-                        player.sendTitle(main.getLanguageManager().getString("titles.quest-completed.title"), main.getLanguageManager().getString("titles.quest-accepted.subtitle").replaceAll("%QUESTNAME%", activeQuest.getQuest().getQuestDisplayName()), 2, 60, 8);
-                    } else {
-                        player.sendTitle(main.getLanguageManager().getString("titles.quest-completed.title"), main.getLanguageManager().getString("titles.quest-accepted.subtitle").replaceAll("%QUESTNAME%", activeQuest.getQuest().getQuestName()), 2, 60, 8);
-                    }
+
+                    player.sendTitle(main.getLanguageManager().getString("titles.quest-completed.title"), main.getLanguageManager().getString("titles.quest-accepted.subtitle").replaceAll("%QUESTNAME%", activeQuest.getQuest().getQuestFinalName()), 2, 60, 8);
                 }
 
                 player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.MASTER, 100, 40);
@@ -515,11 +507,8 @@ public class QuestPlayer {
 
                 if (player != null) {
                     if (main.getDataManager().getConfiguration().visualTitleQuestFailed_enabled) {
-                        if (!activeQuestToFail.getQuest().getQuestDisplayName().equals("")) {
-                            player.sendTitle(main.getLanguageManager().getString("titles.quest-failed.title"), main.getLanguageManager().getString("titles.quest-failed.subtitle").replaceAll("%QUESTNAME%", activeQuestToFail.getQuest().getQuestDisplayName()), 2, 60, 8);
-                        } else {
-                            player.sendTitle(main.getLanguageManager().getString("titles.quest-failed.title"), main.getLanguageManager().getString("titles.quest-failed.subtitle").replaceAll("%QUESTNAME%", activeQuestToFail.getQuest().getQuestName()), 2, 60, 8);
-                        }
+
+                        player.sendTitle(main.getLanguageManager().getString("titles.quest-failed.title"), main.getLanguageManager().getString("titles.quest-failed.subtitle").replaceAll("%QUESTNAME%", activeQuestToFail.getQuest().getQuestFinalName()), 2, 60, 8);
                     }
 
                     player.playSound(player.getLocation(), Sound.ENTITY_RAVAGER_DEATH, SoundCategory.MASTER, 100, 1);
