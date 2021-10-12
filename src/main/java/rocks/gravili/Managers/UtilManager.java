@@ -35,6 +35,8 @@ public class UtilManager {
     private final NotQuests main;
     private final HashMap<Audience, BossBar> playersAndBossBars;
 
+    private final static int CENTER_PX = 154;
+
     public UtilManager(NotQuests main) {
         this.main = main;
         playersAndBossBars = new HashMap<>();
@@ -189,6 +191,47 @@ public class UtilManager {
             }
         }
         return getExtraArguments(extraArgsString.toString());
+    }
+
+
+    public final String getCenteredMessage(String fullMessage) {
+        final StringBuilder finalString = new StringBuilder();
+
+        for (final String message : fullMessage.split("\n")) {
+            int messagePxSize = 0;
+            boolean previousCode = false;
+            boolean isBold = false;
+
+            for (char c : message.toCharArray()) {
+                if (c == '§') {
+                    previousCode = true;
+                    continue;
+                } else if (previousCode) {
+                    previousCode = false;
+                    if (c == 'l' || c == 'L') {
+                        isBold = true;
+                        continue;
+                    } else isBold = false;
+                } else {
+                    DefaultFontInfo dFI = DefaultFontInfo.getDefaultFontInfo(c);
+                    messagePxSize += isBold ? dFI.getBoldLength() : dFI.getLength();
+                    messagePxSize++;
+                }
+            }
+
+            int halvedMessageSize = messagePxSize / 2;
+            int toCompensate = CENTER_PX - halvedMessageSize;
+            int spaceLength = DefaultFontInfo.SPACE.getLength() + 1;
+            int compensated = 0;
+            StringBuilder sb = new StringBuilder();
+            while (compensated < toCompensate) {
+                sb.append(" ");
+                compensated += spaceLength;
+            }
+            finalString.append(sb.append(message).append("\n"));
+        }
+
+        return finalString.toString();
     }
 
 }

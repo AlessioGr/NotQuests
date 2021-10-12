@@ -19,11 +19,11 @@
 package rocks.gravili.Managers;
 
 import net.md_5.bungee.api.ChatColor;
-import rocks.gravili.NotQuests;
 import org.apache.commons.io.IOUtils;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import rocks.gravili.NotQuests;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -241,7 +241,7 @@ public class LanguageManager {
             valueChanged = true;
         }
         if (!getLanguageConfig().isString("chat.quest-completed-and-rewards-given")) {
-            getLanguageConfig().set("chat.quest-completed-and-rewards-given", "&aYou have completed the quest &b%QUESTNAME% &aand received your rewards!!!");
+            getLanguageConfig().set("chat.quest-completed-and-rewards-given", "\n<CENTER>&a[Quest Completed]\n&b&l%QUESTNAME%\n\n");
             valueChanged = true;
         }
 
@@ -524,11 +524,26 @@ public class LanguageManager {
         if (!getLanguageConfig().isString(languageString)) {
             return "Language string not found: " + languageString;
         } else {
-            return applyColor(getLanguageConfig().getString(languageString));
+            return applySpecial(applyColor(getLanguageConfig().getString(languageString)));
         }
 
     }
 
+    public String applySpecial(String initialMessage) { //TODO: Fix center if that message is later processed for placeholders => process the placeholders here instead
+        StringBuilder finalMessage = new StringBuilder();
+
+        for (String message : initialMessage.split("\n")) {
+            message = message.replaceAll("<EMPTY>", " ");
+            if (message.contains("<CENTER>")) {
+                finalMessage.append(main.getUtilManager().getCenteredMessage(message.replaceAll("<CENTER>", "")));
+            } else {
+                finalMessage.append(message);
+            }
+            finalMessage.append("\n");
+        }
+
+        return finalMessage.toString();
+    }
 
     public String applyColor(String message) {
         Matcher matcher = hexPattern.matcher(message);
