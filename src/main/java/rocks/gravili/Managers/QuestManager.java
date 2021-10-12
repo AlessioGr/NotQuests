@@ -666,7 +666,7 @@ public class QuestManager {
                     displayName += " §a[ACCEPTED]";
                 }
                 String description = "";
-                if (!quest.getQuestDescription().equals("")) {
+                if (!quest.getQuestDescription().isBlank()) {
                     description = "§8" + quest.getQuestDescription();
                 }
                 count++;
@@ -778,7 +778,7 @@ public class QuestManager {
                     displayName += " §a[ACCEPTED]";
                 }
                 String description = "";
-                if (!quest.getQuestDescription().equals("")) {
+                if (!quest.getQuestDescription().isBlank()) {
                     description = "§8" + quest.getQuestDescription();
                 }
                 count++;
@@ -1207,15 +1207,12 @@ public class QuestManager {
 
         for (ActiveObjective activeObjective : activeQuest.getCompletedObjectives()) {
 
-            final String objectiveDisplayName = activeObjective.getObjective().getObjectiveDisplayName();
             final String objectiveDescription = activeObjective.getObjective().getObjectiveDescription();
-            if (!objectiveDisplayName.equals("")) {
-                sender.sendMessage("§7§m" + activeObjective.getObjective().getObjectiveID() + ". " + activeObjective.getObjective().getObjectiveDisplayName() + ":");
-            } else {
-                sender.sendMessage("§7§m" + activeObjective.getObjective().getObjectiveID() + ". " + main.getObjectiveManager().getObjectiveType(activeObjective.getObjective().getClass()) + ":");
-            }
 
-            if (!objectiveDescription.equals("")) {
+            sender.sendMessage("§7§m" + activeObjective.getObjective().getObjectiveID() + ". " + activeObjective.getObjective().getObjectiveFinalName() + ":");
+
+
+            if (!objectiveDescription.isBlank()) {
                 sender.sendMessage("   §7§mDescription: §f§m" + objectiveDescription);
             }
 
@@ -1256,15 +1253,11 @@ public class QuestManager {
         for (ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
 
             if (activeObjective.isUnlocked()) {
-                final String objectiveDisplayName = activeObjective.getObjective().getObjectiveDisplayName();
                 final String objectiveDescription = activeObjective.getObjective().getObjectiveDescription();
-                if (!objectiveDisplayName.equals("")) {
-                    sender.sendMessage("§e" + activeObjective.getObjective().getObjectiveID() + ". " + activeObjective.getObjective().getObjectiveDisplayName() + ":");
-                } else {
-                    sender.sendMessage("§e" + activeObjective.getObjective().getObjectiveID() + ". " + main.getObjectiveManager().getObjectiveType(activeObjective.getObjective().getClass()) + ":");
-                }
+                sender.sendMessage("§e" + activeObjective.getObjective().getObjectiveID() + ". " + activeObjective.getObjective().getObjectiveFinalName() + ":");
 
-                if (!objectiveDescription.equals("")) {
+
+                if (!objectiveDescription.isBlank()) {
                     sender.sendMessage("   §9Description: §6" + objectiveDescription);
                 }
 
@@ -1281,15 +1274,11 @@ public class QuestManager {
 
     public void sendObjectives(final CommandSender sender, final Quest quest) {
         for (final Objective objective : quest.getObjectives()) {
-            final String objectiveDisplayName = objective.getObjectiveDisplayName();
             final String objectiveDescription = objective.getObjectiveDescription();
-            if (!objectiveDisplayName.equals("")) {
-                sender.sendMessage("§a" + objective.getObjectiveID() + ". §e" + objectiveDisplayName);
-            } else {
-                sender.sendMessage("§a" + objective.getObjectiveID() + ". §e" + main.getObjectiveManager().getObjectiveType(objective.getClass()) );
-            }
+            sender.sendMessage("§a" + objective.getObjectiveID() + ". §e" + objective.getObjectiveFinalName());
 
-            if (!objectiveDisplayName.equals("")) {
+
+            if (!objectiveDescription.isBlank()) {
                 sender.sendMessage("   §9Description: §6" + objectiveDescription);
             }
 
@@ -1303,15 +1292,12 @@ public class QuestManager {
     public void sendObjectivesAdmin(final CommandSender sender, final Quest quest) {
 
         for (final Objective objective : quest.getObjectives()) {
-            final String objectiveDisplayName = objective.getObjectiveDisplayName();
-            final String objectiveDescription = objective.getObjectiveDescription();
-            if (!objectiveDisplayName.equals("")) {
-                sender.sendMessage("§a" + objective.getObjectiveID() + ". §e" + objectiveDisplayName);
-            } else {
-                sender.sendMessage("§a" + objective.getObjectiveID() + ". §e" + main.getObjectiveManager().getObjectiveType(objective.getClass()) );
-            }
 
-            if (!objectiveDisplayName.equals("")) {
+            final String objectiveDescription = objective.getObjectiveDescription();
+            sender.sendMessage("§a" + objective.getObjectiveID() + ". §e" + objective.getObjectiveFinalName());
+
+
+            if (!objectiveDescription.isBlank()) {
                 sender.sendMessage("   §9Description: §6" + objectiveDescription);
             }
 
@@ -1335,15 +1321,12 @@ public class QuestManager {
     public void sendActiveObjective(final CommandSender sender, ActiveObjective activeObjective) {
 
         if (activeObjective.isUnlocked()) {
-            final String objectiveDisplayName = activeObjective.getObjective().getObjectiveDisplayName();
             final String objectiveDescription = activeObjective.getObjective().getObjectiveDescription();
-            if (!objectiveDisplayName.equals("")) {
-                sender.sendMessage("§e" + activeObjective.getObjective().getObjectiveID() + ". " + activeObjective.getObjective().getObjectiveDisplayName() + ":");
-            } else {
-                sender.sendMessage("§e" + activeObjective.getObjective().getObjectiveID() + ". " + main.getObjectiveManager().getObjectiveType(activeObjective.getObjective().getClass()) + ":");
-            }
 
-            if (!objectiveDisplayName.equals("")) {
+            sender.sendMessage("§e" + activeObjective.getObjective().getObjectiveID() + ". " + activeObjective.getObjective().getObjectiveFinalName() + ":");
+
+
+            if (!objectiveDescription.isBlank()) {
                 sender.sendMessage("   §9Description: §6" + objectiveDescription);
             }
 

@@ -19,16 +19,16 @@
 package rocks.gravili.Structs;
 
 
+import org.bukkit.Bukkit;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
+import org.bukkit.entity.Player;
 import rocks.gravili.NotQuests;
 import rocks.gravili.Structs.Objectives.EscortNPCObjective;
 import rocks.gravili.Structs.Objectives.Objective;
 import rocks.gravili.Structs.Triggers.ActiveTrigger;
 import rocks.gravili.Structs.Triggers.Trigger;
 import rocks.gravili.Structs.Triggers.TriggerTypes.TriggerType;
-import org.bukkit.Bukkit;
-import org.bukkit.Sound;
-import org.bukkit.SoundCategory;
-import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -174,7 +174,7 @@ public class ActiveQuest {
 
             toRemove.add(activeObjective);
             if (!silent) {
-                questPlayer.sendMessage("§aYou have successfully completed the objective §e" + main.getObjectiveManager().getObjectiveType(activeObjective.getObjective().getClass()) + "§a for quest §b" + quest.getQuestName() + "§a!");
+                questPlayer.sendMessage("§aYou have successfully completed the objective §e" + activeObjective.getObjective().getObjectiveFinalName() + "§a for quest §b" + quest.getQuestName() + "§a!");
                 final Player player = Bukkit.getPlayer(questPlayer.getUUID());
                 if (player != null) {
                     player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, SoundCategory.MASTER, 75, 1.4f);
@@ -208,7 +208,7 @@ public class ActiveQuest {
 
             toRemove.add(activeObjective);
             if (!silent) {
-                questPlayer.sendMessage("§aYou have successfully completed the objective §e" + main.getObjectiveManager().getObjectiveType(activeObjective.getObjective().getClass()) + "§a for quest §b" + quest.getQuestName() + "§a!");
+                questPlayer.sendMessage("§aYou have successfully completed the objective §e" + activeObjective.getObjective().getObjectiveFinalName() + "§a for quest §b" + quest.getQuestName() + "§a!");
                 final Player player = Bukkit.getPlayer(questPlayer.getUUID());
                 if (player != null) {
                     player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, SoundCategory.MASTER, 75, 1.4f);

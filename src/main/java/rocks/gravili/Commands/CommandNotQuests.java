@@ -741,12 +741,8 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
 
                                         //count++;
                                         if (activeObjective.isUnlocked()) {
-                                            String nameToDisplay;
-                                            if (!activeObjective.getObjective().getObjectiveDisplayName().isBlank()) {
-                                                nameToDisplay = activeObjective.getObjective().getObjectiveDisplayName();
-                                            } else {
-                                                nameToDisplay = main.getObjectiveManager().getObjectiveType(activeObjective.getObjective().getClass());
-                                            }
+                                            String nameToDisplay = activeObjective.getObjective().getObjectiveFinalName();
+
                                             String descriptionToDisplay = main.getLanguageManager().getString("gui.progress.button.unlockedObjective.description-empty");
                                             if (!activeObjective.getObjective().getObjectiveDescription().isBlank()) {
                                                 descriptionToDisplay = activeObjective.getObjective().getObjectiveDescription(50);
@@ -798,12 +794,9 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                         //count++;
 
 
-                                        String nameToDisplay;
-                                        if (!activeObjective.getObjective().getObjectiveDisplayName().isBlank()) {
-                                            nameToDisplay = activeObjective.getObjective().getObjectiveDisplayName();
-                                        } else {
-                                            nameToDisplay = main.getObjectiveManager().getObjectiveType(activeObjective.getObjective().getClass());
-                                        }
+                                        final String nameToDisplay = activeObjective.getObjective().getObjectiveFinalName();
+
+
                                         String descriptionToDisplay = main.getLanguageManager().getString("gui.progress.button.completedObjective.description-empty");
                                         if (!activeObjective.getObjective().getObjectiveDescription().isBlank()) {
                                             descriptionToDisplay = activeObjective.getObjective().getObjectiveDescription(50);

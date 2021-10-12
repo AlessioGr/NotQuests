@@ -108,6 +108,14 @@ public abstract class Objective {
         return objectiveDisplayName;
     }
 
+    public final String getObjectiveFinalName() {
+        if (!objectiveDisplayName.isBlank()) {
+            return objectiveDisplayName;
+        } else {
+            return main.getObjectiveManager().getObjectiveType(this.getClass());
+        }
+    }
+
     public void setObjectiveDisplayName(final String newObjectiveDisplayName, boolean save) {
         this.objectiveDisplayName = newObjectiveDisplayName;
         if (save) {
