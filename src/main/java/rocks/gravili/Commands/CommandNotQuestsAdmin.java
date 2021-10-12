@@ -807,7 +807,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                         sender.sendMessage("§7--- Apply on: §fObjective " + trigger.getApplyOn());
                                     }
 
-                                    if (trigger.getWorldName() == null || trigger.getWorldName().equals("") || trigger.getWorldName().equalsIgnoreCase("ALL")) {
+                                    if (trigger.getWorldName() == null || trigger.getWorldName().isBlank() || trigger.getWorldName().equalsIgnoreCase("ALL")) {
                                         sender.sendMessage("§7--- In World: §fAll Worlds");
                                     } else {
                                         sender.sendMessage("§7--- In World: §f" + trigger.getWorldName());

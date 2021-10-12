@@ -676,7 +676,7 @@ public class DataManager {
      * @param replace      should replace existing resource file?
      */
     public void saveResource(String resourcePath, boolean replace) {
-        if (!resourcePath.equals("")) {
+        if (!resourcePath.isBlank()) {
             resourcePath = resourcePath.replace('\\', '/');
             InputStream in = main.getResource(resourcePath);
             if (in == null) {
@@ -684,7 +684,7 @@ public class DataManager {
             } else {
                 File outFile = new File(main.getDataFolder(), resourcePath);
                 int lastIndex = resourcePath.lastIndexOf(47);
-                File outDir = new File(main.getDataFolder(), resourcePath.substring(0, lastIndex >= 0 ? lastIndex : 0));
+                File outDir = new File(main.getDataFolder(), resourcePath.substring(0, Math.max(lastIndex, 0)));
                 if (!outDir.exists()) {
                     outDir.mkdirs();
                 }

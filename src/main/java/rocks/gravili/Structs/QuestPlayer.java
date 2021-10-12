@@ -172,7 +172,7 @@ public class QuestPlayer {
 
 
                 }
-                if (!requirementsStillNeeded.toString().equals("")) {
+                if (!requirementsStillNeeded.toString().isBlank()) {
 
                     return "§cYou do not fulfill all the requirements this quest needs! Requirement still needed:" + requirementsStillNeeded;
                 }
