@@ -667,7 +667,7 @@ public class QuestManager {
                 }
                 String description = "";
                 if (!quest.getQuestDescription().isBlank()) {
-                    description = "§8" + quest.getQuestDescription();
+                    description = "§8" + quest.getQuestDescription(50);
                 }
                 count++;
 
@@ -779,7 +779,7 @@ public class QuestManager {
                 }
                 String description = "";
                 if (!quest.getQuestDescription().isBlank()) {
-                    description = "§8" + quest.getQuestDescription();
+                    description = "§8" + quest.getQuestDescription(50);
                 }
                 count++;
 
