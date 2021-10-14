@@ -81,8 +81,8 @@ public class CommandManager {
                 commandManager.registerAsynchronousCompletions();
             }
 
-            minecraftHelp = new MinecraftHelp<CommandSender>(
-                    "/myplugin help",
+            minecraftHelp = new MinecraftHelp<>(
+                    "/notquestsadmin help",
                     main.adventure()::sender,
                     commandManager
             );
@@ -94,15 +94,15 @@ public class CommandManager {
     }
 
 
+
     public void constructCommands() {
 
         // /ag
         final Command.Builder<CommandSender> agBuilder = commandManager.commandBuilder("notquestsadmin", "qa");
         commandManager.command(agBuilder.meta(CommandMeta.DESCRIPTION, "Teleports players to the Adventurers' Guild Hub")
                 .senderType(Player.class)
-                //permission is dealt inside of the command
                 .handler(commandContext -> {
-
+                    minecraftHelp.queryCommands(commandContext.getOrDefault("", ""), commandContext.getSender());
                 }));
 
 
