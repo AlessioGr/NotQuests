@@ -85,7 +85,10 @@ repositories {
         }
     }
 
-    maven { url 'https://jitpack.io' }
+    maven {
+        url "https://repo.incendo.org/content/repositories/snapshots"
+    }
+
 }
 
 dependencies {
@@ -112,6 +115,9 @@ dependencies {
     implementation "net.kyori:adventure-text-minimessage:4.2.0-SNAPSHOT"
     implementation 'net.kyori:adventure-platform-bukkit:4.0.0'
 
+    implementation "cloud.commandframework:cloud-bukkit:1.5.0"
+    implementation 'me.lucko:commodore:1.9'
+
 }
 
 /**
@@ -123,12 +129,20 @@ shadowJar {
     relocate 'net.kyori', 'rocks.gravili.shaded.kyori'
     relocate("org.bstats", "rocks.gravili.shaded.bstats")
 
+    relocate 'cloud.commandframework', 'rocks.gravili.shaded.cloud'
+    relocate 'me.lucko', 'rocks.gravili.shaded.lucky'
+
+
     dependencies {
-        include(dependency('io.papermc:paperlib'))
+        include dependency('io.papermc:paperlib')
         include dependency("de.themoep:inventorygui:1.5-SNAPSHOT")
         include dependency('commons-io:')
         include dependency('org.bstats:')
-        include(dependency('net.kyori:'))
+        include dependency('net.kyori:')
+
+        include dependency('cloud.commandframework:')
+        include dependency('me.lucko:')
+
     }
 
     dependencies {
