@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.Commands;
+package rocks.gravili.Commands.old;
 
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
@@ -38,9 +38,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
-import rocks.gravili.Commands.AdminCommands.ArmorStandsAdminCommand;
-import rocks.gravili.Commands.AdminCommands.ObjectivesAdminCommand;
-import rocks.gravili.Commands.AdminCommands.QuestPointsAdminCommand;
+import rocks.gravili.Commands.old.AdminCommands.ArmorStandsAdminCommand;
+import rocks.gravili.Commands.old.AdminCommands.ObjectivesAdminCommand;
+import rocks.gravili.Commands.old.AdminCommands.QuestPointsAdminCommand;
 import rocks.gravili.NotQuests;
 import rocks.gravili.Structs.*;
 import rocks.gravili.Structs.Objectives.Objective;

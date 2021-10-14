@@ -1,6 +1,6 @@
 rocks.gravili
 rocks.gravili.Commands
-rocks.gravili.Commands.AdminCommands
+rocks.gravili.Commands.old.AdminCommands
 rocks.gravili.Events
 rocks.gravili.Events.hooks
 rocks.gravili.Hooks.BetonQuest

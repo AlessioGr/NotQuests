@@ -116,6 +116,8 @@ dependencies {
     implementation 'net.kyori:adventure-platform-bukkit:4.0.0'
 
     implementation "cloud.commandframework:cloud-paper:1.6.0-SNAPSHOT"
+    implementation "cloud.commandframework:cloud-minecraft-extras:1.6.0-SNAPSHOT"
+
     //implementation 'me.lucko:commodore:1.10'
 
 }

@@ -30,8 +30,10 @@ import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
-import rocks.gravili.Commands.CommandNotQuests;
-import rocks.gravili.Commands.CommandNotQuestsAdmin;
+import org.bstats.bukkit.Metrics;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.RegisteredServiceProvider;
+import org.bukkit.plugin.java.JavaPlugin;
 import rocks.gravili.Events.ArmorStandEvents;
 import rocks.gravili.Events.QuestEvents;
 import rocks.gravili.Events.hooks.CitizensEvents;
@@ -40,13 +42,7 @@ import rocks.gravili.Events.hooks.MythicMobsEvents;
 import rocks.gravili.Events.hooks.WorldEditHook;
 import rocks.gravili.Hooks.BetonQuest.BetonQuestIntegration;
 import rocks.gravili.Managers.*;
-import rocks.gravili.Managers.*;
 import rocks.gravili.Placeholders.QuestPlaceholders;
-import org.bstats.bukkit.Metrics;
-import org.bukkit.Bukkit;
-import org.bukkit.command.PluginCommand;
-import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -71,6 +67,7 @@ public final class NotQuests extends JavaPlugin {
     private ArmorStandManager armorStandManager;
     private PerformanceManager performanceManager;
     private ObjectiveManager objectiveManager;
+    private CommandManager commandManager;
 
     //Vault
     private Economy econ = null;
@@ -246,21 +243,8 @@ public final class NotQuests extends JavaPlugin {
 
 
         //Register the notquestsadmin command & tab completer. This command will be used by Admins
-        final PluginCommand notQuestsAdminCommand = getCommand("notquestsadmin");
-        if (notQuestsAdminCommand != null) {
-            final CommandNotQuestsAdmin commandNotQuestsAdmin = new CommandNotQuestsAdmin(this);
-            notQuestsAdminCommand.setTabCompleter(commandNotQuestsAdmin);
-            notQuestsAdminCommand.setExecutor(commandNotQuestsAdmin);
-        }
-
-
-        //Register the notquests command & tab completer. This command will be used by Players
-        final PluginCommand notQuestsCommand = getCommand("notquests");
-        if (notQuestsCommand != null) {
-            final CommandNotQuests commandNotQuests = new CommandNotQuests(this);
-            notQuestsCommand.setExecutor(commandNotQuests);
-            notQuestsCommand.setTabCompleter(commandNotQuests);
-        }
+        commandManager = new CommandManager(this);
+        commandManager.setupCommands();
 
 
         //Register the Event Listeners in QuestEvents
@@ -388,6 +372,7 @@ public final class NotQuests extends JavaPlugin {
 
 
     }
+
 
     /**
      * Returns an instance of the QuestManager which handles the saving and loading of configured Quests
@@ -586,5 +571,9 @@ public final class NotQuests extends JavaPlugin {
             getDataManager().loadNPCData();
         }
 
+    }
+
+    public CommandManager getCommandManager() {
+        return this.commandManager;
     }
 }

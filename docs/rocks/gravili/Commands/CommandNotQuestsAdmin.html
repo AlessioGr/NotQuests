@@ -73,7 +73,7 @@ loadScripts(document, 'script');</script>
 <h1 class="title" title="Class CommandNotQuestsAdmin">Class CommandNotQuestsAdmin</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang">java.lang.Object</a>
-<div class="inheritance">rocks.gravili.Commands.CommandNotQuestsAdmin</div>
+<div class="inheritance">rocks.gravili.Commands.old.CommandNotQuestsAdmin</div>
 </div>
 <section class="class-description" id="class-description">
 <dl class="notes">
@@ -96,7 +96,9 @@ implements org.bukkit.command.CommandExecutor, org.bukkit.command.TabCompleter</
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>private final <a href="AdminCommands/ArmorStandsAdminCommand.html" title="class in rocks.gravili.Commands.AdminCommands">ArmorStandsAdminCommand</a></code></div>
+    <div class="col-first even-row-color"><code>private final <a href="AdminCommands/ArmorStandsAdminCommand.html"
+                                                                 title="class in rocks.gravili.Commands.old.AdminCommands">ArmorStandsAdminCommand</a></code>
+    </div>
 <div class="col-second even-row-color"><code><a class="member-name-link" href="#armorStandsAdminCommand">armorStandsAdminCommand</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>private final net.kyori.adventure.text.Component</code></div>
@@ -105,13 +107,17 @@ implements org.bukkit.command.CommandExecutor, org.bukkit.command.TabCompleter</
 <div class="col-first even-row-color"><code>private final <a href="../NotQuests.html" title="class in rocks.gravili">NotQuests</a></code></div>
 <div class="col-second even-row-color"><code><a class="member-name-link" href="#main">main</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>private final <a href="AdminCommands/ObjectivesAdminCommand.html" title="class in rocks.gravili.Commands.AdminCommands">ObjectivesAdminCommand</a></code></div>
+    <div class="col-first odd-row-color"><code>private final <a href="AdminCommands/ObjectivesAdminCommand.html"
+                                                                title="class in rocks.gravili.Commands.old.AdminCommands">ObjectivesAdminCommand</a></code>
+    </div>
 <div class="col-second odd-row-color"><code><a class="member-name-link" href="#objectivesAdminCommand">objectivesAdminCommand</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>private final <a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util">ArrayList</a>&lt;<a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang">String</a>&gt;</code></div>
 <div class="col-second even-row-color"><code><a class="member-name-link" href="#placeholders">placeholders</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>private final <a href="AdminCommands/QuestPointsAdminCommand.html" title="class in rocks.gravili.Commands.AdminCommands">QuestPointsAdminCommand</a></code></div>
+    <div class="col-first odd-row-color"><code>private final <a href="AdminCommands/QuestPointsAdminCommand.html"
+                                                                title="class in rocks.gravili.Commands.old.AdminCommands">QuestPointsAdminCommand</a></code>
+    </div>
 <div class="col-second odd-row-color"><code><a class="member-name-link" href="#questPointsAdminCommand">questPointsAdminCommand</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>(package private) final <a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util">ArrayList</a>&lt;<a href="../Structs/ActiveQuest.html" title="class in rocks.gravili.Structs">ActiveQuest</a>&gt;</code></div>
@@ -216,19 +222,25 @@ implements org.bukkit.command.CommandExecutor, org.bukkit.command.TabCompleter</
 <li>
 <section class="detail" id="questPointsAdminCommand">
 <h3>questPointsAdminCommand</h3>
-<div class="member-signature"><span class="modifiers">private final</span>&nbsp;<span class="return-type"><a href="AdminCommands/QuestPointsAdminCommand.html" title="class in rocks.gravili.Commands.AdminCommands">QuestPointsAdminCommand</a></span>&nbsp;<span class="element-name">questPointsAdminCommand</span></div>
+    <div class="member-signature"><span class="modifiers">private final</span>&nbsp;<span class="return-type"><a
+            href="AdminCommands/QuestPointsAdminCommand.html" title="class in rocks.gravili.Commands.old.AdminCommands">QuestPointsAdminCommand</a></span>&nbsp;<span
+            class="element-name">questPointsAdminCommand</span></div>
 </section>
 </li>
 <li>
 <section class="detail" id="objectivesAdminCommand">
 <h3>objectivesAdminCommand</h3>
-<div class="member-signature"><span class="modifiers">private final</span>&nbsp;<span class="return-type"><a href="AdminCommands/ObjectivesAdminCommand.html" title="class in rocks.gravili.Commands.AdminCommands">ObjectivesAdminCommand</a></span>&nbsp;<span class="element-name">objectivesAdminCommand</span></div>
+    <div class="member-signature"><span class="modifiers">private final</span>&nbsp;<span class="return-type"><a
+            href="AdminCommands/ObjectivesAdminCommand.html" title="class in rocks.gravili.Commands.old.AdminCommands">ObjectivesAdminCommand</a></span>&nbsp;<span
+            class="element-name">objectivesAdminCommand</span></div>
 </section>
 </li>
 <li>
 <section class="detail" id="armorStandsAdminCommand">
 <h3>armorStandsAdminCommand</h3>
-<div class="member-signature"><span class="modifiers">private final</span>&nbsp;<span class="return-type"><a href="AdminCommands/ArmorStandsAdminCommand.html" title="class in rocks.gravili.Commands.AdminCommands">ArmorStandsAdminCommand</a></span>&nbsp;<span class="element-name">armorStandsAdminCommand</span></div>
+    <div class="member-signature"><span class="modifiers">private final</span>&nbsp;<span class="return-type"><a
+            href="AdminCommands/ArmorStandsAdminCommand.html" title="class in rocks.gravili.Commands.old.AdminCommands">ArmorStandsAdminCommand</a></span>&nbsp;<span
+            class="element-name">armorStandsAdminCommand</span></div>
 </section>
 </li>
 <li>

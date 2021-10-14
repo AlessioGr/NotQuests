@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.Commands.AdminCommands;
+package rocks.gravili.Commands.old.AdminCommands;
 
 import net.kyori.adventure.audience.Audience;
 import org.bukkit.Bukkit;
