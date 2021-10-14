@@ -21,6 +21,7 @@ package rocks.gravili.Managers;
 import cloud.commandframework.bukkit.CloudBukkitCapabilities;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
 import cloud.commandframework.paper.PaperCommandManager;
+import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import rocks.gravili.Commands.CommandNotQuests;
 import rocks.gravili.Commands.old.CommandNotQuestsAdmin;
@@ -31,7 +32,7 @@ import java.util.function.Function;
 public class CommandManager {
     private final NotQuests main;
     private final boolean useNewCommands = false;
-    private PaperCommandManager commandManager;
+    private PaperCommandManager<CommandSender> commandManager;
 
 
     public CommandManager(final NotQuests main) {
