@@ -530,17 +530,23 @@ public class LanguageManager {
     }
 
     public String applySpecial(String initialMessage) { //TODO: Fix center if that message is later processed for placeholders => process the placeholders here instead
-        StringBuilder finalMessage = new StringBuilder();
+        initialMessage = initialMessage.replaceAll("<EMPTY>", " ");
 
-        for (String message : initialMessage.split("\n")) {
-            message = message.replaceAll("<EMPTY>", " ");
-            if (message.contains("<CENTER>")) {
-                finalMessage.append(main.getUtilManager().getCenteredMessage(message.replaceAll("<CENTER>", "")));
+
+        final StringBuilder finalMessage = new StringBuilder();
+
+        final String[] splitMessages = initialMessage.split("\n");
+        for (int index = 0; index < splitMessages.length; index++) {
+            if (splitMessages[index].contains("<CENTER>")) {
+                finalMessage.append(main.getUtilManager().getCenteredMessage(splitMessages[index].replaceAll("<CENTER>", "")));
             } else {
-                finalMessage.append(message);
+                finalMessage.append(splitMessages[index]);
             }
-            finalMessage.append("\n");
+            if (index < splitMessages.length - 1) {
+                finalMessage.append("\n");
+            }
         }
+
 
         return finalMessage.toString();
     }
