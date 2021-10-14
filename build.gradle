@@ -115,8 +115,8 @@ dependencies {
     implementation "net.kyori:adventure-text-minimessage:4.2.0-SNAPSHOT"
     implementation 'net.kyori:adventure-platform-bukkit:4.0.0'
 
-    implementation "cloud.commandframework:cloud-bukkit:1.5.0"
-    implementation 'me.lucko:commodore:1.9'
+    implementation "cloud.commandframework:cloud-paper:1.6.0"
+    //implementation 'me.lucko:commodore:1.10'
 
 }
 
@@ -130,7 +130,7 @@ shadowJar {
     relocate("org.bstats", "rocks.gravili.shaded.bstats")
 
     relocate 'cloud.commandframework', 'rocks.gravili.shaded.cloud'
-    relocate 'me.lucko', 'rocks.gravili.shaded.lucky'
+    //relocate 'me.lucko', 'rocks.gravili.shaded.lucky'
 
 
     dependencies {
@@ -141,7 +141,7 @@ shadowJar {
         include dependency('net.kyori:')
 
         include dependency('cloud.commandframework:')
-        include dependency('me.lucko:')
+        //include dependency('me.lucko:')
 
     }
 
