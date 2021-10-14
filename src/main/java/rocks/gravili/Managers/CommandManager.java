@@ -99,7 +99,7 @@ public class CommandManager {
 
         // /ag
         final Command.Builder<CommandSender> agBuilder = commandManager.commandBuilder("notquestsadmin", "qa");
-        commandManager.command(agBuilder.meta(CommandMeta.DESCRIPTION, "Teleports players to the Adventurers' Guild Hub")
+        commandManager.command(agBuilder.meta(CommandMeta.DESCRIPTION, "fwefwe")
                 .senderType(Player.class)
                 .handler(commandContext -> {
                     minecraftHelp.queryCommands(commandContext.getOrDefault("", ""), commandContext.getSender());
