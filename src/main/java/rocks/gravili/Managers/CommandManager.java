@@ -18,11 +18,15 @@
 
 package rocks.gravili.Managers;
 
+import cloud.commandframework.Command;
 import cloud.commandframework.bukkit.CloudBukkitCapabilities;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
+import cloud.commandframework.meta.CommandMeta;
+import cloud.commandframework.minecraft.extras.MinecraftHelp;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.entity.Player;
 import rocks.gravili.Commands.CommandNotQuests;
 import rocks.gravili.Commands.old.CommandNotQuestsAdmin;
 import rocks.gravili.NotQuests;
@@ -33,6 +37,7 @@ public class CommandManager {
     private final NotQuests main;
     private final boolean useNewCommands = false;
     private PaperCommandManager<CommandSender> commandManager;
+    private MinecraftHelp<CommandSender> minecraftHelp;
 
 
     public CommandManager(final NotQuests main) {
@@ -76,8 +81,29 @@ public class CommandManager {
                 commandManager.registerAsynchronousCompletions();
             }
 
+            minecraftHelp = new MinecraftHelp<CommandSender>(
+                    "/myplugin help",
+                    main.adventure()::sender,
+                    commandManager
+            );
 
+            constructCommands();
         }
+
+
+    }
+
+
+    public void constructCommands() {
+
+        // /ag
+        final Command.Builder<CommandSender> agBuilder = commandManager.commandBuilder("notquestsadmin", "qa");
+        commandManager.command(agBuilder.meta(CommandMeta.DESCRIPTION, "Teleports players to the Adventurers' Guild Hub")
+                .senderType(Player.class)
+                //permission is dealt inside of the command
+                .handler(commandContext -> {
+
+                }));
 
 
     }
