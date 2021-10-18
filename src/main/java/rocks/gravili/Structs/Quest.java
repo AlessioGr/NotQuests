@@ -20,6 +20,7 @@ package rocks.gravili.Structs;
 
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
+import net.md_5.bungee.api.ChatColor;
 import rocks.gravili.Hooks.Citizens.QuestGiverNPCTrait;
 import rocks.gravili.NotQuests;
 import rocks.gravili.Structs.Objectives.Objective;
@@ -185,13 +186,13 @@ public class Quest {
     }
 
     public final String getQuestDescription() {
-        return description;
+        return ChatColor.translateAlternateColorCodes('&', description);
     }
 
     public final String getQuestDescription(final int maxLengthPerLine) {
         final StringBuilder descriptionWithLineBreaks = new StringBuilder();
         int count = 0;
-        for (char character : description.toCharArray()) {
+        for (char character : getQuestDescription().toCharArray()) {
             count++;
             if (count > maxLengthPerLine) {
                 count = 0;
@@ -212,7 +213,7 @@ public class Quest {
     }
 
     public final String getQuestDisplayName() {
-        return displayName;
+        return ChatColor.translateAlternateColorCodes('&', displayName);
     }
 
 
@@ -223,7 +224,7 @@ public class Quest {
      */
     public final String getQuestFinalName() {
         if (!displayName.isBlank()) {
-            return displayName;
+            return getQuestDisplayName();
         } else {
             return questName;
         }

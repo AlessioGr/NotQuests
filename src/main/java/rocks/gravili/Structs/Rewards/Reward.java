@@ -18,6 +18,7 @@
 
 package rocks.gravili.Structs.Rewards;
 
+import net.md_5.bungee.api.ChatColor;
 import rocks.gravili.Structs.Quest;
 import org.bukkit.entity.Player;
 
@@ -43,7 +44,7 @@ public abstract class Reward {
     }
 
     public final String getRewardDisplayName() {
-        return rewardDisplayName;
+        return ChatColor.translateAlternateColorCodes('&', rewardDisplayName);
     }
 
     public void setRewardDisplayName(final String newRewardDisplayName) {

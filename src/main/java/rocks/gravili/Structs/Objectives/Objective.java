@@ -18,6 +18,7 @@
 
 package rocks.gravili.Structs.Objectives;
 
+import net.md_5.bungee.api.ChatColor;
 import rocks.gravili.NotQuests;
 import rocks.gravili.Structs.Quest;
 
@@ -105,12 +106,12 @@ public abstract class Objective {
     }
 
     public final String getObjectiveDisplayName() {
-        return objectiveDisplayName;
+        return ChatColor.translateAlternateColorCodes('&', objectiveDisplayName);
     }
 
     public final String getObjectiveFinalName() {
         if (!objectiveDisplayName.isBlank()) {
-            return objectiveDisplayName;
+            return getObjectiveDisplayName();
         } else {
             return main.getObjectiveManager().getObjectiveType(this.getClass());
         }
@@ -131,7 +132,7 @@ public abstract class Objective {
     }
 
     public final String getObjectiveDescription() {
-        return objectiveDescription;
+        return ChatColor.translateAlternateColorCodes('&', objectiveDescription);
     }
 
 
@@ -146,7 +147,7 @@ public abstract class Objective {
 
         final StringBuilder descriptionWithLineBreaks = new StringBuilder();
         int count = 0;
-        for (char character : objectiveDescription.toCharArray()) {
+        for (char character : getObjectiveDescription().toCharArray()) {
             count++;
             if (count > maxLengthPerLine) {
                 count = 0;
