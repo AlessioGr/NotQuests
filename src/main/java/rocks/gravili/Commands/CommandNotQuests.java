@@ -112,7 +112,6 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                 0, // Display a number as the item count
                                 click -> {
                                     player.chat("/notquests abort");
-                                    gui.close();
                                     return true; // returning true will cancel the click event and stop taking the item
                                 },
                                 main.getLanguageManager().getString("gui.main.button.abortquest.text")
@@ -122,7 +121,6 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                 0, // Display a number as the item count
                                 click -> {
                                     player.chat("/notquests preview");
-                                    gui.close();
                                     return true; // returning true will cancel the click event and stop taking the item
                                 },
                                 main.getLanguageManager().getString("gui.main.button.previewquest.text")
