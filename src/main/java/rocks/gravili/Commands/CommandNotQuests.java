@@ -79,11 +79,10 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        if (sender instanceof Player player) {
-            boolean guiEnabled = main.getDataManager().getConfiguration().isUserCommandsUseGUI();
+        if (sender instanceof final Player player) {
+            final boolean guiEnabled = main.getDataManager().getConfiguration().isUserCommandsUseGUI();
             if (sender.hasPermission("notquests.use")) {
-                QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer((player.getUniqueId()));
-                sender.sendMessage("");
+                final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer((player.getUniqueId()));
                 if (args.length == 0) {
                     if (guiEnabled) {
                         String[] guiSetup = {
@@ -161,6 +160,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
 
                         gui.show(player);
                     } else {
+                        sender.sendMessage("");
                         main.adventure().sender(sender).sendMessage(firstLevelCommands);
                     }
                 } else if (args.length == 1) {
