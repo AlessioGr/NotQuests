@@ -501,6 +501,12 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                     questsToFail.add(activeQuest);
                                 }
                             }
+
+                            if (questsToFail.isEmpty()) {
+                                sender.sendMessage(main.getLanguageManager().getString("chat.quest-not-active-error", player).replaceAll("%QUESTNAME%", activeQuestName));
+                                return true;
+                            }
+
                             if (guiEnabled) {
                                 String[] guiSetup = {
                                         "zxxxxxxxx",
