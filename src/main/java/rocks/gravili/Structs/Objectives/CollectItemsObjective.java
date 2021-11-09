@@ -19,9 +19,9 @@
 package rocks.gravili.Structs.Objectives;
 
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import rocks.gravili.NotQuests;
 import rocks.gravili.Structs.Quest;
-import org.bukkit.inventory.ItemStack;
 
 public class CollectItemsObjective extends Objective {
 
@@ -44,7 +44,10 @@ public class CollectItemsObjective extends Objective {
 
     @Override
     public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
-        return "    §7" + eventualColor + "Items to collect: §f" + eventualColor + getItemToCollect().getType() + " (" + getItemToCollect().getItemMeta().getDisplayName() + ")";
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.collectItems.base", player)
+                .replaceAll("%EVENTUALCOLOR%", eventualColor)
+                .replaceAll("%ITEMTOCOLLECTTYPE%", "" + getItemToCollect().getType())
+                .replaceAll("%ITEMTOCOLLECTNAME%", "" + getItemToCollect().getItemMeta().getDisplayName());
     }
 
     @Override

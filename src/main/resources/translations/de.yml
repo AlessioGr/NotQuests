@@ -30,7 +30,33 @@ chat:
     description: '   &9Beschreibung: &6%OBJECTIVEDESCRIPTION%'
     progress: '   &7Fortschritt: &f%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
     taskDescription:
-      breakBlocks: '    &7%EVENTUALCOLOR% Block abbauen: &f%EVENTUALCOLOR%%BLOCKTOBREAK%'
+      breakBlocks:
+        base: '    &7%EVENTUALCOLOR%Block abbauen: &f%EVENTUALCOLOR%%BLOCKTOBREAK%'
+      breed:
+        base: '    &7%EVENTUALCOLOR%Mob züchten: &f%EVENTUALCOLOR%%ENTITYTOBREED%'
+      collectItems:
+        base: '    &7%EVENTUALCOLOR%Items sammeln: &f%EVENTUALCOLOR%%ITEMTOCOLLECTTYPE% (%ITEMTOCOLLECTNAME%)'
+      consumeItems:
+        base: '    &7%EVENTUALCOLOR%Items konsumieren: &f%EVENTUALCOLOR%%ITEMTOCONSUMETYPE% (%ITEMTOCONSUMENAME%)'
+      craftItems:
+        base: '    &7%EVENTUALCOLOR%Items craften: &f%EVENTUALCOLOR%%ITEMTOCRAFTTYPE% (%ITEMTOCRAFTNAME%)'
+      deliverItems:
+        base: '    &7%EVENTUALCOLOR%Items liefern: &f%EVENTUALCOLOR%%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
+      escortNPC:
+        base: '    &7%EVENTUALCOLOR%Eskortiere &f%EVENTUALCOLOR%%NPCNAME% &7%EVENTUALCOLOR%zu &f%EVENTUALCOLOR%%DESTINATIONNPCNAME%'
+      killMobs:
+        base: '    &7%EVENTUALCOLOR%Mobs töten: &f%EVENTUALCOLOR%%MOBTOKILL%'
+      otherQuest:
+        base: '    &7%EVENTUALCOLOR%Quest abschließen: &f%EVENTUALCOLOR%%OTHERQUESTNAME%'
+      reachLocation:
+        base: '    &7%EVENTUALCOLOR%Ort erreichen: &f%EVENTUALCOLOR%%LOCATIONNAME%'
+      talkToNPC:
+        base: '    &7%EVENTUALCOLOR%Spreche mit &f%EVENTUALCOLOR%%NAME%'
+      triggerCommand:
+        base: '    &7%EVENTUALCOLOR%Ziel: &f%EVENTUALCOLOR%%TRIGGERNAME%'
+      killEliteMobs:
+        base: '    &7%EVENTUALCOLOR%Töte Elite Mob: &f%EVENTUALCOLOR%%ELITEMOBNAME%'
+        any: '    &7%EVENTUALCOLOR%Töte irgendein Elite Mob!'
 titles:
   quest-accepted:
     title: '&fQuest akzeptiert'

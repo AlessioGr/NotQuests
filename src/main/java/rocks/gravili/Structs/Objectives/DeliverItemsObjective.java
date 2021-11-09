@@ -21,9 +21,9 @@ package rocks.gravili.Structs.Objectives;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import rocks.gravili.NotQuests;
 import rocks.gravili.Structs.Quest;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
 
@@ -75,13 +75,17 @@ public class DeliverItemsObjective extends Objective {
 
     @Override
     public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
-        String toReturn = "    §7" + eventualColor + "Items to deliver: §f" + eventualColor + getItemToDeliver().getType() + " (" + getItemToDeliver().getItemMeta().getDisplayName() + ")\n";
+        String toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.base", player)
+                .replaceAll("%EVENTUALCOLOR%", eventualColor)
+                .replaceAll("%ITEMTODELIVERTYPE%", "" + getItemToDeliver().getType())
+                .replaceAll("%ITEMTODELIVERNAME%", "" + getItemToDeliver().getItemMeta().getDisplayName());
+
         if (main.isCitizensEnabled() && getRecipientNPCID() != -1) {
             final NPC npc = CitizensAPI.getNPCRegistry().getById(getRecipientNPCID());
             if (npc != null) {
-                toReturn += "    §7" + eventualColor + "Deliver it to §f" + eventualColor + npc.getName();
+                toReturn += "\n      §7" + eventualColor + "Deliver it to §f" + eventualColor + npc.getName();
             } else {
-                toReturn += "    §7" + eventualColor + "The delivery NPC is currently not available!";
+                toReturn += "\n      §7" + eventualColor + "The delivery NPC is currently not available!";
             }
         } else {
 

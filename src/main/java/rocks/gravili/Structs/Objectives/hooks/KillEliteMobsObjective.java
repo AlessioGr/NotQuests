@@ -61,9 +61,12 @@ public class KillEliteMobsObjective extends Objective {
     public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
         String toReturn = "";
         if (!getEliteMobToKillContainsName().isBlank()) {
-            toReturn = "    §7" + eventualColor + "Kill Elite Mob: §f" + eventualColor + getEliteMobToKillContainsName();
+            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.killEliteMobs.base", player)
+                    .replaceAll("%EVENTUALCOLOR%", eventualColor)
+                    .replaceAll("%ELITEMOBNAME%", "" + getEliteMobToKillContainsName());
         } else {
-            toReturn = "    §7" + eventualColor + "Kill any Elite Mob!";
+            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.killEliteMobs.any", player)
+                    .replaceAll("%EVENTUALCOLOR%", eventualColor);
         }
         if (getMinimumLevel() != -1) {
             if (getMaximumLevel() != -1) {

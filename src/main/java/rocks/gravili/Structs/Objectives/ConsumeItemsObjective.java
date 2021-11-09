@@ -19,9 +19,9 @@
 package rocks.gravili.Structs.Objectives;
 
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import rocks.gravili.NotQuests;
 import rocks.gravili.Structs.Quest;
-import org.bukkit.inventory.ItemStack;
 
 public class ConsumeItemsObjective extends Objective {
 
@@ -45,7 +45,10 @@ public class ConsumeItemsObjective extends Objective {
 
     @Override
     public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
-        return "    §7" + eventualColor + "Items to consume: §f" + eventualColor + getItemToConsume().getType() + " (" + getItemToConsume().getItemMeta().getDisplayName() + ")";
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.consumeItems.base", player)
+                .replaceAll("%EVENTUALCOLOR%", eventualColor)
+                .replaceAll("%ITEMTOCONSUMETYPE%", "" + getItemToConsume().getType())
+                .replaceAll("%ITEMTOCONSUMENAME%", "" + getItemToConsume().getItemMeta().getDisplayName());
     }
 
     @Override

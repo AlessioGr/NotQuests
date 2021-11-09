@@ -46,7 +46,9 @@ public class TriggerCommandObjective extends Objective {
 
     @Override
     public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
-        return "    §7" + eventualColor + "Goal: §f" + eventualColor + getTriggerName();
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.triggerCommand.base", player)
+                .replaceAll("%EVENTUALCOLOR%", eventualColor)
+                .replaceAll("%TRIGGERNAME%", "" + getTriggerName());
     }
 
     @Override

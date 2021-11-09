@@ -24,6 +24,39 @@ chat:
   take-disabled-preview: '&cPreviewing the quest &b%QUESTNAME% &cis disabled with the &e/nquests preview &ccommand.'
   take-disabled-accept: '&cAccepting the quest &b%QUESTNAME% &cis disabled with the &e/nquests take &ccommand.'
   quest-not-active-error: '&cError: &b%QUESTNAME% &cis not an active Quest!'
+  objectives:
+    counter: '&e%OBJECTIVEID%. %OBJECTIVENAME%:'
+    hidden: '&e%OBJECTIVEID%. &7&l[HIDDEN]'
+    description: '   &9Description: &6%OBJECTIVEDESCRIPTION%'
+    progress: '   &7Progress: &f%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
+    taskDescription:
+      breakBlocks:
+        base: '    &7%EVENTUALCOLOR%Block to break: &f%EVENTUALCOLOR%%BLOCKTOBREAK%'
+      breed:
+        base: '    &7%EVENTUALCOLOR%Mob to breed: &f%EVENTUALCOLOR%%ENTITYTOBREED%'
+      collectItems:
+        base: '    &7%EVENTUALCOLOR%Items to collect: &f%EVENTUALCOLOR%%ITEMTOCOLLECTTYPE% (%ITEMTOCOLLECTNAME%)'
+      consumeItems:
+        base: '    &7%EVENTUALCOLOR%Items to consume: &f%EVENTUALCOLOR%%ITEMTOCONSUMETYPE% (%ITEMTOCONSUMENAME%)'
+      craftItems:
+        base: '    &7%EVENTUALCOLOR%Items to craft: &f%EVENTUALCOLOR%%ITEMTOCRAFTTYPE% (%ITEMTOCRAFTNAME%)'
+      deliverItems:
+        base: '    &7%EVENTUALCOLOR%Items to deliver: &f%EVENTUALCOLOR%%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
+      escortNPC:
+        base: '    &7%EVENTUALCOLOR%Escort &f%EVENTUALCOLOR%%NPCNAME% &7%EVENTUALCOLOR%to &f%EVENTUALCOLOR%%DESTINATIONNPCNAME%'
+      killMobs:
+        base: '    &7%EVENTUALCOLOR%Mobs to kill: &f%EVENTUALCOLOR%%MOBTOKILL%'
+      otherQuest:
+        base: '    &7%EVENTUALCOLOR%Quest completion: &f%EVENTUALCOLOR%%OTHERQUESTNAME%'
+      reachLocation:
+        base: '    &7%EVENTUALCOLOR%Reach Location: &f%EVENTUALCOLOR%%LOCATIONNAME%'
+      talkToNPC:
+        base: '    &7%EVENTUALCOLOR%Talk to &f%EVENTUALCOLOR%%NAME%'
+      triggerCommand:
+        base: '    &7%EVENTUALCOLOR%Goal: &f%EVENTUALCOLOR%%TRIGGERNAME%'
+      killEliteMobs:
+        base: '    &7%EVENTUALCOLOR%Kill Elite Mob: &f%EVENTUALCOLOR%%ELITEMOBNAME%'
+        any: '    &7%EVENTUALCOLOR%Kill any Elite Mob!'
 titles:
   quest-accepted:
     title: '&fQuest accepted'

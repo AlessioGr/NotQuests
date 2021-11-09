@@ -18,10 +18,10 @@
 
 package rocks.gravili.Structs.Objectives;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import rocks.gravili.NotQuests;
 import rocks.gravili.Structs.Quest;
-import org.bukkit.Location;
 
 public class ReachLocationObjective extends Objective {
     private final Location min, max;
@@ -49,7 +49,9 @@ public class ReachLocationObjective extends Objective {
 
     @Override
     public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
-        return "    §7" + eventualColor + "Reach Location: §f" + eventualColor + getLocationName();
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.reachLocation.base", player)
+                .replaceAll("%EVENTUALCOLOR%", eventualColor)
+                .replaceAll("%LOCATIONNAME%", getLocationName());
     }
 
     @Override

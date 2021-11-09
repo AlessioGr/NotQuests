@@ -55,7 +55,10 @@ public class EscortNPCObjective extends Objective {
             final NPC npcDestination = CitizensAPI.getNPCRegistry().getById(getNpcToEscortToID());
 
             if (npc != null && npcDestination != null) {
-                toReturn = "    §7" + eventualColor + "Escort §f" + eventualColor + npc.getName() + " §7" + eventualColor + "to §f" + eventualColor + npcDestination.getName();
+                toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.escortNPC.base", player)
+                        .replaceAll("%EVENTUALCOLOR%", eventualColor)
+                        .replaceAll("%NPCNAME%", "" + npc.getName())
+                        .replaceAll("%DESTINATIONNPCNAME%", "" + npcDestination.getName());
             } else {
                 toReturn = "    §7" + eventualColor + "The target or destination NPC is currently not available!";
             }

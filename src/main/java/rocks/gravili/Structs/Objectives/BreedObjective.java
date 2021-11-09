@@ -26,7 +26,9 @@ public class BreedObjective extends Objective {
 
     @Override
     public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
-        return "    §7" + eventualColor + "Mob to breed: §f" + eventualColor + getEntityToBreedType();
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.breed.base", player)
+                .replaceAll("%EVENTUALCOLOR%", eventualColor)
+                .replaceAll("%ENTITYTOBREED%", getEntityToBreedType());
     }
 
     @Override

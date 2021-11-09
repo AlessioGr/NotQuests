@@ -19,9 +19,9 @@
 package rocks.gravili.Structs.Objectives;
 
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import rocks.gravili.NotQuests;
 import rocks.gravili.Structs.Quest;
-import org.bukkit.inventory.ItemStack;
 
 public class CraftItemsObjective extends Objective {
 
@@ -45,7 +45,10 @@ public class CraftItemsObjective extends Objective {
 
     @Override
     public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
-        return "    §7" + eventualColor + "Items to craft: §f" + eventualColor + getItemToCraft().getType() + " (" + getItemToCraft().getItemMeta().getDisplayName() + ")";
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.craftItems.base", player)
+                .replaceAll("%EVENTUALCOLOR%", eventualColor)
+                .replaceAll("%ITEMTOCRAFTTYPE%", "" + getItemToCraft().getType())
+                .replaceAll("%ITEMTOCRAFTNAME%", "" + getItemToCraft().getItemMeta().getDisplayName());
     }
 
     @Override
