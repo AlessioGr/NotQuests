@@ -64,6 +64,7 @@ gui:
     # If set to false, clickable text will be used for all the other /q commands instead
     enabled: true
 placeholders:
+  support_placeholders_in_translation_strings: false
   player_active_quests_list_horizontal:
     separator: '|'
     limit: -1 #-1 for unlimited
