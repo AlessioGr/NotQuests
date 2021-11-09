@@ -322,6 +322,31 @@ public class LanguageManager {
             valueChanged = true;
         }
 
+        //Chat Objectives
+        if (!getLanguageConfig().isString("chat.objectives.counter")) {
+            getLanguageConfig().set("chat.objectives.counter", "&e%OBJECTIVEID%. %OBJECTIVENAME%:");
+            valueChanged = true;
+        }
+        if (!getLanguageConfig().isString("chat.objectives.hidden")) {
+            getLanguageConfig().set("chat.objectives.hidden", "&e%OBJECTIVEID%. &7&l[HIDDEN]");
+            valueChanged = true;
+        }
+        if (!getLanguageConfig().isString("chat.objectives.description")) {
+            getLanguageConfig().set("chat.objectives.description", "   &9Description: &6%OBJECTIVEDESCRIPTION%");
+            valueChanged = true;
+        }
+        if (!getLanguageConfig().isString("chat.objectives.progress")) {
+            getLanguageConfig().set("chat.objectives.progress", "   §7Progress: §f%ACTIVEOBJECTIVEPROGRESS% &f/ %OBJECTIVEPROGRESSNEEDED%");
+            valueChanged = true;
+        }
+        //Chat Objectives Task Descriptions
+        if (!getLanguageConfig().isString("chat.objectives.taskDescription.breakBlocks")) {
+            getLanguageConfig().set("chat.objectives.taskDescription.breakBlocks", "    &7%EVENTUALCOLOR% Block to break: &f%EVENTUALCOLOR%%BLOCKTOBREAK%");
+            valueChanged = true;
+        }
+
+
+
         //user /q gui - Main
         if (!getLanguageConfig().isString("gui.main.title")) {
             getLanguageConfig().set("gui.main.title", "                &9Quests");

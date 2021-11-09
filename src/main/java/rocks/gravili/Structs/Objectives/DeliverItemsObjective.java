@@ -20,6 +20,7 @@ package rocks.gravili.Structs.Objectives;
 
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
+import org.bukkit.entity.Player;
 import rocks.gravili.NotQuests;
 import rocks.gravili.Structs.Quest;
 import org.bukkit.inventory.ItemStack;
@@ -73,7 +74,7 @@ public class DeliverItemsObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(String eventualColor) {
+    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
         String toReturn = "    §7" + eventualColor + "Items to deliver: §f" + eventualColor + getItemToDeliver().getType() + " (" + getItemToDeliver().getItemMeta().getDisplayName() + ")\n";
         if (main.isCitizensEnabled() && getRecipientNPCID() != -1) {
             final NPC npc = CitizensAPI.getNPCRegistry().getById(getRecipientNPCID());

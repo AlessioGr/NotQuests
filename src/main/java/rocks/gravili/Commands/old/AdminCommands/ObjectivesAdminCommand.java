@@ -87,7 +87,7 @@ public class ObjectivesAdminCommand {
                     sender.sendMessage("§aObjective Type: §b" + main.getObjectiveManager().getObjectiveType(objective.getClass()) );
                     sender.sendMessage("§aObjective Content: ");
 
-                    sender.sendMessage(main.getQuestManager().getObjectiveTaskDescription(objective, false));
+                    sender.sendMessage(main.getQuestManager().getObjectiveTaskDescription(objective, false, null));
 
 
                     sender.sendMessage("§aObjective DisplayName: §b" + objective.getObjectiveDisplayName());

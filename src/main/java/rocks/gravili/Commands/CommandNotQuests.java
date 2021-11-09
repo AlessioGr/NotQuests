@@ -758,7 +758,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                                             .replaceAll("%ACTIVEOBJECTIVEID%", "" + activeObjective.getObjectiveID())
                                                             .replaceAll("%OBJECTIVENAME%", nameToDisplay)
                                                             .replaceAll("%OBJECTIVEDESCRIPTION%", descriptionToDisplay)
-                                                            .replaceAll("%ACTIVEOBJECTIVEDESCRIPTION%", main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), false))
+                                                            .replaceAll("%ACTIVEOBJECTIVEDESCRIPTION%", main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), false, player))
                                                             .replaceAll("%ACTIVEOBJECTIVEPROGRESS%", "" + activeObjective.getCurrentProgress())
                                                             .replaceAll("%OBJECTIVEPROGRESSNEEDED%", "" + activeObjective.getProgressNeeded())
 
@@ -813,7 +813,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                                         .replaceAll("%ACTIVEOBJECTIVEID%", "" + activeObjective.getObjectiveID())
                                                         .replaceAll("%OBJECTIVENAME%", nameToDisplay)
                                                         .replaceAll("%OBJECTIVEDESCRIPTION%", descriptionToDisplay)
-                                                        .replaceAll("%COMPLETEDOBJECTIVEDESCRIPTION%", main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), true))
+                                                        .replaceAll("%COMPLETEDOBJECTIVEDESCRIPTION%", main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), true, player))
                                                         .replaceAll("%ACTIVEOBJECTIVEPROGRESS%", "" + activeObjective.getCurrentProgress())
                                                         .replaceAll("%OBJECTIVEPROGRESSNEEDED%", "" + activeObjective.getProgressNeeded())
 
@@ -836,9 +836,9 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                     gui.show(player);
                                 } else {
                                     sender.sendMessage("§aCompleted Objectives for Quest §b" + requestedActiveQuest.getQuest().getQuestFinalName() + "§e:");
-                                    main.getQuestManager().sendCompletedObjectivesAndProgress(sender, requestedActiveQuest);
+                                    main.getQuestManager().sendCompletedObjectivesAndProgress(player, requestedActiveQuest);
                                     sender.sendMessage("§eActive Objectives for Quest §b" + requestedActiveQuest.getQuest().getQuestFinalName() + "§e:");
-                                    main.getQuestManager().sendActiveObjectivesAndProgress(sender, requestedActiveQuest);
+                                    main.getQuestManager().sendActiveObjectivesAndProgress(player, requestedActiveQuest);
                                 }
 
                             } else {

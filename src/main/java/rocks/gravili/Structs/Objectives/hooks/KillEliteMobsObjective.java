@@ -18,6 +18,7 @@
 
 package rocks.gravili.Structs.Objectives.hooks;
 
+import org.bukkit.entity.Player;
 import rocks.gravili.NotQuests;
 import rocks.gravili.Structs.Objectives.Objective;
 import rocks.gravili.Structs.Quest;
@@ -57,7 +58,7 @@ public class KillEliteMobsObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(String eventualColor) {
+    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
         String toReturn = "";
         if (!getEliteMobToKillContainsName().isBlank()) {
             toReturn = "    §7" + eventualColor + "Kill Elite Mob: §f" + eventualColor + getEliteMobToKillContainsName();

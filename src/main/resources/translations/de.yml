@@ -24,6 +24,13 @@ chat:
   take-disabled-preview: '&cDas Ansehen der Vorschau von der Quest &b%QUESTNAME% &cmit dem &e/nquests preview &cCommand wurde deaktiviert.'
   take-disabled-accept: '&cDas Akzeptieren der Quest &b%QUESTNAME% &cmit dem &e/nquests take &cCommand wurde deaktiviert.'
   quest-not-active-error: '&cFehler: &b%QUESTNAME% &cist keine aktive Quest!'
+  objectives:
+    counter: '&e%OBJECTIVEID%. %OBJECTIVENAME%:'
+    hidden: '&e%OBJECTIVEID%. &7&l[VERBORGEN]'
+    description: '   &9Beschreibung: &6%OBJECTIVEDESCRIPTION%'
+    progress: '   &7Fortschritt: &f%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
+    taskDescription:
+      breakBlocks: '    &7%EVENTUALCOLOR% Block abbauen: &f%EVENTUALCOLOR%%BLOCKTOBREAK%'
 titles:
   quest-accepted:
     title: '&fQuest akzeptiert'

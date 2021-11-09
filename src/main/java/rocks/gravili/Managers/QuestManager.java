@@ -1203,32 +1203,32 @@ public class QuestManager {
     }
 
 
-    public void sendCompletedObjectivesAndProgress(final CommandSender sender, final ActiveQuest activeQuest) {
+    public void sendCompletedObjectivesAndProgress(final Player player, final ActiveQuest activeQuest) {
 
         for (ActiveObjective activeObjective : activeQuest.getCompletedObjectives()) {
 
             final String objectiveDescription = activeObjective.getObjective().getObjectiveDescription();
 
-            sender.sendMessage("§7§m" + activeObjective.getObjective().getObjectiveID() + ". " + activeObjective.getObjective().getObjectiveFinalName() + ":");
+            player.sendMessage("§7§m" + activeObjective.getObjective().getObjectiveID() + ". " + activeObjective.getObjective().getObjectiveFinalName() + ":");
 
 
             if (!objectiveDescription.isBlank()) {
-                sender.sendMessage("   §7§mDescription: §f§m" + objectiveDescription);
+                player.sendMessage("   §7§mDescription: §f§m" + objectiveDescription);
             }
 
-            sender.sendMessage(getObjectiveTaskDescription(activeObjective.getObjective(), true));
-            sender.sendMessage("   §7§mProgress: §f§m" + activeObjective.getCurrentProgress() + " / " + activeObjective.getProgressNeeded());
+            player.sendMessage(getObjectiveTaskDescription(activeObjective.getObjective(), true, player));
+            player.sendMessage("   §7§mProgress: §f§m" + activeObjective.getCurrentProgress() + " / " + activeObjective.getProgressNeeded());
         }
     }
 
 
-    public final String getObjectiveTaskDescription(final Objective objective, boolean completed) {
+    public final String getObjectiveTaskDescription(final Objective objective, boolean completed, final Player player) {
         String toReturn = "";
         String eventualColor = "";
         if (completed) {
             eventualColor = "§m";
         }
-        toReturn += objective.getObjectiveTaskDescription(eventualColor);
+        toReturn += objective.getObjectiveTaskDescription(eventualColor, player);
 
         if (objective.getCompletionNPCID() != -1) {
             if (main.isCitizensEnabled()) {
@@ -1248,41 +1248,46 @@ public class QuestManager {
         return toReturn;
     }
 
-    public void sendActiveObjectivesAndProgress(final CommandSender sender, final ActiveQuest activeQuest) {
+    public void sendActiveObjectivesAndProgress(final Player player, final ActiveQuest activeQuest) {
 
         for (ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
 
             if (activeObjective.isUnlocked()) {
                 final String objectiveDescription = activeObjective.getObjective().getObjectiveDescription();
-                sender.sendMessage("§e" + activeObjective.getObjective().getObjectiveID() + ". " + activeObjective.getObjective().getObjectiveFinalName() + ":");
-
+                player.sendMessage(main.getLanguageManager().getString("chat.objectives.counter", player)
+                        .replaceAll("%OBJECTIVEID%", ""+activeObjective.getObjective().getObjectiveID())
+                        .replaceAll("%OBJECTIVENAME%", ""+activeObjective.getObjective().getObjectiveFinalName()));
 
                 if (!objectiveDescription.isBlank()) {
-                    sender.sendMessage("   §9Description: §6" + objectiveDescription);
+                    player.sendMessage(main.getLanguageManager().getString("chat.objectives.description", player)
+                            .replaceAll("%OBJECTIVEDESCRIPTION%", objectiveDescription));
                 }
 
-                sender.sendMessage(getObjectiveTaskDescription(activeObjective.getObjective(), false));
+                player.sendMessage(getObjectiveTaskDescription(activeObjective.getObjective(), false, player));
 
-                sender.sendMessage("   §7Progress: §f" + activeObjective.getCurrentProgress() + " / " + activeObjective.getProgressNeeded());
+                player.sendMessage(main.getLanguageManager().getString("chat.objectives.progress", player)
+                        .replaceAll("%ACTIVEOBJECTIVEPROGRESS%", ""+activeObjective.getCurrentProgress())
+                        .replaceAll("%OBJECTIVEPROGRESSNEEDED%", ""+activeObjective.getProgressNeeded()));
             } else {
-                sender.sendMessage("§e" + activeObjective.getObjective().getObjectiveID() + ". §7§l[HIDDEN]");
+                player.sendMessage(main.getLanguageManager().getString("chat.objectives.hidden", player)
+                        .replaceAll("%OBJECTIVEID%", ""+activeObjective.getObjective().getObjectiveID()));
 
             }
 
         }
     }
 
-    public void sendObjectives(final CommandSender sender, final Quest quest) {
+    public void sendObjectives(final Player player, final Quest quest) {
         for (final Objective objective : quest.getObjectives()) {
             final String objectiveDescription = objective.getObjectiveDescription();
-            sender.sendMessage("§a" + objective.getObjectiveID() + ". §e" + objective.getObjectiveFinalName());
+            player.sendMessage("§a" + objective.getObjectiveID() + ". §e" + objective.getObjectiveFinalName());
 
 
             if (!objectiveDescription.isBlank()) {
-                sender.sendMessage("   §9Description: §6" + objectiveDescription);
+                player.sendMessage("   §9Description: §6" + objectiveDescription);
             }
 
-            sender.sendMessage(getObjectiveTaskDescription(objective, false));
+            player.sendMessage(getObjectiveTaskDescription(objective, false, player));
 
 
         }
@@ -1312,30 +1317,30 @@ public class QuestManager {
                 sender.sendMessage("      §8No depending objectives found!");
             }
 
-            sender.sendMessage(getObjectiveTaskDescription(objective, false));
+            sender.sendMessage(getObjectiveTaskDescription(objective, false, null));
 
         }
     }
 
 
-    public void sendActiveObjective(final CommandSender sender, ActiveObjective activeObjective) {
+    public void sendActiveObjective(final Player player, ActiveObjective activeObjective) {
 
         if (activeObjective.isUnlocked()) {
             final String objectiveDescription = activeObjective.getObjective().getObjectiveDescription();
 
-            sender.sendMessage("§e" + activeObjective.getObjective().getObjectiveID() + ". " + activeObjective.getObjective().getObjectiveFinalName() + ":");
+            player.sendMessage("§e" + activeObjective.getObjective().getObjectiveID() + ". " + activeObjective.getObjective().getObjectiveFinalName() + ":");
 
 
             if (!objectiveDescription.isBlank()) {
-                sender.sendMessage("   §9Description: §6" + objectiveDescription);
+                player.sendMessage("   §9Description: §6" + objectiveDescription);
             }
 
-            sender.sendMessage(getObjectiveTaskDescription(activeObjective.getObjective(), false));
+            player.sendMessage(getObjectiveTaskDescription(activeObjective.getObjective(), false, player));
 
 
-            sender.sendMessage("   §7Progress: §f" + activeObjective.getCurrentProgress() + " / " + activeObjective.getProgressNeeded());
+            player.sendMessage("   §7Progress: §f" + activeObjective.getCurrentProgress() + " / " + activeObjective.getProgressNeeded());
         } else {
-            sender.sendMessage("§e" + activeObjective.getObjective().getObjectiveID() + ". §7§l[HIDDEN]");
+            player.sendMessage("§e" + activeObjective.getObjective().getObjectiveID() + ". §7§l[HIDDEN]");
 
         }
 

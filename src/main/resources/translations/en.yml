@@ -24,6 +24,13 @@ chat:
   take-disabled-preview: '&cPreviewing the quest &b%QUESTNAME% &cis disabled with the &e/nquests preview &ccommand.'
   take-disabled-accept: '&cAccepting the quest &b%QUESTNAME% &cis disabled with the &e/nquests take &ccommand.'
   quest-not-active-error: '&cError: &b%QUESTNAME% &cis not an active Quest!'
+  objectives:
+    counter: '&e%OBJECTIVEID%. %OBJECTIVENAME%:'
+    hidden: '&e%OBJECTIVEID%. &7&l[HIDDEN]'
+    description: '   &9Description: &6%OBJECTIVEDESCRIPTION%'
+    progress: '   &7Progress: &f%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
+    taskDescription:
+      breakBlocks: '    &7%EVENTUALCOLOR% Block to break: &f%EVENTUALCOLOR%%BLOCKTOBREAK%'
 titles:
   quest-accepted:
     title: '&fQuest accepted'

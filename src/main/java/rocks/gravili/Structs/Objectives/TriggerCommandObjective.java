@@ -19,6 +19,7 @@
 package rocks.gravili.Structs.Objectives;
 
 
+import org.bukkit.entity.Player;
 import rocks.gravili.NotQuests;
 import rocks.gravili.Structs.Quest;
 
@@ -44,7 +45,7 @@ public class TriggerCommandObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(String eventualColor) {
+    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
         return "    §7" + eventualColor + "Goal: §f" + eventualColor + getTriggerName();
     }
 

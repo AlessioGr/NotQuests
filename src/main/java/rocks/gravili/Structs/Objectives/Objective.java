@@ -19,6 +19,7 @@
 package rocks.gravili.Structs.Objectives;
 
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.entity.Player;
 import rocks.gravili.NotQuests;
 import rocks.gravili.Structs.Quest;
 
@@ -179,7 +180,7 @@ public abstract class Objective {
         return quest;
     }
 
-    public abstract String getObjectiveTaskDescription(final String eventualColor);
+    public abstract String getObjectiveTaskDescription(final String eventualColor, final Player player);
 
     public abstract void save();
 

@@ -18,6 +18,7 @@
 
 package rocks.gravili.Structs.Objectives;
 
+import org.bukkit.entity.Player;
 import rocks.gravili.NotQuests;
 import rocks.gravili.Structs.Quest;
 import org.bukkit.Location;
@@ -47,7 +48,7 @@ public class ReachLocationObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(String eventualColor) {
+    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
         return "    §7" + eventualColor + "Reach Location: §f" + eventualColor + getLocationName();
     }
 

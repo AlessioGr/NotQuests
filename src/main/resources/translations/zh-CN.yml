@@ -21,6 +21,13 @@ chat:
   take-disabled-preview: '&c任务预览 &b%QUESTNAME% &c已被通过指令 &e/nquests preview &c禁止.'
   take-disabled-accept: '&c任务接受 &b%QUESTNAME% &c已被通过指令 &e/nquests take &c禁止.'
   quest-not-active-error: '&c错误: &b%QUESTNAME% &c不是一个进行中的任务!'
+  objectives:
+    counter: '&e%OBJECTIVEID%. %OBJECTIVENAME%:'
+    hidden: '&e%OBJECTIVEID%. &7&l[HIDDEN]'
+    description: '   &9描述: &6%OBJECTIVEDESCRIPTION%'
+    progress: '   &7进度: &f%ACTIVEOBJECTIVEPROGRESS% &f/ %OBJECTIVEPROGRESSNEEDED%'
+    taskDescription:
+      breakBlocks: '    &7%EVENTUALCOLOR% Block to break: &f%EVENTUALCOLOR%%BLOCKTOBREAK%'
 titles:
   quest-accepted:
     title: '&f任务已接受'
