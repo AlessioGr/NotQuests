@@ -339,6 +339,10 @@ public class LanguageManager {
             getLanguageConfig().set("chat.objectives.progress", "   §7Progress: §f%ACTIVEOBJECTIVEPROGRESS% &f/ %OBJECTIVEPROGRESSNEEDED%");
             valueChanged = true;
         }
+        if (!getLanguageConfig().isString("chat.objectives.successfully-completed")) {
+            getLanguageConfig().set("chat.objectives.successfully-completed", "&aYou have successfully completed the objective &e%OBJECTIVENAME% &a for quest &b%QUESTNAME%&a!");
+            valueChanged = true;
+        }
         //Chat Objectives Task Descriptions
         if (!getLanguageConfig().isString("chat.objectives.taskDescription.breakBlocks.base")) {
             getLanguageConfig().set("chat.objectives.taskDescription.breakBlocks.base", "    &7%EVENTUALCOLOR%Block to break: &f%EVENTUALCOLOR%%BLOCKTOBREAK%");

@@ -29,6 +29,7 @@ chat:
     hidden: '&e%OBJECTIVEID%. &7&l[VERBORGEN]'
     description: '   &9Beschreibung: &6%OBJECTIVEDESCRIPTION%'
     progress: '   &7Fortschritt: &f%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
+    successfully-completed: '&aDu hast die Aufgabe &e%OBJECTIVENAME% &afür die Quest &b%QUESTNAME% &aerfolgreich abgeschlossen!!'
     taskDescription:
       breakBlocks:
         base: '    &7%EVENTUALCOLOR%Block abbauen: &f%EVENTUALCOLOR%%BLOCKTOBREAK%'

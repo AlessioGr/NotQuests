@@ -26,6 +26,7 @@ chat:
     hidden: '&e%OBJECTIVEID%. &7&l[HIDDEN]'
     description: '   &9描述: &6%OBJECTIVEDESCRIPTION%'
     progress: '   &7进度: &f%ACTIVEOBJECTIVEPROGRESS% &f/ %OBJECTIVEPROGRESSNEEDED%'
+    successfully-completed: '&aYou have successfully completed the objective &e%OBJECTIVENAME% &afor quest &b%QUESTNAME%&a!'
     taskDescription:
       breakBlocks:
         base: '    &7%EVENTUALCOLOR%Block to break: &f%EVENTUALCOLOR%%BLOCKTOBREAK%'
