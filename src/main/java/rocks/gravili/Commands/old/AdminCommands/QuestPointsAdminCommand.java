@@ -60,7 +60,7 @@ public class QuestPointsAdminCommand {
                     sender.sendMessage("§cPlease enter the 4. argument");
                     showUsage(sender, args);
                 } else {
-                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                     showUsage(sender, args);
                 }
             }
@@ -72,12 +72,12 @@ public class QuestPointsAdminCommand {
             } else if (args[2].equalsIgnoreCase("set")) {
                 setQuestPoints(sender, args[1], Long.parseLong(args[3]));
             } else {
-                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                 showUsage(sender, args);
             }
 
         } else {
-            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
             showUsage(sender, args);
         }
     }

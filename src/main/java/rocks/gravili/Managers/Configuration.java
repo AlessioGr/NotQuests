@@ -103,6 +103,11 @@ public class Configuration {
     public boolean visualTitleQuestCompleted_enabled = true;
 
 
+
+
+    public boolean supportPlaceholderAPIInTranslationStrings = false;
+
+
     public Configuration() {
 
     }

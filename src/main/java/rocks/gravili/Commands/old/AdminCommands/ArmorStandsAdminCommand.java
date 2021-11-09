@@ -237,7 +237,7 @@ public class ArmorStandsAdminCommand {
             }
         }else {
 
-            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
             showUsage(quest, sender, args);
         }
 

@@ -67,6 +67,7 @@ public class QuestPlayer {
     }
 
     public String addActiveQuest(final ActiveQuest quest, final boolean triggerAcceptQuestTrigger, final boolean sendQuestInfo) {
+
         //Configuration Option: general.max-active-quests-per-player
         if(main.getDataManager().getConfiguration().getMaxActiveQuestsPerPlayer() != -1 && activeQuests.size() >= main.getDataManager().getConfiguration().getMaxActiveQuestsPerPlayer()){
             return "§cYou can not accept more than §b" + main.getDataManager().getConfiguration().getMaxActiveQuestsPerPlayer() + " §cQuests.";
@@ -74,7 +75,7 @@ public class QuestPlayer {
 
         for (ActiveQuest activeQuest : activeQuests) {
             if (activeQuest.getQuest().equals(quest.getQuest())) {
-                return main.getLanguageManager().getString("chat.quest-already-accepted");
+                return main.getLanguageManager().getString("chat.quest-already-accepted", getPlayer());
             }
         }
         int completedAmount = 0;
@@ -139,7 +140,7 @@ public class QuestPlayer {
                     } else if (requirement instanceof final MoneyRequirement moneyRequirement) {
                         final long moneyRequirementAmount = moneyRequirement.getMoneyRequirement();
                         final boolean deductMoney = moneyRequirement.isDeductMoney();
-                        final Player player = Bukkit.getPlayer(getUUID());
+                        final Player player = getPlayer();
                         if (player != null) {
                             if (!main.isVaultEnabled() || main.getEconomy() == null) {
                                 requirementsStillNeeded.append("\n§eError: The server does not have vault enabled. Please ask the Owner to install Vault for money stuff to work.");
@@ -158,7 +159,7 @@ public class QuestPlayer {
                     } else if (requirement instanceof final PermissionRequirement permissionRequirement) {
                         final String requiredPermission = permissionRequirement.getRequiredPermission();
 
-                        final Player player = Bukkit.getPlayer(uuid);
+                        final Player player = getPlayer();
                         if (player != null) {
                             if (!player.hasPermission(requiredPermission)) {
                                 requirementsStillNeeded.append("\n§eYou need the following permission: §b").append(requiredPermission).append("§e.");
@@ -178,7 +179,7 @@ public class QuestPlayer {
                 }
 
                 if (moneyToDeduct > 0) {
-                    final Player player = Bukkit.getPlayer(getUUID());
+                    final Player player = getPlayer();
                     if (player != null) {
                         if(main.isVaultEnabled()){
                             removeMoney(player, player.getWorld().getName(), moneyToDeduct, true);
@@ -200,14 +201,14 @@ public class QuestPlayer {
 
                 finishAddingQuest(quest, triggerAcceptQuestTrigger, false);
                 if (sendQuestInfo) {
-                    final Player player = Bukkit.getPlayer(uuid);
+                    final Player player = getPlayer();
                     if (player != null) {
-                        player.sendMessage(main.getLanguageManager().getString("chat.objectives-label-after-quest-accepting"));
+                        player.sendMessage(main.getLanguageManager().getString("chat.objectives-label-after-quest-accepting", player));
                         main.getQuestManager().sendActiveObjectivesAndProgress(player, quest);
 
                         if (main.getDataManager().getConfiguration().visualTitleQuestSuccessfullyAccepted_enabled) {
 
-                            player.sendTitle(main.getLanguageManager().getString("titles.quest-accepted.title"), main.getLanguageManager().getString("titles.quest-accepted.subtitle").replaceAll("%QUESTNAME%", quest.getQuest().getQuestFinalName()), 2, 60, 8);
+                            player.sendTitle(main.getLanguageManager().getString("titles.quest-accepted.title", player), main.getLanguageManager().getString("titles.quest-accepted.subtitle", player).replaceAll("%QUESTNAME%", quest.getQuest().getQuestFinalName()), 2, 60, 8);
 
 
                         }
@@ -265,7 +266,7 @@ public class QuestPlayer {
                         if (activeTrigger.getTrigger().getWorldName().equalsIgnoreCase("ALL")) {
                             activeTrigger.addAndCheckTrigger(activeQuest);
                         } else {
-                            final Player player = Bukkit.getPlayer(getUUID());
+                            final Player player = getPlayer();
                             if (player != null && player.getWorld().getName().equalsIgnoreCase(activeTrigger.getTrigger().getWorldName())) {
                                 activeTrigger.addAndCheckTrigger(activeQuest);
                             }
@@ -283,7 +284,7 @@ public class QuestPlayer {
     public String forceAddActiveQuest(final ActiveQuest quest, boolean triggerAcceptQuestTrigger) { //ignores max amount, cooldown and requirements
         for (ActiveQuest activeQuest : activeQuests) {
             if (activeQuest.getQuest().equals(quest.getQuest())) {
-                return main.getLanguageManager().getString("chat.quest-already-accepted");
+                return main.getLanguageManager().getString("chat.quest-already-accepted", getPlayer());
             }
         }
         finishAddingQuest(quest, triggerAcceptQuestTrigger, false);
@@ -316,14 +317,14 @@ public class QuestPlayer {
 
     public void giveReward(Quest quest) {
         for (Reward reward : quest.getRewards()) {
-            reward.giveReward(Bukkit.getPlayer(uuid), quest);
+            reward.giveReward(getPlayer(), quest);
         }
-        Objects.requireNonNull(Bukkit.getPlayer(uuid)).sendMessage(main.getLanguageManager().getString("chat.quest-completed-and-rewards-given").replaceAll("%QUESTNAME%", quest.getQuestFinalName()));
+        Objects.requireNonNull(getPlayer()).sendMessage(main.getLanguageManager().getString("chat.quest-completed-and-rewards-given", getPlayer()).replaceAll("%QUESTNAME%", quest.getQuestFinalName()));
 
     }
 
     public void sendMessage(String message) {
-        final Player player = Bukkit.getPlayer(uuid);
+        final Player player = getPlayer();
         if (player != null) {
             player.sendMessage(message);
         }
@@ -342,7 +343,7 @@ public class QuestPlayer {
                     if (activeTrigger.getTrigger().getWorldName().equalsIgnoreCase("ALL")) {
                         activeTrigger.addAndCheckTrigger(activeQuest);
                     } else {
-                        final Player player = Bukkit.getPlayer(getUUID());
+                        final Player player = getPlayer();
                         if (player != null && player.getWorld().getName().equalsIgnoreCase(activeTrigger.getTrigger().getWorldName())) {
                             activeTrigger.addAndCheckTrigger(activeQuest);
                         }
@@ -355,10 +356,10 @@ public class QuestPlayer {
         giveReward(activeQuest.getQuest());
         questsToComplete.add(activeQuest);
 
-        final Player player = Bukkit.getPlayer(uuid);
+        final Player player = getPlayer();
         if (player != null) {
             if (main.getDataManager().getConfiguration().visualTitleQuestCompleted_enabled) {
-                player.sendTitle(main.getLanguageManager().getString("titles.quest-completed.title"), main.getLanguageManager().getString("titles.quest-accepted.subtitle").replaceAll("%QUESTNAME%", activeQuest.getQuest().getQuestFinalName()), 2, 60, 8);
+                player.sendTitle(main.getLanguageManager().getString("titles.quest-completed.title", player), main.getLanguageManager().getString("titles.quest-accepted.subtitle", player).replaceAll("%QUESTNAME%", activeQuest.getQuest().getQuestFinalName()), 2, 60, 8);
 
             }
 
@@ -389,7 +390,7 @@ public class QuestPlayer {
                     if (activeTrigger.getTrigger().getWorldName().equalsIgnoreCase("ALL")) {
                         activeTrigger.addAndCheckTrigger(activeQuest);
                     } else {
-                        final Player player = Bukkit.getPlayer(getUUID());
+                        final Player player = getPlayer();
                         if (player != null && player.getWorld().getName().equalsIgnoreCase(activeTrigger.getTrigger().getWorldName())) {
                             activeTrigger.addAndCheckTrigger(activeQuest);
                         }
@@ -401,11 +402,11 @@ public class QuestPlayer {
         if (activeQuest.isCompleted()) {
             giveReward(activeQuest.getQuest());
             questsToComplete.add(activeQuest);
-            final Player player = Bukkit.getPlayer(uuid);
+            final Player player = getPlayer();
             if (player != null) {
                 if (main.getDataManager().getConfiguration().visualTitleQuestCompleted_enabled) {
 
-                    player.sendTitle(main.getLanguageManager().getString("titles.quest-completed.title"), main.getLanguageManager().getString("titles.quest-accepted.subtitle").replaceAll("%QUESTNAME%", activeQuest.getQuest().getQuestFinalName()), 2, 60, 8);
+                    player.sendTitle(main.getLanguageManager().getString("titles.quest-completed.title", player), main.getLanguageManager().getString("titles.quest-accepted.subtitle", player).replaceAll("%QUESTNAME%", activeQuest.getQuest().getQuestFinalName()), 2, 60, 8);
                 }
 
                 player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.MASTER, 100, 40);
@@ -432,7 +433,7 @@ public class QuestPlayer {
         }
 
         if (notifyPlayer) {
-            final Player player = Bukkit.getPlayer(getUUID());
+            final Player player = getPlayer();
             if (player != null) {
                 player.sendMessage("§eYour quest points have been set to §b" + newQuestPoints + "§e.");
             }
@@ -443,7 +444,7 @@ public class QuestPlayer {
     public void addQuestPoints(long questPointsToAdd, boolean notifyPlayer) {
         setQuestPoints(getQuestPoints() + questPointsToAdd, false);
         if (notifyPlayer) {
-            final Player player = Bukkit.getPlayer(getUUID());
+            final Player player = getPlayer();
             if (player != null) {
                 player.sendMessage("§b+" + questPointsToAdd + " §aquest points!");
             }
@@ -453,7 +454,7 @@ public class QuestPlayer {
     public void removeQuestPoints(final long questPointsToRemove, final boolean notifyPlayer) {
         setQuestPoints(getQuestPoints() - questPointsToRemove, false);
         if (notifyPlayer) {
-            final Player player = Bukkit.getPlayer(getUUID());
+            final Player player = getPlayer();
             if (player != null) {
                 player.sendMessage("§b-" + questPointsToRemove + " §cquest points!");
             }
@@ -503,12 +504,12 @@ public class QuestPlayer {
 
                 foundActiveQuest.fail();
                 questsToRemove.add(foundActiveQuest);
-                final Player player = Bukkit.getPlayer(uuid);
+                final Player player = getPlayer();
 
                 if (player != null) {
                     if (main.getDataManager().getConfiguration().visualTitleQuestFailed_enabled) {
 
-                        player.sendTitle(main.getLanguageManager().getString("titles.quest-failed.title"), main.getLanguageManager().getString("titles.quest-failed.subtitle").replaceAll("%QUESTNAME%", activeQuestToFail.getQuest().getQuestFinalName()), 2, 60, 8);
+                        player.sendTitle(main.getLanguageManager().getString("titles.quest-failed.title", player), main.getLanguageManager().getString("titles.quest-failed.subtitle", player).replaceAll("%QUESTNAME%", activeQuestToFail.getQuest().getQuestFinalName()), 2, 60, 8);
                     }
 
                     player.playSound(player.getLocation(), Sound.ENTITY_RAVAGER_DEATH, SoundCategory.MASTER, 100, 1);
@@ -536,4 +537,10 @@ public class QuestPlayer {
         }
         return false;
     }
+
+
+    public final Player getPlayer(){
+        return Bukkit.getPlayer(uuid);
+    }
+
 }

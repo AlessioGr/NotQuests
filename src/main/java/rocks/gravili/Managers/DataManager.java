@@ -536,6 +536,11 @@ public class DataManager {
         }
         configuration.setUserCommandsUseGUI(getGeneralConfig().getBoolean("gui.usercommands.enabled"));
 
+        if (!getGeneralConfig().isBoolean("placeholders.support_placeholderapi_in_translation_strings")) {
+            getGeneralConfig().set("placeholders.support_placeholderapi_in_translation_strings", false);
+            valueChanged = true;
+        }
+        configuration.supportPlaceholderAPIInTranslationStrings = getGeneralConfig().getBoolean("placeholders.support_placeholderapi_in_translation_strings.separator");
 
         if (!getGeneralConfig().isString("placeholders.player_active_quests_list_horizontal.separator")) {
             getGeneralConfig().set("placeholders.player_active_quests_list_horizontal.separator", " | ");

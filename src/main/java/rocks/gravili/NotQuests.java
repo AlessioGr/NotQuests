@@ -87,7 +87,7 @@ public final class NotQuests extends JavaPlugin {
 
     //Enabled Hooks
     private boolean eliteMobsEnabled = false;
-
+    private boolean placeholderAPIEnabled = false;
     private boolean betonQuestEnabled = false;
     private BetonQuestIntegration betonQuestIntegration;
 
@@ -276,6 +276,8 @@ public final class NotQuests extends JavaPlugin {
 
             if (getDataManager().getConfiguration().isIntegrationPlaceholderAPIEnabled()) {
                 if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+                    placeholderAPIEnabled = true;
+                    getLogManager().info("PlaceholderAPI found! Enabling PlaceholderAPI support...");
                     new QuestPlaceholders(this).register();
                 }
             }
@@ -499,6 +501,10 @@ public final class NotQuests extends JavaPlugin {
 
     public boolean isEliteMobsEnabled() {
         return eliteMobsEnabled;
+    }
+
+    public boolean isPlaceholderAPIEnabled() {
+        return placeholderAPIEnabled;
     }
 
     public boolean isBetonQuestEnabled() {

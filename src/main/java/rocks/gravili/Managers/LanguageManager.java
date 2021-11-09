@@ -18,11 +18,13 @@
 
 package rocks.gravili.Managers;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.io.IOUtils;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import rocks.gravili.NotQuests;
 
 import java.io.*;
@@ -520,11 +522,19 @@ public class LanguageManager {
         return languageConfig;
     }
 
-    public final String getString(final String languageString) {
+    public final String getString(final String languageString, final Player targetPlayer) {
         if (!getLanguageConfig().isString(languageString)) {
             return "Language string not found: " + languageString;
         } else {
-            return applySpecial(applyColor(getLanguageConfig().getString(languageString)));
+            final String translatedString = getLanguageConfig().getString(languageString);
+            if(translatedString == null){
+                return "Language string not found: " + languageString;
+            }
+            if(!main.getDataManager().getConfiguration().supportPlaceholderAPIInTranslationStrings || !main.isPlaceholderAPIEnabled() || targetPlayer == null){
+                return applySpecial(applyColor(translatedString));
+            }else{
+                return applySpecial(applyColor(PlaceholderAPI.setPlaceholders(targetPlayer, translatedString)));
+            }
         }
 
     }

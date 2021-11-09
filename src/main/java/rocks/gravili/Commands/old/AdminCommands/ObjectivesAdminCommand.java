@@ -302,7 +302,7 @@ public class ObjectivesAdminCommand {
                         }
                     }
                 } else {
-                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                 }
             } else if (args[3].equalsIgnoreCase("edit") && args[5].equalsIgnoreCase("description")) {
                 if (args[6].equalsIgnoreCase("show")) {
@@ -406,7 +406,7 @@ public class ObjectivesAdminCommand {
                 }
 
             } else {
-                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
             }
         } else if (args.length >= 8 && args[3].equalsIgnoreCase("edit") && (args[5].equalsIgnoreCase("displayName") || args[5].equalsIgnoreCase("description")) && args[6].equalsIgnoreCase("set")) {
             final int objectiveID = Integer.parseInt(args[4]);
@@ -428,7 +428,7 @@ public class ObjectivesAdminCommand {
                     objective.setObjectiveDescription(descriptionOrDisplayName.toString(), true);
                     sender.sendMessage("§aDescription successfully added to objective with ID §b" + objectiveID + "§a! New description: §e" + objective.getObjectiveDescription());
                 } else {
-                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                 }
 
 
@@ -614,7 +614,7 @@ public class ObjectivesAdminCommand {
 
 
                 } else {
-                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                 }
 
 
@@ -735,11 +735,11 @@ public class ObjectivesAdminCommand {
                 }
 
             } else {
-                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
             }
         } else {
 
-            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
             showUsage(quest, sender, args);
         }
     }
@@ -763,7 +763,7 @@ public class ObjectivesAdminCommand {
                 sender.sendMessage("§cPlease specify the Objective ID.");
                 sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives edit §3[Objective ID] ...");
             } else {
-                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                 sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §3[Objective Type] ...");
                 sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives edit §3[Objective ID] ...");
                 sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives list");
@@ -829,7 +829,7 @@ public class ObjectivesAdminCommand {
 
 
             } else {
-                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
             }
         } else if (args.length == 6) {
             if (args[3].equalsIgnoreCase("add")) {
@@ -862,7 +862,7 @@ public class ObjectivesAdminCommand {
                     sender.sendMessage("§cMissing 7. argument §3[Destination NPC ID]§c. Specify the §bID of the NPC§c where the player has to escort the escort NPC to.");
                     sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2EscortNPC " + args[5] + " §3[Destination NPC ID]");
                 } else {
-                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                 }
             } else if (args[3].equalsIgnoreCase("edit")) {
                 final int objectiveID = Integer.parseInt(args[4]);
@@ -906,7 +906,7 @@ public class ObjectivesAdminCommand {
 
 
             } else {
-                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
             }
         } else if (args.length == 7) {
             if (args[3].equalsIgnoreCase("add")) {
@@ -934,7 +934,7 @@ public class ObjectivesAdminCommand {
                             sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3description set <New Description> §7 | Sets new objective description");
 
                         } else if (!args[6].equalsIgnoreCase("show") && !args[6].equalsIgnoreCase("remove")) {
-                            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                         }
 
                     } else if (args[5].equalsIgnoreCase("displayName")) {
@@ -943,7 +943,7 @@ public class ObjectivesAdminCommand {
                             sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3displayName set <New DisplayName> §7 | Sets new objective Display Name");
 
                         } else if (!args[6].equalsIgnoreCase("show") && !args[6].equalsIgnoreCase("remove")) {
-                            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                         }
                     } else if (args[5].equalsIgnoreCase("dependencies")) {
                         if (!args[6].equalsIgnoreCase("list") && !args[6].equalsIgnoreCase("clear")) {
@@ -956,7 +956,7 @@ public class ObjectivesAdminCommand {
                                 sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3dependencies remove <Objective ID> §7 | Removes an objective from a dependency (needs to be completed before this one)");
 
                             } else {
-                                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                             }
 
                         }
@@ -966,18 +966,18 @@ public class ObjectivesAdminCommand {
                             sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives edit §2" + objectiveID + " §3completionNPC set <CompletionNPC ID / armorstand> §7 | Sets the completion NPC ID (-1 = default = complete automatically)");
 
                         } else if (!args[6].equalsIgnoreCase("show") && !args[6].equalsIgnoreCase("view")) {
-                            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
 
                         }
                     } else {
-                        sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                        sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                     }
                 } else {
                     sender.sendMessage("§cError: Objective with the ID §b" + objectiveID + " §c was not found for quest §b" + quest.getQuestName() + "§c!");
                 }
 
             } else {
-                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
             }
         } else {
             sender.sendMessage("§e/qadmin §6edit §3 [Quest Name] §6objectives add §3[Objective Type] ...");
@@ -1210,7 +1210,7 @@ public class ObjectivesAdminCommand {
             sender.sendMessage("§aKillEliteMobs Objective successfully added to quest §b" + quest.getQuestName() + "§a!");
 
         } else {
-            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
         }
     }
 

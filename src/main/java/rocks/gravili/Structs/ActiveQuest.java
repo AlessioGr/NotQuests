@@ -292,7 +292,7 @@ public class ActiveQuest {
             //  }
         }
 
-        questPlayer.sendMessage(main.getLanguageManager().getString("chat.quest-failed").replaceAll("%QUESTNAME%", getQuest().getQuestName()));
+        questPlayer.sendMessage(main.getLanguageManager().getString("chat.quest-failed", questPlayer.getPlayer()).replaceAll("%QUESTNAME%", getQuest().getQuestName()));
 
 
         for (final ActiveObjective activeObjective : getActiveObjectives()) {

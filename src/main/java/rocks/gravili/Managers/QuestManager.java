@@ -915,7 +915,7 @@ public class QuestManager {
         if (quest.getQuestDescription().length() >= 1) {
             player.sendMessage("§eQuest description: §7" + quest.getQuestDescription());
         } else {
-            player.sendMessage(main.getLanguageManager().getString("chat.missing-quest-description"));
+            player.sendMessage(main.getLanguageManager().getString("chat.missing-quest-description", player));
         }
 
         player.sendMessage("§9Quest Requirements:");

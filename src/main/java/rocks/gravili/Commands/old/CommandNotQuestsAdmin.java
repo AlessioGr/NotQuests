@@ -217,7 +217,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                     sender.sendMessage("§cMissing 2. argument §3[Player Name]§c. Specify the §bname of the player§c to complete their quests.");
                     sender.sendMessage("§e/qadmin §6completeQuest §3[Player Name] [Active Quest Name] §7| Force-completes an active quest for set player");
                 } else {
-                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                 }
             } else if (args.length == 2) {
                 if (args[0].equalsIgnoreCase("actions")) {
@@ -237,7 +237,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                             counter += 1;
                         }
                     } else {
-                        sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                        sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                     }
                 } else if (args[0].equalsIgnoreCase("resetAndRemoveQuestForAllPlayers")) {
                     final Quest quest = main.getQuestManager().getQuest(args[1]);
@@ -417,7 +417,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                     sender.sendMessage("§cMissing 3. argument §3[Active Quest Name] §c. Specify the §bname of the active quest§c of the player they should complete.");
                     sender.sendMessage("§e/qadmin §6completeQuest §3[Player Name] [Active Quest Name] §7| Force-completes an active quest for set player");
                 } else {
-                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                 }
             } else if (args[0].equalsIgnoreCase("edit") && args[2].equalsIgnoreCase("objectives")) { //args >= 3
                 final Quest quest = main.getQuestManager().getQuest(args[1]);
@@ -452,7 +452,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                         sender.sendMessage("§e/qadmin §6actions edit §2" + args[2] + " §3setCommand <new Console Command>");
                         sender.sendMessage("§e/qadmin §6actions edit §2" + args[2] + " §3delete");
                     } else {
-                        sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                        sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                     }
                 } else if (args[0].equalsIgnoreCase("edit")) {
                     final Quest quest = main.getQuestManager().getQuest(args[1]);
@@ -488,7 +488,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                             sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6displayName §3<display name> §7| Sets the name of the quest which will be displayed in, for example, the quest preview");
                             sender.sendMessage("§9Current quest displayname: §e" + quest.getQuestDisplayName());
                         } else {
-                            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                         }
                     } else {
                         sender.sendMessage("§cQuest §b" + args[1] + " §cdoes not exist");
@@ -616,7 +616,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                         sender.sendMessage("§cPlayer §b" + playerName + " §cis not online or was not found!");
                     }
                 } else {
-                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                 }
 
             } else if (args[0].equalsIgnoreCase("edit") && args[2].equalsIgnoreCase("description") || args[0].equalsIgnoreCase("actions") && args[1].equalsIgnoreCase("add")) { //args >= 4
@@ -655,7 +655,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
 
 
                     } else {
-                        sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                        sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                     }
                 } else if (args[0].equalsIgnoreCase("edit")) {
                     final Quest quest = main.getQuestManager().getQuest(args[1]);
@@ -683,7 +683,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                         sender.sendMessage("§cQuest §b" + args[1] + " §cdoes not exist");
                     }
                 } else {
-                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                 }
 
 
@@ -744,7 +744,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                 quest.removeAllRequirements();
                                 sender.sendMessage("§aAll requirements of quest §b" + quest.getQuestName() + " §ahave been removed!");
                             } else {
-                                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                             }
 
 
@@ -775,7 +775,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                 quest.removeAllNPCs();
                                 sender.sendMessage("§aAll NPCs of quest §b" + quest.getQuestName() + " §ahave been removed!");
                             } else {
-                                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                             }
 
                         } else if (args[2].equalsIgnoreCase("triggers")) {
@@ -819,7 +819,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                 quest.removeAllTriggers();
                                 sender.sendMessage("§aAll Triggers of quest §b" + quest.getQuestName() + " §ahave been removed!");
                             } else {
-                                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                             }
 
                         } else if (args[2].equalsIgnoreCase("maxAccepts")) {
@@ -863,7 +863,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                 sender.sendMessage("§aCooldown for quest §b" + quest.getQuestName() + " §ahas been §bdisabled§a!");
                             }
                         } else {
-                            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                         }
                     } else {
                         sender.sendMessage("§cQuest §b" + args[1] + " §cdoes not exist");
@@ -895,12 +895,12 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                         sender.sendMessage("§cMissing 5. argument <new Console Command>§c. Specify the new console command here.");
                         sender.sendMessage("§e/qadmin §6actions edit §2" + args[2] + " §3setCommand <new Console Command>");
                     } else {
-                        sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                        sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                     }
 
 
                 } else {
-                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                 }
             } else if (args[0].equalsIgnoreCase("actions") && args[1].equalsIgnoreCase("edit") && args[3].equalsIgnoreCase("setCommand")) { //args >= 5
 
@@ -956,7 +956,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                     sender.sendMessage("§cInvalid Requirement Type");
                                 }
                             } else {
-                                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                             }
                         } else if (args[2].equalsIgnoreCase("npcs")) {
                             if (args[3].equalsIgnoreCase("add")) {
@@ -984,16 +984,16 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                 sender.sendMessage(quest.removeTrigger(triggerID));
 
                             } else {
-                                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                             }
                         } else {
-                            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                         }
                     } else {
                         sender.sendMessage("§cQuest §b" + args[1] + " §cdoes not exist");
                     }
                 } else {
-                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                 }
             } else if (args.length == 6) {
                 if (args[0].equalsIgnoreCase("edit")) {
@@ -1016,10 +1016,10 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                     quest.addRequirement(permissionRequirement);
                                     sender.sendMessage("§aRequirement successfully added to quest §b" + quest.getQuestName() + "§a!");
                                 } else {
-                                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                                 }
                             } else {
-                                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                             }
 
                         }else if (args[2].equalsIgnoreCase("npcs")) {
@@ -1058,7 +1058,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
 
 
                             } else {
-                                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                             }
                         } else if (args[2].equalsIgnoreCase("triggers")) {
 
@@ -1100,20 +1100,20 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                     sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2WORLDLEAVE §3[Apply On] [World Name/ALL] [Amount of Leaves] [World to Leave Name/ALL]");
 
                                 } else {
-                                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                                 }
                             } else {
-                                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                             }
 
                         } else {
-                            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                         }
                     } else {
                         sender.sendMessage("§cQuest §b" + args[1] + " §cdoes not exist");
                     }
                 } else {
-                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                 }
             } else if (args.length == 7) {
                 if (args[0].equalsIgnoreCase("edit")) {
@@ -1176,10 +1176,10 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                     }
 
                                 } else {
-                                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                                 }
                             } else {
-                                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                             }
                         } else if (args[2].equalsIgnoreCase("triggers")) {
 
@@ -1222,21 +1222,21 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                     sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2WORLDLEAVE §3[Apply On] [World Name/ALL] [Amount of Leaves] [World to Leave Name/ALL]");
 
                                 } else {
-                                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                                 }
 
 
                             } else {
-                                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                             }
                         } else {
-                            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                         }
                     } else {
                         sender.sendMessage("§cQuest §b" + args[1] + " §cdoes not exist");
                     }
                 } else {
-                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                 }
             } else if (args.length == 8) {
                 if (args[0].equalsIgnoreCase("edit")) {
@@ -1348,21 +1348,21 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                     sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2WORLDLEAVE §3[Apply On] [World Name/ALL] [Amount of Leaves] [World to Leave Name/ALL]");
 
                                 } else {
-                                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                                 }
 
 
                             } else {
-                                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                             }
                         } else {
-                            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                         }
                     } else {
                         sender.sendMessage("§cQuest §b" + args[1] + " §cdoes not exist");
                     }
                 } else {
-                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                 }
 
             } else if (args.length == 9) {
@@ -1410,21 +1410,21 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                     sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2WORLDLEAVE §3[Apply On] [World Name/ALL] [Amount of Leaves] [World to Leave Name/ALL]");
 
                                 } else {
-                                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                                 }
 
 
                             } else {
-                                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                             }
                         } else {
-                            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                         }
                     } else {
                         sender.sendMessage("§cQuest §b" + args[1] + " §cdoes not exist");
                     }
                 } else {
-                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                 }
 
             } else if (args.length == 10) {
@@ -1519,27 +1519,27 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                         sender.sendMessage("§cError: the following action was not found: §b" + args[4]);
                                     }
                                 } else {
-                                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                                 }
                             } else {
-                                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                             }
                         } else {
-                            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                         }
                     } else {
                         sender.sendMessage("§cQuest §b" + args[1] + " §cdoes not exist");
                     }
                 } else {
-                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                 }
 
             } else {
-                sender.sendMessage(main.getLanguageManager().getString("chat.too-many-arguments"));
+                sender.sendMessage(main.getLanguageManager().getString("chat.too-many-arguments", null));
             }
 
         } else {
-            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage").replaceAll("%PERMISSION%", "notquests.admin"));
+            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null).replaceAll("%PERMISSION%", "notquests.admin"));
         }
         return true;
     }
@@ -1657,7 +1657,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                 sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards edit §3[Reward ID] ...");
                 sender.sendMessage("§cPlease specify the reward ID you want to edit! You can list the rewards and their IDs via /qa ... rewards list.");
             } else {
-                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
             }
         } else if(args.length == 5){
             if (args[3].equalsIgnoreCase("add")) {
@@ -1697,7 +1697,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                 }
 
             } else {
-                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
             }
         } else if (args[3].equalsIgnoreCase("add") && args[4].equalsIgnoreCase("ConsoleCommand")) { //args >= 5
             StringBuilder rewardCommand = new StringBuilder();
@@ -1734,7 +1734,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                     quest.addReward(moneyReward);
                     sender.sendMessage("§bMoney Reward §asuccessfully added to quest §b" + quest.getQuestName() + "§a!");
                 } else {
-                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                 }
             } else if (args[3].equalsIgnoreCase("edit")) {
                 final int rewardID = Integer.parseInt(args[4]);
@@ -1775,7 +1775,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                     sender.sendMessage("§cError: Reward with the ID §b" + rewardID + " §c was not found for quest §b" + quest.getQuestName() + "§c!");
                 }
             } else{
-                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
             }
         } else if(args.length == 7){
             if (args[3].equalsIgnoreCase("add")) {
@@ -1816,7 +1816,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
 
 
                 } else {
-                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                    sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                 }
             } else if (args[3].equalsIgnoreCase("edit")) {
                 final int rewardID = Integer.parseInt(args[4]);
@@ -1837,16 +1837,16 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                             sender.sendMessage("§cMissing 8. argument <new Display Name>!");
                             sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards edit §2" + rewardID + " §3displayName set <New Display Name> §7 | Sets new reward Display Name. Only rewards with a display name set will be displayed.");
                         } else {
-                            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                         }
                     } else{
-                        sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                        sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                     }
                 } else {
                     sender.sendMessage("§cError: Reward with the ID §b" + rewardID + " §c was not found for quest §b" + quest.getQuestName() + "§c!");
                 }
             } else {
-                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
             }
         } else { //args.length >= 8
             if (args[3].equalsIgnoreCase("edit")) {
@@ -1867,16 +1867,16 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                             main.getDataManager().getQuestsData().set("quests." + quest.getQuestName() + ".rewards." + reward.getRewardID() + ".displayName", reward.getRewardDisplayName());
                             sender.sendMessage("§aDisplay Name successfully added to reward with ID §b" + reward.getRewardID() + "§a! New display name: §e" + reward.getRewardDisplayName());
                         } else {
-                            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                         }
                     } else{
-                        sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                        sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                     }
                 } else {
                     sender.sendMessage("§cError: Reward with the ID §b" + rewardID + " §c was not found for quest §b" + quest.getQuestName() + "§c!");
                 }
             } else {
-                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage"));
+                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
             }
         }
     }
