@@ -98,7 +98,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
 
                         gui.addElement(new StaticGuiElement('8',
                                 new ItemStack(Material.CHEST),
-                                0, // Display a number as the item count
+                                0,
                                 click -> {
                                     player.chat("/notquests take");
 
@@ -109,7 +109,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                         ));
                         gui.addElement(new StaticGuiElement('a',
                                 new ItemStack(Material.REDSTONE_BLOCK),
-                                0, // Display a number as the item count
+                                0,
                                 click -> {
                                     player.chat("/notquests abort");
                                     return true; // returning true will cancel the click event and stop taking the item
@@ -118,7 +118,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                         ));
                         gui.addElement(new StaticGuiElement('c',
                                 new ItemStack(Material.SPYGLASS),
-                                0, // Display a number as the item count
+                                0,
                                 click -> {
                                     player.chat("/notquests preview");
                                     return true; // returning true will cancel the click event and stop taking the item
@@ -128,7 +128,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
 
                         gui.addElement(new StaticGuiElement('o',
                                 new ItemStack(Material.LADDER),
-                                0, // Display a number as the item count
+                                0,
                                 click -> {
                                     player.chat("/notquests activeQuests");
                                     return true; // returning true will cancel the click event and stop taking the item
@@ -138,7 +138,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                         if (questPlayer != null) {
                             gui.addElement(new StaticGuiElement('z',
                                     new ItemStack(Material.SUNFLOWER),
-                                    0, // Display a number as the item count
+                                    0,
                                     click -> {
                                         return true; // returning true will cancel the click event and stop taking the item
                                     },
@@ -147,7 +147,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                         } else {
                             gui.addElement(new StaticGuiElement('z',
                                     new ItemStack(Material.SUNFLOWER),
-                                    0, // Display a number as the item count
+                                    0,
                                     click -> {
                                         return true; // returning true will cancel the click event and stop taking the item
                                     },
@@ -189,8 +189,10 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                         materialToUse = Material.EMERALD_BLOCK;
                                     }
 
+                                    if (main.getDataManager().getConfiguration().showQuestItemAmount) {
+                                        count++;
+                                    }
 
-                                    count++;
 
                                     String displayName = activeQuest.getQuest().getQuestFinalName();
 
@@ -256,8 +258,9 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                 if (quest.isTakeEnabled()) {
                                     final Material materialToUse = quest.getTakeItem();
 
-
-                                    count++;
+                                    if (main.getDataManager().getConfiguration().showQuestItemAmount) {
+                                        count++;
+                                    }
 
                                     String displayName = quest.getQuestFinalName();
 
@@ -337,8 +340,9 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                     }
 
 
-                                    count++;
-
+                                    if (main.getDataManager().getConfiguration().showQuestItemAmount) {
+                                        count++;
+                                    }
                                     String displayName = activeQuest.getQuest().getQuestFinalName();
 
                                     group.addElement(new StaticGuiElement('e',
@@ -402,8 +406,9 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                     final Material materialToUse = quest.getTakeItem();
 
 
-                                    count++;
-
+                                    if (main.getDataManager().getConfiguration().showQuestItemAmount) {
+                                        count++;
+                                    }
                                     String displayName = quest.getQuestFinalName();
 
                                     displayName = main.getLanguageManager().getString("gui.previewQuestChoose.button.questPreview.questNamePrefix", player) + displayName;
@@ -744,6 +749,10 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                         final Material materialToUse = Material.PAPER;
 
                                         //count++;
+                                        int count = activeObjective.getObjectiveID();
+                                        if (!main.getDataManager().getConfiguration().showObjectiveItemAmount) {
+                                            count = 0;
+                                        }
                                         if (activeObjective.isUnlocked()) {
                                             String nameToDisplay = activeObjective.getObjective().getObjectiveFinalName();
 
@@ -754,7 +763,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
 
                                             group.addElement(new StaticGuiElement('e',
                                                     new ItemStack(materialToUse),
-                                                    activeObjective.getObjectiveID(), // Display a number as the item count
+                                                    count, // Display a number as the item count
                                                     click -> {
                                                         //click.getEvent().getWhoClicked().sendMessage(ChatColor.RED + "I am Redstone!");
                                                         return true; // returning true will cancel the click event and stop taking the item
@@ -797,7 +806,10 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
 
                                         //count++;
 
-
+                                        int count = activeObjective.getObjectiveID();
+                                        if (!main.getDataManager().getConfiguration().showObjectiveItemAmount) {
+                                            count = 0;
+                                        }
                                         final String nameToDisplay = activeObjective.getObjective().getObjectiveFinalName();
 
 
@@ -809,7 +821,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
 
                                         group.addElement(new StaticGuiElement('e',
                                                 new ItemStack(materialToUse),
-                                                activeObjective.getObjectiveID(), // Display a number as the item count
+                                                count, // Display a number as the item count
                                                 click -> {
                                                     //click.getEvent().getWhoClicked().sendMessage(ChatColor.RED + "I am Redstone!");
                                                     return true; // returning true will cancel the click event and stop taking the item

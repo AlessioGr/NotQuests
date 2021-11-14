@@ -506,6 +506,17 @@ public class DataManager {
         }
         configuration.setGuiQuestPreviewDescription_slot(getGeneralConfig().getString("gui.questpreview.description.slot").charAt(0));
 
+        if (!getGeneralConfig().isBoolean("gui.show-quest-item-amount")) {
+            getGeneralConfig().set("gui.show-quest-item-amount", true);
+            valueChanged = true;
+        }
+        configuration.showQuestItemAmount = getGeneralConfig().getBoolean("gui.show-quest-item-amount");
+        if (!getGeneralConfig().isBoolean("gui.show-objective-item-amount")) {
+            getGeneralConfig().set("gui.show-objective-item-amount", true);
+            valueChanged = true;
+        }
+        configuration.showObjectiveItemAmount = getGeneralConfig().getBoolean("gui.show-objective-item-amount");
+
         //Rewards
         if (!getGeneralConfig().isBoolean("gui.questpreview.rewards.enabled")) {
             getGeneralConfig().set("gui.questpreview.rewards.enabled", true);

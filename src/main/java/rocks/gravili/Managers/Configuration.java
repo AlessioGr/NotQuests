@@ -95,14 +95,13 @@ public class Configuration {
     private char guiQuestPreviewDescription_slot = '1';
     private char guiQuestPreviewRewards_slot = '3';
     private char guiQuestPreviewRequirements_slot = '5';
-
+    public boolean showQuestItemAmount = true;
+    public boolean showObjectiveItemAmount = true;
 
     //Visual
     public boolean visualTitleQuestSuccessfullyAccepted_enabled = true;
     public boolean visualTitleQuestFailed_enabled = true;
     public boolean visualTitleQuestCompleted_enabled = true;
-
-
 
 
     public boolean supportPlaceholderAPIInTranslationStrings = false;
