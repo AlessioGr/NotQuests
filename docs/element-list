@@ -1,5 +1,6 @@
 rocks.gravili
 rocks.gravili.Commands
+rocks.gravili.Commands.old
 rocks.gravili.Commands.old.AdminCommands
 rocks.gravili.Events
 rocks.gravili.Events.hooks
