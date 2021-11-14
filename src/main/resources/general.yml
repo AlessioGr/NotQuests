@@ -48,7 +48,7 @@ visual:
       enabled: true
 
 gui:
-  show-quest-item-amount: true
+  show-quest-item-amount: false
   show-objective-item-amount: true
   questpreview:
     # If set to false, clickable text will be used for Quest Previews instead

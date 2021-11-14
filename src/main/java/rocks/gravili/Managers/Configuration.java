@@ -95,7 +95,7 @@ public class Configuration {
     private char guiQuestPreviewDescription_slot = '1';
     private char guiQuestPreviewRewards_slot = '3';
     private char guiQuestPreviewRequirements_slot = '5';
-    public boolean showQuestItemAmount = true;
+    public boolean showQuestItemAmount = false;
     public boolean showObjectiveItemAmount = true;
 
     //Visual

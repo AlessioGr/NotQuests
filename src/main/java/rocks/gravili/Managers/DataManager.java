@@ -507,7 +507,7 @@ public class DataManager {
         configuration.setGuiQuestPreviewDescription_slot(getGeneralConfig().getString("gui.questpreview.description.slot").charAt(0));
 
         if (!getGeneralConfig().isBoolean("gui.show-quest-item-amount")) {
-            getGeneralConfig().set("gui.show-quest-item-amount", true);
+            getGeneralConfig().set("gui.show-quest-item-amount", false);
             valueChanged = true;
         }
         configuration.showQuestItemAmount = getGeneralConfig().getBoolean("gui.show-quest-item-amount");
