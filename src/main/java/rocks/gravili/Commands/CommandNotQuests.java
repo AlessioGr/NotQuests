@@ -184,7 +184,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
 
                                     final Material materialToUse;
                                     if (!activeQuest.isCompleted()) {
-                                        materialToUse = Material.BOOK;
+                                        materialToUse = activeQuest.getQuest().getTakeItem();
                                     } else {
                                         materialToUse = Material.EMERALD_BLOCK;
                                     }
@@ -254,7 +254,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
 
                             for (final Quest quest : main.getQuestManager().getAllQuests()) {
                                 if (quest.isTakeEnabled()) {
-                                    final Material materialToUse = Material.BOOK;
+                                    final Material materialToUse = quest.getTakeItem();
 
 
                                     count++;
@@ -331,7 +331,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
 
                                     final Material materialToUse;
                                     if (!activeQuest.isCompleted()) {
-                                        materialToUse = Material.BOOK;
+                                        materialToUse = activeQuest.getQuest().getTakeItem();
                                     } else {
                                         materialToUse = Material.EMERALD_BLOCK;
                                     }
@@ -399,7 +399,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
 
                             for (final Quest quest : main.getQuestManager().getAllQuests()) {
                                 if (quest.isTakeEnabled()) {
-                                    final Material materialToUse = Material.BOOK;
+                                    final Material materialToUse = quest.getTakeItem();
 
 
                                     count++;

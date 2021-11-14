@@ -21,6 +21,7 @@ package rocks.gravili.Structs;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Material;
 import rocks.gravili.Hooks.Citizens.QuestGiverNPCTrait;
 import rocks.gravili.NotQuests;
 import rocks.gravili.Structs.Objectives.Objective;
@@ -57,6 +58,7 @@ public class Quest {
     private boolean takeEnabled = true;
     private String description = "";
     private String displayName = "";
+    private Material takeItem = Material.BOOK;
 
     public Quest(NotQuests main, String questName) {
         this.main = main;
@@ -423,6 +425,15 @@ public class Quest {
         } else {
             return "§cError: Trigger not found!";
         }
+    }
+
+    public final Material getTakeItem() {
+        return takeItem;
+    }
+
+    public void setTakeItem(final Material takeItem) {
+        this.takeItem = takeItem;
+        main.getDataManager().getQuestsData().set("quests." + questName + ".takeItem", takeItem.name());
     }
 
 }

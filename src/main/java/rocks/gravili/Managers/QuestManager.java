@@ -487,6 +487,8 @@ public class QuestManager {
                         }
                     }
 
+                    //TakeItem:
+                    quest.setTakeItem(Material.valueOf(main.getDataManager().getQuestsData().getString("quests." + questName + ".takeItem", "BOOK")));
 
                     quests.add(quest);
                 }

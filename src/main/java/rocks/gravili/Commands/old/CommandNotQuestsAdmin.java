@@ -326,6 +326,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                         sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6acceptCooldown §3[time in minutes] §7| Sets the time players have to wait between accepting quests");
                         sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6description §3<description> §7| Sets the quest description");
                         sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6displayName §3<display name> §7| Sets the name of the quest which will be displayed in, for example, the quest preview");
+                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §takeItem §3[Material] §7| Sets the item displayed in the quest take GUI (default: BOOK)");
 
                     } else {
                         sender.sendMessage("§cQuest §b" + args[1] + " §cdoes not exist");
@@ -487,6 +488,10 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                             sender.sendMessage("§cPlease enter the quest display name!");
                             sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6displayName §3<display name> §7| Sets the name of the quest which will be displayed in, for example, the quest preview");
                             sender.sendMessage("§9Current quest displayname: §e" + quest.getQuestDisplayName());
+                        } else if (args[2].equalsIgnoreCase("takeItem")) {
+                            sender.sendMessage("§cPlease enter the material for the take Item!");
+                            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §takeItem §3[Material] §7| Sets the item displayed in the quest take GUI (default: BOOK)");
+
                         } else {
                             sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                         }
@@ -862,6 +867,19 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                 quest.setAcceptCooldown(-1);
                                 sender.sendMessage("§aCooldown for quest §b" + quest.getQuestName() + " §ahas been §bdisabled§a!");
                             }
+                        } else if (args[2].equalsIgnoreCase("takeItem")) {
+                            final Material takeItem = Material.getMaterial(args[3]);
+                            if (takeItem != null) {
+
+                                quest.setTakeItem(takeItem);
+                                sender.sendMessage("§aTakeItem Material for quest §b" + quest.getQuestName() + " §ahas been set to §b" + takeItem.name() + "§a!");
+
+
+                            } else {
+                                sender.sendMessage("§cMaterial §b" + args[5] + " §cnot found!");
+                            }
+
+
                         } else {
                             sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                         }
@@ -2222,7 +2240,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
             main.getDataManager().completions.add("acceptCooldown");
             main.getDataManager().completions.add("description");
             main.getDataManager().completions.add("displayName");
-
+            main.getDataManager().completions.add("takeItem");
             //For fancy action bar only
             final String currentArg = args[args.length - 1];
             if (currentArg.equalsIgnoreCase("objectives")) {
@@ -2247,6 +2265,8 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                 main.getUtilManager().sendFancyCommandCompletion(audience, args, "[What do you want to edit?]", "<Enter new Quest description>");
             } else if (currentArg.equalsIgnoreCase("displayName")) {
                 main.getUtilManager().sendFancyCommandCompletion(audience, args, "[What do you want to edit?]", "<Enter new Quest display name>");
+            } else if (currentArg.equalsIgnoreCase("takeItem")) {
+                main.getUtilManager().sendFancyCommandCompletion(audience, args, "[What do you want to edit?]", "[Enter the Item Material]");
             } else {
                 main.getUtilManager().sendFancyCommandCompletion(audience, args, "[What do you want to edit?]", "...");
             }
@@ -2315,6 +2335,11 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                 }
 
 
+            } else if (args[2].equalsIgnoreCase("takeItem")) {
+                for (Material material : Material.values()) {
+                    main.getDataManager().completions.add(material.toString());
+                }
+                main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Enter the Item Material]", "");
             }
         } else if (args.length == 5) {
             if (args[2].equalsIgnoreCase("npcs") && args[3].equalsIgnoreCase("add")) {
