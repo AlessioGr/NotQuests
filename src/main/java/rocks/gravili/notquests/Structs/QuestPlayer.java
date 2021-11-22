@@ -23,6 +23,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
+import rocks.gravili.notquests.Events.notquests.QuestPointsChangeEvent;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Objectives.OtherQuestObjective;
 import rocks.gravili.notquests.Structs.Requirements.*;
@@ -426,19 +427,24 @@ public class QuestPlayer {
     }
 
     public void setQuestPoints(long newQuestPoints, boolean notifyPlayer) {
-        if (newQuestPoints < 0) { //Prevent questPoints from going below 0
-            this.questPoints = 0;
-        } else {
-            this.questPoints = newQuestPoints;
-        }
 
-        if (notifyPlayer) {
-            final Player player = getPlayer();
-            if (player != null) {
-                player.sendMessage("§eYour quest points have been set to §b" + newQuestPoints + "§e.");
+
+        QuestPointsChangeEvent questPointsChangeEvent = new QuestPointsChangeEvent(this, newQuestPoints);
+        Bukkit.getPluginManager().callEvent(questPointsChangeEvent); // This fires the event and allows any listener to listen to the event
+        if (!questPointsChangeEvent.isCancelled()) {
+            if (newQuestPoints < 0) { //Prevent questPoints from going below 0
+                this.questPoints = 0;
+            } else {
+                this.questPoints = newQuestPoints;
+            }
+
+            if (notifyPlayer) {
+                final Player player = getPlayer();
+                if (player != null) {
+                    player.sendMessage("§eYour quest points have been set to §b" + newQuestPoints + "§e.");
+                }
             }
         }
-
     }
 
     public void addQuestPoints(long questPointsToAdd, boolean notifyPlayer) {
