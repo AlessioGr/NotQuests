@@ -73,7 +73,7 @@ loadScripts(document, 'script');</script>
 <h1 class="title" title="Class Objective">Class Objective</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang">java.lang.Object</a>
-<div class="inheritance">rocks.gravili.Structs.Objectives.Objective</div>
+<div class="inheritance">Objective</div>
 </div>
 <section class="class-description" id="class-description">
 <dl class="notes">
@@ -150,10 +150,13 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a class="member-name-link" href="#%3Cinit%3E(rocks.gravili.NotQuests,rocks.gravili.Structs.Quest,int,int)">Objective</a><wbr>(<a href="../../NotQuests.html" title="class in rocks.gravili">NotQuests</a>&nbsp;main,
- <a href="../Quest.html" title="class in rocks.gravili.Structs">Quest</a>&nbsp;quest,
- int&nbsp;objectiveID,
- int&nbsp;progressNeeded)</code></div>
+    <div class="col-constructor-name even-row-color"><code><a class="member-name-link"
+                                                              href="#%3Cinit%3E(NotQuests,Quest,int,int)">Objective</a>
+        <wbr>
+        (<a href="../../NotQuests.html" title="class in rocks.gravili">NotQuests</a>&nbsp;main,
+        <a href="../Quest.html" title="class in rocks.gravili.Structs">Quest</a>&nbsp;quest,
+        int&nbsp;objectiveID,
+        int&nbsp;progressNeeded)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -170,8 +173,11 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#addDependantObjective(rocks.gravili.Structs.Objectives.Objective,boolean)">addDependantObjective</a><wbr>(<a href="Objective.html" title="class in rocks.gravili.Structs.Objectives">Objective</a>&nbsp;objective,
- boolean&nbsp;save)</code></div>
+    <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+        <code><a class="member-name-link" href="#addDependantObjective(Objective,boolean)">addDependantObjective</a>
+            <wbr>
+            (<a href="Objective.html" title="class in rocks.gravili.Structs.Objectives">Objective</a>&nbsp;objective,
+            boolean&nbsp;save)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#clearDependantObjectives()">clearDependantObjectives</a>()</code></div>
@@ -262,7 +268,7 @@ loadScripts(document, 'script');</script>
     </div>
     <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
         <code><a class="member-name-link"
-                 href="#removeDependantObjective(rocks.gravili.Structs.Objectives.Objective,boolean)">removeDependantObjective</a>
+                 href="#removeDependantObjective(Objective,boolean)">removeDependantObjective</a>
             <wbr>
             (<a href="Objective.html" title="class in rocks.gravili.Structs.Objectives">Objective</a>&nbsp;objective,
             boolean&nbsp;save)</code></div>
@@ -420,13 +426,16 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(rocks.gravili.NotQuests,rocks.gravili.Structs.Quest,int,int)">
-<h3>Objective</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Objective</span><wbr><span class="parameters">(<a href="../../NotQuests.html" title="class in rocks.gravili">NotQuests</a>&nbsp;main,
+    <section class="detail" id="&lt;init&gt;(NotQuests,Quest,int,int)">
+        <h3>Objective</h3>
+        <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span
+                class="element-name">Objective</span>
+            <wbr>
+            <span class="parameters">(<a href="../../NotQuests.html" title="class in rocks.gravili">NotQuests</a>&nbsp;main,
  <a href="../Quest.html" title="class in rocks.gravili.Structs">Quest</a>&nbsp;quest,
  int&nbsp;objectiveID,
  int&nbsp;progressNeeded)</span></div>
-</section>
+    </section>
 </li>
 </ul>
 </section>
@@ -481,18 +490,24 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="addDependantObjective(rocks.gravili.Structs.Objectives.Objective,boolean)">
-<h3>addDependantObjective</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">addDependantObjective</span><wbr><span class="parameters">(<a href="Objective.html" title="class in rocks.gravili.Structs.Objectives">Objective</a>&nbsp;objective,
+    <section class="detail" id="addDependantObjective(Objective,boolean)">
+        <h3>addDependantObjective</h3>
+        <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span
+                class="element-name">addDependantObjective</span>
+            <wbr>
+            <span class="parameters">(<a href="Objective.html" title="class in rocks.gravili.Structs.Objectives">Objective</a>&nbsp;objective,
  boolean&nbsp;save)</span></div>
-</section>
+    </section>
 </li>
 <li>
-<section class="detail" id="removeDependantObjective(rocks.gravili.Structs.Objectives.Objective,boolean)">
-<h3>removeDependantObjective</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">removeDependantObjective</span><wbr><span class="parameters">(<a href="Objective.html" title="class in rocks.gravili.Structs.Objectives">Objective</a>&nbsp;objective,
+    <section class="detail" id="removeDependantObjective(Objective,boolean)">
+        <h3>removeDependantObjective</h3>
+        <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span
+                class="element-name">removeDependantObjective</span>
+            <wbr>
+            <span class="parameters">(<a href="Objective.html" title="class in rocks.gravili.Structs.Objectives">Objective</a>&nbsp;objective,
  boolean&nbsp;save)</span></div>
-</section>
+    </section>
 </li>
 <li>
 <section class="detail" id="clearDependantObjectives()">

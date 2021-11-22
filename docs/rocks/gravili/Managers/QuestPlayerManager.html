@@ -73,7 +73,7 @@ loadScripts(document, 'script');</script>
 <h1 class="title" title="Class QuestPlayerManager">Class QuestPlayerManager</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang">java.lang.Object</a>
-<div class="inheritance">rocks.gravili.Managers.QuestPlayerManager</div>
+<div class="inheritance">QuestPlayerManager</div>
 </div>
 <section class="class-description" id="class-description">
 <hr>
@@ -108,7 +108,9 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a class="member-name-link" href="#%3Cinit%3E(rocks.gravili.NotQuests)">QuestPlayerManager</a><wbr>(<a href="../NotQuests.html" title="class in rocks.gravili">NotQuests</a>&nbsp;notQuests)</code></div>
+    <div class="col-constructor-name even-row-color"><code><a class="member-name-link" href="#%3Cinit%3E(NotQuests)">QuestPlayerManager</a>
+        <wbr>
+        (<a href="../NotQuests.html" title="class in rocks.gravili">NotQuests</a>&nbsp;notQuests)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -125,17 +127,25 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#acceptQuest(org.bukkit.entity.Player,rocks.gravili.Structs.Quest,boolean,boolean)">acceptQuest</a><wbr>(org.bukkit.entity.Player&nbsp;player,
- <a href="../Structs/Quest.html" title="class in rocks.gravili.Structs">Quest</a>&nbsp;quest,
- boolean&nbsp;triggerAcceptQuestTrigger,
- boolean&nbsp;sendQuestInfo)</code></div>
+    <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+        <code><a class="member-name-link" href="#acceptQuest(org.bukkit.entity.Player,Quest,boolean,boolean)">acceptQuest</a>
+            <wbr>
+            (org.bukkit.entity.Player&nbsp;player,
+            <a href="../Structs/Quest.html" title="class in rocks.gravili.Structs">Quest</a>&nbsp;quest,
+            boolean&nbsp;triggerAcceptQuestTrigger,
+            boolean&nbsp;sendQuestInfo)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#createQuestPlayer(java.util.UUID)">createQuestPlayer</a><wbr>(<a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util">UUID</a>&nbsp;uuid)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#forceAcceptQuest(java.util.UUID,rocks.gravili.Structs.Quest)">forceAcceptQuest</a><wbr>(<a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util">UUID</a>&nbsp;uuid,
- <a href="../Structs/Quest.html" title="class in rocks.gravili.Structs">Quest</a>&nbsp;quest)</code></div>
+    <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+        <code><a class="member-name-link" href="#forceAcceptQuest(java.util.UUID,Quest)">forceAcceptQuest</a>
+            <wbr>
+            (<a class="external-link"
+                href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html"
+                title="class or interface in java.util">UUID</a>&nbsp;uuid,
+            <a href="../Structs/Quest.html" title="class in rocks.gravili.Structs">Quest</a>&nbsp;quest)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="../Structs/QuestPlayer.html" title="class in rocks.gravili.Structs">QuestPlayer</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#getQuestPlayer(java.util.UUID)">getQuestPlayer</a><wbr>(<a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util">UUID</a>&nbsp;uuid)</code></div>
@@ -187,10 +197,13 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(rocks.gravili.NotQuests)">
-<h3>QuestPlayerManager</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">QuestPlayerManager</span><wbr><span class="parameters">(<a href="../NotQuests.html" title="class in rocks.gravili">NotQuests</a>&nbsp;notQuests)</span></div>
-</section>
+    <section class="detail" id="&lt;init&gt;(NotQuests)">
+        <h3>QuestPlayerManager</h3>
+        <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">QuestPlayerManager</span>
+            <wbr>
+            <span class="parameters">(<a href="../NotQuests.html" title="class in rocks.gravili">NotQuests</a>&nbsp;notQuests)</span>
+        </div>
+    </section>
 </li>
 </ul>
 </section>
@@ -225,13 +238,19 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="acceptQuest(org.bukkit.entity.Player,rocks.gravili.Structs.Quest,boolean,boolean)">
-<h3>acceptQuest</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang">String</a></span>&nbsp;<span class="element-name">acceptQuest</span><wbr><span class="parameters">(org.bukkit.entity.Player&nbsp;player,
+    <section class="detail" id="acceptQuest(org.bukkit.entity.Player,Quest,boolean,boolean)">
+        <h3>acceptQuest</h3>
+        <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a
+                class="external-link"
+                href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html"
+                title="class or interface in java.lang">String</a></span>&nbsp;<span
+                class="element-name">acceptQuest</span>
+            <wbr>
+            <span class="parameters">(org.bukkit.entity.Player&nbsp;player,
  <a href="../Structs/Quest.html" title="class in rocks.gravili.Structs">Quest</a>&nbsp;quest,
  boolean&nbsp;triggerAcceptQuestTrigger,
  boolean&nbsp;sendQuestInfo)</span></div>
-</section>
+    </section>
 </li>
 <li>
 <section class="detail" id="createQuestPlayer(java.util.UUID)">
@@ -240,11 +259,18 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="forceAcceptQuest(java.util.UUID,rocks.gravili.Structs.Quest)">
-<h3>forceAcceptQuest</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang">String</a></span>&nbsp;<span class="element-name">forceAcceptQuest</span><wbr><span class="parameters">(<a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util">UUID</a>&nbsp;uuid,
+    <section class="detail" id="forceAcceptQuest(java.util.UUID,Quest)">
+        <h3>forceAcceptQuest</h3>
+        <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a
+                class="external-link"
+                href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html"
+                title="class or interface in java.lang">String</a></span>&nbsp;<span class="element-name">forceAcceptQuest</span>
+            <wbr>
+            <span class="parameters">(<a class="external-link"
+                                         href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html"
+                                         title="class or interface in java.util">UUID</a>&nbsp;uuid,
  <a href="../Structs/Quest.html" title="class in rocks.gravili.Structs">Quest</a>&nbsp;quest)</span></div>
-</section>
+    </section>
 </li>
 </ul>
 </section>

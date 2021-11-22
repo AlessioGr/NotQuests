@@ -73,8 +73,8 @@ loadScripts(document, 'script');</script>
 <h1 class="title" title="Class EscortNPCObjective">Class EscortNPCObjective</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang">java.lang.Object</a>
-<div class="inheritance"><a href="Objective.html" title="class in rocks.gravili.Structs.Objectives">rocks.gravili.Structs.Objectives.Objective</a>
-<div class="inheritance">rocks.gravili.Structs.Objectives.EscortNPCObjective</div>
+<div class="inheritance"><a href="Objective.html" title="class in rocks.gravili.Structs.Objectives">Objective</a>
+    <div class="inheritance">EscortNPCObjective</div>
 </div>
 </div>
 <section class="class-description" id="class-description">
@@ -113,16 +113,22 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a class="member-name-link" href="#%3Cinit%3E(rocks.gravili.NotQuests,rocks.gravili.Structs.Quest,int,int)">EscortNPCObjective</a><wbr>(<a href="../../NotQuests.html" title="class in rocks.gravili">NotQuests</a>&nbsp;main,
- <a href="../Quest.html" title="class in rocks.gravili.Structs">Quest</a>&nbsp;quest,
- int&nbsp;objectiveNumber,
- int&nbsp;progressNeeded)</code></div>
+    <div class="col-constructor-name even-row-color"><code><a class="member-name-link"
+                                                              href="#%3Cinit%3E(NotQuests,Quest,int,int)">EscortNPCObjective</a>
+        <wbr>
+        (<a href="../../NotQuests.html" title="class in rocks.gravili">NotQuests</a>&nbsp;main,
+        <a href="../Quest.html" title="class in rocks.gravili.Structs">Quest</a>&nbsp;quest,
+        int&nbsp;objectiveNumber,
+        int&nbsp;progressNeeded)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-constructor-name odd-row-color"><code><a class="member-name-link" href="#%3Cinit%3E(rocks.gravili.NotQuests,rocks.gravili.Structs.Quest,int,int,int)">EscortNPCObjective</a><wbr>(<a href="../../NotQuests.html" title="class in rocks.gravili">NotQuests</a>&nbsp;main,
- <a href="../Quest.html" title="class in rocks.gravili.Structs">Quest</a>&nbsp;quest,
- int&nbsp;objectiveID,
- int&nbsp;npcToEscortID,
- int&nbsp;npcToEscortToID)</code></div>
+    <div class="col-constructor-name odd-row-color"><code><a class="member-name-link"
+                                                             href="#%3Cinit%3E(NotQuests,Quest,int,int,int)">EscortNPCObjective</a>
+        <wbr>
+        (<a href="../../NotQuests.html" title="class in rocks.gravili">NotQuests</a>&nbsp;main,
+        <a href="../Quest.html" title="class in rocks.gravili.Structs">Quest</a>&nbsp;quest,
+        int&nbsp;objectiveID,
+        int&nbsp;npcToEscortID,
+        int&nbsp;npcToEscortToID)</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
@@ -161,9 +167,9 @@ loadScripts(document, 'script');</script>
 </div>
 </div>
     <div class="inherited-list">
-        <h3 id="methods-inherited-from-class-rocks.gravili.Structs.Objectives.Objective">Methods inherited from class&nbsp;rocks.gravili.Structs.Objectives.<a
+        <h3 id="methods-inherited-from-class-Objective">Methods inherited from class&nbsp;rocks.gravili.Structs.Objectives.<a
                 href="Objective.html" title="class in rocks.gravili.Structs.Objectives">Objective</a></h3>
-        <code><a href="Objective.html#addDependantObjective(rocks.gravili.Structs.Objectives.Objective,boolean)">addDependantObjective</a>,
+        <code><a href="Objective.html#addDependantObjective(Objective,boolean)">addDependantObjective</a>,
             <a href="Objective.html#clearDependantObjectives()">clearDependantObjectives</a>, <a
                     href="Objective.html#getCompletionArmorStandUUID()">getCompletionArmorStandUUID</a>, <a
                     href="Objective.html#getCompletionNPCID()">getCompletionNPCID</a>, <a
@@ -175,7 +181,7 @@ loadScripts(document, 'script');</script>
                     href="Objective.html#getObjectiveID()">getObjectiveID</a>, <a
                     href="Objective.html#getProgressNeeded()">getProgressNeeded</a>, <a
                     href="Objective.html#getQuest()">getQuest</a>, <a
-                    href="Objective.html#removeDependantObjective(rocks.gravili.Structs.Objectives.Objective,boolean)">removeDependantObjective</a>,
+                    href="Objective.html#removeDependantObjective(Objective,boolean)">removeDependantObjective</a>,
             <a href="Objective.html#removeObjectiveDescription(boolean)">removeObjectiveDescription</a>, <a
                     href="Objective.html#removeObjectiveDisplayName(boolean)">removeObjectiveDisplayName</a>, <a
                     href="Objective.html#setCompletionArmorStandUUID(java.util.UUID,boolean)">setCompletionArmorStandUUID</a>,
@@ -224,23 +230,27 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(rocks.gravili.NotQuests,rocks.gravili.Structs.Quest,int,int,int)">
-<h3>EscortNPCObjective</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">EscortNPCObjective</span><wbr><span class="parameters">(<a href="../../NotQuests.html" title="class in rocks.gravili">NotQuests</a>&nbsp;main,
+    <section class="detail" id="&lt;init&gt;(NotQuests,Quest,int,int,int)">
+        <h3>EscortNPCObjective</h3>
+        <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">EscortNPCObjective</span>
+            <wbr>
+            <span class="parameters">(<a href="../../NotQuests.html" title="class in rocks.gravili">NotQuests</a>&nbsp;main,
  <a href="../Quest.html" title="class in rocks.gravili.Structs">Quest</a>&nbsp;quest,
  int&nbsp;objectiveID,
  int&nbsp;npcToEscortID,
  int&nbsp;npcToEscortToID)</span></div>
-</section>
+    </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(rocks.gravili.NotQuests,rocks.gravili.Structs.Quest,int,int)">
-<h3>EscortNPCObjective</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">EscortNPCObjective</span><wbr><span class="parameters">(<a href="../../NotQuests.html" title="class in rocks.gravili">NotQuests</a>&nbsp;main,
+    <section class="detail" id="&lt;init&gt;(NotQuests,Quest,int,int)">
+        <h3>EscortNPCObjective</h3>
+        <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">EscortNPCObjective</span>
+            <wbr>
+            <span class="parameters">(<a href="../../NotQuests.html" title="class in rocks.gravili">NotQuests</a>&nbsp;main,
  <a href="../Quest.html" title="class in rocks.gravili.Structs">Quest</a>&nbsp;quest,
  int&nbsp;objectiveNumber,
  int&nbsp;progressNeeded)</span></div>
-</section>
+    </section>
 </li>
 </ul>
 </section>

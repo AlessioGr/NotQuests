@@ -4,7 +4,7 @@ plugins {
     id 'maven-publish'
 }
 
-group = 'notquests'
+group = 'rocks.gravili.notquests'
 version = '1.6.6'
 
 repositories {
@@ -110,6 +110,9 @@ dependencies {
     compileOnly 'com.sk89q.worldedit:worldedit-core:7.3.0-SNAPSHOT'
     compileOnly 'com.sk89q.worldedit:worldedit-bukkit:7.3.0-SNAPSHOT'
 
+    //compileOnly 'com.github.NEZNAMY:TAB:2.9.2'
+
+
     //Shaded
     implementation 'io.papermc:paperlib:1.0.6'
     implementation "net.kyori:adventure-text-minimessage:4.2.0-SNAPSHOT"
@@ -130,7 +133,7 @@ dependencies {
 /**
  * Configure NotQuests for shading
  */
-String path = 'rocks.gravili.shaded'
+String path = 'rocks.gravili.notquests.shaded'
 shadowJar {
     minimize()
 

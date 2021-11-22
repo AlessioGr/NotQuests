@@ -73,7 +73,7 @@ loadScripts(document, 'script');</script>
 <h1 class="title" title="Class Trigger">Class Trigger</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang">java.lang.Object</a>
-<div class="inheritance">rocks.gravili.Structs.Triggers.Trigger</div>
+<div class="inheritance">Trigger</div>
 </div>
 <section class="class-description" id="class-description">
 <dl class="notes">
@@ -124,12 +124,17 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a class="member-name-link" href="#%3Cinit%3E(rocks.gravili.NotQuests,rocks.gravili.Structs.Triggers.Action,rocks.gravili.Structs.Triggers.TriggerTypes.TriggerType,int,java.lang.String,long)">Trigger</a><wbr>(<a href="../../NotQuests.html" title="class in rocks.gravili">NotQuests</a>&nbsp;main,
- <a href="Action.html" title="class in rocks.gravili.Structs.Triggers">Action</a>&nbsp;action,
- <a href="TriggerTypes/TriggerType.html" title="enum class in rocks.gravili.Structs.Triggers.TriggerTypes">TriggerType</a>&nbsp;triggerType,
- int&nbsp;applyOn,
- <a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang">String</a>&nbsp;worldName,
- long&nbsp;amountNeeded)</code></div>
+    <div class="col-constructor-name even-row-color"><code><a class="member-name-link"
+                                                              href="#%3Cinit%3E(NotQuests,Action,TriggerType,int,java.lang.String,long)">Trigger</a>
+        <wbr>
+        (<a href="../../NotQuests.html" title="class in rocks.gravili">NotQuests</a>&nbsp;main,
+        <a href="Action.html" title="class in rocks.gravili.Structs.Triggers">Action</a>&nbsp;action,
+        <a href="TriggerTypes/TriggerType.html" title="enum class in rocks.gravili.Structs.Triggers.TriggerTypes">TriggerType</a>&nbsp;triggerType,
+        int&nbsp;applyOn,
+        <a class="external-link"
+           href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html"
+           title="class or interface in java.lang">String</a>&nbsp;worldName,
+        long&nbsp;amountNeeded)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -161,7 +166,11 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#getWorldName()">getWorldName</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#trigger(rocks.gravili.Structs.ActiveQuest)">trigger</a><wbr>(<a href="../ActiveQuest.html" title="class in rocks.gravili.Structs">ActiveQuest</a>&nbsp;activeQuest)</code></div>
+    <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+        <code><a class="member-name-link" href="#trigger(ActiveQuest)">trigger</a>
+            <wbr>
+            (<a href="../ActiveQuest.html"
+                title="class in rocks.gravili.Structs">ActiveQuest</a>&nbsp;activeQuest)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
@@ -225,15 +234,20 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(rocks.gravili.NotQuests,rocks.gravili.Structs.Triggers.Action,rocks.gravili.Structs.Triggers.TriggerTypes.TriggerType,int,java.lang.String,long)">
-<h3>Trigger</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Trigger</span><wbr><span class="parameters">(<a href="../../NotQuests.html" title="class in rocks.gravili">NotQuests</a>&nbsp;main,
+    <section class="detail" id="&lt;init&gt;(NotQuests,Action,TriggerType,int,java.lang.String,long)">
+        <h3>Trigger</h3>
+        <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span
+                class="element-name">Trigger</span>
+            <wbr>
+            <span class="parameters">(<a href="../../NotQuests.html" title="class in rocks.gravili">NotQuests</a>&nbsp;main,
  <a href="Action.html" title="class in rocks.gravili.Structs.Triggers">Action</a>&nbsp;action,
- <a href="TriggerTypes/TriggerType.html" title="enum class in rocks.gravili.Structs.Triggers.TriggerTypes">TriggerType</a>&nbsp;triggerType,
+ <a href="TriggerTypes/TriggerType.html"
+    title="enum class in rocks.gravili.Structs.Triggers.TriggerTypes">TriggerType</a>&nbsp;triggerType,
  int&nbsp;applyOn,
- <a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang">String</a>&nbsp;worldName,
+ <a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html"
+    title="class or interface in java.lang">String</a>&nbsp;worldName,
  long&nbsp;amountNeeded)</span></div>
-</section>
+    </section>
 </li>
 </ul>
 </section>
@@ -274,10 +288,15 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="trigger(rocks.gravili.Structs.ActiveQuest)">
-<h3>trigger</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">trigger</span><wbr><span class="parameters">(<a href="../ActiveQuest.html" title="class in rocks.gravili.Structs">ActiveQuest</a>&nbsp;activeQuest)</span></div>
-</section>
+    <section class="detail" id="trigger(ActiveQuest)">
+        <h3>trigger</h3>
+        <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span
+                class="element-name">trigger</span>
+            <wbr>
+            <span class="parameters">(<a href="../ActiveQuest.html"
+                                         title="class in rocks.gravili.Structs">ActiveQuest</a>&nbsp;activeQuest)</span>
+        </div>
+    </section>
 </li>
 </ul>
 </section>

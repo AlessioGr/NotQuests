@@ -73,7 +73,7 @@ loadScripts(document, 'script');</script>
 <h1 class="title" title="Class ActiveQuest">Class ActiveQuest</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang">java.lang.Object</a>
-<div class="inheritance">rocks.gravili.Structs.ActiveQuest</div>
+<div class="inheritance">ActiveQuest</div>
 </div>
 <section class="class-description" id="class-description">
 <hr>
@@ -135,9 +135,12 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a class="member-name-link" href="#%3Cinit%3E(rocks.gravili.NotQuests,rocks.gravili.Structs.Quest,rocks.gravili.Structs.QuestPlayer)">ActiveQuest</a><wbr>(<a href="../NotQuests.html" title="class in rocks.gravili">NotQuests</a>&nbsp;main,
- <a href="Quest.html" title="class in rocks.gravili.Structs">Quest</a>&nbsp;quest,
- <a href="QuestPlayer.html" title="class in rocks.gravili.Structs">QuestPlayer</a>&nbsp;questPlayer)</code></div>
+    <div class="col-constructor-name even-row-color"><code><a class="member-name-link"
+                                                              href="#%3Cinit%3E(NotQuests,Quest,QuestPlayer)">ActiveQuest</a>
+        <wbr>
+        (<a href="../NotQuests.html" title="class in rocks.gravili">NotQuests</a>&nbsp;main,
+        <a href="Quest.html" title="class in rocks.gravili.Structs">Quest</a>&nbsp;quest,
+        <a href="QuestPlayer.html" title="class in rocks.gravili.Structs">QuestPlayer</a>&nbsp;questPlayer)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -181,14 +184,23 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#isCompleted()">isCompleted</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#notifyActiveObjectiveCompleted(rocks.gravili.Structs.ActiveObjective,boolean,int)">notifyActiveObjectiveCompleted</a><wbr>(<a href="ActiveObjective.html" title="class in rocks.gravili.Structs">ActiveObjective</a>&nbsp;activeObjective,
- boolean&nbsp;silent,
- int&nbsp;NPCID)</code></div>
+    <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+        <code><a class="member-name-link" href="#notifyActiveObjectiveCompleted(ActiveObjective,boolean,int)">notifyActiveObjectiveCompleted</a>
+            <wbr>
+            (<a href="ActiveObjective.html" title="class in rocks.gravili.Structs">ActiveObjective</a>&nbsp;activeObjective,
+            boolean&nbsp;silent,
+            int&nbsp;NPCID)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#notifyActiveObjectiveCompleted(rocks.gravili.Structs.ActiveObjective,boolean,java.util.UUID)">notifyActiveObjectiveCompleted</a><wbr>(<a href="ActiveObjective.html" title="class in rocks.gravili.Structs">ActiveObjective</a>&nbsp;activeObjective,
- boolean&nbsp;silent,
- <a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util">UUID</a>&nbsp;armorStandUUID)</code></div>
+    <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+        <code><a class="member-name-link"
+                 href="#notifyActiveObjectiveCompleted(ActiveObjective,boolean,java.util.UUID)">notifyActiveObjectiveCompleted</a>
+            <wbr>
+            (<a href="ActiveObjective.html" title="class in rocks.gravili.Structs">ActiveObjective</a>&nbsp;activeObjective,
+            boolean&nbsp;silent,
+            <a class="external-link"
+               href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html"
+               title="class or interface in java.util">UUID</a>&nbsp;armorStandUUID)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#removeCompletedObjectives(boolean)">removeCompletedObjectives</a><wbr>(boolean&nbsp;notifyPlayer)</code></div>
@@ -271,12 +283,15 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(rocks.gravili.NotQuests,rocks.gravili.Structs.Quest,rocks.gravili.Structs.QuestPlayer)">
-<h3>ActiveQuest</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">ActiveQuest</span><wbr><span class="parameters">(<a href="../NotQuests.html" title="class in rocks.gravili">NotQuests</a>&nbsp;main,
+    <section class="detail" id="&lt;init&gt;(NotQuests,Quest,QuestPlayer)">
+        <h3>ActiveQuest</h3>
+        <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span
+                class="element-name">ActiveQuest</span>
+            <wbr>
+            <span class="parameters">(<a href="../NotQuests.html" title="class in rocks.gravili">NotQuests</a>&nbsp;main,
  <a href="Quest.html" title="class in rocks.gravili.Structs">Quest</a>&nbsp;quest,
  <a href="QuestPlayer.html" title="class in rocks.gravili.Structs">QuestPlayer</a>&nbsp;questPlayer)</span></div>
-</section>
+    </section>
 </li>
 </ul>
 </section>
@@ -323,20 +338,27 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="notifyActiveObjectiveCompleted(rocks.gravili.Structs.ActiveObjective,boolean,int)">
-<h3>notifyActiveObjectiveCompleted</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">notifyActiveObjectiveCompleted</span><wbr><span class="parameters">(<a href="ActiveObjective.html" title="class in rocks.gravili.Structs">ActiveObjective</a>&nbsp;activeObjective,
+    <section class="detail" id="notifyActiveObjectiveCompleted(ActiveObjective,boolean,int)">
+        <h3>notifyActiveObjectiveCompleted</h3>
+        <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span
+                class="element-name">notifyActiveObjectiveCompleted</span>
+            <wbr>
+            <span class="parameters">(<a href="ActiveObjective.html" title="class in rocks.gravili.Structs">ActiveObjective</a>&nbsp;activeObjective,
  boolean&nbsp;silent,
  int&nbsp;NPCID)</span></div>
-</section>
+    </section>
 </li>
 <li>
-<section class="detail" id="notifyActiveObjectiveCompleted(rocks.gravili.Structs.ActiveObjective,boolean,java.util.UUID)">
-<h3>notifyActiveObjectiveCompleted</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">notifyActiveObjectiveCompleted</span><wbr><span class="parameters">(<a href="ActiveObjective.html" title="class in rocks.gravili.Structs">ActiveObjective</a>&nbsp;activeObjective,
+    <section class="detail" id="notifyActiveObjectiveCompleted(ActiveObjective,boolean,java.util.UUID)">
+        <h3>notifyActiveObjectiveCompleted</h3>
+        <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span
+                class="element-name">notifyActiveObjectiveCompleted</span>
+            <wbr>
+            <span class="parameters">(<a href="ActiveObjective.html" title="class in rocks.gravili.Structs">ActiveObjective</a>&nbsp;activeObjective,
  boolean&nbsp;silent,
- <a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util">UUID</a>&nbsp;armorStandUUID)</span></div>
-</section>
+ <a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html"
+    title="class or interface in java.util">UUID</a>&nbsp;armorStandUUID)</span></div>
+    </section>
 </li>
 <li>
 <section class="detail" id="removeCompletedObjectives(boolean)">

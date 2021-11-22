@@ -73,7 +73,7 @@ loadScripts(document, 'script');</script>
 <h1 class="title" title="Class QuestPlayer">Class QuestPlayer</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang">java.lang.Object</a>
-<div class="inheritance">rocks.gravili.Structs.QuestPlayer</div>
+<div class="inheritance">QuestPlayer</div>
 </div>
 <section class="class-description" id="class-description">
 <hr>
@@ -134,8 +134,12 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a class="member-name-link" href="#%3Cinit%3E(rocks.gravili.NotQuests,java.util.UUID)">QuestPlayer</a><wbr>(<a href="../NotQuests.html" title="class in rocks.gravili">NotQuests</a>&nbsp;main,
- <a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util">UUID</a>&nbsp;uuid)</code></div>
+    <div class="col-constructor-name even-row-color"><code><a class="member-name-link"
+                                                              href="#%3Cinit%3E(NotQuests,java.util.UUID)">QuestPlayer</a>
+        <wbr>
+        (<a href="../NotQuests.html" title="class in rocks.gravili">NotQuests</a>&nbsp;main,
+        <a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html"
+           title="class or interface in java.util">UUID</a>&nbsp;uuid)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -152,31 +156,52 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#addActiveQuest(rocks.gravili.Structs.ActiveQuest,boolean,boolean)">addActiveQuest</a><wbr>(<a href="ActiveQuest.html" title="class in rocks.gravili.Structs">ActiveQuest</a>&nbsp;quest,
- boolean&nbsp;triggerAcceptQuestTrigger,
- boolean&nbsp;sendQuestInfo)</code></div>
+    <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+        <code><a class="member-name-link" href="#addActiveQuest(ActiveQuest,boolean,boolean)">addActiveQuest</a>
+            <wbr>
+            (<a href="ActiveQuest.html" title="class in rocks.gravili.Structs">ActiveQuest</a>&nbsp;quest,
+            boolean&nbsp;triggerAcceptQuestTrigger,
+            boolean&nbsp;sendQuestInfo)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#addCompletedQuest(rocks.gravili.Structs.CompletedQuest)">addCompletedQuest</a><wbr>(<a href="CompletedQuest.html" title="class in rocks.gravili.Structs">CompletedQuest</a>&nbsp;completedQuest)</code></div>
+    <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+        <code><a class="member-name-link" href="#addCompletedQuest(CompletedQuest)">addCompletedQuest</a>
+            <wbr>
+            (<a href="CompletedQuest.html" title="class in rocks.gravili.Structs">CompletedQuest</a>&nbsp;completedQuest)</code>
+    </div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#addQuestPoints(long,boolean)">addQuestPoints</a><wbr>(long&nbsp;questPointsToAdd,
  boolean&nbsp;notifyPlayer)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#failQuest(rocks.gravili.Structs.ActiveQuest)">failQuest</a><wbr>(<a href="ActiveQuest.html" title="class in rocks.gravili.Structs">ActiveQuest</a>&nbsp;activeQuestToFail)</code></div>
+    <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+        <code><a class="member-name-link" href="#failQuest(ActiveQuest)">failQuest</a>
+            <wbr>
+            (<a href="ActiveQuest.html"
+                title="class in rocks.gravili.Structs">ActiveQuest</a>&nbsp;activeQuestToFail)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#finishAddingQuest(rocks.gravili.Structs.ActiveQuest,boolean,boolean)">finishAddingQuest</a><wbr>(<a href="ActiveQuest.html" title="class in rocks.gravili.Structs">ActiveQuest</a>&nbsp;activeQuest,
- boolean&nbsp;triggerAcceptQuestTrigger,
- boolean&nbsp;sendUpdateObjectivesUnlocked)</code></div>
+    <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+        <code><a class="member-name-link" href="#finishAddingQuest(ActiveQuest,boolean,boolean)">finishAddingQuest</a>
+            <wbr>
+            (<a href="ActiveQuest.html" title="class in rocks.gravili.Structs">ActiveQuest</a>&nbsp;activeQuest,
+            boolean&nbsp;triggerAcceptQuestTrigger,
+            boolean&nbsp;sendUpdateObjectivesUnlocked)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#forceActiveQuestCompleted(rocks.gravili.Structs.ActiveQuest)">forceActiveQuestCompleted</a><wbr>(<a href="ActiveQuest.html" title="class in rocks.gravili.Structs">ActiveQuest</a>&nbsp;activeQuest)</code></div>
+    <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+        <code><a class="member-name-link" href="#forceActiveQuestCompleted(ActiveQuest)">forceActiveQuestCompleted</a>
+            <wbr>
+            (<a href="ActiveQuest.html" title="class in rocks.gravili.Structs">ActiveQuest</a>&nbsp;activeQuest)</code>
+    </div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#forceAddActiveQuest(rocks.gravili.Structs.ActiveQuest,boolean)">forceAddActiveQuest</a><wbr>(<a href="ActiveQuest.html" title="class in rocks.gravili.Structs">ActiveQuest</a>&nbsp;quest,
- boolean&nbsp;triggerAcceptQuestTrigger)</code></div>
+    <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+        <code><a class="member-name-link" href="#forceAddActiveQuest(ActiveQuest,boolean)">forceAddActiveQuest</a>
+            <wbr>
+            (<a href="ActiveQuest.html" title="class in rocks.gravili.Structs">ActiveQuest</a>&nbsp;quest,
+            boolean&nbsp;triggerAcceptQuestTrigger)</code></div>
     <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
         &nbsp;
     </div>
@@ -239,7 +264,7 @@ loadScripts(document, 'script');</script>
     <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code>
     </div>
     <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-        <code><a class="member-name-link" href="#giveReward(rocks.gravili.Structs.Quest)">giveReward</a>
+        <code><a class="member-name-link" href="#giveReward(Quest)">giveReward</a>
             <wbr>
             (<a href="Quest.html" title="class in rocks.gravili.Structs">Quest</a>&nbsp;quest)</code></div>
     <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -248,7 +273,7 @@ loadScripts(document, 'script');</script>
     <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
         <code>final boolean</code></div>
     <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-        <code><a class="member-name-link" href="#hasAcceptedQuest(rocks.gravili.Structs.Quest)">hasAcceptedQuest</a>
+        <code><a class="member-name-link" href="#hasAcceptedQuest(Quest)">hasAcceptedQuest</a>
             <wbr>
             (<a href="Quest.html" title="class in rocks.gravili.Structs">Quest</a>&nbsp;quest)</code></div>
     <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -257,7 +282,7 @@ loadScripts(document, 'script');</script>
     <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code>
     </div>
     <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-        <code><a class="member-name-link" href="#notifyActiveQuestCompleted(rocks.gravili.Structs.ActiveQuest)">notifyActiveQuestCompleted</a>
+        <code><a class="member-name-link" href="#notifyActiveQuestCompleted(ActiveQuest)">notifyActiveQuestCompleted</a>
             <wbr>
             (<a href="ActiveQuest.html" title="class in rocks.gravili.Structs">ActiveQuest</a>&nbsp;activeQuest)</code>
     </div>
@@ -390,11 +415,15 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(rocks.gravili.NotQuests,java.util.UUID)">
-<h3>QuestPlayer</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">QuestPlayer</span><wbr><span class="parameters">(<a href="../NotQuests.html" title="class in rocks.gravili">NotQuests</a>&nbsp;main,
- <a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util">UUID</a>&nbsp;uuid)</span></div>
-</section>
+    <section class="detail" id="&lt;init&gt;(NotQuests,java.util.UUID)">
+        <h3>QuestPlayer</h3>
+        <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span
+                class="element-name">QuestPlayer</span>
+            <wbr>
+            <span class="parameters">(<a href="../NotQuests.html" title="class in rocks.gravili">NotQuests</a>&nbsp;main,
+ <a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html"
+    title="class or interface in java.util">UUID</a>&nbsp;uuid)</span></div>
+    </section>
 </li>
 </ul>
 </section>
@@ -405,27 +434,41 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="addActiveQuest(rocks.gravili.Structs.ActiveQuest,boolean,boolean)">
-<h3>addActiveQuest</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang">String</a></span>&nbsp;<span class="element-name">addActiveQuest</span><wbr><span class="parameters">(<a href="ActiveQuest.html" title="class in rocks.gravili.Structs">ActiveQuest</a>&nbsp;quest,
+    <section class="detail" id="addActiveQuest(ActiveQuest,boolean,boolean)">
+        <h3>addActiveQuest</h3>
+        <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a
+                class="external-link"
+                href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html"
+                title="class or interface in java.lang">String</a></span>&nbsp;<span
+                class="element-name">addActiveQuest</span>
+            <wbr>
+            <span class="parameters">(<a href="ActiveQuest.html" title="class in rocks.gravili.Structs">ActiveQuest</a>&nbsp;quest,
  boolean&nbsp;triggerAcceptQuestTrigger,
  boolean&nbsp;sendQuestInfo)</span></div>
-</section>
+    </section>
 </li>
 <li>
-<section class="detail" id="finishAddingQuest(rocks.gravili.Structs.ActiveQuest,boolean,boolean)">
-<h3>finishAddingQuest</h3>
-<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">finishAddingQuest</span><wbr><span class="parameters">(<a href="ActiveQuest.html" title="class in rocks.gravili.Structs">ActiveQuest</a>&nbsp;activeQuest,
+    <section class="detail" id="finishAddingQuest(ActiveQuest,boolean,boolean)">
+        <h3>finishAddingQuest</h3>
+        <div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">void</span>&nbsp;<span
+                class="element-name">finishAddingQuest</span>
+            <wbr>
+            <span class="parameters">(<a href="ActiveQuest.html" title="class in rocks.gravili.Structs">ActiveQuest</a>&nbsp;activeQuest,
  boolean&nbsp;triggerAcceptQuestTrigger,
  boolean&nbsp;sendUpdateObjectivesUnlocked)</span></div>
-</section>
+    </section>
 </li>
 <li>
-<section class="detail" id="forceAddActiveQuest(rocks.gravili.Structs.ActiveQuest,boolean)">
-<h3>forceAddActiveQuest</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang">String</a></span>&nbsp;<span class="element-name">forceAddActiveQuest</span><wbr><span class="parameters">(<a href="ActiveQuest.html" title="class in rocks.gravili.Structs">ActiveQuest</a>&nbsp;quest,
+    <section class="detail" id="forceAddActiveQuest(ActiveQuest,boolean)">
+        <h3>forceAddActiveQuest</h3>
+        <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a
+                class="external-link"
+                href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html"
+                title="class or interface in java.lang">String</a></span>&nbsp;<span class="element-name">forceAddActiveQuest</span>
+            <wbr>
+            <span class="parameters">(<a href="ActiveQuest.html" title="class in rocks.gravili.Structs">ActiveQuest</a>&nbsp;quest,
  boolean&nbsp;triggerAcceptQuestTrigger)</span></div>
-</section>
+    </section>
 </li>
 <li>
 <section class="detail" id="getUUID()">
@@ -440,10 +483,14 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="giveReward(rocks.gravili.Structs.Quest)">
-<h3>giveReward</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">giveReward</span><wbr><span class="parameters">(<a href="Quest.html" title="class in rocks.gravili.Structs">Quest</a>&nbsp;quest)</span></div>
-</section>
+    <section class="detail" id="giveReward(Quest)">
+        <h3>giveReward</h3>
+        <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span
+                class="element-name">giveReward</span>
+            <wbr>
+            <span class="parameters">(<a href="Quest.html" title="class in rocks.gravili.Structs">Quest</a>&nbsp;quest)</span>
+        </div>
+    </section>
 </li>
 <li>
 <section class="detail" id="sendMessage(java.lang.String)">
@@ -458,16 +505,24 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="forceActiveQuestCompleted(rocks.gravili.Structs.ActiveQuest)">
-<h3>forceActiveQuestCompleted</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">forceActiveQuestCompleted</span><wbr><span class="parameters">(<a href="ActiveQuest.html" title="class in rocks.gravili.Structs">ActiveQuest</a>&nbsp;activeQuest)</span></div>
-</section>
+    <section class="detail" id="forceActiveQuestCompleted(ActiveQuest)">
+        <h3>forceActiveQuestCompleted</h3>
+        <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span
+                class="element-name">forceActiveQuestCompleted</span>
+            <wbr>
+            <span class="parameters">(<a href="ActiveQuest.html" title="class in rocks.gravili.Structs">ActiveQuest</a>&nbsp;activeQuest)</span>
+        </div>
+    </section>
 </li>
 <li>
-<section class="detail" id="notifyActiveQuestCompleted(rocks.gravili.Structs.ActiveQuest)">
-<h3>notifyActiveQuestCompleted</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">notifyActiveQuestCompleted</span><wbr><span class="parameters">(<a href="ActiveQuest.html" title="class in rocks.gravili.Structs">ActiveQuest</a>&nbsp;activeQuest)</span></div>
-</section>
+    <section class="detail" id="notifyActiveQuestCompleted(ActiveQuest)">
+        <h3>notifyActiveQuestCompleted</h3>
+        <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span
+                class="element-name">notifyActiveQuestCompleted</span>
+            <wbr>
+            <span class="parameters">(<a href="ActiveQuest.html" title="class in rocks.gravili.Structs">ActiveQuest</a>&nbsp;activeQuest)</span>
+        </div>
+    </section>
 </li>
 <li>
 <section class="detail" id="setQuestPoints(long,boolean)">
@@ -512,16 +567,24 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="addCompletedQuest(rocks.gravili.Structs.CompletedQuest)">
-<h3>addCompletedQuest</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">addCompletedQuest</span><wbr><span class="parameters">(<a href="CompletedQuest.html" title="class in rocks.gravili.Structs">CompletedQuest</a>&nbsp;completedQuest)</span></div>
-</section>
+    <section class="detail" id="addCompletedQuest(CompletedQuest)">
+        <h3>addCompletedQuest</h3>
+        <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span
+                class="element-name">addCompletedQuest</span>
+            <wbr>
+            <span class="parameters">(<a href="CompletedQuest.html" title="class in rocks.gravili.Structs">CompletedQuest</a>&nbsp;completedQuest)</span>
+        </div>
+    </section>
 </li>
 <li>
-<section class="detail" id="failQuest(rocks.gravili.Structs.ActiveQuest)">
-<h3>failQuest</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">failQuest</span><wbr><span class="parameters">(<a href="ActiveQuest.html" title="class in rocks.gravili.Structs">ActiveQuest</a>&nbsp;activeQuestToFail)</span></div>
-</section>
+    <section class="detail" id="failQuest(ActiveQuest)">
+        <h3>failQuest</h3>
+        <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span
+                class="element-name">failQuest</span>
+            <wbr>
+            <span class="parameters">(<a href="ActiveQuest.html" title="class in rocks.gravili.Structs">ActiveQuest</a>&nbsp;activeQuestToFail)</span>
+        </div>
+    </section>
 </li>
     <li>
         <section class="detail" id="getActiveQuestsCopy()">
@@ -536,7 +599,7 @@ loadScripts(document, 'script');</script>
         </section>
     </li>
     <li>
-        <section class="detail" id="hasAcceptedQuest(rocks.gravili.Structs.Quest)">
+        <section class="detail" id="hasAcceptedQuest(Quest)">
             <h3>hasAcceptedQuest</h3>
             <div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span
                     class="element-name">hasAcceptedQuest</span>

@@ -1,6 +1,6 @@
 name: NotQuests
 version: '${version}'
-main: rocks.gravili.NotQuests
+main: rocks.gravili.notquests.NotQuests
 api-version: 1.17
 authors: [ NoeX ]
 description: Flexible, open, GUI Quest Plugin for Minecraft 1.17.1

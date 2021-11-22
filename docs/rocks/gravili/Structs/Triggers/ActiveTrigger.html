@@ -73,7 +73,7 @@ loadScripts(document, 'script');</script>
 <h1 class="title" title="Class ActiveTrigger">Class ActiveTrigger</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang">java.lang.Object</a>
-<div class="inheritance">rocks.gravili.Structs.Triggers.ActiveTrigger</div>
+<div class="inheritance">ActiveTrigger</div>
 </div>
 <section class="class-description" id="class-description">
 <hr>
@@ -114,9 +114,13 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a class="member-name-link" href="#%3Cinit%3E(int,rocks.gravili.Structs.Triggers.Trigger,rocks.gravili.Structs.ActiveQuest)">ActiveTrigger</a><wbr>(int&nbsp;triggerID,
- <a href="Trigger.html" title="class in rocks.gravili.Structs.Triggers">Trigger</a>&nbsp;trigger,
- <a href="../ActiveQuest.html" title="class in rocks.gravili.Structs">ActiveQuest</a>&nbsp;activeQuest)</code></div>
+    <div class="col-constructor-name even-row-color"><code><a class="member-name-link"
+                                                              href="#%3Cinit%3E(int,Trigger,ActiveQuest)">ActiveTrigger</a>
+        <wbr>
+        (int&nbsp;triggerID,
+        <a href="Trigger.html" title="class in rocks.gravili.Structs.Triggers">Trigger</a>&nbsp;trigger,
+        <a href="../ActiveQuest.html" title="class in rocks.gravili.Structs">ActiveQuest</a>&nbsp;activeQuest)</code>
+    </div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -133,7 +137,11 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#addAndCheckTrigger(rocks.gravili.Structs.ActiveQuest)">addAndCheckTrigger</a><wbr>(<a href="../ActiveQuest.html" title="class in rocks.gravili.Structs">ActiveQuest</a>&nbsp;activeQuest)</code></div>
+    <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+        <code><a class="member-name-link" href="#addAndCheckTrigger(ActiveQuest)">addAndCheckTrigger</a>
+            <wbr>
+            (<a href="../ActiveQuest.html"
+                title="class in rocks.gravili.Structs">ActiveQuest</a>&nbsp;activeQuest)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#addProgress(long)">addProgress</a><wbr>(long&nbsp;progressToAdd)</code></div>
@@ -209,12 +217,14 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(int,rocks.gravili.Structs.Triggers.Trigger,rocks.gravili.Structs.ActiveQuest)">
-<h3>ActiveTrigger</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">ActiveTrigger</span><wbr><span class="parameters">(int&nbsp;triggerID,
+    <section class="detail" id="&lt;init&gt;(int,Trigger,ActiveQuest)">
+        <h3>ActiveTrigger</h3>
+        <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">ActiveTrigger</span>
+            <wbr>
+            <span class="parameters">(int&nbsp;triggerID,
  <a href="Trigger.html" title="class in rocks.gravili.Structs.Triggers">Trigger</a>&nbsp;trigger,
  <a href="../ActiveQuest.html" title="class in rocks.gravili.Structs">ActiveQuest</a>&nbsp;activeQuest)</span></div>
-</section>
+    </section>
 </li>
 </ul>
 </section>
@@ -255,10 +265,15 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="addAndCheckTrigger(rocks.gravili.Structs.ActiveQuest)">
-<h3>addAndCheckTrigger</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">addAndCheckTrigger</span><wbr><span class="parameters">(<a href="../ActiveQuest.html" title="class in rocks.gravili.Structs">ActiveQuest</a>&nbsp;activeQuest)</span></div>
-</section>
+    <section class="detail" id="addAndCheckTrigger(ActiveQuest)">
+        <h3>addAndCheckTrigger</h3>
+        <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span
+                class="element-name">addAndCheckTrigger</span>
+            <wbr>
+            <span class="parameters">(<a href="../ActiveQuest.html"
+                                         title="class in rocks.gravili.Structs">ActiveQuest</a>&nbsp;activeQuest)</span>
+        </div>
+    </section>
 </li>
 <li>
 <section class="detail" id="getTriggerID()">
