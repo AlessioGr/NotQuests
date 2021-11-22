@@ -427,16 +427,15 @@ public class QuestPlayer {
     }
 
     public void setQuestPoints(long newQuestPoints, boolean notifyPlayer) {
-
+        if (newQuestPoints < 0) { //Prevent questPoints from going below 0
+            newQuestPoints = 0;
+        }
 
         QuestPointsChangeEvent questPointsChangeEvent = new QuestPointsChangeEvent(this, newQuestPoints);
         Bukkit.getPluginManager().callEvent(questPointsChangeEvent); // This fires the event and allows any listener to listen to the event
         if (!questPointsChangeEvent.isCancelled()) {
-            if (newQuestPoints < 0) { //Prevent questPoints from going below 0
-                this.questPoints = 0;
-            } else {
-                this.questPoints = newQuestPoints;
-            }
+            this.questPoints = questPointsChangeEvent.getNewQuestPointsAmount();
+
 
             if (notifyPlayer) {
                 final Player player = getPlayer();
