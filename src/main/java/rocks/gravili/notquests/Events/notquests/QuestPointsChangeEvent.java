@@ -32,6 +32,8 @@ public class QuestPointsChangeEvent extends Event implements Cancellable {
     private boolean isCancelled;
 
     public QuestPointsChangeEvent(final QuestPlayer questPlayer, final long newQuestPointsAmount) {
+        super(true);
+
         this.questPlayer = questPlayer;
         this.newQuestPointsAmount = newQuestPointsAmount;
 
