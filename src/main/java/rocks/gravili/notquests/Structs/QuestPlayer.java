@@ -430,9 +430,16 @@ public class QuestPlayer {
         if (newQuestPoints < 0) { //Prevent questPoints from going below 0
             newQuestPoints = 0;
         }
-
         QuestPointsChangeEvent questPointsChangeEvent = new QuestPointsChangeEvent(this, newQuestPoints);
-        Bukkit.getPluginManager().callEvent(questPointsChangeEvent); // This fires the event and allows any listener to listen to the event
+        if (Bukkit.isPrimaryThread()) {
+            Bukkit.getScheduler().runTaskAsynchronously(main, () -> {
+                Bukkit.getPluginManager().callEvent(questPointsChangeEvent);
+            });
+        } else {
+            Bukkit.getPluginManager().callEvent(questPointsChangeEvent);
+        }
+
+
         if (!questPointsChangeEvent.isCancelled()) {
             this.questPoints = questPointsChangeEvent.getNewQuestPointsAmount();
 
