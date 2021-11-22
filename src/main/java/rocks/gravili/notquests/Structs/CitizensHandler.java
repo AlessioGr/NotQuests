@@ -92,7 +92,7 @@ public class CitizensHandler {
 
                     player.sendMessage("§aEscort quest started! Please escort §b" + npcToEscort.getName() + " §ato §b" + destinationNPC.getName() + "§a.");
                 } else {
-                    main.getLogManager().log(Level.WARNING, "Error: The escort objective could not be started, because the player with the UUID §b" + activeQuest.getQuestPlayer().getActiveQuests() + " §cwas not found!");
+                    main.getLogManager().log(Level.WARNING, "Error: The escort objective could not be started, because the player with the UUID §b" + activeQuest.getQuestPlayer().getUUID() + " §cwas not found!");
 
 
                 }
