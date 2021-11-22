@@ -197,3 +197,16 @@ processResources {
         expand props
     }
 }
+
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'rocks.gravili.notquests'
+            artifactId = 'NotQuests'
+            version = '1.6.6'
+
+            from components.java
+        }
+    }
+}
