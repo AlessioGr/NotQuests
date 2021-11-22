@@ -1,0 +1,152 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "rocks.gravili.notquests",
+    "module": "NotQuests",
+    "version": "1.6.7",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.2"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 16,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "files": [
+        {
+          "name": "NotQuests-1.6.7.jar",
+          "url": "NotQuests-1.6.7.jar",
+          "size": 2001573,
+          "sha512": "5c62120cd8ecd91729a7fae8287935266a234ab7f1e9682ff722c853d127864d1dfda7adf49be87e510f27e7d983e2abcddba8d5828e24d669f4989d0e9d657b",
+          "sha256": "d0eee74b04ef483c7163c81514db845a9d869664d60c2b4294985ed83a804aef",
+          "sha1": "b673e32d28a5689f8e76defdc427452295eba760",
+          "md5": "7f9f8f7496030d6b611ce4d8dcf2ce83"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 16,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "org.bstats",
+          "module": "bstats-bukkit",
+          "version": {
+            "requires": "2.2.1"
+          }
+        },
+        {
+          "group": "de.themoep",
+          "module": "inventorygui",
+          "version": {
+            "requires": "1.5-SNAPSHOT"
+          }
+        },
+        {
+          "group": "commons-io",
+          "module": "commons-io",
+          "version": {
+            "requires": "2.11.0"
+          }
+        },
+        {
+          "group": "io.lumine.xikage",
+          "module": "MythicMobs",
+          "version": {
+            "requires": "4.12.0"
+          }
+        },
+        {
+          "group": "io.papermc",
+          "module": "paperlib",
+          "version": {
+            "requires": "1.0.6"
+          }
+        },
+        {
+          "group": "net.kyori",
+          "module": "adventure-text-minimessage",
+          "version": {
+            "requires": "4.2.0-SNAPSHOT"
+          }
+        },
+        {
+          "group": "net.kyori",
+          "module": "adventure-platform-bukkit",
+          "version": {
+            "requires": "4.0.0"
+          }
+        },
+        {
+          "group": "cloud.commandframework",
+          "module": "cloud-paper",
+          "version": {
+            "requires": "1.6.0-SNAPSHOT"
+          }
+        },
+        {
+          "group": "cloud.commandframework",
+          "module": "cloud-minecraft-extras",
+          "version": {
+            "requires": "1.6.0-SNAPSHOT"
+          }
+        },
+        {
+          "group": "io.leangen.geantyref",
+          "module": "geantyref",
+          "version": {
+            "requires": "1.3.4"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "NotQuests-1.6.7.jar",
+          "url": "NotQuests-1.6.7.jar",
+          "size": 2001573,
+          "sha512": "5c62120cd8ecd91729a7fae8287935266a234ab7f1e9682ff722c853d127864d1dfda7adf49be87e510f27e7d983e2abcddba8d5828e24d669f4989d0e9d657b",
+          "sha256": "d0eee74b04ef483c7163c81514db845a9d869664d60c2b4294985ed83a804aef",
+          "sha1": "b673e32d28a5689f8e76defdc427452295eba760",
+          "md5": "7f9f8f7496030d6b611ce4d8dcf2ce83"
+        }
+      ]
+    },
+    {
+      "name": "shadowRuntimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "shadowed",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "NotQuests-1.6.7.jar",
+          "url": "NotQuests-1.6.7.jar",
+          "size": 2001573,
+          "sha512": "5c62120cd8ecd91729a7fae8287935266a234ab7f1e9682ff722c853d127864d1dfda7adf49be87e510f27e7d983e2abcddba8d5828e24d669f4989d0e9d657b",
+          "sha256": "d0eee74b04ef483c7163c81514db845a9d869664d60c2b4294985ed83a804aef",
+          "sha1": "b673e32d28a5689f8e76defdc427452295eba760",
+          "md5": "7f9f8f7496030d6b611ce4d8dcf2ce83"
+        }
+      ]
+    }
+  ]
+}
