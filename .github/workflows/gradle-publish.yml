@@ -32,7 +32,7 @@ jobs:
       - name: Build artifacts
         run: ./gradlew build shadowJar
       - name: Upload build artifacts
-      uses: actions/upload-artifact@v1
-      with:
-        name: NotQuests-dev-build.jar
-        path: build/libs
+        uses: actions/upload-artifact@v1
+        with:
+          name: NotQuests-dev-build.jar
+          path: build/libs
