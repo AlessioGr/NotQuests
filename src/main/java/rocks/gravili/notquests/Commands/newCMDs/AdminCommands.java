@@ -35,6 +35,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import rocks.gravili.notquests.Commands.newCMDs.arguments.ActiveQuestSelector;
 import rocks.gravili.notquests.Commands.newCMDs.arguments.QuestSelector;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.ActiveQuest;
@@ -484,15 +485,94 @@ public class AdminCommands {
 
         manager.command(builder.literal("progress")
                 .argument(SinglePlayerSelectorArgument.of("player"), ArgumentDescription.of("Player progress you want to see"))
-                .argument(new QuestSelector<>(
+                .argument(new ActiveQuestSelector<>(
                         true,
                         "quest",
-                        main
+                        main,
+                        "player"
                 ), ArgumentDescription.of("Quest name of the quest you wish to see the progress for."))
                 .meta(CommandMeta.DESCRIPTION, "Shows the progress for a quest of another player")
                 .handler((context) -> {
                     final SinglePlayerSelector singlePlayerSelector = context.get("player");
                     getProgress(context.getSender(), singlePlayerSelector.getPlayer(), singlePlayerSelector.getSelector(), context.get("quest"));
+                }));
+
+
+        manager.command(builder.literal("failQuest")
+                .argument(SinglePlayerSelectorArgument.of("player"), ArgumentDescription.of("Player name whose quest should be failed."))
+                .argument(new ActiveQuestSelector<>(
+                        true,
+                        "activequest",
+                        main,
+                        "player"
+                ), ArgumentDescription.of("Active quest which should be failed."))
+                .meta(CommandMeta.DESCRIPTION, "Fails an active quest for a player")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+                    final SinglePlayerSelector singlePlayerSelector = context.get("player");
+                    final Player player = singlePlayerSelector.getPlayer();
+                    final Quest activeQuest = context.get("activequest");
+                    if (player != null) {
+                        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                        if (questPlayer != null) {
+                            for (final ActiveQuest activeQuest1 : questPlayer.getActiveQuests()) {
+                                if (activeQuest1.getQuest() == activeQuest) {
+                                    questPlayer.failQuest(activeQuest1);
+                                    audience.sendMessage(miniMessage.parse(
+                                            successGradient + "The active quest " + highlightGradient + activeQuest1.getQuest().getQuestName() + "</gradient> has been failed for player " + highlight2Gradient + player.getName() + "</gradient!</gradient>"
+                                    ));
+                                    return;
+                                }
+                            }
+                        } else {
+                            audience.sendMessage(miniMessage.parse(
+                                    errorGradient + "Player " + highlightGradient + singlePlayerSelector.getSelector() + "</gradient> seems to not have accepted any quests!</gradient>"
+                            ));
+                        }
+                    } else {
+                        audience.sendMessage(miniMessage.parse(
+                                errorGradient + "Player " + highlightGradient + singlePlayerSelector.getSelector() + "</gradient> is not online or was not found!</gradient>"
+                        ));
+                    }
+                }));
+
+
+        manager.command(builder.literal("completeQuest")
+                .argument(SinglePlayerSelectorArgument.of("player"), ArgumentDescription.of("Player name whose quest should be completed."))
+                .argument(new ActiveQuestSelector<>(
+                        true,
+                        "activequest",
+                        main,
+                        "player"
+                ), ArgumentDescription.of("Active quest which should be completed."))
+                .meta(CommandMeta.DESCRIPTION, "Completes an active quest for a player")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+                    final SinglePlayerSelector singlePlayerSelector = context.get("player");
+                    final Player player = singlePlayerSelector.getPlayer();
+                    final Quest activeQuest = context.get("activequest");
+                    if (player != null) {
+                        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                        if (questPlayer != null) {
+                            for (final ActiveQuest activeQuest1 : questPlayer.getActiveQuests()) {
+                                if (activeQuest1.getQuest() == activeQuest) {
+                                    questPlayer.forceActiveQuestCompleted(activeQuest1);
+                                    audience.sendMessage(miniMessage.parse(
+                                            successGradient + "The active quest " + highlightGradient + activeQuest1.getQuest().getQuestName() + "</gradient> has been completed for player " + highlight2Gradient + player.getName() + "</gradient!</gradient>"
+                                    ));
+                                    return;
+                                }
+                            }
+                        } else {
+                            audience.sendMessage(miniMessage.parse(
+                                    errorGradient + "Player " + highlightGradient + singlePlayerSelector.getSelector() + "</gradient> seems to not have accepted any quests!</gradient>"
+                            ));
+                        }
+                    } else {
+                        audience.sendMessage(miniMessage.parse(
+                                errorGradient + "Player " + highlightGradient + singlePlayerSelector.getSelector() + "</gradient> is not online or was not found!</gradient>"
+                        ));
+                    }
                 }));
     }
 
