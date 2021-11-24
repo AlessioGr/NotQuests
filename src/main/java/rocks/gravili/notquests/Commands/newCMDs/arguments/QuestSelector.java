@@ -25,13 +25,14 @@ import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.exceptions.parsing.NoInputProvidedException;
 import io.leangen.geantyref.TypeToken;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Quest;
 
 import java.util.List;
 import java.util.Queue;
 
-public class QuestSelector<C, ArrayList> extends CommandArgument<C, List<Quest>> {
+public class QuestSelector<C> extends CommandArgument<C, Quest> {
 
     public QuestSelector(
             boolean required,
@@ -43,14 +44,14 @@ public class QuestSelector<C, ArrayList> extends CommandArgument<C, List<Quest>>
                 name,
                 new QuestsParser<>(main),
                 "",
-                new TypeToken<List<Quest>>() {
+                new TypeToken<>() {
                 },
                 null
         );
     }
 
 
-    public static final class QuestsParser<C, ArrayList> implements ArgumentParser<C, List<Quest>> {
+    public static final class QuestsParser<C> implements ArgumentParser<C, Quest> {
 
         private final NotQuests main;
 
@@ -65,22 +66,31 @@ public class QuestSelector<C, ArrayList> extends CommandArgument<C, List<Quest>>
         }
 
 
+        @NotNull
         @Override
-        public List<String> suggestions(CommandContext<C> context, String input) {
+        public List<String> suggestions(@NotNull CommandContext<C> context, @NotNull String input) {
             List<String> questNames = new java.util.ArrayList<>();
             for (Quest quest : main.getQuestManager().getAllQuests()) {
                 questNames.add(quest.getQuestName());
             }
+
             return questNames;
         }
 
         @Override
-        public @NonNull ArgumentParseResult<List<Quest>> parse(@NonNull CommandContext<@NonNull C> context, @NonNull Queue<@NonNull String> inputQueue) {
+        public @NonNull ArgumentParseResult<Quest> parse(@NonNull CommandContext<@NonNull C> context, @NonNull Queue<@NonNull String> inputQueue) {
             if (inputQueue.isEmpty()) {
                 return ArgumentParseResult.failure(new NoInputProvidedException(QuestsParser.class, context));
             }
+            final String input = inputQueue.peek();
+            final Quest foundQuest = main.getQuestManager().getQuest(input);
+            if (foundQuest == null) {
+                return ArgumentParseResult.failure(new IllegalArgumentException("Quest '" + inputQueue.peek() + "' does not exist!"
+                ));
+            }
 
-            return ArgumentParseResult.success(main.getQuestManager().getAllQuests());
+            inputQueue.remove();
+            return ArgumentParseResult.success(foundQuest);
 
         }
 

@@ -34,7 +34,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.Commands.CommandNotQuests;
 import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.Commands.newCMDs.AdminCommands;
@@ -200,8 +199,8 @@ public class CommandManager {
 
 
         //Help menu
-        commandManager.command(builder.meta(CommandMeta.DESCRIPTION, "Opens the help menu").senderType(Player.class).handler((context) -> {
-            minecraftHelp.queryCommands(context.getOrDefault("", "qa2 *"), context.getSender());
+        commandManager.command(builder.meta(CommandMeta.DESCRIPTION, "Opens the help menu").handler((context) -> {
+            minecraftHelp.queryCommands("qa2 *", context.getSender());
             final Audience audience = main.adventure().sender(context.getSender());
             final List<String> allArgs = context.getRawInput();
             main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[What would you like to do?]", "[...]");
@@ -223,7 +222,16 @@ public class CommandManager {
                 .withInvalidSyntaxHandler()
                 .withNoPermissionHandler()
                 .withCommandExecutionHandler()
-                .withDecorator(message -> Component.text("NotQuests > ").color(NotQuestColors.main).append(Component.space()).append(message));
+                .withDecorator(message -> {
+
+                            return Component.text("NotQuests > ").color(NotQuestColors.main).append(Component.space()).append(message);
+                        }
+                )
+                .withHandler(MinecraftExceptionHandler.ExceptionType.INVALID_SYNTAX, (sender, e) -> {
+                    minecraftHelp.queryCommands(e.getMessage().split("syntax is: ")[1], sender);
+
+                    return Component.text(e.getMessage(), NamedTextColor.RED);
+                });
 
         exceptionHandler.apply(commandManager, main.adventure()::sender);
 

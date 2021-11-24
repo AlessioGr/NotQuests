@@ -30,5 +30,9 @@ public class NotQuestColors {
     public static String mainGradient = "<gradient:#1985ff:#2bc7ff>";
     public static String highlightGradient = "<gradient:#00fffb:#00ffc3>";
     public static String highlight2Gradient = "<gradient:#ff004c:#ff0090>";
-    public static String unimportant = "<Gray>";
+    public static String unimportant = "<GRAY>";
+    public static String unimportantClose = "</GRAY>";
+
+    public static String warningGradient = "<gradient:#fff700:#ffa629>";
+
 }
