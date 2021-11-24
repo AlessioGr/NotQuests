@@ -18,16 +18,23 @@
 
 package rocks.gravili.notquests.Managers;
 
+import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
+import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.bukkit.CloudBukkitCapabilities;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
-import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.minecraft.extras.MinecraftHelp;
 import cloud.commandframework.paper.PaperCommandManager;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.builder.RequiredArgumentBuilder;
+import com.mojang.brigadier.tree.LiteralCommandNode;
+import me.lucko.commodore.Commodore;
+import me.lucko.commodore.CommodoreProvider;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.Commands.CommandNotQuests;
+import rocks.gravili.notquests.Commands.newCMDs.AdminCommands;
 import rocks.gravili.notquests.Commands.old.CommandNotQuestsAdmin;
 import rocks.gravili.notquests.NotQuests;
 
@@ -39,16 +46,68 @@ public class CommandManager {
     private PaperCommandManager<CommandSender> commandManager;
     private MinecraftHelp<CommandSender> minecraftHelp;
 
+    private final Commodore commodore;
+
 
     public CommandManager(final NotQuests main) {
         this.main = main;
+        if (CommodoreProvider.isSupported()) {
+            // get a commodore instance
+            commodore = CommodoreProvider.getCommodore(main);
+        } else {
+            commodore = null;
+        }
+    }
+
+
+    private void registerCommodoreCompletions(Commodore commodore, PluginCommand command) {
+        if (CommodoreProvider.isSupported()) {
+
+
+            LiteralCommandNode<?> timeCommand = LiteralArgumentBuilder.literal("time")
+                    .then(LiteralArgumentBuilder.literal("set")
+                            .then(LiteralArgumentBuilder.literal("day"))
+                            .then(LiteralArgumentBuilder.literal("noon"))
+                            .then(LiteralArgumentBuilder.literal("night"))
+                            .then(LiteralArgumentBuilder.literal("midnight"))
+                            .then(RequiredArgumentBuilder.argument("time", IntegerArgumentType.integer())))
+                    .then(LiteralArgumentBuilder.literal("add")
+                            .then(RequiredArgumentBuilder.argument("time", IntegerArgumentType.integer())))
+                    .then(LiteralArgumentBuilder.literal("query")
+                            .then(LiteralArgumentBuilder.literal("daytime"))
+                            .then(LiteralArgumentBuilder.literal("gametime"))
+                            .then(LiteralArgumentBuilder.literal("day"))
+                    ).build();
+
+            commodore.register(command, timeCommand);
+        }
+
     }
 
     public void setupCommands() {
 
+        final PluginCommand notQuestsAdminCommand = main.getCommand("notquestsadmin");
+        if (notQuestsAdminCommand != null) {
+            final CommandNotQuestsAdmin commandNotQuestsAdmin = new CommandNotQuestsAdmin(main);
+            notQuestsAdminCommand.setTabCompleter(commandNotQuestsAdmin);
+            notQuestsAdminCommand.setExecutor(commandNotQuestsAdmin);
+
+
+            registerCommodoreCompletions(commodore, notQuestsAdminCommand);
+        }
+        //Register the notquests command & tab completer. This command will be used by Players
+        final PluginCommand notQuestsCommand = main.getCommand("notquests");
+        if (notQuestsCommand != null) {
+            final CommandNotQuests commandNotQuests = new CommandNotQuests(main);
+            notQuestsCommand.setExecutor(commandNotQuests);
+            notQuestsCommand.setTabCompleter(commandNotQuests);
+
+
+        }
+
 
         if (!useNewCommands) {
-            final PluginCommand notQuestsAdminCommand = main.getCommand("notquestsadmin");
+            /*final PluginCommand notQuestsAdminCommand = main.getCommand("notquestsadmin");
             if (notQuestsAdminCommand != null) {
                 final CommandNotQuestsAdmin commandNotQuestsAdmin = new CommandNotQuestsAdmin(main);
                 notQuestsAdminCommand.setTabCompleter(commandNotQuestsAdmin);
@@ -60,7 +119,7 @@ public class CommandManager {
                 final CommandNotQuests commandNotQuests = new CommandNotQuests(main);
                 notQuestsCommand.setExecutor(commandNotQuests);
                 notQuestsCommand.setTabCompleter(commandNotQuests);
-            }
+            }*/
         } else {
             //Cloud command framework
             try {
@@ -81,8 +140,15 @@ public class CommandManager {
                 commandManager.registerAsynchronousCompletions();
             }
 
+            //brigadier/commodore
+            try {
+                commandManager.registerBrigadier();
+            } catch (final Exception e) {
+                main.getLogger().warning("Failed to initialize Brigadier support: " + e.getMessage());
+            }
+
             minecraftHelp = new MinecraftHelp<>(
-                    "/notquestsadmin help",
+                    "/notquestsadmin2 help",
                     main.adventure()::sender,
                     commandManager
             );
@@ -97,14 +163,39 @@ public class CommandManager {
 
     public void constructCommands() {
 
-        // /ag
-        final Command.Builder<CommandSender> agBuilder = commandManager.commandBuilder("notquestsadmin", "qa");
-        commandManager.command(agBuilder.meta(CommandMeta.DESCRIPTION, "fwefwe")
+
+       /* final Command.Builder<CommandSender> helpBuilder = commandManager.commandBuilder("notquestsadmin", "qa");
+        commandManager.command(helpBuilder.meta(CommandMeta.DESCRIPTION, "fwefwe")
                 .senderType(Player.class)
                 .handler(commandContext -> {
                     minecraftHelp.queryCommands(commandContext.getOrDefault("", ""), commandContext.getSender());
                 }));
 
+        helpBuilder.literal("notquestsadmin",
+                ArgumentDescription.of("Your Description"));*/
 
+
+       /* commandManager.command(
+                builder.literal("help", new String[0])
+                .argument(com.magmaguy.shaded.cloud.arguments.standard.StringArgument.optional("query", com.magmaguy.shaded.cloud.arguments.standard.StringArgument.StringMode.GREEDY)).handler((context) -> {
+                    this.minecraftHelp.queryCommands((String)context.getOrDefault("query", ""), context.getSender());
+                })
+        );*/
+
+
+        Command.Builder<CommandSender> builder = commandManager.commandBuilder("notquestsadmin2", ArgumentDescription.of("Admin commands for NotQuests"), "nqa2", "qa2")
+                .permission("notquests.admin");
+
+        new AdminCommands(main, commandManager, builder);
+
+        commandManager.command(
+                builder
+                        .literal("help")
+                        .argument(StringArgument.optional("query", StringArgument.StringMode.GREEDY))
+
+                        .handler(context -> {
+                            minecraftHelp.queryCommands(context.getOrDefault("query", ""), context.getSender());
+                        })
+        );
     }
 }
