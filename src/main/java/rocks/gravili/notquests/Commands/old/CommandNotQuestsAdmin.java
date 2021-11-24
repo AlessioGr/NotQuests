@@ -26,6 +26,7 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -141,7 +142,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-
+        final Audience audience = main.adventure().sender(sender);
         if (sender.hasPermission("notquests.admin")) {
             sender.sendMessage("");
             if (args.length == 0) {
@@ -309,9 +310,9 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                     }
 
                 } else if (args[0].equalsIgnoreCase("create")) {
-                    sender.sendMessage(main.getQuestManager().createQuest(args[1]));
+                    audience.sendMessage(MiniMessage.miniMessage().parse(main.getQuestManager().createQuest(args[1])));
                 } else if (args[0].equalsIgnoreCase("delete")) {
-                    sender.sendMessage(main.getQuestManager().deleteQuest(args[1]));
+                    audience.sendMessage(MiniMessage.miniMessage().parse(main.getQuestManager().deleteQuest(args[1])));
                 } else if (args[0].equalsIgnoreCase("edit")) {
                     if (main.getQuestManager().getQuest(args[1]) != null) {
                         sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6requirements");
@@ -651,7 +652,9 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
 
 
                             sender.sendMessage("§aTrying to create Action with the name §b" + actionName + " §aand console command §e" + consoleCommand + " §a...");
-                            sender.sendMessage("§aStatus: §b" + main.getQuestManager().createAction(actionName, consoleCommand.toString()));
+                            audience.sendMessage(Component.text("Status: ", NamedTextColor.GREEN)
+                                    .append(MiniMessage.miniMessage().parse(main.getQuestManager().createAction(actionName, consoleCommand.toString())))
+                            );
 
 
                         } else {

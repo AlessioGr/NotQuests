@@ -23,26 +23,30 @@ import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.bukkit.CloudBukkitCapabilities;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
+import cloud.commandframework.meta.CommandMeta;
+import cloud.commandframework.minecraft.extras.MinecraftExceptionHandler;
 import cloud.commandframework.minecraft.extras.MinecraftHelp;
 import cloud.commandframework.paper.PaperCommandManager;
-import com.mojang.brigadier.arguments.IntegerArgumentType;
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import com.mojang.brigadier.builder.RequiredArgumentBuilder;
-import com.mojang.brigadier.tree.LiteralCommandNode;
 import me.lucko.commodore.Commodore;
 import me.lucko.commodore.CommodoreProvider;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.entity.Player;
 import rocks.gravili.notquests.Commands.CommandNotQuests;
+import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.Commands.newCMDs.AdminCommands;
 import rocks.gravili.notquests.Commands.old.CommandNotQuestsAdmin;
 import rocks.gravili.notquests.NotQuests;
 
+import java.util.List;
 import java.util.function.Function;
 
 public class CommandManager {
     private final NotQuests main;
-    private final boolean useNewCommands = false;
+    private final boolean useNewCommands = true;
     private PaperCommandManager<CommandSender> commandManager;
     private MinecraftHelp<CommandSender> minecraftHelp;
 
@@ -63,15 +67,14 @@ public class CommandManager {
     private void registerCommodoreCompletions(Commodore commodore, PluginCommand command) {
         if (CommodoreProvider.isSupported()) {
 
-
-            LiteralCommandNode<?> timeCommand = LiteralArgumentBuilder.literal("notquestsadmin")
-                    .then(LiteralArgumentBuilder.literal("set")
+            /*LiteralCommandNode<?> timeCommand = LiteralArgumentBuilder.literal("notquestsadmin")
+                    .then(LiteralArgumentBuilder.literal("create")
                             .then(LiteralArgumentBuilder.literal("day"))
                             .then(LiteralArgumentBuilder.literal("noon"))
                             .then(LiteralArgumentBuilder.literal("night"))
                             .then(LiteralArgumentBuilder.literal("midnight"))
                             .then(RequiredArgumentBuilder.argument("time", IntegerArgumentType.integer())))
-                    .then(LiteralArgumentBuilder.literal("add")
+                    .then(LiteralArgumentBuilder.literal("delete")
                             .then(RequiredArgumentBuilder.argument("time", IntegerArgumentType.integer())))
                     .then(LiteralArgumentBuilder.literal("query")
                             .then(LiteralArgumentBuilder.literal("daytime"))
@@ -79,7 +82,7 @@ public class CommandManager {
                             .then(LiteralArgumentBuilder.literal("day"))
                     ).build();
 
-            commodore.register(command, timeCommand);
+            commodore.register(command, timeCommand);*/
         }
 
     }
@@ -148,10 +151,19 @@ public class CommandManager {
             }
 
             minecraftHelp = new MinecraftHelp<>(
-                    "/notquestsadmin2 help",
+                    "/qa2 help",
                     main.adventure()::sender,
                     commandManager
             );
+
+            minecraftHelp.setHelpColors(MinecraftHelp.HelpColors.of(
+                    NotQuestColors.main,
+                    NamedTextColor.WHITE,
+                    NotQuestColors.highlight,
+                    NamedTextColor.GRAY,
+                    NamedTextColor.DARK_GRAY
+            ));
+
 
             constructCommands();
         }
@@ -183,19 +195,40 @@ public class CommandManager {
         );*/
 
 
-        Command.Builder<CommandSender> builder = commandManager.commandBuilder("notquestsadmin2", ArgumentDescription.of("Admin commands for NotQuests"), "nqa2", "qa2")
+        Command.Builder<CommandSender> builder = commandManager.commandBuilder("qa2", ArgumentDescription.of("Admin commands for NotQuests"), "notquestsadmin2, nqa2")
                 .permission("notquests.admin");
 
-        new AdminCommands(main, commandManager, builder);
 
+        //Help menu
+        commandManager.command(builder.meta(CommandMeta.DESCRIPTION, "Opens the help menu").senderType(Player.class).handler((context) -> {
+            minecraftHelp.queryCommands(context.getOrDefault("", "qa2 *"), context.getSender());
+            final Audience audience = main.adventure().sender(context.getSender());
+            final List<String> allArgs = context.getRawInput();
+            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[What would you like to do?]", "[...]");
+
+        }));
         commandManager.command(
-                builder
-                        .literal("help")
+                builder.literal("help")
                         .argument(StringArgument.optional("query", StringArgument.StringMode.GREEDY))
 
                         .handler(context -> {
-                            minecraftHelp.queryCommands(context.getOrDefault("query", ""), context.getSender());
+                            minecraftHelp.queryCommands(context.getOrDefault("query", "qa2 *"), context.getSender());
                         })
         );
+
+
+        MinecraftExceptionHandler<CommandSender> exceptionHandler = new MinecraftExceptionHandler<CommandSender>()
+                .withArgumentParsingHandler()
+                .withInvalidSenderHandler()
+                .withInvalidSyntaxHandler()
+                .withNoPermissionHandler()
+                .withCommandExecutionHandler()
+                .withDecorator(message -> Component.text("NotQuests > ").color(NotQuestColors.main).append(Component.space()).append(message));
+
+        exceptionHandler.apply(commandManager, main.adventure()::sender);
+
+        new AdminCommands(main, commandManager, builder);
+
+
     }
 }

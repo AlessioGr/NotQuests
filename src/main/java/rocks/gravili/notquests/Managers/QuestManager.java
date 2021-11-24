@@ -26,7 +26,6 @@ import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitInfo;
-import net.md_5.bungee.api.chat.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -39,6 +38,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.Hooks.Citizens.QuestGiverNPCTrait;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.ActiveObjective;
@@ -125,14 +125,14 @@ public class QuestManager {
     public final String createQuest(String questName) {
         if (getQuest(questName) == null) {
             if(questName.contains("°")){
-                return "The symbol ° cannot be used, because it's used for some important, plugin-internal stuff.";
+                return (NotQuestColors.errorGradient + "The symbol ° cannot be used, because it's used for some important, plugin-internal stuff.");
             }
             Quest newQuest = new Quest(main, questName);
             quests.add(newQuest);
             main.getDataManager().getQuestsData().set("quests." + questName, "");
-            return "§aQuest successfully created!";
+            return (NotQuestColors.successGradient + "Quest successfully created!");
         } else {
-            return "§cQuest already exists!";
+            return (NotQuestColors.errorGradient + "Quest already exists!");
         }
     }
 
@@ -141,9 +141,9 @@ public class QuestManager {
             Quest questToDelete = getQuest(questName);
             quests.remove(questToDelete);
             main.getDataManager().getQuestsData().set("quests." + questName, null);
-            return "§aQuest successfully deleted!";
+            return (NotQuestColors.successGradient + "Quest successfully deleted!");
         } else {
-            return "§cQuest doesn't exist!";
+            return (NotQuestColors.errorGradient + "Quest doesn't exists!");
         }
     }
 
@@ -722,13 +722,13 @@ public class QuestManager {
             for (Quest quest : questsAttachedToNPC) {
 
 
-                BaseComponent component;
+                net.md_5.bungee.api.chat.BaseComponent component;
 
 
-                BaseComponent acceptComponent = new TextComponent("§a§l[CHOOSE]");
+                net.md_5.bungee.api.chat.BaseComponent acceptComponent = new net.md_5.bungee.api.chat.TextComponent("§a§l[CHOOSE]");
                 acceptComponent.setClickEvent(new net.md_5.bungee.api.chat.ClickEvent(net.md_5.bungee.api.chat.ClickEvent.Action.RUN_COMMAND, "/nquests preview " + quest.getQuestName()));
-                acceptComponent.setHoverEvent(new net.md_5.bungee.api.chat.HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aClick to preview/choose the quest §b" + quest.getQuestFinalName()).create()));
-                component = new TextComponent("§e" + counter + ". §b" + quest.getQuestFinalName() + " ");
+                acceptComponent.setHoverEvent(new net.md_5.bungee.api.chat.HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT, new net.md_5.bungee.api.chat.ComponentBuilder("§aClick to preview/choose the quest §b" + quest.getQuestFinalName()).create()));
+                component = new net.md_5.bungee.api.chat.TextComponent("§e" + counter + ". §b" + quest.getQuestFinalName() + " ");
 
                 component.addExtra(acceptComponent);
 
@@ -834,13 +834,13 @@ public class QuestManager {
             for (Quest quest : questsAttachedToNPC) {
 
 
-                BaseComponent component;
+                net.md_5.bungee.api.chat.BaseComponent component;
 
 
-                BaseComponent acceptComponent = new TextComponent("§a§l[CHOOSE]");
+                net.md_5.bungee.api.chat.BaseComponent acceptComponent = new net.md_5.bungee.api.chat.TextComponent("§a§l[CHOOSE]");
                 acceptComponent.setClickEvent(new net.md_5.bungee.api.chat.ClickEvent(net.md_5.bungee.api.chat.ClickEvent.Action.RUN_COMMAND, "/nquests preview " + quest.getQuestName()));
-                acceptComponent.setHoverEvent(new net.md_5.bungee.api.chat.HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aClick to preview/choose the quest §b" + quest.getQuestFinalName()).create()));
-                component = new TextComponent("§e" + counter + ". §b" + quest.getQuestFinalName() + " ");
+                acceptComponent.setHoverEvent(new net.md_5.bungee.api.chat.HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT, new net.md_5.bungee.api.chat.ComponentBuilder("§aClick to preview/choose the quest §b" + quest.getQuestFinalName()).create()));
+                component = new net.md_5.bungee.api.chat.TextComponent("§e" + counter + ". §b" + quest.getQuestFinalName() + " ");
 
                 component.addExtra(acceptComponent);
 
@@ -929,9 +929,9 @@ public class QuestManager {
         player.sendMessage(getQuestRewards(quest));
 
 
-        BaseComponent acceptComponent = new TextComponent("§a§l[ACCEPT THIS QUEST]");
-        acceptComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nquests take " + quest.getQuestName()));
-        acceptComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aClick to accept this quest").create()));
+        net.md_5.bungee.api.chat.BaseComponent acceptComponent = new net.md_5.bungee.api.chat.TextComponent("§a§l[ACCEPT THIS QUEST]");
+        acceptComponent.setClickEvent(new net.md_5.bungee.api.chat.ClickEvent(net.md_5.bungee.api.chat.ClickEvent.Action.RUN_COMMAND, "/nquests take " + quest.getQuestName()));
+        acceptComponent.setHoverEvent(new net.md_5.bungee.api.chat.HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT, new net.md_5.bungee.api.chat.ComponentBuilder("§aClick to accept this quest").create()));
 
 
 
@@ -1178,9 +1178,9 @@ public class QuestManager {
             final Action newAction = new Action(main, actionName, consoleCommand);
             actions.add(newAction);
             main.getDataManager().getQuestsData().set("actions." + actionName + ".consoleCommand", consoleCommand);
-            return "§aAction successfully created!";
+            return (NotQuestColors.successGradient + "Action successfully created!");
         } else {
-            return "§cAction already exists!";
+            return (NotQuestColors.errorGradient + "Action already exists!");
         }
     }
 

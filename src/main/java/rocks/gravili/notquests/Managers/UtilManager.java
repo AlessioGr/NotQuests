@@ -22,11 +22,11 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
 
 import java.util.HashMap;
@@ -83,7 +83,7 @@ public class UtilManager {
 
         Component currentCompletion;
         if (args[args.length - 1].isBlank()) {
-            currentCompletion = Component.text("" + hintCurrentArg, NamedTextColor.GREEN, TextDecoration.BOLD).decoration(TextDecoration.ITALIC, false);
+            currentCompletion = Component.text("" + hintCurrentArg, NotQuestColors.highlight, TextDecoration.BOLD).decoration(TextDecoration.ITALIC, false);
         } else {
             currentCompletion = Component.text("" + args[args.length - 1], NamedTextColor.YELLOW, TextDecoration.BOLD).decoration(TextDecoration.ITALIC, false);
         }
@@ -94,16 +94,16 @@ public class UtilManager {
                 hintNextArgs = hintNextArgs.substring(0, 14) + "...";
             }
 
-            return Component.text(argsTogether.toString(), TextColor.fromHexString("#a5c7a6"), TextDecoration.ITALIC)
+            return Component.text(argsTogether.toString(), NotQuestColors.lightHighlight, TextDecoration.ITALIC)
                     .append(currentCompletion)
                     .append(Component.text(" " + hintNextArgs, NamedTextColor.GRAY));
         } else {
             if (!args[args.length - 1].isBlank()) { //Command finished
-                return Component.text(argsTogether.toString(), TextColor.fromHexString("#a5c7a6"), TextDecoration.ITALIC)
+                return Component.text(argsTogether.toString(), NotQuestColors.lightHighlight, TextDecoration.ITALIC)
                         .append(currentCompletion)
                         .append(Component.text(" ✓", NamedTextColor.GREEN, TextDecoration.BOLD));
             } else {
-                return Component.text(argsTogether.toString(), TextColor.fromHexString("#a5c7a6"), TextDecoration.ITALIC)
+                return Component.text(argsTogether.toString(), NotQuestColors.lightHighlight, TextDecoration.ITALIC)
                         .append(currentCompletion);
             }
 

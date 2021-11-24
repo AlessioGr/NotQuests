@@ -32,6 +32,8 @@ import java.util.HashMap;
 import java.util.UUID;
 import java.util.logging.Level;
 
+import static rocks.gravili.notquests.Commands.NotQuestColors.*;
+
 public class QuestPlayerManager {
     private final NotQuests main;
 
@@ -313,10 +315,10 @@ public class QuestPlayerManager {
         if (questPlayer == null) {
             questPlayer = new QuestPlayer(main, uuid);
             questPlayersAndUUIDs.put(uuid, questPlayer);
-            return "§aQuest player with uuid §b" + uuid + " §ahas been created successfully!";
+            return successGradient + "Quest player with uuid " + highlightGradient + uuid + "</gradient> has been created successfully!</gradient>";
 
         } else {
-            return "§cQuest player already exists.";
+            return errorGradient + "Quest player already exists.";
         }
     }
 
