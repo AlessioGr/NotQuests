@@ -480,6 +480,20 @@ public class AdminCommands {
                         }
                     }
                 }));
+
+
+        manager.command(builder.literal("progress")
+                .argument(SinglePlayerSelectorArgument.of("player"), ArgumentDescription.of("Player progress you want to see"))
+                .argument(new QuestSelector<>(
+                        true,
+                        "quest",
+                        main
+                ), ArgumentDescription.of("Quest name of the quest you wish to see the progress for."))
+                .meta(CommandMeta.DESCRIPTION, "Shows the progress for a quest of another player")
+                .handler((context) -> {
+                    final SinglePlayerSelector singlePlayerSelector = context.get("player");
+                    getProgress(context.getSender(), singlePlayerSelector.getPlayer(), singlePlayerSelector.getSelector(), context.get("quest"));
+                }));
     }
 
 
@@ -661,5 +675,105 @@ public class AdminCommands {
                         counter += 1;
                     }
                 }));
+    }
+
+
+    public void getProgress(CommandSender sender, Player player, String playerName, Quest quest) {
+        final Audience audience = main.adventure().sender(sender);
+
+        audience.sendMessage(Component.empty());
+
+        if (player != null) {
+
+
+            QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+            if (questPlayer != null) {
+
+                ActiveQuest requestedActiveQuest = null;
+
+                for (ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+                    if (activeQuest.getQuest().getQuestName().equalsIgnoreCase(quest.getQuestName())) {
+                        requestedActiveQuest = activeQuest;
+                    }
+                }
+                if (requestedActiveQuest != null) {
+                    audience.sendMessage(miniMessage.parse(
+                            mainGradient + "Completed Objectives for Quest " + highlightGradient + requestedActiveQuest.getQuest().getQuestName() + "</gradient> of player "
+                                    + highlight2Gradient + playerName + "</gradient>" + " <green>(online)</green>:</gradient>"
+                    ));
+                    main.getQuestManager().sendCompletedObjectivesAndProgress((Player) sender, requestedActiveQuest);
+
+                    audience.sendMessage(miniMessage.parse(
+                            mainGradient + "Active Objectives for Quest " + highlightGradient + requestedActiveQuest.getQuest().getQuestName() + "</gradient> of player "
+                                    + highlight2Gradient + playerName + "</gradient>" + " <green>(online)</green>:</gradient>"
+                    ));
+                    main.getQuestManager().sendActiveObjectivesAndProgress((Player) sender, requestedActiveQuest);
+
+
+                } else {
+                    audience.sendMessage(miniMessage.parse(
+                            errorGradient + "Quest " + highlightGradient + quest.getQuestName() + "</gradient> was not found or active!"
+                    ));
+                    audience.sendMessage(miniMessage.parse(mainGradient + "Active quests of player " + highlightGradient + player.getName() + "</gradient> <green>(online)</green>:"));
+                    int counter = 1;
+                    for (ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+                        audience.sendMessage(miniMessage.parse(highlightGradient + counter + ".</gradient> " + mainGradient + activeQuest.getQuest().getQuestName()));
+                        counter += 1;
+                    }
+                    audience.sendMessage(miniMessage.parse(unimportant + "Total active quests: " + highlight2Gradient + (counter - 1) + "</gradient>."));
+
+                }
+
+            } else {
+                audience.sendMessage(miniMessage.parse(errorGradient + "Seems like the player " + highlightGradient + player.getName() + "</gradient> <green>(online)</green> did not accept any active quests."));
+
+            }
+
+
+        } else {
+            OfflinePlayer offlinePlayer = main.getUtilManager().getOfflinePlayer(playerName);
+
+            QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(offlinePlayer.getUniqueId());
+            if (questPlayer != null) {
+
+                ActiveQuest requestedActiveQuest = null;
+
+                for (ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+                    if (activeQuest.getQuest().getQuestName().equalsIgnoreCase(quest.getQuestName())) {
+                        requestedActiveQuest = activeQuest;
+                    }
+                }
+                if (requestedActiveQuest != null) {
+
+                    audience.sendMessage(miniMessage.parse(
+                            mainGradient + "Completed Objectives for Quest " + highlightGradient + requestedActiveQuest.getQuest().getQuestName() + "</gradient> of player "
+                                    + highlight2Gradient + playerName + "</gradient>" + " <red>(offline)</red>:</gradient>"
+                    ));
+                    main.getQuestManager().sendCompletedObjectivesAndProgress((Player) sender, requestedActiveQuest);
+
+                    audience.sendMessage(miniMessage.parse(
+                            mainGradient + "Active Objectives for Quest " + highlightGradient + requestedActiveQuest.getQuest().getQuestName() + "</gradient> of player "
+                                    + highlight2Gradient + playerName + "</gradient>" + " <red>(offline)</red>:</gradient>"
+                    ));
+                    main.getQuestManager().sendActiveObjectivesAndProgress((Player) sender, requestedActiveQuest);
+
+
+                } else {
+                    audience.sendMessage(miniMessage.parse(
+                            errorGradient + "Quest " + highlightGradient + quest.getQuestName() + "</gradient> was not found or active!"
+                    ));
+                    audience.sendMessage(miniMessage.parse(mainGradient + "Active quests of player " + highlightGradient + offlinePlayer.getName() + "</gradient> <green>(online)</green>:"));
+                    int counter = 1;
+                    for (ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+                        audience.sendMessage(miniMessage.parse(highlightGradient + counter + ".</gradient> " + mainGradient + activeQuest.getQuest().getQuestName()));
+                        counter += 1;
+                    }
+
+                }
+            } else {
+                audience.sendMessage(miniMessage.parse(errorGradient + "Seems like the player " + highlightGradient + offlinePlayer.getName() + "</gradient> <red>(offline)</red> did not accept any active quests."));
+            }
+        }
+
     }
 }
