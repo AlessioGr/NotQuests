@@ -89,6 +89,8 @@ repositories {
         url "https://repo.incendo.org/content/repositories/snapshots"
     }
 
+    maven { url 'https://libraries.minecraft.net/' }
+
 }
 
 dependencies {
@@ -136,6 +138,9 @@ shadowJar {
 
 
     dependencies {
+
+        exclude(dependency('com.mojang:brigadier'))
+
         relocate 'io.papermc.lib', path + '.paper'
         relocate('org.bstats', path + '.bstats')
         relocate('cloud.commandframework', path + '.cloud')
@@ -143,7 +148,6 @@ shadowJar {
         relocate('io.leangen.geantyref', path + '.geantyref')
         relocate("de.themoep", path + '.de.themoep')
         relocate("org.apache.commons.io", path + '.commons.io')
-        relocate('me.lucko', path + '.lucko')
 
 
         include dependency('io.papermc:paperlib')
@@ -157,7 +161,7 @@ shadowJar {
 
 
     }
-
+    relocate('me.lucko.commodore', path + '.commodore')
 
 
 

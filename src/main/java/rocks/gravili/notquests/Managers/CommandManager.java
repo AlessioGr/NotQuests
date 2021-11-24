@@ -64,7 +64,7 @@ public class CommandManager {
         if (CommodoreProvider.isSupported()) {
 
 
-            LiteralCommandNode<?> timeCommand = LiteralArgumentBuilder.literal("time")
+            LiteralCommandNode<?> timeCommand = LiteralArgumentBuilder.literal("notquestsadmin")
                     .then(LiteralArgumentBuilder.literal("set")
                             .then(LiteralArgumentBuilder.literal("day"))
                             .then(LiteralArgumentBuilder.literal("noon"))
@@ -86,7 +86,7 @@ public class CommandManager {
 
     public void setupCommands() {
 
-        final PluginCommand notQuestsAdminCommand = main.getCommand("notquestsadmin");
+        PluginCommand notQuestsAdminCommand = main.getCommand("notquestsadmin");
         if (notQuestsAdminCommand != null) {
             final CommandNotQuestsAdmin commandNotQuestsAdmin = new CommandNotQuestsAdmin(main);
             notQuestsAdminCommand.setTabCompleter(commandNotQuestsAdmin);
