@@ -35,10 +35,10 @@ public class PerformanceManager {
     //Accurate way of getting the TPS through reflection
     private final String name = Bukkit.getServer().getClass().getPackage().getName();
     private final DecimalFormat format = new DecimalFormat("##.##");
-    private long msPerTick = 50;
     private long lastMS = 0;
     private float tickCounter = 0;
-    private int msCounter = 0;
+    private long msPerTick = 50;
+    private long msCounter = 0;
     private Object serverInstance;
     private Field tpsField;
 
@@ -86,7 +86,7 @@ public class PerformanceManager {
     }
 
 
-    private Class<?> getNMSClass(String className) {
+    private Class<?> getNMSClass(final String className) {
         try {
             return Class.forName("net.minecraft.server." + className);
 
@@ -108,9 +108,9 @@ public class PerformanceManager {
                 tickCounter++;
 
                 if (msCounter >= 1000) {
-                    int aboveASecond = msCounter - 1000;
+                    long aboveASecond = msCounter - 1000;
 
-                    tickCounter = tickCounter - (aboveASecond / tickCounter);
+                    //tickCounter = tickCounter - (aboveASecond / tickCounter);
 
                     //System.out.println("TPS: " + tickCounter);
 
