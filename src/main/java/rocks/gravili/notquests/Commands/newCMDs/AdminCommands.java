@@ -53,7 +53,7 @@ public class AdminCommands {
     private final NotQuests main;
     private final PaperCommandManager<CommandSender> manager;
     private final Command.Builder<CommandSender> builder;
-    private final ArrayList<String> placeholders;
+    public final ArrayList<String> placeholders;
     protected final MiniMessage miniMessage = MiniMessage.miniMessage();
     private final Date resultDate;
 
@@ -597,6 +597,15 @@ public class AdminCommands {
                     main.getDataManager().saveData();
                     audience.sendMessage(Component.empty());
                     audience.sendMessage(miniMessage.parse(successGradient + "NotQuests configuration and player data has been saved"));
+                }));
+
+        manager.command(builder.literal("version")
+                .meta(CommandMeta.DESCRIPTION, "Displays the version of the NotQuests plugin you're using.")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+
+
+                    audience.sendMessage(miniMessage.parse(mainGradient + "Current NotQuests version: " + highlightGradient + main.getDescription().getVersion()));
                 }));
 
     }

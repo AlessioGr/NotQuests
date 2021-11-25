@@ -38,11 +38,10 @@ import rocks.gravili.notquests.Commands.CommandNotQuests;
 import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.Commands.newCMDs.AdminCommands;
 import rocks.gravili.notquests.Commands.newCMDs.AdminEditCommands;
+import rocks.gravili.notquests.Commands.newCMDs.arguments.QuestSelector;
 import rocks.gravili.notquests.Commands.old.CommandNotQuestsAdmin;
 import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.Structs.Quest;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -52,10 +51,13 @@ public class CommandManager {
     private PaperCommandManager<CommandSender> commandManager;
     private MinecraftHelp<CommandSender> minecraftHelp;
     private Command.Builder<CommandSender> adminCommandBuilder;
+    private Command.Builder<CommandSender> adminEditCommandBuilder;
+
     private Command.Builder<CommandSender> adminEditAddObjectiveCommandBuilder;
 
     private final Commodore commodore;
 
+    private AdminCommands adminCommands;
 
     public CommandManager(final NotQuests main) {
         this.main = main;
@@ -110,21 +112,15 @@ public class CommandManager {
             adminCommandBuilder = commandManager.commandBuilder("qa2", ArgumentDescription.of("Admin commands for NotQuests"), "notquestsadmin2, nqa2")
                     .permission("notquests.admin");
 
-
-            adminEditAddObjectiveCommandBuilder = adminCommandBuilder
+            adminEditCommandBuilder = adminCommandBuilder
                     .literal("edit")
-                    .argument(StringArgument.<CommandSender>newBuilder("Quest Name").withSuggestionsProvider(
-                            (context, lastString) -> {
-                                final List<String> allArgs = context.getRawInput();
-                                final Audience audience = main.adventure().sender(context.getSender());
-                                main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Quest Name]", "[...]");
-                                ArrayList<String> completions = new ArrayList<>();
-                                for (Quest quest : main.getQuestManager().getAllQuests()) {
-                                    completions.add(quest.getQuestName());
-                                }
-                                return completions;
-                            }
-                    ).single().build(), ArgumentDescription.of("Quest Name"))
+                    .argument(new QuestSelector<>(
+                            true,
+                            "quest",
+                            main
+                    ), ArgumentDescription.of("Quest Name"));
+
+            adminEditAddObjectiveCommandBuilder = adminEditCommandBuilder
                     .literal("objectives")
                     .literal("add");
 
@@ -265,9 +261,9 @@ public class CommandManager {
 
         exceptionHandler.apply(commandManager, main.adventure()::sender);
 
-        new AdminCommands(main, commandManager, adminCommandBuilder);
+        adminCommands = new AdminCommands(main, commandManager, adminCommandBuilder);
 
-        new AdminEditCommands(main, commandManager, adminCommandBuilder);
+        new AdminEditCommands(main, commandManager, adminEditCommandBuilder);
 
 
     }
@@ -276,9 +272,16 @@ public class CommandManager {
         return commandManager;
     }
 
+    public final Command.Builder<CommandSender> getAdminEditCommandBuilder() {
+        return adminEditCommandBuilder;
+    }
+
     public final Command.Builder<CommandSender> getAdminEditAddObjectiveCommandBuilder() {
         return adminEditAddObjectiveCommandBuilder;
     }
 
 
+    public final AdminCommands getAdminCommands() {
+        return adminCommands;
+    }
 }
