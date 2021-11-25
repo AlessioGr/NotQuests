@@ -3,7 +3,7 @@ version: '${version}'
 main: rocks.gravili.notquests.NotQuests
 api-version: 1.17
 authors: [ NoeX ]
-description: Flexible, open, GUI Quest Plugin for Minecraft 1.17.1
+description: Flexible, open, GUI Quest Plugin for Minecraft 1.17 and 1.18
 website: quests.notnot.pro
 softdepend: [ Citizens, Vault, PlaceholderAPI, MythicMobs, EliteMobs, BetonQuest, WorldEdit ]
 commands:
