@@ -799,7 +799,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                     sender.sendMessage("§e" + counter + ". Type: §b" + trigger.getTriggerType());
 
                                     final String triggerDescription = trigger.getTriggerDescription();
-                                    if (!triggerDescription.isBlank()) {
+                                    if (triggerDescription != null && !triggerDescription.isBlank()) {
                                         sender.sendMessage("§7-- " + triggerDescription);
                                     }
 
@@ -1279,7 +1279,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                             applyOn = Integer.parseInt(args[6].substring(1));
                                         }
                                         if (applyOn != -1) {
-                                            final FailTrigger failTrigger = new FailTrigger(main, quest, quest.getTriggers().size() + 1, action, applyOn, args[7]);
+                                            final FailTrigger failTrigger = new FailTrigger(main, quest, quest.getTriggers().size() + 1, action, applyOn, args[7], 1);
                                             quest.addTrigger(failTrigger);
                                             sender.sendMessage("§aTrigger successfully added to quest §b" + quest.getQuestName() + "§a!");
                                         } else {
@@ -1300,7 +1300,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                             applyOn = Integer.parseInt(args[6].substring(1));
                                         }
                                         if (applyOn != -1) {
-                                            final CompleteTrigger completeTrigger = new CompleteTrigger(main, quest, quest.getTriggers().size() + 1, action, applyOn, args[7]);
+                                            final CompleteTrigger completeTrigger = new CompleteTrigger(main, quest, quest.getTriggers().size() + 1, action, applyOn, args[7], 1);
                                             quest.addTrigger(completeTrigger);
                                             sender.sendMessage("§aTrigger successfully added to quest §b" + quest.getQuestName() + "§a!");
                                         } else {
@@ -1320,7 +1320,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                             applyOn = Integer.parseInt(args[6].substring(1));
                                         }
                                         if (applyOn != -1) {
-                                            final BeginTrigger beginTrigger = new BeginTrigger(main, quest, quest.getTriggers().size() + 1, action, applyOn, args[7]);
+                                            final BeginTrigger beginTrigger = new BeginTrigger(main, quest, quest.getTriggers().size() + 1, action, applyOn, args[7], 1);
                                             quest.addTrigger(beginTrigger);
                                             sender.sendMessage("§aTrigger successfully added to quest §b" + quest.getQuestName() + "§a!");
                                         } else {
@@ -1340,7 +1340,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                             applyOn = Integer.parseInt(args[6].substring(1));
                                         }
                                         if (applyOn != -1) {
-                                            final DisconnectTrigger disconnectTrigger = new DisconnectTrigger(main, quest, quest.getTriggers().size() + 1, action, applyOn, args[7]);
+                                            final DisconnectTrigger disconnectTrigger = new DisconnectTrigger(main, quest, quest.getTriggers().size() + 1, action, applyOn, args[7], 1);
                                             quest.addTrigger(disconnectTrigger);
                                             sender.sendMessage("§aTrigger successfully added to quest §b" + quest.getQuestName() + "§a!");
                                         } else {

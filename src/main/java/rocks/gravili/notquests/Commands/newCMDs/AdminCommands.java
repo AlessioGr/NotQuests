@@ -304,7 +304,7 @@ public class AdminCommands {
                                 if (activeQuest1.getQuest() == activeQuest) {
                                     questPlayer.failQuest(activeQuest1);
                                     audience.sendMessage(miniMessage.parse(
-                                            successGradient + "The active quest " + highlightGradient + activeQuest1.getQuest().getQuestName() + "</gradient> has been failed for player " + highlight2Gradient + player.getName() + "</gradient!</gradient>"
+                                            successGradient + "The active quest " + highlightGradient + activeQuest1.getQuest().getQuestName() + "</gradient> has been failed for player " + highlight2Gradient + player.getName() + "</gradient>!</gradient>"
                                     ));
                                     return;
                                 }

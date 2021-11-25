@@ -30,8 +30,8 @@ public class FailTrigger extends Trigger {
 
     private final NotQuests main;
 
-    public FailTrigger(final NotQuests main, final Quest quest, final int triggerID, Action action, int applyOn, String worldName) {
-        super(main, quest, triggerID, action, applyOn, worldName, 1);
+    public FailTrigger(final NotQuests main, final Quest quest, final int triggerID, Action action, int applyOn, String worldName, long amountNeeded) {
+        super(main, quest, triggerID, action, applyOn, worldName, amountNeeded);
         this.main = main;
     }
 
