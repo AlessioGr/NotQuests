@@ -57,10 +57,12 @@ public class AdminCommands {
     private final MiniMessage miniMessage = MiniMessage.miniMessage();
     private final Date resultDate;
 
+
     public AdminCommands(final NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder) {
         this.main = main;
         this.manager = manager;
         this.builder = builder;
+
 
         placeholders = new ArrayList<>();
         placeholders.add("{PLAYER}");

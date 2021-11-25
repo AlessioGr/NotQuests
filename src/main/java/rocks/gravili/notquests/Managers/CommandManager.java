@@ -37,6 +37,7 @@ import org.bukkit.command.PluginCommand;
 import rocks.gravili.notquests.Commands.CommandNotQuests;
 import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.Commands.newCMDs.AdminCommands;
+import rocks.gravili.notquests.Commands.newCMDs.AdminEditCommands;
 import rocks.gravili.notquests.Commands.old.CommandNotQuestsAdmin;
 import rocks.gravili.notquests.NotQuests;
 
@@ -236,6 +237,8 @@ public class CommandManager {
         exceptionHandler.apply(commandManager, main.adventure()::sender);
 
         new AdminCommands(main, commandManager, builder);
+
+        new AdminEditCommands(main, commandManager, builder);
 
 
     }
