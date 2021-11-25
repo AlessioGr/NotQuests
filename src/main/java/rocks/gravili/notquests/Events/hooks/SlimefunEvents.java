@@ -19,15 +19,47 @@
 package rocks.gravili.notquests.Events.hooks;
 
 
+import io.github.thebusybiscuit.slimefun4.api.events.PlayerPreResearchEvent;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.ActiveObjective;
+import rocks.gravili.notquests.Structs.ActiveQuest;
+import rocks.gravili.notquests.Structs.Objectives.SlimefunResearchObjective;
+import rocks.gravili.notquests.Structs.QuestPlayer;
 
 public class SlimefunEvents implements Listener {
     private final NotQuests main;
 
+
     public SlimefunEvents(NotQuests main) {
         this.main = main;
+    }
 
+    @EventHandler
+    public void onPlayerResearch(final PlayerPreResearchEvent e) {
+        if (!e.isCancelled()) {
+            final Player player = e.getPlayer();
+            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+            if (questPlayer != null) {
+                if (questPlayer.getActiveQuests().size() > 0) {
+                    for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+                        for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
+                            if (activeObjective.isUnlocked()) {
+                                if (activeObjective.getObjective() instanceof SlimefunResearchObjective slimefunResearchObjective) {
+                                    activeObjective.addProgress(e.getResearch().getCost(), -1);
+
+                                }
+                            }
+
+                        }
+                        activeQuest.removeCompletedObjectives(true);
+                    }
+                    questPlayer.removeCompletedQuests();
+                }
+            }
+        }
     }
 
 

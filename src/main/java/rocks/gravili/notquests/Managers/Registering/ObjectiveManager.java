@@ -59,7 +59,7 @@ public class ObjectiveManager {
         registerObjective("KillEliteMobs", KillEliteMobsObjective.class); //TODO: only if EliteMobs enabled?
         registerObjective("ReachLocation", ReachLocationObjective.class);
         registerObjective("BreedMobs", BreedObjective.class);
-
+        registerObjective("SlimefunResearch", SlimefunResearchObjective.class);
 
         //registerObjectiveCommandCompletionHandler("KillMobs", this::eee);
     }

@@ -569,21 +569,22 @@ public class AdminEditCommands {
                 .handler((context) -> {
                     final Audience audience = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
-                    final Objective objective = quest.getObjectiveFromID(context.get("Objective ID"));
+                    final int objectiveID = context.get("Objective ID");
+                    final Objective objective = quest.getObjectiveFromID(objectiveID);
                     assert objective != null; //Shouldn't be null
 
                     audience.sendMessage(miniMessage.parse(
-                            mainGradient + "The completionNPCID of the objective with the ID " + highlightGradient + objective + "</gradient> is "
+                            mainGradient + "The completionNPCID of the objective with the ID " + highlightGradient + objectiveID + "</gradient> is "
                                     + highlight2Gradient + objective.getCompletionNPCID() + "</gradient>!</gradient>"
                     ));
                     if (objective.getCompletionArmorStandUUID() != null) {
                         audience.sendMessage(miniMessage.parse(
-                                mainGradient + "The completionNPCUUID (for armor stands)  of the objective with the ID " + highlightGradient + objective + "</gradient> is "
+                                mainGradient + "The completionNPCUUID (for armor stands) of the objective with the ID " + highlightGradient + objectiveID + "</gradient> is "
                                         + highlight2Gradient + objective.getCompletionArmorStandUUID() + "</gradient>!</gradient>"
                         ));
                     } else {
                         audience.sendMessage(miniMessage.parse(
-                                mainGradient + "The completionNPCUUID (for armor stands)  of the objective with the ID " + highlightGradient + objective + "</gradient> is "
+                                mainGradient + "The completionNPCUUID (for armor stands) of the objective with the ID " + highlightGradient + objectiveID + "</gradient> is "
                                         + highlight2Gradient + "null</gradient>!</gradient>"
                         ));
                     }
