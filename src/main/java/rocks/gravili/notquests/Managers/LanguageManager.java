@@ -345,59 +345,59 @@ public class LanguageManager {
         }
         //Chat Objectives Task Descriptions
         if (!getLanguageConfig().isString("chat.objectives.taskDescription.breakBlocks.base")) {
-            getLanguageConfig().set("chat.objectives.taskDescription.breakBlocks.base", "    &7%EVENTUALCOLOR%Block to break: &f%EVENTUALCOLOR%%BLOCKTOBREAK%");
+            getLanguageConfig().set("chat.objectives.taskDescription.breakBlocks.base", "    &8└─ &7%EVENTUALCOLOR%Block to break: &f%EVENTUALCOLOR%%BLOCKTOBREAK%");
             valueChanged = true;
         }
         if (!getLanguageConfig().isString("chat.objectives.taskDescription.breed.base")) {
-            getLanguageConfig().set("chat.objectives.taskDescription.breed.base", "    &7%EVENTUALCOLOR%Mob to breed: &f%EVENTUALCOLOR%%ENTITYTOBREED%");
+            getLanguageConfig().set("chat.objectives.taskDescription.breed.base", "    &8└─ &7%EVENTUALCOLOR%Mob to breed: &f%EVENTUALCOLOR%%ENTITYTOBREED%");
             valueChanged = true;
         }
         if (!getLanguageConfig().isString("chat.objectives.taskDescription.collectItems.base")) {
-            getLanguageConfig().set("chat.objectives.taskDescription.collectItems.base", "    &7%EVENTUALCOLOR%Items to collect: &f%EVENTUALCOLOR%%ITEMTOCOLLECTTYPE% (%ITEMTOCOLLECTNAME%)");
+            getLanguageConfig().set("chat.objectives.taskDescription.collectItems.base", "    &8└─ &7%EVENTUALCOLOR%Items to collect: &f%EVENTUALCOLOR%%ITEMTOCOLLECTTYPE% (%ITEMTOCOLLECTNAME%)");
             valueChanged = true;
         }
         if (!getLanguageConfig().isString("chat.objectives.taskDescription.consumeItems.base")) {
-            getLanguageConfig().set("chat.objectives.taskDescription.consumeItems.base", "    &7%EVENTUALCOLOR%Items to consume: &f%EVENTUALCOLOR%%ITEMTOCONSUMETYPE% (%ITEMTOCONSUMENAME%)");
+            getLanguageConfig().set("chat.objectives.taskDescription.consumeItems.base", "    &8└─ &7%EVENTUALCOLOR%Items to consume: &f%EVENTUALCOLOR%%ITEMTOCONSUMETYPE% (%ITEMTOCONSUMENAME%)");
             valueChanged = true;
         }
         if (!getLanguageConfig().isString("chat.objectives.taskDescription.craftItems.base")) {
-            getLanguageConfig().set("chat.objectives.taskDescription.craftItems.base", "    &7%EVENTUALCOLOR%Items to craft: &f%EVENTUALCOLOR%%ITEMTOCRAFTTYPE% (%ITEMTOCRAFTNAME%)");
+            getLanguageConfig().set("chat.objectives.taskDescription.craftItems.base", "    &8└─ &7%EVENTUALCOLOR%Items to craft: &f%EVENTUALCOLOR%%ITEMTOCRAFTTYPE% (%ITEMTOCRAFTNAME%)");
             valueChanged = true;
         }
         if (!getLanguageConfig().isString("chat.objectives.taskDescription.deliverItems.base")) {
-            getLanguageConfig().set("chat.objectives.taskDescription.deliverItems.base", "    &7%EVENTUALCOLOR%Items to deliver: &f%EVENTUALCOLOR%%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)");
+            getLanguageConfig().set("chat.objectives.taskDescription.deliverItems.base", "    &8└─ &7%EVENTUALCOLOR%Items to deliver: &f%EVENTUALCOLOR%%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)");
             valueChanged = true;
         }
         if (!getLanguageConfig().isString("chat.objectives.taskDescription.escortNPC.base")) {
-            getLanguageConfig().set("chat.objectives.taskDescription.escortNPC.base", "    &7%EVENTUALCOLOR%Escort &f%EVENTUALCOLOR%%NPCNAME% &7%EVENTUALCOLOR%to &f%EVENTUALCOLOR%%DESTINATIONNPCNAME%");
+            getLanguageConfig().set("chat.objectives.taskDescription.escortNPC.base", "    &8└─ &7%EVENTUALCOLOR%Escort &f%EVENTUALCOLOR%%NPCNAME% &7%EVENTUALCOLOR%to &f%EVENTUALCOLOR%%DESTINATIONNPCNAME%");
             valueChanged = true;
         }
         if (!getLanguageConfig().isString("chat.objectives.taskDescription.killMobs.base")) {
-            getLanguageConfig().set("chat.objectives.taskDescription.killMobs.base", "    &7%EVENTUALCOLOR%Mobs to kill: &f%EVENTUALCOLOR%%MOBTOKILL%");
+            getLanguageConfig().set("chat.objectives.taskDescription.killMobs.base", "    &8└─ &7%EVENTUALCOLOR%Mobs to kill: &f%EVENTUALCOLOR%%MOBTOKILL%");
             valueChanged = true;
         }
         if (!getLanguageConfig().isString("chat.objectives.taskDescription.otherQuest.base")) {
-            getLanguageConfig().set("chat.objectives.taskDescription.otherQuest.base", "    &7%EVENTUALCOLOR%Quest completion: &f%EVENTUALCOLOR%%OTHERQUESTNAME%");
+            getLanguageConfig().set("chat.objectives.taskDescription.otherQuest.base", "    &8└─ &7%EVENTUALCOLOR%Quest completion: &f%EVENTUALCOLOR%%OTHERQUESTNAME%");
             valueChanged = true;
         }
         if (!getLanguageConfig().isString("chat.objectives.taskDescription.reachLocation.base")) {
-            getLanguageConfig().set("chat.objectives.taskDescription.reachLocation.base", "    &7%EVENTUALCOLOR%Reach Location: &f%EVENTUALCOLOR%%LOCATIONNAME%");
+            getLanguageConfig().set("chat.objectives.taskDescription.reachLocation.base", "    &8└─ &7%EVENTUALCOLOR%Reach Location: &f%EVENTUALCOLOR%%LOCATIONNAME%");
             valueChanged = true;
         }
         if (!getLanguageConfig().isString("chat.objectives.taskDescription.talkToNPC.base")) {
-            getLanguageConfig().set("chat.objectives.taskDescription.talkToNPC.base", "    &7%EVENTUALCOLOR%Talk to &f%EVENTUALCOLOR%%NAME%");
+            getLanguageConfig().set("chat.objectives.taskDescription.talkToNPC.base", "    &8└─ &7%EVENTUALCOLOR%Talk to &f%EVENTUALCOLOR%%NAME%");
             valueChanged = true;
         }
         if (!getLanguageConfig().isString("chat.objectives.taskDescription.triggerCommand.base")) {
-            getLanguageConfig().set("chat.objectives.taskDescription.triggerCommand.base", "    &7%EVENTUALCOLOR%Goal: &f%EVENTUALCOLOR%%TRIGGERNAME%");
+            getLanguageConfig().set("chat.objectives.taskDescription.triggerCommand.base", "    &8└─ &7%EVENTUALCOLOR%Goal: &f%EVENTUALCOLOR%%TRIGGERNAME%");
             valueChanged = true;
         }
         if (!getLanguageConfig().isString("chat.objectives.taskDescription.killEliteMobs.base")) {
-            getLanguageConfig().set("chat.objectives.taskDescription.killEliteMobs.base", "    &7%EVENTUALCOLOR%Kill Elite Mob: &f%EVENTUALCOLOR%%ELITEMOBNAME%");
+            getLanguageConfig().set("chat.objectives.taskDescription.killEliteMobs.base", "    &8└─ &7%EVENTUALCOLOR%Kill Elite Mob: &f%EVENTUALCOLOR%%ELITEMOBNAME%");
             valueChanged = true;
         }
         if (!getLanguageConfig().isString("chat.objectives.taskDescription.killEliteMobs.any")) {
-            getLanguageConfig().set("chat.objectives.taskDescription.killEliteMobs.any", "    &7%EVENTUALCOLOR%Kill any Elite Mob!");
+            getLanguageConfig().set("chat.objectives.taskDescription.killEliteMobs.any", "    &8└─ &7%EVENTUALCOLOR%Kill any Elite Mob!");
             valueChanged = true;
         }
 

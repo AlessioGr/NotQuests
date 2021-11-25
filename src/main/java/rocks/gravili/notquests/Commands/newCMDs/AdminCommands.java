@@ -769,7 +769,7 @@ public class AdminCommands {
                     audience.sendMessage(miniMessage.parse(mainGradient + "All Actions:"));
                     for (final Action action : main.getQuestManager().getAllActions()) {
                         audience.sendMessage(miniMessage.parse(highlightGradient + counter + ".</gradient> " + mainGradient + action.getActionName()));
-                        audience.sendMessage(miniMessage.parse(unimportant + "--- Command: " + highlight2Gradient + action.getConsoleCommand()));
+                        audience.sendMessage(miniMessage.parse(veryUnimportant + "  └─ " + unimportant + "Command: " + highlight2Gradient + action.getConsoleCommand()));
                         counter += 1;
                     }
                 }));
