@@ -249,6 +249,24 @@ public class AdminCommands {
                     }
                 }));
 
+
+        manager.command(builder.literal("debug")
+
+                .meta(CommandMeta.DESCRIPTION, "Toggles debug mode for yourself.")
+                .senderType(Player.class)
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+
+                    if (main.getQuestManager().isDebugEnabledPlayer((Player) context.getSender())) {
+                        main.getQuestManager().removeDebugEnabledPlayer((Player) context.getSender());
+                        audience.sendMessage(miniMessage.parse(successGradient + "Your debug mode has been disabled."));
+                    } else {
+                        main.getQuestManager().addDebugEnabledPlayer((Player) context.getSender());
+                        audience.sendMessage(miniMessage.parse(successGradient + "Your debug mode has been enabled."));
+                    }
+
+                }));
+
     }
 
 

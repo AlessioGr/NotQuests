@@ -19,10 +19,12 @@
 package rocks.gravili.notquests.Structs;
 
 
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
+import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.Events.notquests.QuestPointsChangeEvent;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Objectives.OtherQuestObjective;
@@ -328,6 +330,16 @@ public class QuestPlayer {
         final Player player = getPlayer();
         if (player != null) {
             player.sendMessage(message);
+        }
+    }
+
+    public void sendDebugMessage(String message) {
+        final Player player = getPlayer();
+        if (player != null) {
+            if (main.getQuestManager().isDebugEnabledPlayer(player)) {
+                main.adventure().player(player).sendMessage(MiniMessage.miniMessage().parse(NotQuestColors.debugTitleGradient + "[NotQuests Debug]</gradient> " + NotQuestColors.debugGradient + message + "</gradient>"));
+            }
+
         }
     }
 

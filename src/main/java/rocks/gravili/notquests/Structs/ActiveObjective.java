@@ -21,6 +21,7 @@ package rocks.gravili.notquests.Structs;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Objectives.EscortNPCObjective;
 import rocks.gravili.notquests.Structs.Objectives.Objective;
@@ -180,6 +181,7 @@ public class ActiveObjective {
             setHasBeenCompleted(true);
             activeQuest.notifyActiveObjectiveCompleted(this, false, NPCID);
         }
+        getQuestPlayer().sendDebugMessage("+" + i + " progress for objective " + NotQuestColors.debugHighlightGradient + getObjective().getObjectiveFinalName() + "</gradient> of quest " + NotQuestColors.debugHighlightGradient + getActiveQuest().getQuest().getQuestFinalName() + "</gradient>.");
     }
 
     //For Armor Stands
@@ -189,6 +191,7 @@ public class ActiveObjective {
             setHasBeenCompleted(true);
             activeQuest.notifyActiveObjectiveCompleted(this, false, armorStandUUID);
         }
+        getQuestPlayer().sendDebugMessage("+" + i + " progress for objective " + NotQuestColors.debugHighlightGradient + getObjective().getObjectiveFinalName() + "</gradient> of quest " + NotQuestColors.debugHighlightGradient + getActiveQuest().getQuest().getQuestFinalName() + "</gradient>.");
     }
 
     //For Citizens NPCs
@@ -198,6 +201,7 @@ public class ActiveObjective {
             setHasBeenCompleted(true);
             activeQuest.notifyActiveObjectiveCompleted(this, true, NPCID);
         }
+        getQuestPlayer().sendDebugMessage("[Silent] +" + i + " progress for objective " + NotQuestColors.debugHighlightGradient + getObjective().getObjectiveFinalName() + "</gradient> of quest " + NotQuestColors.debugHighlightGradient + getActiveQuest().getQuest().getQuestFinalName() + "</gradient>.");
     }
 
     //For Armor Stands
@@ -207,6 +211,7 @@ public class ActiveObjective {
             setHasBeenCompleted(true);
             activeQuest.notifyActiveObjectiveCompleted(this, true, armorStandUUID);
         }
+        getQuestPlayer().sendDebugMessage("[Silent] +" + i + " progress for objective " + NotQuestColors.debugHighlightGradient + getObjective().getObjectiveFinalName() + "</gradient> of quest " + NotQuestColors.debugHighlightGradient + getActiveQuest().getQuest().getQuestFinalName() + "</gradient>.");
     }
 
     public void removeProgress(int i, boolean capAtZero) {
@@ -223,6 +228,7 @@ public class ActiveObjective {
             currentProgress -= i;
         }
 
+        getQuestPlayer().sendDebugMessage("-" + i + " progress for objective " + NotQuestColors.debugHighlightGradient + getObjective().getObjectiveFinalName() + "</gradient> of quest " + NotQuestColors.debugHighlightGradient + getActiveQuest().getQuest().getQuestFinalName() + "</gradient>.");
 
     }
 

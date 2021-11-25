@@ -35,4 +35,7 @@ public class NotQuestColors {
 
     public static String warningGradient = "<gradient:#fff700:#ffa629>";
 
+    public static String debugTitleGradient = "<gradient:#abfff5:#c7fff8>";
+    public static String debugGradient = "<gradient:#8a98c2:#8ac2bb>";
+    public static String debugHighlightGradient = "<gradient:#009dff:#00e5ff>";
 }

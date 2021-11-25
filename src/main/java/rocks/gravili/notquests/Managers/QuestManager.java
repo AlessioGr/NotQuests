@@ -69,11 +69,15 @@ public class QuestManager {
     private final String rewardTypesList, requirementsTypesList;
     private String objectiveTypesList;
 
+    private final ArrayList<Player> debugEnabledPlayers;
+
 
     public QuestManager(NotQuests main) {
         this.main = main;
         quests = new ArrayList<>();
         actions = new ArrayList<>();
+
+        debugEnabledPlayers = new ArrayList<>();
 
         objectiveTypesList = """
                 §eObjective Types:
@@ -1378,7 +1382,7 @@ public class QuestManager {
                     continue;
                 }
                 final Location npcLocation = npc.getEntity().getLocation();
-                if (npcLocation.getWorld().equals(player.getWorld())) {
+                if (npcLocation.getWorld() != null && npcLocation.getWorld().equals(player.getWorld())) {
                     if (npcLocation.distance(player.getLocation()) < closenessCheckDistance) {
                         return true;
                     }
@@ -1401,6 +1405,22 @@ public class QuestManager {
 
     public final String getRequirementsTypesList() {
         return requirementsTypesList;
+    }
+
+    public final ArrayList<Player> getDebugEnabledPlayers() {
+        return debugEnabledPlayers;
+    }
+
+    public void addDebugEnabledPlayer(final Player player) {
+        this.debugEnabledPlayers.add(player);
+    }
+
+    public void removeDebugEnabledPlayer(final Player player) {
+        this.debugEnabledPlayers.remove(player);
+    }
+
+    public final boolean isDebugEnabledPlayer(final Player player) {
+        return this.debugEnabledPlayers.contains(player);
     }
 
 }
