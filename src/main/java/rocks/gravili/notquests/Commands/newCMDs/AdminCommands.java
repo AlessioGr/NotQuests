@@ -38,10 +38,9 @@ import org.bukkit.entity.Player;
 import rocks.gravili.notquests.Commands.newCMDs.arguments.ActiveQuestSelector;
 import rocks.gravili.notquests.Commands.newCMDs.arguments.QuestSelector;
 import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.Structs.ActiveQuest;
-import rocks.gravili.notquests.Structs.CompletedQuest;
-import rocks.gravili.notquests.Structs.Quest;
-import rocks.gravili.notquests.Structs.QuestPlayer;
+import rocks.gravili.notquests.Structs.*;
+import rocks.gravili.notquests.Structs.Objectives.Objective;
+import rocks.gravili.notquests.Structs.Objectives.TriggerCommandObjective;
 import rocks.gravili.notquests.Structs.Triggers.Action;
 
 import java.util.ArrayList;
@@ -165,7 +164,7 @@ public class AdminCommands {
 
         handleQuestPoints();
 
-        manager.command(builder.literal("activequests")
+        manager.command(builder.literal("activeQuests")
                 .argument(SinglePlayerSelectorArgument.of("player"), ArgumentDescription.of("Player whose active quests you want to see."))
                 .meta(CommandMeta.DESCRIPTION, "Shows the active quests of a player.")
                 .handler((context) -> {
@@ -203,7 +202,7 @@ public class AdminCommands {
                     }
                 }));
 
-        manager.command(builder.literal("completedquests")
+        manager.command(builder.literal("completedQuests")
                 .argument(SinglePlayerSelectorArgument.of("player"), ArgumentDescription.of("Player whose completed quests you want to see."))
                 .meta(CommandMeta.DESCRIPTION, "Shows the completed quests of a player.")
                 .handler((context) -> {
@@ -265,6 +264,337 @@ public class AdminCommands {
                         audience.sendMessage(miniMessage.parse(successGradient + "Your debug mode has been enabled."));
                     }
 
+                }));
+
+        manager.command(builder.literal("progress")
+                .argument(SinglePlayerSelectorArgument.of("player"), ArgumentDescription.of("Player progress you want to see"))
+                .argument(new ActiveQuestSelector<>(
+                        true,
+                        "quest",
+                        main,
+                        "player"
+                ), ArgumentDescription.of("Quest name of the quest you wish to see the progress for."))
+                .meta(CommandMeta.DESCRIPTION, "Shows the progress for a quest of another player")
+                .handler((context) -> {
+                    final SinglePlayerSelector singlePlayerSelector = context.get("player");
+                    getProgress(context.getSender(), singlePlayerSelector.getPlayer(), singlePlayerSelector.getSelector(), context.get("quest"));
+                }));
+
+
+        manager.command(builder.literal("failQuest")
+                .argument(SinglePlayerSelectorArgument.of("player"), ArgumentDescription.of("Player name whose quest should be failed."))
+                .argument(new ActiveQuestSelector<>(
+                        true,
+                        "activequest",
+                        main,
+                        "player"
+                ), ArgumentDescription.of("Active quest which should be failed."))
+                .meta(CommandMeta.DESCRIPTION, "Fails an active quest for a player")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+                    final SinglePlayerSelector singlePlayerSelector = context.get("player");
+                    final Player player = singlePlayerSelector.getPlayer();
+                    final Quest activeQuest = context.get("activequest");
+                    if (player != null) {
+                        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                        if (questPlayer != null) {
+                            for (final ActiveQuest activeQuest1 : questPlayer.getActiveQuests()) {
+                                if (activeQuest1.getQuest() == activeQuest) {
+                                    questPlayer.failQuest(activeQuest1);
+                                    audience.sendMessage(miniMessage.parse(
+                                            successGradient + "The active quest " + highlightGradient + activeQuest1.getQuest().getQuestName() + "</gradient> has been failed for player " + highlight2Gradient + player.getName() + "</gradient!</gradient>"
+                                    ));
+                                    return;
+                                }
+                            }
+                        } else {
+                            audience.sendMessage(miniMessage.parse(
+                                    errorGradient + "Player " + highlightGradient + singlePlayerSelector.getSelector() + "</gradient> seems to not have accepted any quests!</gradient>"
+                            ));
+                        }
+                    } else {
+                        audience.sendMessage(miniMessage.parse(
+                                errorGradient + "Player " + highlightGradient + singlePlayerSelector.getSelector() + "</gradient> is not online or was not found!</gradient>"
+                        ));
+                    }
+                }));
+
+
+        manager.command(builder.literal("completeQuest")
+                .argument(SinglePlayerSelectorArgument.of("player"), ArgumentDescription.of("Player name whose quest should be completed."))
+                .argument(new ActiveQuestSelector<>(
+                        true,
+                        "activequest",
+                        main,
+                        "player"
+                ), ArgumentDescription.of("Active quest which should be completed."))
+                .meta(CommandMeta.DESCRIPTION, "Completes an active quest for a player")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+                    final SinglePlayerSelector singlePlayerSelector = context.get("player");
+                    final Player player = singlePlayerSelector.getPlayer();
+                    final Quest activeQuest = context.get("activequest");
+                    if (player != null) {
+                        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                        if (questPlayer != null) {
+                            for (final ActiveQuest activeQuest1 : questPlayer.getActiveQuests()) {
+                                if (activeQuest1.getQuest() == activeQuest) {
+                                    questPlayer.forceActiveQuestCompleted(activeQuest1);
+                                    audience.sendMessage(miniMessage.parse(
+                                            successGradient + "The active quest " + highlightGradient + activeQuest1.getQuest().getQuestName() + "</gradient> has been completed for player " + highlight2Gradient + player.getName() + "</gradient>!</gradient>"
+                                    ));
+                                    return;
+                                }
+                            }
+                        } else {
+                            audience.sendMessage(miniMessage.parse(
+                                    errorGradient + "Player " + highlightGradient + singlePlayerSelector.getSelector() + "</gradient> seems to not have accepted any quests!</gradient>"
+                            ));
+                        }
+                    } else {
+                        audience.sendMessage(miniMessage.parse(
+                                errorGradient + "Player " + highlightGradient + singlePlayerSelector.getSelector() + "</gradient> is not online or was not found!</gradient>"
+                        ));
+                    }
+                }));
+
+        manager.command(builder.literal("listObjectiveTypes")
+                .meta(CommandMeta.DESCRIPTION, "Shows you a list of all available Objective Types.")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+                    audience.sendMessage(Component.empty());
+                    audience.sendMessage(miniMessage.parse(highlightGradient + "All objective types:</gradient>"));
+                    for (final String objectiveType : main.getObjectiveManager().getObjectiveIdentifiers()) {
+                        audience.sendMessage(miniMessage.parse(mainGradient + objectiveType));
+                    }
+                }));
+
+        manager.command(builder.literal("listRewardTypes")
+                .meta(CommandMeta.DESCRIPTION, "Shows you a list of all available Reward Types.")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+                    audience.sendMessage(Component.empty());
+                    audience.sendMessage(miniMessage.parse(highlightGradient + "All reward types:</gradient>"));
+                    for (final String rewardType : main.getQuestManager().getRewardTypesList()) {
+                        audience.sendMessage(miniMessage.parse(mainGradient + rewardType));
+                    }
+                }));
+
+        manager.command(builder.literal("listRequirementTypes")
+                .meta(CommandMeta.DESCRIPTION, "Shows you a list of all available Requirement Types.")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+                    audience.sendMessage(Component.empty());
+                    audience.sendMessage(miniMessage.parse(highlightGradient + "All requirement types:</gradient>"));
+                    for (final String requirementType : main.getQuestManager().getRequirementsTypesList()) {
+                        audience.sendMessage(miniMessage.parse(mainGradient + requirementType));
+                    }
+                }));
+
+        manager.command(builder.literal("listAllQuests")
+                .meta(CommandMeta.DESCRIPTION, "Shows you a list of all created Quests.")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+                    audience.sendMessage(Component.empty());
+                    int counter = 1;
+                    audience.sendMessage(miniMessage.parse(highlightGradient + "All Quests:</gradient>"));
+                    for (final Quest quest : main.getQuestManager().getAllQuests()) {
+                        audience.sendMessage(miniMessage.parse(highlightGradient + counter + ".</gradient> " + mainGradient + quest.getQuestName()));
+                        counter += 1;
+                    }
+
+                }));
+
+        manager.command(builder.literal("listPlaceholders")
+                .meta(CommandMeta.DESCRIPTION, "Shows you a list of all available Placeholders which can be used in Trigger or Action commands.")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+                    audience.sendMessage(Component.empty());
+
+                    audience.sendMessage(miniMessage.parse(highlightGradient + "All Placeholders (Case-sensitive):</gradient>"));
+                    audience.sendMessage(miniMessage.parse(highlightGradient + "1.</gradient> " + highlight2Gradient + "{PLAYER} </gradient>" + mainGradient + "- Name of the player"));
+                    audience.sendMessage(miniMessage.parse(highlightGradient + "2.</gradient> " + highlight2Gradient + "{PLAYERUUID} </gradient>" + mainGradient + "- UUID of the player"));
+                    audience.sendMessage(miniMessage.parse(highlightGradient + "3.</gradient> " + highlight2Gradient + "{PLAYERX} </gradient>" + mainGradient + "- X coordinates of the player"));
+                    audience.sendMessage(miniMessage.parse(highlightGradient + "4.</gradient> " + highlight2Gradient + "{PLAYERY} </gradient>" + mainGradient + "- Y coordinates of the player"));
+                    audience.sendMessage(miniMessage.parse(highlightGradient + "5.</gradient> " + highlight2Gradient + "{PLAYERZ} </gradient>" + mainGradient + "- Z coordinates of the player"));
+                    audience.sendMessage(miniMessage.parse(highlightGradient + "6.</gradient> " + highlight2Gradient + "{WORLD} </gradient>" + mainGradient + "- World name of the player"));
+                    audience.sendMessage(miniMessage.parse(highlightGradient + "6.</gradient> " + highlight2Gradient + "{QUEST} </gradient>" + mainGradient + "- Quest name (if relevant)"));
+
+                }));
+
+        manager.command(builder.literal("triggerObjective")
+                .argument(StringArgument.<CommandSender>newBuilder("Trigger Name").withSuggestionsProvider(
+                        (context, lastString) -> {
+                            final List<String> allArgs = context.getRawInput();
+                            final Audience audience = main.adventure().sender(context.getSender());
+                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Trigger Name]", "[Player Name]");
+
+                            ArrayList<String> completions = new ArrayList<>();
+                            for (final Quest quest : main.getQuestManager().getAllQuests()) {
+                                for (final Objective objective : quest.getObjectives()) {
+                                    if (objective instanceof final TriggerCommandObjective triggerCommandObjective) {
+                                        completions.add(triggerCommandObjective.getTriggerName());
+                                    }
+                                }
+                            }
+
+                            return completions;
+                        }
+                ).single().build(), ArgumentDescription.of("Name of the trigger which should be triggered."))
+                .argument(SinglePlayerSelectorArgument.of("Player Name"), ArgumentDescription.of("Player whose trigger should e triggered."))
+                .meta(CommandMeta.DESCRIPTION, "This triggers the Trigger Command which is needed to complete a TriggerObjective (don't mistake it with Triggers & actions).")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+
+                    final String triggerName = context.get("Trigger Name");
+                    final SinglePlayerSelector singlePlayerSelector = context.get("Player Name");
+                    final Player player = singlePlayerSelector.getPlayer();
+                    if (player != null) {
+                        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                        if (questPlayer != null) {
+                            if (questPlayer.getActiveQuests().size() > 0) {
+                                for (ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+                                    for (ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
+                                        if (activeObjective.isUnlocked()) {
+                                            if (activeObjective.getObjective() instanceof TriggerCommandObjective triggerCommandObjective) {
+                                                if (triggerCommandObjective.getTriggerName().equalsIgnoreCase(triggerName)) {
+                                                    activeObjective.addProgress(1, -1);
+
+                                                }
+                                            }
+                                        }
+
+                                    }
+                                    activeQuest.removeCompletedObjectives(true);
+                                }
+                                questPlayer.removeCompletedQuests();
+                            }
+                        }
+
+                    } else {
+                        audience.sendMessage(miniMessage.parse(errorGradient + "Objective TriggerCommand failed. Player " + highlightGradient + singlePlayerSelector.getSelector()
+                                + "</gradient> is not online or was not found!</gradient>"
+                        ));
+                    }
+                }));
+
+        manager.command(builder.literal("resetAndRemoveQuestForAllPlayers")
+                .argument(new QuestSelector<>(
+                        true,
+                        "Quest Name",
+                        main
+                ), ArgumentDescription.of("Name of the Quest which should be reset and removed."))
+                .meta(CommandMeta.DESCRIPTION, "Removes the quest from all players, removes it from completed quests, resets the accept cooldown and basically everything else.")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+                    audience.sendMessage(Component.empty());
+
+                    final Quest quest = context.get("Quest Name");
+                    for (final QuestPlayer questPlayer : main.getQuestPlayerManager().getQuestPlayers()) {
+                        final ArrayList<ActiveQuest> activeQuestsToRemove = new ArrayList<>();
+                        for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+                            if (activeQuest.getQuest().equals(quest)) {
+                                activeQuestsToRemove.add(activeQuest);
+                                audience.sendMessage(miniMessage.parse(successGradient + "Removed the quest as an active quest for the player with the UUID "
+                                        + highlightGradient + questPlayer.getUUID().toString() + "</gradient> and name "
+                                        + highlight2Gradient + Bukkit.getOfflinePlayer(questPlayer.getUUID()).getName() + "</gradient>.</gradient>"
+                                ));
+
+                            }
+                        }
+
+                        questPlayer.getActiveQuests().removeAll(activeQuestsToRemove);
+
+                        final ArrayList<CompletedQuest> completedQuestsToRemove = new ArrayList<>();
+
+                        for (final CompletedQuest completedQuest : questPlayer.getCompletedQuests()) {
+                            if (completedQuest.getQuest().equals(quest)) {
+                                completedQuestsToRemove.add(completedQuest);
+                                audience.sendMessage(miniMessage.parse(successGradient + "Removed the quest as a completed quest for the player with the UUID "
+                                        + highlightGradient + questPlayer.getUUID().toString() + "</gradient> and name "
+                                        + highlight2Gradient + Bukkit.getOfflinePlayer(questPlayer.getUUID()).getName() + "</gradient>.</gradient>"
+                                ));
+                            }
+
+                        }
+
+                        questPlayer.getCompletedQuests().removeAll(completedQuestsToRemove);
+                    }
+                    audience.sendMessage(miniMessage.parse(successGradient + "Operation done!"));
+                }));
+
+        manager.command(builder.literal("resetAndFailQuestForAllPlayers")
+                .argument(new QuestSelector<>(
+                        true,
+                        "Quest Name",
+                        main
+                ), ArgumentDescription.of("Name of the Quest which should be reset and failed."))
+                .meta(CommandMeta.DESCRIPTION, "Fails the quest from all players, removes it from completed quests, resets the accept cooldown and basically everything else.")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+                    audience.sendMessage(Component.empty());
+
+                    final Quest quest = context.get("Quest Name");
+
+
+                    for (final QuestPlayer questPlayer : main.getQuestPlayerManager().getQuestPlayers()) {
+                        final ArrayList<ActiveQuest> activeQuestsToRemove = new ArrayList<>();
+                        for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+                            if (activeQuest.getQuest().equals(quest)) {
+                                activeQuestsToRemove.add(activeQuest);
+                            }
+                        }
+
+                        for (final ActiveQuest activeQuest : activeQuestsToRemove) {
+                            questPlayer.failQuest(activeQuest);
+                            audience.sendMessage(miniMessage.parse(successGradient + "Failed the quest as an active quest for the player with the UUID "
+                                    + highlightGradient + questPlayer.getUUID().toString() + "</gradient> and name "
+                                    + highlight2Gradient + Bukkit.getOfflinePlayer(questPlayer.getUUID()).getName() + "</gradient>.</gradient>"
+                            ));
+
+                        }
+
+                        // questPlayer.getActiveQuests().removeAll(activeQuestsToRemove);
+
+                        final ArrayList<CompletedQuest> completedQuestsToRemove = new ArrayList<>();
+
+                        for (final CompletedQuest completedQuest : questPlayer.getCompletedQuests()) {
+                            if (completedQuest.getQuest().equals(quest)) {
+                                completedQuestsToRemove.add(completedQuest);
+                                audience.sendMessage(miniMessage.parse(successGradient + "Removed the quest as a completed quest for the player with the UUID "
+                                        + highlightGradient + questPlayer.getUUID().toString() + "</gradient> and name "
+                                        + highlight2Gradient + Bukkit.getOfflinePlayer(questPlayer.getUUID()).getName() + "</gradient>.</gradient>"
+                                ));
+                            }
+
+                        }
+
+                        questPlayer.getCompletedQuests().removeAll(completedQuestsToRemove);
+                    }
+                    audience.sendMessage(miniMessage.parse(successGradient + "Operation done!"));
+
+                }));
+
+
+        manager.command(builder.literal("reload", "load")
+                .meta(CommandMeta.DESCRIPTION, "Loads from the NotQuests configuration file.")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+
+                    main.getDataManager().loadGeneralConfig();
+                    main.getLanguageManager().loadLanguageConfig();
+                    audience.sendMessage(Component.empty());
+                    audience.sendMessage(miniMessage.parse(successGradient + "NotQuests general.yml and language configuration have been re-loaded. </gradient>" + unimportant + "If you want to reload more, please use the ServerUtils plugin (available on spigot) or restart the server. This reload command does not reload the quests file or the database."));
+                }));
+
+        manager.command(builder.literal("save")
+                .meta(CommandMeta.DESCRIPTION, "Saves the NotQuests configuration file.")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+
+                    main.getDataManager().saveData();
+                    audience.sendMessage(Component.empty());
+                    audience.sendMessage(miniMessage.parse(successGradient + "NotQuests configuration and player data has been saved"));
                 }));
 
     }
@@ -501,97 +831,7 @@ public class AdminCommands {
                 }));
 
 
-        manager.command(builder.literal("progress")
-                .argument(SinglePlayerSelectorArgument.of("player"), ArgumentDescription.of("Player progress you want to see"))
-                .argument(new ActiveQuestSelector<>(
-                        true,
-                        "quest",
-                        main,
-                        "player"
-                ), ArgumentDescription.of("Quest name of the quest you wish to see the progress for."))
-                .meta(CommandMeta.DESCRIPTION, "Shows the progress for a quest of another player")
-                .handler((context) -> {
-                    final SinglePlayerSelector singlePlayerSelector = context.get("player");
-                    getProgress(context.getSender(), singlePlayerSelector.getPlayer(), singlePlayerSelector.getSelector(), context.get("quest"));
-                }));
 
-
-        manager.command(builder.literal("failQuest")
-                .argument(SinglePlayerSelectorArgument.of("player"), ArgumentDescription.of("Player name whose quest should be failed."))
-                .argument(new ActiveQuestSelector<>(
-                        true,
-                        "activequest",
-                        main,
-                        "player"
-                ), ArgumentDescription.of("Active quest which should be failed."))
-                .meta(CommandMeta.DESCRIPTION, "Fails an active quest for a player")
-                .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-                    final SinglePlayerSelector singlePlayerSelector = context.get("player");
-                    final Player player = singlePlayerSelector.getPlayer();
-                    final Quest activeQuest = context.get("activequest");
-                    if (player != null) {
-                        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
-                        if (questPlayer != null) {
-                            for (final ActiveQuest activeQuest1 : questPlayer.getActiveQuests()) {
-                                if (activeQuest1.getQuest() == activeQuest) {
-                                    questPlayer.failQuest(activeQuest1);
-                                    audience.sendMessage(miniMessage.parse(
-                                            successGradient + "The active quest " + highlightGradient + activeQuest1.getQuest().getQuestName() + "</gradient> has been failed for player " + highlight2Gradient + player.getName() + "</gradient!</gradient>"
-                                    ));
-                                    return;
-                                }
-                            }
-                        } else {
-                            audience.sendMessage(miniMessage.parse(
-                                    errorGradient + "Player " + highlightGradient + singlePlayerSelector.getSelector() + "</gradient> seems to not have accepted any quests!</gradient>"
-                            ));
-                        }
-                    } else {
-                        audience.sendMessage(miniMessage.parse(
-                                errorGradient + "Player " + highlightGradient + singlePlayerSelector.getSelector() + "</gradient> is not online or was not found!</gradient>"
-                        ));
-                    }
-                }));
-
-
-        manager.command(builder.literal("completeQuest")
-                .argument(SinglePlayerSelectorArgument.of("player"), ArgumentDescription.of("Player name whose quest should be completed."))
-                .argument(new ActiveQuestSelector<>(
-                        true,
-                        "activequest",
-                        main,
-                        "player"
-                ), ArgumentDescription.of("Active quest which should be completed."))
-                .meta(CommandMeta.DESCRIPTION, "Completes an active quest for a player")
-                .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-                    final SinglePlayerSelector singlePlayerSelector = context.get("player");
-                    final Player player = singlePlayerSelector.getPlayer();
-                    final Quest activeQuest = context.get("activequest");
-                    if (player != null) {
-                        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
-                        if (questPlayer != null) {
-                            for (final ActiveQuest activeQuest1 : questPlayer.getActiveQuests()) {
-                                if (activeQuest1.getQuest() == activeQuest) {
-                                    questPlayer.forceActiveQuestCompleted(activeQuest1);
-                                    audience.sendMessage(miniMessage.parse(
-                                            successGradient + "The active quest " + highlightGradient + activeQuest1.getQuest().getQuestName() + "</gradient> has been completed for player " + highlight2Gradient + player.getName() + "</gradient!</gradient>"
-                                    ));
-                                    return;
-                                }
-                            }
-                        } else {
-                            audience.sendMessage(miniMessage.parse(
-                                    errorGradient + "Player " + highlightGradient + singlePlayerSelector.getSelector() + "</gradient> seems to not have accepted any quests!</gradient>"
-                            ));
-                        }
-                    } else {
-                        audience.sendMessage(miniMessage.parse(
-                                errorGradient + "Player " + highlightGradient + singlePlayerSelector.getSelector() + "</gradient> is not online or was not found!</gradient>"
-                        ));
-                    }
-                }));
     }
 
 
@@ -766,7 +1006,7 @@ public class AdminCommands {
                 .handler((context) -> {
                     final Audience audience = main.adventure().sender(context.getSender());
                     int counter = 1;
-                    audience.sendMessage(miniMessage.parse(mainGradient + "All Actions:"));
+                    audience.sendMessage(miniMessage.parse(highlightGradient + "All Actions:"));
                     for (final Action action : main.getQuestManager().getAllActions()) {
                         audience.sendMessage(miniMessage.parse(highlightGradient + counter + ".</gradient> " + mainGradient + action.getActionName()));
                         audience.sendMessage(miniMessage.parse(veryUnimportant + "  └─ " + unimportant + "Command: " + highlight2Gradient + action.getConsoleCommand()));

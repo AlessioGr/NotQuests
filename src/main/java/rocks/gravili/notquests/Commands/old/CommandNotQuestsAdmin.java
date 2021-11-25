@@ -159,9 +159,13 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                     main.getDataManager().saveData();
                     sender.sendMessage("§aNotQuests configuration and player data has been saved");
                 } else if (args[0].equalsIgnoreCase("listobjectivetypes")) {
-                    sender.sendMessage(main.getQuestManager().getObjectiveTypesList());
+                    for (final String objectiveType : main.getObjectiveManager().getObjectiveIdentifiers()) {
+                        sender.sendMessage(objectiveType);
+                    }
                 } else if (args[0].equalsIgnoreCase("listrewardtypes")) {
-                    sender.sendMessage(main.getQuestManager().getRewardTypesList());
+                    for (String reward : main.getQuestManager().getRewardTypesList()) {
+                        sender.sendMessage(reward);
+                    }
                 } else if (args[0].equalsIgnoreCase("resetAndRemoveQuestForAllPlayers")) {
                     sender.sendMessage("§cMissing 2. argument §3[Quest Name]§c. Specify the §bname of the quest§c which should be reset and removed.");
                     sender.sendMessage("§e/qadmin §6resetAndRemoveQuestForAllPlayers §3[Quest Name] §7| Resets & removes specified quest for all players");
@@ -169,7 +173,9 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                     sender.sendMessage("§cMissing 2. argument §3[Quest Name]§c. Specify the §bname of the quest§c which should be reset and failed.");
                     sender.sendMessage("§e/qadmin §6resetAndFailQuestForAllPlayers §3[Quest Name] §7| Resets & fails specified quest for all players");
                 } else if (args[0].equalsIgnoreCase("listrequirementtypes")) {
-                    sender.sendMessage(main.getQuestManager().getRequirementsTypesList());
+                    for (String requirement : main.getQuestManager().getRequirementsTypesList()) {
+                        sender.sendMessage(requirement);
+                    }
                 } else if (args[0].equalsIgnoreCase("listallquests")) {
                     int counter = 1;
                     sender.sendMessage("§eAll Quests:");
@@ -728,7 +734,9 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                             if (args[3].equalsIgnoreCase("add")) {
                                 sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6requirements add §3[Requirement Type] ...");
                                 sender.sendMessage("§cPlease specify a requirement type!");
-                                sender.sendMessage(main.getQuestManager().getRequirementsTypesList());
+                                for (String requirement : main.getQuestManager().getRequirementsTypesList()) {
+                                    sender.sendMessage(requirement);
+                                }
                             } else if (args[3].equalsIgnoreCase("list")) {
                                 sender.sendMessage("§9Requirements for quest §b" + quest.getQuestName() + "§9:");
                                 int counter = 1;
@@ -1655,7 +1663,9 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
             if (args[3].equalsIgnoreCase("add")) {
                 sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards add §3[Reward Type] ...");
                 sender.sendMessage("§cPlease specify a reward type!");
-                sender.sendMessage(main.getQuestManager().getRewardTypesList());
+                for (String reward : main.getQuestManager().getRewardTypesList()) {
+                    sender.sendMessage(reward);
+                }
             } else if (args[3].equalsIgnoreCase("list")) {
                 sender.sendMessage("§9Rewards for quest §b" + quest.getQuestName() + "§9:");
                 for (final Reward reward : quest.getRewards()) {
@@ -1695,7 +1705,9 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                     sender.sendMessage("§cMissing 6. argument §3[Amount]§c. Specify the §bamount of money §cthe player should receive.");
                     sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards add §2Money §3[Amount]");
                 } else {
-                    sender.sendMessage(main.getQuestManager().getRewardTypesList());
+                    for (String reward : main.getQuestManager().getRewardTypesList()) {
+                        sender.sendMessage(reward);
+                    }
                 }
             } else if (args[3].equalsIgnoreCase("edit")) {
                 try {

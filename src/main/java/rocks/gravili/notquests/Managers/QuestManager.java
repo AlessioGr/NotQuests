@@ -66,8 +66,7 @@ public class QuestManager {
 
     private boolean questDataLoaded = false;
 
-    private final String rewardTypesList, requirementsTypesList;
-    private String objectiveTypesList;
+    private final ArrayList<String> rewardTypesList, requirementsTypesList;
 
     private final ArrayList<Player> debugEnabledPlayers;
 
@@ -79,50 +78,20 @@ public class QuestManager {
 
         debugEnabledPlayers = new ArrayList<>();
 
-        objectiveTypesList = """
-                §eObjective Types:
-                §bBreakBlocks
-                §bCollectItems
-                §bCraftItems
-                §bKillMobs
-                §bBreedMobs
-                §bTriggerCommand
-                §bOtherQuest
-                §bConsumeItems
-                §bDeliverItems
-                §bTalkToNPC
-                §bEscortNPC
-                """;
+        rewardTypesList = new ArrayList<>();
+        requirementsTypesList = new ArrayList<>();
 
-        if (main.isEliteMobsEnabled()) {
-            objectiveTypesList += "\n§9KillEliteMobs §7[Special Integration]";
-        } else {
-            objectiveTypesList += "\n§7§mKillEliteMobs§c [EliteMobs needed]";
+        rewardTypesList.add("ConsoleCommand");
+        rewardTypesList.add("QuestPoints");
+        rewardTypesList.add("Item");
+        rewardTypesList.add("Money");
 
-        }
-        if (main.isWorldEditEnabled()) {
-            objectiveTypesList += "\n§9ReachLocation §7[Special Integration]";
-        } else {
-            objectiveTypesList += "\n§7§mReachLocation§c [WorldEdit needed]";
+        requirementsTypesList.add("OtherQuest");
+        requirementsTypesList.add("QuestPoints");
+        requirementsTypesList.add("Permission");
+        requirementsTypesList.add("Money");
+        requirementsTypesList.add("Placeholder (WIP)");
 
-        }
-
-        rewardTypesList = """
-                §eReward Types:
-                §bConsoleCommand
-                §bQuestPoints
-                §bItem
-                §bMoney
-                """;
-
-        requirementsTypesList = """
-                §eRequirement Types:
-                §bOtherQuest
-                §bQuestPoints
-                §bPermission
-                §bMoney
-                §bPlaceholder (WIP)
-                """;
     }
 
 
@@ -1395,15 +1364,12 @@ public class QuestManager {
 
     }
 
-    public final String getObjectiveTypesList() {
-        return objectiveTypesList;
-    }
 
-    public final String getRewardTypesList() {
+    public final ArrayList<String> getRewardTypesList() {
         return rewardTypesList;
     }
 
-    public final String getRequirementsTypesList() {
+    public final ArrayList<String> getRequirementsTypesList() {
         return requirementsTypesList;
     }
 

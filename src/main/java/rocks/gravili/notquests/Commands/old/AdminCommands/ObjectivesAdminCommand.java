@@ -756,7 +756,9 @@ public class ObjectivesAdminCommand {
         } else if (args.length == 4) {
             if (args[2].equalsIgnoreCase("add")) {
                 sender.sendMessage("§cPlease specify an objective type!");
-                sender.sendMessage(main.getQuestManager().getObjectiveTypesList());
+                for (final String objectiveType : main.getObjectiveManager().getObjectiveIdentifiers()) {
+                    sender.sendMessage(objectiveType);
+                }
 
                 sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §3[Objective Type] ...");
             } else if (args[2].equalsIgnoreCase("edit")) {
@@ -802,7 +804,9 @@ public class ObjectivesAdminCommand {
                     sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives add §2EscortNPC §3[NPC to escort ID] [Destination NPC ID]");
                 } else {
                     sender.sendMessage("§cInvalid ObjectiveType.");
-                    sender.sendMessage(main.getQuestManager().getObjectiveTypesList());
+                    for (final String objectiveType : main.getObjectiveManager().getObjectiveIdentifiers()) {
+                        sender.sendMessage(objectiveType);
+                    }
                 }
             } else if (args[3].equalsIgnoreCase("edit")) {
                 try {
