@@ -21,7 +21,6 @@ package rocks.gravili.notquests.Events;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -34,7 +33,6 @@ import org.bukkit.event.entity.EntityBreedEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityDropItemEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
@@ -55,6 +53,8 @@ import rocks.gravili.notquests.Structs.Triggers.TriggerTypes.WorldEnterTrigger;
 import rocks.gravili.notquests.Structs.Triggers.TriggerTypes.WorldLeaveTrigger;
 
 import java.util.Locale;
+
+import static rocks.gravili.notquests.Commands.NotQuestColors.debugHighlightGradient;
 
 
 public class QuestEvents implements Listener {
@@ -416,26 +416,44 @@ public class QuestEvents implements Listener {
                         for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
                             if (activeObjective.isUnlocked()) {
                                 if (activeObjective.getObjective() instanceof final CraftItemsObjective craftItemsObjective) {
+                                    final ItemStack result = e.getRecipe().getResult();
+                                    final ItemStack cursor = e.getCursor();
 
                                     //Check if the Material of the crafted item is equal to the Material needed in the CraftItemsObjective
-                                    if (!craftItemsObjective.getItemToCraft().getType().equals(e.getInventory().getResult().getType())) {
-                                        return;
+                                    if (!craftItemsObjective.getItemToCraft().getType().equals(result.getType())) {
+                                        continue;
                                     }
 
                                     //If the objectiv-item which needs to be crafted has an ItemMeta...
                                     if (craftItemsObjective.getItemToCraft().getItemMeta() != null) {
                                         //then check if the ItemMeta of the crafted item is equal to the ItemMeta needed in the CraftItemsObjective
-                                        if (!craftItemsObjective.getItemToCraft().getItemMeta().equals(e.getInventory().getResult().getItemMeta())) {
-                                            return;
+                                        if (!craftItemsObjective.getItemToCraft().getItemMeta().equals(result.getItemMeta())) {
+                                            continue;
                                         }
                                     }
 
                                     //Now we gotta figure out the real amount of items which have been crafted, which is trickier than expected:
-                                    ClickType click = e.getClick();
 
-                                    int recipeAmount = e.getRecipe().getResult().getAmount();
 
-                                    switch (click) {
+                                    int recipeAmount = result.getAmount();
+
+                                    questPlayer.sendDebugMessage("Inventory craft event. Click type: " + debugHighlightGradient + e.getClick().name() + "</gradient>");
+
+
+                                    switch (e.getClick()) {
+                                        case LEFT:
+                                        case RIGHT:
+                                            if (!main.getUtilManager().isItemEmpty(cursor)) {
+                                                questPlayer.sendDebugMessage("Inventory craft event: Cursor is not empty");
+
+                                                if (!cursor.isSimilar(result)) {
+                                                    recipeAmount = 0;
+                                                }
+                                                if (cursor.getAmount() + result.getAmount() > cursor.getMaxStackSize()) {
+                                                    recipeAmount = 0;
+                                                }
+                                            }
+                                            break;
                                         case NUMBER_KEY:
                                             //If the hotbar is full, the item will not be crafted but it will still trigger this event for some reason. That's
                                             //why we manually have to set the amount to 0 here
@@ -447,36 +465,39 @@ public class QuestEvents implements Listener {
                                         case DROP:
                                         case CONTROL_DROP:
                                             // If we are holding items, craft-via-drop fails (vanilla behavior)
-                                            ItemStack cursor = e.getCursor();
                                             // Cursor is either null or AIR
-                                            if (!(cursor == null || cursor.getType() == Material.AIR)) {
+                                            if (!main.getUtilManager().isItemEmpty(cursor)) {
                                                 recipeAmount = 0;
                                             }
 
                                             break;
 
-                                        case SHIFT_RIGHT:
                                         case SHIFT_LEFT:
-                                            if (recipeAmount == 0)
+                                        case SHIFT_RIGHT:
+                                            if (recipeAmount == 0) {
                                                 break;
+                                            }
 
                                             int maxCraftable = getMaxCraftAmount(e.getInventory());
-                                            int capacity = fits(e.getRecipe().getResult(), e.getView().getBottomInventory());
+                                            int capacity = fits(result, e.getView().getBottomInventory());
 
                                             // If we can't fit everything, increase "space" to include the items dropped by
                                             // crafting
                                             // (Think: Uncrafting 8 iron blocks into 1 slot)
-                                            if (capacity < maxCraftable)
+                                            if (capacity < maxCraftable) {
                                                 maxCraftable = ((capacity + recipeAmount - 1) / recipeAmount) * recipeAmount;
-
+                                            }
                                             recipeAmount = maxCraftable;
                                             break;
                                         default:
+                                            recipeAmount = 0;
                                     }
 
                                     // No use continuing if we haven't actually crafted a thing
-                                    if (recipeAmount == 0)
-                                        return;
+                                    if (recipeAmount == 0) {
+                                        continue;
+                                    }
+
 
                                     activeObjective.addProgress(recipeAmount, -1);
 

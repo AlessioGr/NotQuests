@@ -25,7 +25,9 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
 
@@ -230,4 +232,8 @@ public class UtilManager {
         return returnMessage.toString();
     }
 
+
+    public final boolean isItemEmpty(final ItemStack itemStack) {
+        return itemStack == null || itemStack.getType() == Material.AIR;
+    }
 }
