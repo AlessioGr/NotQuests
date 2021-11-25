@@ -18,7 +18,10 @@
 
 package rocks.gravili.notquests.Structs.Rewards;
 
+import cloud.commandframework.Command;
+import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.NotQuests;
@@ -60,5 +63,9 @@ public class CommandReward extends Reward {
 
     public final String getConsoleCommand() {
         return consoleCommand;
+    }
+
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder) {
+
     }
 }

@@ -27,7 +27,7 @@ import rocks.gravili.notquests.Structs.Triggers.TriggerTypes.TriggerType;
 
 import java.util.logging.Level;
 
-public class Trigger {
+public abstract class Trigger {
     private final NotQuests main;
     private final TriggerType triggerType; //Enum
     private final Action action; //Class

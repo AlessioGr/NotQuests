@@ -47,7 +47,6 @@ public abstract class Objective {
 
 
 
-
     public final int getCompletionNPCID() {
         return completionNPCID;
     }

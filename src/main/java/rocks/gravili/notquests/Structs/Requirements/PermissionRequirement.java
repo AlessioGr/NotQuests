@@ -18,6 +18,9 @@
 
 package rocks.gravili.notquests.Structs.Requirements;
 
+import cloud.commandframework.Command;
+import cloud.commandframework.paper.PaperCommandManager;
+import org.bukkit.command.CommandSender;
 import rocks.gravili.notquests.NotQuests;
 
 public class PermissionRequirement extends Requirement {
@@ -39,4 +42,7 @@ public class PermissionRequirement extends Requirement {
     }
 
 
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder) {
+
+    }
 }

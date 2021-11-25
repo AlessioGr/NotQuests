@@ -18,7 +18,15 @@
 
 package rocks.gravili.notquests.Structs.Objectives;
 
+import cloud.commandframework.ArgumentDescription;
+import cloud.commandframework.Command;
+import cloud.commandframework.arguments.standard.IntegerArgument;
+import cloud.commandframework.bukkit.parsers.MaterialArgument;
+import cloud.commandframework.meta.CommandMeta;
+import cloud.commandframework.paper.PaperCommandManager;
+import net.kyori.adventure.audience.Audience;
 import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Quest;
@@ -59,6 +67,7 @@ public class BreakBlocksObjective extends Objective {
 
     }
 
+
     public final Material getBlockToBreak() {
         return blockToBreak;
     }
@@ -71,4 +80,18 @@ public class BreakBlocksObjective extends Objective {
         return deductIfBlockIsPlaced;
     }
 
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
+        manager.command(addObjectiveBuilder.literal("BreakBlocks")
+                .argument(MaterialArgument.of("material"))
+                .argument(IntegerArgument.of("amount"))
+                .flag(
+                        manager.flagBuilder("deductIfBlockIsPlaced")
+                                .withDescription(ArgumentDescription.of("Determines if Quest progress should be removed if a block is placed"))
+                )
+                .meta(CommandMeta.DESCRIPTION, "Adds a new BreakBlocks Objective to a quest")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+
+                }));
+    }
 }

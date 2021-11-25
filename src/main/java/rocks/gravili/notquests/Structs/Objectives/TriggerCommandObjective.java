@@ -19,6 +19,9 @@
 package rocks.gravili.notquests.Structs.Objectives;
 
 
+import cloud.commandframework.Command;
+import cloud.commandframework.paper.PaperCommandManager;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Quest;
@@ -61,4 +64,7 @@ public class TriggerCommandObjective extends Objective {
     }
 
 
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder) {
+
+    }
 }

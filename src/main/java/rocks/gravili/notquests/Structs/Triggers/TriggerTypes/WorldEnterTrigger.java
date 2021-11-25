@@ -18,6 +18,9 @@
 
 package rocks.gravili.notquests.Structs.Triggers.TriggerTypes;
 
+import cloud.commandframework.Command;
+import cloud.commandframework.paper.PaperCommandManager;
+import org.bukkit.command.CommandSender;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Triggers.Action;
 import rocks.gravili.notquests.Structs.Triggers.Trigger;
@@ -39,4 +42,7 @@ public class WorldEnterTrigger extends Trigger {
     }
 
 
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder) {
+
+    }
 }

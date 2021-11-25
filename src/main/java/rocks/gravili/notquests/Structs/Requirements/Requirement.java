@@ -18,7 +18,7 @@
 
 package rocks.gravili.notquests.Structs.Requirements;
 
-public class Requirement {
+public abstract class Requirement {
     private final RequirementType requirementType;
     private final long progressNeeded;
 

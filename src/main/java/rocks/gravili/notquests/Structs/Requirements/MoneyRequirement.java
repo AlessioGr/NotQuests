@@ -18,6 +18,9 @@
 
 package rocks.gravili.notquests.Structs.Requirements;
 
+import cloud.commandframework.Command;
+import cloud.commandframework.paper.PaperCommandManager;
+import org.bukkit.command.CommandSender;
 import rocks.gravili.notquests.NotQuests;
 
 public class MoneyRequirement extends Requirement {
@@ -45,4 +48,7 @@ public class MoneyRequirement extends Requirement {
         return deductMoney;
     }
 
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder) {
+
+    }
 }

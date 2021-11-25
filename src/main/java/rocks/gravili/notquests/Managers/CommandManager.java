@@ -40,7 +40,9 @@ import rocks.gravili.notquests.Commands.newCMDs.AdminCommands;
 import rocks.gravili.notquests.Commands.newCMDs.AdminEditCommands;
 import rocks.gravili.notquests.Commands.old.CommandNotQuestsAdmin;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.Quest;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -49,6 +51,8 @@ public class CommandManager {
     private final boolean useNewCommands = true;
     private PaperCommandManager<CommandSender> commandManager;
     private MinecraftHelp<CommandSender> minecraftHelp;
+    private Command.Builder<CommandSender> adminCommandBuilder;
+    private Command.Builder<CommandSender> adminEditAddObjectiveCommandBuilder;
 
     private final Commodore commodore;
 
@@ -83,6 +87,72 @@ public class CommandManager {
                     ).build();
 
             commodore.register(command, timeCommand);*/
+        }
+
+    }
+
+    public void preSetupCommands() {
+        if (useNewCommands) {
+            //Cloud command framework
+            try {
+                commandManager = new PaperCommandManager<>(
+                        /* Owning plugin */ main,
+                        /* Coordinator function */ CommandExecutionCoordinator.simpleCoordinator(),
+                        /* Command Sender -> C */ Function.identity(),
+                        /* C -> Command Sender */ Function.identity()
+                );
+            } catch (final Exception e) {
+                main.getLogManager().severe("There was an error setting up the commands.");
+                return;
+            }
+
+
+            adminCommandBuilder = commandManager.commandBuilder("qa2", ArgumentDescription.of("Admin commands for NotQuests"), "notquestsadmin2, nqa2")
+                    .permission("notquests.admin");
+
+
+            adminEditAddObjectiveCommandBuilder = adminCommandBuilder
+                    .literal("edit")
+                    .argument(StringArgument.<CommandSender>newBuilder("Quest Name").withSuggestionsProvider(
+                            (context, lastString) -> {
+                                final List<String> allArgs = context.getRawInput();
+                                final Audience audience = main.adventure().sender(context.getSender());
+                                main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Quest Name]", "[...]");
+                                ArrayList<String> completions = new ArrayList<>();
+                                for (Quest quest : main.getQuestManager().getAllQuests()) {
+                                    completions.add(quest.getQuestName());
+                                }
+                                return completions;
+                            }
+                    ).single().build(), ArgumentDescription.of("Quest Name"))
+                    .literal("objectives")
+                    .literal("add");
+
+            //asynchronous completions
+            if (commandManager.queryCapability(CloudBukkitCapabilities.ASYNCHRONOUS_COMPLETION)) {
+                commandManager.registerAsynchronousCompletions();
+            }
+
+            //brigadier/commodore
+            try {
+                commandManager.registerBrigadier();
+            } catch (final Exception e) {
+                main.getLogger().warning("Failed to initialize Brigadier support: " + e.getMessage());
+            }
+
+            minecraftHelp = new MinecraftHelp<>(
+                    "/qa2 help",
+                    main.adventure()::sender,
+                    commandManager
+            );
+
+            minecraftHelp.setHelpColors(MinecraftHelp.HelpColors.of(
+                    NotQuestColors.main,
+                    NamedTextColor.WHITE,
+                    NotQuestColors.highlight,
+                    NamedTextColor.GRAY,
+                    NamedTextColor.DARK_GRAY
+            ));
         }
 
     }
@@ -124,45 +194,9 @@ public class CommandManager {
                 notQuestsCommand.setTabCompleter(commandNotQuests);
             }*/
         } else {
-            //Cloud command framework
-            try {
-                commandManager = new PaperCommandManager<>(
-                        /* Owning plugin */ main,
-                        /* Coordinator function */ CommandExecutionCoordinator.simpleCoordinator(),
-                        /* Command Sender -> C */ Function.identity(),
-                        /* C -> Command Sender */ Function.identity()
-                );
-            } catch (final Exception e) {
-                main.getLogManager().severe("There was an error setting up the commands.");
-                return;
-            }
 
 
-            //asynchronous completions
-            if (commandManager.queryCapability(CloudBukkitCapabilities.ASYNCHRONOUS_COMPLETION)) {
-                commandManager.registerAsynchronousCompletions();
-            }
 
-            //brigadier/commodore
-            try {
-                commandManager.registerBrigadier();
-            } catch (final Exception e) {
-                main.getLogger().warning("Failed to initialize Brigadier support: " + e.getMessage());
-            }
-
-            minecraftHelp = new MinecraftHelp<>(
-                    "/qa2 help",
-                    main.adventure()::sender,
-                    commandManager
-            );
-
-            minecraftHelp.setHelpColors(MinecraftHelp.HelpColors.of(
-                    NotQuestColors.main,
-                    NamedTextColor.WHITE,
-                    NotQuestColors.highlight,
-                    NamedTextColor.GRAY,
-                    NamedTextColor.DARK_GRAY
-            ));
 
 
             constructCommands();
@@ -170,7 +204,6 @@ public class CommandManager {
 
 
     }
-
 
 
     public void constructCommands() {
@@ -195,12 +228,8 @@ public class CommandManager {
         );*/
 
 
-        Command.Builder<CommandSender> builder = commandManager.commandBuilder("qa2", ArgumentDescription.of("Admin commands for NotQuests"), "notquestsadmin2, nqa2")
-                .permission("notquests.admin");
-
-
         //Help menu
-        commandManager.command(builder.meta(CommandMeta.DESCRIPTION, "Opens the help menu").handler((context) -> {
+        commandManager.command(adminCommandBuilder.meta(CommandMeta.DESCRIPTION, "Opens the help menu").handler((context) -> {
             minecraftHelp.queryCommands("qa2 *", context.getSender());
             final Audience audience = main.adventure().sender(context.getSender());
             final List<String> allArgs = context.getRawInput();
@@ -208,7 +237,7 @@ public class CommandManager {
 
         }));
         commandManager.command(
-                builder.literal("help")
+                adminCommandBuilder.literal("help")
                         .argument(StringArgument.optional("query", StringArgument.StringMode.GREEDY))
 
                         .handler(context -> {
@@ -236,10 +265,20 @@ public class CommandManager {
 
         exceptionHandler.apply(commandManager, main.adventure()::sender);
 
-        new AdminCommands(main, commandManager, builder);
+        new AdminCommands(main, commandManager, adminCommandBuilder);
 
-        new AdminEditCommands(main, commandManager, builder);
+        new AdminEditCommands(main, commandManager, adminCommandBuilder);
 
 
     }
+
+    public final PaperCommandManager<CommandSender> getPaperCommandManager() {
+        return commandManager;
+    }
+
+    public final Command.Builder<CommandSender> getAdminEditAddObjectiveCommandBuilder() {
+        return adminEditAddObjectiveCommandBuilder;
+    }
+
+
 }

@@ -54,7 +54,7 @@ public class AdminCommands {
     private final PaperCommandManager<CommandSender> manager;
     private final Command.Builder<CommandSender> builder;
     private final ArrayList<String> placeholders;
-    private final MiniMessage miniMessage = MiniMessage.miniMessage();
+    protected final MiniMessage miniMessage = MiniMessage.miniMessage();
     private final Date resultDate;
 
 

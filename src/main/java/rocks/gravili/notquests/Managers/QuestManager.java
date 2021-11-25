@@ -278,6 +278,7 @@ public class QuestManager {
                     if (objectivesConfigurationSection != null) {
                         for (final String objectiveNumber : objectivesConfigurationSection.getKeys(false)) {
                             Class<? extends Objective> objectiveType = null;
+
                             try {
                                 objectiveType = main.getObjectiveManager().getObjectiveClass(main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".objectiveType"));
                             } catch (java.lang.NullPointerException ex) {

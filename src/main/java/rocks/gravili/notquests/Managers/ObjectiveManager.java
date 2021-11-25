@@ -18,10 +18,14 @@
 
 package rocks.gravili.notquests.Managers;
 
+import cloud.commandframework.Command;
+import cloud.commandframework.paper.PaperCommandManager;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Objectives.*;
 import rocks.gravili.notquests.Structs.Objectives.hooks.KillEliteMobsObjective;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -73,9 +77,16 @@ public class ObjectiveManager {
 
     }*/
 
-    public void registerObjective(final String identifier, final Class<? extends Objective> objective){
+    public void registerObjective(final String identifier, final Class<? extends Objective> objective) {
         main.getLogManager().info("Registering objective <AQUA>" + identifier);
         objectives.put(identifier, objective);
+
+        try {
+            Method commandHandler = objective.getMethod("handleCommands", main.getClass(), PaperCommandManager.class, Command.Builder.class);
+            commandHandler.invoke(objective, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddObjectiveCommandBuilder());
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
 

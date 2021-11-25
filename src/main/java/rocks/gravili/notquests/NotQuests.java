@@ -219,7 +219,6 @@ public final class NotQuests extends JavaPlugin {
         //Create a new instance of the Quest Manager which will be re-used everywhere
         questManager = new QuestManager(this);
 
-        objectiveManager = new ObjectiveManager(this);
 
         languageManager = new LanguageManager(this);
 
@@ -244,6 +243,10 @@ public final class NotQuests extends JavaPlugin {
 
         //Register the notquestsadmin command & tab completer. This command will be used by Admins
         commandManager = new CommandManager(this);
+        commandManager.preSetupCommands();
+
+        objectiveManager = new ObjectiveManager(this);
+
         commandManager.setupCommands();
 
 
