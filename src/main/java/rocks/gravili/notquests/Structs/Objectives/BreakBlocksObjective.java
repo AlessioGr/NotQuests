@@ -31,8 +31,6 @@ import org.bukkit.entity.Player;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Quest;
 
-import java.util.ArrayList;
-
 public class BreakBlocksObjective extends Objective {
 
     private final NotQuests main;
@@ -85,14 +83,7 @@ public class BreakBlocksObjective extends Objective {
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
         manager.command(addObjectiveBuilder.literal("BreakBlocks")
                 .argument(MaterialArgument.of("material"), ArgumentDescription.of("Material of the block which needs to be broken."))
-                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1).withSuggestionsProvider((context, lastString) -> {
-                    ArrayList<String> completions = new ArrayList<>();
-                    completions.add("<amount>");
-                    completions.add("1");
-                    completions.add("11");
-
-                    return completions;
-                }).build(), ArgumentDescription.of("Amount of blocks which need to be broken"))
+                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of blocks which need to be broken"))
                 .flag(
                         manager.flagBuilder("deductIfBlockIsPlaced")
                                 .withDescription(ArgumentDescription.of("Determines if Quest progress should be removed if a block is placed"))

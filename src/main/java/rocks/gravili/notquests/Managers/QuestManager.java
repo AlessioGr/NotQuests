@@ -26,11 +26,12 @@ import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitInfo;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
@@ -55,6 +56,8 @@ import java.util.ArrayList;
 import java.util.UUID;
 import java.util.logging.Level;
 
+import static rocks.gravili.notquests.Commands.NotQuestColors.*;
+
 
 public class QuestManager {
 
@@ -68,6 +71,7 @@ public class QuestManager {
     private final ArrayList<String> rewardTypesList, requirementsTypesList;
 
     private final ArrayList<Player> debugEnabledPlayers;
+    protected final MiniMessage miniMessage = MiniMessage.miniMessage();
 
 
     public QuestManager(NotQuests main) {
@@ -1293,30 +1297,40 @@ public class QuestManager {
     }
 
 
-    public void sendObjectivesAdmin(final CommandSender sender, final Quest quest) {
+    public void sendObjectivesAdmin(final Audience audience, final Quest quest) {
 
         for (final Objective objective : quest.getObjectives()) {
 
             final String objectiveDescription = objective.getObjectiveDescription();
-            sender.sendMessage("§a" + objective.getObjectiveID() + ". §e" + objective.getObjectiveFinalName());
+            audience.sendMessage(miniMessage.parse(
+                    highlightGradient + objective.getObjectiveID() + ".</gradient> " + mainGradient + objective.getObjectiveFinalName()
+            ));
 
 
             if (!objectiveDescription.isBlank()) {
-                sender.sendMessage("   §9Description: §6" + objectiveDescription);
+                audience.sendMessage(miniMessage.parse(
+                        highlightGradient + "   Description:</gradient> " + mainGradient + objectiveDescription
+                ));
             }
 
 
-            sender.sendMessage("   §9Depending objectives:");
+            audience.sendMessage(miniMessage.parse(
+                    highlightGradient + "   Depending objectives:</gradient>"
+            ));
             int counter2 = 1;
             for (final Objective dependantObjective : objective.getDependantObjectives()) {
-                sender.sendMessage("         §e" + counter2 + ". Objective ID: §b" + dependantObjective.getObjectiveID());
+                audience.sendMessage(miniMessage.parse(
+                        highlightGradient + "         " + counter2 + ".</gradient>" + mainGradient + " Objective ID: </gradient>" + highlight2Gradient + dependantObjective.getObjectiveID()
+                ));
                 counter2++;
             }
             if (counter2 == 1) {
-                sender.sendMessage("      §8No depending objectives found!");
+                audience.sendMessage(miniMessage.parse(
+                        unimportant + "      No depending objectives found!"
+                ));
             }
 
-            sender.sendMessage(getObjectiveTaskDescription(objective, false, null));
+            audience.sendMessage(miniMessage.parse(getObjectiveTaskDescription(objective, false, null)));
 
         }
     }

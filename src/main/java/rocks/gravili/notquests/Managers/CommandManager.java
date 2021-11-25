@@ -146,6 +146,7 @@ public class CommandManager {
             //brigadier/commodore
             try {
                 commandManager.registerBrigadier();
+                commandManager.brigadierManager().setNativeNumberSuggestions(false);
             } catch (final Exception e) {
                 main.getLogger().warning("Failed to initialize Brigadier support: " + e.getMessage());
             }

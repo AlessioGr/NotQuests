@@ -225,15 +225,19 @@ public final class NotQuests extends JavaPlugin {
 
         //Enable 'SlimeFun' integration.
         if (getDataManager().getConfiguration().isIntegrationSlimeFunEnabled()) {
-
-            slimefun = Slimefun.instance();
-            if (slimefun == null) {
+            if (getServer().getPluginManager().getPlugin("Slimefun") == null || !Objects.requireNonNull(getServer().getPluginManager().getPlugin("Slimefun")).isEnabled()) {
                 slimefunEnabled = false;
-
             } else {
-                getLogManager().info("SlimeFun found! Enabling SlimeFun support...");
-                slimefunEnabled = true;
+                slimefun = Slimefun.instance();
+                if (slimefun == null) {
+                    slimefunEnabled = false;
+
+                } else {
+                    getLogManager().info("SlimeFun found! Enabling SlimeFun support...");
+                    slimefunEnabled = true;
+                }
             }
+
         }
 
 

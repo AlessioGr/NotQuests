@@ -20,6 +20,7 @@ package rocks.gravili.notquests.Commands.newCMDs;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
+import cloud.commandframework.arguments.parser.ArgumentParseResult;
 import cloud.commandframework.arguments.standard.BooleanArgument;
 import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.arguments.standard.StringArrayArgument;
@@ -29,6 +30,7 @@ import cloud.commandframework.paper.PaperCommandManager;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -39,6 +41,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.Objectives.Objective;
 import rocks.gravili.notquests.Structs.Quest;
 
 import java.util.ArrayList;
@@ -237,6 +240,15 @@ public class AdminEditCommands {
 
 
                 }));
+
+        final Command.Builder<CommandSender> objectivesBuilder = editBuilder.literal("objectives");
+        handleObjectives(objectivesBuilder);
+        final Command.Builder<CommandSender> requirementsBuilder = editBuilder.literal("requirements");
+        handleRequirements(requirementsBuilder);
+        final Command.Builder<CommandSender> rewardsBuilder = editBuilder.literal("rewards");
+        handleRewards(rewardsBuilder);
+        final Command.Builder<CommandSender> triggersBuilder = editBuilder.literal("triggers");
+        handleTriggers(triggersBuilder);
     }
 
 
@@ -317,6 +329,7 @@ public class AdminEditCommands {
                     }
                 }));
     }
+
 
     public void handleArmorStands(final Command.Builder<CommandSender> builder) {
 
@@ -417,6 +430,7 @@ public class AdminEditCommands {
 
         manager.command(builder.literal("clear")
                 .senderType(Player.class)
+                .meta(CommandMeta.DESCRIPTION, "This command is not done yet.")
                 .handler((context) -> {
                     final Audience audience = main.adventure().sender(context.getSender());
                     audience.sendMessage(miniMessage.parse(errorGradient + "Sorry, this command is not done yet! I'll add it in future versions."));
@@ -424,6 +438,7 @@ public class AdminEditCommands {
 
         manager.command(builder.literal("list")
                 .senderType(Player.class)
+                .meta(CommandMeta.DESCRIPTION, "This command is not done yet.")
                 .handler((context) -> {
                     final Audience audience = main.adventure().sender(context.getSender());
                     audience.sendMessage(miniMessage.parse(errorGradient + "Sorry, this command is not done yet! I'll add it in future versions."));
@@ -488,4 +503,107 @@ public class AdminEditCommands {
                     audience.sendMessage(miniMessage.parse(successGradient + "You have been given an item with which you can remove this quest from armor stands!"));
                 }));
     }
+
+    public void handleObjectives(final Command.Builder<CommandSender> builder) {
+        //Add is handled individually by each objective
+
+        manager.command(builder.literal("clear")
+                .meta(CommandMeta.DESCRIPTION, "Removes all objectives from a Quest.")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+                    final Quest quest = context.get("quest");
+                    quest.removeAllObjectives();
+                    audience.sendMessage(Component.empty());
+                    audience.sendMessage(miniMessage.parse(
+                            successGradient + "All objectives of Quest" + highlightGradient + quest.getQuestName()
+                                    + "</gradient> have been removed!</gradient>"
+                    ));
+                }));
+        manager.command(builder.literal("list")
+                .meta(CommandMeta.DESCRIPTION, "Lists all objectives of a Quest.")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+                    final Quest quest = context.get("quest");
+                    audience.sendMessage(Component.empty());
+                    audience.sendMessage(miniMessage.parse(highlightGradient + "Objectives for Quest " + highlight2Gradient + quest.getQuestName() + "</gradient>:</gradient>"));
+                    main.getQuestManager().sendObjectivesAdmin(audience, quest);
+                }));
+
+        final Command.Builder<CommandSender> editObjectivesBuilder = builder.literal("edit")
+                .argument(IntegerArgument.<CommandSender>newBuilder("Objective ID").withMin(1).withSuggestionsProvider(
+                                (context, lastString) -> {
+                                    final List<String> allArgs = context.getRawInput();
+                                    final Audience audience = main.adventure().sender(context.getSender());
+                                    main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Objective ID]", "[...]");
+
+                                    ArrayList<String> completions = new ArrayList<>();
+
+                                    final Quest quest = context.get("quest");
+                                    for (final Objective objective : quest.getObjectives()) {
+                                        completions.add("" + objective.getObjectiveID());
+                                    }
+
+
+                                    return completions;
+                                }
+                        ).withParser((context, lastString) -> {
+                            final int ID = context.get("Objective ID");
+                            final Quest quest = context.get("quest");
+                            final Objective foundObjective = quest.getObjectiveFromID(ID);
+                            if (foundObjective == null) {
+                                return ArgumentParseResult.failure(new IllegalArgumentException("Objective with the ID '" + ID + "' does not belong to Quest '" + quest.getQuestName() + "'!"));
+                            } else {
+                                return ArgumentParseResult.success(ID);
+                            }
+                        })
+                        .build(), ArgumentDescription.of("Objective ID"));
+        handleEditObjectives(editObjectivesBuilder);
+
+
+    }
+
+    public void handleEditObjectives(final Command.Builder<CommandSender> builder) {
+        manager.command(builder.literal("completionNPC")
+                .literal("show", "view")
+                .meta(CommandMeta.DESCRIPTION, "Shows the completionNPC of an objective.")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+                    final Quest quest = context.get("quest");
+                    final Objective objective = quest.getObjectiveFromID(context.get("Objective ID"));
+                    assert objective != null; //Shouldn't be null
+
+                    audience.sendMessage(miniMessage.parse(
+                            mainGradient + "The completionNPCID of the objective with the ID " + highlightGradient + objective + "</gradient> is "
+                                    + highlight2Gradient + objective.getCompletionNPCID() + "</gradient>!</gradient>"
+                    ));
+                    if (objective.getCompletionArmorStandUUID() != null) {
+                        audience.sendMessage(miniMessage.parse(
+                                mainGradient + "The completionNPCUUID (for armor stands)  of the objective with the ID " + highlightGradient + objective + "</gradient> is "
+                                        + highlight2Gradient + objective.getCompletionArmorStandUUID() + "</gradient>!</gradient>"
+                        ));
+                    } else {
+                        audience.sendMessage(miniMessage.parse(
+                                mainGradient + "The completionNPCUUID (for armor stands)  of the objective with the ID " + highlightGradient + objective + "</gradient> is "
+                                        + highlight2Gradient + "null</gradient>!</gradient>"
+                        ));
+                    }
+                }));
+    }
+
+
+    public void handleRequirements(final Command.Builder<CommandSender> builder) {
+        //Add is handled individually by each requirement
+
+    }
+
+    public void handleRewards(final Command.Builder<CommandSender> builder) {
+        //Add is handled individually by each reward
+
+    }
+
+    public void handleTriggers(final Command.Builder<CommandSender> builder) {
+        //Add is handled individually by each trigger
+
+    }
+
 }

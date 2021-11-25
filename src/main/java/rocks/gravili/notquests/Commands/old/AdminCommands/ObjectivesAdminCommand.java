@@ -58,8 +58,7 @@ public class ObjectivesAdminCommand {
                 showUsage(quest, sender, args);
             } else if (args[3].equalsIgnoreCase("list")) {
                 sender.sendMessage("§9Objectives for quest §b" + quest.getQuestName() + "§9:");
-
-                main.getQuestManager().sendObjectivesAdmin(sender, quest);
+                main.getQuestManager().sendObjectivesAdmin(main.adventure().sender(sender), quest);
 
             } else if (args[3].equalsIgnoreCase("clear")) {
                 quest.removeAllObjectives();
