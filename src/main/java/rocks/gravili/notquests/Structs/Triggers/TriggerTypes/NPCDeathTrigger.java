@@ -22,6 +22,7 @@ import cloud.commandframework.Command;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.Quest;
 import rocks.gravili.notquests.Structs.Triggers.Action;
 import rocks.gravili.notquests.Structs.Triggers.Trigger;
 
@@ -30,11 +31,18 @@ public class NPCDeathTrigger extends Trigger {
     private final NotQuests main;
     private final int npcToDieID;
 
-    public NPCDeathTrigger(final NotQuests main, Action action, int applyOn, String worldName, long amountNeeded, int npcToDieID) {
-        super(main, action, TriggerType.NPCDEATH, applyOn, worldName, amountNeeded);
+
+    public NPCDeathTrigger(final NotQuests main, final Quest quest, final int triggerID, Action action, int applyOn, String worldName, long amountNeeded) {
+        super(main, quest, triggerID, action, applyOn, worldName, amountNeeded);
+        this.main = main;
+
+        this.npcToDieID = main.getDataManager().getQuestsData().getInt("quests." + getQuest().getQuestName() + ".triggers." + triggerID + ".specifics.npcToDie");
+    }
+
+    public NPCDeathTrigger(final NotQuests main, final Quest quest, final int triggerID, Action action, int applyOn, String worldName, long amountNeeded, int npcToDieID) {
+        super(main, quest, triggerID, action, applyOn, worldName, amountNeeded);
         this.main = main;
         this.npcToDieID = npcToDieID;
-
     }
 
     public final int getNpcToDieID() {
@@ -43,6 +51,16 @@ public class NPCDeathTrigger extends Trigger {
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder) {
 
+    }
+
+    @Override
+    public void save() {
+        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".triggers." + getTriggerID() + ".specifics.npcToDie", getNpcToDieID());
+    }
+
+    @Override
+    public String getTriggerDescription() {
+        return "NPC to die ID: §f" + getNpcToDieID();
     }
 
 

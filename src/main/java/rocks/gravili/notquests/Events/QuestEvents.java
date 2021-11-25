@@ -48,7 +48,6 @@ import rocks.gravili.notquests.Structs.ActiveQuest;
 import rocks.gravili.notquests.Structs.Objectives.*;
 import rocks.gravili.notquests.Structs.QuestPlayer;
 import rocks.gravili.notquests.Structs.Triggers.ActiveTrigger;
-import rocks.gravili.notquests.Structs.Triggers.TriggerTypes.TriggerType;
 import rocks.gravili.notquests.Structs.Triggers.TriggerTypes.WorldEnterTrigger;
 import rocks.gravili.notquests.Structs.Triggers.TriggerTypes.WorldLeaveTrigger;
 
@@ -249,7 +248,7 @@ public class QuestEvents implements Listener {
                     for (int i = 0; i < questPlayer.getActiveQuests().size(); i++) {
                         final ActiveQuest activeQuest = questPlayer.getActiveQuests().get(i);
                         for (final ActiveTrigger activeTrigger : activeQuest.getActiveTriggers()) {
-                            if (activeTrigger.getTrigger().getTriggerType() == TriggerType.DEATH) {
+                            if (activeTrigger.getTrigger().getTriggerType().equals("DEATH")) {
                                 handleGeneralTrigger(questPlayer, activeTrigger);
 
                             }
@@ -362,7 +361,7 @@ public class QuestEvents implements Listener {
                 for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
 
                     for (final ActiveTrigger activeTrigger : activeQuest.getActiveTriggers()) {
-                        if (activeTrigger.getTrigger().getTriggerType() == TriggerType.DISCONNECT) {
+                        if (activeTrigger.getTrigger().getTriggerType().equals("DISCONNECT")) {
                             handleGeneralTrigger(questPlayer, activeTrigger);
                         }
                     }

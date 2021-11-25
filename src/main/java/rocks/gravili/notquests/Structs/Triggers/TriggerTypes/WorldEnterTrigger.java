@@ -22,6 +22,7 @@ import cloud.commandframework.Command;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.Quest;
 import rocks.gravili.notquests.Structs.Triggers.Action;
 import rocks.gravili.notquests.Structs.Triggers.Trigger;
 
@@ -30,11 +31,17 @@ public class WorldEnterTrigger extends Trigger {
     private final NotQuests main;
     private final String worldToEnterName;
 
-    public WorldEnterTrigger(final NotQuests main, Action action, int applyOn, String worldName, long amountNeeded, String worldToEnterName) {
-        super(main, action, TriggerType.WORLDENTER, applyOn, worldName, amountNeeded);
+    public WorldEnterTrigger(final NotQuests main, final Quest quest, final int triggerID, Action action, int applyOn, String worldName, long amountNeeded) {
+        super(main, quest, triggerID, action, applyOn, worldName, amountNeeded);
+        this.main = main;
+
+        this.worldToEnterName = main.getDataManager().getQuestsData().getString("quests." + getQuest().getQuestName() + ".triggers." + triggerID + ".specifics.worldToEnter", "ALL");
+    }
+
+    public WorldEnterTrigger(final NotQuests main, final Quest quest, final int triggerID, Action action, int applyOn, String worldName, long amountNeeded, String worldToEnterName) {
+        super(main, quest, triggerID, action, applyOn, worldName, amountNeeded);
         this.main = main;
         this.worldToEnterName = worldToEnterName;
-
     }
 
     public final String getWorldToEnterName() {
@@ -44,5 +51,16 @@ public class WorldEnterTrigger extends Trigger {
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder) {
 
+    }
+
+    @Override
+    public void save() {
+        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".triggers." + getTriggerID() + ".specifics.worldToEnter", getWorldToEnterName());
+
+    }
+
+    @Override
+    public String getTriggerDescription() {
+        return "World to enter: §f" + getWorldToEnterName();
     }
 }

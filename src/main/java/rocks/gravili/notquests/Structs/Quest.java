@@ -28,9 +28,6 @@ import rocks.gravili.notquests.Structs.Objectives.Objective;
 import rocks.gravili.notquests.Structs.Requirements.Requirement;
 import rocks.gravili.notquests.Structs.Rewards.Reward;
 import rocks.gravili.notquests.Structs.Triggers.Trigger;
-import rocks.gravili.notquests.Structs.Triggers.TriggerTypes.NPCDeathTrigger;
-import rocks.gravili.notquests.Structs.Triggers.TriggerTypes.WorldEnterTrigger;
-import rocks.gravili.notquests.Structs.Triggers.TriggerTypes.WorldLeaveTrigger;
 
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -146,6 +143,17 @@ public class Quest {
         }
 
         reward.save();
+    }
+
+    public void addTrigger(final Trigger trigger) {
+        triggers.add(trigger);
+        main.getDataManager().getQuestsData().set("quests." + questName + ".triggers." + triggers.size() + ".triggerType", trigger.getTriggerType());
+        main.getDataManager().getQuestsData().set("quests." + questName + ".triggers." + triggers.size() + ".triggerActionName", trigger.getTriggerAction().getActionName());
+        main.getDataManager().getQuestsData().set("quests." + questName + ".triggers." + triggers.size() + ".applyOn", trigger.getApplyOn());
+        main.getDataManager().getQuestsData().set("quests." + questName + ".triggers." + triggers.size() + ".amountNeeded", trigger.getAmountNeeded());
+        main.getDataManager().getQuestsData().set("quests." + questName + ".triggers." + triggers.size() + ".worldName", trigger.getWorldName());
+
+        trigger.save();
     }
 
     public void removeAllObjectives() {
@@ -346,27 +354,7 @@ public class Quest {
         return triggers;
     }
 
-    public void addTrigger(final Trigger trigger) {
-        triggers.add(trigger);
-        main.getDataManager().getQuestsData().set("quests." + questName + ".triggers." + triggers.size() + ".triggerType", trigger.getTriggerType().toString());
-        main.getDataManager().getQuestsData().set("quests." + questName + ".triggers." + triggers.size() + ".triggerActionName", trigger.getTriggerAction().getActionName());
-        main.getDataManager().getQuestsData().set("quests." + questName + ".triggers." + triggers.size() + ".applyOn", trigger.getApplyOn());
-        main.getDataManager().getQuestsData().set("quests." + questName + ".triggers." + triggers.size() + ".amountNeeded", trigger.getAmountNeeded());
-        main.getDataManager().getQuestsData().set("quests." + questName + ".triggers." + triggers.size() + ".worldName", trigger.getWorldName());
 
-        if (trigger instanceof NPCDeathTrigger) {
-            main.getDataManager().getQuestsData().set("quests." + questName + ".triggers." + triggers.size() + ".specifics.npcToDie", ((NPCDeathTrigger) trigger).getNpcToDieID());
-
-        } else if (trigger instanceof WorldEnterTrigger) {
-            main.getDataManager().getQuestsData().set("quests." + questName + ".triggers." + triggers.size() + ".specifics.worldToEnter", ((WorldEnterTrigger) trigger).getWorldToEnterName());
-
-        } else if (trigger instanceof WorldLeaveTrigger) {
-            main.getDataManager().getQuestsData().set("quests." + questName + ".triggers." + triggers.size() + ".specifics.worldToLeave", ((WorldLeaveTrigger) trigger).getWorldToLeaveName());
-
-        }
-
-
-    }
 
     public void removeAllTriggers() {
         triggers.clear();

@@ -22,6 +22,7 @@ import cloud.commandframework.Command;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.Quest;
 import rocks.gravili.notquests.Structs.Triggers.Action;
 import rocks.gravili.notquests.Structs.Triggers.Trigger;
 
@@ -30,9 +31,19 @@ public class DeathTrigger extends Trigger {
     private final NotQuests main;
 
 
-    public DeathTrigger(final NotQuests main, Action action, int applyOn, String worldName, long amountNeeded) {
-        super(main, action, TriggerType.DEATH, applyOn, worldName, amountNeeded);
+    public DeathTrigger(final NotQuests main, final Quest quest, final int triggerID, Action action, int applyOn, String worldName, long amountNeeded) {
+        super(main, quest, triggerID, action, applyOn, worldName, amountNeeded);
         this.main = main;
+    }
+
+    @Override
+    public void save() {
+
+    }
+
+    @Override
+    public String getTriggerDescription() {
+        return null;
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder) {

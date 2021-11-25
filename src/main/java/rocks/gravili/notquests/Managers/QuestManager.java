@@ -50,7 +50,6 @@ import rocks.gravili.notquests.Structs.Requirements.Requirement;
 import rocks.gravili.notquests.Structs.Rewards.Reward;
 import rocks.gravili.notquests.Structs.Triggers.Action;
 import rocks.gravili.notquests.Structs.Triggers.Trigger;
-import rocks.gravili.notquests.Structs.Triggers.TriggerTypes.*;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -202,75 +201,6 @@ public class QuestManager {
                     quest.setAcceptCooldown(main.getDataManager().getQuestsData().getLong("quests." + questName + ".acceptCooldown", -1));
                     quest.setQuestDescription(main.getDataManager().getQuestsData().getString("quests." + questName + ".description", ""));
                     quest.setQuestDisplayName(main.getDataManager().getQuestsData().getString("quests." + questName + ".displayName", ""));
-
-
-                    final ConfigurationSection triggersConfigurationSection = main.getDataManager().getQuestsData().getConfigurationSection("quests." + questName + ".triggers");
-                    if (triggersConfigurationSection != null) {
-                        for (final String triggerNumber : triggersConfigurationSection.getKeys(false)) {
-
-
-                            //Triggers:
-                            final String triggerTypeString = main.getDataManager().getQuestsData().getString("quests." + questName + ".triggers." + triggerNumber + ".triggerType");
-                            final String triggerActionName = main.getDataManager().getQuestsData().getString("quests." + questName + ".triggers." + triggerNumber + ".triggerActionName");
-                            final long amountNeeded = main.getDataManager().getQuestsData().getLong("quests." + questName + ".triggers." + triggerNumber + ".amountNeeded", 1);
-
-                            final int applyOn = main.getDataManager().getQuestsData().getInt("quests." + questName + ".triggers." + triggerNumber + ".applyOn");
-                            final String worldName = main.getDataManager().getQuestsData().getString("quests." + questName + ".triggers." + triggerNumber + ".worldName", "ALL");
-
-
-                            final TriggerType triggerType = TriggerType.valueOf(triggerTypeString);
-
-                            Action foundAction = null;
-                            for (final Action action : actions) {
-                                if (action.getActionName().equalsIgnoreCase(triggerActionName)) {
-                                    foundAction = action;
-                                    break;
-                                }
-                            }
-                            if (foundAction != null) {
-                                Trigger trigger = null;
-                                if (triggerType == TriggerType.COMPLETE) {
-                                    trigger = new CompleteTrigger(main, foundAction, applyOn, worldName);
-                                } else if (triggerType == TriggerType.BEGIN) {
-                                    trigger = new BeginTrigger(main, foundAction, applyOn, worldName);
-                                } else if (triggerType == TriggerType.DEATH) {
-
-                                    trigger = new DeathTrigger(main, foundAction, applyOn, worldName, amountNeeded);
-                                } else if (triggerType == TriggerType.FAIL) {
-                                    trigger = new FailTrigger(main, foundAction, applyOn, worldName);
-                                } else if (triggerType == TriggerType.DISCONNECT) {
-                                    trigger = new DisconnectTrigger(main, foundAction, applyOn, worldName);
-                                } else if (triggerType == TriggerType.NPCDEATH) {
-                                    final int npcToDie = main.getDataManager().getQuestsData().getInt("quests." + questName + ".triggers." + triggerNumber + ".specifics.npcToDie");
-                                    trigger = new NPCDeathTrigger(main, foundAction, applyOn, worldName, amountNeeded, npcToDie);
-                                } else if (triggerType == TriggerType.WORLDENTER) {
-                                    final String worldToEnter = main.getDataManager().getQuestsData().getString("quests." + questName + ".triggers." + triggerNumber + ".specifics.worldToEnter", "ALL");
-                                    trigger = new WorldEnterTrigger(main, foundAction, applyOn, worldName, amountNeeded, worldToEnter);
-                                } else if (triggerType == TriggerType.WORLDLEAVE) {
-                                    final String worldToLeave = main.getDataManager().getQuestsData().getString("quests." + questName + ".triggers." + triggerNumber + ".specifics.worldToLeave", "ALL");
-                                    trigger = new WorldLeaveTrigger(main, foundAction, applyOn, worldName, amountNeeded, worldToLeave);
-                                } else {
-                                    main.getLogManager().log(Level.SEVERE, "ERROR when loading trigger with the triggerNumber <AQUA>" + triggerNumber + " </AQUA>: TriggerType is unknown. Trigger creation SKIPPED!");
-
-                                    main.getLogManager().log(Level.SEVERE, "Plugin disabled, because there was an error while loading quests trigger data.");
-                                    main.getDataManager().setSavingEnabled(false);
-                                    main.getServer().getPluginManager().disablePlugin(main);
-                                }
-                                if (trigger != null) {
-                                    quest.addTrigger(trigger);
-                                }
-
-                            } else {
-                                main.getLogManager().log(Level.SEVERE, "ERROR when loading trigger with the triggerNumber <AQUA>" + triggerNumber + " </AQUA>: Action could not be loaded. Trigger creation SKIPPED!");
-
-                                main.getLogManager().log(Level.SEVERE, "Plugin disabled, because there was an error while loading quests trigger data.");
-                                main.getDataManager().setSavingEnabled(false);
-                                main.getServer().getPluginManager().disablePlugin(main);
-                            }
-
-
-                        }
-                    }
 
 
                     //Objectives:
@@ -469,6 +399,84 @@ public class QuestManager {
                                     main.getDataManager().setSavingEnabled(false);
                                     main.getServer().getPluginManager().disablePlugin(main);
                                 }
+                            }
+
+
+                        }
+                    }
+
+
+                    //Triggers:
+                    final ConfigurationSection triggersConfigurationSection = main.getDataManager().getQuestsData().getConfigurationSection("quests." + questName + ".triggers");
+                    if (triggersConfigurationSection != null) {
+                        for (final String triggerNumber : triggersConfigurationSection.getKeys(false)) {
+
+
+                            int triggerID = -1;
+                            boolean validTriggerID = true;
+                            try {
+                                triggerID = Integer.parseInt(triggerNumber);
+                            } catch (java.lang.NumberFormatException ex) {
+                                main.getLogManager().log(Level.SEVERE, "Error parsing loaded trigger ID ID <AQUA>" + triggerNumber + "</AQUA>. Trigger creation skipped...");
+
+                                validTriggerID = false;
+                                main.getLogManager().log(Level.SEVERE, "Plugin disabled, because there was an error while loading quests trigger ID data.");
+                                main.getDataManager().setSavingEnabled(false);
+                                main.getServer().getPluginManager().disablePlugin(main);
+                            }
+
+                            Class<? extends Trigger> triggerType = null;
+                            final String triggerTypeString = main.getDataManager().getQuestsData().getString("quests." + questName + ".triggers." + triggerNumber + ".triggerType");
+
+                            try {
+                                triggerType = main.getTriggerManager().getTriggerClass(triggerTypeString);
+                            } catch (java.lang.NullPointerException ex) {
+                                main.getLogManager().log(Level.SEVERE, "Error parsing trigger Type of trigger with ID <AQUA>" + triggerNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "<AQUA>. Trigger creation skipped...");
+                                ex.printStackTrace();
+                                main.getLogManager().log(Level.SEVERE, "Plugin disabled, because there was an error while loading quests trigger Type data.");
+                                main.getDataManager().setSavingEnabled(false);
+                                main.getServer().getPluginManager().disablePlugin(main);
+                            }
+
+
+                            final String triggerActionName = main.getDataManager().getQuestsData().getString("quests." + questName + ".triggers." + triggerNumber + ".triggerActionName");
+                            final long amountNeeded = main.getDataManager().getQuestsData().getLong("quests." + questName + ".triggers." + triggerNumber + ".amountNeeded", 1);
+
+                            final int applyOn = main.getDataManager().getQuestsData().getInt("quests." + questName + ".triggers." + triggerNumber + ".applyOn");
+                            final String worldName = main.getDataManager().getQuestsData().getString("quests." + questName + ".triggers." + triggerNumber + ".worldName", "ALL");
+
+
+                            Action foundAction = null;
+                            for (final Action action : actions) {
+                                if (action.getActionName().equalsIgnoreCase(triggerActionName)) {
+                                    foundAction = action;
+                                    break;
+                                }
+                            }
+                            if (validTriggerID && triggerID > 0 && triggerType != null && foundAction != null) {
+                                Trigger trigger = null;
+
+                                try {
+                                    trigger = triggerType.getDeclaredConstructor(NotQuests.class, Quest.class, int.class, Action.class, int.class, String.class, long.class).newInstance(main, quest, triggerID, foundAction, applyOn, worldName, amountNeeded);
+
+                                } catch (Exception ex) {
+                                    main.getLogManager().log(Level.SEVERE, "Error parsing requirement Type of trigger with ID <AQUA>" + triggerNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "</AQUA>. Trigger creation skipped...");
+
+                                    ex.printStackTrace();
+                                    main.getLogManager().log(Level.SEVERE, "Plugin disabled, because there was an error while loading quests trigger Type data.");
+                                    main.getDataManager().setSavingEnabled(false);
+                                    main.getServer().getPluginManager().disablePlugin(main);
+                                }
+                                if (trigger != null) {
+                                    quest.addTrigger(trigger);
+                                }
+
+                            } else {
+                                main.getLogManager().log(Level.SEVERE, "ERROR when loading trigger with the triggerNumber <AQUA>" + triggerNumber + " </AQUA>: Action could not be loaded. Trigger creation SKIPPED!");
+
+                                main.getLogManager().log(Level.SEVERE, "Plugin disabled, because there was an error while loading quests trigger data.");
+                                main.getDataManager().setSavingEnabled(false);
+                                main.getServer().getPluginManager().disablePlugin(main);
                             }
 
 

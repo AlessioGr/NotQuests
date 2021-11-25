@@ -22,6 +22,7 @@ import cloud.commandframework.Command;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.Quest;
 import rocks.gravili.notquests.Structs.Triggers.Action;
 import rocks.gravili.notquests.Structs.Triggers.Trigger;
 
@@ -30,11 +31,17 @@ public class WorldLeaveTrigger extends Trigger {
     private final NotQuests main;
     private final String worldToLeaveName;
 
-    public WorldLeaveTrigger(final NotQuests main, Action action, int applyOn, String worldName, long amountNeeded, String worldToLeaveName) {
-        super(main, action, TriggerType.WORLDLEAVE, applyOn, worldName, amountNeeded);
+    public WorldLeaveTrigger(final NotQuests main, final Quest quest, final int triggerID, Action action, int applyOn, String worldName, long amountNeeded) {
+        super(main, quest, triggerID, action, applyOn, worldName, amountNeeded);
+        this.main = main;
+
+        this.worldToLeaveName = main.getDataManager().getQuestsData().getString("quests." + getQuest().getQuestName() + ".triggers." + triggerID + ".specifics.worldToLeave", "ALL");
+    }
+
+    public WorldLeaveTrigger(final NotQuests main, final Quest quest, final int triggerID, Action action, int applyOn, String worldName, long amountNeeded, String worldToLeaveName) {
+        super(main, quest, triggerID, action, applyOn, worldName, amountNeeded);
         this.main = main;
         this.worldToLeaveName = worldToLeaveName;
-
     }
 
     public final String getWorldToLeaveName() {
@@ -44,5 +51,15 @@ public class WorldLeaveTrigger extends Trigger {
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder) {
 
+    }
+
+    @Override
+    public void save() {
+        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".triggers." + getTriggerID() + ".specifics.worldToLeave", getWorldToLeaveName());
+    }
+
+    @Override
+    public String getTriggerDescription() {
+        return "World to leave: §f" + getWorldToLeaveName();
     }
 }

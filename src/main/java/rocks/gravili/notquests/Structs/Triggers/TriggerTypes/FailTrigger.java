@@ -22,6 +22,7 @@ import cloud.commandframework.Command;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.Quest;
 import rocks.gravili.notquests.Structs.Triggers.Action;
 import rocks.gravili.notquests.Structs.Triggers.Trigger;
 
@@ -29,13 +30,23 @@ public class FailTrigger extends Trigger {
 
     private final NotQuests main;
 
-    public FailTrigger(final NotQuests main, Action action, int applyOn, String worldName) {
-        super(main, action, TriggerType.FAIL, applyOn, worldName, 1);
+    public FailTrigger(final NotQuests main, final Quest quest, final int triggerID, Action action, int applyOn, String worldName) {
+        super(main, quest, triggerID, action, applyOn, worldName, 1);
         this.main = main;
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder) {
 
+    }
+
+    @Override
+    public void save() {
+
+    }
+
+    @Override
+    public String getTriggerDescription() {
+        return null;
     }
 
 

@@ -22,7 +22,6 @@ import org.bukkit.entity.Player;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.*;
 import rocks.gravili.notquests.Structs.Triggers.ActiveTrigger;
-import rocks.gravili.notquests.Structs.Triggers.TriggerTypes.TriggerType;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -137,12 +136,11 @@ public class QuestPlayerManager {
 
 
                         if (triggerTypeString != null) {
-                            final TriggerType triggerType = TriggerType.valueOf(triggerTypeString);
                             final int triggerID = activeQuestTriggerResults.getInt("TriggerID");
 
 
                             for (ActiveTrigger activeTrigger : activeQuest.getActiveTriggers()) {
-                                if (activeTrigger.getTrigger().getTriggerType().equals(triggerType) && activeTrigger.getTriggerID() == triggerID) {
+                                if (activeTrigger.getTrigger().getTriggerType().equals(triggerTypeString) && activeTrigger.getTriggerID() == triggerID) {
                                     activeTrigger.addProgressSilent(currentProgress);
                                 }
 
@@ -259,7 +257,7 @@ public class QuestPlayerManager {
                     main.getDataManager().getDatabaseStatement().executeUpdate("INSERT INTO ActiveQuests (QuestName, PlayerUUID) VALUES ('" + activeQuest.getQuest().getQuestName() + "', '" + questPlayerUUID + "');");
                     //Active Triggers
                     for (ActiveTrigger activeTrigger : activeQuest.getActiveTriggers()) {
-                        main.getDataManager().getDatabaseStatement().executeUpdate("INSERT INTO ActiveTriggers (TriggerType, QuestName, PlayerUUID, CurrentProgress, TriggerID) VALUES ('" + activeTrigger.getTrigger().getTriggerType().toString() + "', '" + activeTrigger.getActiveQuest().getQuest().getQuestName() + "', '" + questPlayerUUID + "', " + activeTrigger.getCurrentProgress() + ", " + activeTrigger.getTriggerID() + ");");
+                        main.getDataManager().getDatabaseStatement().executeUpdate("INSERT INTO ActiveTriggers (TriggerType, QuestName, PlayerUUID, CurrentProgress, TriggerID) VALUES ('" + activeTrigger.getTrigger().getTriggerType() + "', '" + activeTrigger.getActiveQuest().getQuest().getQuestName() + "', '" + questPlayerUUID + "', " + activeTrigger.getCurrentProgress() + ", " + activeTrigger.getTriggerID() + ");");
                     }
 
                     //Active Objectives

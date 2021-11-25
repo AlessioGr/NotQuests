@@ -36,6 +36,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import rocks.gravili.notquests.Events.ArmorStandEvents;
 import rocks.gravili.notquests.Events.QuestEvents;
+import rocks.gravili.notquests.Events.TriggerEvents;
 import rocks.gravili.notquests.Events.hooks.CitizensEvents;
 import rocks.gravili.notquests.Events.hooks.EliteMobsEvents;
 import rocks.gravili.notquests.Events.hooks.MythicMobsEvents;
@@ -265,6 +266,9 @@ public final class NotQuests extends JavaPlugin {
 
         //Register the Event Listeners in QuestEvents
         getServer().getPluginManager().registerEvents(new QuestEvents(this), this);
+
+        //Register the Event Listeners in TriggerEvents
+        getServer().getPluginManager().registerEvents(new TriggerEvents(this), this);
 
         //Register the Event Listeners in ArmorStandEvents
         getServer().getPluginManager().registerEvents(new ArmorStandEvents(this), this);

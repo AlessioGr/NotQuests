@@ -23,12 +23,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
+import rocks.gravili.notquests.Events.notquests.ObjectiveCompleteEvent;
+import rocks.gravili.notquests.Events.notquests.QuestFailEvent;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Objectives.EscortNPCObjective;
 import rocks.gravili.notquests.Structs.Objectives.Objective;
 import rocks.gravili.notquests.Structs.Triggers.ActiveTrigger;
 import rocks.gravili.notquests.Structs.Triggers.Trigger;
-import rocks.gravili.notquests.Structs.Triggers.TriggerTypes.TriggerType;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -153,70 +154,59 @@ public class ActiveQuest {
     //For Citizens NPCs
     public void notifyActiveObjectiveCompleted(final ActiveObjective activeObjective, final boolean silent, final int NPCID) {
         if (activeObjective.isCompleted(NPCID)) {
-            for (final ActiveTrigger activeTrigger : getActiveTriggers()) {
-                if (activeTrigger.getTrigger().getTriggerType() == TriggerType.COMPLETE) { //Complete the quest
-                    if (activeTrigger.getTrigger().getApplyOn() >= 1) { //Objective and not Quest
-                        if (activeObjective.getObjectiveID() == activeTrigger.getTrigger().getApplyOn()) {
+            ObjectiveCompleteEvent objectiveCompleteEvent = new ObjectiveCompleteEvent(getQuestPlayer(), activeObjective, this);
+            if (Bukkit.isPrimaryThread()) {
+                Bukkit.getScheduler().runTaskAsynchronously(main, () -> {
+                    Bukkit.getPluginManager().callEvent(objectiveCompleteEvent);
+                });
+            } else {
+                Bukkit.getPluginManager().callEvent(objectiveCompleteEvent);
+            }
 
-                            if (activeTrigger.getTrigger().getWorldName().equalsIgnoreCase("ALL")) {
-                                activeTrigger.addAndCheckTrigger(this);
-                            } else {
-                                final Player player = Bukkit.getPlayer(getQuestPlayer().getUUID());
-                                if (player != null && player.getWorld().getName().equalsIgnoreCase(activeTrigger.getTrigger().getWorldName())) {
-                                    activeTrigger.addAndCheckTrigger(this);
-                                }
-                            }
+            if (!objectiveCompleteEvent.isCancelled()) {
 
-                        }
+                toRemove.add(activeObjective);
+                if (!silent) {
+                    questPlayer.sendMessage(main.getLanguageManager().getString("chat.objectives.successfully-completed", questPlayer.getPlayer())
+                            .replaceAll("%OBJECTIVENAME%", activeObjective.getObjective().getObjectiveFinalName())
+                            .replaceAll("%QUESTNAME%", quest.getQuestFinalName()));
+                    final Player player = Bukkit.getPlayer(questPlayer.getUUID());
+                    if (player != null) {
+                        player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, SoundCategory.MASTER, 75, 1.4f);
+
                     }
                 }
             }
 
-            toRemove.add(activeObjective);
-            if (!silent) {
-                questPlayer.sendMessage(main.getLanguageManager().getString("chat.objectives.successfully-completed", questPlayer.getPlayer())
-                        .replaceAll("%OBJECTIVENAME%", activeObjective.getObjective().getObjectiveFinalName())
-                        .replaceAll("%QUESTNAME%", quest.getQuestFinalName()));
-                final Player player = Bukkit.getPlayer(questPlayer.getUUID());
-                if (player != null) {
-                    player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, SoundCategory.MASTER, 75, 1.4f);
 
-                }
-            }
         }
     }
 
     //For Armor Stands
     public void notifyActiveObjectiveCompleted(final ActiveObjective activeObjective, final boolean silent, final UUID armorStandUUID) {
         if (activeObjective.isCompleted(armorStandUUID)) {
-            for (final ActiveTrigger activeTrigger : getActiveTriggers()) {
-                if (activeTrigger.getTrigger().getTriggerType() == TriggerType.COMPLETE) { //Complete the quest
-                    if (activeTrigger.getTrigger().getApplyOn() >= 1) { //Objective and not Quest
-                        if (activeObjective.getObjectiveID() == activeTrigger.getTrigger().getApplyOn()) {
 
-                            if (activeTrigger.getTrigger().getWorldName().equalsIgnoreCase("ALL")) {
-                                activeTrigger.addAndCheckTrigger(this);
-                            } else {
-                                final Player player = Bukkit.getPlayer(getQuestPlayer().getUUID());
-                                if (player != null && player.getWorld().getName().equalsIgnoreCase(activeTrigger.getTrigger().getWorldName())) {
-                                    activeTrigger.addAndCheckTrigger(this);
-                                }
-                            }
-
-                        }
-                    }
-                }
+            ObjectiveCompleteEvent objectiveCompleteEvent = new ObjectiveCompleteEvent(getQuestPlayer(), activeObjective, this);
+            if (Bukkit.isPrimaryThread()) {
+                Bukkit.getScheduler().runTaskAsynchronously(main, () -> {
+                    Bukkit.getPluginManager().callEvent(objectiveCompleteEvent);
+                });
+            } else {
+                Bukkit.getPluginManager().callEvent(objectiveCompleteEvent);
             }
 
-            toRemove.add(activeObjective);
-            if (!silent) {
-                questPlayer.sendMessage(main.getLanguageManager().getString("chat.objectives.successfully-completed", questPlayer.getPlayer())
-                        .replaceAll("%OBJECTIVENAME%", activeObjective.getObjective().getObjectiveFinalName())
-                        .replaceAll("%QUESTNAME%", quest.getQuestFinalName()));
-                final Player player = Bukkit.getPlayer(questPlayer.getUUID());
-                if (player != null) {
-                    player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, SoundCategory.MASTER, 75, 1.4f);
+            if (!objectiveCompleteEvent.isCancelled()) {
 
+                toRemove.add(activeObjective);
+                if (!silent) {
+                    questPlayer.sendMessage(main.getLanguageManager().getString("chat.objectives.successfully-completed", questPlayer.getPlayer())
+                            .replaceAll("%OBJECTIVENAME%", activeObjective.getObjective().getObjectiveFinalName())
+                            .replaceAll("%QUESTNAME%", quest.getQuestFinalName()));
+                    final Player player = Bukkit.getPlayer(questPlayer.getUUID());
+                    if (player != null) {
+                        player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, SoundCategory.MASTER, 75, 1.4f);
+
+                    }
                 }
             }
         }
@@ -242,59 +232,19 @@ public class ActiveQuest {
 
     public void fail() {
 
-
-        if (questPlayer.getActiveQuests().size() > 0) {
-            final ArrayList<ActiveQuest> activeQuestsCopy = new ArrayList<>(questPlayer.getActiveQuests());
-
-            //So, this is not a for loop anymore but instead it just uses the current activequest. That's because we had this error: "When miner (Gold Madness) & 3rdlife 2, this also fails 3rdlife2 if I fail miner (Gold Madness) for some reason"
-            //So, this fixes it. Because the Trigger type FAIL should only apply for the current quest anyways. Other Active Quests dont matter for the FAIL trigger for the current quest
-            //TODO: Add an option in the todo trigger creation to make it apply to a different quest (enter different quest name). If not, use current quest.
-
-            // for(final ActiveQuest activeQuest : activeQuestsCopy){
-            final ActiveQuest activeQuest = this;
-            for (final ActiveTrigger activeTrigger : activeQuest.getActiveTriggers()) {
-                if (activeTrigger.getTrigger().getTriggerType() == TriggerType.FAIL) {
-                    if (activeTrigger.getTrigger().getApplyOn() == 0) { //Quest and not Objective
-                        //System.out.println("§eAAA");
-
-                        if (activeTrigger.getTrigger().getWorldName().equalsIgnoreCase("ALL")) {
-                            activeTrigger.addAndCheckTrigger(activeQuest);
-                            //System.out.println("§eAAA2");
-
-                        } else {
-                            final Player player = Bukkit.getPlayer(getQuestPlayer().getUUID());
-                            if (player != null && player.getWorld().getName().equalsIgnoreCase(activeTrigger.getTrigger().getWorldName())) {
-                                activeTrigger.addAndCheckTrigger(activeQuest);
-                                //System.out.println("§eAAA3");
-
-                            }
-                        }
-
-
-                    } else if (activeTrigger.getTrigger().getApplyOn() >= 1) { //Objective and not Quest
-
-                        final ActiveObjective activeObjective = activeQuest.getActiveObjectiveFromID(activeTrigger.getTrigger().getApplyOn());
-                        if (activeObjective != null && activeObjective.isUnlocked()) {
-
-
-                            if (activeTrigger.getTrigger().getWorldName().equalsIgnoreCase("ALL")) {
-                                activeTrigger.addAndCheckTrigger(activeQuest);
-                            } else {
-                                final Player player = Bukkit.getPlayer(getQuestPlayer().getUUID());
-                                if (player != null && player.getWorld().getName().equalsIgnoreCase(activeTrigger.getTrigger().getWorldName())) {
-                                    activeTrigger.addAndCheckTrigger(activeQuest);
-                                }
-                            }
-
-                        }
-                    }
-
-                }
-            }
-
-
-            //  }
+        QuestFailEvent questFailEvent = new QuestFailEvent(getQuestPlayer(), this);
+        if (Bukkit.isPrimaryThread()) {
+            Bukkit.getScheduler().runTaskAsynchronously(main, () -> {
+                Bukkit.getPluginManager().callEvent(questFailEvent);
+            });
+        } else {
+            Bukkit.getPluginManager().callEvent(questFailEvent);
         }
+
+        if (questFailEvent.isCancelled()) {
+            return;
+        }
+
 
         questPlayer.sendMessage(main.getLanguageManager().getString("chat.quest-failed", questPlayer.getPlayer()).replaceAll("%QUESTNAME%", getQuest().getQuestName()));
 

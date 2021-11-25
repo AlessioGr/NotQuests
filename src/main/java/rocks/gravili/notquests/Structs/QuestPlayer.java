@@ -25,13 +25,13 @@ import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.Commands.NotQuestColors;
+import rocks.gravili.notquests.Events.notquests.QuestCompletedEvent;
+import rocks.gravili.notquests.Events.notquests.QuestFinishAcceptEvent;
 import rocks.gravili.notquests.Events.notquests.QuestPointsChangeEvent;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Objectives.OtherQuestObjective;
 import rocks.gravili.notquests.Structs.Requirements.Requirement;
 import rocks.gravili.notquests.Structs.Rewards.Reward;
-import rocks.gravili.notquests.Structs.Triggers.ActiveTrigger;
-import rocks.gravili.notquests.Structs.Triggers.TriggerTypes.TriggerType;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -182,26 +182,24 @@ public class QuestPlayer {
 
 
     private void finishAddingQuest(final ActiveQuest activeQuest, boolean triggerAcceptQuestTrigger, final boolean sendUpdateObjectivesUnlocked) {
+
+        QuestFinishAcceptEvent questFinishAcceptEvent = new QuestFinishAcceptEvent(this, activeQuest, triggerAcceptQuestTrigger);
+        if (Bukkit.isPrimaryThread()) {
+            Bukkit.getScheduler().runTaskAsynchronously(main, () -> {
+                Bukkit.getPluginManager().callEvent(questFinishAcceptEvent);
+            });
+        } else {
+            Bukkit.getPluginManager().callEvent(questFinishAcceptEvent);
+        }
+
+        if (questFinishAcceptEvent.isCancelled()) {
+            return;
+        }
+
+
         activeQuests.add(activeQuest);
         activeQuestsCopy.add(activeQuest);
 
-        if (triggerAcceptQuestTrigger) {
-            for (final ActiveTrigger activeTrigger : activeQuest.getActiveTriggers()) {
-                if (activeTrigger.getTrigger().getTriggerType() == TriggerType.BEGIN) { //Start the quest
-                    if (activeTrigger.getTrigger().getApplyOn() == 0) { //Quest and not objective
-
-                        if (activeTrigger.getTrigger().getWorldName().equalsIgnoreCase("ALL")) {
-                            activeTrigger.addAndCheckTrigger(activeQuest);
-                        } else {
-                            final Player player = getPlayer();
-                            if (player != null && player.getWorld().getName().equalsIgnoreCase(activeTrigger.getTrigger().getWorldName())) {
-                                activeTrigger.addAndCheckTrigger(activeQuest);
-                            }
-                        }
-                    }
-                }
-            }
-        }
 
         activeQuest.updateObjectivesUnlocked(sendUpdateObjectivesUnlocked, triggerAcceptQuestTrigger);
 
@@ -273,20 +271,17 @@ public class QuestPlayer {
 
 
     public void forceActiveQuestCompleted(ActiveQuest activeQuest) {
-        for (final ActiveTrigger activeTrigger : activeQuest.getActiveTriggers()) {
-            if (activeTrigger.getTrigger().getTriggerType() == TriggerType.COMPLETE) { //Complete the quest
-                if (activeTrigger.getTrigger().getApplyOn() == 0) { //Quest and not objective
+        QuestCompletedEvent questCompletedEvent = new QuestCompletedEvent(this, activeQuest, true);
+        if (Bukkit.isPrimaryThread()) {
+            Bukkit.getScheduler().runTaskAsynchronously(main, () -> {
+                Bukkit.getPluginManager().callEvent(questCompletedEvent);
+            });
+        } else {
+            Bukkit.getPluginManager().callEvent(questCompletedEvent);
+        }
 
-                    if (activeTrigger.getTrigger().getWorldName().equalsIgnoreCase("ALL")) {
-                        activeTrigger.addAndCheckTrigger(activeQuest);
-                    } else {
-                        final Player player = getPlayer();
-                        if (player != null && player.getWorld().getName().equalsIgnoreCase(activeTrigger.getTrigger().getWorldName())) {
-                            activeTrigger.addAndCheckTrigger(activeQuest);
-                        }
-                    }
-                }
-            }
+        if (questCompletedEvent.isCancelled()) {
+            return;
         }
 
 
@@ -320,20 +315,17 @@ public class QuestPlayer {
     }
 
     public void notifyActiveQuestCompleted(ActiveQuest activeQuest) {
-        for (final ActiveTrigger activeTrigger : activeQuest.getActiveTriggers()) {
-            if (activeTrigger.getTrigger().getTriggerType() == TriggerType.COMPLETE) { //Complete the quest
-                if (activeTrigger.getTrigger().getApplyOn() == 0) { //Quest and not objective
+        QuestCompletedEvent questCompletedEvent = new QuestCompletedEvent(this, activeQuest, false);
+        if (Bukkit.isPrimaryThread()) {
+            Bukkit.getScheduler().runTaskAsynchronously(main, () -> {
+                Bukkit.getPluginManager().callEvent(questCompletedEvent);
+            });
+        } else {
+            Bukkit.getPluginManager().callEvent(questCompletedEvent);
+        }
 
-                    if (activeTrigger.getTrigger().getWorldName().equalsIgnoreCase("ALL")) {
-                        activeTrigger.addAndCheckTrigger(activeQuest);
-                    } else {
-                        final Player player = getPlayer();
-                        if (player != null && player.getWorld().getName().equalsIgnoreCase(activeTrigger.getTrigger().getWorldName())) {
-                            activeTrigger.addAndCheckTrigger(activeQuest);
-                        }
-                    }
-                }
-            }
+        if (questCompletedEvent.isCancelled()) {
+            return;
         }
 
         if (activeQuest.isCompleted()) {

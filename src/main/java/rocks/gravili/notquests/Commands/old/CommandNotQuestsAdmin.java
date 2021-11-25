@@ -796,14 +796,13 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                 int counter = 1;
                                 for (Trigger trigger : quest.getTriggers()) {
 
-                                    sender.sendMessage("§e" + counter + ". Type: §b" + trigger.getTriggerType().toString());
-                                    if (trigger.getTriggerType() == TriggerType.NPCDEATH) {
-                                        sender.sendMessage("§7-- NPC to die ID: §f" + ((NPCDeathTrigger) trigger).getNpcToDieID());
-                                    } else if (trigger.getTriggerType() == TriggerType.WORLDENTER) {
-                                        sender.sendMessage("§7-- World to enter: §f" + ((WorldEnterTrigger) trigger).getWorldToEnterName());
-                                    } else if (trigger.getTriggerType() ==TriggerType.WORLDLEAVE ) {
-                                        sender.sendMessage("§7-- World to leave: §f" + ((WorldLeaveTrigger) trigger).getWorldToLeaveName());
+                                    sender.sendMessage("§e" + counter + ". Type: §b" + trigger.getTriggerType());
+
+                                    final String triggerDescription = trigger.getTriggerDescription();
+                                    if (!triggerDescription.isBlank()) {
+                                        sender.sendMessage("§7-- " + triggerDescription);
                                     }
+
                                     sender.sendMessage("§7--- Action Name: §f" + trigger.getTriggerAction().getActionName());
                                     sender.sendMessage("§7------ Action console command: §f" + trigger.getTriggerAction().getConsoleCommand());
                                     sender.sendMessage("§7--- Amount of triggers needed for first execution: §f" + trigger.getAmountNeeded());
@@ -1280,7 +1279,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                             applyOn = Integer.parseInt(args[6].substring(1));
                                         }
                                         if (applyOn != -1) {
-                                            final FailTrigger failTrigger = new FailTrigger(main, action, applyOn, args[7]);
+                                            final FailTrigger failTrigger = new FailTrigger(main, quest, quest.getTriggers().size() + 1, action, applyOn, args[7]);
                                             quest.addTrigger(failTrigger);
                                             sender.sendMessage("§aTrigger successfully added to quest §b" + quest.getQuestName() + "§a!");
                                         } else {
@@ -1301,7 +1300,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                             applyOn = Integer.parseInt(args[6].substring(1));
                                         }
                                         if (applyOn != -1) {
-                                            final CompleteTrigger completeTrigger = new CompleteTrigger(main, action, applyOn, args[7]);
+                                            final CompleteTrigger completeTrigger = new CompleteTrigger(main, quest, quest.getTriggers().size() + 1, action, applyOn, args[7]);
                                             quest.addTrigger(completeTrigger);
                                             sender.sendMessage("§aTrigger successfully added to quest §b" + quest.getQuestName() + "§a!");
                                         } else {
@@ -1321,7 +1320,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                             applyOn = Integer.parseInt(args[6].substring(1));
                                         }
                                         if (applyOn != -1) {
-                                            final BeginTrigger beginTrigger = new BeginTrigger(main, action, applyOn, args[7]);
+                                            final BeginTrigger beginTrigger = new BeginTrigger(main, quest, quest.getTriggers().size() + 1, action, applyOn, args[7]);
                                             quest.addTrigger(beginTrigger);
                                             sender.sendMessage("§aTrigger successfully added to quest §b" + quest.getQuestName() + "§a!");
                                         } else {
@@ -1341,7 +1340,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                             applyOn = Integer.parseInt(args[6].substring(1));
                                         }
                                         if (applyOn != -1) {
-                                            final DisconnectTrigger disconnectTrigger = new DisconnectTrigger(main, action, applyOn, args[7]);
+                                            final DisconnectTrigger disconnectTrigger = new DisconnectTrigger(main, quest, quest.getTriggers().size() + 1, action, applyOn, args[7]);
                                             quest.addTrigger(disconnectTrigger);
                                             sender.sendMessage("§aTrigger successfully added to quest §b" + quest.getQuestName() + "§a!");
                                         } else {
@@ -1403,7 +1402,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                         }
                                         if (applyOn != -1) {
                                             int amountOfDeaths = Integer.parseInt(args[8]);
-                                            final DeathTrigger deathTrigger = new DeathTrigger(main, action, applyOn, args[7], amountOfDeaths);
+                                            final DeathTrigger deathTrigger = new DeathTrigger(main, quest, quest.getTriggers().size() + 1, action, applyOn, args[7], amountOfDeaths);
                                             quest.addTrigger(deathTrigger);
                                             sender.sendMessage("§aTrigger successfully added to quest §b" + quest.getQuestName() + "§a!");
                                         } else {
@@ -1470,7 +1469,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                             int npcID = Integer.parseInt(args[9]);
                                             final NPC npc = CitizensAPI.getNPCRegistry().getById(npcID);
                                             if (npc != null) {
-                                                final NPCDeathTrigger npcDeathTrigger = new NPCDeathTrigger(main, action, applyOn, args[7], amountOfDeaths, npcID);
+                                                final NPCDeathTrigger npcDeathTrigger = new NPCDeathTrigger(main, quest, quest.getTriggers().size() + 1, action, applyOn, args[7], amountOfDeaths, npcID);
                                                 quest.addTrigger(npcDeathTrigger);
                                                 sender.sendMessage("§aTrigger successfully added to quest §b" + quest.getQuestName() + "§a!");
                                             } else {
@@ -1498,7 +1497,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                             final int amountOfEnters = Integer.parseInt(args[8]);
                                             final String worldName = args[9];
 
-                                            final WorldEnterTrigger worldEnterTrigger = new WorldEnterTrigger(main, action, applyOn, args[7], amountOfEnters, worldName);
+                                            final WorldEnterTrigger worldEnterTrigger = new WorldEnterTrigger(main, quest, quest.getTriggers().size() + 1, action, applyOn, args[7], amountOfEnters, worldName);
                                             quest.addTrigger(worldEnterTrigger);
                                             sender.sendMessage("§aTrigger successfully added to quest §b" + quest.getQuestName() + "§a!");
 
@@ -1525,7 +1524,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                             final int amountOfLeaves = Integer.parseInt(args[8]);
                                             final String worldName = args[9];
 
-                                            final WorldLeaveTrigger worldLeaveTrigger = new WorldLeaveTrigger(main, action, applyOn, args[7], amountOfLeaves, worldName);
+                                            final WorldLeaveTrigger worldLeaveTrigger = new WorldLeaveTrigger(main, quest, quest.getTriggers().size() + 1, action, applyOn, args[7], amountOfLeaves, worldName);
                                             quest.addTrigger(worldLeaveTrigger);
                                             sender.sendMessage("§aTrigger successfully added to quest §b" + quest.getQuestName() + "§a!");
 

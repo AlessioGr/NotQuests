@@ -42,7 +42,6 @@ import rocks.gravili.notquests.Structs.Objectives.TalkToNPCObjective;
 import rocks.gravili.notquests.Structs.QuestPlayer;
 import rocks.gravili.notquests.Structs.Triggers.ActiveTrigger;
 import rocks.gravili.notquests.Structs.Triggers.TriggerTypes.NPCDeathTrigger;
-import rocks.gravili.notquests.Structs.Triggers.TriggerTypes.TriggerType;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -64,7 +63,7 @@ public class CitizensEvents implements Listener {
             if (questPlayer.getActiveQuests().size() > 0) {
                 for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                     for (final ActiveTrigger activeTrigger : activeQuest.getActiveTriggers()) {
-                        if (activeTrigger.getTrigger().getTriggerType() == TriggerType.NPCDEATH) {
+                        if (activeTrigger.getTrigger().getTriggerType().equals("NPCDEATH")) {
                             if (((NPCDeathTrigger) activeTrigger.getTrigger()).getNpcToDieID() == npc.getId()) {
                                 if (activeTrigger.getTrigger().getApplyOn() == 0) { //Quest and not Objective
 

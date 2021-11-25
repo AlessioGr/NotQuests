@@ -22,12 +22,11 @@ package rocks.gravili.notquests.Structs;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.Commands.NotQuestColors;
+import rocks.gravili.notquests.Events.notquests.ObjectiveUnlockEvent;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Objectives.EscortNPCObjective;
 import rocks.gravili.notquests.Structs.Objectives.Objective;
 import rocks.gravili.notquests.Structs.Objectives.OtherQuestObjective;
-import rocks.gravili.notquests.Structs.Triggers.ActiveTrigger;
-import rocks.gravili.notquests.Structs.Triggers.TriggerTypes.TriggerType;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -64,27 +63,19 @@ public class ActiveObjective {
         if (this.unlocked != unlocked) {
             this.unlocked = unlocked;
             if (unlocked) {
-                if (triggerAcceptQuestTrigger) {
-                    for (final ActiveTrigger activeTrigger : getActiveQuest().getActiveTriggers()) {
-                        if (activeTrigger.getTrigger().getTriggerType() == TriggerType.BEGIN) { //Start the quest
-                            if (activeTrigger.getTrigger().getApplyOn() >= 1) { //Objective and not Quest
-                                if (getObjectiveID() == activeTrigger.getTrigger().getApplyOn()) {
-                                    if (activeTrigger.getTrigger().getWorldName().equalsIgnoreCase("ALL")) {
-                                        activeTrigger.addAndCheckTrigger(activeQuest);
-                                    } else {
-                                        final Player player = Bukkit.getPlayer(getQuestPlayer().getUUID());
-                                        if (player != null && player.getWorld().getName().equalsIgnoreCase(activeTrigger.getTrigger().getWorldName())) {
-                                            activeTrigger.addAndCheckTrigger(activeQuest);
-                                        }
-                                    }
 
-
-                                }
-                            }
-                        }
-                    }
+                ObjectiveUnlockEvent objectiveUnlockEvent = new ObjectiveUnlockEvent(getQuestPlayer(), this, activeQuest, triggerAcceptQuestTrigger);
+                if (Bukkit.isPrimaryThread()) {
+                    Bukkit.getScheduler().runTaskAsynchronously(main, () -> {
+                        Bukkit.getPluginManager().callEvent(objectiveUnlockEvent);
+                    });
+                } else {
+                    Bukkit.getPluginManager().callEvent(objectiveUnlockEvent);
                 }
 
+                if (objectiveUnlockEvent.isCancelled()) {
+                    return;
+                }
 
                 if (objective instanceof EscortNPCObjective escortNPCObjective) {
                     if (main.isCitizensEnabled()) {

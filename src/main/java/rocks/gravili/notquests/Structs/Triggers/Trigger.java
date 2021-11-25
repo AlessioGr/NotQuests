@@ -23,34 +23,44 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.ActiveQuest;
-import rocks.gravili.notquests.Structs.Triggers.TriggerTypes.TriggerType;
+import rocks.gravili.notquests.Structs.Quest;
 
 import java.util.logging.Level;
 
 public abstract class Trigger {
     private final NotQuests main;
-    private final TriggerType triggerType; //Enum
-    private final Action action; //Class
+    private final Quest quest;
+    private final int triggerID;
+    private final Action action;
     private final int applyOn; // 0 is for the whole quest. Positive numbers = objectives (JUST INTERNALLY HERE, NOT IN THE ADMIN COMMAND)
     private final String worldName;
     private final long amountNeeded; // 0 or 1 means every trigger() triggers it
 
 
-    public Trigger(final NotQuests main, Action action, TriggerType triggerType, int applyOn, String worldName, long amountNeeded) {
+    public Trigger(final NotQuests main, final Quest quest, final int triggerID, Action action, int applyOn, String worldName, long amountNeeded) {
         this.main = main;
+        this.quest = quest;
+        this.triggerID = triggerID;
         this.action = action;
-        this.triggerType = triggerType;
         this.applyOn = applyOn;
         this.amountNeeded = amountNeeded;
         this.worldName = worldName;
     }
 
-    public final String getWorldName() {
-        return worldName;
+    public final Quest getQuest() {
+        return quest;
     }
 
-    public final TriggerType getTriggerType() {
-        return triggerType;
+    public final int getTriggerID() {
+        return triggerID;
+    }
+
+    public final String getTriggerType() {
+        return main.getTriggerManager().getTriggerType(this.getClass());
+    }
+
+    public final String getWorldName() {
+        return worldName;
     }
 
     public final Action getTriggerAction() {
@@ -75,7 +85,10 @@ public abstract class Trigger {
             main.getLogManager().log(Level.WARNING, "Tried to execute trigger for offline player - ABORTED!");
 
         }
-
     }
+
+    public abstract void save();
+
+    public abstract String getTriggerDescription();
 
 }
