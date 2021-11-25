@@ -20,26 +20,28 @@ package rocks.gravili.notquests.Structs.Rewards;
 
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.entity.Player;
+import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Quest;
 
 public abstract class Reward {
-    private final RewardType rewardType;
+    private final NotQuests main;
+    private final Quest quest;
     private final int rewardID;
     private String rewardDisplayName = "";
 
 
-    public Reward(final RewardType rewardType, int rewardID) {
-        this.rewardType = rewardType;
+    public Reward(NotQuests main, Quest quest, int rewardID) {
+        this.main = main;
+        this.quest = quest;
         this.rewardID = rewardID;
     }
 
-    public final RewardType getRewardType() {
-        return rewardType;
+    public final String getRewardType() {
+        return main.getRewardManager().getRewardType(this.getClass());
     }
 
-    public abstract void giveReward(final Player player, final Quest quest);
 
-    public final int getRewardID(){
+    public final int getRewardID() {
         return rewardID;
     }
 
@@ -54,6 +56,15 @@ public abstract class Reward {
 
     public void removeRewardDisplayName() {
         this.rewardDisplayName = "";
-
     }
+
+    public final Quest getQuest() {
+        return quest;
+    }
+
+    public abstract String getRewardDescription();
+
+    public abstract void giveReward(final Player player, final Quest quest);
+
+    public abstract void save();
 }

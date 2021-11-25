@@ -18,20 +18,46 @@
 
 package rocks.gravili.notquests.Structs.Requirements;
 
-public abstract class Requirement {
-    private final RequirementType requirementType;
-    private final long progressNeeded;
+import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.Quest;
+import rocks.gravili.notquests.Structs.QuestPlayer;
 
-    public Requirement(RequirementType requirementType, long progressNeeded) {
-        this.requirementType = requirementType;
+public abstract class Requirement {
+    private final NotQuests main;
+    private final long progressNeeded;
+    private final int requirementID;
+    private final Quest quest;
+
+    public Requirement(NotQuests main, Quest quest, int requirementID, long progressNeeded) {
+        this.main = main;
         this.progressNeeded = progressNeeded;
+        this.quest = quest;
+        this.requirementID = requirementID;
     }
 
-    public final RequirementType getRequirementType() {
-        return requirementType;
+    public final String getRequirementType() {
+        return main.getRequirementManager().getRequirementType(this.getClass());
     }
 
     public final long getProgressNeeded() {
         return progressNeeded;
     }
+
+    public final Quest getQuest() {
+        return quest;
+    }
+
+    public final int getRequirementID() {
+        return requirementID;
+    }
+
+    /**
+     * @return String if the requirement is not fulfilled. Empty string if the requirement is fulfilled. The String should say the still-required requirements.
+     */
+    public abstract String check(final QuestPlayer questPlayer, final boolean enforce);
+
+
+    public abstract String getRequirementDescription();
+
+    public abstract void save();
 }

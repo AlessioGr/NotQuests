@@ -22,21 +22,31 @@ import cloud.commandframework.Command;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.CompletedQuest;
 import rocks.gravili.notquests.Structs.Quest;
+import rocks.gravili.notquests.Structs.QuestPlayer;
 
 
 public class OtherQuestRequirement extends Requirement {
 
     private final NotQuests main;
     private final String otherQuestName;
-    private final int amountOfCompletionsNeeded;
+    private final long amountOfCompletionsNeeded;
 
 
-    public OtherQuestRequirement(NotQuests main, String otherQuestName, int amountOfCompletionsNeeded) {
-        super(RequirementType.OtherQuest, amountOfCompletionsNeeded);
+    public OtherQuestRequirement(NotQuests main, final Quest quest, final int requirementID, long amountOfCompletionsNeeded) {
+        super(main, quest, requirementID, amountOfCompletionsNeeded);
         this.main = main;
-        this.otherQuestName = otherQuestName;
         this.amountOfCompletionsNeeded = amountOfCompletionsNeeded;
+
+        otherQuestName = main.getDataManager().getQuestsData().getString("quests." + quest.getQuestName() + ".requirements." + requirementID + ".specifics.otherQuestRequirememt");
+    }
+
+    public OtherQuestRequirement(NotQuests main, final Quest quest, final int requirementID, int amountOfCompletionsNeeded, String otherQuestName) {
+        super(main, quest, requirementID, amountOfCompletionsNeeded);
+        this.main = main;
+        this.amountOfCompletionsNeeded = amountOfCompletionsNeeded;
+        this.otherQuestName = otherQuestName;
 
     }
 
@@ -49,11 +59,40 @@ public class OtherQuestRequirement extends Requirement {
         return main.getQuestManager().getQuest(otherQuestName);
     }
 
-    public final int getAmountOfCompletionsNeeded() {
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder) {
+
+    }
+
+    public final long getAmountOfCompletionsNeeded() {
         return amountOfCompletionsNeeded;
     }
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder) {
+    @Override
+    public String check(final QuestPlayer questPlayer, final boolean enforce) {
+        final Quest otherQuest = getOtherQuest();
 
+        int otherQuestCompletedAmount = 0;
+
+        for (CompletedQuest completedQuest : questPlayer.getCompletedQuests()) {
+            if (completedQuest.getQuest().equals(otherQuest)) {
+                otherQuestCompletedAmount += 1;
+            }
+        }
+        if (otherQuestCompletedAmount < getProgressNeeded()) {
+            return "\n§eFinish the following quest: §b" + getOtherQuestName() + " §7(" + getProgressNeeded() + " times)\n";
+        } else {
+            return "";
+        }
+    }
+
+
+    @Override
+    public void save() {
+        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".requirements." + getRequirementID() + ".specifics.otherQuestRequirememt", getOtherQuestName());
+    }
+
+    @Override
+    public String getRequirementDescription() {
+        return "§7-- Finish Quest first: " + getOtherQuestName();
     }
 }

@@ -371,25 +371,36 @@ public class AdminCommands {
                     }
                 }));
 
-        manager.command(builder.literal("listRewardTypes")
-                .meta(CommandMeta.DESCRIPTION, "Shows you a list of all available Reward Types.")
-                .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-                    audience.sendMessage(Component.empty());
-                    audience.sendMessage(miniMessage.parse(highlightGradient + "All reward types:</gradient>"));
-                    for (final String rewardType : main.getQuestManager().getRewardTypesList()) {
-                        audience.sendMessage(miniMessage.parse(mainGradient + rewardType));
-                    }
-                }));
-
         manager.command(builder.literal("listRequirementTypes")
                 .meta(CommandMeta.DESCRIPTION, "Shows you a list of all available Requirement Types.")
                 .handler((context) -> {
                     final Audience audience = main.adventure().sender(context.getSender());
                     audience.sendMessage(Component.empty());
                     audience.sendMessage(miniMessage.parse(highlightGradient + "All requirement types:</gradient>"));
-                    for (final String requirementType : main.getQuestManager().getRequirementsTypesList()) {
+                    for (final String requirementType : main.getRequirementManager().getRequirementIdentifiers()) {
                         audience.sendMessage(miniMessage.parse(mainGradient + requirementType));
+                    }
+                }));
+
+        manager.command(builder.literal("listRewardTypes")
+                .meta(CommandMeta.DESCRIPTION, "Shows you a list of all available Reward Types.")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+                    audience.sendMessage(Component.empty());
+                    audience.sendMessage(miniMessage.parse(highlightGradient + "All reward types:</gradient>"));
+                    for (final String rewardType : main.getRewardManager().getRewardIdentifiers()) {
+                        audience.sendMessage(miniMessage.parse(mainGradient + rewardType));
+                    }
+                }));
+
+        manager.command(builder.literal("listTriggerTypes")
+                .meta(CommandMeta.DESCRIPTION, "Shows you a list of all available Trigger Types.")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+                    audience.sendMessage(Component.empty());
+                    audience.sendMessage(miniMessage.parse(highlightGradient + "All trigger types:</gradient>"));
+                    for (final String triggerType : main.getTriggerManager().getTriggerIdentifiers()) {
+                        audience.sendMessage(miniMessage.parse(mainGradient + triggerType));
                     }
                 }));
 

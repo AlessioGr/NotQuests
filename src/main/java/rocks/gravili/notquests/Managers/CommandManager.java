@@ -54,10 +54,15 @@ public class CommandManager {
     private Command.Builder<CommandSender> adminEditCommandBuilder;
 
     private Command.Builder<CommandSender> adminEditAddObjectiveCommandBuilder;
+    private Command.Builder<CommandSender> adminEditAddRequirementCommandBuilder;
+    private Command.Builder<CommandSender> adminEditAddRewardCommandBuilder;
+    private Command.Builder<CommandSender> adminEditAddTriggerCommandBuilder;
+
 
     private final Commodore commodore;
 
     private AdminCommands adminCommands;
+    private AdminEditCommands adminEditCommands;
 
     public CommandManager(final NotQuests main) {
         this.main = main;
@@ -122,6 +127,15 @@ public class CommandManager {
 
             adminEditAddObjectiveCommandBuilder = adminEditCommandBuilder
                     .literal("objectives")
+                    .literal("add");
+            adminEditAddRequirementCommandBuilder = adminEditCommandBuilder
+                    .literal("requirements")
+                    .literal("add");
+            adminEditAddRewardCommandBuilder = adminEditCommandBuilder
+                    .literal("rewards")
+                    .literal("add");
+            adminEditAddTriggerCommandBuilder = adminEditCommandBuilder
+                    .literal("triggers")
                     .literal("add");
 
             //asynchronous completions
@@ -263,7 +277,7 @@ public class CommandManager {
 
         adminCommands = new AdminCommands(main, commandManager, adminCommandBuilder);
 
-        new AdminEditCommands(main, commandManager, adminEditCommandBuilder);
+        adminEditCommands = new AdminEditCommands(main, commandManager, adminEditCommandBuilder);
 
 
     }
@@ -280,8 +294,24 @@ public class CommandManager {
         return adminEditAddObjectiveCommandBuilder;
     }
 
+    public final Command.Builder<CommandSender> getAdminEditAddRequirementCommandBuilder() {
+        return adminEditAddRequirementCommandBuilder;
+    }
+
+    public final Command.Builder<CommandSender> getAdminEditAddRewardCommandBuilder() {
+        return adminEditAddRewardCommandBuilder;
+    }
+
+    public final Command.Builder<CommandSender> getAdminEditAddTriggerCommandBuilder() {
+        return adminEditAddTriggerCommandBuilder;
+    }
+
 
     public final AdminCommands getAdminCommands() {
         return adminCommands;
+    }
+
+    public final AdminEditCommands getAdminEditCommands() {
+        return adminEditCommands;
     }
 }

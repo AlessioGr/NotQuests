@@ -741,18 +741,8 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                 sender.sendMessage("§9Requirements for quest §b" + quest.getQuestName() + "§9:");
                                 int counter = 1;
                                 for (Requirement requirement : quest.getRequirements()) {
-                                    sender.sendMessage("§a" + counter + ". §e" + requirement.getRequirementType().toString());
-                                    if (requirement instanceof OtherQuestRequirement otherQuestRequirement) {
-                                        sender.sendMessage("§7-- Finish Quest first: " + otherQuestRequirement.getOtherQuestName());
-                                    } else if (requirement instanceof QuestPointsRequirement questPointsRequirement) {
-                                        sender.sendMessage("§7-- Quest points needed: " + questPointsRequirement.getQuestPointRequirement());
-                                        sender.sendMessage("§7--- Will quest points be deducted?: " + questPointsRequirement.isDeductQuestPoints());
-                                    } else if (requirement instanceof MoneyRequirement moneyRequirement) {
-                                        sender.sendMessage("§7-- Money needed: " + moneyRequirement.getMoneyRequirement());
-                                        sender.sendMessage("§7--- Will money be deducted?: " + moneyRequirement.isDeductMoney());
-                                    } else if (requirement instanceof PermissionRequirement permissionRequirement) {
-                                        sender.sendMessage("§7-- Permission needed: " + permissionRequirement.getRequiredPermission());
-                                    }
+                                    sender.sendMessage("§a" + counter + ". §e" + requirement.getRequirementType());
+                                    sender.sendMessage(requirement.getRequirementDescription());
 
                                     counter += 1;
                                 }
@@ -1041,7 +1031,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                     sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6requirements add §2Money §3[Money requirement amount] §3[Deduct money?]");
                                 } else if (args[4].equalsIgnoreCase("Permission")) {
                                     String requiredPermission = args[5];
-                                    PermissionRequirement permissionRequirement = new PermissionRequirement(main, requiredPermission);
+                                    PermissionRequirement permissionRequirement = new PermissionRequirement(main, quest, quest.getRequirements().size() + 1, requiredPermission);
                                     quest.addRequirement(permissionRequirement);
                                     sender.sendMessage("§aRequirement successfully added to quest §b" + quest.getQuestName() + "§a!");
                                 } else {
@@ -1153,7 +1143,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                 if (args[4].equalsIgnoreCase("OtherQuest")) {
                                     String otherQuestName = args[5];
                                     int amountOfCompletions = Integer.parseInt(args[6]);
-                                    OtherQuestRequirement otherQuestRequirement = new OtherQuestRequirement(main, otherQuestName, amountOfCompletions);
+                                    OtherQuestRequirement otherQuestRequirement = new OtherQuestRequirement(main, quest, quest.getRequirements().size() + 1, amountOfCompletions, otherQuestName);
                                     quest.addRequirement(otherQuestRequirement);
                                     sender.sendMessage("§aRequirement successfully added to quest §b" + quest.getQuestName() + "§a!");
 
@@ -1169,7 +1159,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                         didntSpecify = false;
                                     }
                                     if (!didntSpecify) {
-                                        QuestPointsRequirement questPointsRequirement = new QuestPointsRequirement(main, questPointsNeeded, deductQuestPoints);
+                                        QuestPointsRequirement questPointsRequirement = new QuestPointsRequirement(main, quest, quest.getRequirements().size() + 1, questPointsNeeded, deductQuestPoints);
                                         quest.addRequirement(questPointsRequirement);
                                         sender.sendMessage("§aRequirement successfully added to quest §b" + quest.getQuestName() + "§a!");
                                     } else {
@@ -1196,7 +1186,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                             return true;
                                         }
 
-                                        MoneyRequirement moneyRequirement = new MoneyRequirement(main, moneyNeeded, deductMoney);
+                                        MoneyRequirement moneyRequirement = new MoneyRequirement(main, quest, quest.getRequirements().size() + 1, moneyNeeded, deductMoney);
                                         quest.addRequirement(moneyRequirement);
                                         sender.sendMessage("§aRequirement successfully added to quest §b" + quest.getQuestName() + "§a!");
                                     } else {
@@ -1669,17 +1659,8 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
             } else if (args[3].equalsIgnoreCase("list")) {
                 sender.sendMessage("§9Rewards for quest §b" + quest.getQuestName() + "§9:");
                 for (final Reward reward : quest.getRewards()) {
-                    sender.sendMessage("§a" + reward.getRewardID() + ". §e" + reward.getRewardType().toString());
-                    if (reward instanceof CommandReward commandReward) {
-                        sender.sendMessage("§7-- Reward Command: " + commandReward.getConsoleCommand());
-                    } else if (reward instanceof QuestPointsReward questPointsReward) {
-                        sender.sendMessage("§7-- Quest points amount: " + questPointsReward.getRewardedQuestPoints());
-                    } else if (reward instanceof ItemReward itemReward) {
-                        sender.sendMessage("§7-- Item: " + itemReward.getItemReward());
-                    } else if (reward instanceof MoneyReward moneyReward) {
-                        sender.sendMessage("§7-- Money: " + moneyReward.getRewardedMoney());
-                    }
-
+                    sender.sendMessage("§a" + reward.getRewardID() + ". §e" + reward.getRewardType());
+                    sender.sendMessage("§7-- " + reward.getRewardDescription());
                 }
             } else if (args[3].equalsIgnoreCase("clear")) {
                 quest.removeAllRewards();
@@ -1737,7 +1718,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
             for (int start = 5; start < args.length; start++) {
                 rewardCommand.append(args[start]).append(" ");
             }
-            CommandReward commandReward = new CommandReward(main, rewardCommand.toString(), quest.getRewards().size() + 1);
+            CommandReward commandReward = new CommandReward(main, quest, quest.getRewards().size() + 1, rewardCommand.toString());
             quest.addReward(commandReward);
             sender.sendMessage("§aReward successfully added to quest §b" + quest.getQuestName() + "§a! Reward command: §e" + rewardCommand);
 
@@ -1747,7 +1728,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
 
                     final long questPointRewardAmount = Long.parseLong(args[5]);
 
-                    QuestPointsReward questPointsReward = new QuestPointsReward(main, questPointRewardAmount, quest.getRewards().size() + 1);
+                    QuestPointsReward questPointsReward = new QuestPointsReward(main, quest, quest.getRewards().size() + 1, questPointRewardAmount);
                     quest.addReward(questPointsReward);
                     sender.sendMessage("§bQuest Points Reward §asuccessfully added to quest §b" + quest.getQuestName() + "§a!");
 
@@ -1763,7 +1744,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                     }
                     final long moneyRewardAmount = Long.parseLong(args[5]);
 
-                    MoneyReward moneyReward = new MoneyReward(main, moneyRewardAmount, quest.getRewards().size() + 1);
+                    MoneyReward moneyReward = new MoneyReward(main, quest, quest.getRewards().size() + 1, moneyRewardAmount);
                     quest.addReward(moneyReward);
                     sender.sendMessage("§bMoney Reward §asuccessfully added to quest §b" + quest.getQuestName() + "§a!");
                 } else {
@@ -1781,17 +1762,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
 
                     } else if (args[5].equalsIgnoreCase("info")) {
                         sender.sendMessage("§9Reward §a" + rewardID + " §9for quest §b" + quest.getQuestName() + "§9:");
-                            if (reward instanceof CommandReward commandReward) {
-                                sender.sendMessage("§7-- Reward Command: " + commandReward.getConsoleCommand());
-                            } else if (reward instanceof QuestPointsReward questPointsReward) {
-                                sender.sendMessage("§7-- Quest points amount: " + questPointsReward.getRewardedQuestPoints());
-                            } else if (reward instanceof ItemReward itemReward) {
-                                sender.sendMessage("§7-- Item: " + itemReward.getItemReward());
-                            } else if (reward instanceof MoneyReward moneyReward) {
-                                sender.sendMessage("§7-- Money: " + moneyReward.getRewardedMoney());
-                            }
-
-
+                        sender.sendMessage("§7-- " + reward.getRewardDescription());
                     } else if (args[5].equalsIgnoreCase("remove") || args[5].equalsIgnoreCase("delete")) {
 
                         quest.removeReward(reward);
@@ -1823,7 +1794,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                             ItemStack holdingItem = player.getInventory().getItemInMainHand().clone();
                             holdingItem.setAmount(itemRewardAmount);
 
-                            ItemReward itemReward = new ItemReward(main, holdingItem, quest.getRewards().size() + 1);
+                            ItemReward itemReward = new ItemReward(main, quest, quest.getRewards().size() + 1, holdingItem);
                             quest.addReward(itemReward);
                             sender.sendMessage("§aReward successfully added to quest §b" + quest.getQuestName() + "§a!");
 
@@ -1837,7 +1808,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                             ItemStack itemStack = new ItemStack(itemMaterial, itemRewardAmount);
 
 
-                            ItemReward itemReward = new ItemReward(main, itemStack, quest.getRewards().size() + 1);
+                            ItemReward itemReward = new ItemReward(main, quest, quest.getRewards().size() + 1, itemStack);
                             quest.addReward(itemReward);
                             sender.sendMessage("§aReward successfully added to quest §b" + quest.getQuestName() + "§a!");
 

@@ -22,6 +22,8 @@ import cloud.commandframework.Command;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.Quest;
+import rocks.gravili.notquests.Structs.QuestPlayer;
 
 public class QuestPointsRequirement extends Requirement {
 
@@ -30,11 +32,22 @@ public class QuestPointsRequirement extends Requirement {
     private final boolean deductQuestPoints;
 
 
-    public QuestPointsRequirement(NotQuests main, long questPointRequirement, boolean deductQuestPoints) {
-        super(RequirementType.QuestPoints, questPointRequirement);
+    public QuestPointsRequirement(NotQuests main, final Quest quest, final int requirementID, long questPointRequirement) {
+        super(main, quest, requirementID, questPointRequirement);
+        this.main = main;
+        this.questPointRequirement = questPointRequirement;
+
+        this.deductQuestPoints = main.getDataManager().getQuestsData().getBoolean("quests." + quest.getQuestName() + ".requirements." + requirementID + ".specifics.deductQuestPoints");
+    }
+
+    public QuestPointsRequirement(NotQuests main, final Quest quest, final int requirementID, long questPointRequirement, boolean deductQuestPoints) {
+        super(main, quest, requirementID, questPointRequirement);
         this.main = main;
         this.questPointRequirement = questPointRequirement;
         this.deductQuestPoints = deductQuestPoints;
+    }
+
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder) {
 
     }
 
@@ -48,7 +61,34 @@ public class QuestPointsRequirement extends Requirement {
         return deductQuestPoints;
     }
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder) {
+    @Override
+    public String check(final QuestPlayer questPlayer, final boolean enforce) {
+        final long questPointRequirementAmount = getQuestPointRequirement();
+        final boolean deductQuestPoints = isDeductQuestPoints();
 
+        if (questPlayer.getQuestPoints() < questPointRequirementAmount) {
+            return "\n§eYou need §b" + (questPointRequirementAmount - questPlayer.getQuestPoints()) + " §emore quest points.";
+        } else {
+            if (enforce && deductQuestPoints && questPointRequirementAmount > 0) {
+                questPlayer.removeQuestPoints(questPointRequirementAmount, true);
+            }
+            return "";
+        }
+    }
+
+    @Override
+    public void save() {
+        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".requirements." + getRequirementID() + ".specifics.deductQuestPoints", isDeductQuestPoints());
+    }
+
+    @Override
+    public String getRequirementDescription() {
+        String description = "§7-- Quest points needed: " + getQuestPointRequirement() + "\n";
+        if (isDeductQuestPoints()) {
+            description += "§7--- §cQuest points WILL BE DEDUCTED!";
+        } else {
+            description += "§7--- Will quest points be deducted?: No";
+        }
+        return description;
     }
 }

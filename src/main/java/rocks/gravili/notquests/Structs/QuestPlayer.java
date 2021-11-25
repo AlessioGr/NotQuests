@@ -28,7 +28,7 @@ import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.Events.notquests.QuestPointsChangeEvent;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Objectives.OtherQuestObjective;
-import rocks.gravili.notquests.Structs.Requirements.*;
+import rocks.gravili.notquests.Structs.Requirements.Requirement;
 import rocks.gravili.notquests.Structs.Rewards.Reward;
 import rocks.gravili.notquests.Structs.Triggers.ActiveTrigger;
 import rocks.gravili.notquests.Structs.Triggers.TriggerTypes.TriggerType;
@@ -37,7 +37,6 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 
 /**
  * The QuestPlayer Object is initialized for every player, once they join the server - loading its data from the database.
@@ -109,97 +108,22 @@ public class QuestPlayer {
 
                 //Requirements
                 StringBuilder requirementsStillNeeded = new StringBuilder();
-                long questPointsToDeduct = 0;
-                long moneyToDeduct = 0;
 
-                for (Requirement requirement : quest.getQuest().getRequirements()) {
-                    final long progressNeeded = requirement.getProgressNeeded();
-
-
-                    if (requirement instanceof final OtherQuestRequirement otherQuestRequirement) {
-                        final Quest otherQuest = otherQuestRequirement.getOtherQuest();
-
-                        int otherQuestCompletedAmount = 0;
-
-                        for (CompletedQuest completedQuest : completedQuests) {
-                            if (completedQuest.getQuest().equals(otherQuest)) {
-                                otherQuestCompletedAmount += 1;
-                            }
-                        }
-                        if (otherQuestCompletedAmount < progressNeeded) {
-                            requirementsStillNeeded.append("\n§eFinish the following quest: §b").append(otherQuestRequirement.getOtherQuestName()).append(" §7(").append(otherQuestRequirement.getProgressNeeded()).append(" times)").append("\n");
-                        }
-                    } else if (requirement instanceof final QuestPointsRequirement questPointsRequirement) {
-                        final long questPointRequirementAmount = questPointsRequirement.getQuestPointRequirement();
-                        final boolean deductQuestPoints = questPointsRequirement.isDeductQuestPoints();
-
-                        if (getQuestPoints() < questPointRequirementAmount) {
-                            requirementsStillNeeded.append("\n§eYou need §b").append(questPointRequirementAmount - getQuestPoints()).append(" §emore quest points.");
-                        } else {
-                            if (deductQuestPoints) {
-                                questPointsToDeduct += questPointRequirementAmount;
-                            }
-                        }
-                    } else if (requirement instanceof final MoneyRequirement moneyRequirement) {
-                        final long moneyRequirementAmount = moneyRequirement.getMoneyRequirement();
-                        final boolean deductMoney = moneyRequirement.isDeductMoney();
-                        final Player player = getPlayer();
-                        if (player != null) {
-                            if (!main.isVaultEnabled() || main.getEconomy() == null) {
-                                requirementsStillNeeded.append("\n§eError: The server does not have vault enabled. Please ask the Owner to install Vault for money stuff to work.");
-                            } else if (main.getEconomy().getBalance(player, player.getWorld().getName()) < moneyRequirementAmount) {
-                                requirementsStillNeeded.append("\n§eYou need §b").append(moneyRequirementAmount - main.getEconomy().getBalance(player, player.getWorld().getName())).append(" §emore money.");
-                            } else {
-                                if (deductMoney) {
-                                    moneyToDeduct += moneyRequirementAmount;
-                                }
-                            }
-                        } else {
-                            requirementsStillNeeded.append("\n§eError reading money requirement...");
-
-                        }
-
-                    } else if (requirement instanceof final PermissionRequirement permissionRequirement) {
-                        final String requiredPermission = permissionRequirement.getRequiredPermission();
-
-                        final Player player = getPlayer();
-                        if (player != null) {
-                            if (!player.hasPermission(requiredPermission)) {
-                                requirementsStillNeeded.append("\n§eYou need the following permission: §b").append(requiredPermission).append("§e.");
-                            }
-                        } else {
-                            requirementsStillNeeded.append("\n§eYou need to be online.");
-
-                        }
-
-                    }
-
-
+                if (getPlayer() == null) {
+                    requirementsStillNeeded.append("\n§eError: Player object not found. Please report this to the plugin developer.");
                 }
-                if (!requirementsStillNeeded.toString().isBlank()) {
 
+                for (final Requirement requirement : quest.getQuest().getRequirements()) {
+                    requirementsStillNeeded.append(requirement.check(this, true));
+                }
+
+
+                if (!requirementsStillNeeded.toString().isBlank()) {
                     return "§cYou do not fulfill all the requirements this quest needs! Requirement still needed:" + requirementsStillNeeded;
                 }
 
-                if (moneyToDeduct > 0) {
-                    final Player player = getPlayer();
-                    if (player != null) {
-                        if(main.isVaultEnabled()){
-                            removeMoney(player, player.getWorld().getName(), moneyToDeduct, true);
-                        }else{
-                            main.getLogManager().log(Level.WARNING, "§eWarning: Could not deduct money, because Vault was not found. Please install Vault for money stuff to work.");
-                            main.getLogManager().log(Level.WARNING, "§cError: Tried to load Economy when Vault is not enabled. Please report this to the plugin author (and I also recommend you installing Vault for money stuff to work)");
-                            return "§cError deducting money, because Vault has not been found. Report this to an Admin.";
-                        }
-                    } else {
-                        return "§cError getting player data from your UUID. Report this to an Admin.";
-                    }
 
-                }
 
-                if (questPointsToDeduct > 0) {
-                    removeQuestPoints(questPointsToDeduct, true);
-                }
 
 
                 finishAddingQuest(quest, triggerAcceptQuestTrigger, false);
@@ -485,17 +409,7 @@ public class QuestPlayer {
         }
     }
 
-    private void removeMoney(final Player player, final String worldName, final long moneyToDeduct, final boolean notifyPlayer) {
-        if(!main.isVaultEnabled() || main.getEconomy() == null){
-            main.getLogManager().log(Level.WARNING, "§eWarning: Could not deduct money, because Vault was not found. Please install Vault for money stuff to work.");
-            return;
-        }
-        main.getEconomy().withdrawPlayer(player, worldName, moneyToDeduct);
-        if (notifyPlayer) {
-            player.sendMessage("§b-" + moneyToDeduct + " §c$!");
 
-        }
-    }
 
 
     public final long getQuestPoints() {

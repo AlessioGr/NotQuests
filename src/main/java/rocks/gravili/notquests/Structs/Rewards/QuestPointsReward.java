@@ -33,11 +33,18 @@ public class QuestPointsReward extends Reward {
     private final NotQuests main;
     private final long rewardedQuestPoints;
 
-    public QuestPointsReward(final NotQuests main, long rewardedQuestPoints, final int rewardID) {
-        super(RewardType.QuestPoints, rewardID);
+
+    public QuestPointsReward(final NotQuests main, final Quest quest, final int rewardID) {
+        super(main, quest, rewardID);
+        this.main = main;
+
+        this.rewardedQuestPoints = main.getDataManager().getQuestsData().getLong("quests." + getQuest().getQuestName() + ".rewards." + rewardID + ".specifics.rewardedQuestPoints");
+    }
+
+    public QuestPointsReward(final NotQuests main, final Quest quest, final int rewardID, long rewardedQuestPoints) {
+        super(main, quest, rewardID);
         this.main = main;
         this.rewardedQuestPoints = rewardedQuestPoints;
-
     }
 
     @Override
@@ -52,6 +59,17 @@ public class QuestPointsReward extends Reward {
             player.sendMessage("§cError giving quest point reward.");
         }
 
+    }
+
+    @Override
+    public String getRewardDescription() {
+        return "Quest points amount: " + getRewardedQuestPoints();
+    }
+
+
+    @Override
+    public void save() {
+        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".rewards." + getRewardID() + ".specifics.rewardedQuestPoints", getRewardedQuestPoints());
     }
 
     public final long getRewardedQuestPoints() {

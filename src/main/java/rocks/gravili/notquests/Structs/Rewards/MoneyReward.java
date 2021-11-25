@@ -31,11 +31,18 @@ public class MoneyReward extends Reward {
     private final NotQuests main;
     private final long rewardedMoney;
 
-    public MoneyReward(final NotQuests main, long rewardedMoney, final int rewardID) {
-        super(RewardType.Money, rewardID);
+
+    public MoneyReward(final NotQuests main, final Quest quest, final int rewardID) {
+        super(main, quest, rewardID);
+        this.main = main;
+
+        this.rewardedMoney = main.getDataManager().getQuestsData().getLong("quests." + getQuest().getQuestName() + ".rewards." + rewardID + ".specifics.rewardedMoneyAmount");
+    }
+
+    public MoneyReward(final NotQuests main, final Quest quest, final int rewardID, long rewardedMoney) {
+        super(main, quest, rewardID);
         this.main = main;
         this.rewardedMoney = rewardedMoney;
-
     }
 
     @Override
@@ -49,6 +56,17 @@ public class MoneyReward extends Reward {
         } else if (rewardedMoney < 0) {
             main.getEconomy().withdrawPlayer(player, Math.abs(rewardedMoney));
         }
+    }
+
+    @Override
+    public String getRewardDescription() {
+        return "Money: " + getRewardedMoney();
+    }
+
+
+    @Override
+    public void save() {
+        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".rewards." + getRewardID() + ".specifics.rewardedMoneyAmount", getRewardedMoney());
     }
 
     public final long getRewardedMoney() {

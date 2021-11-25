@@ -42,6 +42,10 @@ import rocks.gravili.notquests.Events.hooks.MythicMobsEvents;
 import rocks.gravili.notquests.Events.hooks.WorldEditHook;
 import rocks.gravili.notquests.Hooks.BetonQuest.BetonQuestIntegration;
 import rocks.gravili.notquests.Managers.*;
+import rocks.gravili.notquests.Managers.Registering.ObjectiveManager;
+import rocks.gravili.notquests.Managers.Registering.RequirementManager;
+import rocks.gravili.notquests.Managers.Registering.RewardManager;
+import rocks.gravili.notquests.Managers.Registering.TriggerManager;
 import rocks.gravili.notquests.Placeholders.QuestPlaceholders;
 
 import java.util.ArrayList;
@@ -66,8 +70,13 @@ public final class NotQuests extends JavaPlugin {
     private LanguageManager languageManager;
     private ArmorStandManager armorStandManager;
     private PerformanceManager performanceManager;
-    private ObjectiveManager objectiveManager;
     private CommandManager commandManager;
+    //Registering Managers
+    private ObjectiveManager objectiveManager;
+    private RequirementManager requirementManager;
+    private RewardManager rewardManager;
+    private TriggerManager triggerManager;
+
 
     //Vault
     private Economy econ = null;
@@ -245,7 +254,11 @@ public final class NotQuests extends JavaPlugin {
         commandManager = new CommandManager(this);
         commandManager.preSetupCommands();
 
+        //Registering Managers
         objectiveManager = new ObjectiveManager(this);
+        requirementManager = new RequirementManager(this);
+        rewardManager = new RewardManager(this);
+        triggerManager = new TriggerManager(this);
 
         commandManager.setupCommands();
 
@@ -541,6 +554,18 @@ public final class NotQuests extends JavaPlugin {
 
     public ObjectiveManager getObjectiveManager() {
         return objectiveManager;
+    }
+
+    public RequirementManager getRequirementManager() {
+        return requirementManager;
+    }
+
+    public RewardManager getRewardManager() {
+        return rewardManager;
+    }
+
+    public TriggerManager getTriggerManager() {
+        return triggerManager;
     }
 
     public MythicMobs getMythicMobs() {

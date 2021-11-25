@@ -25,8 +25,8 @@ import org.bukkit.Material;
 import rocks.gravili.notquests.Hooks.Citizens.QuestGiverNPCTrait;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Objectives.Objective;
-import rocks.gravili.notquests.Structs.Requirements.*;
-import rocks.gravili.notquests.Structs.Rewards.*;
+import rocks.gravili.notquests.Structs.Requirements.Requirement;
+import rocks.gravili.notquests.Structs.Rewards.Reward;
 import rocks.gravili.notquests.Structs.Triggers.Trigger;
 import rocks.gravili.notquests.Structs.Triggers.TriggerTypes.NPCDeathTrigger;
 import rocks.gravili.notquests.Structs.Triggers.TriggerTypes.WorldEnterTrigger;
@@ -79,23 +79,7 @@ public class Quest {
         return rewards;
     }
 
-    public void addReward(Reward reward) {
-        rewards.add(reward);
-        main.getDataManager().getQuestsData().set("quests." + questName + ".rewards." + reward.getRewardID() + ".rewardType", reward.getRewardType().toString());
-        if(!reward.getRewardDisplayName().isBlank()){
-            main.getDataManager().getQuestsData().set("quests." + questName + ".rewards." + reward.getRewardID()  + ".displayName", reward.getRewardDisplayName());
-        }
-        if (reward instanceof CommandReward commandReward) {
-            main.getDataManager().getQuestsData().set("quests." + questName + ".rewards." + reward.getRewardID()  + ".specifics.consoleCommand", commandReward.getConsoleCommand());
-        } else if (reward instanceof QuestPointsReward commandReward) {
-            main.getDataManager().getQuestsData().set("quests." + questName + ".rewards." + reward.getRewardID()  + ".specifics.rewardedQuestPoints", commandReward.getRewardedQuestPoints());
-        } else if (reward instanceof ItemReward itemReward) {
-            main.getDataManager().getQuestsData().set("quests." + questName + ".rewards." + reward.getRewardID()  + ".specifics.rewardItem", itemReward.getItemReward());
-        } else if (reward instanceof MoneyReward moneyReward) {
-            main.getDataManager().getQuestsData().set("quests." + questName + ".rewards." + reward.getRewardID()  + ".specifics.rewardedMoneyAmount", moneyReward.getRewardedMoney());
-        }
 
-    }
 
     public void removeAllRewards() {
         rewards.clear();
@@ -132,26 +116,36 @@ public class Quest {
                 break;
             }
         }
-
         if (!dupeID) {
             objectives.add(objective);
-
             if (save) {
                 objective.save();
 
                 main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".objectiveType", main.getObjectiveManager().getObjectiveType(objective.getClass()));
                 main.getDataManager().getQuestsData().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".progressNeeded", objective.getProgressNeeded());
-
-
-
             }
-
         } else {
             main.getLogManager().log(Level.WARNING, "ERROR: Tried to add objective to quest §b" + getQuestName() + " §cwith the ID §b" + objective.getObjectiveID() + " §cbut the ID was a DUPLICATE!");
+        }
+    }
 
+
+    public void addRequirement(Requirement requirement) {
+        requirements.add(requirement);
+        main.getDataManager().getQuestsData().set("quests." + questName + ".requirements." + requirements.size() + ".requirementType", requirement.getRequirementType());
+        main.getDataManager().getQuestsData().set("quests." + questName + ".requirements." + requirements.size() + ".progressNeeded", requirement.getProgressNeeded());
+
+        requirement.save();
+    }
+
+    public void addReward(Reward reward) {
+        rewards.add(reward);
+        main.getDataManager().getQuestsData().set("quests." + questName + ".rewards." + reward.getRewardID() + ".rewardType", reward.getRewardType());
+        if (!reward.getRewardDisplayName().isBlank()) {
+            main.getDataManager().getQuestsData().set("quests." + questName + ".rewards." + reward.getRewardID() + ".displayName", reward.getRewardDisplayName());
         }
 
-
+        reward.save();
     }
 
     public void removeAllObjectives() {
@@ -241,29 +235,6 @@ public class Quest {
 
     public final ArrayList<Requirement> getRequirements() {
         return requirements;
-    }
-
-    public void addRequirement(Requirement requirement) {
-        requirements.add(requirement);
-        main.getDataManager().getQuestsData().set("quests." + questName + ".requirements." + requirements.size() + ".requirementType", requirement.getRequirementType().toString());
-        main.getDataManager().getQuestsData().set("quests." + questName + ".requirements." + requirements.size() + ".progressNeeded", requirement.getProgressNeeded());
-
-
-        if (requirement instanceof OtherQuestRequirement otherQuestRequirement) {
-            main.getDataManager().getQuestsData().set("quests." + questName + ".requirements." + requirements.size() + ".specifics.otherQuestRequirememt", otherQuestRequirement.getOtherQuestName());
-        } else if (requirement instanceof QuestPointsRequirement questPointsRequirement) {
-            main.getDataManager().getQuestsData().set("quests." + questName + ".requirements." + requirements.size() + ".specifics.questPointRequirement", questPointsRequirement.getQuestPointRequirement());
-            main.getDataManager().getQuestsData().set("quests." + questName + ".requirements." + requirements.size() + ".specifics.deductQuestPoints", questPointsRequirement.isDeductQuestPoints());
-
-        } else if (requirement instanceof MoneyRequirement moneyRequirement) {
-            main.getDataManager().getQuestsData().set("quests." + questName + ".requirements." + requirements.size() + ".specifics.moneyRequirement", moneyRequirement.getMoneyRequirement());
-            main.getDataManager().getQuestsData().set("quests." + questName + ".requirements." + requirements.size() + ".specifics.deductMoney", moneyRequirement.isDeductMoney());
-
-        } else if (requirement instanceof PermissionRequirement permissionRequirement) {
-            main.getDataManager().getQuestsData().set("quests." + questName + ".requirements." + requirements.size() + ".specifics.requiredPermission", permissionRequirement.getRequiredPermission());
-
-        }
-
     }
 
     public void removeAllRequirements() {

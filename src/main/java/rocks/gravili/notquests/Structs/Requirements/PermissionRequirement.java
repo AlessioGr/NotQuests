@@ -21,7 +21,10 @@ package rocks.gravili.notquests.Structs.Requirements;
 import cloud.commandframework.Command;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.Quest;
+import rocks.gravili.notquests.Structs.QuestPlayer;
 
 public class PermissionRequirement extends Requirement {
 
@@ -29,11 +32,24 @@ public class PermissionRequirement extends Requirement {
     private final String requiredPermission;
 
 
-    public PermissionRequirement(NotQuests main, String requiredPermission) {
-        super(RequirementType.Permission, 1);
+    public PermissionRequirement(NotQuests main, final Quest quest, final int requirementID) {
+        super(main, quest, requirementID, 1);
+        this.main = main;
+
+        this.requiredPermission = main.getDataManager().getQuestsData().getString("quests." + quest.getQuestName() + ".requirements." + requirementID + ".specifics.requiredPermission");
+    }
+
+    public PermissionRequirement(NotQuests main, final Quest quest, final int requirementID, long progressNeeded) {
+        super(main, quest, requirementID, 1);
+        this.main = main;
+
+        this.requiredPermission = main.getDataManager().getQuestsData().getString("quests." + quest.getQuestName() + ".requirements." + requirementID + ".specifics.requiredPermission");
+    }
+
+    public PermissionRequirement(NotQuests main, final Quest quest, final int requirementID, String requiredPermission) {
+        super(main, quest, requirementID, 1);
         this.main = main;
         this.requiredPermission = requiredPermission;
-
     }
 
 
@@ -44,5 +60,31 @@ public class PermissionRequirement extends Requirement {
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder) {
 
+    }
+
+
+    @Override
+    public void save() {
+        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".requirements." + getRequirementID() + ".specifics.requiredPermission", getRequiredPermission());
+    }
+
+    @Override
+    public String check(QuestPlayer questPlayer, boolean enforce) {
+        final String requiredPermission = getRequiredPermission();
+
+        final Player player = questPlayer.getPlayer();
+        if (player != null) {
+            if (!player.hasPermission(requiredPermission)) {
+                return "\n§eYou need the following permission: §b" + requiredPermission + "§e.";
+            }
+        } else {
+            return "\n§eYou need to be online.";
+        }
+        return "";
+    }
+
+    @Override
+    public String getRequirementDescription() {
+        return "§7-- Permission needed: " + getRequiredPermission();
     }
 }

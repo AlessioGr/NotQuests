@@ -31,7 +31,7 @@ import rocks.gravili.notquests.Structs.Quest;
 import rocks.gravili.notquests.Structs.QuestPlayer;
 import rocks.gravili.notquests.Structs.Requirements.*;
 
-public class BQRequirementsCondition extends Condition {
+public class BQRequirementsCondition extends Condition { //TODO: Make it dynamic for future or API requirements
 
     private final NotQuests main;
     private Requirement requirement = null;
@@ -53,15 +53,15 @@ public class BQRequirementsCondition extends Condition {
 
         final String requirementTypeName = instruction.getPart(1);
 
-        RequirementType requirementType;
+        Class<? extends Requirement> requirementType = null;
         try {
-            requirementType = RequirementType.valueOf(requirementTypeName);
+            requirementType = main.getRequirementManager().getRequirementClass(requirementTypeName);
         } catch (Exception e) {
             throw new InstructionParseException("Requirement type '" + requirementTypeName + "' does not exist.");
         }
 
         int requirementInt = 0;
-        if (requirementType == RequirementType.OtherQuest) {
+        if (requirementType == OtherQuestRequirement.class) {
             String requirementString = instruction.getPart(2);
             try {
                 requirementInt = Integer.parseInt(instruction.getPart(3));
@@ -69,28 +69,28 @@ public class BQRequirementsCondition extends Condition {
                 throw new RuntimeException("Invalid number for second argument (amount of requirements needed).");
             }
 
-            requirement = new OtherQuestRequirement(main, requirementString, requirementInt);
+            requirement = new OtherQuestRequirement(main, null, -1, requirementInt, requirementString);
 
-        } else if (requirementType == RequirementType.Money) {
+        } else if (requirementType == MoneyRequirement.class) {
             try {
-                requirement = new MoneyRequirement(main, Long.parseLong(instruction.getPart(2)), false);
+                requirement = new MoneyRequirement(main, null, -1, Long.parseLong(instruction.getPart(2)), false);
 
             } catch (NumberFormatException e) {
                 throw new RuntimeException("Invalid number for second argument (amount of requirements needed).");
             }
 
-        } else if (requirementType == RequirementType.QuestPoints) {
+        } else if (requirementType == QuestPointsRequirement.class) {
             try {
-                requirement = new QuestPointsRequirement(main, Long.parseLong(instruction.getPart(2)), false);
+                requirement = new QuestPointsRequirement(main, null, -1, Long.parseLong(instruction.getPart(2)), false);
 
             } catch (NumberFormatException e) {
                 throw new RuntimeException("Invalid number for second argument (amount of requirements needed).");
             }
-        } else if (requirementType == RequirementType.Permission) {
+        } else if (requirementType == PermissionRequirement.class) {
             String requirementString = instruction.getPart(2);
 
 
-            requirement = new PermissionRequirement(main, requirementString);
+            requirement = new PermissionRequirement(main, null, -1, requirementString);
         } else {
             throw new InstructionParseException("Requirement type '" + requirementTypeName + "' could not be created. Please contact the NotQuests author about it.");
         }

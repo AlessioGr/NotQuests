@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.Managers;
+package rocks.gravili.notquests.Managers.Registering;
 
 import cloud.commandframework.Command;
 import cloud.commandframework.paper.PaperCommandManager;
@@ -35,16 +35,10 @@ public class ObjectiveManager {
     private final HashMap<String, Class<? extends Objective>> objectives;
 
 
-    private final HashMap<String, Void> objectiveCommandHandlers;
-    private final HashMap<String, Void> objectiveCommandCompletionHandlers;
-
 
     public ObjectiveManager(final NotQuests main){
         this.main = main;
         objectives = new HashMap<>();
-
-        objectiveCommandHandlers = new HashMap<>();
-        objectiveCommandCompletionHandlers = new HashMap<>();
 
         registerDefaultObjectives();
 

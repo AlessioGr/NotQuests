@@ -32,11 +32,18 @@ public class CommandReward extends Reward {
     private final NotQuests main;
     private final String consoleCommand;
 
-    public CommandReward(final NotQuests main, String consoleCommand, final int rewardID) {
-        super(RewardType.ConsoleCommand, rewardID);
+
+    public CommandReward(final NotQuests main, final Quest quest, final int rewardID) {
+        super(main, quest, rewardID);
+        this.main = main;
+
+        this.consoleCommand = main.getDataManager().getQuestsData().getString("quests." + getQuest().getQuestName() + ".rewards." + rewardID + ".specifics.consoleCommand");
+    }
+
+    public CommandReward(final NotQuests main, final Quest quest, final int rewardID, String consoleCommand) {
+        super(main, quest, rewardID);
         this.main = main;
         this.consoleCommand = consoleCommand;
-
     }
 
     @Override
@@ -59,6 +66,17 @@ public class CommandReward extends Reward {
         }
 
 
+    }
+
+    @Override
+    public String getRewardDescription() {
+        return "Reward Command: " + getConsoleCommand();
+    }
+
+
+    @Override
+    public void save() {
+        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".rewards." + getRewardID() + ".specifics.consoleCommand", getConsoleCommand());
     }
 
     public final String getConsoleCommand() {
