@@ -30,8 +30,6 @@ import rocks.gravili.notquests.Structs.ActiveQuest;
 import rocks.gravili.notquests.Structs.QuestPlayer;
 import rocks.gravili.notquests.Structs.Triggers.ActiveTrigger;
 
-import java.util.ArrayList;
-
 public class TriggerEvents implements Listener {
     private final NotQuests main;
 
@@ -108,58 +106,53 @@ public class TriggerEvents implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     private void onQuestFail(QuestFailEvent e) {
         final QuestPlayer questPlayer = e.getQuestPlayer();
-        if (questPlayer.getActiveQuests().size() > 0) {
-            final ArrayList<ActiveQuest> activeQuestsCopy = new ArrayList<>(questPlayer.getActiveQuests());
+        //final ArrayList<ActiveQuest> activeQuestsCopy = new ArrayList<>(questPlayer.getActiveQuests());
 
-            //So, this is not a for loop anymore but instead it just uses the current activequest. That's because we had this error: "When miner (Gold Madness) & 3rdlife 2, this also fails 3rdlife2 if I fail miner (Gold Madness) for some reason"
-            //So, this fixes it. Because the Trigger type FAIL should only apply for the current quest anyways. Other Active Quests dont matter for the FAIL trigger for the current quest
-            //TODO: Add an option in the todo trigger creation to make it apply to a different quest (enter different quest name). If not, use current quest.
+        //So, this is not a for loop anymore but instead it just uses the current activequest. That's because we had this error: "When miner (Gold Madness) & 3rdlife 2, this also fails 3rdlife2 if I fail miner (Gold Madness) for some reason"
+        //So, this fixes it. Because the Trigger type FAIL should only apply for the current quest anyways. Other Active Quests dont matter for the FAIL trigger for the current quest
+        //TODO: Add an option in the todo trigger creation to make it apply to a different quest (enter different quest name). If not, use current quest.
 
-            // for(final ActiveQuest activeQuest : activeQuestsCopy){
-            final ActiveQuest activeQuest = e.getActiveQuest();
-            for (final ActiveTrigger activeTrigger : activeQuest.getActiveTriggers()) {
-                if (activeTrigger.getTrigger().getTriggerType().equals("FAIL")) {
-                    if (activeTrigger.getTrigger().getApplyOn() == 0) { //Quest and not Objective
-                        //System.out.println("§eAAA");
+        // for(final ActiveQuest activeQuest : activeQuestsCopy){
+        final ActiveQuest activeQuest = e.getActiveQuest();
+        for (final ActiveTrigger activeTrigger : activeQuest.getActiveTriggers()) {
+            if (activeTrigger.getTrigger().getTriggerType().equals("FAIL")) {
+                if (activeTrigger.getTrigger().getApplyOn() == 0) { //Quest and not Objective
+                    //System.out.println("§eAAA");
+                    if (activeTrigger.getTrigger().getWorldName().equalsIgnoreCase("ALL")) {
+                        activeTrigger.addAndCheckTrigger(activeQuest);
+                        //System.out.println("§eAAA2");
+
+                    } else {
+                        final Player player = Bukkit.getPlayer(questPlayer.getUUID());
+                        if (player != null && player.getWorld().getName().equalsIgnoreCase(activeTrigger.getTrigger().getWorldName())) {
+                            activeTrigger.addAndCheckTrigger(activeQuest);
+                            //System.out.println("§eAAA3");
+                        }
+                    }
+
+
+                } else if (activeTrigger.getTrigger().getApplyOn() >= 1) { //Objective and not Quest
+
+                    final ActiveObjective activeObjective = activeQuest.getActiveObjectiveFromID(activeTrigger.getTrigger().getApplyOn());
+                    if (activeObjective != null && activeObjective.isUnlocked()) {
+
 
                         if (activeTrigger.getTrigger().getWorldName().equalsIgnoreCase("ALL")) {
                             activeTrigger.addAndCheckTrigger(activeQuest);
-                            //System.out.println("§eAAA2");
-
                         } else {
                             final Player player = Bukkit.getPlayer(questPlayer.getUUID());
                             if (player != null && player.getWorld().getName().equalsIgnoreCase(activeTrigger.getTrigger().getWorldName())) {
                                 activeTrigger.addAndCheckTrigger(activeQuest);
-                                //System.out.println("§eAAA3");
-
                             }
                         }
 
-
-                    } else if (activeTrigger.getTrigger().getApplyOn() >= 1) { //Objective and not Quest
-
-                        final ActiveObjective activeObjective = activeQuest.getActiveObjectiveFromID(activeTrigger.getTrigger().getApplyOn());
-                        if (activeObjective != null && activeObjective.isUnlocked()) {
-
-
-                            if (activeTrigger.getTrigger().getWorldName().equalsIgnoreCase("ALL")) {
-                                activeTrigger.addAndCheckTrigger(activeQuest);
-                            } else {
-                                final Player player = Bukkit.getPlayer(questPlayer.getUUID());
-                                if (player != null && player.getWorld().getName().equalsIgnoreCase(activeTrigger.getTrigger().getWorldName())) {
-                                    activeTrigger.addAndCheckTrigger(activeQuest);
-                                }
-                            }
-
-                        }
                     }
-
                 }
+
             }
-
-
-            //  }
         }
+
+
     }
 
 

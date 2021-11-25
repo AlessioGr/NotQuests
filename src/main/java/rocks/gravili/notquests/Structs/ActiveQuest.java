@@ -234,9 +234,7 @@ public class ActiveQuest {
 
         QuestFailEvent questFailEvent = new QuestFailEvent(getQuestPlayer(), this);
         if (Bukkit.isPrimaryThread()) {
-            Bukkit.getScheduler().runTaskAsynchronously(main, () -> {
-                Bukkit.getPluginManager().callEvent(questFailEvent);
-            });
+            Bukkit.getScheduler().runTaskAsynchronously(main, () -> Bukkit.getPluginManager().callEvent(questFailEvent));
         } else {
             Bukkit.getPluginManager().callEvent(questFailEvent);
         }

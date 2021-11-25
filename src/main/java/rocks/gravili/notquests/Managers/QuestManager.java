@@ -329,7 +329,10 @@ public class QuestManager {
                                     main.getDataManager().setSavingEnabled(false);
                                     main.getServer().getPluginManager().disablePlugin(main);
                                 }
-                                quest.addRequirement(requirement);
+                                if (requirement != null) {
+                                    quest.addRequirement(requirement);
+                                }
+
                             } else {
                                 main.getLogManager().log(Level.SEVERE, "Error loading requirement");
 
@@ -386,7 +389,6 @@ public class QuestManager {
                                     main.getDataManager().setSavingEnabled(false);
                                     main.getServer().getPluginManager().disablePlugin(main);
                                 }
-                                quest.addReward(reward);
 
                                 if (reward != null) {
                                     final String rewardDisplayName = main.getDataManager().getQuestsData().getString("quests." + questName + ".rewards." + rewardNumber + ".displayName", "");
