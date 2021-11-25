@@ -89,3 +89,5 @@ integrations: #These should usually be left to true. These integrations will onl
     enabled: true
   worldedit:
     enabled: true
+  slimefun:
+    enabled: true

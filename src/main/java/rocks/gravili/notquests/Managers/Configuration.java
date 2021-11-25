@@ -78,7 +78,7 @@ public class Configuration {
     private boolean integrationEliteMobsEnabled = true;
     private boolean integrationBetonQuestEnabled = true;
     private boolean integrationWorldEditEnabled = true;
-
+    private boolean integrationSlimeFunEnabled = true;
 
     //Other
     private boolean actionBarFancyCommandCompletionEnabled = true;
@@ -342,6 +342,15 @@ public class Configuration {
     public void setIntegrationWorldEditEnabled(final boolean integrationWorldEditEnabled) {
         this.integrationWorldEditEnabled = integrationWorldEditEnabled;
     }
+
+    public final boolean isIntegrationSlimeFunEnabled() {
+        return integrationSlimeFunEnabled;
+    }
+
+    public void setIntegrationSlimeFunEnabled(final boolean integrationSlimeFunEnabled) {
+        this.integrationSlimeFunEnabled = integrationSlimeFunEnabled;
+    }
+
 
     public final boolean isActionBarFancyCommandCompletionEnabled() {
         return actionBarFancyCommandCompletionEnabled;

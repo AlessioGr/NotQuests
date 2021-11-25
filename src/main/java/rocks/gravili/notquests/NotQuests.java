@@ -20,6 +20,7 @@
 package rocks.gravili.notquests;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.papermc.lib.PaperLib;
 import net.citizensnpcs.api.CitizensAPI;
@@ -37,10 +38,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import rocks.gravili.notquests.Events.ArmorStandEvents;
 import rocks.gravili.notquests.Events.QuestEvents;
 import rocks.gravili.notquests.Events.TriggerEvents;
-import rocks.gravili.notquests.Events.hooks.CitizensEvents;
-import rocks.gravili.notquests.Events.hooks.EliteMobsEvents;
-import rocks.gravili.notquests.Events.hooks.MythicMobsEvents;
-import rocks.gravili.notquests.Events.hooks.WorldEditHook;
+import rocks.gravili.notquests.Events.hooks.*;
 import rocks.gravili.notquests.Hooks.BetonQuest.BetonQuestIntegration;
 import rocks.gravili.notquests.Managers.*;
 import rocks.gravili.notquests.Managers.Registering.ObjectiveManager;
@@ -90,6 +88,7 @@ public final class NotQuests extends JavaPlugin {
     //Enabled Features
     private boolean vaultEnabled = false;
     private boolean citizensEnabled = false;
+    private boolean slimefunEnabled = false;
 
     //Enabled Hooks
     private boolean mythicMobsEnabled = false;
@@ -104,6 +103,8 @@ public final class NotQuests extends JavaPlugin {
     private boolean worldEditEnabled = false;
     private WorldEditPlugin worldEditPlugin;
     private WorldEditHook worldEditHook;
+
+    private Slimefun slimefun;
 
 
     private BukkitAudiences adventure;
@@ -211,7 +212,7 @@ public final class NotQuests extends JavaPlugin {
         }
 
 
-        //Enable 'Citizens' integration. If it's not found, it will just disable some NPC features which can mostly be replaced by armor standsw
+        //Enable 'Citizens' integration. If it's not found, it will just disable some NPC features which can mostly be replaced by armor stands
         if (getDataManager().getConfiguration().isIntegrationCitizensEnabled()) {
             if (getServer().getPluginManager().getPlugin("Citizens") == null || !Objects.requireNonNull(getServer().getPluginManager().getPlugin("Citizens")).isEnabled()) {
                 getLogManager().log(Level.INFO, "Citizens Dependency not found! Congratulations! In NotQuests, you can use armor stands instead of Citizens NPCs");
@@ -219,6 +220,19 @@ public final class NotQuests extends JavaPlugin {
             } else {
                 citizensEnabled = true;
                 getLogManager().info("Citizens found! Enabling Citizens support...");
+            }
+        }
+
+        //Enable 'SlimeFun' integration.
+        if (getDataManager().getConfiguration().isIntegrationSlimeFunEnabled()) {
+
+            slimefun = Slimefun.instance();
+            if (slimefun == null) {
+                slimefunEnabled = false;
+
+            } else {
+                getLogManager().info("SlimeFun found! Enabling SlimeFun support...");
+                slimefunEnabled = true;
             }
         }
 
@@ -286,6 +300,11 @@ public final class NotQuests extends JavaPlugin {
         //Register the Event Listeners in EliteMobsEvents, if EliteMobs integration is enabled
         if (isEliteMobsEnabled()) {
             getServer().getPluginManager().registerEvents(new EliteMobsEvents(this), this);
+        }
+
+        //Register the Event Listeners in SlimefunEvents, if Slimefun integration is enabled
+        if (isSlimefunEnabled()) {
+            getServer().getPluginManager().registerEvents(new SlimefunEvents(this), this);
         }
 
         //This finally starts loading all Config-, Quest-, and Player Data. Reload = Load
@@ -523,6 +542,10 @@ public final class NotQuests extends JavaPlugin {
         return eliteMobsEnabled;
     }
 
+    private boolean isSlimefunEnabled() {
+        return slimefunEnabled;
+    }
+
     public boolean isPlaceholderAPIEnabled() {
         return placeholderAPIEnabled;
     }
@@ -583,6 +606,10 @@ public final class NotQuests extends JavaPlugin {
 
     public WorldEditPlugin getWorldEdit() {
         return worldEditPlugin;
+    }
+
+    public Slimefun getSlimefun() {
+        return slimefun;
     }
 
     public WorldEditHook getWorldEditHook() {

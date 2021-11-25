@@ -627,6 +627,12 @@ public class DataManager {
         }
         configuration.setIntegrationWorldEditEnabled(getGeneralConfig().getBoolean("integrations.worldedit.enabled"));
 
+        if (!getGeneralConfig().isBoolean("integrations.slimefun.enabled")) {
+            getGeneralConfig().set("integrations.slimefun.enabled", true);
+            valueChanged = true;
+        }
+        configuration.setIntegrationSlimeFunEnabled(getGeneralConfig().getBoolean("integrations.slimefun.enabled"));
+
 
         if (!getGeneralConfig().isBoolean("visual.fancy-command-completion.actionbar-enabled")) {
             getGeneralConfig().set("visual.fancy-command-completion.actionbar-enabled", true);
