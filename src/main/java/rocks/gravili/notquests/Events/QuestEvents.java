@@ -31,13 +31,9 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityBreedEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityDropItemEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.bukkit.event.player.PlayerItemConsumeEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.Inventory;
@@ -225,46 +221,45 @@ public class QuestEvents implements Listener {
 
 
     @EventHandler
-    private void onDropItemEvent(EntityDropItemEvent e) { //DEFAULT ENABLED FOR ITEM DROPS UNLIKE FOR BLOCK BREAKS
-        final Entity entity = e.getEntity();
-        if (entity instanceof final Player player) {
-            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
-            if (questPlayer != null) {
-                if (questPlayer.getActiveQuests().size() > 0) {
-                    for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-                        for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-                            if (activeObjective.isUnlocked()) {
-                                if (activeObjective.getObjective() instanceof final CollectItemsObjective collectItemsObjective) {
+    private void onDropItemEvent(PlayerDropItemEvent e) { //DEFAULT ENABLED FOR ITEM DROPS UNLIKE FOR BLOCK BREAKS
+        final Entity player = e.getPlayer();
 
-                                    if (!collectItemsObjective.isDeductIfItemIsDropped()) {
-                                        continue;
-                                    }
-
-                                    //Check if the Material of the collected item is equal to the Material needed in the CollectItemsObjective
-                                    if (!collectItemsObjective.getItemToCollect().getType().equals(e.getItemDrop().getItemStack().getType())) {
-                                        continue;
-                                    }
-
-                                    //If the objective-item which needs to be collected has an ItemMeta...
-                                    if (collectItemsObjective.getItemToCollect().getItemMeta() != null) {
-                                        //then check if the ItemMeta of the collected item is equal to the ItemMeta needed in the CollectItemsObjective
-                                        if (!collectItemsObjective.getItemToCollect().getItemMeta().equals(e.getItemDrop().getItemStack().getItemMeta())) {
-                                            continue;
-                                        }
-                                    }
-
-                                    activeObjective.removeProgress(e.getItemDrop().getItemStack().getAmount(), false);
-
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+        if (questPlayer != null) {
+            if (questPlayer.getActiveQuests().size() > 0) {
+                for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+                    for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
+                        if (activeObjective.isUnlocked()) {
+                            if (activeObjective.getObjective() instanceof final CollectItemsObjective collectItemsObjective) {
+                                if (!collectItemsObjective.isDeductIfItemIsDropped()) {
+                                    continue;
                                 }
-                            }
 
+                                //Check if the Material of the collected item is equal to the Material needed in the CollectItemsObjective
+                                if (!collectItemsObjective.getItemToCollect().getType().equals(e.getItemDrop().getItemStack().getType())) {
+                                    continue;
+                                }
+
+                                //If the objective-item which needs to be collected has an ItemMeta...
+                                if (collectItemsObjective.getItemToCollect().getItemMeta() != null) {
+                                    //then check if the ItemMeta of the collected item is equal to the ItemMeta needed in the CollectItemsObjective
+                                    if (!collectItemsObjective.getItemToCollect().getItemMeta().equals(e.getItemDrop().getItemStack().getItemMeta())) {
+                                        continue;
+                                    }
+                                }
+
+                                activeObjective.removeProgress(e.getItemDrop().getItemStack().getAmount(), false);
+
+                            }
                         }
-                        activeQuest.removeCompletedObjectives(true);
+
                     }
-                    questPlayer.removeCompletedQuests();
+                    activeQuest.removeCompletedObjectives(true);
                 }
+                questPlayer.removeCompletedQuests();
             }
         }
+
 
     }
 
