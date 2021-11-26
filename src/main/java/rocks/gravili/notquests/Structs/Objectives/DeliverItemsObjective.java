@@ -135,6 +135,12 @@ public class DeliverItemsObjective extends Objective {
 
 
                     if (!npcIDOrArmorstand.equalsIgnoreCase("armorstand")) {
+                        if (!main.isCitizensEnabled()) {
+                            audience.sendMessage(MiniMessage.miniMessage().parse(
+                                    NotQuestColors.errorGradient + "Error: Any kind of NPC stuff has been disabled, because you don't have the Citizens plugin installed on your server. You need to install the Citizens plugin in order to use Citizen NPCs. You can, however, use armor stands as an alternative. To do that, just enter 'armorstand' instead of the NPC ID."
+                            ));
+                            return;
+                        }
                         int npcID;
                         try {
                             npcID = Integer.parseInt(npcIDOrArmorstand);
