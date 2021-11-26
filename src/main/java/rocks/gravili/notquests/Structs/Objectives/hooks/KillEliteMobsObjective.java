@@ -235,6 +235,14 @@ public class KillEliteMobsObjective extends Objective {
                 .meta(CommandMeta.DESCRIPTION, "Adds a new KillEliteMobs Objective to a quest")
                 .handler((context) -> {
                     final Audience audience = main.adventure().sender(context.getSender());
+
+                    //Cancel if EliteMobs is not found
+                    if (!main.isEliteMobsEnabled()) {
+                        audience.sendMessage(MiniMessage.miniMessage().parse(
+                                NotQuestColors.errorGradient + "Error: The Elite Mobs integration is not enabled. Thus, you cannot create an EliteMobs Objective."
+                        ));
+                        return;
+                    }
                     final Quest quest = context.get("quest");
 
                     final int amount = context.get("amount");
