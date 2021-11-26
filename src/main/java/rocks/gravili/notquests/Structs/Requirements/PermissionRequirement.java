@@ -20,7 +20,7 @@ package rocks.gravili.notquests.Structs.Requirements;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
-import cloud.commandframework.arguments.standard.StringArrayArgument;
+import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import net.kyori.adventure.audience.Audience;
@@ -95,16 +95,17 @@ public class PermissionRequirement extends Requirement {
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addRequirementBuilder) {
         manager.command(addRequirementBuilder.literal("Permission")
-                .argument(StringArrayArgument.of("Permission",
+                .argument(StringArgument.<CommandSender>newBuilder("Permission").withSuggestionsProvider(
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
                             final Audience audience = main.adventure().sender(context.getSender());
                             main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Required Permission Node]", "");
+
                             ArrayList<String> completions = new ArrayList<>();
                             completions.add("<Enter required Permission node>");
                             return completions;
                         }
-                ), ArgumentDescription.of("Permission node which the player needs in order to accept this Quest."))
+                ).single().build(), ArgumentDescription.of("Permission node which the player needs in order to accept this Quest."))
                 .meta(CommandMeta.DESCRIPTION, "Adds a new Permission Requirement to a quest")
                 .handler((context) -> {
                     final Audience audience = main.adventure().sender(context.getSender());
