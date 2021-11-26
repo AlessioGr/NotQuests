@@ -18,13 +18,25 @@
 
 package rocks.gravili.notquests.Structs.Objectives.hooks;
 
+import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
+import cloud.commandframework.arguments.flags.CommandFlag;
+import cloud.commandframework.arguments.standard.IntegerArgument;
+import cloud.commandframework.arguments.standard.StringArgument;
+import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Objectives.Objective;
 import rocks.gravili.notquests.Structs.Quest;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class KillEliteMobsObjective extends Objective {
 
@@ -129,7 +141,145 @@ public class KillEliteMobsObjective extends Objective {
     }
 
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder) {
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
+        CommandFlag<String> mobname = CommandFlag
+                .newBuilder("mobname")
+                .withArgument(StringArgument.<CommandSender>newBuilder("Mob name contains").withSuggestionsProvider(
+                        (context, lastString) -> {
+                            final List<String> allArgs = context.getRawInput();
+                            final Audience audience = main.adventure().sender(context.getSender());
+                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Part of Elite Mob Name]", "");
 
+                            ArrayList<String> completions = new ArrayList<>();
+
+                            completions.add("any");
+                            if (main.isEliteMobsEnabled()) {
+                                completions.addAll(main.getDataManager().standardEliteMobNamesCompletions);
+                            }
+                            return completions;
+                        }
+                ).single().build())
+                .build();
+
+        CommandFlag<String> minimumLevel = CommandFlag
+                .newBuilder("minimumLevel")
+                .withArgument(StringArgument.<CommandSender>newBuilder("Minimum level").withSuggestionsProvider(
+                        (context, lastString) -> {
+                            final List<String> allArgs = context.getRawInput();
+                            final Audience audience = main.adventure().sender(context.getSender());
+                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Minimum Level]", "");
+
+                            return new ArrayList<>(main.getDataManager().numberPositiveCompletions);
+                        }
+                ).single().build())
+                .build();
+
+        CommandFlag<String> maximumLevel = CommandFlag
+                .newBuilder("maximumLevel")
+                .withArgument(StringArgument.<CommandSender>newBuilder("Maximum level").withSuggestionsProvider(
+                        (context, lastString) -> {
+                            final List<String> allArgs = context.getRawInput();
+                            final Audience audience = main.adventure().sender(context.getSender());
+                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Maximum Level]", "");
+
+                            return new ArrayList<>(main.getDataManager().numberPositiveCompletions);
+                        }
+                ).single().build())
+                .build();
+
+
+        CommandFlag<String> spawnReason = CommandFlag
+                .newBuilder("spawnReason")
+                .withArgument(StringArgument.<CommandSender>newBuilder("Spawn Reason").withSuggestionsProvider(
+                        (context, lastString) -> {
+                            final List<String> allArgs = context.getRawInput();
+                            final Audience audience = main.adventure().sender(context.getSender());
+                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Spawn Reason]", "");
+
+                            ArrayList<String> completions = new ArrayList<>();
+                            for (final CreatureSpawnEvent.SpawnReason spawnReasonS : CreatureSpawnEvent.SpawnReason.values()) {
+                                completions.add(spawnReasonS.toString());
+                            }
+                            return completions;
+                        }
+                ).single().build())
+                .build();
+
+        CommandFlag<String> minimumDamagePercentage = CommandFlag
+                .newBuilder("minimumDamagePercentage")
+                .withArgument(StringArgument.<CommandSender>newBuilder("Minimum Damage Percentage").withSuggestionsProvider(
+                        (context, lastString) -> {
+                            final List<String> allArgs = context.getRawInput();
+                            final Audience audience = main.adventure().sender(context.getSender());
+                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Minimum Damage Percentage]", "");
+
+                            ArrayList<String> completions = new ArrayList<>();
+                            for (int i = 50; i <= 100; i++) {
+                                completions.add("" + i);
+                            }
+
+                            return completions;
+                        }
+                ).single().build())
+                .build();
+
+
+        manager.command(addObjectiveBuilder.literal("KillEliteMobs")
+                .flag(mobname)
+                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of kills needed"))
+
+                .meta(CommandMeta.DESCRIPTION, "Adds a new KillEliteMobs Objective to a quest")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+                    final Quest quest = context.get("quest");
+
+                    final int amount = context.get("amount");
+
+                    String mobNameString = context.flags().getValue(mobname, "");
+                    if (mobNameString.equalsIgnoreCase("any")) {
+                        mobNameString = "";
+                    }
+                    final String minimumLevelString = context.flags().getValue(minimumLevel, "any");
+                    final String maximumLevelString = context.flags().getValue(maximumLevel, "any");
+
+                    int minimumLevelInt = -1;
+                    try {
+                        minimumLevelInt = Integer.parseInt(minimumLevelString);
+                    } catch (NumberFormatException e) {
+                        minimumLevelInt = -1;
+                    }
+
+                    int maximumLevelInt = -1;
+                    try {
+                        maximumLevelInt = Integer.parseInt(maximumLevelString);
+                    } catch (NumberFormatException e) {
+                        maximumLevelInt = -1;
+                    }
+
+                    String spawnReasonString = context.flags().getValue(spawnReason, "");
+                    if (spawnReasonString.equalsIgnoreCase("any")) {
+                        spawnReasonString = "";
+                    }
+
+                    final String minimumDamagePercentageString = context.flags().getValue(minimumDamagePercentage, "any");
+
+                    int minimumDamagePercentageInt = -1;
+                    try {
+                        minimumDamagePercentageInt = Integer.parseInt(minimumDamagePercentageString);
+                    } catch (NumberFormatException e) {
+                        minimumDamagePercentageInt = -1;
+                    }
+
+                    KillEliteMobsObjective killEliteMobsObjective = new KillEliteMobsObjective(main, quest, quest.getObjectives().size() + 1,
+                            mobNameString, minimumLevelInt, maximumLevelInt, spawnReasonString, minimumDamagePercentageInt, amount);
+
+                    quest.addObjective(killEliteMobsObjective, true);
+
+                    audience.sendMessage(MiniMessage.miniMessage().parse(
+                            NotQuestColors.successGradient + "KillEliteMobs Objective successfully added to Quest " + NotQuestColors.highlightGradient
+                                    + quest.getQuestName() + "</gradient>!</gradient>"
+                    ));
+
+                }));
     }
 }
