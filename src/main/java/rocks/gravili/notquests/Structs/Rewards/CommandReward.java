@@ -104,7 +104,7 @@ public class CommandReward extends Reward {
                             return completions;
                         }
                 ), ArgumentDescription.of("Command which will be executed from the console as a reward. A '/' at the beginning is not required."))
-                .meta(CommandMeta.DESCRIPTION, "Adds a new ConsoleCommand Requirement to a quest")
+                .meta(CommandMeta.DESCRIPTION, "Adds a new ConsoleCommand Reward to a quest")
                 .handler((context) -> {
                     final Audience audience = main.adventure().sender(context.getSender());
 
