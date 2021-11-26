@@ -225,8 +225,12 @@ public class KillEliteMobsObjective extends Objective {
 
 
         manager.command(addObjectiveBuilder.literal("KillEliteMobs")
-                .flag(mobname)
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of kills needed"))
+                .flag(mobname)
+                .flag(minimumLevel)
+                .flag(maximumLevel)
+                .flag(spawnReason)
+                .flag(minimumDamagePercentage)
 
                 .meta(CommandMeta.DESCRIPTION, "Adds a new KillEliteMobs Objective to a quest")
                 .handler((context) -> {
@@ -239,6 +243,7 @@ public class KillEliteMobsObjective extends Objective {
                     if (mobNameString.equalsIgnoreCase("any")) {
                         mobNameString = "";
                     }
+                    mobNameString = mobNameString.replaceAll("_", " ");
                     final String minimumLevelString = context.flags().getValue(minimumLevel, "any");
                     final String maximumLevelString = context.flags().getValue(maximumLevel, "any");
 
@@ -265,7 +270,7 @@ public class KillEliteMobsObjective extends Objective {
 
                     int minimumDamagePercentageInt = -1;
                     try {
-                        minimumDamagePercentageInt = Integer.parseInt(minimumDamagePercentageString);
+                        minimumDamagePercentageInt = Integer.parseInt(minimumDamagePercentageString.replaceAll("%", ""));
                     } catch (NumberFormatException e) {
                         minimumDamagePercentageInt = -1;
                     }
