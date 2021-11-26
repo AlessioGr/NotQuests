@@ -88,7 +88,7 @@ public class BreakBlocksObjective extends Objective {
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of blocks which need to be broken"))
                 .flag(
                         manager.flagBuilder("doNotDeductIfBlockIsPlaced")
-                                .withDescription(ArgumentDescription.of("Determines if Quest progress should be removed if a block is placed"))
+                                .withDescription(ArgumentDescription.of("Makes it so Quest progress is not removed if the block is placed"))
                 )
                 .meta(CommandMeta.DESCRIPTION, "Adds a new BreakBlocks Objective to a quest")
                 .handler((context) -> {

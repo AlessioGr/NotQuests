@@ -860,7 +860,6 @@ public class AdminCommands {
     public void handleActions() {
         //Actions
         manager.command(builder.literal("actions")
-                .senderType(Player.class)
                 .literal("add")
                 .argument(StringArgument.<CommandSender>newBuilder("Action Name").withSuggestionsProvider(
                         (context, lastString) -> {
@@ -919,7 +918,6 @@ public class AdminCommands {
                     }
                 }));
         manager.command(builder.literal("actions")
-                .senderType(Player.class)
                 .literal("edit")
                 .argument(StringArgument.<CommandSender>newBuilder("Action Name").withSuggestionsProvider(
                         (context, lastString) -> {
@@ -978,7 +976,6 @@ public class AdminCommands {
 
 
         manager.command(builder.literal("actions")
-                .senderType(Player.class)
                 .literal("edit")
                 .argument(StringArgument.<CommandSender>newBuilder("Action Name").withSuggestionsProvider(
                         (context, lastString) -> {
@@ -1022,7 +1019,6 @@ public class AdminCommands {
                 }));
 
         manager.command(builder.literal("actions")
-                .senderType(Player.class)
                 .literal("list")
                 .meta(CommandMeta.DESCRIPTION, "Shows all existing actions.")
                 .handler((context) -> {

@@ -18,11 +18,19 @@
 
 package rocks.gravili.notquests.Structs.Objectives;
 
+import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
+import cloud.commandframework.arguments.standard.IntegerArgument;
+import cloud.commandframework.bukkit.parsers.MaterialArgument;
+import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Quest;
 
@@ -30,11 +38,13 @@ public class CollectItemsObjective extends Objective {
 
     private final NotQuests main;
     private final ItemStack itemToCollect;
+    private final boolean deductIfItemIsPlaced;
 
-    public CollectItemsObjective(NotQuests main, final Quest quest, final int objectiveID, ItemStack itemToCollect, int amountToCollect) {
+    public CollectItemsObjective(NotQuests main, final Quest quest, final int objectiveID, ItemStack itemToCollect, int amountToCollect, boolean deductIfItemIsPlaced) {
         super(main, quest, objectiveID, amountToCollect);
         this.main = main;
         this.itemToCollect = itemToCollect;
+        this.deductIfItemIsPlaced = deductIfItemIsPlaced;
     }
 
     public CollectItemsObjective(NotQuests main, Quest quest, int objectiveNumber, int progressNeeded) {
@@ -43,7 +53,9 @@ public class CollectItemsObjective extends Objective {
 
         this.main = main;
         itemToCollect = main.getDataManager().getQuestsData().getItemStack("quests." + questName + ".objectives." + objectiveNumber + ".specifics.itemToCollect.itemstack");
-   }
+        deductIfItemIsPlaced = main.getDataManager().getQuestsData().getItemStack("quests." + questName + ".objectives." + objectiveNumber + ".specifics.deductIfBlockPlaced");
+
+    }
 
     @Override
     public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
@@ -67,7 +79,29 @@ public class CollectItemsObjective extends Objective {
     }
 
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder) {
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
+        manager.command(addObjectiveBuilder.literal("CollectItems")
+                .argument(MaterialArgument.of("material"), ArgumentDescription.of("Material of the item which needs to be collected."))
+                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of items which need to be collected"))
+                .flag(
+                        manager.flagBuilder("doNotDeductIfItemIsDropped")
+                                .withDescription(ArgumentDescription.of("Makes it so Quest progress is not removed if the item is dropped"))
+                )
+                .meta(CommandMeta.DESCRIPTION, "Adds a new BreakBlocks Objective to a quest")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+                    final Quest quest = context.get("quest");
+                    final Material material = context.get("material");
+                    final int amount = context.get("amount");
+                    final boolean deductIfBlockIsPlaced = !context.flags().isPresent("doNotDeductIfBlockIsPlaced");
 
+                    BreakBlocksObjective breakBlocksObjective = new BreakBlocksObjective(main, quest, quest.getObjectives().size() + 1, material, amount, deductIfBlockIsPlaced);
+                    quest.addObjective(breakBlocksObjective, true);
+                    audience.sendMessage(MiniMessage.miniMessage().parse(
+                            NotQuestColors.successGradient + "BreakBlocks Objective successfully added to Quest " + NotQuestColors.highlightGradient
+                                    + quest.getQuestName() + "</gradient>!</gradient>"
+                    ));
+
+                }));
     }
 }
