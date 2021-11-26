@@ -74,12 +74,12 @@ public class CollectItemsObjective extends Objective {
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
         manager.command(addObjectiveBuilder.literal("CollectItems")
                 .argument(MaterialOrHandArgument.of("material"), ArgumentDescription.of("Material of the item which needs to be collected."))
-                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of items which need to be collected"))
+                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of items which need to be collected."))
                 .flag(
                         manager.flagBuilder("doNotDeductIfItemIsDropped")
-                                .withDescription(ArgumentDescription.of("Makes it so Quest progress is not removed if the item is dropped"))
+                                .withDescription(ArgumentDescription.of("Makes it so Quest progress is not removed if the item is dropped."))
                 )
-                .meta(CommandMeta.DESCRIPTION, "Adds a new BreakBlocks Objective to a quest")
+                .meta(CommandMeta.DESCRIPTION, "Adds a new CollectItems Objective to a quest")
                 .handler((context) -> {
                     final Audience audience = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");

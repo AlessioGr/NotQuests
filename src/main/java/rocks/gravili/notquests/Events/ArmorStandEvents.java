@@ -18,6 +18,7 @@
 
 package rocks.gravili.notquests.Events;
 
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.ArmorStand;
@@ -34,6 +35,7 @@ import org.bukkit.event.world.EntitiesUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.ActiveObjective;
 import rocks.gravili.notquests.Structs.ActiveQuest;
@@ -269,7 +271,9 @@ public class ArmorStandEvents implements Listener {
                             player.sendMessage("§aObjective successfully added to quest §b" + quest.getQuestName() + "§a!");
 
                         } else {
-                            player.sendMessage("§cError: Quest §b" + questName + " §cdoes not exist.");
+                            main.adventure().player(player).sendMessage(MiniMessage.miniMessage().parse(
+                                    NotQuestColors.errorGradient + "Error: Quest " + NotQuestColors.highlightGradient + questName + "</gradient> does not exist."
+                            ));
                         }
 
                     } else if (id == 6) { //Set as completionNPC to an objective of a Quest
@@ -286,7 +290,9 @@ public class ArmorStandEvents implements Listener {
 
 
                         } else {
-                            player.sendMessage("§cError: Quest §b" + questName + " §cdoes not exist.");
+                            main.adventure().player(player).sendMessage(MiniMessage.miniMessage().parse(
+                                    NotQuestColors.errorGradient + "Error: Quest " + NotQuestColors.highlightGradient + questName + "</gradient> does not exist."
+                            ));
                         }
 
 
@@ -306,14 +312,23 @@ public class ArmorStandEvents implements Listener {
                             if (itemToDeliver != null) {
                                 DeliverItemsObjective deliverItemsObjective = new DeliverItemsObjective(main, quest, quest.getObjectives().size() + 1, itemToDeliver, amountToDeliver, armorStand.getUniqueId());
                                 quest.addObjective(deliverItemsObjective, true);
-                                player.sendMessage("§aObjective successfully added to quest §b" + quest.getQuestName() + "§a!");
+
+                                main.adventure().player(player).sendMessage(MiniMessage.miniMessage().parse(
+                                        NotQuestColors.successGradient + "DeliverItems Objective successfully added to Quest " + NotQuestColors.highlightGradient
+                                                + quest.getQuestName() + "</gradient>!</gradient>"
+                                ));
+
                             } else {
-                                player.sendMessage("§cItemStack is not cached anymore! This item won't work after a server restart.");
+                                main.adventure().player(player).sendMessage(MiniMessage.miniMessage().parse(
+                                        NotQuestColors.errorGradient + "ItemStack is not cached anymore! This item won't work after a server restart."
+                                ));
                             }
 
 
                         } else {
-                            player.sendMessage("§cError: Quest §b" + questName + " §cdoes not exist.");
+                            main.adventure().player(player).sendMessage(MiniMessage.miniMessage().parse(
+                                    NotQuestColors.errorGradient + "Error: Quest " + NotQuestColors.highlightGradient + questName + "</gradient> does not exist."
+                            ));
                         }
 
                     }
