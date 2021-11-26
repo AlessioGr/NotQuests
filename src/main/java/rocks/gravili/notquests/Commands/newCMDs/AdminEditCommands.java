@@ -519,7 +519,7 @@ public class AdminEditCommands {
                     quest.removeAllObjectives();
                     audience.sendMessage(Component.empty());
                     audience.sendMessage(miniMessage.parse(
-                            successGradient + "All objectives of Quest" + highlightGradient + quest.getQuestName()
+                            successGradient + "All objectives of Quest " + highlightGradient + quest.getQuestName()
                                     + "</gradient> have been removed!</gradient>"
                     ));
                 }));
