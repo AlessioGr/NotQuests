@@ -12,6 +12,10 @@ general:
   max-active-quests-per-player: -1
   #If set to false, Reach Location Objective will not work anymore - for better performance
   enable-move-event: true
+  #List of worlds where the last slot of a player's inventory should be set to a clickable journal book. Set to '*' for every world
+  journal-item:
+    enabled-worlds:
+      - ''
 visual:
   #Sets which language to use. Default is languages/en.yml
   language: en

@@ -20,7 +20,8 @@ package rocks.gravili.notquests.Structs;
 
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Material;
 import rocks.gravili.notquests.Hooks.Citizens.QuestGiverNPCTrait;
 import rocks.gravili.notquests.NotQuests;
@@ -199,13 +200,14 @@ public class Quest {
     }
 
     public final String getQuestDescription() {
-        return ChatColor.translateAlternateColorCodes('&', description);
+
+        return LegacyComponentSerializer.builder().hexColors().build().serialize(MiniMessage.miniMessage().parse(description)).replace("&", "§");
     }
 
     public final String getQuestDescription(final int maxLengthPerLine) {
         final StringBuilder descriptionWithLineBreaks = new StringBuilder();
         int count = 0;
-        for (char character : getQuestDescription().toCharArray()) {
+        for (char character : description.toCharArray()) {
             count++;
             if (count > maxLengthPerLine) {
                 count = 0;
@@ -215,7 +217,7 @@ public class Quest {
             }
         }
 
-        return descriptionWithLineBreaks.toString();
+        return LegacyComponentSerializer.builder().hexColors().build().serialize(MiniMessage.miniMessage().parse(descriptionWithLineBreaks.toString())).replace("&", "§");
     }
 
 
@@ -226,7 +228,7 @@ public class Quest {
     }
 
     public final String getQuestDisplayName() {
-        return ChatColor.translateAlternateColorCodes('&', displayName);
+        return LegacyComponentSerializer.builder().hexColors().build().serialize(MiniMessage.miniMessage().parse(displayName)).replace("&", "§");
     }
 
 

@@ -19,6 +19,8 @@
 package rocks.gravili.notquests.Managers;
 
 import me.clip.placeholderapi.PlaceholderAPI;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.io.IOUtils;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -650,7 +652,7 @@ public class LanguageManager {
             message = before + hexColor + after;
             matcher = hexPattern.matcher(message);
         }
-        return ChatColor.translateAlternateColorCodes('&', message);
+        return LegacyComponentSerializer.builder().hexColors().build().serialize(MiniMessage.miniMessage().parse(message)).replace("&", "§");
     }
 
 

@@ -18,7 +18,8 @@
 
 package rocks.gravili.notquests.Structs.Objectives;
 
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Quest;
@@ -106,7 +107,7 @@ public abstract class Objective {
     }
 
     public final String getObjectiveDisplayName() {
-        return ChatColor.translateAlternateColorCodes('&', objectiveDisplayName);
+        return LegacyComponentSerializer.builder().hexColors().build().serialize(MiniMessage.miniMessage().parse(objectiveDisplayName)).replace("&", "§");
     }
 
     public final String getObjectiveFinalName() {
@@ -132,7 +133,7 @@ public abstract class Objective {
     }
 
     public final String getObjectiveDescription() {
-        return ChatColor.translateAlternateColorCodes('&', objectiveDescription);
+        return LegacyComponentSerializer.builder().hexColors().build().serialize(MiniMessage.miniMessage().parse(objectiveDescription)).replace("&", "§");
     }
 
 
