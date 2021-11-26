@@ -22,12 +22,14 @@ package rocks.gravili.notquests.Structs.Objectives;
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.IntegerArgument;
-import cloud.commandframework.bukkit.parsers.MaterialArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import rocks.gravili.notquests.Commands.NotQuestColors;
+import rocks.gravili.notquests.Commands.newCMDs.arguments.EntityTypeSelector;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Quest;
 
@@ -69,15 +71,26 @@ public class BreedObjective extends Objective {
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
         manager.command(addObjectiveBuilder.literal("BreedMobs")
-                .argument(MaterialArgument.of("material"))
-                .argument(IntegerArgument.of("amount"))
-                .flag(
-                        manager.flagBuilder("deductIfBlockIsPlaced")
-                                .withDescription(ArgumentDescription.of("Determines if Quest progress should be removed if a block is placed"))
-                )
+                .argument(new EntityTypeSelector<>(
+                        true,
+                        "entitytype",
+                        main
+                ), ArgumentDescription.of("Type of Entity the player has to breed."))
+                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of times the player needs to breed this entity."))
                 .meta(CommandMeta.DESCRIPTION, "Adds a new BreedMobs Objective to a quest")
                 .handler((context) -> {
                     final Audience audience = main.adventure().sender(context.getSender());
+                    final Quest quest = context.get("quest");
+                    final String entityType = context.get("entitytype");
+                    final int amount = context.get("amount");
+
+                    BreedObjective breedObjective = new BreedObjective(main, quest, quest.getObjectives().size() + 1, amount, entityType);
+                    quest.addObjective(breedObjective, true);
+
+                    audience.sendMessage(MiniMessage.miniMessage().parse(
+                            NotQuestColors.successGradient + "BreedMobs Objective successfully added to Quest " + NotQuestColors.highlightGradient
+                                    + quest.getQuestName() + "</gradient>!</gradient>"
+                    ));
 
                 }));
     }

@@ -667,6 +667,13 @@ public class DataManager {
         configuration.setMoveEventEnabled(getGeneralConfig().getBoolean("general.enable-move-event"));
 
 
+        if (!getGeneralConfig().isList("general.journal-item.enabled-worlds")) {
+            getGeneralConfig().set("general.journal-item.enabled-worlds", List.of(""));
+            valueChanged = true;
+        }
+        configuration.journalItemEnabledWorlds = getGeneralConfig().getStringList("general.journal-item.enabled-worlds");
+
+
         if (valueChanged) {
             main.getLogManager().info("<AQUA>General.yml</AQUA> Configuration was updated with new values! Saving it...");
             saveGeneralConfig();

@@ -59,17 +59,48 @@ import static rocks.gravili.notquests.Commands.NotQuestColors.debugHighlightGrad
 public class QuestEvents implements Listener {
     private final NotQuests main;
 
+
     public QuestEvents(NotQuests main) {
         this.main = main;
     }
 
 
+    @EventHandler
+    public void playerChangeWorldEvent(PlayerChangedWorldEvent e) {
+        final Player player = e.getPlayer();
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+        if (questPlayer != null) {
+            if (questPlayer.getActiveQuests().size() > 0) {
+                for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+
+                    for (final ActiveTrigger activeTrigger : activeQuest.getActiveTriggers()) {
+                        if (activeTrigger.getTrigger() instanceof WorldEnterTrigger worldEnterTrigger) {
+                            if (e.getPlayer().getWorld().getName().equals(worldEnterTrigger.getWorldToEnterName())) {
+                                handleGeneralTrigger(questPlayer, activeTrigger);
+
+                            }
+
+                        } else if (activeTrigger.getTrigger() instanceof WorldLeaveTrigger worldLeaveTrigger) {
+                            if (e.getFrom().getName().equals(worldLeaveTrigger.getWorldToLeaveName())) {
+                                handleGeneralTrigger(questPlayer, activeTrigger);
+                            }
+
+                        }
+                    }
+
+
+                }
+            }
+        }
+    }
+
+
     @EventHandler(priority = EventPriority.LOWEST)
-    private void onEntityBreed(EntityBreedEvent e){
+    private void onEntityBreed(EntityBreedEvent e) {
         if (!e.isCancelled()) {
-            if(e.getBreeder() instanceof final Player player){
+            if (e.getBreeder() instanceof final Player player) {
                 final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
-                if(questPlayer == null){
+                if (questPlayer == null) {
                     return;
                 }
                 if (questPlayer.getActiveQuests().size() == 0) {
@@ -373,35 +404,7 @@ public class QuestEvents implements Listener {
     }
 
 
-    @EventHandler
-    public void playerChangeWorldEvent(PlayerChangedWorldEvent e) {
 
-
-        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(e.getPlayer().getUniqueId());
-        if (questPlayer != null) {
-            if (questPlayer.getActiveQuests().size() > 0) {
-                for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-
-                    for (final ActiveTrigger activeTrigger : activeQuest.getActiveTriggers()) {
-                        if (activeTrigger.getTrigger() instanceof WorldEnterTrigger worldEnterTrigger) {
-                            if (e.getPlayer().getWorld().getName().equals(worldEnterTrigger.getWorldToEnterName())) {
-                                handleGeneralTrigger(questPlayer, activeTrigger);
-
-                            }
-
-                        } else if (activeTrigger.getTrigger() instanceof WorldLeaveTrigger worldLeaveTrigger) {
-                            if (e.getFrom().getName().equals(worldLeaveTrigger.getWorldToLeaveName())) {
-                                handleGeneralTrigger(questPlayer, activeTrigger);
-                            }
-
-                        }
-                    }
-
-
-                }
-            }
-        }
-    }
 
 
     @EventHandler
