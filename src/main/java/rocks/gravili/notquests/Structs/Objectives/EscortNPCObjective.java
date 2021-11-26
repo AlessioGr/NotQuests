@@ -110,11 +110,17 @@ public class EscortNPCObjective extends Objective {
                 }).build(), ArgumentDescription.of("ID of the Citizens NPC the player has to escort."))
                 .argument(IntegerArgument.<CommandSender>newBuilder("Destination NPC").withSuggestionsProvider((context, lastString) -> {
                     ArrayList<String> completions = new ArrayList<>();
-                    for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
-                        if (!("" + npc.getId()).equalsIgnoreCase(context.get("NPC to escort"))) {
-                            completions.add("" + npc.getId());
+                    try {
+                        int npcToEscortID = context.get("NPC to escort");
+                        for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
+                            if (npc.getId() != npcToEscortID) {
+                                completions.add("" + npc.getId());
+                            }
                         }
+                    } catch (Exception ignored) {
+
                     }
+
                     final List<String> allArgs = context.getRawInput();
                     final Audience audience = main.adventure().sender(context.getSender());
                     main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Destination NPC ID]", "");
