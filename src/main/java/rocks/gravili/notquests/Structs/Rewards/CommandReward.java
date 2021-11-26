@@ -100,8 +100,15 @@ public class CommandReward extends Reward {
                             final Audience audience = main.adventure().sender(context.getSender());
                             main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "<Enter Console Command>", "");
                             ArrayList<String> completions = new ArrayList<>();
-                            completions.add("<Enter Console Command>");
+
+                            if (lastString.startsWith("{")) {
+                                completions.addAll(main.getCommandManager().getAdminCommands().placeholders);
+                            } else {
+                                completions.add("<Enter Console Command>");
+                            }
+
                             return completions;
+
                         }
                 ), ArgumentDescription.of("Command which will be executed from the console as a reward. A '/' at the beginning is not required."))
                 .meta(CommandMeta.DESCRIPTION, "Adds a new ConsoleCommand Reward to a quest")
