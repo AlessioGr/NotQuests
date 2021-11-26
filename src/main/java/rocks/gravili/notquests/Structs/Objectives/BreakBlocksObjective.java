@@ -52,7 +52,7 @@ public class BreakBlocksObjective extends Objective {
 
         this.main = main;
         blockToBreak = Material.valueOf(main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.blockToBreak.material"));
-        deductIfBlockIsPlaced = main.getDataManager().getQuestsData().getBoolean("quests." + questName + ".objectives." + objectiveNumber + ".specifics.deductIfBlockPlaced");
+        deductIfBlockIsPlaced = main.getDataManager().getQuestsData().getBoolean("quests." + questName + ".objectives." + objectiveNumber + ".specifics.deductIfBlockPlaced", true);
     }
 
     @Override
@@ -65,7 +65,7 @@ public class BreakBlocksObjective extends Objective {
     @Override
     public void save() {
         main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.blockToBreak.material", getBlockToBreak().toString());
-        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName()  + ".objectives." + getObjectiveID() + ".specifics.deductIfBlockPlaced", willDeductIfBlockPlaced());
+        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.deductIfBlockPlaced", isDeductIfBlockPlaced());
 
     }
 
@@ -78,7 +78,7 @@ public class BreakBlocksObjective extends Objective {
         return super.getProgressNeeded();
     }
 
-    public final boolean willDeductIfBlockPlaced() {
+    public final boolean isDeductIfBlockPlaced() {
         return deductIfBlockIsPlaced;
     }
 
