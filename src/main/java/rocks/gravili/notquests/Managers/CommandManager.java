@@ -20,7 +20,9 @@ package rocks.gravili.notquests.Managers;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
+import cloud.commandframework.arguments.flags.CommandFlag;
 import cloud.commandframework.arguments.standard.StringArgument;
+import cloud.commandframework.arguments.standard.StringArrayArgument;
 import cloud.commandframework.bukkit.CloudBukkitCapabilities;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
 import cloud.commandframework.meta.CommandMeta;
@@ -42,6 +44,7 @@ import rocks.gravili.notquests.Commands.newCMDs.arguments.QuestSelector;
 import rocks.gravili.notquests.Commands.old.CommandNotQuestsAdmin;
 import rocks.gravili.notquests.NotQuests;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -64,6 +67,12 @@ public class CommandManager {
     private AdminCommands adminCommands;
     private AdminEditCommands adminEditCommands;
 
+
+    //Re-usable value flags
+    public final CommandFlag<String[]> nametag_containsany;
+    public final CommandFlag<String[]> nametag_equals;
+
+
     public CommandManager(final NotQuests main) {
         this.main = main;
         if (CommodoreProvider.isSupported()) {
@@ -72,6 +81,34 @@ public class CommandManager {
         } else {
             commodore = null;
         }
+
+        nametag_containsany = CommandFlag
+                .newBuilder("nametag_containsany")
+                .withArgument(StringArrayArgument.of("nametag_containsany",
+                        (context, lastString) -> {
+                            final List<String> allArgs = context.getRawInput();
+                            final Audience audience = main.adventure().sender((CommandSender) context.getSender());
+                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "<Enter nametag_containsany flag value>", "");
+                            ArrayList<String> completions = new ArrayList<>();
+                            completions.add("<nametag_containsany flag value>");
+                            return completions;
+                        }
+                ))
+                .build();
+
+        nametag_equals = CommandFlag
+                .newBuilder("nametag_equals")
+                .withArgument(StringArrayArgument.of("nametag_equals",
+                        (context, lastString) -> {
+                            final List<String> allArgs = context.getRawInput();
+                            final Audience audience = main.adventure().sender((CommandSender) context.getSender());
+                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "<Enter nametag_equals flag value>", "");
+                            ArrayList<String> completions = new ArrayList<>();
+                            completions.add("<nametag_equals flag value>");
+                            return completions;
+                        }
+                ))
+                .build();
     }
 
 

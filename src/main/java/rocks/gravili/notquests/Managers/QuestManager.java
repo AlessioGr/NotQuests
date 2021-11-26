@@ -993,7 +993,8 @@ public class QuestManager {
 
 
                                                 } else {
-                                                    main.getLogManager().log(Level.WARNING, "Error attaching npc with ID §b" + main.getDataManager().getQuestsData().getInt("quests." + questName + ".npcs." + npcNumber + ".npcID") + " to quest - NPC not found.");
+                                                    main.getLogManager().log(Level.WARNING, "Error attaching npc with ID <AQUA>" + main.getDataManager().getQuestsData().getInt("quests." + questName + ".npcs." + npcNumber + ".npcID")
+                                                            + "</AQUA> to quest <AQUA>" + quest.getQuestName() + "</AQUA> - NPC not found.");
 
                                                 }
                                             } else {
@@ -1039,8 +1040,8 @@ public class QuestManager {
 
 
                                         } else {
-                                            main.getLogManager().log(Level.WARNING, "Error attaching npc with ID §b" + main.getDataManager().getQuestsData().getInt("quests." + questName + ".npcs." + npcNumber + ".npcID") + " to quest - NPC not found.");
-
+                                            main.getLogManager().log(Level.WARNING, "Error attaching npc with ID <AQUA>" + main.getDataManager().getQuestsData().getInt("quests." + questName + ".npcs." + npcNumber + ".npcID")
+                                                    + "</AQUA> to quest <AQUA>" + quest.getQuestName() + "</AQUA> - NPC not found.");
                                         }
 
                                     }
