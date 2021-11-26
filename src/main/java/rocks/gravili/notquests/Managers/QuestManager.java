@@ -676,7 +676,7 @@ public class QuestManager {
             GuiElementGroup group = new GuiElementGroup('g');
 
             for (final Quest quest : questsAttachedToNPC) {
-                final Material materialToUse = Material.BOOK;
+                final Material materialToUse = quest.getTakeItem();
 
                 String displayName = quest.getQuestFinalName();
 
@@ -788,7 +788,8 @@ public class QuestManager {
             GuiElementGroup group = new GuiElementGroup('g');
 
             for (final Quest quest : questsAttachedToNPC) {
-                final Material materialToUse = Material.BOOK;
+                final Material materialToUse = quest.getTakeItem();
+
 
                 String displayName = quest.getQuestFinalName();
 
