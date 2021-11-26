@@ -46,6 +46,7 @@ import rocks.gravili.notquests.Structs.Objectives.Objective;
 import rocks.gravili.notquests.Structs.Quest;
 import rocks.gravili.notquests.Structs.Requirements.Requirement;
 import rocks.gravili.notquests.Structs.Rewards.Reward;
+import rocks.gravili.notquests.Structs.Triggers.Trigger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -1162,7 +1163,7 @@ public class AdminEditCommands {
                     final int ID = context.get("Reward ID");
                     final Quest quest = context.get("quest");
                     final Reward foundReward = quest.getRewardFromID(ID);
-
+                    audience.sendMessage(Component.empty());
                     if (foundReward == null) {
                         audience.sendMessage(miniMessage.parse(
                                 errorGradient + "Invalid reward."
@@ -1186,7 +1187,7 @@ public class AdminEditCommands {
                     final int ID = context.get("Reward ID");
                     final Quest quest = context.get("quest");
                     final Reward foundReward = quest.getRewardFromID(ID);
-
+                    audience.sendMessage(Component.empty());
                     if (foundReward == null) {
                         audience.sendMessage(miniMessage.parse(
                                 errorGradient + "Invalid reward."
@@ -1208,7 +1209,7 @@ public class AdminEditCommands {
                     final int ID = context.get("Reward ID");
                     final Quest quest = context.get("quest");
                     final Reward foundReward = quest.getRewardFromID(ID);
-
+                    audience.sendMessage(Component.empty());
                     if (foundReward == null) {
                         audience.sendMessage(miniMessage.parse(
                                 errorGradient + "Invalid reward."
@@ -1234,7 +1235,7 @@ public class AdminEditCommands {
                     final int ID = context.get("Reward ID");
                     final Quest quest = context.get("quest");
                     final Reward foundReward = quest.getRewardFromID(ID);
-
+                    audience.sendMessage(Component.empty());
                     if (foundReward == null) {
                         audience.sendMessage(miniMessage.parse(
                                 errorGradient + "Invalid reward."
@@ -1270,7 +1271,7 @@ public class AdminEditCommands {
                     final int ID = context.get("Reward ID");
                     final Quest quest = context.get("quest");
                     final Reward foundReward = quest.getRewardFromID(ID);
-
+                    audience.sendMessage(Component.empty());
                     if (foundReward == null) {
                         audience.sendMessage(miniMessage.parse(
                                 errorGradient + "Invalid reward."
@@ -1292,6 +1293,100 @@ public class AdminEditCommands {
 
     public void handleTriggers(final Command.Builder<CommandSender> builder) {
         //Add is handled individually by each trigger
+        manager.command(builder.literal("clear")
+                .meta(CommandMeta.DESCRIPTION, "Removes all the triggers this Quest has.")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+                    final Quest quest = context.get("quest");
+
+                    quest.removeAllTriggers();
+                    audience.sendMessage(miniMessage.parse(
+                            successGradient + "All Triggers of Quest " + highlightGradient + quest.getQuestName() + "</gradient> have been removed!</gradient>"
+                    ));
+
+                }));
+
+        manager.command(builder.literal("list", "show")
+                .meta(CommandMeta.DESCRIPTION, "Lists all the triggers this Quest has.")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+                    final Quest quest = context.get("quest");
+
+
+                    audience.sendMessage(miniMessage.parse(highlightGradient + "Triggers for Quest " + highlight2Gradient + quest.getQuestName() + "</gradient>:</gradient>"));
+
+                    int counter = 1;
+                    for (Trigger trigger : quest.getTriggers()) {
+                        audience.sendMessage(miniMessage.parse(highlightGradient + counter + ". </gradient> Type: " + mainGradient + trigger.getTriggerType() + "</gradient>"));
+
+
+                        final String triggerDescription = trigger.getTriggerDescription();
+                        if (triggerDescription != null && !triggerDescription.isBlank()) {
+                            audience.sendMessage(miniMessage.parse(unimportant + "-- " + unimportantClose + mainGradient + triggerDescription + "</gradient>"));
+                        }
+
+                        audience.sendMessage(miniMessage.parse(unimportant + "--- Action Name: " + unimportantClose + mainGradient + trigger.getTriggerAction().getActionName() + "</gradient>"));
+                        audience.sendMessage(miniMessage.parse(unimportant + "------ Action console command: " + unimportantClose + mainGradient + trigger.getTriggerAction().getConsoleCommand() + "</gradient>"));
+                        audience.sendMessage(miniMessage.parse(unimportant + "--- Amount of triggers needed for first execution: " + unimportantClose + mainGradient + trigger.getAmountNeeded() + "</gradient>"));
+
+                        if (trigger.getApplyOn() == 0) {
+                            audience.sendMessage(miniMessage.parse(unimportant + "--- Apply on: " + unimportantClose + mainGradient + "Quest</gradient>"));
+
+                        } else {
+                            audience.sendMessage(miniMessage.parse(unimportant + "--- Apply on: " + unimportantClose + mainGradient + "Objective " + trigger.getApplyOn() + "</gradient>"));
+                        }
+
+                        if (trigger.getWorldName() == null || trigger.getWorldName().isBlank() || trigger.getWorldName().equalsIgnoreCase("ALL")) {
+                            audience.sendMessage(miniMessage.parse(unimportant + "--- In World: " + unimportantClose + mainGradient + "Any World</gradient>"));
+                        } else {
+                            audience.sendMessage(miniMessage.parse(unimportant + "--- In World: " + unimportantClose + mainGradient + trigger.getWorldName() + "</gradient>"));
+                        }
+
+                        counter++;
+                    }
+
+                }));
+
+
+        manager.command(builder.literal("remove", "delete")
+                .argument(IntegerArgument.<CommandSender>newBuilder("Trigger ID").withMin(1).withSuggestionsProvider(
+                                (context, lastString) -> {
+                                    final List<String> allArgs = context.getRawInput();
+                                    final Audience audience = main.adventure().sender(context.getSender());
+                                    main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Trigger ID]", "");
+
+                                    ArrayList<String> completions = new ArrayList<>();
+
+                                    final Quest quest = context.get("quest");
+                                    for (final Trigger trigger : quest.getTriggers()) {
+                                        completions.add("" + trigger.getTriggerID());
+                                    }
+
+                                    return completions;
+                                }
+                        ).withParser((context, lastString) -> { //TODO: Fix this parser. It isn't run at all.
+                            final int ID = context.get("Trigger ID");
+                            final Quest quest = context.get("quest");
+                            final Trigger foundTrigger = quest.getTriggerFromID(ID);
+                            if (foundTrigger == null) {
+                                return ArgumentParseResult.failure(new IllegalArgumentException("Trigger with the ID '" + ID + "' does not belong to Quest '" + quest.getQuestName() + "'!"));
+                            } else {
+                                return ArgumentParseResult.success(ID);
+                            }
+                        })
+                        , ArgumentDescription.of("Trigger ID"))
+                .meta(CommandMeta.DESCRIPTION, "Removes all the triggers this Quest has.")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+                    final Quest quest = context.get("quest");
+
+                    final int triggerID = context.get("Trigger ID");
+
+                    audience.sendMessage(miniMessage.parse(
+                            quest.removeTrigger(triggerID)
+                    ));
+
+                }));
 
     }
 

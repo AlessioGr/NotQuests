@@ -105,6 +105,15 @@ public class Quest {
         return null;
     }
 
+    public final Trigger getTriggerFromID(final int triggerID) {
+        for (final Trigger trigger : triggers) {
+            if (trigger.getTriggerID() == triggerID) {
+                return trigger;
+            }
+        }
+        return null;
+    }
+
     public void addObjective(Objective objective, boolean save) {
         boolean dupeID = false;
         for (Objective objective1 : objectives) {
