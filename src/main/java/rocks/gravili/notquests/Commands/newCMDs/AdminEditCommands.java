@@ -44,6 +44,8 @@ import org.bukkit.persistence.PersistentDataType;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Objectives.Objective;
 import rocks.gravili.notquests.Structs.Quest;
+import rocks.gravili.notquests.Structs.Requirements.Requirement;
+import rocks.gravili.notquests.Structs.Rewards.Reward;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -1063,11 +1065,229 @@ public class AdminEditCommands {
     public void handleRequirements(final Command.Builder<CommandSender> builder) {
         //Add is handled individually by each requirement
 
+
+        manager.command(builder.literal("list", "show")
+                .meta(CommandMeta.DESCRIPTION, "Lists all the requirements this Quest has.")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+                    final Quest quest = context.get("quest");
+
+                    audience.sendMessage(miniMessage.parse(highlightGradient + "Requirements for Quest " + highlight2Gradient + quest.getQuestName() + "</gradient>:</gradient>"));
+                    int counter = 1;
+                    for (Requirement requirement : quest.getRequirements()) {
+                        audience.sendMessage(miniMessage.parse(highlightGradient + counter + ". </gradient>" + mainGradient + requirement.getRequirementType() + "</gradient>"));
+                        audience.sendMessage(miniMessage.parse(mainGradient + requirement.getRequirementDescription()));
+                        counter += 1;
+                    }
+                }));
+
+        manager.command(builder.literal("clear")
+                .meta(CommandMeta.DESCRIPTION, "Clears all the requirements this Quest has.")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+                    final Quest quest = context.get("quest");
+
+                    quest.removeAllRequirements();
+                    audience.sendMessage(miniMessage.parse(successGradient + "All requirements of Quest " + highlightGradient + quest.getQuestName() + "</gradient> have been removed!</gradient>"));
+                }));
+
     }
 
     public void handleRewards(final Command.Builder<CommandSender> builder) {
         //Add is handled individually by each reward
 
+        manager.command(builder.literal("list", "show")
+                .meta(CommandMeta.DESCRIPTION, "Lists all the rewards this Quest has.")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+                    final Quest quest = context.get("quest");
+
+                    audience.sendMessage(miniMessage.parse(highlightGradient + "Rewards for Quest " + highlight2Gradient + quest.getQuestName() + "</gradient>:</gradient>"));
+                    for (final Reward reward : quest.getRewards()) {
+                        audience.sendMessage(miniMessage.parse(highlightGradient + reward.getRewardID() + ". </gradient>" + mainGradient + reward.getRewardType() + "</gradient>"));
+                        audience.sendMessage(miniMessage.parse(unimportant + "-- " + unimportantClose + mainGradient + reward.getRewardDescription() + "</gradient>"));
+
+                    }
+
+                }));
+
+        manager.command(builder.literal("clear")
+                .meta(CommandMeta.DESCRIPTION, "Clears all the rewards this Quest has.")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+                    final Quest quest = context.get("quest");
+
+                    quest.removeAllRewards();
+                    audience.sendMessage(miniMessage.parse(successGradient + "All rewards of Quest " + highlightGradient + quest.getQuestName() + "</gradient> have been removed!</gradient>"));
+                }));
+
+
+        final Command.Builder<CommandSender> editRewardsBuilder = builder.literal("edit")
+                .argument(IntegerArgument.<CommandSender>newBuilder("Reward ID").withMin(1).withSuggestionsProvider(
+                                (context, lastString) -> {
+                                    final List<String> allArgs = context.getRawInput();
+                                    final Audience audience = main.adventure().sender(context.getSender());
+                                    main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Reward ID]", "[...]");
+
+                                    ArrayList<String> completions = new ArrayList<>();
+
+                                    final Quest quest = context.get("quest");
+                                    for (final Reward reward : quest.getRewards()) {
+                                        completions.add("" + reward.getRewardID());
+                                    }
+
+                                    return completions;
+                                }
+                        ).withParser((context, lastString) -> { //TODO: Fix this parser. It isn't run at all.
+                            final int ID = context.get("Reward ID");
+                            final Quest quest = context.get("quest");
+                            final Reward foundReward = quest.getRewardFromID(ID);
+                            if (foundReward == null) {
+                                return ArgumentParseResult.failure(new IllegalArgumentException("Reward with the ID '" + ID + "' does not belong to Quest '" + quest.getQuestName() + "'!"));
+                            } else {
+                                return ArgumentParseResult.success(ID);
+                            }
+                        })
+                        , ArgumentDescription.of("Reward ID"));
+        handleEditRewards(editRewardsBuilder);
+
+
+    }
+
+    public void handleEditRewards(final Command.Builder<CommandSender> builder) {
+        manager.command(builder.literal("info")
+                .meta(CommandMeta.DESCRIPTION, "Shows everything there is to know about this reward.")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+                    final int ID = context.get("Reward ID");
+                    final Quest quest = context.get("quest");
+                    final Reward foundReward = quest.getRewardFromID(ID);
+
+                    if (foundReward == null) {
+                        audience.sendMessage(miniMessage.parse(
+                                errorGradient + "Invalid reward."
+                        ));
+                        return;
+                    }
+
+                    audience.sendMessage(miniMessage.parse(
+                            mainGradient + "Reward " + highlightGradient + ID + "</gradient> for Quest " + highlight2Gradient + quest.getQuestName() + "</gradient>:</gradient>"
+                    ));
+                    audience.sendMessage(miniMessage.parse(
+                            unimportant + "-- " + unimportantClose + mainGradient + foundReward.getRewardDescription() + "</gradient>"
+                    ));
+
+                }));
+
+        manager.command(builder.literal("remove")
+                .meta(CommandMeta.DESCRIPTION, "Removes the reward from the Quest.")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+                    final int ID = context.get("Reward ID");
+                    final Quest quest = context.get("quest");
+                    final Reward foundReward = quest.getRewardFromID(ID);
+
+                    if (foundReward == null) {
+                        audience.sendMessage(miniMessage.parse(
+                                errorGradient + "Invalid reward."
+                        ));
+                        return;
+                    }
+                    quest.removeReward(foundReward);
+                    audience.sendMessage(miniMessage.parse(
+                            successGradient + "The reward with the ID " + highlightGradient + ID + "</gradient> has been removed from the Quest "
+                                    + highlight2Gradient + quest.getQuestName() + "</gradient>!</gradient>"
+                    ));
+                }));
+
+        manager.command(builder.literal("displayname")
+                .literal("show")
+                .meta(CommandMeta.DESCRIPTION, "Shows current reward Display Name.")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+                    final int ID = context.get("Reward ID");
+                    final Quest quest = context.get("quest");
+                    final Reward foundReward = quest.getRewardFromID(ID);
+
+                    if (foundReward == null) {
+                        audience.sendMessage(miniMessage.parse(
+                                errorGradient + "Invalid reward."
+                        ));
+                        return;
+                    }
+                    if (foundReward.getRewardDisplayName().isBlank()) {
+                        audience.sendMessage(miniMessage.parse(
+                                mainGradient + "This reward has no display name set."
+                        ));
+                    } else {
+                        audience.sendMessage(miniMessage.parse(
+                                mainGradient + "Reward display name: " + highlightGradient + foundReward.getRewardDisplayName() + "</gradient></gradient>"
+                        ));
+                    }
+                }));
+
+        manager.command(builder.literal("displayname")
+                .literal("remove", "delete")
+                .meta(CommandMeta.DESCRIPTION, "Removes current reward Display Name.")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+                    final int ID = context.get("Reward ID");
+                    final Quest quest = context.get("quest");
+                    final Reward foundReward = quest.getRewardFromID(ID);
+
+                    if (foundReward == null) {
+                        audience.sendMessage(miniMessage.parse(
+                                errorGradient + "Invalid reward."
+                        ));
+                        return;
+                    }
+                    foundReward.removeRewardDisplayName();
+                    main.getDataManager().getQuestsData().set("quests." + quest.getQuestName() + ".rewards." + foundReward.getRewardID() + ".displayName", null);
+                    audience.sendMessage(miniMessage.parse(
+                            successGradient + "Display Name of reward with the ID " + highlightGradient + ID + "</gradient> has been removed successfully.</gradient>"
+                    ));
+                }));
+
+        manager.command(builder.literal("displayname")
+                .literal("set")
+                .argument(StringArrayArgument.of("DisplayName",
+                        (context, lastString) -> {
+                            final List<String> allArgs = context.getRawInput();
+                            final Audience audience = main.adventure().sender(context.getSender());
+                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "<Enter new Reward display name>", "");
+                            ArrayList<String> completions = new ArrayList<>();
+                            if (lastString.startsWith("{")) {
+                                completions.addAll(main.getCommandManager().getAdminCommands().placeholders);
+                            } else {
+                                completions.add("<Enter new Reward display name>");
+                            }
+                            return completions;
+                        }
+                ), ArgumentDescription.of("Reward display name"))
+                .meta(CommandMeta.DESCRIPTION, "Sets new reward Display Name. Only rewards with a Display Name will be displayed.")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+                    final int ID = context.get("Reward ID");
+                    final Quest quest = context.get("quest");
+                    final Reward foundReward = quest.getRewardFromID(ID);
+
+                    if (foundReward == null) {
+                        audience.sendMessage(miniMessage.parse(
+                                errorGradient + "Invalid reward."
+                        ));
+                        return;
+                    }
+
+                    final String displayName = String.join(" ", (String[]) context.get("DisplayName"));
+
+
+                    foundReward.setRewardDisplayName(displayName);
+                    main.getDataManager().getQuestsData().set("quests." + quest.getQuestName() + ".rewards." + foundReward.getRewardID() + ".displayName", foundReward.getRewardDisplayName());
+                    audience.sendMessage(miniMessage.parse(
+                            successGradient + "Display Name successfully added to reward with ID " + highlightGradient + ID + "</gradient>! New display name: "
+                                    + highlight2Gradient + foundReward.getRewardDisplayName() + "</gradient></gradient>"
+                    ));
+                }));
     }
 
     public void handleTriggers(final Command.Builder<CommandSender> builder) {
