@@ -75,7 +75,7 @@ gui:
       questpoints:
         text: |-
           &6Πόντοι αποστολής
-          &eΤρέχον πόντοι αποστολής: &b%QUESTPOINTS%
+          &eΤρέχοντες πόντοι αποστολής: &b%QUESTPOINTS%
       takequest:
         text: |-
           &aΑνέλαβε μία αποστολή
