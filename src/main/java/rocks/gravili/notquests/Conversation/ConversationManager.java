@@ -19,10 +19,14 @@
 package rocks.gravili.notquests.Conversation;
 
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.QuestPlayer;
@@ -79,7 +83,7 @@ public class ConversationManager {
     }
 
     public Conversation createTestConversation() {
-        final Conversation testConversation = new Conversation(main, "test", 0);
+        final Conversation testConversation = new Conversation(main, null, null, "test", 0);
 
         final Speaker gustav = new Speaker("Gustav");
 
@@ -157,7 +161,7 @@ public class ConversationManager {
 
             final int npcID = config.getInt("npcID", -1);
 
-            final Conversation conversation = new Conversation(main, conversationFile.getName().replaceAll(".yml", ""), npcID);
+            final Conversation conversation = new Conversation(main, conversationFile, config, conversationFile.getName().replaceAll(".yml", ""), npcID);
 
 
             //First add all speakers
@@ -324,4 +328,25 @@ public class ConversationManager {
     }
 
 
+    public final Conversation getConversation(final String identifier) {
+        for (final Conversation conversation : conversations) {
+            if (conversation.getIdentifier().equals(identifier)) {
+                return conversation;
+            }
+        }
+        return null;
+
+    }
+
+    public final Conversation getConversationAttachedToArmorstand(final ArmorStand armorstand) {
+        PersistentDataContainer armorstandPDB = armorstand.getPersistentDataContainer();
+        NamespacedKey attachedQuestsKey = main.getArmorStandManager().getAttachedConversationKey();
+
+        if (armorstandPDB.has(attachedQuestsKey, PersistentDataType.STRING)) {
+            String attachedConversation = armorstandPDB.get(attachedQuestsKey, PersistentDataType.STRING);
+            return getConversation(attachedConversation);
+        }
+        return null;
+
+    }
 }

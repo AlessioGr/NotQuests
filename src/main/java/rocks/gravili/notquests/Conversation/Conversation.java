@@ -22,27 +22,36 @@ package rocks.gravili.notquests.Conversation;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
+import org.bukkit.configuration.file.YamlConfiguration;
 import rocks.gravili.notquests.Hooks.Citizens.QuestGiverNPCTrait;
 import rocks.gravili.notquests.NotQuests;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
 public class Conversation {
     private final NotQuests main;
+    private final YamlConfiguration config;
+    private final File configFile;
 
     private final String identifier;
-    private final int npcID; //-1: no NPC
+    private int npcID; //-1: no NPC
     private final ArrayList<ConversationLine> start;
 
 
-    public Conversation(final NotQuests main, final String identifier, final int npcID) {
+    public Conversation(final NotQuests main, File configFile, YamlConfiguration config, final String identifier, final int npcID) {
         this.main = main;
+        this.configFile = configFile;
+        this.config = config;
         this.identifier = identifier;
         this.npcID = npcID;
         start = new ArrayList<>();
+    }
 
-
+    public final YamlConfiguration getConfig() {
+        return config;
     }
 
     public void bindToCitizensNPC() {
@@ -93,6 +102,24 @@ public class Conversation {
 
     public final ArrayList<ConversationLine> getStartingLines() {
         return start;
+    }
+
+
+    public void setNPC(int npcID) {
+        this.npcID = npcID;
+        bindToCitizensNPC();
+
+        if (configFile == null || config == null) {
+            return;
+        }
+        config.set("npcID", npcID);
+        try {
+            config.save(configFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+            main.getLogManager().severe("There was an error saving the configuration of Conversation <AQUA>" + identifier + "</AQUA>.");
+        }
+
     }
 
 

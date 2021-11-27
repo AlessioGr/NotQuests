@@ -36,6 +36,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import rocks.gravili.notquests.Commands.NotQuestColors;
+import rocks.gravili.notquests.Conversation.Conversation;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.ActiveObjective;
 import rocks.gravili.notquests.Structs.ActiveQuest;
@@ -139,7 +140,7 @@ public class ArmorStandEvents implements Listener {
                             player.sendMessage("§2Attached Quests: §b" + "°" + questName + "°");
 
                             //Since this is the first Quest added to it:
-                            main.getArmorStandManager().addArmorStandWithQuestsAttachedToThem(armorStand);
+                            main.getArmorStandManager().addArmorStandWithQuestsOrConversationAttachedToThem(armorStand);
 
                         }
 
@@ -176,7 +177,7 @@ public class ArmorStandEvents implements Listener {
                                     //It consists only of separators - no quests. Thus, we set this to "" and remove the PDB
                                     existingAttachedQuests = "";
                                     armorstandPDB.remove(attachedQuestsKey);
-                                    main.getArmorStandManager().removeArmorStandWithQuestsAttachedToThem(armorStand);
+                                    main.getArmorStandManager().removeArmorStandWithQuestsOrConversationAttachedToThem(armorStand);
                                 }else{
                                     armorstandPDB.set(attachedQuestsKey, PersistentDataType.STRING, existingAttachedQuests);
                                 }
@@ -331,6 +332,71 @@ public class ArmorStandEvents implements Listener {
                             ));
                         }
 
+                    } else if (id == 8) { //Add conversation to armorstand
+
+
+                        NamespacedKey conversationIdentifierKey = new NamespacedKey(main, "notquests-conversation");
+
+                        final String conversationIdentifier = container.get(conversationIdentifierKey, PersistentDataType.STRING);
+                        if (conversationIdentifier != null && !conversationIdentifier.isBlank()) {
+                            final Conversation conversation = main.getConversationManager().getConversation(conversationIdentifier);
+                            if (conversation != null) {
+
+
+                                //Add conversation to armorStandPDB
+
+                                PersistentDataContainer armorStandPDB = armorStand.getPersistentDataContainer();
+                                final NamespacedKey attachedConversationKey = main.getArmorStandManager().getAttachedConversationKey();
+
+                                if (armorStandPDB.has(attachedConversationKey, PersistentDataType.STRING)) {
+                                    String existingAttachedConversation = armorStandPDB.get(attachedConversationKey, PersistentDataType.STRING);
+
+
+                                    if (existingAttachedConversation != null) {
+
+                                        player.sendMessage("§cError: That armor stand already has the Conversation §b" + existingAttachedConversation + " §cattached to it!");
+
+                                    }
+
+                                } else {
+                                    armorStandPDB.set(attachedConversationKey, PersistentDataType.STRING, conversation.getIdentifier());
+                                    player.sendMessage("§aConversation with the name §b" + conversation.getIdentifier() + " §awas added to this poor little armorstand!");
+
+                                    //Since this is the first Quest added to it:
+                                    main.getArmorStandManager().addArmorStandWithQuestsOrConversationAttachedToThem(armorStand);
+
+                                }
+
+
+                            } else {
+                                main.adventure().player(player).sendMessage(MiniMessage.miniMessage().parse(
+                                        NotQuestColors.errorGradient + "Error: Conversation " + NotQuestColors.highlightGradient + conversationIdentifier + "</gradient> does not exist."
+                                ));
+                            }
+
+
+                        } else {
+                            main.adventure().player(player).sendMessage(MiniMessage.miniMessage().parse(
+                                    NotQuestColors.errorGradient + "Error: this item has no valid conversation."
+                            ));
+                        }
+
+
+                    } else if (id == 9) { //Remove conversation from armorstand
+
+                        PersistentDataContainer armorStandPDB = armorStand.getPersistentDataContainer();
+                        final NamespacedKey attachedConversationKey = main.getArmorStandManager().getAttachedConversationKey();
+
+                        if (armorStandPDB.has(attachedConversationKey, PersistentDataType.STRING)) {
+                            armorStandPDB.remove(attachedConversationKey);
+                            main.getArmorStandManager().removeArmorStandWithQuestsOrConversationAttachedToThem(armorStand);
+                            player.sendMessage("§aAll conversations were removed from this armorStand!");
+
+                        } else {
+                            player.sendMessage("§cThis armorstand doesn't have the conversation attached to it.");
+                        }
+
+
                     }
                 }else {
                     showQuestOrHandleObjectivesOfArmorStands(player, armorStand, event);
@@ -422,6 +488,16 @@ public class ArmorStandEvents implements Listener {
         if (main.getQuestManager().sendQuestsPreviewOfQuestShownArmorstands(armorStand, player) && main.getDataManager().getConfiguration().isArmorStandPreventEditing()) {
             event.setCancelled(true);
         }
+
+        //Conversations
+        final Conversation foundConversation = main.getConversationManager().getConversationAttachedToArmorstand(armorStand);
+        if (foundConversation != null) {
+            main.getConversationManager().playConversation(player, foundConversation);
+            if (main.getDataManager().getConfiguration().isArmorStandPreventEditing()) {
+                event.setCancelled(true);
+            }
+        }
+
     }
 
 
@@ -434,11 +510,11 @@ public class ArmorStandEvents implements Listener {
             if (entity instanceof final ArmorStand armorStand) {
                 final PersistentDataContainer armorStandPDB = armorStand.getPersistentDataContainer();
 
-                if (!armorStandPDB.has(main.getArmorStandManager().getAttachedQuestsShowingKey(), PersistentDataType.STRING) && !armorStandPDB.has(main.getArmorStandManager().getAttachedQuestsNonShowingKey(), PersistentDataType.STRING)) {
+                if (!armorStandPDB.has(main.getArmorStandManager().getAttachedQuestsShowingKey(), PersistentDataType.STRING) && !armorStandPDB.has(main.getArmorStandManager().getAttachedQuestsNonShowingKey(), PersistentDataType.STRING) && !armorStandPDB.has(main.getArmorStandManager().getAttachedConversationKey(), PersistentDataType.STRING)) {
                     return;
                 }
 
-                main.getArmorStandManager().addArmorStandWithQuestsAttachedToThem(armorStand);
+                main.getArmorStandManager().addArmorStandWithQuestsOrConversationAttachedToThem(armorStand);
 
             }
         }
@@ -455,11 +531,11 @@ public class ArmorStandEvents implements Listener {
                 final PersistentDataContainer armorStandPDB = armorStand.getPersistentDataContainer();
 
 
-                if (!armorStandPDB.has(main.getArmorStandManager().getAttachedQuestsShowingKey(), PersistentDataType.STRING) && !armorStandPDB.has(main.getArmorStandManager().getAttachedQuestsNonShowingKey(), PersistentDataType.STRING)) {
+                if (!armorStandPDB.has(main.getArmorStandManager().getAttachedQuestsShowingKey(), PersistentDataType.STRING) && !armorStandPDB.has(main.getArmorStandManager().getAttachedQuestsNonShowingKey(), PersistentDataType.STRING) && !armorStandPDB.has(main.getArmorStandManager().getAttachedConversationKey(), PersistentDataType.STRING)) {
                     continue;
                 }
 
-                main.getArmorStandManager().removeArmorStandWithQuestsAttachedToThem(armorStand);
+                main.getArmorStandManager().removeArmorStandWithQuestsOrConversationAttachedToThem(armorStand);
             }
         }
     }
@@ -474,10 +550,10 @@ public class ArmorStandEvents implements Listener {
             }
             final PersistentDataContainer armorStandPDB = armorStand.getPersistentDataContainer();
 
-            if (!armorStandPDB.has(main.getArmorStandManager().getAttachedQuestsShowingKey(), PersistentDataType.STRING) && !armorStandPDB.has(main.getArmorStandManager().getAttachedQuestsNonShowingKey(), PersistentDataType.STRING)) {
+            if (!armorStandPDB.has(main.getArmorStandManager().getAttachedQuestsShowingKey(), PersistentDataType.STRING) && !armorStandPDB.has(main.getArmorStandManager().getAttachedQuestsNonShowingKey(), PersistentDataType.STRING) && !armorStandPDB.has(main.getArmorStandManager().getAttachedConversationKey(), PersistentDataType.STRING)) {
                 return;
             }
-            main.getArmorStandManager().addArmorStandWithQuestsAttachedToThem(armorStand);
+            main.getArmorStandManager().addArmorStandWithQuestsOrConversationAttachedToThem(armorStand);
 
         }
 
@@ -493,11 +569,11 @@ public class ArmorStandEvents implements Listener {
             final PersistentDataContainer armorStandPDB = armorStand.getPersistentDataContainer();
 
 
-            if (!armorStandPDB.has(main.getArmorStandManager().getAttachedQuestsShowingKey(), PersistentDataType.STRING) && !armorStandPDB.has(main.getArmorStandManager().getAttachedQuestsNonShowingKey(), PersistentDataType.STRING)) {
+            if (!armorStandPDB.has(main.getArmorStandManager().getAttachedQuestsShowingKey(), PersistentDataType.STRING) && !armorStandPDB.has(main.getArmorStandManager().getAttachedQuestsNonShowingKey(), PersistentDataType.STRING) && !armorStandPDB.has(main.getArmorStandManager().getAttachedConversationKey(), PersistentDataType.STRING)) {
                 return;
             }
 
-            main.getArmorStandManager().removeArmorStandWithQuestsAttachedToThem(armorStand);
+            main.getArmorStandManager().removeArmorStandWithQuestsOrConversationAttachedToThem(armorStand);
 
         }
 

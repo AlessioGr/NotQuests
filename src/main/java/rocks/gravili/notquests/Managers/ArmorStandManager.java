@@ -35,19 +35,24 @@ public class ArmorStandManager {
     private final NotQuests main;
     private final NamespacedKey attachedQuestsShowingKey;
     private final NamespacedKey attachedQuestsNonShowingKey;
+    final NamespacedKey attachedConversationKey;
 
-
-    private final ArrayList<ArmorStand> armorStandsWithQuestsAttachedToThem;
+    private final ArrayList<ArmorStand> armorStandsWithQuestsOrConversationAttachedToThem;
 
     public ArmorStandManager(NotQuests main) {
         this.main = main;
-        armorStandsWithQuestsAttachedToThem = new ArrayList<>();
+        armorStandsWithQuestsOrConversationAttachedToThem = new ArrayList<>();
         attachedQuestsShowingKey = new NamespacedKey(main, "notquests-attachedQuests-showing");
         attachedQuestsNonShowingKey = new NamespacedKey(main, "notquests-attachedQuests-nonshowing");
+        attachedConversationKey = new NamespacedKey(main, "notquests-attachedConversation");
 
         if (main.getDataManager().getConfiguration().isArmorStandQuestGiverIndicatorParticleEnabled()) {
             startQuestGiverIndicatorParticleRunnable();
         }
+    }
+
+    public final NamespacedKey getAttachedConversationKey() {
+        return attachedConversationKey;
     }
 
     public final NamespacedKey getAttachedQuestsShowingKey() {
@@ -58,12 +63,12 @@ public class ArmorStandManager {
         return attachedQuestsNonShowingKey;
     }
 
-    public void addArmorStandWithQuestsAttachedToThem(final ArmorStand armorStand) {
-        this.armorStandsWithQuestsAttachedToThem.add(armorStand);
+    public void addArmorStandWithQuestsOrConversationAttachedToThem(final ArmorStand armorStand) {
+        this.armorStandsWithQuestsOrConversationAttachedToThem.add(armorStand);
     }
 
-    public void removeArmorStandWithQuestsAttachedToThem(final ArmorStand armorStand) {
-        this.armorStandsWithQuestsAttachedToThem.remove(armorStand);
+    public void removeArmorStandWithQuestsOrConversationAttachedToThem(final ArmorStand armorStand) {
+        this.armorStandsWithQuestsOrConversationAttachedToThem.remove(armorStand);
     }
 
     public void loadAllArmorStandsFromLoadedChunks() {
@@ -74,7 +79,7 @@ public class ArmorStandManager {
 
                     boolean hasShowingQuestsPDBKey = false;
                     boolean hasNonShowingQuestsPDBKey = false;
-
+                    boolean hasConversationPDBKey = false;
 
                     if (armorStandPDB.has(main.getArmorStandManager().getAttachedQuestsShowingKey(), PersistentDataType.STRING)) {
                         hasShowingQuestsPDBKey = true;
@@ -82,9 +87,12 @@ public class ArmorStandManager {
                     if (armorStandPDB.has(main.getArmorStandManager().getAttachedQuestsNonShowingKey(), PersistentDataType.STRING)) {
                         hasNonShowingQuestsPDBKey = true;
                     }
+                    if (armorStandPDB.has(main.getArmorStandManager().getAttachedConversationKey(), PersistentDataType.STRING)) {
+                        hasConversationPDBKey = true;
+                    }
 
-                    if (hasShowingQuestsPDBKey || hasNonShowingQuestsPDBKey) {
-                        main.getArmorStandManager().addArmorStandWithQuestsAttachedToThem(armorStand);
+                    if (hasShowingQuestsPDBKey || hasNonShowingQuestsPDBKey || hasConversationPDBKey) {
+                        main.getArmorStandManager().addArmorStandWithQuestsOrConversationAttachedToThem(armorStand);
                     }
                 }
             }
@@ -103,7 +111,7 @@ public class ArmorStandManager {
                 }
             }
 
-            for (final ArmorStand armorStand : armorStandsWithQuestsAttachedToThem) {
+            for (final ArmorStand armorStand : armorStandsWithQuestsOrConversationAttachedToThem) {
                 final Location location = armorStand.getLocation();
                 armorStand.getWorld().spawnParticle(main.getDataManager().getConfiguration().getArmorStandQuestGiverIndicatorParticleType(), location.getX() - 0.25 + (Math.random() / 2), location.getY() + 1.75 + (Math.random() / 2), location.getZ() - 0.25 + (Math.random() / 2), main.getDataManager().getConfiguration().getArmorStandQuestGiverIndicatorParticleCount());
 
