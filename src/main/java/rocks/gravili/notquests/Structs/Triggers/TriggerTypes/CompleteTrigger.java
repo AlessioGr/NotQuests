@@ -59,10 +59,10 @@ public class CompleteTrigger extends Trigger {
 
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addTriggerBuilder) {
-        manager.command(addTriggerBuilder.literal("BEGIN")
+        manager.command(addTriggerBuilder.literal("COMPLETE")
                 .flag(main.getCommandManager().applyOn)
                 .flag(main.getCommandManager().triggerWorldString)
-                .meta(CommandMeta.DESCRIPTION, "Triggers when a Quest begins or an Objective gets unlocked ('begins')")
+                .meta(CommandMeta.DESCRIPTION, "Triggers when a Quest or an Objective is completed")
                 .handler((context) -> {
                     final Audience audience = main.adventure().sender(context.getSender());
 
