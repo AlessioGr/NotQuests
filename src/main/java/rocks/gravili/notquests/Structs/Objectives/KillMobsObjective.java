@@ -50,15 +50,15 @@ public class KillMobsObjective extends Objective {
         final String questName = quest.getQuestName();
 
         this.main = main;
-        mobToKillType = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.mobToKill");
+        mobToKillType = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.mobToKill");
 
         //Extras
-        final String nameTagContains = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".extras.nameTagContainsAny", "");
+        final String nameTagContains = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".extras.nameTagContainsAny", "");
         if (!nameTagContains.isBlank()) {
             setNameTagContainsAny(nameTagContains);
         }
 
-        final String nameTagEquals = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".extras.nameTagEquals", "");
+        final String nameTagEquals = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".extras.nameTagEquals", "");
         if (!nameTagEquals.isBlank()) {
             setNameTagEquals(nameTagEquals);
         }
@@ -73,14 +73,14 @@ public class KillMobsObjective extends Objective {
 
     @Override
     public void save() {
-        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.mobToKill", getMobToKill());
+        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.mobToKill", getMobToKill());
 
         //Extra args
         if (!getNameTagContainsAny().isBlank()) {
-            main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".extras.nameTagContainsAny", getNameTagContainsAny());
+            main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".extras.nameTagContainsAny", getNameTagContainsAny());
         }
         if (!getNameTagEquals().isBlank()) {
-            main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".extras.nameTagEquals", getNameTagEquals());
+            main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".extras.nameTagEquals", getNameTagEquals());
         }
     }
 

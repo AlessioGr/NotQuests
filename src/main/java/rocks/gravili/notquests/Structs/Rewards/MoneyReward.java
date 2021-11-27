@@ -42,7 +42,7 @@ public class MoneyReward extends Reward {
         super(main, quest, rewardID);
         this.main = main;
 
-        this.rewardedMoney = main.getDataManager().getQuestsData().getLong("quests." + getQuest().getQuestName() + ".rewards." + rewardID + ".specifics.rewardedMoneyAmount");
+        this.rewardedMoney = main.getDataManager().getQuestsConfig().getLong("quests." + getQuest().getQuestName() + ".rewards." + rewardID + ".specifics.rewardedMoneyAmount");
     }
 
     public MoneyReward(final NotQuests main, final Quest quest, final int rewardID, long rewardedMoney) {
@@ -72,7 +72,7 @@ public class MoneyReward extends Reward {
 
     @Override
     public void save() {
-        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".rewards." + getRewardID() + ".specifics.rewardedMoneyAmount", getRewardedMoney());
+        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".rewards." + getRewardID() + ".specifics.rewardedMoneyAmount", getRewardedMoney());
     }
 
     public final long getRewardedMoney() {

@@ -47,7 +47,7 @@ public class NPCDeathTrigger extends Trigger {
         super(main, quest, triggerID, action, applyOn, worldName, amountNeeded);
         this.main = main;
 
-        this.npcToDieID = main.getDataManager().getQuestsData().getInt("quests." + getQuest().getQuestName() + ".triggers." + triggerID + ".specifics.npcToDie");
+        this.npcToDieID = main.getDataManager().getQuestsConfig().getInt("quests." + getQuest().getQuestName() + ".triggers." + triggerID + ".specifics.npcToDie");
     }
 
     public NPCDeathTrigger(final NotQuests main, final Quest quest, final int triggerID, Action action, int applyOn, String worldName, long amountNeeded, int npcToDieID) {
@@ -62,7 +62,7 @@ public class NPCDeathTrigger extends Trigger {
 
     @Override
     public void save() {
-        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".triggers." + getTriggerID() + ".specifics.npcToDie", getNpcToDieID());
+        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".triggers." + getTriggerID() + ".specifics.npcToDie", getNpcToDieID());
     }
 
     @Override

@@ -52,8 +52,8 @@ public class CollectItemsObjective extends Objective {
         final String questName = quest.getQuestName();
 
         this.main = main;
-        itemToCollect = main.getDataManager().getQuestsData().getItemStack("quests." + questName + ".objectives." + objectiveNumber + ".specifics.itemToCollect.itemstack");
-        deductIfItemIsDropped = main.getDataManager().getQuestsData().getBoolean("quests." + questName + ".objectives." + objectiveNumber + ".specifics.deductIfItemDropped", true);
+        itemToCollect = main.getDataManager().getQuestsConfig().getItemStack("quests." + questName + ".objectives." + objectiveNumber + ".specifics.itemToCollect.itemstack");
+        deductIfItemIsDropped = main.getDataManager().getQuestsConfig().getBoolean("quests." + questName + ".objectives." + objectiveNumber + ".specifics.deductIfItemDropped", true);
 
     }
 
@@ -123,8 +123,8 @@ public class CollectItemsObjective extends Objective {
 
     @Override
     public void save() {
-        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.itemToCollect.itemstack", getItemToCollect());
-        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.deductIfItemDropped", deductIfItemIsDropped);
+        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.itemToCollect.itemstack", getItemToCollect());
+        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.deductIfItemDropped", deductIfItemIsDropped);
 
     }
 

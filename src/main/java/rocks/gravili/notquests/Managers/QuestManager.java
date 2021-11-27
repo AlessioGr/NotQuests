@@ -103,7 +103,7 @@ public class QuestManager {
             }
             Quest newQuest = new Quest(main, questName);
             quests.add(newQuest);
-            main.getDataManager().getQuestsData().set("quests." + questName, "");
+            main.getDataManager().getQuestsConfig().set("quests." + questName, "");
             return (NotQuestColors.successGradient + "Quest successfully created!");
         } else {
             return (NotQuestColors.errorGradient + "Quest already exists!");
@@ -114,7 +114,7 @@ public class QuestManager {
         if (getQuest(questName) != null) {
             Quest questToDelete = getQuest(questName);
             quests.remove(questToDelete);
-            main.getDataManager().getQuestsData().set("quests." + questName, null);
+            main.getDataManager().getQuestsConfig().set("quests." + questName, null);
             return (NotQuestColors.successGradient + "Quest successfully deleted!");
         } else {
             return (NotQuestColors.errorGradient + "Quest doesn't exists!");
@@ -149,10 +149,10 @@ public class QuestManager {
             quests.clear();
 
             //Actions
-            final ConfigurationSection actionsConfigurationSection = main.getDataManager().getQuestsData().getConfigurationSection("actions");
+            final ConfigurationSection actionsConfigurationSection = main.getDataManager().getQuestsConfig().getConfigurationSection("actions");
             if (actionsConfigurationSection != null) {
                 for (final String actionName : actionsConfigurationSection.getKeys(false)) {
-                    final String consoleCommand = main.getDataManager().getQuestsData().getString("actions." + actionName + ".consoleCommand", "");
+                    final String consoleCommand = main.getDataManager().getQuestsConfig().getString("actions." + actionName + ".consoleCommand", "");
                     if (consoleCommand.equalsIgnoreCase("")) {
                         main.getLogManager().log(Level.WARNING, "Action has an empty console command. This should NOT be possible! Creating an action with an empty console command... Action name: <AQUA>" + actionName + "</AQUA>");
 
@@ -168,7 +168,7 @@ public class QuestManager {
                     if (!nameAlreadyExists) {
                         final Action newAction = new Action(main, actionName, consoleCommand);
                         actions.add(newAction);
-                        main.getDataManager().getQuestsData().set("actions." + actionName + ".consoleCommand", consoleCommand);
+                        main.getDataManager().getQuestsConfig().set("actions." + actionName + ".consoleCommand", consoleCommand);
                     } else {
                         main.getLogManager().log(Level.WARNING, "NotQuests > Action already exists. This should NOT be possible! Skipping action creation... Action name: <AQUA>" + actionName + "</AQUA>");
 
@@ -181,25 +181,25 @@ public class QuestManager {
             }
 
             //Quests
-            final ConfigurationSection questsConfigurationSection = main.getDataManager().getQuestsData().getConfigurationSection("quests");
+            final ConfigurationSection questsConfigurationSection = main.getDataManager().getQuestsConfig().getConfigurationSection("quests");
             if (questsConfigurationSection != null) {
                 for (String questName : questsConfigurationSection.getKeys(false)) {
                     Quest quest = new Quest(main, questName);
-                    quest.setMaxAccepts(main.getDataManager().getQuestsData().getInt("quests." + questName + ".maxAccepts", -1));
-                    quest.setTakeEnabled(main.getDataManager().getQuestsData().getBoolean("quests." + questName + ".takeEnabled", true));
-                    quest.setAcceptCooldown(main.getDataManager().getQuestsData().getLong("quests." + questName + ".acceptCooldown", -1));
-                    quest.setQuestDescription(main.getDataManager().getQuestsData().getString("quests." + questName + ".description", ""));
-                    quest.setQuestDisplayName(main.getDataManager().getQuestsData().getString("quests." + questName + ".displayName", ""));
+                    quest.setMaxAccepts(main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".maxAccepts", -1));
+                    quest.setTakeEnabled(main.getDataManager().getQuestsConfig().getBoolean("quests." + questName + ".takeEnabled", true));
+                    quest.setAcceptCooldown(main.getDataManager().getQuestsConfig().getLong("quests." + questName + ".acceptCooldown", -1));
+                    quest.setQuestDescription(main.getDataManager().getQuestsConfig().getString("quests." + questName + ".description", ""));
+                    quest.setQuestDisplayName(main.getDataManager().getQuestsConfig().getString("quests." + questName + ".displayName", ""));
 
 
                     //Objectives:
-                    final ConfigurationSection objectivesConfigurationSection = main.getDataManager().getQuestsData().getConfigurationSection("quests." + questName + ".objectives");
+                    final ConfigurationSection objectivesConfigurationSection = main.getDataManager().getQuestsConfig().getConfigurationSection("quests." + questName + ".objectives");
                     if (objectivesConfigurationSection != null) {
                         for (final String objectiveNumber : objectivesConfigurationSection.getKeys(false)) {
                             Class<? extends Objective> objectiveType = null;
 
                             try {
-                                objectiveType = main.getObjectiveManager().getObjectiveClass(main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".objectiveType"));
+                                objectiveType = main.getObjectiveManager().getObjectiveClass(main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".objectiveType"));
                             } catch (java.lang.NullPointerException ex) {
                                 main.getLogManager().log(Level.SEVERE, "Error parsing objective Type of objective with ID <AQUA>" + objectiveNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "</AQUA>. Objective creation skipped...");
 
@@ -208,7 +208,7 @@ public class QuestManager {
                                 main.getDataManager().setSavingEnabled(false);
                                 main.getServer().getPluginManager().disablePlugin(main);
                             }
-                            final int progressNeeded = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".progressNeeded", 1);
+                            final int progressNeeded = main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".objectives." + objectiveNumber + ".progressNeeded", 1);
 
                             int objectiveID = -1;
                             boolean validObjectiveID = true;
@@ -242,10 +242,10 @@ public class QuestManager {
 
                                 if (objective != null) {
 
-                                    final String objectiveDisplayName = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".displayName", "");
-                                    final String objectiveDescription = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".description", "");
-                                    final int completionNPCID = main.getDataManager().getQuestsData().getInt("quests." + quest.getQuestName() + ".objectives." + objectiveNumber + ".completionNPCID", -1);
-                                    final String completionArmorStandUUIDString = main.getDataManager().getQuestsData().getString("quests." + quest.getQuestName() + ".objectives." + objectiveNumber + ".completionArmorStandUUID", null);
+                                    final String objectiveDisplayName = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".displayName", "");
+                                    final String objectiveDescription = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".description", "");
+                                    final int completionNPCID = main.getDataManager().getQuestsConfig().getInt("quests." + quest.getQuestName() + ".objectives." + objectiveNumber + ".completionNPCID", -1);
+                                    final String completionArmorStandUUIDString = main.getDataManager().getQuestsConfig().getString("quests." + quest.getQuestName() + ".objectives." + objectiveNumber + ".completionArmorStandUUID", null);
                                     if (completionArmorStandUUIDString != null) {
                                         final UUID completionArmorStandUUID = UUID.fromString(completionArmorStandUUIDString);
                                         objective.setCompletionArmorStandUUID(completionArmorStandUUID, false);
@@ -272,7 +272,7 @@ public class QuestManager {
                     }
 
                     //Requirements:
-                    final ConfigurationSection requirementsConfigurationSection = main.getDataManager().getQuestsData().getConfigurationSection("quests." + questName + ".requirements");
+                    final ConfigurationSection requirementsConfigurationSection = main.getDataManager().getQuestsConfig().getConfigurationSection("quests." + questName + ".requirements");
                     if (requirementsConfigurationSection != null) {
                         for (String requirementNumber : requirementsConfigurationSection.getKeys(false)) {
 
@@ -292,7 +292,7 @@ public class QuestManager {
                             Class<? extends Requirement> requirementType = null;
 
                             try {
-                                requirementType = main.getRequirementManager().getRequirementClass(main.getDataManager().getQuestsData().getString("quests." + questName + ".requirements." + requirementNumber + ".requirementType"));
+                                requirementType = main.getRequirementManager().getRequirementClass(main.getDataManager().getQuestsConfig().getString("quests." + questName + ".requirements." + requirementNumber + ".requirementType"));
                             } catch (java.lang.NullPointerException ex) {
                                 main.getLogManager().log(Level.SEVERE, "Error parsing requirement Type of requirement with ID <AQUA>" + requirementNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "<AQUA>. Requirement creation skipped...");
                                 ex.printStackTrace();
@@ -302,7 +302,7 @@ public class QuestManager {
                             }
 
                             //RequirementType requirementType = RequirementType.valueOf(main.getDataManager().getQuestsData().getString("quests." + questName + ".requirements." + requirementNumber + ".requirementType"));
-                            int progressNeeded = main.getDataManager().getQuestsData().getInt("quests." + questName + ".requirements." + requirementNumber + ".progressNeeded");
+                            int progressNeeded = main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".requirements." + requirementNumber + ".progressNeeded");
 
                             if (validRequirementID && requirementID > 0 && requirementType != null) {
                                 Requirement requirement = null;
@@ -335,7 +335,7 @@ public class QuestManager {
 
 
                     //Rewards:
-                    final ConfigurationSection rewardsConfigurationSection = main.getDataManager().getQuestsData().getConfigurationSection("quests." + questName + ".rewards");
+                    final ConfigurationSection rewardsConfigurationSection = main.getDataManager().getQuestsConfig().getConfigurationSection("quests." + questName + ".rewards");
                     if (rewardsConfigurationSection != null) {
                         for (String rewardNumber : rewardsConfigurationSection.getKeys(false)) {
 
@@ -355,7 +355,7 @@ public class QuestManager {
                             Class<? extends Reward> rewardType = null;
 
                             try {
-                                rewardType = main.getRewardManager().getRewardClass(main.getDataManager().getQuestsData().getString("quests." + questName + ".rewards." + rewardNumber + ".rewardType"));
+                                rewardType = main.getRewardManager().getRewardClass(main.getDataManager().getQuestsConfig().getString("quests." + questName + ".rewards." + rewardNumber + ".rewardType"));
                             } catch (java.lang.NullPointerException ex) {
                                 main.getLogManager().log(Level.SEVERE, "Error parsing reward Type of reward with ID <AQUA>" + rewardNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "<AQUA>. Reward creation skipped...");
                                 ex.printStackTrace();
@@ -380,7 +380,7 @@ public class QuestManager {
                                 }
 
                                 if (reward != null) {
-                                    final String rewardDisplayName = main.getDataManager().getQuestsData().getString("quests." + questName + ".rewards." + rewardNumber + ".displayName", "");
+                                    final String rewardDisplayName = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".rewards." + rewardNumber + ".displayName", "");
                                     reward.setRewardDisplayName(rewardDisplayName);
                                     quest.addReward(reward);
                                 } else {
@@ -398,7 +398,7 @@ public class QuestManager {
 
 
                     //Triggers:
-                    final ConfigurationSection triggersConfigurationSection = main.getDataManager().getQuestsData().getConfigurationSection("quests." + questName + ".triggers");
+                    final ConfigurationSection triggersConfigurationSection = main.getDataManager().getQuestsConfig().getConfigurationSection("quests." + questName + ".triggers");
                     if (triggersConfigurationSection != null) {
                         for (final String triggerNumber : triggersConfigurationSection.getKeys(false)) {
 
@@ -417,7 +417,7 @@ public class QuestManager {
                             }
 
                             Class<? extends Trigger> triggerType = null;
-                            final String triggerTypeString = main.getDataManager().getQuestsData().getString("quests." + questName + ".triggers." + triggerNumber + ".triggerType");
+                            final String triggerTypeString = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".triggers." + triggerNumber + ".triggerType");
 
                             try {
                                 triggerType = main.getTriggerManager().getTriggerClass(triggerTypeString);
@@ -430,11 +430,11 @@ public class QuestManager {
                             }
 
 
-                            final String triggerActionName = main.getDataManager().getQuestsData().getString("quests." + questName + ".triggers." + triggerNumber + ".triggerActionName");
-                            final long amountNeeded = main.getDataManager().getQuestsData().getLong("quests." + questName + ".triggers." + triggerNumber + ".amountNeeded", 1);
+                            final String triggerActionName = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".triggers." + triggerNumber + ".triggerActionName");
+                            final long amountNeeded = main.getDataManager().getQuestsConfig().getLong("quests." + questName + ".triggers." + triggerNumber + ".amountNeeded", 1);
 
-                            final int applyOn = main.getDataManager().getQuestsData().getInt("quests." + questName + ".triggers." + triggerNumber + ".applyOn");
-                            final String worldName = main.getDataManager().getQuestsData().getString("quests." + questName + ".triggers." + triggerNumber + ".worldName", "ALL");
+                            final int applyOn = main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".triggers." + triggerNumber + ".applyOn");
+                            final String worldName = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".triggers." + triggerNumber + ".worldName", "ALL");
 
 
                             Action foundAction = null;
@@ -477,10 +477,10 @@ public class QuestManager {
 
                     //Objective Dependencies
                     for (final Objective objective : quest.getObjectives()) {
-                        final ConfigurationSection objectiveDependenciesConfigurationSection = main.getDataManager().getQuestsData().getConfigurationSection("quests." + quest.getQuestName() + ".objectives." + objective.getObjectiveID() + ".dependantObjectives.");
+                        final ConfigurationSection objectiveDependenciesConfigurationSection = main.getDataManager().getQuestsConfig().getConfigurationSection("quests." + quest.getQuestName() + ".objectives." + objective.getObjectiveID() + ".dependantObjectives.");
                         if (objectiveDependenciesConfigurationSection != null) {
                             for (String objectiveDependencyNumber : objectiveDependenciesConfigurationSection.getKeys(false)) {
-                                int dependantObjectiveID = main.getDataManager().getQuestsData().getInt("quests." + quest.getQuestName() + ".objectives." + (objective.getObjectiveID()) + ".dependantObjectives." + objectiveDependencyNumber + ".objectiveID", objective.getObjectiveID());
+                                int dependantObjectiveID = main.getDataManager().getQuestsConfig().getInt("quests." + quest.getQuestName() + ".objectives." + (objective.getObjectiveID()) + ".dependantObjectives." + objectiveDependencyNumber + ".objectiveID", objective.getObjectiveID());
                                 final Objective dependantObjective = quest.getObjectiveFromID(dependantObjectiveID);
                                 objective.addDependantObjective(dependantObjective, false);
                             }
@@ -492,7 +492,7 @@ public class QuestManager {
 
 
                     //TakeItem:
-                    quest.setTakeItem(Material.valueOf(main.getDataManager().getQuestsData().getString("quests." + questName + ".takeItem", "BOOK")));
+                    quest.setTakeItem(Material.valueOf(main.getDataManager().getQuestsConfig().getString("quests." + questName + ".takeItem", "BOOK")));
 
                     quests.add(quest);
                 }
@@ -946,7 +946,7 @@ public class QuestManager {
         if (isQuestDataLoaded()) {
             try {
 
-                final ConfigurationSection questsConfigurationSetting = main.getDataManager().getQuestsData().getConfigurationSection("quests");
+                final ConfigurationSection questsConfigurationSetting = main.getDataManager().getQuestsConfig().getConfigurationSection("quests");
                 if (questsConfigurationSetting != null) {
                     if (!Bukkit.isPrimaryThread()) {
                         Bukkit.getScheduler().runTask(main, () -> {
@@ -955,19 +955,19 @@ public class QuestManager {
 
                                 if (quest != null) {
                                     //NPC
-                                    final ConfigurationSection npcsConfigurationSection = main.getDataManager().getQuestsData().getConfigurationSection("quests." + questName + ".npcs");
+                                    final ConfigurationSection npcsConfigurationSection = main.getDataManager().getQuestsConfig().getConfigurationSection("quests." + questName + ".npcs");
                                     if (npcsConfigurationSection != null) {
 
 
                                         for (String npcNumber : npcsConfigurationSection.getKeys(false)) {
-                                            if (main.getDataManager().getQuestsData() != null) {
+                                            if (main.getDataManager().getQuestsConfig() != null) {
 
 
-                                                final NPC npc = CitizensAPI.getNPCRegistry().getById(main.getDataManager().getQuestsData().getInt("quests." + questName + ".npcs." + npcNumber + ".npcID"));
+                                                final NPC npc = CitizensAPI.getNPCRegistry().getById(main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".npcs." + npcNumber + ".npcID"));
 
 
                                                 if (npc != null) {
-                                                    final boolean questShowing = main.getDataManager().getQuestsData().getBoolean("quests." + questName + ".npcs." + npc.getId() + ".questShowing", true);
+                                                    final boolean questShowing = main.getDataManager().getQuestsConfig().getBoolean("quests." + questName + ".npcs." + npc.getId() + ".questShowing", true);
 
 
                                                     // call the callback with the result
@@ -978,7 +978,7 @@ public class QuestManager {
 
 
                                                 } else {
-                                                    main.getLogManager().log(Level.WARNING, "Error attaching npc with ID <AQUA>" + main.getDataManager().getQuestsData().getInt("quests." + questName + ".npcs." + npcNumber + ".npcID")
+                                                    main.getLogManager().log(Level.WARNING, "Error attaching npc with ID <AQUA>" + main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".npcs." + npcNumber + ".npcID")
                                                             + "</AQUA> to quest <AQUA>" + quest.getQuestName() + "</AQUA> - NPC not found.");
 
                                                 }
@@ -1009,11 +1009,11 @@ public class QuestManager {
 
                             if (quest != null) {
                                 //NPC
-                                final ConfigurationSection npcsConfigurationSection = main.getDataManager().getQuestsData().getConfigurationSection("quests." + questName + ".npcs");
+                                final ConfigurationSection npcsConfigurationSection = main.getDataManager().getQuestsConfig().getConfigurationSection("quests." + questName + ".npcs");
                                 if (npcsConfigurationSection != null) {
                                     for (String npcNumber : npcsConfigurationSection.getKeys(false)) {
-                                        final NPC npc = CitizensAPI.getNPCRegistry().getById(main.getDataManager().getQuestsData().getInt("quests." + questName + ".npcs." + npcNumber + ".npcID"));
-                                        final boolean questShowing = main.getDataManager().getQuestsData().getBoolean("quests." + questName + ".npcs." + npc.getId() + ".questShowing", true);
+                                        final NPC npc = CitizensAPI.getNPCRegistry().getById(main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".npcs." + npcNumber + ".npcID"));
+                                        final boolean questShowing = main.getDataManager().getQuestsConfig().getBoolean("quests." + questName + ".npcs." + npc.getId() + ".questShowing", true);
 
                                         if (npc != null) {
 
@@ -1025,7 +1025,7 @@ public class QuestManager {
 
 
                                         } else {
-                                            main.getLogManager().log(Level.WARNING, "Error attaching npc with ID <AQUA>" + main.getDataManager().getQuestsData().getInt("quests." + questName + ".npcs." + npcNumber + ".npcID")
+                                            main.getLogManager().log(Level.WARNING, "Error attaching npc with ID <AQUA>" + main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".npcs." + npcNumber + ".npcID")
                                                     + "</AQUA> to quest <AQUA>" + quest.getQuestName() + "</AQUA> - NPC not found.");
                                         }
 
@@ -1167,7 +1167,7 @@ public class QuestManager {
         if (!nameAlreadyExists) {
             final Action newAction = new Action(main, actionName, consoleCommand);
             actions.add(newAction);
-            main.getDataManager().getQuestsData().set("actions." + actionName + ".consoleCommand", consoleCommand);
+            main.getDataManager().getQuestsConfig().set("actions." + actionName + ".consoleCommand", consoleCommand);
             return (NotQuestColors.successGradient + "Action successfully created!");
         } else {
             return (NotQuestColors.errorGradient + "Action already exists!");
@@ -1189,7 +1189,7 @@ public class QuestManager {
 
     public String removeAction(Action actionToDelete) {
         actions.remove(actionToDelete);
-        main.getDataManager().getQuestsData().set("actions." + actionToDelete.getActionName(), null);
+        main.getDataManager().getQuestsConfig().set("actions." + actionToDelete.getActionName(), null);
         return "§aAction successfully deleted!";
 
     }

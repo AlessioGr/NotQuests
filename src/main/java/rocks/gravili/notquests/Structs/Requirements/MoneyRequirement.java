@@ -46,7 +46,7 @@ public class MoneyRequirement extends Requirement {
         this.main = main;
         this.moneyRequirement = moneyRequirement;
 
-        this.deductMoney = main.getDataManager().getQuestsData().getBoolean("quests." + quest.getQuestName() + ".requirements." + requirementID + ".specifics.deductMoney");
+        this.deductMoney = main.getDataManager().getQuestsConfig().getBoolean("quests." + quest.getQuestName() + ".requirements." + requirementID + ".specifics.deductMoney");
     }
 
 
@@ -71,8 +71,8 @@ public class MoneyRequirement extends Requirement {
 
     @Override
     public void save() {
-        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".requirements." + getRequirementID() + ".specifics.moneyRequirement", getMoneyRequirement());
-        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".requirements." + getRequirementID() + ".specifics.deductMoney", isDeductMoney());
+        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".requirements." + getRequirementID() + ".specifics.moneyRequirement", getMoneyRequirement());
+        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".requirements." + getRequirementID() + ".specifics.deductMoney", isDeductMoney());
 
     }
 

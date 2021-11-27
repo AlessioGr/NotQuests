@@ -50,7 +50,7 @@ public class CraftItemsObjective extends Objective {
         final String questName = quest.getQuestName();
 
         this.main = main;
-        itemToCraft = main.getDataManager().getQuestsData().getItemStack("quests." + questName + ".objectives." + objectiveNumber + ".specifics.itemToCraft.itemstack");
+        itemToCraft = main.getDataManager().getQuestsConfig().getItemStack("quests." + questName + ".objectives." + objectiveNumber + ".specifics.itemToCraft.itemstack");
 
     }
 
@@ -91,7 +91,7 @@ public class CraftItemsObjective extends Objective {
 
     @Override
     public void save() {
-        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.itemToCraft.itemstack", getItemToCraft());
+        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.itemToCraft.itemstack", getItemToCraft());
     }
 
     public final ItemStack getItemToCraft() {

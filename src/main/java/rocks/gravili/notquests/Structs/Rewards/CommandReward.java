@@ -46,7 +46,7 @@ public class CommandReward extends Reward {
         super(main, quest, rewardID);
         this.main = main;
 
-        this.consoleCommand = main.getDataManager().getQuestsData().getString("quests." + getQuest().getQuestName() + ".rewards." + rewardID + ".specifics.consoleCommand");
+        this.consoleCommand = main.getDataManager().getQuestsConfig().getString("quests." + getQuest().getQuestName() + ".rewards." + rewardID + ".specifics.consoleCommand");
     }
 
     public CommandReward(final NotQuests main, final Quest quest, final int rewardID, String consoleCommand) {
@@ -85,7 +85,7 @@ public class CommandReward extends Reward {
 
     @Override
     public void save() {
-        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".rewards." + getRewardID() + ".specifics.consoleCommand", getConsoleCommand());
+        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".rewards." + getRewardID() + ".specifics.consoleCommand", getConsoleCommand());
     }
 
     public final String getConsoleCommand() {

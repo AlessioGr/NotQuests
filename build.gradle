@@ -115,6 +115,8 @@ dependencies {
 
     compileOnly 'com.github.TheBusyBiscuit:Slimefun4:RC-29'
 
+    compileOnly 'net.luckperms:api:5.3'
+
     //compileOnly 'com.github.NEZNAMY:TAB:2.9.2'
 
 

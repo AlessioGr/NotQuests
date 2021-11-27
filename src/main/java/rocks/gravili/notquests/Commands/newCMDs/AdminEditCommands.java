@@ -1242,7 +1242,7 @@ public class AdminEditCommands {
                         return;
                     }
                     foundReward.removeRewardDisplayName();
-                    main.getDataManager().getQuestsData().set("quests." + quest.getQuestName() + ".rewards." + foundReward.getRewardID() + ".displayName", null);
+                    main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + foundReward.getRewardID() + ".displayName", null);
                     audience.sendMessage(miniMessage.parse(
                             successGradient + "Display Name of reward with the ID " + highlightGradient + ID + "</gradient> has been removed successfully.</gradient>"
                     ));
@@ -1282,7 +1282,7 @@ public class AdminEditCommands {
 
 
                     foundReward.setRewardDisplayName(displayName);
-                    main.getDataManager().getQuestsData().set("quests." + quest.getQuestName() + ".rewards." + foundReward.getRewardID() + ".displayName", foundReward.getRewardDisplayName());
+                    main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + foundReward.getRewardID() + ".displayName", foundReward.getRewardDisplayName());
                     audience.sendMessage(miniMessage.parse(
                             successGradient + "Display Name successfully added to reward with ID " + highlightGradient + ID + "</gradient>! New display name: "
                                     + highlight2Gradient + foundReward.getRewardDisplayName() + "</gradient></gradient>"

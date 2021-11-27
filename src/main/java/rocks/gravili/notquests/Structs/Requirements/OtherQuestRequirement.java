@@ -46,7 +46,7 @@ public class OtherQuestRequirement extends Requirement {
         this.main = main;
         this.amountOfCompletionsNeeded = amountOfCompletionsNeeded;
 
-        otherQuestName = main.getDataManager().getQuestsData().getString("quests." + quest.getQuestName() + ".requirements." + requirementID + ".specifics.otherQuestRequirememt");
+        otherQuestName = main.getDataManager().getQuestsConfig().getString("quests." + quest.getQuestName() + ".requirements." + requirementID + ".specifics.otherQuestRequirememt");
     }
 
     public OtherQuestRequirement(NotQuests main, final Quest quest, final int requirementID, int amountOfCompletionsNeeded, String otherQuestName) {
@@ -93,7 +93,7 @@ public class OtherQuestRequirement extends Requirement {
 
     @Override
     public void save() {
-        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".requirements." + getRequirementID() + ".specifics.otherQuestRequirememt", getOtherQuestName());
+        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".requirements." + getRequirementID() + ".specifics.otherQuestRequirememt", getOtherQuestName());
     }
 
     @Override

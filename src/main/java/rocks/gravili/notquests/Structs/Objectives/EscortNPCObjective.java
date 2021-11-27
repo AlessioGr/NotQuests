@@ -54,8 +54,8 @@ public class EscortNPCObjective extends Objective {
         final String questName = quest.getQuestName();
         this.main = main;
 
-        npcToEscortID = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.NPCToEscortID");
-        npcToEscortToID = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.destinationNPCID");
+        npcToEscortID = main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.NPCToEscortID");
+        npcToEscortToID = main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.destinationNPCID");
 
     }
 
@@ -82,8 +82,8 @@ public class EscortNPCObjective extends Objective {
 
     @Override
     public void save() {
-        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.NPCToEscortID", getNpcToEscortID());
-        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.destinationNPCID", getNpcToEscortToID());
+        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.NPCToEscortID", getNpcToEscortID());
+        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.destinationNPCID", getNpcToEscortToID());
     }
 
     public final int getNpcToEscortID() {

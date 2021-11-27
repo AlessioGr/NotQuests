@@ -53,7 +53,7 @@ public class TriggerCommandObjective extends Objective {
         final String questName = quest.getQuestName();
 
         this.main = main;
-        triggerName = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.triggerName");
+        triggerName = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.triggerName");
 
     }
 
@@ -66,7 +66,7 @@ public class TriggerCommandObjective extends Objective {
 
     @Override
     public void save() {
-        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.triggerName", getTriggerName());
+        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.triggerName", getTriggerName());
     }
 
     public final String getTriggerName() {

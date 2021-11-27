@@ -51,8 +51,8 @@ public class OtherQuestObjective extends Objective {
         final String questName = quest.getQuestName();
 
         this.main = main;
-        otherQuestName = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.otherQuestName");
-        countPreviousCompletions = main.getDataManager().getQuestsData().getBoolean("quests." + questName + ".objectives." + objectiveNumber + ".specifics.countPreviousCompletions");
+        otherQuestName = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.otherQuestName");
+        countPreviousCompletions = main.getDataManager().getQuestsConfig().getBoolean("quests." + questName + ".objectives." + objectiveNumber + ".specifics.countPreviousCompletions");
     }
 
     @Override
@@ -64,8 +64,8 @@ public class OtherQuestObjective extends Objective {
 
     @Override
     public void save() {
-        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.otherQuestName", getOtherQuestName());
-        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.countPreviousCompletions", isCountPreviousCompletions());
+        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.otherQuestName", getOtherQuestName());
+        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.countPreviousCompletions", isCountPreviousCompletions());
     }
 
     public final String getOtherQuestName() {

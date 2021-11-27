@@ -84,6 +84,7 @@ public class Configuration {
     private boolean integrationBetonQuestEnabled = true;
     private boolean integrationWorldEditEnabled = true;
     private boolean integrationSlimeFunEnabled = true;
+    private boolean integrationLuckPermsEnabled = true;
 
     //Other
     private boolean actionBarFancyCommandCompletionEnabled = true;
@@ -444,5 +445,13 @@ public class Configuration {
 
     public void setGuiQuestPreviewRequirements_slot(char guiQuestPreviewRequirements_slot) {
         this.guiQuestPreviewRequirements_slot = guiQuestPreviewRequirements_slot;
+    }
+
+    public final boolean isIntegrationLuckPermsEnabled() {
+        return integrationLuckPermsEnabled;
+    }
+
+    public void setIntegrationLuckPermsEnabled(boolean integrationLuckPermsEnabled) {
+        this.integrationLuckPermsEnabled = integrationLuckPermsEnabled;
     }
 }

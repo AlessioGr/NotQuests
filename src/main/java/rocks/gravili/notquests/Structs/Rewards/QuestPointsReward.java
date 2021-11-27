@@ -44,7 +44,7 @@ public class QuestPointsReward extends Reward {
         super(main, quest, rewardID);
         this.main = main;
 
-        this.rewardedQuestPoints = main.getDataManager().getQuestsData().getLong("quests." + getQuest().getQuestName() + ".rewards." + rewardID + ".specifics.rewardedQuestPoints");
+        this.rewardedQuestPoints = main.getDataManager().getQuestsConfig().getLong("quests." + getQuest().getQuestName() + ".rewards." + rewardID + ".specifics.rewardedQuestPoints");
     }
 
     public QuestPointsReward(final NotQuests main, final Quest quest, final int rewardID, long rewardedQuestPoints) {
@@ -75,7 +75,7 @@ public class QuestPointsReward extends Reward {
 
     @Override
     public void save() {
-        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".rewards." + getRewardID() + ".specifics.rewardedQuestPoints", getRewardedQuestPoints());
+        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".rewards." + getRewardID() + ".specifics.rewardedQuestPoints", getRewardedQuestPoints());
     }
 
     public final long getRewardedQuestPoints() {

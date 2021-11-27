@@ -44,7 +44,7 @@ public class ItemReward extends Reward {
         super(main, quest, rewardID);
         this.main = main;
 
-        this.item = main.getDataManager().getQuestsData().getItemStack("quests." + getQuest().getQuestName() + ".rewards." + rewardID + ".specifics.rewardItem");
+        this.item = main.getDataManager().getQuestsConfig().getItemStack("quests." + getQuest().getQuestName() + ".rewards." + rewardID + ".specifics.rewardItem");
     }
 
     public ItemReward(final NotQuests main, final Quest quest, final int rewardID, ItemStack item) {
@@ -73,7 +73,7 @@ public class ItemReward extends Reward {
 
     @Override
     public void save() {
-        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".rewards." + getRewardID() + ".specifics.rewardItem", getItemReward());
+        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".rewards." + getRewardID() + ".specifics.rewardItem", getItemReward());
     }
 
     public final ItemStack getItemReward() {

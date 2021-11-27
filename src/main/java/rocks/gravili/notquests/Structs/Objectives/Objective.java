@@ -59,7 +59,7 @@ public abstract class Objective {
     public final void setCompletionNPCID(final int completionNPCID, final boolean save) {
         this.completionNPCID = completionNPCID;
         if (save) {
-            main.getDataManager().getQuestsData().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".completionNPCID", completionNPCID);
+            main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".completionNPCID", completionNPCID);
         }
     }
 
@@ -67,9 +67,9 @@ public abstract class Objective {
         this.completionArmorStandUUID = completionArmorStandUUID;
         if (save) {
             if (completionArmorStandUUID != null) {
-                main.getDataManager().getQuestsData().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".completionArmorStandUUID", completionArmorStandUUID.toString());
+                main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".completionArmorStandUUID", completionArmorStandUUID.toString());
             } else {
-                main.getDataManager().getQuestsData().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".completionArmorStandUUID", null);
+                main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".completionArmorStandUUID", null);
             }
         }
     }
@@ -90,20 +90,20 @@ public abstract class Objective {
     public void addDependantObjective(final Objective objective, final boolean save) {
         dependantObjectives.add(objective);
         if (save) {
-            main.getDataManager().getQuestsData().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".dependantObjectives." + objective.getObjectiveID() + ".objectiveID", objective.getObjectiveID());
+            main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".dependantObjectives." + objective.getObjectiveID() + ".objectiveID", objective.getObjectiveID());
         }
     }
 
     public void removeDependantObjective(final Objective objective, final boolean save) {
         dependantObjectives.remove(objective);
         if (save) {
-            main.getDataManager().getQuestsData().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".dependantObjectives." + objective.getObjectiveID(), null);
+            main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".dependantObjectives." + objective.getObjectiveID(), null);
         }
     }
 
     public void clearDependantObjectives() {
         dependantObjectives.clear();
-        main.getDataManager().getQuestsData().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".dependantObjectives", null);
+        main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".dependantObjectives", null);
     }
 
     public final String getObjectiveDisplayName() {
@@ -121,14 +121,14 @@ public abstract class Objective {
     public void setObjectiveDisplayName(final String newObjectiveDisplayName, boolean save) {
         this.objectiveDisplayName = newObjectiveDisplayName;
         if (save) {
-            main.getDataManager().getQuestsData().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".displayName", newObjectiveDisplayName);
+            main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".displayName", newObjectiveDisplayName);
         }
     }
 
     public void removeObjectiveDisplayName(boolean save) {
         this.objectiveDisplayName = "";
         if (save) {
-            main.getDataManager().getQuestsData().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".displayName", null);
+            main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".displayName", null);
         }
     }
 
@@ -165,14 +165,14 @@ public abstract class Objective {
     public void setObjectiveDescription(final String newObjectiveDescription, boolean save) {
         this.objectiveDescription = newObjectiveDescription;
         if (save) {
-            main.getDataManager().getQuestsData().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".description", newObjectiveDescription);
+            main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".description", newObjectiveDescription);
         }
     }
 
     public void removeObjectiveDescription(boolean save) {
         this.objectiveDescription = "";
         if (save) {
-            main.getDataManager().getQuestsData().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".description", null);
+            main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".description", null);
         }
     }
 

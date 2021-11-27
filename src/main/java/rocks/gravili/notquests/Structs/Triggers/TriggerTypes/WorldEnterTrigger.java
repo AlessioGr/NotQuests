@@ -47,7 +47,7 @@ public class WorldEnterTrigger extends Trigger {
         super(main, quest, triggerID, action, applyOn, worldName, amountNeeded);
         this.main = main;
 
-        this.worldToEnterName = main.getDataManager().getQuestsData().getString("quests." + getQuest().getQuestName() + ".triggers." + triggerID + ".specifics.worldToEnter", "ALL");
+        this.worldToEnterName = main.getDataManager().getQuestsConfig().getString("quests." + getQuest().getQuestName() + ".triggers." + triggerID + ".specifics.worldToEnter", "ALL");
     }
 
     public WorldEnterTrigger(final NotQuests main, final Quest quest, final int triggerID, Action action, int applyOn, String worldName, long amountNeeded, String worldToEnterName) {
@@ -62,7 +62,7 @@ public class WorldEnterTrigger extends Trigger {
 
     @Override
     public void save() {
-        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".triggers." + getTriggerID() + ".specifics.worldToEnter", getWorldToEnterName());
+        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".triggers." + getTriggerID() + ".specifics.worldToEnter", getWorldToEnterName());
 
     }
 

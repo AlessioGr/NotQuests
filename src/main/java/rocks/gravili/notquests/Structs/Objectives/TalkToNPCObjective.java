@@ -65,11 +65,11 @@ public class TalkToNPCObjective extends Objective {
         final String questName = quest.getQuestName();
         this.main = main;
 
-        NPCtoTalkID = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.NPCtoTalkID", -1);
+        NPCtoTalkID = main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.NPCtoTalkID", -1);
         if (NPCtoTalkID != -1) {
             armorStandUUID = null;
         } else {
-            final String armorStandUUIDString = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.ArmorStandToTalkUUID");
+            final String armorStandUUIDString = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.ArmorStandToTalkUUID");
             if (armorStandUUIDString != null) {
                 armorStandUUID = UUID.fromString(armorStandUUIDString);
             } else {
@@ -110,11 +110,11 @@ public class TalkToNPCObjective extends Objective {
 
     @Override
     public void save() {
-        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.NPCtoTalkID", getNPCtoTalkID());
+        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.NPCtoTalkID", getNPCtoTalkID());
         if (getArmorStandUUID() != null) {
-            main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.ArmorStandToTalkUUID", getArmorStandUUID().toString());
+            main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.ArmorStandToTalkUUID", getArmorStandUUID().toString());
         } else {
-            main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.ArmorStandToTalkUUID", null);
+            main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.ArmorStandToTalkUUID", null);
         }
     }
 

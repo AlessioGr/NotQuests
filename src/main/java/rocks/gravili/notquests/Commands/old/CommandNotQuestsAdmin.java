@@ -1828,7 +1828,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                     if (args[5].equalsIgnoreCase("displayName")) {
                         if(args[6].equalsIgnoreCase("remove") || args[6].equalsIgnoreCase("delete")){
                             reward.removeRewardDisplayName();
-                            main.getDataManager().getQuestsData().set("quests." + quest.getQuestName() + ".rewards." + reward.getRewardID() + ".displayName", null);
+                            main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + reward.getRewardID() + ".displayName", null);
                             sender.sendMessage("§aDisplay Name of reward with the ID §b" + rewardID + " §ahas been removed successfully.");
                         } else if(args[6].equalsIgnoreCase("show")){
                             if(reward.getRewardDisplayName().isBlank()){
@@ -1867,7 +1867,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                             }
 
                             reward.setRewardDisplayName(newRewardDisplayName.toString());
-                            main.getDataManager().getQuestsData().set("quests." + quest.getQuestName() + ".rewards." + reward.getRewardID() + ".displayName", reward.getRewardDisplayName());
+                            main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + reward.getRewardID() + ".displayName", reward.getRewardDisplayName());
                             sender.sendMessage("§aDisplay Name successfully added to reward with ID §b" + reward.getRewardID() + "§a! New display name: §e" + reward.getRewardDisplayName());
                         } else {
                             sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));

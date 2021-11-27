@@ -47,7 +47,7 @@ public class WorldLeaveTrigger extends Trigger {
         super(main, quest, triggerID, action, applyOn, worldName, amountNeeded);
         this.main = main;
 
-        this.worldToLeaveName = main.getDataManager().getQuestsData().getString("quests." + getQuest().getQuestName() + ".triggers." + triggerID + ".specifics.worldToLeave", "ALL");
+        this.worldToLeaveName = main.getDataManager().getQuestsConfig().getString("quests." + getQuest().getQuestName() + ".triggers." + triggerID + ".specifics.worldToLeave", "ALL");
     }
 
     public WorldLeaveTrigger(final NotQuests main, final Quest quest, final int triggerID, Action action, int applyOn, String worldName, long amountNeeded, String worldToLeaveName) {
@@ -62,7 +62,7 @@ public class WorldLeaveTrigger extends Trigger {
 
     @Override
     public void save() {
-        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".triggers." + getTriggerID() + ".specifics.worldToLeave", getWorldToLeaveName());
+        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".triggers." + getTriggerID() + ".specifics.worldToLeave", getWorldToLeaveName());
     }
 
     @Override

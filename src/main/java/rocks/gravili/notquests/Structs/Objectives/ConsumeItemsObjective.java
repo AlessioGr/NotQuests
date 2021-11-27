@@ -50,7 +50,7 @@ public class ConsumeItemsObjective extends Objective {
         final String questName = quest.getQuestName();
 
         this.main = main;
-        itemToConsume = main.getDataManager().getQuestsData().getItemStack("quests." + questName + ".objectives." + objectiveNumber + ".specifics.itemToConsume.itemstack");
+        itemToConsume = main.getDataManager().getQuestsConfig().getItemStack("quests." + questName + ".objectives." + objectiveNumber + ".specifics.itemToConsume.itemstack");
 
     }
 
@@ -91,7 +91,7 @@ public class ConsumeItemsObjective extends Objective {
 
     @Override
     public void save() {
-        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.itemToConsume.itemstack", getItemToConsume());
+        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.itemToConsume.itemstack", getItemToConsume());
     }
 
     public final ItemStack getItemToConsume() {

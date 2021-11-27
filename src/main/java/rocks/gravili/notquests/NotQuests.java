@@ -28,6 +28,7 @@ import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitInfo;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.luckperms.api.LuckPerms;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
@@ -102,7 +103,6 @@ public final class NotQuests extends JavaPlugin {
     private boolean mythicMobsEnabled = false;
     private MythicMobs mythicMobs;
 
-    //Enabled Hooks
     private boolean eliteMobsEnabled = false;
     private boolean placeholderAPIEnabled = false;
     private boolean betonQuestEnabled = false;
@@ -113,6 +113,9 @@ public final class NotQuests extends JavaPlugin {
     private WorldEditHook worldEditHook;
 
     private Slimefun slimefun;
+
+    private boolean luckpermsEnabled = false;
+    private LuckPerms luckPerms;
 
 
     private BukkitAudiences adventure;
@@ -163,92 +166,7 @@ public final class NotQuests extends JavaPlugin {
         dataManager.loadGeneralConfig();
 
 
-        //Vault Hook
-        if (getDataManager().getConfiguration().isIntegrationVaultEnabled()) {
-            //Vault is needed for NotQuests to function. If it's not found, NotQuests will be disabled. EDIT: Now it will just disable some features
-            if (!setupEconomy()) {
-                getLogManager().log(Level.WARNING, "Vault Dependency not found! Some features have been disabled. I recommend you to install Vault for the best experience.");
-                //getServer().getPluginManager().disablePlugin(this);
-                //return;
-            } else {
-                setupPermissions();
-                setupChat();
-                vaultEnabled = true;
-                getLogManager().info("Vault found! Enabling Vault support...");
-            }
-        }
-
-        //MythicMobs Hook
-        if (getDataManager().getConfiguration().isIntegrationMythicMobsEnabled()) {
-            if (getServer().getPluginManager().getPlugin("MythicMobs") != null && Objects.requireNonNull(getServer().getPluginManager().getPlugin("MythicMobs")).isEnabled()) {
-                mythicMobsEnabled = true;
-                getLogManager().info("MythicMobs found! Enabling MythicMobs support...");
-                this.mythicMobs = MythicMobs.inst();
-            }
-        }
-
-
-        //EliteMobs Hook
-        if (getDataManager().getConfiguration().isIntegrationEliteMobsEnabled()) {
-            if (getServer().getPluginManager().getPlugin("EliteMobs") != null && Objects.requireNonNull(getServer().getPluginManager().getPlugin("EliteMobs")).isEnabled()) {
-                eliteMobsEnabled = true;
-                getLogManager().info("EliteMobs found! Enabling EliteMobs support...");
-            }
-        }
-
-        //BetonQuest Hook
-        if (getDataManager().getConfiguration().isIntegrationBetonQuestEnabled()) {
-            if (getServer().getPluginManager().getPlugin("BetonQuest") != null && Objects.requireNonNull(getServer().getPluginManager().getPlugin("BetonQuest")).isEnabled()) {
-                betonQuestEnabled = true;
-                getLogManager().info("BetonQuest found! Enabling BetonQuest support...");
-                betonQuestIntegration = new BetonQuestIntegration(this);
-            }
-        }
-
-
-        //WorldEdit
-        if (getDataManager().getConfiguration().isIntegrationWorldEditEnabled()) {
-            worldEditPlugin = (WorldEditPlugin) Bukkit.getServer().getPluginManager().getPlugin("WorldEdit");
-            if (worldEditPlugin == null) {
-                worldEditEnabled = false;
-
-            } else {
-                getLogManager().info("WorldEdit found! Enabling WorldEdit support...");
-                worldEditEnabled = true;
-                worldEditHook = new WorldEditHook(this);
-            }
-        }
-
-
-        //Enable 'Citizens' integration. If it's not found, it will just disable some NPC features which can mostly be replaced by armor stands
-        if (getDataManager().getConfiguration().isIntegrationCitizensEnabled()) {
-            if (getServer().getPluginManager().getPlugin("Citizens") == null || !Objects.requireNonNull(getServer().getPluginManager().getPlugin("Citizens")).isEnabled()) {
-                getLogManager().log(Level.INFO, "Citizens Dependency not found! Congratulations! In NotQuests, you can use armor stands instead of Citizens NPCs");
-
-            } else {
-                citizensManager = new CitizensManager(this);
-
-                citizensEnabled = true;
-                getLogManager().info("Citizens found! Enabling Citizens support...");
-            }
-        }
-
-        //Enable 'SlimeFun' integration.
-        if (getDataManager().getConfiguration().isIntegrationSlimeFunEnabled()) {
-            if (getServer().getPluginManager().getPlugin("Slimefun") == null || !Objects.requireNonNull(getServer().getPluginManager().getPlugin("Slimefun")).isEnabled()) {
-                slimefunEnabled = false;
-            } else {
-                slimefun = Slimefun.instance();
-                if (slimefun == null) {
-                    slimefunEnabled = false;
-
-                } else {
-                    getLogManager().info("SlimeFun found! Enabling SlimeFun support...");
-                    slimefunEnabled = true;
-                }
-            }
-
-        }
+        enableIntegrations();
 
 
         dataManager.loadStandardCompletions();
@@ -365,6 +283,104 @@ public final class NotQuests extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ConversationEvents(this, conversationManager), this);
 
         commandManager.setupAdminConversationCommands(conversationManager);
+
+    }
+
+    private void enableIntegrations() {
+        //Vault Hook
+        if (getDataManager().getConfiguration().isIntegrationVaultEnabled()) {
+            //Vault is needed for NotQuests to function. If it's not found, NotQuests will be disabled. EDIT: Now it will just disable some features
+            if (!setupEconomy()) {
+                getLogManager().log(Level.WARNING, "Vault Dependency not found! Some features have been disabled. I recommend you to install Vault for the best experience.");
+                //getServer().getPluginManager().disablePlugin(this);
+                //return;
+            } else {
+                setupPermissions();
+                setupChat();
+                vaultEnabled = true;
+                getLogManager().info("Vault found! Enabling Vault support...");
+            }
+        }
+
+        //MythicMobs Hook
+        if (getDataManager().getConfiguration().isIntegrationMythicMobsEnabled()) {
+            if (getServer().getPluginManager().getPlugin("MythicMobs") != null && Objects.requireNonNull(getServer().getPluginManager().getPlugin("MythicMobs")).isEnabled()) {
+                mythicMobsEnabled = true;
+                getLogManager().info("MythicMobs found! Enabling MythicMobs support...");
+                this.mythicMobs = MythicMobs.inst();
+            }
+        }
+
+
+        //EliteMobs Hook
+        if (getDataManager().getConfiguration().isIntegrationEliteMobsEnabled()) {
+            if (getServer().getPluginManager().getPlugin("EliteMobs") != null && Objects.requireNonNull(getServer().getPluginManager().getPlugin("EliteMobs")).isEnabled()) {
+                eliteMobsEnabled = true;
+                getLogManager().info("EliteMobs found! Enabling EliteMobs support...");
+            }
+        }
+
+        //BetonQuest Hook
+        if (getDataManager().getConfiguration().isIntegrationBetonQuestEnabled()) {
+            if (getServer().getPluginManager().getPlugin("BetonQuest") != null && Objects.requireNonNull(getServer().getPluginManager().getPlugin("BetonQuest")).isEnabled()) {
+                betonQuestEnabled = true;
+                getLogManager().info("BetonQuest found! Enabling BetonQuest support...");
+                betonQuestIntegration = new BetonQuestIntegration(this);
+            }
+        }
+
+
+        //WorldEdit
+        if (getDataManager().getConfiguration().isIntegrationWorldEditEnabled()) {
+            worldEditPlugin = (WorldEditPlugin) Bukkit.getServer().getPluginManager().getPlugin("WorldEdit");
+            if (worldEditPlugin == null) {
+                worldEditEnabled = false;
+
+            } else {
+                getLogManager().info("WorldEdit found! Enabling WorldEdit support...");
+                worldEditEnabled = true;
+                worldEditHook = new WorldEditHook(this);
+            }
+        }
+
+
+        //Enable 'Citizens' integration. If it's not found, it will just disable some NPC features which can mostly be replaced by armor stands
+        if (getDataManager().getConfiguration().isIntegrationCitizensEnabled()) {
+            if (getServer().getPluginManager().getPlugin("Citizens") == null || !Objects.requireNonNull(getServer().getPluginManager().getPlugin("Citizens")).isEnabled()) {
+                getLogManager().log(Level.INFO, "Citizens Dependency not found! Congratulations! In NotQuests, you can use armor stands instead of Citizens NPCs");
+
+            } else {
+                citizensManager = new CitizensManager(this);
+
+                citizensEnabled = true;
+                getLogManager().info("Citizens found! Enabling Citizens support...");
+            }
+        }
+
+        //Enable 'SlimeFun' integration.
+        if (getDataManager().getConfiguration().isIntegrationSlimeFunEnabled()) {
+            if (getServer().getPluginManager().getPlugin("Slimefun") == null || !Objects.requireNonNull(getServer().getPluginManager().getPlugin("Slimefun")).isEnabled()) {
+                slimefunEnabled = false;
+            } else {
+                slimefun = Slimefun.instance();
+                if (slimefun == null) {
+                    slimefunEnabled = false;
+
+                } else {
+                    getLogManager().info("SlimeFun found! Enabling SlimeFun support...");
+                    slimefunEnabled = true;
+                }
+            }
+        }
+
+        //Luckperms
+        if (getDataManager().getConfiguration().isIntegrationLuckPermsEnabled()) {
+            RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
+            if (provider != null) {
+                luckPerms = provider.getProvider();
+                luckpermsEnabled = true;
+            }
+        }
 
     }
 
@@ -582,6 +598,10 @@ public final class NotQuests extends JavaPlugin {
         return worldEditEnabled;
     }
 
+    public boolean isLuckpermsEnabled() {
+        return luckpermsEnabled;
+    }
+
 
     public LanguageManager getLanguageManager() {
         return languageManager;
@@ -638,6 +658,10 @@ public final class NotQuests extends JavaPlugin {
 
     public WorldEditHook getWorldEditHook() {
         return worldEditHook;
+    }
+
+    public LuckPerms getLuckPerms() {
+        return luckPerms;
     }
 
     public void enableMythicMobs() {

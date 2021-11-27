@@ -78,13 +78,13 @@ public class DeliverItemsObjective extends Objective {
         final String questName = quest.getQuestName();
         this.main = main;
 
-        itemToDeliver = main.getDataManager().getQuestsData().getItemStack("quests." + questName + ".objectives." + objectiveNumber + ".specifics.itemToCollect.itemstack");
-        recipientNPCID = main.getDataManager().getQuestsData().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.recipientNPCID");
+        itemToDeliver = main.getDataManager().getQuestsConfig().getItemStack("quests." + questName + ".objectives." + objectiveNumber + ".specifics.itemToCollect.itemstack");
+        recipientNPCID = main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.recipientNPCID");
 
         if (recipientNPCID != -1) {
             recipientArmorStandUUID = null;
         } else {
-            final String armorStandUUIDString = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.recipientArmorStandID");
+            final String armorStandUUIDString = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.recipientArmorStandID");
             if (armorStandUUIDString != null) {
                 recipientArmorStandUUID = UUID.fromString(armorStandUUIDString);
             } else {
@@ -228,13 +228,13 @@ public class DeliverItemsObjective extends Objective {
 
     @Override
     public void save() {
-        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.itemToCollect.itemstack", getItemToDeliver());
+        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.itemToCollect.itemstack", getItemToDeliver());
 
-        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.recipientNPCID", getRecipientNPCID());
+        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.recipientNPCID", getRecipientNPCID());
         if (getRecipientArmorStandUUID() != null) {
-            main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.recipientArmorStandID", getRecipientArmorStandUUID().toString());
+            main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.recipientArmorStandID", getRecipientArmorStandUUID().toString());
         } else {
-            main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.recipientArmorStandID", null);
+            main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.recipientArmorStandID", null);
         }
     }
 

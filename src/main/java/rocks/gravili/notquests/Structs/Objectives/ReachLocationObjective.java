@@ -53,9 +53,9 @@ public class ReachLocationObjective extends Objective {
         final String questName = quest.getQuestName();
         this.main = main;
 
-        min = main.getDataManager().getQuestsData().getLocation("quests." + questName + ".objectives." + objectiveNumber + ".specifics.minLocation");
-        max = main.getDataManager().getQuestsData().getLocation("quests." + questName + ".objectives." + objectiveNumber + ".specifics.maxLocation");
-        locationName = main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.locationName");
+        min = main.getDataManager().getQuestsConfig().getLocation("quests." + questName + ".objectives." + objectiveNumber + ".specifics.minLocation");
+        max = main.getDataManager().getQuestsConfig().getLocation("quests." + questName + ".objectives." + objectiveNumber + ".specifics.maxLocation");
+        locationName = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.locationName");
 
     }
 
@@ -68,9 +68,9 @@ public class ReachLocationObjective extends Objective {
 
     @Override
     public void save() {
-        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.minLocation", getMinLocation());
-        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.maxLocation", getMaxLocation());
-        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.locationName", getLocationName());
+        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.minLocation", getMinLocation());
+        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.maxLocation", getMaxLocation());
+        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.locationName", getLocationName());
     }
 
     public final Location getMinLocation() {

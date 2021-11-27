@@ -43,7 +43,7 @@ public class QuestPointsRequirement extends Requirement {
         this.main = main;
         this.questPointRequirement = questPointRequirement;
 
-        this.deductQuestPoints = main.getDataManager().getQuestsData().getBoolean("quests." + quest.getQuestName() + ".requirements." + requirementID + ".specifics.deductQuestPoints");
+        this.deductQuestPoints = main.getDataManager().getQuestsConfig().getBoolean("quests." + quest.getQuestName() + ".requirements." + requirementID + ".specifics.deductQuestPoints");
     }
 
     public QuestPointsRequirement(NotQuests main, final Quest quest, final int requirementID, long questPointRequirement, boolean deductQuestPoints) {
@@ -80,7 +80,7 @@ public class QuestPointsRequirement extends Requirement {
 
     @Override
     public void save() {
-        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".requirements." + getRequirementID() + ".specifics.deductQuestPoints", isDeductQuestPoints());
+        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".requirements." + getRequirementID() + ".specifics.deductQuestPoints", isDeductQuestPoints());
     }
 
     @Override

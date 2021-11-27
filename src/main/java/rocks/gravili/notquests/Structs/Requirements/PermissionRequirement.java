@@ -45,14 +45,14 @@ public class PermissionRequirement extends Requirement {
         super(main, quest, requirementID, 1);
         this.main = main;
 
-        this.requiredPermission = main.getDataManager().getQuestsData().getString("quests." + quest.getQuestName() + ".requirements." + requirementID + ".specifics.requiredPermission");
+        this.requiredPermission = main.getDataManager().getQuestsConfig().getString("quests." + quest.getQuestName() + ".requirements." + requirementID + ".specifics.requiredPermission");
     }
 
     public PermissionRequirement(NotQuests main, final Quest quest, final int requirementID, long progressNeeded) {
         super(main, quest, requirementID, 1);
         this.main = main;
 
-        this.requiredPermission = main.getDataManager().getQuestsData().getString("quests." + quest.getQuestName() + ".requirements." + requirementID + ".specifics.requiredPermission");
+        this.requiredPermission = main.getDataManager().getQuestsConfig().getString("quests." + quest.getQuestName() + ".requirements." + requirementID + ".specifics.requiredPermission");
     }
 
     public PermissionRequirement(NotQuests main, final Quest quest, final int requirementID, String requiredPermission) {
@@ -69,7 +69,7 @@ public class PermissionRequirement extends Requirement {
 
     @Override
     public void save() {
-        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".requirements." + getRequirementID() + ".specifics.requiredPermission", getRequiredPermission());
+        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".requirements." + getRequirementID() + ".specifics.requiredPermission", getRequiredPermission());
     }
 
     @Override
