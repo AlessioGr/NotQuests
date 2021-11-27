@@ -31,7 +31,10 @@ import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class UtilManager {
     private final NotQuests main;
@@ -235,5 +238,22 @@ public class UtilManager {
 
     public final boolean isItemEmpty(final ItemStack itemStack) {
         return itemStack == null || itemStack.getType() == Material.AIR;
+    }
+
+
+    public List<File> listFilesRecursively(File directory) {
+        List<File> files = new ArrayList<>();
+        // Get all files from a directory.
+        File[] fList = directory.listFiles();
+        if (fList != null)
+            for (File file : fList) {
+                if (file.isFile()) {
+                    files.add(file);
+                } else if (file.isDirectory()) {
+                    files.addAll(listFilesRecursively(file));
+                }
+            }
+
+        return files;
     }
 }

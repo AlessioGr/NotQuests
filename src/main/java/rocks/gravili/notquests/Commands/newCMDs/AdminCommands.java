@@ -558,8 +558,42 @@ public class AdminCommands {
 
                     main.getDataManager().loadGeneralConfig();
                     main.getLanguageManager().loadLanguageConfig();
+                    main.getConversationManager().loadConversationsFromConfig();
                     audience.sendMessage(Component.empty());
-                    audience.sendMessage(miniMessage.parse(successGradient + "NotQuests general.yml and language configuration have been re-loaded. </gradient>" + unimportant + "If you want to reload more, please use the ServerUtils plugin (available on spigot) or restart the server. This reload command does not reload the quests file or the database."));
+                    audience.sendMessage(miniMessage.parse(successGradient + "NotQuests general.yml, language configuration and conversations have been re-loaded. </gradient>" + unimportant + "If you want to reload more, please use the ServerUtils plugin (available on spigot) or restart the server. This reload command does not reload the quests file or the database."));
+                }));
+
+        manager.command(builder.literal("reload", "load")
+                .literal("general.yml")
+                .meta(CommandMeta.DESCRIPTION, "Reload the general.yml.")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+
+                    main.getDataManager().loadGeneralConfig();
+                    audience.sendMessage(Component.empty());
+                    audience.sendMessage(miniMessage.parse(successGradient + "General.yml has been reloaded."));
+                }));
+
+        manager.command(builder.literal("reload", "load")
+                .literal("languages")
+                .meta(CommandMeta.DESCRIPTION, "Reload the languages from conversations files.")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+
+                    main.getLanguageManager().loadLanguageConfig();
+                    audience.sendMessage(Component.empty());
+                    audience.sendMessage(miniMessage.parse(successGradient + "Languages have been reloaded."));
+                }));
+
+        manager.command(builder.literal("reload", "load")
+                .literal("conversations")
+                .meta(CommandMeta.DESCRIPTION, "Reload the conversations from conversations files.")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+
+                    main.getConversationManager().loadConversationsFromConfig();
+                    audience.sendMessage(Component.empty());
+                    audience.sendMessage(miniMessage.parse(successGradient + "Conversations have been reloaded."));
                 }));
 
         manager.command(builder.literal("save")

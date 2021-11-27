@@ -19,15 +19,16 @@
 package rocks.gravili.notquests.Conversation;
 
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.QuestPlayer;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.logging.Level;
 
 public class ConversationManager {
     private final NotQuests main;
@@ -46,7 +47,8 @@ public class ConversationManager {
         playerSpeaker.setPlayer(true);
 
 
-        playConversation(Bukkit.getPlayer("NoeX"), createTestConversation());
+        //playConversation(Bukkit.getPlayer("NoeX"), createTestConversation());
+        loadConversationsFromConfig();
     }
 
     public ConversationPlayer getOpenConversation(final UUID uuid) {
@@ -101,5 +103,27 @@ public class ConversationManager {
             );
         }
 
+    }
+
+
+    public void loadConversationsFromConfig() {
+        conversations.clear();
+        openConversations.clear();
+
+        File conversationsFolder = new File(main.getDataFolder().getPath() + "/conversations/");
+        if (!conversationsFolder.exists()) {
+            main.getLogManager().log(Level.INFO, "Conversations Folder not found. Creating a new one...");
+
+            if (!conversationsFolder.mkdirs()) {
+                main.getLogManager().log(Level.SEVERE, "There was an error creating the NotQuests conversations folder");
+                main.getDataManager().disablePluginAndSaving("There was an error creating the NotQuests conversations folder.");
+                return;
+            }
+
+        }
+
+        for (File conversationFile : main.getUtilManager().listFilesRecursively(conversationsFolder)) {
+            main.getLogManager().log(Level.INFO, "Reading conversation file <AQUA>" + conversationFile.getName() + "</AQUA>...");
+        }
     }
 }
