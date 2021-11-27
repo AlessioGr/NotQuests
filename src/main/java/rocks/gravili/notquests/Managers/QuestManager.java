@@ -25,7 +25,6 @@ import de.themoep.inventorygui.StaticGuiElement;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
-import net.citizensnpcs.api.trait.TraitInfo;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
@@ -40,7 +39,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import rocks.gravili.notquests.Commands.NotQuestColors;
-import rocks.gravili.notquests.Hooks.Citizens.QuestGiverNPCTrait;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.ActiveObjective;
 import rocks.gravili.notquests.Structs.ActiveQuest;
@@ -140,21 +138,8 @@ public class QuestManager {
     public void loadData() {
 
         if(main.isCitizensEnabled()){
-            main.getLogManager().log(Level.INFO, "Registering Citizens nquestgiver trait...");
+            main.getCitizensManager().registerQuestGiverTrait();
 
-            final ArrayList<TraitInfo> toDeregister = new ArrayList<>();
-            for (final TraitInfo traitInfo : net.citizensnpcs.api.CitizensAPI.getTraitFactory().getRegisteredTraits()) {
-                if (traitInfo.getTraitName().equals("nquestgiver")) {
-                    toDeregister.add(traitInfo);
-
-                }
-            }
-            for (final TraitInfo traitInfo : toDeregister) {
-                net.citizensnpcs.api.CitizensAPI.getTraitFactory().deregisterTrait(traitInfo);
-            }
-
-            net.citizensnpcs.api.CitizensAPI.getTraitFactory().registerTrait(net.citizensnpcs.api.trait.TraitInfo.create(QuestGiverNPCTrait.class).withName("nquestgiver"));
-            main.getLogManager().log(Level.INFO, "Citizens nquestgiver trait has been registered!");
         }
 
 
@@ -1120,7 +1105,9 @@ public class QuestManager {
         final ArrayList<Trait> traitsToRemove = new ArrayList<>();
         for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
             allNPCsFound += 1;
-            if (getAllQuestsAttachedToNPC(npc).size() == 0) {
+
+            //No quests attached to NPC => check if it has the trait
+            if (getAllQuestsAttachedToNPC(npc).size() == 0 && (main.getConversationManager().getConversationForNPCID(npc.getId()) == null)) {
                 for (final Trait trait : npc.getTraits()) {
                     if (trait.getName().contains("questgiver")) {
                         traitsToRemove.add(trait);

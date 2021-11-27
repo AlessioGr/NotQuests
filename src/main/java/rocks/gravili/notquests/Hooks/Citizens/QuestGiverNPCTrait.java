@@ -25,6 +25,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.plugin.java.JavaPlugin;
+import rocks.gravili.notquests.Conversation.Conversation;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Quest;
 
@@ -78,6 +79,12 @@ public class QuestGiverNPCTrait extends Trait {
         if (event.getNPC() == this.getNPC()) {
             final Player player = event.getClicker();
             plugin.getQuestManager().sendQuestsPreviewOfQuestShownNPCs(getNPC(), player);
+
+            //Conversations
+            final Conversation foundConversation = plugin.getConversationManager().getConversationForNPCID(getNPC().getId());
+            if (foundConversation != null) {
+                plugin.getConversationManager().playConversation(player, foundConversation);
+            }
         }
 
     }

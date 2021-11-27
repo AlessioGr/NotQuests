@@ -43,6 +43,7 @@ import rocks.gravili.notquests.Events.QuestEvents;
 import rocks.gravili.notquests.Events.TriggerEvents;
 import rocks.gravili.notquests.Events.hooks.*;
 import rocks.gravili.notquests.Hooks.BetonQuest.BetonQuestIntegration;
+import rocks.gravili.notquests.Hooks.Citizens.CitizensManager;
 import rocks.gravili.notquests.Managers.*;
 import rocks.gravili.notquests.Managers.Registering.ObjectiveManager;
 import rocks.gravili.notquests.Managers.Registering.RequirementManager;
@@ -74,6 +75,9 @@ public final class NotQuests extends JavaPlugin {
     private PerformanceManager performanceManager;
     private CommandManager commandManager;
     private ConversationManager conversationManager;
+
+    private CitizensManager citizensManager;
+
     //Registering Managers
     private ObjectiveManager objectiveManager;
     private RequirementManager requirementManager;
@@ -222,6 +226,8 @@ public final class NotQuests extends JavaPlugin {
                 getLogManager().log(Level.INFO, "Citizens Dependency not found! Congratulations! In NotQuests, you can use armor stands instead of Citizens NPCs");
 
             } else {
+                citizensManager = new CitizensManager(this);
+
                 citizensEnabled = true;
                 getLogManager().info("Citizens found! Enabling Citizens support...");
             }
@@ -662,5 +668,9 @@ public final class NotQuests extends JavaPlugin {
 
     public ConversationManager getConversationManager() {
         return this.conversationManager;
+    }
+
+    public CitizensManager getCitizensManager() {
+        return citizensManager;
     }
 }

@@ -780,7 +780,6 @@ public class DataManager {
      */
     public void saveData() {
         if (isSavingEnabled()) {
-            main.getLogManager().log(Level.INFO, "Citizens nquestgiver trait has been registered!");
             main.getLogManager().log(Level.INFO, "Saving player data...");
             main.getQuestPlayerManager().savePlayerData();
 

@@ -57,6 +57,17 @@ public class ConversationManager {
 
         //playConversation(Bukkit.getPlayer("NoeX"), createTestConversation());
         loadConversationsFromConfig();
+
+
+    }
+
+    public Conversation getConversationForNPCID(final int npcID) {
+        for (final Conversation conversation : conversations) {
+            if (conversation.getNPCID() == npcID) {
+                return conversation;
+            }
+        }
+        return null;
     }
 
     public ConversationPlayer getOpenConversation(final UUID uuid) {
@@ -68,7 +79,7 @@ public class ConversationManager {
     }
 
     public Conversation createTestConversation() {
-        final Conversation testConversation = new Conversation("test", 0);
+        final Conversation testConversation = new Conversation(main, "test", 0);
 
         final Speaker gustav = new Speaker("Gustav");
 
@@ -146,7 +157,7 @@ public class ConversationManager {
 
             final int npcID = config.getInt("npcID", -1);
 
-            final Conversation conversation = new Conversation(conversationFile.getName().replaceAll(".yml", ""), npcID);
+            final Conversation conversation = new Conversation(main, conversationFile.getName().replaceAll(".yml", ""), npcID);
 
 
             //First add all speakers
