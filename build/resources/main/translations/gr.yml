@@ -1,0 +1,200 @@
+chat:
+  wrong-command-usage: '&cΛανθασμένη χρήση εντολών!'
+  missing-permission: '&cΑνεπαρκής άδεια! Απαιτούμενο node άδειας:  &e%PERMISSION%'
+  too-many-arguments: '&cΥπερβολικές μεταβλητές!'
+  quest-successfully-accepted: '&aΑναλάβατε επιτυχώς την αποστολή &b%QUESTNAME%&a.'
+  quest-description: '&eΠεριγραφή αποστολής: &7%QUESTDESCRIPTION%'
+  quest-already-accepted: '&cΈχετε ήδη αναλάβει αυτή την αποστολή.'
+  quest-failed: '&c&lAποτύχατε &eστην αποστολή &b%QUESTNAME%&e!'
+  quest-aborted: '&aΗ αποστολή &b%QUESTNAME% &aματαιώθηκε!'
+  quest-completed-and-rewards-given: |2+
+
+    <CENTER>&a[Η αποστολή ολοκληρώθηκε]
+    <CENTER>&b&l%QUESTNAME%
+    <EMPTY>
+  missing-quest-description: '&eΑυτή η αποστολή δεν έχει περιγραφή.'
+  objectives-label-after-quest-accepting: '&9Στόχοι:'
+  questpoints:
+    query: '&eΑυτήν τη στιγμή έχετε &b%QUESTPOINTS% &eπόντους αποστολής.'
+    none: '&cΔεν έχετε πόντους αναζήτησης!'
+  no-quests-accepted: '&cΔεν έχετε ενεργές αποστολές!'
+  quest-does-not-exist: '&cΗ αποστολή &b%QUESTNAME% &cδεν υπάρχει!'
+  quest-not-found-or-does-not-exist: '&cΗ αποστολή &b%QUESTNAME% &cδεν βρέθηκε ή δεν είναι ενεργή!'
+  active-quests-label: '&eΕνεργές αποστολές:'
+  take-disabled-preview: '&cΗ προεπισκόπηση της αποστολής &b%QUESTNAME% &cμε την εντολή &e/nquests preview &cείναι απενεργοποιημένη.'
+  take-disabled-accept: '&cΗ αποδοχή της αποστολής &b%QUESTNAME% &cμε την εντολή &e/nquests take &cείναι απενεργοποιημένη.'
+  quest-not-active-error: '&cΣφάλμα: Η &b%QUESTNAME% &cδεν είναι ενεργή αποστολή!'
+  objectives:
+    counter: '&e%OBJECTIVEID%. %OBJECTIVENAME%:'
+    hidden: '&e%OBJECTIVEID%. &7&l[HIDDEN]'
+    description: '   &9Περιγραφή: &6%OBJECTIVEDESCRIPTION%'
+    progress: '   &7Πρόοδος: &f%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
+    successfully-completed: '&aΟλοκληρώσατε με επιτυχία τον στόχο &e%OBJECTIVENAME% &aγια την αποστολή &b%QUESTNAME%&a!'
+    taskDescription:
+      breakBlocks:
+        base: '    &8└─ &7%EVENTUALCOLOR%Block to break: &f%EVENTUALCOLOR%%BLOCKTOBREAK%'
+      breed:
+        base: '    &8└─ &7%EVENTUALCOLOR%Mob to breed: &f%EVENTUALCOLOR%%ENTITYTOBREED%'
+      collectItems:
+        base: '    &8└─ &7%EVENTUALCOLOR%Items to collect: &f%EVENTUALCOLOR%%ITEMTOCOLLECTTYPE% (%ITEMTOCOLLECTNAME%)'
+      consumeItems:
+        base: '    &8└─ &7%EVENTUALCOLOR%Items to consume: &f%EVENTUALCOLOR%%ITEMTOCONSUMETYPE% (%ITEMTOCONSUMENAME%)'
+      craftItems:
+        base: '    &8└─ &7%EVENTUALCOLOR%Items to craft: &f%EVENTUALCOLOR%%ITEMTOCRAFTTYPE% (%ITEMTOCRAFTNAME%)'
+      deliverItems:
+        base: '    &8└─ &7%EVENTUALCOLOR%Items to deliver: &f%EVENTUALCOLOR%%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
+      escortNPC:
+        base: '    &8└─ &7%EVENTUALCOLOR%Escort &f%EVENTUALCOLOR%%NPCNAME% &7%EVENTUALCOLOR%to &f%EVENTUALCOLOR%%DESTINATIONNPCNAME%'
+      killMobs:
+        base: '    &8└─ &7%EVENTUALCOLOR%Mobs to kill: &f%EVENTUALCOLOR%%MOBTOKILL%'
+      otherQuest:
+        base: '    &8└─ &7%EVENTUALCOLOR%Quest completion: &f%EVENTUALCOLOR%%OTHERQUESTNAME%'
+      reachLocation:
+        base: '    &8└─ &7%EVENTUALCOLOR%Reach Location: &f%EVENTUALCOLOR%%LOCATIONNAME%'
+      talkToNPC:
+        base: '    &8└─ &7%EVENTUALCOLOR%Talk to &f%EVENTUALCOLOR%%NAME%'
+      triggerCommand:
+        base: '    &8└─ &7%EVENTUALCOLOR%Goal: &f%EVENTUALCOLOR%%TRIGGERNAME%'
+      killEliteMobs:
+        base: '    &8└─ &7%EVENTUALCOLOR%Kill Elite Mob: &f%EVENTUALCOLOR%%ELITEMOBNAME%'
+        any: '    &8└─ &7%EVENTUALCOLOR%Kill any Elite Mob!'
+titles:
+  quest-accepted:
+    title: '&fΑναλάβατε την αποστολή'
+    subtitle: <#b617ff>%QUESTNAME%
+  quest-completed:
+    title: '&aΗ αποστολή ολοκληρώθηκε'
+    subtitle: <#b617ff>%QUESTNAME%
+  quest-failed:
+    title: '&cΗ αποστολή απέτυχε'
+    subtitle: <#b617ff>%QUESTNAME%
+gui:
+  main:
+    title: '&9Αποστολές'
+    button:
+      questpoints:
+        text: |-
+          &6Πόντοι αποστολής
+          &eΤρέχον πόντοι αποστολής: &b%QUESTPOINTS%
+      takequest:
+        text: |-
+          &aΑνέλαβε μία αποστολή
+          &7Ξεκίνα μια αποστολή!
+
+          &8Κάποιες αποστολές δεν
+          &8μπορούν να ξεκινήσουν έτσι.
+      abortquest:
+        text: |-
+          &cΜαταίωση μιας αποστολής
+          &7Η ματαίωση μιας αποστολής
+          &7μπορεί να οδηγήσει σε τιμωρίες.
+      previewquest:
+        text: |-
+          &9Προεπισκόπηση αποστολής (Πληροφορίες αποστολής)
+          &7Εμφάνιση περισσότερων πληροφοριών.
+          &7σχετικά με μια αποστολή.
+      activequests:
+        text: |-
+          &3Ενεργές αποστολές
+          &7Δείχνει όλες της
+          &7ενεργές σου αποστολές.
+  activeQuests:
+    title: '&9Ενεργές αποστολές'
+    button:
+      activeQuestButton:
+        text: |-
+          &b%QUESTNAME% &a[ΕΝΕΡΓΗ]
+          &7Πρόοδος: &a%COMPLETEDOBJECTIVESCOUNT% &f/ %ALLOBJECTIVESCOUNT%
+          &fΚάνε κλικ για πληροφορίες!
+  takeQuestChoose:
+    title: '&9Ποια αποστολή θες να αναλάβεις?'
+    button:
+      questPreview:
+        acceptedSuffix: ' &a[ΑΠΟΣΤΟΛΗ ΑΠΟΔΕΚΤΗ]'
+        questNamePrefix: '&b'
+        questDescriptionPrefix: '&8'
+        bottomText: '&aΚάντε κλικ για προεπισκόπηση της αποστολής!'
+  abortQuestChoose:
+    title: '  &9Ενεργές αποστολές που μπορείτε να ματαιώσετε'
+    button:
+      abortQuestPreview:
+        text: |-
+          &b%QUESTNAME% &a[ΕΝΕΡΓΗ]
+          &7Πρόοδος: &a%COMPLETEDOBJECTIVESCOUNT% &f/ %ALLOBJECTIVESCOUNT%
+          &cΚάντε κλικ για να ματαιώσετε την αποστολή!
+  previewQuestChoose:
+    title: '&9Προεπισκόπηση αποστολής'
+    button:
+      questPreview:
+        acceptedSuffix: ' &a[ΑΠΟΣΤΟΛΗ ΑΠΟΔΕΚΤΗ]'
+        questNamePrefix: '&b'
+        questDescriptionPrefix: '&8'
+        bottomText: '&aΚάντε κλικ για προεπισκόπηση της αποστολής!'
+  abortQuest:
+    title: '&cΕπιβεβαίωση ματαίωσης'
+    button:
+      confirmAbort:
+        text: |-
+          &b%QUESTNAME% &a[ΕΝΕΡΓΗ]
+          &7Πρόοδος: &a%COMPLETEDOBJECTIVESCOUNT% &f/ %ALLOBJECTIVESCOUNT%
+          &cΚάντε κλικ για να ματαιώσετε την αποστολή &b%QUESTNAME%&c!
+      cancelAbort:
+        text: |-
+          &aΚάντε κλικ για να ΜΗΝ ματαιώσετε αυτήν την αποστολή
+          &aκαι ακυρώστε αυτήν την ενέργεια
+  previewQuest:
+    title: '&9Προεπισκόπηση για την αποστολή &b%QUESTNAME%'
+    button:
+      description:
+        text: |-
+          &eΠεριγραφή
+          &8%QUESTDESCRIPTION%
+        empty: ???
+      rewards:
+        text: |-
+          &aΑνταμοιβές
+          &f%QUESTREWARDS%
+        empty: '&8Καμία ή κρυφές'
+      requirements:
+        text: |-
+          &cΑπαιτήσεις
+          &f%QUESTREQUIREMENTS%
+        empty: '&8-'
+      confirmTake:
+        text: |-
+          &b%QUESTNAME%
+          &aΚάντε κλικ για να αναλάβετε την αποστολή &b%QUESTNAME%&a!
+      cancelTake:
+        text: |-
+          &cΚάντε κλικ για να ΜΗΝ αναλάβετε την αποστολή 
+          &cκαι να ματαιώσετε αυτή την ενέργεια
+  progress:
+    title: '&9Λεπτομέρειες για την αποστολή &b%QUESTNAME%'
+    button:
+      unlockedObjective:
+        text: |-
+          &e%ACTIVEOBJECTIVEID%. &b%OBJECTIVENAME%
+          &6&lΕΝΕΡΓΗ
+          &8%OBJECTIVEDESCRIPTION%
+          %ACTIVEOBJECTIVEDESCRIPTION%
+
+          &7Progress: &a%ACTIVEOBJECTIVEPROGRESS% &f/ %OBJECTIVEPROGRESSNEEDED%
+        description-empty: Καμία περιγραφή
+      lockedObjective:
+        text: |-
+          &e%ACTIVEOBJECTIVEID%. &7&l[ΚΡΥΦΟ]
+          &eΑυτός ο στόχος δεν έχει 
+          &eακόμη ξεκλειδωθεί!
+      completedObjective:
+        text: |-
+          &a&m%ACTIVEOBJECTIVEID%. &2&m%OBJECTIVENAME%
+          &a&lΟΛΟΚΛΗΡΩΘΗΚΕ
+          &8&m%OBJECTIVEDESCRIPTION%
+          %COMPLETEDOBJECTIVEDESCRIPTION%
+
+          &7&mΠρόοδος: &a&m%ACTIVEOBJECTIVEPROGRESS% &f&m/ %OBJECTIVEPROGRESSNEEDED%
+        description-empty: Καμία περιγραφή
+      previousPage:
+        text: Πηγαίνετε στην προηγούμενη σελίδα (%prevpage%)
+      nextPage:
+        text: Πηγαίνετε στην επόμενη σελίδα (%nextpage%)
