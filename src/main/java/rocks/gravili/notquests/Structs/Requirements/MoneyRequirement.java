@@ -76,63 +76,11 @@ public class MoneyRequirement extends Requirement {
 
     }
 
-    @Override
-    public String check(QuestPlayer questPlayer, boolean enforce) {
-        final long moneyRequirementAmount = getMoneyRequirement();
-        final boolean deductMoney = isDeductMoney();
-        final Player player = questPlayer.getPlayer();
-        if (player != null) {
-            if (!main.isVaultEnabled() || main.getEconomy() == null) {
-                return "\n§eError: The server does not have vault enabled. Please ask the Owner to install Vault for money stuff to work.";
-            } else if (main.getEconomy().getBalance(player, player.getWorld().getName()) < moneyRequirementAmount) {
-                return "\n§eYou need §b" + (moneyRequirementAmount - main.getEconomy().getBalance(player, player.getWorld().getName())) + " §emore money.";
-            } else {
-                if (enforce && deductMoney && moneyRequirementAmount > 0) {
-
-                    if (main.isVaultEnabled()) {
-                        removeMoney(player, player.getWorld().getName(), moneyRequirementAmount, true);
-                    } else {
-                        main.getLogManager().log(Level.WARNING, "§eWarning: Could not deduct money, because Vault was not found. Please install Vault for money stuff to work.");
-                        main.getLogManager().log(Level.WARNING, "§cError: Tried to load Economy when Vault is not enabled. Please report this to the plugin author (and I also recommend you installing Vault for money stuff to work)");
-                        return "§cError deducting money, because Vault has not been found. Report this to an Admin.";
-                    }
-
-
-                }
-                return "";
-            }
-        } else {
-            return "\n§eError reading money requirement...";
-
-        }
-    }
-
-    @Override
-    public String getRequirementDescription() {
-        String description = "§7-- Money needed: " + getMoneyRequirement() + "\n";
-
-        if (isDeductMoney()) {
-            description += "§7--- §cMoney WILL BE DEDUCTED!";
-        } else {
-            description += "§7--- Will money be deducted?: No";
-        }
-        return description;
-    }
-
-    private void removeMoney(final Player player, final String worldName, final long moneyToDeduct, final boolean notifyPlayer) {
-        if (!main.isVaultEnabled() || main.getEconomy() == null) {
-            main.getLogManager().log(Level.WARNING, "§eWarning: Could not deduct money, because Vault was not found. Please install Vault for money stuff to work.");
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addRequirementBuilder) {
+        if (!main.isVaultEnabled()) {
             return;
         }
-        main.getEconomy().withdrawPlayer(player, worldName, moneyToDeduct);
-        if (notifyPlayer) {
-            player.sendMessage("§b-" + moneyToDeduct + " §c$!");
 
-        }
-    }
-
-
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addRequirementBuilder) {
         manager.command(addRequirementBuilder.literal("Money")
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of money needed"))
                 .flag(
@@ -165,5 +113,61 @@ public class MoneyRequirement extends Requirement {
                     ));
 
                 }));
+    }
+
+    @Override
+    public String getRequirementDescription() {
+        String description = "§7-- Money needed: " + getMoneyRequirement() + "\n";
+
+        if (isDeductMoney()) {
+            description += "§7--- §cMoney WILL BE DEDUCTED!";
+        } else {
+            description += "§7--- Will money be deducted?: No";
+        }
+        return description;
+    }
+
+    private void removeMoney(final Player player, final String worldName, final long moneyToDeduct, final boolean notifyPlayer) {
+        if (!main.isVaultEnabled() || main.getEconomy() == null) {
+            main.getLogManager().log(Level.WARNING, "§eWarning: Could not deduct money, because Vault was not found. Please install Vault for money stuff to work.");
+            return;
+        }
+        main.getEconomy().withdrawPlayer(player, worldName, moneyToDeduct);
+        if (notifyPlayer) {
+            player.sendMessage("§b-" + moneyToDeduct + " §c$!");
+
+        }
+    }
+
+    @Override
+    public String check(QuestPlayer questPlayer, boolean enforce) {
+
+        final long moneyRequirementAmount = getMoneyRequirement();
+        final boolean deductMoney = isDeductMoney();
+        final Player player = questPlayer.getPlayer();
+        if (player != null) {
+            if (!main.isVaultEnabled() || main.getEconomy() == null) {
+                return "\n§eError: The server does not have vault enabled. Please ask the Owner to install Vault for money stuff to work.";
+            } else if (main.getEconomy().getBalance(player, player.getWorld().getName()) < moneyRequirementAmount) {
+                return "\n§eYou need §b" + (moneyRequirementAmount - main.getEconomy().getBalance(player, player.getWorld().getName())) + " §emore money.";
+            } else {
+                if (enforce && deductMoney && moneyRequirementAmount > 0) {
+
+                    if (main.isVaultEnabled()) {
+                        removeMoney(player, player.getWorld().getName(), moneyRequirementAmount, true);
+                    } else {
+                        main.getLogManager().log(Level.WARNING, "§eWarning: Could not deduct money, because Vault was not found. Please install Vault for money stuff to work.");
+                        main.getLogManager().log(Level.WARNING, "§cError: Tried to load Economy when Vault is not enabled. Please report this to the plugin author (and I also recommend you installing Vault for money stuff to work)");
+                        return "§cError deducting money, because Vault has not been found. Report this to an Admin.";
+                    }
+
+
+                }
+                return "";
+            }
+        } else {
+            return "\n§eError reading money requirement...";
+
+        }
     }
 }

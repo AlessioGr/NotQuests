@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.Structs.Objectives;
+package rocks.gravili.notquests.Structs.Objectives.hooks;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
@@ -29,6 +29,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.Objectives.Objective;
 import rocks.gravili.notquests.Structs.Quest;
 
 public class SlimefunResearchObjective extends Objective {
@@ -43,6 +44,10 @@ public class SlimefunResearchObjective extends Objective {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
+        if (!main.isSlimefunEnabled()) {
+            return;
+        }
+
         manager.command(addObjectiveBuilder.literal("SlimefunResearch")
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount to spend on research"))
                 .meta(CommandMeta.DESCRIPTION, "Adds a new SlimefunResearch Objective to a quest")

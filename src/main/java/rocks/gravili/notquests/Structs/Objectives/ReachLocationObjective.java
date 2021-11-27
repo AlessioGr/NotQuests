@@ -86,6 +86,10 @@ public class ReachLocationObjective extends Objective {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
+        if (!main.isWorldEditEnabled()) {
+            return;
+        }
+
         manager.command(addObjectiveBuilder.literal("ReachLocation")
                 .senderType(Player.class)
                 .literal("worldeditselection")

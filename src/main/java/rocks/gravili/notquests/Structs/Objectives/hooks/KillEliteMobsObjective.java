@@ -142,6 +142,11 @@ public class KillEliteMobsObjective extends Objective {
 
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
+        if (!main.isEliteMobsEnabled()) {
+            return;
+        }
+
+
         CommandFlag<String> mobname = CommandFlag
                 .newBuilder("mobname")
                 .withArgument(StringArgument.<CommandSender>newBuilder("Mob name contains").withSuggestionsProvider(

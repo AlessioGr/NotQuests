@@ -23,6 +23,7 @@ import cloud.commandframework.paper.PaperCommandManager;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Objectives.*;
 import rocks.gravili.notquests.Structs.Objectives.hooks.KillEliteMobsObjective;
+import rocks.gravili.notquests.Structs.Objectives.hooks.SlimefunResearchObjective;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

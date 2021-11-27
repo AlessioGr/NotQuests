@@ -26,7 +26,7 @@ import org.bukkit.event.Listener;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.ActiveObjective;
 import rocks.gravili.notquests.Structs.ActiveQuest;
-import rocks.gravili.notquests.Structs.Objectives.SlimefunResearchObjective;
+import rocks.gravili.notquests.Structs.Objectives.hooks.SlimefunResearchObjective;
 import rocks.gravili.notquests.Structs.QuestPlayer;
 
 public class SlimefunEvents implements Listener {

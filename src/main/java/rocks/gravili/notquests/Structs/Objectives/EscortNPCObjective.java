@@ -96,6 +96,10 @@ public class EscortNPCObjective extends Objective {
 
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
+        if (!main.isCitizensEnabled()) {
+            return;
+        }
+
         manager.command(addObjectiveBuilder.literal("EscortNPC")
                 .argument(IntegerArgument.<CommandSender>newBuilder("NPC to escort").withSuggestionsProvider((context, lastString) -> {
                     ArrayList<String> completions = new ArrayList<>();

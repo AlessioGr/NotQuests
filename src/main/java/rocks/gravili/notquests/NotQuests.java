@@ -566,7 +566,7 @@ public final class NotQuests extends JavaPlugin {
         return eliteMobsEnabled;
     }
 
-    private boolean isSlimefunEnabled() {
+    public boolean isSlimefunEnabled() {
         return slimefunEnabled;
     }
 
