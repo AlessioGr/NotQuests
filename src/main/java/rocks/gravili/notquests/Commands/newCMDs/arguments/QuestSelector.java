@@ -130,13 +130,14 @@ public class QuestSelector<C> extends CommandArgument<C, Quest> {
                 return ArgumentParseResult.failure(new NoInputProvidedException(QuestsParser.class, context));
             }
             final String input = inputQueue.peek();
+            inputQueue.remove();
             final Quest foundQuest = main.getQuestManager().getQuest(input);
             if (foundQuest == null) {
-                return ArgumentParseResult.failure(new IllegalArgumentException("Quest '" + inputQueue.peek() + "' does not exist!"
+                return ArgumentParseResult.failure(new IllegalArgumentException("Quest '" + input + "' does not exist!"
                 ));
             }
 
-            inputQueue.remove();
+
             return ArgumentParseResult.success(foundQuest);
 
         }

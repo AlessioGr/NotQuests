@@ -133,7 +133,7 @@ public class ActionSelector<C> extends CommandArgument<C, Action> {
             inputQueue.remove();
 
             if (foundAction == null) {
-                return ArgumentParseResult.failure(new IllegalArgumentException("Action '" + inputQueue.peek() + "' does not exist!"
+                return ArgumentParseResult.failure(new IllegalArgumentException("Action '" + input + "' does not exist!"
                 ));
             }
 

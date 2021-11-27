@@ -24,6 +24,7 @@ import cloud.commandframework.arguments.flags.CommandFlag;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.arguments.standard.StringArrayArgument;
 import cloud.commandframework.bukkit.CloudBukkitCapabilities;
+import cloud.commandframework.bukkit.parsers.WorldArgument;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.minecraft.extras.MinecraftExceptionHandler;
@@ -34,6 +35,8 @@ import me.lucko.commodore.CommodoreProvider;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import rocks.gravili.notquests.Commands.CommandNotQuests;
@@ -41,6 +44,7 @@ import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.Commands.newCMDs.AdminCommands;
 import rocks.gravili.notquests.Commands.newCMDs.AdminEditCommands;
 import rocks.gravili.notquests.Commands.newCMDs.arguments.ActionSelector;
+import rocks.gravili.notquests.Commands.newCMDs.arguments.ApplyOnSelector;
 import rocks.gravili.notquests.Commands.newCMDs.arguments.QuestSelector;
 import rocks.gravili.notquests.Commands.old.CommandNotQuestsAdmin;
 import rocks.gravili.notquests.NotQuests;
@@ -73,6 +77,9 @@ public class CommandManager {
     public final CommandFlag<String[]> nametag_containsany;
     public final CommandFlag<String[]> nametag_equals;
 
+    public final CommandFlag<Integer> applyOn; //0 = Quest
+    public final CommandFlag<World> world;
+    public final CommandFlag<String> triggerWorldString;
 
     public CommandManager(final NotQuests main) {
         this.main = main;
@@ -95,6 +102,7 @@ public class CommandManager {
                             return completions;
                         }
                 ))
+                .withDescription(ArgumentDescription.of("This word or every word seperated by a space needs to be part of the nametag"))
                 .build();
 
         nametag_equals = CommandFlag
@@ -109,6 +117,42 @@ public class CommandManager {
                             return completions;
                         }
                 ))
+                .withDescription(ArgumentDescription.of("What the nametag has to be equal"))
+                .build();
+
+        world = CommandFlag
+                .newBuilder("world")
+                .withArgument(WorldArgument.of("world"))
+                .withDescription(ArgumentDescription.of("World Name"))
+                .build();
+
+
+        applyOn = CommandFlag
+                .newBuilder("applyOn")
+                .withArgument(ApplyOnSelector.of("applyOn", main, "quest"))
+                .withDescription(ArgumentDescription.of("To which part of the Quest it should apply (Examples: 'Quest', 'O1', 'O2. (O1 = Objective 1)."))
+                .build(); //0 = Quest
+
+        triggerWorldString = CommandFlag
+                .newBuilder("world_name")
+                .withArgument(StringArgument.<CommandSender>newBuilder("world_name").withSuggestionsProvider(
+                        (context, lastString) -> {
+                            final List<String> allArgs = context.getRawInput();
+                            final Audience audience = main.adventure().sender(context.getSender());
+                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[World Name / 'ALL']", "");
+
+                            ArrayList<String> completions = new ArrayList<>();
+
+                            completions.add("ALL");
+
+                            for (final World world : Bukkit.getWorlds()) {
+                                completions.add(world.getName());
+                            }
+
+                            return completions;
+                        }
+                ).single().build())
+                .withDescription(ArgumentDescription.of("World where the Trigger applies (Examples: 'world_the_end', 'farmworld', 'world', 'ALL')."))
                 .build();
     }
 

@@ -130,7 +130,7 @@ public class EntityTypeSelector<C> extends CommandArgument<C, String> {
             inputQueue.remove();
 
             if (!main.getDataManager().standardEntityTypeCompletions.contains(input) && !input.equalsIgnoreCase("ANY")) {
-                return ArgumentParseResult.failure(new IllegalArgumentException("Entity type '" + inputQueue.peek() + "' does not exist!"));
+                return ArgumentParseResult.failure(new IllegalArgumentException("Entity type '" + input + "' does not exist!"));
             }
 
             return ArgumentParseResult.success(input);

@@ -37,7 +37,7 @@ import java.util.Locale;
 import java.util.Queue;
 import java.util.function.BiFunction;
 
-public class ApplyOnSelector<C> extends CommandArgument<C, String> {
+public class ApplyOnSelector<C> extends CommandArgument<C, Integer> { //0 = Quest
 
     protected ApplyOnSelector(
             final boolean required,
@@ -49,7 +49,7 @@ public class ApplyOnSelector<C> extends CommandArgument<C, String> {
             NotQuests main,
             String questContext
     ) {
-        super(required, name, new ApplyOnSelector.ApplyOnsParser<>(main, questContext), defaultValue, String.class, suggestionsProvider);
+        super(required, name, new ApplyOnSelector.ApplyOnsParser<>(main, questContext), defaultValue, Integer.class, suggestionsProvider);
     }
 
 
@@ -57,35 +57,35 @@ public class ApplyOnSelector<C> extends CommandArgument<C, String> {
         return new ApplyOnSelector.Builder<>(name, main, questContext);
     }
 
-    public static <C> @NonNull CommandArgument<C, String> of(final @NonNull String name, final NotQuests main, final String questContext) {
+    public static <C> @NonNull CommandArgument<C, Integer> of(final @NonNull String name, final NotQuests main, final String questContext) {
         return ApplyOnSelector.<C>newBuilder(name, main, questContext).asRequired().build();
     }
 
-    public static <C> @NonNull CommandArgument<C, String> optional(final @NonNull String name, final NotQuests main, final String questContext) {
+    public static <C> @NonNull CommandArgument<C, Integer> optional(final @NonNull String name, final NotQuests main, final String questContext) {
         return ApplyOnSelector.<C>newBuilder(name, main, questContext).asOptional().build();
     }
 
-    public static <C> @NonNull CommandArgument<C, String> optional(
+    public static <C> @NonNull CommandArgument<C, Integer> optional(
             final @NonNull String name,
-            final @NonNull String applyOn,
+            final @NonNull Integer applyOn,
             final NotQuests main,
             final String questContext
     ) {
-        return ApplyOnSelector.<C>newBuilder(name, main, questContext).asOptionalWithDefault(applyOn).build();
+        return ApplyOnSelector.<C>newBuilder(name, main, questContext).asOptionalWithDefault("" + applyOn).build();
     }
 
-    public static final class Builder<C> extends CommandArgument.Builder<C, String> {
+    public static final class Builder<C> extends CommandArgument.Builder<C, Integer> {
         private final NotQuests main;
         private final String questContext;
 
         private Builder(final @NonNull String name, NotQuests main, String questContext) {
-            super(String.class, name);
+            super(Integer.class, name);
             this.main = main;
             this.questContext = questContext;
         }
 
         @Override
-        public @NonNull CommandArgument<C, String> build() {
+        public @NonNull CommandArgument<C, Integer> build() {
             return new ApplyOnSelector<>(
                     this.isRequired(),
                     this.getName(),
@@ -99,7 +99,7 @@ public class ApplyOnSelector<C> extends CommandArgument<C, String> {
     }
 
 
-    public static final class ApplyOnsParser<C> implements ArgumentParser<C, String> {
+    public static final class ApplyOnsParser<C> implements ArgumentParser<C, Integer> {
 
         private final NotQuests main;
         private final String questContext;
@@ -140,7 +140,7 @@ public class ApplyOnSelector<C> extends CommandArgument<C, String> {
         }
 
         @Override
-        public @NonNull ArgumentParseResult<String> parse(@NonNull CommandContext<@NonNull C> context, @NonNull Queue<@NonNull String> inputQueue) {
+        public @NonNull ArgumentParseResult<Integer> parse(@NonNull CommandContext<@NonNull C> context, @NonNull Queue<@NonNull String> inputQueue) {
             if (inputQueue.isEmpty()) {
                 return ArgumentParseResult.failure(new NoInputProvidedException(ApplyOnsParser.class, context));
             }
@@ -150,18 +150,18 @@ public class ApplyOnSelector<C> extends CommandArgument<C, String> {
             final Quest quest = context.get(questContext);
 
             if (input.equalsIgnoreCase("Quest")) {
-                return ArgumentParseResult.success(input);
+                return ArgumentParseResult.success(0);
             } else {
                 try {
-                    int objectiveID = Integer.parseInt(input.toLowerCase(Locale.ROOT).replaceAll("o", "_"));
+                    int objectiveID = Integer.parseInt(input.toLowerCase(Locale.ROOT).replaceAll("o", ""));
                     if (quest.getObjectiveFromID(objectiveID) != null) {
-                        return ArgumentParseResult.success(input);
+                        return ArgumentParseResult.success(objectiveID);
                     } else {
                         return ArgumentParseResult.failure(new IllegalArgumentException("ApplyOn Objective '" + input + "' is not an objective of the Quest!"
                         ));
                     }
                 } catch (Exception e) {
-                    return ArgumentParseResult.failure(new IllegalArgumentException("ApplyOn Objective '" + input + "' is not an objective of the Quest!"
+                    return ArgumentParseResult.failure(new IllegalArgumentException("ApplyOn Objective '" + input + "' is not a valid applyOn objective!"
                     ));
                 }
             }
