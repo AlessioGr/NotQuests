@@ -19,12 +19,15 @@
 package rocks.gravili.notquests.Conversation;
 
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.QuestPlayer;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
@@ -124,6 +127,17 @@ public class ConversationManager {
 
         for (File conversationFile : main.getUtilManager().listFilesRecursively(conversationsFolder)) {
             main.getLogManager().log(Level.INFO, "Reading conversation file <AQUA>" + conversationFile.getName() + "</AQUA>...");
+
+            final YamlConfiguration conversationConfig = new YamlConfiguration();
+            try {
+                conversationConfig.load(conversationFile);
+            } catch (IOException | InvalidConfigurationException e) {
+                e.printStackTrace();
+                main.getLogManager().log(Level.WARNING, "Failed reading conversation file <AQUA>" + conversationFile.getName() + "</AQUA>. It's being skipped.");
+                continue;
+            }
+
+
         }
     }
 }
