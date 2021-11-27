@@ -42,11 +42,13 @@ import org.bukkit.command.PluginCommand;
 import rocks.gravili.notquests.Commands.CommandNotQuests;
 import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.Commands.newCMDs.AdminCommands;
+import rocks.gravili.notquests.Commands.newCMDs.AdminConversationCommands;
 import rocks.gravili.notquests.Commands.newCMDs.AdminEditCommands;
 import rocks.gravili.notquests.Commands.newCMDs.arguments.ActionSelector;
 import rocks.gravili.notquests.Commands.newCMDs.arguments.ApplyOnSelector;
 import rocks.gravili.notquests.Commands.newCMDs.arguments.QuestSelector;
 import rocks.gravili.notquests.Commands.old.CommandNotQuestsAdmin;
+import rocks.gravili.notquests.Conversation.ConversationManager;
 import rocks.gravili.notquests.NotQuests;
 
 import java.util.ArrayList;
@@ -60,6 +62,8 @@ public class CommandManager {
     private MinecraftHelp<CommandSender> minecraftHelp;
     private Command.Builder<CommandSender> adminCommandBuilder;
     private Command.Builder<CommandSender> adminEditCommandBuilder;
+    private Command.Builder<CommandSender> adminConversationCommandBuilder;
+
 
     private Command.Builder<CommandSender> adminEditAddObjectiveCommandBuilder;
     private Command.Builder<CommandSender> adminEditAddRequirementCommandBuilder;
@@ -71,6 +75,7 @@ public class CommandManager {
 
     private AdminCommands adminCommands;
     private AdminEditCommands adminEditCommands;
+    private AdminConversationCommands adminConversationCommands;
 
 
     //Re-usable value flags
@@ -202,6 +207,10 @@ public class CommandManager {
             adminEditCommandBuilder = adminCommandBuilder
                     .literal("edit")
                     .argument(QuestSelector.of("quest", main), ArgumentDescription.of("Quest Name"));
+
+            adminConversationCommandBuilder = adminCommandBuilder
+                    .literal("conversations");
+
 
             adminEditAddObjectiveCommandBuilder = adminEditCommandBuilder
                     .literal("objectives")
@@ -362,12 +371,20 @@ public class CommandManager {
 
     }
 
+    public void setupAdminConversationCommands(final ConversationManager conversationManager) { //Has to be done after ConversationManager is initialized
+        adminConversationCommands = new AdminConversationCommands(main, commandManager, adminConversationCommandBuilder, conversationManager);
+    }
+
     public final PaperCommandManager<CommandSender> getPaperCommandManager() {
         return commandManager;
     }
 
     public final Command.Builder<CommandSender> getAdminEditCommandBuilder() {
         return adminEditCommandBuilder;
+    }
+
+    public final Command.Builder<CommandSender> getAdminConversationCommandBuilder() {
+        return adminConversationCommandBuilder;
     }
 
     public final Command.Builder<CommandSender> getAdminEditAddObjectiveCommandBuilder() {
@@ -393,5 +410,9 @@ public class CommandManager {
 
     public final AdminEditCommands getAdminEditCommands() {
         return adminEditCommands;
+    }
+
+    public final AdminConversationCommands getAdminConversationCommands() {
+        return adminConversationCommands;
     }
 }

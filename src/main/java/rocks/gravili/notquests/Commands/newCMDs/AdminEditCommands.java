@@ -59,7 +59,6 @@ public class AdminEditCommands {
     protected final MiniMessage miniMessage = MiniMessage.miniMessage();
     private final Command.Builder<CommandSender> editBuilder;
 
-    //TODO: /qa2 edit ... objectives | requirements | rewards | triggers
 
     public AdminEditCommands(final NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> editBuilder) {
         this.main = main;

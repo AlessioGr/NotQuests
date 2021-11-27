@@ -68,6 +68,7 @@ public class ConversationPlayer {
         ArrayList<ConversationLine> next = findConversationLinesWhichFulfillsCondition(currentLine.getNext());
 
         if (next == null) {
+            main.getConversationManager().stopConversation(this);
             return false;
         } else {
             if (next.size() == 1) {
@@ -171,5 +172,9 @@ public class ConversationPlayer {
             }
         }
 
+    }
+
+    public final QuestPlayer getQuestPlayer() {
+        return questPlayer;
     }
 }

@@ -128,16 +128,29 @@ public class ConversationManager {
         for (File conversationFile : main.getUtilManager().listFilesRecursively(conversationsFolder)) {
             main.getLogManager().log(Level.INFO, "Reading conversation file <AQUA>" + conversationFile.getName() + "</AQUA>...");
 
-            final YamlConfiguration conversationConfig = new YamlConfiguration();
+            final YamlConfiguration config = new YamlConfiguration();
             try {
-                conversationConfig.load(conversationFile);
+                config.load(conversationFile);
             } catch (IOException | InvalidConfigurationException e) {
                 e.printStackTrace();
                 main.getLogManager().log(Level.WARNING, "Failed reading conversation file <AQUA>" + conversationFile.getName() + "</AQUA>. It's being skipped.");
                 continue;
             }
 
+            final int npcID = config.getInt("npcID", -1);
+
+            final Conversation conversation = new Conversation(conversationFile.getName().replaceAll(".yml", ""), npcID);
+
+            conversations.add(conversation);
 
         }
+    }
+
+    public final ArrayList<Conversation> getAllConversations() {
+        return conversations;
+    }
+
+    public void stopConversation(final ConversationPlayer conversationPlayer) {
+        openConversations.remove(conversationPlayer.getQuestPlayer().getUUID());
     }
 }

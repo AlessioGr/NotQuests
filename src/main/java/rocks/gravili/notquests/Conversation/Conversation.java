@@ -23,7 +23,7 @@ import java.util.ArrayList;
 
 public class Conversation {
     private final String identifier;
-    private final int npcID;
+    private final int npcID; //-1: no NPC
     private final ArrayList<ConversationLine> start;
 
     public Conversation(final String identifier, final int npcID) {

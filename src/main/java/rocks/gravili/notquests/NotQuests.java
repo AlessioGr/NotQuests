@@ -358,6 +358,8 @@ public final class NotQuests extends JavaPlugin {
         //Register the Event Listeners in ConversationEvents
         getServer().getPluginManager().registerEvents(new ConversationEvents(this, conversationManager), this);
 
+        commandManager.setupAdminConversationCommands(conversationManager);
+
     }
 
 
