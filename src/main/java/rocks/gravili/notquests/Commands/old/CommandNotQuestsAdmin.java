@@ -85,49 +85,49 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
 
         firstLevelCommands = Component.text("NotQuests §b§lv" + main.getDescription().getVersion() + " §9§lAdmin Commands:", NamedTextColor.BLUE, TextDecoration.BOLD)
                 .append(Component.newline())
-                .append(Component.text("/qadmin §6create §3[Quest Name]", NamedTextColor.YELLOW).clickEvent(ClickEvent.suggestCommand("/qadmin create ")).hoverEvent(HoverEvent.showText(Component.text("Create a Quest", NamedTextColor.GREEN))))
+                .append(Component.text("/notquestsadminold §6create §3[Quest Name]", NamedTextColor.YELLOW).clickEvent(ClickEvent.suggestCommand("/notquestsadminold create ")).hoverEvent(HoverEvent.showText(Component.text("Create a Quest", NamedTextColor.GREEN))))
                 .append(Component.newline())
-                .append(Component.text("/qadmin §6delete §3[Quest Name]", NamedTextColor.YELLOW).clickEvent(ClickEvent.suggestCommand("/qadmin delete ")).hoverEvent(HoverEvent.showText(Component.text("Delete a Quest", NamedTextColor.GREEN))))
+                .append(Component.text("/notquestsadminold §6delete §3[Quest Name]", NamedTextColor.YELLOW).clickEvent(ClickEvent.suggestCommand("/notquestsadminold delete ")).hoverEvent(HoverEvent.showText(Component.text("Delete a Quest", NamedTextColor.GREEN))))
                 .append(Component.newline())
-                .append(Component.text("/qadmin §6edit §3[Quest Name] §3...", NamedTextColor.YELLOW).clickEvent(ClickEvent.suggestCommand("/qadmin edit ")).hoverEvent(HoverEvent.showText(Component.text("Edit a Quest", NamedTextColor.GREEN))))
+                .append(Component.text("/notquestsadminold §6edit §3[Quest Name] §3...", NamedTextColor.YELLOW).clickEvent(ClickEvent.suggestCommand("/notquestsadminold edit ")).hoverEvent(HoverEvent.showText(Component.text("Edit a Quest", NamedTextColor.GREEN))))
                 .append(Component.newline())
-                .append(Component.text("/qadmin §6actions §3...", NamedTextColor.YELLOW).clickEvent(ClickEvent.suggestCommand("/qadmin actions")).hoverEvent(HoverEvent.showText(Component.text("Manage Actions", NamedTextColor.GREEN))))
+                .append(Component.text("/notquestsadminold §6actions §3...", NamedTextColor.YELLOW).clickEvent(ClickEvent.suggestCommand("/notquestsadminold actions")).hoverEvent(HoverEvent.showText(Component.text("Manage Actions", NamedTextColor.GREEN))))
                 .append(Component.newline())
-                .append(Component.text("/qadmin §6give §3[Player Name] [Quest Name]", NamedTextColor.YELLOW).clickEvent(ClickEvent.suggestCommand("/qadmin give ")).hoverEvent(HoverEvent.showText(Component.text("Make another player accept a Quest", NamedTextColor.GREEN))))
+                .append(Component.text("/notquestsadminold §6give §3[Player Name] [Quest Name]", NamedTextColor.YELLOW).clickEvent(ClickEvent.suggestCommand("/notquestsadminold give ")).hoverEvent(HoverEvent.showText(Component.text("Make another player accept a Quest", NamedTextColor.GREEN))))
                 .append(Component.newline())
-                .append(Component.text("/qadmin §6forcegive §3[Player Name] [Quest Name]", NamedTextColor.YELLOW).clickEvent(ClickEvent.suggestCommand("/qadmin give ")).hoverEvent(HoverEvent.showText(Component.text("Same as give, but bypasses max accepts, cooldown & requirements", NamedTextColor.GREEN))))
+                .append(Component.text("/notquestsadminold §6forcegive §3[Player Name] [Quest Name]", NamedTextColor.YELLOW).clickEvent(ClickEvent.suggestCommand("/notquestsadminold give ")).hoverEvent(HoverEvent.showText(Component.text("Same as give, but bypasses max accepts, cooldown & requirements", NamedTextColor.GREEN))))
                 .append(Component.newline())
-                .append(Component.text("/qadmin §6questPoints §3[Player Name]", NamedTextColor.YELLOW).clickEvent(ClickEvent.suggestCommand("/qadmin questPoints ")).hoverEvent(HoverEvent.showText(Component.text("Manages the Quest Points of another player", NamedTextColor.GREEN))))
+                .append(Component.text("/notquestsadminold §6questPoints §3[Player Name]", NamedTextColor.YELLOW).clickEvent(ClickEvent.suggestCommand("/notquestsadminold questPoints ")).hoverEvent(HoverEvent.showText(Component.text("Manages the Quest Points of another player", NamedTextColor.GREEN))))
                 .append(Component.newline())
-                .append(Component.text("/qadmin §6activeQuests §3[Player Name]", NamedTextColor.YELLOW).clickEvent(ClickEvent.suggestCommand("/qadmin activeQuests ")).hoverEvent(HoverEvent.showText(Component.text("Shows active quests of another player", NamedTextColor.GREEN))))
+                .append(Component.text("/notquestsadminold §6activeQuests §3[Player Name]", NamedTextColor.YELLOW).clickEvent(ClickEvent.suggestCommand("/notquestsadminold activeQuests ")).hoverEvent(HoverEvent.showText(Component.text("Shows active quests of another player", NamedTextColor.GREEN))))
                 .append(Component.newline())
-                .append(Component.text("/qadmin §6completedQuests §3[Player Name]", NamedTextColor.YELLOW).clickEvent(ClickEvent.suggestCommand("/qadmin completedQuests ")).hoverEvent(HoverEvent.showText(Component.text("Shows completed quests of another player", NamedTextColor.GREEN))))
+                .append(Component.text("/notquestsadminold §6completedQuests §3[Player Name]", NamedTextColor.YELLOW).clickEvent(ClickEvent.suggestCommand("/notquestsadminold completedQuests ")).hoverEvent(HoverEvent.showText(Component.text("Shows completed quests of another player", NamedTextColor.GREEN))))
                 .append(Component.newline())
-                .append(Component.text("/qadmin §6progress §3[Player Name] [Quest Name]", NamedTextColor.YELLOW).clickEvent(ClickEvent.suggestCommand("/qadmin progress ")).hoverEvent(HoverEvent.showText(Component.text("Shows progress for a quest of another player", NamedTextColor.GREEN))))
+                .append(Component.text("/notquestsadminold §6progress §3[Player Name] [Quest Name]", NamedTextColor.YELLOW).clickEvent(ClickEvent.suggestCommand("/notquestsadminold progress ")).hoverEvent(HoverEvent.showText(Component.text("Shows progress for a quest of another player", NamedTextColor.GREEN))))
                 .append(Component.newline())
-                .append(Component.text("/qadmin §6failQuest §3[Player Name] [Active Quest Name]", NamedTextColor.YELLOW).clickEvent(ClickEvent.suggestCommand("/qadmin failQuest ")).hoverEvent(HoverEvent.showText(Component.text("Fails an active quest for set player", NamedTextColor.GREEN))))
+                .append(Component.text("/notquestsadminold §6failQuest §3[Player Name] [Active Quest Name]", NamedTextColor.YELLOW).clickEvent(ClickEvent.suggestCommand("/notquestsadminold failQuest ")).hoverEvent(HoverEvent.showText(Component.text("Fails an active quest for set player", NamedTextColor.GREEN))))
                 .append(Component.newline())
-                .append(Component.text("/qadmin §6completeQuest §3[Player Name] [Active Quest Name]", NamedTextColor.YELLOW).clickEvent(ClickEvent.suggestCommand("/qadmin completeQuest ")).hoverEvent(HoverEvent.showText(Component.text("Force-completes an active quest for set player no matter if the objectives are completed", NamedTextColor.GREEN))))
+                .append(Component.text("/notquestsadminold §6completeQuest §3[Player Name] [Active Quest Name]", NamedTextColor.YELLOW).clickEvent(ClickEvent.suggestCommand("/notquestsadminold completeQuest ")).hoverEvent(HoverEvent.showText(Component.text("Force-completes an active quest for set player no matter if the objectives are completed", NamedTextColor.GREEN))))
                 .append(Component.newline())
-                .append(Component.text("/qadmin §6listObjectiveTypes", NamedTextColor.YELLOW).clickEvent(ClickEvent.runCommand("/qadmin listObjectiveTypes")).hoverEvent(HoverEvent.showText(Component.text("Shows you a list of all available Objective Types", NamedTextColor.GREEN))))
+                .append(Component.text("/notquestsadminold §6listObjectiveTypes", NamedTextColor.YELLOW).clickEvent(ClickEvent.runCommand("/notquestsadminold listObjectiveTypes")).hoverEvent(HoverEvent.showText(Component.text("Shows you a list of all available Objective Types", NamedTextColor.GREEN))))
                 .append(Component.newline())
-                .append(Component.text("/qadmin §6listRewardTypes", NamedTextColor.YELLOW).clickEvent(ClickEvent.runCommand("/qadmin listRewardTypes")).hoverEvent(HoverEvent.showText(Component.text("Shows you a list of all available Reward Types", NamedTextColor.GREEN))))
+                .append(Component.text("/notquestsadminold §6listRewardTypes", NamedTextColor.YELLOW).clickEvent(ClickEvent.runCommand("/notquestsadminold listRewardTypes")).hoverEvent(HoverEvent.showText(Component.text("Shows you a list of all available Reward Types", NamedTextColor.GREEN))))
                 .append(Component.newline())
-                .append(Component.text("/qadmin §6listRequirementTypes", NamedTextColor.YELLOW).clickEvent(ClickEvent.runCommand("/qadmin listRequirementTypes")).hoverEvent(HoverEvent.showText(Component.text("Shows you a list of all available Requirement Types", NamedTextColor.GREEN))))
+                .append(Component.text("/notquestsadminold §6listRequirementTypes", NamedTextColor.YELLOW).clickEvent(ClickEvent.runCommand("/notquestsadminold listRequirementTypes")).hoverEvent(HoverEvent.showText(Component.text("Shows you a list of all available Requirement Types", NamedTextColor.GREEN))))
                 .append(Component.newline())
-                .append(Component.text("/qadmin §6listAllQuests", NamedTextColor.YELLOW).clickEvent(ClickEvent.runCommand("/qadmin listAllQuests")).hoverEvent(HoverEvent.showText(Component.text("Shows you a list of all created Quests", NamedTextColor.GREEN))))
+                .append(Component.text("/notquestsadminold §6listAllQuests", NamedTextColor.YELLOW).clickEvent(ClickEvent.runCommand("/notquestsadminold listAllQuests")).hoverEvent(HoverEvent.showText(Component.text("Shows you a list of all created Quests", NamedTextColor.GREEN))))
                 .append(Component.newline())
-                .append(Component.text("/qadmin §6listPlaceholders", NamedTextColor.YELLOW).clickEvent(ClickEvent.runCommand("/qadmin listPlaceholders")).hoverEvent(HoverEvent.showText(Component.text("Shows you a list of all available Placeholders which can be used in Trigger or Action commands", NamedTextColor.GREEN))))
+                .append(Component.text("/notquestsadminold §6listPlaceholders", NamedTextColor.YELLOW).clickEvent(ClickEvent.runCommand("/notquestsadminold listPlaceholders")).hoverEvent(HoverEvent.showText(Component.text("Shows you a list of all available Placeholders which can be used in Trigger or Action commands", NamedTextColor.GREEN))))
                 .append(Component.newline())
-                .append(Component.text("/qadmin §6triggerObjective §3[triggerName] [playerName]", NamedTextColor.YELLOW).clickEvent(ClickEvent.suggestCommand("/qadmin triggerObjective ")).hoverEvent(HoverEvent.showText(Component.text("This triggers the Trigger Command which is needed to complete a TriggerObjective (don't mistake it with Triggers & actions)", NamedTextColor.GREEN))))
+                .append(Component.text("/notquestsadminold §6triggerObjective §3[triggerName] [playerName]", NamedTextColor.YELLOW).clickEvent(ClickEvent.suggestCommand("/notquestsadminold triggerObjective ")).hoverEvent(HoverEvent.showText(Component.text("This triggers the Trigger Command which is needed to complete a TriggerObjective (don't mistake it with Triggers & actions)", NamedTextColor.GREEN))))
                 .append(Component.newline())
-                .append(Component.text("/qadmin §6resetAndRemoveQuestForAllPlayers §3[Quest Name]", NamedTextColor.YELLOW).clickEvent(ClickEvent.runCommand("/qadmin resetAndRemoveQuestForAllPlayers ")).hoverEvent(HoverEvent.showText(Component.text("Removes the quest from all players, removes it from completed quests, resets the accept cooldown and basically everything else", NamedTextColor.GREEN))))
+                .append(Component.text("/notquestsadminold §6resetAndRemoveQuestForAllPlayers §3[Quest Name]", NamedTextColor.YELLOW).clickEvent(ClickEvent.runCommand("/notquestsadminold resetAndRemoveQuestForAllPlayers ")).hoverEvent(HoverEvent.showText(Component.text("Removes the quest from all players, removes it from completed quests, resets the accept cooldown and basically everything else", NamedTextColor.GREEN))))
                 .append(Component.newline())
-                .append(Component.text("/qadmin §6resetAndFailQuestForAllPlayers §3[Quest Name]", NamedTextColor.YELLOW).clickEvent(ClickEvent.runCommand("/qadmin resetAndFailQuestForAllPlayers ")).hoverEvent(HoverEvent.showText(Component.text("Fails the quest from all players, removes it from completed quests, resets the accept cooldown and basically everything else", NamedTextColor.GREEN))))
+                .append(Component.text("/notquestsadminold §6resetAndFailQuestForAllPlayers §3[Quest Name]", NamedTextColor.YELLOW).clickEvent(ClickEvent.runCommand("/notquestsadminold resetAndFailQuestForAllPlayers ")).hoverEvent(HoverEvent.showText(Component.text("Fails the quest from all players, removes it from completed quests, resets the accept cooldown and basically everything else", NamedTextColor.GREEN))))
                 .append(Component.newline())
-                .append(Component.text("/qadmin §6load", NamedTextColor.YELLOW).clickEvent(ClickEvent.runCommand("/qadmin load ")).hoverEvent(HoverEvent.showText(Component.text("Loads from the NotQuests configuration file", NamedTextColor.GREEN))))
+                .append(Component.text("/notquestsadminold §6load", NamedTextColor.YELLOW).clickEvent(ClickEvent.runCommand("/notquestsadminold load ")).hoverEvent(HoverEvent.showText(Component.text("Loads from the NotQuests configuration file", NamedTextColor.GREEN))))
                 .append(Component.newline())
-                .append(Component.text("/qadmin §6save", NamedTextColor.YELLOW).clickEvent(ClickEvent.runCommand("/qadmin load ")).hoverEvent(HoverEvent.showText(Component.text("Saves the NotQuests configuration file", NamedTextColor.GREEN))))
+                .append(Component.text("/notquestsadminold §6save", NamedTextColor.YELLOW).clickEvent(ClickEvent.runCommand("/notquestsadminold load ")).hoverEvent(HoverEvent.showText(Component.text("Saves the NotQuests configuration file", NamedTextColor.GREEN))))
                 .append(Component.newline()
                 );
 
@@ -168,10 +168,10 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                     }
                 } else if (args[0].equalsIgnoreCase("resetAndRemoveQuestForAllPlayers")) {
                     sender.sendMessage("§cMissing 2. argument §3[Quest Name]§c. Specify the §bname of the quest§c which should be reset and removed.");
-                    sender.sendMessage("§e/qadmin §6resetAndRemoveQuestForAllPlayers §3[Quest Name] §7| Resets & removes specified quest for all players");
+                    sender.sendMessage("§e/notquestsadminold §6resetAndRemoveQuestForAllPlayers §3[Quest Name] §7| Resets & removes specified quest for all players");
                 } else if (args[0].equalsIgnoreCase("resetAndFailQuestForAllPlayers")) {
                     sender.sendMessage("§cMissing 2. argument §3[Quest Name]§c. Specify the §bname of the quest§c which should be reset and failed.");
-                    sender.sendMessage("§e/qadmin §6resetAndFailQuestForAllPlayers §3[Quest Name] §7| Resets & fails specified quest for all players");
+                    sender.sendMessage("§e/notquestsadminold §6resetAndFailQuestForAllPlayers §3[Quest Name] §7| Resets & fails specified quest for all players");
                 } else if (args[0].equalsIgnoreCase("listrequirementtypes")) {
                     for (String requirement : main.getQuestManager().getRequirementsTypesList()) {
                         sender.sendMessage(requirement);
@@ -194,35 +194,35 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                     sender.sendMessage("§b{QUEST} §7 - Relevant Quest Name");
                 } else if (args[0].equalsIgnoreCase("create")) {
                     sender.sendMessage("§cMissing 2. argument §3[Quest Name]§c. Specify the §bname of the quest§c you would like to create.");
-                    sender.sendMessage("§e/qadmin §6create §3[Quest Name]");
+                    sender.sendMessage("§e/notquestsadminold §6create §3[Quest Name]");
                 } else if (args[0].equalsIgnoreCase("delete")) {
                     sender.sendMessage("§cMissing 2. argument §3[Quest Name]§c. Specify the §bname of the quest§c you would like to delete.");
-                    sender.sendMessage("§e/qadmin §6delete §3[Quest Name]");
+                    sender.sendMessage("§e/notquestsadminold §6delete §3[Quest Name]");
                 } else if (args[0].equalsIgnoreCase("edit")) {
                     sender.sendMessage("§cMissing 2. argument §3[Quest Name]§c. Specify the §bname of the quest§c you would like to edit.");
-                    sender.sendMessage("§e/qadmin §6edit §3[Quest Name] §3...");
+                    sender.sendMessage("§e/notquestsadminold §6edit §3[Quest Name] §3...");
                 } else if (args[0].equalsIgnoreCase("activeQuests")) {
                     sender.sendMessage("§cMissing 2. argument §3[Player Name]§c. Specify the §bname of the player§c to see their active quests.");
-                    sender.sendMessage("§e/qadmin §6activeQuests §3[Player Name] §7| Shows active quests of another player");
+                    sender.sendMessage("§e/notquestsadminold §6activeQuests §3[Player Name] §7| Shows active quests of another player");
                 } else if (args[0].equalsIgnoreCase("completedQuests")) {
                     sender.sendMessage("§cMissing 2. argument §3[Player Name]§c. Specify the §bname of the player§c to see their completed quests.");
-                    sender.sendMessage("§e/qadmin §6completedQuests §3[Player Name] §7| Shows completed quests of another player");
+                    sender.sendMessage("§e/notquestsadminold §6completedQuests §3[Player Name] §7| Shows completed quests of another player");
                 } else if (args[0].equalsIgnoreCase("progress")) {
                     sender.sendMessage("§cMissing 2. argument §3[Player Name]§c. Specify the §bname of the player§c to see their quest progress.");
-                    sender.sendMessage("§e/qadmin §6progress §3[Player Name] [Quest Name] §7| Shows progress for a quest of another player");
+                    sender.sendMessage("§e/notquestsadminold §6progress §3[Player Name] [Quest Name] §7| Shows progress for a quest of another player");
                 } else if (args[0].equalsIgnoreCase("actions")) {
-                    sender.sendMessage("§e/qadmin §6actions add §3[Action Name] <Console Command>");
-                    sender.sendMessage("§e/qadmin §6actions edit §3[Action Name] ...");
-                    sender.sendMessage("§e/qadmin §6actions list");
+                    sender.sendMessage("§e/notquestsadminold §6actions add §3[Action Name] <Console Command>");
+                    sender.sendMessage("§e/notquestsadminold §6actions edit §3[Action Name] ...");
+                    sender.sendMessage("§e/notquestsadminold §6actions list");
                 } else if (args[0].equalsIgnoreCase("forcegive")) {
                     sender.sendMessage("§cMissing 2. argument §3[Player Name]§c. Specify the §bname of the player§c to whom you want to give the quest");
-                    sender.sendMessage("§e/qadmin §6forcegive §3[Player Name] [Quest Name] §7| Bypasses max accepts, cooldown & requirements");
+                    sender.sendMessage("§e/notquestsadminold §6forcegive §3[Player Name] [Quest Name] §7| Bypasses max accepts, cooldown & requirements");
                 } else if (args[0].equalsIgnoreCase("failQuest")) {
                     sender.sendMessage("§cMissing 2. argument §3[Player Name]§c. Specify the §bname of the player§c to fail their quests.");
-                    sender.sendMessage("§e/qadmin §6failQuest §3[Player Name] [Active Quest Name] §7| Fails an active quest for set player");
+                    sender.sendMessage("§e/notquestsadminold §6failQuest §3[Player Name] [Active Quest Name] §7| Fails an active quest for set player");
                 } else if (args[0].equalsIgnoreCase("completeQuest")) {
                     sender.sendMessage("§cMissing 2. argument §3[Player Name]§c. Specify the §bname of the player§c to complete their quests.");
-                    sender.sendMessage("§e/qadmin §6completeQuest §3[Player Name] [Active Quest Name] §7| Force-completes an active quest for set player");
+                    sender.sendMessage("§e/notquestsadminold §6completeQuest §3[Player Name] [Active Quest Name] §7| Force-completes an active quest for set player");
                 } else {
                     sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                 }
@@ -230,11 +230,11 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                 if (args[0].equalsIgnoreCase("actions")) {
                     if (args[1].equalsIgnoreCase("add")) {
                         sender.sendMessage("§cMissing 2. argument §3[Action Name]§c. Specify a §bunique name§c of your new Action.");
-                        sender.sendMessage("§e/qadmin §6actions add §3[Action Name] <Console Command>");
+                        sender.sendMessage("§e/notquestsadminold §6actions add §3[Action Name] <Console Command>");
                     } else if (args[1].equalsIgnoreCase("edit")) {
                         sender.sendMessage("§cMissing 2. argument §3[Action Name]§c. Specify a §baction name§c you wish to edit.");
-                        sender.sendMessage("§e/qadmin §6actions edit §3[Action Name] setCommand <new Console Command>");
-                        sender.sendMessage("§e/qadmin §6actions edit §3[Action Name] delete");
+                        sender.sendMessage("§e/notquestsadminold §6actions edit §3[Action Name] setCommand <new Console Command>");
+                        sender.sendMessage("§e/notquestsadminold §6actions edit §3[Action Name] delete");
                     } else if (args[1].equalsIgnoreCase("list")) {
                         int counter = 1;
                         sender.sendMessage("§eAll Actions:");
@@ -321,26 +321,26 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                     audience.sendMessage(MiniMessage.miniMessage().parse(main.getQuestManager().deleteQuest(args[1])));
                 } else if (args[0].equalsIgnoreCase("edit")) {
                     if (main.getQuestManager().getQuest(args[1]) != null) {
-                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6requirements");
-                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6objectives");
-                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards");
-                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6npcs");
-                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6armorstands [WIP]");
-                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6triggers");
+                        sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6requirements");
+                        sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6objectives");
+                        sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6rewards");
+                        sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6npcs");
+                        sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6armorstands [WIP]");
+                        sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6triggers");
 
-                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6maxAccepts §3[Amount] §7| Sets the maximum amount of times you can start/accept this quest. Set to -1 for unlimited (default)");
-                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6takeEnabled §3[yes/no] §7| Sets if players can accept the quest using /nquests take. Enabled by default");
-                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6acceptCooldown §3[time in minutes] §7| Sets the time players have to wait between accepting quests");
-                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6description §3<description> §7| Sets the quest description");
-                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6displayName §3<display name> §7| Sets the name of the quest which will be displayed in, for example, the quest preview");
-                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §takeItem §3[Material] §7| Sets the item displayed in the quest take GUI (default: BOOK)");
+                        sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6maxAccepts §3[Amount] §7| Sets the maximum amount of times you can start/accept this quest. Set to -1 for unlimited (default)");
+                        sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6takeEnabled §3[yes/no] §7| Sets if players can accept the quest using /nquests take. Enabled by default");
+                        sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6acceptCooldown §3[time in minutes] §7| Sets the time players have to wait between accepting quests");
+                        sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6description §3<description> §7| Sets the quest description");
+                        sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6displayName §3<display name> §7| Sets the name of the quest which will be displayed in, for example, the quest preview");
+                        sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §takeItem §3[Material] §7| Sets the item displayed in the quest take GUI (default: BOOK)");
 
                     } else {
                         sender.sendMessage("§cQuest §b" + args[1] + " §cdoes not exist");
                     }
                 } else if (args[0].equalsIgnoreCase("triggerObjective")) {
                     sender.sendMessage("§c9Please enter a §bplayer name§c!");
-                    sender.sendMessage("§cCommand usage: §e/qadmin §6triggerObjective §3[triggerName] [playerName]");
+                    sender.sendMessage("§cCommand usage: §e/notquestsadminold §6triggerObjective §3[triggerName] [playerName]");
                 } else if (args[0].equalsIgnoreCase("activeQuests")) {
                     final String playerName = args[1];
                     Player player = Bukkit.getPlayer(playerName);
@@ -414,16 +414,16 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
 
                 } else if (args[0].equalsIgnoreCase("progress")) {
                     sender.sendMessage("§cMissing 3. argument §3[Quest Name]§c. Specify the §bquest name§c of the quest you wish to see the player's progress for.");
-                    sender.sendMessage("§e/qadmin §6progress §2" + args[1] + " §3[Quest Name] §7| Shows progress for a quest of another player");
+                    sender.sendMessage("§e/notquestsadminold §6progress §2" + args[1] + " §3[Quest Name] §7| Shows progress for a quest of another player");
                 } else if (args[0].equalsIgnoreCase("forcegive")) {
                     sender.sendMessage("§cMissing 3. argument §3[Quest Name]§c. Specify the §bname of the quest§c the player should be forced to accept.");
-                    sender.sendMessage("§e/qadmin §6forcegive §3[Player Name] [Quest Name] §7| Bypasses max accepts, cooldown & requirements");
+                    sender.sendMessage("§e/notquestsadminold §6forcegive §3[Player Name] [Quest Name] §7| Bypasses max accepts, cooldown & requirements");
                 } else if (args[0].equalsIgnoreCase("failQuest")) {
                     sender.sendMessage("§cMissing 3. argument §3[Active Quest Name] §c. Specify the §bname of the active quest§c of the player they should fail.");
-                    sender.sendMessage("§e/qadmin §6failQuest §3[Player Name] [Active Quest Name] §7| Fails an active quest for set player");
+                    sender.sendMessage("§e/notquestsadminold §6failQuest §3[Player Name] [Active Quest Name] §7| Fails an active quest for set player");
                 } else if (args[0].equalsIgnoreCase("completeQuest")) {
                     sender.sendMessage("§cMissing 3. argument §3[Active Quest Name] §c. Specify the §bname of the active quest§c of the player they should complete.");
-                    sender.sendMessage("§e/qadmin §6completeQuest §3[Player Name] [Active Quest Name] §7| Force-completes an active quest for set player");
+                    sender.sendMessage("§e/notquestsadminold §6completeQuest §3[Player Name] [Active Quest Name] §7| Force-completes an active quest for set player");
                 } else {
                     sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                 }
@@ -453,12 +453,12 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                 if (args[0].equalsIgnoreCase("actions")) {
                     if (args[1].equalsIgnoreCase("add")) {
                         sender.sendMessage("§cMissing 3. argument §3<Console Command>§c. Specify the §bcommand which will be executed from the Console§c of your new Action.");
-                        sender.sendMessage("§e/qadmin §6actions add §3[Action Name] <Console Command>");
+                        sender.sendMessage("§e/notquestsadminold §6actions add §3[Action Name] <Console Command>");
                     } else if (args[1].equalsIgnoreCase("edit")) {
 
                         sender.sendMessage("§cMissing 3. argument§c. Specify 'setCommand', 'setName' or 'delete'.");
-                        sender.sendMessage("§e/qadmin §6actions edit §2" + args[2] + " §3setCommand <new Console Command>");
-                        sender.sendMessage("§e/qadmin §6actions edit §2" + args[2] + " §3delete");
+                        sender.sendMessage("§e/notquestsadminold §6actions edit §2" + args[2] + " §3setCommand <new Console Command>");
+                        sender.sendMessage("§e/notquestsadminold §6actions edit §2" + args[2] + " §3delete");
                     } else {
                         sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                     }
@@ -466,38 +466,38 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                     final Quest quest = main.getQuestManager().getQuest(args[1]);
                     if (quest != null) {
                         if (args[2].equalsIgnoreCase("requirements")) {
-                            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6requirements add §3[Requirement Type] ...");
-                            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6requirements list");
-                            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6requirements clear");
+                            sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6requirements add §3[Requirement Type] ...");
+                            sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6requirements list");
+                            sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6requirements clear");
                         } else if (args[2].equalsIgnoreCase("npcs")) {
-                            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6npcs add §3[NPCS ID] [ShowInNPC (true/false)]");
-                            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6npcs list");
-                            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6npcs clear");
+                            sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6npcs add §3[NPCS ID] [ShowInNPC (true/false)]");
+                            sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6npcs list");
+                            sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6npcs clear");
                         } else if (args[2].equalsIgnoreCase("triggers")) {
-                            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6triggers add §3[Action] [Trigger type] [Apply On] <extra options, depending on what trigger it is>");
-                            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6triggers remove §3[Trigger ID (check the trigger list to get the ID)]");
-                            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6triggers list");
-                            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6triggers clear");
+                            sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6triggers add §3[Action] [Trigger type] [Apply On] <extra options, depending on what trigger it is>");
+                            sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6triggers remove §3[Trigger ID (check the trigger list to get the ID)]");
+                            sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6triggers list");
+                            sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6triggers clear");
                         } else if (args[2].equalsIgnoreCase("maxAccepts")) {
                             sender.sendMessage("§cPlease enter an amount!");
-                            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6maxAccepts §3[Amount] §7| Sets the maximum amount of times you can start/accept this quest. Set to -1 for unlimited (default)");
+                            sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6maxAccepts §3[Amount] §7| Sets the maximum amount of times you can start/accept this quest. Set to -1 for unlimited (default)");
                         } else if (args[2].equalsIgnoreCase("takeEnabled")) {
                             sender.sendMessage("§cPlease enter §b'yes' §cor §b'no§c!");
-                            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6takeEnabled §3[yes/no] §7| Sets if players can accept the quest using /nquests take. Enabled by default");
+                            sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6takeEnabled §3[yes/no] §7| Sets if players can accept the quest using /nquests take. Enabled by default");
                         } else if (args[2].equalsIgnoreCase("acceptCooldown")) {
                             sender.sendMessage("§cPlease enter the amount of time in minutes!");
-                            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6acceptCooldown §3[time in minutes] §7| Sets the time players have to wait between accepting quests");
+                            sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6acceptCooldown §3[time in minutes] §7| Sets the time players have to wait between accepting quests");
                         } else if (args[2].equalsIgnoreCase("description")) {
                             sender.sendMessage("§cPlease enter the quest description!");
-                            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6description §3<description> §7| Sets the quest description");
+                            sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6description §3<description> §7| Sets the quest description");
                             sender.sendMessage("§9Current quest description: §e" + quest.getQuestDescription());
                         } else if (args[2].equalsIgnoreCase("displayName")) {
                             sender.sendMessage("§cPlease enter the quest display name!");
-                            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6displayName §3<display name> §7| Sets the name of the quest which will be displayed in, for example, the quest preview");
+                            sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6displayName §3<display name> §7| Sets the name of the quest which will be displayed in, for example, the quest preview");
                             sender.sendMessage("§9Current quest displayname: §e" + quest.getQuestDisplayName());
                         } else if (args[2].equalsIgnoreCase("takeItem")) {
                             sender.sendMessage("§cPlease enter the material for the take Item!");
-                            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §takeItem §3[Material] §7| Sets the item displayed in the quest take GUI (default: BOOK)");
+                            sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §takeItem §3[Material] §7| Sets the item displayed in the quest take GUI (default: BOOK)");
 
                         } else {
                             sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
@@ -732,7 +732,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                     if (quest != null) {
                         if (args[2].equalsIgnoreCase("requirements")) {
                             if (args[3].equalsIgnoreCase("add")) {
-                                sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6requirements add §3[Requirement Type] ...");
+                                sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6requirements add §3[Requirement Type] ...");
                                 sender.sendMessage("§cPlease specify a requirement type!");
                                 for (String requirement : main.getQuestManager().getRequirementsTypesList()) {
                                     sender.sendMessage(requirement);
@@ -756,7 +756,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
 
                         } else if (args[2].equalsIgnoreCase("npcs")) {
                             if (args[3].equalsIgnoreCase("add")) {
-                                sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6npcs add §3[NPCS ID] [ShowInNPC (yes/no)]");
+                                sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6npcs add §3[NPCS ID] [ShowInNPC (yes/no)]");
                             } else if (args[3].equalsIgnoreCase("list")) {
                                 if(!main.isCitizensEnabled()){
                                     sender.sendMessage("§cError: Any kind of NPC stuff has been disabled, because you don't have the Citizens plugin installed on your server. You need to install the Citizens plugin in order for NPC stuff to work.");
@@ -787,10 +787,10 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                         } else if (args[2].equalsIgnoreCase("triggers")) {
                             if (args[3].equalsIgnoreCase("add")) {
                                 sender.sendMessage("§cMissing 5. argument §3[Action]§c. Specify the §baction§c which will be executed when the Trigger triggers.");
-                                sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6triggers add §3[Action] [Trigger type] [Apply On] [World Name/ALL] <extra options, depending on what trigger it is>");
+                                sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6triggers add §3[Action] [Trigger type] [Apply On] [World Name/ALL] <extra options, depending on what trigger it is>");
                             } else if (args[3].equalsIgnoreCase("remove") || args[3].equalsIgnoreCase("delete")) {
                                 sender.sendMessage("§cMissing 5. argument §3[Trigger ID to remove]§c. Specify the §bID of the trigger§c which should be removed from this quest.");
-                                sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6triggers add §3[Trigger ID to remove (check the trigger list to get the ID)]");
+                                sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6triggers add §3[Trigger ID to remove (check the trigger list to get the ID)]");
                             } else if (args[3].equalsIgnoreCase("list")) {
                                 sender.sendMessage("§9Triggers for quest §b" + quest.getQuestName() + "§9:");
                                 int counter = 1;
@@ -855,7 +855,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                 }
                             } else {
                                 sender.sendMessage("§cPlease enter §b'yes' §cor §b'no§c!");
-                                sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6takeEnabled §3[yes/no] §7| Sets if players can accept the quest using §/nquests take. Enabled by default");
+                                sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6takeEnabled §3[yes/no] §7| Sets if players can accept the quest using §/nquests take. Enabled by default");
                             }
 
                         } else if (args[2].equalsIgnoreCase("acceptCooldown") || args[2].equalsIgnoreCase("cooldown")) {
@@ -911,7 +911,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
 
                     } else if (args[3].equalsIgnoreCase("setCommand")) {
                         sender.sendMessage("§cMissing 5. argument <new Console Command>§c. Specify the new console command here.");
-                        sender.sendMessage("§e/qadmin §6actions edit §2" + args[2] + " §3setCommand <new Console Command>");
+                        sender.sendMessage("§e/notquestsadminold §6actions edit §2" + args[2] + " §3setCommand <new Console Command>");
                     } else {
                         sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                     }
@@ -960,16 +960,16 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                             if (args[3].equalsIgnoreCase("add")) {
                                 if (args[4].equalsIgnoreCase("OtherQuest")) {
                                     sender.sendMessage("§cMissing 6. argument §3[Other Quest Name]§c. Specify the §bname of the quest§c the player has to complete.");
-                                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6requirements add §2OtherQuest §3[Other Quest Name] §3[amount of completions needed]");
+                                    sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6requirements add §2OtherQuest §3[Other Quest Name] §3[amount of completions needed]");
                                 } else if (args[4].equalsIgnoreCase("QuestPoints")) {
                                     sender.sendMessage("§cMissing 6. argument §3[Quest Point requirement amount]§c. Specify the §bamount of quest points§c the player needs to accept this quest.");
-                                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6requirements add §2QuestPoints §3[Quest Point requirement amount] §3[Deduct quest points?]");
+                                    sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6requirements add §2QuestPoints §3[Quest Point requirement amount] §3[Deduct quest points?]");
                                 } else if (args[4].equalsIgnoreCase("Money")) {
                                     sender.sendMessage("§cMissing 6. argument §3[Money requirement amount]§c. Specify the §bamount of money§c the player needs to accept this quest.");
-                                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6requirements add §2Money §3[Money requirement amount] §3[Deduct money?]");
+                                    sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6requirements add §2Money §3[Money requirement amount] §3[Deduct money?]");
                                 } else if (args[4].equalsIgnoreCase("Permission")) {
                                     sender.sendMessage("§cMissing 6. argument §3<Required permission node>§c. Specify the §bpermission§c the player needs to accept this quest.");
-                                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6requirements add §2Permission §3<Required permission node>");
+                                    sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6requirements add §2Permission §3<Required permission node>");
                                 } else {
                                     sender.sendMessage("§cInvalid Requirement Type");
                                 }
@@ -979,12 +979,12 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                         } else if (args[2].equalsIgnoreCase("npcs")) {
                             if (args[3].equalsIgnoreCase("add")) {
                                 sender.sendMessage("§cError: Missing last argument §b[ShowInNPC (yes/no)]§c. Specify if the quest should auto-show when a player right clicks the NPC.");
-                                sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6npcs add §3[NPCS ID] [ShowInNPC (yes/no)]");
+                                sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6npcs add §3[NPCS ID] [ShowInNPC (yes/no)]");
                             }
                         } else if (args[2].equalsIgnoreCase("triggers")) {
                             if (args[3].equalsIgnoreCase("add")) {
                                 sender.sendMessage("§cMissing 6. argument §3[Trigger Type]§c. Specify the §bTrigger type§c of the trigger.");
-                                sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6triggers add §3[Action] [Trigger type] [Apply On] [World Name/ALL] <extra options, depending on what trigger it is>");
+                                sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6triggers add §3[Action] [Trigger type] [Apply On] [World Name/ALL] <extra options, depending on what trigger it is>");
                                 sender.sendMessage("§eTrigger Types:");
                                 sender.sendMessage("§bDEATH");
                                 sender.sendMessage("§bNPCDEATH");
@@ -1021,13 +1021,13 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                             if (args[3].equalsIgnoreCase("add")) {
                                 if (args[4].equalsIgnoreCase("OtherQuest")) {
                                     sender.sendMessage("§cMissing 7. argument §3[Amount of completions]§c. Specify the §bamount of times§c the player has complete the quest.");
-                                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6requirements add §2OtherQuest §3[Other Quest name] [Amount of completions]");
+                                    sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6requirements add §2OtherQuest §3[Other Quest name] [Amount of completions]");
                                 } else if (args[4].equalsIgnoreCase("QuestPoints")) {
                                     sender.sendMessage("§cMissing 7. argument §3[Deduct quest points?]§c. Specify if you want to deduct the quest points from the player once he meets the requirements and accepts the quest.");
-                                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6requirements add §2QuestPoints §3[Quest Point requirement amount] §3[Deduct quest points?]");
+                                    sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6requirements add §2QuestPoints §3[Quest Point requirement amount] §3[Deduct quest points?]");
                                 } else if (args[4].equalsIgnoreCase("Money")) {
                                     sender.sendMessage("§cMissing 7. argument §3[Deduct money?]§c. Specify if you want to deduct the money from the player once he meets the requirements and accepts the quest.");
-                                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6requirements add §2Money §3[Money requirement amount] §3[Deduct money?]");
+                                    sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6requirements add §2Money §3[Money requirement amount] §3[Deduct money?]");
                                 } else if (args[4].equalsIgnoreCase("Permission")) {
                                     String requiredPermission = args[5];
                                     PermissionRequirement permissionRequirement = new PermissionRequirement(main, quest, quest.getRequirements().size() + 1, requiredPermission);
@@ -1084,38 +1084,38 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                 if (args[5].equalsIgnoreCase("DEATH")) {
 
                                     sender.sendMessage("§cMissing 7. argument §3[Apply On]§c. Specify where the trigger will apply (Examples:  'Quest', 'O1', 'O2'). (O1 = Objective 1)");
-                                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2DEATH §3[Apply On] [World Name/ALL] [Amount of Deaths]");
+                                    sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2DEATH §3[Apply On] [World Name/ALL] [Amount of Deaths]");
 
                                 } else if (args[5].equalsIgnoreCase("FAIL")) {
 
                                     sender.sendMessage("§cMissing 7. argument §3[Apply On]§c. Specify where the trigger will apply (Examples:  'Quest', 'O1', 'O2'). (O1 = Objective 1)");
-                                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2FAIL §3[Apply On] [World Name/ALL]");
+                                    sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2FAIL §3[Apply On] [World Name/ALL]");
                                 } else if (args[5].equalsIgnoreCase("COMPLETE")) {
 
                                     sender.sendMessage("§cMissing 7. argument §3[Apply On]§c. Specify where the trigger will apply (Examples:  'Quest', 'O1', 'O2'). (O1 = Objective 1)");
-                                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2COMPLETE §3[Apply On] [World Name/ALL]");
+                                    sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2COMPLETE §3[Apply On] [World Name/ALL]");
                                 } else if (args[5].equalsIgnoreCase("BEGIN")) {
 
                                     sender.sendMessage("§cMissing 7. argument §3[Apply On]§c. Specify where the trigger will apply (Examples:  'Quest', 'O1', 'O2'). (O1 = Objective 1)");
-                                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2BEGIN §3[Apply On] [World Name/ALL]");
+                                    sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2BEGIN §3[Apply On] [World Name/ALL]");
                                 } else if (args[5].equalsIgnoreCase("DISCONNECT")) {
 
                                     sender.sendMessage("§cMissing 7. argument §3[Apply On]§c. Specify where the trigger will apply (Examples:  'Quest', 'O1', 'O2'). (O1 = Objective 1)");
-                                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2DISCONNECT §3[Apply On] [World Name/ALL]");
+                                    sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2DISCONNECT §3[Apply On] [World Name/ALL]");
                                 } else if (args[5].equalsIgnoreCase("NPCDEATH")) {
 
                                     sender.sendMessage("§cMissing 7. argument §3[Apply On]§c. Specify where the trigger will apply (Examples:  'Quest', 'O1', 'O2'). (O1 = Objective 1)");
-                                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2NPCDEATH §3[Apply On] [World Name/ALL] [Amount of Deaths] [NPC ID]");
+                                    sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2NPCDEATH §3[Apply On] [World Name/ALL] [Amount of Deaths] [NPC ID]");
 
                                 } else if (args[5].equalsIgnoreCase("WORLDENTER")) {
 
                                     sender.sendMessage("§cMissing 7. argument §3[Apply On]§c. Specify where the trigger will apply (Examples:  'Quest', 'O1', 'O2'). (O1 = Objective 1)");
-                                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2WORLDENTER §3[Apply On] [World Name/ALL] [Amount of Enters] [World to Enter Name/ALL]");
+                                    sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2WORLDENTER §3[Apply On] [World Name/ALL] [Amount of Enters] [World to Enter Name/ALL]");
 
                                 } else if (args[5].equalsIgnoreCase("WORLDLEAVE")) {
 
                                     sender.sendMessage("§cMissing 7. argument §3[Apply On]§c. Specify where the trigger will apply (Examples:  'Quest', 'O1', 'O2'). (O1 = Objective 1)");
-                                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2WORLDLEAVE §3[Apply On] [World Name/ALL] [Amount of Leaves] [World to Leave Name/ALL]");
+                                    sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2WORLDLEAVE §3[Apply On] [World Name/ALL] [Amount of Leaves] [World to Leave Name/ALL]");
 
                                 } else {
                                     sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
@@ -1163,7 +1163,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                         sender.sendMessage("§aRequirement successfully added to quest §b" + quest.getQuestName() + "§a!");
                                     } else {
                                         sender.sendMessage("§cWrong last argument. Specify §bYes §cor §b No");
-                                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6requirements add §2QuestPoints §3[Quest Point requirement amount] §3[Deduct quest points?]");
+                                        sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6requirements add §2QuestPoints §3[Quest Point requirement amount] §3[Deduct quest points?]");
                                     }
 
                                 } else if (args[4].equalsIgnoreCase("Money")) {
@@ -1190,7 +1190,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                         sender.sendMessage("§aRequirement successfully added to quest §b" + quest.getQuestName() + "§a!");
                                     } else {
                                         sender.sendMessage("§cWrong last argument. Specify §bYes §cor §b No");
-                                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6requirements add §2Money §3[Money requirement amount] §3[Deduct money?]");
+                                        sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6requirements add §2Money §3[Money requirement amount] §3[Deduct money?]");
                                     }
 
                                 } else {
@@ -1206,38 +1206,38 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                 if (args[5].equalsIgnoreCase("DEATH")) {
 
                                     sender.sendMessage("§cMissing 8. argument §3[[World Name/ALL] ]§c. Specify in which world the trigger will apply (Examples:  'Nelphguard', 'ALL', 'world').");
-                                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2DEATH §3[Apply On] [World Name/ALL] [Amount of Deaths]");
+                                    sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2DEATH §3[Apply On] [World Name/ALL] [Amount of Deaths]");
 
                                 } else if (args[5].equalsIgnoreCase("FAIL")) {
 
                                     sender.sendMessage("§cMissing 8. argument §3[[World Name/ALL] ]§c. Specify in which world the trigger will apply (Examples:  'Nelphguard', 'ALL', 'world').");
-                                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2FAIL §3[Apply On] [World Name/ALL]");
+                                    sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2FAIL §3[Apply On] [World Name/ALL]");
                                 } else if (args[5].equalsIgnoreCase("COMPLETE")) {
 
                                     sender.sendMessage("§cMissing 8. argument §3[[World Name/ALL] ]§c. Specify in which world the trigger will apply (Examples:  'Nelphguard', 'ALL', 'world').");
-                                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2COMPLETE §3[Apply On] [World Name/ALL]");
+                                    sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2COMPLETE §3[Apply On] [World Name/ALL]");
                                 } else if (args[5].equalsIgnoreCase("BEGIN")) {
 
                                     sender.sendMessage("§cMissing 8. argument §3[[World Name/ALL] ]§c. Specify in which world the trigger will apply (Examples:  'Nelphguard', 'ALL', 'world').");
-                                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2BEGIN §3[Apply On] [World Name/ALL]");
+                                    sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2BEGIN §3[Apply On] [World Name/ALL]");
                                 } else if (args[5].equalsIgnoreCase("DISCONNECT")) {
 
                                     sender.sendMessage("§cMissing 8. argument §3[[World Name/ALL] ]§c. Specify in which world the trigger will apply (Examples:  'Nelphguard', 'ALL', 'world').");
-                                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2DISCONNECT §3[Apply On] [World Name/ALL]");
+                                    sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2DISCONNECT §3[Apply On] [World Name/ALL]");
                                 } else if (args[5].equalsIgnoreCase("NPCDEATH")) {
 
                                     sender.sendMessage("§cMissing 8. argument §3[[World Name/ALL] ]§c. Specify in which world the trigger will apply (Examples:  'Nelphguard', 'ALL', 'world').");
-                                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2NPCDEATH §3[Apply On] [World Name/ALL] [Amount of Deaths] [NPC ID]");
+                                    sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2NPCDEATH §3[Apply On] [World Name/ALL] [Amount of Deaths] [NPC ID]");
 
                                 } else if (args[5].equalsIgnoreCase("WORLDENTER")) {
 
                                     sender.sendMessage("§cMissing 8. argument §3[[World Name/ALL] ]§c. Specify in which world the trigger will apply (Examples:  'Nelphguard', 'ALL', 'world').");
-                                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2WORLDENTER §3[Apply On] [World Name/ALL] [Amount of Enters] [World to Enter Name/ALL]");
+                                    sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2WORLDENTER §3[Apply On] [World Name/ALL] [Amount of Enters] [World to Enter Name/ALL]");
 
                                 } else if (args[5].equalsIgnoreCase("WORLDLEAVE")) {
 
                                     sender.sendMessage("§cMissing 8. argument §3[[World Name/ALL] ]§c. Specify in which world the trigger will apply (Examples:  'Nelphguard', 'ALL', 'world').");
-                                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2WORLDLEAVE §3[Apply On] [World Name/ALL] [Amount of Leaves] [World to Leave Name/ALL]");
+                                    sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2WORLDLEAVE §3[Apply On] [World Name/ALL] [Amount of Leaves] [World to Leave Name/ALL]");
 
                                 } else {
                                     sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
@@ -1267,7 +1267,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                 if (args[5].equalsIgnoreCase("DEATH")) {
 
                                     sender.sendMessage("§cMissing 9. argument §3[Amount of Deaths]§c. Specify after which amount of deaths the trigger will start to trigger for every further death (or = amount of deaths)");
-                                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2DEATH §3" + args[6] + " [World Name/ALL] [Amount of Deaths]");
+                                    sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2DEATH §3" + args[6] + " [World Name/ALL] [Amount of Deaths]");
 
                                 } else if (args[5].equalsIgnoreCase("FAIL")) {
                                     final Action action = main.getQuestManager().getAction(args[4]);
@@ -1353,17 +1353,17 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                 } else if (args[5].equalsIgnoreCase("NPCDEATH")) {
 
                                     sender.sendMessage("§cMissing 8. argument §3[Amount of Deaths]§c. Specify after which amount of deaths the trigger will start to trigger for every further death (or = amount of deaths)");
-                                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2NPCDEATH §3" + args[6] + " [World Name/ALL] [Amount of Deaths] [NPC ID]");
+                                    sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2NPCDEATH §3" + args[6] + " [World Name/ALL] [Amount of Deaths] [NPC ID]");
 
                                 } else if (args[5].equalsIgnoreCase("WORLDENTER")) {
 
                                     sender.sendMessage("§cMissing 8. argument §3[Amount of Enters]§c. Specify after which amount of world enters the trigger will start to trigger for every further enter (or = amount of enters)");
-                                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2WORLDENTER §3[Apply On] [World Name/ALL] [Amount of Enters] [World to Enter Name/ALL]");
+                                    sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2WORLDENTER §3[Apply On] [World Name/ALL] [Amount of Enters] [World to Enter Name/ALL]");
 
                                 } else if (args[5].equalsIgnoreCase("WORLDLEAVE")) {
 
                                     sender.sendMessage("§cMissing 8. argument §3[Amount of Deaths]§c. Specify after which amount of world leaves the trigger will start to trigger for every further leave (or = amount of leaves)");
-                                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2WORLDLEAVE §3[Apply On] [World Name/ALL] [Amount of Leaves] [World to Leave Name/ALL]");
+                                    sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2WORLDLEAVE §3[Apply On] [World Name/ALL] [Amount of Leaves] [World to Leave Name/ALL]");
 
                                 } else {
                                     sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
@@ -1415,17 +1415,17 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                 } else if (args[5].equalsIgnoreCase("NPCDEATH")) {
 
                                     sender.sendMessage("§cMissing 10. argument §3[NPC ID]§c. Specify the ID of the NPC which has to die for the trigger to trigger");
-                                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2NPCDEATH §3" + args[6] + " [World Name/ALL] [Amount of Deaths] [NPC ID]");
+                                    sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2NPCDEATH §3" + args[6] + " [World Name/ALL] [Amount of Deaths] [NPC ID]");
 
                                 } else if (args[5].equalsIgnoreCase("WORLDENTER")) {
 
                                     sender.sendMessage("§cMissing 10. argument §3[World to Enter Name/ALL]§c. Specify 'ALL' or the name of the world which the player has to enter for the trigger to trigger");
-                                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2WORLDENTER §3[Apply On] [World Name/ALL] [Amount of Enters] [World to Enter Name/ALL]");
+                                    sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2WORLDENTER §3[Apply On] [World Name/ALL] [Amount of Enters] [World to Enter Name/ALL]");
 
                                 } else if (args[5].equalsIgnoreCase("WORLDLEAVE")) {
 
                                     sender.sendMessage("§cMissing 10. argument §3[World to Enter Name/ALL]§c. Specify 'ALL' or the name of the world which the player has to leave for the trigger to trigger");
-                                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2WORLDLEAVE §3[Apply On] [World Name/ALL] [Amount of Leaves] [World to Leave Name/ALL]");
+                                    sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2WORLDLEAVE §3[Apply On] [World Name/ALL] [Amount of Leaves] [World to Leave Name/ALL]");
 
                                 } else {
                                     sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
@@ -1643,14 +1643,14 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
 
 
     public void handleCommandsEditRewards(final CommandSender sender, final String[] args, final Quest quest) { //qa edit xxx rewards ...
-        if(args.length == 3){
-            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards add §3[Reward Type] ...");
-            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards list");
-            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards edit §3[Reward ID] ...");
-            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards clear");
+        if(args.length == 3) {
+            sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6rewards add §3[Reward Type] ...");
+            sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6rewards list");
+            sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6rewards edit §3[Reward ID] ...");
+            sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6rewards clear");
         } else if(args.length == 4){
             if (args[3].equalsIgnoreCase("add")) {
-                sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards add §3[Reward Type] ...");
+                sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6rewards add §3[Reward Type] ...");
                 sender.sendMessage("§cPlease specify a reward type!");
                 for (String reward : main.getQuestManager().getRewardTypesList()) {
                     sender.sendMessage(reward);
@@ -1665,7 +1665,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                 quest.removeAllRewards();
                 sender.sendMessage("§aAll rewards of quest §b" + quest.getQuestName() + " §ahave been removed!");
             } else if (args[3].equalsIgnoreCase("edit")) {
-                sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards edit §3[Reward ID] ...");
+                sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6rewards edit §3[Reward ID] ...");
                 sender.sendMessage("§cPlease specify the reward ID you want to edit! You can list the rewards and their IDs via /qa ... rewards list.");
             } else {
                 sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
@@ -1674,16 +1674,16 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
             if (args[3].equalsIgnoreCase("add")) {
                 if (args[4].equalsIgnoreCase("ConsoleCommand")) {
                     sender.sendMessage("§cMissing 6. argument §3[Console Command]§c. Specify the §bcommand §cwhich will be executed from the console as a reward. A '/' at the beginning is not required.");
-                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards add §2ConsoleCommand §3[Console Command]");
+                    sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6rewards add §2ConsoleCommand §3[Console Command]");
                 } else if (args[4].equalsIgnoreCase("QuestPoints")) {
                     sender.sendMessage("§cMissing 6. argument §3[Quest point reward amount]§c. Specify the §bamount of quest points §cthe player should receive.");
-                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards add §2QuestPoints §3[Quest point reward amount]");
+                    sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6rewards add §2QuestPoints §3[Quest point reward amount]");
                 } else if (args[4].equalsIgnoreCase("Item")) {
                     sender.sendMessage("§cMissing 6. argument §3[Item Name/hand]§c. Specify the §bitem type §cthe player should receive. If you use 'name'. the item you are holding in your main hand will be used.");
-                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards add §2Item §3[Item Name/hand] [Amount]");
+                    sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6rewards add §2Item §3[Item Name/hand] [Amount]");
                 } else if (args[4].equalsIgnoreCase("Money")) {
                     sender.sendMessage("§cMissing 6. argument §3[Amount]§c. Specify the §bamount of money §cthe player should receive.");
-                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards add §2Money §3[Amount]");
+                    sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6rewards add §2Money §3[Amount]");
                 } else {
                     for (String reward : main.getQuestManager().getRewardTypesList()) {
                         sender.sendMessage(reward);
@@ -1695,9 +1695,9 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                     if (quest.getRewards().size() >= rewardID && rewardID > 0) {
                         final Reward reward = quest.getRewardFromID(rewardID);
                         if (reward != null) {
-                            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards edit §2" + rewardID + " §3info §7 | Shows everything there is to know about this reward");
-                            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards edit §2" + rewardID + " §3displayName ... §7 | Manages the display name of the reward");
-                            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards edit §2" + rewardID + " §3remove §7 | Removes the reward from the quest");
+                            sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6rewards edit §2" + rewardID + " §3info §7 | Shows everything there is to know about this reward");
+                            sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6rewards edit §2" + rewardID + " §3displayName ... §7 | Manages the display name of the reward");
+                            sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6rewards edit §2" + rewardID + " §3remove §7 | Removes the reward from the quest");
 
                         } else {
                             sender.sendMessage("§cError: Reward with the ID §b" + reward + " §cwas not found for quest §b" + quest.getQuestName() + "§c!");
@@ -1734,7 +1734,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                 } else if (args[4].equalsIgnoreCase("Item")) {
                     sender.sendMessage("§cMissing 7. argument §3[Amount]§c. Specify the §bamount §cthe player should get from specified item.");
 
-                    sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards add §2Item §3[Item Name/hand] [Amount]");
+                    sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6rewards add §2Item §3[Item Name/hand] [Amount]");
                 } else if (args[4].equalsIgnoreCase("Money")) {
                     if (!main.isVaultEnabled()) {
                         sender.sendMessage("§cError: cannot create a money reward because Vault (needed for money stuff to work) is not installed on the server.");
@@ -1755,9 +1755,9 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                 if (reward != null) {
                     if (args[5].equalsIgnoreCase("displayName")) {
                         sender.sendMessage("§cMissing 7. argument!");
-                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards edit §2" + rewardID + " §3displayName set <New Display Name> §7 | Sets new reward Display Name. Only rewards with a display name set will be displayed.");
-                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards edit §2" + rewardID + " §3displayName remove §7 | Removes current reward Display Name");
-                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards edit §2" + rewardID + " §3displayName show §7 | Shows current reward Display Name");
+                        sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6rewards edit §2" + rewardID + " §3displayName set <New Display Name> §7 | Sets new reward Display Name. Only rewards with a display name set will be displayed.");
+                        sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6rewards edit §2" + rewardID + " §3displayName remove §7 | Removes current reward Display Name");
+                        sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6rewards edit §2" + rewardID + " §3displayName show §7 | Shows current reward Display Name");
 
                     } else if (args[5].equalsIgnoreCase("info")) {
                         sender.sendMessage("§9Reward §a" + rewardID + " §9for quest §b" + quest.getQuestName() + "§9:");
@@ -1769,9 +1769,9 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
 
                     } else {
                         sender.sendMessage("§cMissing 7. argument!");
-                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards edit §2" + rewardID + " §3info §7 | Shows everything there is to know about this reward");
-                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards edit §2" + rewardID + " §3displayName ... §7 | Manages the display name of the reward");
-                        sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards edit §2" + rewardID + " §3remove §7 | Removes the reward from the quest");
+                        sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6rewards edit §2" + rewardID + " §3info §7 | Shows everything there is to know about this reward");
+                        sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6rewards edit §2" + rewardID + " §3displayName ... §7 | Manages the display name of the reward");
+                        sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6rewards edit §2" + rewardID + " §3remove §7 | Removes the reward from the quest");
 
                     }
                 } else {
@@ -1838,7 +1838,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                             }
                         } else if(args[6].equalsIgnoreCase("set")){
                             sender.sendMessage("§cMissing 8. argument <new Display Name>!");
-                            sender.sendMessage("§e/qadmin §6edit §2" + args[1] + " §6rewards edit §2" + rewardID + " §3displayName set <New Display Name> §7 | Sets new reward Display Name. Only rewards with a display name set will be displayed.");
+                            sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6rewards edit §2" + rewardID + " §3displayName set <New Display Name> §7 | Sets new reward Display Name. Only rewards with a display name set will be displayed.");
                         } else {
                             sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null));
                         }

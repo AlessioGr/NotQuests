@@ -258,7 +258,7 @@ public class CommandManager {
 
     public void setupCommands() {
 
-        PluginCommand notQuestsAdminCommand = main.getCommand("notquestsadmin");
+        PluginCommand notQuestsAdminCommand = main.getCommand("notquestsadminold");
         if (notQuestsAdminCommand != null) {
             final CommandNotQuestsAdmin commandNotQuestsAdmin = new CommandNotQuestsAdmin(main);
             notQuestsAdminCommand.setTabCompleter(commandNotQuestsAdmin);
