@@ -48,11 +48,6 @@ public class WorldEnterTrigger extends Trigger {
         return worldToEnterName;
     }
 
-
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder) {
-
-    }
-
     @Override
     public void save() {
         main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".triggers." + getTriggerID() + ".specifics.worldToEnter", getWorldToEnterName());
@@ -62,5 +57,9 @@ public class WorldEnterTrigger extends Trigger {
     @Override
     public String getTriggerDescription() {
         return "World to enter: §f" + getWorldToEnterName();
+    }
+
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addTriggerBuilder) {
+
     }
 }
