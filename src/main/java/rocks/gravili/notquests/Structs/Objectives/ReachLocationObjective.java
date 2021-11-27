@@ -18,13 +18,22 @@
 
 package rocks.gravili.notquests.Structs.Objectives;
 
+import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
+import cloud.commandframework.arguments.standard.StringArrayArgument;
+import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Quest;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ReachLocationObjective extends Objective {
     private final Location min, max;
@@ -76,7 +85,43 @@ public class ReachLocationObjective extends Objective {
         return locationName;
     }
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder) {
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
+        manager.command(addObjectiveBuilder.literal("ReachLocation")
+                .senderType(Player.class)
+                .literal("worldeditselection")
+                .argument(StringArrayArgument.of("Location Name",
+                        (context, lastString) -> {
+                            final List<String> allArgs = context.getRawInput();
+                            final Audience audience = main.adventure().sender(context.getSender());
+                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "<Location Name>", "");
+                            ArrayList<String> completions = new ArrayList<>();
+                            completions.add("<Enter new Location name>");
+                            return completions;
+                        }
+                ), ArgumentDescription.of("Location name"))
+                .meta(CommandMeta.DESCRIPTION, "Adds a new ReachLocation Objective to a quest")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
 
+                    if (!main.isWorldEditEnabled()) {
+                        audience.sendMessage(MiniMessage.miniMessage().parse(
+                                NotQuestColors.errorGradient + "Error: The plugin 'WorldEdit' needs to be enabled in order to use this feature."
+                        ));
+                        return;
+                    }
+
+                    final Quest quest = context.get("quest");
+
+                    final String locationName = String.join(" ", (String[]) context.get("Location Name"));
+
+
+                    main.getWorldEditHook().handleReachLocationObjectiveCreation((Player) context.getSender(), quest, locationName);
+
+                    audience.sendMessage(MiniMessage.miniMessage().parse(
+                            NotQuestColors.successGradient + "ReachLocation Objective successfully added to Quest " + NotQuestColors.highlightGradient
+                                    + quest.getQuestName() + "</gradient>!</gradient>"
+                    ));
+
+                }));
     }
 }

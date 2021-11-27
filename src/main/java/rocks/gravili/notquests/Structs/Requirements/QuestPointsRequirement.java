@@ -18,9 +18,15 @@
 
 package rocks.gravili.notquests.Structs.Requirements;
 
+import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
+import cloud.commandframework.arguments.standard.IntegerArgument;
+import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
+import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Quest;
 import rocks.gravili.notquests.Structs.QuestPlayer;
@@ -45,10 +51,6 @@ public class QuestPointsRequirement extends Requirement {
         this.main = main;
         this.questPointRequirement = questPointRequirement;
         this.deductQuestPoints = deductQuestPoints;
-    }
-
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder) {
-
     }
 
 
@@ -90,5 +92,33 @@ public class QuestPointsRequirement extends Requirement {
             description += "§7--- Will quest points be deducted?: No";
         }
         return description;
+    }
+
+
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addRequirementBuilder) {
+        manager.command(addRequirementBuilder.literal("QuestPoints")
+                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of QuestPoints needed"))
+                .flag(
+                        manager.flagBuilder("deductQuestPoints")
+                                .withDescription(ArgumentDescription.of("Makes it so the required quest points are deducted from the players balance if the Quest is accepted."))
+                )
+                .meta(CommandMeta.DESCRIPTION, "Adds a new QuestPoints Requirement to a quest")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+
+                    final Quest quest = context.get("quest");
+
+                    final int amount = context.get("amount");
+                    final boolean deductQuestPoints = context.flags().isPresent("deductQuestPoints");
+
+                    QuestPointsRequirement questPointsRequirement = new QuestPointsRequirement(main, quest, quest.getRequirements().size() + 1, amount, deductQuestPoints);
+                    quest.addRequirement(questPointsRequirement);
+
+                    audience.sendMessage(MiniMessage.miniMessage().parse(
+                            NotQuestColors.successGradient + "QuestPoints Requirement successfully added to Quest " + NotQuestColors.highlightGradient
+                                    + quest.getQuestName() + "</gradient>!</gradient>"
+                    ));
+
+                }));
     }
 }

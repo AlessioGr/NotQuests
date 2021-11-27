@@ -19,12 +19,22 @@
 package rocks.gravili.notquests.Structs.Objectives;
 
 
+import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
+import cloud.commandframework.arguments.standard.IntegerArgument;
+import cloud.commandframework.arguments.standard.StringArgument;
+import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Quest;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TriggerCommandObjective extends Objective {
 
@@ -64,7 +74,38 @@ public class TriggerCommandObjective extends Objective {
     }
 
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder) {
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
+        manager.command(addObjectiveBuilder.literal("TriggerCommand")
+                .senderType(Player.class)
+                .argument(StringArgument.<CommandSender>newBuilder("Trigger name").withSuggestionsProvider(
+                        (context, lastString) -> {
+                            final List<String> allArgs = context.getRawInput();
+                            final Audience audience = main.adventure().sender(context.getSender());
+                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[New Trigger Name]", "[Amount of triggers needed]");
 
+                            ArrayList<String> completions = new ArrayList<>();
+                            completions.add("<Enter new TriggerCommand name>");
+
+                            return completions;
+                        }
+                ).single().build(), ArgumentDescription.of("Triggercommand name"))
+                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of times the trigger needs to be triggered to complete this objective."))
+                .meta(CommandMeta.DESCRIPTION, "Adds a new TriggerCommand Objective to a quest")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+                    final Quest quest = context.get("quest");
+
+                    final String triggerName = String.join(" ", (String[]) context.get("Trigger name"));
+
+                    final int amount = context.get("amount");
+
+                    TriggerCommandObjective triggerCommandObjective = new TriggerCommandObjective(main, quest, quest.getObjectives().size() + 1, triggerName, amount);
+                    quest.addObjective(triggerCommandObjective, true);
+                    audience.sendMessage(MiniMessage.miniMessage().parse(
+                            NotQuestColors.successGradient + "TriggerCommand Objective successfully added to Quest " + NotQuestColors.highlightGradient
+                                    + quest.getQuestName() + "</gradient>!</gradient>"
+                    ));
+
+                }));
     }
 }

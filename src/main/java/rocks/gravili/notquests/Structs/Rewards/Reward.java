@@ -18,7 +18,8 @@
 
 package rocks.gravili.notquests.Structs.Rewards;
 
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Quest;
@@ -46,7 +47,7 @@ public abstract class Reward {
     }
 
     public final String getRewardDisplayName() {
-        return ChatColor.translateAlternateColorCodes('&', rewardDisplayName);
+        return LegacyComponentSerializer.builder().hexColors().build().serialize(MiniMessage.miniMessage().parse(rewardDisplayName)).replace("&", "§");
     }
 
     public void setRewardDisplayName(final String newRewardDisplayName) {

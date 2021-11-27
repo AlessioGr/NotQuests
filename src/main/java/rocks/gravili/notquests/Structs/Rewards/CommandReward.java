@@ -18,14 +18,23 @@
 
 package rocks.gravili.notquests.Structs.Rewards;
 
+import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
+import cloud.commandframework.arguments.standard.StringArrayArgument;
+import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Quest;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CommandReward extends Reward {
 
@@ -83,7 +92,41 @@ public class CommandReward extends Reward {
         return consoleCommand;
     }
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder) {
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addRewardBuilder) {
+        manager.command(addRewardBuilder.literal("ConsoleCommand")
+                .argument(StringArrayArgument.of("ConsoleCommand",
+                        (context, lastString) -> {
+                            final List<String> allArgs = context.getRawInput();
+                            final Audience audience = main.adventure().sender(context.getSender());
+                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "<Enter Console Command>", "");
+                            ArrayList<String> completions = new ArrayList<>();
 
+                            if (lastString.startsWith("{")) {
+                                completions.addAll(main.getCommandManager().getAdminCommands().placeholders);
+                            } else {
+                                completions.add("<Enter Console Command>");
+                            }
+
+                            return completions;
+
+                        }
+                ), ArgumentDescription.of("Command which will be executed from the console as a reward. A '/' at the beginning is not required."))
+                .meta(CommandMeta.DESCRIPTION, "Adds a new ConsoleCommand Reward to a quest")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+
+                    final Quest quest = context.get("quest");
+
+                    final String consoleCommand = String.join(" ", (String[]) context.get("ConsoleCommand"));
+
+                    CommandReward commandReward = new CommandReward(main, quest, quest.getRewards().size() + 1, consoleCommand);
+                    quest.addReward(commandReward);
+
+                    audience.sendMessage(MiniMessage.miniMessage().parse(
+                            NotQuestColors.successGradient + "ConsoleCommand Reward successfully added to Quest " + NotQuestColors.highlightGradient
+                                    + quest.getQuestName() + "</gradient>!</gradient>"
+                    ));
+
+                }));
     }
 }

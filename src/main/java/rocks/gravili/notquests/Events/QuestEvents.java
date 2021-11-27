@@ -31,13 +31,9 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityBreedEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityDropItemEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.bukkit.event.player.PlayerItemConsumeEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.Inventory;
@@ -59,17 +55,48 @@ import static rocks.gravili.notquests.Commands.NotQuestColors.debugHighlightGrad
 public class QuestEvents implements Listener {
     private final NotQuests main;
 
+
     public QuestEvents(NotQuests main) {
         this.main = main;
     }
 
 
+    @EventHandler
+    public void playerChangeWorldEvent(PlayerChangedWorldEvent e) {
+        final Player player = e.getPlayer();
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+        if (questPlayer != null) {
+            if (questPlayer.getActiveQuests().size() > 0) {
+                for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+
+                    for (final ActiveTrigger activeTrigger : activeQuest.getActiveTriggers()) {
+                        if (activeTrigger.getTrigger() instanceof WorldEnterTrigger worldEnterTrigger) {
+                            if (e.getPlayer().getWorld().getName().equals(worldEnterTrigger.getWorldToEnterName())) {
+                                handleGeneralTrigger(questPlayer, activeTrigger);
+
+                            }
+
+                        } else if (activeTrigger.getTrigger() instanceof WorldLeaveTrigger worldLeaveTrigger) {
+                            if (e.getFrom().getName().equals(worldLeaveTrigger.getWorldToLeaveName())) {
+                                handleGeneralTrigger(questPlayer, activeTrigger);
+                            }
+
+                        }
+                    }
+
+
+                }
+            }
+        }
+    }
+
+
     @EventHandler(priority = EventPriority.LOWEST)
-    private void onEntityBreed(EntityBreedEvent e){
+    private void onEntityBreed(EntityBreedEvent e) {
         if (!e.isCancelled()) {
-            if(e.getBreeder() instanceof final Player player){
+            if (e.getBreeder() instanceof final Player player) {
                 final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
-                if(questPlayer == null){
+                if (questPlayer == null) {
                     return;
                 }
                 if (questPlayer.getActiveQuests().size() == 0) {
@@ -136,7 +163,7 @@ public class QuestEvents implements Listener {
                             //This is for the BreakBlocksObjective. It should deduct the progress if the player placed the same block again (if willDeductIfBlockPlaced() is set to true)
                             if (activeObjective.getObjective() instanceof BreakBlocksObjective breakBlocksObjective) {
                                 if (breakBlocksObjective.getBlockToBreak().equals(e.getBlock().getType())) {
-                                    if (breakBlocksObjective.willDeductIfBlockPlaced()) {
+                                    if (breakBlocksObjective.isDeductIfBlockPlaced()) {
                                         activeObjective.removeProgress(1, false);
                                     }
                                 }
@@ -166,14 +193,14 @@ public class QuestEvents implements Listener {
 
                                     //Check if the Material of the collected item is equal to the Material needed in the CollectItemsObjective
                                     if (!collectItemsObjective.getItemToCollect().getType().equals(e.getItem().getItemStack().getType())) {
-                                        return;
+                                        continue;
                                     }
 
                                     //If the objective-item which needs to be collected has an ItemMeta...
                                     if (collectItemsObjective.getItemToCollect().getItemMeta() != null) {
                                         //then check if the ItemMeta of the collected item is equal to the ItemMeta needed in the CollectItemsObjective
                                         if (!collectItemsObjective.getItemToCollect().getItemMeta().equals(e.getItem().getItemStack().getItemMeta())) {
-                                            return;
+                                            continue;
                                         }
                                     }
 
@@ -194,42 +221,45 @@ public class QuestEvents implements Listener {
 
 
     @EventHandler
-    private void onDropItemEvent(EntityDropItemEvent e) { //DEFAULT ENABLED FOR ITEM DROPS UNLIKE FOR BLOCK BREAKS
-        final Entity entity = e.getEntity();
-        if (entity instanceof final Player player) {
-            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
-            if (questPlayer != null) {
-                if (questPlayer.getActiveQuests().size() > 0) {
-                    for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-                        for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-                            if (activeObjective.isUnlocked()) {
-                                if (activeObjective.getObjective() instanceof final CollectItemsObjective collectItemsObjective) {
+    private void onDropItemEvent(PlayerDropItemEvent e) { //DEFAULT ENABLED FOR ITEM DROPS UNLIKE FOR BLOCK BREAKS
+        final Entity player = e.getPlayer();
 
-                                    //Check if the Material of the collected item is equal to the Material needed in the CollectItemsObjective
-                                    if (!collectItemsObjective.getItemToCollect().getType().equals(e.getItemDrop().getItemStack().getType())) {
-                                        return;
-                                    }
-
-                                    //If the objective-item which needs to be collected has an ItemMeta...
-                                    if (collectItemsObjective.getItemToCollect().getItemMeta() != null) {
-                                        //then check if the ItemMeta of the collected item is equal to the ItemMeta needed in the CollectItemsObjective
-                                        if (!collectItemsObjective.getItemToCollect().getItemMeta().equals(e.getItemDrop().getItemStack().getItemMeta())) {
-                                            return;
-                                        }
-                                    }
-
-                                    activeObjective.removeProgress(e.getItemDrop().getItemStack().getAmount(), false);
-
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+        if (questPlayer != null) {
+            if (questPlayer.getActiveQuests().size() > 0) {
+                for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+                    for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
+                        if (activeObjective.isUnlocked()) {
+                            if (activeObjective.getObjective() instanceof final CollectItemsObjective collectItemsObjective) {
+                                if (!collectItemsObjective.isDeductIfItemIsDropped()) {
+                                    continue;
                                 }
-                            }
 
+                                //Check if the Material of the collected item is equal to the Material needed in the CollectItemsObjective
+                                if (!collectItemsObjective.getItemToCollect().getType().equals(e.getItemDrop().getItemStack().getType())) {
+                                    continue;
+                                }
+
+                                //If the objective-item which needs to be collected has an ItemMeta...
+                                if (collectItemsObjective.getItemToCollect().getItemMeta() != null) {
+                                    //then check if the ItemMeta of the collected item is equal to the ItemMeta needed in the CollectItemsObjective
+                                    if (!collectItemsObjective.getItemToCollect().getItemMeta().equals(e.getItemDrop().getItemStack().getItemMeta())) {
+                                        continue;
+                                    }
+                                }
+
+                                activeObjective.removeProgress(e.getItemDrop().getItemStack().getAmount(), false);
+
+                            }
                         }
-                        activeQuest.removeCompletedObjectives(true);
+
                     }
-                    questPlayer.removeCompletedQuests();
+                    activeQuest.removeCompletedObjectives(true);
                 }
+                questPlayer.removeCompletedQuests();
             }
         }
+
 
     }
 
@@ -327,14 +357,14 @@ public class QuestEvents implements Listener {
 
                                 //Check if the Material of the consumed item is equal to the Material needed in the ConsumeItemsObjective
                                 if (!consumeItemsObjective.getItemToConsume().getType().equals(e.getItem().getType())) {
-                                    return;
+                                    continue;
                                 }
 
                                 //If the objectiv-item which needs to be crafted has an ItemMeta...
                                 if (consumeItemsObjective.getItemToConsume().getItemMeta() != null) {
                                     //then check if the ItemMeta of the consumed item is equal to the ItemMeta needed in the ConsumeItemsObjective
                                     if (!consumeItemsObjective.getItemToConsume().getItemMeta().equals(e.getItem().getItemMeta())) {
-                                        return;
+                                        continue;
                                     }
                                 }
 
@@ -373,35 +403,7 @@ public class QuestEvents implements Listener {
     }
 
 
-    @EventHandler
-    public void playerChangeWorldEvent(PlayerChangedWorldEvent e) {
 
-
-        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(e.getPlayer().getUniqueId());
-        if (questPlayer != null) {
-            if (questPlayer.getActiveQuests().size() > 0) {
-                for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-
-                    for (final ActiveTrigger activeTrigger : activeQuest.getActiveTriggers()) {
-                        if (activeTrigger.getTrigger() instanceof WorldEnterTrigger worldEnterTrigger) {
-                            if (e.getPlayer().getWorld().getName().equals(worldEnterTrigger.getWorldToEnterName())) {
-                                handleGeneralTrigger(questPlayer, activeTrigger);
-
-                            }
-
-                        } else if (activeTrigger.getTrigger() instanceof WorldLeaveTrigger worldLeaveTrigger) {
-                            if (e.getFrom().getName().equals(worldLeaveTrigger.getWorldToLeaveName())) {
-                                handleGeneralTrigger(questPlayer, activeTrigger);
-                            }
-
-                        }
-                    }
-
-
-                }
-            }
-        }
-    }
 
 
     @EventHandler
@@ -607,7 +609,7 @@ public class QuestEvents implements Listener {
 
                                     final Location minLocation = reachLocationObjective.getMinLocation();
                                     if (minLocation.getWorld() != null && currentLocation.getWorld() != null && !currentLocation.getWorld().equals(minLocation.getWorld())) {
-                                        return;
+                                        continue;
                                     }
                                     final Location maxLocation = reachLocationObjective.getMaxLocation();
                                     if (currentLocation.getX() >= minLocation.getX() && currentLocation.getX() <= maxLocation.getX()) {

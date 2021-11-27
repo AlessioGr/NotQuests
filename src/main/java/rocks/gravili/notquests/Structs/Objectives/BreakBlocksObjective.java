@@ -25,9 +25,11 @@ import cloud.commandframework.bukkit.parsers.MaterialArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Quest;
 
@@ -50,7 +52,7 @@ public class BreakBlocksObjective extends Objective {
 
         this.main = main;
         blockToBreak = Material.valueOf(main.getDataManager().getQuestsData().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.blockToBreak.material"));
-        deductIfBlockIsPlaced = main.getDataManager().getQuestsData().getBoolean("quests." + questName + ".objectives." + objectiveNumber + ".specifics.deductIfBlockPlaced");
+        deductIfBlockIsPlaced = main.getDataManager().getQuestsData().getBoolean("quests." + questName + ".objectives." + objectiveNumber + ".specifics.deductIfBlockPlaced", true);
     }
 
     @Override
@@ -63,7 +65,7 @@ public class BreakBlocksObjective extends Objective {
     @Override
     public void save() {
         main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.blockToBreak.material", getBlockToBreak().toString());
-        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName()  + ".objectives." + getObjectiveID() + ".specifics.deductIfBlockPlaced", willDeductIfBlockPlaced());
+        main.getDataManager().getQuestsData().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.deductIfBlockPlaced", isDeductIfBlockPlaced());
 
     }
 
@@ -76,7 +78,7 @@ public class BreakBlocksObjective extends Objective {
         return super.getProgressNeeded();
     }
 
-    public final boolean willDeductIfBlockPlaced() {
+    public final boolean isDeductIfBlockPlaced() {
         return deductIfBlockIsPlaced;
     }
 
@@ -85,12 +87,23 @@ public class BreakBlocksObjective extends Objective {
                 .argument(MaterialArgument.of("material"), ArgumentDescription.of("Material of the block which needs to be broken."))
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of blocks which need to be broken"))
                 .flag(
-                        manager.flagBuilder("deductIfBlockIsPlaced")
-                                .withDescription(ArgumentDescription.of("Determines if Quest progress should be removed if a block is placed"))
+                        manager.flagBuilder("doNotDeductIfBlockIsPlaced")
+                                .withDescription(ArgumentDescription.of("Makes it so Quest progress is not removed if the block is placed"))
                 )
                 .meta(CommandMeta.DESCRIPTION, "Adds a new BreakBlocks Objective to a quest")
                 .handler((context) -> {
                     final Audience audience = main.adventure().sender(context.getSender());
+                    final Quest quest = context.get("quest");
+                    final Material material = context.get("material");
+                    final int amount = context.get("amount");
+                    final boolean deductIfBlockIsPlaced = !context.flags().isPresent("doNotDeductIfBlockIsPlaced");
+
+                    BreakBlocksObjective breakBlocksObjective = new BreakBlocksObjective(main, quest, quest.getObjectives().size() + 1, material, amount, deductIfBlockIsPlaced);
+                    quest.addObjective(breakBlocksObjective, true);
+                    audience.sendMessage(MiniMessage.miniMessage().parse(
+                            NotQuestColors.successGradient + "BreakBlocks Objective successfully added to Quest " + NotQuestColors.highlightGradient
+                                    + quest.getQuestName() + "</gradient>!</gradient>"
+                    ));
 
                 }));
     }

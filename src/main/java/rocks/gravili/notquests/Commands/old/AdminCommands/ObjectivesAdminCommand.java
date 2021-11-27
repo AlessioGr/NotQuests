@@ -215,7 +215,7 @@ public class ObjectivesAdminCommand {
                             ItemStack holdingItem = player.getInventory().getItemInMainHand();
                             int amountToCollect = Integer.parseInt(args[6]);
 
-                            CollectItemsObjective collectItemsObjective = new CollectItemsObjective(main, quest, quest.getObjectives().size() + 1, holdingItem, amountToCollect);
+                            CollectItemsObjective collectItemsObjective = new CollectItemsObjective(main, quest, quest.getObjectives().size() + 1, holdingItem, amountToCollect, true);
                             quest.addObjective(collectItemsObjective, true);
                             sender.sendMessage("§aObjective successfully added to quest §b" + quest.getQuestName() + "§a!");
 
@@ -229,7 +229,7 @@ public class ObjectivesAdminCommand {
                             int amountToCollect = Integer.parseInt(args[6]);
 
 
-                            CollectItemsObjective collectItemsObjective = new CollectItemsObjective(main, quest, quest.getObjectives().size() + 1, itemStack, amountToCollect);
+                            CollectItemsObjective collectItemsObjective = new CollectItemsObjective(main, quest, quest.getObjectives().size() + 1, itemStack, amountToCollect, true);
                             quest.addObjective(collectItemsObjective, true);
                             sender.sendMessage("§aObjective successfully added to quest §b" + quest.getQuestName() + "§a!");
 

@@ -20,12 +20,15 @@ package rocks.gravili.notquests.Managers;
 
 import org.bukkit.Particle;
 
+import java.util.List;
+
 /**
  * This is the Configuration Class which contains the settings which can be configured in the General.conf
  *
  * @author Alessio Gravili
  */
 public class Configuration {
+
 
     /**
      * MYSQL Database Connection Information
@@ -52,6 +55,8 @@ public class Configuration {
 
 
     private boolean armorStandPreventEditing = true;
+
+    public List<String> journalItemEnabledWorlds;
 
 
     //Particles

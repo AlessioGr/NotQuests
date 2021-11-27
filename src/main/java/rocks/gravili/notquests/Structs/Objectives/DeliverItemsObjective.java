@@ -18,16 +18,33 @@
 
 package rocks.gravili.notquests.Structs.Objectives;
 
+import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
+import cloud.commandframework.arguments.standard.IntegerArgument;
+import cloud.commandframework.arguments.standard.StringArgument;
+import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
+import rocks.gravili.notquests.Commands.NotQuestColors;
+import rocks.gravili.notquests.Commands.newCMDs.arguments.MaterialOrHandArgument;
+import rocks.gravili.notquests.Commands.newCMDs.arguments.wrappers.MaterialOrHand;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Quest;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 public class DeliverItemsObjective extends Objective {
@@ -76,35 +93,137 @@ public class DeliverItemsObjective extends Objective {
         }
     }
 
-    @Override
-    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
-        String toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.base", player)
-                .replaceAll("%EVENTUALCOLOR%", eventualColor)
-                .replaceAll("%ITEMTODELIVERTYPE%", "" + getItemToDeliver().getType())
-                .replaceAll("%ITEMTODELIVERNAME%", "" + getItemToDeliver().getItemMeta().getDisplayName());
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
+        manager.command(addObjectiveBuilder.literal("DeliverItems")
+                .argument(MaterialOrHandArgument.of("material", main), ArgumentDescription.of("Material of the item which needs to be delivered."))
+                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of items which need to be delivered."))
+                .argument(StringArgument.<CommandSender>newBuilder("NPC or Armorstand").withSuggestionsProvider((context, lastString) -> {
+                    ArrayList<String> completions = new ArrayList<>();
+                    for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
+                        completions.add("" + npc.getId());
+                    }
+                    completions.add("armorstand");
+                    final List<String> allArgs = context.getRawInput();
+                    final Audience audience = main.adventure().sender(context.getSender());
+                    main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Recipient NPC ID / 'armorstand']", "");
 
-        if (main.isCitizensEnabled() && getRecipientNPCID() != -1) {
-            final NPC npc = CitizensAPI.getNPCRegistry().getById(getRecipientNPCID());
-            if (npc != null) {
-                toReturn += "\n      §7" + eventualColor + "Deliver it to §f" + eventualColor + npc.getName();
-            } else {
-                toReturn += "\n      §7" + eventualColor + "The delivery NPC is currently not available!";
-            }
-        } else {
+                    return completions;
+                }).build(), ArgumentDescription.of("ID of the Citizens NPC or 'armorstand' to whom the items should be delivered."))
+                .meta(CommandMeta.DESCRIPTION, "Adds a new DeliverItems Objective to a quest.")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+                    final Quest quest = context.get("quest");
+                    final int amountToDeliver = context.get("amount");
 
-            if (getRecipientNPCID() != -1) {
-                toReturn += "    §cError: Citizens plugin not installed. Contact an admin.";
-            } else { //Armor Stands
-                final UUID armorStandUUID = getRecipientArmorStandUUID();
-                if (armorStandUUID != null) {
-                    toReturn += "    §7" + eventualColor + "Deliver it to §f" + eventualColor + main.getArmorStandManager().getArmorStandName(armorStandUUID);
-                } else {
-                    toReturn += "    §7" + eventualColor + "The target Armor Stand is currently not available!";
-                }
-            }
+                    final MaterialOrHand materialOrHand = context.get("material");
+                    ItemStack itemToDeliver;
+                    if (materialOrHand.hand) { //"hand"
+                        if (context.getSender() instanceof Player player) {
+                            itemToDeliver = player.getInventory().getItemInMainHand();
+                        } else {
+                            audience.sendMessage(MiniMessage.miniMessage().parse(
+                                    NotQuestColors.errorGradient + "This must be run by a player."
+                            ));
+                            return;
+                        }
+                    } else {
+                        itemToDeliver = new ItemStack(materialOrHand.material, 1);
+                    }
 
-        }
-        return toReturn;
+
+                    final String npcIDOrArmorstand = context.get("NPC or Armorstand");
+
+
+                    if (!npcIDOrArmorstand.equalsIgnoreCase("armorstand")) {
+                        if (!main.isCitizensEnabled()) {
+                            audience.sendMessage(MiniMessage.miniMessage().parse(
+                                    NotQuestColors.errorGradient + "Error: Any kind of NPC stuff has been disabled, because you don't have the Citizens plugin installed on your server. You need to install the Citizens plugin in order to use Citizen NPCs. You can, however, use armor stands as an alternative. To do that, just enter 'armorstand' instead of the NPC ID."
+                            ));
+                            return;
+                        }
+                        int npcID;
+                        try {
+                            npcID = Integer.parseInt(npcIDOrArmorstand);
+                        } catch (NumberFormatException e) {
+                            audience.sendMessage(
+                                    MiniMessage.miniMessage().parse(
+                                            NotQuestColors.errorGradient + "Invalid NPC ID."
+                                    )
+                            );
+                            return;
+                        }
+                        DeliverItemsObjective deliverItemsObjective = new DeliverItemsObjective(main, quest, quest.getObjectives().size() + 1, itemToDeliver, amountToDeliver, npcID);
+
+                        quest.addObjective(deliverItemsObjective, true);
+                        audience.sendMessage(MiniMessage.miniMessage().parse(
+                                NotQuestColors.successGradient + "DeliverItems Objective successfully added to Quest " + NotQuestColors.highlightGradient
+                                        + quest.getQuestName() + "</gradient>!</gradient>"
+                        ));
+                    } else {//Armorstands
+                        if (context.getSender() instanceof Player player) {
+
+
+                            Random rand = new Random();
+                            int randomNum = rand.nextInt((Integer.MAX_VALUE - 1) + 1) + 1;
+
+                            main.getDataManager().getItemStackCache().put(randomNum, itemToDeliver);
+
+
+                            ItemStack itemStack = new ItemStack(Material.PAPER, 1);
+                            //give a specialitem. clicking an armorstand with that special item will remove the pdb.
+
+                            NamespacedKey key = new NamespacedKey(main, "notquests-item");
+                            NamespacedKey QuestNameKey = new NamespacedKey(main, "notquests-questname");
+
+                            NamespacedKey ItemStackKey = new NamespacedKey(main, "notquests-itemstackcache");
+                            NamespacedKey ItemStackAmountKey = new NamespacedKey(main, "notquests-itemstackamount");
+
+                            ItemMeta itemMeta = itemStack.getItemMeta();
+                            //Only paper List<Component> lore = new ArrayList<>();
+                            List<String> lore = new ArrayList<>();
+
+                            assert itemMeta != null;
+
+                            itemMeta.getPersistentDataContainer().set(QuestNameKey, PersistentDataType.STRING, quest.getQuestName());
+                            itemMeta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, 7);
+
+
+                            itemMeta.getPersistentDataContainer().set(ItemStackKey, PersistentDataType.INTEGER, randomNum);
+                            itemMeta.getPersistentDataContainer().set(ItemStackAmountKey, PersistentDataType.INTEGER, amountToDeliver);
+
+
+                            //Only paper itemMeta.displayName(Component.text("§dCheck Armor Stand", NamedTextColor.LIGHT_PURPLE));
+                            itemMeta.setDisplayName("§dAdd DeliverItems Objective to Armor Stand");
+                            //Only paper lore.add(Component.text("§fRight-click an Armor Stand to see which Quests are attached to it."));
+                            lore.add("§fRight-click an Armor Stand to add the following objective to it:");
+                            lore.add("§eDeliverItems §fObjective of Quest §b" + quest.getQuestName() + "§f.");
+
+                            itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+                            //Only paper itemMeta.lore(lore);
+
+                            itemMeta.setLore(lore);
+                            itemStack.setItemMeta(itemMeta);
+
+                            player.getInventory().addItem(itemStack);
+
+                            audience.sendMessage(
+                                    MiniMessage.miniMessage().parse(
+                                            NotQuestColors.successGradient + "You have been given an item with which you can add the DeliverItems Objective to an armor stand. Check your inventory!"
+                                    )
+                            );
+
+
+                        } else {
+                            audience.sendMessage(
+                                    MiniMessage.miniMessage().parse(
+                                            NotQuestColors.errorGradient + "Must be a player!"
+                                    )
+                            );
+                        }
+                    }
+
+
+                }));
     }
 
     @Override
@@ -136,8 +255,41 @@ public class DeliverItemsObjective extends Objective {
         return recipientArmorStandUUID;
     }
 
+    @Override
+    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
+        final String displayName;
+        if (getItemToDeliver().getItemMeta() != null) {
+            displayName = getItemToDeliver().getItemMeta().getDisplayName();
+        } else {
+            displayName = getItemToDeliver().getType().name();
+        }
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
+        String toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.base", player)
+                .replaceAll("%EVENTUALCOLOR%", eventualColor)
+                .replaceAll("%ITEMTODELIVERTYPE%", "" + getItemToDeliver().getType())
+                .replaceAll("%ITEMTODELIVERNAME%", "" + displayName);
 
+        if (main.isCitizensEnabled() && getRecipientNPCID() != -1) {
+            final NPC npc = CitizensAPI.getNPCRegistry().getById(getRecipientNPCID());
+            if (npc != null) {
+                toReturn += "\n      §7" + eventualColor + "Deliver it to §f" + eventualColor + npc.getName();
+            } else {
+                toReturn += "\n      §7" + eventualColor + "The delivery NPC is currently not available!";
+            }
+        } else {
+
+            if (getRecipientNPCID() != -1) {
+                toReturn += "    §cError: Citizens plugin not installed. Contact an admin.";
+            } else { //Armor Stands
+                final UUID armorStandUUID = getRecipientArmorStandUUID();
+                if (armorStandUUID != null) {
+                    toReturn += "    §7" + eventualColor + "Deliver it to §f" + eventualColor + main.getArmorStandManager().getArmorStandName(armorStandUUID);
+                } else {
+                    toReturn += "    §7" + eventualColor + "The target Armor Stand is currently not available!";
+                }
+            }
+
+        }
+        return toReturn;
     }
 }

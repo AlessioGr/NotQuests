@@ -20,8 +20,11 @@ package rocks.gravili.notquests.Managers;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
+import cloud.commandframework.arguments.flags.CommandFlag;
 import cloud.commandframework.arguments.standard.StringArgument;
+import cloud.commandframework.arguments.standard.StringArrayArgument;
 import cloud.commandframework.bukkit.CloudBukkitCapabilities;
+import cloud.commandframework.bukkit.parsers.WorldArgument;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.minecraft.extras.MinecraftExceptionHandler;
@@ -32,16 +35,21 @@ import me.lucko.commodore.CommodoreProvider;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import rocks.gravili.notquests.Commands.CommandNotQuests;
 import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.Commands.newCMDs.AdminCommands;
 import rocks.gravili.notquests.Commands.newCMDs.AdminEditCommands;
+import rocks.gravili.notquests.Commands.newCMDs.arguments.ActionSelector;
+import rocks.gravili.notquests.Commands.newCMDs.arguments.ApplyOnSelector;
 import rocks.gravili.notquests.Commands.newCMDs.arguments.QuestSelector;
 import rocks.gravili.notquests.Commands.old.CommandNotQuestsAdmin;
 import rocks.gravili.notquests.NotQuests;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -64,6 +72,15 @@ public class CommandManager {
     private AdminCommands adminCommands;
     private AdminEditCommands adminEditCommands;
 
+
+    //Re-usable value flags
+    public final CommandFlag<String[]> nametag_containsany;
+    public final CommandFlag<String[]> nametag_equals;
+
+    public final CommandFlag<Integer> applyOn; //0 = Quest
+    public final CommandFlag<World> world;
+    public final CommandFlag<String> triggerWorldString;
+
     public CommandManager(final NotQuests main) {
         this.main = main;
         if (CommodoreProvider.isSupported()) {
@@ -72,6 +89,71 @@ public class CommandManager {
         } else {
             commodore = null;
         }
+
+        nametag_containsany = CommandFlag
+                .newBuilder("nametag_containsany")
+                .withArgument(StringArrayArgument.of("nametag_containsany",
+                        (context, lastString) -> {
+                            final List<String> allArgs = context.getRawInput();
+                            final Audience audience = main.adventure().sender((CommandSender) context.getSender());
+                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "<Enter nametag_containsany flag value>", "");
+                            ArrayList<String> completions = new ArrayList<>();
+                            completions.add("<nametag_containsany flag value>");
+                            return completions;
+                        }
+                ))
+                .withDescription(ArgumentDescription.of("This word or every word seperated by a space needs to be part of the nametag"))
+                .build();
+
+        nametag_equals = CommandFlag
+                .newBuilder("nametag_equals")
+                .withArgument(StringArrayArgument.of("nametag_equals",
+                        (context, lastString) -> {
+                            final List<String> allArgs = context.getRawInput();
+                            final Audience audience = main.adventure().sender((CommandSender) context.getSender());
+                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "<Enter nametag_equals flag value>", "");
+                            ArrayList<String> completions = new ArrayList<>();
+                            completions.add("<nametag_equals flag value>");
+                            return completions;
+                        }
+                ))
+                .withDescription(ArgumentDescription.of("What the nametag has to be equal"))
+                .build();
+
+        world = CommandFlag
+                .newBuilder("world")
+                .withArgument(WorldArgument.of("world"))
+                .withDescription(ArgumentDescription.of("World Name"))
+                .build();
+
+
+        applyOn = CommandFlag
+                .newBuilder("applyOn")
+                .withArgument(ApplyOnSelector.of("applyOn", main, "quest"))
+                .withDescription(ArgumentDescription.of("To which part of the Quest it should apply (Examples: 'Quest', 'O1', 'O2. (O1 = Objective 1)."))
+                .build(); //0 = Quest
+
+        triggerWorldString = CommandFlag
+                .newBuilder("world_name")
+                .withArgument(StringArgument.<CommandSender>newBuilder("world_name").withSuggestionsProvider(
+                        (context, lastString) -> {
+                            final List<String> allArgs = context.getRawInput();
+                            final Audience audience = main.adventure().sender(context.getSender());
+                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[World Name / 'ALL']", "");
+
+                            ArrayList<String> completions = new ArrayList<>();
+
+                            completions.add("ALL");
+
+                            for (final World world : Bukkit.getWorlds()) {
+                                completions.add(world.getName());
+                            }
+
+                            return completions;
+                        }
+                ).single().build())
+                .withDescription(ArgumentDescription.of("World where the Trigger applies (Examples: 'world_the_end', 'farmworld', 'world', 'ALL')."))
+                .build();
     }
 
 
@@ -113,17 +195,13 @@ public class CommandManager {
                 return;
             }
 
-
-            adminCommandBuilder = commandManager.commandBuilder("qa2", ArgumentDescription.of("Admin commands for NotQuests"), "notquestsadmin2, nqa2")
+            adminCommandBuilder = commandManager.commandBuilder("notquestsadmin", ArgumentDescription.of("Admin commands for NotQuests"),
+                            "nquestsadmin", "nquestadmin", "notquestadmin", "qadmin", "questadmin", "qa", "qag", "nqa")
                     .permission("notquests.admin");
 
             adminEditCommandBuilder = adminCommandBuilder
                     .literal("edit")
-                    .argument(new QuestSelector<>(
-                            true,
-                            "quest",
-                            main
-                    ), ArgumentDescription.of("Quest Name"));
+                    .argument(QuestSelector.of("quest", main), ArgumentDescription.of("Quest Name"));
 
             adminEditAddObjectiveCommandBuilder = adminEditCommandBuilder
                     .literal("objectives")
@@ -136,7 +214,8 @@ public class CommandManager {
                     .literal("add");
             adminEditAddTriggerCommandBuilder = adminEditCommandBuilder
                     .literal("triggers")
-                    .literal("add");
+                    .literal("add")
+                    .argument(ActionSelector.of("action", main), ArgumentDescription.of("Action which will be executed when the Trigger triggers."));
 
             //asynchronous completions
             if (commandManager.queryCapability(CloudBukkitCapabilities.ASYNCHRONOUS_COMPLETION)) {
@@ -152,7 +231,7 @@ public class CommandManager {
             }
 
             minecraftHelp = new MinecraftHelp<>(
-                    "/qa2 help",
+                    "/qa help",
                     main.adventure()::sender,
                     commandManager
             );
@@ -241,7 +320,7 @@ public class CommandManager {
 
         //Help menu
         commandManager.command(adminCommandBuilder.meta(CommandMeta.DESCRIPTION, "Opens the help menu").handler((context) -> {
-            minecraftHelp.queryCommands("qa2 *", context.getSender());
+            minecraftHelp.queryCommands("qa *", context.getSender());
             final Audience audience = main.adventure().sender(context.getSender());
             final List<String> allArgs = context.getRawInput();
             main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[What would you like to do?]", "[...]");
@@ -252,7 +331,7 @@ public class CommandManager {
                         .argument(StringArgument.optional("query", StringArgument.StringMode.GREEDY))
 
                         .handler(context -> {
-                            minecraftHelp.queryCommands(context.getOrDefault("query", "qa2 *"), context.getSender());
+                            minecraftHelp.queryCommands(context.getOrDefault("query", "qa *"), context.getSender());
                         })
         );
 

@@ -18,12 +18,20 @@
 
 package rocks.gravili.notquests.Structs.Rewards;
 
+import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
+import cloud.commandframework.arguments.standard.IntegerArgument;
+import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import rocks.gravili.notquests.Commands.NotQuestColors;
+import rocks.gravili.notquests.Commands.newCMDs.arguments.MaterialOrHandArgument;
+import rocks.gravili.notquests.Commands.newCMDs.arguments.wrappers.MaterialOrHand;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Quest;
 
@@ -72,7 +80,44 @@ public class ItemReward extends Reward {
         return item;
     }
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder) {
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addRewardBuilder) {
+        manager.command(addRewardBuilder.literal("Item")
+                .argument(MaterialOrHandArgument.of("material", main), ArgumentDescription.of("Material of the item which the player should receive. If you use 'hand', the item you are holding in your main hand will be used."))
+                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of items which the player will receive."))
+                .meta(CommandMeta.DESCRIPTION, "Adds a new Item Reward to a quest")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
 
+                    final Quest quest = context.get("quest");
+
+
+                    final MaterialOrHand materialOrHand = context.get("material");
+                    final int itemRewardAmount = context.get("amount");
+
+                    ItemStack itemStack;
+                    if (materialOrHand.hand) { //"hand"
+                        if (context.getSender() instanceof Player player) {
+                            itemStack = player.getInventory().getItemInMainHand().clone();
+                            itemStack.setAmount(itemRewardAmount);
+                        } else {
+                            audience.sendMessage(MiniMessage.miniMessage().parse(
+                                    NotQuestColors.errorGradient + "This must be run by a player."
+                            ));
+                            return;
+                        }
+                    } else {
+                        itemStack = new ItemStack(materialOrHand.material, itemRewardAmount);
+                    }
+
+                    ItemReward itemReward = new ItemReward(main, quest, quest.getRewards().size() + 1, itemStack);
+
+                    quest.addReward(itemReward);
+
+                    audience.sendMessage(MiniMessage.miniMessage().parse(
+                            NotQuestColors.successGradient + "Item Reward successfully added to Quest " + NotQuestColors.highlightGradient
+                                    + quest.getQuestName() + "</gradient>!</gradient>"
+                    ));
+
+                }));
     }
 }

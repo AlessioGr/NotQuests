@@ -18,45 +18,91 @@
 
 package rocks.gravili.notquests.Commands.newCMDs.arguments;
 
+import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.arguments.CommandArgument;
 import cloud.commandframework.arguments.parser.ArgumentParseResult;
 import cloud.commandframework.arguments.parser.ArgumentParser;
 import cloud.commandframework.bukkit.arguments.selector.SinglePlayerSelector;
 import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.exceptions.parsing.NoInputProvidedException;
-import io.leangen.geantyref.TypeToken;
+import net.kyori.adventure.audience.Audience;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.ActiveQuest;
 import rocks.gravili.notquests.Structs.Quest;
 import rocks.gravili.notquests.Structs.QuestPlayer;
 
 import java.util.List;
 import java.util.Queue;
 import java.util.UUID;
+import java.util.function.BiFunction;
 
-public class ActiveQuestSelector<C> extends CommandArgument<C, Quest> {
+public class ActiveQuestSelector<C> extends CommandArgument<C, ActiveQuest> {
 
-    public ActiveQuestSelector(
-            boolean required,
-            String name,
+    protected ActiveQuestSelector(
+            final boolean required,
+            final @NonNull String name,
+            final @NonNull String defaultValue,
+            final @Nullable BiFunction<@NonNull CommandContext<C>, @NonNull String,
+                    @NonNull List<@NonNull String>> suggestionsProvider,
+            final @NonNull ArgumentDescription defaultDescription,
             NotQuests main,
             String playerContext
     ) {
-        super(
-                required,
-                name,
-                new ActiveQuestsParser<>(main, playerContext),
-                "",
-                new TypeToken<>() {
-                },
-                null
-        );
+        super(required, name, new ActiveQuestsParser<>(main, playerContext), defaultValue, ActiveQuest.class, suggestionsProvider);
+    }
+
+    public static <C> ActiveQuestSelector.@NonNull Builder<C> newBuilder(final @NonNull String name, final NotQuests main, final String playerContext) {
+        return new ActiveQuestSelector.Builder<>(name, main, playerContext);
+    }
+
+    public static <C> @NonNull CommandArgument<C, ActiveQuest> of(final @NonNull String name, final NotQuests main, final String playerContext) {
+        return ActiveQuestSelector.<C>newBuilder(name, main, playerContext).asRequired().build();
+    }
+
+    public static <C> @NonNull CommandArgument<C, ActiveQuest> optional(final @NonNull String name, final NotQuests main, final String playerContext) {
+        return ActiveQuestSelector.<C>newBuilder(name, main, playerContext).asOptional().build();
+    }
+
+    public static <C> @NonNull CommandArgument<C, ActiveQuest> optional(
+            final @NonNull String name,
+            final @NonNull ActiveQuest activeQuest,
+            final NotQuests main,
+            final String questContext
+    ) {
+        return ActiveQuestSelector.<C>newBuilder(name, main, questContext).asOptionalWithDefault(activeQuest.getQuest().getQuestName()).build();
+    }
+
+    public static final class Builder<C> extends CommandArgument.Builder<C, ActiveQuest> {
+        private final NotQuests main;
+        private final String playerContext;
+
+        private Builder(final @NonNull String name, NotQuests main, String playerContext) {
+            super(ActiveQuest.class, name);
+            this.main = main;
+            this.playerContext = playerContext;
+        }
+
+        @Override
+        public @NonNull CommandArgument<C, ActiveQuest> build() {
+            return new ActiveQuestSelector<>(
+                    this.isRequired(),
+                    this.getName(),
+                    this.getDefaultValue(),
+                    this.getSuggestionsProvider(),
+                    this.getDefaultDescription(),
+                    this.main,
+                    this.playerContext
+            );
+        }
     }
 
 
-    public static final class ActiveQuestsParser<C> implements ArgumentParser<C, Quest> {
+    public static final class ActiveQuestsParser<C> implements ArgumentParser<C, ActiveQuest> {
 
         private final NotQuests main;
         private final String playerContext;
@@ -96,12 +142,16 @@ public class ActiveQuestSelector<C> extends CommandArgument<C, Quest> {
                 }
             }
 
+            final Audience audience = main.adventure().sender((CommandSender) context.getSender());
+            final List<String> allArgs = context.getRawInput();
+
+            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Active Quest Name]", "[...]");
 
             return questNames;
         }
 
         @Override
-        public @NonNull ArgumentParseResult<Quest> parse(@NonNull CommandContext<@NonNull C> context, @NonNull Queue<@NonNull String> inputQueue) {
+        public @NonNull ArgumentParseResult<ActiveQuest> parse(@NonNull CommandContext<@NonNull C> context, @NonNull Queue<@NonNull String> inputQueue) {
             if (inputQueue.isEmpty()) {
                 return ArgumentParseResult.failure(new NoInputProvidedException(ActiveQuestsParser.class, context));
             }
@@ -121,7 +171,6 @@ public class ActiveQuestSelector<C> extends CommandArgument<C, Quest> {
                 ));
             }
 
-
             final Quest foundQuest = main.getQuestManager().getQuest(input);
             if (foundQuest == null) {
                 return ArgumentParseResult.failure(new IllegalArgumentException("Quest '" + input + "' does not exist!"
@@ -129,12 +178,14 @@ public class ActiveQuestSelector<C> extends CommandArgument<C, Quest> {
             }
             inputQueue.remove();
 
-            if (questPlayer.hasAcceptedQuest(foundQuest)) {
-                return ArgumentParseResult.success(foundQuest);
-            } else {
-                return ArgumentParseResult.failure(new IllegalArgumentException("Quest '" + input + "' is not active!"
-                ));
+            for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+                if (activeQuest.getQuest().equals(foundQuest)) {
+                    return ArgumentParseResult.success(activeQuest);
+                }
             }
+
+            return ArgumentParseResult.failure(new IllegalArgumentException("Quest '" + input + "' is not active!"
+            ));
 
 
         }

@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'rocks.gravili.notquests'
-version = '2.0.0-BETA'
+version = '2.0.0-BETA-1'
 
 repositories {
     mavenCentral()
@@ -96,14 +96,14 @@ repositories {
 
 dependencies {
     //compileOnly 'io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT'
-    compileOnly 'org.spigotmc:spigot-api:1.18-pre8-R0.1-SNAPSHOT'
+    compileOnly 'org.spigotmc:spigot-api:1.18-rc3-R0.1-SNAPSHOT'
     //does not work  implementation "net.kyori:adventure-platform-bukkit:4.0.0"
     implementation 'org.bstats:bstats-bukkit:2.2.1'
     compileOnly 'net.citizensnpcs:citizens-main:2.0.28-SNAPSHOT'
     compileOnly 'me.clip:placeholderapi:2.10.10'
     compileOnly 'com.github.MilkBowl:VaultAPI:1.7'
     implementation 'de.themoep:inventorygui:1.5-SNAPSHOT'
-    implementation 'commons-io:commons-io:20030203.000550'
+    implementation 'commons-io:commons-io:2.11.0'
 
     implementation 'io.lumine.xikage:MythicMobs:4.12.0'
     compileOnly files('libs/EliteMobs.jar')
@@ -209,7 +209,7 @@ publishing {
         maven(MavenPublication) {
             groupId = 'rocks.gravili.notquests'
             artifactId = 'NotQuests'
-            version = '2.0.0-BETA'
+            version = '2.0.0-BETA-1'
 
             from components.java
         }

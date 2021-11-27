@@ -18,10 +18,16 @@
 
 package rocks.gravili.notquests.Structs.Rewards;
 
+import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
+import cloud.commandframework.arguments.standard.IntegerArgument;
+import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Quest;
 import rocks.gravili.notquests.Structs.QuestPlayer;
@@ -76,7 +82,28 @@ public class QuestPointsReward extends Reward {
         return rewardedQuestPoints;
     }
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder) {
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addRewardBuilder) {
+        manager.command(addRewardBuilder.literal("QuestPoints")
+                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of QuestPoints the player will receive."))
+                .meta(CommandMeta.DESCRIPTION, "Adds a new QuestPoints Reward to a quest")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
 
+                    final Quest quest = context.get("quest");
+
+
+                    final int questPointsAmount = context.get("amount");
+
+
+                    QuestPointsReward questPointsReward = new QuestPointsReward(main, quest, quest.getRewards().size() + 1, questPointsAmount);
+
+                    quest.addReward(questPointsReward);
+
+                    audience.sendMessage(MiniMessage.miniMessage().parse(
+                            NotQuestColors.successGradient + "QuestPoints Reward successfully added to Quest " + NotQuestColors.highlightGradient
+                                    + quest.getQuestName() + "</gradient>!</gradient>"
+                    ));
+
+                }));
     }
 }

@@ -18,10 +18,17 @@
 
 package rocks.gravili.notquests.Structs.Objectives;
 
+import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
+import cloud.commandframework.arguments.standard.IntegerArgument;
+import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import rocks.gravili.notquests.Commands.NotQuestColors;
+import rocks.gravili.notquests.Commands.newCMDs.arguments.EntityTypeSelector;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Quest;
 
@@ -103,7 +110,53 @@ public class KillMobsObjective extends Objective {
         this.nameTagEquals = nameTagEquals;
     }
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder) {
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
+        manager.command(addObjectiveBuilder.literal("KillMobs")
+                .argument(EntityTypeSelector.of("entityType", main), ArgumentDescription.of("Type of Entity the player has to kill."))
+                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of kills needed"))
+                .flag(main.getCommandManager().nametag_equals)
+                .flag(main.getCommandManager().nametag_containsany)
+                .meta(CommandMeta.DESCRIPTION, "Adds a new KillMobs Objective to a quest")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+                    final Quest quest = context.get("quest");
 
+                    final String entityType = context.get("entityType");
+                    final int amountToKill = context.get("amount");
+
+                    final String[] a = context.flags().getValue(main.getCommandManager().nametag_equals, new String[]{""});
+                    final String[] b = context.flags().getValue(main.getCommandManager().nametag_containsany, new String[]{""});
+                    final String nametag_equals = String.join(" ", a);
+                    final String nametag_containsany = String.join(" ", b);
+
+                    KillMobsObjective killMobsObjective = new KillMobsObjective(main, quest, quest.getObjectives().size() + 1, entityType, amountToKill);
+
+                    //Add flags
+                    killMobsObjective.setNameTagEquals(nametag_equals);
+                    killMobsObjective.setNameTagContainsAny(nametag_containsany);
+
+
+                    quest.addObjective(killMobsObjective, true);
+
+                    audience.sendMessage(MiniMessage.miniMessage().parse(
+                            NotQuestColors.successGradient + "KillMobs Objective successfully added to Quest " + NotQuestColors.highlightGradient
+                                    + quest.getQuestName() + "</gradient>!</gradient>"
+                    ));
+
+
+                    if (nametag_equals != null && !nametag_equals.isBlank()) {
+                        audience.sendMessage(MiniMessage.miniMessage().parse(
+                                NotQuestColors.mainGradient + "With nametag_equals flag:  " + NotQuestColors.highlightGradient
+                                        + nametag_equals + "</gradient>!</gradient>"
+                        ));
+                    }
+                    if (nametag_containsany != null && !nametag_containsany.isBlank()) {
+                        audience.sendMessage(MiniMessage.miniMessage().parse(
+                                NotQuestColors.mainGradient + "With nametag_containsany flag:  " + NotQuestColors.highlightGradient
+                                        + nametag_containsany + "</gradient>!</gradient>"
+                        ));
+                    }
+
+                }));
     }
 }
