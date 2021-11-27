@@ -63,6 +63,7 @@ public class LanguageManager {
         languageFiles.add("de.yml");
         languageFiles.add("zh-CN.yml");
         languageFiles.add("vi.yml");
+        languageFiles.add("gr.yml");
 
         //Create the Language Data Folder if it does not exist yet (the NotQuests/languages folder)
         File languageFolder = new File(main.getDataFolder().getPath() + "/languages/");
