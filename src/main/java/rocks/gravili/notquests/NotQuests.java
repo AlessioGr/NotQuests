@@ -35,6 +35,8 @@ import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import rocks.gravili.notquests.Conversation.ConversationEvents;
+import rocks.gravili.notquests.Conversation.ConversationManager;
 import rocks.gravili.notquests.Events.ArmorStandEvents;
 import rocks.gravili.notquests.Events.InventoryEvents;
 import rocks.gravili.notquests.Events.QuestEvents;
@@ -71,6 +73,7 @@ public final class NotQuests extends JavaPlugin {
     private ArmorStandManager armorStandManager;
     private PerformanceManager performanceManager;
     private CommandManager commandManager;
+    private ConversationManager conversationManager;
     //Registering Managers
     private ObjectiveManager objectiveManager;
     private RequirementManager requirementManager;
@@ -295,6 +298,7 @@ public final class NotQuests extends JavaPlugin {
         //Register the Event Listeners in ArmorStandEvents
         getServer().getPluginManager().registerEvents(new ArmorStandEvents(this), this);
 
+
         //Register the Event Listeners in CitizensEvents, if Citizens integration is enabled
         if (isCitizensEnabled()) {
             getServer().getPluginManager().registerEvents(new CitizensEvents(this), this);
@@ -349,6 +353,10 @@ public final class NotQuests extends JavaPlugin {
             metrics = new Metrics(this, pluginId);
         }
 
+
+        conversationManager = new ConversationManager(this);
+        //Register the Event Listeners in ConversationEvents
+        getServer().getPluginManager().registerEvents(new ConversationEvents(this, conversationManager), this);
 
     }
 
@@ -648,5 +656,9 @@ public final class NotQuests extends JavaPlugin {
 
     public CommandManager getCommandManager() {
         return this.commandManager;
+    }
+
+    public ConversationManager getConversationManager() {
+        return this.conversationManager;
     }
 }

@@ -293,6 +293,15 @@ public class QuestPlayerManager {
         return questPlayersAndUUIDs.get(uuid);
     }
 
+    public final QuestPlayer getOrCreateQuestPlayer(final UUID uuid) {
+        QuestPlayer foundQuestPlayer = questPlayersAndUUIDs.get(uuid);
+        if (foundQuestPlayer == null) {
+            createQuestPlayer(uuid);
+            foundQuestPlayer = questPlayersAndUUIDs.get(uuid);
+        }
+        return foundQuestPlayer;
+    }
+
     public final Collection<QuestPlayer> getQuestPlayers() {
         return questPlayersAndUUIDs.values();
     }

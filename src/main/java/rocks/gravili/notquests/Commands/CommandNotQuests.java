@@ -36,6 +36,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
+import rocks.gravili.notquests.Conversation.ConversationPlayer;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.ActiveObjective;
 import rocks.gravili.notquests.Structs.ActiveQuest;
@@ -469,6 +470,11 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                     } else {
                         sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", player));
                     }
+                } else if (args.length >= 2 && args[0].equalsIgnoreCase("continueConversation")) {
+                    if (args[0].equalsIgnoreCase("continueConversation")) {
+                        handleConversation(player, args);
+                        return true;
+                    }
                 } else if (args.length == 2) {
                     //Accept Quest
                     if (args[0].equalsIgnoreCase("take")) {
@@ -890,6 +896,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
     }
 
 
+
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
         completions.clear();
@@ -954,5 +961,41 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
 
 
     }
+
+
+    private void handleConversation(Player player, String[] args) {
+        final StringBuilder option = new StringBuilder();
+
+        int counter = 0;
+        for (String arg : args) {
+            counter++;
+            if (counter == args.length) {
+                option.append(arg);
+            } else if (counter > 1) {
+                option.append(arg).append(" ");
+            }
+        }
+
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+        if (main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId()) == null) {
+            return;
+        }
+
+
+        //Check if the player has an open conversation
+        final ConversationPlayer conversationPlayer = main.getConversationManager().getOpenConversation(player.getUniqueId());
+        if (conversationPlayer != null) {
+            conversationPlayer.chooseOption(option.toString());
+        } else {
+            questPlayer.sendDebugMessage("Tried to choose conversation option, but the conversationPlayer was not found! Active conversationPlayers count: " + NotQuestColors.highlightGradient + main.getConversationManager().getOpenConversations().size());
+            questPlayer.sendDebugMessage("All active conversationPlayers: " + NotQuestColors.highlightGradient + main.getConversationManager().getOpenConversations().toString());
+            questPlayer.sendDebugMessage("Current QuestPlayer: " + questPlayer);
+
+
+        }
+
+    }
+
+
 }
 
