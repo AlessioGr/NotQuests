@@ -18,11 +18,19 @@
 
 package rocks.gravili.notquests.Structs.Triggers.TriggerTypes;
 
+import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
+import cloud.commandframework.arguments.standard.IntegerArgument;
+import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
+import rocks.gravili.notquests.Commands.NotQuestColors;
+import rocks.gravili.notquests.Commands.newCMDs.arguments.ApplyOnSelector;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Quest;
+import rocks.gravili.notquests.Structs.Rewards.MoneyReward;
 import rocks.gravili.notquests.Structs.Triggers.Action;
 import rocks.gravili.notquests.Structs.Triggers.Trigger;
 
@@ -33,10 +41,6 @@ public class BeginTrigger extends Trigger {
     public BeginTrigger(final NotQuests main, final Quest quest, final int triggerID, Action action, int applyOn, String worldName, long amountNeeded) {
         super(main, quest, triggerID, action, applyOn, worldName, amountNeeded);
         this.main = main;
-    }
-
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder) {
-
     }
 
     @Override
@@ -56,6 +60,34 @@ public class BeginTrigger extends Trigger {
     public void isCompleted(){
 
     }*/
+
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addTriggerBuilder) {
+        manager.command(addTriggerBuilder.literal("BEGIN")
+                .argument(ApplyOnSelector.of("applyOn", main, "Quest"), ArgumentDescription.of("Where the Trigger will apply (Examples: 'Quest', 'O1', 'O2. (O1 = Objective 1)."))
+                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of money the player will receive."))
+                .meta(CommandMeta.DESCRIPTION, "Triggers when a Quest begins or an Objective gets unlocked ('begins')")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+
+                    final Quest quest = context.get("quest");
+                    final Action action = context.get("action");
+                    final String applyOn = context.get("applyOn");
+
+
+                    final int moneyAmount = context.get("amount");
+
+
+                    MoneyReward moneyReward = new MoneyReward(main, quest, quest.getRewards().size() + 1, moneyAmount);
+
+                    quest.addReward(moneyReward);
+
+                    audience.sendMessage(MiniMessage.miniMessage().parse(
+                            NotQuestColors.successGradient + "Money Reward successfully added to Quest " + NotQuestColors.highlightGradient
+                                    + quest.getQuestName() + "</gradient>!</gradient>"
+                    ));
+
+                }));
+    }
 
 
 }

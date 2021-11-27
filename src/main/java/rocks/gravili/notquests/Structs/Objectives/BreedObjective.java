@@ -71,17 +71,13 @@ public class BreedObjective extends Objective {
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
         manager.command(addObjectiveBuilder.literal("BreedMobs")
-                .argument(new EntityTypeSelector<>(
-                        true,
-                        "entitytype",
-                        main
-                ), ArgumentDescription.of("Type of Entity the player has to breed."))
+                .argument(EntityTypeSelector.of("entityType", main), ArgumentDescription.of("Type of Entity the player has to breed."))
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of times the player needs to breed this entity."))
                 .meta(CommandMeta.DESCRIPTION, "Adds a new BreedMobs Objective to a quest")
                 .handler((context) -> {
                     final Audience audience = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
-                    final String entityType = context.get("entitytype");
+                    final String entityType = context.get("entityType");
                     final int amount = context.get("amount");
 
                     BreedObjective breedObjective = new BreedObjective(main, quest, quest.getObjectives().size() + 1, amount, entityType);

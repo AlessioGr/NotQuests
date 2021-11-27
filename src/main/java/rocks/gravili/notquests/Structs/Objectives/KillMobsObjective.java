@@ -112,11 +112,7 @@ public class KillMobsObjective extends Objective {
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
         manager.command(addObjectiveBuilder.literal("KillMobs")
-                .argument(new EntityTypeSelector<>(
-                        true,
-                        "entitytype",
-                        main
-                ), ArgumentDescription.of("Type of Entity the player has to kill."))
+                .argument(EntityTypeSelector.of("entityType", main), ArgumentDescription.of("Type of Entity the player has to kill."))
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of kills needed"))
                 .flag(main.getCommandManager().nametag_equals)
                 .flag(main.getCommandManager().nametag_containsany)
@@ -125,7 +121,7 @@ public class KillMobsObjective extends Objective {
                     final Audience audience = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
 
-                    final String entityType = context.get("entitytype");
+                    final String entityType = context.get("entityType");
                     final int amountToKill = context.get("amount");
 
                     final String[] a = context.flags().getValue(main.getCommandManager().nametag_equals, new String[]{""});

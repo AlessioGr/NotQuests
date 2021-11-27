@@ -56,7 +56,7 @@ public class ConsumeItemsObjective extends Objective {
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
         manager.command(addObjectiveBuilder.literal("ConsumeItems")
-                .argument(MaterialOrHandArgument.of("material"), ArgumentDescription.of("Material of the item which needs to be consumed."))
+                .argument(MaterialOrHandArgument.of("material", main), ArgumentDescription.of("Material of the item which needs to be consumed."))
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of items which need to be consumed."))
                 .meta(CommandMeta.DESCRIPTION, "Adds a new ConsumeItems Objective to a quest.")
                 .handler((context) -> {

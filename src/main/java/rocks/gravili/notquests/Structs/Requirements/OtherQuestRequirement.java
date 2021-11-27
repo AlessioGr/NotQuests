@@ -104,11 +104,7 @@ public class OtherQuestRequirement extends Requirement {
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addRequirementBuilder) {
         manager.command(addRequirementBuilder.literal("OtherQuest")
-                .argument(new QuestSelector<>(
-                        true,
-                        "otherquest",
-                        main
-                ), ArgumentDescription.of("Name of the other Quest the player has to complete."))
+                .argument(QuestSelector.of("otherQuest", main), ArgumentDescription.of("Name of the other Quest the player has to complete."))
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of completions needed"))
                 .meta(CommandMeta.DESCRIPTION, "Adds a new OtherQuest Requirement to a quest")
                 .handler((context) -> {
@@ -116,7 +112,7 @@ public class OtherQuestRequirement extends Requirement {
 
                     final Quest quest = context.get("quest");
 
-                    final Quest otherQuest = context.get("otherquest");
+                    final Quest otherQuest = context.get("otherQuest");
                     final int amount = context.get("amount");
 
                     OtherQuestRequirement otherQuestRequirement = new OtherQuestRequirement(main, quest, quest.getRequirements().size() + 1, amount, otherQuest.getQuestName());

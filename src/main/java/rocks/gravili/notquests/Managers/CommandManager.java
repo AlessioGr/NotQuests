@@ -40,6 +40,7 @@ import rocks.gravili.notquests.Commands.CommandNotQuests;
 import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.Commands.newCMDs.AdminCommands;
 import rocks.gravili.notquests.Commands.newCMDs.AdminEditCommands;
+import rocks.gravili.notquests.Commands.newCMDs.arguments.ActionSelector;
 import rocks.gravili.notquests.Commands.newCMDs.arguments.QuestSelector;
 import rocks.gravili.notquests.Commands.old.CommandNotQuestsAdmin;
 import rocks.gravili.notquests.NotQuests;
@@ -156,11 +157,7 @@ public class CommandManager {
 
             adminEditCommandBuilder = adminCommandBuilder
                     .literal("edit")
-                    .argument(new QuestSelector<>(
-                            true,
-                            "quest",
-                            main
-                    ), ArgumentDescription.of("Quest Name"));
+                    .argument(QuestSelector.of("quest", main), ArgumentDescription.of("Quest Name"));
 
             adminEditAddObjectiveCommandBuilder = adminEditCommandBuilder
                     .literal("objectives")
@@ -173,7 +170,8 @@ public class CommandManager {
                     .literal("add");
             adminEditAddTriggerCommandBuilder = adminEditCommandBuilder
                     .literal("triggers")
-                    .literal("add");
+                    .literal("add")
+                    .argument(ActionSelector.of("action", main), ArgumentDescription.of("Action which will be executed when the Trigger triggers."));
 
             //asynchronous completions
             if (commandManager.queryCapability(CloudBukkitCapabilities.ASYNCHRONOUS_COMPLETION)) {

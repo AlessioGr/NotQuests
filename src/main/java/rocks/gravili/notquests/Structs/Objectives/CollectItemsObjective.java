@@ -73,7 +73,7 @@ public class CollectItemsObjective extends Objective {
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
         manager.command(addObjectiveBuilder.literal("CollectItems")
-                .argument(MaterialOrHandArgument.of("material"), ArgumentDescription.of("Material of the item which needs to be collected."))
+                .argument(MaterialOrHandArgument.of("material", main), ArgumentDescription.of("Material of the item which needs to be collected."))
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of items which need to be collected."))
                 .flag(
                         manager.flagBuilder("doNotDeductIfItemIsDropped")

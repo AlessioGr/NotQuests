@@ -27,10 +27,13 @@ import cloud.commandframework.captions.CaptionVariable;
 import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.exceptions.parsing.NoInputProvidedException;
 import cloud.commandframework.exceptions.parsing.ParserException;
+import net.kyori.adventure.audience.Audience;
 import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.Commands.newCMDs.arguments.wrappers.MaterialOrHand;
+import rocks.gravili.notquests.NotQuests;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,15 +47,17 @@ import java.util.function.BiFunction;
  */
 public class MaterialOrHandArgument<C> extends CommandArgument<C, MaterialOrHand> {
 
+
     protected MaterialOrHandArgument(
             final boolean required,
             final @NonNull String name,
             final @NonNull String defaultValue,
             final @Nullable BiFunction<@NonNull CommandContext<C>, @NonNull String,
                     @NonNull List<@NonNull String>> suggestionsProvider,
-            final @NonNull ArgumentDescription defaultDescription
+            final @NonNull ArgumentDescription defaultDescription,
+            NotQuests main
     ) {
-        super(required, name, new MaterialOrHandArgument.MaterialParser<>(), defaultValue, MaterialOrHand.class, suggestionsProvider);
+        super(required, name, new MaterialOrHandArgument.MaterialParser<>(main), defaultValue, MaterialOrHand.class, suggestionsProvider);
     }
 
     /**
@@ -62,8 +67,8 @@ public class MaterialOrHandArgument<C> extends CommandArgument<C, MaterialOrHand
      * @param <C>  Command sender type
      * @return Created builder
      */
-    public static <C> MaterialOrHandArgument.@NonNull Builder<C> newBuilder(final @NonNull String name) {
-        return new MaterialOrHandArgument.Builder<>(name);
+    public static <C> MaterialOrHandArgument.@NonNull Builder<C> newBuilder(final @NonNull String name, final NotQuests main) {
+        return new MaterialOrHandArgument.Builder<>(name, main);
     }
 
     /**
@@ -73,8 +78,8 @@ public class MaterialOrHandArgument<C> extends CommandArgument<C, MaterialOrHand
      * @param <C>  Command sender type
      * @return Created argument
      */
-    public static <C> @NonNull CommandArgument<C, MaterialOrHand> of(final @NonNull String name) {
-        return MaterialOrHandArgument.<C>newBuilder(name).asRequired().build();
+    public static <C> @NonNull CommandArgument<C, MaterialOrHand> of(final @NonNull String name, final NotQuests main) {
+        return MaterialOrHandArgument.<C>newBuilder(name, main).asRequired().build();
     }
 
     /**
@@ -84,8 +89,8 @@ public class MaterialOrHandArgument<C> extends CommandArgument<C, MaterialOrHand
      * @param <C>  Command sender type
      * @return Created argument
      */
-    public static <C> @NonNull CommandArgument<C, MaterialOrHand> optional(final @NonNull String name) {
-        return MaterialOrHandArgument.<C>newBuilder(name).asOptional().build();
+    public static <C> @NonNull CommandArgument<C, MaterialOrHand> optional(final @NonNull String name, final NotQuests main) {
+        return MaterialOrHandArgument.<C>newBuilder(name, main).asOptional().build();
     }
 
     /**
@@ -98,15 +103,18 @@ public class MaterialOrHandArgument<C> extends CommandArgument<C, MaterialOrHand
      */
     public static <C> @NonNull CommandArgument<C, MaterialOrHand> optional(
             final @NonNull String name,
-            final @NonNull MaterialOrHand material
+            final @NonNull MaterialOrHand material,
+            final NotQuests main
     ) {
-        return MaterialOrHandArgument.<C>newBuilder(name).asOptionalWithDefault(material.material.name().toLowerCase()).build();
+        return MaterialOrHandArgument.<C>newBuilder(name, main).asOptionalWithDefault(material.material.name().toLowerCase()).build();
     }
 
     public static final class Builder<C> extends CommandArgument.Builder<C, MaterialOrHand> {
+        private final NotQuests main;
 
-        private Builder(final @NonNull String name) {
+        private Builder(final @NonNull String name, NotQuests main) {
             super(MaterialOrHand.class, name);
+            this.main = main;
         }
 
         @Override
@@ -116,13 +124,25 @@ public class MaterialOrHandArgument<C> extends CommandArgument<C, MaterialOrHand
                     this.getName(),
                     this.getDefaultValue(),
                     this.getSuggestionsProvider(),
-                    this.getDefaultDescription()
+                    this.getDefaultDescription(),
+                    this.main
             );
         }
 
     }
 
     public static final class MaterialParser<C> implements ArgumentParser<C, MaterialOrHand> {
+
+        private final NotQuests main;
+
+        /**
+         * Constructs a new MaterialParser.
+         */
+        public MaterialParser(
+                NotQuests main
+        ) {
+            this.main = main;
+        }
 
         @Override
         public @NonNull ArgumentParseResult<MaterialOrHand> parse(
@@ -145,8 +165,7 @@ public class MaterialOrHandArgument<C> extends CommandArgument<C, MaterialOrHand
                     inputQueue.remove();
                     return ArgumentParseResult.success(materialOrHand);
                 }
-                final Material material = Material.valueOf(input.toUpperCase());
-                materialOrHand.material = material;
+                materialOrHand.material = Material.valueOf(input.toUpperCase());
                 inputQueue.remove();
                 return ArgumentParseResult.success(materialOrHand);
             } catch (final IllegalArgumentException exception) {
@@ -156,7 +175,7 @@ public class MaterialOrHandArgument<C> extends CommandArgument<C, MaterialOrHand
 
         @Override
         public @NonNull List<@NonNull String> suggestions(
-                final @NonNull CommandContext<C> commandContext,
+                final @NonNull CommandContext<C> context,
                 final @NonNull String input
         ) {
             final List<String> completions = new ArrayList<>();
@@ -164,6 +183,13 @@ public class MaterialOrHandArgument<C> extends CommandArgument<C, MaterialOrHand
                 completions.add(value.name().toLowerCase());
             }
             completions.add("hand");
+
+
+            final Audience audience = main.adventure().sender((CommandSender) context.getSender());
+            final List<String> allArgs = context.getRawInput();
+
+            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Item Name / 'hand']", "[...]");
+
             return completions;
         }
 

@@ -30,92 +30,110 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.Quest;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Queue;
 import java.util.function.BiFunction;
 
-public class EntityTypeSelector<C> extends CommandArgument<C, String> {
+public class ApplyOnSelector<C> extends CommandArgument<C, String> {
 
-    protected EntityTypeSelector(
+    protected ApplyOnSelector(
             final boolean required,
             final @NonNull String name,
             final @NonNull String defaultValue,
             final @Nullable BiFunction<@NonNull CommandContext<C>, @NonNull String,
                     @NonNull List<@NonNull String>> suggestionsProvider,
             final @NonNull ArgumentDescription defaultDescription,
-            NotQuests main
+            NotQuests main,
+            String questContext
     ) {
-        super(required, name, new EntityTypeParser<>(main), defaultValue, String.class, suggestionsProvider);
+        super(required, name, new ApplyOnSelector.ApplyOnsParser<>(main, questContext), defaultValue, String.class, suggestionsProvider);
     }
 
-    public static <C> EntityTypeSelector.@NonNull Builder<C> newBuilder(final @NonNull String name, final NotQuests main) {
-        return new EntityTypeSelector.Builder<>(name, main);
+
+    public static <C> ApplyOnSelector.@NonNull Builder<C> newBuilder(final @NonNull String name, final NotQuests main, final String questContext) {
+        return new ApplyOnSelector.Builder<>(name, main, questContext);
     }
 
-    public static <C> @NonNull CommandArgument<C, String> of(final @NonNull String name, final NotQuests main) {
-        return EntityTypeSelector.<C>newBuilder(name, main).asRequired().build();
+    public static <C> @NonNull CommandArgument<C, String> of(final @NonNull String name, final NotQuests main, final String questContext) {
+        return ApplyOnSelector.<C>newBuilder(name, main, questContext).asRequired().build();
     }
 
-    public static <C> @NonNull CommandArgument<C, String> optional(final @NonNull String name, final NotQuests main) {
-        return EntityTypeSelector.<C>newBuilder(name, main).asOptional().build();
+    public static <C> @NonNull CommandArgument<C, String> optional(final @NonNull String name, final NotQuests main, final String questContext) {
+        return ApplyOnSelector.<C>newBuilder(name, main, questContext).asOptional().build();
     }
 
     public static <C> @NonNull CommandArgument<C, String> optional(
             final @NonNull String name,
-            final @NonNull String entityType,
-            final NotQuests main
+            final @NonNull String applyOn,
+            final NotQuests main,
+            final String questContext
     ) {
-        return EntityTypeSelector.<C>newBuilder(name, main).asOptionalWithDefault(entityType).build();
+        return ApplyOnSelector.<C>newBuilder(name, main, questContext).asOptionalWithDefault(applyOn).build();
     }
 
     public static final class Builder<C> extends CommandArgument.Builder<C, String> {
         private final NotQuests main;
+        private final String questContext;
 
-        private Builder(final @NonNull String name, NotQuests main) {
+        private Builder(final @NonNull String name, NotQuests main, String questContext) {
             super(String.class, name);
             this.main = main;
+            this.questContext = questContext;
         }
 
         @Override
         public @NonNull CommandArgument<C, String> build() {
-            return new EntityTypeSelector<>(
+            return new ApplyOnSelector<>(
                     this.isRequired(),
                     this.getName(),
                     this.getDefaultValue(),
                     this.getSuggestionsProvider(),
                     this.getDefaultDescription(),
-                    this.main
+                    this.main,
+                    this.questContext
             );
         }
     }
 
 
-    public static final class EntityTypeParser<C> implements ArgumentParser<C, String> {
+    public static final class ApplyOnsParser<C> implements ArgumentParser<C, String> {
 
         private final NotQuests main;
-
+        private final String questContext;
 
         /**
-         * Constructs a new EntityTypePare.
+         * Constructs a new PluginsParser.
          */
-        public EntityTypeParser(
-                NotQuests main
+        public ApplyOnsParser(
+                NotQuests main,
+                String questContext
         ) {
             this.main = main;
+            this.questContext = questContext;
         }
 
 
         @NotNull
         @Override
         public List<String> suggestions(@NotNull CommandContext<C> context, @NotNull String input) {
-            List<String> completions = new java.util.ArrayList<>(main.getDataManager().standardEntityTypeCompletions);
-            completions.add("ANY");
+            List<String> completions = new java.util.ArrayList<>();
+
+            final Quest quest = context.get(questContext);
+
+            completions.add("Quest");
+            final int objectiveCount = quest.getObjectives().size();
+            for (int i = 1; i <= objectiveCount; i++) {
+                completions.add("O" + i);
+            }
+
 
             final Audience audience = main.adventure().sender((CommandSender) context.getSender());
             final List<String> allArgs = context.getRawInput();
 
-            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Mob Name / 'ANY']", "[...]");
+            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Apply On]", "[...]");
 
 
             return completions;
@@ -124,16 +142,30 @@ public class EntityTypeSelector<C> extends CommandArgument<C, String> {
         @Override
         public @NonNull ArgumentParseResult<String> parse(@NonNull CommandContext<@NonNull C> context, @NonNull Queue<@NonNull String> inputQueue) {
             if (inputQueue.isEmpty()) {
-                return ArgumentParseResult.failure(new NoInputProvidedException(EntityTypeParser.class, context));
+                return ArgumentParseResult.failure(new NoInputProvidedException(ApplyOnsParser.class, context));
             }
             final String input = inputQueue.peek();
             inputQueue.remove();
 
-            if (!main.getDataManager().standardEntityTypeCompletions.contains(input) && !input.equalsIgnoreCase("ANY")) {
-                return ArgumentParseResult.failure(new IllegalArgumentException("Entity type '" + inputQueue.peek() + "' does not exist!"));
+            final Quest quest = context.get(questContext);
+
+            if (input.equalsIgnoreCase("Quest")) {
+                return ArgumentParseResult.success(input);
+            } else {
+                try {
+                    int objectiveID = Integer.parseInt(input.toLowerCase(Locale.ROOT).replaceAll("o", "_"));
+                    if (quest.getObjectiveFromID(objectiveID) != null) {
+                        return ArgumentParseResult.success(input);
+                    } else {
+                        return ArgumentParseResult.failure(new IllegalArgumentException("ApplyOn Objective '" + input + "' is not an objective of the Quest!"
+                        ));
+                    }
+                } catch (Exception e) {
+                    return ArgumentParseResult.failure(new IllegalArgumentException("ApplyOn Objective '" + input + "' is not an objective of the Quest!"
+                    ));
+                }
             }
 
-            return ArgumentParseResult.success(input);
 
         }
 
@@ -141,5 +173,6 @@ public class EntityTypeSelector<C> extends CommandArgument<C, String> {
         public boolean isContextFree() {
             return true;
         }
+
     }
 }

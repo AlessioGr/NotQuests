@@ -56,7 +56,7 @@ public class CraftItemsObjective extends Objective {
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
         manager.command(addObjectiveBuilder.literal("CraftItems")
-                .argument(MaterialOrHandArgument.of("material"), ArgumentDescription.of("Material of the item which needs to be crafted."))
+                .argument(MaterialOrHandArgument.of("material", main), ArgumentDescription.of("Material of the item which needs to be crafted."))
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of items which need to be crafted."))
                 .meta(CommandMeta.DESCRIPTION, "Adds a new CraftItems Objective to a quest.")
                 .handler((context) -> {
