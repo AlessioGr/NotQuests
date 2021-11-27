@@ -195,8 +195,8 @@ public class CommandManager {
                 return;
             }
 
-
-            adminCommandBuilder = commandManager.commandBuilder("qa2", ArgumentDescription.of("Admin commands for NotQuests"), "notquestsadmin2, nqa2")
+            adminCommandBuilder = commandManager.commandBuilder("notquestsadmin", ArgumentDescription.of("Admin commands for NotQuests"),
+                            "nquestsadmin", "nquestadmin", "notquestadmin", "qadmin", "questadmin", "qa", "qag", "nqa")
                     .permission("notquests.admin");
 
             adminEditCommandBuilder = adminCommandBuilder
@@ -231,7 +231,7 @@ public class CommandManager {
             }
 
             minecraftHelp = new MinecraftHelp<>(
-                    "/qa2 help",
+                    "/qa help",
                     main.adventure()::sender,
                     commandManager
             );
@@ -320,7 +320,7 @@ public class CommandManager {
 
         //Help menu
         commandManager.command(adminCommandBuilder.meta(CommandMeta.DESCRIPTION, "Opens the help menu").handler((context) -> {
-            minecraftHelp.queryCommands("qa2 *", context.getSender());
+            minecraftHelp.queryCommands("qa *", context.getSender());
             final Audience audience = main.adventure().sender(context.getSender());
             final List<String> allArgs = context.getRawInput();
             main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[What would you like to do?]", "[...]");
@@ -331,7 +331,7 @@ public class CommandManager {
                         .argument(StringArgument.optional("query", StringArgument.StringMode.GREEDY))
 
                         .handler(context -> {
-                            minecraftHelp.queryCommands(context.getOrDefault("query", "qa2 *"), context.getSender());
+                            minecraftHelp.queryCommands(context.getOrDefault("query", "qa *"), context.getSender());
                         })
         );
 

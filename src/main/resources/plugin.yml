@@ -7,10 +7,9 @@ description: Flexible, open, GUI Quest Plugin for Minecraft 1.17 and 1.18
 website: quests.notnot.pro
 softdepend: [ Citizens, Vault, PlaceholderAPI, MythicMobs, EliteMobs, BetonQuest, WorldEdit, Slimefun ]
 commands:
-  notquestsadmin:
-    description: Edit quests
+  notquestsadminold:
+    description: Edit quests (old command)
     usage: /notquestsadmin
-    aliases: [ nquestsadmin, nquestadmin, notquestadmin, qadmin, questadmin, questsadmin, qa, qag, nqa ]
     permission: notquests.admin
   notquests:
     description: Accept quests
