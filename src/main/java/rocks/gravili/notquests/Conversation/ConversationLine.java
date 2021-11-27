@@ -28,11 +28,25 @@ public class ConversationLine {
     private String color = "<GRAY>";
     private boolean shout = false;
 
-    public ConversationLine(final Speaker speaker, final String message) {
-        this.speaker = speaker;
+    private final String identifier;
 
+    private final String fullIdentifier;
+
+    public ConversationLine(final Speaker speaker, final String identifier, final String message) {
+        this.speaker = speaker;
+        this.identifier = identifier;
         this.message = message;
         next = new ArrayList<>();
+
+        this.fullIdentifier = speaker.getSpeakerName() + "." + identifier;
+    }
+
+    public final String getFullIdentifier() {
+        return fullIdentifier;
+    }
+
+    public final String getIdentifier() {
+        return identifier;
     }
 
     public final String getMessage() {

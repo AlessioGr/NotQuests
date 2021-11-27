@@ -68,14 +68,18 @@ public class ConversationPlayer {
         ArrayList<ConversationLine> next = findConversationLinesWhichFulfillsCondition(currentLine.getNext());
 
         if (next == null) {
+            questPlayer.sendDebugMessage("Next of <AQUA>" + currentLine.getFullIdentifier() + "</AQUA> is empty. Ending conversation...");
             main.getConversationManager().stopConversation(this);
             return false;
         } else {
             if (next.size() == 1) {
-
                 if (!next.get(0).getSpeaker().isPlayer()) {
+                    questPlayer.sendDebugMessage("Line <AQUA>" + currentLine.getFullIdentifier() + "</AQUA> has one next: <AQUA>" + next.get(0).getFullIdentifier());
+
                     return next(next.get(0));
                 } else {
+                    questPlayer.sendDebugMessage("Line <AQUA>" + currentLine.getFullIdentifier() + "</AQUA> has one PLAYER next: <AQUA>" + next.get(0).getFullIdentifier());
+
                     nextPlayer(next);
                 }
 
