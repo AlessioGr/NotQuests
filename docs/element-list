@@ -2,8 +2,10 @@ rocks.gravili.notquests
 rocks.gravili.notquests.Commands
 rocks.gravili.notquests.Commands.newCMDs
 rocks.gravili.notquests.Commands.newCMDs.arguments
+rocks.gravili.notquests.Commands.newCMDs.arguments.wrappers
 rocks.gravili.notquests.Commands.old
 rocks.gravili.notquests.Commands.old.AdminCommands
+rocks.gravili.notquests.Conversation
 rocks.gravili.notquests.Events
 rocks.gravili.notquests.Events.hooks
 rocks.gravili.notquests.Events.notquests
