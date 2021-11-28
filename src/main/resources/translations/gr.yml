@@ -64,6 +64,8 @@ chat:
       interact:
         base: '    &8└─ &7%EVENTUALCOLOR%%INTERACTTYPE% Location: &f%EVENTUALCOLOR%%COORDINATES% &f%EVENTUALCOLOR%in world%EVENTUALCOLOR% %WORLDNAME%'
         taskDescriptionProvided: '    &8└─ &7%EVENTUALCOLOR%%TASKDESCRIPTION%'
+      jump:
+        base: '    &8└─ &7%EVENTUALCOLOR%Jump &f%EVENTUALCOLOR%%AMOUNTOFJUMPS% &7%EVENTUALCOLOR%times'
 titles:
   quest-accepted:
     title: '&fΑναλάβατε την αποστολή'

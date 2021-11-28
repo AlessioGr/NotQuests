@@ -39,6 +39,7 @@ import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import rocks.gravili.notquests.Events.notquests.other.PlayerJumpEvent;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.ActiveObjective;
 import rocks.gravili.notquests.Structs.ActiveQuest;
@@ -59,6 +60,32 @@ public class QuestEvents implements Listener {
 
     public QuestEvents(NotQuests main) {
         this.main = main;
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onPlayerJump(final PlayerJumpEvent e) {
+
+        final Player player = e.getPlayer();
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+        if (questPlayer == null) {
+            return;
+        }
+        if (questPlayer.getActiveQuests().size() == 0) {
+            return;
+        }
+
+        for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+            for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
+                if (activeObjective.isUnlocked()) {
+                    if (activeObjective.getObjective() instanceof JumpObjective jumpObjective) {
+                        activeObjective.addProgress(1, -1);
+                    }
+                }
+
+            }
+            activeQuest.removeCompletedObjectives(true);
+        }
+        questPlayer.removeCompletedQuests();
     }
 
 

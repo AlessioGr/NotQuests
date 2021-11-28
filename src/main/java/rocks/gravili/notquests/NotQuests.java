@@ -44,6 +44,7 @@ import rocks.gravili.notquests.Events.InventoryEvents;
 import rocks.gravili.notquests.Events.QuestEvents;
 import rocks.gravili.notquests.Events.TriggerEvents;
 import rocks.gravili.notquests.Events.hooks.*;
+import rocks.gravili.notquests.Events.notquests.other.PlayerJumpEvent;
 import rocks.gravili.notquests.Hooks.BetonQuest.BetonQuestIntegration;
 import rocks.gravili.notquests.Hooks.Citizens.CitizensManager;
 import rocks.gravili.notquests.Hooks.Luckperms.LuckpermsManager;
@@ -156,6 +157,7 @@ public final class NotQuests extends JavaPlugin {
         PaperLib.suggestPaper(this);
 
 
+
         //Create a new instance of the Util Manager which will be re-used everywhere
         utilManager = new UtilManager(this);
 
@@ -180,6 +182,8 @@ public final class NotQuests extends JavaPlugin {
 
 
         dataManager.loadStandardCompletions();
+
+        Bukkit.getServer().getPluginManager().registerEvents(PlayerJumpEvent.listener, this);
 
 
         //Create a new instance of the Quest Manager which will be re-used everywhere

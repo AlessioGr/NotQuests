@@ -421,6 +421,10 @@ public class LanguageManager {
             getLanguageConfig().set("chat.objectives.taskDescription.interact.taskDescriptionProvided", "    &8└─ &7%EVENTUALCOLOR%%TASKDESCRIPTION%");
             valueChanged = true;
         }
+        if (!getLanguageConfig().isString("chat.objectives.taskDescription.jump.base")) {
+            getLanguageConfig().set("chat.objectives.taskDescription.jump.base", "    &8└─ &7%EVENTUALCOLOR%Jump &f%EVENTUALCOLOR%%AMOUNTOFJUMPS% &7%EVENTUALCOLOR%times");
+            valueChanged = true;
+        }
 
 
         //user /q gui - Main

@@ -65,6 +65,8 @@ chat:
       interact:
         base: '    &8└─ &7%EVENTUALCOLOR%%INTERACTTYPE% Ort: &f%EVENTUALCOLOR%%COORDINATES% &f%EVENTUALCOLOR%in Welt%EVENTUALCOLOR% %WORLDNAME%'
         taskDescriptionProvided: '    &8└─ &7%EVENTUALCOLOR%%TASKDESCRIPTION%'
+      jump:
+        base: '    &8└─ &7%EVENTUALCOLOR%Springe &f%EVENTUALCOLOR%%AMOUNTOFJUMPS% &7%EVENTUALCOLOR%mal'
 titles:
   quest-accepted:
     title: '&fQuest akzeptiert'
