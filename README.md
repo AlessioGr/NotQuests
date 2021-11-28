@@ -50,6 +50,8 @@ Admin Commands - Quest Editing:
 
 
 ![Banner_Features](https://user-images.githubusercontent.com/70709113/133997198-bbc020b6-69c5-454b-b5b5-5f1bec0bab0d.png)
+- Conversation system (Beta)
+- Great API
 - MythicMobs integration
 - EliteMobs integration
 - Quests can be bound to Citizens NPCs
@@ -62,6 +64,7 @@ Admin Commands - Quest Editing:
 - Re-usable Actions for Triggers
 - Multiple Quest Objectives:
   - Break Blocks
+  - Place Blocks
   - Collect Items
   - Consume Items
   - Craft Items
@@ -74,6 +77,7 @@ Admin Commands - Quest Editing:
   - Command Triggers (to finish the objective)
   - KillEliteMobs (if you're using EliteMobs)
   - ReachLocation (WorldEdit required for objective creation)
+  - SlimefunResearch (requires Slimefun)
 - Multiple Quest Accept Requirements:
   -  Money
   -  Other Quest
@@ -84,6 +88,7 @@ Admin Commands - Quest Editing:
   - Quest Points
   - Item
   - Money
+  - Permission (Requires LuckPerms)
 - Multiple Triggers: (Triggers run console commands (= Actions) when activated. Triggers are set per-quest)
   - Begin Quest or Objective
   - Complete Quest or Objective
