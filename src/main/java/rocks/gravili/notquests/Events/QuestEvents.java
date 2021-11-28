@@ -157,7 +157,7 @@ public class QuestEvents implements Listener {
 
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     private void onBlockPlace(BlockPlaceEvent e) {
         if (!e.isCancelled()) {
             final Player player = e.getPlayer();
