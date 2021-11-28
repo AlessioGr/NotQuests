@@ -33,20 +33,20 @@ import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Quest;
 
-public class BlockPlaceObjective extends Objective {
+public class PlaceBlocksObjective extends Objective {
 
     private final NotQuests main;
     private final Material blockToPlace;
     private final boolean deductIfBlockIsBroken;
 
-    public BlockPlaceObjective(NotQuests main, final Quest quest, final int objectiveID, Material blockToPlace, int amountToPlace, boolean deductIfBlockIsBroken) {
+    public PlaceBlocksObjective(NotQuests main, final Quest quest, final int objectiveID, Material blockToPlace, int amountToPlace, boolean deductIfBlockIsBroken) {
         super(main, quest, objectiveID, amountToPlace);
         this.main = main;
         this.blockToPlace = blockToPlace;
         this.deductIfBlockIsBroken = deductIfBlockIsBroken;
     }
 
-    public BlockPlaceObjective(NotQuests main, Quest quest, int objectiveNumber, int progressNeeded) {
+    public PlaceBlocksObjective(NotQuests main, Quest quest, int objectiveNumber, int progressNeeded) {
         super(main, quest, objectiveNumber, progressNeeded);
         final String questName = quest.getQuestName();
 
@@ -56,25 +56,25 @@ public class BlockPlaceObjective extends Objective {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
-        manager.command(addObjectiveBuilder.literal("BreakBlocks")
-                .argument(MaterialArgument.of("material"), ArgumentDescription.of("Material of the block which needs to be broken."))
-                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of blocks which need to be broken"))
+        manager.command(addObjectiveBuilder.literal("PlaceBlocks")
+                .argument(MaterialArgument.of("material"), ArgumentDescription.of("Material of the block which needs to be place."))
+                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of blocks which need to be placed"))
                 .flag(
-                        manager.flagBuilder("doNotDeductIfBlockIsPlaced")
-                                .withDescription(ArgumentDescription.of("Makes it so Quest progress is not removed if the block is placed"))
+                        manager.flagBuilder("doNotDeductIfBlockIsBroken")
+                                .withDescription(ArgumentDescription.of("Makes it so Quest progress is not removed if the block is broken"))
                 )
-                .meta(CommandMeta.DESCRIPTION, "Adds a new BreakBlocks Objective to a quest")
+                .meta(CommandMeta.DESCRIPTION, "Adds a new PlaceBlocks Objective to a quest")
                 .handler((context) -> {
                     final Audience audience = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
                     final Material material = context.get("material");
                     final int amount = context.get("amount");
-                    final boolean deductIfBlockIsPlaced = !context.flags().isPresent("doNotDeductIfBlockIsPlaced");
+                    final boolean deductIfBlockIsBroken = !context.flags().isPresent("doNotDeductIfBlockIsBroken");
 
-                    BreakBlocksObjective breakBlocksObjective = new BreakBlocksObjective(main, quest, quest.getObjectives().size() + 1, material, amount, deductIfBlockIsPlaced);
-                    quest.addObjective(breakBlocksObjective, true);
+                    PlaceBlocksObjective placeBlocksObjective = new PlaceBlocksObjective(main, quest, quest.getObjectives().size() + 1, material, amount, deductIfBlockIsBroken);
+                    quest.addObjective(placeBlocksObjective, true);
                     audience.sendMessage(MiniMessage.miniMessage().parse(
-                            NotQuestColors.successGradient + "BreakBlocks Objective successfully added to Quest " + NotQuestColors.highlightGradient
+                            NotQuestColors.successGradient + "PlaceBlocks Objective successfully added to Quest " + NotQuestColors.highlightGradient
                                     + quest.getQuestName() + "</gradient>!</gradient>"
                     ));
 

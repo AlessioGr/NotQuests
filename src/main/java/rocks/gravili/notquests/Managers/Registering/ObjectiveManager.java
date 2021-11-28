@@ -48,6 +48,7 @@ public class ObjectiveManager {
     public void registerDefaultObjectives(){
         objectives.clear();
         registerObjective("BreakBlocks", BreakBlocksObjective.class);
+        registerObjective("PlaceBlocks", PlaceBlocksObjective.class);
         registerObjective("CollectItems", CollectItemsObjective.class);
         registerObjective("TriggerCommand", TriggerCommandObjective.class);
         registerObjective("OtherQuest", OtherQuestObjective.class);

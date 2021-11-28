@@ -384,6 +384,10 @@ public class LanguageManager {
             getLanguageConfig().set("chat.objectives.taskDescription.otherQuest.base", "    &8└─ &7%EVENTUALCOLOR%Quest completion: &f%EVENTUALCOLOR%%OTHERQUESTNAME%");
             valueChanged = true;
         }
+        if (!getLanguageConfig().isString("chat.objectives.taskDescription.placeBlocks.base")) {
+            getLanguageConfig().set("chat.objectives.taskDescription.placeBlocks.base", "    &8└─ &7%EVENTUALCOLOR%Block to place: &f%EVENTUALCOLOR%%BLOCKTOPLACE%");
+            valueChanged = true;
+        }
         if (!getLanguageConfig().isString("chat.objectives.taskDescription.reachLocation.base")) {
             getLanguageConfig().set("chat.objectives.taskDescription.reachLocation.base", "    &8└─ &7%EVENTUALCOLOR%Reach Location: &f%EVENTUALCOLOR%%LOCATIONNAME%");
             valueChanged = true;

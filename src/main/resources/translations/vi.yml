@@ -49,6 +49,8 @@ chat:
         base: '    &7%EVENTUALCOLOR%Tiêu Diệt Quái: &f%EVENTUALCOLOR%%MOBTOKILL%'
       otherQuest:
         base: '    &7%EVENTUALCOLOR%Hoàn Thành Nhiệm Vụ: &f%EVENTUALCOLOR%%OTHERQUESTNAME%'
+      placeBlocks:
+        base: '    &8└─ &7%EVENTUALCOLOR%Block to place: &f%EVENTUALCOLOR%%BLOCKTOPLACE%'
       reachLocation:
         base: '    &7%EVENTUALCOLOR%Đi Đến Địa Điểm: &f%EVENTUALCOLOR%%LOCATIONNAME%'
       talkToNPC:

@@ -138,6 +138,12 @@ public class QuestEvents implements Listener {
                                     if (breakBlocksObjective.getBlockToBreak().equals(e.getBlock().getType())) {
                                         activeObjective.addProgress(1, -1);
                                     }
+                                } else if (activeObjective.getObjective() instanceof PlaceBlocksObjective placeBlocksObjective) { //Deduct if Block is Broken for PlaceBlocksObjective
+                                    if (placeBlocksObjective.getBlockToPlace().equals(e.getBlock().getType())) {
+                                        if (placeBlocksObjective.isDeductIfBlockBroken()) {
+                                            activeObjective.removeProgress(1, false);
+                                        }
+                                    }
                                 }
                             }
 
@@ -166,6 +172,10 @@ public class QuestEvents implements Listener {
                                     if (breakBlocksObjective.isDeductIfBlockPlaced()) {
                                         activeObjective.removeProgress(1, false);
                                     }
+                                }
+                            } else if (activeObjective.getObjective() instanceof PlaceBlocksObjective placeBlocksObjective) {
+                                if (placeBlocksObjective.getBlockToPlace().equals(e.getBlock().getType())) {
+                                    activeObjective.addProgress(1, -1);
                                 }
                             }
                         }

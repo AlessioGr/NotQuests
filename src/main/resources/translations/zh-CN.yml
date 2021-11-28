@@ -46,6 +46,8 @@ chat:
         base: '    &8└─ &7%EVENTUALCOLOR%Mobs to kill: &f%EVENTUALCOLOR%%MOBTOKILL%'
       otherQuest:
         base: '    &8└─ &7%EVENTUALCOLOR%Quest completion: &f%EVENTUALCOLOR%%OTHERQUESTNAME%'
+      placeBlocks:
+        base: '    &8└─ &7%EVENTUALCOLOR%Block to place: &f%EVENTUALCOLOR%%BLOCKTOPLACE%'
       reachLocation:
         base: '    &8└─ &7%EVENTUALCOLOR%Reach Location: &f%EVENTUALCOLOR%%LOCATIONNAME%'
       talkToNPC:
