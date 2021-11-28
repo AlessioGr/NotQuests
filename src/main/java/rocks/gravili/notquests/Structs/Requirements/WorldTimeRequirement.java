@@ -57,8 +57,8 @@ public class WorldTimeRequirement extends Requirement {
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addRequirementBuilder) {
         manager.command(addRequirementBuilder.literal("WorldTime")
-                .argument(IntegerArgument.<CommandSender>newBuilder("minTime").withMin(1), ArgumentDescription.of("Minimum world time (24-hour clock)"))
-                .argument(IntegerArgument.<CommandSender>newBuilder("maxTime").withMin(1), ArgumentDescription.of("Maximum world time (24-hour clock)"))
+                .argument(IntegerArgument.<CommandSender>newBuilder("minTime").withMin(0).withMax(24), ArgumentDescription.of("Minimum world time (24-hour clock)"))
+                .argument(IntegerArgument.<CommandSender>newBuilder("maxTime").withMin(0).withMax(24), ArgumentDescription.of("Maximum world time (24-hour clock)"))
 
                 .meta(CommandMeta.DESCRIPTION, "Adds a new Time Requirement (24-hour-clock) to a quest")
                 .handler((context) -> {
