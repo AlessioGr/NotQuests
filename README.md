@@ -86,6 +86,7 @@ Admin Commands - Quest Editing:
   -  Other Quest
   -  Permission
   -  Quest Points
+  -  World Time
 - Multiple Quest Completion Rewards:
   - Command
   - Quest Points
