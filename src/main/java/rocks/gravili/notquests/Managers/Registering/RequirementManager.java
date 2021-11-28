@@ -48,6 +48,7 @@ public class RequirementManager {
         registerRequirement("QuestPoints", QuestPointsRequirement.class);
         registerRequirement("Permission", PermissionRequirement.class);
         registerRequirement("Money", MoneyRequirement.class);
+        registerRequirement("WorldTime", WorldTimeRequirement.class);
 
 
     }
