@@ -80,6 +80,7 @@ Admin Commands - Quest Editing:
   - SlimefunResearch (requires Slimefun)
   - Run Command
   - Interact (right- or left-click block (or both))
+  - Jump
 - Multiple Quest Accept Requirements:
   -  Money
   -  Other Quest
