@@ -32,7 +32,7 @@ import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bstats.bukkit.Metrics;
-import org.bstats.charts.SimpleBarChart;
+import org.bstats.charts.AdvancedPie;
 import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -288,7 +288,7 @@ public final class NotQuests extends JavaPlugin {
 
             conversationManager = new ConversationManager(this);
 
-            setupBstats();
+            setupBStats();
 
 
         }
@@ -301,7 +301,7 @@ public final class NotQuests extends JavaPlugin {
 
     }
 
-    public void setupBstats() {
+    public void setupBStats() {
         //bStats statistics
         final int pluginId = 12824; // <- Plugin ID (on bstats)
         metrics = new Metrics(this, pluginId);
@@ -320,21 +320,22 @@ public final class NotQuests extends JavaPlugin {
             }
         }));
 
-        metrics.addCustomChart(new SimpleBarChart("ObjectiveTypes", new Callable<Map<String, Integer>>() {
+        metrics.addCustomChart(new AdvancedPie("ObjectiveTypes", new Callable<Map<String, Integer>>() {
             @Override
             public Map<String, Integer> call() throws Exception {
-                Map<String, Integer> map = new HashMap<>();
+                Map<String, Integer> valueMap = new HashMap<>();
                 for (Quest quest : getQuestManager().getAllQuests()) {
                     for (Objective objective : quest.getObjectives()) {
                         String objectiveType = getObjectiveManager().getObjectiveType(objective.getClass());
-                        map.put(objectiveType, map.getOrDefault(objectiveType, 0) + 1);
+                        valueMap.put(objectiveType, valueMap.getOrDefault(objectiveType, 0) + 1);
                     }
                 }
-                return map;
+                return valueMap;
             }
         }));
 
-        metrics.addCustomChart(new SimpleBarChart("RequirementTypes", new Callable<Map<String, Integer>>() {
+
+        metrics.addCustomChart(new AdvancedPie("RequirementTypes", new Callable<Map<String, Integer>>() {
             @Override
             public Map<String, Integer> call() throws Exception {
                 Map<String, Integer> map = new HashMap<>();
@@ -348,7 +349,7 @@ public final class NotQuests extends JavaPlugin {
             }
         }));
 
-        metrics.addCustomChart(new SimpleBarChart("RewardTypes", new Callable<Map<String, Integer>>() {
+        metrics.addCustomChart(new AdvancedPie("RewardTypes", new Callable<Map<String, Integer>>() {
             @Override
             public Map<String, Integer> call() throws Exception {
                 Map<String, Integer> map = new HashMap<>();
@@ -362,7 +363,7 @@ public final class NotQuests extends JavaPlugin {
             }
         }));
 
-        metrics.addCustomChart(new SimpleBarChart("TriggerTypes", new Callable<Map<String, Integer>>() {
+        metrics.addCustomChart(new AdvancedPie("TriggerTypes", new Callable<Map<String, Integer>>() {
             @Override
             public Map<String, Integer> call() throws Exception {
                 Map<String, Integer> map = new HashMap<>();
