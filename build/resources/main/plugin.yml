@@ -1,5 +1,5 @@
 name: NotQuests
-version: '2.0.1'
+version: '2.0.2'
 main: rocks.gravili.notquests.NotQuests
 api-version: 1.17
 authors: [ NoeX ]
