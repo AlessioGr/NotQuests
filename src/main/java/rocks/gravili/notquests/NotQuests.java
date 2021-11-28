@@ -32,6 +32,8 @@ import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bstats.bukkit.Metrics;
+import org.bstats.charts.SimpleBarChart;
+import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -51,9 +53,17 @@ import rocks.gravili.notquests.Managers.Registering.RequirementManager;
 import rocks.gravili.notquests.Managers.Registering.RewardManager;
 import rocks.gravili.notquests.Managers.Registering.TriggerManager;
 import rocks.gravili.notquests.Placeholders.QuestPlaceholders;
+import rocks.gravili.notquests.Structs.Objectives.Objective;
+import rocks.gravili.notquests.Structs.Quest;
+import rocks.gravili.notquests.Structs.Requirements.Requirement;
+import rocks.gravili.notquests.Structs.Rewards.Reward;
+import rocks.gravili.notquests.Structs.Triggers.Trigger;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.Callable;
 import java.util.logging.Level;
 
 /**
@@ -272,18 +282,95 @@ public final class NotQuests extends JavaPlugin {
                 getLogManager().info("Unable to check for updates ('" + e.getMessage() + "').");
             }
 
-            //bStats statistics
-            final int pluginId = 12824; // <- Plugin ID (on bstats)
-            metrics = new Metrics(this, pluginId);
+            conversationManager = new ConversationManager(this);
+
+            setupBstats();
+
+
         }
 
 
-        conversationManager = new ConversationManager(this);
         //Register the Event Listeners in ConversationEvents
         getServer().getPluginManager().registerEvents(new ConversationEvents(this, conversationManager), this);
 
         commandManager.setupAdminConversationCommands(conversationManager);
 
+    }
+
+    public void setupBstats() {
+        //bStats statistics
+        final int pluginId = 12824; // <- Plugin ID (on bstats)
+        metrics = new Metrics(this, pluginId);
+
+        metrics.addCustomChart(new SingleLineChart("quests", new Callable<Integer>() {
+            @Override
+            public Integer call() throws Exception {
+                return getQuestManager().getAllQuests().size();
+            }
+        }));
+
+        metrics.addCustomChart(new SingleLineChart("conversations", new Callable<Integer>() {
+            @Override
+            public Integer call() throws Exception {
+                return getConversationManager().getAllConversations().size();
+            }
+        }));
+
+        metrics.addCustomChart(new SimpleBarChart("ObjectiveTypes", new Callable<Map<String, Integer>>() {
+            @Override
+            public Map<String, Integer> call() throws Exception {
+                Map<String, Integer> map = new HashMap<>();
+                for (Quest quest : getQuestManager().getAllQuests()) {
+                    for (Objective objective : quest.getObjectives()) {
+                        String objectiveType = getObjectiveManager().getObjectiveType(objective.getClass());
+                        map.put(objectiveType, map.getOrDefault(objectiveType, 0) + 1);
+                    }
+                }
+                return map;
+            }
+        }));
+
+        metrics.addCustomChart(new SimpleBarChart("RequirementTypes", new Callable<Map<String, Integer>>() {
+            @Override
+            public Map<String, Integer> call() throws Exception {
+                Map<String, Integer> map = new HashMap<>();
+                for (Quest quest : getQuestManager().getAllQuests()) {
+                    for (Requirement requirement : quest.getRequirements()) {
+                        String requirementType = getRequirementManager().getRequirementType(requirement.getClass());
+                        map.put(requirementType, map.getOrDefault(requirementType, 0) + 1);
+                    }
+                }
+                return map;
+            }
+        }));
+
+        metrics.addCustomChart(new SimpleBarChart("RewardTypes", new Callable<Map<String, Integer>>() {
+            @Override
+            public Map<String, Integer> call() throws Exception {
+                Map<String, Integer> map = new HashMap<>();
+                for (Quest quest : getQuestManager().getAllQuests()) {
+                    for (Reward reward : quest.getRewards()) {
+                        String rewardType = getRewardManager().getRewardType(reward.getClass());
+                        map.put(rewardType, map.getOrDefault(rewardType, 0) + 1);
+                    }
+                }
+                return map;
+            }
+        }));
+
+        metrics.addCustomChart(new SimpleBarChart("TriggerTypes", new Callable<Map<String, Integer>>() {
+            @Override
+            public Map<String, Integer> call() throws Exception {
+                Map<String, Integer> map = new HashMap<>();
+                for (Quest quest : getQuestManager().getAllQuests()) {
+                    for (Trigger trigger : quest.getTriggers()) {
+                        String triggerType = getTriggerManager().getTriggerType(trigger.getClass());
+                        map.put(triggerType, map.getOrDefault(triggerType, 0) + 1);
+                    }
+                }
+                return map;
+            }
+        }));
     }
 
     private void enableIntegrations() {
