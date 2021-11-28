@@ -159,32 +159,35 @@ public class QuestEvents implements Listener {
 
     @EventHandler
     private void onBlockPlace(BlockPlaceEvent e) {
-        final Player player = e.getPlayer();
-        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
-        if (questPlayer != null) {
-            if (questPlayer.getActiveQuests().size() > 0) {
-                for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-                    for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-                        if (activeObjective.isUnlocked()) {
-                            //This is for the BreakBlocksObjective. It should deduct the progress if the player placed the same block again (if willDeductIfBlockPlaced() is set to true)
-                            if (activeObjective.getObjective() instanceof BreakBlocksObjective breakBlocksObjective) {
-                                if (breakBlocksObjective.getBlockToBreak().equals(e.getBlock().getType())) {
-                                    if (breakBlocksObjective.isDeductIfBlockPlaced()) {
-                                        activeObjective.removeProgress(1, false);
+        if (!e.isCancelled()) {
+            final Player player = e.getPlayer();
+            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+            if (questPlayer != null) {
+                if (questPlayer.getActiveQuests().size() > 0) {
+                    for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+                        for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
+                            if (activeObjective.isUnlocked()) {
+                                //This is for the BreakBlocksObjective. It should deduct the progress if the player placed the same block again (if willDeductIfBlockPlaced() is set to true)
+                                if (activeObjective.getObjective() instanceof BreakBlocksObjective breakBlocksObjective) {
+                                    if (breakBlocksObjective.getBlockToBreak().equals(e.getBlock().getType())) {
+                                        if (breakBlocksObjective.isDeductIfBlockPlaced()) {
+                                            activeObjective.removeProgress(1, false);
+                                        }
                                     }
-                                }
-                            } else if (activeObjective.getObjective() instanceof PlaceBlocksObjective placeBlocksObjective) {
-                                if (placeBlocksObjective.getBlockToPlace().equals(e.getBlock().getType())) {
-                                    activeObjective.addProgress(1, -1);
+                                } else if (activeObjective.getObjective() instanceof PlaceBlocksObjective placeBlocksObjective) {
+                                    if (placeBlocksObjective.getBlockToPlace().equals(e.getBlock().getType())) {
+                                        activeObjective.addProgress(1, -1);
+                                    }
                                 }
                             }
                         }
+                        activeQuest.removeCompletedObjectives(true);
                     }
-                    activeQuest.removeCompletedObjectives(true);
+                    questPlayer.removeCompletedQuests();
                 }
-                questPlayer.removeCompletedQuests();
             }
         }
+
     }
 
 
