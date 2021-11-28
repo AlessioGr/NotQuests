@@ -64,7 +64,7 @@ public class InteractObjective extends Objective {
         this.main = main;
         locationToInteract = main.getDataManager().getQuestsConfig().getLocation("quests." + questName + ".objectives." + objectiveNumber + ".specifics.locationToInteract");
         leftClick = main.getDataManager().getQuestsConfig().getBoolean("quests." + questName + ".objectives." + objectiveNumber + ".specifics.leftClick", false);
-        rightClick = main.getDataManager().getQuestsConfig().getBoolean("quests." + questName + ".objectives." + objectiveNumber + ".specifics.cancelCommand", false);
+        rightClick = main.getDataManager().getQuestsConfig().getBoolean("quests." + questName + ".objectives." + objectiveNumber + ".specifics.rightClick", false);
         taskDescription = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.taskDescription", "");
         maxDistance = main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.maxDistance", 1);
         cancelInteraction = main.getDataManager().getQuestsConfig().getBoolean("quests." + questName + ".objectives." + objectiveNumber + ".specifics.cancelInteraction", false);

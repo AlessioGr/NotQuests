@@ -78,8 +78,12 @@ public class QuestEvents implements Listener {
             for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
                 if (activeObjective.isUnlocked()) {
                     if (activeObjective.getObjective() instanceof InteractObjective interactObjective) {
-                        questPlayer.sendDebugMessage("Found InteractObjective Objective in PlayerInteractEvent. Clicked Block material: " + highlightGradient + e.getMaterial().name()
-                                + "</gradient>."
+                        String materialName = "AIR";
+                        if (e.getClickedBlock() != null) {
+                            materialName = e.getClickedBlock().getBlockData().getMaterial().name();
+                        }
+                        questPlayer.sendDebugMessage("Found InteractObjective Objective in PlayerInteractEvent. Clicked Block material: " + highlightGradient + materialName
+                                + "</gradient>. Action: " + highlight2Gradient + e.getAction() + "</gradient>."
                         );
 
                         if (e.getAction() == Action.RIGHT_CLICK_BLOCK && !interactObjective.isRightClick()) {
