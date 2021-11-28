@@ -413,6 +413,14 @@ public class LanguageManager {
             getLanguageConfig().set("chat.objectives.taskDescription.runCommand.base", "    &8└─ &7%EVENTUALCOLOR%Run command: &f%EVENTUALCOLOR%%COMMANDTORUN%");
             valueChanged = true;
         }
+        if (!getLanguageConfig().isString("chat.objectives.taskDescription.interact.base")) {
+            getLanguageConfig().set("chat.objectives.taskDescription.interact.base", "    &8└─ &7%EVENTUALCOLOR%%INTERACTTYPE% Location: &f%EVENTUALCOLOR%%COORDINATES% &f%EVENTUALCOLOR%in world%EVENTUALCOLOR% %WORLDNAME%");
+            valueChanged = true;
+        }
+        if (!getLanguageConfig().isString("chat.objectives.taskDescription.interact.taskDescriptionProvided")) {
+            getLanguageConfig().set("chat.objectives.taskDescription.interact.taskDescriptionProvided", "    &8└─ &7%EVENTUALCOLOR%%TASKDESCRIPTION%");
+            valueChanged = true;
+        }
 
 
         //user /q gui - Main

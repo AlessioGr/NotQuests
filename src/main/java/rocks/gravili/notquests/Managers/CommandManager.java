@@ -21,6 +21,7 @@ package rocks.gravili.notquests.Managers;
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.flags.CommandFlag;
+import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.arguments.standard.StringArrayArgument;
 import cloud.commandframework.bukkit.CloudBukkitCapabilities;
@@ -81,6 +82,9 @@ public class CommandManager {
     //Re-usable value flags
     public final CommandFlag<String[]> nametag_containsany;
     public final CommandFlag<String[]> nametag_equals;
+    public final CommandFlag<String> taskDescription;
+    public final CommandFlag<Integer> maxDistance;
+
 
     public final CommandFlag<Integer> applyOn; //0 = Quest
     public final CommandFlag<World> world;
@@ -124,6 +128,29 @@ public class CommandManager {
                 ))
                 .withDescription(ArgumentDescription.of("What the nametag has to be equal"))
                 .build();
+
+        taskDescription = CommandFlag
+                .newBuilder("taskDescription")
+                .withArgument(StringArgument.<CommandSender>newBuilder("Task Description").withSuggestionsProvider(
+                        (context, lastString) -> {
+                            final List<String> allArgs = context.getRawInput();
+                            final Audience audience = main.adventure().sender(context.getSender());
+                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Enter task description (put between \" \" if you want to use spaces)]", "");
+
+                            ArrayList<String> completions = new ArrayList<>();
+
+                            completions.add("<Enter task description (put between \" \" if you want to use spaces)>");
+                            return completions;
+                        }
+                ).quoted())
+                .withDescription(ArgumentDescription.of("Custom description of the task"))
+                .build();
+
+        maxDistance = CommandFlag
+                .newBuilder("maxDistance")
+                .withArgument(IntegerArgument.of("maxDistance"))
+                .withDescription(ArgumentDescription.of("Enter maximum distance of two locations."))
+                .build(); //0 = Quest
 
         world = CommandFlag
                 .newBuilder("world")

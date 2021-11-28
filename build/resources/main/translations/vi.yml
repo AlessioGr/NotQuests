@@ -62,6 +62,9 @@ chat:
         any: '    &7%EVENTUALCOLOR%Tiêu Diệt Bất Kì EliteMobs Nào!'
       runCommand:
         base: '    &8└─ &7%EVENTUALCOLOR%Run command: &f%EVENTUALCOLOR%%COMMANDTORUN%'
+      interact:
+        base: '    &8└─ &7%EVENTUALCOLOR%%INTERACTTYPE% Location: &f%EVENTUALCOLOR%%COORDINATES% &f%EVENTUALCOLOR%in world%EVENTUALCOLOR% %WORLDNAME%'
+        taskDescriptionProvided: '    &8└─ &7%EVENTUALCOLOR%%TASKDESCRIPTION%'
 titles:
   quest-accepted:
     title: '&fChấp Nhận Nhiệm Vụ'

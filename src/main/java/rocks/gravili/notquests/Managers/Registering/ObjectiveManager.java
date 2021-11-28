@@ -63,6 +63,8 @@ public class ObjectiveManager {
         registerObjective("BreedMobs", BreedObjective.class);
         registerObjective("SlimefunResearch", SlimefunResearchObjective.class);
         registerObjective("RunCommand", RunCommandObjective.class);
+        registerObjective("Interact", InteractObjective.class);
+
 
         //registerObjectiveCommandCompletionHandler("KillMobs", this::eee);
     }

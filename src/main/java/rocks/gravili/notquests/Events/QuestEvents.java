@@ -27,6 +27,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityBreedEvent;
@@ -58,6 +59,58 @@ public class QuestEvents implements Listener {
 
     public QuestEvents(NotQuests main) {
         this.main = main;
+    }
+
+
+    @EventHandler
+    public void interactEvent(final PlayerInteractEvent e) {
+        final Player player = e.getPlayer();
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+        if (questPlayer == null) {
+            return;
+        }
+        if (questPlayer.getActiveQuests().size() == 0) {
+            return;
+        }
+
+
+        for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+            for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
+                if (activeObjective.isUnlocked()) {
+                    if (activeObjective.getObjective() instanceof InteractObjective interactObjective) {
+                        questPlayer.sendDebugMessage("Found InteractObjective Objective in PlayerInteractEvent. Clicked Block material: " + highlightGradient + e.getMaterial().name()
+                                + "</gradient>."
+                        );
+
+                        if (e.getAction() == Action.RIGHT_CLICK_BLOCK && !interactObjective.isRightClick()) {
+                            return;
+                        }
+                        if (e.getAction() == Action.LEFT_CLICK_BLOCK && !interactObjective.isLeftClick()) {
+                            return;
+                        }
+                        if (e.getClickedBlock() == null || e.getClickedBlock().getLocation().getWorld() == null || interactObjective.getLocationToInteract().getWorld() == null) {
+                            return;
+                        }
+
+                        if (!e.getClickedBlock().getLocation().getWorld().getName().equalsIgnoreCase(interactObjective.getLocationToInteract().getWorld().getName())) {
+                            return;
+                        }
+                        if (e.getClickedBlock().getLocation().distance(interactObjective.getLocationToInteract()) > interactObjective.getMaxDistance()) {
+                            return;
+                        }
+
+                        activeObjective.addProgress(1, -1);
+                        if (interactObjective.isCancelInteraction()) {
+                            e.setCancelled(true);
+                        }
+
+                    }
+                }
+
+            }
+            activeQuest.removeCompletedObjectives(true);
+        }
+        questPlayer.removeCompletedQuests();
     }
 
 
