@@ -49,7 +49,7 @@ import rocks.gravili.notquests.Structs.Triggers.TriggerTypes.WorldLeaveTrigger;
 
 import java.util.Locale;
 
-import static rocks.gravili.notquests.Commands.NotQuestColors.debugHighlightGradient;
+import static rocks.gravili.notquests.Commands.NotQuestColors.*;
 
 
 public class QuestEvents implements Listener {
@@ -58,6 +58,49 @@ public class QuestEvents implements Listener {
 
     public QuestEvents(NotQuests main) {
         this.main = main;
+    }
+
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onCommand(final PlayerCommandPreprocessEvent e) {
+        final Player player = e.getPlayer();
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+        if (questPlayer == null) {
+            return;
+        }
+        if (questPlayer.getActiveQuests().size() == 0) {
+            return;
+        }
+
+        for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+            for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
+                if (activeObjective.isUnlocked()) {
+                    if (activeObjective.getObjective() instanceof RunCommandObjective runCommandObjective) {
+                        questPlayer.sendDebugMessage("Found RunCommand Objective in PlayerCommandPreprocessEvent. Command: " + highlightGradient + e.getMessage()
+                                + "</gradient> Objective command to run: " + highlight2Gradient + runCommandObjective.getCommandToRun() + "</gradient>."
+                        );
+
+                        if (runCommandObjective.isIgnoreCase() && !e.getMessage().equalsIgnoreCase(runCommandObjective.getCommandToRun())) {
+                            continue;
+                        }
+                        if (!runCommandObjective.isIgnoreCase() && !e.getMessage().equals(runCommandObjective.getCommandToRun())) {
+                            continue;
+                        }
+
+                        activeObjective.addProgress(1, -1);
+                        if (runCommandObjective.isCancelCommand()) {
+                            e.setCancelled(true);
+                        }
+
+                    }
+                }
+
+            }
+            activeQuest.removeCompletedObjectives(true);
+        }
+        questPlayer.removeCompletedQuests();
+
+
     }
 
 

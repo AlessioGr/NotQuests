@@ -60,6 +60,8 @@ chat:
       killEliteMobs:
         base: '    &7%EVENTUALCOLOR%Tiêu Diệt Elite Mobs: &f%EVENTUALCOLOR%%ELITEMOBNAME%'
         any: '    &7%EVENTUALCOLOR%Tiêu Diệt Bất Kì EliteMobs Nào!'
+      runCommand:
+        base: '    &8└─ &7%EVENTUALCOLOR%Run command: &f%EVENTUALCOLOR%%COMMANDTORUN%'
 titles:
   quest-accepted:
     title: '&fChấp Nhận Nhiệm Vụ'

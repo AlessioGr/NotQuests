@@ -57,6 +57,8 @@ chat:
       killEliteMobs:
         base: '    &8└─ &7%EVENTUALCOLOR%Kill Elite Mob: &f%EVENTUALCOLOR%%ELITEMOBNAME%'
         any: '    &8└─ &7%EVENTUALCOLOR%Kill any Elite Mob!'
+      runCommand:
+        base: '    &8└─ &7%EVENTUALCOLOR%Run command: &f%EVENTUALCOLOR%%COMMANDTORUN%'
 titles:
   quest-accepted:
     title: '&f任务已接受'

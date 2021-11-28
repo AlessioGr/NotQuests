@@ -409,6 +409,11 @@ public class LanguageManager {
             valueChanged = true;
         }
 
+        if (!getLanguageConfig().isString("chat.objectives.taskDescription.runCommand.base")) {
+            getLanguageConfig().set("chat.objectives.taskDescription.runCommand.base", "    &8└─ &7%EVENTUALCOLOR%Run command: &f%EVENTUALCOLOR%%COMMANDTORUN%");
+            valueChanged = true;
+        }
+
 
         //user /q gui - Main
         if (!getLanguageConfig().isString("gui.main.title")) {
