@@ -80,6 +80,10 @@ public class MoneyReward extends Reward {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addRewardBuilder) {
+        if (!main.isVaultEnabled()) {
+            return;
+        }
+
         manager.command(addRewardBuilder.literal("Money")
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of money the player will receive."))
                 .meta(CommandMeta.DESCRIPTION, "Adds a new Money Reward to a quest")

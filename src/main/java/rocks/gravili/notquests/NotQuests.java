@@ -28,7 +28,6 @@ import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitInfo;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
-import net.luckperms.api.LuckPerms;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
@@ -45,6 +44,7 @@ import rocks.gravili.notquests.Events.TriggerEvents;
 import rocks.gravili.notquests.Events.hooks.*;
 import rocks.gravili.notquests.Hooks.BetonQuest.BetonQuestIntegration;
 import rocks.gravili.notquests.Hooks.Citizens.CitizensManager;
+import rocks.gravili.notquests.Hooks.Luckperms.LuckpermsManager;
 import rocks.gravili.notquests.Managers.*;
 import rocks.gravili.notquests.Managers.Registering.ObjectiveManager;
 import rocks.gravili.notquests.Managers.Registering.RequirementManager;
@@ -115,7 +115,7 @@ public final class NotQuests extends JavaPlugin {
     private Slimefun slimefun;
 
     private boolean luckpermsEnabled = false;
-    private LuckPerms luckPerms;
+    private LuckpermsManager luckpermsManager;
 
 
     private BukkitAudiences adventure;
@@ -375,11 +375,11 @@ public final class NotQuests extends JavaPlugin {
 
         //Luckperms
         if (getDataManager().getConfiguration().isIntegrationLuckPermsEnabled()) {
-            RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
-            if (provider != null) {
-                luckPerms = provider.getProvider();
+            if (getServer().getPluginManager().getPlugin("LuckPerms") != null) {
+                luckpermsManager = new LuckpermsManager(this);
                 luckpermsEnabled = true;
             }
+
         }
 
     }
@@ -660,8 +660,8 @@ public final class NotQuests extends JavaPlugin {
         return worldEditHook;
     }
 
-    public LuckPerms getLuckPerms() {
-        return luckPerms;
+    public LuckpermsManager getLuckPermsManager() {
+        return luckpermsManager;
     }
 
     public void enableMythicMobs() {

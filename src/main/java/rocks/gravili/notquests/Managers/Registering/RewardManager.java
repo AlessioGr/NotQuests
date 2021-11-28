@@ -48,7 +48,7 @@ public class RewardManager {
         registerReward("QuestPoints", QuestPointsReward.class);
         registerReward("Item", ItemReward.class);
         registerReward("Money", MoneyReward.class);
-
+        registerReward("Permission", PermissionReward.class);
 
     }
 
