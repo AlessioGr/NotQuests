@@ -71,7 +71,6 @@ public class MoneyRequirement extends Requirement {
 
     @Override
     public void save() {
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".requirements." + getRequirementID() + ".specifics.moneyRequirement", getMoneyRequirement());
         main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".requirements." + getRequirementID() + ".specifics.deductMoney", isDeductMoney());
 
     }

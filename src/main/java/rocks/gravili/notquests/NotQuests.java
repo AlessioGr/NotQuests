@@ -128,6 +128,7 @@ public final class NotQuests extends JavaPlugin {
     private boolean luckpermsEnabled = false;
     private LuckpermsManager luckpermsManager;
 
+    private boolean ultimateClansEnabled = false;
 
     private BukkitAudiences adventure;
 
@@ -474,6 +475,14 @@ public final class NotQuests extends JavaPlugin {
 
         }
 
+        //UltimateClans
+        if (getDataManager().getConfiguration().isIntegrationUltimateClansEnabled()) {
+            if (getServer().getPluginManager().getPlugin("UltimateClans") != null) {
+                ultimateClansEnabled = true;
+            }
+
+        }
+
     }
 
 
@@ -692,6 +701,10 @@ public final class NotQuests extends JavaPlugin {
 
     public boolean isLuckpermsEnabled() {
         return luckpermsEnabled;
+    }
+
+    public boolean isUltimateClansEnabled() {
+        return ultimateClansEnabled;
     }
 
 

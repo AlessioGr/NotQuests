@@ -85,6 +85,7 @@ public class Configuration {
     private boolean integrationWorldEditEnabled = true;
     private boolean integrationSlimeFunEnabled = true;
     private boolean integrationLuckPermsEnabled = true;
+    private boolean integrationUltimateClansEnabled = true;
 
     //Other
     private boolean actionBarFancyCommandCompletionEnabled = true;
@@ -453,5 +454,13 @@ public class Configuration {
 
     public void setIntegrationLuckPermsEnabled(boolean integrationLuckPermsEnabled) {
         this.integrationLuckPermsEnabled = integrationLuckPermsEnabled;
+    }
+
+    public boolean isIntegrationUltimateClansEnabled() {
+        return integrationUltimateClansEnabled;
+    }
+
+    public void setIntegrationUltimateClansEnabled(boolean integrationUltimateClansEnabled) {
+        this.integrationUltimateClansEnabled = integrationUltimateClansEnabled;
     }
 }

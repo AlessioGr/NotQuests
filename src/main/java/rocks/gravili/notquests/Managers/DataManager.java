@@ -639,6 +639,12 @@ public class DataManager {
         }
         configuration.setIntegrationLuckPermsEnabled(getGeneralConfig().getBoolean("integrations.luckperms.enabled"));
 
+        if (!getGeneralConfig().isBoolean("integrations.ultimateclans.enabled")) {
+            getGeneralConfig().set("integrations.ultimateclans.enabled", true);
+            valueChanged = true;
+        }
+        configuration.setIntegrationUltimateClansEnabled(getGeneralConfig().getBoolean("integrations.ultimateclans.enabled"));
+
 
         if (!getGeneralConfig().isBoolean("visual.fancy-command-completion.actionbar-enabled")) {
             getGeneralConfig().set("visual.fancy-command-completion.actionbar-enabled", true);

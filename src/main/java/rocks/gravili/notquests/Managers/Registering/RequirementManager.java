@@ -22,6 +22,7 @@ import cloud.commandframework.Command;
 import cloud.commandframework.paper.PaperCommandManager;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Requirements.*;
+import rocks.gravili.notquests.Structs.Requirements.hooks.UltimateClansClanLevelRequirement;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -49,7 +50,7 @@ public class RequirementManager {
         registerRequirement("Permission", PermissionRequirement.class);
         registerRequirement("Money", MoneyRequirement.class);
         registerRequirement("WorldTime", WorldTimeRequirement.class);
-
+        registerRequirement("UltimateClansClanLevel", UltimateClansClanLevelRequirement.class);
 
     }
 

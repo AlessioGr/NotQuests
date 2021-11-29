@@ -1,11 +1,11 @@
 name: NotQuests
-version: '2.1.3'
+version: '2.1.4'
 main: rocks.gravili.notquests.NotQuests
 api-version: 1.17
 authors: [ NoeX ]
 description: Flexible, open, GUI Quest Plugin for Minecraft 1.17 and 1.18
 website: quests.notnot.pro
-softdepend: [ Citizens, Vault, PlaceholderAPI, MythicMobs, EliteMobs, BetonQuest, WorldEdit, Slimefun, LuckPerms ]
+softdepend: [ Citizens, Vault, PlaceholderAPI, MythicMobs, EliteMobs, BetonQuest, WorldEdit, Slimefun, LuckPerms, UltimateClans ]
 commands:
   notquestsadminold:
     description: Edit quests (old command)
