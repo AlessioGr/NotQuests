@@ -94,7 +94,6 @@ public class UltimateClansClanLevelRequirement extends Requirement {
             if (!main.isUltimateClansEnabled()) {
                 return "\n§eError: The server does not have UltimateClans enabled. Please ask the Owner to install UltimateClans for UltimateClans stuff to work.";
             } else {
-
                 if (PlayerAPI.getInstance().getPlayerClan(player.getName()) != null && PlayerAPI.getInstance().getPlayerClan(player.getName()).getLevel() >= getMinClanLevel()) {
                     return "";
 
