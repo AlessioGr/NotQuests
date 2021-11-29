@@ -425,6 +425,10 @@ public class LanguageManager {
             getLanguageConfig().set("chat.objectives.taskDescription.jump.base", "    &8└─ &7%EVENTUALCOLOR%Jump &f%EVENTUALCOLOR%%AMOUNTOFJUMPS% &7%EVENTUALCOLOR%times");
             valueChanged = true;
         }
+        if (!getLanguageConfig().isString("chat.objectives.taskDescription.smelt.base")) {
+            getLanguageConfig().set("chat.objectives.taskDescription.smelt.base", "    &8└─ &7%EVENTUALCOLOR%Items to smelt: &f%EVENTUALCOLOR%%ITEMTOSMELTTYPE% (%ITEMTOSMELTNAME%)");
+            valueChanged = true;
+        }
 
 
         //user /q gui - Main

@@ -67,6 +67,8 @@ chat:
         taskDescriptionProvided: '    &8└─ &7%EVENTUALCOLOR%%TASKDESCRIPTION%'
       jump:
         base: '    &8└─ &7%EVENTUALCOLOR%Jump &f%EVENTUALCOLOR%%AMOUNTOFJUMPS% &7%EVENTUALCOLOR%times'
+      smelt:
+        base: '    &8└─ &7%EVENTUALCOLOR%Items to smelt: &f%EVENTUALCOLOR%%ITEMTOSMELTTYPE% (%ITEMTOSMELTNAME%)'
 titles:
   quest-accepted:
     title: '&fQuest accepted'
