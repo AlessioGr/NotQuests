@@ -78,6 +78,7 @@ Admin Commands - Quest Editing:
   - KillEliteMobs (if you're using EliteMobs)
   - ReachLocation (WorldEdit required for objective creation)
   - SlimefunResearch (requires Slimefun)
+  - UltimateClansClanLevel (requires UltimateClans)
   - Run Command
   - Interact (right- or left-click block (or both))
   - Jump
