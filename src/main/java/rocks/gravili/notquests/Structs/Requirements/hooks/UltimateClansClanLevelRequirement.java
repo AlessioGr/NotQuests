@@ -83,24 +83,23 @@ public class UltimateClansClanLevelRequirement extends Requirement {
 
     @Override
     public String getRequirementDescription() {
-        String description = "§7-- Member of clan with min. level: " + getMinClanLevel() + "\n";
 
-        return description;
+        return "§7-- Member of clan with min. level: " + getMinClanLevel() + "\n";
     }
 
     @Override
     public String check(QuestPlayer questPlayer, boolean enforce) {
         final Player player = questPlayer.getPlayer();
         if (player != null) {
-            if (main.isUltimateClansEnabled()) {
+            if (!main.isUltimateClansEnabled()) {
                 return "\n§eError: The server does not have UltimateClans enabled. Please ask the Owner to install UltimateClans for UltimateClans stuff to work.";
             } else {
 
-                if (PlayerAPI.getInstance().getPlayerClan(player.getName()).getLevel() >= getMinClanLevel()) {
+                if (PlayerAPI.getInstance().getPlayerClan(player.getName()) != null && PlayerAPI.getInstance().getPlayerClan(player.getName()).getLevel() >= getMinClanLevel()) {
                     return "";
 
                 }
-                return "\n§eYou need to be in a Clan with at least leve §b" + getMinClanLevel() + "§e.";
+                return "\n§eYou need to be in a Clan with at least level §b" + getMinClanLevel() + "§e.";
 
             }
         } else {

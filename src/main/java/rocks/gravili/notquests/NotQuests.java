@@ -477,7 +477,7 @@ public final class NotQuests extends JavaPlugin {
 
         //UltimateClans
         if (getDataManager().getConfiguration().isIntegrationUltimateClansEnabled()) {
-            if (getServer().getPluginManager().getPlugin("UltimateClans") != null) {
+            if (getServer().getPluginManager().getPlugin("UClans") != null) {
                 ultimateClansEnabled = true;
             }
 
