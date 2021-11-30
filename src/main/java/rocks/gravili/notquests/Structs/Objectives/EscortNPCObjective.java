@@ -68,9 +68,9 @@ public class EscortNPCObjective extends Objective {
 
             if (npc != null && npcDestination != null) {
                 toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.escortNPC.base", player)
-                        .replaceAll("%EVENTUALCOLOR%", eventualColor)
-                        .replaceAll("%NPCNAME%", "" + npc.getName())
-                        .replaceAll("%DESTINATIONNPCNAME%", "" + npcDestination.getName());
+                        .replace("%EVENTUALCOLOR%", eventualColor)
+                        .replace("%NPCNAME%", "" + npc.getName())
+                        .replace("%DESTINATIONNPCNAME%", "" + npcDestination.getName());
             } else {
                 toReturn = "    §7" + eventualColor + "The target or destination NPC is currently not available!";
             }

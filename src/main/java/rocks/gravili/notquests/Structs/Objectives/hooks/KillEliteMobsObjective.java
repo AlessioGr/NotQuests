@@ -72,75 +72,6 @@ public class KillEliteMobsObjective extends Objective {
 
     }
 
-    @Override
-    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
-        String toReturn = "";
-        if (!getEliteMobToKillContainsName().isBlank()) {
-            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.killEliteMobs.base", player)
-                    .replaceAll("%EVENTUALCOLOR%", eventualColor)
-                    .replaceAll("%ELITEMOBNAME%", "" + getEliteMobToKillContainsName());
-        } else {
-            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.killEliteMobs.any", player)
-                    .replaceAll("%EVENTUALCOLOR%", eventualColor);
-        }
-        if (getMinimumLevel() != -1) {
-            if (getMaximumLevel() != -1) {
-                toReturn += "\n        §7" + eventualColor + "Level: §f" + eventualColor + getMinimumLevel() + "-" + getMaximumLevel();
-            } else {
-                toReturn += "\n        §7" + eventualColor + "Minimum Level: §f" + eventualColor + getMinimumLevel();
-            }
-        } else {
-            if (getMaximumLevel() != -1) {
-                toReturn += "\n        §7" + eventualColor + "Maximum Level: §f" + eventualColor + getMaximumLevel();
-            }
-        }
-
-        if (!getSpawnReason().isBlank()) {
-            toReturn += "\n        §7" + eventualColor + "Spawned from: §f" + eventualColor + getSpawnReason();
-        }
-
-        if (getMinimumDamagePercentage() != -1) {
-            toReturn += "\n        §7" + eventualColor + "Inflict minimum damage: §f" + eventualColor + getMinimumDamagePercentage() + "%";
-        }
-        return toReturn;
-    }
-
-    @Override
-    public void save() {
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.eliteMobToKill", getEliteMobToKillContainsName());
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.minimumLevel", getMinimumLevel());
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.maximumLevel", getMaximumLevel());
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.spawnReason", getSpawnReason());
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.minimumDamagePercentage", getMinimumDamagePercentage());
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.amountToKill", getAmountToKill());
-
-    }
-
-    public final String getEliteMobToKillContainsName() {
-        return eliteMobToKillContainsName;
-    }
-
-    public final int getAmountToKill() {
-        return amountToKill;
-    }
-
-    public final int getMinimumLevel() {
-        return minimumLevel;
-    }
-
-    public final int getMaximumLevel() {
-        return maximumLevel;
-    }
-
-    public final String getSpawnReason() {
-        return spawnReason;
-    }
-
-    public final int getMinimumDamagePercentage() {
-        return minimumDamagePercentage;
-    }
-
-
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
         if (!main.isEliteMobsEnabled()) {
             return;
@@ -253,10 +184,10 @@ public class KillEliteMobsObjective extends Objective {
                     final int amount = context.get("amount");
 
                     String mobNameString = context.flags().getValue(mobname, "");
-                    if (mobNameString.equalsIgnoreCase("any")) {
+                    if (mobNameString == null || mobNameString.equalsIgnoreCase("any")) {
                         mobNameString = "";
                     }
-                    mobNameString = mobNameString.replaceAll("_", " ");
+                    mobNameString = mobNameString.replace("_", " ");
                     final String minimumLevelString = context.flags().getValue(minimumLevel, "any");
                     final String maximumLevelString = context.flags().getValue(maximumLevel, "any");
 
@@ -275,7 +206,7 @@ public class KillEliteMobsObjective extends Objective {
                     }
 
                     String spawnReasonString = context.flags().getValue(spawnReason, "");
-                    if (spawnReasonString.equalsIgnoreCase("any")) {
+                    if (spawnReasonString == null || spawnReasonString.equalsIgnoreCase("any")) {
                         spawnReasonString = "";
                     }
 
@@ -283,9 +214,8 @@ public class KillEliteMobsObjective extends Objective {
 
                     int minimumDamagePercentageInt = -1;
                     try {
-                        minimumDamagePercentageInt = Integer.parseInt(minimumDamagePercentageString.replaceAll("%", ""));
-                    } catch (NumberFormatException e) {
-                        minimumDamagePercentageInt = -1;
+                        minimumDamagePercentageInt = Integer.parseInt(minimumDamagePercentageString.replace("%", ""));
+                    } catch (NumberFormatException ignored) {
                     }
 
                     KillEliteMobsObjective killEliteMobsObjective = new KillEliteMobsObjective(main, quest, quest.getObjectives().size() + 1,
@@ -299,5 +229,73 @@ public class KillEliteMobsObjective extends Objective {
                     ));
 
                 }));
+    }
+
+    @Override
+    public void save() {
+        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.eliteMobToKill", getEliteMobToKillContainsName());
+        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.minimumLevel", getMinimumLevel());
+        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.maximumLevel", getMaximumLevel());
+        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.spawnReason", getSpawnReason());
+        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.minimumDamagePercentage", getMinimumDamagePercentage());
+        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.amountToKill", getAmountToKill());
+
+    }
+
+    public final String getEliteMobToKillContainsName() {
+        return eliteMobToKillContainsName;
+    }
+
+    public final int getAmountToKill() {
+        return amountToKill;
+    }
+
+    public final int getMinimumLevel() {
+        return minimumLevel;
+    }
+
+    public final int getMaximumLevel() {
+        return maximumLevel;
+    }
+
+    public final String getSpawnReason() {
+        return spawnReason;
+    }
+
+    public final int getMinimumDamagePercentage() {
+        return minimumDamagePercentage;
+    }
+
+    @Override
+    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
+        String toReturn;
+        if (!getEliteMobToKillContainsName().isBlank()) {
+            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.killEliteMobs.base", player)
+                    .replace("%EVENTUALCOLOR%", eventualColor)
+                    .replace("%ELITEMOBNAME%", "" + getEliteMobToKillContainsName());
+        } else {
+            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.killEliteMobs.any", player)
+                    .replace("%EVENTUALCOLOR%", eventualColor);
+        }
+        if (getMinimumLevel() != -1) {
+            if (getMaximumLevel() != -1) {
+                toReturn += "\n        §7" + eventualColor + "Level: §f" + eventualColor + getMinimumLevel() + "-" + getMaximumLevel();
+            } else {
+                toReturn += "\n        §7" + eventualColor + "Minimum Level: §f" + eventualColor + getMinimumLevel();
+            }
+        } else {
+            if (getMaximumLevel() != -1) {
+                toReturn += "\n        §7" + eventualColor + "Maximum Level: §f" + eventualColor + getMaximumLevel();
+            }
+        }
+
+        if (!getSpawnReason().isBlank()) {
+            toReturn += "\n        §7" + eventualColor + "Spawned from: §f" + eventualColor + getSpawnReason();
+        }
+
+        if (getMinimumDamagePercentage() != -1) {
+            toReturn += "\n        §7" + eventualColor + "Inflict minimum damage: §f" + eventualColor + getMinimumDamagePercentage() + "%";
+        }
+        return toReturn;
     }
 }

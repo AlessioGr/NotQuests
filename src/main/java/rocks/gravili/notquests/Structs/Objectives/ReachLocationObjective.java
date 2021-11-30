@@ -62,8 +62,8 @@ public class ReachLocationObjective extends Objective {
     @Override
     public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
         return main.getLanguageManager().getString("chat.objectives.taskDescription.reachLocation.base", player)
-                .replaceAll("%EVENTUALCOLOR%", eventualColor)
-                .replaceAll("%LOCATIONNAME%", getLocationName());
+                .replace("%EVENTUALCOLOR%", eventualColor)
+                .replace("%LOCATIONNAME%", getLocationName());
     }
 
     @Override

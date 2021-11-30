@@ -112,8 +112,8 @@ public class CraftItemsObjective extends Objective {
         }
 
         return main.getLanguageManager().getString("chat.objectives.taskDescription.craftItems.base", player)
-                .replaceAll("%EVENTUALCOLOR%", eventualColor)
-                .replaceAll("%ITEMTOCRAFTTYPE%", "" + getItemToCraft().getType())
-                .replaceAll("%ITEMTOCRAFTNAME%", "" + displayName);
+                .replace("%EVENTUALCOLOR%", eventualColor)
+                .replace("%ITEMTOCRAFTTYPE%", "" + getItemToCraft().getType())
+                .replace("%ITEMTOCRAFTNAME%", "" + displayName);
     }
 }

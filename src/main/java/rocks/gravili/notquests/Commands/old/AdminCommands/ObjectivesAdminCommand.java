@@ -1151,7 +1151,7 @@ public class ObjectivesAdminCommand {
             if (args[5].equalsIgnoreCase("any")) {
                 eliteMobName = "";
             } else {
-                eliteMobName = args[5].replaceAll("_", " ");
+                eliteMobName = args[5].replace("_", " ");
             }
             final int minimumLevel;
             if (args[6].equalsIgnoreCase("any")) {
@@ -1176,7 +1176,7 @@ public class ObjectivesAdminCommand {
             if (args[9].equalsIgnoreCase("any")) {
                 minimumDamagePercentage = -1;
             } else {
-                minimumDamagePercentage = Integer.parseInt(args[9].replaceAll("%", ""));
+                minimumDamagePercentage = Integer.parseInt(args[9].replace("%", ""));
             }
 
             final int amountToKill = Integer.parseInt(args[10]);

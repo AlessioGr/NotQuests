@@ -167,9 +167,7 @@ public class ActiveQuest {
 
                 toRemove.add(activeObjective);
                 if (!silent) {
-                    questPlayer.sendMessage(main.getLanguageManager().getString("chat.objectives.successfully-completed", questPlayer.getPlayer())
-                            .replaceAll("%OBJECTIVENAME%", activeObjective.getObjective().getObjectiveFinalName())
-                            .replaceAll("%QUESTNAME%", quest.getQuestFinalName()));
+                    questPlayer.sendMessage(main.getLanguageManager().getString("chat.objectives.successfully-completed", questPlayer.getPlayer(), this, activeObjective));
                     final Player player = Bukkit.getPlayer(questPlayer.getUUID());
                     if (player != null) {
                         player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, SoundCategory.MASTER, 75, 1.4f);
@@ -199,9 +197,7 @@ public class ActiveQuest {
 
                 toRemove.add(activeObjective);
                 if (!silent) {
-                    questPlayer.sendMessage(main.getLanguageManager().getString("chat.objectives.successfully-completed", questPlayer.getPlayer())
-                            .replaceAll("%OBJECTIVENAME%", activeObjective.getObjective().getObjectiveFinalName())
-                            .replaceAll("%QUESTNAME%", quest.getQuestFinalName()));
+                    questPlayer.sendMessage(main.getLanguageManager().getString("chat.objectives.successfully-completed", questPlayer.getPlayer(), this, activeObjective));
                     final Player player = Bukkit.getPlayer(questPlayer.getUUID());
                     if (player != null) {
                         player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, SoundCategory.MASTER, 75, 1.4f);
@@ -244,7 +240,7 @@ public class ActiveQuest {
         }
 
 
-        questPlayer.sendMessage(main.getLanguageManager().getString("chat.quest-failed", questPlayer.getPlayer()).replaceAll("%QUESTNAME%", getQuest().getQuestName()));
+        questPlayer.sendMessage(main.getLanguageManager().getString("chat.quest-failed", questPlayer.getPlayer(), this));
 
 
         for (final ActiveObjective activeObjective : getActiveObjectives()) {

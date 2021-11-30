@@ -149,17 +149,17 @@ public class InteractObjective extends Objective {
 
         if (taskDescription.isBlank()) {
             toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.interact.base", player)
-                    .replaceAll("%EVENTUALCOLOR%", eventualColor)
-                    .replaceAll("%INTERACTTYPE%", interactType)
-                    .replaceAll("%COORDINATES%", "X: " + getLocationToInteract().getX() + " Y: " + getLocationToInteract().getY() + " Z: " + getLocationToInteract().getZ())
-                    .replaceAll("%WORLDNAME%", worldName);
+                    .replace("%EVENTUALCOLOR%", eventualColor)
+                    .replace("%INTERACTTYPE%", interactType)
+                    .replace("%COORDINATES%", "X: " + getLocationToInteract().getX() + " Y: " + getLocationToInteract().getY() + " Z: " + getLocationToInteract().getZ())
+                    .replace("%WORLDNAME%", worldName);
         } else {
             toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.interact.taskDescriptionProvided", player)
-                    .replaceAll("%TASKDESCRIPTION%", getTaskDescription())
-                    .replaceAll("%EVENTUALCOLOR%", eventualColor)
-                    .replaceAll("%INTERACTTYPE%", interactType)
-                    .replaceAll("%COORDINATES%", "X: " + getLocationToInteract().getX() + " Y: " + getLocationToInteract().getY() + " Z: " + getLocationToInteract().getZ())
-                    .replaceAll("%WORLDNAME%", worldName);
+                    .replace("%TASKDESCRIPTION%", getTaskDescription())
+                    .replace("%EVENTUALCOLOR%", eventualColor)
+                    .replace("%INTERACTTYPE%", interactType)
+                    .replace("%COORDINATES%", "X: " + getLocationToInteract().getX() + " Y: " + getLocationToInteract().getY() + " Z: " + getLocationToInteract().getZ())
+                    .replace("%WORLDNAME%", worldName);
         }
 
         return toReturn;

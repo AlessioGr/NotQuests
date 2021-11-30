@@ -143,7 +143,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                     click -> {
                                         return true; // returning true will cancel the click event and stop taking the item
                                     },
-                                    main.getLanguageManager().getString("gui.main.button.questpoints.text", player).replaceAll("%QUESTPOINTS%", "" + questPlayer.getQuestPoints())
+                                    main.getLanguageManager().getString("gui.main.button.questpoints.text", player, questPlayer)
                             ));
                         } else {
                             gui.addElement(new StaticGuiElement('z',
@@ -152,7 +152,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                     click -> {
                                         return true; // returning true will cancel the click event and stop taking the item
                                     },
-                                    main.getLanguageManager().getString("gui.main.button.questpoints.text", player).replaceAll("%QUESTPOINTS%", "??")
+                                    main.getLanguageManager().getString("gui.main.button.questpoints.text", player).replace("%QUESTPOINTS%", "??")
 
                             ));
                         }
@@ -351,10 +351,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                                 return true; // returning true will cancel the click event and stop taking the item
 
                                             },
-                                            main.getLanguageManager().getString("gui.abortQuestChoose.button.abortQuestPreview.text", player)
-                                                    .replaceAll("%QUESTNAME%", displayName)
-                                                    .replaceAll("%COMPLETEDOBJECTIVESCOUNT%", "" + activeQuest.getCompletedObjectives().size())
-                                                    .replaceAll("%ALLOBJECTIVESCOUNT%", "" + activeQuest.getQuest().getObjectives().size())
+                                            main.getLanguageManager().getString("gui.abortQuestChoose.button.abortQuestPreview.text", player, activeQuest)
 
 
                                     ));
@@ -459,7 +456,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                         sender.sendMessage("§e/nquests §6progress §3[Quest Name]");
                     } else if (args[0].equalsIgnoreCase("questPoints")) {
                         if (questPlayer != null) {
-                            sender.sendMessage(main.getLanguageManager().getString("chat.questpoints.query", player).replaceAll("%QUESTPOINTS%", "" + questPlayer.getQuestPoints()));
+                            sender.sendMessage(main.getLanguageManager().getString("chat.questpoints.query", player, questPlayer));
                         } else {
                             sender.sendMessage(main.getLanguageManager().getString("chat.questpoints.none", player));
                         }
@@ -478,16 +475,16 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                         if (quest != null) {
 
                             if (!quest.isTakeEnabled() && !main.getQuestManager().isPlayerCloseToCitizenOrArmorstandWithQuest(player, quest)) {
-                                sender.sendMessage(main.getLanguageManager().getString("chat.take-disabled-accept", player).replaceAll("%QUESTNAME%", quest.getQuestFinalName()));
+                                sender.sendMessage(main.getLanguageManager().getString("chat.take-disabled-accept", player, quest));
                                 return true;
                             }
                             final String result = main.getQuestPlayerManager().acceptQuest(player, quest, true, true);
                             if (!result.equals("accepted")) {
                                 sender.sendMessage(result);
                             } else {
-                                sender.sendMessage(main.getLanguageManager().getString("chat.quest-successfully-accepted", player).replaceAll("%QUESTNAME%", quest.getQuestFinalName()));
+                                sender.sendMessage(main.getLanguageManager().getString("chat.quest-successfully-accepted", player, quest));
                                 if (!quest.getQuestDescription().isBlank()) {
-                                    sender.sendMessage(main.getLanguageManager().getString("chat.quest-description", player).replaceAll("%QUESTDESCRIPTION%", quest.getQuestDescription()));
+                                    sender.sendMessage(main.getLanguageManager().getString("chat.quest-description", player, quest));
                                 } else {
                                     sender.sendMessage(main.getLanguageManager().getString("chat.missing-quest-description", player));
                                 }
@@ -495,7 +492,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                             return true;
 
                         } else {
-                            sender.sendMessage(main.getLanguageManager().getString("chat.quest-does-not-exist", player).replaceAll("%QUESTNAME%", args[1]));
+                            sender.sendMessage(main.getLanguageManager().getString("chat.quest-does-not-exist", player).replace("%QUESTNAME%", args[1]));
                         }
                     } else if (args[0].equalsIgnoreCase("abort")) {
 
@@ -510,7 +507,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                             }
 
                             if (questsToFail.isEmpty()) {
-                                sender.sendMessage(main.getLanguageManager().getString("chat.quest-not-active-error", player).replaceAll("%QUESTNAME%", activeQuestName));
+                                sender.sendMessage(main.getLanguageManager().getString("chat.quest-not-active-error", player).replace("%QUESTNAME%", activeQuestName));
                                 return true;
                             }
 
@@ -528,7 +525,6 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
 
                                 final ActiveQuest activeQuest = questsToFail.get(0);
 
-                                String displayName = activeQuest.getQuest().getQuestFinalName();
 
                                 gui.addElement(new StaticGuiElement('9',
                                         new ItemStack(Material.GREEN_WOOL),
@@ -538,19 +534,16 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                             failedSuccessfully.set(true);
                                             questsToFail.clear();
                                             if (!failedSuccessfully.get()) {
-                                                sender.sendMessage(main.getLanguageManager().getString("chat.quest-not-active-error", player).replaceAll("%QUESTNAME%", displayName));
+                                                sender.sendMessage(main.getLanguageManager().getString("chat.quest-not-active-error", player, activeQuest));
                                             }
-                                            sender.sendMessage(main.getLanguageManager().getString("chat.quest-aborted", player).replaceAll("%QUESTNAME%", displayName));
+                                            sender.sendMessage(main.getLanguageManager().getString("chat.quest-aborted", player, activeQuest));
 
                                             //click.getEvent().getWhoClicked().sendMessage(ChatColor.RED + "I am Redstone!");
                                             gui.close();
                                             return true; // returning true will cancel the click event and stop taking the item
 
                                         },
-                                        main.getLanguageManager().getString("gui.abortQuest.button.confirmAbort.text", player)
-                                                .replaceAll("%QUESTNAME%", displayName)
-                                                .replaceAll("%COMPLETEDOBJECTIVESCOUNT%", "" + activeQuest.getCompletedObjectives().size())
-                                                .replaceAll("%ALLOBJECTIVESCOUNT%", "" + activeQuest.getQuest().getObjectives().size())
+                                        main.getLanguageManager().getString("gui.abortQuest.button.confirmAbort.text", player, activeQuest)
 
 
                                 ));
@@ -575,13 +568,12 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                 for (final ActiveQuest activeQuest : questsToFail) {
                                     questPlayer.failQuest(activeQuest);
                                     failedSuccessfully.set(true);
-                                    sender.sendMessage(main.getLanguageManager().getString("chat.quest-aborted", player).replaceAll("%QUESTNAME%", activeQuest.getQuest().getQuestFinalName()));
+                                    sender.sendMessage(main.getLanguageManager().getString("chat.quest-aborted", player, activeQuest));
 
                                 }
                                 questsToFail.clear();
                                 if (!failedSuccessfully.get()) {
-                                    sender.sendMessage(main.getLanguageManager().getString("chat.quest-not-active-error", player).replaceAll("%QUESTNAME%", activeQuestName));
-
+                                    sender.sendMessage(main.getLanguageManager().getString("chat.quest-not-active-error", player).replace("%QUESTNAME%", activeQuestName));
                                 }
                             }
 
@@ -595,7 +587,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                         if (quest != null) {
 
                             if (!quest.isTakeEnabled() && !main.getQuestManager().isPlayerCloseToCitizenOrArmorstandWithQuest(player, quest)) {
-                                sender.sendMessage(main.getLanguageManager().getString("chat.take-disabled-preview", player).replaceAll("%QUESTNAME%", quest.getQuestFinalName()));
+                                sender.sendMessage(main.getLanguageManager().getString("chat.take-disabled-preview", player, quest));
                                 return true;
                             }
                             if (guiEnabled) {
@@ -608,14 +600,13 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                         "xxxxxxxxx"
                                 };
 
-                                String displayName = quest.getQuestFinalName();
 
-                                InventoryGui gui = new InventoryGui(main, player, main.getLanguageManager().getString("gui.previewQuest.title", player).replaceAll("%QUESTNAME%", displayName), guiSetup);
+                                InventoryGui gui = new InventoryGui(main, player, main.getLanguageManager().getString("gui.previewQuest.title", player, quest, questPlayer), guiSetup);
                                 gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
 
 
                                 if (main.getDataManager().getConfiguration().isGuiQuestPreviewDescription_enabled()) {
-                                    String description = main.getLanguageManager().getString("gui.previewQuest.button.description.empty", player);
+                                    String description = main.getLanguageManager().getString("gui.previewQuest.button.description.empty", player, questPlayer);
                                     if (!quest.getQuestDescription().isBlank()) {
                                         description = quest.getQuestDescription(50);
                                     }
@@ -627,8 +618,8 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                                 return true; // returning true will cancel the click event and stop taking the item
 
                                             },
-                                            main.getLanguageManager().getString("gui.previewQuest.button.description.text", player)
-                                                    .replaceAll("%QUESTDESCRIPTION%", description)
+                                            main.getLanguageManager().getString("gui.previewQuest.button.description.text", player, questPlayer)
+                                                    .replace("%QUESTDESCRIPTION%", description)
 
 
                                     ));
@@ -649,8 +640,8 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                                 return true; // returning true will cancel the click event and stop taking the item
 
                                             },
-                                            main.getLanguageManager().getString("gui.previewQuest.button.rewards.text", player)
-                                                    .replaceAll("%QUESTREWARDS%", rewards)
+                                            main.getLanguageManager().getString("gui.previewQuest.button.rewards.text", player, quest, questPlayer)
+                                                    .replace("%QUESTREWARDS%", rewards)
 
 
                                     ));
@@ -660,7 +651,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                 if (main.getDataManager().getConfiguration().isGuiQuestPreviewRequirements_enabled()) {
                                     String requirements = main.getQuestManager().getQuestRequirements(quest);
                                     if (requirements.isBlank()) {
-                                        requirements = main.getLanguageManager().getString("gui.previewQuest.button.requirements.empty", player);
+                                        requirements = main.getLanguageManager().getString("gui.previewQuest.button.requirements.empty", player, questPlayer);
                                     }
 
                                     gui.addElement(new StaticGuiElement(main.getDataManager().getConfiguration().getGuiQuestPreviewRequirements_slot(),
@@ -671,15 +662,14 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                                 return true; // returning true will cancel the click event and stop taking the item
 
                                             },
-                                            main.getLanguageManager().getString("gui.previewQuest.button.requirements.text", player)
-                                                    .replaceAll("%QUESTREQUIREMENTS%", requirements)
+                                            main.getLanguageManager().getString("gui.previewQuest.button.requirements.text", player, quest, questPlayer)
+                                                    .replace("%QUESTREQUIREMENTS%", requirements)
 
 
                                     ));
                                 }
 
 
-                                String finalDisplayName = displayName;
                                 gui.addElement(new StaticGuiElement('g',
                                         new ItemStack(Material.GREEN_WOOL),
                                         1, // Display a number as the item count
@@ -691,8 +681,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                             return true; // returning true will cancel the click event and stop taking the item
 
                                         },
-                                        main.getLanguageManager().getString("gui.previewQuest.button.confirmTake.text", player)
-                                                .replaceAll("%QUESTNAME%", finalDisplayName)
+                                        main.getLanguageManager().getString("gui.previewQuest.button.confirmTake.text", player, quest, questPlayer)
 
                                 ));
                                 gui.addElement(new StaticGuiElement('i',
@@ -704,7 +693,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                             return true; // returning true will cancel the click event and stop taking the item
 
                                         },
-                                        main.getLanguageManager().getString("gui.previewQuest.button.cancelTake.text", player)
+                                        main.getLanguageManager().getString("gui.previewQuest.button.cancelTake.text", player, quest, questPlayer)
 
                                 ));
 
@@ -717,7 +706,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                             return true;
 
                         } else {
-                            sender.sendMessage(main.getLanguageManager().getString("chat.quest-does-not-exist", player).replaceAll("%QUESTNAME%", args[1]));
+                            sender.sendMessage(main.getLanguageManager().getString("chat.quest-does-not-exist", player, questPlayer).replace("%QUESTNAME%", args[1]));
                         }
                     } else if (args[0].equalsIgnoreCase("progress")) {
                         ActiveQuest requestedActiveQuest = null;
@@ -739,7 +728,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                     };
                                     String displayName = requestedActiveQuest.getQuest().getQuestFinalName();
 
-                                    InventoryGui gui = new InventoryGui(main, player, main.getLanguageManager().getString("gui.progress.title", player).replaceAll("%QUESTNAME%", displayName), guiSetup);
+                                    InventoryGui gui = new InventoryGui(main, player, main.getLanguageManager().getString("gui.progress.title", player, requestedActiveQuest, questPlayer), guiSetup);
                                     gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
 
 
@@ -771,13 +760,9 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                                         return true; // returning true will cancel the click event and stop taking the item
 
                                                     },
-                                                    main.getLanguageManager().getString("gui.progress.button.unlockedObjective.text", player)
-                                                            .replaceAll("%ACTIVEOBJECTIVEID%", "" + activeObjective.getObjectiveID())
-                                                            .replaceAll("%OBJECTIVENAME%", nameToDisplay)
-                                                            .replaceAll("%OBJECTIVEDESCRIPTION%", descriptionToDisplay)
-                                                            .replaceAll("%ACTIVEOBJECTIVEDESCRIPTION%", main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), false, player))
-                                                            .replaceAll("%ACTIVEOBJECTIVEPROGRESS%", "" + activeObjective.getCurrentProgress())
-                                                            .replaceAll("%OBJECTIVEPROGRESSNEEDED%", "" + activeObjective.getProgressNeeded())
+                                                    main.getLanguageManager().getString("gui.progress.button.unlockedObjective.text", player, activeObjective, questPlayer)
+                                                            .replace("%OBJECTIVEDESCRIPTION%", descriptionToDisplay)
+                                                            .replace("%ACTIVEOBJECTIVEDESCRIPTION%", main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), false, player))
 
 
                                             ));
@@ -792,8 +777,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                                         return true; // returning true will cancel the click event and stop taking the item
 
                                                     },
-                                                    main.getLanguageManager().getString("gui.progress.button.lockedObjective.text", player)
-                                                            .replaceAll("%ACTIVEOBJECTIVEID%", "" + activeObjective.getObjectiveID())
+                                                    main.getLanguageManager().getString("gui.progress.button.lockedObjective.text", player, activeObjective)
 
 
                                             ));
@@ -815,7 +799,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                         final String nameToDisplay = activeObjective.getObjective().getObjectiveFinalName();
 
 
-                                        String descriptionToDisplay = main.getLanguageManager().getString("gui.progress.button.completedObjective.description-empty", player);
+                                        String descriptionToDisplay = main.getLanguageManager().getString("gui.progress.button.completedObjective.description-empty", player, activeObjective, questPlayer);
                                         if (!activeObjective.getObjective().getObjectiveDescription().isBlank()) {
                                             descriptionToDisplay = activeObjective.getObjective().getObjectiveDescription(50);
                                         }
@@ -829,13 +813,9 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                                     return true; // returning true will cancel the click event and stop taking the item
 
                                                 },
-                                                main.getLanguageManager().getString("gui.progress.button.completedObjective.text", player)
-                                                        .replaceAll("%ACTIVEOBJECTIVEID%", "" + activeObjective.getObjectiveID())
-                                                        .replaceAll("%OBJECTIVENAME%", nameToDisplay)
-                                                        .replaceAll("%OBJECTIVEDESCRIPTION%", descriptionToDisplay)
-                                                        .replaceAll("%COMPLETEDOBJECTIVEDESCRIPTION%", main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), true, player))
-                                                        .replaceAll("%ACTIVEOBJECTIVEPROGRESS%", "" + activeObjective.getCurrentProgress())
-                                                        .replaceAll("%OBJECTIVEPROGRESSNEEDED%", "" + activeObjective.getProgressNeeded())
+                                                main.getLanguageManager().getString("gui.progress.button.completedObjective.text", player, activeObjective, questPlayer)
+                                                        .replace("%OBJECTIVEDESCRIPTION%", descriptionToDisplay)
+                                                        .replace("%COMPLETEDOBJECTIVEDESCRIPTION%", main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), true, player))
 
 
                                         ));
@@ -862,8 +842,8 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                 }
 
                             } else {
-                                sender.sendMessage(main.getLanguageManager().getString("chat.quest-not-found-or-does-not-exist", player).replaceAll("%QUESTNAME%", args[1]));
-                                sender.sendMessage(main.getLanguageManager().getString("chat.active-quests-label", player));
+                                sender.sendMessage(main.getLanguageManager().getString("chat.quest-not-found-or-does-not-exist", player, questPlayer).replace("%QUESTNAME%", args[1]));
+                                sender.sendMessage(main.getLanguageManager().getString("chat.active-quests-label", player, questPlayer));
                                 int counter = 1;
                                 for (ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                                     sender.sendMessage("§a" + counter + ". §e" + activeQuest.getQuest().getQuestFinalName());
@@ -882,7 +862,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                     sender.sendMessage(main.getLanguageManager().getString("chat.too-many-arguments", player));
                 }
             } else {
-                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", player).replaceAll("%PERMISSION%", "notquests.use"));
+                sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", player).replace("%PERMISSION%", "notquests.use"));
             }
         } else {
             sender.sendMessage("§cOnly players can run this command! Try §b/notquestsadmin§c.");

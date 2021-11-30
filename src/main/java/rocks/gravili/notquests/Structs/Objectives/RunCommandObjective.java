@@ -110,8 +110,8 @@ public class RunCommandObjective extends Objective {
     @Override
     public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
         return main.getLanguageManager().getString("chat.objectives.taskDescription.runCommand.base", player)
-                .replaceAll("%EVENTUALCOLOR%", eventualColor)
-                .replaceAll("%COMMANDTORUN%", getCommandToRun());
+                .replace("%EVENTUALCOLOR%", eventualColor)
+                .replace("%COMMANDTORUN%", getCommandToRun());
     }
 
     @Override

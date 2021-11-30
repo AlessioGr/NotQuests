@@ -1557,7 +1557,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
             }
 
         } else {
-            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null).replaceAll("%PERMISSION%", "notquests.admin"));
+            sender.sendMessage(main.getLanguageManager().getString("chat.wrong-command-usage", null).replace("%PERMISSION%", "notquests.admin"));
         }
         return true;
     }

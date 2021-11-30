@@ -1246,23 +1246,17 @@ public class QuestManager {
 
             if (activeObjective.isUnlocked()) {
                 final String objectiveDescription = activeObjective.getObjective().getObjectiveDescription();
-                player.sendMessage(main.getLanguageManager().getString("chat.objectives.counter", player)
-                        .replaceAll("%OBJECTIVEID%", ""+activeObjective.getObjective().getObjectiveID())
-                        .replaceAll("%OBJECTIVENAME%", ""+activeObjective.getObjective().getObjectiveFinalName()));
+                player.sendMessage(main.getLanguageManager().getString("chat.objectives.counter", player, activeQuest, activeObjective));
 
                 if (!objectiveDescription.isBlank()) {
-                    player.sendMessage(main.getLanguageManager().getString("chat.objectives.description", player)
-                            .replaceAll("%OBJECTIVEDESCRIPTION%", objectiveDescription));
+                    player.sendMessage(main.getLanguageManager().getString("chat.objectives.description", player, activeQuest, activeObjective));
                 }
 
                 player.sendMessage(getObjectiveTaskDescription(activeObjective.getObjective(), false, player));
 
-                player.sendMessage(main.getLanguageManager().getString("chat.objectives.progress", player)
-                        .replaceAll("%ACTIVEOBJECTIVEPROGRESS%", ""+activeObjective.getCurrentProgress())
-                        .replaceAll("%OBJECTIVEPROGRESSNEEDED%", ""+activeObjective.getProgressNeeded()));
+                player.sendMessage(main.getLanguageManager().getString("chat.objectives.progress", player, activeQuest, activeObjective));
             } else {
-                player.sendMessage(main.getLanguageManager().getString("chat.objectives.hidden", player)
-                        .replaceAll("%OBJECTIVEID%", ""+activeObjective.getObjective().getObjectiveID()));
+                player.sendMessage(main.getLanguageManager().getString("chat.objectives.hidden", player, activeObjective, activeObjective));
 
             }
 

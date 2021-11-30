@@ -153,7 +153,7 @@ public class ApplyOnSelector<C> extends CommandArgument<C, Integer> { //0 = Ques
                 return ArgumentParseResult.success(0);
             } else {
                 try {
-                    int objectiveID = Integer.parseInt(input.toLowerCase(Locale.ROOT).replaceAll("o", ""));
+                    int objectiveID = Integer.parseInt(input.toLowerCase(Locale.ROOT).replace("o", ""));
                     if (quest.getObjectiveFromID(objectiveID) != null) {
                         return ArgumentParseResult.success(objectiveID);
                     } else {

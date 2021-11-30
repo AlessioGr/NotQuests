@@ -265,9 +265,9 @@ public class DeliverItemsObjective extends Objective {
         }
 
         String toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.base", player)
-                .replaceAll("%EVENTUALCOLOR%", eventualColor)
-                .replaceAll("%ITEMTODELIVERTYPE%", "" + getItemToDeliver().getType())
-                .replaceAll("%ITEMTODELIVERNAME%", "" + displayName);
+                .replace("%EVENTUALCOLOR%", eventualColor)
+                .replace("%ITEMTODELIVERTYPE%", "" + getItemToDeliver().getType())
+                .replace("%ITEMTODELIVERNAME%", "" + displayName);
 
         if (main.isCitizensEnabled() && getRecipientNPCID() != -1) {
             final NPC npc = CitizensAPI.getNPCRegistry().getById(getRecipientNPCID());

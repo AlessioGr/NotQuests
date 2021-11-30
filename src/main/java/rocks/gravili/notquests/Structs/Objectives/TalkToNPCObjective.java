@@ -86,8 +86,8 @@ public class TalkToNPCObjective extends Objective {
             final NPC npc = CitizensAPI.getNPCRegistry().getById(getNPCtoTalkID());
             if (npc != null) {
                 toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.talkToNPC.base", player)
-                        .replaceAll("%EVENTUALCOLOR%", eventualColor)
-                        .replaceAll("%NAME%", npc.getName());
+                        .replace("%EVENTUALCOLOR%", eventualColor)
+                        .replace("%NAME%", npc.getName());
             } else {
                 toReturn = "    §7" + eventualColor + "The target NPC is currently not available!";
             }
@@ -98,8 +98,8 @@ public class TalkToNPCObjective extends Objective {
                 final UUID armorStandUUID = getArmorStandUUID();
                 if (armorStandUUID != null) {
                     toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.talkToNPC.base", player)
-                            .replaceAll("%EVENTUALCOLOR%", eventualColor)
-                            .replaceAll("%NAME%", main.getArmorStandManager().getArmorStandName(armorStandUUID));
+                            .replace("%EVENTUALCOLOR%", eventualColor)
+                            .replace("%NAME%", main.getArmorStandManager().getArmorStandName(armorStandUUID));
                 } else {
                     toReturn += "    §7" + eventualColor + "The target Armor Stand is currently not available!";
                 }

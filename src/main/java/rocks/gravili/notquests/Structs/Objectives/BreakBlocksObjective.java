@@ -58,8 +58,8 @@ public class BreakBlocksObjective extends Objective {
     @Override
     public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
         return main.getLanguageManager().getString("chat.objectives.taskDescription.breakBlocks.base", player)
-                .replaceAll("%EVENTUALCOLOR%", eventualColor)
-                .replaceAll("%BLOCKTOBREAK%", getBlockToBreak().toString());
+                .replace("%EVENTUALCOLOR%", eventualColor)
+                .replace("%BLOCKTOBREAK%", getBlockToBreak().toString());
     }
 
     @Override

@@ -68,7 +68,7 @@ public class SlimefunResearchObjective extends Objective {
     @Override
     public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
         return "    §8└─ §7%EVENTUALCOLOR%Spend on research"
-                .replaceAll("%EVENTUALCOLOR%", eventualColor);
+                .replace("%EVENTUALCOLOR%", eventualColor);
     }
 
     @Override

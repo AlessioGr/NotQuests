@@ -161,7 +161,7 @@ public class ConversationManager {
 
             final int npcID = config.getInt("npcID", -1);
 
-            final Conversation conversation = new Conversation(main, conversationFile, config, conversationFile.getName().replaceAll(".yml", ""), npcID);
+            final Conversation conversation = new Conversation(main, conversationFile, config, conversationFile.getName().replace(".yml", ""), npcID);
 
 
             //First add all speakers

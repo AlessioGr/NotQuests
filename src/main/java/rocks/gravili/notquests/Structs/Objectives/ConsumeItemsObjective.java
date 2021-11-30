@@ -112,8 +112,8 @@ public class ConsumeItemsObjective extends Objective {
         }
 
         return main.getLanguageManager().getString("chat.objectives.taskDescription.consumeItems.base", player)
-                .replaceAll("%EVENTUALCOLOR%", eventualColor)
-                .replaceAll("%ITEMTOCONSUMETYPE%", "" + getItemToConsume().getType())
-                .replaceAll("%ITEMTOCONSUMENAME%", "" + displayName);
+                .replace("%EVENTUALCOLOR%", eventualColor)
+                .replace("%ITEMTOCONSUMETYPE%", "" + getItemToConsume().getType())
+                .replace("%ITEMTOCONSUMENAME%", "" + displayName);
     }
 }

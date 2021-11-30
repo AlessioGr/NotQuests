@@ -84,8 +84,8 @@ public class PlaceBlocksObjective extends Objective {
     @Override
     public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
         return main.getLanguageManager().getString("chat.objectives.taskDescription.placeBlocks.base", player)
-                .replaceAll("%EVENTUALCOLOR%", eventualColor)
-                .replaceAll("%BLOCKTOPLACE%", getBlockToPlace().toString());
+                .replace("%EVENTUALCOLOR%", eventualColor)
+                .replace("%BLOCKTOPLACE%", getBlockToPlace().toString());
     }
 
     @Override

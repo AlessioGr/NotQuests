@@ -72,7 +72,7 @@ public class JumpObjective extends Objective {
     @Override
     public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
         return main.getLanguageManager().getString("chat.objectives.taskDescription.jump.base", player)
-                .replaceAll("%EVENTUALCOLOR%", eventualColor)
-                .replaceAll("%AMOUNTOFJUMPS%", "" + getAmountToJump());
+                .replace("%EVENTUALCOLOR%", eventualColor)
+                .replace("%AMOUNTOFJUMPS%", "" + getAmountToJump());
     }
 }

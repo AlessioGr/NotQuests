@@ -29,12 +29,17 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.ActiveObjective;
 import rocks.gravili.notquests.Structs.ActiveQuest;
 import rocks.gravili.notquests.Structs.Objectives.Objective;
 import rocks.gravili.notquests.Structs.Quest;
+import rocks.gravili.notquests.Structs.QuestPlayer;
+import rocks.gravili.notquests.Structs.Triggers.Trigger;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -317,29 +322,45 @@ public class LanguageManager {
     }
 
     public String applyInternalPlaceholders(String initialMessage, Object... internalPlaceholderObjects) {
-        main.getLogManager().log(Level.INFO, "Pre-applying placeholder...");
-        for (Object internalPlaceholderObject : internalPlaceholderObjects) {
-            main.getLogManager().log(Level.INFO, "Applying placeholder: " + internalPlaceholderObject.getClass().toString());
-            if (internalPlaceholderObject instanceof Quest quest) {
-                initialMessage = initialMessage.replaceAll("%QUESTNAME%", quest.getQuestFinalName())
-                        .replaceAll("%QUESTDESCRIPTION%", quest.getQuestDescription());
-            }
-            if (internalPlaceholderObject instanceof ActiveQuest activeQuest) {
-                initialMessage = initialMessage.replaceAll("%QUESTNAME%", activeQuest.getQuest().getQuestFinalName())
-                        .replaceAll("%QUESTDESCRIPTION%", activeQuest.getQuest().getQuestDescription()
-                                .replaceAll("%COMPLETEDOBJECTIVESCOUNT%", "" + activeQuest.getCompletedObjectives().size())
-                                .replaceAll("%ALLOBJECTIVESCOUNT%", "" + activeQuest.getQuest().getObjectives().size()));
-            }
-            if (internalPlaceholderObject instanceof Objective objective) {
-                initialMessage = initialMessage.replaceAll("%OBJECTIVEID%", "" + objective.getObjectiveID())
-                        .replaceAll("%OBJECTIVENAME%", objective.getObjectiveFinalName());
-            }
+        if (internalPlaceholderObjects.length == 0) {
+            return initialMessage;
         }
-        return initialMessage;
+        final Map<String, String> replacements = new HashMap<>();
+        for (Object internalPlaceholderObject : internalPlaceholderObjects) {
+            if (internalPlaceholderObject instanceof ActiveQuest activeQuest) {
+                //main.getLogManager().log(Level.INFO, "Applying ActiveQuest placeholders...");
+                replacements.put("%QUESTNAME%", activeQuest.getQuest().getQuestFinalName());
+                replacements.put("%QUESTDESCRIPTION%", activeQuest.getQuest().getQuestDescription());
+                replacements.put("%COMPLETEDOBJECTIVESCOUNT%", "" + activeQuest.getCompletedObjectives().size());
+                replacements.put("%ALLOBJECTIVESCOUNT%", "" + activeQuest.getQuest().getObjectives().size());
+            } else if (internalPlaceholderObject instanceof Quest quest) {
+                //main.getLogManager().log(Level.INFO, "Applying Quest placeholders...");
+                replacements.put("%QUESTNAME%", quest.getQuestFinalName());
+                replacements.put("%QUESTDESCRIPTION%", quest.getQuestDescription());
+            } else if (internalPlaceholderObject instanceof ActiveObjective activeObjective) {
+                //main.getLogManager().log(Level.INFO, "Applying ActiveObjective placeholders...");
+                replacements.put("%OBJECTIVEID%", "" + activeObjective.getObjective().getObjectiveID());
+                replacements.put("%ACTIVEOBJECTIVEID%", "" + activeObjective.getObjective().getObjectiveID());
+                replacements.put("%OBJECTIVENAME%", "" + activeObjective.getObjective().getObjectiveID());
+                replacements.put("%ACTIVEOBJECTIVEPROGRESS%", "" + activeObjective.getCurrentProgress());
+                replacements.put("%OBJECTIVEPROGRESSNEEDED%", "" + activeObjective.getProgressNeeded());
+            } else if (internalPlaceholderObject instanceof Objective objective) {
+                //main.getLogManager().log(Level.INFO, "Applying Objective placeholders...");
+                replacements.put("%OBJECTIVEID%", "" + objective.getObjectiveID());
+                replacements.put("%OBJECTIVENAME%", "" + objective.getObjectiveFinalName());
+            } else if (internalPlaceholderObject instanceof Trigger trigger) {
+                //main.getLogManager().log(Level.INFO, "Applying Trigger placeholders...");
+            } else if (internalPlaceholderObject instanceof QuestPlayer questPlayer) {
+                //main.getLogManager().log(Level.INFO, "Applying QuestPlayer placeholders...");
+                replacements.put("%QUESTPOINTS%", "" + questPlayer.getQuestPoints());
+            }
+
+        }
+        return main.getUtilManager().replaceFromMap(initialMessage, replacements);
     }
 
     public String applySpecial(String initialMessage) { //TODO: Fix center if that message is later processed for placeholders => process the placeholders here instead
-        initialMessage = initialMessage.replaceAll("<EMPTY>", " ");
+        initialMessage = initialMessage.replace("<EMPTY>", " ");
 
 
         final StringBuilder finalMessage = new StringBuilder();
@@ -347,7 +368,7 @@ public class LanguageManager {
         final String[] splitMessages = initialMessage.split("\n");
         for (int index = 0; index < splitMessages.length; index++) {
             if (splitMessages[index].contains("<CENTER>")) {
-                finalMessage.append(main.getUtilManager().getCenteredMessage(splitMessages[index].replaceAll("<CENTER>", "")));
+                finalMessage.append(main.getUtilManager().getCenteredMessage(splitMessages[index].replace("<CENTER>", "")));
             } else {
                 finalMessage.append(splitMessages[index]);
             }

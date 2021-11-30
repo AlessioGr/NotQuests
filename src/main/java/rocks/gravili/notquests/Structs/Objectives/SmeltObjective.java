@@ -113,8 +113,8 @@ public class SmeltObjective extends Objective {
         }
 
         return main.getLanguageManager().getString("chat.objectives.taskDescription.smelt.base", player)
-                .replaceAll("%EVENTUALCOLOR%", eventualColor)
-                .replaceAll("%ITEMTOSMELTTYPE%", "" + getItemToSmelt().getType())
-                .replaceAll("%ITEMTOSMELTNAME%", "" + displayName);
+                .replace("%EVENTUALCOLOR%", eventualColor)
+                .replace("%ITEMTOSMELTTYPE%", "" + getItemToSmelt().getType())
+                .replace("%ITEMTOSMELTNAME%", "" + displayName);
     }
 }

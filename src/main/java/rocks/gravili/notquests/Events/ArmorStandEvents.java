@@ -161,7 +161,7 @@ public class ArmorStandEvents implements Listener {
                             if(existingAttachedQuests != null && existingAttachedQuests.contains("°"+questName+"°")){
 
 
-                                existingAttachedQuests = existingAttachedQuests.replaceAll("°" + questName+"°", "°");
+                                existingAttachedQuests = existingAttachedQuests.replace("°" + questName + "°", "°");
 
                                 //So it can go fully empty again
                                 boolean foundNonSeparator = false;

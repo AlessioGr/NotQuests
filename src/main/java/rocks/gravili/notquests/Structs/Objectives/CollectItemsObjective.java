@@ -66,9 +66,9 @@ public class CollectItemsObjective extends Objective {
             displayName = getItemToCollect().getType().name();
         }
         return main.getLanguageManager().getString("chat.objectives.taskDescription.collectItems.base", player)
-                .replaceAll("%EVENTUALCOLOR%", eventualColor)
-                .replaceAll("%ITEMTOCOLLECTTYPE%", "" + getItemToCollect().getType())
-                .replaceAll("%ITEMTOCOLLECTNAME%", "" + displayName);
+                .replace("%EVENTUALCOLOR%", eventualColor)
+                .replace("%ITEMTOCOLLECTTYPE%", "" + getItemToCollect().getType())
+                .replace("%ITEMTOCOLLECTNAME%", "" + displayName);
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
