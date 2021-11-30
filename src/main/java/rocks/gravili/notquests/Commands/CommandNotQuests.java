@@ -745,7 +745,6 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                             count = 0;
                                         }
                                         if (activeObjective.isUnlocked()) {
-                                            String nameToDisplay = activeObjective.getObjective().getObjectiveFinalName();
 
                                             String descriptionToDisplay = main.getLanguageManager().getString("gui.progress.button.unlockedObjective.description-empty", player);
                                             if (!activeObjective.getObjective().getObjectiveDescription().isBlank()) {

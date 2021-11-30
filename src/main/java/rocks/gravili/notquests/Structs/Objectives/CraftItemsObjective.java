@@ -80,6 +80,7 @@ public class CraftItemsObjective extends Objective {
                     }
 
                     CraftItemsObjective craftItemsObjective = new CraftItemsObjective(main, quest, quest.getObjectives().size() + 1, itemStack, amount);
+                    quest.addObjective(craftItemsObjective, true);
 
                     audience.sendMessage(MiniMessage.miniMessage().parse(
                             NotQuestColors.successGradient + "CraftItems Objective successfully added to Quest " + NotQuestColors.highlightGradient

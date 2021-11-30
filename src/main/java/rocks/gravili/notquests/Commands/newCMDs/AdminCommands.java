@@ -468,7 +468,7 @@ public class AdminCommands {
                     final Audience audience = main.adventure().sender(context.getSender());
                     audience.sendMessage(Component.empty());
 
-                    final Quest quest = context.get("Quest Name");
+                    final Quest quest = context.get("quest");
                     for (final QuestPlayer questPlayer : main.getQuestPlayerManager().getQuestPlayers()) {
                         final ArrayList<ActiveQuest> activeQuestsToRemove = new ArrayList<>();
                         for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
@@ -509,7 +509,7 @@ public class AdminCommands {
                     final Audience audience = main.adventure().sender(context.getSender());
                     audience.sendMessage(Component.empty());
 
-                    final Quest quest = context.get("Quest Name");
+                    final Quest quest = context.get("quest");
 
 
                     for (final QuestPlayer questPlayer : main.getQuestPlayerManager().getQuestPlayers()) {

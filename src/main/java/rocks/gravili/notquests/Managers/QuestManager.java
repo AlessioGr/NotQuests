@@ -1204,7 +1204,8 @@ public class QuestManager {
                 player.sendMessage(main.getLanguageManager().getString("chat.objectives.counter", player, activeQuest, activeObjective));
 
                 if (!objectiveDescription.isBlank()) {
-                    player.sendMessage(main.getLanguageManager().getString("chat.objectives.description", player, activeQuest, activeObjective));
+                    player.sendMessage(main.getLanguageManager().getString("chat.objectives.description", player, activeQuest, activeObjective)
+                            .replace("%OBJECTIVEDESCRIPTION%", activeObjective.getObjective().getObjectiveDescription()));
                 }
 
                 player.sendMessage(getObjectiveTaskDescription(activeObjective.getObjective(), false, player));
