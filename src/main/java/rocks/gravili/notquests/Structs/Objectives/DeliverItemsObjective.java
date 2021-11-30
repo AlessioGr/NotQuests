@@ -99,9 +99,12 @@ public class DeliverItemsObjective extends Objective {
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of items which need to be delivered."))
                 .argument(StringArgument.<CommandSender>newBuilder("NPC or Armorstand").withSuggestionsProvider((context, lastString) -> {
                     ArrayList<String> completions = new ArrayList<>();
-                    for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
-                        completions.add("" + npc.getId());
+                    if (main.isCitizensEnabled()) {
+                        for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
+                            completions.add("" + npc.getId());
+                        }
                     }
+
                     completions.add("armorstand");
                     final List<String> allArgs = context.getRawInput();
                     final Audience audience = main.adventure().sender(context.getSender());
@@ -263,11 +266,23 @@ public class DeliverItemsObjective extends Objective {
         } else {
             displayName = getItemToDeliver().getType().name();
         }
+        String toReturn;
+        if (!displayName.isBlank()) {
+            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.base", player)
+                    .replace("%EVENTUALCOLOR%", eventualColor)
+                    .replace("%ITEMTODELIVERTYPE%", "" + getItemToDeliver().getType())
+                    .replace("%ITEMTODELIVERNAME%", "" + displayName)
+                    .replace("%(%", "(")
+                    .replace("%)%", "§f)");
+        } else {
+            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.base", player)
+                    .replace("%EVENTUALCOLOR%", eventualColor)
+                    .replace("%ITEMTODELIVERTYPE%", "" + getItemToDeliver().getType())
+                    .replace("%ITEMTODELIVERNAME%", "")
+                    .replace("%(%", "")
+                    .replace("%)%", "");
+        }
 
-        String toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.base", player)
-                .replace("%EVENTUALCOLOR%", eventualColor)
-                .replace("%ITEMTODELIVERTYPE%", "" + getItemToDeliver().getType())
-                .replace("%ITEMTODELIVERNAME%", "" + displayName);
 
         if (main.isCitizensEnabled() && getRecipientNPCID() != -1) {
             final NPC npc = CitizensAPI.getNPCRegistry().getById(getRecipientNPCID());

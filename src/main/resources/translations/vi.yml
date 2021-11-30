@@ -36,13 +36,13 @@ chat:
       breed:
         base: '    &7%EVENTUALCOLOR%Làm Mob Sinh Sản: &f%EVENTUALCOLOR%%ENTITYTOBREED%'
       collectItems:
-        base: '    &7%EVENTUALCOLOR%Thư Nhập Vật Phẩm: &f%EVENTUALCOLOR%%ITEMTOCOLLECTTYPE% (%ITEMTOCOLLECTNAME%)'
+        base: '    &7%EVENTUALCOLOR%Thư Nhập Vật Phẩm: &f%EVENTUALCOLOR%%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
       consumeItems:
-        base: '    &7%EVENTUALCOLOR%Dùng Vật Phẩm: &f%EVENTUALCOLOR%%ITEMTOCONSUMETYPE% (%ITEMTOCONSUMENAME%)'
+        base: '    &7%EVENTUALCOLOR%Dùng Vật Phẩm: &f%EVENTUALCOLOR%%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
-        base: '    &7%EVENTUALCOLOR%Chế Tạo Vật Phẩm: &f%EVENTUALCOLOR%%ITEMTOCRAFTTYPE% (%ITEMTOCRAFTNAME%)'
+        base: '    &7%EVENTUALCOLOR%Chế Tạo Vật Phẩm: &f%EVENTUALCOLOR%%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: '    &7%EVENTUALCOLOR%Giao Vật Phẩm: &f%EVENTUALCOLOR%%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
+        base: '    &7%EVENTUALCOLOR%Giao Vật Phẩm: &f%EVENTUALCOLOR%%ITEMTODELIVERTYPE% %(%%ITEMTODELIVERNAME%%)%'
       escortNPC:
         base: '    &7%EVENTUALCOLOR%Đi Theo &f%EVENTUALCOLOR%%NPCNAME% &7%EVENTUALCOLOR% Đến &f%EVENTUALCOLOR%%DESTINATIONNPCNAME%'
       killMobs:
@@ -68,7 +68,7 @@ chat:
       jump:
         base: '    &8└─ &7%EVENTUALCOLOR%Jump &f%EVENTUALCOLOR%%AMOUNTOFJUMPS% &7%EVENTUALCOLOR%times'
       smelt:
-        base: '    &8└─ &7%EVENTUALCOLOR%Items to smelt: &f%EVENTUALCOLOR%%ITEMTOSMELTTYPE% (%ITEMTOSMELTNAME%)'
+        base: '    &8└─ &7%EVENTUALCOLOR%Items to smelt: &f%EVENTUALCOLOR%%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
 titles:
   quest-accepted:
     title: '&fChấp Nhận Nhiệm Vụ'

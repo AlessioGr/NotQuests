@@ -112,9 +112,22 @@ public class CraftItemsObjective extends Objective {
             displayName = getItemToCraft().getType().name();
         }
 
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.craftItems.base", player)
-                .replace("%EVENTUALCOLOR%", eventualColor)
-                .replace("%ITEMTOCRAFTTYPE%", "" + getItemToCraft().getType())
-                .replace("%ITEMTOCRAFTNAME%", "" + displayName);
+        if (!displayName.isBlank()) {
+            return main.getLanguageManager().getString("chat.objectives.taskDescription.craftItems.base", player)
+                    .replace("%EVENTUALCOLOR%", eventualColor)
+                    .replace("%ITEMTOCRAFTTYPE%", "" + getItemToCraft().getType())
+                    .replace("%ITEMTOCRAFTNAME%", "" + displayName)
+                    .replace("%(%", "(")
+                    .replace("%)%", "§f)");
+        } else {
+            return main.getLanguageManager().getString("chat.objectives.taskDescription.craftItems.base", player)
+                    .replace("%EVENTUALCOLOR%", eventualColor)
+                    .replace("%ITEMTOCRAFTTYPE%", "" + getItemToCraft().getType())
+                    .replace("%ITEMTOCRAFTNAME%", "")
+                    .replace("%(%", "")
+                    .replace("%)%", "");
+        }
+
+
     }
 }

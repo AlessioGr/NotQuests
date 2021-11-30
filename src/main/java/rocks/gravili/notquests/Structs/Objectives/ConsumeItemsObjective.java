@@ -80,6 +80,7 @@ public class ConsumeItemsObjective extends Objective {
                     }
 
                     ConsumeItemsObjective consumeItemsObjective = new ConsumeItemsObjective(main, quest, quest.getObjectives().size() + 1, itemStack, amount);
+                    quest.addObjective(consumeItemsObjective, true);
 
                     audience.sendMessage(MiniMessage.miniMessage().parse(
                             NotQuestColors.successGradient + "ConsumeItems Objective successfully added to Quest " + NotQuestColors.highlightGradient
@@ -111,9 +112,22 @@ public class ConsumeItemsObjective extends Objective {
             displayName = getItemToConsume().getType().name();
         }
 
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.consumeItems.base", player)
-                .replace("%EVENTUALCOLOR%", eventualColor)
-                .replace("%ITEMTOCONSUMETYPE%", "" + getItemToConsume().getType())
-                .replace("%ITEMTOCONSUMENAME%", "" + displayName);
+        if (!displayName.isBlank()) {
+            return main.getLanguageManager().getString("chat.objectives.taskDescription.consumeItems.base", player)
+                    .replace("%EVENTUALCOLOR%", eventualColor)
+                    .replace("%ITEMTOCONSUMETYPE%", "" + getItemToConsume().getType())
+                    .replace("%ITEMTOCONSUMENAME%", "" + displayName)
+                    .replace("%(%", "(")
+                    .replace("%)%", "§f)");
+        } else {
+            return main.getLanguageManager().getString("chat.objectives.taskDescription.consumeItems.base", player)
+                    .replace("%EVENTUALCOLOR%", eventualColor)
+                    .replace("%ITEMTOCONSUMETYPE%", "" + getItemToConsume().getType())
+                    .replace("%ITEMTOCONSUMENAME%", "")
+                    .replace("%(%", "")
+                    .replace("%)%", ")");
+        }
+
+
     }
 }

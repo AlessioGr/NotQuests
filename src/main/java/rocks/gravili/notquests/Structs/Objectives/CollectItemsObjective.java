@@ -65,10 +65,24 @@ public class CollectItemsObjective extends Objective {
         } else {
             displayName = getItemToCollect().getType().name();
         }
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.collectItems.base", player)
-                .replace("%EVENTUALCOLOR%", eventualColor)
-                .replace("%ITEMTOCOLLECTTYPE%", "" + getItemToCollect().getType())
-                .replace("%ITEMTOCOLLECTNAME%", "" + displayName);
+
+
+        if (!displayName.isBlank()) {
+            return main.getLanguageManager().getString("chat.objectives.taskDescription.collectItems.base", player)
+                    .replace("%EVENTUALCOLOR%", eventualColor)
+                    .replace("%ITEMTOCOLLECTTYPE%", "" + getItemToCollect().getType())
+                    .replace("%ITEMTOCOLLECTNAME%", "" + displayName)
+                    .replace("%(%", "(")
+                    .replace("%)%", "§f)");
+        } else {
+            return main.getLanguageManager().getString("chat.objectives.taskDescription.collectItems.base", player)
+                    .replace("%EVENTUALCOLOR%", eventualColor)
+                    .replace("%ITEMTOCOLLECTTYPE%", "" + getItemToCollect().getType())
+                    .replace("%ITEMTOCOLLECTNAME%", "")
+                    .replace("%(%", "")
+                    .replace("%)%", "");
+        }
+
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {

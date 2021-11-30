@@ -112,9 +112,22 @@ public class SmeltObjective extends Objective {
             displayName = getItemToSmelt().getType().name();
         }
 
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.smelt.base", player)
-                .replace("%EVENTUALCOLOR%", eventualColor)
-                .replace("%ITEMTOSMELTTYPE%", "" + getItemToSmelt().getType())
-                .replace("%ITEMTOSMELTNAME%", "" + displayName);
+        if (!displayName.isBlank()) {
+            return main.getLanguageManager().getString("chat.objectives.taskDescription.smelt.base", player)
+                    .replace("%EVENTUALCOLOR%", eventualColor)
+                    .replace("%ITEMTOSMELTTYPE%", "" + getItemToSmelt().getType())
+                    .replace("%ITEMTOSMELTNAME%", "" + displayName)
+                    .replace("%(%", "(")
+                    .replace("%)%", "§f)");
+        } else {
+            return main.getLanguageManager().getString("chat.objectives.taskDescription.smelt.base", player)
+                    .replace("%EVENTUALCOLOR%", eventualColor)
+                    .replace("%ITEMTOSMELTTYPE%", "" + getItemToSmelt().getType())
+                    .replace("%ITEMTOSMELTNAME%", "")
+                    .replace("%(%", "")
+                    .replace("%)%", "");
+        }
+
+
     }
 }

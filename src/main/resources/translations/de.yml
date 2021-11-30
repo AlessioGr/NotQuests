@@ -36,13 +36,13 @@ chat:
       breed:
         base: '    &8└─ &7%EVENTUALCOLOR%Mob züchten: &f%EVENTUALCOLOR%%ENTITYTOBREED%'
       collectItems:
-        base: '    &8└─ &7%EVENTUALCOLOR%Items sammeln: &f%EVENTUALCOLOR%%ITEMTOCOLLECTTYPE% (%ITEMTOCOLLECTNAME%)'
+        base: '    &8└─ &7%EVENTUALCOLOR%Items sammeln: &f%EVENTUALCOLOR%%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
       consumeItems:
-        base: '    &8└─ &7%EVENTUALCOLOR%Items konsumieren: &f%EVENTUALCOLOR%%ITEMTOCONSUMETYPE% (%ITEMTOCONSUMENAME%)'
+        base: '    &8└─ &7%EVENTUALCOLOR%Items konsumieren: &f%EVENTUALCOLOR%%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
-        base: '    &8└─ &7%EVENTUALCOLOR%Items craften: &f%EVENTUALCOLOR%%ITEMTOCRAFTTYPE% (%ITEMTOCRAFTNAME%)'
+        base: '    &8└─ &7%EVENTUALCOLOR%Items craften: &f%EVENTUALCOLOR%%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: '    &8└─ &7%EVENTUALCOLOR%Items liefern: &f%EVENTUALCOLOR%%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
+        base: '    &8└─ &7%EVENTUALCOLOR%Items liefern: &f%EVENTUALCOLOR%%ITEMTODELIVERTYPE% %(%%ITEMTODELIVERNAME%%)%'
       escortNPC:
         base: '    &8└─ &7%EVENTUALCOLOR%Eskortiere &f%EVENTUALCOLOR%%NPCNAME% &7%EVENTUALCOLOR%zu &f%EVENTUALCOLOR%%DESTINATIONNPCNAME%'
       killMobs:
@@ -68,7 +68,7 @@ chat:
       jump:
         base: '    &8└─ &7%EVENTUALCOLOR%Springe &f%EVENTUALCOLOR%%AMOUNTOFJUMPS% &7%EVENTUALCOLOR%mal'
       smelt:
-        base: '    &8└─ &7%EVENTUALCOLOR%Items schmelzen: &f%EVENTUALCOLOR%%ITEMTOSMELTTYPE% (%ITEMTOSMELTNAME%)'
+        base: '    &8└─ &7%EVENTUALCOLOR%Items schmelzen: &f%EVENTUALCOLOR%%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
 titles:
   quest-accepted:
     title: '&fQuest akzeptiert'
