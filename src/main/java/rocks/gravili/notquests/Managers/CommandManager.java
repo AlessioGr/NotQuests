@@ -232,24 +232,24 @@ public class CommandManager {
                     .permission("notquests.admin");
 
             adminEditCommandBuilder = adminCommandBuilder
-                    .literal("edit")
+                    .literal("edit", "e")
                     .argument(QuestSelector.of("quest", main), ArgumentDescription.of("Quest Name"));
 
             adminConversationCommandBuilder = adminCommandBuilder
-                    .literal("conversations");
+                    .literal("conversations", "c");
 
 
             adminEditAddObjectiveCommandBuilder = adminEditCommandBuilder
-                    .literal("objectives")
+                    .literal("objectives", "o")
                     .literal("add");
             adminEditAddRequirementCommandBuilder = adminEditCommandBuilder
-                    .literal("requirements")
+                    .literal("requirements", "req")
                     .literal("add");
             adminEditAddRewardCommandBuilder = adminEditCommandBuilder
-                    .literal("rewards")
+                    .literal("rewards", "rew")
                     .literal("add");
             adminEditAddTriggerCommandBuilder = adminEditCommandBuilder
-                    .literal("triggers")
+                    .literal("triggers", "t")
                     .literal("add")
                     .argument(ActionSelector.of("action", main), ArgumentDescription.of("Action which will be executed when the Trigger triggers."));
 
