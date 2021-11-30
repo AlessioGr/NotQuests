@@ -209,4 +209,3 @@ gui:
         text: Go to previous page (%prevpage%)
       nextPage:
         text: Go to next page (%nextpage%)
-        oo: lol

@@ -363,8 +363,20 @@ public class DataManager {
             valueChanged = true;
         }
 
+        if (!getGeneralConfig().isBoolean("storage.load-playerdata")) {
+            getGeneralConfig().set("storage.load-playerdata", true);
+            valueChanged = true;
+        }
+        configuration.loadPlayerData = generalConfig.getBoolean("storage.load-playerdata");
+
+        if (!getGeneralConfig().isBoolean("storage.save-playerdata")) {
+            getGeneralConfig().set("storage.save-playerdata", true);
+            valueChanged = true;
+        }
+        configuration.savePlayerData = generalConfig.getBoolean("storage.save-playerdata");
+
         //For upgrades from older versions who didn't have the enable flag but still used MySQL
-        if(mysqlstorageenabledbooleannotloadedyet && !errored){
+        if (mysqlstorageenabledbooleannotloadedyet && !errored) {
             configuration.setMySQLEnabled(true);
             getGeneralConfig().set("storage.database.enabled", true);
         }
@@ -792,8 +804,8 @@ public class DataManager {
      */
     public void saveData() {
         if (isSavingEnabled()) {
-            main.getLogManager().log(Level.INFO, "Saving player data...");
             main.getQuestPlayerManager().savePlayerData();
+
 
             if (questsConfig == null || questsConfigFile == null) {
                 main.getLogManager().log(Level.SEVERE, "Could not save data to quests.yml");

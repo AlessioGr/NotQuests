@@ -244,7 +244,7 @@ public class QuestPlayer {
         for (Reward reward : quest.getRewards()) {
             reward.giveReward(getPlayer(), quest);
         }
-        Objects.requireNonNull(getPlayer()).sendMessage(main.getLanguageManager().getString("chat.quest-completed-and-rewards-given", getPlayer()).replaceAll("%QUESTNAME%", quest.getQuestFinalName()));
+        Objects.requireNonNull(getPlayer()).sendMessage(main.getLanguageManager().getString("chat.quest-completed-and-rewards-given", getPlayer(), quest));
 
     }
 

@@ -195,7 +195,6 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                     }
 
 
-                                    String displayName = activeQuest.getQuest().getQuestFinalName();
 
                                     group.addElement(new StaticGuiElement('e',
                                             new ItemStack(materialToUse),
@@ -206,10 +205,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                                 return true; // returning true will cancel the click event and stop taking the item
 
                                             },
-                                            main.getLanguageManager().getString("gui.activeQuests.button.activeQuestButton.text", player)
-                                                    .replaceAll("%QUESTNAME%", displayName)
-                                                    .replaceAll("%COMPLETEDOBJECTIVESCOUNT%", "" + activeQuest.getCompletedObjectives().size())
-                                                    .replaceAll("%ALLOBJECTIVESCOUNT%", "" + activeQuest.getQuest().getObjectives().size())
+                                            main.getLanguageManager().getString("gui.activeQuests.button.activeQuestButton.text", player, activeQuest)
 
 
                                     ));

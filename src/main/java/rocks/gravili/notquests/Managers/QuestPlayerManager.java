@@ -45,6 +45,11 @@ public class QuestPlayerManager {
     }
 
     public void loadPlayerData() {
+        if (!main.getDataManager().getConfiguration().loadPlayerData) {
+            main.getLogManager().log(Level.INFO, "Loading of playerdata has been skipped...");
+            return;
+        }
+
         questPlayersAndUUIDs.clear();
 
 
@@ -228,6 +233,13 @@ public class QuestPlayerManager {
     }
 
     public void savePlayerData() {
+        if (!main.getDataManager().getConfiguration().savePlayerData) {
+            main.getLogManager().log(Level.INFO, "Saving of playerdata has been skipped...");
+            return;
+        }
+
+        main.getLogManager().log(Level.INFO, "Saving player data...");
+
 
         //try{
         //if(main.getDataManager().getDatabaseStatement().isClosed()){

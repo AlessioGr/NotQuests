@@ -34,6 +34,10 @@ public class Configuration {
      * MYSQL Database Connection Information
      */
     private String host, database, username, password;
+
+    public boolean loadPlayerData = true;
+    public boolean savePlayerData = true;
+
     /**
      * MYSQL Database Connection Information
      */

@@ -29,6 +29,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.ActiveQuest;
+import rocks.gravili.notquests.Structs.Objectives.Objective;
+import rocks.gravili.notquests.Structs.Quest;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -297,21 +300,42 @@ public class LanguageManager {
         return languageConfig;
     }
 
-    public final String getString(final String languageString, final Player targetPlayer) {
+    public final String getString(final String languageString, final Player targetPlayer, Object... internalPlaceholderObjects) {
         if (!getLanguageConfig().isString(languageString)) {
             return "Language string not found: " + languageString;
         } else {
             final String translatedString = getLanguageConfig().getString(languageString);
-            if(translatedString == null){
+            if (translatedString == null) {
                 return "Language string not found: " + languageString;
             }
-            if(!main.getDataManager().getConfiguration().supportPlaceholderAPIInTranslationStrings || !main.isPlaceholderAPIEnabled() || targetPlayer == null){
-                return applySpecial(applyColor(translatedString));
-            }else{
-                return applySpecial(applyColor(PlaceholderAPI.setPlaceholders(targetPlayer, translatedString)));
+            if (!main.getDataManager().getConfiguration().supportPlaceholderAPIInTranslationStrings || !main.isPlaceholderAPIEnabled() || targetPlayer == null) {
+                return applySpecial(applyColor(applyInternalPlaceholders(translatedString, internalPlaceholderObjects)));
+            } else {
+                return applySpecial(applyColor(PlaceholderAPI.setPlaceholders(targetPlayer, applyInternalPlaceholders(translatedString, internalPlaceholderObjects))));
             }
         }
+    }
 
+    public String applyInternalPlaceholders(String initialMessage, Object... internalPlaceholderObjects) {
+        main.getLogManager().log(Level.INFO, "Pre-applying placeholder...");
+        for (Object internalPlaceholderObject : internalPlaceholderObjects) {
+            main.getLogManager().log(Level.INFO, "Applying placeholder: " + internalPlaceholderObject.getClass().toString());
+            if (internalPlaceholderObject instanceof Quest quest) {
+                initialMessage = initialMessage.replaceAll("%QUESTNAME%", quest.getQuestFinalName())
+                        .replaceAll("%QUESTDESCRIPTION%", quest.getQuestDescription());
+            }
+            if (internalPlaceholderObject instanceof ActiveQuest activeQuest) {
+                initialMessage = initialMessage.replaceAll("%QUESTNAME%", activeQuest.getQuest().getQuestFinalName())
+                        .replaceAll("%QUESTDESCRIPTION%", activeQuest.getQuest().getQuestDescription()
+                                .replaceAll("%COMPLETEDOBJECTIVESCOUNT%", "" + activeQuest.getCompletedObjectives().size())
+                                .replaceAll("%ALLOBJECTIVESCOUNT%", "" + activeQuest.getQuest().getObjectives().size()));
+            }
+            if (internalPlaceholderObject instanceof Objective objective) {
+                initialMessage = initialMessage.replaceAll("%OBJECTIVEID%", "" + objective.getObjectiveID())
+                        .replaceAll("%OBJECTIVENAME%", objective.getObjectiveFinalName());
+            }
+        }
+        return initialMessage;
     }
 
     public String applySpecial(String initialMessage) { //TODO: Fix center if that message is later processed for placeholders => process the placeholders here instead

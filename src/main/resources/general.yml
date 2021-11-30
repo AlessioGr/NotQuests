@@ -1,4 +1,6 @@
 storage:
+  load-playerdata: true
+  save-playerdata: true
   database:
     # If this is set to false, SQLite will be used instead (no configuration needed)
     enabled: false
