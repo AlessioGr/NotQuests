@@ -78,7 +78,7 @@ public class BQActionEvent extends QuestEvent {
 
 
         boolean foundAction = false;
-        for (final Action action : main.getQuestManager().getAllActions()) {
+        for (final Action action : main.getActionsManager().getActions()) {
             if (action.getActionName().equalsIgnoreCase(actionName)) {
                 this.action = action;
                 foundAction = true;

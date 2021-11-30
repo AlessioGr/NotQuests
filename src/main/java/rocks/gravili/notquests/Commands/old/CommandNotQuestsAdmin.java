@@ -238,7 +238,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                     } else if (args[1].equalsIgnoreCase("list")) {
                         int counter = 1;
                         sender.sendMessage("§eAll Actions:");
-                        for (final Action action : main.getQuestManager().getAllActions()) {
+                        for (final Action action : main.getActionsManager().getActions()) {
                             sender.sendMessage("§a" + counter + ". §e" + action.getActionName());
                             sender.sendMessage("§7--- Command: §f" + action.getConsoleCommand());
                             counter += 1;
@@ -639,7 +639,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                         final String actionName = args[2];
 
                         boolean alreadyExists = false;
-                        for (final Action action : main.getQuestManager().getAllActions()) {
+                        for (final Action action : main.getActionsManager().getActions()) {
                             if (action.getActionName().equalsIgnoreCase(actionName)) {
                                 alreadyExists = true;
                                 break;
@@ -659,7 +659,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
 
                             sender.sendMessage("§aTrying to create Action with the name §b" + actionName + " §aand console command §e" + consoleCommand + " §a...");
                             audience.sendMessage(Component.text("Status: ", NamedTextColor.GREEN)
-                                    .append(MiniMessage.miniMessage().parse(main.getQuestManager().createAction(actionName, consoleCommand.toString())))
+                                    .append(MiniMessage.miniMessage().parse(main.getActionsManager().createAction(actionName, consoleCommand.toString())))
                             );
 
 
@@ -891,7 +891,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                         final String actionName = args[2];
 
                         Action foundAction = null;
-                        for (final Action action : main.getQuestManager().getAllActions()) {
+                        for (final Action action : main.getActionsManager().getActions()) {
                             if (action.getActionName().equalsIgnoreCase(actionName)) {
                                 foundAction = action;
                                 break;
@@ -900,7 +900,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
 
                         if (foundAction != null) {
 
-                            main.getQuestManager().removeAction(foundAction);
+                            main.getActionsManager().removeAction(foundAction);
                             sender.sendMessage("§aAction with the name §b" + foundAction.getActionName() + " §ahas been deleted.");
 
 
@@ -926,7 +926,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                 final String actionName = args[2];
 
                 Action foundAction = null;
-                for (final Action action : main.getQuestManager().getAllActions()) {
+                for (final Action action : main.getActionsManager().getActions()) {
                     if (action.getActionName().equalsIgnoreCase(actionName)) {
                         foundAction = action;
                         break;
@@ -1270,7 +1270,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                     sender.sendMessage("§e/notquestsadminold §6edit §2" + args[1] + " §6triggers add §3" + args[4] + " §2DEATH §3" + args[6] + " [World Name/ALL] [Amount of Deaths]");
 
                                 } else if (args[5].equalsIgnoreCase("FAIL")) {
-                                    final Action action = main.getQuestManager().getAction(args[4]);
+                                    final Action action = main.getActionsManager().getAction(args[4]);
                                     if (action != null) {
                                         int applyOn = -1;
                                         if (args[6].equalsIgnoreCase("quest")) {
@@ -1291,7 +1291,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                     }
 
                                 } else if (args[5].equalsIgnoreCase("COMPLETE")) {
-                                    final Action action = main.getQuestManager().getAction(args[4]);
+                                    final Action action = main.getActionsManager().getAction(args[4]);
                                     if (action != null) {
                                         int applyOn = -1;
                                         if (args[6].equalsIgnoreCase("quest")) {
@@ -1311,7 +1311,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                         sender.sendMessage("§cError: the following action was not found: §b" + args[4]);
                                     }
                                 } else if (args[5].equalsIgnoreCase("BEGIN")) {
-                                    final Action action = main.getQuestManager().getAction(args[4]);
+                                    final Action action = main.getActionsManager().getAction(args[4]);
                                     if (action != null) {
                                         int applyOn = -1;
                                         if (args[6].equalsIgnoreCase("quest")) {
@@ -1331,7 +1331,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                         sender.sendMessage("§cError: the following action was not found: §b" + args[4]);
                                     }
                                 } else if (args[5].equalsIgnoreCase("DISCONNECT")) {
-                                    final Action action = main.getQuestManager().getAction(args[4]);
+                                    final Action action = main.getActionsManager().getAction(args[4]);
                                     if (action != null) {
                                         int applyOn = -1;
                                         if (args[6].equalsIgnoreCase("quest")) {
@@ -1392,7 +1392,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
 
 
                                 if (args[5].equalsIgnoreCase("DEATH")) {
-                                    final Action action = main.getQuestManager().getAction(args[4]);
+                                    final Action action = main.getActionsManager().getAction(args[4]);
                                     if (action != null) {
                                         int applyOn = -1;
                                         if (args[6].equalsIgnoreCase("quest")) {
@@ -1456,7 +1456,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                         sender.sendMessage("§cError: Any kind of NPC stuff has been disabled, because you don't have the Citizens plugin installed on your server. You need to install the Citizens plugin in order for NPC stuff to work.");
                                         return true;
                                     }
-                                    final Action action = main.getQuestManager().getAction(args[4]);
+                                    final Action action = main.getActionsManager().getAction(args[4]);
                                     if (action != null) {
                                         int applyOn = -1;
                                         if (args[6].equalsIgnoreCase("quest")) {
@@ -1485,7 +1485,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                                     }
                                 } else if (args[5].equalsIgnoreCase("WORLDENTER")) {
 
-                                    final Action action = main.getQuestManager().getAction(args[4]);
+                                    final Action action = main.getActionsManager().getAction(args[4]);
                                     if (action != null) {
                                         int applyOn = -1;
                                         if (args[6].equalsIgnoreCase("quest")) {
@@ -1512,7 +1512,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
 
                                 } else if (args[5].equalsIgnoreCase("WORLDLEAVE")) {
 
-                                    final Action action = main.getQuestManager().getAction(args[4]);
+                                    final Action action = main.getActionsManager().getAction(args[4]);
                                     if (action != null) {
                                         int applyOn = -1;
                                         if (args[6].equalsIgnoreCase("quest")) {
@@ -2163,7 +2163,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
                 main.getDataManager().completions.add("<Enter new, unique Action name>");
                 main.getUtilManager().sendFancyCommandCompletion(audience, args, "<Enter new, unique Action name>", "<Console Command>");
             } else if (args[1].equalsIgnoreCase("edit")) {
-                for (final Action action : main.getQuestManager().getAllActions()) {
+                for (final Action action : main.getActionsManager().getActions()) {
                     main.getDataManager().completions.add(action.getActionName());
                 }
                 main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Action Name]", "[setCommand / delete]");
@@ -2586,7 +2586,7 @@ public class CommandNotQuestsAdmin implements CommandExecutor, TabCompleter {
 
         } else if (args.length == 5) {
             if (args[3].equalsIgnoreCase("add")) {
-                for (final Action action : main.getQuestManager().getAllActions()) {
+                for (final Action action : main.getActionsManager().getActions()) {
                     main.getDataManager().completions.add(action.getActionName());
                 }
                 main.getUtilManager().sendFancyCommandCompletion(audience, args, "[Action Name]", "[Trigger Type]");

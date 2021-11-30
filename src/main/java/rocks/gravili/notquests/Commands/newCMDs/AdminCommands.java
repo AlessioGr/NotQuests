@@ -892,7 +892,7 @@ public class AdminCommands {
                     final String actionName = context.get("Action Name");
 
                     boolean alreadyExists = false;
-                    for (final Action action : main.getQuestManager().getAllActions()) {
+                    for (final Action action : main.getActionsManager().getActions()) {
                         if (action.getActionName().equalsIgnoreCase(actionName)) {
                             alreadyExists = true;
                             break;
@@ -906,7 +906,7 @@ public class AdminCommands {
                                 + highlightGradient + actionName + "</gradient> and console command " + highlight2Gradient + consoleCommand + "</gradient>...</gradient>"
                         ));
 
-                        audience.sendMessage(miniMessage.parse(mainGradient + "Status: " + main.getQuestManager().createAction(actionName, consoleCommand)));
+                        audience.sendMessage(miniMessage.parse(mainGradient + "Status: " + main.getActionsManager().createAction(actionName, consoleCommand)));
 
                     } else {
                         audience.sendMessage(miniMessage.parse(errorGradient + "Error! An action with the name " + highlightGradient + actionName + "</gradient> already exists!</gradient>"));
@@ -923,7 +923,7 @@ public class AdminCommands {
 
                             ArrayList<String> completions = new ArrayList<>();
 
-                            for (final Action action : main.getQuestManager().getAllActions()) {
+                            for (final Action action : main.getActionsManager().getActions()) {
                                 completions.add(action.getActionName());
                             }
                             return completions;
@@ -955,7 +955,7 @@ public class AdminCommands {
                     final String consoleCommand = String.join(" ", (String[]) context.get("Console Command"));
 
                     Action foundAction = null;
-                    for (final Action action : main.getQuestManager().getAllActions()) {
+                    for (final Action action : main.getActionsManager().getActions()) {
                         if (action.getActionName().equalsIgnoreCase(actionName)) {
                             foundAction = action;
                             break;
@@ -981,7 +981,7 @@ public class AdminCommands {
 
                             ArrayList<String> completions = new ArrayList<>();
 
-                            for (final Action action : main.getQuestManager().getAllActions()) {
+                            for (final Action action : main.getActionsManager().getActions()) {
                                 completions.add(action.getActionName());
                             }
                             return completions;
@@ -995,7 +995,7 @@ public class AdminCommands {
                     final String actionName = context.get("Action Name");
 
                     Action foundAction = null;
-                    for (final Action action : main.getQuestManager().getAllActions()) {
+                    for (final Action action : main.getActionsManager().getActions()) {
                         if (action.getActionName().equalsIgnoreCase(actionName)) {
                             foundAction = action;
                             break;
@@ -1005,7 +1005,7 @@ public class AdminCommands {
 
                     if (foundAction != null) {
 
-                        main.getQuestManager().removeAction(foundAction);
+                        main.getActionsManager().removeAction(foundAction);
                         audience.sendMessage(miniMessage.parse(successGradient + "Action with the name " + highlightGradient + foundAction.getActionName() + "</gradient> has been deleted.</gradient>"));
 
                     } else {
@@ -1021,7 +1021,7 @@ public class AdminCommands {
                     final Audience audience = main.adventure().sender(context.getSender());
                     int counter = 1;
                     audience.sendMessage(miniMessage.parse(highlightGradient + "All Actions:"));
-                    for (final Action action : main.getQuestManager().getAllActions()) {
+                    for (final Action action : main.getActionsManager().getActions()) {
                         audience.sendMessage(miniMessage.parse(highlightGradient + counter + ".</gradient> " + mainGradient + action.getActionName()));
                         audience.sendMessage(miniMessage.parse(veryUnimportant + "  └─ " + unimportant + "Command: " + highlight2Gradient + action.getConsoleCommand()));
                         counter += 1;

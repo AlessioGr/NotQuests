@@ -84,6 +84,6 @@ public class Action {
 
     public void setConsoleCommand(String newConsoleCommand) {
         this.consoleCommand = newConsoleCommand;
-        main.getDataManager().getQuestsConfig().set("actions." + actionName + ".consoleCommand", newConsoleCommand);
+        main.getActionsManager().getActionsConfig().set("actions." + actionName + ".consoleCommand", newConsoleCommand);
     }
 }

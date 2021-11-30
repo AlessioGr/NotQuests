@@ -200,7 +200,7 @@ public class DataManager {
 
 
                 try {
-                    //Try to create the general.yml config file, and throw an error if it fails.
+                    //Try to create the quests.yml config file, and throw an error if it fails.
 
 
                     if (!questsConfigFile.createNewFile()) {
@@ -806,7 +806,17 @@ public class DataManager {
         if (isSavingEnabled()) {
             main.getQuestPlayerManager().savePlayerData();
 
+            saveQuestsConfig();
 
+        } else {
+            main.getLogManager().log(Level.WARNING, "NotQuests > Saving is disabled => no data has been saved.");
+        }
+
+    }
+
+
+    public void saveQuestsConfig() {
+        if (isSavingEnabled()) {
             if (questsConfig == null || questsConfigFile == null) {
                 main.getLogManager().log(Level.SEVERE, "Could not save data to quests.yml");
                 return;
@@ -818,11 +828,7 @@ public class DataManager {
                 main.getLogManager().log(Level.SEVERE, "Could not save config to <AQUA>" + questsConfigFile + "</AQUA>. Stacktrace:");
                 e.printStackTrace();
             }
-        } else {
-            main.getLogManager().log(Level.WARNING, "NotQuests > Saving is disabled => no data has been saved.");
         }
-
-
     }
 
     /**

@@ -80,6 +80,7 @@ public final class NotQuests extends JavaPlugin {
     private UtilManager utilManager;
     private LogManager logManager;
     private DataManager dataManager;
+    private ActionsManager actionsManager;
     private QuestManager questManager;
     private QuestPlayerManager questPlayerManager;
     private LanguageManager languageManager;
@@ -175,6 +176,8 @@ public final class NotQuests extends JavaPlugin {
         //Create a new instance of the Data Manager which will be re-used everywhere
         dataManager = new DataManager(this);
 
+        actionsManager = new ActionsManager(this);
+
         //Load general config first, because we'll need it for the integrations
         dataManager.loadGeneralConfig();
 
@@ -258,11 +261,15 @@ public final class NotQuests extends JavaPlugin {
             getServer().getPluginManager().registerEvents(new SlimefunEvents(this), this);
         }
 
+        //Load actions first, as they are needed for triggers loading in dataManager.reloadData()
+        actionsManager.loadActions();
+
         //This finally starts loading all Config-, Quest-, and Player Data. Reload = Load
         dataManager.reloadData();
 
         //This registers all PlaceholderAPI placeholders, if loading is enabled
         if (getDataManager().isLoadingEnabled()) {
+
 
             if (getDataManager().getConfiguration().isIntegrationPlaceholderAPIEnabled()) {
                 if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
@@ -581,6 +588,10 @@ public final class NotQuests extends JavaPlugin {
      */
     public DataManager getDataManager() {
         return dataManager;
+    }
+
+    public ActionsManager getActionsManager() {
+        return actionsManager;
     }
 
     /**

@@ -62,7 +62,7 @@ public class QuestManager {
     private final NotQuests main;
 
     private final ArrayList<Quest> quests;
-    private final ArrayList<Action> actions;
+
 
     private boolean questDataLoaded = false;
 
@@ -75,7 +75,6 @@ public class QuestManager {
     public QuestManager(NotQuests main) {
         this.main = main;
         quests = new ArrayList<>();
-        actions = new ArrayList<>();
 
         debugEnabledPlayers = new ArrayList<>();
 
@@ -148,37 +147,30 @@ public class QuestManager {
 
             quests.clear();
 
-            //Actions
-            final ConfigurationSection actionsConfigurationSection = main.getDataManager().getQuestsConfig().getConfigurationSection("actions");
-            if (actionsConfigurationSection != null) {
-                for (final String actionName : actionsConfigurationSection.getKeys(false)) {
+
+            //Actions load from quests.yml, so we can migrate them to actions.yml
+            final ConfigurationSection oldActionsConfigurationSection = main.getDataManager().getQuestsConfig().getConfigurationSection("actions");
+            if (oldActionsConfigurationSection != null) {
+                for (final String actionName : oldActionsConfigurationSection.getKeys(false)) {
                     final String consoleCommand = main.getDataManager().getQuestsConfig().getString("actions." + actionName + ".consoleCommand", "");
                     if (consoleCommand.equalsIgnoreCase("")) {
                         main.getLogManager().log(Level.WARNING, "Action has an empty console command. This should NOT be possible! Creating an action with an empty console command... Action name: <AQUA>" + actionName + "</AQUA>");
-
-                    }
-                    boolean nameAlreadyExists = false;
-                    for (final Action action : actions) {
-                        if (action.getActionName().equalsIgnoreCase(actionName)) {
-                            nameAlreadyExists = true;
-                            break;
-                        }
                     }
 
-                    if (!nameAlreadyExists) {
-                        final Action newAction = new Action(main, actionName, consoleCommand);
-                        actions.add(newAction);
-                        main.getDataManager().getQuestsConfig().set("actions." + actionName + ".consoleCommand", consoleCommand);
-                    } else {
-                        main.getLogManager().log(Level.WARNING, "NotQuests > Action already exists. This should NOT be possible! Skipping action creation... Action name: <AQUA>" + actionName + "</AQUA>");
+                    main.getActionsManager().createAction(actionName, consoleCommand);
+                    main.getLogManager().log(Level.INFO, "Migrated the following action from quests.yml to actions.yml: <AQUA>" + actionName + "</AQUA>");
 
-                        main.getLogManager().log(Level.SEVERE, "Plugin disabled, because there was an error while loading quests action data.");
-                        main.getDataManager().setSavingEnabled(false);
-                        main.getServer().getPluginManager().disablePlugin(main);
-                    }
 
                 }
             }
+
+            //Now that they are loaded, let's delete them from the quests.yml and save the actions.yml
+            main.getDataManager().getQuestsConfig().set("actions", null);
+            main.getDataManager().saveQuestsConfig();
+
+
+            //save them to write them to the actions.yml (in case of migration)
+            main.getActionsManager().saveActions();
 
             //Quests
             final ConfigurationSection questsConfigurationSection = main.getDataManager().getQuestsConfig().getConfigurationSection("quests");
@@ -438,7 +430,7 @@ public class QuestManager {
 
 
                             Action foundAction = null;
-                            for (final Action action : actions) {
+                            for (final Action action : main.getActionsManager().getActions()) {
                                 if (action.getActionName().equalsIgnoreCase(triggerActionName)) {
                                     foundAction = action;
                                     break;
@@ -1155,44 +1147,7 @@ public class QuestManager {
         }
     }
 
-    public final String createAction(String actionName, String consoleCommand) {
-        boolean nameAlreadyExists = false;
-        for (Action action : actions) {
-            if (action.getActionName().equalsIgnoreCase(actionName)) {
-                nameAlreadyExists = true;
-                break;
-            }
-        }
 
-        if (!nameAlreadyExists) {
-            final Action newAction = new Action(main, actionName, consoleCommand);
-            actions.add(newAction);
-            main.getDataManager().getQuestsConfig().set("actions." + actionName + ".consoleCommand", consoleCommand);
-            return (NotQuestColors.successGradient + "Action successfully created!");
-        } else {
-            return (NotQuestColors.errorGradient + "Action already exists!");
-        }
-    }
-
-    public final ArrayList<Action> getAllActions() {
-        return actions;
-    }
-
-    public final Action getAction(String actionName) {
-        for (Action action : actions) {
-            if (action.getActionName().equalsIgnoreCase(actionName)) {
-                return action;
-            }
-        }
-        return null;
-    }
-
-    public String removeAction(Action actionToDelete) {
-        actions.remove(actionToDelete);
-        main.getDataManager().getQuestsConfig().set("actions." + actionToDelete.getActionName(), null);
-        return "§aAction successfully deleted!";
-
-    }
 
 
     public void sendCompletedObjectivesAndProgress(final Player player, final ActiveQuest activeQuest) {

@@ -112,7 +112,7 @@ public class ActionSelector<C> extends CommandArgument<C, Action> {
         @Override
         public List<String> suggestions(@NotNull CommandContext<C> context, @NotNull String input) {
             List<String> questNames = new java.util.ArrayList<>();
-            for (Action action : main.getQuestManager().getAllActions()) {
+            for (Action action : main.getActionsManager().getActions()) {
                 questNames.add(action.getActionName());
             }
             final Audience audience = main.adventure().sender((CommandSender) context.getSender());
@@ -129,7 +129,7 @@ public class ActionSelector<C> extends CommandArgument<C, Action> {
                 return ArgumentParseResult.failure(new NoInputProvidedException(ActionsParser.class, context));
             }
             final String input = inputQueue.peek();
-            final Action foundAction = main.getQuestManager().getAction(input);
+            final Action foundAction = main.getActionsManager().getAction(input);
             inputQueue.remove();
 
             if (foundAction == null) {

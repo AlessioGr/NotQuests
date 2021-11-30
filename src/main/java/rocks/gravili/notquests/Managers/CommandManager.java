@@ -227,6 +227,7 @@ public class CommandManager {
                 return;
             }
 
+
             adminCommandBuilder = commandManager.commandBuilder("notquestsadmin", ArgumentDescription.of("Admin commands for NotQuests"),
                             "nquestsadmin", "nquestadmin", "notquestadmin", "qadmin", "questadmin", "qa", "qag", "nqa")
                     .permission("notquests.admin");
