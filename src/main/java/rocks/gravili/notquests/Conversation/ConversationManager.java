@@ -383,11 +383,18 @@ public class ConversationManager {
 
 
     public final Action parseActionString(final String actionString) {
-        if (actionString.isBlank()) {
+        if (!actionString.isBlank()) {
+            main.getLogManager().log(Level.INFO, "<GREEN>Trying to find action: " + actionString);
+
             if (actionString.startsWith("action ")) {
                 final String existingActionName = actionString.split(" ")[1];
 
-                return main.getActionsManager().getAction(existingActionName);
+                final Action foundAction = main.getActionsManager().getAction(existingActionName);
+                if (foundAction != null) {
+                    main.getLogManager().log(Level.INFO, "Found conversation line action: " + foundAction.getActionName());
+                }
+
+                return foundAction;
             }
             return null;
         }

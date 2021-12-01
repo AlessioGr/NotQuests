@@ -179,6 +179,9 @@ public class ActionsManager {
             actions.add(newAction);
             getActionsConfig().set("actions." + actionName + ".type", "ConsoleCommand");
             getActionsConfig().set("actions." + actionName + ".specifics.consoleCommand", consoleCommand);
+
+            saveActions();
+
             return (NotQuestColors.successGradient + "Action successfully created!");
         } else {
             return (NotQuestColors.errorGradient + "Action already exists!");
