@@ -53,7 +53,7 @@ public class NQPacketListener implements PacketListener {
 
 
     public void handleMainChatHistorySavingLogic(final WrapperPlayServerChatMessage wrapperPlayServerChatMessage, final Player player) {
-        Component component = null;
+        Component component;
         try {
             component = GsonComponentSerializer.builder().build().deserialize(wrapperPlayServerChatMessage.getJSONMessageRaw());
 
@@ -75,11 +75,8 @@ public class NQPacketListener implements PacketListener {
             //main.getLogManager().log(Level.WARNING, "Prev: " + hist.size());
             int toRemove = hist.size() - maxChathistory;
             if (toRemove > 0) {
-                for (int i = 0; i < toRemove; i++) {
-                    //main.getLogManager().log(Level.WARNING, "ToRemove: " + i);
-
-                    hist.remove(0);
-                }
+                //main.getLogManager().log(Level.WARNING, "ToRemove: " + i);
+                hist.subList(0, toRemove).clear();
             }
             //main.getLogManager().log(Level.WARNING, "After: " + hist.size());
 
@@ -90,9 +87,9 @@ public class NQPacketListener implements PacketListener {
         } catch (Exception ignored) {
 
         }
-        if (component != null) {
-            //main.getLogManager().log(Level.INFO, "E " + LegacyComponentSerializer.legacyAmpersand().serialize(component));
-        }
+        //if (component != null) {
+        //main.getLogManager().log(Level.INFO, "E " + LegacyComponentSerializer.legacyAmpersand().serialize(component));
+        //}
 
 
     }
@@ -100,20 +97,18 @@ public class NQPacketListener implements PacketListener {
 
     @Override
     public void onPacketSend(PacketSendEvent event) {
-        Player player = (Player) event.getPlayer();
         if (event.getPacketType() == PacketType.Play.Server.CHAT_MESSAGE) {
-
 
             WrapperPlayServerChatMessage wrapperPlayServerChatMessage = new WrapperPlayServerChatMessage(event);
 
-
             if (wrapperPlayServerChatMessage.getJSONMessageRaw() != null && !wrapperPlayServerChatMessage.getJSONMessageRaw().contains("fg9023zf729ofz")) {
+                Player player = (Player) event.getPlayer();
 
                 handleMainChatHistorySavingLogic(wrapperPlayServerChatMessage, player);
 
             } else if (wrapperPlayServerChatMessage.getJSONMessageRaw() != null && wrapperPlayServerChatMessage.getJSONMessageRaw().contains("fg9023zf729ofz")) {
                 //main.getLogManager().log(Level.INFO, "replay");
-                Component component = null;
+                Component component;
                 try {
                     component = GsonComponentSerializer.builder().build().deserialize(wrapperPlayServerChatMessage.getJSONMessageRaw());
 
