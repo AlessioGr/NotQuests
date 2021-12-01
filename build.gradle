@@ -138,7 +138,7 @@ dependencies {
     implementation 'me.lucko:commodore:1.10'
 
 
-    implementation 'com.github.retrooper.packetevents:bukkit:2.0-469e610c15-1'
+    implementation 'com.github.retrooper.packetevents:bukkit:2.0-2327997910-1'
 }
 
 /**
