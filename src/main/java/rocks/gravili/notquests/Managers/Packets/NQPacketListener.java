@@ -35,7 +35,7 @@ import java.util.logging.Level;
 public class NQPacketListener implements PacketListener {
     private final NotQuests main;
 
-    private final int maxChathistory = 15;
+    private final int maxChathistory = 16;
 
 
     public NQPacketListener(final NotQuests main) {
