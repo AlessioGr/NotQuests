@@ -699,13 +699,13 @@ public class DataManager {
 
 
         if (!getGeneralConfig().isBoolean("general.packet-magic.enabled")) {
-            getGeneralConfig().set("general.packet-magic.enabled", false);
+            getGeneralConfig().set("general.packet-magic.enabled", true);
             valueChanged = true;
         }
         configuration.packetMagic = getGeneralConfig().getBoolean("general.packet-magic.enabled");
 
         if (!getGeneralConfig().isBoolean("general.packet-magic.conversations.delete-previous")) {
-            getGeneralConfig().set("general.packet-magic.conversations.delete-previous", false);
+            getGeneralConfig().set("general.packet-magic.conversations.delete-previous", true);
             valueChanged = true;
         }
         configuration.deletePreviousConversations = getGeneralConfig().getBoolean("general.packet-magic.conversations.delete-previous");

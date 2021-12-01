@@ -53,7 +53,6 @@ public class NQPacketListener implements PacketListener {
 
 
     public void handleMainChatHistorySavingLogic(final WrapperPlayServerChatMessage wrapperPlayServerChatMessage, final Player player) {
-
         Component component = null;
         try {
             component = GsonComponentSerializer.builder().build().deserialize(wrapperPlayServerChatMessage.getJSONMessageRaw());
@@ -63,6 +62,7 @@ public class NQPacketListener implements PacketListener {
             if (convHist != null && convHist.contains(component)) {
                 return;
             }
+
 
             ArrayList<Component> hist = main.getPacketManager().getChatHistory().get(player.getUniqueId());
             if (hist != null) {
@@ -84,10 +84,11 @@ public class NQPacketListener implements PacketListener {
             //main.getLogManager().log(Level.WARNING, "After: " + hist.size());
 
 
-            //main.getPacketManager().getChatHistory().put(player.getUniqueId(), hist);
+            main.getPacketManager().getChatHistory().put(player.getUniqueId(), hist);
 
 
         } catch (Exception ignored) {
+
         }
         if (component != null) {
             //main.getLogManager().log(Level.INFO, "E " + LegacyComponentSerializer.legacyAmpersand().serialize(component));
