@@ -18,6 +18,10 @@ general:
   journal-item:
     enabled-worlds:
       - ''
+  packet-magic:
+    enabled: false
+    conversations:
+      delete-previous: false
 visual:
   #Sets which language to use. Default is languages/en.yml
   language: en

@@ -18,6 +18,8 @@
 
 package rocks.gravili.notquests.Conversation;
 
+import rocks.gravili.notquests.Structs.Triggers.Action;
+
 import java.util.ArrayList;
 
 public class ConversationLine {
@@ -28,8 +30,9 @@ public class ConversationLine {
     private String color = "<GRAY>";
     private boolean shout = false;
 
-    private final String identifier;
+    private Action action;
 
+    private final String identifier;
     private final String fullIdentifier;
 
     public ConversationLine(final Speaker speaker, final String identifier, final String message) {
@@ -79,5 +82,13 @@ public class ConversationLine {
 
     public void setShouting(final boolean shouting) {
         this.shout = shouting;
+    }
+
+    public final Action getAction() {
+        return action;
+    }
+
+    public void setAction(final Action newAction) {
+        this.action = newAction;
     }
 }

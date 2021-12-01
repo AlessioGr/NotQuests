@@ -30,6 +30,7 @@ import org.bukkit.persistence.PersistentDataType;
 import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.QuestPlayer;
+import rocks.gravili.notquests.Structs.Triggers.Action;
 
 import java.io.File;
 import java.io.IOException;
@@ -217,6 +218,9 @@ public class ConversationManager {
             for (final String starterLine : starterLines.split(",")) {
                 final String message = config.getString("Lines." + starterLine + ".text", "-");
 
+                final String actionString = config.getString("Lines." + starterLine + ".action", "");
+                final Action action = parseActionString(actionString);
+
                 if (message.equals("-")) {
                     main.getLogManager().log(Level.WARNING, "Warning: couldn't find message for starter line <AQUA>" + starterLine + "</AQUA> of conversation <AQUA>" + conversationFile.getName() + "</AQUA>");
 
@@ -235,6 +239,10 @@ public class ConversationManager {
                 }
 
                 ConversationLine startLine = new ConversationLine(foundSpeaker, starterLine.split("\\.")[1], message);
+                if (action != null) {
+                    startLine.setAction(action);
+                }
+
                 conversationLines.add(startLine);
 
                 conversation.addStarterConversationLine(startLine);
@@ -271,6 +279,8 @@ public class ConversationManager {
 
                     final String message = config.getString("Lines." + nextLineFullIdentifier + ".text", "");
                     final String next = config.getString("Lines." + nextLineFullIdentifier + ".next", "");
+                    final String actionString = config.getString("Lines." + nextLineFullIdentifier + ".action", "");
+                    final Action action = parseActionString(actionString);
 
                     main.getLogManager().log(Level.INFO, "Deep diving next string <AQUA>" + nextLineFullIdentifier + "</AQUA> for conversation line <AQUA>" + fullIdentifier + "</AQUA>...");
                     main.getLogManager().log(Level.INFO, "---- Message: <AQUA>" + message + "</AQUA> | Next: <AQUA>" + next + "</AQUA>");
@@ -308,6 +318,9 @@ public class ConversationManager {
 
 
                         ConversationLine newLine = new ConversationLine(foundSpeaker, nextLineFullIdentifier.split("\\.")[1], message);
+                        if (action != null) {
+                            newLine.setAction(action);
+                        }
                         conversationLine.addNext(newLine);
                         linesForOneFile.add(newLine);
 
@@ -366,6 +379,19 @@ public class ConversationManager {
 
 
         }*/
+    }
+
+
+    public final Action parseActionString(final String actionString) {
+        if (actionString.isBlank()) {
+            if (actionString.startsWith("action ")) {
+                final String existingActionName = actionString.split(" ")[1];
+
+                return main.getActionsManager().getAction(existingActionName);
+            }
+            return null;
+        }
+        return null; //TODO:
     }
 
 

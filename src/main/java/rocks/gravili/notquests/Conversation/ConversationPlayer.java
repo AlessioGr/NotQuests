@@ -60,13 +60,19 @@ public class ConversationPlayer {
         if (startingLine != null) {
 
 
-            next(startingLine);
+            next(startingLine, true);
         }
 
     }
 
-    public boolean next(final ConversationLine currentLine) {
-        sendLine(currentLine);
+    /**
+     * Continues the conversation. Called, when either (1) starting line is called or (2) when the next line is NOT a clickable option line.
+     *
+     * @param currentLine
+     * @return
+     */
+    public boolean next(final ConversationLine currentLine, boolean deletePrevious) {
+        sendLine(currentLine, deletePrevious);
 
         ArrayList<ConversationLine> next = findConversationLinesWhichFulfillsCondition(currentLine.getNext());
 
@@ -79,7 +85,12 @@ public class ConversationPlayer {
                 if (!next.get(0).getSpeaker().isPlayer()) {
                     questPlayer.sendDebugMessage("Line <AQUA>" + currentLine.getFullIdentifier() + "</AQUA> has one next: <AQUA>" + next.get(0).getFullIdentifier());
 
-                    return next(next.get(0));
+                    if (!currentLine.getSpeaker().isPlayer()) { //Two consecutive non-playerl ines
+                        return next(next.get(0), false); //Setting it to false won't remove the previous lines (if packet stuff enabled). Otherwise, the first line wouldn't even be visible to the player
+                    } else {
+                        return next(next.get(0), true);
+                    }
+
                 } else {
                     questPlayer.sendDebugMessage("Line <AQUA>" + currentLine.getFullIdentifier() + "</AQUA> has one PLAYER next: <AQUA>" + next.get(0).getFullIdentifier());
 
@@ -95,6 +106,12 @@ public class ConversationPlayer {
         }
     }
 
+    /**
+     * Called when the next lines (playerLines) are clickable option lines
+     *
+     * @param playerLines
+     * @return
+     */
     public boolean nextPlayer(final ArrayList<ConversationLine> playerLines) {
         questPlayer.sendDebugMessage("Clearing currentPlayerLines (3)");
         currentPlayerLines.clear();
@@ -122,7 +139,6 @@ public class ConversationPlayer {
         for (final ConversationLine playerLine : playerLines) {
             sendOptionLine(playerLine);
         }
-        audience.sendMessage(Component.empty());
 
         if (main.getDataManager().getConfiguration().packetMagic && main.getDataManager().getConfiguration().deletePreviousConversations) {
             ArrayList<Component> hist = main.getPacketManager().getConversationChatHistory().get(player.getUniqueId());
@@ -131,6 +147,11 @@ public class ConversationPlayer {
             }
             hist.add(Component.empty());
         }
+
+
+        audience.sendMessage(Component.empty());
+
+
         return true;
     }
 
@@ -156,12 +177,19 @@ public class ConversationPlayer {
 
     }
 
-    public void sendLine(final ConversationLine conversationLine) {
+    /**
+     * Sends the player a normal text line. This is NOT a clickable/option line.
+     *
+     * @param conversationLine
+     */
+    public void sendLine(final ConversationLine conversationLine, boolean deletePrevious) {
         Component line = MiniMessage.miniMessage().parse(
                 conversationLine.getSpeaker().getColor() + "[" + conversationLine.getSpeaker().getSpeakerName() + "] <GRAY>" + conversationLine.getMessage()
         );
-        removeOldMessages();
-        audience.sendMessage(line);
+        if (deletePrevious) {
+            removeOldMessages();
+        }
+
 
         if (main.getDataManager().getConfiguration().packetMagic && main.getDataManager().getConfiguration().deletePreviousConversations) {
             ArrayList<Component> hist = main.getPacketManager().getConversationChatHistory().get(player.getUniqueId());
@@ -172,14 +200,26 @@ public class ConversationPlayer {
             main.getPacketManager().getConversationChatHistory().put(player.getUniqueId(), hist);
         }
 
+        audience.sendMessage(line);
+
+        if (conversationLine.getAction() != null) {
+            conversationLine.getAction().execute(questPlayer.getPlayer());
+        }
+
+
     }
 
+
+    /**
+     * Sends the player a clickable option text. The conversation will not continue until the player clicks it
+     *
+     * @param conversationLine
+     */
     public void sendOptionLine(final ConversationLine conversationLine) {
         Component toSend = MiniMessage.miniMessage().parse(
                 conversationLine.getSpeaker().getColor() + " > <GRAY>" + conversationLine.getMessage()
         ).clickEvent(ClickEvent.runCommand("/notquests continueConversation " + conversationLine.getMessage())).hoverEvent(HoverEvent.showText(Component.text("Click to answer", NamedTextColor.AQUA)));
 
-        audience.sendMessage(toSend);
 
         if (main.getDataManager().getConfiguration().packetMagic && main.getDataManager().getConfiguration().deletePreviousConversations) {
             ArrayList<Component> hist = main.getPacketManager().getConversationChatHistory().get(player.getUniqueId());
@@ -190,14 +230,27 @@ public class ConversationPlayer {
             main.getPacketManager().getConversationChatHistory().put(player.getUniqueId(), hist);
         }
 
+        audience.sendMessage(toSend);
+
+
     }
 
-
+    /**
+     * Called when the player chooses an answer (clicks in chat).
+     *
+     * @param option option which the player chooses = exact message
+     */
     public void chooseOption(final String option) {
         questPlayer.sendDebugMessage("Conversation option triggered: " + option);
         for (final ConversationLine playerOptionLine : currentPlayerLines) {
             questPlayer.sendDebugMessage("Looking through current player line: <AQUA>" + playerOptionLine.getMessage());
             if (playerOptionLine.getMessage().equalsIgnoreCase(option)) {
+
+                //Trigger its action first:
+                if (playerOptionLine.getAction() != null) {
+                    playerOptionLine.getAction().execute(questPlayer.getPlayer());
+                }
+
 
                 questPlayer.sendDebugMessage("Conversation option found!");
 
@@ -214,7 +267,7 @@ public class ConversationPlayer {
                     if (next.size() == 1) {
 
                         if (!next.get(0).getSpeaker().isPlayer()) {
-                            next(next.get(0));
+                            next(next.get(0), true);
                         } else {
                             nextPlayer(next);
                         }
@@ -232,11 +285,10 @@ public class ConversationPlayer {
 
     }
 
-    public final QuestPlayer getQuestPlayer() {
-        return questPlayer;
-    }
 
-
+    /**
+     * Resends the chat history without ANY conversation messages
+     */
     public void removeOldMessages() {
         if (!main.getDataManager().getConfiguration().packetMagic || !main.getDataManager().getConfiguration().deletePreviousConversations) {
             return;
@@ -261,7 +313,7 @@ public class ConversationPlayer {
         for (int i = 0; i < allChatHistory.size(); i++) {
             main.getLogManager().log(Level.INFO, "Conversation stop stage 3");
             Component component = allChatHistory.get(i);
-            if (component != null && !allConversationHistory.contains(component)) {
+            if (component != null && !allConversationHistory.contains(component)) { //prob unnecessary now?
                 // audience.sendMessage(component.append(Component.text("fg9023zf729ofz")));
                 main.getLogManager().log(Level.INFO, "Conversation stop stage 4");
                 audience.sendMessage(component);
@@ -275,5 +327,9 @@ public class ConversationPlayer {
         main.getPacketManager().getChatHistory().put(getQuestPlayer().getUUID(), allChatHistory);
         main.getPacketManager().getConversationChatHistory().put(getQuestPlayer().getUUID(), allConversationHistory);
 
+    }
+
+    public final QuestPlayer getQuestPlayer() {
+        return questPlayer;
     }
 }

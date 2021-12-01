@@ -46,6 +46,8 @@ repositories {
             includeGroup 'com.github.MilkBowl'
             includeGroup 'com.github.TheBusyBiscuit'
             includeGroup 'com.github.retrooper'
+            includeGroup 'com.github.retrooper.packetevents'
+            includeGroup 'io.github.retrooper'
         }
     }
     maven {
@@ -136,7 +138,7 @@ dependencies {
     implementation 'me.lucko:commodore:1.10'
 
 
-    implementation 'com.github.retrooper:packetevents:dev-SNAPSHOT'
+    implementation 'com.github.retrooper.packetevents:bukkit:2.0-469e610c15-1'
 }
 
 /**
@@ -171,7 +173,7 @@ shadowJar {
         include dependency('io.leangen.geantyref:')
         include dependency('me.lucko:')
 
-        include dependency('com.github.retrooper:')
+        include dependency('com.github.retrooper.packetevents:')
 
 
 
