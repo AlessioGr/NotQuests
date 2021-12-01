@@ -18,9 +18,10 @@
 
 package rocks.gravili.notquests.Managers.Packets;
 
-import io.github.retrooper.packetevents.PacketEvents;
-import io.github.retrooper.packetevents.settings.PacketEventsSettings;
-import io.github.retrooper.packetevents.utils.server.ServerVersion;
+import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.event.PacketListenerPriority;
+import com.github.retrooper.packetevents.factory.bukkit.BukkitPacketEventsBuilder;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerChatMessage;
 import net.kyori.adventure.text.Component;
 import rocks.gravili.notquests.NotQuests;
 
@@ -50,25 +51,25 @@ public class PacketManager {
     }
 
     public void onLoad() {
-        PacketEvents.create(main);
-        PacketEventsSettings settings = PacketEvents.get().getSettings();
-        settings
-                .fallbackServerVersion(ServerVersion.v_1_17_1)
-                .compatInjector(false)
-                .checkForUpdates(false)
-                .bStats(false);
-        PacketEvents.get().loadAsyncNewThread();
+
+        PacketEvents.setAPI(BukkitPacketEventsBuilder.build(main));
+        PacketEvents.getAPI().load();
+
+
     }
 
     public void initialize() {
         if (main.getDataManager().getConfiguration().packetMagic) {
-            PacketEvents.get().registerListener(new PacketListener(main));
-            PacketEvents.get().init();
+            WrapperPlayServerChatMessage.HANDLE_JSON = false;
+            PacketEvents.getAPI().getEventManager().registerListener(new NQPacketListener(main), PacketListenerPriority.LOW);
+            PacketEvents.getAPI().init();
+
+
         }
 
     }
 
     public void terminate() {
-        PacketEvents.get().terminate();
+        PacketEvents.getAPI().terminate();
     }
 }

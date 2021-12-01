@@ -1044,7 +1044,7 @@ public class AdminCommands {
                             Component component = history.get(i);
                             if (component != null) {
                                 // audience.sendMessage(component.append(Component.text("fg9023zf729ofz")));
-                                collectiveComponent = collectiveComponent.append(component);
+                                collectiveComponent = collectiveComponent.append(component).append(Component.newline());
                             }
                         }
 
@@ -1071,7 +1071,7 @@ public class AdminCommands {
                             Component component = history.get(i);
                             if (component != null) {
                                 // audience.sendMessage(component.append(Component.text("fg9023zf729ofz")));
-                                collectiveComponent = collectiveComponent.append(Component.text(i + ".", NamedTextColor.RED).append(component));
+                                collectiveComponent = collectiveComponent.append(Component.text(i + ".", NamedTextColor.RED).append(component)).append(Component.newline());
                             }
                         }
 

@@ -729,7 +729,6 @@ public class DataManager {
      */
     public void saveDefaultConfig() {
         if (!this.generalConfigFile.exists()) {
-            System.out.println("AAA");
             this.saveResource("general.yml", false);
         }
     }

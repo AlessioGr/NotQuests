@@ -18,14 +18,13 @@
 
 package rocks.gravili.notquests.Managers.Packets;
 
-import io.github.retrooper.packetevents.event.PacketListenerAbstract;
-import io.github.retrooper.packetevents.event.PacketListenerPriority;
-import io.github.retrooper.packetevents.event.impl.PacketPlaySendEvent;
-import io.github.retrooper.packetevents.packettype.PacketType;
-import io.github.retrooper.packetevents.packetwrappers.play.out.chat.WrappedPacketOutChat;
-import net.kyori.adventure.platform.bukkit.MinecraftComponentSerializer;
+import com.github.retrooper.packetevents.event.PacketListener;
+import com.github.retrooper.packetevents.event.impl.PacketSendEvent;
+import com.github.retrooper.packetevents.protocol.packettype.PacketType;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerChatMessage;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextReplacementConfig;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.NotQuests;
@@ -33,14 +32,13 @@ import rocks.gravili.notquests.NotQuests;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
-public class PacketListener extends PacketListenerAbstract {
+public class NQPacketListener implements PacketListener {
     private final NotQuests main;
 
     private final int maxChathistory = 15;
 
 
-    public PacketListener(final NotQuests main) {
-        super(PacketListenerPriority.LOW);
+    public NQPacketListener(final NotQuests main) {
         this.main = main;
 
     }
@@ -56,11 +54,13 @@ public class PacketListener extends PacketListenerAbstract {
     }*/
 
 
-    public void handleMainChatHistorySavingLogic(final WrappedPacketOutChat wrappedPacketOutChat, final Player player) {
+    public void handleMainChatHistorySavingLogic(final WrapperPlayServerChatMessage wrapperPlayServerChatMessage, final Player player) {
 
         Component component = null;
         try {
-            component = MinecraftComponentSerializer.get().deserialize(wrappedPacketOutChat.readAnyObject(1));
+            component = GsonComponentSerializer.builder().build().deserialize(wrapperPlayServerChatMessage.getJSONMessageRaw());
+
+            //component = MinecraftComponentSerializer.get().deserialize(wrapperPlayServerChatMessage.readAnyObject(1));
 
             final ArrayList<Component> convHist = main.getPacketManager().getConversationChatHistory().get(player.getUniqueId());
             if (convHist != null && convHist.contains(component)) {
@@ -75,55 +75,59 @@ public class PacketListener extends PacketListenerAbstract {
                 hist.add(component);
             }
 
-            for (final Component comp : hist) {
+            /*for (final Component comp : hist) {
                 main.getLogManager().log(Level.WARNING, "Prev: " + comp);
-            }
+            }*/
 
-
-            int toRemove = maxChathistory - hist.size();
+            main.getLogManager().log(Level.WARNING, "Prev: " + hist.size());
+            int toRemove = hist.size() - maxChathistory;
             if (toRemove > 0) {
                 for (int i = 0; i < toRemove; i++) {
                     main.getLogManager().log(Level.WARNING, "ToRemove: " + i);
 
                     hist.remove(0);
                 }
-
             }
+            main.getLogManager().log(Level.WARNING, "After: " + hist.size());
+
 
             main.getPacketManager().getChatHistory().put(player.getUniqueId(), hist);
 
-            for (final Component comp : hist) {
+            /*for (final Component comp : hist) {
                 main.getLogManager().log(Level.WARNING, "Aft: " + comp);
-            }
-
+            }*/
 
         } catch (Exception ignored) {
         }
         if (component != null) {
             main.getLogManager().log(Level.INFO, "E " + LegacyComponentSerializer.legacyAmpersand().serialize(component));
-
         }
 
 
-        main.getLogManager().log(Level.INFO, wrappedPacketOutChat.getMessage());
+        //main.getLogManager().log(Level.INFO, wrapperPlayServerChatMessage.getJSONMessageRaw());
     }
 
 
     @Override
-    public void onPacketPlaySend(PacketPlaySendEvent event) {
-        Player player = event.getPlayer();
-        if (event.getPacketId() == PacketType.Play.Server.CHAT) {
-            WrappedPacketOutChat wrappedPacketOutChat = new WrappedPacketOutChat(event.getNMSPacket());
+    public void onPacketSend(PacketSendEvent event) {
+        Player player = (Player) event.getPlayer();
+        if (event.getPacketType() == PacketType.Play.Server.CHAT_MESSAGE) {
 
-            if (wrappedPacketOutChat.getMessage() != null && !wrappedPacketOutChat.getMessage().contains("fg9023zf729ofz")) {
 
-                handleMainChatHistorySavingLogic(wrappedPacketOutChat, player);
+            WrapperPlayServerChatMessage wrapperPlayServerChatMessage = new WrapperPlayServerChatMessage(event);
 
-            } else if (wrappedPacketOutChat.getMessage() != null && wrappedPacketOutChat.getMessage().contains("fg9023zf729ofz")) {
+
+            if (wrapperPlayServerChatMessage.getJSONMessageRaw() != null && !wrapperPlayServerChatMessage.getJSONMessageRaw().contains("fg9023zf729ofz")) {
+
+                handleMainChatHistorySavingLogic(wrapperPlayServerChatMessage, player);
+
+            } else if (wrapperPlayServerChatMessage.getJSONMessageRaw() != null && wrapperPlayServerChatMessage.getJSONMessageRaw().contains("fg9023zf729ofz")) {
                 main.getLogManager().log(Level.INFO, "replay");
                 Component component = null;
                 try {
-                    component = MinecraftComponentSerializer.get().deserialize(wrappedPacketOutChat.readAnyObject(1));
+                    component = GsonComponentSerializer.builder().build().deserialize(wrapperPlayServerChatMessage.getJSONMessageRaw());
+
+                    //component = MinecraftComponentSerializer.get().deserialize(wrapperPlayServerChatMessage.readAnyObject(1));
                     component.replaceText(TextReplacementConfig.builder()
                             .match("fg9023zf729ofz").replacement(Component.text("")).build());
                     //wrappedPacketOutChat.writeAnyObject(1, MinecraftComponentSerializer.get().serialize(component));

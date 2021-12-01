@@ -228,7 +228,7 @@ public class ConversationManager {
 
                 Speaker foundSpeaker = null;
                 for (final Speaker speaker : allSpeakers) {
-                    if (speaker.getSpeakerName().equals(starterLine.split("\\.")[0])) {
+                    if (speaker.getSpeakerName().equals(starterLine.split("\\.")[0].replaceAll("\\s", ""))) {
                         foundSpeaker = speaker;
                     }
                 }
@@ -297,7 +297,7 @@ public class ConversationManager {
                     }
                     if (!alreadyExists) {
 
-                        final String nextLineSpeakerName = nextLineFullIdentifier.split("\\.")[0];
+                        final String nextLineSpeakerName = nextLineFullIdentifier.split("\\.")[0].replaceAll("\\s", "");
                         main.getLogManager().log(Level.INFO, "---- Trying to find speaker: <AQUA>" + nextLineSpeakerName + "</AQUA>...");
 
                         Speaker foundSpeaker = null;

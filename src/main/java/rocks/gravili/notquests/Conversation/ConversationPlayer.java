@@ -310,22 +310,24 @@ public class ConversationPlayer {
 
         final Audience audience = main.adventure().player(getQuestPlayer().getPlayer());
 
+
+        Component collectiveComponent = Component.text("");
         for (int i = 0; i < allChatHistory.size(); i++) {
-            main.getLogManager().log(Level.INFO, "Conversation stop stage 3");
             Component component = allChatHistory.get(i);
-            if (component != null && !allConversationHistory.contains(component)) { //prob unnecessary now?
+            if (component != null) {
                 // audience.sendMessage(component.append(Component.text("fg9023zf729ofz")));
-                main.getLogManager().log(Level.INFO, "Conversation stop stage 4");
-                audience.sendMessage(component);
+                collectiveComponent = collectiveComponent.append(component).append(Component.newline());
             }
-
-
         }
+        audience.sendMessage(collectiveComponent);
 
         allChatHistory.removeAll(allConversationHistory);
         allConversationHistory.clear();
         main.getPacketManager().getChatHistory().put(getQuestPlayer().getUUID(), allChatHistory);
         main.getPacketManager().getConversationChatHistory().put(getQuestPlayer().getUUID(), allConversationHistory);
+
+        //maybe this won't send the huge, 1-component-chat-history again
+        allConversationHistory.add(collectiveComponent);
 
     }
 

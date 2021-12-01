@@ -138,7 +138,7 @@ dependencies {
     implementation 'me.lucko:commodore:1.10'
 
 
-    implementation 'com.github.retrooper.packetevents:bukkit:2.0-SNAPSHOT'
+    implementation 'com.github.retrooper.packetevents:bukkit:2.0-e50feeb9cd-1'
 }
 
 /**
@@ -174,13 +174,16 @@ shadowJar {
         include dependency('me.lucko:')
 
         include dependency('com.github.retrooper.packetevents:')
-        include dependency('io.github.retrooper.packetevents:')
+
+
+
     }
 
-    relocate("io.github.retrooper.packetevents", path + '.packetevents.bukkit')
-    relocate("com.github.retrooper.packetevents", path + '.packetevents.api')
-
     relocate('me.lucko.commodore', path + '.commodore')
+
+    relocate("io.github.retrooper.packetevents", path + '.packetevents')
+
+
 
 
 
