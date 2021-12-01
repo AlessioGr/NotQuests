@@ -40,7 +40,7 @@ repositories {
         }
     }
     maven {
-        name = 'vault'
+        name = 'jitpack'
         url = 'https://jitpack.io'
         content {
             includeGroup 'com.github.MilkBowl'
@@ -95,6 +95,8 @@ repositories {
 
     maven { url 'https://libraries.minecraft.net/' }
 
+    mavenLocal()
+
 }
 
 dependencies {
@@ -127,7 +129,7 @@ dependencies {
     //Shaded
     implementation 'io.papermc:paperlib:1.0.6'
     implementation "net.kyori:adventure-text-minimessage:4.2.0-SNAPSHOT"
-    implementation 'net.kyori:adventure-platform-bukkit:4.0.0'
+    implementation 'net.kyori:adventure-platform-bukkit:5.0.2-SNAPSHOT'
 
     //CloudCommands
     implementation group: 'cloud.commandframework', name: 'cloud-paper', version: '1.6.0-SNAPSHOT'
