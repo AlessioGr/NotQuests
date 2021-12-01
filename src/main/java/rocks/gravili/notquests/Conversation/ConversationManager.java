@@ -49,6 +49,8 @@ public class ConversationManager {
     final ArrayList<ConversationLine> linesForOneFile = new ArrayList<>();
     final ArrayList<Speaker> speakersForOneFile = new ArrayList<>();
 
+    private File conversationsFolder;
+
 
     public ConversationManager(final NotQuests main) {
         this.main = main;
@@ -63,7 +65,10 @@ public class ConversationManager {
         //playConversation(Bukkit.getPlayer("NoeX"), createTestConversation());
         loadConversationsFromConfig();
 
+    }
 
+    public File getConversationsFolder() {
+        return conversationsFolder;
     }
 
     public Conversation getConversationForNPCID(final int npcID) {
@@ -144,7 +149,7 @@ public class ConversationManager {
         conversations.clear();
         openConversations.clear();
 
-        File conversationsFolder = new File(main.getDataFolder().getPath() + "/conversations/");
+        conversationsFolder = new File(main.getDataFolder().getPath() + "/conversations/");
         if (!conversationsFolder.exists()) {
             main.getLogManager().log(Level.INFO, "Conversations Folder not found. Creating a new one...");
 

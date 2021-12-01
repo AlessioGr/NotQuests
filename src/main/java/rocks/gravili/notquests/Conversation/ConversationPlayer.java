@@ -241,7 +241,7 @@ public class ConversationPlayer {
      * @param option option which the player chooses = exact message
      */
     public void chooseOption(final String option) {
-        questPlayer.sendDebugMessage("Conversation option triggered: " + option);
+        questPlayer.sendDebugMessage("Conversation option triggered: " + option + ". currentPlayerLines count: " + currentPlayerLines.size());
         for (final ConversationLine playerOptionLine : currentPlayerLines) {
             questPlayer.sendDebugMessage("Looking through current player line: <AQUA>" + playerOptionLine.getMessage());
             if (playerOptionLine.getMessage().equalsIgnoreCase(option)) {
@@ -259,7 +259,7 @@ public class ConversationPlayer {
                 if (next == null) {
                     questPlayer.sendDebugMessage("Clearing currentPlayerLines (1)");
                     currentPlayerLines.clear();
-
+                    main.getConversationManager().stopConversation(this);
                     return;
                 } else {
                     questPlayer.sendDebugMessage("Clearing currentPlayerLines (2)");

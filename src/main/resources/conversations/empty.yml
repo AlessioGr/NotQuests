@@ -1,0 +1,11 @@
+npcID: -1
+start: Robert.greeting1
+Lines:
+  Robert:
+    color: "<BLUE>"
+    greeting1:
+      text: "Hello!"
+      next: Player.bye
+  Player:
+    bye:
+      text: "Bye!"

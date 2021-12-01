@@ -21,12 +21,14 @@ package rocks.gravili.notquests.Commands.newCMDs;
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.IntegerArgument;
+import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.apache.commons.io.IOUtils;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
@@ -41,6 +43,10 @@ import rocks.gravili.notquests.Conversation.ConversationLine;
 import rocks.gravili.notquests.Conversation.ConversationManager;
 import rocks.gravili.notquests.NotQuests;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,6 +67,87 @@ public class AdminConversationCommands {
         this.conversationBuilder = conversationBuilder;
 
         this.conversationManager = conversationManager;
+
+
+        manager.command(conversationBuilder.literal("create")
+                .argument(StringArgument.<CommandSender>newBuilder("Conversation Name").withSuggestionsProvider(
+                        (context, lastString) -> {
+                            final List<String> allArgs = context.getRawInput();
+                            final Audience audience = main.adventure().sender(context.getSender());
+                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[New Conversation Name]", "");
+
+                            ArrayList<String> completions = new ArrayList<>();
+
+                            completions.add("<Enter new Conversation Name>");
+                            return completions;
+                        }
+                ).single().build(), ArgumentDescription.of("Conversation Name"))
+                .flag(
+                        manager.flagBuilder("demo")
+                                .withDescription(ArgumentDescription.of("Fills the new conversation file with demo data"))
+                )
+                .meta(CommandMeta.DESCRIPTION, "Creates a new conversation file.")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+
+                    final String conversationName = context.get("Conversation Name");
+                    final boolean demo = context.flags().isPresent("demo");
+
+
+                    final Conversation existingConversation = main.getConversationManager().getConversation(conversationName);
+
+                    if (existingConversation == null) {
+                        File newConversationFile = new File(main.getConversationManager().getConversationsFolder().getPath() + "/" + conversationName + ".yml");
+
+                        try {
+                            if (!newConversationFile.exists()) {
+                                if (!newConversationFile.createNewFile()) {
+                                    audience.sendMessage(miniMessage.parse(
+                                            errorGradient + "Error: couldn't create conversation file."
+                                    ));
+                                    return;
+                                }
+                                InputStream inputStream;
+                                if (!demo) {
+                                    inputStream = main.getResource("conversations/empty.yml");
+                                } else {
+                                    inputStream = main.getResource("conversations/demo.yml");
+                                }
+
+                                //Instead of creating a new language file, we will copy the one from inside of the plugin jar into the plugin folder:
+                                if (inputStream != null) {
+                                    try (OutputStream outputStream = new FileOutputStream(newConversationFile)) {
+                                        IOUtils.copy(inputStream, outputStream);
+                                        main.getConversationManager().loadConversationsFromConfig();
+                                        audience.sendMessage(miniMessage.parse(
+                                                successGradient + "The conversation has been created successfully! There are currently no commands to edit them - you have to edit the conversation file. You can find it at " + highlightGradient + "plugins/NotQuests/conversations/" + conversationName + ".yml"
+                                        ));
+                                    } catch (Exception e) {
+                                        audience.sendMessage(miniMessage.parse(
+                                                errorGradient + "Error: couldn't create conversation file. There was an exception. (2)"
+                                        ));
+                                        return;
+                                    }
+
+
+                                }
+                            }
+
+
+                        } catch (Exception e) {
+                            audience.sendMessage(miniMessage.parse(
+                                    errorGradient + "Error: couldn't create conversation file. There was an exception."
+                            ));
+                        }
+
+                    } else {
+                        audience.sendMessage(miniMessage.parse(
+                                errorGradient + "Error: the conversation " + highlightGradient + existingConversation.getIdentifier() + "</gradient> already exists!"
+                        ));
+                    }
+
+
+                }));
 
 
         manager.command(conversationBuilder.literal("test")

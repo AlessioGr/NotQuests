@@ -1030,7 +1030,8 @@ public class AdminCommands {
                 }));
 
 
-        manager.command(builder.literal("testcommand")
+        manager.command(builder.literal("debug")
+                .literal("testcommand")
                 .meta(CommandMeta.DESCRIPTION, "You can probably ignore this.")
                 .senderType(Player.class)
                 .handler((context) -> {
@@ -1057,7 +1058,8 @@ public class AdminCommands {
                 }));
 
 
-        manager.command(builder.literal("testcommand2")
+        manager.command(builder.literal("debug")
+                .literal("testcommand2")
                 .meta(CommandMeta.DESCRIPTION, "You can probably ignore this.")
                 .senderType(Player.class)
                 .handler((context) -> {
