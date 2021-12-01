@@ -99,6 +99,16 @@ public class ConversationManager {
         final ConversationLine gustav2 = new ConversationLine(gustav, "gustav2", "Nice to meet you!");
         final ConversationLine gustav3 = new ConversationLine(gustav, "gustav3", "Yeah, fuck you!");
 
+        final ConversationLine player3 = new ConversationLine(playerSpeaker, "player2", "That was mean...");
+        gustav3.addNext(player3);
+
+        final ConversationLine gustav4 = new ConversationLine(gustav, "gustav3", "You are mean too!");
+        player3.addNext(gustav4);
+
+        final ConversationLine gustav5 = new ConversationLine(gustav, "gustav3", "I don't like you!");
+
+        gustav4.addNext(gustav5);
+
         player1.addNext(gustav2);
 
         player2.addNext(gustav3);
@@ -324,7 +334,38 @@ public class ConversationManager {
     }
 
     public void stopConversation(final ConversationPlayer conversationPlayer) {
+        conversationPlayer.getQuestPlayer().sendDebugMessage("Stopping conversation...");
         openConversations.remove(conversationPlayer.getQuestPlayer().getUUID());
+
+        //Send back old messages
+        /*ArrayList<Component> allChatHistory = main.getPacketManager().getChatHistory().get(conversationPlayer.getQuestPlayer().getUUID());
+        ArrayList<Component> allConversationHistory = main.getPacketManager().getConversationChatHistory().get(conversationPlayer.getQuestPlayer().getUUID());
+
+        main.getLogManager().log(Level.INFO, "Conversation stop stage 1");
+
+        if(allChatHistory == null ){
+            return;
+        }
+        main.getLogManager().log(Level.INFO, "Conversation stop stage 1.5");
+        if(allConversationHistory == null){
+            return;
+        }
+        main.getLogManager().log(Level.INFO, "Conversation stop stage 2");
+
+        final Audience audience = main.adventure().player(conversationPlayer.getQuestPlayer().getPlayer());
+
+        for( int i = 0; i < allChatHistory.size(); i++ )
+        {
+            main.getLogManager().log(Level.INFO, "Conversation stop stage 3");
+            Component component = allChatHistory.get(i);
+            if(component != null && !allConversationHistory.contains(component)){
+                // audience.sendMessage(component.append(Component.text("fg9023zf729ofz")));
+                main.getLogManager().log(Level.INFO, "Conversation stop stage 4");
+                audience.sendMessage(component);
+            }
+
+
+        }*/
     }
 
 

@@ -63,6 +63,9 @@ public class Configuration {
     public List<String> journalItemEnabledWorlds;
 
 
+    public boolean packetMagic = false;
+    public boolean deletePreviousConversations = false;
+
     //Particles
     private int citizensNPCQuestGiverIndicatorParticleSpawnInterval = 10;
     private int citizensNPCQuestGiverIndicatorParticleCount = 1;

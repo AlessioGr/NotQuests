@@ -84,7 +84,7 @@ public class OtherQuestRequirement extends Requirement {
             }
         }
         if (otherQuestCompletedAmount < getProgressNeeded()) {
-            return "\n§eFinish the following quest: §b" + getOtherQuestName() + " §7(" + getProgressNeeded() + " times)\n";
+            return "\n§eFinish the following quest: §b" + otherQuest.getQuestFinalName() + " §7(" + getProgressNeeded() + " times)\n";
         } else {
             return "";
         }
@@ -98,7 +98,13 @@ public class OtherQuestRequirement extends Requirement {
 
     @Override
     public String getRequirementDescription() {
-        return "§7-- Finish Quest first: " + getOtherQuestName();
+        final Quest otherQuest = getOtherQuest();
+        if (otherQuest != null) {
+            return "§7-- Finish Quest first: " + otherQuest.getQuestFinalName();
+        } else {
+            return "§7-- Finish Quest first: " + getOtherQuestName();
+        }
+
     }
 
 

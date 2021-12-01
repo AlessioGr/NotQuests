@@ -30,6 +30,7 @@ import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -1026,6 +1027,60 @@ public class AdminCommands {
                         audience.sendMessage(miniMessage.parse(veryUnimportant + "  └─ " + unimportant + "Command: " + highlight2Gradient + action.getConsoleCommand()));
                         counter += 1;
                     }
+                }));
+
+
+        manager.command(builder.literal("testcommand")
+                .meta(CommandMeta.DESCRIPTION, "You can probably ignore this.")
+                .senderType(Player.class)
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+                    audience.sendMessage(Component.empty());
+                    Player player = (Player) context.getSender();
+                    ArrayList<Component> history = main.getPacketManager().getChatHistory().get(player.getUniqueId());
+                    if (history != null) {
+                        Component collectiveComponent = Component.text("");
+                        for (int i = 0; i < history.size(); i++) {
+                            Component component = history.get(i);
+                            if (component != null) {
+                                // audience.sendMessage(component.append(Component.text("fg9023zf729ofz")));
+                                collectiveComponent = collectiveComponent.append(component);
+                            }
+                        }
+
+                        audience.sendMessage(collectiveComponent);
+
+                    } else {
+                        audience.sendMessage(miniMessage.parse(errorGradient + "No chat history!"));
+                    }
+
+                }));
+
+
+        manager.command(builder.literal("testcommand2")
+                .meta(CommandMeta.DESCRIPTION, "You can probably ignore this.")
+                .senderType(Player.class)
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+                    audience.sendMessage(Component.empty());
+                    Player player = (Player) context.getSender();
+                    ArrayList<Component> history = main.getPacketManager().getChatHistory().get(player.getUniqueId());
+                    if (history != null) {
+                        Component collectiveComponent = Component.text("");
+                        for (int i = 0; i < history.size(); i++) {
+                            Component component = history.get(i);
+                            if (component != null) {
+                                // audience.sendMessage(component.append(Component.text("fg9023zf729ofz")));
+                                collectiveComponent = collectiveComponent.append(Component.text(i + ".", NamedTextColor.RED).append(component));
+                            }
+                        }
+
+                        audience.sendMessage(collectiveComponent);
+
+                    } else {
+                        audience.sendMessage(miniMessage.parse(errorGradient + "No chat history!"));
+                    }
+
                 }));
     }
 

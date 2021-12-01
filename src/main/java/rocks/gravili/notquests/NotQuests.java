@@ -49,6 +49,7 @@ import rocks.gravili.notquests.Hooks.BetonQuest.BetonQuestIntegration;
 import rocks.gravili.notquests.Hooks.Citizens.CitizensManager;
 import rocks.gravili.notquests.Hooks.Luckperms.LuckpermsManager;
 import rocks.gravili.notquests.Managers.*;
+import rocks.gravili.notquests.Managers.Packets.PacketManager;
 import rocks.gravili.notquests.Managers.Registering.ObjectiveManager;
 import rocks.gravili.notquests.Managers.Registering.RequirementManager;
 import rocks.gravili.notquests.Managers.Registering.RewardManager;
@@ -90,6 +91,8 @@ public final class NotQuests extends JavaPlugin {
     private ConversationManager conversationManager;
 
     private CitizensManager citizensManager;
+
+    private PacketManager packetManager;
 
     //Registering Managers
     private ObjectiveManager objectiveManager;
@@ -134,7 +137,15 @@ public final class NotQuests extends JavaPlugin {
     private BukkitAudiences adventure;
 
 
-    public final BukkitAudiences adventure() {
+    @Override
+    public void onLoad() {
+        if (packetManager == null) {
+            packetManager = new PacketManager(this);
+            packetManager.onLoad();
+        }
+    }
+
+    public BukkitAudiences adventure() {
         if (this.adventure == null) {
             throw new IllegalStateException("Tried to access Adventure when the plugin was disabled!");
         }
@@ -384,6 +395,13 @@ public final class NotQuests extends JavaPlugin {
                 return map;
             }
         }));
+
+
+        if (packetManager == null) {
+            packetManager = new PacketManager(this);
+        }
+
+        packetManager.initialize();
     }
 
     private void enableIntegrations() {
@@ -559,6 +577,7 @@ public final class NotQuests extends JavaPlugin {
             this.adventure = null;
         }
 
+        packetManager.terminate();
 
     }
 
@@ -812,5 +831,9 @@ public final class NotQuests extends JavaPlugin {
 
     public CitizensManager getCitizensManager() {
         return citizensManager;
+    }
+
+    public PacketManager getPacketManager() {
+        return packetManager;
     }
 }

@@ -45,6 +45,7 @@ repositories {
         content {
             includeGroup 'com.github.MilkBowl'
             includeGroup 'com.github.TheBusyBiscuit'
+            includeGroup 'com.github.retrooper'
         }
     }
     maven {
@@ -133,6 +134,9 @@ dependencies {
     implementation group: 'io.leangen.geantyref', name: 'geantyref', version: '1.3.13'
 
     implementation 'me.lucko:commodore:1.10'
+
+
+    implementation 'com.github.retrooper:packetevents:dev-SNAPSHOT'
 }
 
 /**
@@ -147,6 +151,7 @@ shadowJar {
 
         exclude(dependency('com.mojang:brigadier'))
 
+
         relocate 'io.papermc.lib', path + '.paper'
         relocate('org.bstats', path + '.bstats')
         relocate('cloud.commandframework', path + '.cloud')
@@ -154,6 +159,7 @@ shadowJar {
         relocate('io.leangen.geantyref', path + '.geantyref')
         relocate("de.themoep", path + '.de.themoep')
         relocate("org.apache.commons.io", path + '.commons.io')
+
 
 
         include dependency('io.papermc:paperlib')
@@ -165,9 +171,15 @@ shadowJar {
         include dependency('io.leangen.geantyref:')
         include dependency('me.lucko:')
 
+        include dependency('com.github.retrooper:')
+
+
 
     }
+
     relocate('me.lucko.commodore', path + '.commodore')
+
+    relocate("io.github.retrooper.packetevents", path + '.packetevents')
 
 
 

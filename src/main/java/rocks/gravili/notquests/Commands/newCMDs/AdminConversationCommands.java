@@ -173,11 +173,39 @@ public class AdminConversationCommands {
                                                 audience.sendMessage(miniMessage.parse(
                                                         "      " + unimportant + "  Message: " + unimportantClose + mainGradient + nextnextnext.getMessage()
                                                 ));
+                                                if (nextnext.getNext().size() >= 1) {
+                                                    audience.sendMessage(miniMessage.parse(
+                                                            "    " + unimportant + "  Next: " + unimportantClose
+                                                    ));
+                                                    for (final ConversationLine nextnextnextnext : nextnextnext.getNext()) {
+                                                        audience.sendMessage(miniMessage.parse(
+                                                                unimportant + "       └" + highlightGradient + nextnextnextnext.getIdentifier() + ":"
+                                                        ));
+                                                        audience.sendMessage(miniMessage.parse(
+                                                                "        " + unimportant + "  Speaker: " + unimportantClose + mainGradient + nextnextnextnext.getSpeaker().getSpeakerName()
+                                                        ));
+                                                        audience.sendMessage(miniMessage.parse(
+                                                                "        " + unimportant + "  Message: " + unimportantClose + mainGradient + nextnextnextnext.getMessage()
+                                                        ));
+                                                    }
+                                                } else {
+                                                    audience.sendMessage(miniMessage.parse(
+                                                            "    " + unimportant + "  Next: none" + unimportantClose
+                                                    ));
+                                                }
                                             }
 
+                                        } else {
+                                            audience.sendMessage(miniMessage.parse(
+                                                    "    " + unimportant + "  Next: none" + unimportantClose
+                                            ));
                                         }
 
                                     }
+                                } else {
+                                    audience.sendMessage(miniMessage.parse(
+                                            "  " + unimportant + "  Next: none" + unimportantClose
+                                    ));
                                 }
 
 

@@ -698,6 +698,18 @@ public class DataManager {
         configuration.journalItemEnabledWorlds = getGeneralConfig().getStringList("general.journal-item.enabled-worlds");
 
 
+        if (!getGeneralConfig().isBoolean("general.packet-magic.enabled")) {
+            getGeneralConfig().set("general.packet-magic.enabled", false);
+            valueChanged = true;
+        }
+        configuration.packetMagic = getGeneralConfig().getBoolean("general.packet-magic.enabled");
+
+        if (!getGeneralConfig().isBoolean("general.packet-magic.conversations.delete-previous")) {
+            getGeneralConfig().set("general.packet-magic.conversations.delete-previous", false);
+            valueChanged = true;
+        }
+        configuration.deletePreviousConversations = getGeneralConfig().getBoolean("general.packet-magic.conversations.delete-previous");
+
         if (valueChanged) {
             main.getLogManager().info("<AQUA>General.yml</AQUA> Configuration was updated with new values! Saving it...");
             saveGeneralConfig();

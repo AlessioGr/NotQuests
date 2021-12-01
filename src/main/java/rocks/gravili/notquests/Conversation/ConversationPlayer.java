@@ -29,6 +29,9 @@ import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.QuestPlayer;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+
+import static rocks.gravili.notquests.Commands.NotQuestColors.mainGradient;
 
 public class ConversationPlayer {
     private final NotQuests main;
@@ -93,14 +96,40 @@ public class ConversationPlayer {
     }
 
     public boolean nextPlayer(final ArrayList<ConversationLine> playerLines) {
+        questPlayer.sendDebugMessage("Clearing currentPlayerLines (3)");
         currentPlayerLines.clear();
+        questPlayer.sendDebugMessage("Adding " + playerLines.size() + " currentPlayerLines");
         currentPlayerLines.addAll(playerLines);
 
-        audience.sendMessage(MiniMessage.miniMessage().parse(
-                "<BLUE>Choose your answer:"
-        ));
+        Component component = MiniMessage.miniMessage().parse(
+                mainGradient + "Choose your answer:</gradient>"
+
+        );
+        audience.sendMessage(Component.empty());
+        audience.sendMessage(component);
+
+        if (main.getDataManager().getConfiguration().packetMagic && main.getDataManager().getConfiguration().deletePreviousConversations) {
+            ArrayList<Component> hist = main.getPacketManager().getConversationChatHistory().get(player.getUniqueId());
+            if (hist == null) {
+                hist = new ArrayList<>();
+            }
+            hist.add(Component.empty());
+            hist.add(component);
+            main.getPacketManager().getConversationChatHistory().put(player.getUniqueId(), hist);
+        }
+
+
         for (final ConversationLine playerLine : playerLines) {
             sendOptionLine(playerLine);
+        }
+        audience.sendMessage(Component.empty());
+
+        if (main.getDataManager().getConfiguration().packetMagic && main.getDataManager().getConfiguration().deletePreviousConversations) {
+            ArrayList<Component> hist = main.getPacketManager().getConversationChatHistory().get(player.getUniqueId());
+            if (hist == null) {
+                hist = new ArrayList<>();
+            }
+            hist.add(Component.empty());
         }
         return true;
     }
@@ -128,24 +157,46 @@ public class ConversationPlayer {
     }
 
     public void sendLine(final ConversationLine conversationLine) {
-        audience.sendMessage(MiniMessage.miniMessage().parse(
+        Component line = MiniMessage.miniMessage().parse(
                 conversationLine.getSpeaker().getColor() + "[" + conversationLine.getSpeaker().getSpeakerName() + "] <GRAY>" + conversationLine.getMessage()
-        ));
+        );
+        removeOldMessages();
+        audience.sendMessage(line);
+
+        if (main.getDataManager().getConfiguration().packetMagic && main.getDataManager().getConfiguration().deletePreviousConversations) {
+            ArrayList<Component> hist = main.getPacketManager().getConversationChatHistory().get(player.getUniqueId());
+            if (hist == null) {
+                hist = new ArrayList<>();
+            }
+            hist.add(line);
+            main.getPacketManager().getConversationChatHistory().put(player.getUniqueId(), hist);
+        }
+
     }
 
     public void sendOptionLine(final ConversationLine conversationLine) {
         Component toSend = MiniMessage.miniMessage().parse(
-                conversationLine.getSpeaker().getColor() + "[" + conversationLine.getSpeaker().getSpeakerName() + "] <GRAY>" + conversationLine.getMessage()
+                conversationLine.getSpeaker().getColor() + " > <GRAY>" + conversationLine.getMessage()
         ).clickEvent(ClickEvent.runCommand("/notquests continueConversation " + conversationLine.getMessage())).hoverEvent(HoverEvent.showText(Component.text("Click to answer", NamedTextColor.AQUA)));
 
-
         audience.sendMessage(toSend);
+
+        if (main.getDataManager().getConfiguration().packetMagic && main.getDataManager().getConfiguration().deletePreviousConversations) {
+            ArrayList<Component> hist = main.getPacketManager().getConversationChatHistory().get(player.getUniqueId());
+            if (hist == null) {
+                hist = new ArrayList<>();
+            }
+            hist.add(toSend);
+            main.getPacketManager().getConversationChatHistory().put(player.getUniqueId(), hist);
+        }
+
     }
 
 
     public void chooseOption(final String option) {
         questPlayer.sendDebugMessage("Conversation option triggered: " + option);
         for (final ConversationLine playerOptionLine : currentPlayerLines) {
+            questPlayer.sendDebugMessage("Looking through current player line: <AQUA>" + playerOptionLine.getMessage());
             if (playerOptionLine.getMessage().equalsIgnoreCase(option)) {
 
                 questPlayer.sendDebugMessage("Conversation option found!");
@@ -153,10 +204,13 @@ public class ConversationPlayer {
                 ArrayList<ConversationLine> next = findConversationLinesWhichFulfillsCondition(playerOptionLine.getNext());
 
                 if (next == null) {
+                    questPlayer.sendDebugMessage("Clearing currentPlayerLines (1)");
                     currentPlayerLines.clear();
 
                     return;
                 } else {
+                    questPlayer.sendDebugMessage("Clearing currentPlayerLines (2)");
+                    currentPlayerLines.clear();
                     if (next.size() == 1) {
 
                         if (!next.get(0).getSpeaker().isPlayer()) {
@@ -169,7 +223,7 @@ public class ConversationPlayer {
                     } else { //Multiple player options
                         nextPlayer(next);
                     }
-                    currentPlayerLines.clear();
+
                     return;
                 }
 
@@ -180,5 +234,46 @@ public class ConversationPlayer {
 
     public final QuestPlayer getQuestPlayer() {
         return questPlayer;
+    }
+
+
+    public void removeOldMessages() {
+        if (!main.getDataManager().getConfiguration().packetMagic || !main.getDataManager().getConfiguration().deletePreviousConversations) {
+            return;
+        }
+        //Send back old messages
+        ArrayList<Component> allChatHistory = main.getPacketManager().getChatHistory().get(getQuestPlayer().getUUID());
+        ArrayList<Component> allConversationHistory = main.getPacketManager().getConversationChatHistory().get(getQuestPlayer().getUUID());
+
+        main.getLogManager().log(Level.INFO, "Conversation stop stage 1");
+
+        if (allChatHistory == null) {
+            return;
+        }
+        main.getLogManager().log(Level.INFO, "Conversation stop stage 1.5");
+        if (allConversationHistory == null) {
+            return;
+        }
+        main.getLogManager().log(Level.INFO, "Conversation stop stage 2");
+
+        final Audience audience = main.adventure().player(getQuestPlayer().getPlayer());
+
+        for (int i = 0; i < allChatHistory.size(); i++) {
+            main.getLogManager().log(Level.INFO, "Conversation stop stage 3");
+            Component component = allChatHistory.get(i);
+            if (component != null && !allConversationHistory.contains(component)) {
+                // audience.sendMessage(component.append(Component.text("fg9023zf729ofz")));
+                main.getLogManager().log(Level.INFO, "Conversation stop stage 4");
+                audience.sendMessage(component);
+            }
+
+
+        }
+
+        allChatHistory.removeAll(allConversationHistory);
+        allConversationHistory.clear();
+        main.getPacketManager().getChatHistory().put(getQuestPlayer().getUUID(), allChatHistory);
+        main.getPacketManager().getConversationChatHistory().put(getQuestPlayer().getUUID(), allConversationHistory);
+
     }
 }
