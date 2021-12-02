@@ -707,14 +707,14 @@ public class DataManager {
 
 
         if (!getGeneralConfig().isBoolean("general.packet-magic.enabled")) {
-            getGeneralConfig().set("general.packet-magic.enabled", true);
-            valueChanged = true;
+            getGeneralConfig().set("general.packet-magic.enabled", false);
+            valueChanged = false;
         }
         configuration.packetMagic = getGeneralConfig().getBoolean("general.packet-magic.enabled");
 
         if (!getGeneralConfig().isBoolean("general.packet-magic.conversations.delete-previous")) {
-            getGeneralConfig().set("general.packet-magic.conversations.delete-previous", true);
-            valueChanged = true;
+            getGeneralConfig().set("general.packet-magic.conversations.delete-previous", false);
+            valueChanged = false;
         }
         configuration.deletePreviousConversations = getGeneralConfig().getBoolean("general.packet-magic.conversations.delete-previous");
 
