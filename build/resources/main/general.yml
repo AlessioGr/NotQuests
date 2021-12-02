@@ -20,9 +20,9 @@ general:
     enabled-worlds:
       - ''
   packet-magic:
-    enabled: true
+    enabled: false
     conversations:
-      delete-previous: true
+      delete-previous: false
 visual:
   #Sets which language to use. Default is languages/en.yml
   language: en

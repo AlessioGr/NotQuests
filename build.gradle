@@ -142,7 +142,7 @@ dependencies {
     implementation 'me.lucko:commodore:1.10'
 
 
-    implementation 'com.github.AlessioGr.packetevents:bukkit:2.0-SNAPSHOT'
+    implementation 'com.github.retrooper.packetevents:bukkit:2.0-SNAPSHOT'
 }
 
 /**
@@ -180,7 +180,7 @@ shadowJar {
         //include dependency('com.github.retrooper.packetevents:')
         //include dependency('io.github.retrooper.packetevents:')
 
-        include dependency('com.github.AlessioGr.packetevents:')
+        include dependency('com.github.retrooper.packetevents:')
     }
 
     relocate("io.github.retrooper.packetevents", path + '.packetevents.bukkit')
@@ -234,4 +234,9 @@ publishing {
             from components.java
         }
     }
+}
+
+wrapper {
+    gradleVersion = "7.3.1"
+    distributionType = Wrapper.DistributionType.ALL
 }
