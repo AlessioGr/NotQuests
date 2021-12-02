@@ -18,6 +18,7 @@
 
 package rocks.gravili.notquests.Conversation;
 
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
@@ -51,6 +52,9 @@ public class ConversationManager {
 
     private File conversationsFolder;
 
+    private final int maxChathistory = 16;
+    HashMap<UUID, ArrayList<Component>> chatHistory;
+    HashMap<UUID, ArrayList<Component>> conversationChatHistory;
 
     public ConversationManager(final NotQuests main) {
         this.main = main;
@@ -61,10 +65,17 @@ public class ConversationManager {
         playerSpeaker = new Speaker("You");
         playerSpeaker.setPlayer(true);
 
+        chatHistory = new HashMap<>();
+        conversationChatHistory = new HashMap<>();
+
 
         //playConversation(Bukkit.getPlayer("NoeX"), createTestConversation());
         loadConversationsFromConfig();
 
+    }
+
+    public final int getMaxChathistory() {
+        return maxChathistory;
     }
 
     public File getConversationsFolder() {
@@ -344,6 +355,14 @@ public class ConversationManager {
             }
 
         }
+    }
+
+    public final HashMap<UUID, ArrayList<Component>> getChatHistory() {
+        return chatHistory;
+    }
+
+    public final HashMap<UUID, ArrayList<Component>> getConversationChatHistory() {
+        return conversationChatHistory;
     }
 
 

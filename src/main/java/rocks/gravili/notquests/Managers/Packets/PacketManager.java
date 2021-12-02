@@ -22,33 +22,19 @@ import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.event.PacketListenerPriority;
 import com.github.retrooper.packetevents.factory.bukkit.BukkitPacketEventsBuilder;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerChatMessage;
-import net.kyori.adventure.text.Component;
 import rocks.gravili.notquests.NotQuests;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.UUID;
 
 public class PacketManager {
     private final NotQuests main;
-    HashMap<UUID, ArrayList<Component>> chatHistory;
 
-    HashMap<UUID, ArrayList<Component>> conversationChatHistory;
 
     public PacketManager(final NotQuests main) {
         this.main = main;
-        chatHistory = new HashMap<>();
-        conversationChatHistory = new HashMap<>();
+
     }
 
 
-    public final HashMap<UUID, ArrayList<Component>> getChatHistory() {
-        return chatHistory;
-    }
 
-    public final HashMap<UUID, ArrayList<Component>> getConversationChatHistory() {
-        return conversationChatHistory;
-    }
 
     public void onLoad() {
         if (main.getDataManager().getConfiguration().packetMagic) {

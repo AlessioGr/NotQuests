@@ -1038,7 +1038,7 @@ public class AdminCommands {
                     final Audience audience = main.adventure().sender(context.getSender());
                     audience.sendMessage(Component.empty());
                     Player player = (Player) context.getSender();
-                    ArrayList<Component> history = main.getPacketManager().getChatHistory().get(player.getUniqueId());
+                    ArrayList<Component> history = main.getConversationManager().getChatHistory().get(player.getUniqueId());
                     if (history != null) {
                         Component collectiveComponent = Component.text("");
                         for (int i = 0; i < history.size(); i++) {
@@ -1066,7 +1066,7 @@ public class AdminCommands {
                     final Audience audience = main.adventure().sender(context.getSender());
                     audience.sendMessage(Component.empty());
                     Player player = (Player) context.getSender();
-                    ArrayList<Component> history = main.getPacketManager().getChatHistory().get(player.getUniqueId());
+                    ArrayList<Component> history = main.getConversationManager().getChatHistory().get(player.getUniqueId());
                     if (history != null) {
                         Component collectiveComponent = Component.text("");
                         for (int i = 0; i < history.size(); i++) {

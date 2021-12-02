@@ -124,14 +124,14 @@ public class ConversationPlayer {
         audience.sendMessage(Component.empty());
         audience.sendMessage(component);
 
-        if (main.getDataManager().getConfiguration().packetMagic && main.getDataManager().getConfiguration().deletePreviousConversations) {
-            ArrayList<Component> hist = main.getPacketManager().getConversationChatHistory().get(player.getUniqueId());
+        if (main.getDataManager().getConfiguration().deletePreviousConversations) {
+            ArrayList<Component> hist = main.getConversationManager().getConversationChatHistory().get(player.getUniqueId());
             if (hist == null) {
                 hist = new ArrayList<>();
             }
             hist.add(Component.empty());
             hist.add(component);
-            main.getPacketManager().getConversationChatHistory().put(player.getUniqueId(), hist);
+            main.getConversationManager().getConversationChatHistory().put(player.getUniqueId(), hist);
         }
 
 
@@ -139,8 +139,8 @@ public class ConversationPlayer {
             sendOptionLine(playerLine);
         }
 
-        if (main.getDataManager().getConfiguration().packetMagic && main.getDataManager().getConfiguration().deletePreviousConversations) {
-            ArrayList<Component> hist = main.getPacketManager().getConversationChatHistory().get(player.getUniqueId());
+        if (main.getDataManager().getConfiguration().deletePreviousConversations) {
+            ArrayList<Component> hist = main.getConversationManager().getConversationChatHistory().get(player.getUniqueId());
             if (hist == null) {
                 hist = new ArrayList<>();
             }
@@ -190,13 +190,13 @@ public class ConversationPlayer {
         }
 
 
-        if (main.getDataManager().getConfiguration().packetMagic && main.getDataManager().getConfiguration().deletePreviousConversations) {
-            ArrayList<Component> hist = main.getPacketManager().getConversationChatHistory().get(player.getUniqueId());
+        if (main.getDataManager().getConfiguration().deletePreviousConversations) {
+            ArrayList<Component> hist = main.getConversationManager().getConversationChatHistory().get(player.getUniqueId());
             if (hist == null) {
                 hist = new ArrayList<>();
             }
             hist.add(line);
-            main.getPacketManager().getConversationChatHistory().put(player.getUniqueId(), hist);
+            main.getConversationManager().getConversationChatHistory().put(player.getUniqueId(), hist);
         }
 
         audience.sendMessage(line);
@@ -220,13 +220,13 @@ public class ConversationPlayer {
         ).clickEvent(ClickEvent.runCommand("/notquests continueConversation " + conversationLine.getMessage())).hoverEvent(HoverEvent.showText(Component.text("Click to answer", NamedTextColor.AQUA)));
 
 
-        if (main.getDataManager().getConfiguration().packetMagic && main.getDataManager().getConfiguration().deletePreviousConversations) {
-            ArrayList<Component> hist = main.getPacketManager().getConversationChatHistory().get(player.getUniqueId());
+        if (main.getDataManager().getConfiguration().deletePreviousConversations) {
+            ArrayList<Component> hist = main.getConversationManager().getConversationChatHistory().get(player.getUniqueId());
             if (hist == null) {
                 hist = new ArrayList<>();
             }
             hist.add(toSend);
-            main.getPacketManager().getConversationChatHistory().put(player.getUniqueId(), hist);
+            main.getConversationManager().getConversationChatHistory().put(player.getUniqueId(), hist);
         }
 
         audience.sendMessage(toSend);
@@ -289,12 +289,12 @@ public class ConversationPlayer {
      * Resends the chat history without ANY conversation messages
      */
     public void removeOldMessages() {
-        if (!main.getDataManager().getConfiguration().packetMagic || !main.getDataManager().getConfiguration().deletePreviousConversations) {
+        if (!main.getDataManager().getConfiguration().deletePreviousConversations) {
             return;
         }
         //Send back old messages
-        ArrayList<Component> allChatHistory = main.getPacketManager().getChatHistory().get(getQuestPlayer().getUUID());
-        ArrayList<Component> allConversationHistory = main.getPacketManager().getConversationChatHistory().get(getQuestPlayer().getUUID());
+        ArrayList<Component> allChatHistory = main.getConversationManager().getChatHistory().get(getQuestPlayer().getUUID());
+        ArrayList<Component> allConversationHistory = main.getConversationManager().getConversationChatHistory().get(getQuestPlayer().getUUID());
 
         main.getLogManager().debug("Conversation stop stage 1");
 
@@ -322,8 +322,8 @@ public class ConversationPlayer {
 
         allChatHistory.removeAll(allConversationHistory);
         allConversationHistory.clear();
-        main.getPacketManager().getChatHistory().put(getQuestPlayer().getUUID(), allChatHistory);
-        main.getPacketManager().getConversationChatHistory().put(getQuestPlayer().getUUID(), allConversationHistory);
+        main.getConversationManager().getChatHistory().put(getQuestPlayer().getUUID(), allChatHistory);
+        main.getConversationManager().getConversationChatHistory().put(getQuestPlayer().getUUID(), allConversationHistory);
 
         //maybe this won't send the huge, 1-component-chat-history again
         allConversationHistory.add(collectiveComponent);

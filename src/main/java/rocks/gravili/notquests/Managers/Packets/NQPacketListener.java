@@ -34,7 +34,7 @@ import java.util.ArrayList;
 public class NQPacketListener implements PacketListener {
     private final NotQuests main;
 
-    private final int maxChathistory = 16;
+
 
 
     public NQPacketListener(final NotQuests main) {
@@ -59,12 +59,12 @@ public class NQPacketListener implements PacketListener {
             component = GsonComponentSerializer.builder().build().deserialize(wrapperPlayServerChatMessage.getChatComponentJson());
 
 
-            final ArrayList<Component> convHist = main.getPacketManager().getConversationChatHistory().get(player.getUniqueId());
+            final ArrayList<Component> convHist = main.getConversationManager().getConversationChatHistory().get(player.getUniqueId());
             if (convHist != null && convHist.contains(component)) {
                 return;
             }
 
-            ArrayList<Component> hist = main.getPacketManager().getChatHistory().get(player.getUniqueId());
+            ArrayList<Component> hist = main.getConversationManager().getChatHistory().get(player.getUniqueId());
             if (hist != null) {
                 hist.add(component);
             } else {
@@ -73,7 +73,7 @@ public class NQPacketListener implements PacketListener {
             }
 
             main.getLogManager().debug("Registering chat message with position: " + wrapperPlayServerChatMessage.getPosition() + " and packet ID: " + wrapperPlayServerChatMessage.getPacketId() + ". Message: " + MiniMessage.builder().build().serialize(component));
-            int toRemove = hist.size() - maxChathistory;
+            int toRemove = hist.size() - main.getConversationManager().getMaxChathistory();
             if (toRemove > 0) {
                 //main.getLogManager().log(Level.WARNING, "ToRemove: " + i);
                 hist.subList(0, toRemove).clear();
@@ -81,7 +81,7 @@ public class NQPacketListener implements PacketListener {
             //main.getLogManager().log(Level.WARNING, "After: " + hist.size());
 
 
-            main.getPacketManager().getChatHistory().put(player.getUniqueId(), hist);
+            main.getConversationManager().getChatHistory().put(player.getUniqueId(), hist);
 
 
         } catch (Exception ignored) {

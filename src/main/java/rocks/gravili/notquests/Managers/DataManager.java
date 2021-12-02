@@ -758,6 +758,13 @@ public class DataManager {
         }
         configuration.packetMagic = getGeneralConfig().getBoolean(key);
 
+        main.getLogManager().info("Detected version: " + Bukkit.getBukkitVersion());
+
+        if (!Bukkit.getBukkitVersion().contains("1.18") && !Bukkit.getBukkitVersion().contains("1.17")) {
+            configuration.packetMagic = false;
+            main.getLogManager().info("Packet magic has been disabled, because you are using an unsupported bukkit version...");
+        }
+
         key = "general.packet-magic.conversations.delete-previous";
         if (!getGeneralConfig().isBoolean(key)) {
             getGeneralConfig().set(key, false);
