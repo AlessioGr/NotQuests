@@ -24,6 +24,7 @@ import com.github.retrooper.packetevents.protocol.packettype.PacketType;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerChatMessage;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextReplacementConfig;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.NotQuests;
@@ -63,7 +64,6 @@ public class NQPacketListener implements PacketListener {
                 return;
             }
 
-
             ArrayList<Component> hist = main.getPacketManager().getChatHistory().get(player.getUniqueId());
             if (hist != null) {
                 hist.add(component);
@@ -72,7 +72,7 @@ public class NQPacketListener implements PacketListener {
                 hist.add(component);
             }
 
-            //main.getLogManager().log(Level.WARNING, "Prev: " + hist.size());
+            main.getLogManager().debug("Registering chat message with position: " + wrapperPlayServerChatMessage.getPosition() + " and packet ID: " + wrapperPlayServerChatMessage.getPacketId() + ". Message: " + MiniMessage.builder().build().serialize(component));
             int toRemove = hist.size() - maxChathistory;
             if (toRemove > 0) {
                 //main.getLogManager().log(Level.WARNING, "ToRemove: " + i);
@@ -100,6 +100,10 @@ public class NQPacketListener implements PacketListener {
         if (event.getPacketType() == PacketType.Play.Server.CHAT_MESSAGE) {
 
             WrapperPlayServerChatMessage wrapperPlayServerChatMessage = new WrapperPlayServerChatMessage(event);
+
+            if (wrapperPlayServerChatMessage.getPosition() == WrapperPlayServerChatMessage.ChatPosition.GAME_INFO) { //Skip actionbar messages
+                return;
+            }
 
             if (wrapperPlayServerChatMessage.getChatComponentJson() != null && !wrapperPlayServerChatMessage.getChatComponentJson().contains("fg9023zf729ofz")) {
                 Player player = (Player) event.getPlayer();
