@@ -68,6 +68,8 @@ public class LogManager {
             afterPrefixSuffix = "<YELLOW>";
         } else if (level == Level.SEVERE) {
             afterPrefixSuffix = "<RED>";
+        } else if (level == Level.FINE) {
+            afterPrefixSuffix = "<GRAY>";
         }
 
         consoleSender.sendMessage(MiniMessage.miniMessage().parse(prefixText + afterPrefixSuffix + message));
@@ -108,6 +110,8 @@ public class LogManager {
             afterPrefixSuffix = "<YELLOW>";
         } else if (level == Level.SEVERE) {
             afterPrefixSuffix = "<RED>";
+        } else if (level == Level.FINE) {
+            afterPrefixSuffix = "<GRAY>";
         }
 
         consoleSender.sendMessage(MiniMessage.miniMessage().parse(prefixText + afterPrefixSuffix + message));
@@ -127,5 +131,11 @@ public class LogManager {
         log(Level.SEVERE, message);
     }
 
+    public void debug(final String message) {
+        if (main.getDataManager().getConfiguration().debug) {
+            log(Level.FINE, message);
+        }
+
+    }
 }
 

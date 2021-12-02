@@ -29,6 +29,7 @@ import java.util.List;
  */
 public class Configuration {
 
+    public boolean debug = false;
 
     /**
      * MYSQL Database Connection Information

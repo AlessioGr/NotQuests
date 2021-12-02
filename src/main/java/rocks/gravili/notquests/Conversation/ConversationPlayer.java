@@ -29,7 +29,6 @@ import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.QuestPlayer;
 
 import java.util.ArrayList;
-import java.util.logging.Level;
 
 import static rocks.gravili.notquests.Commands.NotQuestColors.mainGradient;
 
@@ -297,16 +296,16 @@ public class ConversationPlayer {
         ArrayList<Component> allChatHistory = main.getPacketManager().getChatHistory().get(getQuestPlayer().getUUID());
         ArrayList<Component> allConversationHistory = main.getPacketManager().getConversationChatHistory().get(getQuestPlayer().getUUID());
 
-        main.getLogManager().log(Level.INFO, "Conversation stop stage 1");
+        main.getLogManager().debug("Conversation stop stage 1");
 
         if (allChatHistory == null) {
             return;
         }
-        main.getLogManager().log(Level.INFO, "Conversation stop stage 1.5");
+        main.getLogManager().debug("Conversation stop stage 1.5");
         if (allConversationHistory == null) {
             return;
         }
-        main.getLogManager().log(Level.INFO, "Conversation stop stage 2");
+        main.getLogManager().debug("Conversation stop stage 2");
 
         final Audience audience = main.adventure().player(getQuestPlayer().getPlayer());
 

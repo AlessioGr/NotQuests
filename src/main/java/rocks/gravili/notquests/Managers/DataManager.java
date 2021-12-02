@@ -328,7 +328,8 @@ public class DataManager {
 
         boolean valueChanged = false;
 
-        String key = "";
+        String key;
+
 
         if (!getGeneralConfig().isBoolean("storage.database.enabled")) {
             getGeneralConfig().set("storage.database.enabled", false);
@@ -385,6 +386,13 @@ public class DataManager {
             //No need to error previous stuff, since SQLite will be used
             errored = false;
         }
+
+
+        if (!getGeneralConfig().isBoolean("debug")) {
+            getGeneralConfig().set("debug", false);
+            valueChanged = true;
+        }
+        configuration.debug = getGeneralConfig().getBoolean("debug");
 
 
         //Other values from general.yml
