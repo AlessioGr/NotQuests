@@ -1,3 +1,4 @@
+debug: false
 storage:
   load-playerdata: true
   save-playerdata: true

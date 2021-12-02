@@ -51,11 +51,10 @@ public class PacketManager {
     }
 
     public void onLoad() {
-
-        PacketEvents.setAPI(BukkitPacketEventsBuilder.build(main));
-        PacketEvents.getAPI().load();
-
-
+        if (main.getDataManager().getConfiguration().packetMagic) {
+            PacketEvents.setAPI(BukkitPacketEventsBuilder.build(main));
+            PacketEvents.getAPI().load();
+        }
     }
 
     public void initialize() {
@@ -70,6 +69,9 @@ public class PacketManager {
     }
 
     public void terminate() {
-        PacketEvents.getAPI().terminate();
+        if (main.getDataManager().getConfiguration().packetMagic) {
+            PacketEvents.getAPI().terminate();
+        }
+
     }
 }

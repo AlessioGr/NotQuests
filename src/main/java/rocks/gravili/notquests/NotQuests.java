@@ -139,10 +139,25 @@ public final class NotQuests extends JavaPlugin {
 
     @Override
     public void onLoad() {
+
+
+        //Create a new instance of the Log Manager which will be re-used everywhere
+        logManager = new LogManager(this);
+
+
+        //Create a new instance of the Data Manager which will be re-used everywhere
+        dataManager = new DataManager(this);
+        //Load general config first, because we'll need it for the integrations
+        dataManager.loadGeneralConfig();
+
         if (packetManager == null) {
             packetManager = new PacketManager(this);
             packetManager.onLoad();
         }
+    }
+
+    public boolean isAdventureEnabled() {
+        return this.adventure != null;
     }
 
     public BukkitAudiences adventure() {
@@ -166,31 +181,25 @@ public final class NotQuests extends JavaPlugin {
         // Initialize an audiences instance for the plugin
         this.adventure = BukkitAudiences.create(this);
 
+        logManager.lateInit(); //To initialize adventure
+
+        getLogManager().log(Level.INFO, "NotQuests is starting...");
+
         //PaperLib for paper-specific methods (like getting TPS)
         PaperLib.suggestPaper(this);
-
 
 
         //Create a new instance of the Util Manager which will be re-used everywhere
         utilManager = new UtilManager(this);
 
 
-        //Create a new instance of the Log Manager which will be re-used everywhere
-        logManager = new LogManager(this);
-
-        getLogManager().log(Level.INFO, "NotQuests is starting...");
-
 
         //Create a new instance of the Performance Manager which will be re-used everywhere
         performanceManager = new PerformanceManager(this);
 
-        //Create a new instance of the Data Manager which will be re-used everywhere
-        dataManager = new DataManager(this);
 
         actionsManager = new ActionsManager(this);
 
-        //Load general config first, because we'll need it for the integrations
-        dataManager.loadGeneralConfig();
 
 
         enableIntegrations();

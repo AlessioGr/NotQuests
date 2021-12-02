@@ -22,6 +22,7 @@ import io.papermc.lib.PaperLib;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import rocks.gravili.notquests.NotQuests;
 
@@ -29,13 +30,12 @@ import java.util.logging.Level;
 
 public class LogManager {
     private final NotQuests main;
-    private final Audience consoleSender;
+    private Audience consoleSender;
     private final Component prefix;
     private final String prefixText;
 
     public LogManager(final NotQuests main) {
         this.main = main;
-        consoleSender = main.adventure().sender(Bukkit.getConsoleSender());
 
 
         if (PaperLib.isPaper()) {
@@ -45,6 +45,10 @@ public class LogManager {
             prefixText = "<DARK_GRAY>[<WHITE>NotQuests<DARK_GRAY>]<GRAY>: ";
             prefix = MiniMessage.miniMessage().parse(prefixText);
         }
+    }
+
+    public void lateInit() {
+        consoleSender = main.adventure().sender(Bukkit.getConsoleSender());
     }
 
 
@@ -72,7 +76,12 @@ public class LogManager {
             afterPrefixSuffix = "<GRAY>";
         }
 
-        consoleSender.sendMessage(MiniMessage.miniMessage().parse(prefixText + afterPrefixSuffix + message));
+        if (main.isAdventureEnabled() && consoleSender != null) {
+            consoleSender.sendMessage(MiniMessage.miniMessage().parse(prefixText + afterPrefixSuffix + message));
+        } else {
+            main.getLogger().log(level, LegacyComponentSerializer.builder().build().serialize(MiniMessage.miniMessage().parse(afterPrefixSuffix + message)).replace("&", "§"));
+        }
+
 
     }
 
@@ -114,7 +123,12 @@ public class LogManager {
             afterPrefixSuffix = "<GRAY>";
         }
 
-        consoleSender.sendMessage(MiniMessage.miniMessage().parse(prefixText + afterPrefixSuffix + message));
+        if (main.isAdventureEnabled() && consoleSender != null) {
+            consoleSender.sendMessage(MiniMessage.miniMessage().parse(prefixText + afterPrefixSuffix + message));
+        } else {
+            main.getLogger().log(level, LegacyComponentSerializer.builder().build().serialize(MiniMessage.miniMessage().parse(afterPrefixSuffix + message)).replace("&", "§"));
+        }
+
 
     }
 
