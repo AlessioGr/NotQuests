@@ -55,7 +55,7 @@ public class NQPacketListener implements PacketListener {
     public void handleMainChatHistorySavingLogic(final WrapperPlayServerChatMessage wrapperPlayServerChatMessage, final Player player) {
         Component component;
         try {
-            component = GsonComponentSerializer.builder().build().deserialize(wrapperPlayServerChatMessage.getJSONMessageRaw());
+            component = GsonComponentSerializer.builder().build().deserialize(wrapperPlayServerChatMessage.getChatComponentJson());
 
 
             final ArrayList<Component> convHist = main.getPacketManager().getConversationChatHistory().get(player.getUniqueId());
@@ -101,16 +101,16 @@ public class NQPacketListener implements PacketListener {
 
             WrapperPlayServerChatMessage wrapperPlayServerChatMessage = new WrapperPlayServerChatMessage(event);
 
-            if (wrapperPlayServerChatMessage.getJSONMessageRaw() != null && !wrapperPlayServerChatMessage.getJSONMessageRaw().contains("fg9023zf729ofz")) {
+            if (wrapperPlayServerChatMessage.getChatComponentJson() != null && !wrapperPlayServerChatMessage.getChatComponentJson().contains("fg9023zf729ofz")) {
                 Player player = (Player) event.getPlayer();
 
                 handleMainChatHistorySavingLogic(wrapperPlayServerChatMessage, player);
 
-            } else if (wrapperPlayServerChatMessage.getJSONMessageRaw() != null && wrapperPlayServerChatMessage.getJSONMessageRaw().contains("fg9023zf729ofz")) {
+            } else if (wrapperPlayServerChatMessage.getChatComponentJson() != null && wrapperPlayServerChatMessage.getChatComponentJson().contains("fg9023zf729ofz")) {
                 //main.getLogManager().log(Level.INFO, "replay");
                 Component component;
                 try {
-                    component = GsonComponentSerializer.builder().build().deserialize(wrapperPlayServerChatMessage.getJSONMessageRaw());
+                    component = GsonComponentSerializer.builder().build().deserialize(wrapperPlayServerChatMessage.getChatComponentJson());
 
                     component.replaceText(TextReplacementConfig.builder()
                             .match("fg9023zf729ofz").replacement(Component.text("")).build());

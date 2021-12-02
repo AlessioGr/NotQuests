@@ -48,6 +48,8 @@ repositories {
             includeGroup 'com.github.retrooper'
             includeGroup 'com.github.retrooper.packetevents'
             includeGroup 'io.github.retrooper'
+            includeGroup 'com.github.AlessioGr'
+            includeGroup 'com.github.AlessioGr.packetevents'
         }
     }
     maven {
@@ -95,7 +97,7 @@ repositories {
 
     maven { url 'https://libraries.minecraft.net/' }
 
-    mavenLocal()
+    //mavenLocal()
 
 }
 
@@ -129,7 +131,7 @@ dependencies {
     //Shaded
     implementation 'io.papermc:paperlib:1.0.6'
     implementation "net.kyori:adventure-text-minimessage:4.2.0-SNAPSHOT"
-    implementation 'net.kyori:adventure-platform-bukkit:5.0.2-SNAPSHOT'
+    implementation 'net.kyori:adventure-platform-bukkit:4.0.1'
 
     //CloudCommands
     implementation group: 'cloud.commandframework', name: 'cloud-paper', version: '1.6.0-SNAPSHOT'
@@ -140,7 +142,7 @@ dependencies {
     implementation 'me.lucko:commodore:1.10'
 
 
-    implementation 'com.github.retrooper.packetevents:bukkit:2.0-SNAPSHOT'
+    implementation 'com.github.AlessioGr.packetevents:bukkit:2.0-SNAPSHOT'
 }
 
 /**
