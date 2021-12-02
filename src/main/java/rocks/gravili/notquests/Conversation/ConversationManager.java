@@ -283,7 +283,7 @@ public class ConversationManager {
 
             final String fullIdentifier = conversationLine.getFullIdentifier();
 
-            main.getLogManager().log(Level.INFO, "Deep diving conversation line <AQUA>" + fullIdentifier + "</AQUA>...");
+            main.getLogManager().debug("Deep diving conversation line <AQUA>" + fullIdentifier + "</AQUA>...");
 
 
             final String nextString = config.getString("Lines." + fullIdentifier + ".next", "");
@@ -298,8 +298,8 @@ public class ConversationManager {
                     final String actionString = config.getString("Lines." + nextLineFullIdentifier + ".action", "");
                     final Action action = parseActionString(actionString);
 
-                    main.getLogManager().log(Level.INFO, "Deep diving next string <AQUA>" + nextLineFullIdentifier + "</AQUA> for conversation line <AQUA>" + fullIdentifier + "</AQUA>...");
-                    main.getLogManager().log(Level.INFO, "---- Message: <AQUA>" + message + "</AQUA> | Next: <AQUA>" + next + "</AQUA>");
+                    main.getLogManager().debug("Deep diving next string <AQUA>" + nextLineFullIdentifier + "</AQUA> for conversation line <AQUA>" + fullIdentifier + "</AQUA>...");
+                    main.getLogManager().debug("---- Message: <AQUA>" + message + "</AQUA> | Next: <AQUA>" + next + "</AQUA>");
 
 
                     boolean alreadyExists = false;
@@ -314,7 +314,7 @@ public class ConversationManager {
                     if (!alreadyExists) {
 
                         final String nextLineSpeakerName = nextLineFullIdentifier.split("\\.")[0].replaceAll("\\s", "");
-                        main.getLogManager().log(Level.INFO, "---- Trying to find speaker: <AQUA>" + nextLineSpeakerName + "</AQUA>...");
+                        main.getLogManager().debug("Trying to find speaker: <AQUA>" + nextLineSpeakerName + "</AQUA>...");
 
                         Speaker foundSpeaker = null;
                         for (final Speaker speaker : speakersForOneFile) {
@@ -330,7 +330,7 @@ public class ConversationManager {
                             continue;
                         }
 
-                        main.getLogManager().log(Level.INFO, "---- Speaker: <AQUA>" + foundSpeaker.getSpeakerName() + "</AQUA> | Is Player?: <AQUA>" + foundSpeaker.isPlayer() + "</AQUA>");
+                        main.getLogManager().debug("---- Speaker: <AQUA>" + foundSpeaker.getSpeakerName() + "</AQUA> | Is Player?: <AQUA>" + foundSpeaker.isPlayer() + "</AQUA>");
 
 
                         ConversationLine newLine = new ConversationLine(foundSpeaker, nextLineFullIdentifier.split("\\.")[1], message);
@@ -408,14 +408,14 @@ public class ConversationManager {
 
     public final Action parseActionString(final String actionString) {
         if (!actionString.isBlank()) {
-            main.getLogManager().log(Level.INFO, "<GREEN>Trying to find action: " + actionString);
+            main.getLogManager().debug("<GREEN>Trying to find action: " + actionString);
 
             if (actionString.startsWith("action ")) {
                 final String existingActionName = actionString.split(" ")[1];
 
                 final Action foundAction = main.getActionsManager().getAction(existingActionName);
                 if (foundAction != null) {
-                    main.getLogManager().log(Level.INFO, "Found conversation line action: " + foundAction.getActionName());
+                    main.getLogManager().debug("Found conversation line action: " + foundAction.getActionName());
                 }
 
                 return foundAction;
