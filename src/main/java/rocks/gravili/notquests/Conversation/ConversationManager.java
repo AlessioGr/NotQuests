@@ -40,6 +40,9 @@ import java.util.HashMap;
 import java.util.UUID;
 import java.util.logging.Level;
 
+import static rocks.gravili.notquests.Commands.NotQuestColors.highlight2Gradient;
+import static rocks.gravili.notquests.Commands.NotQuestColors.highlightGradient;
+
 public class ConversationManager {
     private final NotQuests main;
     private final ArrayList<Conversation> conversations;
@@ -48,7 +51,6 @@ public class ConversationManager {
     private final HashMap<UUID, ConversationPlayer> openConversations;
 
     final ArrayList<ConversationLine> linesForOneFile = new ArrayList<>();
-    final ArrayList<Speaker> speakersForOneFile = new ArrayList<>();
 
     private File conversationsFolder;
 
@@ -103,6 +105,10 @@ public class ConversationManager {
         final Conversation testConversation = new Conversation(main, null, null, "test", 0);
 
         final Speaker gustav = new Speaker("Gustav");
+
+        testConversation.addSpeaker(gustav, false);
+
+        testConversation.addSpeaker(playerSpeaker, false);
 
 
         final ConversationLine gustav1 = new ConversationLine(gustav, "gustav1", "Hello, I'm Gustav! What's your name?");
@@ -174,7 +180,6 @@ public class ConversationManager {
 
         for (File conversationFile : main.getUtilManager().listFilesRecursively(conversationsFolder)) {
             linesForOneFile.clear();
-            speakersForOneFile.clear();
             main.getLogManager().log(Level.INFO, "Reading conversation file <AQUA>" + conversationFile.getName() + "</AQUA>...");
 
             final YamlConfiguration config = new YamlConfiguration();
@@ -198,13 +203,18 @@ public class ConversationManager {
                 for (final String speakerName : speakersAndLinesConfigurationSection.getKeys(false)) {
                     final Speaker speaker = new Speaker(speakerName);
                     final String color = speakersAndLinesConfigurationSection.getString(speakerName + ".color", "<WHITE>");
-                    speaker.setColor(color);
+                    if (!color.isBlank()) {
+                        speaker.setColor(color);
+                    }
+
 
                     if (speakerName.equalsIgnoreCase("player")) {
                         speaker.setPlayer(true);
                     }
                     allSpeakers.add(speaker);
-                    speakersForOneFile.add(speaker);
+                    if (!conversation.hasSpeaker(speaker) && !conversation.addSpeaker(speaker, false)) {
+                        main.getLogManager().warn("Speaker " + highlightGradient + speaker.getSpeakerName() + "</gradient> could not be added to conversation " + highlight2Gradient + conversation.getIdentifier() + "</gradient>. Does the speaker already exist?");
+                    }
 
 
                     final ConfigurationSection speakerLines = speakersAndLinesConfigurationSection.getConfigurationSection(speakerName);
@@ -268,7 +278,7 @@ public class ConversationManager {
             //Now here we have all starter conversation lines. We need to dive deep into them!
 
             linesForOneFile.addAll(conversationLines);
-            deepDiveAndConnectStarterLines(conversationLines, config);
+            deepDiveAndConnectStarterLines(conversation, conversationLines, config);
 
 
             conversations.add(conversation);
@@ -277,7 +287,7 @@ public class ConversationManager {
     }
 
 
-    public void deepDiveAndConnectStarterLines(final ArrayList<ConversationLine> lines, final YamlConfiguration config) {
+    public void deepDiveAndConnectStarterLines(final Conversation conversation, final ArrayList<ConversationLine> lines, final YamlConfiguration config) {
 
         for (final ConversationLine conversationLine : lines) {
 
@@ -317,7 +327,7 @@ public class ConversationManager {
                         main.getLogManager().debug("Trying to find speaker: <AQUA>" + nextLineSpeakerName + "</AQUA>...");
 
                         Speaker foundSpeaker = null;
-                        for (final Speaker speaker : speakersForOneFile) {
+                        for (final Speaker speaker : conversation.getSpeakers()) {
                             if (speaker.getSpeakerName().equals(nextLineSpeakerName)) {
                                 foundSpeaker = speaker;
                             }
@@ -332,6 +342,10 @@ public class ConversationManager {
 
                         main.getLogManager().debug("---- Speaker: <AQUA>" + foundSpeaker.getSpeakerName() + "</AQUA> | Is Player?: <AQUA>" + foundSpeaker.isPlayer() + "</AQUA>");
 
+
+                        if (!conversation.hasSpeaker(foundSpeaker) && !conversation.addSpeaker(foundSpeaker, false)) {
+                            main.getLogManager().warn("Speaker " + highlightGradient + foundSpeaker.getSpeakerName() + "</gradient> could not be added to conversation " + highlight2Gradient + conversation.getIdentifier() + "</gradient>. Does the speaker already exist?");
+                        }
 
                         ConversationLine newLine = new ConversationLine(foundSpeaker, nextLineFullIdentifier.split("\\.")[1], message);
                         if (action != null) {
@@ -350,7 +364,7 @@ public class ConversationManager {
 
 
                 //Dive again to next level
-                deepDiveAndConnectStarterLines(keepDiving, config);
+                deepDiveAndConnectStarterLines(conversation, keepDiving, config);
 
             }
 

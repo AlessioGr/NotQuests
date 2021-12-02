@@ -38,9 +38,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import rocks.gravili.notquests.Commands.newCMDs.arguments.ConversationSelector;
+import rocks.gravili.notquests.Commands.newCMDs.arguments.SpeakerSelector;
 import rocks.gravili.notquests.Conversation.Conversation;
 import rocks.gravili.notquests.Conversation.ConversationLine;
 import rocks.gravili.notquests.Conversation.ConversationManager;
+import rocks.gravili.notquests.Conversation.Speaker;
 import rocks.gravili.notquests.NotQuests;
 
 import java.io.File;
@@ -445,5 +447,138 @@ public class AdminConversationCommands {
                 }));
 
 
+        manager.command(conversationBuilder.literal("edit")
+                .argument(ConversationSelector.of("conversation", main), ArgumentDescription.of("Name of the Conversation."))
+                .literal("speakers")
+                .literal("add", "create")
+                .argument(StringArgument.<CommandSender>newBuilder("Speaker Name").withSuggestionsProvider(
+                        (context, lastString) -> {
+                            final List<String> allArgs = context.getRawInput();
+                            final Audience audience = main.adventure().sender(context.getSender());
+                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[New Speaker Name]", "");
+
+                            ArrayList<String> completions = new ArrayList<>();
+
+                            completions.add("<Enter new Speaker Name>");
+                            return completions;
+                        }
+                ).single().build(), ArgumentDescription.of("Speaker Name"))
+                .flag(main.getCommandManager().speakerColor)
+                .meta(CommandMeta.DESCRIPTION, "Adds / creates a new speaker for the conversation.")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+
+                    final Conversation foundConversation = context.get("conversation");
+
+
+                    final String speakerName = context.get("Speaker Name");
+                    final String speakerColor = context.flags().getValue(main.getCommandManager().speakerColor, "");
+
+                    Speaker speaker = new Speaker(speakerName);
+                    if (speakerColor != null && !speakerColor.isBlank()) {
+                        speaker.setColor(speakerColor);
+                    }
+
+                    if (foundConversation.addSpeaker(speaker, true)) {
+                        audience.sendMessage(miniMessage.parse(
+                                successGradient + "Speaker " + highlightGradient + speaker.getSpeakerName() + "</gradient> was successfully added to conversation "
+                                        + highlight2Gradient + foundConversation.getIdentifier() + "</gradient>!"
+                        ));
+                    } else {
+                        audience.sendMessage(miniMessage.parse(
+                                errorGradient + "Speaker " + highlightGradient + speaker.getSpeakerName() + "</gradient> could not be added to "
+                                        + highlight2Gradient + foundConversation.getIdentifier() + "</gradient>! Does it already exist?"
+                        ));
+                    }
+
+
+                }));
+
+        manager.command(conversationBuilder.literal("edit")
+                .argument(ConversationSelector.of("conversation", main), ArgumentDescription.of("Name of the Conversation."))
+                .literal("speakers")
+                .literal("list", "show")
+                .meta(CommandMeta.DESCRIPTION, "Adds / creates a new speaker for the conversation.")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+
+                    final Conversation foundConversation = context.get("conversation");
+
+                    if (foundConversation.getSpeakers().size() == 0) {
+                        audience.sendMessage(miniMessage.parse(
+                                successGradient + "This conversation has no speakers."
+                        ));
+                    } else {
+                        audience.sendMessage(miniMessage.parse(highlightGradient + "Speakers of conversation " + highlight2Gradient + foundConversation.getIdentifier() + "</gradient>:</gradient>"));
+                        int counter = 0;
+                        for (final Speaker speaker : foundConversation.getSpeakers()) {
+                            counter++;
+
+                            audience.sendMessage(miniMessage.parse(highlightGradient + counter + ".</gradient> " + mainGradient + "Name:</gradient> " + highlight2Gradient + speaker.getSpeakerName() + "</gradient> Color: " + highlight2Gradient + speaker.getColor() + speaker.getColor().replace("<", "").replace(">", "") + "</gradient>"));
+                        }
+                    }
+
+                }));
+
+        manager.command(conversationBuilder.literal("edit")
+                .argument(ConversationSelector.of("conversation", main), ArgumentDescription.of("Name of the Conversation."))
+                .literal("speakers")
+                .literal("remove", "delete")
+                .argument(SpeakerSelector.of("Speaker", main, "conversation"))
+
+                .meta(CommandMeta.DESCRIPTION, "Adds / creates a new speaker for the conversation.")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+
+                    final Conversation foundConversation = context.get("conversation");
+
+
+                    final Speaker speaker = context.get("Speaker");
+
+
+                    if (foundConversation.hasSpeaker(speaker) && foundConversation.removeSpeaker(speaker, true)) {
+                        //TODO: Reload conversation here
+                        audience.sendMessage(miniMessage.parse(
+                                successGradient + "Speaker " + highlightGradient + speaker.getSpeakerName() + "</gradient> was successfully removed from conversation "
+                                        + highlight2Gradient + foundConversation.getIdentifier() + "</gradient>!"
+                        ));
+                    } else {
+                        audience.sendMessage(miniMessage.parse(
+                                errorGradient + "Speaker " + highlightGradient + speaker.getSpeakerName() + "</gradient> could not be removed from "
+                                        + highlight2Gradient + foundConversation.getIdentifier() + "</gradient>! Does it exist?"
+                        ));
+                    }
+
+
+                }));
+
+        handleLinesCommands();
+    }
+
+    public void handleLinesCommands() {
+        /*manager.command(conversationBuilder.literal("edit")
+                .argument(ConversationSelector.of("conversation", main), ArgumentDescription.of("Name of the Conversation."))
+                .literal("lines")
+                .literal("add", "create")
+                .meta(CommandMeta.DESCRIPTION, "Creates a line for a conversation.")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+
+                    final Conversation foundConversation = context.get("conversation");
+
+                    audience.sendMessage(miniMessage.parse(
+                            highlightGradient + "Starting lines (max. 3 levels of next):"
+                    ));
+                    final int npcID = context.get("NPC");
+
+                    foundConversation.setNPC(npcID);
+
+                    audience.sendMessage(miniMessage.parse(
+                            mainGradient + "NPC of conversation " + highlightGradient + foundConversation.getIdentifier() + "</gradient> has been set to "
+                                    + highlight2Gradient + npcID + "</gradient>!"
+                    ));
+
+
+                }));*/
     }
 }

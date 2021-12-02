@@ -40,6 +40,8 @@ public class Conversation {
     private int npcID; //-1: no NPC
     private final ArrayList<ConversationLine> start;
 
+    final ArrayList<Speaker> speakers;
+
 
     public Conversation(final NotQuests main, File configFile, YamlConfiguration config, final String identifier, final int npcID) {
         this.main = main;
@@ -48,6 +50,79 @@ public class Conversation {
         this.identifier = identifier;
         this.npcID = npcID;
         start = new ArrayList<>();
+        speakers = new ArrayList<>();
+    }
+
+    public final ArrayList<Speaker> getSpeakers() {
+        return speakers;
+    }
+
+    public final boolean hasSpeaker(final Speaker speaker) {
+        if (speakers.contains(speaker)) {
+            return true;
+        }
+        for (final Speaker speakerToCheck : speakers) {
+            if (speakerToCheck.getSpeakerName().equalsIgnoreCase(speaker.getSpeakerName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public final boolean removeSpeaker(final Speaker speaker, final boolean save) {
+        if (!hasSpeaker(speaker)) {
+            return false;
+        }
+
+        speakers.remove(speaker);
+        if (save) {
+            if (configFile == null || config == null) {
+                return false;
+            }
+            if (config.get(speaker.getSpeakerName()) != null) {
+                return false;
+            }
+            config.set("Lines." + speaker.getSpeakerName(), null);
+            try {
+                config.save(configFile);
+                return true;
+            } catch (IOException e) {
+                e.printStackTrace();
+                main.getLogManager().severe("There was an error saving the configuration of Conversation <AQUA>" + identifier + "</AQUA>.");
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
+
+
+    public boolean addSpeaker(final Speaker speaker, final boolean save) {
+        if (hasSpeaker(speaker)) {
+            return false;
+        }
+
+        speakers.add(speaker);
+        if (save) {
+            if (configFile == null || config == null) {
+                return false;
+            }
+            if (config.get(speaker.getSpeakerName()) != null) {
+                return false;
+            }
+            config.set("Lines." + speaker.getSpeakerName() + ".color", speaker.getColor());
+            try {
+                config.save(configFile);
+                return true;
+            } catch (IOException e) {
+                e.printStackTrace();
+                main.getLogManager().severe("There was an error saving the configuration of Conversation <AQUA>" + identifier + "</AQUA>.");
+                return false;
+            }
+        } else {
+            return true;
+        }
+
     }
 
     public final YamlConfiguration getConfig() {

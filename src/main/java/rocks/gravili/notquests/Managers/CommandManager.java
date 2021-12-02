@@ -86,6 +86,8 @@ public class CommandManager {
     public final CommandFlag<Integer> maxDistance;
 
 
+    public final CommandFlag<String> speakerColor;
+
     public final CommandFlag<Integer> applyOn; //0 = Quest
     public final CommandFlag<World> world;
     public final CommandFlag<String> triggerWorldString;
@@ -144,6 +146,24 @@ public class CommandManager {
                         }
                 ).quoted())
                 .withDescription(ArgumentDescription.of("Custom description of the task"))
+                .build();
+
+        speakerColor = CommandFlag
+                .newBuilder("speakerColor")
+                .withArgument(StringArgument.<CommandSender>newBuilder("Speaker Color").withSuggestionsProvider(
+                        (context, lastString) -> {
+                            final List<String> allArgs = context.getRawInput();
+                            final Audience audience = main.adventure().sender(context.getSender());
+                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Enter speaker color (default: <WHITE>)]", "");
+
+                            ArrayList<String> completions = new ArrayList<>();
+
+                            completions.add("<WHITE>");
+                            completions.add("<BLUE>");
+                            return completions;
+                        }
+                ).single())
+                .withDescription(ArgumentDescription.of("Color of the speaker name"))
                 .build();
 
         maxDistance = CommandFlag
