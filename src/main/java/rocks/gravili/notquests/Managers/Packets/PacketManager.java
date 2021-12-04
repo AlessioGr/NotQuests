@@ -21,6 +21,7 @@ package rocks.gravili.notquests.Managers.Packets;
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.event.PacketListenerPriority;
 import com.github.retrooper.packetevents.factory.bukkit.BukkitPacketEventsBuilder;
+import com.github.retrooper.packetevents.settings.PacketEventsSettings;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerChatMessage;
 import rocks.gravili.notquests.NotQuests;
 
@@ -47,6 +48,11 @@ public class PacketManager {
         if (main.getDataManager().getConfiguration().packetMagic) {
             WrapperPlayServerChatMessage.HANDLE_JSON = false;
             PacketEvents.getAPI().getEventManager().registerListener(new NQPacketListener(main), PacketListenerPriority.LOW);
+
+
+            PacketEventsSettings settings = PacketEvents.get().getSettings();
+            settings.bStats(false).checkForUpdates(false);
+
             PacketEvents.getAPI().init();
 
 
