@@ -50,8 +50,9 @@ public class PacketManager {
             PacketEvents.getAPI().getEventManager().registerListener(new NQPacketListener(main), PacketListenerPriority.LOW);
 
 
-            PacketEventsSettings settings = PacketEvents.get().getSettings();
+            PacketEventsSettings settings = PacketEvents.getAPI().getSettings();
             settings.bStats(false).checkForUpdates(false);
+
 
             PacketEvents.getAPI().init();
 
