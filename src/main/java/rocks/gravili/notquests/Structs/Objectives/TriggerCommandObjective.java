@@ -95,7 +95,7 @@ public class TriggerCommandObjective extends Objective {
                     final Audience audience = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
 
-                    final String triggerName = String.join(" ", (String[]) context.get("Trigger name"));
+                    final String triggerName = context.get("Trigger name");
 
                     final int amount = context.get("amount");
 
