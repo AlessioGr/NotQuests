@@ -301,7 +301,7 @@ public class QuestManager {
 
                                 try {
                                     condition = requirementType.getDeclaredConstructor(NotQuests.class, Object[].class).newInstance(main, new Object[]{progressNeeded, quest});
-                                    condition.save("quests." + questName + ".requirements." + requirementID);
+                                    condition.load("quests." + questName + ".requirements." + requirementID);
                                 } catch (Exception ex) {
                                     main.getLogManager().log(Level.SEVERE, "Error parsing requirement Type of requirement with ID <AQUA>" + requirementNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "</AQUA>. Requirement creation skipped...");
 
@@ -467,17 +467,69 @@ public class QuestManager {
                     }
 
 
-                    //Objective Dependencies
-                   /* for (final Objective objective : quest.getObjectives()) {
-                        final ConfigurationSection objectiveDependenciesConfigurationSection = main.getDataManager().getQuestsConfig().getConfigurationSection("quests." + quest.getQuestName() + ".objectives." + objective.getObjectiveID() + ".dependantObjectives.");
-                        if (objectiveDependenciesConfigurationSection != null) {
-                            for (String objectiveDependencyNumber : objectiveDependenciesConfigurationSection.getKeys(false)) {
-                                int dependantObjectiveID = main.getDataManager().getQuestsConfig().getInt("quests." + quest.getQuestName() + ".objectives." + (objective.getObjectiveID()) + ".dependantObjectives." + objectiveDependencyNumber + ".objectiveID", objective.getObjectiveID());
-                                final Objective dependantObjective = quest.getObjectiveFromID(dependantObjectiveID);
-                                objective.addDependantObjective(dependantObjective, false);
+                    //Objective Conditions
+                    main.getLogManager().info("Loading objective conditions...");
+                   for (final Objective objective : quest.getObjectives()) { //TODO: Add objective name to error or debug messages to discern from normal requirement loading
+                        final ConfigurationSection objectiveConditionsConfigurationSection = main.getDataManager().getQuestsConfig().getConfigurationSection("quests." + quest.getQuestName() + ".objectives." + objective.getObjectiveID() + ".conditions.");
+                        if (objectiveConditionsConfigurationSection != null) {
+                            for (String objectiveConditionNumber : objectiveConditionsConfigurationSection.getKeys(false)) {
+                                int conditionID = -1;
+                                boolean validConditionID = true;
+                                try {
+                                    conditionID = Integer.parseInt(objectiveConditionNumber);
+                                } catch (java.lang.NumberFormatException ex) {
+                                    main.getLogManager().severe("Error parsing loaded condition ID <AQUA>" + objectiveConditionNumber + "</AQUA>. Condition creation skipped...");
+
+                                    validConditionID = false;
+                                    main.getLogManager().severe("Plugin disabled, because there was an error while loading quests condition ID data.");
+                                    main.getDataManager().setSavingEnabled(false);
+                                    main.getServer().getPluginManager().disablePlugin(main);
+                                }
+
+                                Class<? extends Condition> conditionType = null;
+
+                                try {
+
+                                    conditionType = main.getConditionsManager().getConditionClass(main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + (objective.getObjectiveID())  + ".conditions."  + objectiveConditionNumber + ".conditionType"));
+                                } catch (java.lang.NullPointerException ex) {
+                                    main.getLogManager().severe("Error parsing condition Type of requirement with ID <AQUA>" + objectiveConditionNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "<AQUA>. Condition creation skipped...");
+                                    ex.printStackTrace();
+                                    main.getLogManager().severe("Plugin disabled, because there was an error while loading quests condition Type data.");
+                                    main.getDataManager().setSavingEnabled(false);
+                                    main.getServer().getPluginManager().disablePlugin(main);
+                                }
+
+                                //RequirementType requirementType = RequirementType.valueOf(main.getDataManager().getQuestsData().getString("quests." + questName + ".requirements." + requirementNumber + ".requirementType"));
+                                int progressNeeded = main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".objectives." + (objective.getObjectiveID())  + ".conditions."  + objectiveConditionNumber + ".progressNeeded");
+
+                                if (validConditionID && conditionID > 0 && conditionType != null) {
+                                    Condition condition = null;
+
+                                    try {
+                                        condition = conditionType.getDeclaredConstructor(NotQuests.class, Object[].class).newInstance(main, new Object[]{progressNeeded, quest});
+                                        condition.load("quests." + questName + ".objectives." + (objective.getObjectiveID())  + ".conditions."  + objectiveConditionNumber);
+                                    } catch (Exception ex) {
+                                        main.getLogManager().severe("Error parsing condition Type of requirement with ID <AQUA>" + objectiveConditionNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "</AQUA>. Requirement creation skipped...");
+
+                                        ex.printStackTrace();
+                                        main.getLogManager().severe("Plugin disabled, because there was an error while loading quests condition Type data.");
+                                        main.getDataManager().setSavingEnabled(false);
+                                        main.getServer().getPluginManager().disablePlugin(main);
+                                    }
+                                    if (condition != null) {
+                                        objective.addCondition(condition, false);
+                                    }
+
+                                } else {
+                                    main.getLogManager().severe("Error loading condition. ValidRequirementID: " + validConditionID + " conditionID: " + conditionID + " ConditionTypeNull?" + (conditionType == null) + " ConditionType: " + conditionType.toString());
+
+                                    main.getLogManager().severe("Plugin disabled, because there was an error while loading quests requirement data.");
+                                    main.getDataManager().setSavingEnabled(false);
+                                    main.getServer().getPluginManager().disablePlugin(main);
+                                }
                             }
                         }
-                    }*/
+                    }
 
 
 
