@@ -69,11 +69,6 @@ public class ObjectiveCompletedCondition extends Condition {
     }
 
 
-
-    public final long getAmountOfCompletionsNeeded() {
-        return getProgressNeeded();
-    }
-
     @Override
     public String check(final QuestPlayer questPlayer, final boolean enforce) {
         final Objective objectiveToComplete = getObjectiveToComplete();
@@ -91,7 +86,7 @@ public class ObjectiveCompletedCondition extends Condition {
             return "§cError: Cannot find current active quest.";
         }
 
-        if(activeQuest.getActiveObjectiveFromID(getObjectiveToCompleteID()).isCompleted(-1)){
+        if(activeQuest.getActiveObjectiveFromID(getObjectiveToCompleteID()) != null){
             return "\n§eFinish the following objective first: §b" + objectiveToComplete.getObjectiveFinalName() + "\n";
         }
         return "";

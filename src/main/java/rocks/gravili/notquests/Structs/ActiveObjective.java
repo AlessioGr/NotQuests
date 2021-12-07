@@ -116,7 +116,10 @@ public class ActiveObjective {
 
         boolean foundStillFalseConditions = false;
         for (final Condition condition : objective.getConditions()){
-            if(!condition.check(getQuestPlayer(), false).isBlank()) {
+            String check = condition.check(getQuestPlayer(), false);
+            getQuestPlayer().sendDebugMessage("Condition status for " + objective.getObjectiveFinalName() + ": " + check);
+
+            if(!check.isBlank()) {
                 foundStillFalseConditions = true;
                 getQuestPlayer().sendDebugMessage("Following objective condition is still unfinished: " + condition.getConditionDescription());
                 setUnlocked(false, notifyPlayer, triggerAcceptQuestTrigger);
@@ -127,6 +130,7 @@ public class ActiveObjective {
             }
         }
         if (!foundStillFalseConditions) {
+            getQuestPlayer().sendDebugMessage("Active objective " + objective.getObjectiveFinalName() + " has been set to unlocked!");
             setUnlocked(true, notifyPlayer, triggerAcceptQuestTrigger);
 
         }
