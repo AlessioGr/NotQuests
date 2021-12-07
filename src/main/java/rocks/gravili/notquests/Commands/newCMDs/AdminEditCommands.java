@@ -532,34 +532,8 @@ public class AdminEditCommands {
                     main.getQuestManager().sendObjectivesAdmin(audience, quest);
                 }));
 
-        final Command.Builder<CommandSender> editObjectivesBuilder = builder.literal("edit")
-                .argument(IntegerArgument.<CommandSender>newBuilder("Objective ID").withMin(1).withSuggestionsProvider(
-                                (context, lastString) -> {
-                                    final List<String> allArgs = context.getRawInput();
-                                    final Audience audience = main.adventure().sender(context.getSender());
-                                    main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Objective ID]", "[...]");
 
-                                    ArrayList<String> completions = new ArrayList<>();
-
-                                    final Quest quest = context.get("quest");
-                                    for (final Objective objective : quest.getObjectives()) {
-                                        completions.add("" + objective.getObjectiveID());
-                                    }
-
-                                    return completions;
-                                }
-                        ).withParser((context, lastString) -> { //TODO: Fix this parser. It isn't run at all.
-                            final int ID = context.get("Objective ID");
-                            final Quest quest = context.get("quest");
-                            final Objective foundObjective = quest.getObjectiveFromID(ID);
-                            if (foundObjective == null) {
-                                return ArgumentParseResult.failure(new IllegalArgumentException("Objective with the ID '" + ID + "' does not belong to Quest '" + quest.getQuestName() + "'!"));
-                            } else {
-                                return ArgumentParseResult.success(ID);
-                            }
-                        })
-                        , ArgumentDescription.of("Objective ID"));
-        handleEditObjectives(editObjectivesBuilder);
+        handleEditObjectives(main.getCommandManager().getEditObjectivesBuilder());
 
 
     }

@@ -51,6 +51,7 @@ public class ConditionsManager {
         registerCondition("Money", MoneyCondition.class);
         registerCondition("WorldTime", WorldTimeCondition.class);
         registerCondition("UltimateClansClanLevel", UltimateClansClanLevelCondition.class);
+        registerCondition("ObjectiveCompleted", ObjectiveCompletedCondition.class);
 
     }
 

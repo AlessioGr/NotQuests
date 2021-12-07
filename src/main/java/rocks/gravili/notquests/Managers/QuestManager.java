@@ -300,7 +300,7 @@ public class QuestManager {
                                 Condition condition = null;
 
                                 try {
-                                    condition = requirementType.getDeclaredConstructor(NotQuests.class, long.class, Quest.class).newInstance(main, progressNeeded, quest);
+                                    condition = requirementType.getDeclaredConstructor(NotQuests.class, Object[].class).newInstance(main, new Object[]{progressNeeded, quest});
                                     condition.save("quests." + questName + ".requirements." + requirementID);
                                 } catch (Exception ex) {
                                     main.getLogManager().log(Level.SEVERE, "Error parsing requirement Type of requirement with ID <AQUA>" + requirementNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "</AQUA>. Requirement creation skipped...");
