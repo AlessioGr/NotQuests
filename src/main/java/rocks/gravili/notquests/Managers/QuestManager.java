@@ -42,10 +42,10 @@ import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.ActiveObjective;
 import rocks.gravili.notquests.Structs.ActiveQuest;
+import rocks.gravili.notquests.Structs.Conditions.Condition;
 import rocks.gravili.notquests.Structs.Objectives.Objective;
 import rocks.gravili.notquests.Structs.Quest;
 import rocks.gravili.notquests.Structs.QuestPlayer;
-import rocks.gravili.notquests.Structs.Requirements.Requirement;
 import rocks.gravili.notquests.Structs.Rewards.Reward;
 import rocks.gravili.notquests.Structs.Triggers.Action;
 import rocks.gravili.notquests.Structs.Triggers.Trigger;
@@ -281,10 +281,10 @@ public class QuestManager {
                                 main.getServer().getPluginManager().disablePlugin(main);
                             }
 
-                            Class<? extends Requirement> requirementType = null;
+                            Class<? extends Condition> requirementType = null;
 
                             try {
-                                requirementType = main.getRequirementManager().getRequirementClass(main.getDataManager().getQuestsConfig().getString("quests." + questName + ".requirements." + requirementNumber + ".requirementType"));
+                                requirementType = main.getConditionsManager().getConditionClass(main.getDataManager().getQuestsConfig().getString("quests." + questName + ".requirements." + requirementNumber + ".requirementType"));
                             } catch (java.lang.NullPointerException ex) {
                                 main.getLogManager().log(Level.SEVERE, "Error parsing requirement Type of requirement with ID <AQUA>" + requirementNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "<AQUA>. Requirement creation skipped...");
                                 ex.printStackTrace();
@@ -297,11 +297,11 @@ public class QuestManager {
                             int progressNeeded = main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".requirements." + requirementNumber + ".progressNeeded");
 
                             if (validRequirementID && requirementID > 0 && requirementType != null) {
-                                Requirement requirement = null;
+                                Condition condition = null;
 
                                 try {
-                                    requirement = requirementType.getDeclaredConstructor(NotQuests.class, Quest.class, int.class, long.class).newInstance(main, quest, requirementID, progressNeeded);
-
+                                    condition = requirementType.getDeclaredConstructor(NotQuests.class, long.class, Quest.class).newInstance(main, progressNeeded, quest);
+                                    condition.save("quests." + questName + ".requirements." + requirementID);
                                 } catch (Exception ex) {
                                     main.getLogManager().log(Level.SEVERE, "Error parsing requirement Type of requirement with ID <AQUA>" + requirementNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "</AQUA>. Requirement creation skipped...");
 
@@ -310,8 +310,8 @@ public class QuestManager {
                                     main.getDataManager().setSavingEnabled(false);
                                     main.getServer().getPluginManager().disablePlugin(main);
                                 }
-                                if (requirement != null) {
-                                    quest.addRequirement(requirement);
+                                if (condition != null) {
+                                    quest.addRequirement(condition);
                                 }
 
                             } else {
@@ -468,7 +468,7 @@ public class QuestManager {
 
 
                     //Objective Dependencies
-                    for (final Objective objective : quest.getObjectives()) {
+                   /* for (final Objective objective : quest.getObjectives()) {
                         final ConfigurationSection objectiveDependenciesConfigurationSection = main.getDataManager().getQuestsConfig().getConfigurationSection("quests." + quest.getQuestName() + ".objectives." + objective.getObjectiveID() + ".dependantObjectives.");
                         if (objectiveDependenciesConfigurationSection != null) {
                             for (String objectiveDependencyNumber : objectiveDependenciesConfigurationSection.getKeys(false)) {
@@ -477,7 +477,7 @@ public class QuestManager {
                                 objective.addDependantObjective(dependantObjective, false);
                             }
                         }
-                    }
+                    }*/
 
 
 
@@ -854,13 +854,13 @@ public class QuestManager {
     public final String getQuestRequirements(final Quest quest) {
         StringBuilder requirements = new StringBuilder();
         int counter = 1;
-        for (final Requirement requirement : quest.getRequirements()) {
+        for (final Condition condition : quest.getRequirements()) {
             if(counter != 1){
                 requirements.append("\n");
             }
-            requirements.append("§a").append(counter).append(". §e").append(requirement.getRequirementType()).append("\n");
+            requirements.append("§a").append(counter).append(". §e").append(condition.getConditionType()).append("\n");
 
-            requirements.append(requirement.getRequirementDescription());
+            requirements.append(condition.getConditionDescription());
 
 
             counter += 1;
@@ -1257,9 +1257,9 @@ public class QuestManager {
                     highlightGradient + "   Depending objectives:</gradient>"
             ));
             int counter2 = 1;
-            for (final Objective dependantObjective : objective.getDependantObjectives()) {
+            for (final Condition condition : objective.getConditions()) {
                 audience.sendMessage(miniMessage.parse(
-                        highlightGradient + "         " + counter2 + ".</gradient>" + mainGradient + " Objective ID: </gradient>" + highlight2Gradient + dependantObjective.getObjectiveID()
+                        highlightGradient + "         " + counter2 + ".</gradient>" + mainGradient + " Condition: </gradient>" + highlight2Gradient + condition.getConditionDescription()
                 ));
                 counter2++;
             }

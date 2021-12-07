@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.Structs.Requirements;
+package rocks.gravili.notquests.Structs.Conditions;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
@@ -32,30 +32,26 @@ import rocks.gravili.notquests.Structs.Quest;
 import rocks.gravili.notquests.Structs.QuestPlayer;
 
 
-public class WorldTimeRequirement extends Requirement {
+public class WorldTimeCondition extends Condition {
 
     private final NotQuests main;
-    private final int minTime, maxTime;
+    private int minTime, maxTime;
 
-    public WorldTimeRequirement(NotQuests main, final Quest quest, final int requirementID, long amountOfCompletionsNeeded) {
-        super(main, quest, requirementID, 1);
+    public WorldTimeCondition(NotQuests main, Object... objects) {
+        super(main, objects);
         this.main = main;
-
-
-        minTime = main.getDataManager().getQuestsConfig().getInt("quests." + quest.getQuestName() + ".requirements." + requirementID + ".specifics.minTime");
-        maxTime = main.getDataManager().getQuestsConfig().getInt("quests." + quest.getQuestName() + ".requirements." + requirementID + ".specifics.maxTime");
-
     }
 
-    public WorldTimeRequirement(NotQuests main, final Quest quest, final int requirementID, long amountOfCompletionsNeeded, int minTime, int maxTime) {
-        super(main, quest, requirementID, 1);
-        this.main = main;
+
+
+    public void setMinTime(final int minTime){
         this.minTime = minTime;
+    }
+    public void setMaxTime(final int maxTime){
         this.maxTime = maxTime;
-
     }
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addRequirementBuilder) {
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addRequirementBuilder, Command.Builder<CommandSender> objectiveAddConditionBuilder) {
         manager.command(addRequirementBuilder.literal("WorldTime")
                 .argument(IntegerArgument.<CommandSender>newBuilder("minTime").withMin(0).withMax(24), ArgumentDescription.of("Minimum world time (24-hour clock)"))
                 .argument(IntegerArgument.<CommandSender>newBuilder("maxTime").withMin(0).withMax(24), ArgumentDescription.of("Maximum world time (24-hour clock)"))
@@ -69,7 +65,9 @@ public class WorldTimeRequirement extends Requirement {
                     final int minTime = context.get("minTime");
                     final int maxTime = context.get("maxTime");
 
-                    WorldTimeRequirement worldTimeRequirement = new WorldTimeRequirement(main, quest, quest.getRequirements().size() + 1, 1, minTime, maxTime);
+                    WorldTimeCondition worldTimeRequirement = new WorldTimeCondition(main, 1, quest);
+                    worldTimeRequirement.setMinTime(minTime);
+                    worldTimeRequirement.setMaxTime(maxTime);
                     quest.addRequirement(worldTimeRequirement);
 
                     audience.sendMessage(MiniMessage.miniMessage().parse(
@@ -126,15 +124,24 @@ public class WorldTimeRequirement extends Requirement {
 
     }
 
+
+
     @Override
-    public void save() {
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".requirements." + getRequirementID() + ".specifics.minTime", getMinTime());
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".requirements." + getRequirementID() + ".specifics.maxTime", getMaxTime());
+    public String getConditionDescription() {
+        return "§7-- World time: " + getMinTime() + " - " + getMaxTime();
+    }
+
+    @Override
+    public void save(String initialPath) {
+        main.getDataManager().getQuestsConfig().set(initialPath + ".specifics.minTime", getMinTime());
+        main.getDataManager().getQuestsConfig().set(initialPath + ".specifics.maxTime", getMaxTime());
 
     }
 
     @Override
-    public String getRequirementDescription() {
-        return "§7-- World time: " + getMinTime() + " - " + getMaxTime();
+    public void load(String initialPath) {
+        minTime = main.getDataManager().getQuestsConfig().getInt(initialPath + ".specifics.minTime");
+        maxTime = main.getDataManager().getQuestsConfig().getInt(initialPath + ".specifics.maxTime");
+
     }
 }

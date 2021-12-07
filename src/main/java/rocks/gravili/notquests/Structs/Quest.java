@@ -25,8 +25,8 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Material;
 import rocks.gravili.notquests.Hooks.Citizens.QuestGiverNPCTrait;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.Conditions.Condition;
 import rocks.gravili.notquests.Structs.Objectives.Objective;
-import rocks.gravili.notquests.Structs.Requirements.Requirement;
 import rocks.gravili.notquests.Structs.Rewards.Reward;
 import rocks.gravili.notquests.Structs.Triggers.Trigger;
 
@@ -47,7 +47,7 @@ public class Quest {
     private final String questName;
     private final ArrayList<Reward> rewards;
     private final ArrayList<Objective> objectives;
-    private final ArrayList<Requirement> requirements; //Requirements to accept the quest
+    private final ArrayList<Condition> conditions; //Requirements to accept the quest
     private final ArrayList<Trigger> triggers; //Triggers for the quest
     private final ArrayList<NPC> attachedNPCsWithQuestShowing;
     private final ArrayList<NPC> attachedNPCsWithoutQuestShowing;
@@ -63,7 +63,7 @@ public class Quest {
         this.questName = questName;
         rewards = new ArrayList<>();
         objectives = new ArrayList<>();
-        requirements = new ArrayList<>();
+        conditions = new ArrayList<>();
         attachedNPCsWithQuestShowing = new ArrayList<>();
         attachedNPCsWithoutQuestShowing = new ArrayList<>();
         triggers = new ArrayList<>();
@@ -137,12 +137,12 @@ public class Quest {
     }
 
 
-    public void addRequirement(Requirement requirement) {
-        requirements.add(requirement);
-        main.getDataManager().getQuestsConfig().set("quests." + questName + ".requirements." + requirements.size() + ".requirementType", requirement.getRequirementType());
-        main.getDataManager().getQuestsConfig().set("quests." + questName + ".requirements." + requirements.size() + ".progressNeeded", requirement.getProgressNeeded());
+    public void addRequirement(Condition condition) {
+        conditions.add(condition);
+        main.getDataManager().getQuestsConfig().set("quests." + questName + ".requirements." + conditions.size() + ".requirementType", condition.getConditionType());
+        main.getDataManager().getQuestsConfig().set("quests." + questName + ".requirements." + conditions.size() + ".progressNeeded", condition.getProgressNeeded());
 
-        requirement.save();
+        condition.save("quests." + questName + ".requirements." + conditions.size() );
     }
 
     public void addReward(Reward reward) {
@@ -252,12 +252,12 @@ public class Quest {
     }
 
 
-    public final ArrayList<Requirement> getRequirements() {
-        return requirements;
+    public final ArrayList<Condition> getRequirements() {
+        return conditions;
     }
 
     public void removeAllRequirements() {
-        requirements.clear();
+        conditions.clear();
         main.getDataManager().getQuestsConfig().set("quests." + questName + ".requirements", null);
     }
 

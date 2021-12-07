@@ -6,7 +6,7 @@
 <meta content="width=device-width, initial-scale=1" name="viewport">
 <meta content="text/html; charset=utf8" http-equiv="Content-Type">
 <meta content="2021-11-27" name="dc.created">
-<meta content="declaration: package: rocks.gravili.notquests.Structs.Requirements, class: MoneyRequirement" name="description">
+<meta content="declaration: package: rocks.gravili.notquests.Structs.Conditions, class: MoneyRequirement" name="description">
 <meta content="javadoc/ClassWriterImpl" name="generator">
 <link href="../../../../../stylesheet.css" rel="stylesheet" title="Style" type="text/css">
 <link href="../../../../../script-dir/jquery-ui.min.css" rel="stylesheet" title="Style" type="text/css">
@@ -69,18 +69,18 @@ loadScripts(document, 'script');</script>
 <main role="main">
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
-<div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">rocks.gravili.notquests.Structs.Requirements</a></div>
+<div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">rocks.gravili.notquests.Structs.Conditions</a></div>
 <h1 class="title" title="Class MoneyRequirement">Class MoneyRequirement</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang">java.lang.Object</a>
-<div class="inheritance"><a href="Requirement.html" title="class in rocks.gravili.notquests.Structs.Requirements">rocks.gravili.notquests.Structs.Requirements.Requirement</a>
-<div class="inheritance">rocks.gravili.notquests.Structs.Requirements.MoneyRequirement</div>
+<div class="inheritance"><a href="Requirement.html" title="class in rocks.gravili.notquests.Structs.Conditions">rocks.gravili.notquests.Structs.Conditions.Condition</a>
+<div class="inheritance">rocks.gravili.notquests.Structs.Conditions.MoneyCondition</div>
 </div>
 </div>
 <section class="class-description" id="class-description">
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">MoneyRequirement</span>
-<span class="extends-implements">extends <a href="Requirement.html" title="class in rocks.gravili.notquests.Structs.Requirements">Requirement</a></span></div>
+<span class="extends-implements">extends <a href="Requirement.html" title="class in rocks.gravili.notquests.Structs.Conditions">Requirement</a></span></div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -169,7 +169,7 @@ loadScripts(document, 'script');</script>
 </div>
 </div>
 <div class="inherited-list">
-<h3 id="methods-inherited-from-class-rocks.gravili.notquests.Structs.Requirements.Requirement">Methods inherited from class&nbsp;rocks.gravili.notquests.Structs.Requirements.<a href="Requirement.html" title="class in rocks.gravili.notquests.Structs.Requirements">Requirement</a></h3>
+<h3 id="methods-inherited-from-class-rocks.gravili.notquests.Structs.Conditions.Condition">Methods inherited from class&nbsp;rocks.gravili.notquests.Structs.Conditions.<a href="Requirement.html" title="class in rocks.gravili.notquests.Structs.Conditions">Requirement</a></h3>
 <code><a href="Requirement.html#getProgressNeeded()">getProgressNeeded</a>, <a href="Requirement.html#getQuest()">getQuest</a>, <a href="Requirement.html#getRequirementID()">getRequirementID</a>, <a href="Requirement.html#getRequirementType()">getRequirementType</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang">Object</a></h3>
@@ -256,7 +256,7 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">save</span>()</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="Requirement.html#save()">save</a></code>&nbsp;in class&nbsp;<code><a href="Requirement.html" title="class in rocks.gravili.notquests.Structs.Requirements">Requirement</a></code></dd>
+<dd><code><a href="Requirement.html#save()">save</a></code>&nbsp;in class&nbsp;<code><a href="Requirement.html" title="class in rocks.gravili.notquests.Structs.Conditions">Requirement</a></code></dd>
 </dl>
 </section>
 </li>
@@ -267,9 +267,9 @@ loadScripts(document, 'script');</script>
  boolean&nbsp;enforce)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="Requirement.html#check(rocks.gravili.notquests.Structs.QuestPlayer,boolean)">check</a></code>&nbsp;in class&nbsp;<code><a href="Requirement.html" title="class in rocks.gravili.notquests.Structs.Requirements">Requirement</a></code></dd>
+<dd><code><a href="Requirement.html#check(rocks.gravili.notquests.Structs.QuestPlayer,boolean)">check</a></code>&nbsp;in class&nbsp;<code><a href="Requirement.html" title="class in rocks.gravili.notquests.Structs.Conditions">Requirement</a></code></dd>
 <dt>Returns:</dt>
-<dd>String if the requirement is not fulfilled. Empty string if the requirement is fulfilled. The String should say the still-required requirements.</dd>
+<dd>String if the condition is not fulfilled. Empty string if the condition is fulfilled. The String should say the still-required requirements.</dd>
 </dl>
 </section>
 </li>
@@ -279,7 +279,7 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang">String</a></span>&nbsp;<span class="element-name">getRequirementDescription</span>()</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="Requirement.html#getRequirementDescription()">getRequirementDescription</a></code>&nbsp;in class&nbsp;<code><a href="Requirement.html" title="class in rocks.gravili.notquests.Structs.Requirements">Requirement</a></code></dd>
+<dd><code><a href="Requirement.html#getRequirementDescription()">getRequirementDescription</a></code>&nbsp;in class&nbsp;<code><a href="Requirement.html" title="class in rocks.gravili.notquests.Structs.Conditions">Requirement</a></code></dd>
 </dl>
 </section>
 </li>

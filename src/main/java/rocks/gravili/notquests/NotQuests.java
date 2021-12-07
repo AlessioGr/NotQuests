@@ -50,14 +50,14 @@ import rocks.gravili.notquests.Hooks.Citizens.CitizensManager;
 import rocks.gravili.notquests.Hooks.Luckperms.LuckpermsManager;
 import rocks.gravili.notquests.Managers.*;
 import rocks.gravili.notquests.Managers.Packets.PacketManager;
+import rocks.gravili.notquests.Managers.Registering.ConditionsManager;
 import rocks.gravili.notquests.Managers.Registering.ObjectiveManager;
-import rocks.gravili.notquests.Managers.Registering.RequirementManager;
 import rocks.gravili.notquests.Managers.Registering.RewardManager;
 import rocks.gravili.notquests.Managers.Registering.TriggerManager;
 import rocks.gravili.notquests.Placeholders.QuestPlaceholders;
 import rocks.gravili.notquests.Structs.Objectives.Objective;
 import rocks.gravili.notquests.Structs.Quest;
-import rocks.gravili.notquests.Structs.Requirements.Requirement;
+import rocks.gravili.notquests.Structs.Conditions.Condition;
 import rocks.gravili.notquests.Structs.Rewards.Reward;
 import rocks.gravili.notquests.Structs.Triggers.Trigger;
 
@@ -96,7 +96,7 @@ public final class NotQuests extends JavaPlugin {
 
     //Registering Managers
     private ObjectiveManager objectiveManager;
-    private RequirementManager requirementManager;
+    private ConditionsManager conditionsManager;
     private RewardManager rewardManager;
     private TriggerManager triggerManager;
 
@@ -241,7 +241,7 @@ public final class NotQuests extends JavaPlugin {
 
         //Registering Managers
         objectiveManager = new ObjectiveManager(this);
-        requirementManager = new RequirementManager(this);
+        conditionsManager = new ConditionsManager(this);
         rewardManager = new RewardManager(this);
         triggerManager = new TriggerManager(this);
 
@@ -368,8 +368,8 @@ public final class NotQuests extends JavaPlugin {
             public Map<String, Integer> call() throws Exception {
                 Map<String, Integer> map = new HashMap<>();
                 for (Quest quest : getQuestManager().getAllQuests()) {
-                    for (Requirement requirement : quest.getRequirements()) {
-                        String requirementType = getRequirementManager().getRequirementType(requirement.getClass());
+                    for (Condition condition : quest.getRequirements()) {
+                        String requirementType = getConditionsManager().getConditionType(condition.getClass());
                         map.put(requirementType, map.getOrDefault(requirementType, 0) + 1);
                     }
                 }
@@ -771,8 +771,8 @@ public final class NotQuests extends JavaPlugin {
         return objectiveManager;
     }
 
-    public RequirementManager getRequirementManager() {
-        return requirementManager;
+    public ConditionsManager getConditionsManager() {
+        return conditionsManager;
     }
 
     public RewardManager getRewardManager() {

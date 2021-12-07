@@ -22,13 +22,15 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.Conditions.Condition;
 import rocks.gravili.notquests.Structs.Quest;
 
 import java.util.ArrayList;
 import java.util.UUID;
 
 public abstract class Objective {
-    private final ArrayList<Objective> dependantObjectives;
+    private final ArrayList<Condition> conditions;
+
     private final long progressNeeded;
     private final Quest quest;
     private final NotQuests main;
@@ -43,7 +45,7 @@ public abstract class Objective {
         this.quest = quest;
         this.objectiveID = objectiveID;
         this.progressNeeded = progressNeeded;
-        dependantObjectives = new ArrayList<>();
+        conditions = new ArrayList<>();
     }
 
 
@@ -82,28 +84,32 @@ public abstract class Objective {
         return progressNeeded;
     }
 
-    public final ArrayList<Objective> getDependantObjectives() {
-        return dependantObjectives;
+    public final ArrayList<Condition> getConditions() {
+        return conditions;
     }
 
 
-    public void addDependantObjective(final Objective objective, final boolean save) {
-        dependantObjectives.add(objective);
+    public void addCondition(final Condition condition, final boolean save) {
+        conditions.add(condition);
         if (save) {
-            main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".dependantObjectives." + objective.getObjectiveID() + ".objectiveID", objective.getObjectiveID());
+            main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions." + conditions.size()  + ".conditionType", condition.getConditionType());
+            main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions." + conditions.size()  + ".progressNeeded", condition.getProgressNeeded());
+
+            condition.save("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions." + conditions.size()  );
         }
     }
 
-    public void removeDependantObjective(final Objective objective, final boolean save) {
-        dependantObjectives.remove(objective);
+    public void removeCondition(final Condition condition, final boolean save) {
+        int conditionID = conditions.indexOf(condition);
+        conditions.remove(condition);
         if (save) {
-            main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".dependantObjectives." + objective.getObjectiveID(), null);
+            main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions." + conditionID, null);
         }
     }
 
-    public void clearDependantObjectives() {
-        dependantObjectives.clear();
-        main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".dependantObjectives", null);
+    public void clearConditions() {
+        conditions.clear();
+        main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions", null);
     }
 
     public final String getObjectiveDisplayName() {

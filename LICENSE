@@ -216,7 +216,7 @@ terms of section 4, provided that you also meet all of these conditions:
 
     b) The work must carry prominent notices stating that it is
     released under this License and any conditions added under section
-    7.  This requirement modifies the requirement in section 4 to
+    7.  This condition modifies the condition in section 4 to
     "keep intact all notices".
 
     c) You must license the entire work, as a whole, under this
@@ -321,13 +321,13 @@ part of a transaction in which the right of possession and use of the
 User Product is transferred to the recipient in perpetuity or for a
 fixed term (regardless of how the transaction is characterized), the
 Corresponding Source conveyed under this section must be accompanied
-by the Installation Information.  But this requirement does not apply
+by the Installation Information.  But this condition does not apply
 if neither you nor any third party retains the ability to install
 modified object code on the User Product (for example, the work has
 been installed in ROM).
 
-  The requirement to provide Installation Information does not include a
-requirement to continue to provide support service, warranty, or updates
+  The condition to provide Installation Information does not include a
+condition to continue to provide support service, warranty, or updates
 for a work that has been modified or installed by the recipient, or for
 the User Product in which it has been modified or installed.  Access to a
 network may be denied when the modification itself materially and

@@ -42,9 +42,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.Conditions.Condition;
 import rocks.gravili.notquests.Structs.Objectives.Objective;
 import rocks.gravili.notquests.Structs.Quest;
-import rocks.gravili.notquests.Structs.Requirements.Requirement;
 import rocks.gravili.notquests.Structs.Rewards.Reward;
 import rocks.gravili.notquests.Structs.Triggers.Trigger;
 
@@ -682,7 +682,7 @@ public class AdminEditCommands {
                 }));
 
 
-        manager.command(builder.literal("dependencies")
+       /* manager.command(builder.literal("dependencies")
                 .literal("add")
                 .meta(CommandMeta.DESCRIPTION, "Adds an objective as a dependency (needs to be completed before this one)")
                 .argument(IntegerArgument.<CommandSender>newBuilder("Depending Objective ID").withMin(1).withSuggestionsProvider(
@@ -867,7 +867,7 @@ public class AdminEditCommands {
                         audience.sendMessage(miniMessage.parse(warningGradient + "No objectives where this objective is a dependant of found!"));
                     }
 
-                }));
+                }));*/
 
 
         manager.command(builder.literal("description")
@@ -1031,14 +1031,12 @@ public class AdminEditCommands {
                     ));
 
                     audience.sendMessage(miniMessage.parse(
-                            highlightGradient + "Objective Dependencies:</gradient>"
+                            highlightGradient + "Objective Conditions:</gradient>"
                     ));
                     int counter = 1;
-                    for (final Objective dependantObjective : objective.getDependantObjectives()) {
+                    for (final Condition condition : objective.getConditions()) {
                         audience.sendMessage(miniMessage.parse(
-                                highlightGradient + "    " + counter + ". Type: " + mainGradient + main.getObjectiveManager().getObjectiveType(dependantObjective.getClass()) + "</gradient>"
-                                        + " Quest Name: " + mainGradient + quest.getQuestName() + "</gradient>"
-                                        + " ID: " + mainGradient + dependantObjective.getObjectiveID() + "</gradient></gradient>"
+                                highlightGradient + "    " + counter + ". Description: " + condition.getConditionDescription()
                         ));
                         counter++;
                     }
@@ -1074,9 +1072,9 @@ public class AdminEditCommands {
 
                     audience.sendMessage(miniMessage.parse(highlightGradient + "Requirements for Quest " + highlight2Gradient + quest.getQuestName() + "</gradient>:</gradient>"));
                     int counter = 1;
-                    for (Requirement requirement : quest.getRequirements()) {
-                        audience.sendMessage(miniMessage.parse(highlightGradient + counter + ". </gradient>" + mainGradient + requirement.getRequirementType() + "</gradient>"));
-                        audience.sendMessage(miniMessage.parse(mainGradient + requirement.getRequirementDescription()));
+                    for (Condition condition : quest.getRequirements()) {
+                        audience.sendMessage(miniMessage.parse(highlightGradient + counter + ". </gradient>" + mainGradient + condition.getConditionType() + "</gradient>"));
+                        audience.sendMessage(miniMessage.parse(mainGradient + condition.getConditionDescription()));
                         counter += 1;
                     }
                 }));

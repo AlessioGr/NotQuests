@@ -348,7 +348,7 @@ public class AdminCommands {
                     final Audience audience = main.adventure().sender(context.getSender());
                     audience.sendMessage(Component.empty());
                     audience.sendMessage(miniMessage.parse(highlightGradient + "All requirement types:</gradient>"));
-                    for (final String requirementType : main.getRequirementManager().getRequirementIdentifiers()) {
+                    for (final String requirementType : main.getConditionsManager().getConditionIdentifiers()) {
                         audience.sendMessage(miniMessage.parse(mainGradient + requirementType));
                     }
                 }));

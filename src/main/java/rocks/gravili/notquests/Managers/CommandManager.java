@@ -70,6 +70,9 @@ public class CommandManager {
     private Command.Builder<CommandSender> adminEditAddRewardCommandBuilder;
     private Command.Builder<CommandSender> adminEditAddTriggerCommandBuilder;
 
+    private Command.Builder<CommandSender> adminEditObjectiveAddConditionCommandBuilder;
+
+
 
     private final Commodore commodore;
 
@@ -265,6 +268,11 @@ public class CommandManager {
             adminEditAddRequirementCommandBuilder = adminEditCommandBuilder
                     .literal("requirements", "req")
                     .literal("add");
+            adminEditObjectiveAddConditionCommandBuilder = adminEditCommandBuilder
+                    .literal("objectives", "o")
+                    .literal("edit")
+                    .literal("conditions")
+                    .literal("add");
             adminEditAddRewardCommandBuilder = adminEditCommandBuilder
                     .literal("rewards", "rew")
                     .literal("add");
@@ -440,6 +448,10 @@ public class CommandManager {
 
     public final Command.Builder<CommandSender> getAdminEditAddRequirementCommandBuilder() {
         return adminEditAddRequirementCommandBuilder;
+    }
+
+    public final Command.Builder<CommandSender> getAdminEditObjectiveAddConditionCommandBuilder(){
+        return adminEditObjectiveAddConditionCommandBuilder;
     }
 
     public final Command.Builder<CommandSender> getAdminEditAddRewardCommandBuilder() {
