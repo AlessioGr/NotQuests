@@ -309,7 +309,7 @@ public class CommandManager {
                             , ArgumentDescription.of("Objective ID"));
 
 
-            adminEditObjectiveAddConditionCommandBuilder = adminEditCommandBuilder
+            adminEditObjectiveAddConditionCommandBuilder = editObjectivesBuilder
                     .literal("conditions")
                     .literal("add");
 
