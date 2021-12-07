@@ -48,7 +48,6 @@ import rocks.gravili.notquests.Commands.newCMDs.AdminEditCommands;
 import rocks.gravili.notquests.Commands.newCMDs.arguments.ActionSelector;
 import rocks.gravili.notquests.Commands.newCMDs.arguments.ApplyOnSelector;
 import rocks.gravili.notquests.Commands.newCMDs.arguments.QuestSelector;
-import rocks.gravili.notquests.Commands.old.CommandNotQuestsAdmin;
 import rocks.gravili.notquests.Conversation.ConversationManager;
 import rocks.gravili.notquests.NotQuests;
 
@@ -306,7 +305,7 @@ public class CommandManager {
 
     public void setupCommands() {
 
-        PluginCommand notQuestsAdminCommand = main.getCommand("notquestsadminold");
+       /* PluginCommand notQuestsAdminCommand = main.getCommand("notquestsadminold");
         if (notQuestsAdminCommand != null) {
             final CommandNotQuestsAdmin commandNotQuestsAdmin = new CommandNotQuestsAdmin(main);
             notQuestsAdminCommand.setTabCompleter(commandNotQuestsAdmin);
@@ -314,7 +313,7 @@ public class CommandManager {
 
 
             registerCommodoreCompletions(commodore, notQuestsAdminCommand);
-        }
+        }*/
         //Register the notquests command & tab completer. This command will be used by Players
         final PluginCommand notQuestsCommand = main.getCommand("notquests");
         if (notQuestsCommand != null) {

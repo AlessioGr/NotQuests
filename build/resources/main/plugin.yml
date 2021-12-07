@@ -8,10 +8,6 @@ website: quests.notnot.pro
 softdepend: [ Citizens, Vault, PlaceholderAPI, MythicMobs, EliteMobs, BetonQuest, WorldEdit, Slimefun, LuckPerms, UClans ]
 load: POSTWORLD
 commands:
-  notquestsadminold:
-    description: Edit quests (old command)
-    usage: /notquestsadmin
-    permission: notquests.admin
   notquests:
     description: Accept quests
     usage: /notquests
