@@ -656,6 +656,87 @@ public class QuestEvents implements Listener {
 
     }
 
+    public final int getCraftAmount(){
+        final ItemStack result = e.getRecipe().getResult();
+        final ItemStack cursor = e.getCursor();
+
+        //Check if the Material of the crafted item is equal to the Material needed in the CraftItemsObjective
+        if (!craftItemsObjective.getItemToCraft().getType().equals(result.getType())) {
+            continue;
+        }
+
+        //If the objectiv-item which needs to be crafted has an ItemMeta...
+        if (craftItemsObjective.getItemToCraft().getItemMeta() != null) {
+            //then check if the ItemMeta of the crafted item is equal to the ItemMeta needed in the CraftItemsObjective
+            if (!craftItemsObjective.getItemToCraft().getItemMeta().equals(result.getItemMeta())) {
+                continue;
+            }
+        }
+
+        //Now we gotta figure out the real amount of items which have been crafted, which is trickier than expected:
+
+
+        int recipeAmount = result.getAmount();
+
+        questPlayer.sendDebugMessage("Inventory craft event. Click type: " + debugHighlightGradient + e.getClick().name() + "</gradient>");
+
+
+        switch (e.getClick()) {
+            case LEFT:
+            case RIGHT:
+                if (!main.getUtilManager().isItemEmpty(cursor)) {
+                    questPlayer.sendDebugMessage("Inventory craft event: Cursor is not empty");
+
+                    if (!cursor.isSimilar(result)) {
+                        recipeAmount = 0;
+                    }
+                    if (cursor.getAmount() + result.getAmount() > cursor.getMaxStackSize()) {
+                        recipeAmount = 0;
+                    }
+                }
+                break;
+            case NUMBER_KEY:
+                //If the hotbar is full, the item will not be crafted but it will still trigger this event for some reason. That's
+                //why we manually have to set the amount to 0 here
+                if (e.getWhoClicked().getInventory().getItem(e.getHotbarButton()) != null) {
+                    recipeAmount = 0;
+                }
+                break;
+
+            case DROP:
+            case CONTROL_DROP:
+                // If we are holding items, craft-via-drop fails (vanilla behavior)
+                // Cursor is either null or AIR
+                if (!main.getUtilManager().isItemEmpty(cursor)) {
+                    recipeAmount = 0;
+                }
+
+                break;
+
+            case SHIFT_LEFT:
+            case SHIFT_RIGHT:
+                if (recipeAmount == 0) {
+                    break;
+                }
+
+                int maxCraftable = getMaxCraftAmount(e.getInventory());
+                int capacity = fits(result, e.getView().getBottomInventory());
+
+                // If we can't fit everything, increase "space" to include the items dropped by
+                // crafting
+                // (Think: Uncrafting 8 iron blocks into 1 slot)
+                if (capacity < maxCraftable) {
+                    maxCraftable = ((capacity + recipeAmount - 1) / recipeAmount) * recipeAmount;
+                }
+                recipeAmount = maxCraftable;
+                break;
+            default:
+                recipeAmount = 0;
+        }
+
+        return recipeAmount;
+    }
+
 
     private int getMaxCraftAmount(CraftingInventory inv) {
         if (inv.getResult() == null)
