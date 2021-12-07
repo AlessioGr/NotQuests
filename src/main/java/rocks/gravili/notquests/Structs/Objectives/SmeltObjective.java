@@ -92,7 +92,7 @@ public class SmeltObjective extends Objective {
 
     @Override
     public void save() {
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.itemToSmelt.itemstack", getAmountToSmelt());
+        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.itemToSmelt.itemstack", getItemToSmelt());
     }
 
     public final ItemStack getItemToSmelt() {
