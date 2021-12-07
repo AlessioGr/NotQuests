@@ -28,6 +28,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
 import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.Objectives.Objective;
 import rocks.gravili.notquests.Structs.Quest;
 import rocks.gravili.notquests.Structs.QuestPlayer;
 
@@ -118,6 +119,41 @@ public class QuestPointsCondition extends Condition {
                             NotQuestColors.successGradient + "QuestPoints Requirement successfully added to Quest " + NotQuestColors.highlightGradient
                                     + quest.getQuestName() + "</gradient>!</gradient>"
                     ));
+
+                }));
+
+
+        manager.command(objectiveAddConditionBuilder.literal("QuestPoints")
+                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of QuestPoints needed"))
+                .flag(
+                        manager.flagBuilder("deductQuestPoints")
+                                .withDescription(ArgumentDescription.of("Makes it so the required quest points are deducted from the players balance if the Quest is accepted."))
+                )
+                .meta(CommandMeta.DESCRIPTION, "Adds a new QuestPoints Requirement to a quest")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+
+                    final Quest quest = context.get("quest");
+
+                    final int amount = context.get("amount");
+                    final boolean deductQuestPoints = context.flags().isPresent("deductQuestPoints");
+
+                    final int objectiveID = context.get("Objective ID");
+                    final Objective objective = quest.getObjectiveFromID(objectiveID);
+                    assert objective != null; //Shouldn't be null
+
+                    QuestPointsCondition questPointsCondition = new QuestPointsCondition(main, amount, quest, objective);
+                    questPointsCondition.setDeductQuestPoints(deductQuestPoints);
+
+
+                    objective.addCondition(questPointsCondition, true);
+
+                    audience.sendMessage(MiniMessage.miniMessage().parse(
+                            NotQuestColors.successGradient + "QuestPoints Condition successfully added to Objective " + NotQuestColors.highlightGradient
+                                    + objective.getObjectiveFinalName() + "</gradient>!</gradient>"
+                    ));
+
+
 
                 }));
 
