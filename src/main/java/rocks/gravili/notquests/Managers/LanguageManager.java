@@ -84,7 +84,7 @@ public class LanguageManager {
         languageFiles.add("zh-CN.yml");
         languageFiles.add("vi.yml");
         languageFiles.add("gr.yml");
-
+        languageFiles.add("pl.yml");
 
         if (!languageFolder.exists()) {
             main.getLogManager().log(Level.INFO, "Languages Folder not found. Creating a new one...");

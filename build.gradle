@@ -51,6 +51,9 @@ repositories {
             includeGroup 'com.github.AlessioGr'
             includeGroup 'com.github.AlessioGr.packetevents'
         }
+        metadataSources {
+            artifact()
+        }
     }
     maven {
         name = 'inventorygui (minebench)'
@@ -142,7 +145,9 @@ dependencies {
     implementation 'me.lucko:commodore:1.11'
 
 
-    implementation 'com.github.retrooper.packetevents:bukkit:2.0-SNAPSHOT'
+    //implementation 'com.github.retrooper.packetevents:bukkit:2.0-SNAPSHOT'
+    implementation 'com.github.retrooper.packetevents:bukkit:2.0-6dba94e69d-1'
+
 }
 
 /**
