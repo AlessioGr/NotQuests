@@ -79,7 +79,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (sender instanceof final Player player) {
             final boolean guiEnabled = main.getDataManager().getConfiguration().isUserCommandsUseGUI();
             if (sender.hasPermission("notquests.use")) {
@@ -268,7 +268,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                     }
                                     String description = "";
                                     if (!quest.getQuestDescription().isBlank()) {
-                                        description = main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.questDescriptionPrefix", player) + quest.getQuestDescription(50);
+                                        description = main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.questDescriptionPrefix", player) + quest.getQuestDescription(main.getDataManager().getConfiguration().guiQuestDescriptionMaxLineLength);
                                     }
 
                                     group.addElement(new StaticGuiElement('e',
@@ -340,7 +340,6 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                     if (main.getDataManager().getConfiguration().showQuestItemAmount) {
                                         count++;
                                     }
-                                    String displayName = activeQuest.getQuest().getQuestFinalName();
 
                                     group.addElement(new StaticGuiElement('e',
                                             new ItemStack(materialToUse),
@@ -412,7 +411,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                     }
                                     String description = "";
                                     if (!quest.getQuestDescription().isBlank()) {
-                                        description = main.getLanguageManager().getString("gui.previewQuestChoose.button.questPreview.questDescriptionPrefix", player) + quest.getQuestDescription(50);
+                                        description = main.getLanguageManager().getString("gui.previewQuestChoose.button.questPreview.questDescriptionPrefix", player) + quest.getQuestDescription(main.getDataManager().getConfiguration().guiQuestDescriptionMaxLineLength);
                                     }
 
                                     group.addElement(new StaticGuiElement('e',
@@ -608,7 +607,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                 if (main.getDataManager().getConfiguration().isGuiQuestPreviewDescription_enabled()) {
                                     String description = main.getLanguageManager().getString("gui.previewQuest.button.description.empty", player, questPlayer);
                                     if (!quest.getQuestDescription().isBlank()) {
-                                        description = quest.getQuestDescription(50);
+                                        description = quest.getQuestDescription(main.getDataManager().getConfiguration().guiQuestDescriptionMaxLineLength);
                                     }
                                     gui.addElement(new StaticGuiElement(main.getDataManager().getConfiguration().getGuiQuestPreviewDescription_slot(),
                                             new ItemStack(Material.BOOKSHELF),
@@ -726,7 +725,6 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                             "xgggggggx",
                                             "pxxxxxxxn"
                                     };
-                                    String displayName = requestedActiveQuest.getQuest().getQuestFinalName();
 
                                     InventoryGui gui = new InventoryGui(main, player, main.getLanguageManager().getString("gui.progress.title", player, requestedActiveQuest, questPlayer), guiSetup);
                                     gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
@@ -748,7 +746,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
 
                                             String descriptionToDisplay = main.getLanguageManager().getString("gui.progress.button.unlockedObjective.description-empty", player);
                                             if (!activeObjective.getObjective().getObjectiveDescription().isBlank()) {
-                                                descriptionToDisplay = activeObjective.getObjective().getObjectiveDescription(50);
+                                                descriptionToDisplay = activeObjective.getObjective().getObjectiveDescription(main.getDataManager().getConfiguration().guiObjectiveDescriptionMaxLineLength);
                                             }
 
                                             group.addElement(new StaticGuiElement('e',
@@ -795,12 +793,11 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                         if (!main.getDataManager().getConfiguration().showObjectiveItemAmount) {
                                             count = 0;
                                         }
-                                        final String nameToDisplay = activeObjective.getObjective().getObjectiveFinalName();
 
 
                                         String descriptionToDisplay = main.getLanguageManager().getString("gui.progress.button.completedObjective.description-empty", player, activeObjective, questPlayer);
                                         if (!activeObjective.getObjective().getObjectiveDescription().isBlank()) {
-                                            descriptionToDisplay = activeObjective.getObjective().getObjectiveDescription(50);
+                                            descriptionToDisplay = activeObjective.getObjective().getObjectiveDescription(main.getDataManager().getConfiguration().guiObjectiveDescriptionMaxLineLength);
                                         }
 
 
@@ -873,7 +870,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
 
 
     @Override
-    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         completions.clear();
         main.getDataManager().partialCompletions.clear();
 

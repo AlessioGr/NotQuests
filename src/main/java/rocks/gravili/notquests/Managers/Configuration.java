@@ -121,6 +121,9 @@ public class Configuration {
 
     public boolean supportPlaceholderAPIInTranslationStrings = false;
 
+    public int guiQuestDescriptionMaxLineLength = 50;
+    public int guiObjectiveDescriptionMaxLineLength = 50;
+
 
     public Configuration() {
 

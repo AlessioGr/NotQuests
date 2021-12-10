@@ -61,6 +61,8 @@ visual:
 gui:
   show-quest-item-amount: false
   show-objective-item-amount: true
+  quest-description-max-line-length: 50
+  objective-description-max-line-length: 50
   questpreview:
     # If set to false, clickable text will be used for Quest Previews instead
     enabled: true

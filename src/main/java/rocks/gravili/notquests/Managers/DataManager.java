@@ -529,6 +529,7 @@ public class DataManager {
         }
         configuration.setQuestPreviewUseGUI(getGeneralConfig().getBoolean(key));
 
+
         //Description
         key = "gui.questpreview.description.enabled";
         if (!getGeneralConfig().isBoolean(key)) {
@@ -557,6 +558,20 @@ public class DataManager {
             valueChanged = true;
         }
         configuration.showObjectiveItemAmount = getGeneralConfig().getBoolean(key);
+
+        key = "gui.quest-description-max-line-length";
+        if (!getGeneralConfig().isInt(key)) {
+            getGeneralConfig().set(key, true);
+            valueChanged = true;
+        }
+        configuration.guiQuestDescriptionMaxLineLength = getGeneralConfig().getInt(key);
+
+        key = "gui.objective-description-max-line-length";
+        if (!getGeneralConfig().isInt(key)) {
+            getGeneralConfig().set(key, true);
+            valueChanged = true;
+        }
+        configuration.guiObjectiveDescriptionMaxLineLength = getGeneralConfig().getInt(key);
 
         //Rewards
         key = "gui.questpreview.rewards.enabled";
