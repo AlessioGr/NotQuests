@@ -665,7 +665,7 @@ public class QuestManager {
                 }
                 String description = "";
                 if (!quest.getQuestDescription().isBlank()) {
-                    description = main.getLanguageManager().getString("gui.availableQuests.button.questPreview.questDescriptionPrefix", player, quest) + quest.getQuestDescription(50);
+                    description = main.getLanguageManager().getString("gui.availableQuests.button.questPreview.questDescriptionPrefix", player, quest) + quest.getQuestDescription(main.getDataManager().getConfiguration().guiQuestDescriptionMaxLineLength);
                 }
                 count++;
 
@@ -778,7 +778,7 @@ public class QuestManager {
                 }
                 String description = "";
                 if (!quest.getQuestDescription().isBlank()) {
-                    description = main.getLanguageManager().getString("gui.availableQuests.button.questPreview.questDescriptionPrefix", player, quest) + quest.getQuestDescription(50);
+                    description = main.getLanguageManager().getString("gui.availableQuests.button.questPreview.questDescriptionPrefix", player, quest) + quest.getQuestDescription(main.getDataManager().getConfiguration().guiQuestDescriptionMaxLineLength);
                 }
                 count++;
 

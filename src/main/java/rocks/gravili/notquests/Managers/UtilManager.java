@@ -24,6 +24,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.title.Title;
+import org.apache.commons.text.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -288,5 +289,22 @@ public class UtilManager {
             }
 
         return files;
+    }
+
+    public final String wrapText(final String unwrappedText, final int maxLineLength){
+        /*final StringBuilder descriptionWithLineBreaks = new StringBuilder();
+        int count = 0;
+        for (char character : unwrappedText.toCharArray()) {
+            count++;
+            if (count > maxLineLength) {
+                count = 0;
+                descriptionWithLineBreaks.append("\n§8");
+            } else {
+                descriptionWithLineBreaks.append(character);
+            }
+        }*/
+        //return descriptionWithLineBreaks.toString();
+        return WordUtils.wrap(unwrappedText, maxLineLength, "\n§8", main.getDataManager().getConfiguration().wrapLongWords);
+
     }
 }

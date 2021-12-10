@@ -123,6 +123,7 @@ public class Configuration {
 
     public int guiQuestDescriptionMaxLineLength = 50;
     public int guiObjectiveDescriptionMaxLineLength = 50;
+    public boolean wrapLongWords = false;
 
 
     public Configuration() {

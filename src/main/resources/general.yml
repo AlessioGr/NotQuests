@@ -61,6 +61,7 @@ visual:
 gui:
   show-quest-item-amount: false
   show-objective-item-amount: true
+  wrap-long-words: false
   quest-description-max-line-length: 50
   objective-description-max-line-length: 50
   questpreview:

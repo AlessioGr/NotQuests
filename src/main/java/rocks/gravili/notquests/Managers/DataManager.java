@@ -573,6 +573,13 @@ public class DataManager {
         }
         configuration.guiObjectiveDescriptionMaxLineLength = getGeneralConfig().getInt(key);
 
+        key = "gui.wrap-long-words";
+        if (!getGeneralConfig().isBoolean(key)) {
+            getGeneralConfig().set(key, false);
+            valueChanged = true;
+        }
+        configuration.wrapLongWords = getGeneralConfig().getBoolean(key);
+
         //Rewards
         key = "gui.questpreview.rewards.enabled";
         if (!getGeneralConfig().isBoolean(key)) {
