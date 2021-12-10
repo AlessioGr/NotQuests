@@ -561,14 +561,14 @@ public class DataManager {
 
         key = "gui.quest-description-max-line-length";
         if (!getGeneralConfig().isInt(key)) {
-            getGeneralConfig().set(key, true);
+            getGeneralConfig().set(key, 50);
             valueChanged = true;
         }
         configuration.guiQuestDescriptionMaxLineLength = getGeneralConfig().getInt(key);
 
         key = "gui.objective-description-max-line-length";
         if (!getGeneralConfig().isInt(key)) {
-            getGeneralConfig().set(key, true);
+            getGeneralConfig().set(key, 50);
             valueChanged = true;
         }
         configuration.guiObjectiveDescriptionMaxLineLength = getGeneralConfig().getInt(key);
