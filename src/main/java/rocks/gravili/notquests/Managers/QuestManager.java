@@ -646,7 +646,7 @@ public class QuestManager {
                     "xgggggggx",
                     "pxxxxxxxn"
             };
-            InventoryGui gui = new InventoryGui(main, player, "          §9Available Quests", guiSetup);
+            InventoryGui gui = new InventoryGui(main, player, main.getLanguageManager().getString("gui.availableQuests.title", player), guiSetup);
             gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
 
             int count = 0;
@@ -657,15 +657,15 @@ public class QuestManager {
 
                 String displayName = quest.getQuestFinalName();
 
-                displayName = "§b" + displayName;
+                displayName = main.getLanguageManager().getString("gui.availableQuests.button.questPreview.questNamePrefix", player, quest) + displayName;
                 QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer((player.getUniqueId()));
 
                 if (questPlayer != null && questPlayer.hasAcceptedQuest(quest)) {
-                    displayName += " §a[ACCEPTED]";
+                    displayName += main.getLanguageManager().getString("gui.availableQuests.button.questPreview.acceptedSuffix", player, quest);
                 }
                 String description = "";
                 if (!quest.getQuestDescription().isBlank()) {
-                    description = "§8" + quest.getQuestDescription(50);
+                    description = main.getLanguageManager().getString("gui.availableQuests.button.questPreview.questDescriptionPrefix", player, quest) + quest.getQuestDescription(50);
                 }
                 count++;
 
@@ -681,7 +681,7 @@ public class QuestManager {
                         },
                         displayName,
                         description,
-                        "§aClick to open Quest"
+                        main.getLanguageManager().getString("gui.availableQuests.button.questPreview.bottomText", player, questPlayer, quest)
                 ));
 
             }
@@ -758,7 +758,7 @@ public class QuestManager {
                     "xgggggggx",
                     "pxxxxxxxn"
             };
-            InventoryGui gui = new InventoryGui(main, player, "          §9Available Quests", guiSetup);
+            InventoryGui gui = new InventoryGui(main, player, main.getLanguageManager().getString("gui.availableQuests.title", player), guiSetup);
             gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
 
             int count = 0;
@@ -770,15 +770,15 @@ public class QuestManager {
 
                 String displayName = quest.getQuestFinalName();
 
-                displayName = "§b" + displayName;
+                displayName = main.getLanguageManager().getString("gui.availableQuests.button.questPreview.questNamePrefix", player, quest) + displayName;
                 QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer((player.getUniqueId()));
 
                 if (questPlayer != null && questPlayer.hasAcceptedQuest(quest)) {
-                    displayName += " §a[ACCEPTED]";
+                    displayName += main.getLanguageManager().getString("gui.availableQuests.button.questPreview.acceptedSuffix", player, quest);
                 }
                 String description = "";
                 if (!quest.getQuestDescription().isBlank()) {
-                    description = "§8" + quest.getQuestDescription(50);
+                    description = main.getLanguageManager().getString("gui.availableQuests.button.questPreview.questDescriptionPrefix", player, quest) + quest.getQuestDescription(50);
                 }
                 count++;
 
@@ -794,7 +794,7 @@ public class QuestManager {
                         },
                         displayName,
                         description,
-                        "§aClick to open Quest"
+                        main.getLanguageManager().getString("gui.availableQuests.button.questPreview.bottomText", player, questPlayer, quest)
                 ));
 
             }
@@ -878,7 +878,7 @@ public class QuestManager {
             if(!reward.getRewardDisplayName().isBlank()){
                 rewards.append("§a").append(counter).append(". §9").append(reward.getRewardDisplayName());
             }else{
-                rewards.append("§a").append(counter).append(". §7[HIDDEN]");
+                rewards.append("§a").append(counter).append(main.getLanguageManager().getString("gui.reward-hidden-text", null, quest, reward));
 
             }
             counter += 1;

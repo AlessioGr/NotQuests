@@ -80,6 +80,15 @@ titles:
     title: '&cQuest Failed'
     subtitle: <#b617ff>%QUESTNAME%
 gui:
+  reward-hidden-text: '. &7[HIDDEN]'
+  availableQuests:
+    title: '         &9Available Quests'
+    button:
+      questPreview:
+        acceptedSuffix: ' &a[ACCEPTED]'
+        questNamePrefix: '&b'
+        questDescriptionPrefix: '&8'
+        bottomText: '&aClick to open Quest'
   main:
     title: '                &9Quests'
     button:

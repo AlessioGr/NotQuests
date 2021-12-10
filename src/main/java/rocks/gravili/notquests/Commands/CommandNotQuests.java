@@ -261,14 +261,14 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
 
                                     String displayName = quest.getQuestFinalName();
 
-                                    displayName = main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.questNamePrefix", player) + displayName;
+                                    displayName = main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.questNamePrefix", player, quest) + displayName;
 
                                     if (questPlayer != null && questPlayer.hasAcceptedQuest(quest)) {
-                                        displayName += main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.acceptedSuffix", player);
+                                        displayName += main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.acceptedSuffix", player, quest);
                                     }
                                     String description = "";
                                     if (!quest.getQuestDescription().isBlank()) {
-                                        description = main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.questDescriptionPrefix", player) + quest.getQuestDescription(main.getDataManager().getConfiguration().guiQuestDescriptionMaxLineLength);
+                                        description = main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.questDescriptionPrefix", player, quest) + quest.getQuestDescription(main.getDataManager().getConfiguration().guiQuestDescriptionMaxLineLength);
                                     }
 
                                     group.addElement(new StaticGuiElement('e',
