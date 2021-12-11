@@ -730,6 +730,13 @@ public class DataManager {
         }
         configuration.setIntegrationUltimateClansEnabled(getGeneralConfig().getBoolean(key));
 
+        key = "integrations.towny.enabled";
+        if (!getGeneralConfig().isBoolean(key)) {
+            getGeneralConfig().set(key, true);
+            valueChanged = true;
+        }
+        configuration.setIntegrationTownyEnabled(getGeneralConfig().getBoolean(key));
+
 
         key = "visual.fancy-command-completion.actionbar-enabled";
         if (!getGeneralConfig().isBoolean(key)) {

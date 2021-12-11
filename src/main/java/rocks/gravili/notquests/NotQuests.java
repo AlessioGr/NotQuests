@@ -134,6 +134,9 @@ public final class NotQuests extends JavaPlugin {
 
     private boolean ultimateClansEnabled = false;
 
+    private boolean townyEnabled = false;
+
+
     private BukkitAudiences adventure;
 
 
@@ -517,6 +520,14 @@ public final class NotQuests extends JavaPlugin {
 
         }
 
+        //Towny
+        if (getDataManager().getConfiguration().isIntegrationUltimateClansEnabled()) {
+            if (getServer().getPluginManager().getPlugin("Towny") != null) {
+                townyEnabled = true;
+            }
+
+        }
+
     }
 
 
@@ -745,6 +756,10 @@ public final class NotQuests extends JavaPlugin {
     public boolean isUltimateClansEnabled() {
         return ultimateClansEnabled;
     }
+    public boolean isTownyEnabled() {
+        return townyEnabled;
+    }
+
 
 
     public LanguageManager getLanguageManager() {

@@ -94,6 +94,8 @@ public class Configuration {
     private boolean integrationSlimeFunEnabled = true;
     private boolean integrationLuckPermsEnabled = true;
     private boolean integrationUltimateClansEnabled = true;
+    private boolean integrationTownyEnabled = true;
+
 
     //Other
     private boolean actionBarFancyCommandCompletionEnabled = true;
@@ -474,5 +476,13 @@ public class Configuration {
 
     public void setIntegrationUltimateClansEnabled(boolean integrationUltimateClansEnabled) {
         this.integrationUltimateClansEnabled = integrationUltimateClansEnabled;
+    }
+
+    public boolean isIntegrationTownyEnabled() {
+        return integrationTownyEnabled;
+    }
+
+    public void setIntegrationTownyEnabled(boolean integrationTownyEnabled) {
+        this.integrationTownyEnabled = integrationTownyEnabled;
     }
 }
