@@ -149,7 +149,7 @@ dependencies {
 
 
     //implementation 'com.github.retrooper.packetevents:bukkit:2.0-SNAPSHOT'
-    implementation 'com.github.retrooper.packetevents:bukkit:2.0-6dba94e69d-1'
+    implementation 'com.github.AlessioGr.packetevents:bukkit:2.0-SNAPSHOT'
 
 }
 
@@ -189,7 +189,7 @@ shadowJar {
         //include dependency('com.github.retrooper.packetevents:')
         //include dependency('io.github.retrooper.packetevents:')
 
-        include dependency('com.github.retrooper.packetevents:')
+        include dependency('com.github.AlessioGr.packetevents:')
     }
 
     relocate("io.github.retrooper.packetevents", path + '.packetevents.bukkit')

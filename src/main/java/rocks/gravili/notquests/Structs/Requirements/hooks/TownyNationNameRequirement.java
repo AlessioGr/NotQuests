@@ -24,6 +24,11 @@ import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
+import com.palmergames.bukkit.towny.TownyAPI;
+import com.palmergames.bukkit.towny.TownyUniverse;
+import com.palmergames.bukkit.towny.object.Nation;
+import com.palmergames.bukkit.towny.object.Resident;
+import com.palmergames.bukkit.towny.object.Town;
 import me.ulrich.clans.api.PlayerAPI;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -66,26 +71,27 @@ public class TownyNationNameRequirement extends Requirement {
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
                             final Audience audience = main.adventure().sender(context.getSender());
-                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Required Permission Node]", "");
+                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Required nation name (put between \"\" if using spaces)]", "");
 
                             ArrayList<String> completions = new ArrayList<>();
-                            completions.add("<Enter required Permission node>");
+                            completions.add("<Enter required nation name (put between \"\" if using spaces)>");
                             return completions;
                         }
-                ).single().build(), ArgumentDescription.of("Permission node which the player needs in order to accept this Quest."))
-                .meta(CommandMeta.DESCRIPTION, "Adds a new UltimateClansClanLevel Requirement to a quest")
+                ).quoted().build(), ArgumentDescription.of("Name of the nation which the player needs to be a member of"))
+                .meta(CommandMeta.DESCRIPTION, "Adds a new TownyNationName Requirement to a quest")
                 .handler((context) -> {
                     final Audience audience = main.adventure().sender(context.getSender());
 
                     final Quest quest = context.get("quest");
 
-                    final int minLevel = context.get("minLevel");
+                    final String townyNationName = context.get("Nation Name");
 
-                    UltimateClansClanLevelRequirement ultimateClansClanLevelRequirement = new UltimateClansClanLevelRequirement(main, quest, quest.getRequirements().size() + 1, minLevel);
-                    quest.addRequirement(ultimateClansClanLevelRequirement);
+                    TownyNationNameRequirement townyNationNameRequirement = new TownyNationNameRequirement(main, quest, quest.getRequirements().size() + 1, 1, townyNationName);
+
+                    quest.addRequirement(townyNationNameRequirement);
 
                     audience.sendMessage(MiniMessage.miniMessage().parse(
-                            NotQuestColors.successGradient + "UltimateClansClanLevel Requirement successfully added to Quest " + NotQuestColors.highlightGradient
+                            NotQuestColors.successGradient + "TownyNationName Requirement successfully added to Quest " + NotQuestColors.highlightGradient
                                     + quest.getQuestName() + "</gradient>!</gradient>"
                     ));
 
@@ -112,18 +118,36 @@ public class TownyNationNameRequirement extends Requirement {
     public String check(QuestPlayer questPlayer, boolean enforce) {
         final Player player = questPlayer.getPlayer();
         if (player != null) {
-            if (!main.isUltimateClansEnabled()) {
-                return "\n§eError: The server does not have UltimateClans enabled. Please ask the Owner to install UltimateClans for UltimateClans stuff to work.";
+            if (!main.isTownyEnabled()) {
+                return "\n§eError: The server does not have Towny enabled. Please ask the Owner to install Towny for Towny stuff to work.";
             } else {
-                if (PlayerAPI.getInstance().getPlayerClan(player.getName()) != null && PlayerAPI.getInstance().getPlayerClan(player.getName()).getLevel() >= getMinClanLevel()) {
-                    return "";
+                Resident resident = TownyUniverse.getInstance().getResident(questPlayer.getUUID());
+                try{
+                    if(resident != null && resident.getTown() != null && resident.hasTown() && resident.getTown().hasNation()){
 
+                        Nation nation = resident.getNationOrNull();
+                        if(nation != null && nation.getName().replace("_", " ").equals(getTownyNationName())){
+                            return "";
+                        }else{
+                            if(nation != null){
+                                return "\n§eYou need to be in the nation §b" + getTownyNationName() + "§e. However, you are currently in §b" + nation.getName().replace("_", " ");
+                            }else{
+                                return "\n§eYou need to be in the nation §b" + getTownyNationName();
+                            }
+                        }
+                    }else{
+                        return "\n§eYou need to be in the nation §b" + getTownyNationName();
+                    }
+                }catch (Exception e){
+                    return "\n§eYou need to be in the nation §b" + getTownyNationName();
                 }
-                return "\n§eYou need to be in a Clan with at least level §b" + getMinClanLevel() + "§e.";
+
+
+
 
             }
         } else {
-            return "\n§eError reading UltimateClans requirement...";
+            return "\n§eError reading TownyNationName requirement...";
 
         }
     }

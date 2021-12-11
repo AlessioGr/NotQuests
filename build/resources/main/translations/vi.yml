@@ -80,6 +80,15 @@ titles:
     title: '&cNhiệm Vụ Thất Bại'
     subtitle: <#b617ff>%QUESTNAME%
 gui:
+  reward-hidden-text: '. &7[KHÓA]'
+  availableQuests:
+    title: '         &9Nhiệm Vụ Hiện Có'
+    button:
+      questPreview:
+        acceptedSuffix: ' &a[Đồng Ys]'
+        questNamePrefix: '&b'
+        questDescriptionPrefix: '&8'
+        bottomText: '&aNhấn để xem nhiệm vụ'
   main:
     title: '                &9Nhiệm Vụ'
     button:
