@@ -73,7 +73,7 @@ public class NQPacketListener implements PacketListener {
             }
 
             main.getLogManager().debug("Registering chat message with position: " + wrapperPlayServerChatMessage.getPosition() + " and packet ID: " + wrapperPlayServerChatMessage.getPacketId() + ". Message: " + MiniMessage.builder().build().serialize(component));
-            int toRemove = hist.size() - main.getConversationManager().getMaxChathistory();
+            int toRemove = hist.size() - main.getConversationManager().getMaxChatHistory();
             if (toRemove > 0) {
                 //main.getLogManager().log(Level.WARNING, "ToRemove: " + i);
                 hist.subList(0, toRemove).clear();

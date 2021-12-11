@@ -801,6 +801,13 @@ public class DataManager {
         }
         configuration.deletePreviousConversations = getGeneralConfig().getBoolean(key);
 
+        key = "general.packet-magic.conversations.history-size";
+        if (!getGeneralConfig().isInt(key)) {
+            getGeneralConfig().set(key, 20);
+            valueChanged = false;
+        }
+        configuration.previousConversationsHistorySize = getGeneralConfig().getInt(key);
+
         if (valueChanged) {
             main.getLogManager().info("<AQUA>General.yml</AQUA> Configuration was updated with new values! Saving it...");
             saveGeneralConfig();

@@ -23,6 +23,7 @@ general:
     enabled: false
     conversations:
       delete-previous: false
+      history-size: 20
 visual:
   #Sets which language to use. Default is languages/en.yml
   language: en
