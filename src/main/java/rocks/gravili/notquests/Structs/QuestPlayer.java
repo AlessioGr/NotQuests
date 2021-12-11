@@ -114,12 +114,17 @@ public class QuestPlayer {
                 }
 
                 for (final Requirement requirement : quest.getQuest().getRequirements()) {
-                    requirementsStillNeeded.append(requirement.check(this, true));
+                    requirementsStillNeeded.append(requirement.check(this, false));
                 }
 
 
                 if (!requirementsStillNeeded.toString().isBlank()) {
                     return "§cYou do not fulfill all the requirements this quest needs! Requirement still needed:" + requirementsStillNeeded;
+                }else{
+                    //Now loop through all the requirements again in order to enforce them
+                    for (final Requirement requirement : quest.getQuest().getRequirements()) {
+                        requirement.check(this, true);
+                    }
                 }
 
 
