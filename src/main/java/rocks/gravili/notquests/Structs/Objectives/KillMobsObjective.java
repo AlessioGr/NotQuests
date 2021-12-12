@@ -30,6 +30,7 @@ import org.bukkit.entity.Player;
 import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.Commands.newCMDs.arguments.EntityTypeSelector;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.ActiveObjective;
 import rocks.gravili.notquests.Structs.Quest;
 
 public class KillMobsObjective extends Objective {
@@ -82,6 +83,11 @@ public class KillMobsObjective extends Objective {
         if (!getNameTagEquals().isBlank()) {
             main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".extras.nameTagEquals", getNameTagEquals());
         }
+    }
+
+    @Override
+    public void onObjectiveUnlock(final ActiveObjective activeObjective) {
+
     }
 
     public final String getMobToKill() {

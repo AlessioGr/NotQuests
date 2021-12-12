@@ -31,6 +31,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.ActiveObjective;
 import rocks.gravili.notquests.Structs.Quest;
 
 import java.util.ArrayList;
@@ -84,6 +85,11 @@ public class EscortNPCObjective extends Objective {
     public void save() {
         main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.NPCToEscortID", getNpcToEscortID());
         main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.destinationNPCID", getNpcToEscortToID());
+    }
+
+    @Override
+    public void onObjectiveUnlock(final ActiveObjective activeObjective) {
+
     }
 
     public final int getNpcToEscortID() {

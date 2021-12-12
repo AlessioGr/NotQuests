@@ -22,6 +22,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.ActiveObjective;
 import rocks.gravili.notquests.Structs.Quest;
 
 import java.util.ArrayList;
@@ -171,6 +172,6 @@ public abstract class Objective {
 
     public abstract void save();
 
-
+    public abstract void onObjectiveUnlock(final ActiveObjective activeObjective);
 
 }

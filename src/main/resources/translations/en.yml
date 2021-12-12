@@ -69,6 +69,8 @@ chat:
         base: '    &8└─ &7%EVENTUALCOLOR%Jump &f%EVENTUALCOLOR%%AMOUNTOFJUMPS% &7%EVENTUALCOLOR%times'
       smelt:
         base: '    &8└─ &7%EVENTUALCOLOR%Items to smelt: &f%EVENTUALCOLOR%%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+      townyReachResidentCount:
+        base: '    &8└─ &7%EVENTUALCOLOR%Reach resident amount: &f%EVENTUALCOLOR%%AMOUNT%'
 titles:
   quest-accepted:
     title: '&fQuest accepted'

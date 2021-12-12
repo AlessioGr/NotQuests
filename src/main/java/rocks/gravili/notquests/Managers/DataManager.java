@@ -783,7 +783,7 @@ public class DataManager {
         key = "general.packet-magic.enabled";
         if (!getGeneralConfig().isBoolean(key)) {
             getGeneralConfig().set(key, false);
-            valueChanged = false;
+            valueChanged = true;
         }
         configuration.packetMagic = getGeneralConfig().getBoolean(key);
 
@@ -797,14 +797,14 @@ public class DataManager {
         key = "general.packet-magic.conversations.delete-previous";
         if (!getGeneralConfig().isBoolean(key)) {
             getGeneralConfig().set(key, false);
-            valueChanged = false;
+            valueChanged = true;
         }
         configuration.deletePreviousConversations = getGeneralConfig().getBoolean(key);
 
         key = "general.packet-magic.conversations.history-size";
         if (!getGeneralConfig().isInt(key)) {
             getGeneralConfig().set(key, 20);
-            valueChanged = false;
+            valueChanged = true;
         }
         configuration.previousConversationsHistorySize = getGeneralConfig().getInt(key);
 

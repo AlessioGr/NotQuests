@@ -37,6 +37,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.ActiveObjective;
 import rocks.gravili.notquests.Structs.Quest;
 
 import java.util.ArrayList;
@@ -116,6 +117,11 @@ public class TalkToNPCObjective extends Objective {
         } else {
             main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.ArmorStandToTalkUUID", null);
         }
+    }
+
+    @Override
+    public void onObjectiveUnlock(ActiveObjective activeObjective) {
+
     }
 
 

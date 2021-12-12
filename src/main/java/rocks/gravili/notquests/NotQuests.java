@@ -279,6 +279,11 @@ public final class NotQuests extends JavaPlugin {
             getServer().getPluginManager().registerEvents(new EliteMobsEvents(this), this);
         }
 
+        if (isTownyEnabled()) {
+            getServer().getPluginManager().registerEvents(new TownyEvents(this), this);
+        }
+
+
         //Register the Event Listeners in SlimefunEvents, if Slimefun integration is enabled
         if (isSlimefunEnabled()) {
             getServer().getPluginManager().registerEvents(new SlimefunEvents(this), this);

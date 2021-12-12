@@ -40,6 +40,7 @@ import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.Commands.newCMDs.arguments.MaterialOrHandArgument;
 import rocks.gravili.notquests.Commands.newCMDs.arguments.wrappers.MaterialOrHand;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.ActiveObjective;
 import rocks.gravili.notquests.Structs.Quest;
 
 import java.util.ArrayList;
@@ -239,6 +240,11 @@ public class DeliverItemsObjective extends Objective {
         } else {
             main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.recipientArmorStandID", null);
         }
+    }
+
+    @Override
+    public void onObjectiveUnlock(final ActiveObjective activeObjective) {
+
     }
 
     public final ItemStack getItemToDeliver() {

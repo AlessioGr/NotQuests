@@ -31,6 +31,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.ActiveObjective;
 import rocks.gravili.notquests.Structs.Quest;
 
 public class BreakBlocksObjective extends Objective {
@@ -66,6 +67,11 @@ public class BreakBlocksObjective extends Objective {
     public void save() {
         main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.blockToBreak.material", getBlockToBreak().toString());
         main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.deductIfBlockPlaced", isDeductIfBlockPlaced());
+
+    }
+
+    @Override
+    public void onObjectiveUnlock(final ActiveObjective activeObjective) {
 
     }
 

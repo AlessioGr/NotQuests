@@ -32,6 +32,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.ActiveObjective;
 import rocks.gravili.notquests.Structs.Objectives.Objective;
 import rocks.gravili.notquests.Structs.Quest;
 
@@ -239,6 +240,11 @@ public class KillEliteMobsObjective extends Objective {
         main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.spawnReason", getSpawnReason());
         main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.minimumDamagePercentage", getMinimumDamagePercentage());
         main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.amountToKill", getAmountToKill());
+
+    }
+
+    @Override
+    public void onObjectiveUnlock(final ActiveObjective activeObjective) {
 
     }
 
