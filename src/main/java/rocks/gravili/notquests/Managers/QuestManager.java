@@ -64,7 +64,6 @@ public class QuestManager {
     private final ArrayList<Quest> quests;
 
 
-    private boolean questDataLoaded = false;
 
     private final ArrayList<String> rewardTypesList, requirementsTypesList;
 
@@ -134,11 +133,10 @@ public class QuestManager {
     }
 
 
-    public void loadData() {
+    public void loadQuestsFromConfig() {
 
         if(main.isCitizensEnabled()){
             main.getCitizensManager().registerQuestGiverTrait();
-
         }
 
 
@@ -554,8 +552,7 @@ public class QuestManager {
                 }
             }
 
-
-            setQuestDataLoaded(true);
+            main.getDataManager().setAlreadyLoadedQuests(true);
         } catch (Exception e) {
             e.printStackTrace();
             main.getLogManager().log(Level.SEVERE, "Plugin disabled, because there was an exception while loading quests data.");
@@ -995,11 +992,11 @@ public class QuestManager {
         main.getLogManager().log(Level.INFO, "Loading NPC data...");
 
         if(!main.isCitizensEnabled()){
-            main.getLogManager().log(Level.WARNING, "§eNPC data loading has been cancelled, because Citizens is not installed. Install the Citizens plugin if you want NPC stuff to work.");
+            main.getLogManager().log(Level.WARNING, "NPC data loading has been cancelled, because Citizens is not installed. Install the Citizens plugin if you want NPC stuff to work.");
             return;
         }
 
-        if (isQuestDataLoaded()) {
+        if (main.getDataManager().isAlreadyLoadedQuests()) {
             try {
 
                 final ConfigurationSection questsConfigurationSetting = main.getDataManager().getQuestsConfig().getConfigurationSection("quests");
@@ -1104,7 +1101,6 @@ public class QuestManager {
 
                 } else {
                     main.getLogManager().log(Level.INFO, "Skipped loading NPC data because questsConfigurationSetting was null.");
-
                 }
                 main.getLogManager().log(Level.INFO, "Npc data loaded!");
 
@@ -1125,27 +1121,15 @@ public class QuestManager {
             main.getLogManager().log(Level.WARNING, "NotQuests > Tried to load NPC data before quest data was loaded. skipping scheduling another load...");
 
             Bukkit.getScheduler().runTaskLaterAsynchronously(main, () -> {
-                main.getLogManager().log(Level.WARNING, "NotQuests > Trying to load NPC quest data again...");
-
-                main.getDataManager().loadNPCData();
+                if(!main.getDataManager().isAlreadyLoadedNPCs()){
+                    main.getLogManager().log(Level.WARNING, "NotQuests > Trying to load NPC quest data again...");
+                    main.getDataManager().loadNPCData();
+                }
             }, 40);
         }
 
 
     }
-
-    public final boolean isQuestDataLoaded() {
-        return questDataLoaded;
-    }
-
-    public void setQuestDataLoaded(boolean questDataLoaded) {
-        this.questDataLoaded = questDataLoaded;
-        if (questDataLoaded) {
-            main.getLogManager().log(Level.INFO, "Quests data loaded!");
-
-        }
-    }
-
 
     public void cleanupBuggedNPCs() {
         if(!main.isCitizensEnabled()){

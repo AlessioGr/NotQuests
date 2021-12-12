@@ -151,7 +151,9 @@ public final class NotQuests extends JavaPlugin {
         //Create a new instance of the Data Manager which will be re-used everywhere
         dataManager = new DataManager(this);
         //Load general config first, because we'll need it for the integrations
-        dataManager.loadGeneralConfig();
+        if(!dataManager.isAlreadyLoadedGeneral()){
+            dataManager.loadGeneralConfig();
+        }
 
         if (packetManager == null) {
             packetManager = new PacketManager(this);
@@ -845,7 +847,9 @@ public final class NotQuests extends JavaPlugin {
             getLogManager().info("Citizens found! Enabling Citizens support (late)...");
             getDataManager().setAlreadyLoadedNPCs(false);
             getServer().getPluginManager().registerEvents(new CitizensEvents(this), this);
-            getDataManager().loadNPCData();
+            if(!getDataManager().isAlreadyLoadedNPCs()){ //Just making sure
+                getDataManager().loadNPCData();
+            }
         }
 
     }
