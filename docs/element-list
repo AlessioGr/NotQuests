@@ -19,7 +19,7 @@ rocks.gravili.notquests.Placeholders
 rocks.gravili.notquests.Structs
 rocks.gravili.notquests.Structs.Objectives
 rocks.gravili.notquests.Structs.Objectives.hooks
-rocks.gravili.notquests.Structs.Requirements
+rocks.gravili.notquests.Structs.Conditions
 rocks.gravili.notquests.Structs.Rewards
 rocks.gravili.notquests.Structs.Triggers
 rocks.gravili.notquests.Structs.Triggers.TriggerTypes

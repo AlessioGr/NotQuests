@@ -29,8 +29,8 @@ import rocks.gravili.notquests.Events.notquests.QuestCompletedEvent;
 import rocks.gravili.notquests.Events.notquests.QuestFinishAcceptEvent;
 import rocks.gravili.notquests.Events.notquests.QuestPointsChangeEvent;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.Conditions.Condition;
 import rocks.gravili.notquests.Structs.Objectives.OtherQuestObjective;
-import rocks.gravili.notquests.Structs.Requirements.Requirement;
 import rocks.gravili.notquests.Structs.Rewards.Reward;
 
 import java.util.ArrayList;
@@ -113,8 +113,8 @@ public class QuestPlayer {
                     requirementsStillNeeded.append("\n§eError: Player object not found. Please report this to the plugin developer.");
                 }
 
-                for (final Requirement requirement : quest.getQuest().getRequirements()) {
-                    requirementsStillNeeded.append(requirement.check(this, false));
+                for (final Condition condition : quest.getQuest().getRequirements()) {
+                    requirementsStillNeeded.append(condition.check(this, false));
                 }
 
 
@@ -122,8 +122,8 @@ public class QuestPlayer {
                     return "§cYou do not fulfill all the requirements this quest needs! Requirement still needed:" + requirementsStillNeeded;
                 }else{
                     //Now loop through all the requirements again in order to enforce them
-                    for (final Requirement requirement : quest.getQuest().getRequirements()) {
-                        requirement.check(this, true);
+                    for (final Condition condition : quest.getQuest().getRequirements()) {
+                        condition.check(this, true);
                     }
                 }
 
@@ -480,4 +480,12 @@ public class QuestPlayer {
         return Bukkit.getPlayer(uuid);
     }
 
+    public final ActiveQuest getActiveQuest(final Quest quest) {
+        for(final ActiveQuest activeQuest : activeQuests){
+            if(activeQuest.getQuest().equals(quest)){
+                return activeQuest;
+            }
+        }
+        return null;
+    }
 }

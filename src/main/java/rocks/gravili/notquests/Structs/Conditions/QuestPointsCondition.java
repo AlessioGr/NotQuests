@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.Structs.Requirements;
+package rocks.gravili.notquests.Structs.Conditions;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
@@ -28,34 +28,28 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
 import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.Objectives.Objective;
 import rocks.gravili.notquests.Structs.Quest;
 import rocks.gravili.notquests.Structs.QuestPlayer;
 
-public class QuestPointsRequirement extends Requirement {
+public class QuestPointsCondition extends Condition {
 
     private final NotQuests main;
-    private final long questPointRequirement;
-    private final boolean deductQuestPoints;
+    private boolean deductQuestPoints = false;
 
 
-    public QuestPointsRequirement(NotQuests main, final Quest quest, final int requirementID, long questPointRequirement) {
-        super(main, quest, requirementID, questPointRequirement);
+    public QuestPointsCondition(NotQuests main, Object... objects) {
+        super(main, objects);
         this.main = main;
-        this.questPointRequirement = questPointRequirement;
-
-        this.deductQuestPoints = main.getDataManager().getQuestsConfig().getBoolean("quests." + quest.getQuestName() + ".requirements." + requirementID + ".specifics.deductQuestPoints");
     }
 
-    public QuestPointsRequirement(NotQuests main, final Quest quest, final int requirementID, long questPointRequirement, boolean deductQuestPoints) {
-        super(main, quest, requirementID, questPointRequirement);
-        this.main = main;
-        this.questPointRequirement = questPointRequirement;
+    public void setDeductQuestPoints(final boolean deductQuestPoints){
         this.deductQuestPoints = deductQuestPoints;
     }
 
 
     public final long getQuestPointRequirement() {
-        return questPointRequirement;
+        return getProgressNeeded();
     }
 
 
@@ -79,12 +73,18 @@ public class QuestPointsRequirement extends Requirement {
     }
 
     @Override
-    public void save() {
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".requirements." + getRequirementID() + ".specifics.deductQuestPoints", isDeductQuestPoints());
+    public void save(final String initialPath) {
+        main.getDataManager().getQuestsConfig().set(initialPath + ".specifics.deductQuestPoints", isDeductQuestPoints());
     }
 
     @Override
-    public String getRequirementDescription() {
+    public void load(String initialPath) {
+        this.deductQuestPoints = main.getDataManager().getQuestsConfig().getBoolean(initialPath + ".specifics.deductQuestPoints");
+
+    }
+
+    @Override
+    public String getConditionDescription() {
         String description = "§7-- Quest points needed: " + getQuestPointRequirement() + "\n";
         if (isDeductQuestPoints()) {
             description += "§7--- §cQuest points WILL BE DEDUCTED!";
@@ -95,7 +95,7 @@ public class QuestPointsRequirement extends Requirement {
     }
 
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addRequirementBuilder) {
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addRequirementBuilder, Command.Builder<CommandSender> objectiveAddConditionBuilder) {
         manager.command(addRequirementBuilder.literal("QuestPoints")
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of QuestPoints needed"))
                 .flag(
@@ -111,7 +111,8 @@ public class QuestPointsRequirement extends Requirement {
                     final int amount = context.get("amount");
                     final boolean deductQuestPoints = context.flags().isPresent("deductQuestPoints");
 
-                    QuestPointsRequirement questPointsRequirement = new QuestPointsRequirement(main, quest, quest.getRequirements().size() + 1, amount, deductQuestPoints);
+                    QuestPointsCondition questPointsRequirement = new QuestPointsCondition(main, amount, quest);
+                    questPointsRequirement.setDeductQuestPoints(deductQuestPoints);
                     quest.addRequirement(questPointsRequirement);
 
                     audience.sendMessage(MiniMessage.miniMessage().parse(
@@ -120,5 +121,42 @@ public class QuestPointsRequirement extends Requirement {
                     ));
 
                 }));
+
+
+        manager.command(objectiveAddConditionBuilder.literal("QuestPoints")
+                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of QuestPoints needed"))
+                .flag(
+                        manager.flagBuilder("deductQuestPoints")
+                                .withDescription(ArgumentDescription.of("Makes it so the required quest points are deducted from the players balance if the Quest is accepted."))
+                )
+                .meta(CommandMeta.DESCRIPTION, "Adds a new QuestPoints Requirement to a quest")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+
+                    final Quest quest = context.get("quest");
+
+                    final int amount = context.get("amount");
+                    final boolean deductQuestPoints = context.flags().isPresent("deductQuestPoints");
+
+                    final int objectiveID = context.get("Objective ID");
+                    final Objective objective = quest.getObjectiveFromID(objectiveID);
+                    assert objective != null; //Shouldn't be null
+
+                    QuestPointsCondition questPointsCondition = new QuestPointsCondition(main, amount, quest, objective);
+                    questPointsCondition.setDeductQuestPoints(deductQuestPoints);
+
+
+                    objective.addCondition(questPointsCondition, true);
+
+                    audience.sendMessage(MiniMessage.miniMessage().parse(
+                            NotQuestColors.successGradient + "QuestPoints Condition successfully added to Objective " + NotQuestColors.highlightGradient
+                                    + objective.getObjectiveFinalName() + "</gradient>!</gradient>"
+                    ));
+
+
+
+                }));
+
+
     }
 }

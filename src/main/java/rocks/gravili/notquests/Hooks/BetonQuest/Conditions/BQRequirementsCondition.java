@@ -19,7 +19,6 @@
 package rocks.gravili.notquests.Hooks.BetonQuest.Conditions;
 
 import org.betonquest.betonquest.Instruction;
-import org.betonquest.betonquest.api.Condition;
 import org.betonquest.betonquest.exceptions.InstructionParseException;
 import org.betonquest.betonquest.exceptions.QuestRuntimeException;
 import org.betonquest.betonquest.id.ID;
@@ -29,12 +28,12 @@ import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.CompletedQuest;
 import rocks.gravili.notquests.Structs.Quest;
 import rocks.gravili.notquests.Structs.QuestPlayer;
-import rocks.gravili.notquests.Structs.Requirements.*;
+import rocks.gravili.notquests.Structs.Conditions.*;
 
-public class BQRequirementsCondition extends Condition { //TODO: Make it dynamic for future or API requirements
+public class BQRequirementsCondition extends org.betonquest.betonquest.api.Condition { //TODO: Make it dynamic for future or API requirements
 
     private final NotQuests main;
-    private Requirement requirement = null;
+    private Condition condition = null;
 
     /**
      * Creates new instance of the condition. The condition should parse
@@ -53,15 +52,15 @@ public class BQRequirementsCondition extends Condition { //TODO: Make it dynamic
 
         final String requirementTypeName = instruction.getPart(1);
 
-        Class<? extends Requirement> requirementType = null;
+        Class<? extends Condition> requirementType = null;
         try {
-            requirementType = main.getRequirementManager().getRequirementClass(requirementTypeName);
+            requirementType = main.getConditionsManager().getConditionClass(requirementTypeName);
         } catch (Exception e) {
             throw new InstructionParseException("Requirement type '" + requirementTypeName + "' does not exist.");
         }
 
         int requirementInt = 0;
-        if (requirementType == OtherQuestRequirement.class) {
+        if (requirementType == OtherQuestCondition.class) {
             String requirementString = instruction.getPart(2);
             try {
                 requirementInt = Integer.parseInt(instruction.getPart(3));
@@ -69,28 +68,31 @@ public class BQRequirementsCondition extends Condition { //TODO: Make it dynamic
                 throw new RuntimeException("Invalid number for second argument (amount of requirements needed).");
             }
 
-            requirement = new OtherQuestRequirement(main, null, -1, requirementInt, requirementString);
+            condition = new OtherQuestCondition(main, requirementInt);
+            ((OtherQuestCondition)condition).setOtherQuestName(requirementString);
 
-        } else if (requirementType == MoneyRequirement.class) {
+        } else if (requirementType == MoneyCondition.class) {
             try {
-                requirement = new MoneyRequirement(main, null, -1, Long.parseLong(instruction.getPart(2)), false);
+                condition = new MoneyCondition(main,  Long.parseLong(instruction.getPart(2)));
+                ((MoneyCondition)condition).setDeductMoney(false);
 
             } catch (NumberFormatException e) {
                 throw new RuntimeException("Invalid number for second argument (amount of requirements needed).");
             }
 
-        } else if (requirementType == QuestPointsRequirement.class) {
+        } else if (requirementType == QuestPointsCondition.class) {
             try {
-                requirement = new QuestPointsRequirement(main, null, -1, Long.parseLong(instruction.getPart(2)), false);
+                condition = new QuestPointsCondition(main, Long.parseLong(instruction.getPart(2)), false);
 
             } catch (NumberFormatException e) {
                 throw new RuntimeException("Invalid number for second argument (amount of requirements needed).");
             }
-        } else if (requirementType == PermissionRequirement.class) {
+        } else if (requirementType == PermissionCondition.class) {
             String requirementString = instruction.getPart(2);
 
 
-            requirement = new PermissionRequirement(main, null, -1, requirementString);
+            condition = new PermissionCondition(main, 1);
+            ((PermissionCondition)condition).setRequiredPermission(requirementString);
         } else {
             throw new InstructionParseException("Requirement type '" + requirementTypeName + "' could not be created. Please contact the NotQuests author about it.");
         }
@@ -99,10 +101,10 @@ public class BQRequirementsCondition extends Condition { //TODO: Make it dynamic
 
     @Override
     protected Boolean execute(String playerID) throws QuestRuntimeException {
-        if (requirement != null) {
+        if (condition != null) {
             final Player player = PlayerConverter.getPlayer(playerID);
 
-            if (requirement instanceof final OtherQuestRequirement otherQuestRequirement) {
+            if (condition instanceof final OtherQuestCondition otherQuestRequirement) {
                 final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
                 if (questPlayer != null) {
                     final Quest otherQuest = otherQuestRequirement.getOtherQuest();
@@ -118,7 +120,7 @@ public class BQRequirementsCondition extends Condition { //TODO: Make it dynamic
                 }
 
 
-            } else if (requirement instanceof final QuestPointsRequirement questPointsRequirement) {
+            } else if (condition instanceof final QuestPointsCondition questPointsRequirement) {
                 final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
                 if (questPlayer != null) {
                     final long questPointRequirementAmount = questPointsRequirement.getQuestPointRequirement();
@@ -126,7 +128,7 @@ public class BQRequirementsCondition extends Condition { //TODO: Make it dynamic
                     return questPlayer.getQuestPoints() >= questPointRequirementAmount;
                 }
 
-            } else if (requirement instanceof final MoneyRequirement moneyRequirement) {
+            } else if (condition instanceof final MoneyCondition moneyRequirement) {
                 final long moneyRequirementAmount = moneyRequirement.getMoneyRequirement();
 
                 if (!main.isVaultEnabled() || main.getEconomy() == null) {
@@ -135,7 +137,7 @@ public class BQRequirementsCondition extends Condition { //TODO: Make it dynamic
                     return !(main.getEconomy().getBalance(player, player.getWorld().getName()) < moneyRequirementAmount);
 
 
-            } else if (requirement instanceof final PermissionRequirement permissionRequirement) {
+            } else if (condition instanceof final PermissionCondition permissionRequirement) {
                 final String requiredPermission = permissionRequirement.getRequiredPermission();
 
                 return player.hasPermission(requiredPermission);

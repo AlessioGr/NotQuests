@@ -147,7 +147,6 @@ dependencies {
 
     implementation 'me.lucko:commodore:1.11'
 
-
     //implementation 'com.github.retrooper.packetevents:bukkit:2.0-SNAPSHOT'
     implementation 'com.github.AlessioGr.packetevents:bukkit:2.0-SNAPSHOT'
 

@@ -42,10 +42,10 @@ import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.ActiveObjective;
 import rocks.gravili.notquests.Structs.ActiveQuest;
+import rocks.gravili.notquests.Structs.Conditions.Condition;
 import rocks.gravili.notquests.Structs.Objectives.Objective;
 import rocks.gravili.notquests.Structs.Quest;
 import rocks.gravili.notquests.Structs.QuestPlayer;
-import rocks.gravili.notquests.Structs.Requirements.Requirement;
 import rocks.gravili.notquests.Structs.Rewards.Reward;
 import rocks.gravili.notquests.Structs.Triggers.Action;
 import rocks.gravili.notquests.Structs.Triggers.Trigger;
@@ -281,10 +281,22 @@ public class QuestManager {
                                 main.getServer().getPluginManager().disablePlugin(main);
                             }
 
-                            Class<? extends Requirement> requirementType = null;
+                            Class<? extends Condition> conditionType = null;
 
                             try {
-                                requirementType = main.getRequirementManager().getRequirementClass(main.getDataManager().getQuestsConfig().getString("quests." + questName + ".requirements." + requirementNumber + ".requirementType"));
+                                String conditionTypeString = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".requirements." + requirementNumber + ".conditionType", "");
+
+                                //Old conversion code start
+                                if(conditionTypeString.isBlank()){//User might be using old system with requirementType instead of conditionType. Let's convert it!
+                                    main.getLogManager().info("Converting old requirementType to conditionType...");
+                                    conditionTypeString = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".requirements." + requirementNumber + ".requirementType", "");
+                                    main.getDataManager().getQuestsConfig().set("quests." + questName + ".requirements." + requirementNumber + ".requirementType", null);
+                                    main.getDataManager().getQuestsConfig().set("quests." + questName + ".requirements." + requirementNumber + ".conditionType", conditionTypeString);
+                                    main.getDataManager().saveQuestsConfig();
+                                }
+                                //Old conversion code end
+
+                                conditionType = main.getConditionsManager().getConditionClass(conditionTypeString);
                             } catch (java.lang.NullPointerException ex) {
                                 main.getLogManager().log(Level.SEVERE, "Error parsing requirement Type of requirement with ID <AQUA>" + requirementNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "<AQUA>. Requirement creation skipped...");
                                 ex.printStackTrace();
@@ -296,12 +308,12 @@ public class QuestManager {
                             //RequirementType requirementType = RequirementType.valueOf(main.getDataManager().getQuestsData().getString("quests." + questName + ".requirements." + requirementNumber + ".requirementType"));
                             int progressNeeded = main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".requirements." + requirementNumber + ".progressNeeded");
 
-                            if (validRequirementID && requirementID > 0 && requirementType != null) {
-                                Requirement requirement = null;
+                            if (validRequirementID && requirementID > 0 && conditionType != null) {
+                                Condition condition = null;
 
                                 try {
-                                    requirement = requirementType.getDeclaredConstructor(NotQuests.class, Quest.class, int.class, long.class).newInstance(main, quest, requirementID, progressNeeded);
-
+                                    condition = conditionType.getDeclaredConstructor(NotQuests.class, Object[].class).newInstance(main, new Object[]{progressNeeded, quest});
+                                    condition.load("quests." + questName + ".requirements." + requirementID);
                                 } catch (Exception ex) {
                                     main.getLogManager().log(Level.SEVERE, "Error parsing requirement Type of requirement with ID <AQUA>" + requirementNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "</AQUA>. Requirement creation skipped...");
 
@@ -310,8 +322,8 @@ public class QuestManager {
                                     main.getDataManager().setSavingEnabled(false);
                                     main.getServer().getPluginManager().disablePlugin(main);
                                 }
-                                if (requirement != null) {
-                                    quest.addRequirement(requirement);
+                                if (condition != null) {
+                                    quest.addRequirement(condition);
                                 }
 
                             } else {
@@ -467,14 +479,66 @@ public class QuestManager {
                     }
 
 
-                    //Objective Dependencies
-                    for (final Objective objective : quest.getObjectives()) {
-                        final ConfigurationSection objectiveDependenciesConfigurationSection = main.getDataManager().getQuestsConfig().getConfigurationSection("quests." + quest.getQuestName() + ".objectives." + objective.getObjectiveID() + ".dependantObjectives.");
-                        if (objectiveDependenciesConfigurationSection != null) {
-                            for (String objectiveDependencyNumber : objectiveDependenciesConfigurationSection.getKeys(false)) {
-                                int dependantObjectiveID = main.getDataManager().getQuestsConfig().getInt("quests." + quest.getQuestName() + ".objectives." + (objective.getObjectiveID()) + ".dependantObjectives." + objectiveDependencyNumber + ".objectiveID", objective.getObjectiveID());
-                                final Objective dependantObjective = quest.getObjectiveFromID(dependantObjectiveID);
-                                objective.addDependantObjective(dependantObjective, false);
+                    //Objective Conditions
+                    main.getLogManager().info("Loading objective conditions...");
+                   for (final Objective objective : quest.getObjectives()) { //TODO: Add objective name to error or debug messages to discern from normal requirement loading
+                        final ConfigurationSection objectiveConditionsConfigurationSection = main.getDataManager().getQuestsConfig().getConfigurationSection("quests." + quest.getQuestName() + ".objectives." + objective.getObjectiveID() + ".conditions.");
+                        if (objectiveConditionsConfigurationSection != null) {
+                            for (String objectiveConditionNumber : objectiveConditionsConfigurationSection.getKeys(false)) {
+                                int conditionID = -1;
+                                boolean validConditionID = true;
+                                try {
+                                    conditionID = Integer.parseInt(objectiveConditionNumber);
+                                } catch (java.lang.NumberFormatException ex) {
+                                    main.getLogManager().severe("Error parsing loaded condition ID <AQUA>" + objectiveConditionNumber + "</AQUA>. Condition creation skipped...");
+
+                                    validConditionID = false;
+                                    main.getLogManager().severe("Plugin disabled, because there was an error while loading quests condition ID data.");
+                                    main.getDataManager().setSavingEnabled(false);
+                                    main.getServer().getPluginManager().disablePlugin(main);
+                                }
+
+                                Class<? extends Condition> conditionType = null;
+
+                                try {
+
+                                    conditionType = main.getConditionsManager().getConditionClass(main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + (objective.getObjectiveID())  + ".conditions."  + objectiveConditionNumber + ".conditionType"));
+                                } catch (java.lang.NullPointerException ex) {
+                                    main.getLogManager().severe("Error parsing condition Type of requirement with ID <AQUA>" + objectiveConditionNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "<AQUA>. Condition creation skipped...");
+                                    ex.printStackTrace();
+                                    main.getLogManager().severe("Plugin disabled, because there was an error while loading quests condition Type data.");
+                                    main.getDataManager().setSavingEnabled(false);
+                                    main.getServer().getPluginManager().disablePlugin(main);
+                                }
+
+                                //RequirementType requirementType = RequirementType.valueOf(main.getDataManager().getQuestsData().getString("quests." + questName + ".requirements." + requirementNumber + ".requirementType"));
+                                int progressNeeded = main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".objectives." + (objective.getObjectiveID())  + ".conditions."  + objectiveConditionNumber + ".progressNeeded");
+
+                                if (validConditionID && conditionID > 0 && conditionType != null) {
+                                    Condition condition = null;
+
+                                    try {
+                                        condition = conditionType.getDeclaredConstructor(NotQuests.class, Object[].class).newInstance(main, new Object[]{progressNeeded, quest});
+                                        condition.load("quests." + questName + ".objectives." + (objective.getObjectiveID())  + ".conditions."  + objectiveConditionNumber);
+                                    } catch (Exception ex) {
+                                        main.getLogManager().severe("Error parsing condition Type of requirement with ID <AQUA>" + objectiveConditionNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "</AQUA>. Requirement creation skipped...");
+
+                                        ex.printStackTrace();
+                                        main.getLogManager().severe("Plugin disabled, because there was an error while loading quests condition Type data.");
+                                        main.getDataManager().setSavingEnabled(false);
+                                        main.getServer().getPluginManager().disablePlugin(main);
+                                    }
+                                    if (condition != null) {
+                                        objective.addCondition(condition, false);
+                                    }
+
+                                } else {
+                                    main.getLogManager().severe("Error loading condition. ValidRequirementID: " + validConditionID + " conditionID: " + conditionID + " ConditionTypeNull?" + (conditionType == null) + " ConditionType: " + conditionType.toString());
+
+                                    main.getLogManager().severe("Plugin disabled, because there was an error while loading quests requirement data.");
+                                    main.getDataManager().setSavingEnabled(false);
+                                    main.getServer().getPluginManager().disablePlugin(main);
+                                }
                             }
                         }
                     }
@@ -854,13 +918,13 @@ public class QuestManager {
     public final String getQuestRequirements(final Quest quest) {
         StringBuilder requirements = new StringBuilder();
         int counter = 1;
-        for (final Requirement requirement : quest.getRequirements()) {
+        for (final Condition condition : quest.getRequirements()) {
             if(counter != 1){
                 requirements.append("\n");
             }
-            requirements.append("§a").append(counter).append(". §e").append(requirement.getRequirementType()).append("\n");
+            requirements.append("§a").append(counter).append(". §e").append(condition.getConditionType()).append("\n");
 
-            requirements.append(requirement.getRequirementDescription());
+            requirements.append(condition.getConditionDescription());
 
 
             counter += 1;
@@ -1257,9 +1321,9 @@ public class QuestManager {
                     highlightGradient + "   Depending objectives:</gradient>"
             ));
             int counter2 = 1;
-            for (final Objective dependantObjective : objective.getDependantObjectives()) {
+            for (final Condition condition : objective.getConditions()) {
                 audience.sendMessage(miniMessage.parse(
-                        highlightGradient + "         " + counter2 + ".</gradient>" + mainGradient + " Objective ID: </gradient>" + highlight2Gradient + dependantObjective.getObjectiveID()
+                        highlightGradient + "         " + counter2 + ".</gradient>" + mainGradient + " Condition: </gradient>" + highlight2Gradient + condition.getConditionDescription()
                 ));
                 counter2++;
             }

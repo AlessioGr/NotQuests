@@ -42,9 +42,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.Conditions.Condition;
 import rocks.gravili.notquests.Structs.Objectives.Objective;
 import rocks.gravili.notquests.Structs.Quest;
-import rocks.gravili.notquests.Structs.Requirements.Requirement;
 import rocks.gravili.notquests.Structs.Rewards.Reward;
 import rocks.gravili.notquests.Structs.Triggers.Trigger;
 
@@ -532,34 +532,8 @@ public class AdminEditCommands {
                     main.getQuestManager().sendObjectivesAdmin(audience, quest);
                 }));
 
-        final Command.Builder<CommandSender> editObjectivesBuilder = builder.literal("edit")
-                .argument(IntegerArgument.<CommandSender>newBuilder("Objective ID").withMin(1).withSuggestionsProvider(
-                                (context, lastString) -> {
-                                    final List<String> allArgs = context.getRawInput();
-                                    final Audience audience = main.adventure().sender(context.getSender());
-                                    main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Objective ID]", "[...]");
 
-                                    ArrayList<String> completions = new ArrayList<>();
-
-                                    final Quest quest = context.get("quest");
-                                    for (final Objective objective : quest.getObjectives()) {
-                                        completions.add("" + objective.getObjectiveID());
-                                    }
-
-                                    return completions;
-                                }
-                        ).withParser((context, lastString) -> { //TODO: Fix this parser. It isn't run at all.
-                            final int ID = context.get("Objective ID");
-                            final Quest quest = context.get("quest");
-                            final Objective foundObjective = quest.getObjectiveFromID(ID);
-                            if (foundObjective == null) {
-                                return ArgumentParseResult.failure(new IllegalArgumentException("Objective with the ID '" + ID + "' does not belong to Quest '" + quest.getQuestName() + "'!"));
-                            } else {
-                                return ArgumentParseResult.success(ID);
-                            }
-                        })
-                        , ArgumentDescription.of("Objective ID"));
-        handleEditObjectives(editObjectivesBuilder);
+        handleEditObjectives(main.getCommandManager().getEditObjectivesBuilder());
 
 
     }
@@ -682,7 +656,7 @@ public class AdminEditCommands {
                 }));
 
 
-        manager.command(builder.literal("dependencies")
+       /* manager.command(builder.literal("dependencies")
                 .literal("add")
                 .meta(CommandMeta.DESCRIPTION, "Adds an objective as a dependency (needs to be completed before this one)")
                 .argument(IntegerArgument.<CommandSender>newBuilder("Depending Objective ID").withMin(1).withSuggestionsProvider(
@@ -867,7 +841,7 @@ public class AdminEditCommands {
                         audience.sendMessage(miniMessage.parse(warningGradient + "No objectives where this objective is a dependant of found!"));
                     }
 
-                }));
+                }));*/
 
 
         manager.command(builder.literal("description")
@@ -1031,14 +1005,12 @@ public class AdminEditCommands {
                     ));
 
                     audience.sendMessage(miniMessage.parse(
-                            highlightGradient + "Objective Dependencies:</gradient>"
+                            highlightGradient + "Objective Conditions:</gradient>"
                     ));
                     int counter = 1;
-                    for (final Objective dependantObjective : objective.getDependantObjectives()) {
+                    for (final Condition condition : objective.getConditions()) {
                         audience.sendMessage(miniMessage.parse(
-                                highlightGradient + "    " + counter + ". Type: " + mainGradient + main.getObjectiveManager().getObjectiveType(dependantObjective.getClass()) + "</gradient>"
-                                        + " Quest Name: " + mainGradient + quest.getQuestName() + "</gradient>"
-                                        + " ID: " + mainGradient + dependantObjective.getObjectiveID() + "</gradient></gradient>"
+                                highlightGradient + "    " + counter + ". Description: " + condition.getConditionDescription()
                         ));
                         counter++;
                     }
@@ -1074,9 +1046,9 @@ public class AdminEditCommands {
 
                     audience.sendMessage(miniMessage.parse(highlightGradient + "Requirements for Quest " + highlight2Gradient + quest.getQuestName() + "</gradient>:</gradient>"));
                     int counter = 1;
-                    for (Requirement requirement : quest.getRequirements()) {
-                        audience.sendMessage(miniMessage.parse(highlightGradient + counter + ". </gradient>" + mainGradient + requirement.getRequirementType() + "</gradient>"));
-                        audience.sendMessage(miniMessage.parse(mainGradient + requirement.getRequirementDescription()));
+                    for (Condition condition : quest.getRequirements()) {
+                        audience.sendMessage(miniMessage.parse(highlightGradient + counter + ". </gradient>" + mainGradient + condition.getConditionType() + "</gradient>"));
+                        audience.sendMessage(miniMessage.parse(mainGradient + condition.getConditionDescription()));
                         counter += 1;
                     }
                 }));

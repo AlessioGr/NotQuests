@@ -348,7 +348,7 @@ public class AdminCommands {
                     final Audience audience = main.adventure().sender(context.getSender());
                     audience.sendMessage(Component.empty());
                     audience.sendMessage(miniMessage.parse(highlightGradient + "All requirement types:</gradient>"));
-                    for (final String requirementType : main.getRequirementManager().getRequirementIdentifiers()) {
+                    for (final String requirementType : main.getConditionsManager().getConditionIdentifiers()) {
                         audience.sendMessage(miniMessage.parse(mainGradient + requirementType));
                     }
                 }));
@@ -1041,8 +1041,7 @@ public class AdminCommands {
                     ArrayList<Component> history = main.getConversationManager().getChatHistory().get(player.getUniqueId());
                     if (history != null) {
                         Component collectiveComponent = Component.text("");
-                        for (int i = 0; i < history.size(); i++) {
-                            Component component = history.get(i);
+                        for (Component component : history) {
                             if (component != null) {
                                 // audience.sendMessage(component.append(Component.text("fg9023zf729ofz")));
                                 collectiveComponent = collectiveComponent.append(component).append(Component.newline());
