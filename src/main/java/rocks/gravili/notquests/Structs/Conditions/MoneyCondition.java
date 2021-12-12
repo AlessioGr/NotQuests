@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.Structs.Requirements;
+package rocks.gravili.notquests.Structs.Conditions;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
@@ -29,37 +29,31 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.Objectives.Objective;
 import rocks.gravili.notquests.Structs.Quest;
 import rocks.gravili.notquests.Structs.QuestPlayer;
 
 import java.util.logging.Level;
 
-public class MoneyRequirement extends Requirement {
+public class MoneyCondition extends Condition {
 
     private final NotQuests main;
-    private final long moneyRequirement;
-    private final boolean deductMoney;
+    private boolean deductMoney = false;
 
 
-    public MoneyRequirement(final NotQuests main, final Quest quest, final int requirementID, final long moneyRequirement) {
-        super(main, quest, requirementID, moneyRequirement);
+    public MoneyCondition(final NotQuests main, Object... objects) {
+        super(main, objects);
         this.main = main;
-        this.moneyRequirement = moneyRequirement;
-
-        this.deductMoney = main.getDataManager().getQuestsConfig().getBoolean("quests." + quest.getQuestName() + ".requirements." + requirementID + ".specifics.deductMoney");
     }
 
 
-    public MoneyRequirement(final NotQuests main, final Quest quest, final int requirementID, final long moneyRequirement, final boolean deductMoney) {
-        super(main, quest, requirementID, moneyRequirement);
-        this.main = main;
-        this.moneyRequirement = moneyRequirement;
+   public void setDeductMoney(final boolean deductMoney){
         this.deductMoney = deductMoney;
-    }
+   }
 
 
     public final long getMoneyRequirement() {
-        return moneyRequirement;
+        return getProgressNeeded();
     }
 
 
@@ -69,13 +63,7 @@ public class MoneyRequirement extends Requirement {
 
 
 
-    @Override
-    public void save() {
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".requirements." + getRequirementID() + ".specifics.deductMoney", isDeductMoney());
-
-    }
-
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addRequirementBuilder) {
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addRequirementBuilder, Command.Builder<CommandSender> objectiveAddConditionBuilder) {
         if (!main.isVaultEnabled()) {
             return;
         }
@@ -90,32 +78,54 @@ public class MoneyRequirement extends Requirement {
                 .handler((context) -> {
                     final Audience audience = main.adventure().sender(context.getSender());
 
-                    //Cancel if Vault is not found
-                    if (!main.isVaultEnabled()) {
-                        audience.sendMessage(MiniMessage.miniMessage().parse(
-                                NotQuestColors.errorGradient + "Error: cannot add a money requirement because Vault (needed for money stuff to work) is not installed on the server."
-                        ));
-                        return;
-                    }
-
                     final Quest quest = context.get("quest");
 
                     final int amount = context.get("amount");
                     final boolean deductMoney = context.flags().isPresent("deductMoney");
 
-                    MoneyRequirement moneyRequirement = new MoneyRequirement(main, quest, quest.getRequirements().size() + 1, amount, deductMoney);
+                    MoneyCondition moneyRequirement = new MoneyCondition(main, amount, deductMoney, quest);
+                    moneyRequirement.setDeductMoney(deductMoney);
                     quest.addRequirement(moneyRequirement);
 
                     audience.sendMessage(MiniMessage.miniMessage().parse(
                             NotQuestColors.successGradient + "Money Requirement successfully added to Quest " + NotQuestColors.highlightGradient
                                     + quest.getQuestName() + "</gradient>!</gradient>"
                     ));
+                }));
+
+        manager.command(objectiveAddConditionBuilder.literal("Money")
+                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of money needed"))
+                .flag(
+                        manager.flagBuilder("deductMoney")
+                                .withDescription(ArgumentDescription.of("Makes it so the required money is deducted from the players balance if the Quest is accepted."))
+                )
+                .meta(CommandMeta.DESCRIPTION, "Adds a new Money Requirement to a quest")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+
+                    final Quest quest = context.get("quest");
+
+                    final int amount = context.get("amount");
+                    final boolean deductMoney = context.flags().isPresent("deductMoney");
+
+                    final int objectiveID = context.get("Objective ID");
+                    final Objective objective = quest.getObjectiveFromID(objectiveID);
+                    assert objective != null; //Shouldn't be null
+
+                    MoneyCondition moneyCondition = new MoneyCondition(main, amount, deductMoney, quest, objective);
+                    moneyCondition.setDeductMoney(deductMoney);
+                    objective.addCondition(moneyCondition, true);
+
+                    audience.sendMessage(MiniMessage.miniMessage().parse(
+                            NotQuestColors.successGradient + "Money Condition successfully added to Objective " + NotQuestColors.highlightGradient
+                                    + objective.getObjectiveFinalName() + "</gradient>!</gradient>"));
+
 
                 }));
     }
 
     @Override
-    public String getRequirementDescription() {
+    public String getConditionDescription() {
         String description = "§7-- Money needed: " + getMoneyRequirement() + "\n";
 
         if (isDeductMoney()) {
@@ -124,6 +134,17 @@ public class MoneyRequirement extends Requirement {
             description += "§7--- Will money be deducted?: No";
         }
         return description;
+    }
+
+    @Override
+    public void save(String initialPath) {
+        main.getDataManager().getQuestsConfig().set(initialPath + ".specifics.deductMoney", isDeductMoney());
+
+    }
+
+    @Override
+    public void load(String initialPath) {
+        this.deductMoney = main.getDataManager().getQuestsConfig().getBoolean(initialPath + ".specifics.deductMoney");
     }
 
     private void removeMoney(final Player player, final String worldName, final long moneyToDeduct, final boolean notifyPlayer) {

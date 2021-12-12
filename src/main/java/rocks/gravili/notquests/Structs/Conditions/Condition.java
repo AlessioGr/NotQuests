@@ -16,27 +16,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.Structs.Requirements;
+package rocks.gravili.notquests.Structs.Conditions;
 
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.Objectives.Objective;
 import rocks.gravili.notquests.Structs.Quest;
 import rocks.gravili.notquests.Structs.QuestPlayer;
 
-public abstract class Requirement {
-    private final NotQuests main;
-    private final long progressNeeded;
-    private final int requirementID;
-    private final Quest quest;
 
-    public Requirement(NotQuests main, Quest quest, int requirementID, long progressNeeded) {
+public abstract class Condition {
+    private final NotQuests main;
+    private long progressNeeded = 1;
+    private Quest quest;
+    private Objective objective;
+
+    public Condition(NotQuests main, final Object... objects) {
         this.main = main;
-        this.progressNeeded = progressNeeded;
-        this.quest = quest;
-        this.requirementID = requirementID;
+
+        for(final Object object : objects){
+            if(object instanceof Long number){
+                progressNeeded = number;
+            }else if(object instanceof final Quest quest1){
+                this.quest = quest1;
+            }else if(object instanceof final Objective objective1){
+                this.objective = objective1;
+            }
+        }
     }
 
-    public final String getRequirementType() {
-        return main.getRequirementManager().getRequirementType(this.getClass());
+    public final String getConditionType() {
+        return main.getConditionsManager().getConditionType(this.getClass());
     }
 
     public final long getProgressNeeded() {
@@ -47,17 +56,19 @@ public abstract class Requirement {
         return quest;
     }
 
-    public final int getRequirementID() {
-        return requirementID;
+    public final Objective getObjective(){
+        return objective;
     }
 
+
     /**
-     * @return String if the requirement is not fulfilled. Empty string if the requirement is fulfilled. The String should say the still-required requirements.
+     * @return String if the condition is not fulfilled. Empty string if the condition is fulfilled. The String should say the still-required condition.
      */
     public abstract String check(final QuestPlayer questPlayer, final boolean enforce);
 
 
-    public abstract String getRequirementDescription();
+    public abstract String getConditionDescription();
 
-    public abstract void save();
+    public abstract void save(final String initialPath);
+    public abstract void load(final String initialPath);
 }

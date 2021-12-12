@@ -24,6 +24,7 @@ import org.bukkit.entity.Player;
 import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.Events.notquests.ObjectiveUnlockEvent;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.Conditions.Condition;
 import rocks.gravili.notquests.Structs.Objectives.EscortNPCObjective;
 import rocks.gravili.notquests.Structs.Objectives.Objective;
 import rocks.gravili.notquests.Structs.Objectives.OtherQuestObjective;
@@ -115,23 +116,23 @@ public class ActiveObjective {
 
     public void updateUnlocked(final boolean notifyPlayer, final boolean triggerAcceptQuestTrigger) {
 
-        boolean foundStillDependant = false;
-        for (final Objective dependantObjective : objective.getDependantObjectives()) {
-            for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-                if (activeObjective.getObjectiveID() == dependantObjective.getObjectiveID()) {
-                    foundStillDependant = true;
-                    if (!isUnlocked()) {
-                        setUnlocked(false, notifyPlayer, triggerAcceptQuestTrigger);
-                    }
+        boolean foundStillFalseConditions = false;
+        for (final Condition condition : objective.getConditions()){
+            String check = condition.check(getQuestPlayer(), false);
+            getQuestPlayer().sendDebugMessage("Condition status for " + objective.getObjectiveFinalName() + ": " + check);
 
-                    break;
-                }
+            if(!check.isBlank()) {
+                foundStillFalseConditions = true;
+                getQuestPlayer().sendDebugMessage("Following objective condition is still unfinished: " + condition.getConditionDescription());
+                setUnlocked(false, notifyPlayer, triggerAcceptQuestTrigger);
             }
-            if (foundStillDependant) {
+
+            if (foundStillFalseConditions) {
                 break;
             }
         }
-        if (!foundStillDependant) {
+        if (!foundStillFalseConditions) {
+            getQuestPlayer().sendDebugMessage("Active objective " + objective.getObjectiveFinalName() + " has been set to unlocked!");
             setUnlocked(true, notifyPlayer, triggerAcceptQuestTrigger);
 
         }
@@ -139,21 +140,6 @@ public class ActiveObjective {
 
     }
 
-    public final ArrayList<ActiveObjective> getObjectivesWhichStillNeedToBeCompletedBeforeUnlock() {
-        final ArrayList<ActiveObjective> stillDependantObjectives = new ArrayList<>();
-        for (final Objective dependantObjective : objective.getDependantObjectives()) {
-            for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-                if (activeObjective.getObjectiveID() == dependantObjective.getObjectiveID()) {
-                    stillDependantObjectives.add(activeObjective);
-                    break;
-                }
-            }
-
-
-        }
-
-        return stillDependantObjectives;
-    }
 
     public final Objective getObjective() {
         return objective;

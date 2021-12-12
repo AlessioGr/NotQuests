@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.Structs.Requirements;
+package rocks.gravili.notquests.Structs.Conditions;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
@@ -30,31 +30,25 @@ import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.Commands.newCMDs.arguments.QuestSelector;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.CompletedQuest;
+import rocks.gravili.notquests.Structs.Objectives.Objective;
 import rocks.gravili.notquests.Structs.Quest;
 import rocks.gravili.notquests.Structs.QuestPlayer;
 
 
-public class OtherQuestRequirement extends Requirement {
+public class OtherQuestCondition extends Condition {
 
     private final NotQuests main;
-    private final String otherQuestName;
-    private final long amountOfCompletionsNeeded;
+    private String otherQuestName = "";
 
 
-    public OtherQuestRequirement(NotQuests main, final Quest quest, final int requirementID, long amountOfCompletionsNeeded) {
-        super(main, quest, requirementID, amountOfCompletionsNeeded);
+    public OtherQuestCondition(NotQuests main, Object... objects) {
+        super(main, objects);
         this.main = main;
-        this.amountOfCompletionsNeeded = amountOfCompletionsNeeded;
 
-        otherQuestName = main.getDataManager().getQuestsConfig().getString("quests." + quest.getQuestName() + ".requirements." + requirementID + ".specifics.otherQuestRequirememt");
     }
 
-    public OtherQuestRequirement(NotQuests main, final Quest quest, final int requirementID, int amountOfCompletionsNeeded, String otherQuestName) {
-        super(main, quest, requirementID, amountOfCompletionsNeeded);
-        this.main = main;
-        this.amountOfCompletionsNeeded = amountOfCompletionsNeeded;
+    public void setOtherQuestName(final String otherQuestName){
         this.otherQuestName = otherQuestName;
-
     }
 
 
@@ -69,7 +63,7 @@ public class OtherQuestRequirement extends Requirement {
 
 
     public final long getAmountOfCompletionsNeeded() {
-        return amountOfCompletionsNeeded;
+        return getProgressNeeded();
     }
 
     @Override
@@ -92,12 +86,7 @@ public class OtherQuestRequirement extends Requirement {
 
 
     @Override
-    public void save() {
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".requirements." + getRequirementID() + ".specifics.otherQuestRequirememt", getOtherQuestName());
-    }
-
-    @Override
-    public String getRequirementDescription() {
+    public String getConditionDescription() {
         final Quest otherQuest = getOtherQuest();
         if (otherQuest != null) {
             return "§7-- Finish Quest first: " + otherQuest.getQuestFinalName();
@@ -107,8 +96,19 @@ public class OtherQuestRequirement extends Requirement {
 
     }
 
+    @Override
+    public void save(String initialPath) {
+        main.getDataManager().getQuestsConfig().set(initialPath + ".specifics.otherQuestRequirememt", getOtherQuestName());
+    }
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addRequirementBuilder) {
+    @Override
+    public void load(String initialPath) {
+        otherQuestName = main.getDataManager().getQuestsConfig().getString(initialPath + ".specifics.otherQuestRequirememt");
+
+    }
+
+
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addRequirementBuilder, Command.Builder<CommandSender> objectiveAddConditionBuilder) {
         manager.command(addRequirementBuilder.literal("OtherQuest")
                 .argument(QuestSelector.of("otherQuest", main), ArgumentDescription.of("Name of the other Quest the player has to complete."))
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of completions needed"))
@@ -121,13 +121,41 @@ public class OtherQuestRequirement extends Requirement {
                     final Quest otherQuest = context.get("otherQuest");
                     final int amount = context.get("amount");
 
-                    OtherQuestRequirement otherQuestRequirement = new OtherQuestRequirement(main, quest, quest.getRequirements().size() + 1, amount, otherQuest.getQuestName());
+                    OtherQuestCondition otherQuestRequirement = new OtherQuestCondition(main, amount, quest);
+                    otherQuestRequirement.setOtherQuestName(otherQuest.getQuestName());
                     quest.addRequirement(otherQuestRequirement);
 
                     audience.sendMessage(MiniMessage.miniMessage().parse(
                             NotQuestColors.successGradient + "OtherQuest Requirement successfully added to Quest " + NotQuestColors.highlightGradient
                                     + quest.getQuestName() + "</gradient>!</gradient>"
                     ));
+
+                }));
+
+        manager.command(objectiveAddConditionBuilder.literal("OtherQuest")
+                .argument(QuestSelector.of("otherQuest", main), ArgumentDescription.of("Name of the other Quest the player has to complete."))
+                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of completions needed"))
+                .meta(CommandMeta.DESCRIPTION, "Adds a new OtherQuest Requirement to a quest")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+
+                    final Quest quest = context.get("quest");
+
+                    final Quest otherQuest = context.get("otherQuest");
+                    final int amount = context.get("amount");
+
+                    final int objectiveID = context.get("Objective ID");
+                    final Objective objective = quest.getObjectiveFromID(objectiveID);
+                    assert objective != null; //Shouldn't be null
+
+                    OtherQuestCondition otherQuestCondition = new OtherQuestCondition(main, amount, quest, objective);
+                    otherQuestCondition.setOtherQuestName(otherQuest.getQuestName());
+                    objective.addCondition(otherQuestCondition, true);
+
+                    audience.sendMessage(MiniMessage.miniMessage().parse(
+                            NotQuestColors.successGradient + "OtherQuest Condition successfully added to Objective " + NotQuestColors.highlightGradient
+                                    + objective.getObjectiveFinalName() + "</gradient>!</gradient>"));
+
 
                 }));
     }
