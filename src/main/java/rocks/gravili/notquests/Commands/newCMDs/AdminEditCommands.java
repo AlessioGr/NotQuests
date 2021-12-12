@@ -675,7 +675,7 @@ public class AdminEditCommands {
                 }));
 
         manager.command(builder.literal("conditions")
-                .literal("list")
+                .literal("list", "show")
                 .meta(CommandMeta.DESCRIPTION, "Lists all conditions of this objective.")
                 .handler((context) -> {
                     final Audience audience = main.adventure().sender(context.getSender());
