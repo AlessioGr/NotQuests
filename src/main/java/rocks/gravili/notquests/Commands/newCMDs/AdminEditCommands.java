@@ -656,6 +656,51 @@ public class AdminEditCommands {
                 }));
 
 
+        manager.command(builder.literal("conditions")
+                .literal("clear")
+                .meta(CommandMeta.DESCRIPTION, "Removes all conditions from this objective.")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+                    final Quest quest = context.get("quest");
+                    final int objectiveID = context.get("Objective ID");
+                    final Objective objective = quest.getObjectiveFromID(objectiveID);
+                    assert objective != null; //Shouldn't be null
+
+                    objective.clearConditions();
+                    audience.sendMessage(miniMessage.parse(
+                            successGradient + "All conditions of objective with ID " + highlightGradient + objectiveID
+                                    + "</gradient> have been removed!</gradient>"
+                    ));
+
+                }));
+
+        manager.command(builder.literal("conditions")
+                .literal("list")
+                .meta(CommandMeta.DESCRIPTION, "Lists all conditions of this objective.")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+                    final Quest quest = context.get("quest");
+                    final int objectiveID = context.get("Objective ID");
+                    final Objective objective = quest.getObjectiveFromID(objectiveID);
+                    assert objective != null; //Shouldn't be null
+
+
+                    audience.sendMessage(miniMessage.parse(
+                            highlightGradient + "Conditions of objective with ID " + highlight2Gradient + objectiveID
+                                    + "</gradient>:</gradient>"
+                    ));
+                    int counter = 1;
+                    for (Condition condition : quest.getRequirements()) {
+                        audience.sendMessage(miniMessage.parse(highlightGradient + counter + ". </gradient>" + mainGradient + condition.getConditionType() + "</gradient>"));
+                        audience.sendMessage(miniMessage.parse(mainGradient + condition.getConditionDescription()));
+                        counter += 1;
+                    }
+
+                    if (counter == 1) {
+                        audience.sendMessage(miniMessage.parse(warningGradient + "This objective has no conditions!"));
+                    }
+
+                }));
        /* manager.command(builder.literal("dependencies")
                 .literal("add")
                 .meta(CommandMeta.DESCRIPTION, "Adds an objective as a dependency (needs to be completed before this one)")
@@ -777,23 +822,6 @@ public class AdminEditCommands {
 
                 }));
 
-        manager.command(builder.literal("dependencies")
-                .literal("clear")
-                .meta(CommandMeta.DESCRIPTION, "Removes all dependencies from this objective.")
-                .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-                    final Quest quest = context.get("quest");
-                    final int objectiveID = context.get("Objective ID");
-                    final Objective objective = quest.getObjectiveFromID(objectiveID);
-                    assert objective != null; //Shouldn't be null
-
-                    objective.clearDependantObjectives();
-                    audience.sendMessage(miniMessage.parse(
-                            successGradient + "All depending objectives of objective with ID " + highlightGradient + objectiveID
-                                    + "</gradient> have been removed!</gradient>"
-                    ));
-
-                }));
 
         manager.command(builder.literal("dependencies")
                 .literal("list")

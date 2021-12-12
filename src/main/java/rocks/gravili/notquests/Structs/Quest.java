@@ -139,7 +139,7 @@ public class Quest {
 
     public void addRequirement(Condition condition) {
         conditions.add(condition);
-        main.getDataManager().getQuestsConfig().set("quests." + questName + ".requirements." + conditions.size() + ".requirementType", condition.getConditionType());
+        main.getDataManager().getQuestsConfig().set("quests." + questName + ".requirements." + conditions.size() + ".conditionType", condition.getConditionType());
         main.getDataManager().getQuestsConfig().set("quests." + questName + ".requirements." + conditions.size() + ".progressNeeded", condition.getProgressNeeded());
 
         condition.save("quests." + questName + ".requirements." + conditions.size() );
