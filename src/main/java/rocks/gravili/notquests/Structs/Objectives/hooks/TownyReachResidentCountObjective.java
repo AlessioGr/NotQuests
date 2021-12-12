@@ -106,25 +106,32 @@ public class TownyReachResidentCountObjective extends Objective {
 
     @Override
     public void onObjectiveUnlock(ActiveObjective activeObjective) {
+        activeObjective.getQuestPlayer().sendDebugMessage("TownyReachResidentCountObjective onObjectiveUnlock");
         if(!isCountPreviousResidents()){
+            activeObjective.getQuestPlayer().sendDebugMessage("TownyReachResidentCountObjective onObjectiveUnlock cancel 1");
             return;
         }
 
         final Player player = activeObjective.getQuestPlayer().getPlayer();
         if(player == null){
+            activeObjective.getQuestPlayer().sendDebugMessage("TownyReachResidentCountObjective onObjectiveUnlock cancel 2");
             return;
         }
         Resident resident = TownyUniverse.getInstance().getResident(player.getUniqueId());
 
         if(resident == null){
+            activeObjective.getQuestPlayer().sendDebugMessage("TownyReachResidentCountObjective onObjectiveUnlock cancel 3");
             return;
         }
 
         Town town = resident.getTownOrNull();
 
         if(town == null){
+            activeObjective.getQuestPlayer().sendDebugMessage("TownyReachResidentCountObjective onObjectiveUnlock cancel 4");
             return;
         }
+
+        activeObjective.getQuestPlayer().sendDebugMessage("TownyReachResidentCountObjective addProgress: " + town.getNumResidents());
 
         activeObjective.addProgress(town.getNumResidents(), -1);
     }
