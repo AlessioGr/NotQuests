@@ -171,6 +171,9 @@ public class ActiveObjective {
     public void addProgress(long progressToAdd) {
         addProgress(progressToAdd, -1, null, false);
     }
+    public void addProgress(long progressToAdd, boolean silent) {
+        addProgress(progressToAdd, -1, null, silent);
+    }
     //For Citizens NPCs
     public void addProgress(long progressToAdd, final int NPCID) {
         addProgress(progressToAdd, NPCID, null, false);

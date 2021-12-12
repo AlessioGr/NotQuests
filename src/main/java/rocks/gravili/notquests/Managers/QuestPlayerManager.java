@@ -179,24 +179,22 @@ public class QuestPlayerManager {
                                     if (activeObjective.getObjective().getCompletionNPCID() == -1) { //Complete automatically
                                         if (activeObjective.getObjective().getCompletionArmorStandUUID() != null) { //Only complete if player has talked to the completion Armor Stand
                                             if (activeObjective.hasBeenCompleted()) {
-                                                activeObjective.addProgressSilent(currentProgress, activeObjective.getObjective().getCompletionArmorStandUUID());
+                                                activeObjective.addProgress(currentProgress, activeObjective.getObjective().getCompletionArmorStandUUID(), true);
 
                                             } else {
-                                                activeObjective.addProgressSilent(currentProgress, null);
+                                                activeObjective.addProgress(currentProgress, true);
 
                                             }
                                         } else {
-                                            activeObjective.addProgressSilent(currentProgress, -1);
+                                            activeObjective.addProgress(currentProgress, true);
                                         }
 
                                     } else { //Only complete if player has talked to the completion NPC
-                                        //System.out.println("§4§lTHIS IS WHAT I WANNA SEE FIRST");
                                         if (activeObjective.hasBeenCompleted()) {
-                                            activeObjective.addProgressSilent(currentProgress, activeObjective.getObjective().getCompletionNPCID());
+                                            activeObjective.addProgress(currentProgress, activeObjective.getObjective().getCompletionNPCID(), true);
 
                                         } else {
-                                            //System.out.println("§4§lTHIS IS WHAT I WANNA SEE TOO");
-                                            activeObjective.addProgressSilent(currentProgress, -1);
+                                            activeObjective.addProgress(currentProgress, true);
 
                                         }
                                     }
