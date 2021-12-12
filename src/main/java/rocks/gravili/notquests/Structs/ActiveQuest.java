@@ -153,59 +153,55 @@ public class ActiveQuest {
 
     //For Citizens NPCs
     public void notifyActiveObjectiveCompleted(final ActiveObjective activeObjective, final boolean silent, final int NPCID) {
-        if (activeObjective.isCompleted(NPCID)) {
-            ObjectiveCompleteEvent objectiveCompleteEvent = new ObjectiveCompleteEvent(getQuestPlayer(), activeObjective, this);
-            if (Bukkit.isPrimaryThread()) {
-                Bukkit.getScheduler().runTaskAsynchronously(main, () -> {
-                    Bukkit.getPluginManager().callEvent(objectiveCompleteEvent);
-                });
-            } else {
+        ObjectiveCompleteEvent objectiveCompleteEvent = new ObjectiveCompleteEvent(getQuestPlayer(), activeObjective, this);
+        if (Bukkit.isPrimaryThread()) {
+            Bukkit.getScheduler().runTaskAsynchronously(main, () -> {
                 Bukkit.getPluginManager().callEvent(objectiveCompleteEvent);
-            }
+            });
+        } else {
+            Bukkit.getPluginManager().callEvent(objectiveCompleteEvent);
+        }
 
-            if (!objectiveCompleteEvent.isCancelled()) {
+        if (!objectiveCompleteEvent.isCancelled()) {
 
-                toRemove.add(activeObjective);
-                if (!silent) {
-                    questPlayer.sendMessage(main.getLanguageManager().getString("chat.objectives.successfully-completed", questPlayer.getPlayer(), this, activeObjective));
-                    final Player player = Bukkit.getPlayer(questPlayer.getUUID());
-                    if (player != null) {
-                        player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, SoundCategory.MASTER, 75, 1.4f);
+            toRemove.add(activeObjective);
+            if (!silent) {
+                questPlayer.sendMessage(main.getLanguageManager().getString("chat.objectives.successfully-completed", questPlayer.getPlayer(), this, activeObjective));
+                final Player player = Bukkit.getPlayer(questPlayer.getUUID());
+                if (player != null) {
+                    player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, SoundCategory.MASTER, 75, 1.4f);
 
-                    }
                 }
             }
-
-
         }
+
     }
 
     //For Armor Stands
     public void notifyActiveObjectiveCompleted(final ActiveObjective activeObjective, final boolean silent, final UUID armorStandUUID) {
-        if (activeObjective.isCompleted(armorStandUUID)) {
 
-            ObjectiveCompleteEvent objectiveCompleteEvent = new ObjectiveCompleteEvent(getQuestPlayer(), activeObjective, this);
-            if (Bukkit.isPrimaryThread()) {
-                Bukkit.getScheduler().runTaskAsynchronously(main, () -> {
-                    Bukkit.getPluginManager().callEvent(objectiveCompleteEvent);
-                });
-            } else {
+        ObjectiveCompleteEvent objectiveCompleteEvent = new ObjectiveCompleteEvent(getQuestPlayer(), activeObjective, this);
+        if (Bukkit.isPrimaryThread()) {
+            Bukkit.getScheduler().runTaskAsynchronously(main, () -> {
                 Bukkit.getPluginManager().callEvent(objectiveCompleteEvent);
-            }
+            });
+        } else {
+            Bukkit.getPluginManager().callEvent(objectiveCompleteEvent);
+        }
 
-            if (!objectiveCompleteEvent.isCancelled()) {
+        if (!objectiveCompleteEvent.isCancelled()) {
 
-                toRemove.add(activeObjective);
-                if (!silent) {
-                    questPlayer.sendMessage(main.getLanguageManager().getString("chat.objectives.successfully-completed", questPlayer.getPlayer(), this, activeObjective));
-                    final Player player = Bukkit.getPlayer(questPlayer.getUUID());
-                    if (player != null) {
-                        player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, SoundCategory.MASTER, 75, 1.4f);
+            toRemove.add(activeObjective);
+            if (!silent) {
+                questPlayer.sendMessage(main.getLanguageManager().getString("chat.objectives.successfully-completed", questPlayer.getPlayer(), this, activeObjective));
+                final Player player = Bukkit.getPlayer(questPlayer.getUUID());
+                if (player != null) {
+                    player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, SoundCategory.MASTER, 75, 1.4f);
 
-                    }
                 }
             }
         }
+
     }
 
 

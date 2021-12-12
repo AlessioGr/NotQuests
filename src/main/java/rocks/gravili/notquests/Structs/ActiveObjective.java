@@ -171,6 +171,7 @@ public class ActiveObjective {
     public void addProgress(long i, final int NPCID) {
         currentProgress += i;
         if (isCompleted(NPCID)) {
+            getQuestPlayer().sendDebugMessage("Objective " + NotQuestColors.debugHighlightGradient + getObjective().getObjectiveFinalName() + "</gradient> of quest " + NotQuestColors.debugHighlightGradient + getActiveQuest().getQuest().getQuestFinalName() + "</gradient> has been registered as completed.");
             setHasBeenCompleted(true);
             activeQuest.notifyActiveObjectiveCompleted(this, false, NPCID);
         }
