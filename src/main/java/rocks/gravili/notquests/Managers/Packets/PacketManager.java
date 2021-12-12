@@ -51,7 +51,7 @@ public class PacketManager {
 
 
             PacketEventsSettings settings = PacketEvents.getAPI().getSettings();
-            settings.bStats(false).checkForUpdates(false);
+            settings.bStats(false).checkForUpdates(false).debug(false);
 
 
             PacketEvents.getAPI().init();

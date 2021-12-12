@@ -1,0 +1,209 @@
+chat:
+  wrong-command-usage: '&cNieprawidłowe użycie polecenia!'
+  missing-permission: '&cBrak permisji! Potrzebujesz permisji: &e%PERMISSION%'
+  too-many-arguments: '&cZbyt wiele argumentów!'
+  quest-successfully-accepted: '&aPomyślnie zaakceptowałeś quest &b%QUESTNAME%&a.'
+  quest-description: '&eOpis zadania: &7%QUESTDESCRIPTION%'
+  quest-already-accepted: '&cQuest jest już przyjęty.'
+  quest-failed: '&eNie udało ci się wykonać zadania: &b%QUESTNAME%&e!'
+  quest-aborted: '&aAktywny quest &b%QUESTNAME% &azostał przerwany!'
+  quest-completed-and-rewards-given: |2+
+
+    <CENTER>&a[Quest ukończony]
+    <CENTER>&b&l%QUESTNAME%
+    <EMPTY>
+  missing-quest-description: '&eTen quest nie ma opisu.'
+  objectives-label-after-quest-accepting: '&9Zadania:'
+  questpoints:
+    query: '&eMasz obecnie &b%QUESTPOINTS% &epunktów questów.'
+    none: '&cWygląda na to, że nie masz żadnych punktów questów.!'
+  no-quests-accepted: '&cWygląda na to, że nie masz żadnych aktywnych zadań.!'
+  quest-does-not-exist: '&cQuest &b%QUESTNAME% &cnie istnieje!'
+  quest-not-found-or-does-not-exist: '&cNie znaleziono quest &b%QUESTNAME% &club jest on nieaktywny!'
+  active-quests-label: '&eAktywne questy:'
+  take-disabled-preview: '&cPodgląd questu &b%QUESTNAME% &cjest wyłączony.'
+  take-disabled-accept: '&cAkceptowanie questów &b%QUESTNAME% &cjest wyłączone.'
+  quest-not-active-error: '&cBłąd: &b%QUESTNAME% &cnie jest aktywnym questem!'
+  objectives:
+    counter: '&e%OBJECTIVEID%. %OBJECTIVENAME%:'
+    hidden: '&e%OBJECTIVEID%. &7&l[UKRYTE]'
+    description: '   &9Opis: &6%OBJECTIVEDESCRIPTION%'
+    progress: '   &7Postęp: &f%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
+    successfully-completed: '&aUkończyłeś zadanie &e%OBJECTIVENAME% &az questa &b%QUESTNAME%&a!'
+    taskDescription:
+      breakBlocks:
+        base: '    &8└─ &7%EVENTUALCOLOR%Bloki do zniszczenia: &f%EVENTUALCOLOR%%BLOCKTOBREAK%'
+      breed:
+        base: '    &8└─ &7%EVENTUALCOLOR%Moby do rozmnożenia: &f%EVENTUALCOLOR%%ENTITYTOBREED%'
+      collectItems:
+        base: '    &8└─ &7%EVENTUALCOLOR%Przedmioty do zdobycia: &f%EVENTUALCOLOR%%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
+      consumeItems:
+        base: '    &8└─ &7%EVENTUALCOLOR%Przedmioty do zjedzenia: &f%EVENTUALCOLOR%%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
+      craftItems:
+        base: '    &8└─ &7%EVENTUALCOLOR%Przedmioty do wytworzenia: &f%EVENTUALCOLOR%%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
+      deliverItems:
+        base: '    &8└─ &7%EVENTUALCOLOR%Przedmioty do dostarczenia: &f%EVENTUALCOLOR%%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
+      escortNPC:
+        base: '    &8└─ &7%EVENTUALCOLOR%Eskort &f%EVENTUALCOLOR%%NPCNAME% &7%EVENTUALCOLOR%to &f%EVENTUALCOLOR%%DESTINATIONNPCNAME%'
+      killMobs:
+        base: '    &8└─ &7%EVENTUALCOLOR%Moby do zabicia: &f%EVENTUALCOLOR%%MOBTOKILL%'
+      otherQuest:
+        base: '    &8└─ &7%EVENTUALCOLOR%Questy do ukończenia: &f%EVENTUALCOLOR%%OTHERQUESTNAME%'
+      placeBlocks:
+        base: '    &8└─ &7%EVENTUALCOLOR%Bloki do postawienia: &f%EVENTUALCOLOR%%BLOCKTOPLACE%'
+      reachLocation:
+        base: '    &8└─ &7%EVENTUALCOLOR%Lokalizacja do znalezienia: &f%EVENTUALCOLOR%%LOCATIONNAME%'
+      talkToNPC:
+        base: '    &8└─ &7%EVENTUALCOLOR%Porozmawiaj z &f%EVENTUALCOLOR%%NAME%'
+      triggerCommand:
+        base: '    &8└─ &7%EVENTUALCOLOR%Wykonaj: &f%EVENTUALCOLOR%%TRIGGERNAME%'
+      killEliteMobs:
+        base: '    &8└─ &7%EVENTUALCOLOR%Kill Elite Mob: &f%EVENTUALCOLOR%%ELITEMOBNAME%'
+        any: '    &8└─ &7%EVENTUALCOLOR%Kill any Elite Mob!'
+      runCommand:
+        base: '    &8└─ &7%EVENTUALCOLOR%Wykonaj polecenie: &f%EVENTUALCOLOR%%COMMANDTORUN%'
+      interact:
+        base: '    &8└─ &7%EVENTUALCOLOR%%INTERACTTYPE% Lokalizacja: &f%EVENTUALCOLOR%%COORDINATES% &f%EVENTUALCOLOR%w świecie %EVENTUALCOLOR%%WORLDNAME%'
+        taskDescriptionProvided: '    &8└─ &7%EVENTUALCOLOR%%TASKDESCRIPTION%'
+      jump:
+        base: '    &8└─ &7%EVENTUALCOLOR%Skoki &f%EVENTUALCOLOR%%AMOUNTOFJUMPS% &7%EVENTUALCOLOR%times'
+      smelt:
+        base: '    &8└─ &7%EVENTUALCOLOR%Przedmioty do wytopienia: &f%EVENTUALCOLOR%%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+titles:
+  quest-accepted:
+    title: '&fQuest zaakceptowany'
+    subtitle: <#b617ff>%QUESTNAME%
+  quest-completed:
+    title: '&aQuest ukończony'
+    subtitle: <#b617ff>%QUESTNAME%
+  quest-failed:
+    title: '&cQuest nieukończony'
+    subtitle: <#b617ff>%QUESTNAME%
+gui:
+  main:
+    title: '                &9Zadania'
+    button:
+      questpoints:
+        text: |-
+          &6Punkty
+          &eAktualne punkty: &b%QUESTPOINTS%
+      takequest:
+        text: |-
+          &aWybierz quest
+          &7Rozpocznij nowe zadanie!
+
+          &8Niektóre questy nie mogą być
+          &8rozpoczęte w ten sposób.
+      abortquest:
+        text: |-
+          &cPrzerywanie questa
+      previewquest:
+        text: |-
+          &9Podgląd questa
+          &7Pokaż informacje o
+          &7podjętym zadaniu.
+      activequests:
+        text: |-
+          &3Aktywne questy
+          &7Zobacz wszystkie
+          &7aktywne questy.
+  activeQuests:
+    title: '             &9Aktywne questy'
+    button:
+      activeQuestButton:
+        text: |-
+          &b%QUESTNAME% &a[AKTYWNE]
+          &7Postęp: &a%COMPLETEDOBJECTIVESCOUNT% &f/ %ALLOBJECTIVESCOUNT%
+          &fKliknij, aby zobaczyć szczegóły!
+  takeQuestChoose:
+    title: '&9Który quest chcesz wykonać?'
+    button:
+      questPreview:
+        acceptedSuffix: ' &a[PRZYJĘTY]'
+        questNamePrefix: '&b'
+        questDescriptionPrefix: '&8'
+        bottomText: '&aKliknij, aby zobaczyć podgląd questa!'
+  abortQuestChoose:
+    title: '  &9Aktywne zadania, które możesz przerwać'
+    button:
+      abortQuestPreview:
+        text: |-
+          &b%QUESTNAME% &a[AKTYWNE]
+          &7Postęp: &a%COMPLETEDOBJECTIVESCOUNT% &f/ %ALLOBJECTIVESCOUNT%
+          &cKliknij, aby przerwać quest!
+  previewQuestChoose:
+    title: '     &9Wybierz quest do podglądu'
+    button:
+      questPreview:
+        acceptedSuffix: ' &a[PRZYJĘTY]'
+        questNamePrefix: '&b'
+        questDescriptionPrefix: '&8'
+        bottomText: '&aKliknij, aby zobaczyć podgląd questa!'
+  abortQuest:
+    title: '         &cPotwierdź przerwanie'
+    button:
+      confirmAbort:
+        text: |-
+          &b%QUESTNAME% &a[AKTYWNY]
+          &7Postęp: &a%COMPLETEDOBJECTIVESCOUNT% &f/ %ALLOBJECTIVESCOUNT%
+          &cKliknij, aby przerwać zadanie &b%QUESTNAME%&c!
+      cancelAbort:
+        text: |-
+          &aKliknij, aby NIE przerwać tego zadania
+          &ai anulować to działanie
+  previewQuest:
+    title: '&9Podgląd questa &b%QUESTNAME%'
+    button:
+      description:
+        text: |-
+          &eOpis
+          &8%QUESTDESCRIPTION%
+        empty: ???
+      rewards:
+        text: |-
+          &aNagrody
+          &f%QUESTREWARDS%
+        empty: '&8Brak lub ukryte'
+      requirements:
+        text: |-
+          &cWymagania
+          &f%QUESTREQUIREMENTS%
+        empty: '&8-'
+      confirmTake:
+        text: |-
+          &b%QUESTNAME%
+          &aKliknij, aby wykonać zadanie &b%QUESTNAME%&a!
+      cancelTake:
+        text: |-
+          &cKliknij, aby NIE akceptować
+          &ctego questa
+  progress:
+    title: '&9Szczegóły dla questu &b%QUESTNAME%'
+    button:
+      unlockedObjective:
+        text: |-
+          &e%ACTIVEOBJECTIVEID%. &b%OBJECTIVENAME%
+          &6&lAKTYWNY
+          &8%OBJECTIVEDESCRIPTION%
+          %ACTIVEOBJECTIVEDESCRIPTION%
+
+          &7Postęp: &a%ACTIVEOBJECTIVEPROGRESS% &f/ %OBJECTIVEPROGRESSNEEDED%
+        description-empty: Brak opisu
+      lockedObjective:
+        text: |-
+          &e%ACTIVEOBJECTIVEID%. &7&l[UKRYTY]
+          &eTe zadanie nie zostało
+          &ejeszcze odblokowane!
+      completedObjective:
+        text: |-
+          &a&m%ACTIVEOBJECTIVEID%. &2&m%OBJECTIVENAME%
+          &a&lUKOŃCZONE
+          &8&m%OBJECTIVEDESCRIPTION%
+          %COMPLETEDOBJECTIVEDESCRIPTION%
+
+          &7&mPostęp: &a&m%ACTIVEOBJECTIVEPROGRESS% &f&m/ %OBJECTIVEPROGRESSNEEDED%
+        description-empty: Brak opisu
+      previousPage:
+        text: Przejdź do poprzedniej strony (%prevpage%)
+      nextPage:
+        text: Przejdź do następnej strony (%nextpage%)

@@ -205,19 +205,7 @@ public class Quest {
     }
 
     public final String getQuestDescription(final int maxLengthPerLine) {
-        final StringBuilder descriptionWithLineBreaks = new StringBuilder();
-        int count = 0;
-        for (char character : description.toCharArray()) {
-            count++;
-            if (count > maxLengthPerLine) {
-                count = 0;
-                descriptionWithLineBreaks.append("\n§8");
-            } else {
-                descriptionWithLineBreaks.append(character);
-            }
-        }
-
-        return LegacyComponentSerializer.builder().hexColors().build().serialize(MiniMessage.miniMessage().parse(descriptionWithLineBreaks.toString())).replace("&", "§");
+        return LegacyComponentSerializer.builder().hexColors().build().serialize(MiniMessage.miniMessage().parse(main.getUtilManager().wrapText(description, maxLengthPerLine))).replace("&", "§");
     }
 
 

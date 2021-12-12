@@ -50,7 +50,7 @@ public class MythicMobsEvents implements Listener {
                                     final MythicMob killedMob = event.getMobType();
                                     if (killMobsObjective.getMobToKill().equalsIgnoreCase("any") || killMobsObjective.getMobToKill().equals(killedMob.getInternalName())) {
                                         if (event.getEntity() != event.getKiller()) { //Suicide prevention
-                                            activeObjective.addProgress(1, -1);
+                                            activeObjective.addProgress(1);
                                         }
 
                                     }

@@ -281,10 +281,22 @@ public class QuestManager {
                                 main.getServer().getPluginManager().disablePlugin(main);
                             }
 
-                            Class<? extends Condition> requirementType = null;
+                            Class<? extends Condition> conditionType = null;
 
                             try {
-                                requirementType = main.getConditionsManager().getConditionClass(main.getDataManager().getQuestsConfig().getString("quests." + questName + ".requirements." + requirementNumber + ".requirementType"));
+                                String conditionTypeString = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".requirements." + requirementNumber + ".conditionType", "");
+
+                                //Old conversion code start
+                                if(conditionTypeString.isBlank()){//User might be using old system with requirementType instead of conditionType. Let's convert it!
+                                    main.getLogManager().info("Converting old requirementType to conditionType...");
+                                    conditionTypeString = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".requirements." + requirementNumber + ".requirementType", "");
+                                    main.getDataManager().getQuestsConfig().set("quests." + questName + ".requirements." + requirementNumber + ".requirementType", null);
+                                    main.getDataManager().getQuestsConfig().set("quests." + questName + ".requirements." + requirementNumber + ".conditionType", conditionTypeString);
+                                    main.getDataManager().saveQuestsConfig();
+                                }
+                                //Old conversion code end
+
+                                conditionType = main.getConditionsManager().getConditionClass(conditionTypeString);
                             } catch (java.lang.NullPointerException ex) {
                                 main.getLogManager().log(Level.SEVERE, "Error parsing requirement Type of requirement with ID <AQUA>" + requirementNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "<AQUA>. Requirement creation skipped...");
                                 ex.printStackTrace();
@@ -296,11 +308,11 @@ public class QuestManager {
                             //RequirementType requirementType = RequirementType.valueOf(main.getDataManager().getQuestsData().getString("quests." + questName + ".requirements." + requirementNumber + ".requirementType"));
                             int progressNeeded = main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".requirements." + requirementNumber + ".progressNeeded");
 
-                            if (validRequirementID && requirementID > 0 && requirementType != null) {
+                            if (validRequirementID && requirementID > 0 && conditionType != null) {
                                 Condition condition = null;
 
                                 try {
-                                    condition = requirementType.getDeclaredConstructor(NotQuests.class, Object[].class).newInstance(main, new Object[]{progressNeeded, quest});
+                                    condition = conditionType.getDeclaredConstructor(NotQuests.class, Object[].class).newInstance(main, new Object[]{progressNeeded, quest});
                                     condition.load("quests." + questName + ".requirements." + requirementID);
                                 } catch (Exception ex) {
                                     main.getLogManager().log(Level.SEVERE, "Error parsing requirement Type of requirement with ID <AQUA>" + requirementNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "</AQUA>. Requirement creation skipped...");
@@ -698,7 +710,7 @@ public class QuestManager {
                     "xgggggggx",
                     "pxxxxxxxn"
             };
-            InventoryGui gui = new InventoryGui(main, player, "          §9Available Quests", guiSetup);
+            InventoryGui gui = new InventoryGui(main, player, main.getLanguageManager().getString("gui.availableQuests.title", player), guiSetup);
             gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
 
             int count = 0;
@@ -709,15 +721,15 @@ public class QuestManager {
 
                 String displayName = quest.getQuestFinalName();
 
-                displayName = "§b" + displayName;
+                displayName = main.getLanguageManager().getString("gui.availableQuests.button.questPreview.questNamePrefix", player, quest) + displayName;
                 QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer((player.getUniqueId()));
 
                 if (questPlayer != null && questPlayer.hasAcceptedQuest(quest)) {
-                    displayName += " §a[ACCEPTED]";
+                    displayName += main.getLanguageManager().getString("gui.availableQuests.button.questPreview.acceptedSuffix", player, quest);
                 }
                 String description = "";
                 if (!quest.getQuestDescription().isBlank()) {
-                    description = "§8" + quest.getQuestDescription(50);
+                    description = main.getLanguageManager().getString("gui.availableQuests.button.questPreview.questDescriptionPrefix", player, quest) + quest.getQuestDescription(main.getDataManager().getConfiguration().guiQuestDescriptionMaxLineLength);
                 }
                 count++;
 
@@ -733,7 +745,7 @@ public class QuestManager {
                         },
                         displayName,
                         description,
-                        "§aClick to open Quest"
+                        main.getLanguageManager().getString("gui.availableQuests.button.questPreview.bottomText", player, questPlayer, quest)
                 ));
 
             }
@@ -810,7 +822,7 @@ public class QuestManager {
                     "xgggggggx",
                     "pxxxxxxxn"
             };
-            InventoryGui gui = new InventoryGui(main, player, "          §9Available Quests", guiSetup);
+            InventoryGui gui = new InventoryGui(main, player, main.getLanguageManager().getString("gui.availableQuests.title", player), guiSetup);
             gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
 
             int count = 0;
@@ -822,15 +834,15 @@ public class QuestManager {
 
                 String displayName = quest.getQuestFinalName();
 
-                displayName = "§b" + displayName;
+                displayName = main.getLanguageManager().getString("gui.availableQuests.button.questPreview.questNamePrefix", player, quest) + displayName;
                 QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer((player.getUniqueId()));
 
                 if (questPlayer != null && questPlayer.hasAcceptedQuest(quest)) {
-                    displayName += " §a[ACCEPTED]";
+                    displayName += main.getLanguageManager().getString("gui.availableQuests.button.questPreview.acceptedSuffix", player, quest);
                 }
                 String description = "";
                 if (!quest.getQuestDescription().isBlank()) {
-                    description = "§8" + quest.getQuestDescription(50);
+                    description = main.getLanguageManager().getString("gui.availableQuests.button.questPreview.questDescriptionPrefix", player, quest) + quest.getQuestDescription(main.getDataManager().getConfiguration().guiQuestDescriptionMaxLineLength);
                 }
                 count++;
 
@@ -846,7 +858,7 @@ public class QuestManager {
                         },
                         displayName,
                         description,
-                        "§aClick to open Quest"
+                        main.getLanguageManager().getString("gui.availableQuests.button.questPreview.bottomText", player, questPlayer, quest)
                 ));
 
             }
@@ -930,7 +942,7 @@ public class QuestManager {
             if(!reward.getRewardDisplayName().isBlank()){
                 rewards.append("§a").append(counter).append(". §9").append(reward.getRewardDisplayName());
             }else{
-                rewards.append("§a").append(counter).append(". §7[HIDDEN]");
+                rewards.append("§a").append(counter).append(main.getLanguageManager().getString("gui.reward-hidden-text", null, quest, reward));
 
             }
             counter += 1;

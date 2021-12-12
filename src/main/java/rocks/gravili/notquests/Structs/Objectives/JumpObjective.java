@@ -29,6 +29,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.ActiveObjective;
 import rocks.gravili.notquests.Structs.Quest;
 
 public class JumpObjective extends Objective {
@@ -62,6 +63,11 @@ public class JumpObjective extends Objective {
 
     @Override
     public void save() {
+    }
+
+    @Override
+    public void onObjectiveUnlock(final ActiveObjective activeObjective) {
+
     }
 
 

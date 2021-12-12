@@ -48,7 +48,7 @@ public class SlimefunEvents implements Listener {
                         for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
                             if (activeObjective.isUnlocked()) {
                                 if (activeObjective.getObjective() instanceof SlimefunResearchObjective slimefunResearchObjective) {
-                                    activeObjective.addProgress(e.getResearch().getCost(), -1);
+                                    activeObjective.addProgress(e.getResearch().getCost());
 
                                 }
                             }

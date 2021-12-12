@@ -23,6 +23,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Conditions.Condition;
+import rocks.gravili.notquests.Structs.ActiveObjective;
 import rocks.gravili.notquests.Structs.Quest;
 
 import java.util.ArrayList;
@@ -151,20 +152,7 @@ public abstract class Objective {
      * @return the description of the objective with proper line-breaks
      */
     public final String getObjectiveDescription(final int maxLengthPerLine) {
-
-        final StringBuilder descriptionWithLineBreaks = new StringBuilder();
-        int count = 0;
-        for (char character : getObjectiveDescription().toCharArray()) {
-            count++;
-            if (count > maxLengthPerLine) {
-                count = 0;
-                descriptionWithLineBreaks.append("\n§8");
-            } else {
-                descriptionWithLineBreaks.append(character);
-            }
-        }
-
-        return descriptionWithLineBreaks.toString();
+        return main.getUtilManager().wrapText(getObjectiveDescription(), maxLengthPerLine);
     }
 
 
@@ -190,6 +178,6 @@ public abstract class Objective {
 
     public abstract void save();
 
-
+    public abstract void onObjectiveUnlock(final ActiveObjective activeObjective);
 
 }

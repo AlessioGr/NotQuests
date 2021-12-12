@@ -22,6 +22,7 @@ import cloud.commandframework.Command;
 import cloud.commandframework.paper.PaperCommandManager;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Conditions.*;
+import rocks.gravili.notquests.Structs.Conditions.hooks.TownyNationNameCondition;
 import rocks.gravili.notquests.Structs.Conditions.hooks.UltimateClansClanLevelCondition;
 
 import java.lang.reflect.InvocationTargetException;
@@ -52,6 +53,7 @@ public class ConditionsManager {
         registerCondition("WorldTime", WorldTimeCondition.class);
         registerCondition("UltimateClansClanLevel", UltimateClansClanLevelCondition.class);
         registerCondition("ObjectiveCompleted", ObjectiveCompletedCondition.class);
+        registerCondition("TownyNationName", TownyNationNameCondition.class);
 
     }
 

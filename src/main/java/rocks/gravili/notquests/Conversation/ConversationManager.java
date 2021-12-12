@@ -54,7 +54,6 @@ public class ConversationManager {
 
     private File conversationsFolder;
 
-    private final int maxChathistory = 16;
     HashMap<UUID, ArrayList<Component>> chatHistory;
     HashMap<UUID, ArrayList<Component>> conversationChatHistory;
 
@@ -76,8 +75,8 @@ public class ConversationManager {
 
     }
 
-    public final int getMaxChathistory() {
-        return maxChathistory;
+    public final int getMaxChatHistory() {
+        return main.getDataManager().getConfiguration().previousConversationsHistorySize;
     }
 
     public File getConversationsFolder() {

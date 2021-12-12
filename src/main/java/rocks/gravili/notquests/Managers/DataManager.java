@@ -529,6 +529,7 @@ public class DataManager {
         }
         configuration.setQuestPreviewUseGUI(getGeneralConfig().getBoolean(key));
 
+
         //Description
         key = "gui.questpreview.description.enabled";
         if (!getGeneralConfig().isBoolean(key)) {
@@ -557,6 +558,27 @@ public class DataManager {
             valueChanged = true;
         }
         configuration.showObjectiveItemAmount = getGeneralConfig().getBoolean(key);
+
+        key = "gui.quest-description-max-line-length";
+        if (!getGeneralConfig().isInt(key)) {
+            getGeneralConfig().set(key, 50);
+            valueChanged = true;
+        }
+        configuration.guiQuestDescriptionMaxLineLength = getGeneralConfig().getInt(key);
+
+        key = "gui.objective-description-max-line-length";
+        if (!getGeneralConfig().isInt(key)) {
+            getGeneralConfig().set(key, 50);
+            valueChanged = true;
+        }
+        configuration.guiObjectiveDescriptionMaxLineLength = getGeneralConfig().getInt(key);
+
+        key = "gui.wrap-long-words";
+        if (!getGeneralConfig().isBoolean(key)) {
+            getGeneralConfig().set(key, false);
+            valueChanged = true;
+        }
+        configuration.wrapLongWords = getGeneralConfig().getBoolean(key);
 
         //Rewards
         key = "gui.questpreview.rewards.enabled";
@@ -708,6 +730,13 @@ public class DataManager {
         }
         configuration.setIntegrationUltimateClansEnabled(getGeneralConfig().getBoolean(key));
 
+        key = "integrations.towny.enabled";
+        if (!getGeneralConfig().isBoolean(key)) {
+            getGeneralConfig().set(key, true);
+            valueChanged = true;
+        }
+        configuration.setIntegrationTownyEnabled(getGeneralConfig().getBoolean(key));
+
 
         key = "visual.fancy-command-completion.actionbar-enabled";
         if (!getGeneralConfig().isBoolean(key)) {
@@ -754,7 +783,7 @@ public class DataManager {
         key = "general.packet-magic.enabled";
         if (!getGeneralConfig().isBoolean(key)) {
             getGeneralConfig().set(key, false);
-            valueChanged = false;
+            valueChanged = true;
         }
         configuration.packetMagic = getGeneralConfig().getBoolean(key);
 
@@ -768,9 +797,16 @@ public class DataManager {
         key = "general.packet-magic.conversations.delete-previous";
         if (!getGeneralConfig().isBoolean(key)) {
             getGeneralConfig().set(key, false);
-            valueChanged = false;
+            valueChanged = true;
         }
         configuration.deletePreviousConversations = getGeneralConfig().getBoolean(key);
+
+        key = "general.packet-magic.conversations.history-size";
+        if (!getGeneralConfig().isInt(key)) {
+            getGeneralConfig().set(key, 20);
+            valueChanged = true;
+        }
+        configuration.previousConversationsHistorySize = getGeneralConfig().getInt(key);
 
         if (valueChanged) {
             main.getLogManager().info("<AQUA>General.yml</AQUA> Configuration was updated with new values! Saving it...");

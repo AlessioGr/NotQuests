@@ -105,47 +105,10 @@ public class ActiveQuest {
         return completedObjectives;
     }
 
-    /*public void updateQuestStatus(){
-
-        for(ActiveObjective activeObjective : activeObjectives){
-            if(activeObjective.isCompleted()){
-                toRemove.add(activeObjective);
-                questPlayer.sendMessage("§aYou have successfully completed the objective §e" + activeObjective.getObjective().getObjectiveType() + "§a for quest §b" + quest.getQuestName() + "§a!");
-            }
-        }
-        activeObjectives.removeAll(toRemove);
-        completedObjectives.addAll(toRemove);
-        toRemove.clear();
-
-        if(activeObjectives.size() == 0){
-            setCompleted();
-
-        }
-    }*/
-
     public final boolean isCompleted() {
         return activeObjectives.size() == 0;
     }
 
-  /*  public void setCompleted(){
-        completed = true;
-        UUID playerUUID = questPlayer.getUUID();
-        Player player = Bukkit.getPlayer(playerUUID);
-        if(player != null) {
-            if(questPlayer.getActiveQuests().size() > 0){
-                for(ActiveQuest activeQuest : questPlayer.getActiveQuests()){
-                    for(ActiveObjective activeObjective : activeQuest.getActiveObjectives()){
-                        if(activeObjective.getObjective() instanceof OtherQuestObjective){
-                            if( ((OtherQuestObjective) activeObjective.getObjective()).getOtherQuest().equals(quest) ){
-                                activeObjective.addProgress(1);
-                            }
-                        }
-                    }
-                }
-                questPlayer.updateOtherQuestObjectiveQuestStatus(quest);
-            }
-        }
-    }*/
 
     public final QuestPlayer getQuestPlayer() {
         return questPlayer;
@@ -153,70 +116,51 @@ public class ActiveQuest {
 
     //For Citizens NPCs
     public void notifyActiveObjectiveCompleted(final ActiveObjective activeObjective, final boolean silent, final int NPCID) {
-        if (activeObjective.isCompleted(NPCID)) {
-            ObjectiveCompleteEvent objectiveCompleteEvent = new ObjectiveCompleteEvent(getQuestPlayer(), activeObjective, this);
-            if (Bukkit.isPrimaryThread()) {
-                Bukkit.getScheduler().runTaskAsynchronously(main, () -> {
-                    Bukkit.getPluginManager().callEvent(objectiveCompleteEvent);
-                });
-            } else {
-                Bukkit.getPluginManager().callEvent(objectiveCompleteEvent);
-            }
-
-            if (!objectiveCompleteEvent.isCancelled()) {
-
-                toRemove.add(activeObjective);
-                if (!silent) {
-                    questPlayer.sendMessage(main.getLanguageManager().getString("chat.objectives.successfully-completed", questPlayer.getPlayer(), this, activeObjective));
-                    final Player player = Bukkit.getPlayer(questPlayer.getUUID());
-                    if (player != null) {
-                        player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, SoundCategory.MASTER, 75, 1.4f);
-
-                    }
-                }
-            }
-
-
-        }
+        notifyActiveObjectiveCompleted(activeObjective, silent, NPCID, null);
     }
-
     //For Armor Stands
     public void notifyActiveObjectiveCompleted(final ActiveObjective activeObjective, final boolean silent, final UUID armorStandUUID) {
-        if (activeObjective.isCompleted(armorStandUUID)) {
-
-            ObjectiveCompleteEvent objectiveCompleteEvent = new ObjectiveCompleteEvent(getQuestPlayer(), activeObjective, this);
-            if (Bukkit.isPrimaryThread()) {
-                Bukkit.getScheduler().runTaskAsynchronously(main, () -> {
-                    Bukkit.getPluginManager().callEvent(objectiveCompleteEvent);
-                });
-            } else {
+        notifyActiveObjectiveCompleted(activeObjective, silent, -1, armorStandUUID);
+    }
+    public void notifyActiveObjectiveCompleted(final ActiveObjective activeObjective, final boolean silent, final int NPCID, final UUID armorStandUUID) {
+        ObjectiveCompleteEvent objectiveCompleteEvent = new ObjectiveCompleteEvent(getQuestPlayer(), activeObjective, this);
+        if (Bukkit.isPrimaryThread()) {
+            Bukkit.getScheduler().runTaskAsynchronously(main, () -> {
                 Bukkit.getPluginManager().callEvent(objectiveCompleteEvent);
-            }
+            });
+        } else {
+            Bukkit.getPluginManager().callEvent(objectiveCompleteEvent);
+        }
 
-            if (!objectiveCompleteEvent.isCancelled()) {
+        if(objectiveCompleteEvent.isCancelled()){
+            return;
+        }
 
-                toRemove.add(activeObjective);
-                if (!silent) {
-                    questPlayer.sendMessage(main.getLanguageManager().getString("chat.objectives.successfully-completed", questPlayer.getPlayer(), this, activeObjective));
-                    final Player player = Bukkit.getPlayer(questPlayer.getUUID());
-                    if (player != null) {
-                        player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, SoundCategory.MASTER, 75, 1.4f);
+        completedObjectives.add(activeObjective);
 
-                    }
-                }
+        //Add to completed Objectives list. This list will then be used in removeCompletedObjectives() to remove all its contests also from the activeObjectives lists
+        //(Without a concurrentmodificationexception)
+        toRemove.add(activeObjective);
+        if (!silent) {
+            questPlayer.sendMessage(main.getLanguageManager().getString("chat.objectives.successfully-completed", questPlayer.getPlayer(), this, activeObjective));
+            final Player player = Bukkit.getPlayer(questPlayer.getUUID());
+            if (player != null) {
+                player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, SoundCategory.MASTER, 75, 1.4f);
+
             }
         }
     }
 
 
     public void removeCompletedObjectives(final boolean notifyPlayer) {
-        if (toRemove.size() != 0) {
-            activeObjectives.removeAll(toRemove);
-            completedObjectives.addAll(toRemove);
-            toRemove.clear();
+        if (toRemove.size() == 0) {
+            return;
         }
 
+        activeObjectives.removeAll(toRemove);
+        toRemove.clear();
 
+        //Other active objectives might be unlocked if this objective is completed. This will re-check them all. (This is either due to a dependency or OtherQuest condition (for v3))
         for (final ActiveObjective activeObjectiveToCheckForIfUnlocked : activeObjectives) {
             activeObjectiveToCheckForIfUnlocked.updateUnlocked(notifyPlayer, true);
         }

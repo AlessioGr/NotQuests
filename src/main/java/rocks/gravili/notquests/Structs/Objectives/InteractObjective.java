@@ -33,6 +33,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.ActiveObjective;
 import rocks.gravili.notquests.Structs.Quest;
 
 
@@ -178,6 +179,11 @@ public class InteractObjective extends Objective {
         }
         main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.cancelInteraction", isCancelInteraction());
 
+
+    }
+
+    @Override
+    public void onObjectiveUnlock(final ActiveObjective activeObjective) {
 
     }
 

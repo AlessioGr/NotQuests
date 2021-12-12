@@ -66,6 +66,7 @@ public class Configuration {
 
     public boolean packetMagic = false;
     public boolean deletePreviousConversations = false;
+    public int previousConversationsHistorySize = 20;
 
     //Particles
     private int citizensNPCQuestGiverIndicatorParticleSpawnInterval = 10;
@@ -94,6 +95,8 @@ public class Configuration {
     private boolean integrationSlimeFunEnabled = true;
     private boolean integrationLuckPermsEnabled = true;
     private boolean integrationUltimateClansEnabled = true;
+    private boolean integrationTownyEnabled = true;
+
 
     //Other
     private boolean actionBarFancyCommandCompletionEnabled = true;
@@ -120,6 +123,10 @@ public class Configuration {
 
 
     public boolean supportPlaceholderAPIInTranslationStrings = false;
+
+    public int guiQuestDescriptionMaxLineLength = 50;
+    public int guiObjectiveDescriptionMaxLineLength = 50;
+    public boolean wrapLongWords = false;
 
 
     public Configuration() {
@@ -470,5 +477,13 @@ public class Configuration {
 
     public void setIntegrationUltimateClansEnabled(boolean integrationUltimateClansEnabled) {
         this.integrationUltimateClansEnabled = integrationUltimateClansEnabled;
+    }
+
+    public boolean isIntegrationTownyEnabled() {
+        return integrationTownyEnabled;
+    }
+
+    public void setIntegrationTownyEnabled(boolean integrationTownyEnabled) {
+        this.integrationTownyEnabled = integrationTownyEnabled;
     }
 }

@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'rocks.gravili.notquests'
-version = '3.0.0-dev'
+version = '2.3.2'
 
 repositories {
     mavenCentral()
@@ -50,6 +50,10 @@ repositories {
             includeGroup 'io.github.retrooper'
             includeGroup 'com.github.AlessioGr'
             includeGroup 'com.github.AlessioGr.packetevents'
+            includeGroup 'com.github.TownyAdvanced'
+        }
+        metadataSources {
+            artifact()
         }
     }
     maven {
@@ -103,7 +107,7 @@ repositories {
 
 dependencies {
     //compileOnly 'io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT'
-    compileOnly 'org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT'
+    compileOnly 'org.spigotmc:spigot-api:1.18.1-R0.1-SNAPSHOT'
     //does not work  implementation "net.kyori:adventure-platform-bukkit:4.0.0"
     implementation 'org.bstats:bstats-bukkit:2.2.1'
     compileOnly 'net.citizensnpcs:citizens-main:2.0.28-SNAPSHOT'
@@ -111,6 +115,7 @@ dependencies {
     compileOnly 'com.github.MilkBowl:VaultAPI:1.7'
     implementation 'de.themoep:inventorygui:1.5-SNAPSHOT'
     implementation 'commons-io:commons-io:2.11.0'
+    implementation 'org.apache.commons:commons-text:1.9'
 
     implementation 'io.lumine.xikage:MythicMobs:4.12.0'
     compileOnly files('libs/EliteMobs.jar')
@@ -126,6 +131,7 @@ dependencies {
     compileOnly 'net.luckperms:api:5.3'
 
     //compileOnly 'com.github.NEZNAMY:TAB:2.9.2'
+    compileOnly 'com.github.TownyAdvanced:Towny:0.97.5.0'
 
 
     //Shaded
@@ -141,8 +147,9 @@ dependencies {
 
     implementation 'me.lucko:commodore:1.11'
 
+    //implementation 'com.github.retrooper.packetevents:bukkit:2.0-SNAPSHOT'
+    implementation 'com.github.AlessioGr.packetevents:bukkit:2.0-SNAPSHOT'
 
-    implementation 'com.github.retrooper.packetevents:bukkit:2.0-SNAPSHOT'
 }
 
 /**
@@ -165,12 +172,13 @@ shadowJar {
         relocate('io.leangen.geantyref', path + '.geantyref')
         relocate("de.themoep", path + '.de.themoep')
         relocate("org.apache.commons.io", path + '.commons.io')
-
+        relocate("org.apache.commons.text", path + '.commons.text')
 
 
         include dependency('io.papermc:paperlib')
         include dependency("de.themoep:inventorygui:1.5-SNAPSHOT")
         include dependency('commons.io:')
+        include dependency('org.apache.commons:commons-text')
         include dependency('org.bstats:')
         include dependency('net.kyori:')
         include dependency('cloud.commandframework:')
@@ -180,7 +188,7 @@ shadowJar {
         //include dependency('com.github.retrooper.packetevents:')
         //include dependency('io.github.retrooper.packetevents:')
 
-        include dependency('com.github.retrooper.packetevents:')
+        include dependency('com.github.AlessioGr.packetevents:')
     }
 
     relocate("io.github.retrooper.packetevents", path + '.packetevents.bukkit')
@@ -229,7 +237,7 @@ publishing {
         maven(MavenPublication) {
             groupId = 'rocks.gravili.notquests'
             artifactId = 'NotQuests'
-            version = '3.0.0-dev'
+            version = '2.3.2'
 
             from components.java
         }

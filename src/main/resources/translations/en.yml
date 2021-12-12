@@ -69,6 +69,8 @@ chat:
         base: '    &8└─ &7%EVENTUALCOLOR%Jump &f%EVENTUALCOLOR%%AMOUNTOFJUMPS% &7%EVENTUALCOLOR%times'
       smelt:
         base: '    &8└─ &7%EVENTUALCOLOR%Items to smelt: &f%EVENTUALCOLOR%%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+      townyReachResidentCount:
+        base: '    &8└─ &7%EVENTUALCOLOR%Reach resident amount: &f%EVENTUALCOLOR%%AMOUNT%'
 titles:
   quest-accepted:
     title: '&fQuest accepted'
@@ -80,6 +82,15 @@ titles:
     title: '&cQuest Failed'
     subtitle: <#b617ff>%QUESTNAME%
 gui:
+  reward-hidden-text: '. &7[HIDDEN]'
+  availableQuests:
+    title: '         &9Available Quests'
+    button:
+      questPreview:
+        acceptedSuffix: ' &a[ACCEPTED]'
+        questNamePrefix: '&b'
+        questDescriptionPrefix: '&8'
+        bottomText: '&aClick to open Quest'
   main:
     title: '                &9Quests'
     button:

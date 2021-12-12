@@ -31,6 +31,7 @@ import org.bukkit.entity.Player;
 import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.Commands.newCMDs.arguments.EntityTypeSelector;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.ActiveObjective;
 import rocks.gravili.notquests.Structs.Quest;
 
 public class BreedObjective extends Objective {
@@ -62,6 +63,11 @@ public class BreedObjective extends Objective {
     @Override
     public void save() {
         main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.mobToBreed", getEntityToBreedType());
+
+    }
+
+    @Override
+    public void onObjectiveUnlock(final ActiveObjective activeObjective) {
 
     }
 

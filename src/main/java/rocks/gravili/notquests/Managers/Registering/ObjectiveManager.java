@@ -24,6 +24,7 @@ import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Objectives.*;
 import rocks.gravili.notquests.Structs.Objectives.hooks.KillEliteMobsObjective;
 import rocks.gravili.notquests.Structs.Objectives.hooks.SlimefunResearchObjective;
+import rocks.gravili.notquests.Structs.Objectives.hooks.TownyReachResidentCountObjective;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -66,6 +67,8 @@ public class ObjectiveManager {
         registerObjective("Interact", InteractObjective.class);
         registerObjective("Jump", JumpObjective.class);
         registerObjective("SmeltItems", SmeltObjective.class);
+        registerObjective("TownyReachResidentCount", TownyReachResidentCountObjective.class);
+
 
 
         //registerObjectiveCommandCompletionHandler("KillMobs", this::eee);

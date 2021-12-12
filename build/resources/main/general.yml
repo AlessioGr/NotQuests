@@ -23,6 +23,7 @@ general:
     enabled: false
     conversations:
       delete-previous: false
+      history-size: 20
 visual:
   #Sets which language to use. Default is languages/en.yml
   language: en
@@ -61,6 +62,9 @@ visual:
 gui:
   show-quest-item-amount: false
   show-objective-item-amount: true
+  wrap-long-words: false
+  quest-description-max-line-length: 50
+  objective-description-max-line-length: 50
   questpreview:
     # If set to false, clickable text will be used for Quest Previews instead
     enabled: true
@@ -105,4 +109,6 @@ integrations: #These should usually be left to true. These integrations will onl
   luckperms:
     enabled: true
   ultimateclans:
+    enabled: true
+  towny:
     enabled: true
