@@ -167,49 +167,42 @@ public class ActiveObjective {
         return currentProgress;
     }
 
+
+    public void addProgress(long progressToAdd) {
+        addProgress(progressToAdd, -1, null, false);
+    }
     //For Citizens NPCs
-    public void addProgress(long i, final int NPCID) {
-        currentProgress += i;
-        if (isCompleted(NPCID)) {
-            getQuestPlayer().sendDebugMessage("Objective " + NotQuestColors.debugHighlightGradient + getObjective().getObjectiveFinalName() + "</gradient> of quest " + NotQuestColors.debugHighlightGradient + getActiveQuest().getQuest().getQuestFinalName() + "</gradient> has been registered as completed.");
-            setHasBeenCompleted(true);
-            activeQuest.notifyActiveObjectiveCompleted(this, false, NPCID);
-        }
-        getQuestPlayer().sendDebugMessage("+" + i + " progress for objective " + NotQuestColors.debugHighlightGradient + getObjective().getObjectiveFinalName() + "</gradient> of quest " + NotQuestColors.debugHighlightGradient + getActiveQuest().getQuest().getQuestFinalName() + "</gradient>.");
+    public void addProgress(long progressToAdd, final int NPCID) {
+        addProgress(progressToAdd, NPCID, null, false);
+    }
+    public void addProgress(long progressToAdd, final int NPCID, final boolean silent) {
+        addProgress(progressToAdd, NPCID, null, silent);
+
+    }
+    //For Armor Stands
+    public void addProgress(long progressToAdd, final UUID armorStandUUID) {
+        addProgress(progressToAdd, -1, armorStandUUID, false);
+    }
+    public void addProgress(long progressToAdd, final UUID armorStandUUID, final boolean silent) {
+        addProgress(progressToAdd, -1, armorStandUUID, silent);
     }
 
-    //For Armor Stands
-    public void addProgress(long i, final UUID armorStandUUID) {
-        currentProgress += i;
+    public void addProgress(long progressToAdd, final int NPCID, final UUID armorStandUUID, boolean silent) {
+        currentProgress += progressToAdd;
         if (isCompleted(armorStandUUID)) {
             setHasBeenCompleted(true);
-            activeQuest.notifyActiveObjectiveCompleted(this, false, armorStandUUID);
+            if(armorStandUUID != null){
+                activeQuest.notifyActiveObjectiveCompleted(this, silent, armorStandUUID);
+            }else{
+                activeQuest.notifyActiveObjectiveCompleted(this, silent, NPCID);
+            }
         }
-        getQuestPlayer().sendDebugMessage("+" + i + " progress for objective " + NotQuestColors.debugHighlightGradient + getObjective().getObjectiveFinalName() + "</gradient> of quest " + NotQuestColors.debugHighlightGradient + getActiveQuest().getQuest().getQuestFinalName() + "</gradient>.");
+        getQuestPlayer().sendDebugMessage("+" + progressToAdd + " progress for objective " + NotQuestColors.debugHighlightGradient + getObjective().getObjectiveFinalName() + "</gradient> of quest " + NotQuestColors.debugHighlightGradient + getActiveQuest().getQuest().getQuestFinalName() + "</gradient>. Silent: " + silent);
     }
 
-    //For Citizens NPCs
-    public void addProgressSilent(long i, final int NPCID) {
-        currentProgress += i;
-        if (isCompleted(NPCID)) {
-            setHasBeenCompleted(true);
-            activeQuest.notifyActiveObjectiveCompleted(this, true, NPCID);
-        }
-        getQuestPlayer().sendDebugMessage("[Silent] +" + i + " progress for objective " + NotQuestColors.debugHighlightGradient + getObjective().getObjectiveFinalName() + "</gradient> of quest " + NotQuestColors.debugHighlightGradient + getActiveQuest().getQuest().getQuestFinalName() + "</gradient>.");
-    }
 
-    //For Armor Stands
-    public void addProgressSilent(long i, final UUID armorStandUUID) {
-        currentProgress += i;
-        if (isCompleted(armorStandUUID)) {
-            setHasBeenCompleted(true);
-            activeQuest.notifyActiveObjectiveCompleted(this, true, armorStandUUID);
-        }
-        getQuestPlayer().sendDebugMessage("[Silent] +" + i + " progress for objective " + NotQuestColors.debugHighlightGradient + getObjective().getObjectiveFinalName() + "</gradient> of quest " + NotQuestColors.debugHighlightGradient + getActiveQuest().getQuest().getQuestFinalName() + "</gradient>.");
-    }
 
     public void removeProgress(int i, boolean capAtZero) {
-
         if (capAtZero) {
             if (currentProgress - i < 0) {
                 if (currentProgress > 0) {

@@ -2,7 +2,6 @@ package rocks.gravili.notquests.Events.hooks;
 
 import com.palmergames.bukkit.towny.event.TownAddResidentEvent;
 import com.palmergames.bukkit.towny.event.TownRemoveResidentEvent;
-import com.palmergames.bukkit.towny.object.Resident;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -30,7 +29,7 @@ public class TownyEvents implements Listener {
                         for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
                             if (activeObjective.isUnlocked()) {
                                 if (activeObjective.getObjective() instanceof TownyReachResidentCountObjective) {
-                                    activeObjective.addProgress(1, -1);
+                                    activeObjective.addProgress(1);
                                 }
                             }
 

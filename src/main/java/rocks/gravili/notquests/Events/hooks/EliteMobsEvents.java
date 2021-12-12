@@ -80,7 +80,7 @@ public class EliteMobsEvents implements Listener {
                                     if (!killEliteMobsObjective.getSpawnReason().isBlank() && !eliteMob.getSpawnReason().toString().toLowerCase(Locale.ROOT).equalsIgnoreCase(killEliteMobsObjective.getSpawnReason().toLowerCase(Locale.ROOT))) {
                                         continue;
                                     }
-                                    activeObjective.addProgress(1, -1);
+                                    activeObjective.addProgress(1);
 
                                 }
 

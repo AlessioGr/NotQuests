@@ -190,7 +190,7 @@ public class QuestEvents implements Listener {
                                     }
 
 
-                                    activeObjective.addProgress(amount, -1);
+                                    activeObjective.addProgress(amount);
 
 
                                 }
@@ -266,7 +266,7 @@ public class QuestEvents implements Listener {
                                     }
 
 
-                                    activeObjective.addProgress(recipeAmount, -1);
+                                    activeObjective.addProgress(recipeAmount);
 
 
                                 }
@@ -395,8 +395,8 @@ public class QuestEvents implements Listener {
         for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
             for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
                 if (activeObjective.isUnlocked()) {
-                    if (activeObjective.getObjective() instanceof JumpObjective jumpObjective) {
-                        activeObjective.addProgress(1, -1);
+                    if (activeObjective.getObjective() instanceof JumpObjective) {
+                        activeObjective.addProgress(1);
                     }
                 }
 
@@ -448,7 +448,7 @@ public class QuestEvents implements Listener {
                             return;
                         }
 
-                        activeObjective.addProgress(1, -1);
+                        activeObjective.addProgress(1);
                         if (interactObjective.isCancelInteraction()) {
                             e.setCancelled(true);
                         }
@@ -489,7 +489,7 @@ public class QuestEvents implements Listener {
                             continue;
                         }
 
-                        activeObjective.addProgress(1, -1);
+                        activeObjective.addProgress(1);
                         if (runCommandObjective.isCancelCommand()) {
                             e.setCancelled(true);
                         }
@@ -553,7 +553,7 @@ public class QuestEvents implements Listener {
                         if (activeObjective.isUnlocked()) {
                             if (activeObjective.getObjective() instanceof BreedObjective breedObjective) {
                                 if(breedObjective.getEntityToBreedType().equalsIgnoreCase("any") ||  breedObjective.getEntityToBreedType().equalsIgnoreCase(e.getEntityType().toString())){
-                                    activeObjective.addProgress(1, -1);
+                                    activeObjective.addProgress(1);
                                 }
 
                             }
@@ -581,7 +581,7 @@ public class QuestEvents implements Listener {
                             if (activeObjective.isUnlocked()) {
                                 if (activeObjective.getObjective() instanceof BreakBlocksObjective breakBlocksObjective) {
                                     if (breakBlocksObjective.getBlockToBreak().equals(e.getBlock().getType())) {
-                                        activeObjective.addProgress(1, -1);
+                                        activeObjective.addProgress(1);
                                     }
                                 } else if (activeObjective.getObjective() instanceof PlaceBlocksObjective placeBlocksObjective) { //Deduct if Block is Broken for PlaceBlocksObjective
                                     if (placeBlocksObjective.getBlockToPlace().equals(e.getBlock().getType())) {
@@ -621,7 +621,7 @@ public class QuestEvents implements Listener {
                                     }
                                 } else if (activeObjective.getObjective() instanceof PlaceBlocksObjective placeBlocksObjective) {
                                     if (placeBlocksObjective.getBlockToPlace().equals(e.getBlock().getType())) {
-                                        activeObjective.addProgress(1, -1);
+                                        activeObjective.addProgress(1);
                                     }
                                 }
                             }
@@ -662,7 +662,7 @@ public class QuestEvents implements Listener {
                                         }
                                     }
 
-                                    activeObjective.addProgress(e.getItem().getItemStack().getAmount(), -1);
+                                    activeObjective.addProgress(e.getItem().getItemStack().getAmount());
 
                                 }
                             }
@@ -784,7 +784,7 @@ public class QuestEvents implements Listener {
                                                 }
                                             }
 
-                                            activeObjective.addProgress(1, -1);
+                                            activeObjective.addProgress(1);
                                         }
 
                                     }
@@ -818,7 +818,7 @@ public class QuestEvents implements Listener {
                                     continue;
                                 }
 
-                                //If the objectiv-item which needs to be crafted has an ItemMeta...
+                                //If the objective-item which needs to be crafted has an ItemMeta...
                                 if (consumeItemsObjective.getItemToConsume().getItemMeta() != null) {
                                     //then check if the ItemMeta of the consumed item is equal to the ItemMeta needed in the ConsumeItemsObjective
                                     if (!consumeItemsObjective.getItemToConsume().getItemMeta().equals(e.getItem().getItemMeta())) {
@@ -826,7 +826,7 @@ public class QuestEvents implements Listener {
                                     }
                                 }
 
-                                activeObjective.addProgress(1, -1);
+                                activeObjective.addProgress(1);
 
                             }
 
@@ -933,7 +933,7 @@ public class QuestEvents implements Listener {
                                     if (currentLocation.getX() >= minLocation.getX() && currentLocation.getX() <= maxLocation.getX()) {
                                         if (currentLocation.getZ() >= minLocation.getZ() && currentLocation.getZ() <= maxLocation.getZ()) {
                                             if (currentLocation.getY() >= minLocation.getY() && currentLocation.getY() <= maxLocation.getY()) {
-                                                activeObjective.addProgress(1, -1);
+                                                activeObjective.addProgress(1);
                                             }
                                         }
                                     }

@@ -26,7 +26,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
@@ -51,8 +50,11 @@ public class InventoryEvents implements Listener {
         ArrayList<String> lore = new ArrayList<>();
         lore.add("§7A book containing all your quest information");
 
-        im.setDisplayName("§9§oJournal");
-        im.setLore(lore);
+        if(im != null){
+            im.setDisplayName("§9§oJournal");
+            im.setLore(lore);
+        }
+
 
         journal.setItemMeta(im);
 
@@ -144,13 +146,8 @@ public class InventoryEvents implements Listener {
     public void onInventoryUse(InventoryClickEvent e) {
         if (e.getWhoClicked() instanceof Player player && e.getClickedInventory() != null) {
             if (isItemSlotWorld(player.getWorld().getName())) {
-                ItemStack item;
+                ItemStack item = e.getCurrentItem();
 
-                if (e.getClick() == ClickType.NUMBER_KEY) {
-                    item = e.getCurrentItem();
-                } else {
-                    item = e.getCurrentItem();
-                }
                 if (item != null && item.isSimilar(journal)) {
                     e.setCancelled(true);
 
@@ -160,20 +157,6 @@ public class InventoryEvents implements Listener {
                     }
                 }
 
-                /*if(e.getCursor() != null && e.getCursor().isSimilar(journal)){
-                    player.sendMessage("b");
-                    player.setItemOnCursor(null);
-                    e.setCurrentItem(null);
-                    player.getInventory().setItem(8, journal);
-                    e.setCancelled(true);
-                }
-                if(e.getCurrentItem() != null && e.getCurrentItem().isSimilar(journal)){
-                    player.sendMessage("a");
-                    e.setCurrentItem(new ItemStack(Material.AIR));
-                    player.setItemOnCursor(new ItemStack(Material.AIR));
-                    player.getInventory().setItem(8, journal);
-                    //e.setCancelled(true);
-                }*/
 
                 final ItemStack journalItem = player.getInventory().getItem(8);
                 if (journalItem == null || !journalItem.isSimilar(journal)) {

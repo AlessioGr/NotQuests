@@ -334,25 +334,30 @@ public class QuestPlayer {
         }
 
         if (activeQuest.isCompleted()) {
-            giveReward(activeQuest.getQuest());
+            //Add to completed Quests list. This list will then be used in removeCompletedQuests() to remove all its contests also from the activeQuests lists
+            //(Without a ConcurrentModificationException)
             questsToComplete.add(activeQuest);
+            //We can safely (without ConcurrentModificationException) add it to the CompletedQuests list already without having to remove it from activeQuests
+            completedQuests.add(new CompletedQuest(activeQuest.getQuest(), this));
+
+            //Give Quest completion reward & show Quest completion title
+            giveReward(activeQuest.getQuest());
             final Player player = getPlayer();
             if (player != null) {
                 if (main.getDataManager().getConfiguration().visualTitleQuestCompleted_enabled) {
-
                     player.sendTitle(main.getLanguageManager().getString("titles.quest-completed.title", player), main.getLanguageManager().getString("titles.quest-accepted.subtitle", player, this, activeQuest), 2, 60, 8);
                 }
-
                 player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.MASTER, 100, 40);
-
             }
+
         }
 
+        //Handle OtherQuest Objectives for other Quests
         for (ActiveQuest activeQuest2 : activeQuests) {
             for (ActiveObjective objective : activeQuest2.getActiveObjectives()) {
-                if (objective.getObjective() instanceof OtherQuestObjective) {
-                    if (((OtherQuestObjective) (objective.getObjective())).getOtherQuest().equals(activeQuest.getQuest())) {
-                        objective.addProgress(1, -1);
+                if (objective.getObjective() instanceof OtherQuestObjective otherQuestObjective) {
+                    if (otherQuestObjective.getOtherQuest().equals(activeQuest.getQuest())) {
+                        objective.addProgress(1);
                     }
                 }
             }
@@ -419,9 +424,6 @@ public class QuestPlayer {
         }
         activeQuests.removeAll(questsToComplete);
         activeQuestsCopy.removeAll(questsToComplete);
-        for (final ActiveQuest activeQuest2 : questsToComplete) {
-            completedQuests.add(new CompletedQuest(activeQuest2.getQuest(), this));
-        }
 
         questsToComplete.clear();
     }
