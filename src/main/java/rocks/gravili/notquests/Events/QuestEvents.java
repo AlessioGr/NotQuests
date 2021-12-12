@@ -47,8 +47,6 @@ import rocks.gravili.notquests.Structs.QuestPlayer;
 import rocks.gravili.notquests.Structs.Triggers.ActiveTrigger;
 import rocks.gravili.notquests.Structs.Triggers.TriggerTypes.WorldEnterTrigger;
 import rocks.gravili.notquests.Structs.Triggers.TriggerTypes.WorldLeaveTrigger;
-
-import java.awt.*;
 import java.util.Locale;
 
 import static rocks.gravili.notquests.Commands.NotQuestColors.*;
