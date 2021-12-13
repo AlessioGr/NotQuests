@@ -1200,7 +1200,7 @@ public class QuestManager {
 
 
             audience.sendMessage(miniMessage.parse(
-                    highlightGradient + "   Depending objectives:</gradient>"
+                    highlightGradient + "   Conditions:</gradient>"
             ));
             int counter2 = 1;
             for (final Condition condition : objective.getConditions()) {
@@ -1211,7 +1211,7 @@ public class QuestManager {
             }
             if (counter2 == 1) {
                 audience.sendMessage(miniMessage.parse(
-                        unimportant + "      No depending objectives found!"
+                        unimportant + "      No conditions found!"
                 ));
             }
 
