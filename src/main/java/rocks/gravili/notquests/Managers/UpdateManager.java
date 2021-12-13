@@ -1,6 +1,10 @@
 package rocks.gravili.notquests.Managers;
 
+import org.bukkit.configuration.ConfigurationSection;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.Conditions.ObjectiveCompletedCondition;
+import rocks.gravili.notquests.Structs.Objectives.Objective;
+import rocks.gravili.notquests.Structs.Quest;
 
 public class UpdateManager {
     final UpdateChecker updateChecker;
@@ -31,6 +35,32 @@ public class UpdateManager {
         main.getDataManager().getQuestsConfig().set("quests." + questName + ".requirements." + requirementID + ".conditionType", conditionTypeString);
         main.getDataManager().saveQuestsConfig();
         return main.getDataManager().getQuestsConfig().getString("quests." + questName + ".requirements." + requirementID + ".requirementType", "");
+    }
+
+
+    public void convertObjectiveDependenciesToNewObjectiveConditions(final Quest quest) {
+
+        for (final Objective objective : quest.getObjectives()) {
+            final ConfigurationSection objectiveDependenciesConfigurationSection = main.getDataManager().getQuestsConfig().getConfigurationSection("quests." + quest.getQuestName() + ".objectives." + objective.getObjectiveID() + ".dependantObjectives.");
+            if (objectiveDependenciesConfigurationSection != null) {
+                main.getLogManager().info("Converting old objective dependencies to objective conditions...");
+                for (String objectiveDependencyNumber : objectiveDependenciesConfigurationSection.getKeys(false)) {
+                    //Get old stuff
+                    int dependantObjectiveID = main.getDataManager().getQuestsConfig().getInt("quests." + quest.getQuestName() + ".objectives." + (objective.getObjectiveID()) + ".dependantObjectives." + objectiveDependencyNumber + ".objectiveID", objective.getObjectiveID());
+
+                    //Delete old stuff
+                    main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + objective.getObjectiveID() + ".dependantObjectives", null);
+
+                    //Create new stuff with old stuff
+                    ObjectiveCompletedCondition objectiveCompletedCondition = new ObjectiveCompletedCondition(main, quest, objective);
+                    objectiveCompletedCondition.setObjectiveID(dependantObjectiveID);
+                    objective.addCondition(objectiveCompletedCondition, true);
+
+                    //Conversion done. Now save conversion
+                    main.getDataManager().saveQuestsConfig();
+                }
+            }
+        }
 
     }
 }

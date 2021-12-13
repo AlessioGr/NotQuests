@@ -690,7 +690,7 @@ public class AdminEditCommands {
                                     + "</gradient>:</gradient>"
                     ));
                     int counter = 1;
-                    for (Condition condition : quest.getRequirements()) {
+                    for (Condition condition : objective.getConditions()) {
                         audience.sendMessage(miniMessage.parse(highlightGradient + counter + ". </gradient>" + mainGradient + condition.getConditionType() + "</gradient>"));
                         audience.sendMessage(miniMessage.parse(mainGradient + condition.getConditionDescription()));
                         counter += 1;

@@ -153,8 +153,6 @@ public class QuestPointsCondition extends Condition {
                                     + objective.getObjectiveFinalName() + "</gradient>!</gradient>"
                     ));
 
-
-
                 }));
 
 

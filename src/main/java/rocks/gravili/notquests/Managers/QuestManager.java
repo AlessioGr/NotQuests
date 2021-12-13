@@ -400,9 +400,13 @@ public class QuestManager {
                     }
 
 
+                    //Convert old dependencies
+                    main.getUpdateManager().convertObjectiveDependenciesToNewObjectiveConditions(quest);
+
+
                     //Objective Conditions
                     main.getLogManager().info("Loading objective conditions...");
-                   for (final Objective objective : quest.getObjectives()) { //TODO: Add objective name to error or debug messages to discern from normal requirement loading
+                    for (final Objective objective : quest.getObjectives()) { //TODO: Add objective name to error or debug messages to discern from normal requirement loading
                         final ConfigurationSection objectiveConditionsConfigurationSection = main.getDataManager().getQuestsConfig().getConfigurationSection("quests." + quest.getQuestName() + ".objectives." + objective.getObjectiveID() + ".conditions.");
                         if (objectiveConditionsConfigurationSection != null) {
                             for (String objectiveConditionNumber : objectiveConditionsConfigurationSection.getKeys(false)) {
