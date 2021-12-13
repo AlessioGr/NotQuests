@@ -29,7 +29,6 @@ import rocks.gravili.notquests.Structs.Triggers.Action;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
 
 public class ActionsManager {
     private final NotQuests main;
@@ -52,36 +51,24 @@ public class ActionsManager {
     }
 
     public void setupFiles() {
-        main.getLogManager().log(Level.INFO, "Loading actions.yml config");
+        main.getLogManager().info("Loading actions.yml config");
         if (actionsConfigFile == null) {
 
-            //Create the Data Folder if it does not exist yet (the NotQuests folder)
-            if (!main.getDataFolder().exists()) {
-                main.getLogManager().log(Level.INFO, "Data Folder not found. Creating a new one...");
+            main.getDataManager().prepareDataFolder();
 
-                if (!main.getDataFolder().mkdirs()) {
-                    main.getLogManager().log(Level.SEVERE, "There was an error creating the NotQuests data folder");
-                    main.getDataManager().disablePluginAndSaving("There was an error creating the NotQuests data folder.");
-                    return;
-                }
-
-
-            }
             actionsConfigFile = new File(main.getDataFolder(), "actions.yml");
 
             if (!actionsConfigFile.exists()) {
-                main.getLogManager().log(Level.INFO, "Actions Configuration (actions.yml) does not exist. Creating a new one...");
+                main.getLogManager().info("Actions Configuration (actions.yml) does not exist. Creating a new one...");
                 try {
                     //Try to create the actions.yml config file, and throw an error if it fails.
                     if (!actionsConfigFile.createNewFile()) {
-                        main.getLogManager().log(Level.SEVERE, "There was an error creating the actions.yml config file. (1)");
                         main.getDataManager().disablePluginAndSaving("There was an error creating the actions.yml config file.");
                         return;
 
                     }
                 } catch (IOException ioException) {
-                    ioException.printStackTrace();
-                    main.getDataManager().disablePluginAndSaving("There was an error creating the actions.yml config file. (2)");
+                    main.getDataManager().disablePluginAndSaving("There was an error creating the actions.yml config file. (2)", ioException);
                     return;
                 }
             }
@@ -107,7 +94,7 @@ public class ActionsManager {
             for (final String actionName : actionsConfigurationSection.getKeys(false)) {
                 final String consoleCommand = getActionsConfig().getString("actions." + actionName + ".specifics.consoleCommand", "");
                 if (consoleCommand.equalsIgnoreCase("")) {
-                    main.getLogManager().log(Level.WARNING, "Action has an empty console command. This should NOT be possible! Creating an action with an empty console command... Action name: <AQUA>" + actionName + "</AQUA>");
+                    main.getLogManager().warn("Action has an empty console command. This should NOT be possible! Creating an action with an empty console command... Action name: <AQUA>" + actionName + "</AQUA>");
                 }
                 boolean nameAlreadyExists = false;
                 for (final Action action : actions) {
@@ -124,11 +111,7 @@ public class ActionsManager {
                     getActionsConfig().set("actions." + actionName + ".specifics.consoleCommand", consoleCommand);
 
                 } else {
-                    main.getLogManager().log(Level.WARNING, "NotQuests > Action already exists. This should NOT be possible! Skipping action creation... Action name: <AQUA>" + actionName + "</AQUA>");
-
-                    main.getLogManager().log(Level.SEVERE, "Plugin disabled, because there was an error while loading quests action data.");
-                    main.getDataManager().setSavingEnabled(false);
-                    main.getServer().getPluginManager().disablePlugin(main);
+                    main.getDataManager().disablePluginAndSaving("Action already exists. This should NOT be possible! Action name: <AQUA>" + actionName + "</AQUA>");
                     return;
                 }
 
@@ -140,9 +123,9 @@ public class ActionsManager {
     public void saveActions() {
         try {
             actionsConfig.save(actionsConfigFile);
-            main.getLogManager().log(Level.INFO, "Saved Data to actions.yml");
+            main.getLogManager().info("Saved Data to actions.yml");
         } catch (IOException e) {
-            main.getLogManager().log(Level.SEVERE, "Error saving actions. Actions were not saved...");
+            main.getLogManager().severe("Error saving actions. Actions were not saved...");
 
         }
 

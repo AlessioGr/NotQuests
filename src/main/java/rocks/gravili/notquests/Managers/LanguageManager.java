@@ -40,7 +40,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -87,9 +86,8 @@ public class LanguageManager {
         languageFiles.add("pl.yml");
 
         if (!languageFolder.exists()) {
-            main.getLogManager().log(Level.INFO, "Languages Folder not found. Creating a new one...");
+            main.getLogManager().info(LogCategory.LANGUAGE, "Languages Folder not found. Creating a new one...");
             if (!languageFolder.mkdirs()) {
-                main.getLogManager().log(Level.SEVERE, "There was an error creating the NotQuests languages folder");
                 main.getDataManager().disablePluginAndSaving("There was an error creating the NotQuests languages folder.");
                 return;
             }
@@ -97,14 +95,13 @@ public class LanguageManager {
 
         for (final String fileName : languageFiles) {
             try {
-                main.getLogManager().log(Level.INFO, "Creating the <AQUA>" + fileName + "</AQUA> language file...");
+                main.getLogManager().info(LogCategory.LANGUAGE, "Creating the <AQUA>" + fileName + "</AQUA> language file...");
 
                 File file = new File(languageFolder, fileName);
 
 
                 if (!file.exists()) {
                     if (!file.createNewFile()) {
-                        main.getLogManager().log(Level.SEVERE, "There was an error creating the " + fileName + " language file. (3)");
                         main.getDataManager().disablePluginAndSaving("There was an error creating the " + fileName + " language file. (3)");
                         return;
                     }
@@ -115,11 +112,9 @@ public class LanguageManager {
                         try (OutputStream outputStream = new FileOutputStream(file)) {
                             IOUtils.copy(inputStream, outputStream);
                         } catch (Exception e) {
-                            main.getLogManager().log(Level.SEVERE, "There was an error creating the " + fileName + " language file. (4)");
-                            main.getDataManager().disablePluginAndSaving("There was an error creating the " + fileName + " language file. (4)");
+                            main.getDataManager().disablePluginAndSaving("There was an error creating the " + fileName + " language file. (4)", e);
                             return;
                         }
-
 
                     }
                 }
@@ -128,7 +123,7 @@ public class LanguageManager {
                 //Doesn't matter if the en.yml exists in the plugin folder or not, because we're reading it from the internal resources folder
                 if (fileName.equals("en.yml")) {
                     //Copy to default.yml
-                    main.getLogManager().log(Level.INFO, "Creating default.yml...");
+                    main.getLogManager().info(LogCategory.LANGUAGE, "Creating default.yml...");
                     File defaultFile = new File(languageFolder, "default.yml");
 
                     InputStream inputStream = main.getResource("translations/en.yml");
@@ -139,7 +134,6 @@ public class LanguageManager {
                             //Put into fileConfiguration
 
                             if (!defaultFile.exists()) {
-                                main.getLogManager().log(Level.SEVERE, "There was an error reading the default.yml language file. (5)");
                                 main.getDataManager().disablePluginAndSaving("There was an error reading the default.yml language file. (5)");
                                 return;
                             }
@@ -147,12 +141,10 @@ public class LanguageManager {
                             defaultLanguageConfig.load(defaultFile);
 
                         } catch (Exception e) {
-                            main.getLogManager().log(Level.SEVERE, "There was an error creating the default.yml language file. (6)");
-                            main.getDataManager().disablePluginAndSaving("There was an error creating the default.yml language file. (6)");
+                            main.getDataManager().disablePluginAndSaving("There was an error creating the default.yml language file. (6)", e);
                             return;
                         }
                     } else {
-                        main.getLogManager().log(Level.SEVERE, "There was an error creating the default.yml language file. (7)");
                         main.getDataManager().disablePluginAndSaving("There was an error creating the default.yml language file. (7)");
                         return;
                     }
@@ -162,8 +154,7 @@ public class LanguageManager {
 
 
             } catch (IOException ioException) {
-                ioException.printStackTrace();
-                main.getDataManager().disablePluginAndSaving("There was an error creating the " + fileName + " language file. (3)");
+                main.getDataManager().disablePluginAndSaving("There was an error creating the " + fileName + " language file. (3)", ioException);
                 return;
             }
         }
@@ -179,7 +170,7 @@ public class LanguageManager {
         loadMissingDefaultLanguageFiles();
 
         final String languageCode = main.getDataManager().getConfiguration().getLanguageCode();
-        main.getLogManager().log(Level.INFO, LogCategory.LANGUAGE, "Loading language config <AQUA>" + languageCode + ".yml");
+        main.getLogManager().info(LogCategory.LANGUAGE, "Loading language config <AQUA>" + languageCode + ".yml");
 
         /*
          * If the generalConfigFile Object doesn't exist yet, this will load the file
@@ -189,16 +180,7 @@ public class LanguageManager {
         if (languageConfigFile == null || !currentLanguage.equals(languageCode)) {
 
             //Create the Data Folder if it does not exist yet (the NotQuests folder)
-            if (!main.getDataFolder().exists()) {
-                main.getLogManager().log(Level.INFO, "Data Folder not found. Creating a new one...");
-
-                if (!main.getDataFolder().mkdirs()) {
-                    main.getLogManager().log(Level.SEVERE, "There was an error creating the NotQuests data folder");
-                    main.getDataManager().disablePluginAndSaving("There was an error creating the NotQuests data folder.");
-                    return;
-                }
-
-            }
+            main.getDataManager().prepareDataFolder();
 
 
             if (languageFolder == null) {
@@ -206,10 +188,9 @@ public class LanguageManager {
             }
 
             if (!languageFolder.exists()) {
-                main.getLogManager().log(Level.INFO, "Languages Folder not found. Creating a new one...");
+                main.getLogManager().info(LogCategory.LANGUAGE, "Languages Folder not found. Creating a new one...");
 
                 if (!languageFolder.mkdirs()) {
-                    main.getLogManager().log(Level.SEVERE, "There was an error creating the NotQuests languages folder");
                     main.getDataManager().disablePluginAndSaving("There was an error creating the NotQuests languages folder.");
                     return;
                 }
@@ -219,7 +200,7 @@ public class LanguageManager {
             languageConfigFile = new File(languageFolder, main.getDataManager().getConfiguration().getLanguageCode() + ".yml");
 
             if (!languageConfigFile.exists()) {
-                main.getLogManager().log(Level.INFO, "Language Configuration (" + main.getDataManager().getConfiguration().getLanguageCode() + ".yml) does not exist. Creating a new one...");
+                main.getLogManager().info(LogCategory.LANGUAGE, "Language Configuration (" + main.getDataManager().getConfiguration().getLanguageCode() + ".yml) does not exist. Creating a new one...");
 
                 //Does not work yet, since comments are overridden if something is saved
                 //saveDefaultConfig();
@@ -229,14 +210,12 @@ public class LanguageManager {
                     //Try to create the language.yml config file, and throw an error if it fails.
 
                     if (!languageConfigFile.createNewFile()) {
-                        main.getLogManager().log(Level.SEVERE, "There was an error creating the " + main.getDataManager().getConfiguration().getLanguageCode() + ".yml language file. (1)");
                         main.getDataManager().disablePluginAndSaving("There was an error creating the " + main.getDataManager().getConfiguration().getLanguageCode() + ".yml language file.");
                         return;
 
                     }
                 } catch (IOException ioException) {
-                    ioException.printStackTrace();
-                    main.getDataManager().disablePluginAndSaving("There was an error creating the " + main.getDataManager().getConfiguration().getLanguageCode() + ".yml config file. (2)");
+                    main.getDataManager().disablePluginAndSaving("There was an error creating the " + main.getDataManager().getConfiguration().getLanguageCode() + ".yml config file. (2)", ioException);
                     return;
                 }
             }
@@ -266,7 +245,6 @@ public class LanguageManager {
         //Set default values
 
         if (defaultLanguageConfig == null) {
-            main.getLogManager().log(Level.SEVERE, "There was an error reading the default.yml language configuration.");
             main.getDataManager().disablePluginAndSaving("There was an error reading the default.yml language configuration.");
             return false;
         }
@@ -282,12 +260,10 @@ public class LanguageManager {
                 }
 
                 if (!getLanguageConfig().isString(defaultString)) {
-                    main.getLogManager().log(Level.INFO, "Updating string: <AQUA>" + defaultString + "</AQUA>");
+                    main.getLogManager().info(LogCategory.LANGUAGE, "Updating string: <AQUA>" + defaultString + "</AQUA>");
 
                     getLanguageConfig().set(defaultString, defaultConfigurationSection.getString(defaultString));
                     valueChanged = true;
-                } else {
-                    //main.getLogManager().log(Level.INFO, "Already exists: <AQUA>" + defaultString + "</AQUA>");
                 }
             }
         }
@@ -406,7 +382,8 @@ public class LanguageManager {
             getLanguageConfig().save(languageConfigFile);
 
         } catch (IOException ioException) {
-            main.getLogManager().log(Level.SEVERE, "Language Config file could not be saved.");
+            ioException.printStackTrace();
+            main.getLogManager().severe("Language Config file could not be saved.");
         }
     }
 

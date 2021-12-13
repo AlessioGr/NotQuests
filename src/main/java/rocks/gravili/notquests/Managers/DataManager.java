@@ -39,7 +39,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
 
 
 /**
@@ -121,6 +120,7 @@ public class DataManager {
      * If this is set to false, the plugin will try to load NPCs once Citizens is re-loaded or enabled
      */
     private boolean alreadyLoadedNPCs = false;
+
     private boolean alreadyLoadedGeneral = false;
     private boolean alreadyLoadedQuests = false;
 
@@ -166,9 +166,8 @@ public class DataManager {
     public void prepareDataFolder(){
         //Create the Data Folder if it does not exist yet (the NotQuests folder)
         if (!main.getDataFolder().exists()) {
-            main.getLogManager().log(Level.INFO, "Data Folder not found. Creating a new one...");
+            main.getLogManager().info("Data Folder not found. Creating a new one...");
             if (!main.getDataFolder().mkdirs()) {
-                main.getLogManager().log(Level.SEVERE, "There was an error creating the NotQuests data folder");
                 disablePluginAndSaving("There was an error creating the NotQuests data folder.");
             }
         }
@@ -176,7 +175,7 @@ public class DataManager {
 
 
     public final void loadQuestsConfig(){
-        main.getLogManager().log(Level.INFO, "Loading quests.yml config");
+        main.getLogManager().info("Loading quests.yml config");
         /*
          * If the generalConfigFile Object doesn't exist yet, this will load the file
          * or create a new general.yml file if it does not exist yet and load it into the
@@ -188,7 +187,7 @@ public class DataManager {
 
             questsConfigFile = new File(main.getDataFolder(), "quests.yml");
             if (!questsConfigFile.exists()) {
-                main.getLogManager().log(Level.INFO, "Quests Configuration (quests.yml) does not exist. Creating a new one...");
+                main.getLogManager().info("Quests Configuration (quests.yml) does not exist. Creating a new one...");
                 try {
                     //Try to create the quests.yml config file, and throw an error if it fails.
                     if (!questsConfigFile.createNewFile()) {
@@ -220,7 +219,7 @@ public class DataManager {
      * stop and throw a warning, since it cannot function without a MySQL database.
      */
     public final void loadGeneralConfig() {
-        main.getLogManager().log(Level.INFO, "Loading general config");
+        main.getLogManager().info("Loading general config");
         /*
          * If the generalConfigFile Object doesn't exist yet, this will load the file
          * or create a new general.yml file if it does not exist yet and load it into the
@@ -233,14 +232,14 @@ public class DataManager {
             generalConfigFile = new File(main.getDataFolder(), "general.yml");
 
             if (!generalConfigFile.exists()) {
-                main.getLogManager().log(Level.INFO, "General Configuration (general.yml) does not exist. Creating a new one...");
+                main.getLogManager().info("General Configuration (general.yml) does not exist. Creating a new one...");
                 try {
                     //Try to create the general.yml config file, and throw an error if it fails.
                     if (!generalConfigFile.createNewFile()) {
                         disablePluginAndSaving("There was an error creating the general.yml config file (1).");
                         return;
                     }
-                    main.getLogManager().log(Level.INFO, "Loading default <AQUA>general.yml</AQUA>...");
+                    main.getLogManager().info("Loading default <AQUA>general.yml</AQUA>...");
 
                     //Instead of creating a new general.yml file, we will copy the one from inside of the plugin jar into the plugin folder:
                     InputStream inputStream = main.getResource("general.yml");
@@ -248,7 +247,7 @@ public class DataManager {
                         try (OutputStream outputStream = new FileOutputStream(generalConfigFile)) {
                             IOUtils.copy(inputStream, outputStream);
                         } catch (Exception e) {
-                            disablePluginAndSaving("There was an error creating the general.yml config file (2).");
+                            disablePluginAndSaving("There was an error creating the general.yml config file (2).", e);
                             return;
                         }
                     }
@@ -785,20 +784,20 @@ public class DataManager {
         try {
             getGeneralConfig().save(generalConfigFile);
         } catch (IOException ioException) {
-            main.getLogManager().log(Level.SEVERE, "General Config file could not be saved.");
+            main.getLogManager().severe("General Config file could not be saved.");
         }
     }
     public void saveQuestsConfig() {
         if (isSavingEnabled()) {
             if (questsConfig == null || questsConfigFile == null) {
-                main.getLogManager().log(Level.SEVERE, "Could not save data to quests.yml");
+                main.getLogManager().severe("Could not save data to quests.yml");
                 return;
             }
             try {
                 getQuestsConfig().save(questsConfigFile);
-                main.getLogManager().log(Level.INFO, "Saved Data to quests.yml");
+                main.getLogManager().info("Saved Data to quests.yml");
             } catch (IOException e) {
-                main.getLogManager().log(Level.SEVERE, "Could not save quests config to <AQUA>" + questsConfigFile + "</AQUA>. Stacktrace:");
+                main.getLogManager().severe("Could not save quests config to <AQUA>" + questsConfigFile + "</AQUA>. Stacktrace:");
                 e.printStackTrace();
             }
         }
@@ -811,14 +810,14 @@ public class DataManager {
      * @param reason the reason for disabling saving and the plugin. Will be shown in the console error message
      */
     public void disablePluginAndSaving(final String reason) {
-        main.getLogManager().log(Level.SEVERE, "Plugin, saving and loading has been disabled. Reason: " + reason);
+        main.getLogManager().severe("Plugin, saving and loading has been disabled. Reason: " + reason);
         setSavingEnabled(false);
         setLoadingEnabled(false);
         main.getServer().getPluginManager().disablePlugin(main);
     }
 
     public void disablePluginAndSaving(final String reason, Throwable throwable) {
-        main.getLogManager().log(Level.SEVERE, "Error message:");
+        main.getLogManager().severe("Error message:");
         throwable.printStackTrace();
         disablePluginAndSaving(reason);
     }
@@ -836,7 +835,7 @@ public class DataManager {
 
             saveQuestsConfig();
         } else {
-            main.getLogManager().log(Level.WARNING, "NotQuests > Saving is disabled => no data has been saved.");
+            main.getLogManager().warn("NotQuests > Saving is disabled => no data has been saved.");
         }
     }
 
@@ -900,7 +899,7 @@ public class DataManager {
 
             //Check for isLoadingEnabled again, in case it changed during loading of the general config
             if(!isLoadingEnabled()){
-                main.getLogManager().log(Level.SEVERE, "Data loading has been skipped, because it has been disabled. This is because there was an error loading from the general config.");
+                main.getLogManager().severe("Data loading has been skipped, because it has been disabled. This is because there was an error loading from the general config.");
                 return;
             }
 
@@ -921,19 +920,19 @@ public class DataManager {
 
                     //Create Database tables if they don't exist yet
                     try {
-                        main.getLogManager().log(Level.INFO, LogCategory.DATA, "Creating database table 'QuestPlayerData' if it doesn't exist yet...");
+                        main.getLogManager().info(LogCategory.DATA, "Creating database table 'QuestPlayerData' if it doesn't exist yet...");
                         statement.executeUpdate("CREATE TABLE IF NOT EXISTS `QuestPlayerData` (`PlayerUUID` varchar(200), `QuestPoints` BIGINT(255), PRIMARY KEY (PlayerUUID))");
 
-                        main.getLogManager().log(Level.INFO, LogCategory.DATA, "Creating database table 'ActiveQuests' if it doesn't exist yet...");
+                        main.getLogManager().info(LogCategory.DATA, "Creating database table 'ActiveQuests' if it doesn't exist yet...");
                         statement.executeUpdate("CREATE TABLE IF NOT EXISTS `ActiveQuests` (`QuestName` varchar(200), `PlayerUUID` varchar(200))");
 
-                        main.getLogManager().log(Level.INFO, LogCategory.DATA, "Creating database table 'CompletedQuests' if it doesn't exist yet...");
+                        main.getLogManager().info(LogCategory.DATA, "Creating database table 'CompletedQuests' if it doesn't exist yet...");
                         statement.executeUpdate("CREATE TABLE IF NOT EXISTS `CompletedQuests` (`QuestName` varchar(200), `PlayerUUID` varchar(200), `TimeCompleted` BIGINT(255))");
 
-                        main.getLogManager().log(Level.INFO, LogCategory.DATA, "Creating database table 'ActiveObjectives' if it doesn't exist yet...");
+                        main.getLogManager().info(LogCategory.DATA, "Creating database table 'ActiveObjectives' if it doesn't exist yet...");
                         statement.executeUpdate("CREATE TABLE IF NOT EXISTS `ActiveObjectives` (`ObjectiveType` varchar(200), `QuestName` varchar(200), `PlayerUUID` varchar(200), `CurrentProgress` BIGINT(255), `ObjectiveID` INT(255), `HasBeenCompleted` BOOLEAN)");
 
-                        main.getLogManager().log(Level.INFO, LogCategory.DATA, "Creating database table 'ActiveTriggers' if it doesn't exist yet...");
+                        main.getLogManager().info(LogCategory.DATA, "Creating database table 'ActiveTriggers' if it doesn't exist yet...");
 
                         statement.executeUpdate("CREATE TABLE IF NOT EXISTS `ActiveTriggers` (`TriggerType` varchar(200), `QuestName` varchar(200), `PlayerUUID` varchar(200), `CurrentProgress` BIGINT(255), `TriggerID` INT(255))");
 
@@ -944,14 +943,14 @@ public class DataManager {
                     }
 
                     if (isSavingEnabled()) {
-                        main.getLogManager().log(Level.INFO, "Loaded player data");
+                        main.getLogManager().info("Loaded player data");
 
                         if (!isAlreadyLoadedQuests()) {
                             loadQuestsConfig();
                             main.getQuestManager().loadQuestsFromConfig();
 
                         } else {
-                            main.getLogManager().log(Level.INFO, "Loading Data from existing quests.yml... - reloadData");
+                            main.getLogManager().info("Loading Data from existing quests.yml... - reloadData");
                             try {
                                 questsConfig = loadYAMLConfiguration(questsConfigFile);
                             } catch (Exception e) {
@@ -984,34 +983,34 @@ public class DataManager {
             } else { //If this is already an asynchronous thread, this else{ thingy does not try to create a new asynchronous thread for better performance. The contents of this else section is identical.2
                 openConnection();
                 if(connection == null){
-                    main.getLogManager().log(Level.SEVERE, "There was a database error, so loading has been disabled.");
+                    main.getLogManager().severe("There was a database error, so loading has been disabled.");
                     return;
                 }
                 try {
                     statement = connection.createStatement();
                 } catch (SQLException e) {
                     e.printStackTrace();
-                    main.getLogManager().log(Level.SEVERE, "There was a database error, so loading has been disabled.");
+                    main.getLogManager().severe("There was a database error, so loading has been disabled.");
                     return;
                 }
 
 
                 //Create Database tables if they don't exist yet
                 try {
-                    main.getLogManager().log(Level.INFO, LogCategory.DATA, "Creating database table 'QuestPlayerData' if it doesn't exist yet...");
+                    main.getLogManager().info(LogCategory.DATA, "Creating database table 'QuestPlayerData' if it doesn't exist yet...");
                     statement.executeUpdate("CREATE TABLE IF NOT EXISTS `QuestPlayerData` (`PlayerUUID` varchar(200), `QuestPoints` BIGINT(255), PRIMARY KEY (PlayerUUID))");
 
-                    main.getLogManager().log(Level.INFO, LogCategory.DATA, "Creating database table 'ActiveQuests' if it doesn't exist yet...");
+                    main.getLogManager().info(LogCategory.DATA, "Creating database table 'ActiveQuests' if it doesn't exist yet...");
                     statement.executeUpdate("CREATE TABLE IF NOT EXISTS `ActiveQuests` (`QuestName` varchar(200), `PlayerUUID` varchar(200))");
 
-                    main.getLogManager().log(Level.INFO, LogCategory.DATA, "Creating database table 'CompletedQuests' if it doesn't exist yet...");
+                    main.getLogManager().info(LogCategory.DATA, "Creating database table 'CompletedQuests' if it doesn't exist yet...");
                     statement.executeUpdate("CREATE TABLE IF NOT EXISTS `CompletedQuests` (`QuestName` varchar(200), `PlayerUUID` varchar(200), `TimeCompleted` BIGINT(255))");
 
-                    main.getLogManager().log(Level.INFO, LogCategory.DATA, "Creating database table 'ActiveObjectives' if it doesn't exist yet...");
+                    main.getLogManager().info(LogCategory.DATA, "Creating database table 'ActiveObjectives' if it doesn't exist yet...");
                     statement.executeUpdate("CREATE TABLE IF NOT EXISTS `ActiveObjectives` (`ObjectiveType` varchar(200), `QuestName` varchar(200), `PlayerUUID` varchar(200), `CurrentProgress` BIGINT(255), `ObjectiveID` INT(255), `HasBeenCompleted` BOOLEAN)");
 
                 } catch (SQLException e) {
-                    main.getLogManager().log(Level.SEVERE, LogCategory.DATA, "There was an error while trying to load MySQL database tables! This is the stacktrace:");
+                    main.getLogManager().info(LogCategory.DATA, "There was an error while trying to load MySQL database tables! This is the stacktrace:");
 
                     e.printStackTrace();
                     disablePluginAndSaving("Plugin disabled, because there was an error while initializing tables.");
@@ -1020,11 +1019,11 @@ public class DataManager {
 
                 if (isSavingEnabled()) {
 
-                    main.getLogManager().log(Level.INFO, "Loaded player data");
+                    main.getLogManager().info("Loaded player data");
 
                     if (questsConfigFile == null) {
                         questsConfigFile = new File(main.getDataFolder(), "quests.yml");
-                        main.getLogManager().log(Level.INFO, "First load of quests.yml...");
+                        main.getLogManager().info("First load of quests.yml...");
                         try {
                             questsConfig = loadYAMLConfiguration(questsConfigFile);
                         } catch (Exception e) {
@@ -1034,7 +1033,7 @@ public class DataManager {
                         }
                         main.getQuestManager().loadQuestsFromConfig();
                     } else {
-                        main.getLogManager().log(Level.INFO, "Loading Data from existing quests.yml...");
+                        main.getLogManager().info("Loading Data from existing quests.yml...");
                         try{
                             questsConfig = loadYAMLConfiguration(questsConfigFile);
                         } catch (Exception e) {
@@ -1060,7 +1059,7 @@ public class DataManager {
                 }
             }
         }else{
-            main.getLogManager().log(Level.SEVERE, "Data loading has been skipped, because it has been disabled. This might be caused because of an error during plugin startup earlier.");
+            main.getLogManager().severe("Data loading has been skipped, because it has been disabled. This might be caused because of an error during plugin startup earlier.");
 
         }
 
@@ -1112,10 +1111,10 @@ public class DataManager {
                 if (!dataFolder.exists()){
                     try {
                         if(!dataFolder.createNewFile()){
-                            main.getLogManager().log(Level.SEVERE, "File write error: database_sqlite.db (1)");
+                            main.getLogManager().severe("File write error: database_sqlite.db (1)");
                         }
                     } catch (IOException e) {
-                        main.getLogManager().log(Level.SEVERE, "File write error: database_sqlite.db (2)");
+                        main.getLogManager().severe("File write error: database_sqlite.db (2)");
                     }
                 }
                 try {
@@ -1125,10 +1124,10 @@ public class DataManager {
                     Class.forName("org.sqlite.JDBC");
                     connection = DriverManager.getConnection("jdbc:sqlite:" + dataFolder);
                 } catch (SQLException ex) {
-                    main.getLogManager().log(Level.SEVERE, "SQLite exception on initialize");
+                    main.getLogManager().severe("SQLite exception on initialize");
                     ex.printStackTrace();
                 } catch (ClassNotFoundException ex) {
-                    main.getLogManager().log(Level.SEVERE, "You need the SQLite JBDC library. Google it. Put it in /lib folder.");
+                    main.getLogManager().severe("You need the SQLite JBDC library. Google it. Put it in /lib folder.");
                 }
             }else{
                 // Class.forName("com.mysql.jdbc.Driver"); - Use this with old version of the Driver

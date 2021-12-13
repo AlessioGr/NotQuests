@@ -37,7 +37,6 @@ public class LogManager {
     public LogManager(final NotQuests main) {
         this.main = main;
 
-
         if (PaperLib.isPaper()) {
             prefixText = "<#393e46>[<gradient:#E0EAFC:#CFDEF3>NotQuests<#393e46>]<#636c73>: ";
             prefix = MiniMessage.miniMessage().parse(prefixText);
@@ -52,104 +51,71 @@ public class LogManager {
     }
 
 
-    public void log(final Level level, final String message) {
-        /*Component afterPrefixSuffix = Component.text("<WHITE>");
-        if(level == Level.INFO) {
-            afterPrefixSuffix = MiniMessage.miniMessage().parse("<GREEN>");
-        }
-        consoleSender.sendMessage(Component.text("Log level: " + level.getName()));
-        consoleSender.sendMessage(prefix.append(afterPrefixSuffix).append(Component.text(message)));*/
+    private void log(final Level level, final String color, final String message) {
+        log(level, LogCategory.DEFAULT, color, message);
+    }
 
-        String afterPrefixSuffix = "<WHITE>";
-        if (level == Level.INFO) {
+    private void log(final Level level, final LogCategory logCategory, final String color, final String message) {
+        if (main.isAdventureEnabled() && consoleSender != null) {
+            consoleSender.sendMessage(MiniMessage.miniMessage().parse(prefixText + color + message));
+        } else {
+            main.getLogger().log(level, LegacyComponentSerializer.builder().build().serialize(MiniMessage.miniMessage().parse(color + message)).replace("&", "§"));
+        }
+
+
+    }
+
+
+    public void info(final LogCategory logCategory, final String message) {
+        if (logCategory == LogCategory.DEFAULT) {
             if (PaperLib.isPaper()) {
-                afterPrefixSuffix = "<gradient:#37a659:#56B4D3>";
+                log(Level.INFO, logCategory, "<gradient:#37a659:#56B4D3>", message);
             } else {
-                afterPrefixSuffix = "<GREEN>";
+                log(Level.INFO, logCategory, "<GREEN>", message);
             }
-
-        } else if (level == Level.WARNING) {
-            afterPrefixSuffix = "<YELLOW>";
-        } else if (level == Level.SEVERE) {
-            afterPrefixSuffix = "<RED>";
-        } else if (level == Level.FINE) {
-            afterPrefixSuffix = "<GRAY>";
-        }
-
-        if (main.isAdventureEnabled() && consoleSender != null) {
-            consoleSender.sendMessage(MiniMessage.miniMessage().parse(prefixText + afterPrefixSuffix + message));
-        } else {
-            main.getLogger().log(level, LegacyComponentSerializer.builder().build().serialize(MiniMessage.miniMessage().parse(afterPrefixSuffix + message)).replace("&", "§"));
-        }
-
-
-    }
-
-
-    public void log(final Level level, final LogCategory logCategory, final String message) {
-        String afterPrefixSuffix = "<WHITE>";
-        if (level == Level.INFO) {
-            if (logCategory == LogCategory.DEFAULT) {
-                if (PaperLib.isPaper()) {
-                    afterPrefixSuffix = "<gradient:#37a659:#56B4D3>";
-
-                } else {
-                    afterPrefixSuffix = "<GREEN>";
-                }
-
-            } else if (logCategory == LogCategory.DATA) {
-                if (PaperLib.isPaper()) {
-                    afterPrefixSuffix = "<gradient:#1FA2FF:#12D8FA:#A6FFCB>";
-
-                } else {
-                    afterPrefixSuffix = "<BLUE>";
-                }
-
-            } else if (logCategory == LogCategory.LANGUAGE) {
-                if (PaperLib.isPaper()) {
-                    afterPrefixSuffix = "<gradient:#AA076B:#61045F>";
-
-                } else {
-                    afterPrefixSuffix = "<DARK_PURPLE>";
-                }
-
+        } else if (logCategory == LogCategory.DATA) {
+            if (PaperLib.isPaper()) {
+                log(Level.INFO, logCategory, "<gradient:#1FA2FF:#12D8FA:#A6FFCB>", message);
+            } else {
+                log(Level.INFO, logCategory, "<BLUE>", message);
             }
-
-        } else if (level == Level.WARNING) {
-            afterPrefixSuffix = "<YELLOW>";
-        } else if (level == Level.SEVERE) {
-            afterPrefixSuffix = "<RED>";
-        } else if (level == Level.FINE) {
-            afterPrefixSuffix = "<GRAY>";
+        } else if (logCategory == LogCategory.LANGUAGE) {
+            if (PaperLib.isPaper()) {
+                log(Level.INFO, logCategory, "<gradient:#AA076B:#61045F>", message);
+            } else {
+                log(Level.INFO, logCategory, "<DARK_PURPLE>", message);
+            }
         }
-
-        if (main.isAdventureEnabled() && consoleSender != null) {
-            consoleSender.sendMessage(MiniMessage.miniMessage().parse(prefixText + afterPrefixSuffix + message));
-        } else {
-            main.getLogger().log(level, LegacyComponentSerializer.builder().build().serialize(MiniMessage.miniMessage().parse(afterPrefixSuffix + message)).replace("&", "§"));
-        }
-
-
     }
-
 
     public void info(final String message) {
-        log(Level.INFO, message);
+        info(LogCategory.DEFAULT, message);
+    }
+
+    public void warn(final LogCategory logCategory, final String message) {
+        log(Level.WARNING, logCategory, "<YELLOW>", message);
     }
 
     public void warn(final String message) {
-        log(Level.WARNING, message);
+        warn(LogCategory.DEFAULT, message);
+    }
+
+    public void severe(final LogCategory logCategory, final String message) {
+        log(Level.SEVERE, logCategory, "<RED>", message);
     }
 
     public void severe(final String message) {
-        log(Level.SEVERE, message);
+        warn(LogCategory.DEFAULT, message);
+    }
+
+    public void debug(final LogCategory logCategory, final String message) {
+        if (main.getDataManager().getConfiguration().debug) {
+            log(Level.FINE, logCategory, "<GRAY>", message);
+        }
     }
 
     public void debug(final String message) {
-        if (main.getDataManager().getConfiguration().debug) {
-            log(Level.FINE, message);
-        }
-
+        debug(LogCategory.DEFAULT, message);
     }
 }
 

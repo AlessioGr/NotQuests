@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
-import java.util.logging.Level;
 
 import static rocks.gravili.notquests.Commands.NotQuestColors.*;
 
@@ -46,7 +45,7 @@ public class QuestPlayerManager {
 
     public void loadPlayerData() {
         if (!main.getDataManager().getConfiguration().loadPlayerData) {
-            main.getLogManager().log(Level.INFO, "Loading of playerdata has been skipped...");
+            main.getLogManager().info("Loading of playerdata has been skipped...");
             return;
         }
 
@@ -62,7 +61,7 @@ public class QuestPlayerManager {
                 final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(uuid);
 
                 final long questPoints = result.getLong("QuestPoints");
-                main.getLogManager().log(Level.INFO, "Loaded player with uuid <AQUA>" + uuid + "</AQUA> and questPoints: " + questPoints);
+                main.getLogManager().info("Loaded player with uuid <AQUA>" + uuid + "</AQUA> and questPoints: " + questPoints);
 
                 if (questPlayer != null) {
                     //QuestPoints
@@ -70,7 +69,7 @@ public class QuestPlayerManager {
 
 
                 } else {
-                    main.getLogManager().log(Level.SEVERE, "ERROR: QuestPlayer with the UUID <AQUA>" + uuid + "</AQUA> could not be loaded from database");
+                    main.getLogManager().severe("ERROR: QuestPlayer with the UUID <AQUA>" + uuid + "</AQUA> could not be loaded from database");
 
                 }
 
@@ -99,16 +98,12 @@ public class QuestPlayerManager {
                             final CompletedQuest completedQuest = new CompletedQuest(quest, questPlayer, timeCompleted);
                             questPlayer.addCompletedQuest(completedQuest);
 
-
                         } else {
-                            main.getLogManager().log(Level.WARNING, "§9NotQuests > §cERROR: TimeCompleted from Quest with name §b" + questName + " §ccould not be loaded from database (requested for loading completed Quests)");
-
-
+                            main.getLogManager().warn("ERROR: TimeCompleted from Quest with name <AQUA>" + questName + "</AQUA> could not be loaded from database (requested for loading completed Quests)");
                         }
 
                     } else {
-                        main.getLogManager().log(Level.WARNING, "§9NotQuests > §cERROR: Quest with name §b" + questName + " §ccould not be loaded from database (requested for loading completed Quests)");
-
+                        main.getLogManager().warn("ERROR: Quest with name <AQUA>" + questName + "</AQUA> could not be loaded from database (requested for loading completed Quests)");
                     }
                 }
                 completedQuestsResults.close();
@@ -125,8 +120,7 @@ public class QuestPlayerManager {
                         questPlayer.forceAddActiveQuest(activeQuest, false); //Run begin/accept trigger when plugin reloads if true
 
                     } else {
-                        main.getLogManager().log(Level.WARNING, "§9NotQuests > §cERROR: Quest with name §b" + questName + " §ccould not be loaded from database");
-
+                        main.getLogManager().warn("ERROR: Quest with name <AQUA>" + questName + "</AQUA> could not be loaded from database");
                     }
                 }
                 activeQuestsResults.close();
@@ -153,7 +147,7 @@ public class QuestPlayerManager {
 
 
                         } else {
-                            main.getLogManager().log(Level.WARNING, "ERROR: TriggerType for the Quest §b" + activeQuest.getQuest().getQuestName() + " §ccould not be loaded from database");
+                            main.getLogManager().warn("ERROR: TriggerType for the Quest <AQUA>" + activeQuest.getQuest().getQuestName() + "</AQUA> could not be loaded from database");
 
                         }
                     }
@@ -205,7 +199,7 @@ public class QuestPlayerManager {
 
 
                         } else {
-                            main.getLogManager().log(Level.WARNING, "ERROR: ObjectiveType for the Quest §b" + activeQuest.getQuest().getQuestName() + " §ccould not be loaded from database");
+                            main.getLogManager().warn("ERROR: ObjectiveType for the Quest <AQUA>" + activeQuest.getQuest().getQuestName() + "</AQUA> could not be loaded from database");
 
                         }
                     }
@@ -214,7 +208,6 @@ public class QuestPlayerManager {
                     for (final ActiveObjective activeObjectiveToCheckForIfUnlocked : activeQuest.getActiveObjectives()) {
                         activeObjectiveToCheckForIfUnlocked.updateUnlocked(false, true);
                     }
-
 
                     activeQuestObjectiveResults.close();
                 }
@@ -232,24 +225,15 @@ public class QuestPlayerManager {
 
     public void savePlayerData() {
         if (!main.getDataManager().getConfiguration().savePlayerData) {
-            main.getLogManager().log(Level.INFO, "Saving of playerdata has been skipped...");
+            main.getLogManager().info("Saving of playerdata has been skipped...");
             return;
         }
 
-        main.getLogManager().log(Level.INFO, "Saving player data...");
+        main.getLogManager().info("Saving player data...");
 
 
-        //try{
-        //if(main.getDataManager().getDatabaseStatement().isClosed()){
-        main.getLogManager().log(Level.INFO, "Re-opening database connection...");
-
+        main.getLogManager().info("Re-opening database connection...");
         main.getDataManager().refreshDatabaseConnection(false);
-        //}
-     /*   }catch(SQLException exception){
-            exception.printStackTrace();
-            System.out.println("caNotQuests > SQL Exception! getDatabaseStatement().isClosed() failed. Trying to re-open database connection...");
-            main.getDataManager().refreshDatabaseConnection();
-        }*/
 
 
         for (QuestPlayer questPlayer : questPlayersAndUUIDs.values()) {
@@ -289,13 +273,12 @@ public class QuestPlayerManager {
 
 
             } catch (SQLException sqlException) {
-                main.getLogManager().log(Level.WARNING, "There was an error saving the playerdata of player with UUID <AQUA>" + questPlayer.getUUID() + "</AQUA>! Stacktrace:");
-
+                main.getLogManager().warn("There was an error saving the playerdata of player with UUID <AQUA>" + questPlayer.getUUID() + "</AQUA>! Stacktrace:");
                 sqlException.printStackTrace();
             }
 
         }
-        main.getLogManager().log(Level.INFO, "PlayerData saved");
+        main.getLogManager().info("PlayerData saved");
 
     }
 

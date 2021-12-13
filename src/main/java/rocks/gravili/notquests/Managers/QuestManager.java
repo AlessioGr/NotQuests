@@ -52,7 +52,6 @@ import rocks.gravili.notquests.Structs.Triggers.Trigger;
 
 import java.util.ArrayList;
 import java.util.UUID;
-import java.util.logging.Level;
 
 import static rocks.gravili.notquests.Commands.NotQuestColors.*;
 
@@ -141,7 +140,7 @@ public class QuestManager {
 
 
         try {
-            main.getLogManager().log(Level.INFO, "Loading Quests data...");
+            main.getLogManager().info("Loading Quests data...");
 
             quests.clear();
 
@@ -152,11 +151,11 @@ public class QuestManager {
                 for (final String actionName : oldActionsConfigurationSection.getKeys(false)) {
                     final String consoleCommand = main.getDataManager().getQuestsConfig().getString("actions." + actionName + ".consoleCommand", "");
                     if (consoleCommand.equalsIgnoreCase("")) {
-                        main.getLogManager().log(Level.WARNING, "Action has an empty console command. This should NOT be possible! Creating an action with an empty console command... Action name: <AQUA>" + actionName + "</AQUA>");
+                        main.getLogManager().warn("Action has an empty console command. This should NOT be possible! Creating an action with an empty console command... Action name: <AQUA>" + actionName + "</AQUA>");
                     }
 
                     main.getActionsManager().createAction(actionName, consoleCommand);
-                    main.getLogManager().log(Level.INFO, "Migrated the following action from quests.yml to actions.yml: <AQUA>" + actionName + "</AQUA>");
+                    main.getLogManager().info("Migrated the following action from quests.yml to actions.yml: <AQUA>" + actionName + "</AQUA>");
 
 
                 }
@@ -191,12 +190,7 @@ public class QuestManager {
                             try {
                                 objectiveType = main.getObjectiveManager().getObjectiveClass(main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".objectiveType"));
                             } catch (java.lang.NullPointerException ex) {
-                                main.getLogManager().log(Level.SEVERE, "Error parsing objective Type of objective with ID <AQUA>" + objectiveNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "</AQUA>. Objective creation skipped...");
-
-                                ex.printStackTrace();
-                                main.getLogManager().log(Level.SEVERE, "Plugin disabled, because there was an error while loading quests objective Type data.");
-                                main.getDataManager().setSavingEnabled(false);
-                                main.getServer().getPluginManager().disablePlugin(main);
+                                main.getDataManager().disablePluginAndSaving("Error parsing objective Type of objective with ID <AQUA>" + objectiveNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "</AQUA>.", ex);
                             }
                             final int progressNeeded = main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".objectives." + objectiveNumber + ".progressNeeded", 1);
 
@@ -205,12 +199,9 @@ public class QuestManager {
                             try {
                                 objectiveID = Integer.parseInt(objectiveNumber);
                             } catch (java.lang.NumberFormatException ex) {
-                                main.getLogManager().log(Level.SEVERE, "Error parsing loaded objective ID <AQUA>" + objectiveNumber + "§</AQUA> Objective creation skipped...");
-
                                 validObjectiveID = false;
-                                main.getLogManager().log(Level.SEVERE, "Plugin disabled, because there was an error while loading quests objective ID data.");
-                                main.getDataManager().setSavingEnabled(false);
-                                main.getServer().getPluginManager().disablePlugin(main);
+                                main.getDataManager().disablePluginAndSaving("Error parsing loaded objective ID <AQUA>" + objectiveNumber + "</AQUA>.", ex);
+
                             }
                             if (validObjectiveID && objectiveID > 0 && objectiveType != null) {
 
@@ -221,12 +212,7 @@ public class QuestManager {
                                     objective = objectiveType.getDeclaredConstructor(NotQuests.class, Quest.class, int.class, int.class).newInstance(main, quest, objectiveID, progressNeeded);
 
                                 } catch (Exception ex) {
-                                    main.getLogManager().log(Level.SEVERE, "Error parsing objective Type of objective with ID <AQUA>" + objectiveNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "</AQUA>. Objective creation skipped...");
-
-                                    ex.printStackTrace();
-                                    main.getLogManager().log(Level.SEVERE, "Plugin disabled, because there was an error while loading quests objective Type data.");
-                                    main.getDataManager().setSavingEnabled(false);
-                                    main.getServer().getPluginManager().disablePlugin(main);
+                                    main.getDataManager().disablePluginAndSaving("Error parsing objective Type of objective with ID <AQUA>" + objectiveNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "</AQUA>.", ex);
                                 }
 
 
@@ -246,17 +232,11 @@ public class QuestManager {
                                     objective.setCompletionNPCID(completionNPCID, false);
                                     quest.addObjective(objective, false);
                                 } else {
-                                    main.getLogManager().log(Level.SEVERE, "Error loading objective");
-
-                                    main.getLogManager().log(Level.SEVERE, "Plugin disabled, because there was an error while loading quests objective data.");
-                                    main.getDataManager().setSavingEnabled(false);
-                                    main.getServer().getPluginManager().disablePlugin(main);
+                                    main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading quests objective data.");
                                 }
 
                             } else {
-                                main.getLogManager().log(Level.SEVERE, "Plugin disabled, because there was an error while loading quests objective data (2).");
-                                main.getDataManager().setSavingEnabled(false);
-                                main.getServer().getPluginManager().disablePlugin(main);
+                                main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading quests objective data (2).");
                             }
                         }
                     }
@@ -271,12 +251,8 @@ public class QuestManager {
                             try {
                                 requirementID = Integer.parseInt(requirementNumber);
                             } catch (java.lang.NumberFormatException ex) {
-                                main.getLogManager().log(Level.SEVERE, "Error parsing loaded requirement ID <AQUA>" + requirementNumber + "</AQUA>. Requirement creation skipped...");
-
                                 validRequirementID = false;
-                                main.getLogManager().log(Level.SEVERE, "Plugin disabled, because there was an error while loading quests requirement ID data.");
-                                main.getDataManager().setSavingEnabled(false);
-                                main.getServer().getPluginManager().disablePlugin(main);
+                                main.getDataManager().disablePluginAndSaving("Error parsing loaded requirement ID <AQUA>" + requirementNumber + "</AQUA>.", ex);
                             }
 
                             Class<? extends Condition> conditionType = null;
@@ -296,11 +272,7 @@ public class QuestManager {
 
                                 conditionType = main.getConditionsManager().getConditionClass(conditionTypeString);
                             } catch (java.lang.NullPointerException ex) {
-                                main.getLogManager().log(Level.SEVERE, "Error parsing requirement Type of requirement with ID <AQUA>" + requirementNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "<AQUA>. Requirement creation skipped...");
-                                ex.printStackTrace();
-                                main.getLogManager().log(Level.SEVERE, "Plugin disabled, because there was an error while loading quests requirement Type data.");
-                                main.getDataManager().setSavingEnabled(false);
-                                main.getServer().getPluginManager().disablePlugin(main);
+                                main.getDataManager().disablePluginAndSaving("Error parsing requirement Type of requirement with ID <AQUA>" + requirementNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "<AQUA>.", ex);
                             }
 
                             //RequirementType requirementType = RequirementType.valueOf(main.getDataManager().getQuestsData().getString("quests." + questName + ".requirements." + requirementNumber + ".requirementType"));
@@ -313,23 +285,14 @@ public class QuestManager {
                                     condition = conditionType.getDeclaredConstructor(NotQuests.class, Object[].class).newInstance(main, new Object[]{progressNeeded, quest});
                                     condition.load("quests." + questName + ".requirements." + requirementID);
                                 } catch (Exception ex) {
-                                    main.getLogManager().log(Level.SEVERE, "Error parsing requirement Type of requirement with ID <AQUA>" + requirementNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "</AQUA>. Requirement creation skipped...");
-
-                                    ex.printStackTrace();
-                                    main.getLogManager().log(Level.SEVERE, "Plugin disabled, because there was an error while loading quests requirement Type data.");
-                                    main.getDataManager().setSavingEnabled(false);
-                                    main.getServer().getPluginManager().disablePlugin(main);
+                                    main.getDataManager().disablePluginAndSaving("Error parsing requirement Type of requirement with ID <AQUA>" + requirementNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "</AQUA>.");
                                 }
                                 if (condition != null) {
                                     quest.addRequirement(condition);
                                 }
 
                             } else {
-                                main.getLogManager().log(Level.SEVERE, "Error loading requirement");
-
-                                main.getLogManager().log(Level.SEVERE, "Plugin disabled, because there was an error while loading quests requirement data.");
-                                main.getDataManager().setSavingEnabled(false);
-                                main.getServer().getPluginManager().disablePlugin(main);
+                                main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading quests requirement data.");
                             }
 
                         }
@@ -346,12 +309,8 @@ public class QuestManager {
                             try {
                                 rewardID = Integer.parseInt(rewardNumber);
                             } catch (java.lang.NumberFormatException ex) {
-                                main.getLogManager().log(Level.SEVERE, "Error parsing loaded reward ID <AQUA>" + rewardNumber + "</AQUA>. Reward creation skipped...");
-
                                 validRewardID = false;
-                                main.getLogManager().log(Level.SEVERE, "Plugin disabled, because there was an error while loading quests reward ID data.");
-                                main.getDataManager().setSavingEnabled(false);
-                                main.getServer().getPluginManager().disablePlugin(main);
+                                main.getDataManager().disablePluginAndSaving("Error parsing loaded reward ID <AQUA>" + rewardNumber + "</AQUA>.", ex);
                             }
 
                             Class<? extends Reward> rewardType = null;
@@ -359,11 +318,7 @@ public class QuestManager {
                             try {
                                 rewardType = main.getRewardManager().getRewardClass(main.getDataManager().getQuestsConfig().getString("quests." + questName + ".rewards." + rewardNumber + ".rewardType"));
                             } catch (java.lang.NullPointerException ex) {
-                                main.getLogManager().log(Level.SEVERE, "Error parsing reward Type of reward with ID <AQUA>" + rewardNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "<AQUA>. Reward creation skipped...");
-                                ex.printStackTrace();
-                                main.getLogManager().log(Level.SEVERE, "Plugin disabled, because there was an error while loading quests reward Type data.");
-                                main.getDataManager().setSavingEnabled(false);
-                                main.getServer().getPluginManager().disablePlugin(main);
+                                main.getDataManager().disablePluginAndSaving("Error parsing reward Type of reward with ID <AQUA>" + rewardNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "<AQUA>.", ex);
                             }
 
                             if (validRewardID && rewardID > 0 && rewardType != null) {
@@ -373,12 +328,7 @@ public class QuestManager {
                                     reward = rewardType.getDeclaredConstructor(NotQuests.class, Quest.class, int.class).newInstance(main, quest, rewardID);
 
                                 } catch (Exception ex) {
-                                    main.getLogManager().log(Level.SEVERE, "Error parsing reward Type of reward with ID <AQUA>" + rewardNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "</AQUA>. Reward creation skipped...");
-
-                                    ex.printStackTrace();
-                                    main.getLogManager().log(Level.SEVERE, "Plugin disabled, because there was an error while loading quests reward Type data.");
-                                    main.getDataManager().setSavingEnabled(false);
-                                    main.getServer().getPluginManager().disablePlugin(main);
+                                    main.getDataManager().disablePluginAndSaving("Error parsing reward Type of reward with ID <AQUA>" + rewardNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "</AQUA>.", ex);
                                 }
 
                                 if (reward != null) {
@@ -386,11 +336,7 @@ public class QuestManager {
                                     reward.setRewardDisplayName(rewardDisplayName);
                                     quest.addReward(reward);
                                 } else {
-                                    main.getLogManager().log(Level.SEVERE, "Error loading reward");
-
-                                    main.getLogManager().log(Level.SEVERE, "Plugin disabled, because there was an error while loading quests reward data.");
-                                    main.getDataManager().setSavingEnabled(false);
-                                    main.getServer().getPluginManager().disablePlugin(main);
+                                    main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading quests reward data.");
                                 }
                             }
 
@@ -410,12 +356,8 @@ public class QuestManager {
                             try {
                                 triggerID = Integer.parseInt(triggerNumber);
                             } catch (java.lang.NumberFormatException ex) {
-                                main.getLogManager().log(Level.SEVERE, "Error parsing loaded trigger ID ID <AQUA>" + triggerNumber + "</AQUA>. Trigger creation skipped...");
-
                                 validTriggerID = false;
-                                main.getLogManager().log(Level.SEVERE, "Plugin disabled, because there was an error while loading quests trigger ID data.");
-                                main.getDataManager().setSavingEnabled(false);
-                                main.getServer().getPluginManager().disablePlugin(main);
+                                main.getDataManager().disablePluginAndSaving("Error parsing loaded trigger ID ID <AQUA>" + triggerNumber + "</AQUA>.", ex);
                             }
 
                             Class<? extends Trigger> triggerType = null;
@@ -424,11 +366,7 @@ public class QuestManager {
                             try {
                                 triggerType = main.getTriggerManager().getTriggerClass(triggerTypeString);
                             } catch (java.lang.NullPointerException ex) {
-                                main.getLogManager().log(Level.SEVERE, "Error parsing trigger Type of trigger with ID <AQUA>" + triggerNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "<AQUA>. Trigger creation skipped...");
-                                ex.printStackTrace();
-                                main.getLogManager().log(Level.SEVERE, "Plugin disabled, because there was an error while loading quests trigger Type data.");
-                                main.getDataManager().setSavingEnabled(false);
-                                main.getServer().getPluginManager().disablePlugin(main);
+                                main.getDataManager().disablePluginAndSaving("Error parsing trigger Type of trigger with ID <AQUA>" + triggerNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "<AQUA>.");
                             }
 
 
@@ -453,23 +391,14 @@ public class QuestManager {
                                     trigger = triggerType.getDeclaredConstructor(NotQuests.class, Quest.class, int.class, Action.class, int.class, String.class, long.class).newInstance(main, quest, triggerID, foundAction, applyOn, worldName, amountNeeded);
 
                                 } catch (Exception ex) {
-                                    main.getLogManager().log(Level.SEVERE, "Error parsing requirement Type of trigger with ID <AQUA>" + triggerNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "</AQUA>. Trigger creation skipped...");
-
-                                    ex.printStackTrace();
-                                    main.getLogManager().log(Level.SEVERE, "Plugin disabled, because there was an error while loading quests trigger Type data.");
-                                    main.getDataManager().setSavingEnabled(false);
-                                    main.getServer().getPluginManager().disablePlugin(main);
+                                    main.getDataManager().disablePluginAndSaving("Error parsing requirement Type of trigger with ID <AQUA>" + triggerNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "</AQUA>.", ex);
                                 }
                                 if (trigger != null) {
                                     quest.addTrigger(trigger);
                                 }
 
                             } else {
-                                main.getLogManager().log(Level.SEVERE, "ERROR when loading trigger with the triggerNumber <AQUA>" + triggerNumber + " </AQUA>: Action could not be loaded. Trigger creation SKIPPED!");
-
-                                main.getLogManager().log(Level.SEVERE, "Plugin disabled, because there was an error while loading quests trigger data.");
-                                main.getDataManager().setSavingEnabled(false);
-                                main.getServer().getPluginManager().disablePlugin(main);
+                                main.getDataManager().disablePluginAndSaving("ERROR when loading trigger with the triggerNumber <AQUA>" + triggerNumber + " </AQUA>: Action could not be loaded.");
                             }
 
 
@@ -488,12 +417,8 @@ public class QuestManager {
                                 try {
                                     conditionID = Integer.parseInt(objectiveConditionNumber);
                                 } catch (java.lang.NumberFormatException ex) {
-                                    main.getLogManager().severe("Error parsing loaded condition ID <AQUA>" + objectiveConditionNumber + "</AQUA>. Condition creation skipped...");
-
                                     validConditionID = false;
-                                    main.getLogManager().severe("Plugin disabled, because there was an error while loading quests condition ID data.");
-                                    main.getDataManager().setSavingEnabled(false);
-                                    main.getServer().getPluginManager().disablePlugin(main);
+                                    main.getDataManager().disablePluginAndSaving("Error parsing loaded condition ID <AQUA>" + objectiveConditionNumber + "</AQUA>.", ex);
                                 }
 
                                 Class<? extends Condition> conditionType = null;
@@ -502,11 +427,7 @@ public class QuestManager {
 
                                     conditionType = main.getConditionsManager().getConditionClass(main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + (objective.getObjectiveID())  + ".conditions."  + objectiveConditionNumber + ".conditionType"));
                                 } catch (java.lang.NullPointerException ex) {
-                                    main.getLogManager().severe("Error parsing condition Type of requirement with ID <AQUA>" + objectiveConditionNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "<AQUA>. Condition creation skipped...");
-                                    ex.printStackTrace();
-                                    main.getLogManager().severe("Plugin disabled, because there was an error while loading quests condition Type data.");
-                                    main.getDataManager().setSavingEnabled(false);
-                                    main.getServer().getPluginManager().disablePlugin(main);
+                                    main.getDataManager().disablePluginAndSaving("Error parsing condition Type of requirement with ID <AQUA>" + objectiveConditionNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "<AQUA>.", ex);
                                 }
 
                                 //RequirementType requirementType = RequirementType.valueOf(main.getDataManager().getQuestsData().getString("quests." + questName + ".requirements." + requirementNumber + ".requirementType"));
@@ -519,30 +440,18 @@ public class QuestManager {
                                         condition = conditionType.getDeclaredConstructor(NotQuests.class, Object[].class).newInstance(main, new Object[]{progressNeeded, quest});
                                         condition.load("quests." + questName + ".objectives." + (objective.getObjectiveID())  + ".conditions."  + objectiveConditionNumber);
                                     } catch (Exception ex) {
-                                        main.getLogManager().severe("Error parsing condition Type of requirement with ID <AQUA>" + objectiveConditionNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "</AQUA>. Requirement creation skipped...");
-
-                                        ex.printStackTrace();
-                                        main.getLogManager().severe("Plugin disabled, because there was an error while loading quests condition Type data.");
-                                        main.getDataManager().setSavingEnabled(false);
-                                        main.getServer().getPluginManager().disablePlugin(main);
+                                        main.getDataManager().disablePluginAndSaving("Error parsing condition Type of requirement with ID <AQUA>" + objectiveConditionNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "</AQUA>.", ex);
                                     }
                                     if (condition != null) {
                                         objective.addCondition(condition, false);
                                     }
 
                                 } else {
-                                    main.getLogManager().severe("Error loading condition. ValidRequirementID: " + validConditionID + " conditionID: " + conditionID + " ConditionTypeNull?" + (conditionType == null) + " ConditionType: " + conditionType.toString());
-
-                                    main.getLogManager().severe("Plugin disabled, because there was an error while loading quests requirement data.");
-                                    main.getDataManager().setSavingEnabled(false);
-                                    main.getServer().getPluginManager().disablePlugin(main);
+                                    main.getDataManager().disablePluginAndSaving("Error loading condition. ValidRequirementID: " + validConditionID + " conditionID: " + conditionID + " ConditionTypeNull?" + (conditionType == null) + " ConditionType: " + (conditionType != null ? conditionType.toString() : "null"));
                                 }
                             }
                         }
                     }
-
-
-
 
 
                     //TakeItem:
@@ -553,12 +462,8 @@ public class QuestManager {
             }
 
             main.getDataManager().setAlreadyLoadedQuests(true);
-        } catch (Exception e) {
-            e.printStackTrace();
-            main.getLogManager().log(Level.SEVERE, "Plugin disabled, because there was an exception while loading quests data.");
-            main.getDataManager().setSavingEnabled(false);
-            main.getServer().getPluginManager().disablePlugin(main);
-            //return;
+        } catch (Exception ex) {
+            main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an exception while loading quests data.", ex);
         }
 
 
@@ -770,7 +675,7 @@ public class QuestManager {
 
             gui.show(player);
         } else {
-            main.getLogManager().log(Level.INFO, "NotQuests > All quest count: <AQUA>" + quests.size() + "</AQUA>");
+            main.getLogManager().info("NotQuests > All quest count: <AQUA>" + quests.size() + "</AQUA>");
 
             player.sendMessage("");
             player.sendMessage("§9" + questsAttachedToNPC.size() + " Available Quests:");
@@ -883,7 +788,7 @@ public class QuestManager {
 
             gui.show(player);
         } else {
-            main.getLogManager().log(Level.INFO, "NotQuests > All quest count: <AQUA>" + quests.size() + "</AQUA>");
+            main.getLogManager().info("NotQuests > All quest count: <AQUA>" + quests.size() + "</AQUA>");
 
             player.sendMessage("");
             player.sendMessage("§9" + questsAttachedToNPC.size() + " Available Quests:");
@@ -989,10 +894,10 @@ public class QuestManager {
     }
 
     public void loadNPCData() {
-        main.getLogManager().log(Level.INFO, "Loading NPC data...");
+        main.getLogManager().info("Loading NPC data...");
 
         if(!main.isCitizensEnabled()){
-            main.getLogManager().log(Level.WARNING, "NPC data loading has been cancelled, because Citizens is not installed. Install the Citizens plugin if you want NPC stuff to work.");
+            main.getLogManager().warn("NPC data loading has been cancelled, because Citizens is not installed. Install the Citizens plugin if you want NPC stuff to work.");
             return;
         }
 
@@ -1024,19 +929,19 @@ public class QuestManager {
 
 
                                                     // call the callback with the result
-                                                    main.getLogManager().log(Level.INFO, "Attaching Quest with the name <AQUA>" + quest.getQuestName() + " </AQUA>to NPC with the ID <AQUA>" + npc.getId() + " </AQUA>and name <AQUA>" + npc.getName());
+                                                    main.getLogManager().info("Attaching Quest with the name <AQUA>" + quest.getQuestName() + "</AQUA> to NPC with the ID <AQUA>" + npc.getId() + " </AQUA>and name <AQUA>" + npc.getName());
 
                                                     quest.removeNPC(npc);
                                                     quest.bindToNPC(npc, questShowing);
 
 
                                                 } else {
-                                                    main.getLogManager().log(Level.WARNING, "Error attaching npc with ID <AQUA>" + main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".npcs." + npcNumber + ".npcID")
+                                                    main.getLogManager().warn("Error attaching npc with ID <AQUA>" + main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".npcs." + npcNumber + ".npcID")
                                                             + "</AQUA> to quest <AQUA>" + quest.getQuestName() + "</AQUA> - NPC not found.");
 
                                                 }
                                             } else {
-                                                main.getLogManager().log(Level.WARNING, "Error: quests data is null");
+                                                main.getLogManager().warn("Error: quests data is null");
 
 
                                             }
@@ -1047,11 +952,11 @@ public class QuestManager {
 
                                     }
                                 } else {
-                                    main.getLogManager().log(Level.WARNING, "Error: Quest not found while trying to load NPC");
+                                    main.getLogManager().warn("Error: Quest not found while trying to load NPC");
 
                                 }
                             }
-                            main.getLogManager().log(Level.INFO, "Requesting cleaning of bugged NPCs in loadNPCData()...");
+                            main.getLogManager().info("Requesting cleaning of bugged NPCs in loadNPCData()...");
 
                             cleanupBuggedNPCs();
                         });
@@ -1071,26 +976,26 @@ public class QuestManager {
                                         if (npc != null) {
 
                                             // call the callback with the result
-                                            main.getLogManager().log(Level.INFO, "Attaching Quest with the name <AQUA>" + quest.getQuestName() + " </AQUA>to NPC with the ID <AQUA>" + npc.getId() + " </AQUA>and name <AQUA>" + npc.getName());
+                                            main.getLogManager().info("Attaching Quest with the name <AQUA>" + quest.getQuestName() + " </AQUA>to NPC with the ID <AQUA>" + npc.getId() + " </AQUA>and name <AQUA>" + npc.getName());
 
                                             quest.removeNPC(npc);
                                             quest.bindToNPC(npc, questShowing);
 
 
                                         } else {
-                                            main.getLogManager().log(Level.WARNING, "Error attaching npc with ID <AQUA>" + main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".npcs." + npcNumber + ".npcID")
+                                            main.getLogManager().warn("Error attaching npc with ID <AQUA>" + main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".npcs." + npcNumber + ".npcID")
                                                     + "</AQUA> to quest <AQUA>" + quest.getQuestName() + "</AQUA> - NPC not found.");
                                         }
 
                                     }
-                                    main.getLogManager().log(Level.INFO, "Requesting cleaning of bugged NPCs in loadNPCData()...");
+                                    main.getLogManager().info("Requesting cleaning of bugged NPCs in loadNPCData()...");
 
                                     cleanupBuggedNPCs();
 
 
                                 }
                             } else {
-                                main.getLogManager().log(Level.WARNING, "Error: Quest not found while trying to load NPC");
+                                main.getLogManager().warn("Error: Quest not found while trying to load NPC");
 
                             }
 
@@ -1100,29 +1005,24 @@ public class QuestManager {
 
 
                 } else {
-                    main.getLogManager().log(Level.INFO, "Skipped loading NPC data because questsConfigurationSetting was null.");
+                    main.getLogManager().info("Skipped loading NPC data because questsConfigurationSetting was null.");
                 }
-                main.getLogManager().log(Level.INFO, "Npc data loaded!");
+                main.getLogManager().info("NPC data loaded!");
 
 
                 main.getDataManager().setAlreadyLoadedNPCs(true);
 
 
-            } catch (Exception e) {
-                e.printStackTrace();
-
-                main.getLogManager().log(Level.SEVERE, "Plugin disabled, because there was an exception while loading quests NPC data.");
-                main.getDataManager().setSavingEnabled(false);
-                main.getServer().getPluginManager().disablePlugin(main);
-                //return;
+            } catch (Exception ex) {
+                main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an exception while loading quests NPC data.", ex);
             }
 
         } else {
-            main.getLogManager().log(Level.WARNING, "NotQuests > Tried to load NPC data before quest data was loaded. skipping scheduling another load...");
+            main.getLogManager().warn("NotQuests > Tried to load NPC data before quest data was loaded. skipping scheduling another load...");
 
             Bukkit.getScheduler().runTaskLaterAsynchronously(main, () -> {
                 if(!main.getDataManager().isAlreadyLoadedNPCs()){
-                    main.getLogManager().log(Level.WARNING, "NotQuests > Trying to load NPC quest data again...");
+                    main.getLogManager().warn("NotQuests > Trying to load NPC quest data again...");
                     main.getDataManager().loadNPCData();
                 }
             }, 40);
@@ -1133,11 +1033,11 @@ public class QuestManager {
 
     public void cleanupBuggedNPCs() {
         if(!main.isCitizensEnabled()){
-            main.getLogManager().log(Level.WARNING, "Checking for bugged NPCs has been cancelled, because Citizens is not installed on your server. The Citizens plugin is needed for NPC stuff to work.");
+            main.getLogManager().warn("Checking for bugged NPCs has been cancelled, because Citizens is not installed on your server. The Citizens plugin is needed for NPC stuff to work.");
 
             return;
         }
-        main.getLogManager().log(Level.INFO, "Checking for bugged NPCs...");
+        main.getLogManager().info("Checking for bugged NPCs...");
 
         int buggedNPCsFound = 0;
         int allNPCsFound = 0;
@@ -1169,7 +1069,7 @@ public class QuestManager {
 
                 if (!traitsToRemove.isEmpty()) {
                     buggedNPCsFound += 1;
-                    main.getLogManager().log(Level.INFO, "NotQuests > Bugged trait removed from npc with ID <AQUA>" + npc.getId() + " </AQUA>and name <AQUA>" + npc.getName() + " </AQUA>!");
+                    main.getLogManager().info("NotQuests > Bugged trait removed from npc with ID <AQUA>" + npc.getId() + "</AQUA> and name <AQUA>" + npc.getName() + "</AQUA>!");
 
                 }
 
@@ -1180,17 +1080,17 @@ public class QuestManager {
                 for (final Quest attachedQuest : getAllQuestsAttachedToNPC(npc)) {
                     attachedQuestNames.add(attachedQuest.getQuestName());
                 }
-                main.getLogManager().log(Level.INFO, "NPC with the ID: <AQUA>" + npc.getId() + "</AQUA> is not bugged, because it has the following quests attached: <AQUA>" + attachedQuestNames + "</AQUA>");
+                main.getLogManager().info("NPC with the ID: <AQUA>" + npc.getId() + "</AQUA> is not bugged, because it has the following quests attached: <AQUA>" + attachedQuestNames + "</AQUA>");
 
             }
             traitsToRemove.clear();
 
         }
         if (buggedNPCsFound == 0) {
-            main.getLogManager().log(Level.INFO, "No bugged NPCs found! Amount of checked NPCs: <AQUA>" + allNPCsFound + "</AQUA>");
+            main.getLogManager().info("No bugged NPCs found! Amount of checked NPCs: <AQUA>" + allNPCsFound + "</AQUA>");
 
         } else {
-            main.getLogManager().log(Level.INFO, "<YELLOW><AQUA>" + buggedNPCsFound + "</AQUA> bugged NPCs have been found and removed! Amount of checked NPCs: <AQUA>" + allNPCsFound + "</AQUA>");
+            main.getLogManager().info("<YELLOW><AQUA>" + buggedNPCsFound + "</AQUA> bugged NPCs have been found and removed! Amount of checked NPCs: <AQUA>" + allNPCsFound + "</AQUA>");
 
         }
     }

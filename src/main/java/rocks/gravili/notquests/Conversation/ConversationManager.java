@@ -38,7 +38,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
-import java.util.logging.Level;
 
 import static rocks.gravili.notquests.Commands.NotQuestColors.highlight2Gradient;
 import static rocks.gravili.notquests.Commands.NotQuestColors.highlightGradient;
@@ -167,10 +166,9 @@ public class ConversationManager {
 
         conversationsFolder = new File(main.getDataFolder().getPath() + "/conversations/");
         if (!conversationsFolder.exists()) {
-            main.getLogManager().log(Level.INFO, "Conversations Folder not found. Creating a new one...");
+            main.getLogManager().info("Conversations Folder not found. Creating a new one...");
 
             if (!conversationsFolder.mkdirs()) {
-                main.getLogManager().log(Level.SEVERE, "There was an error creating the NotQuests conversations folder");
                 main.getDataManager().disablePluginAndSaving("There was an error creating the NotQuests conversations folder.");
                 return;
             }
@@ -179,14 +177,14 @@ public class ConversationManager {
 
         for (File conversationFile : main.getUtilManager().listFilesRecursively(conversationsFolder)) {
             linesForOneFile.clear();
-            main.getLogManager().log(Level.INFO, "Reading conversation file <AQUA>" + conversationFile.getName() + "</AQUA>...");
+            main.getLogManager().info("Reading conversation file <AQUA>" + conversationFile.getName() + "</AQUA>...");
 
             final YamlConfiguration config = new YamlConfiguration();
             try {
                 config.load(conversationFile);
             } catch (IOException | InvalidConfigurationException e) {
                 e.printStackTrace();
-                main.getLogManager().log(Level.WARNING, "Failed reading conversation file <AQUA>" + conversationFile.getName() + "</AQUA>. It's being skipped.");
+                main.getLogManager().warn("Failed reading conversation file <AQUA>" + conversationFile.getName() + "</AQUA>. It's being skipped.");
                 continue;
             }
 
@@ -219,7 +217,7 @@ public class ConversationManager {
                     final ConfigurationSection speakerLines = speakersAndLinesConfigurationSection.getConfigurationSection(speakerName);
 
                     if (speakerLines == null) {
-                        main.getLogManager().log(Level.WARNING, "No lines found for conversation <AQUA>" + conversationFile.getName() + "</AQUA>.");
+                        main.getLogManager().warn("No lines found for conversation <AQUA>" + conversationFile.getName() + "</AQUA>.");
 
                         continue;
                     }
@@ -228,7 +226,6 @@ public class ConversationManager {
                         if (line.equals("color")) {
                             continue;
                         }
-
                     }
 
                 }
@@ -247,7 +244,7 @@ public class ConversationManager {
                 final Action action = parseActionString(actionString);
 
                 if (message.equals("-")) {
-                    main.getLogManager().log(Level.WARNING, "Warning: couldn't find message for starter line <AQUA>" + starterLine + "</AQUA> of conversation <AQUA>" + conversationFile.getName() + "</AQUA>");
+                    main.getLogManager().warn("Warning: couldn't find message for starter line <AQUA>" + starterLine + "</AQUA> of conversation <AQUA>" + conversationFile.getName() + "</AQUA>");
 
                 }
 
@@ -259,7 +256,7 @@ public class ConversationManager {
                 }
 
                 if (foundSpeaker == null) {
-                    main.getLogManager().log(Level.WARNING, "Warning: couldn't find speaker for a conversation line. Skipping...");
+                    main.getLogManager().warn("Warning: couldn't find speaker for a conversation line. Skipping...");
                     continue;
                 }
 
@@ -313,8 +310,8 @@ public class ConversationManager {
 
                     boolean alreadyExists = false;
                     for (final ConversationLine existingLine : linesForOneFile) {
-                        final String fullExistingLineIdenfifier = existingLine.getFullIdentifier();
-                        if (nextLineFullIdentifier.equalsIgnoreCase(fullExistingLineIdenfifier)) {
+                        final String fullExistingLineIdentifier = existingLine.getFullIdentifier();
+                        if (nextLineFullIdentifier.equalsIgnoreCase(fullExistingLineIdentifier)) {
                             alreadyExists = true;
                             conversationLine.addNext(existingLine);
                             continue;
@@ -335,7 +332,7 @@ public class ConversationManager {
 
 
                         if (foundSpeaker == null) {
-                            main.getLogManager().log(Level.WARNING, "Warning: couldn't find speaker for next conversation line <AQUA>" + nextLineFullIdentifier + "</AQUA>. Skipping line...");
+                            main.getLogManager().warn("Warning: couldn't find speaker for next conversation line <AQUA>" + nextLineFullIdentifier + "</AQUA>. Skipping line...");
                             continue;
                         }
 

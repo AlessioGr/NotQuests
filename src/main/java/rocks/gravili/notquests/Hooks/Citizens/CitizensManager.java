@@ -24,7 +24,6 @@ import rocks.gravili.notquests.Conversation.Conversation;
 import rocks.gravili.notquests.NotQuests;
 
 import java.util.ArrayList;
-import java.util.logging.Level;
 
 public class CitizensManager {
     private final NotQuests main;
@@ -34,7 +33,7 @@ public class CitizensManager {
     }
 
     public void registerQuestGiverTrait() {
-        main.getLogManager().log(Level.INFO, "Registering Citizens nquestgiver trait...");
+        main.getLogManager().info("Registering Citizens nquestgiver trait...");
 
         final ArrayList<TraitInfo> toDeregister = new ArrayList<>();
         for (final TraitInfo traitInfo : net.citizensnpcs.api.CitizensAPI.getTraitFactory().getRegisteredTraits()) {
@@ -48,7 +47,7 @@ public class CitizensManager {
         }
 
         net.citizensnpcs.api.CitizensAPI.getTraitFactory().registerTrait(net.citizensnpcs.api.trait.TraitInfo.create(QuestGiverNPCTrait.class).withName("nquestgiver"));
-        main.getLogManager().log(Level.INFO, "Citizens nquestgiver trait has been registered!");
+        main.getLogManager().info("Citizens nquestgiver trait has been registered!");
         if (!main.getDataManager().isAlreadyLoadedNPCs()) {
             main.getDataManager().loadNPCData();
         }
@@ -58,7 +57,7 @@ public class CitizensManager {
 
     private void postRegister() {
         if (main.getConversationManager() != null) {
-            main.getLogManager().log(Level.INFO, "Trying to bind Conversations to NPCs...");
+            main.getLogManager().info("Trying to bind Conversations to NPCs...");
             for (Conversation conversation : main.getConversationManager().getAllConversations()) {
                 if (!Bukkit.isPrimaryThread()) {
                     Bukkit.getScheduler().runTask(main, conversation::bindToCitizensNPC);

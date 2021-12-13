@@ -147,8 +147,8 @@ dependencies {
 
     implementation 'me.lucko:commodore:1.11'
 
-    //implementation 'com.github.retrooper.packetevents:bukkit:2.0-SNAPSHOT'
-    implementation 'com.github.AlessioGr.packetevents:bukkit:2.0-SNAPSHOT'
+    implementation 'com.github.retrooper.packetevents:bukkit:2.0-SNAPSHOT'
+    //implementation 'com.github.AlessioGr.packetevents:bukkit:2.0-SNAPSHOT'
 
 }
 
@@ -185,10 +185,10 @@ shadowJar {
         include dependency('io.leangen.geantyref:')
         include dependency('me.lucko:')
 
-        //include dependency('com.github.retrooper.packetevents:')
+        include dependency('com.github.retrooper.packetevents:')
         //include dependency('io.github.retrooper.packetevents:')
 
-        include dependency('com.github.AlessioGr.packetevents:')
+        //include dependency('com.github.AlessioGr.packetevents:')
     }
 
     relocate("io.github.retrooper.packetevents", path + '.packetevents.bukkit')

@@ -33,8 +33,6 @@ import rocks.gravili.notquests.Structs.Objectives.Objective;
 import rocks.gravili.notquests.Structs.Quest;
 import rocks.gravili.notquests.Structs.QuestPlayer;
 
-import java.util.logging.Level;
-
 public class MoneyCondition extends Condition {
 
     private final NotQuests main;
@@ -149,7 +147,7 @@ public class MoneyCondition extends Condition {
 
     private void removeMoney(final Player player, final String worldName, final long moneyToDeduct, final boolean notifyPlayer) {
         if (!main.isVaultEnabled() || main.getEconomy() == null) {
-            main.getLogManager().log(Level.WARNING, "§eWarning: Could not deduct money, because Vault was not found. Please install Vault for money stuff to work.");
+            main.getLogManager().warn("Warning: Could not deduct money, because Vault was not found. Please install Vault for money stuff to work.");
             return;
         }
         main.getEconomy().withdrawPlayer(player, worldName, moneyToDeduct);
@@ -176,8 +174,8 @@ public class MoneyCondition extends Condition {
                     if (main.isVaultEnabled()) {
                         removeMoney(player, player.getWorld().getName(), moneyRequirementAmount, true);
                     } else {
-                        main.getLogManager().log(Level.WARNING, "§eWarning: Could not deduct money, because Vault was not found. Please install Vault for money stuff to work.");
-                        main.getLogManager().log(Level.WARNING, "§cError: Tried to load Economy when Vault is not enabled. Please report this to the plugin author (and I also recommend you installing Vault for money stuff to work)");
+                        main.getLogManager().warn("Warning: Could not deduct money, because Vault was not found. Please install Vault for money stuff to work.");
+                        main.getLogManager().warn("Error: Tried to load Economy when Vault is not enabled. Please report this to the plugin author (and I also recommend you installing Vault for money stuff to work)");
                         return "§cError deducting money, because Vault has not been found. Report this to an Admin.";
                     }
 
