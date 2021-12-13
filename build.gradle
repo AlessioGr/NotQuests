@@ -186,7 +186,7 @@ shadowJar {
         include dependency('me.lucko:')
 
         include dependency('com.github.retrooper.packetevents:')
-        //include dependency('io.github.retrooper.packetevents:')
+        include dependency('io.github.retrooper.packetevents:')
 
         //include dependency('com.github.AlessioGr.packetevents:')
     }
