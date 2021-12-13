@@ -123,7 +123,7 @@ public class DataManager {
 
     private boolean alreadyLoadedGeneral = false;
     private boolean alreadyLoadedQuests = false;
-
+    private boolean currentlyLoading = true;
 
     /**
      * General.yml Configuration
@@ -267,9 +267,9 @@ public class DataManager {
             return;
         }
 
-        setAlreadyLoadedGeneral(true);
 
         updateAndReadGeneralConfig();
+        setAlreadyLoadedGeneral(true);
     }
 
     public void updateAndReadGeneralConfig() {
@@ -913,165 +913,96 @@ public class DataManager {
 
             if (Bukkit.isPrimaryThread()) {
                 Bukkit.getScheduler().runTaskAsynchronously(main, () -> {
-                    openConnection();
-                    if(connection == null){
-                        disablePluginAndSaving("There was a database error, so loading has been disabled. (1)");
-                        return;
-                    }
-                    try {
-                        statement = connection.createStatement();
-                    } catch (SQLException e) {
-                        disablePluginAndSaving("There was a database error, so loading has been disabled. (2)", e);
-                        return;
-                    }
-
-
-                    //Create Database tables if they don't exist yet
-                    try {
-                        main.getLogManager().info(LogCategory.DATA, "Creating database table 'QuestPlayerData' if it doesn't exist yet...");
-                        statement.executeUpdate("CREATE TABLE IF NOT EXISTS `QuestPlayerData` (`PlayerUUID` varchar(200), `QuestPoints` BIGINT(255), PRIMARY KEY (PlayerUUID))");
-
-                        main.getLogManager().info(LogCategory.DATA, "Creating database table 'ActiveQuests' if it doesn't exist yet...");
-                        statement.executeUpdate("CREATE TABLE IF NOT EXISTS `ActiveQuests` (`QuestName` varchar(200), `PlayerUUID` varchar(200))");
-
-                        main.getLogManager().info(LogCategory.DATA, "Creating database table 'CompletedQuests' if it doesn't exist yet...");
-                        statement.executeUpdate("CREATE TABLE IF NOT EXISTS `CompletedQuests` (`QuestName` varchar(200), `PlayerUUID` varchar(200), `TimeCompleted` BIGINT(255))");
-
-                        main.getLogManager().info(LogCategory.DATA, "Creating database table 'ActiveObjectives' if it doesn't exist yet...");
-                        statement.executeUpdate("CREATE TABLE IF NOT EXISTS `ActiveObjectives` (`ObjectiveType` varchar(200), `QuestName` varchar(200), `PlayerUUID` varchar(200), `CurrentProgress` BIGINT(255), `ObjectiveID` INT(255), `HasBeenCompleted` BOOLEAN)");
-
-                        main.getLogManager().info(LogCategory.DATA, "Creating database table 'ActiveTriggers' if it doesn't exist yet...");
-
-                        statement.executeUpdate("CREATE TABLE IF NOT EXISTS `ActiveTriggers` (`TriggerType` varchar(200), `QuestName` varchar(200), `PlayerUUID` varchar(200), `CurrentProgress` BIGINT(255), `TriggerID` INT(255))");
-
-
-                    } catch (SQLException e) {
-                        disablePluginAndSaving("Plugin disabled, because there was an error while trying to load MySQL database tables", e);
-                        return;
-                    }
-
-                    if (isSavingEnabled()) {
-                        main.getLogManager().info("Loaded player data");
-
-                        if (!isAlreadyLoadedQuests()) {
-                            loadQuestsConfig();
-                            main.getQuestManager().loadQuestsFromConfig();
-
-                        } else {
-                            main.getLogManager().info("Loading Data from existing quests.yml... - reloadData");
-                            try {
-                                questsConfig = loadYAMLConfiguration(questsConfigFile);
-                            } catch (Exception e) {
-                                disablePluginAndSaving("Plugin disabled, because there was an error loading data from quests.yml.", e);
-                                return;
-                            }
-                            main.getQuestManager().loadQuestsFromConfig();
-
-                        }
-
-                        main.getQuestPlayerManager().loadPlayerData();
-
-                        //Citizens stuff if Citizens is enabled
-                        if(main.isCitizensEnabled()){
-                            //IF an NPC exist, try to load NPC data.
-                            boolean foundNPC = false;
-                            for (final NPC ignored : CitizensAPI.getNPCRegistry().sorted()) {
-                                foundNPC = true;
-                                break;
-                            }
-                            if (foundNPC && !isAlreadyLoadedNPCs()) {
-                                loadNPCData();
-                            }
-                        }
-
-                    }
-
-
+                    reloadData2();
+                    currentlyLoading = false;
                 });
             } else { //If this is already an asynchronous thread, this else{ thingy does not try to create a new asynchronous thread for better performance. The contents of this else section is identical.2
-                openConnection();
-                if(connection == null){
-                    main.getLogManager().severe("There was a database error, so loading has been disabled.");
-                    return;
-                }
-                try {
-                    statement = connection.createStatement();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                    main.getLogManager().severe("There was a database error, so loading has been disabled.");
-                    return;
-                }
-
-
-                //Create Database tables if they don't exist yet
-                try {
-                    main.getLogManager().info(LogCategory.DATA, "Creating database table 'QuestPlayerData' if it doesn't exist yet...");
-                    statement.executeUpdate("CREATE TABLE IF NOT EXISTS `QuestPlayerData` (`PlayerUUID` varchar(200), `QuestPoints` BIGINT(255), PRIMARY KEY (PlayerUUID))");
-
-                    main.getLogManager().info(LogCategory.DATA, "Creating database table 'ActiveQuests' if it doesn't exist yet...");
-                    statement.executeUpdate("CREATE TABLE IF NOT EXISTS `ActiveQuests` (`QuestName` varchar(200), `PlayerUUID` varchar(200))");
-
-                    main.getLogManager().info(LogCategory.DATA, "Creating database table 'CompletedQuests' if it doesn't exist yet...");
-                    statement.executeUpdate("CREATE TABLE IF NOT EXISTS `CompletedQuests` (`QuestName` varchar(200), `PlayerUUID` varchar(200), `TimeCompleted` BIGINT(255))");
-
-                    main.getLogManager().info(LogCategory.DATA, "Creating database table 'ActiveObjectives' if it doesn't exist yet...");
-                    statement.executeUpdate("CREATE TABLE IF NOT EXISTS `ActiveObjectives` (`ObjectiveType` varchar(200), `QuestName` varchar(200), `PlayerUUID` varchar(200), `CurrentProgress` BIGINT(255), `ObjectiveID` INT(255), `HasBeenCompleted` BOOLEAN)");
-
-                } catch (SQLException e) {
-                    main.getLogManager().info(LogCategory.DATA, "There was an error while trying to load MySQL database tables! This is the stacktrace:");
-
-                    e.printStackTrace();
-                    disablePluginAndSaving("Plugin disabled, because there was an error while initializing tables.");
-                    return;
-                }
-
-                if (isSavingEnabled()) {
-
-                    main.getLogManager().info("Loaded player data");
-
-                    if (questsConfigFile == null) {
-                        questsConfigFile = new File(main.getDataFolder(), "quests.yml");
-                        main.getLogManager().info("First load of quests.yml...");
-                        try {
-                            questsConfig = loadYAMLConfiguration(questsConfigFile);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            disablePluginAndSaving("Plugin disabled, because there was an error loading data from quests.yml.");
-                            return;
-                        }
-                        main.getQuestManager().loadQuestsFromConfig();
-                    } else {
-                        main.getLogManager().info("Loading Data from existing quests.yml...");
-                        try{
-                            questsConfig = loadYAMLConfiguration(questsConfigFile);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            disablePluginAndSaving("Plugin disabled, because there was an error loading data from quests.yml.");
-                            return;
-                        }
-                        main.getQuestManager().loadQuestsFromConfig();
-                    }
-
-                    main.getQuestPlayerManager().loadPlayerData();
-
-                    //IF an NPC exist, try to load NPC data.
-                    boolean foundNPC = false;
-                    for (final NPC ignored : CitizensAPI.getNPCRegistry().sorted()) {
-                        foundNPC = true;
-                        break;
-                    }
-                    if (foundNPC && !isAlreadyLoadedNPCs()) {
-                        loadNPCData();
-                    }
-
-                }
+                reloadData2();
+                currentlyLoading = false;
             }
-        }else{
+        } else {
             main.getLogManager().severe("Data loading has been skipped, because it has been disabled. This might be caused because of an error during plugin startup earlier.");
+        }
+    }
 
+    private void reloadData2() {
+        openConnection();
+        if (connection == null) {
+            disablePluginAndSaving("There was a database error, so loading has been disabled. (1)");
+            return;
+        }
+        try {
+            statement = connection.createStatement();
+        } catch (SQLException e) {
+            disablePluginAndSaving("There was a database error, so loading has been disabled. (2)", e);
+            return;
         }
 
 
+        //Create Database tables if they don't exist yet
+        try {
+            main.getLogManager().info(LogCategory.DATA, "Creating database table 'QuestPlayerData' if it doesn't exist yet...");
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS `QuestPlayerData` (`PlayerUUID` varchar(200), `QuestPoints` BIGINT(255), PRIMARY KEY (PlayerUUID))");
+
+            main.getLogManager().info(LogCategory.DATA, "Creating database table 'ActiveQuests' if it doesn't exist yet...");
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS `ActiveQuests` (`QuestName` varchar(200), `PlayerUUID` varchar(200))");
+
+            main.getLogManager().info(LogCategory.DATA, "Creating database table 'CompletedQuests' if it doesn't exist yet...");
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS `CompletedQuests` (`QuestName` varchar(200), `PlayerUUID` varchar(200), `TimeCompleted` BIGINT(255))");
+
+            main.getLogManager().info(LogCategory.DATA, "Creating database table 'ActiveObjectives' if it doesn't exist yet...");
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS `ActiveObjectives` (`ObjectiveType` varchar(200), `QuestName` varchar(200), `PlayerUUID` varchar(200), `CurrentProgress` BIGINT(255), `ObjectiveID` INT(255), `HasBeenCompleted` BOOLEAN)");
+
+            main.getLogManager().info(LogCategory.DATA, "Creating database table 'ActiveTriggers' if it doesn't exist yet...");
+
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS `ActiveTriggers` (`TriggerType` varchar(200), `QuestName` varchar(200), `PlayerUUID` varchar(200), `CurrentProgress` BIGINT(255), `TriggerID` INT(255))");
+
+
+        } catch (SQLException e) {
+            disablePluginAndSaving("Plugin disabled, because there was an error while trying to load MySQL database tables", e);
+            return;
+        }
+
+        if (isSavingEnabled()) {
+            main.getLogManager().info("Loaded player data");
+
+            if (!isAlreadyLoadedQuests()) {
+                loadQuestsConfig();
+                main.getQuestManager().loadQuestsFromConfig();
+
+            } else {
+                main.getLogManager().info("Loading Data from existing quests.yml... - reloadData");
+                try {
+                    questsConfig = loadYAMLConfiguration(questsConfigFile);
+                } catch (Exception e) {
+                    disablePluginAndSaving("Plugin disabled, because there was an error loading data from quests.yml.", e);
+                    return;
+                }
+                main.getQuestManager().loadQuestsFromConfig();
+
+            }
+
+            main.getQuestPlayerManager().loadPlayerData();
+
+            //Citizens stuff if Citizens is enabled
+            if (main.isCitizensEnabled()) {
+                //IF an NPC exist, try to load NPC data.
+                boolean foundNPC = false;
+                for (final NPC ignored : CitizensAPI.getNPCRegistry().sorted()) {
+                    foundNPC = true;
+                    break;
+                }
+                if (foundNPC && !isAlreadyLoadedNPCs()) {
+                    loadNPCData();
+                }
+            }
+
+        }
+    }
+
+
+    public boolean isCurrentlyLoading() {
+        return currentlyLoading;
     }
 
     /**
@@ -1082,7 +1013,7 @@ public class DataManager {
      * @return the quests.yml Configuration FileConfiguration object
      */
     public final FileConfiguration getQuestsConfig() {
-        if (!isAlreadyLoadedQuests()) {
+        if (!isAlreadyLoadedQuests() && !isCurrentlyLoading()) {
             reloadData();
         }
         return questsConfig;
@@ -1095,7 +1026,7 @@ public class DataManager {
      * @return the general.yml Configuration FileConfiguration object
      */
     public final FileConfiguration getGeneralConfig() {
-        if (!isAlreadyLoadedGeneral()) {
+        if (!isAlreadyLoadedGeneral() && !isCurrentlyLoading()) {
             loadGeneralConfig();
         }
         return generalConfig;
