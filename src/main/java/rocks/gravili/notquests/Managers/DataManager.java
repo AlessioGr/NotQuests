@@ -800,6 +800,8 @@ public class DataManager {
                 main.getLogManager().severe("Could not save quests config to <AQUA>" + questsConfigFile + "</AQUA>. Stacktrace:");
                 e.printStackTrace();
             }
+        } else {
+            main.getLogManager().info("Quest data saving has been skipped, because saving has been disabled. This usually happens when something goes wrong during Quest data loading, to prevent data loss.");
         }
     }
 

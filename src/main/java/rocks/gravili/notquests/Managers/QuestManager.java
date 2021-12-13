@@ -260,15 +260,9 @@ public class QuestManager {
                             try {
                                 String conditionTypeString = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".requirements." + requirementNumber + ".conditionType", "");
 
-                                //Old conversion code start
                                 if(conditionTypeString.isBlank()){//User might be using old system with requirementType instead of conditionType. Let's convert it!
-                                    main.getLogManager().info("Converting old requirementType to conditionType...");
-                                    conditionTypeString = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".requirements." + requirementNumber + ".requirementType", "");
-                                    main.getDataManager().getQuestsConfig().set("quests." + questName + ".requirements." + requirementNumber + ".requirementType", null);
-                                    main.getDataManager().getQuestsConfig().set("quests." + questName + ".requirements." + requirementNumber + ".conditionType", conditionTypeString);
-                                    main.getDataManager().saveQuestsConfig();
+                                    conditionTypeString = main.getUpdateManager().convertQuestRequirementTypeToConditionType(questName, requirementNumber, conditionTypeString);
                                 }
-                                //Old conversion code end
 
                                 conditionType = main.getConditionsManager().getConditionClass(conditionTypeString);
                             } catch (java.lang.NullPointerException ex) {

@@ -23,6 +23,14 @@ public class UpdateManager {
             e.printStackTrace();
             main.getLogManager().info("Unable to check for updates ('" + e.getMessage() + "').");
         }
+    }
+
+    public String convertQuestRequirementTypeToConditionType(final String questName, final String requirementID, final String conditionTypeString) {
+        main.getLogManager().info("Converting old requirementType to conditionType...");
+        main.getDataManager().getQuestsConfig().set("quests." + questName + ".requirements." + requirementID + ".requirementType", null);
+        main.getDataManager().getQuestsConfig().set("quests." + questName + ".requirements." + requirementID + ".conditionType", conditionTypeString);
+        main.getDataManager().saveQuestsConfig();
+        return main.getDataManager().getQuestsConfig().getString("quests." + questName + ".requirements." + requirementID + ".requirementType", "");
 
     }
 }
