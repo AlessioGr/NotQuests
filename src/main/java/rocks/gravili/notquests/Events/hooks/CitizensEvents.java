@@ -42,7 +42,6 @@ import rocks.gravili.notquests.Structs.Triggers.ActiveTrigger;
 import rocks.gravili.notquests.Structs.Triggers.TriggerTypes.NPCDeathTrigger;
 
 import java.util.Locale;
-import java.util.logging.Level;
 
 public class CitizensEvents implements Listener {
     private final NotQuests main;
@@ -194,7 +193,7 @@ public class CitizensEvents implements Listener {
 
     @EventHandler
     private void onCitizensEnable(CitizensEnableEvent e) {
-        main.getLogManager().log(Level.INFO, "Processing Citizens Enable Event...");
+        main.getLogManager().info("Processing Citizens Enable Event...");
         main.getCitizensManager().registerQuestGiverTrait();
 
 
@@ -202,7 +201,7 @@ public class CitizensEvents implements Listener {
 
     @EventHandler
     private void onCitizensReload(CitizensReloadEvent e) {
-        main.getLogManager().log(Level.INFO, "Processing Citizens Reload Event...");
+        main.getLogManager().info("Processing Citizens Reload Event...");
 
         main.getCitizensManager().registerQuestGiverTrait();
 

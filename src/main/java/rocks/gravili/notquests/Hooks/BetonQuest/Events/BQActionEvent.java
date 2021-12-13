@@ -30,8 +30,6 @@ import rocks.gravili.notquests.Structs.Quest;
 import rocks.gravili.notquests.Structs.QuestPlayer;
 import rocks.gravili.notquests.Structs.Triggers.Action;
 
-import java.util.logging.Level;
-
 public class BQActionEvent extends QuestEvent {
 
     private final NotQuests main;
@@ -121,7 +119,7 @@ public class BQActionEvent extends QuestEvent {
             }
 
         } else {
-            main.getLogManager().log(Level.WARNING, "Error executing action (triggered by BetonQuests) - action or player was not found.");
+            main.getLogManager().warn("Error executing action (triggered by BetonQuests) - action or player was not found.");
             throw new QuestRuntimeException("Error executing NotQuests action (triggered by BetonQuests) - action or player was not found.");
         }
 

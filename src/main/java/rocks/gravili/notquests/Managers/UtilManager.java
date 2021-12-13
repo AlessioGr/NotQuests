@@ -28,15 +28,13 @@ import org.apache.commons.text.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class UtilManager {
     private final NotQuests main;
@@ -48,6 +46,35 @@ public class UtilManager {
         this.main = main;
         playersAndBossBars = new HashMap<>();
     }
+
+    /**
+     * Utility function: Returns the UUID of an online player. If the player is
+     * offline, it will return null.
+     *
+     * @param playerName the name of the online player you want to get the UUID from
+     * @return the UUID of the specified, online player
+     */
+    public final UUID getOnlineUUID(final String playerName) {
+        final Player player = Bukkit.getPlayer(playerName);
+        if (player != null) {
+            return player.getUniqueId();
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Utility function: Tries to return the UUID of an offline player (can also be online)
+     * via some weird Bukkit function. This probably makes calls to the Minecraft API, I don't
+     * know for sure. It's definitely slower.
+     *
+     * @param playerName the name of the player you want to get the UUID from
+     * @return the UUID from the player based on his current username.
+     */
+    public final UUID getOfflineUUID(final String playerName) {
+        return Bukkit.getOfflinePlayer(playerName).getUniqueId();
+    }
+
 
     public final OfflinePlayer getOfflinePlayer(final String playerName) {
         return Bukkit.getOfflinePlayer(playerName);

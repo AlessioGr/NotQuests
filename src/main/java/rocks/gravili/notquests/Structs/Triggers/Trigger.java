@@ -25,8 +25,6 @@ import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.ActiveQuest;
 import rocks.gravili.notquests.Structs.Quest;
 
-import java.util.logging.Level;
-
 public abstract class Trigger {
     private final NotQuests main;
     private final Quest quest;
@@ -82,7 +80,7 @@ public abstract class Trigger {
         if (player != null) {
             action.execute(player, activeQuest);
         } else {
-            main.getLogManager().log(Level.WARNING, "Tried to execute trigger for offline player - ABORTED!");
+            main.getLogManager().warn("Tried to execute trigger for offline player - ABORTED!");
 
         }
     }

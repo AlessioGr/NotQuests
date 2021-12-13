@@ -32,8 +32,6 @@ import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Quest;
 import rocks.gravili.notquests.Structs.QuestPlayer;
 
-import java.util.logging.Level;
-
 public class QuestPointsReward extends Reward {
 
     private final NotQuests main;
@@ -60,7 +58,7 @@ public class QuestPointsReward extends Reward {
             questPlayer.addQuestPoints(rewardedQuestPoints, true);
 
         } else {
-            main.getLogManager().log(Level.WARNING, "§cError giving quest point reward to player §b" + player.getName());
+            main.getLogManager().warn("Error giving quest point reward to player <AQUA>" + player.getName() + "</AQUA>");
 
             player.sendMessage("§cError giving quest point reward.");
         }

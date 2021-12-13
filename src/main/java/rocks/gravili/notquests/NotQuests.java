@@ -50,14 +50,14 @@ import rocks.gravili.notquests.Hooks.Citizens.CitizensManager;
 import rocks.gravili.notquests.Hooks.Luckperms.LuckpermsManager;
 import rocks.gravili.notquests.Managers.*;
 import rocks.gravili.notquests.Managers.Packets.PacketManager;
+import rocks.gravili.notquests.Managers.Registering.ConditionsManager;
 import rocks.gravili.notquests.Managers.Registering.ObjectiveManager;
-import rocks.gravili.notquests.Managers.Registering.RequirementManager;
 import rocks.gravili.notquests.Managers.Registering.RewardManager;
 import rocks.gravili.notquests.Managers.Registering.TriggerManager;
 import rocks.gravili.notquests.Placeholders.QuestPlaceholders;
+import rocks.gravili.notquests.Structs.Conditions.Condition;
 import rocks.gravili.notquests.Structs.Objectives.Objective;
 import rocks.gravili.notquests.Structs.Quest;
-import rocks.gravili.notquests.Structs.Requirements.Requirement;
 import rocks.gravili.notquests.Structs.Rewards.Reward;
 import rocks.gravili.notquests.Structs.Triggers.Trigger;
 
@@ -66,7 +66,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.Callable;
-import java.util.logging.Level;
 
 /**
  * This is the entry point of NotQuests. All kinds of managers, commands and other shit is reistered here.
@@ -89,14 +88,13 @@ public final class NotQuests extends JavaPlugin {
     private PerformanceManager performanceManager;
     private CommandManager commandManager;
     private ConversationManager conversationManager;
-
     private CitizensManager citizensManager;
-
     private PacketManager packetManager;
+    private UpdateManager updateManager;
 
     //Registering Managers
     private ObjectiveManager objectiveManager;
-    private RequirementManager requirementManager;
+    private ConditionsManager conditionsManager;
     private RewardManager rewardManager;
     private TriggerManager triggerManager;
 
@@ -151,7 +149,9 @@ public final class NotQuests extends JavaPlugin {
         //Create a new instance of the Data Manager which will be re-used everywhere
         dataManager = new DataManager(this);
         //Load general config first, because we'll need it for the integrations
-        dataManager.loadGeneralConfig();
+        if(!dataManager.isAlreadyLoadedGeneral()){
+            dataManager.loadGeneralConfig();
+        }
 
         if (packetManager == null) {
             packetManager = new PacketManager(this);
@@ -186,7 +186,7 @@ public final class NotQuests extends JavaPlugin {
 
         logManager.lateInit(); //To initialize adventure
 
-        getLogManager().log(Level.INFO, "NotQuests is starting...");
+        getLogManager().info("NotQuests is starting...");
 
         //PaperLib for paper-specific methods (like getting TPS)
         PaperLib.suggestPaper(this);
@@ -219,6 +219,8 @@ public final class NotQuests extends JavaPlugin {
 
         languageManager = new LanguageManager(this);
 
+        updateManager = new UpdateManager(this);
+
         /*
          * Tell the Data Manager: Hey, NPCs have not been loaded yet. If this is set to false, the plugin will
          * try to load NPCs once Citizens is re-loaded or enabled
@@ -244,7 +246,7 @@ public final class NotQuests extends JavaPlugin {
 
         //Registering Managers
         objectiveManager = new ObjectiveManager(this);
-        requirementManager = new RequirementManager(this);
+        conditionsManager = new ConditionsManager(this);
         rewardManager = new RewardManager(this);
         triggerManager = new TriggerManager(this);
 
@@ -309,18 +311,7 @@ public final class NotQuests extends JavaPlugin {
 
 
             //Update Checker
-            try {
-                final UpdateChecker updateChecker = new UpdateChecker(this, 95872);
-                if (updateChecker.checkForUpdates()) {
-                    getLogManager().info("<GOLD>The version <Yellow>" + getDescription().getVersion()
-                            + " <GOLD>is not the latest version (<Green>" + updateChecker.getLatestVersion() + "<GOLD>)! Please update the plugin here: <Aqua>https://www.spigotmc.org/resources/95872/ <DARK_GRAY>(If your version is newer, the spigot API might not be updated yet).");
-                } else {
-                    getLogManager().info("NotQuests seems to be up to date! :)");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                getLogManager().info("Unable to check for updates ('" + e.getMessage() + "').");
-            }
+            updateManager.checkForPluginUpdates();
 
             conversationManager = new ConversationManager(this);
 
@@ -376,8 +367,8 @@ public final class NotQuests extends JavaPlugin {
             public Map<String, Integer> call() throws Exception {
                 Map<String, Integer> map = new HashMap<>();
                 for (Quest quest : getQuestManager().getAllQuests()) {
-                    for (Requirement requirement : quest.getRequirements()) {
-                        String requirementType = getRequirementManager().getRequirementType(requirement.getClass());
+                    for (Condition condition : quest.getRequirements()) {
+                        String requirementType = getConditionsManager().getConditionType(condition.getClass());
                         map.put(requirementType, map.getOrDefault(requirementType, 0) + 1);
                     }
                 }
@@ -424,11 +415,8 @@ public final class NotQuests extends JavaPlugin {
     private void enableIntegrations() {
         //Vault Hook
         if (getDataManager().getConfiguration().isIntegrationVaultEnabled()) {
-            //Vault is needed for NotQuests to function. If it's not found, NotQuests will be disabled. EDIT: Now it will just disable some features
             if (!setupEconomy()) {
-                getLogManager().log(Level.WARNING, "Vault Dependency not found! Some features have been disabled. I recommend you to install Vault for the best experience.");
-                //getServer().getPluginManager().disablePlugin(this);
-                //return;
+                getLogManager().warn("Vault Dependency not found! Some features have been disabled. I recommend you to install Vault for the best experience.");
             } else {
                 setupPermissions();
                 setupChat();
@@ -482,7 +470,7 @@ public final class NotQuests extends JavaPlugin {
         //Enable 'Citizens' integration. If it's not found, it will just disable some NPC features which can mostly be replaced by armor stands
         if (getDataManager().getConfiguration().isIntegrationCitizensEnabled()) {
             if (getServer().getPluginManager().getPlugin("Citizens") == null || !Objects.requireNonNull(getServer().getPluginManager().getPlugin("Citizens")).isEnabled()) {
-                getLogManager().log(Level.INFO, "Citizens Dependency not found! Congratulations! In NotQuests, you can use armor stands instead of Citizens NPCs");
+                getLogManager().info("Citizens Dependency not found! Congratulations! In NotQuests, you can use armor stands instead of Citizens NPCs");
 
             } else {
                 citizensManager = new CitizensManager(this);
@@ -541,7 +529,7 @@ public final class NotQuests extends JavaPlugin {
      */
     @Override
     public void onDisable() {
-        getLogManager().log(Level.INFO, "NotQuests is shutting down...");
+        getLogManager().info("NotQuests is shutting down...");
 
         //Save all kinds of data
         dataManager.saveData();
@@ -572,7 +560,7 @@ public final class NotQuests extends JavaPlugin {
                 }
                 for (final Trait traitToRemove : traitsToRemove) {
                     npc.removeTrait(traitToRemove.getClass());
-                    getLogManager().log(Level.INFO, "Removed nquestgiver trait from NPC with the ID <AQUA>" + npc.getId());
+                    getLogManager().info("Removed nquestgiver trait from NPC with the ID <AQUA>" + npc.getId());
                 }
                 traitsToRemove.clear();
 
@@ -582,7 +570,7 @@ public final class NotQuests extends JavaPlugin {
              * Next, the nquestgiver trait itself which is registered via the Citizens API on startup is being
              * de-registered.
              */
-            getLogManager().log(Level.INFO, "Deregistering nquestgiver trait...");
+            getLogManager().info("Deregistering nquestgiver trait...");
             final ArrayList<TraitInfo> toDeregister = new ArrayList<>();
             for (final TraitInfo traitInfo : net.citizensnpcs.api.CitizensAPI.getTraitFactory().getRegisteredTraits()) {
                 if (traitInfo.getTraitName().equals("nquestgiver")) {
@@ -695,7 +683,7 @@ public final class NotQuests extends JavaPlugin {
      */
     public Economy getEconomy() {
         if(!isVaultEnabled()){
-            getLogManager().log(Level.SEVERE, "§cError: Tried to load Economy when Vault is not enabled. Please report this to the plugin author (and I also recommend you installing Vault for money stuff to work)");
+            getLogManager().severe("§cError: Tried to load Economy when Vault is not enabled. Please report this to the plugin author (and I also recommend you installing Vault for money stuff to work)");
 
             return null;
         }
@@ -791,8 +779,8 @@ public final class NotQuests extends JavaPlugin {
         return objectiveManager;
     }
 
-    public RequirementManager getRequirementManager() {
-        return requirementManager;
+    public ConditionsManager getConditionsManager() {
+        return conditionsManager;
     }
 
     public RewardManager getRewardManager() {
@@ -845,7 +833,9 @@ public final class NotQuests extends JavaPlugin {
             getLogManager().info("Citizens found! Enabling Citizens support (late)...");
             getDataManager().setAlreadyLoadedNPCs(false);
             getServer().getPluginManager().registerEvents(new CitizensEvents(this), this);
-            getDataManager().loadNPCData();
+            if(!getDataManager().isAlreadyLoadedNPCs()){ //Just making sure
+                getDataManager().loadNPCData();
+            }
         }
 
     }
@@ -864,5 +854,9 @@ public final class NotQuests extends JavaPlugin {
 
     public PacketManager getPacketManager() {
         return packetManager;
+    }
+
+    public UpdateManager getUpdateManager() {
+        return updateManager;
     }
 }

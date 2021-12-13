@@ -21,6 +21,7 @@ package rocks.gravili.notquests.Managers;
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.flags.CommandFlag;
+import cloud.commandframework.arguments.parser.ArgumentParseResult;
 import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.arguments.standard.StringArrayArgument;
@@ -50,6 +51,8 @@ import rocks.gravili.notquests.Commands.newCMDs.arguments.ApplyOnSelector;
 import rocks.gravili.notquests.Commands.newCMDs.arguments.QuestSelector;
 import rocks.gravili.notquests.Conversation.ConversationManager;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.Objectives.Objective;
+import rocks.gravili.notquests.Structs.Quest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,6 +73,9 @@ public class CommandManager {
     private Command.Builder<CommandSender> adminEditAddRewardCommandBuilder;
     private Command.Builder<CommandSender> adminEditAddTriggerCommandBuilder;
 
+    private Command.Builder<CommandSender> adminEditObjectiveAddConditionCommandBuilder;
+
+    private Command.Builder<CommandSender> editObjectivesBuilder;
 
     private final Commodore commodore;
 
@@ -273,6 +279,42 @@ public class CommandManager {
                     .literal("add")
                     .argument(ActionSelector.of("action", main), ArgumentDescription.of("Action which will be executed when the Trigger triggers."));
 
+
+            editObjectivesBuilder = adminEditCommandBuilder.literal("objectives").literal("edit")
+                    .argument(IntegerArgument.<CommandSender>newBuilder("Objective ID").withMin(1).withSuggestionsProvider(
+                                    (context, lastString) -> {
+                                        final List<String> allArgs = context.getRawInput();
+                                        final Audience audience = main.adventure().sender(context.getSender());
+                                        main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Objective ID]", "[...]");
+
+                                        ArrayList<String> completions = new ArrayList<>();
+
+                                        final Quest quest = context.get("quest");
+                                        for (final Objective objective : quest.getObjectives()) {
+                                            completions.add("" + objective.getObjectiveID());
+                                        }
+
+                                        return completions;
+                                    }
+                            ).withParser((context, lastString) -> { //TODO: Fix this parser. It isn't run at all.
+                                final int ID = context.get("Objective ID");
+                                final Quest quest = context.get("quest");
+                                final Objective foundObjective = quest.getObjectiveFromID(ID);
+                                if (foundObjective == null) {
+                                    return ArgumentParseResult.failure(new IllegalArgumentException("Objective with the ID '" + ID + "' does not belong to Quest '" + quest.getQuestName() + "'!"));
+                                } else {
+                                    return ArgumentParseResult.success(ID);
+                                }
+                            })
+                            , ArgumentDescription.of("Objective ID"));
+
+
+            adminEditObjectiveAddConditionCommandBuilder = editObjectivesBuilder
+                    .literal("conditions")
+                    .literal("add");
+
+
+
             //asynchronous completions
             if (commandManager.queryCapability(CloudBukkitCapabilities.ASYNCHRONOUS_COMPLETION)) {
                 commandManager.registerAsynchronousCompletions();
@@ -441,6 +483,15 @@ public class CommandManager {
     public final Command.Builder<CommandSender> getAdminEditAddRequirementCommandBuilder() {
         return adminEditAddRequirementCommandBuilder;
     }
+
+    public final Command.Builder<CommandSender> getAdminEditObjectiveAddConditionCommandBuilder(){
+        return adminEditObjectiveAddConditionCommandBuilder;
+    }
+
+    public final Command.Builder<CommandSender> getEditObjectivesBuilder(){
+        return editObjectivesBuilder;
+    }
+
 
     public final Command.Builder<CommandSender> getAdminEditAddRewardCommandBuilder() {
         return adminEditAddRewardCommandBuilder;

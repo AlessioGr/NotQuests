@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.Structs.Requirements;
+package rocks.gravili.notquests.Structs.Conditions;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
@@ -29,48 +29,32 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.Objectives.Objective;
 import rocks.gravili.notquests.Structs.Quest;
 import rocks.gravili.notquests.Structs.QuestPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PermissionRequirement extends Requirement {
+public class PermissionCondition extends Condition {
 
     private final NotQuests main;
-    private final String requiredPermission;
+    private String requiredPermission = "";
 
 
-    public PermissionRequirement(NotQuests main, final Quest quest, final int requirementID) {
-        super(main, quest, requirementID, 1);
+    public PermissionCondition(NotQuests main, Object... objects) {
+        super(main, objects);
         this.main = main;
-
-        this.requiredPermission = main.getDataManager().getQuestsConfig().getString("quests." + quest.getQuestName() + ".requirements." + requirementID + ".specifics.requiredPermission");
     }
 
-    public PermissionRequirement(NotQuests main, final Quest quest, final int requirementID, long progressNeeded) {
-        super(main, quest, requirementID, 1);
-        this.main = main;
-
-        this.requiredPermission = main.getDataManager().getQuestsConfig().getString("quests." + quest.getQuestName() + ".requirements." + requirementID + ".specifics.requiredPermission");
-    }
-
-    public PermissionRequirement(NotQuests main, final Quest quest, final int requirementID, String requiredPermission) {
-        super(main, quest, requirementID, 1);
-        this.main = main;
+    public void setRequiredPermission(final String requiredPermission){
         this.requiredPermission = requiredPermission;
     }
-
 
     public final String getRequiredPermission() {
         return requiredPermission;
     }
 
-
-    @Override
-    public void save() {
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".requirements." + getRequirementID() + ".specifics.requiredPermission", getRequiredPermission());
-    }
 
     @Override
     public String check(QuestPlayer questPlayer, boolean enforce) {
@@ -88,12 +72,24 @@ public class PermissionRequirement extends Requirement {
     }
 
     @Override
-    public String getRequirementDescription() {
+    public String getConditionDescription() {
         return "§7-- Permission needed: " + getRequiredPermission();
     }
 
+    @Override
+    public void save(String initialPath) {
+        main.getDataManager().getQuestsConfig().set(initialPath + ".specifics.requiredPermission", getRequiredPermission());
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addRequirementBuilder) {
+    }
+
+    @Override
+    public void load(String initialPath) {
+        this.requiredPermission = main.getDataManager().getQuestsConfig().getString(initialPath + ".specifics.requiredPermission");
+
+    }
+
+
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addRequirementBuilder, Command.Builder<CommandSender> objectiveAddConditionBuilder) {
         manager.command(addRequirementBuilder.literal("Permission")
                 .argument(StringArgument.<CommandSender>newBuilder("Permission").withSuggestionsProvider(
                         (context, lastString) -> {
@@ -114,13 +110,49 @@ public class PermissionRequirement extends Requirement {
 
                     final String permissionNode = context.get("Permission");
 
-                    PermissionRequirement permissionRequirement = new PermissionRequirement(main, quest, quest.getRequirements().size() + 1, permissionNode);
+                    PermissionCondition permissionRequirement = new PermissionCondition(main, 1, quest);
+                    permissionRequirement.setRequiredPermission(permissionNode);
                     quest.addRequirement(permissionRequirement);
 
                     audience.sendMessage(MiniMessage.miniMessage().parse(
                             NotQuestColors.successGradient + "Permission Requirement successfully added to Quest " + NotQuestColors.highlightGradient
                                     + quest.getQuestName() + "</gradient>!</gradient>"
                     ));
+
+                }));
+
+        manager.command(objectiveAddConditionBuilder.literal("Permission")
+                .argument(StringArgument.<CommandSender>newBuilder("Permission").withSuggestionsProvider(
+                        (context, lastString) -> {
+                            final List<String> allArgs = context.getRawInput();
+                            final Audience audience = main.adventure().sender(context.getSender());
+                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Required Permission Node]", "");
+
+                            ArrayList<String> completions = new ArrayList<>();
+                            completions.add("<Enter required Permission node>");
+                            return completions;
+                        }
+                ).single().build(), ArgumentDescription.of("Permission node which the player needs in order to accept this Quest."))
+                .meta(CommandMeta.DESCRIPTION, "Adds a new Permission Requirement to a quest")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+
+                    final Quest quest = context.get("quest");
+
+                    final String permissionNode = context.get("Permission");
+
+                    final int objectiveID = context.get("Objective ID");
+                    final Objective objective = quest.getObjectiveFromID(objectiveID);
+                    assert objective != null; //Shouldn't be null
+
+                    PermissionCondition permissionCondition = new PermissionCondition(main, 1, quest, objective);
+                    permissionCondition.setRequiredPermission(permissionNode);
+                    objective.addCondition(permissionCondition, true);
+
+                    audience.sendMessage(MiniMessage.miniMessage().parse(
+                            NotQuestColors.successGradient + "Permission Condition successfully added to Objective " + NotQuestColors.highlightGradient
+                                    + objective.getObjectiveFinalName() + "</gradient>!</gradient>"));
+
 
                 }));
     }

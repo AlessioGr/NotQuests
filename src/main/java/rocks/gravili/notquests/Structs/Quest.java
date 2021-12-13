@@ -25,13 +25,12 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Material;
 import rocks.gravili.notquests.Hooks.Citizens.QuestGiverNPCTrait;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.Conditions.Condition;
 import rocks.gravili.notquests.Structs.Objectives.Objective;
-import rocks.gravili.notquests.Structs.Requirements.Requirement;
 import rocks.gravili.notquests.Structs.Rewards.Reward;
 import rocks.gravili.notquests.Structs.Triggers.Trigger;
 
 import java.util.ArrayList;
-import java.util.logging.Level;
 
 /**
  * The Quest object is loaded at the start from whatever is defined in the quests.yml. It contains all data which defines
@@ -47,7 +46,7 @@ public class Quest {
     private final String questName;
     private final ArrayList<Reward> rewards;
     private final ArrayList<Objective> objectives;
-    private final ArrayList<Requirement> requirements; //Requirements to accept the quest
+    private final ArrayList<Condition> conditions; //Requirements to accept the quest
     private final ArrayList<Trigger> triggers; //Triggers for the quest
     private final ArrayList<NPC> attachedNPCsWithQuestShowing;
     private final ArrayList<NPC> attachedNPCsWithoutQuestShowing;
@@ -63,7 +62,7 @@ public class Quest {
         this.questName = questName;
         rewards = new ArrayList<>();
         objectives = new ArrayList<>();
-        requirements = new ArrayList<>();
+        conditions = new ArrayList<>();
         attachedNPCsWithQuestShowing = new ArrayList<>();
         attachedNPCsWithoutQuestShowing = new ArrayList<>();
         triggers = new ArrayList<>();
@@ -132,17 +131,17 @@ public class Quest {
                 main.getDataManager().getQuestsConfig().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".progressNeeded", objective.getProgressNeeded());
             }
         } else {
-            main.getLogManager().log(Level.WARNING, "ERROR: Tried to add objective to quest §b" + getQuestName() + " §cwith the ID §b" + objective.getObjectiveID() + " §cbut the ID was a DUPLICATE!");
+            main.getLogManager().warn("ERROR: Tried to add objective to quest <AQUA>" + getQuestName() + "</AQUA> with the ID <AQUA>" + objective.getObjectiveID() + "</AQUA> but the ID was a DUPLICATE!");
         }
     }
 
 
-    public void addRequirement(Requirement requirement) {
-        requirements.add(requirement);
-        main.getDataManager().getQuestsConfig().set("quests." + questName + ".requirements." + requirements.size() + ".requirementType", requirement.getRequirementType());
-        main.getDataManager().getQuestsConfig().set("quests." + questName + ".requirements." + requirements.size() + ".progressNeeded", requirement.getProgressNeeded());
+    public void addRequirement(Condition condition) {
+        conditions.add(condition);
+        main.getDataManager().getQuestsConfig().set("quests." + questName + ".requirements." + conditions.size() + ".conditionType", condition.getConditionType());
+        main.getDataManager().getQuestsConfig().set("quests." + questName + ".requirements." + conditions.size() + ".progressNeeded", condition.getProgressNeeded());
 
-        requirement.save();
+        condition.save("quests." + questName + ".requirements." + conditions.size() );
     }
 
     public void addReward(Reward reward) {
@@ -240,18 +239,18 @@ public class Quest {
     }
 
 
-    public final ArrayList<Requirement> getRequirements() {
-        return requirements;
+    public final ArrayList<Condition> getRequirements() {
+        return conditions;
     }
 
     public void removeAllRequirements() {
-        requirements.clear();
+        conditions.clear();
         main.getDataManager().getQuestsConfig().set("quests." + questName + ".requirements", null);
     }
 
     public void removeAllNPCs() {
         if(!main.isCitizensEnabled()){
-            main.getLogManager().log(Level.SEVERE, "§cThe removal of all NPCs from Quest " + questName + " §chas been cancelled, because the Citizens plugin is not installed on this server. You will need the Citizens plugin to do NPC stuff.");
+            main.getLogManager().severe("The removal of all NPCs from Quest <AQUA>" + questName + "</AQUA> has been cancelled, because the Citizens plugin is not installed on this server. You will need the Citizens plugin to do NPC stuff.");
             return;
         }
         final ArrayList<NPC> arrayList = new ArrayList<>(attachedNPCsWithQuestShowing);
@@ -269,7 +268,7 @@ public class Quest {
 
     public void bindToNPC(NPC npc, boolean showQuest) {
         if(!main.isCitizensEnabled()){
-            main.getLogManager().log(Level.SEVERE, "§cThe binding to NPC in Quest " + questName + " §chas been cancelled, because the Citizens plugin is not installed on this server. You will need the Citizens plugin to do NPC stuff.");
+            main.getLogManager().severe("The binding to NPC in Quest <AQUA>" + questName + "</AQUA> has been cancelled, because the Citizens plugin is not installed on this server. You will need the Citizens plugin to do NPC stuff.");
             return;
         }
         if (!attachedNPCsWithQuestShowing.contains(npc) && !attachedNPCsWithoutQuestShowing.contains(npc)) {
@@ -310,7 +309,7 @@ public class Quest {
 
     public void removeNPC(final NPC npc) {
         if(!main.isCitizensEnabled()){
-            main.getLogManager().log(Level.SEVERE, "§cThe NPC removal in Quest " + questName + " §chas been cancelled, because the Citizens plugin is not installed on this server. You will need the Citizens plugin to do NPC stuff.");
+            main.getLogManager().severe("The NPC removal in Quest <AQUA>" + questName + "</AQUA> has been cancelled, because the Citizens plugin is not installed on this server. You will need the Citizens plugin to do NPC stuff.");
             return;
         }
         // System.out.println("§e-2");

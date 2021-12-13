@@ -28,7 +28,6 @@ import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Objectives.EscortNPCObjective;
 
 import java.util.Locale;
-import java.util.logging.Level;
 
 public class CitizensHandler {
     private final NotQuests main;
@@ -92,7 +91,7 @@ public class CitizensHandler {
 
                     player.sendMessage("§aEscort quest started! Please escort §b" + npcToEscort.getName() + " §ato §b" + destinationNPC.getName() + "§a.");
                 } else {
-                    main.getLogManager().log(Level.WARNING, "Error: The escort objective could not be started, because the player with the UUID §b" + activeQuest.getQuestPlayer().getUUID() + " §cwas not found!");
+                    main.getLogManager().warn("Error: The escort objective could not be started, because the player with the UUID <AQUA>" + activeQuest.getQuestPlayer().getUUID() + "</AQUA> was not found!");
 
 
                 }
@@ -101,7 +100,7 @@ public class CitizensHandler {
                 if (player != null) {
                     player.sendMessage("The NPC you have to escort is not configured properly. Please consult an admin.");
                 }
-                main.getLogManager().log(Level.WARNING, "Error: The escort NPC with the ID §b" + npcToEscortID + " §cis not configured properly (Follow trait not found)!");
+                main.getLogManager().warn("Error: The escort NPC with the ID <AQUA>" + npcToEscortID + "</AQUA> is not configured properly (Follow trait not found)!");
 
             }
         } else {
@@ -110,7 +109,7 @@ public class CitizensHandler {
                 if (player != null) {
                     player.sendMessage("The Destination NPC does not exist. Please consult an admin.");
                 }
-                main.getLogManager().log(Level.WARNING, "Error: The destination NPC with the ID §b" + npcToEscortID + " §cwas not found!");
+                main.getLogManager().warn("Error: The destination NPC with the ID <AQUA>" + npcToEscortID + "</AQUA> was not found!");
 
             }
             if (npcToEscort == null) {
@@ -118,7 +117,7 @@ public class CitizensHandler {
                 if (player != null) {
                     player.sendMessage("The NPC you have to escort does not exist. Please consult an admin.");
                 }
-                main.getLogManager().log(Level.WARNING, "Error: The escort NPC with the ID §b" + npcToEscortID + " §cwas not found!");
+                main.getLogManager().warn("Error: The escort NPC with the ID <AQUA>" + npcToEscortID + "</AQUA> was not found!");
 
             }
 

@@ -29,7 +29,6 @@ import rocks.gravili.notquests.NotQuests;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
 
 public class Conversation {
     private final NotQuests main;
@@ -134,7 +133,7 @@ public class Conversation {
             return;
         }
         if (!main.isCitizensEnabled()) {
-            main.getLogManager().log(Level.WARNING, "The binding to NPC in Conversation " + identifier + " has been cancelled, because the Citizens plugin is not installed on this server. You will need the Citizens plugin to do NPC stuff.");
+            main.getLogManager().warn("The binding to NPC in Conversation <AQUA>" + identifier + "</AQUA> has been cancelled, because the Citizens plugin is not installed on this server. You will need the Citizens plugin to do NPC stuff.");
             return;
         }
 
@@ -149,7 +148,7 @@ public class Conversation {
                 }
             }
             if (!npc.hasTrait(QuestGiverNPCTrait.class) && !hasTrait) {
-                main.getLogManager().log(Level.INFO, "Trying to add Conversation " + identifier + " to NPC with ID " + npc.getId() + "...");
+                main.getLogManager().info("Trying to add Conversation <AQUA>" + identifier + "</AQUA> to NPC with ID <AQUA>" + npc.getId() + "</AQUA>...");
 
                 npc.addTrait(QuestGiverNPCTrait.class);
             }
