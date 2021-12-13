@@ -261,7 +261,7 @@ public class DataManager {
 
         //Now load the either new (or existing) general config file...
         try {
-            generalConfig = loadYAMLConfiguration(questsConfigFile);
+            generalConfig = loadYAMLConfiguration(generalConfigFile);
         } catch (IOException | InvalidConfigurationException e) {
             disablePluginAndSaving("There was an error loading the general configuration file. It either doesn't exist or is invalid.", e);
         }
