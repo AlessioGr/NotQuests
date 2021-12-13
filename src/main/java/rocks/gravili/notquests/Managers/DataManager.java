@@ -264,8 +264,15 @@ public class DataManager {
             generalConfig = loadYAMLConfiguration(generalConfigFile);
         } catch (IOException | InvalidConfigurationException e) {
             disablePluginAndSaving("There was an error loading the general configuration file. It either doesn't exist or is invalid.", e);
+            return;
         }
 
+        setAlreadyLoadedGeneral(true);
+
+        updateAndReadGeneralConfig();
+    }
+
+    public void updateAndReadGeneralConfig() {
 
         //Load all the MySQL Database Connection information from the general.yml
         configuration.setMySQLEnabled(getGeneralConfig().getBoolean("storage.database.enabled", false));
@@ -767,7 +774,6 @@ public class DataManager {
             saveGeneralConfig();
         }
 
-        setAlreadyLoadedGeneral(true);
 
         //If there was an error loading data from general.yml, the plugin will be disabled
         if (errored) {
