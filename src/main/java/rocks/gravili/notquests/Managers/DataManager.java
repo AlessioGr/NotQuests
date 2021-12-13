@@ -1082,7 +1082,7 @@ public class DataManager {
      * @return the quests.yml Configuration FileConfiguration object
      */
     public final FileConfiguration getQuestsConfig() {
-        if (isAlreadyLoadedQuests()) {
+        if (!isAlreadyLoadedQuests()) {
             reloadData();
         }
         return questsConfig;
