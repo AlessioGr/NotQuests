@@ -29,12 +29,18 @@ public class UpdateManager {
         }
     }
 
-    public String convertQuestRequirementTypeToConditionType(final String questName, final String requirementID, final String conditionTypeString) {
+    public String convertQuestRequirementTypeToConditionType(final String questName, final String requirementID) {
         main.getLogManager().info("Converting old requirementType to conditionType...");
+        String oldRequirementType = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".requirements." + requirementID + ".requirementType", "");
+        if(oldRequirementType.isBlank()){
+            main.getLogManager().warn("There was an error converting the old requirementType to conditionType: Old requirementType is empty. Skipping conversion...");
+            return "";
+        }
+
         main.getDataManager().getQuestsConfig().set("quests." + questName + ".requirements." + requirementID + ".requirementType", null);
-        main.getDataManager().getQuestsConfig().set("quests." + questName + ".requirements." + requirementID + ".conditionType", conditionTypeString);
+        main.getDataManager().getQuestsConfig().set("quests." + questName + ".requirements." + requirementID + ".conditionType", oldRequirementType);
         main.getDataManager().saveQuestsConfig();
-        return main.getDataManager().getQuestsConfig().getString("quests." + questName + ".requirements." + requirementID + ".requirementType", "");
+        return oldRequirementType;
     }
 
 

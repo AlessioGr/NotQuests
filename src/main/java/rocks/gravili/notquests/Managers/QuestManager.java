@@ -256,12 +256,12 @@ public class QuestManager {
                             }
 
                             Class<? extends Condition> conditionType = null;
+                            String conditionTypeString = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".requirements." + requirementNumber + ".conditionType", "");
 
                             try {
-                                String conditionTypeString = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".requirements." + requirementNumber + ".conditionType", "");
 
                                 if(conditionTypeString.isBlank()){//User might be using old system with requirementType instead of conditionType. Let's convert it!
-                                    conditionTypeString = main.getUpdateManager().convertQuestRequirementTypeToConditionType(questName, requirementNumber, conditionTypeString);
+                                    conditionTypeString = main.getUpdateManager().convertQuestRequirementTypeToConditionType(questName, requirementNumber);
                                 }
 
                                 conditionType = main.getConditionsManager().getConditionClass(conditionTypeString);
@@ -286,7 +286,7 @@ public class QuestManager {
                                 }
 
                             } else {
-                                main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading quests requirement data. Valid Requirement ID: " + validRequirementID + ". requirementID > 0: " + (requirementID > 0) + ". conditionType != null: " + (conditionType != null));
+                                main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading quests requirement data. Valid Requirement ID: " + validRequirementID + ". requirementID > 0: " + (requirementID > 0) + ". conditionType != null: " + (conditionType != null) + " ConditionTypeString: " + conditionTypeString + " Quest Name: " + questName + " Requirement ID: " + requirementNumber);
                             }
 
                         }
@@ -420,10 +420,10 @@ public class QuestManager {
                                 }
 
                                 Class<? extends Condition> conditionType = null;
+                                final String conditionTypeString = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + (objective.getObjectiveID())  + ".conditions."  + objectiveConditionNumber + ".conditionType", "");
 
                                 try {
-
-                                    conditionType = main.getConditionsManager().getConditionClass(main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + (objective.getObjectiveID())  + ".conditions."  + objectiveConditionNumber + ".conditionType"));
+                                    conditionType = main.getConditionsManager().getConditionClass(conditionTypeString);
                                 } catch (java.lang.NullPointerException ex) {
                                     main.getDataManager().disablePluginAndSaving("Error parsing condition Type of requirement with ID <AQUA>" + objectiveConditionNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "<AQUA>.", ex);
                                 }
@@ -445,7 +445,8 @@ public class QuestManager {
                                     }
 
                                 } else {
-                                    main.getDataManager().disablePluginAndSaving("Error loading condition. ValidRequirementID: " + validConditionID + " conditionID: " + conditionID + " ConditionTypeNull?" + (conditionType == null) + " ConditionType: " + (conditionType != null ? conditionType.toString() : "null"));
+                                    main.getDataManager().disablePluginAndSaving("Error loading condition. ValidRequirementID: " + validConditionID + " conditionID: " + conditionID + " ConditionTypeNull?" + (conditionType == null) + " ConditionType: " + (conditionType != null ? conditionType.toString() : "null") + " conditionTypeString: " + conditionTypeString);
+                                    return;
                                 }
                             }
                         }
