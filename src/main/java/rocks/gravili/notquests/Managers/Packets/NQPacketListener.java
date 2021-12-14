@@ -116,7 +116,7 @@ public class NQPacketListener implements PacketListener {
                 try {
                     component = GsonComponentSerializer.builder().build().deserialize(wrapperPlayServerChatMessage.getChatComponentJson());
 
-                    component.replaceText(TextReplacementConfig.builder()
+                    component = component.replaceText(TextReplacementConfig.builder()
                             .match("fg9023zf729ofz").replacement(Component.text("")).build());
 
                 } catch (Exception ignored) {
