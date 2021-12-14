@@ -61,14 +61,16 @@ chat:
         base: '    &7%EVENTUALCOLOR%Tiêu Diệt Elite Mobs: &f%EVENTUALCOLOR%%ELITEMOBNAME%'
         any: '    &7%EVENTUALCOLOR%Tiêu Diệt Bất Kì EliteMobs Nào!'
       runCommand:
-        base: '    &8└─ &7%EVENTUALCOLOR%Run command: &f%EVENTUALCOLOR%%COMMANDTORUN%'
+        base: '    &8└─ &7%EVENTUALCOLOR%Dùng Lệnh: &f%EVENTUALCOLOR%%COMMANDTORUN%'
       interact:
-        base: '    &8└─ &7%EVENTUALCOLOR%%INTERACTTYPE% Location: &f%EVENTUALCOLOR%%COORDINATES% &f%EVENTUALCOLOR%in world%EVENTUALCOLOR% %WORLDNAME%'
+        base: '    &8└─ &7%EVENTUALCOLOR%%INTERACTTYPE% Vị Trí: &f%EVENTUALCOLOR%%COORDINATES% &f%EVENTUALCOLOR% Ở Thế Giới%EVENTUALCOLOR% %WORLDNAME%'
         taskDescriptionProvided: '    &8└─ &7%EVENTUALCOLOR%%TASKDESCRIPTION%'
       jump:
-        base: '    &8└─ &7%EVENTUALCOLOR%Jump &f%EVENTUALCOLOR%%AMOUNTOFJUMPS% &7%EVENTUALCOLOR%times'
+        base: '    &8└─ &7%EVENTUALCOLOR%Nhảy &f%EVENTUALCOLOR%%AMOUNTOFJUMPS% &7%EVENTUALCOLOR%times'
       smelt:
-        base: '    &8└─ &7%EVENTUALCOLOR%Items to smelt: &f%EVENTUALCOLOR%%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+        base: '    &8└─ &7%EVENTUALCOLOR%Nung Vật Phẩm: &f%EVENTUALCOLOR%%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+      townyReachResidentCount:
+        base: '    &8└─ &7%EVENTUALCOLOR%Số Lượng Thành Viên Thị Trấn Đạt Đến: &f%EVENTUALCOLOR%%AMOUNT%'
 titles:
   quest-accepted:
     title: '&fChấp Nhận Nhiệm Vụ'
