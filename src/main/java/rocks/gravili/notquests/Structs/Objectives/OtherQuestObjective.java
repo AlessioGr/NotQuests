@@ -93,7 +93,7 @@ public class OtherQuestObjective extends Objective {
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
         manager.command(addObjectiveBuilder.literal("OtherQuest")
-                .argument(QuestSelector.of("quest", main), ArgumentDescription.of("Name of the other Quest the player has to complete."))
+                .argument(QuestSelector.of("other quest name", main), ArgumentDescription.of("Name of the other Quest the player has to complete."))
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of times the Quest needs to be completed."))
                 .flag(
                         manager.flagBuilder("countPreviouslyCompletedQuests")
@@ -103,7 +103,7 @@ public class OtherQuestObjective extends Objective {
                 .handler((context) -> {
                     final Audience audience = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
-                    final Quest otherQuest = context.get("otherquest");
+                    final Quest otherQuest = context.get("other quest name");
                     final int amount = context.get("amount");
                     final boolean countPreviouslyCompletedQuests = context.flags().isPresent("countPreviouslyCompletedQuests");
 
