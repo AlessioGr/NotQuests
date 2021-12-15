@@ -32,8 +32,6 @@ import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.minecraft.extras.MinecraftExceptionHandler;
 import cloud.commandframework.minecraft.extras.MinecraftHelp;
 import cloud.commandframework.paper.PaperCommandManager;
-import me.lucko.commodore.Commodore;
-import me.lucko.commodore.CommodoreProvider;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -77,8 +75,6 @@ public class CommandManager {
 
     private Command.Builder<CommandSender> editObjectivesBuilder;
 
-    private final Commodore commodore;
-
     private AdminCommands adminCommands;
     private AdminEditCommands adminEditCommands;
     private AdminConversationCommands adminConversationCommands;
@@ -99,12 +95,6 @@ public class CommandManager {
 
     public CommandManager(final NotQuests main) {
         this.main = main;
-        if (CommodoreProvider.isSupported()) {
-            // get a commodore instance
-            commodore = CommodoreProvider.getCommodore(main);
-        } else {
-            commodore = null;
-        }
 
         nametag_containsany = CommandFlag
                 .newBuilder("nametag_containsany")
@@ -211,30 +201,6 @@ public class CommandManager {
                 ).single().build())
                 .withDescription(ArgumentDescription.of("World where the Trigger applies (Examples: 'world_the_end', 'farmworld', 'world', 'ALL')."))
                 .build();
-    }
-
-
-    private void registerCommodoreCompletions(Commodore commodore, PluginCommand command) {
-        if (CommodoreProvider.isSupported()) {
-
-            /*LiteralCommandNode<?> timeCommand = LiteralArgumentBuilder.literal("notquestsadmin")
-                    .then(LiteralArgumentBuilder.literal("create")
-                            .then(LiteralArgumentBuilder.literal("day"))
-                            .then(LiteralArgumentBuilder.literal("noon"))
-                            .then(LiteralArgumentBuilder.literal("night"))
-                            .then(LiteralArgumentBuilder.literal("midnight"))
-                            .then(RequiredArgumentBuilder.argument("time", IntegerArgumentType.integer())))
-                    .then(LiteralArgumentBuilder.literal("delete")
-                            .then(RequiredArgumentBuilder.argument("time", IntegerArgumentType.integer())))
-                    .then(LiteralArgumentBuilder.literal("query")
-                            .then(LiteralArgumentBuilder.literal("daytime"))
-                            .then(LiteralArgumentBuilder.literal("gametime"))
-                            .then(LiteralArgumentBuilder.literal("day"))
-                    ).build();
-
-            commodore.register(command, timeCommand);*/
-        }
-
     }
 
     public void preSetupCommands() {
