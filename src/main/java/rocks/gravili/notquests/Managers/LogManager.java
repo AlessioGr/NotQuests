@@ -105,7 +105,7 @@ public class LogManager {
     }
 
     public void severe(final String message) {
-        warn(LogCategory.DEFAULT, message);
+        severe(LogCategory.DEFAULT, message);
     }
 
     public void debug(final LogCategory logCategory, final String message) {
