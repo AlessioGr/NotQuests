@@ -27,14 +27,11 @@ import com.palmergames.bukkit.towny.TownyUniverse;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Conditions.Condition;
-import rocks.gravili.notquests.Structs.Objectives.Objective;
-import rocks.gravili.notquests.Structs.Quest;
+import rocks.gravili.notquests.Structs.Conditions.ConditionFor;
 import rocks.gravili.notquests.Structs.QuestPlayer;
 
 import java.util.ArrayList;
@@ -45,8 +42,8 @@ public class TownyNationNameCondition extends Condition {
     private final NotQuests main;
     private String townyNationName = "";
 
-    public TownyNationNameCondition(final NotQuests main, final Object... objects) {
-        super(main, objects);
+    public TownyNationNameCondition(final NotQuests main) {
+        super(main);
         this.main = main;
     }
 
@@ -54,12 +51,12 @@ public class TownyNationNameCondition extends Condition {
         this.townyNationName = newTownyNationName;
     }
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addRequirementBuilder, Command.Builder<CommandSender> objectiveAddConditionBuilder) {
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
         if (!main.isTownyEnabled()) {
             return;
         }
 
-        manager.command(addRequirementBuilder.literal("TownyNationName")
+        manager.command(builder.literal("TownyNationName")
                 .argument(StringArgument.<CommandSender>newBuilder("Nation Name").withSuggestionsProvider(
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
@@ -73,60 +70,12 @@ public class TownyNationNameCondition extends Condition {
                 ).quoted().build(), ArgumentDescription.of("Name of the nation which the player needs to be a member of"))
                 .meta(CommandMeta.DESCRIPTION, "Adds a new TownyNationName Requirement to a quest")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-
-                    final Quest quest = context.get("quest");
-
                     final String townyNationName = context.get("Nation Name");
 
-                    TownyNationNameCondition townyNationNameCondition = new TownyNationNameCondition(main, quest);
+                    TownyNationNameCondition townyNationNameCondition = new TownyNationNameCondition(main);
                     townyNationNameCondition.setTownyNationName(townyNationName);
 
-                    quest.addRequirement(townyNationNameCondition);
-
-                    audience.sendMessage(MiniMessage.miniMessage().parse(
-                            NotQuestColors.successGradient + "TownyNationName Requirement successfully added to Quest " + NotQuestColors.highlightGradient
-                                    + quest.getQuestName() + "</gradient>!</gradient>"
-                    ));
-
-                }));
-
-        manager.command(objectiveAddConditionBuilder.literal("TownyNationName")
-                .argument(StringArgument.<CommandSender>newBuilder("Nation Name").withSuggestionsProvider(
-                        (context, lastString) -> {
-                            final List<String> allArgs = context.getRawInput();
-                            final Audience audience = main.adventure().sender(context.getSender());
-                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Required nation name (put between \"\" if using spaces)]", "");
-
-                            ArrayList<String> completions = new ArrayList<>();
-                            completions.add("<Enter required nation name (put between \"\" if using spaces)>");
-                            return completions;
-                        }
-                ).quoted().build(), ArgumentDescription.of("Name of the nation which the player needs to be a member of"))
-                .meta(CommandMeta.DESCRIPTION, "Adds a new TownyNationName Requirement to a quest")
-                .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-
-                    final Quest quest = context.get("quest");
-
-                    final String townyNationName = context.get("Nation Name");
-
-                    final int objectiveID = context.get("Objective ID");
-                    final Objective objective = quest.getObjectiveFromID(objectiveID);
-                    assert objective != null; //Shouldn't be null
-
-
-
-                    TownyNationNameCondition townyNationNameCondition = new TownyNationNameCondition(main, quest, objective);
-                    townyNationNameCondition.setTownyNationName(townyNationName);
-
-                    objective.addCondition(townyNationNameCondition, true);
-
-                    audience.sendMessage(MiniMessage.miniMessage().parse(
-                    NotQuestColors.successGradient + "TownyNationName Condition successfully added to Objective " + NotQuestColors.highlightGradient
-                            + objective.getObjectiveFinalName() + "</gradient>!</gradient>"));
-
-
+                    main.getConditionsManager().addCondition(townyNationNameCondition, context);
                 }));
     }
 

@@ -19,11 +19,18 @@
 package rocks.gravili.notquests.Managers.Registering;
 
 import cloud.commandframework.Command;
+import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.paper.PaperCommandManager;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.command.CommandSender;
+import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Conditions.*;
 import rocks.gravili.notquests.Structs.Conditions.hooks.TownyNationNameCondition;
 import rocks.gravili.notquests.Structs.Conditions.hooks.UltimateClansClanLevelCondition;
+import rocks.gravili.notquests.Structs.Objectives.Objective;
+import rocks.gravili.notquests.Structs.Quest;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -63,8 +70,9 @@ public class ConditionsManager {
         conditions.put(identifier, condition);
 
         try {
-            Method commandHandler = condition.getMethod("handleCommands", main.getClass(), PaperCommandManager.class, Command.Builder.class, Command.Builder.class);
-            commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddRequirementCommandBuilder(), main.getCommandManager().getAdminEditObjectiveAddConditionCommandBuilder());
+            Method commandHandler = condition.getMethod("handleCommands", main.getClass(), PaperCommandManager.class, Command.Builder.class);
+            commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddRequirementCommandBuilder(), ConditionFor.QUESTREQUIREMENT);
+            commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddConditionCommandBuilder(), ConditionFor.OBJECTIVECONDITION);
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -94,5 +102,32 @@ public class ConditionsManager {
 
     public final Collection<String> getConditionIdentifiers() {
         return conditions.keySet();
+    }
+
+    public void addCondition(Condition condition, CommandContext<CommandSender> context){
+        Audience audience = main.adventure().sender(context.getSender());
+
+        Quest quest = context.getOrDefault("quest", null);
+        Objective objectiveOfQuest = quest != null ? quest.getObjectiveFromID(context.get("Objective ID")) : null;
+
+        if(quest != null){
+            condition.setQuest(quest);
+            if(objectiveOfQuest != null){//Objective Condition
+                condition.setObjective(objectiveOfQuest);
+
+                objectiveOfQuest.addCondition(condition, true);
+
+                audience.sendMessage(MiniMessage.miniMessage().parse(
+                        NotQuestColors.successGradient + main.getConditionsManager().getConditionType(condition.getClass()) + " Condition successfully added to Objective " + NotQuestColors.highlightGradient
+                                + objectiveOfQuest.getObjectiveFinalName() + "</gradient>!</gradient>"));
+            }else{ //Quest Requirement
+                quest.addRequirement(condition);
+
+                audience.sendMessage(MiniMessage.miniMessage().parse(
+                        NotQuestColors.successGradient + main.getConditionsManager().getConditionType(condition.getClass()) + " Requirement successfully added to Quest " + NotQuestColors.highlightGradient
+                                + quest.getQuestName() + "</gradient>!</gradient>"
+                ));
+            }
+        }
     }
 }

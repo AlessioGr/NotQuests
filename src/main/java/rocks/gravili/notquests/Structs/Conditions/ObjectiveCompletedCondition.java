@@ -27,11 +27,8 @@ import cloud.commandframework.paper.PaperCommandManager;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
-import rocks.gravili.notquests.Commands.NotQuestColors;
-import rocks.gravili.notquests.Commands.newCMDs.arguments.QuestSelector;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.ActiveQuest;
-import rocks.gravili.notquests.Structs.CompletedQuest;
 import rocks.gravili.notquests.Structs.Objectives.Objective;
 import rocks.gravili.notquests.Structs.Quest;
 import rocks.gravili.notquests.Structs.QuestPlayer;
@@ -39,7 +36,6 @@ import rocks.gravili.notquests.Structs.QuestPlayer;
 import java.util.ArrayList;
 import java.util.List;
 
-import static rocks.gravili.notquests.Commands.NotQuestColors.*;
 import static rocks.gravili.notquests.Commands.NotQuestColors.errorGradient;
 
 
@@ -49,8 +45,8 @@ public class ObjectiveCompletedCondition extends Condition {
     private int objectiveID;
 
 
-    public ObjectiveCompletedCondition(NotQuests main, Object... objects) {
-        super(main, objects);
+    public ObjectiveCompletedCondition(NotQuests main) {
+        super(main);
         this.main = main;
 
     }
@@ -116,71 +112,65 @@ public class ObjectiveCompletedCondition extends Condition {
     }
 
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addRequirementBuilder, Command.Builder<CommandSender> objectiveAddConditionBuilder) {
-        manager.command(objectiveAddConditionBuilder.literal("CompleteObjective")
-                .argument(IntegerArgument.<CommandSender>newBuilder("Depending Objective ID").withMin(1).withSuggestionsProvider(
-                                (context, lastString) -> {
-                                    final List<String> allArgs = context.getRawInput();
-                                    final Audience audience = main.adventure().sender(context.getSender());
-                                    main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Depending Objective ID]", "");
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
+        if(conditionFor == ConditionFor.OBJECTIVECONDITION){
+            manager.command(builder.literal("CompleteObjective")
+                    .argument(IntegerArgument.<CommandSender>newBuilder("Depending Objective ID").withMin(1).withSuggestionsProvider(
+                                    (context, lastString) -> {
+                                        final List<String> allArgs = context.getRawInput();
+                                        final Audience audience = main.adventure().sender(context.getSender());
+                                        main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Depending Objective ID]", "");
 
-                                    ArrayList<String> completions = new ArrayList<>();
+                                        ArrayList<String> completions = new ArrayList<>();
 
-                                    final Quest quest = context.get("quest");
-                                    for (final Objective objective : quest.getObjectives()) {
-                                        if (objective.getObjectiveID() != (int) context.get("Objective ID")) {
-                                            completions.add("" + objective.getObjectiveID());
+                                        final Quest quest = context.get("quest");
+                                        for (final Objective objective : quest.getObjectives()) {
+                                            if (objective.getObjectiveID() != (int) context.get("Objective ID")) {
+                                                completions.add("" + objective.getObjectiveID());
+                                            }
                                         }
+
+                                        return completions;
                                     }
-
-                                    return completions;
+                            ).withParser((context, lastString) -> {
+                                final int ID = context.get("Depending Objective ID");
+                                if (ID == (int) context.get("Depending Objective ID")) {
+                                    return ArgumentParseResult.failure(new IllegalArgumentException("An objective cannot depend on itself!"));
                                 }
-                        ).withParser((context, lastString) -> {
-                            final int ID = context.get("Depending Objective ID");
-                            if (ID == (int) context.get("Depending Objective ID")) {
-                                return ArgumentParseResult.failure(new IllegalArgumentException("An objective cannot depend on itself!"));
-                            }
-                            final Quest quest = context.get("quest");
-                            final Objective foundObjective = quest.getObjectiveFromID(ID);
-                            if (foundObjective == null) {
-                                return ArgumentParseResult.failure(new IllegalArgumentException("Objective with the ID '" + ID + "' does not belong to Quest '" + quest.getQuestName() + "'!"));
-                            } else {
-                                return ArgumentParseResult.success(ID);
-                            }
-                        })
-                        .build(), ArgumentDescription.of("Depending Objective ID"))
-                .meta(CommandMeta.DESCRIPTION, "Adds a new OtherQuest Requirement to a quest")
-                .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
+                                final Quest quest = context.get("quest");
+                                final Objective foundObjective = quest.getObjectiveFromID(ID);
+                                if (foundObjective == null) {
+                                    return ArgumentParseResult.failure(new IllegalArgumentException("Objective with the ID '" + ID + "' does not belong to Quest '" + quest.getQuestName() + "'!"));
+                                } else {
+                                    return ArgumentParseResult.success(ID);
+                                }
+                            })
+                            .build(), ArgumentDescription.of("Depending Objective ID"))
+                    .meta(CommandMeta.DESCRIPTION, "Adds a new OtherQuest Requirement to a quest")
+                    .handler((context) -> {
+                        final Audience audience = main.adventure().sender(context.getSender());
 
-                    final Quest quest = context.get("quest");
+                        final Quest quest = context.get("quest");
 
+                        final int objectiveID = context.get("Objective ID");
+                        final Objective objective = quest.getObjectiveFromID(objectiveID);
+                        assert objective != null; //Shouldn't be null
 
-                    final int objectiveID = context.get("Objective ID");
-                    final Objective objective = quest.getObjectiveFromID(objectiveID);
-                    assert objective != null; //Shouldn't be null
+                        final int dependingObjectiveID = context.get("Depending Objective ID");
+                        final Objective dependingObjective = quest.getObjectiveFromID(dependingObjectiveID);
+                        assert dependingObjective != null; //Shouldn't be null
 
-                    final int dependingObjectiveID = context.get("Depending Objective ID");
-                    final Objective dependingObjective = quest.getObjectiveFromID(dependingObjectiveID);
-                    assert dependingObjective != null; //Shouldn't be null
+                        if (dependingObjective != objective) {
 
-                    if (dependingObjective != objective) {
+                            ObjectiveCompletedCondition objectiveCompletedCondition = new ObjectiveCompletedCondition(main);
+                            objectiveCompletedCondition.setObjectiveID(dependingObjectiveID);
 
-                        ObjectiveCompletedCondition objectiveCompletedCondition = new ObjectiveCompletedCondition(main, quest, objective);
-                        objectiveCompletedCondition.setObjectiveID(dependingObjectiveID);
-                        objective.addCondition(objectiveCompletedCondition, true);
+                            main.getConditionsManager().addCondition(objectiveCompletedCondition, context);
+                        } else {
+                            audience.sendMessage(MiniMessage.miniMessage().parse(errorGradient + "Error: You cannot set an objective to depend on itself!"));
+                        }
 
-                        audience.sendMessage(MiniMessage.miniMessage().parse(
-                                NotQuestColors.successGradient + "ObjectiveCompleted Condition successfully added to Objective " + NotQuestColors.highlightGradient
-                                        + objective.getObjectiveFinalName() + "</gradient>!</gradient>"
-                        ));
-                    } else {
-                        audience.sendMessage(MiniMessage.miniMessage().parse(errorGradient + "Error: You cannot set an objective to depend on itself!"));
-                    }
-
-
-
-
-                }));
+                    }));
+        }
     }
 }

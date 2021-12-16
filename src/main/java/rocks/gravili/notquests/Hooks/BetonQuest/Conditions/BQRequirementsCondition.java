@@ -68,12 +68,14 @@ public class BQRequirementsCondition extends org.betonquest.betonquest.api.Condi
                 throw new RuntimeException("Invalid number for second argument (amount of requirements needed).");
             }
 
-            condition = new OtherQuestCondition(main, requirementInt);
+            condition = new OtherQuestCondition(main);
+            condition.setProgressNeeded(requirementInt);
             ((OtherQuestCondition)condition).setOtherQuestName(requirementString);
 
         } else if (requirementType == MoneyCondition.class) {
             try {
-                condition = new MoneyCondition(main,  Long.parseLong(instruction.getPart(2)));
+                condition = new MoneyCondition(main);
+                condition.setProgressNeeded(Long.parseLong(instruction.getPart(2)));
                 ((MoneyCondition)condition).setDeductMoney(false);
 
             } catch (NumberFormatException e) {
@@ -82,7 +84,8 @@ public class BQRequirementsCondition extends org.betonquest.betonquest.api.Condi
 
         } else if (requirementType == QuestPointsCondition.class) {
             try {
-                condition = new QuestPointsCondition(main, Long.parseLong(instruction.getPart(2)), false);
+                condition = new QuestPointsCondition(main);
+                condition.setProgressNeeded(Long.parseLong(instruction.getPart(2)));
 
             } catch (NumberFormatException e) {
                 throw new RuntimeException("Invalid number for second argument (amount of requirements needed).");
@@ -91,7 +94,7 @@ public class BQRequirementsCondition extends org.betonquest.betonquest.api.Condi
             String requirementString = instruction.getPart(2);
 
 
-            condition = new PermissionCondition(main, 1);
+            condition = new PermissionCondition(main);
             ((PermissionCondition)condition).setRequiredPermission(requirementString);
         } else {
             throw new InstructionParseException("Requirement type '" + requirementTypeName + "' could not be created. Please contact the NotQuests author about it.");

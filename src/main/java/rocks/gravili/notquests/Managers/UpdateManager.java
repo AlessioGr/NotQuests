@@ -58,7 +58,9 @@ public class UpdateManager {
                     main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + objective.getObjectiveID() + ".dependantObjectives", null);
 
                     //Create new stuff with old stuff
-                    ObjectiveCompletedCondition objectiveCompletedCondition = new ObjectiveCompletedCondition(main, quest, objective);
+                    ObjectiveCompletedCondition objectiveCompletedCondition = new ObjectiveCompletedCondition(main);
+                    objectiveCompletedCondition.setQuest(quest);
+                    objectiveCompletedCondition.setObjective(objective);
                     objectiveCompletedCondition.setObjectiveID(dependantObjectiveID);
                     objective.addCondition(objectiveCompletedCondition, true);
 

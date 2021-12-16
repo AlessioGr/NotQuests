@@ -23,13 +23,8 @@ import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
-import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.Structs.Objectives.Objective;
-import rocks.gravili.notquests.Structs.Quest;
 import rocks.gravili.notquests.Structs.QuestPlayer;
 
 
@@ -38,8 +33,8 @@ public class WorldTimeCondition extends Condition {
     private final NotQuests main;
     private int minTime, maxTime;
 
-    public WorldTimeCondition(NotQuests main, Object... objects) {
-        super(main, objects);
+    public WorldTimeCondition(NotQuests main) {
+        super(main);
         this.main = main;
     }
 
@@ -52,60 +47,21 @@ public class WorldTimeCondition extends Condition {
         this.maxTime = maxTime;
     }
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addRequirementBuilder, Command.Builder<CommandSender> objectiveAddConditionBuilder) {
-        manager.command(addRequirementBuilder.literal("WorldTime")
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
+        manager.command(builder.literal("WorldTime")
                 .argument(IntegerArgument.<CommandSender>newBuilder("minTime").withMin(0).withMax(24), ArgumentDescription.of("Minimum world time (24-hour clock)"))
                 .argument(IntegerArgument.<CommandSender>newBuilder("maxTime").withMin(0).withMax(24), ArgumentDescription.of("Maximum world time (24-hour clock)"))
 
                 .meta(CommandMeta.DESCRIPTION, "Adds a new Time Requirement (24-hour-clock) to a quest")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-
-                    final Quest quest = context.get("quest");
-
                     final int minTime = context.get("minTime");
                     final int maxTime = context.get("maxTime");
 
-                    WorldTimeCondition worldTimeRequirement = new WorldTimeCondition(main, 1, quest);
-                    worldTimeRequirement.setMinTime(minTime);
-                    worldTimeRequirement.setMaxTime(maxTime);
-                    quest.addRequirement(worldTimeRequirement);
-
-                    audience.sendMessage(MiniMessage.miniMessage().parse(
-                            NotQuestColors.successGradient + "WorldTime Requirement successfully added to Quest " + NotQuestColors.highlightGradient
-                                    + quest.getQuestName() + "</gradient>!</gradient>"
-                    ));
-
-                }));
-
-        manager.command(objectiveAddConditionBuilder.literal("WorldTime")
-                .argument(IntegerArgument.<CommandSender>newBuilder("minTime").withMin(0).withMax(24), ArgumentDescription.of("Minimum world time (24-hour clock)"))
-                .argument(IntegerArgument.<CommandSender>newBuilder("maxTime").withMin(0).withMax(24), ArgumentDescription.of("Maximum world time (24-hour clock)"))
-
-                .meta(CommandMeta.DESCRIPTION, "Adds a new Time Requirement (24-hour-clock) to a quest")
-                .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-
-                    final Quest quest = context.get("quest");
-
-                    final int minTime = context.get("minTime");
-                    final int maxTime = context.get("maxTime");
-
-                    final int objectiveID = context.get("Objective ID");
-                    final Objective objective = quest.getObjectiveFromID(objectiveID);
-                    assert objective != null; //Shouldn't be null
-
-                    WorldTimeCondition worldTimeCondition = new WorldTimeCondition(main, 1, quest, objective);
+                    WorldTimeCondition worldTimeCondition = new WorldTimeCondition(main);
                     worldTimeCondition.setMinTime(minTime);
                     worldTimeCondition.setMaxTime(maxTime);
 
-                    objective.addCondition(worldTimeCondition, true);
-
-                    audience.sendMessage(MiniMessage.miniMessage().parse(
-                            NotQuestColors.successGradient + "WorldTime Condition successfully added to Objective " + NotQuestColors.highlightGradient
-                                    + objective.getObjectiveFinalName() + "</gradient>!</gradient>"));
-
-
+                    main.getConditionsManager().addCondition(worldTimeCondition, context);
                 }));
     }
 

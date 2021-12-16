@@ -23,14 +23,9 @@ import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.Structs.Objectives.Objective;
-import rocks.gravili.notquests.Structs.Quest;
 import rocks.gravili.notquests.Structs.QuestPlayer;
 
 public class MoneyCondition extends Condition {
@@ -39,8 +34,8 @@ public class MoneyCondition extends Condition {
     private boolean deductMoney = false;
 
 
-    public MoneyCondition(final NotQuests main, Object... objects) {
-        super(main, objects);
+    public MoneyCondition(final NotQuests main) {
+        super(main);
         this.main = main;
     }
 
@@ -61,12 +56,12 @@ public class MoneyCondition extends Condition {
 
 
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addRequirementBuilder, Command.Builder<CommandSender> objectiveAddConditionBuilder) {
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
         if (!main.isVaultEnabled()) {
             return;
         }
 
-        manager.command(addRequirementBuilder.literal("Money")
+        manager.command(builder.literal("Money")
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of money needed"))
                 .flag(
                         manager.flagBuilder("deductMoney")
@@ -74,51 +69,14 @@ public class MoneyCondition extends Condition {
                 )
                 .meta(CommandMeta.DESCRIPTION, "Adds a new Money Requirement to a quest")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-
-                    final Quest quest = context.get("quest");
-
                     final int amount = context.get("amount");
                     final boolean deductMoney = context.flags().isPresent("deductMoney");
 
-                    MoneyCondition moneyRequirement = new MoneyCondition(main, amount, deductMoney, quest);
-                    moneyRequirement.setDeductMoney(deductMoney);
-                    quest.addRequirement(moneyRequirement);
-
-                    audience.sendMessage(MiniMessage.miniMessage().parse(
-                            NotQuestColors.successGradient + "Money Requirement successfully added to Quest " + NotQuestColors.highlightGradient
-                                    + quest.getQuestName() + "</gradient>!</gradient>"
-                    ));
-                }));
-
-        manager.command(objectiveAddConditionBuilder.literal("Money")
-                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of money needed"))
-                .flag(
-                        manager.flagBuilder("deductMoney")
-                                .withDescription(ArgumentDescription.of("Makes it so the required money is deducted from the players balance if the Quest is accepted."))
-                )
-                .meta(CommandMeta.DESCRIPTION, "Adds a new Money Requirement to a quest")
-                .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-
-                    final Quest quest = context.get("quest");
-
-                    final int amount = context.get("amount");
-                    final boolean deductMoney = context.flags().isPresent("deductMoney");
-
-                    final int objectiveID = context.get("Objective ID");
-                    final Objective objective = quest.getObjectiveFromID(objectiveID);
-                    assert objective != null; //Shouldn't be null
-
-                    MoneyCondition moneyCondition = new MoneyCondition(main, amount, deductMoney, quest, objective);
+                    MoneyCondition moneyCondition = new MoneyCondition(main);
+                    moneyCondition.setProgressNeeded(amount);
                     moneyCondition.setDeductMoney(deductMoney);
-                    objective.addCondition(moneyCondition, true);
 
-                    audience.sendMessage(MiniMessage.miniMessage().parse(
-                            NotQuestColors.successGradient + "Money Condition successfully added to Objective " + NotQuestColors.highlightGradient
-                                    + objective.getObjectiveFinalName() + "</gradient>!</gradient>"));
-
-
+                    main.getConditionsManager().addCondition(moneyCondition, context);
                 }));
     }
 

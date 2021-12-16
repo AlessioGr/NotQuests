@@ -23,25 +23,25 @@ import rocks.gravili.notquests.Structs.Objectives.Objective;
 import rocks.gravili.notquests.Structs.Quest;
 import rocks.gravili.notquests.Structs.QuestPlayer;
 
-
 public abstract class Condition {
     private final NotQuests main;
     private long progressNeeded = 1;
     private Quest quest;
     private Objective objective;
 
-    public Condition(NotQuests main, final Object... objects) {
+    public Condition(NotQuests main) {
         this.main = main;
 
-        for(final Object object : objects){
-            if(object instanceof Long number){
-                progressNeeded = number;
-            }else if(object instanceof final Quest quest1){
-                this.quest = quest1;
-            }else if(object instanceof final Objective objective1){
-                this.objective = objective1;
-            }
-        }
+    }
+
+    public void setProgressNeeded(final long progressNeeded){
+        this.progressNeeded = progressNeeded;
+    }
+    public void setQuest(final Quest quest){
+        this.quest = quest;
+    }
+    public void setObjective(final Objective objective){
+        this.objective = objective;
     }
 
     public final String getConditionType() {

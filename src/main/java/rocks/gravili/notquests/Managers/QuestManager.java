@@ -276,7 +276,9 @@ public class QuestManager {
                                 Condition condition = null;
 
                                 try {
-                                    condition = conditionType.getDeclaredConstructor(NotQuests.class, Object[].class).newInstance(main, new Object[]{progressNeeded, quest});
+                                    condition = conditionType.getDeclaredConstructor(NotQuests.class).newInstance(main);
+                                    condition.setProgressNeeded(progressNeeded);
+                                    condition.setQuest(quest);
                                     condition.load("quests." + questName + ".requirements." + requirementID);
                                 } catch (Exception ex) {
                                     main.getDataManager().disablePluginAndSaving("Error parsing requirement Type of requirement with ID <AQUA>" + requirementNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "</AQUA>.");
@@ -435,7 +437,10 @@ public class QuestManager {
                                     Condition condition = null;
 
                                     try {
-                                        condition = conditionType.getDeclaredConstructor(NotQuests.class, Object[].class).newInstance(main, new Object[]{progressNeeded, quest});
+                                        condition = conditionType.getDeclaredConstructor(NotQuests.class).newInstance(main);
+                                        condition.setProgressNeeded(progressNeeded);
+                                        condition.setQuest(quest);
+                                        condition.setObjective(objective);
                                         condition.load("quests." + questName + ".objectives." + (objective.getObjectiveID())  + ".conditions."  + objectiveConditionNumber);
                                     } catch (Exception ex) {
                                         main.getDataManager().disablePluginAndSaving("Error parsing condition Type of requirement with ID <AQUA>" + objectiveConditionNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "</AQUA>.", ex);

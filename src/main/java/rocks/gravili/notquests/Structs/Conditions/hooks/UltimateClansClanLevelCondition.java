@@ -24,14 +24,10 @@ import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import me.ulrich.clans.api.PlayerAPI;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.Structs.Objectives.Objective;
-import rocks.gravili.notquests.Structs.Quest;
+import rocks.gravili.notquests.Structs.Conditions.ConditionFor;
 import rocks.gravili.notquests.Structs.QuestPlayer;
 import rocks.gravili.notquests.Structs.Conditions.Condition;
 
@@ -41,8 +37,8 @@ public class UltimateClansClanLevelCondition extends Condition {
     private int minClanLevel = 1;
 
 
-    public UltimateClansClanLevelCondition(final NotQuests main, final Object... objects) {
-        super(main, objects);
+    public UltimateClansClanLevelCondition(final NotQuests main) {
+        super(main);
         this.main = main;
     }
 
@@ -50,57 +46,21 @@ public class UltimateClansClanLevelCondition extends Condition {
         this.minClanLevel = minClanLevel;
     }
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addRequirementBuilder, Command.Builder<CommandSender> objectiveAddConditionBuilder) {
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
         if (!main.isUltimateClansEnabled()) {
             return;
         }
 
-        manager.command(addRequirementBuilder.literal("UltimateClansClanLevel")
+        manager.command(builder.literal("UltimateClansClanLevel")
                 .argument(IntegerArgument.<CommandSender>newBuilder("minLevel").withMin(1), ArgumentDescription.of("Minimum clan level"))
                 .meta(CommandMeta.DESCRIPTION, "Adds a new UltimateClansClanLevel Requirement to a quest")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-
-                    final Quest quest = context.get("quest");
-
                     final int minLevel = context.get("minLevel");
 
-                    UltimateClansClanLevelCondition ultimateClansClanLevelRequirement = new UltimateClansClanLevelCondition(main, quest);
-                    ultimateClansClanLevelRequirement.setMinClanLevel(minLevel);
-                    quest.addRequirement(ultimateClansClanLevelRequirement);
-
-                    audience.sendMessage(MiniMessage.miniMessage().parse(
-                            NotQuestColors.successGradient + "UltimateClansClanLevel Requirement successfully added to Quest " + NotQuestColors.highlightGradient
-                                    + quest.getQuestName() + "</gradient>!</gradient>"
-                    ));
-
-                }));
-
-
-        manager.command(objectiveAddConditionBuilder.literal("UltimateClansClanLevel")
-                .argument(IntegerArgument.<CommandSender>newBuilder("minLevel").withMin(1), ArgumentDescription.of("Minimum clan level"))
-                .meta(CommandMeta.DESCRIPTION, "Adds a new UltimateClansClanLevel Requirement to a quest")
-                .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-
-                    final Quest quest = context.get("quest");
-
-                    final int minLevel = context.get("minLevel");
-
-                    final int objectiveID = context.get("Objective ID");
-                    final Objective objective = quest.getObjectiveFromID(objectiveID);
-                    assert objective != null; //Shouldn't be null
-
-                    UltimateClansClanLevelCondition ultimateClansClanLevelCondition = new UltimateClansClanLevelCondition(main, quest, objective);
+                    UltimateClansClanLevelCondition ultimateClansClanLevelCondition = new UltimateClansClanLevelCondition(main);
                     ultimateClansClanLevelCondition.setMinClanLevel(minLevel);
-                    objective.addCondition(ultimateClansClanLevelCondition, true);
 
-                    audience.sendMessage(MiniMessage.miniMessage().parse(
-                            NotQuestColors.successGradient + "UltimateClansClanLevel Condition successfully added to Objective " + NotQuestColors.highlightGradient
-                                    + objective.getObjectiveFinalName() + "</gradient>!</gradient>"));
-
-
-
+                    main.getConditionsManager().addCondition(ultimateClansClanLevelCondition, context);
                 }));
     }
 
