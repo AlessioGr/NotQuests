@@ -204,8 +204,8 @@ public class DataManager {
         //Now load the either new (or existing) quests config file...
         try {
             questsConfig = loadYAMLConfiguration(questsConfigFile);
-        } catch (IOException | InvalidConfigurationException e) {
-            disablePluginAndSaving("There was an error loading the quests configuration file. It either doesn't exist or is invalid.", e);
+        } catch (Exception e) {
+            disablePluginAndSaving("There was an error loading the quests configuration file. It either doesn't exist, is invalid or has an error.", e);
         }
     }
 

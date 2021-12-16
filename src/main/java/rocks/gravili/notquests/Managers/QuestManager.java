@@ -357,6 +357,10 @@ public class QuestManager {
                             final int applyOn = main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".triggers." + triggerNumber + ".applyOn");
                             final String worldName = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".triggers." + triggerNumber + ".worldName", "ALL");
 
+                            if (Bukkit.getWorld(worldName) == null) {
+                                main.getLogManager().warn("The world of the trigger <AQUA>" + triggerTypeString + "</AQUA> of Quest <AQUA>" + questName + "</AQUA> was not found.");
+                            }
+
 
                             Action foundAction = main.getActionsManager().getAction(triggerActionName);
 
