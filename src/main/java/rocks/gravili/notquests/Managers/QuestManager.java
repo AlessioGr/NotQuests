@@ -318,7 +318,7 @@ public class QuestManager {
                                     return;
                                 }
                             } else {
-                                main.getDataManager().disablePluginAndSaving("Error loading Quest reward " + rewardNumber + " for Quest " + questName);
+                                main.getDataManager().disablePluginAndSaving("Error loading Quest reward <AQUA>" + rewardNumber + "</AQUA> for Quest <AQUA>" + questName + "</AQUA>");
                                 return;
                             }
 
@@ -501,7 +501,7 @@ public class QuestManager {
                                         return;
                                     }
                                 } else {
-                                    main.getDataManager().disablePluginAndSaving("Error loading Objective reward " + objectiveRewardNumber + " for Objective " + objective.getObjectiveID() + " and Quest " + questName);
+                                    main.getDataManager().disablePluginAndSaving("Error loading Objective reward <AQUA>" + objectiveRewardNumber + "</AQUA> for Objective <AQUA>" + objective.getObjectiveID() + "</AQUA> and Quest <AQUA>" + questName + "</AQUA>");
                                     return;
                                 }
 
