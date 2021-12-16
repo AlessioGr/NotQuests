@@ -103,7 +103,7 @@ public class UpdateManager {
         main.getActionsManager().saveActions();
     }
 
-    public void convertActionsYMLBeforeVersion3() {
+    public void convertActionsYMLBeforeVersion3() { //Pre-3.0
         boolean convertedSomething = false;
         final ConfigurationSection oldActionsConfigurationSection = main.getActionsManager().getActionsConfig().getConfigurationSection("actions");
         if (oldActionsConfigurationSection != null) {
@@ -122,5 +122,20 @@ public class UpdateManager {
             main.getLogManager().info("Updated old actions.yml!");
         }
 
+    }
+
+
+    public String convertQuestRewardTypeToActionType(final String questName, final String rewardNumber) { //Pre-3.0
+        main.getLogManager().info("Converting old Quest rewardType to actionType...");
+        String oldRewardType = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".rewards." + rewardNumber + ".rewardType", "");
+        if (oldRewardType.isBlank()) {
+            main.getLogManager().warn("There was an error converting the old rewardType to actionType: Old rewardType is empty. Skipping conversion...");
+            return "";
+        }
+
+        main.getDataManager().getQuestsConfig().set("quests." + questName + ".rewards." + rewardNumber + ".rewardType", null);
+        main.getDataManager().getQuestsConfig().set("quests." + questName + ".rewards." + rewardNumber + ".actionType", oldRewardType);
+        main.getDataManager().saveQuestsConfig();
+        return oldRewardType;
     }
 }

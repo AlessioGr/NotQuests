@@ -284,9 +284,13 @@ public class QuestManager {
                             }
 
                             Class<? extends Action> actionType = null;
+                            String actionTypeString = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".rewards." + rewardNumber + ".actionType", "");
+                            if (actionTypeString.isBlank()) {
+                                actionTypeString = main.getUpdateManager().convertQuestRewardTypeToActionType(questName, rewardNumber);
+                            }
 
                             try {
-                                actionType = main.getActionManager().getActionClass(main.getDataManager().getQuestsConfig().getString("quests." + questName + ".rewards." + rewardNumber + ".actionType"));
+                                actionType = main.getActionManager().getActionClass(actionTypeString);
                             } catch (java.lang.NullPointerException ex) {
                                 main.getDataManager().disablePluginAndSaving("Error parsing reward Type of reward with ID <AQUA>" + rewardNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "<AQUA>.", ex);
                                 return;
