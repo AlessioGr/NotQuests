@@ -124,7 +124,7 @@ public class UpdateManager {
 
     }
 
-
+    //Converts rewardType => actionType converter for Quest rewards
     public String convertQuestRewardTypeToActionType(final String questName, final String rewardNumber) { //Pre-3.0
         main.getLogManager().info("Converting old Quest rewardType to actionType...");
         String oldRewardType = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".rewards." + rewardNumber + ".rewardType", "");
