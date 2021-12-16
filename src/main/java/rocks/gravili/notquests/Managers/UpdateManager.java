@@ -2,6 +2,7 @@ package rocks.gravili.notquests.Managers;
 
 import org.bukkit.configuration.ConfigurationSection;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.Actions.ConsoleCommandAction;
 import rocks.gravili.notquests.Structs.Conditions.ObjectiveCompletedCondition;
 import rocks.gravili.notquests.Structs.Objectives.Objective;
 import rocks.gravili.notquests.Structs.Quest;
@@ -68,6 +69,57 @@ public class UpdateManager {
                     main.getDataManager().saveQuestsConfig();
                 }
             }
+        }
+
+    }
+
+
+    public void convertQuestsYMLActions() {
+        //Actions load from quests.yml, so we can migrate them to actions.yml
+        final ConfigurationSection oldActionsConfigurationSection = main.getDataManager().getQuestsConfig().getConfigurationSection("actions");
+        if (oldActionsConfigurationSection != null) {
+            for (final String actionIdentifier : oldActionsConfigurationSection.getKeys(false)) {
+                final String consoleCommand = main.getDataManager().getQuestsConfig().getString("actions." + actionIdentifier + ".consoleCommand", "");
+                if (consoleCommand.equalsIgnoreCase("")) {
+                    main.getLogManager().warn("Action has an empty console command. This should NOT be possible! Creating an action with an empty console command... Action name: <AQUA>" + actionIdentifier + "</AQUA>");
+                }
+
+                ConsoleCommandAction consoleCommandAction = new ConsoleCommandAction(main);
+                consoleCommandAction.setConsoleCommand(consoleCommand);
+                consoleCommandAction.setActionName(actionIdentifier);
+
+                main.getActionsManager().addAction(actionIdentifier, consoleCommandAction);
+
+                main.getLogManager().info("Migrated the following action from quests.yml to actions.yml: <AQUA>" + actionIdentifier + "</AQUA>");
+            }
+        }
+
+        //Now that they are loaded, let's delete them from the quests.yml and save the actions.yml
+        main.getDataManager().getQuestsConfig().set("actions", null);
+        main.getDataManager().saveQuestsConfig();
+
+
+        //save them to write them to the actions.yml (in case of migration)
+        main.getActionsManager().saveActions();
+    }
+
+    public void convertActionsYMLBeforeVersion3() {
+        boolean convertedSomething = false;
+        final ConfigurationSection oldActionsConfigurationSection = main.getActionsManager().getActionsConfig().getConfigurationSection("actions");
+        if (oldActionsConfigurationSection != null) {
+            for (final String actionIdentifier : oldActionsConfigurationSection.getKeys(false)) {
+                String oldActionsType = oldActionsConfigurationSection.getString(actionIdentifier + ".type", "");
+                if (!oldActionsType.isBlank()) {
+                    oldActionsConfigurationSection.set(actionIdentifier + ".type", null);
+                    oldActionsConfigurationSection.set(actionIdentifier + ".actionType", oldActionsType);
+                    convertedSomething = true;
+                }
+            }
+        }
+        if (convertedSomething) {
+            //save them to write them to the actions.yml (in case of migration)
+            main.getActionsManager().saveActions();
+            main.getLogManager().info("Updated old actions.yml!");
         }
 
     }

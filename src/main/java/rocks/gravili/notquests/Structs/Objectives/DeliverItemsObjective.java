@@ -31,6 +31,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -50,48 +51,13 @@ import java.util.UUID;
 
 public class DeliverItemsObjective extends Objective {
 
-    private final NotQuests main;
-    private final ItemStack itemToDeliver;
-    private final int recipientNPCID;
-    private final UUID recipientArmorStandUUID;
+    private ItemStack itemToDeliver = null;
+    private int recipientNPCID = -1;
+    private UUID recipientArmorStandUUID = null;
 
     //For Citizens NPCs
-    public DeliverItemsObjective(NotQuests main, final Quest quest, final int objectiveID, final ItemStack itemToDeliver, final int amountToDeliver, final int recipientNPCID) {
-        super(main, quest, objectiveID,amountToDeliver);
-        this.main = main;
-        this.itemToDeliver = itemToDeliver;
-        this.recipientNPCID = recipientNPCID;
-        this.recipientArmorStandUUID = null;
-    }
-
-    //For Armor Stands
-    public DeliverItemsObjective(NotQuests main, final Quest quest, final int objectiveID, final ItemStack itemToDeliver, final int amountToDeliver, final UUID recipientArmorStandUUID) {
-        super(main, quest, objectiveID, amountToDeliver);
-        this.main = main;
-        this.itemToDeliver = itemToDeliver;
-        this.recipientNPCID = -1;
-        this.recipientArmorStandUUID = recipientArmorStandUUID;
-    }
-
-
-    public DeliverItemsObjective(NotQuests main, Quest quest, int objectiveNumber, int progressNeeded) {
-        super(main, quest, objectiveNumber, progressNeeded);
-        final String questName = quest.getQuestName();
-        this.main = main;
-
-        itemToDeliver = main.getDataManager().getQuestsConfig().getItemStack("quests." + questName + ".objectives." + objectiveNumber + ".specifics.itemToCollect.itemstack");
-        recipientNPCID = main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.recipientNPCID");
-
-        if (recipientNPCID != -1) {
-            recipientArmorStandUUID = null;
-        } else {
-            final String armorStandUUIDString = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.recipientArmorStandID");
-            if (armorStandUUIDString != null) {
-                recipientArmorStandUUID = UUID.fromString(armorStandUUIDString);
-            } else {
-                recipientArmorStandUUID = null;
-            }
-        }
+    public DeliverItemsObjective(NotQuests main) {
+        super(main);
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
@@ -105,7 +71,6 @@ public class DeliverItemsObjective extends Objective {
                             completions.add("" + npc.getId());
                         }
                     }
-
                     completions.add("armorstand");
                     final List<String> allArgs = context.getRawInput();
                     final Audience audience = main.adventure().sender(context.getSender());
@@ -156,13 +121,12 @@ public class DeliverItemsObjective extends Objective {
                             );
                             return;
                         }
-                        DeliverItemsObjective deliverItemsObjective = new DeliverItemsObjective(main, quest, quest.getObjectives().size() + 1, itemToDeliver, amountToDeliver, npcID);
+                        DeliverItemsObjective deliverItemsObjective = new DeliverItemsObjective(main);
+                        deliverItemsObjective.setItemToDeliver(itemToDeliver);
+                        deliverItemsObjective.setProgressNeeded(amountToDeliver);
+                        deliverItemsObjective.setRecipientNPCID(npcID);
 
-                        quest.addObjective(deliverItemsObjective, true);
-                        audience.sendMessage(MiniMessage.miniMessage().parse(
-                                NotQuestColors.successGradient + "DeliverItems Objective successfully added to Quest " + NotQuestColors.highlightGradient
-                                        + quest.getQuestName() + "</gradient>!</gradient>"
-                        ));
+                        main.getObjectiveManager().addObjective(deliverItemsObjective, context);
                     } else {//Armorstands
                         if (context.getSender() instanceof Player player) {
 
@@ -230,16 +194,16 @@ public class DeliverItemsObjective extends Objective {
                 }));
     }
 
-    @Override
-    public void save() {
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.itemToCollect.itemstack", getItemToDeliver());
+    public void setItemToDeliver(final ItemStack itemToDeliver) {
+        this.itemToDeliver = itemToDeliver;
+    }
 
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.recipientNPCID", getRecipientNPCID());
-        if (getRecipientArmorStandUUID() != null) {
-            main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.recipientArmorStandID", getRecipientArmorStandUUID().toString());
-        } else {
-            main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.recipientArmorStandID", null);
-        }
+    public void setRecipientNPCID(final int recipientNPCID) {
+        this.recipientNPCID = recipientNPCID;
+    }
+
+    public void setRecipientArmorStandUUID(final UUID recipientArmorStandUUID) {
+        this.recipientArmorStandUUID = recipientArmorStandUUID;
     }
 
     @Override
@@ -312,5 +276,34 @@ public class DeliverItemsObjective extends Objective {
 
         }
         return toReturn;
+    }
+
+    @Override
+    public void save(FileConfiguration configuration, String initialPath) {
+        configuration.set(initialPath + ".specifics.itemToCollect.itemstack", getItemToDeliver());
+
+        configuration.set(initialPath + ".specifics.recipientNPCID", getRecipientNPCID());
+        if (getRecipientArmorStandUUID() != null) {
+            configuration.set(initialPath + ".specifics.recipientArmorStandID", getRecipientArmorStandUUID().toString());
+        } else {
+            configuration.set(initialPath + ".specifics.recipientArmorStandID", null);
+        }
+    }
+
+    @Override
+    public void load(FileConfiguration configuration, String initialPath) {
+        itemToDeliver = configuration.getItemStack(initialPath + ".specifics.itemToCollect.itemstack");
+        recipientNPCID = configuration.getInt(initialPath + ".specifics.recipientNPCID");
+
+        if (recipientNPCID != -1) {
+            recipientArmorStandUUID = null;
+        } else {
+            final String armorStandUUIDString = configuration.getString(initialPath + ".specifics.recipientArmorStandID");
+            if (armorStandUUIDString != null) {
+                recipientArmorStandUUID = UUID.fromString(armorStandUUIDString);
+            } else {
+                recipientArmorStandUUID = null;
+            }
+        }
     }
 }

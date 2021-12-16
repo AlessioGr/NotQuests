@@ -24,18 +24,17 @@ import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.QuestPlayer;
 
 
 public class WorldTimeCondition extends Condition {
 
-    private final NotQuests main;
     private int minTime, maxTime;
 
     public WorldTimeCondition(NotQuests main) {
         super(main);
-        this.main = main;
     }
 
 
@@ -119,16 +118,16 @@ public class WorldTimeCondition extends Condition {
     }
 
     @Override
-    public void save(String initialPath) {
-        main.getDataManager().getQuestsConfig().set(initialPath + ".specifics.minTime", getMinTime());
-        main.getDataManager().getQuestsConfig().set(initialPath + ".specifics.maxTime", getMaxTime());
+    public void save(FileConfiguration configuration, String initialPath) {
+        configuration.set(initialPath + ".specifics.minTime", getMinTime());
+        configuration.set(initialPath + ".specifics.maxTime", getMaxTime());
 
     }
 
     @Override
-    public void load(String initialPath) {
-        minTime = main.getDataManager().getQuestsConfig().getInt(initialPath + ".specifics.minTime");
-        maxTime = main.getDataManager().getQuestsConfig().getInt(initialPath + ".specifics.maxTime");
+    public void load(FileConfiguration configuration, String initialPath) {
+        minTime = configuration.getInt(initialPath + ".specifics.minTime");
+        maxTime = configuration.getInt(initialPath + ".specifics.maxTime");
 
     }
 }

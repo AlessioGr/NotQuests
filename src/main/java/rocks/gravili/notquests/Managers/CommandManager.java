@@ -72,6 +72,9 @@ public class CommandManager {
     private Command.Builder<CommandSender> adminEditAddTriggerCommandBuilder;
 
     private Command.Builder<CommandSender> adminEditObjectiveAddConditionCommandBuilder;
+    private Command.Builder<CommandSender> adminEditObjectiveAddRewardCommandBuilder;
+
+    private Command.Builder<CommandSender> adminAddActionCommandBuilder;
 
     private Command.Builder<CommandSender> editObjectivesBuilder;
 
@@ -279,7 +282,23 @@ public class CommandManager {
                     .literal("conditions")
                     .literal("add");
 
+            adminEditObjectiveAddRewardCommandBuilder = editObjectivesBuilder
+                    .literal("rewards", "rew")
+                    .literal("add");
 
+            adminAddActionCommandBuilder = adminCommandBuilder.literal("actions")
+                    .literal("add")
+                    .argument(StringArgument.<CommandSender>newBuilder("Action Identifier").withSuggestionsProvider(
+                            (context, lastString) -> {
+                                final List<String> allArgs = context.getRawInput();
+                                final Audience audience = main.adventure().sender(context.getSender());
+                                main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[New, unique Action Identifier]", "...");
+
+                                ArrayList<String> completions = new ArrayList<>();
+
+                                completions.add("[Enter new, unique Action Identifier]");
+                                return completions;
+                            }));
 
             //asynchronous completions
             if (commandManager.queryCapability(CloudBukkitCapabilities.ASYNCHRONOUS_COMPLETION)) {
@@ -289,7 +308,11 @@ public class CommandManager {
             //brigadier/commodore
             try {
                 commandManager.registerBrigadier();
-                commandManager.brigadierManager().setNativeNumberSuggestions(false);
+                if (commandManager.brigadierManager() != null) {
+                    commandManager.brigadierManager().setNativeNumberSuggestions(false);
+                } else {
+                    main.getLogger().warning("Failed to initialize Brigadier support. Brigardier manager is null.");
+                }
             } catch (final Exception e) {
                 main.getLogger().warning("Failed to initialize Brigadier support: " + e.getMessage());
             }
@@ -450,11 +473,19 @@ public class CommandManager {
         return adminEditAddRequirementCommandBuilder;
     }
 
-    public final Command.Builder<CommandSender> getAdminEditObjectiveAddConditionCommandBuilder(){
+    public final Command.Builder<CommandSender> getAdminEditObjectiveAddConditionCommandBuilder() {
         return adminEditObjectiveAddConditionCommandBuilder;
     }
 
-    public final Command.Builder<CommandSender> getEditObjectivesBuilder(){
+    public final Command.Builder<CommandSender> getAdminEditObjectiveAddRewardCommandBuilder() {
+        return adminEditObjectiveAddRewardCommandBuilder;
+    }
+
+    public final Command.Builder<CommandSender> getAdminAddActionCommandBuilder() {
+        return adminAddActionCommandBuilder;
+    }
+
+    public final Command.Builder<CommandSender> getEditObjectivesBuilder() {
         return editObjectivesBuilder;
     }
 

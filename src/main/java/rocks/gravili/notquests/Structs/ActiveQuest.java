@@ -26,6 +26,7 @@ import org.bukkit.entity.Player;
 import rocks.gravili.notquests.Events.notquests.ObjectiveCompleteEvent;
 import rocks.gravili.notquests.Events.notquests.QuestFailEvent;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.Actions.Action;
 import rocks.gravili.notquests.Structs.Objectives.EscortNPCObjective;
 import rocks.gravili.notquests.Structs.Objectives.Objective;
 import rocks.gravili.notquests.Structs.Triggers.ActiveTrigger;
@@ -123,25 +124,36 @@ public class ActiveQuest {
         notifyActiveObjectiveCompleted(activeObjective, silent, -1, armorStandUUID);
     }
     public void notifyActiveObjectiveCompleted(final ActiveObjective activeObjective, final boolean silent, final int NPCID, final UUID armorStandUUID) {
-        ObjectiveCompleteEvent objectiveCompleteEvent = new ObjectiveCompleteEvent(getQuestPlayer(), activeObjective, this);
-        if (Bukkit.isPrimaryThread()) {
-            Bukkit.getScheduler().runTaskAsynchronously(main, () -> {
+        if (!main.getDataManager().isCurrentlyLoading()) {
+            ObjectiveCompleteEvent objectiveCompleteEvent = new ObjectiveCompleteEvent(getQuestPlayer(), activeObjective, this);
+            if (Bukkit.isPrimaryThread()) {
+                Bukkit.getScheduler().runTaskAsynchronously(main, () -> {
+                    Bukkit.getPluginManager().callEvent(objectiveCompleteEvent);
+                });
+            } else {
                 Bukkit.getPluginManager().callEvent(objectiveCompleteEvent);
-            });
-        } else {
-            Bukkit.getPluginManager().callEvent(objectiveCompleteEvent);
+            }
+
+            if (objectiveCompleteEvent.isCancelled()) {
+                return;
+            }
+
+            //Now execute the objective reward actions:
+            for (Action rewardAction : activeObjective.getObjective().getRewards()) {
+                questPlayer.sendDebugMessage("Executing a rewardAction for an objective");
+                main.getLogManager().debug("Executing a rewardAction for an objective");
+                rewardAction.execute(questPlayer.getPlayer(), getQuest());
+            }
+
         }
 
-        if(objectiveCompleteEvent.isCancelled()){
-            return;
-        }
 
         completedObjectives.add(activeObjective);
 
         //Add to completed Objectives list. This list will then be used in removeCompletedObjectives() to remove all its contests also from the activeObjectives lists
         //(Without a concurrentmodificationexception)
         toRemove.add(activeObjective);
-        if (!silent) {
+        if (!silent && !main.getDataManager().isCurrentlyLoading()) {
             questPlayer.sendMessage(main.getLanguageManager().getString("chat.objectives.successfully-completed", questPlayer.getPlayer(), this, activeObjective));
             final Player player = Bukkit.getPlayer(questPlayer.getUUID());
             if (player != null) {

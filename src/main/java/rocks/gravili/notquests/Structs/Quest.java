@@ -25,9 +25,9 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Material;
 import rocks.gravili.notquests.Hooks.Citizens.QuestGiverNPCTrait;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.Actions.Action;
 import rocks.gravili.notquests.Structs.Conditions.Condition;
 import rocks.gravili.notquests.Structs.Objectives.Objective;
-import rocks.gravili.notquests.Structs.Rewards.Reward;
 import rocks.gravili.notquests.Structs.Triggers.Trigger;
 
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ import java.util.ArrayList;
 public class Quest {
     private final NotQuests main;
     private final String questName;
-    private final ArrayList<Reward> rewards;
+    private final ArrayList<Action> rewards;
     private final ArrayList<Objective> objectives;
     private final ArrayList<Condition> conditions; //Requirements to accept the quest
     private final ArrayList<Trigger> triggers; //Triggers for the quest
@@ -72,7 +72,7 @@ public class Quest {
         return questName;
     }
 
-    public final ArrayList<Reward> getRewards() {
+    public final ArrayList<Action> getRewards() {
         return rewards;
     }
 
@@ -96,14 +96,14 @@ public class Quest {
         return null;
     }
 
-    public final Reward getRewardFromID(final int rewardID) {
+    /*public final Reward getRewardFromID(final int rewardID) {
         for (final Reward reward : rewards) {
             if (reward.getRewardID() == rewardID) {
                 return reward;
             }
         }
         return null;
-    }
+    }*/
 
     public final Trigger getTriggerFromID(final int triggerID) {
         for (final Trigger trigger : triggers) {
@@ -125,10 +125,10 @@ public class Quest {
         if (!dupeID) {
             objectives.add(objective);
             if (save) {
-                objective.save();
-
                 main.getDataManager().getQuestsConfig().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".objectiveType", main.getObjectiveManager().getObjectiveType(objective.getClass()));
                 main.getDataManager().getQuestsConfig().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".progressNeeded", objective.getProgressNeeded());
+
+                objective.save(main.getDataManager().getQuestsConfig(), "quests." + questName + ".objectives." + objective.getObjectiveID());
             }
         } else {
             main.getLogManager().warn("ERROR: Tried to add objective to quest <AQUA>" + getQuestName() + "</AQUA> with the ID <AQUA>" + objective.getObjectiveID() + "</AQUA> but the ID was a DUPLICATE!");
@@ -136,33 +136,42 @@ public class Quest {
     }
 
 
-    public void addRequirement(Condition condition) {
+    public void addRequirement(final Condition condition, final boolean save) {
         conditions.add(condition);
-        main.getDataManager().getQuestsConfig().set("quests." + questName + ".requirements." + conditions.size() + ".conditionType", condition.getConditionType());
-        main.getDataManager().getQuestsConfig().set("quests." + questName + ".requirements." + conditions.size() + ".progressNeeded", condition.getProgressNeeded());
+        if (save) {
+            main.getDataManager().getQuestsConfig().set("quests." + questName + ".requirements." + conditions.size() + ".conditionType", condition.getConditionType());
+            main.getDataManager().getQuestsConfig().set("quests." + questName + ".requirements." + conditions.size() + ".progressNeeded", condition.getProgressNeeded());
 
-        condition.save("quests." + questName + ".requirements." + conditions.size() );
-    }
-
-    public void addReward(Reward reward) {
-        rewards.add(reward);
-        main.getDataManager().getQuestsConfig().set("quests." + questName + ".rewards." + reward.getRewardID() + ".rewardType", reward.getRewardType());
-        if (!reward.getRewardDisplayName().isBlank()) {
-            main.getDataManager().getQuestsConfig().set("quests." + questName + ".rewards." + reward.getRewardID() + ".displayName", reward.getRewardDisplayName());
+            condition.save(main.getDataManager().getQuestsConfig(), "quests." + questName + ".requirements." + conditions.size());
         }
 
-        reward.save();
     }
 
-    public void addTrigger(final Trigger trigger) {
-        triggers.add(trigger);
-        main.getDataManager().getQuestsConfig().set("quests." + questName + ".triggers." + triggers.size() + ".triggerType", trigger.getTriggerType());
-        main.getDataManager().getQuestsConfig().set("quests." + questName + ".triggers." + triggers.size() + ".triggerActionName", trigger.getTriggerAction().getActionName());
-        main.getDataManager().getQuestsConfig().set("quests." + questName + ".triggers." + triggers.size() + ".applyOn", trigger.getApplyOn());
-        main.getDataManager().getQuestsConfig().set("quests." + questName + ".triggers." + triggers.size() + ".amountNeeded", trigger.getAmountNeeded());
-        main.getDataManager().getQuestsConfig().set("quests." + questName + ".triggers." + triggers.size() + ".worldName", trigger.getWorldName());
+    public void addReward(Action action, final boolean save) {
+        rewards.add(action);
+        if (save) {
+            main.getDataManager().getQuestsConfig().set("quests." + questName + ".rewards." + rewards.size() + ".actionType", action.getActionType());
+            if (!action.getActionName().isBlank()) {
+                main.getDataManager().getQuestsConfig().set("quests." + questName + ".rewards." + rewards.size() + ".displayName", action.getActionName());
+            }
 
-        trigger.save();
+            action.save(main.getDataManager().getQuestsConfig(), "quests." + questName + ".rewards." + rewards.size());
+        }
+    }
+
+    public void addTrigger(final Trigger trigger, final boolean save) {
+        triggers.add(trigger);
+
+        if (save) {
+            main.getDataManager().getQuestsConfig().set("quests." + questName + ".triggers." + triggers.size() + ".triggerType", trigger.getTriggerType());
+            main.getDataManager().getQuestsConfig().set("quests." + questName + ".triggers." + triggers.size() + ".triggerActionName", trigger.getTriggerAction().getActionName());
+            main.getDataManager().getQuestsConfig().set("quests." + questName + ".triggers." + triggers.size() + ".applyOn", trigger.getApplyOn());
+            main.getDataManager().getQuestsConfig().set("quests." + questName + ".triggers." + triggers.size() + ".amountNeeded", trigger.getAmountNeeded());
+            main.getDataManager().getQuestsConfig().set("quests." + questName + ".triggers." + triggers.size() + ".worldName", trigger.getWorldName());
+
+            trigger.save(main.getDataManager().getQuestsConfig(), "quests." + questName + ".triggers." + triggers.size());
+        }
+
     }
 
     public void removeAllObjectives() {
@@ -365,10 +374,9 @@ public class Quest {
     }
 
 
-
-    public void removeReward(final Reward reward) {
-        rewards.remove(reward);
-        main.getDataManager().getQuestsConfig().set("quests." + questName + ".rewards." + reward.getRewardID(), null);
+    public void removeReward(final Action action) {
+        rewards.remove(action);
+        main.getDataManager().getQuestsConfig().set("quests." + questName + ".rewards." + rewards.indexOf(action), null);
     }
 
     public String removeTrigger(int triggerID) {

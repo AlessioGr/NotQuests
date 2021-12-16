@@ -30,6 +30,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -46,93 +47,13 @@ import java.util.UUID;
 
 public class TalkToNPCObjective extends Objective {
 
-    private final NotQuests main;
-    private final int NPCtoTalkID;
+    private int npcToTalkID = -1;
 
-    private final UUID armorStandUUID;
+    private UUID armorStandUUID = null;
 
-    public TalkToNPCObjective(NotQuests main, final Quest quest, final int objectiveID, final int NPCtoTalkID, final UUID armorStandUUID) {
-        super(main, quest, objectiveID, 1);
-        this.main = main;
-        this.NPCtoTalkID = NPCtoTalkID;
-        this.armorStandUUID = armorStandUUID;
+    public TalkToNPCObjective(NotQuests main) {
+        super(main);
     }
-
-
-
-
-    public TalkToNPCObjective(NotQuests main, Quest quest, int objectiveNumber, int progressNeeded) {
-        super(main, quest, objectiveNumber, progressNeeded);
-        final String questName = quest.getQuestName();
-        this.main = main;
-
-        NPCtoTalkID = main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.NPCtoTalkID", -1);
-        if (NPCtoTalkID != -1) {
-            armorStandUUID = null;
-        } else {
-            final String armorStandUUIDString = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.ArmorStandToTalkUUID");
-            if (armorStandUUIDString != null) {
-                armorStandUUID = UUID.fromString(armorStandUUIDString);
-            } else {
-                armorStandUUID = null;
-            }
-
-        }
-    }
-
-    @Override
-    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
-        String toReturn = "";
-        if (main.isCitizensEnabled() && getNPCtoTalkID() != -1) {
-            final NPC npc = CitizensAPI.getNPCRegistry().getById(getNPCtoTalkID());
-            if (npc != null) {
-                toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.talkToNPC.base", player)
-                        .replace("%EVENTUALCOLOR%", eventualColor)
-                        .replace("%NAME%", npc.getName());
-            } else {
-                toReturn = "    §7" + eventualColor + "The target NPC is currently not available!";
-            }
-        } else {
-            if (getNPCtoTalkID() != -1) {
-                toReturn += "    §cError: Citizens plugin not installed. Contact an admin.";
-            } else { //Armor Stands
-                final UUID armorStandUUID = getArmorStandUUID();
-                if (armorStandUUID != null) {
-                    toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.talkToNPC.base", player)
-                            .replace("%EVENTUALCOLOR%", eventualColor)
-                            .replace("%NAME%", main.getArmorStandManager().getArmorStandName(armorStandUUID));
-                } else {
-                    toReturn += "    §7" + eventualColor + "The target Armor Stand is currently not available!";
-                }
-            }
-        }
-        return toReturn;
-    }
-
-    @Override
-    public void save() {
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.NPCtoTalkID", getNPCtoTalkID());
-        if (getArmorStandUUID() != null) {
-            main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.ArmorStandToTalkUUID", getArmorStandUUID().toString());
-        } else {
-            main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.ArmorStandToTalkUUID", null);
-        }
-    }
-
-    @Override
-    public void onObjectiveUnlock(ActiveObjective activeObjective) {
-
-    }
-
-
-    public final int getNPCtoTalkID() {
-        return NPCtoTalkID;
-    }
-
-    public final UUID getArmorStandUUID() {
-        return armorStandUUID;
-    }
-
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
         manager.command(addObjectiveBuilder.literal("TalkToNPC")
@@ -175,13 +96,10 @@ public class TalkToNPCObjective extends Objective {
                             return;
                         }
 
-                        TalkToNPCObjective talkToNPCObjective = new TalkToNPCObjective(main, quest, quest.getObjectives().size() + 1, npcID, null);
+                        TalkToNPCObjective talkToNPCObjective = new TalkToNPCObjective(main);
+                        talkToNPCObjective.setNPCtoTalkID(npcID);
 
-                        quest.addObjective(talkToNPCObjective, true);
-                        audience.sendMessage(MiniMessage.miniMessage().parse(
-                                NotQuestColors.successGradient + "TalkToNOPC Objective successfully added to Quest " + NotQuestColors.highlightGradient
-                                        + quest.getQuestName() + "</gradient>!</gradient>"
-                        ));
+                        main.getObjectiveManager().addObjective(talkToNPCObjective, context);
                     } else {//Armorstands
                         if (context.getSender() instanceof Player player) {
 
@@ -233,5 +151,82 @@ public class TalkToNPCObjective extends Objective {
 
                 }));
 
+    }
+
+    public void setArmorStandUUID(final UUID armorStandUUID) {
+        this.armorStandUUID = armorStandUUID;
+    }
+
+    @Override
+    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
+        String toReturn = "";
+        if (main.isCitizensEnabled() && getNPCtoTalkID() != -1) {
+            final NPC npc = CitizensAPI.getNPCRegistry().getById(getNPCtoTalkID());
+            if (npc != null) {
+                toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.talkToNPC.base", player)
+                        .replace("%EVENTUALCOLOR%", eventualColor)
+                        .replace("%NAME%", npc.getName());
+            } else {
+                toReturn = "    §7" + eventualColor + "The target NPC is currently not available!";
+            }
+        } else {
+            if (getNPCtoTalkID() != -1) {
+                toReturn += "    §cError: Citizens plugin not installed. Contact an admin.";
+            } else { //Armor Stands
+                final UUID armorStandUUID = getArmorStandUUID();
+                if (armorStandUUID != null) {
+                    toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.talkToNPC.base", player)
+                            .replace("%EVENTUALCOLOR%", eventualColor)
+                            .replace("%NAME%", main.getArmorStandManager().getArmorStandName(armorStandUUID));
+                } else {
+                    toReturn += "    §7" + eventualColor + "The target Armor Stand is currently not available!";
+                }
+            }
+        }
+        return toReturn;
+    }
+
+    @Override
+    public void save(FileConfiguration configuration, String initialPath) {
+        configuration.set(initialPath + ".specifics.NPCtoTalkID", getNPCtoTalkID());
+        if (getArmorStandUUID() != null) {
+            configuration.set(initialPath + ".specifics.ArmorStandToTalkUUID", getArmorStandUUID().toString());
+        } else {
+            configuration.set(initialPath + ".specifics.ArmorStandToTalkUUID", null);
+        }
+    }
+
+    @Override
+    public void load(FileConfiguration configuration, String initialPath) {
+        npcToTalkID = configuration.getInt(initialPath + ".specifics.NPCtoTalkID", -1);
+        if (npcToTalkID != -1) {
+            armorStandUUID = null;
+        } else {
+            final String armorStandUUIDString = configuration.getString(initialPath + ".specifics.ArmorStandToTalkUUID");
+            if (armorStandUUIDString != null) {
+                armorStandUUID = UUID.fromString(armorStandUUIDString);
+            } else {
+                armorStandUUID = null;
+            }
+
+        }
+    }
+
+    @Override
+    public void onObjectiveUnlock(ActiveObjective activeObjective) {
+
+    }
+
+
+    public final int getNPCtoTalkID() {
+        return npcToTalkID;
+    }
+
+    public final UUID getArmorStandUUID() {
+        return armorStandUUID;
+    }
+
+    public void setNPCtoTalkID(final int npcToTalkID) {
+        this.npcToTalkID = npcToTalkID;
     }
 }

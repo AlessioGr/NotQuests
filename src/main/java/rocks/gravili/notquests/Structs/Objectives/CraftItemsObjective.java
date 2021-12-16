@@ -26,6 +26,7 @@ import cloud.commandframework.paper.PaperCommandManager;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.Commands.NotQuestColors;
@@ -33,26 +34,13 @@ import rocks.gravili.notquests.Commands.newCMDs.arguments.MaterialOrHandArgument
 import rocks.gravili.notquests.Commands.newCMDs.arguments.wrappers.MaterialOrHand;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.ActiveObjective;
-import rocks.gravili.notquests.Structs.Quest;
 
 public class CraftItemsObjective extends Objective {
 
-    private final NotQuests main;
-    private final ItemStack itemToCraft;
+    private ItemStack itemToCraft;
 
-    public CraftItemsObjective(NotQuests main, final Quest quest, final int objectiveID, ItemStack itemToCraft, int amountToCraft) {
-        super(main, quest, objectiveID, amountToCraft);
-        this.main = main;
-        this.itemToCraft = itemToCraft;
-    }
-
-    public CraftItemsObjective(NotQuests main, Quest quest, int objectiveNumber, int progressNeeded) {
-        super(main, quest, objectiveNumber, progressNeeded);
-        final String questName = quest.getQuestName();
-
-        this.main = main;
-        itemToCraft = main.getDataManager().getQuestsConfig().getItemStack("quests." + questName + ".objectives." + objectiveNumber + ".specifics.itemToCraft.itemstack");
-
+    public CraftItemsObjective(NotQuests main) {
+        super(main);
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
@@ -61,39 +49,34 @@ public class CraftItemsObjective extends Objective {
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of items which need to be crafted."))
                 .meta(CommandMeta.DESCRIPTION, "Adds a new CraftItems Objective to a quest.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-                    final Quest quest = context.get("quest");
                     final int amount = context.get("amount");
 
                     final MaterialOrHand materialOrHand = context.get("material");
-                    ItemStack itemStack;
+                    ItemStack itemToCraft;
                     if (materialOrHand.hand) { //"hand"
                         if (context.getSender() instanceof Player player) {
-                            itemStack = player.getInventory().getItemInMainHand();
+                            itemToCraft = player.getInventory().getItemInMainHand();
                         } else {
+                            final Audience audience = main.adventure().sender(context.getSender());
                             audience.sendMessage(MiniMessage.miniMessage().parse(
                                     NotQuestColors.errorGradient + "This must be run by a player."
                             ));
                             return;
                         }
                     } else {
-                        itemStack = new ItemStack(materialOrHand.material, 1);
+                        itemToCraft = new ItemStack(materialOrHand.material, 1);
                     }
 
-                    CraftItemsObjective craftItemsObjective = new CraftItemsObjective(main, quest, quest.getObjectives().size() + 1, itemStack, amount);
-                    quest.addObjective(craftItemsObjective, true);
+                    CraftItemsObjective craftItemsObjective = new CraftItemsObjective(main);
+                    craftItemsObjective.setItemToCraft(itemToCraft);
+                    craftItemsObjective.setProgressNeeded(amount);
 
-                    audience.sendMessage(MiniMessage.miniMessage().parse(
-                            NotQuestColors.successGradient + "CraftItems Objective successfully added to Quest " + NotQuestColors.highlightGradient
-                                    + quest.getQuestName() + "</gradient>!</gradient>"
-                    ));
-
+                    main.getObjectiveManager().addObjective(craftItemsObjective, context);
                 }));
     }
 
-    @Override
-    public void save() {
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.itemToCraft.itemstack", getItemToCraft());
+    public void setItemToCraft(final ItemStack itemToCraft) {
+        this.itemToCraft = itemToCraft;
     }
 
     @Override
@@ -135,5 +118,15 @@ public class CraftItemsObjective extends Objective {
         }
 
 
+    }
+
+    @Override
+    public void save(FileConfiguration configuration, String initialPath) {
+        configuration.set(initialPath + ".specifics.itemToCraft.itemstack", getItemToCraft());
+    }
+
+    @Override
+    public void load(FileConfiguration configuration, String initialPath) {
+        itemToCraft = configuration.getItemStack(initialPath + ".specifics.itemToCraft.itemstack");
     }
 }

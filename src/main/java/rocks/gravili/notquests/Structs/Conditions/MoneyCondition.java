@@ -24,19 +24,18 @@ import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.QuestPlayer;
 
 public class MoneyCondition extends Condition {
 
-    private final NotQuests main;
     private boolean deductMoney = false;
 
 
     public MoneyCondition(final NotQuests main) {
         super(main);
-        this.main = main;
     }
 
 
@@ -93,14 +92,14 @@ public class MoneyCondition extends Condition {
     }
 
     @Override
-    public void save(String initialPath) {
-        main.getDataManager().getQuestsConfig().set(initialPath + ".specifics.deductMoney", isDeductMoney());
+    public void save(FileConfiguration configuration, String initialPath) {
+        configuration.set(initialPath + ".specifics.deductMoney", isDeductMoney());
 
     }
 
     @Override
-    public void load(String initialPath) {
-        this.deductMoney = main.getDataManager().getQuestsConfig().getBoolean(initialPath + ".specifics.deductMoney");
+    public void load(FileConfiguration configuration, String initialPath) {
+        this.deductMoney = configuration.getBoolean(initialPath + ".specifics.deductMoney");
     }
 
     private void removeMoney(final Player player, final String worldName, final long moneyToDeduct, final boolean notifyPlayer) {

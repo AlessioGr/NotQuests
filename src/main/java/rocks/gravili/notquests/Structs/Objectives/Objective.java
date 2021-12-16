@@ -20,10 +20,12 @@ package rocks.gravili.notquests.Structs.Objectives;
 
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.Structs.Conditions.Condition;
+import rocks.gravili.notquests.Structs.Actions.Action;
 import rocks.gravili.notquests.Structs.ActiveObjective;
+import rocks.gravili.notquests.Structs.Conditions.Condition;
 import rocks.gravili.notquests.Structs.Quest;
 
 import java.util.ArrayList;
@@ -31,24 +33,33 @@ import java.util.UUID;
 
 public abstract class Objective {
     private final ArrayList<Condition> conditions;
-
-    private final long progressNeeded;
-    private final Quest quest;
-    private final NotQuests main;
-    private final int objectiveID;
+    protected final NotQuests main;
+    private final ArrayList<Action> rewards;
+    private long progressNeeded = 1;
+    private Quest quest;
+    private int objectiveID = -1;
     private String objectiveDisplayName = "";
     private String objectiveDescription = "";
     private int completionNPCID = -1;
     private UUID completionArmorStandUUID = null;
 
-    public Objective(NotQuests main, Quest quest, int objectiveID, int progressNeeded) {
+    public Objective(NotQuests main) {
         this.main = main;
-        this.quest = quest;
-        this.objectiveID = objectiveID;
-        this.progressNeeded = progressNeeded;
         conditions = new ArrayList<>();
+        rewards = new ArrayList<>();
     }
 
+    public void setQuest(final Quest quest) {
+        this.quest = quest;
+    }
+
+    public void setProgressNeeded(final long progressNeeded) {
+        this.progressNeeded = progressNeeded;
+    }
+
+    public void setObjectiveID(final int objectiveID) {
+        this.objectiveID = objectiveID;
+    }
 
 
     public final int getCompletionNPCID() {
@@ -89,14 +100,29 @@ public abstract class Objective {
         return conditions;
     }
 
+    public final ArrayList<Action> getRewards() {
+        return rewards;
+    }
+
 
     public void addCondition(final Condition condition, final boolean save) {
         conditions.add(condition);
         if (save) {
-            main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions." + conditions.size()  + ".conditionType", condition.getConditionType());
-            main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions." + conditions.size()  + ".progressNeeded", condition.getProgressNeeded());
+            main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions." + conditions.size() + ".conditionType", condition.getConditionType());
+            main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions." + conditions.size() + ".progressNeeded", condition.getProgressNeeded());
 
-            condition.save("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions." + conditions.size()  );
+            condition.save(main.getDataManager().getQuestsConfig(), "quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions." + conditions.size());
+        }
+    }
+
+    public void addReward(final Action action, final boolean save) {
+        rewards.add(action);
+        if (save) {
+            main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".rewards." + rewards.size() + ".actionType", action.getActionType());
+            if (!action.getActionName().isBlank()) {
+                main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".rewards." + rewards.size() + ".displayName", action.getActionName());
+            }
+            action.save(main.getDataManager().getQuestsConfig(), "quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".rewards." + rewards.size());
         }
     }
 
@@ -106,6 +132,19 @@ public abstract class Objective {
         if (save) {
             main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions." + conditionID, null);
         }
+    }
+
+    public void removeReward(final Action action, final boolean save) {
+        int rewardID = rewards.indexOf(action);
+        rewards.remove(action);
+        if (save) {
+            main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".rewards." + rewardID, null);
+        }
+    }
+
+    public void clearRewards() {
+        rewards.clear();
+        main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".rewards", null);
     }
 
     public void clearConditions() {
@@ -176,7 +215,9 @@ public abstract class Objective {
 
     public abstract String getObjectiveTaskDescription(final String eventualColor, final Player player);
 
-    public abstract void save();
+    public abstract void save(final FileConfiguration configuration, final String initialPath);
+
+    public abstract void load(final FileConfiguration configuration, final String initialPath);
 
     public abstract void onObjectiveUnlock(final ActiveObjective activeObjective);
 

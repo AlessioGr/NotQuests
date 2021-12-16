@@ -25,6 +25,7 @@ import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import net.kyori.adventure.audience.Audience;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.QuestPlayer;
@@ -34,13 +35,11 @@ import java.util.List;
 
 public class PermissionCondition extends Condition {
 
-    private final NotQuests main;
     private String requiredPermission = "";
 
 
     public PermissionCondition(NotQuests main) {
         super(main);
-        this.main = main;
     }
 
     public void setRequiredPermission(final String requiredPermission){
@@ -73,14 +72,14 @@ public class PermissionCondition extends Condition {
     }
 
     @Override
-    public void save(String initialPath) {
-        main.getDataManager().getQuestsConfig().set(initialPath + ".specifics.requiredPermission", getRequiredPermission());
+    public void save(FileConfiguration configuration, String initialPath) {
+        configuration.set(initialPath + ".specifics.requiredPermission", getRequiredPermission());
 
     }
 
     @Override
-    public void load(String initialPath) {
-        this.requiredPermission = main.getDataManager().getQuestsConfig().getString(initialPath + ".specifics.requiredPermission");
+    public void load(FileConfiguration configuration, String initialPath) {
+        this.requiredPermission = configuration.getString(initialPath + ".specifics.requiredPermission");
 
     }
 

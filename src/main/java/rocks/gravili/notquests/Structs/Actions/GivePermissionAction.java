@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.Structs.Rewards;
+package rocks.gravili.notquests.Structs.Actions;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
@@ -24,42 +24,30 @@ import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.Structs.Quest;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class PermissionReward extends Reward {
+public class GivePermissionAction extends Action {
 
-    private final NotQuests main;
-    private final String rewardedPermission;
+    private String rewardedPermission = "";
 
 
-    public PermissionReward(final NotQuests main, final Quest quest, final int rewardID) {
-        super(main, quest, rewardID);
-        this.main = main;
-
-        this.rewardedPermission = main.getDataManager().getQuestsConfig().getString("quests." + getQuest().getQuestName() + ".rewards." + rewardID + ".specifics.rewardedPermission");
+    public GivePermissionAction(final NotQuests main) {
+        super(main);
     }
 
-    public PermissionReward(final NotQuests main, final Quest quest, final int rewardID, String rewardedPermission) {
-        super(main, quest, rewardID);
-        this.main = main;
-        this.rewardedPermission = rewardedPermission;
-    }
-
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addRewardBuilder) {
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor rewardFor) {
         if (!main.isLuckpermsEnabled()) {
             return;
         }
 
-        manager.command(addRewardBuilder.literal("Permission")
+        manager.command(builder.literal("GivePermission")
                 .argument(StringArgument.<CommandSender>newBuilder("Permission").withSuggestionsProvider(
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
@@ -74,28 +62,26 @@ public class PermissionReward extends Reward {
                 ).single().build(), ArgumentDescription.of("Permission node which the player will receive as a reward"))
                 .meta(CommandMeta.DESCRIPTION, "Adds a new Permission Reward to a quest")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-
-                    final Quest quest = context.get("quest");
-
-
                     final String permissionNode = context.get("Permission");
 
+                    GivePermissionAction givePermissionAction = new GivePermissionAction(main);
+                    givePermissionAction.setRewardedPermissionNode(permissionNode);
 
-                    PermissionReward permissionReward = new PermissionReward(main, quest, quest.getRewards().size() + 1, permissionNode);
-
-                    quest.addReward(permissionReward);
-
-                    audience.sendMessage(MiniMessage.miniMessage().parse(
-                            NotQuestColors.successGradient + "Permission successfully added to Quest " + NotQuestColors.highlightGradient
-                                    + quest.getQuestName() + "</gradient>!</gradient>"
-                    ));
+                    main.getActionManager().addAction(givePermissionAction, context);
 
                 }));
     }
 
+    public void setRewardedPermissionNode(final String rewardedPermission) {
+        this.rewardedPermission = rewardedPermission;
+    }
+
     @Override
-    public void giveReward(final Player player, final Quest quest) {
+    public void execute(final Player player, Object... objects) {
+        if (rewardedPermission.isBlank()) {
+            main.getLogManager().warn("Tried to give permission reward, but the rewarded permission node is empty.");
+            return;
+        }
         if (!main.isLuckpermsEnabled()) {
             player.sendMessage("§cError: cannot give you the permission reward because Luckperms (needed for money giving to work) is not installed on the server.");
             return;
@@ -106,13 +92,19 @@ public class PermissionReward extends Reward {
     }
 
     @Override
-    public String getRewardDescription() {
+    public String getActionDescription() {
         return "Permission: " + getRewardedPermission();
     }
 
+
     @Override
-    public void save() {
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".rewards." + getRewardID() + ".specifics.rewardedPermission", getRewardedPermission());
+    public void save(final FileConfiguration configuration, String initialPath) {
+        configuration.set(initialPath + ".specifics.permission", getRewardedPermission());
+    }
+
+    @Override
+    public void load(final FileConfiguration configuration, String initialPath) {
+        this.rewardedPermission = configuration.getString(initialPath + ".specifics.permission");
     }
 
     public final String getRewardedPermission() {

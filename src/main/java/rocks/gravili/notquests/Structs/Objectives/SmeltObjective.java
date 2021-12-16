@@ -26,6 +26,7 @@ import cloud.commandframework.paper.PaperCommandManager;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.Commands.NotQuestColors;
@@ -33,26 +34,13 @@ import rocks.gravili.notquests.Commands.newCMDs.arguments.MaterialOrHandArgument
 import rocks.gravili.notquests.Commands.newCMDs.arguments.wrappers.MaterialOrHand;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.ActiveObjective;
-import rocks.gravili.notquests.Structs.Quest;
 
 public class SmeltObjective extends Objective {
 
-    private final NotQuests main;
-    private final ItemStack itemToSmelt;
+    private ItemStack itemToSmelt;
 
-    public SmeltObjective(NotQuests main, final Quest quest, final int objectiveID, int amountToSmelt, ItemStack itemToSmelt) {
-        super(main, quest, objectiveID, amountToSmelt);
-        this.main = main;
-        this.itemToSmelt = itemToSmelt;
-    }
-
-    public SmeltObjective(NotQuests main, Quest quest, int objectiveNumber, int progressNeeded) {
-        super(main, quest, objectiveNumber, progressNeeded);
-        final String questName = quest.getQuestName();
-
-        this.main = main;
-        itemToSmelt = main.getDataManager().getQuestsConfig().getItemStack("quests." + questName + ".objectives." + objectiveNumber + ".specifics.itemToSmelt.itemstack");
-
+    public SmeltObjective(NotQuests main) {
+        super(main);
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
@@ -61,39 +49,34 @@ public class SmeltObjective extends Objective {
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of items which need to be smelted."))
                 .meta(CommandMeta.DESCRIPTION, "Adds a new Smelt Objective to a quest.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-                    final Quest quest = context.get("quest");
                     final int amount = context.get("amount");
 
                     final MaterialOrHand materialOrHand = context.get("material");
-                    ItemStack itemStack;
+                    ItemStack itemToSmelt;
                     if (materialOrHand.hand) { //"hand"
                         if (context.getSender() instanceof Player player) {
-                            itemStack = player.getInventory().getItemInMainHand();
+                            itemToSmelt = player.getInventory().getItemInMainHand();
                         } else {
+                            final Audience audience = main.adventure().sender(context.getSender());
                             audience.sendMessage(MiniMessage.miniMessage().parse(
                                     NotQuestColors.errorGradient + "This must be run by a player."
                             ));
                             return;
                         }
                     } else {
-                        itemStack = new ItemStack(materialOrHand.material, 1);
+                        itemToSmelt = new ItemStack(materialOrHand.material, 1);
                     }
 
-                    SmeltObjective smeltObjective = new SmeltObjective(main, quest, quest.getObjectives().size() + 1, amount, itemStack);
-                    quest.addObjective(smeltObjective, true);
+                    SmeltObjective smeltObjective = new SmeltObjective(main);
+                    smeltObjective.setProgressNeeded(amount);
+                    smeltObjective.setItemToSmelt(itemToSmelt);
 
-                    audience.sendMessage(MiniMessage.miniMessage().parse(
-                            NotQuestColors.successGradient + "Smelt Objective successfully added to Quest " + NotQuestColors.highlightGradient
-                                    + quest.getQuestName() + "</gradient>!</gradient>"
-                    ));
-
+                    main.getObjectiveManager().addObjective(smeltObjective, context);
                 }));
     }
 
-    @Override
-    public void save() {
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.itemToSmelt.itemstack", getItemToSmelt());
+    public void setItemToSmelt(final ItemStack itemToSmelt) {
+        this.itemToSmelt = itemToSmelt;
     }
 
     @Override
@@ -135,5 +118,15 @@ public class SmeltObjective extends Objective {
         }
 
 
+    }
+
+    @Override
+    public void save(FileConfiguration configuration, String initialPath) {
+        configuration.set(initialPath + ".specifics.itemToSmelt.itemstack", getItemToSmelt());
+    }
+
+    @Override
+    public void load(FileConfiguration configuration, String initialPath) {
+        itemToSmelt = configuration.getItemStack(initialPath + ".specifics.itemToSmelt.itemstack");
     }
 }

@@ -24,52 +24,27 @@ import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.bukkit.parsers.WorldArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
-import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.ActiveObjective;
-import rocks.gravili.notquests.Structs.Quest;
 
 
 public class InteractObjective extends Objective {
 
-    private final NotQuests main;
-    private final Location locationToInteract;
-    private final boolean leftClick;
-    private final boolean rightClick;
-    private final String taskDescription;
-    private final int maxDistance;
-    private final boolean cancelInteraction;
+    private Location locationToInteract;
+    private boolean leftClick = false;
+    private boolean rightClick = false;
+    private String taskDescription = "";
+    private int maxDistance = 1;
+    private boolean cancelInteraction = false;
 
-    public InteractObjective(NotQuests main, final Quest quest, final int objectiveID, int amountToInteract, Location locationToInteract, boolean leftClick, boolean rightClick, int maxDistance, boolean cancelInteraction, String taskDescription) {
-        super(main, quest, objectiveID, amountToInteract);
-        this.main = main;
-        this.locationToInteract = locationToInteract;
-        this.leftClick = leftClick;
-        this.rightClick = rightClick;
-        this.taskDescription = taskDescription;
-        this.maxDistance = maxDistance;
-        this.cancelInteraction = cancelInteraction;
-    }
-
-    public InteractObjective(NotQuests main, Quest quest, int objectiveNumber, int progressNeeded) {
-        super(main, quest, objectiveNumber, progressNeeded);
-        final String questName = quest.getQuestName();
-
-        this.main = main;
-        locationToInteract = main.getDataManager().getQuestsConfig().getLocation("quests." + questName + ".objectives." + objectiveNumber + ".specifics.locationToInteract");
-        leftClick = main.getDataManager().getQuestsConfig().getBoolean("quests." + questName + ".objectives." + objectiveNumber + ".specifics.leftClick", false);
-        rightClick = main.getDataManager().getQuestsConfig().getBoolean("quests." + questName + ".objectives." + objectiveNumber + ".specifics.rightClick", false);
-        taskDescription = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.taskDescription", "");
-        maxDistance = main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.maxDistance", 1);
-        cancelInteraction = main.getDataManager().getQuestsConfig().getBoolean("quests." + questName + ".objectives." + objectiveNumber + ".specifics.cancelInteraction", false);
-
+    public InteractObjective(NotQuests main) {
+        super(main);
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
@@ -105,8 +80,6 @@ public class InteractObjective extends Objective {
                 .flag(main.getCommandManager().maxDistance)
                 .meta(CommandMeta.DESCRIPTION, "Adds a new Interact Objective to a quest")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-                    final Quest quest = context.get("quest");
                     final int amount = context.get("amount");
 
                     final World world = context.get("world");
@@ -119,14 +92,41 @@ public class InteractObjective extends Objective {
                     final int maxDistance = context.flags().getValue(main.getCommandManager().maxDistance, 1);
                     final boolean cancelInteraction = context.flags().isPresent("cancelInteraction");
 
-                    InteractObjective interactObjective = new InteractObjective(main, quest, quest.getObjectives().size() + 1, amount, location, leftClick, rightClick, maxDistance, cancelInteraction, taskDescription);
-                    quest.addObjective(interactObjective, true);
-                    audience.sendMessage(MiniMessage.miniMessage().parse(
-                            NotQuestColors.successGradient + "Interact Objective successfully added to Quest " + NotQuestColors.highlightGradient
-                                    + quest.getQuestName() + "</gradient>!</gradient>"
-                    ));
+                    InteractObjective interactObjective = new InteractObjective(main);
+                    interactObjective.setLocationToInteract(location);
+                    interactObjective.setLeftClick(leftClick);
+                    interactObjective.setRightClick(rightClick);
+                    interactObjective.setTaskDescription(taskDescription);
+                    interactObjective.setMaxDistance(maxDistance);
+                    interactObjective.setCancelInteraction(cancelInteraction);
+                    interactObjective.setProgressNeeded(amount);
 
+                    main.getObjectiveManager().addObjective(interactObjective, context);
                 }));
+    }
+
+    public void setLocationToInteract(final Location locationToInteract) {
+        this.locationToInteract = locationToInteract;
+    }
+
+    public void setLeftClick(final boolean leftClick) {
+        this.leftClick = leftClick;
+    }
+
+    public void setRightClick(final boolean rightClick) {
+        this.rightClick = rightClick;
+    }
+
+    public void setTaskDescription(final String taskDescription) {
+        this.taskDescription = taskDescription;
+    }
+
+    public void setMaxDistance(final int maxDistance) {
+        this.maxDistance = maxDistance;
+    }
+
+    public void setCancelInteraction(final boolean cancelInteraction) {
+        this.cancelInteraction = cancelInteraction;
     }
 
     @Override
@@ -167,20 +167,31 @@ public class InteractObjective extends Objective {
     }
 
     @Override
-    public void save() {
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.locationToInteract", getLocationToInteract());
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.leftClick", isLeftClick());
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.rightClick", isRightClick());
+    public void save(FileConfiguration configuration, String initialPath) {
+        configuration.set(initialPath + ".specifics.locationToInteract", getLocationToInteract());
+        configuration.set(initialPath + ".specifics.leftClick", isLeftClick());
+        configuration.set(initialPath + ".specifics.rightClick", isRightClick());
         if (!getTaskDescription().isBlank()) {
-            main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.taskDescription", getTaskDescription());
+            configuration.set(initialPath + ".specifics.taskDescription", getTaskDescription());
         }
         if (getMaxDistance() > 1) {
-            main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.maxDistance", getMaxDistance());
+            configuration.set(initialPath + ".specifics.maxDistance", getMaxDistance());
         }
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.cancelInteraction", isCancelInteraction());
-
+        configuration.set(initialPath + ".specifics.cancelInteraction", isCancelInteraction());
 
     }
+
+    @Override
+    public void load(FileConfiguration configuration, String initialPath) {
+        locationToInteract = configuration.getLocation(initialPath + ".specifics.locationToInteract");
+        leftClick = configuration.getBoolean(initialPath + ".specifics.leftClick", false);
+        rightClick = configuration.getBoolean(initialPath + ".specifics.rightClick", false);
+        taskDescription = configuration.getString(initialPath + ".specifics.taskDescription", "");
+        maxDistance = configuration.getInt(initialPath + ".specifics.maxDistance", 1);
+        cancelInteraction = configuration.getBoolean(initialPath + ".specifics.cancelInteraction", false);
+
+    }
+
 
     @Override
     public void onObjectiveUnlock(final ActiveObjective activeObjective) {

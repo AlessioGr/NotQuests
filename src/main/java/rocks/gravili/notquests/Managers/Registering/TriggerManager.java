@@ -19,8 +19,15 @@
 package rocks.gravili.notquests.Managers.Registering;
 
 import cloud.commandframework.Command;
+import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.paper.PaperCommandManager;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.command.CommandSender;
+import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.Actions.Action;
+import rocks.gravili.notquests.Structs.Quest;
 import rocks.gravili.notquests.Structs.Triggers.Trigger;
 import rocks.gravili.notquests.Structs.Triggers.TriggerTypes.*;
 
@@ -94,5 +101,41 @@ public class TriggerManager {
 
     public final Collection<String> getTriggerIdentifiers() {
         return triggers.keySet();
+    }
+
+
+    public void addTrigger(Trigger trigger, CommandContext<CommandSender> context) {
+        Audience audience = main.adventure().sender(context.getSender());
+
+        Quest quest = context.getOrDefault("quest", null);
+
+        final Action action = context.get("action");
+
+        int applyOn = 0;
+        if (context.flags().contains(main.getCommandManager().applyOn)) {
+            applyOn = context.flags().getValue(main.getCommandManager().applyOn, 0);
+        }
+        final String worldString = context.flags().getValue(main.getCommandManager().triggerWorldString, null);
+
+        int amount = 1;
+        if (context.contains("amount")) {
+            amount = context.get("amount");
+        }
+
+        if (quest != null) {
+            trigger.setQuest(quest);
+            trigger.setAction(action);
+            trigger.setApplyOn(applyOn);
+            trigger.setWorldName(worldString);
+            trigger.setTriggerID(quest.getTriggers().size() + 1);
+            trigger.setAmountNeeded(amount);
+
+            quest.addTrigger(trigger, true);
+
+            audience.sendMessage(MiniMessage.miniMessage().parse(
+                    NotQuestColors.successGradient + getTriggerType(trigger.getClass()) + " Trigger successfully added to Quest " + NotQuestColors.highlightGradient
+                            + quest.getQuestName() + "</gradient>!</gradient>"
+            ));
+        }
     }
 }

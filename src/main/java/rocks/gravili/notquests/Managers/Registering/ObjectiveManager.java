@@ -19,12 +19,18 @@
 package rocks.gravili.notquests.Managers.Registering;
 
 import cloud.commandframework.Command;
+import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.paper.PaperCommandManager;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.command.CommandSender;
+import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Objectives.*;
 import rocks.gravili.notquests.Structs.Objectives.hooks.KillEliteMobsObjective;
 import rocks.gravili.notquests.Structs.Objectives.hooks.SlimefunResearchObjective;
 import rocks.gravili.notquests.Structs.Objectives.hooks.TownyReachResidentCountObjective;
+import rocks.gravili.notquests.Structs.Quest;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -108,15 +114,33 @@ public class ObjectiveManager {
         return null;
     }
 
-    public final HashMap<String, Class<? extends Objective>> getObjectivesAndIdentfiers(){
+    public final HashMap<String, Class<? extends Objective>> getObjectivesAndIdentifiers() {
         return objectives;
     }
 
-    public final Collection<Class<? extends Objective>> getObjectives(){
+    public final Collection<Class<? extends Objective>> getObjectives() {
         return objectives.values();
     }
 
-    public final Collection<String> getObjectiveIdentifiers(){
+    public final Collection<String> getObjectiveIdentifiers() {
         return objectives.keySet();
+    }
+
+
+    public void addObjective(Objective objective, CommandContext<CommandSender> context) {
+        Audience audience = main.adventure().sender(context.getSender());
+
+        Quest quest = context.getOrDefault("quest", null);
+
+        if (quest != null) {
+            objective.setQuest(quest);
+            objective.setObjectiveID(quest.getObjectives().size() + 1);
+            audience.sendMessage(MiniMessage.miniMessage().parse(
+                    NotQuestColors.successGradient + getObjectiveType(objective.getClass()) + " Objective successfully added to Quest " + NotQuestColors.highlightGradient
+                            + quest.getQuestName() + "</gradient>!</gradient>"
+            ));
+
+            quest.addObjective(objective, true);
+        }
     }
 }

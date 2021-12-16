@@ -26,6 +26,7 @@ import cloud.commandframework.paper.PaperCommandManager;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.Commands.NotQuestColors;
@@ -33,26 +34,13 @@ import rocks.gravili.notquests.Commands.newCMDs.arguments.MaterialOrHandArgument
 import rocks.gravili.notquests.Commands.newCMDs.arguments.wrappers.MaterialOrHand;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.ActiveObjective;
-import rocks.gravili.notquests.Structs.Quest;
 
 public class ConsumeItemsObjective extends Objective {
 
-    private final NotQuests main;
-    private final ItemStack itemToConsume;
+    private ItemStack itemToConsume;
 
-    public ConsumeItemsObjective(NotQuests main, final Quest quest, final int objectiveID, ItemStack itemToConsume, int amountToConsume) {
-        super(main, quest, objectiveID, amountToConsume);
-        this.main = main;
-        this.itemToConsume = itemToConsume;
-    }
-
-    public ConsumeItemsObjective(NotQuests main, Quest quest, int objectiveNumber, int progressNeeded) {
-        super(main, quest, objectiveNumber, progressNeeded);
-        final String questName = quest.getQuestName();
-
-        this.main = main;
-        itemToConsume = main.getDataManager().getQuestsConfig().getItemStack("quests." + questName + ".objectives." + objectiveNumber + ".specifics.itemToConsume.itemstack");
-
+    public ConsumeItemsObjective(NotQuests main) {
+        super(main);
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
@@ -61,39 +49,35 @@ public class ConsumeItemsObjective extends Objective {
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of items which need to be consumed."))
                 .meta(CommandMeta.DESCRIPTION, "Adds a new ConsumeItems Objective to a quest.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-                    final Quest quest = context.get("quest");
                     final int amount = context.get("amount");
 
                     final MaterialOrHand materialOrHand = context.get("material");
-                    ItemStack itemStack;
+                    ItemStack itemToConsume;
                     if (materialOrHand.hand) { //"hand"
                         if (context.getSender() instanceof Player player) {
-                            itemStack = player.getInventory().getItemInMainHand();
+                            itemToConsume = player.getInventory().getItemInMainHand();
                         } else {
+                            final Audience audience = main.adventure().sender(context.getSender());
                             audience.sendMessage(MiniMessage.miniMessage().parse(
                                     NotQuestColors.errorGradient + "This must be run by a player."
                             ));
                             return;
                         }
                     } else {
-                        itemStack = new ItemStack(materialOrHand.material, 1);
+                        itemToConsume = new ItemStack(materialOrHand.material, 1);
                     }
 
-                    ConsumeItemsObjective consumeItemsObjective = new ConsumeItemsObjective(main, quest, quest.getObjectives().size() + 1, itemStack, amount);
-                    quest.addObjective(consumeItemsObjective, true);
+                    ConsumeItemsObjective consumeItemsObjective = new ConsumeItemsObjective(main);
+                    consumeItemsObjective.setItemToConsume(itemToConsume);
+                    consumeItemsObjective.setProgressNeeded(amount);
 
-                    audience.sendMessage(MiniMessage.miniMessage().parse(
-                            NotQuestColors.successGradient + "ConsumeItems Objective successfully added to Quest " + NotQuestColors.highlightGradient
-                                    + quest.getQuestName() + "</gradient>!</gradient>"
-                    ));
+                    main.getObjectiveManager().addObjective(consumeItemsObjective, context);
 
                 }));
     }
 
-    @Override
-    public void save() {
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.itemToConsume.itemstack", getItemToConsume());
+    public void setItemToConsume(final ItemStack itemToConsume) {
+        this.itemToConsume = itemToConsume;
     }
 
     @Override
@@ -135,5 +119,15 @@ public class ConsumeItemsObjective extends Objective {
         }
 
 
+    }
+
+    @Override
+    public void save(FileConfiguration configuration, String initialPath) {
+        configuration.set(initialPath + ".specifics.itemToConsume.itemstack", getItemToConsume());
+    }
+
+    @Override
+    public void load(FileConfiguration configuration, String initialPath) {
+        itemToConsume = configuration.getItemStack(initialPath + ".specifics.itemToConsume.itemstack");
     }
 }

@@ -26,59 +26,23 @@ import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.ActiveObjective;
-import rocks.gravili.notquests.Structs.Quest;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TriggerCommandObjective extends Objective {
 
-    private final NotQuests main;
-    private final String triggerName;
+    private String triggerName;
 
 
-    public TriggerCommandObjective(NotQuests main, final Quest quest, final int objectiveID, String triggerName, int amountToTrigger) {
-        super(main, quest, objectiveID, amountToTrigger);
-        this.triggerName = triggerName;
-        this.main = main;
+    public TriggerCommandObjective(NotQuests main) {
+        super(main);
     }
-
-    public TriggerCommandObjective(NotQuests main, Quest quest, int objectiveNumber, int progressNeeded) {
-        super(main, quest, objectiveNumber, progressNeeded);
-        final String questName = quest.getQuestName();
-
-        this.main = main;
-        triggerName = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.triggerName");
-
-    }
-
-    @Override
-    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.triggerCommand.base", player)
-                .replace("%EVENTUALCOLOR%", eventualColor)
-                .replace("%TRIGGERNAME%", "" + getTriggerName());
-    }
-
-    @Override
-    public void save() {
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.triggerName", getTriggerName());
-    }
-
-    @Override
-    public void onObjectiveUnlock(ActiveObjective activeObjective) {
-
-    }
-
-    public final String getTriggerName() {
-        return triggerName;
-    }
-
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
         manager.command(addObjectiveBuilder.literal("TriggerCommand")
@@ -98,20 +62,44 @@ public class TriggerCommandObjective extends Objective {
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of times the trigger needs to be triggered to complete this objective."))
                 .meta(CommandMeta.DESCRIPTION, "Adds a new TriggerCommand Objective to a quest")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-                    final Quest quest = context.get("quest");
-
                     final String triggerName = context.get("Trigger name");
-
                     final int amount = context.get("amount");
 
-                    TriggerCommandObjective triggerCommandObjective = new TriggerCommandObjective(main, quest, quest.getObjectives().size() + 1, triggerName, amount);
-                    quest.addObjective(triggerCommandObjective, true);
-                    audience.sendMessage(MiniMessage.miniMessage().parse(
-                            NotQuestColors.successGradient + "TriggerCommand Objective successfully added to Quest " + NotQuestColors.highlightGradient
-                                    + quest.getQuestName() + "</gradient>!</gradient>"
-                    ));
+                    TriggerCommandObjective triggerCommandObjective = new TriggerCommandObjective(main);
+                    triggerCommandObjective.setProgressNeeded(amount);
+                    triggerCommandObjective.setTriggerName(triggerName);
 
+                    main.getObjectiveManager().addObjective(triggerCommandObjective, context);
                 }));
+    }
+
+    @Override
+    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.triggerCommand.base", player)
+                .replace("%EVENTUALCOLOR%", eventualColor)
+                .replace("%TRIGGERNAME%", "" + getTriggerName());
+    }
+
+    public void setTriggerName(final String triggerName) {
+        this.triggerName = triggerName;
+    }
+
+    @Override
+    public void save(FileConfiguration configuration, String initialPath) {
+        configuration.set(initialPath + ".specifics.triggerName", getTriggerName());
+    }
+
+    @Override
+    public void onObjectiveUnlock(ActiveObjective activeObjective) {
+
+    }
+
+    public final String getTriggerName() {
+        return triggerName;
+    }
+
+    @Override
+    public void load(FileConfiguration configuration, String initialPath) {
+        triggerName = configuration.getString(initialPath + ".specifics.triggerName");
     }
 }

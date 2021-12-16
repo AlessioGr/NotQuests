@@ -25,14 +25,11 @@ import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
-import rocks.gravili.notquests.Commands.NotQuestColors;
+import org.bukkit.configuration.file.FileConfiguration;
 import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.Structs.Quest;
-import rocks.gravili.notquests.Structs.Triggers.Action;
 import rocks.gravili.notquests.Structs.Triggers.Trigger;
 
 import java.util.ArrayList;
@@ -40,35 +37,10 @@ import java.util.List;
 
 public class WorldEnterTrigger extends Trigger {
 
-    private final NotQuests main;
-    private final String worldToEnterName;
+    private String worldToEnterName;
 
-    public WorldEnterTrigger(final NotQuests main, final Quest quest, final int triggerID, Action action, int applyOn, String worldName, long amountNeeded) {
-        super(main, quest, triggerID, action, applyOn, worldName, amountNeeded);
-        this.main = main;
-
-        this.worldToEnterName = main.getDataManager().getQuestsConfig().getString("quests." + getQuest().getQuestName() + ".triggers." + triggerID + ".specifics.worldToEnter", "ALL");
-    }
-
-    public WorldEnterTrigger(final NotQuests main, final Quest quest, final int triggerID, Action action, int applyOn, String worldName, long amountNeeded, String worldToEnterName) {
-        super(main, quest, triggerID, action, applyOn, worldName, amountNeeded);
-        this.main = main;
-        this.worldToEnterName = worldToEnterName;
-    }
-
-    public final String getWorldToEnterName() {
-        return worldToEnterName;
-    }
-
-    @Override
-    public void save() {
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".triggers." + getTriggerID() + ".specifics.worldToEnter", getWorldToEnterName());
-
-    }
-
-    @Override
-    public String getTriggerDescription() {
-        return "World to enter: §f" + getWorldToEnterName();
+    public WorldEnterTrigger(final NotQuests main) {
+        super(main);
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addTriggerBuilder) {
@@ -95,28 +67,35 @@ public class WorldEnterTrigger extends Trigger {
                 .flag(main.getCommandManager().triggerWorldString)
                 .meta(CommandMeta.DESCRIPTION, "Triggers when the player enters a specific world.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-
-                    final Quest quest = context.get("quest");
-                    final Action action = context.get("action");
-
                     final String worldToEnterName = context.get("world to enter");
 
-                    int amountOfWorldEnters = context.get("amount");
+                    WorldEnterTrigger worldEnterTrigger = new WorldEnterTrigger(main);
+                    worldEnterTrigger.setWorldToEnterName(worldToEnterName);
 
-                    final int applyOn = context.flags().getValue(main.getCommandManager().applyOn, 0); //0 = Quest
-                    final String worldString = context.flags().getValue(main.getCommandManager().triggerWorldString, null);
-
-
-                    WorldEnterTrigger worldEnterTrigger = new WorldEnterTrigger(main, quest, quest.getTriggers().size() + 1, action, applyOn, worldString, amountOfWorldEnters, worldToEnterName);
-
-                    quest.addTrigger(worldEnterTrigger);
-
-                    audience.sendMessage(MiniMessage.miniMessage().parse(
-                            NotQuestColors.successGradient + "WORLDENTER Trigger successfully added to Quest " + NotQuestColors.highlightGradient
-                                    + quest.getQuestName() + "</gradient>!</gradient>"
-                    ));
-
+                    main.getTriggerManager().addTrigger(worldEnterTrigger, context);
                 }));
+    }
+
+    public final String getWorldToEnterName() {
+        return worldToEnterName;
+    }
+
+    public void setWorldToEnterName(final String worldToEnterName) {
+        this.worldToEnterName = worldToEnterName;
+    }
+
+    @Override
+    public void save(FileConfiguration configuration, String initialPath) {
+        configuration.set(initialPath + ".specifics.worldToEnter", getWorldToEnterName());
+    }
+
+    @Override
+    public String getTriggerDescription() {
+        return "World to enter: §f" + getWorldToEnterName();
+    }
+
+    @Override
+    public void load(FileConfiguration configuration, String initialPath) {
+        this.worldToEnterName = configuration.getString(initialPath + ".specifics.worldToEnter", "ALL");
     }
 }

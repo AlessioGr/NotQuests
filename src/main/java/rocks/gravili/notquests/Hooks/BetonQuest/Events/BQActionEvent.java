@@ -25,10 +25,10 @@ import org.betonquest.betonquest.exceptions.QuestRuntimeException;
 import org.betonquest.betonquest.utils.PlayerConverter;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.Actions.Action;
 import rocks.gravili.notquests.Structs.ActiveQuest;
 import rocks.gravili.notquests.Structs.Quest;
 import rocks.gravili.notquests.Structs.QuestPlayer;
-import rocks.gravili.notquests.Structs.Triggers.Action;
 
 public class BQActionEvent extends QuestEvent {
 
@@ -74,17 +74,9 @@ public class BQActionEvent extends QuestEvent {
             }
         }
 
+        this.action = main.getActionsManager().getAction(actionName);
 
-        boolean foundAction = false;
-        for (final Action action : main.getActionsManager().getActions()) {
-            if (action.getActionName().equalsIgnoreCase(actionName)) {
-                this.action = action;
-                foundAction = true;
-                break;
-            }
-        }
-
-        if (!foundAction) {
+        if (action == null) {
             throw new InstructionParseException("NotQuests Action with the name '" + actionName + "' does not exist.");
         }
 

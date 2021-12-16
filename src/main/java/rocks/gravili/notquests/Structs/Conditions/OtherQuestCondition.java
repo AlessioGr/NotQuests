@@ -24,6 +24,7 @@ import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import rocks.gravili.notquests.Commands.newCMDs.arguments.QuestSelector;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.CompletedQuest;
@@ -33,13 +34,11 @@ import rocks.gravili.notquests.Structs.QuestPlayer;
 
 public class OtherQuestCondition extends Condition {
 
-    private final NotQuests main;
     private String otherQuestName = "";
 
 
     public OtherQuestCondition(NotQuests main) {
         super(main);
-        this.main = main;
     }
 
     public void setOtherQuestName(final String otherQuestName){
@@ -92,14 +91,13 @@ public class OtherQuestCondition extends Condition {
     }
 
     @Override
-    public void save(String initialPath) {
-        main.getDataManager().getQuestsConfig().set(initialPath + ".specifics.otherQuestRequirememt", getOtherQuestName());
+    public void save(FileConfiguration configuration, String initialPath) {
+        configuration.set(initialPath + ".specifics.otherQuestRequirememt", getOtherQuestName());
     }
 
     @Override
-    public void load(String initialPath) {
-        otherQuestName = main.getDataManager().getQuestsConfig().getString(initialPath + ".specifics.otherQuestRequirememt");
-
+    public void load(FileConfiguration configuration, String initialPath) {
+        otherQuestName = configuration.getString(initialPath + ".specifics.otherQuestRequirememt");
     }
 
 

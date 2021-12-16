@@ -42,10 +42,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.Actions.Action;
 import rocks.gravili.notquests.Structs.Conditions.Condition;
 import rocks.gravili.notquests.Structs.Objectives.Objective;
 import rocks.gravili.notquests.Structs.Quest;
-import rocks.gravili.notquests.Structs.Rewards.Reward;
 import rocks.gravili.notquests.Structs.Triggers.Trigger;
 
 import java.util.ArrayList;
@@ -1103,9 +1103,9 @@ public class AdminEditCommands {
                     final Quest quest = context.get("quest");
 
                     audience.sendMessage(miniMessage.parse(highlightGradient + "Rewards for Quest " + highlight2Gradient + quest.getQuestName() + "</gradient>:</gradient>"));
-                    for (final Reward reward : quest.getRewards()) {
-                        audience.sendMessage(miniMessage.parse(highlightGradient + reward.getRewardID() + ". </gradient>" + mainGradient + reward.getRewardType() + "</gradient>"));
-                        audience.sendMessage(miniMessage.parse(unimportant + "-- " + unimportantClose + mainGradient + reward.getRewardDescription() + "</gradient>"));
+                    for (final Action action : quest.getRewards()) {
+                        audience.sendMessage(miniMessage.parse(highlightGradient + quest.getRewards().indexOf(action) + ". </gradient>" + mainGradient + action.getActionType() + "</gradient>"));
+                        audience.sendMessage(miniMessage.parse(unimportant + "-- " + unimportantClose + mainGradient + action.getActionDescription() + "</gradient>"));
 
                     }
 
@@ -1132,8 +1132,8 @@ public class AdminEditCommands {
                                     ArrayList<String> completions = new ArrayList<>();
 
                                     final Quest quest = context.get("quest");
-                                    for (final Reward reward : quest.getRewards()) {
-                                        completions.add("" + reward.getRewardID());
+                                    for (final Action action : quest.getRewards()) {
+                                        completions.add("" + quest.getRewards().indexOf(action));
                                     }
 
                                     return completions;
@@ -1141,7 +1141,7 @@ public class AdminEditCommands {
                         ).withParser((context, lastString) -> { //TODO: Fix this parser. It isn't run at all.
                             final int ID = context.get("Reward ID");
                             final Quest quest = context.get("quest");
-                            final Reward foundReward = quest.getRewardFromID(ID);
+                            final Action foundReward = quest.getRewards().get(ID);
                             if (foundReward == null) {
                                 return ArgumentParseResult.failure(new IllegalArgumentException("Reward with the ID '" + ID + "' does not belong to Quest '" + quest.getQuestName() + "'!"));
                             } else {
@@ -1161,7 +1161,7 @@ public class AdminEditCommands {
                     final Audience audience = main.adventure().sender(context.getSender());
                     final int ID = context.get("Reward ID");
                     final Quest quest = context.get("quest");
-                    final Reward foundReward = quest.getRewardFromID(ID);
+                    final Action foundReward = quest.getRewards().get(ID);
                     audience.sendMessage(Component.empty());
                     if (foundReward == null) {
                         audience.sendMessage(miniMessage.parse(
@@ -1174,7 +1174,7 @@ public class AdminEditCommands {
                             mainGradient + "Reward " + highlightGradient + ID + "</gradient> for Quest " + highlight2Gradient + quest.getQuestName() + "</gradient>:</gradient>"
                     ));
                     audience.sendMessage(miniMessage.parse(
-                            unimportant + "-- " + unimportantClose + mainGradient + foundReward.getRewardDescription() + "</gradient>"
+                            unimportant + "-- " + unimportantClose + mainGradient + foundReward.getActionDescription() + "</gradient>"
                     ));
 
                 }));
@@ -1185,7 +1185,7 @@ public class AdminEditCommands {
                     final Audience audience = main.adventure().sender(context.getSender());
                     final int ID = context.get("Reward ID");
                     final Quest quest = context.get("quest");
-                    final Reward foundReward = quest.getRewardFromID(ID);
+                    final Action foundReward = quest.getRewards().get(ID);
                     audience.sendMessage(Component.empty());
                     if (foundReward == null) {
                         audience.sendMessage(miniMessage.parse(
@@ -1207,7 +1207,7 @@ public class AdminEditCommands {
                     final Audience audience = main.adventure().sender(context.getSender());
                     final int ID = context.get("Reward ID");
                     final Quest quest = context.get("quest");
-                    final Reward foundReward = quest.getRewardFromID(ID);
+                    final Action foundReward = quest.getRewards().get(ID);
                     audience.sendMessage(Component.empty());
                     if (foundReward == null) {
                         audience.sendMessage(miniMessage.parse(
@@ -1215,13 +1215,13 @@ public class AdminEditCommands {
                         ));
                         return;
                     }
-                    if (foundReward.getRewardDisplayName().isBlank()) {
+                    if (foundReward.getActionName().isBlank()) {
                         audience.sendMessage(miniMessage.parse(
                                 mainGradient + "This reward has no display name set."
                         ));
                     } else {
                         audience.sendMessage(miniMessage.parse(
-                                mainGradient + "Reward display name: " + highlightGradient + foundReward.getRewardDisplayName() + "</gradient></gradient>"
+                                mainGradient + "Reward display name: " + highlightGradient + foundReward.getActionName() + "</gradient></gradient>"
                         ));
                     }
                 }));
@@ -1233,7 +1233,7 @@ public class AdminEditCommands {
                     final Audience audience = main.adventure().sender(context.getSender());
                     final int ID = context.get("Reward ID");
                     final Quest quest = context.get("quest");
-                    final Reward foundReward = quest.getRewardFromID(ID);
+                    final Action foundReward = quest.getRewards().get(ID);
                     audience.sendMessage(Component.empty());
                     if (foundReward == null) {
                         audience.sendMessage(miniMessage.parse(
@@ -1241,8 +1241,8 @@ public class AdminEditCommands {
                         ));
                         return;
                     }
-                    foundReward.removeRewardDisplayName();
-                    main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + foundReward.getRewardID() + ".displayName", null);
+                    foundReward.removeActionName();
+                    main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + ID + ".displayName", null);
                     audience.sendMessage(miniMessage.parse(
                             successGradient + "Display Name of reward with the ID " + highlightGradient + ID + "</gradient> has been removed successfully.</gradient>"
                     ));
@@ -1269,7 +1269,7 @@ public class AdminEditCommands {
                     final Audience audience = main.adventure().sender(context.getSender());
                     final int ID = context.get("Reward ID");
                     final Quest quest = context.get("quest");
-                    final Reward foundReward = quest.getRewardFromID(ID);
+                    final Action foundReward = quest.getRewards().get(ID);
                     audience.sendMessage(Component.empty());
                     if (foundReward == null) {
                         audience.sendMessage(miniMessage.parse(
@@ -1281,11 +1281,11 @@ public class AdminEditCommands {
                     final String displayName = String.join(" ", (String[]) context.get("DisplayName"));
 
 
-                    foundReward.setRewardDisplayName(displayName);
-                    main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + foundReward.getRewardID() + ".displayName", foundReward.getRewardDisplayName());
+                    foundReward.setActionName(displayName);
+                    main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + ID + ".displayName", foundReward.getActionName());
                     audience.sendMessage(miniMessage.parse(
                             successGradient + "Display Name successfully added to reward with ID " + highlightGradient + ID + "</gradient>! New display name: "
-                                    + highlight2Gradient + foundReward.getRewardDisplayName() + "</gradient></gradient>"
+                                    + highlight2Gradient + foundReward.getActionName() + "</gradient></gradient>"
                     ));
                 }));
     }
@@ -1325,7 +1325,7 @@ public class AdminEditCommands {
                         }
 
                         audience.sendMessage(miniMessage.parse(unimportant + "--- Action Name: " + unimportantClose + mainGradient + trigger.getTriggerAction().getActionName() + "</gradient>"));
-                        audience.sendMessage(miniMessage.parse(unimportant + "------ Action console command: " + unimportantClose + mainGradient + trigger.getTriggerAction().getConsoleCommand() + "</gradient>"));
+                        audience.sendMessage(miniMessage.parse(unimportant + "------ Description: " + unimportantClose + mainGradient + trigger.getTriggerAction().getActionDescription() + "</gradient>"));
                         audience.sendMessage(miniMessage.parse(unimportant + "--- Amount of triggers needed for first execution: " + unimportantClose + mainGradient + trigger.getAmountNeeded() + "</gradient>"));
 
                         if (trigger.getApplyOn() == 0) {

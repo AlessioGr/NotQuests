@@ -25,14 +25,11 @@ import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
-import rocks.gravili.notquests.Commands.NotQuestColors;
+import org.bukkit.configuration.file.FileConfiguration;
 import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.Structs.Quest;
-import rocks.gravili.notquests.Structs.Triggers.Action;
 import rocks.gravili.notquests.Structs.Triggers.Trigger;
 
 import java.util.ArrayList;
@@ -40,36 +37,11 @@ import java.util.List;
 
 public class WorldLeaveTrigger extends Trigger {
 
-    private final NotQuests main;
-    private final String worldToLeaveName;
+    private String worldToLeaveName;
 
-    public WorldLeaveTrigger(final NotQuests main, final Quest quest, final int triggerID, Action action, int applyOn, String worldName, long amountNeeded) {
-        super(main, quest, triggerID, action, applyOn, worldName, amountNeeded);
-        this.main = main;
-
-        this.worldToLeaveName = main.getDataManager().getQuestsConfig().getString("quests." + getQuest().getQuestName() + ".triggers." + triggerID + ".specifics.worldToLeave", "ALL");
+    public WorldLeaveTrigger(final NotQuests main) {
+        super(main);
     }
-
-    public WorldLeaveTrigger(final NotQuests main, final Quest quest, final int triggerID, Action action, int applyOn, String worldName, long amountNeeded, String worldToLeaveName) {
-        super(main, quest, triggerID, action, applyOn, worldName, amountNeeded);
-        this.main = main;
-        this.worldToLeaveName = worldToLeaveName;
-    }
-
-    public final String getWorldToLeaveName() {
-        return worldToLeaveName;
-    }
-
-    @Override
-    public void save() {
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".triggers." + getTriggerID() + ".specifics.worldToLeave", getWorldToLeaveName());
-    }
-
-    @Override
-    public String getTriggerDescription() {
-        return "World to leave: §f" + getWorldToLeaveName();
-    }
-
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addTriggerBuilder) {
         manager.command(addTriggerBuilder.literal("WORLDLEAVE")
@@ -95,28 +67,35 @@ public class WorldLeaveTrigger extends Trigger {
                 .flag(main.getCommandManager().triggerWorldString)
                 .meta(CommandMeta.DESCRIPTION, "Triggers when the player leaves a specific world.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-
-                    final Quest quest = context.get("quest");
-                    final Action action = context.get("action");
-
                     final String worldToLeaveName = context.get("world to leave");
 
-                    int amountOfWorldLeaves = context.get("amount");
+                    WorldLeaveTrigger worldLeaveTrigger = new WorldLeaveTrigger(main);
+                    worldLeaveTrigger.setWorldToLeaveName(worldToLeaveName);
 
-                    final int applyOn = context.flags().getValue(main.getCommandManager().applyOn, 0); //0 = Quest
-                    final String worldString = context.flags().getValue(main.getCommandManager().triggerWorldString, null);
-
-
-                    WorldLeaveTrigger worldLeaveTrigger = new WorldLeaveTrigger(main, quest, quest.getTriggers().size() + 1, action, applyOn, worldString, amountOfWorldLeaves, worldToLeaveName);
-
-                    quest.addTrigger(worldLeaveTrigger);
-
-                    audience.sendMessage(MiniMessage.miniMessage().parse(
-                            NotQuestColors.successGradient + "WORLDLEAVE Trigger successfully added to Quest " + NotQuestColors.highlightGradient
-                                    + quest.getQuestName() + "</gradient>!</gradient>"
-                    ));
-
+                    main.getTriggerManager().addTrigger(worldLeaveTrigger, context);
                 }));
+    }
+
+    public final String getWorldToLeaveName() {
+        return worldToLeaveName;
+    }
+
+    public void setWorldToLeaveName(final String worldToLeaveName) {
+        this.worldToLeaveName = worldToLeaveName;
+    }
+
+    @Override
+    public void save(FileConfiguration configuration, String initialPath) {
+        configuration.set(initialPath + ".specifics.worldToLeave", getWorldToLeaveName());
+    }
+
+    @Override
+    public String getTriggerDescription() {
+        return "World to leave: §f" + getWorldToLeaveName();
+    }
+
+    @Override
+    public void load(FileConfiguration configuration, String initialPath) {
+        this.worldToLeaveName = configuration.getString(initialPath + ".specifics.worldToLeave", "ALL");
     }
 }

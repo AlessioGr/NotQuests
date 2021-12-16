@@ -30,7 +30,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.Structs.Triggers.Action;
+import rocks.gravili.notquests.Structs.Actions.Action;
 
 import java.util.List;
 import java.util.Queue;
@@ -111,10 +111,7 @@ public class ActionSelector<C> extends CommandArgument<C, Action> {
         @NotNull
         @Override
         public List<String> suggestions(@NotNull CommandContext<C> context, @NotNull String input) {
-            List<String> questNames = new java.util.ArrayList<>();
-            for (Action action : main.getActionsManager().getActions()) {
-                questNames.add(action.getActionName());
-            }
+            List<String> questNames = new java.util.ArrayList<>(main.getActionsManager().getActionsAndIdentifiers().keySet());
             final Audience audience = main.adventure().sender((CommandSender) context.getSender());
             final List<String> allArgs = context.getRawInput();
 

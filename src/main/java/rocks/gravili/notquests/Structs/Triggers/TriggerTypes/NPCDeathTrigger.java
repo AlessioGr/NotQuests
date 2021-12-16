@@ -26,12 +26,9 @@ import cloud.commandframework.paper.PaperCommandManager;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
-import rocks.gravili.notquests.Commands.NotQuestColors;
+import org.bukkit.configuration.file.FileConfiguration;
 import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.Structs.Quest;
-import rocks.gravili.notquests.Structs.Triggers.Action;
 import rocks.gravili.notquests.Structs.Triggers.Trigger;
 
 import java.util.ArrayList;
@@ -39,44 +36,12 @@ import java.util.List;
 
 public class NPCDeathTrigger extends Trigger {
 
-    private final NotQuests main;
-    private final int npcToDieID;
+    private int npcToDieID = -1;
 
 
-    public NPCDeathTrigger(final NotQuests main, final Quest quest, final int triggerID, Action action, int applyOn, String worldName, long amountNeeded) {
-        super(main, quest, triggerID, action, applyOn, worldName, amountNeeded);
-        this.main = main;
-
-        this.npcToDieID = main.getDataManager().getQuestsConfig().getInt("quests." + getQuest().getQuestName() + ".triggers." + triggerID + ".specifics.npcToDie");
+    public NPCDeathTrigger(final NotQuests main) {
+        super(main);
     }
-
-    public NPCDeathTrigger(final NotQuests main, final Quest quest, final int triggerID, Action action, int applyOn, String worldName, long amountNeeded, int npcToDieID) {
-        super(main, quest, triggerID, action, applyOn, worldName, amountNeeded);
-        this.main = main;
-        this.npcToDieID = npcToDieID;
-    }
-
-    public final int getNpcToDieID() {
-        return npcToDieID;
-    }
-
-    @Override
-    public void save() {
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".triggers." + getTriggerID() + ".specifics.npcToDie", getNpcToDieID());
-    }
-
-    @Override
-    public String getTriggerDescription() {
-        return "NPC to die ID: §f" + getNpcToDieID();
-    }
-
-
-
-
-    /*@Override
-    public void isCompleted(){
-
-    }*/
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addTriggerBuilder) {
         manager.command(addTriggerBuilder.literal("NPCDEATH")
@@ -96,28 +61,36 @@ public class NPCDeathTrigger extends Trigger {
                 .flag(main.getCommandManager().triggerWorldString)
                 .meta(CommandMeta.DESCRIPTION, "Triggers when specified Citizens NPC dies.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-
-                    final Quest quest = context.get("quest");
-                    final Action action = context.get("action");
-
-                    int amountOfNPCDeaths = context.get("amount");
                     final int npcToDieID = context.get("NPC");
 
-                    final int applyOn = context.flags().getValue(main.getCommandManager().applyOn, 0); //0 = Quest
-                    final String worldString = context.flags().getValue(main.getCommandManager().triggerWorldString, null);
+                    NPCDeathTrigger npcDeathTrigger = new NPCDeathTrigger(main);
+                    npcDeathTrigger.setNpcToDieID(npcToDieID);
 
-
-                    NPCDeathTrigger npcDeathTrigger = new NPCDeathTrigger(main, quest, quest.getTriggers().size() + 1, action, applyOn, worldString, amountOfNPCDeaths, npcToDieID);
-
-                    quest.addTrigger(npcDeathTrigger);
-
-                    audience.sendMessage(MiniMessage.miniMessage().parse(
-                            NotQuestColors.successGradient + "NPCDEATH Trigger successfully added to Quest " + NotQuestColors.highlightGradient
-                                    + quest.getQuestName() + "</gradient>!</gradient>"
-                    ));
-
+                    main.getTriggerManager().addTrigger(npcDeathTrigger, context);
                 }));
+    }
+
+    public final int getNpcToDieID() {
+        return npcToDieID;
+    }
+
+    public void setNpcToDieID(final int npcToDieID) {
+        this.npcToDieID = npcToDieID;
+    }
+
+    @Override
+    public void save(FileConfiguration configuration, String initialPath) {
+        configuration.set(initialPath + ".specifics.npcToDie", getNpcToDieID());
+    }
+
+    @Override
+    public String getTriggerDescription() {
+        return "NPC to die ID: §f" + getNpcToDieID();
+    }
+
+    @Override
+    public void load(FileConfiguration configuration, String initialPath) {
+        this.npcToDieID = configuration.getInt(initialPath + ".specifics.npcToDie");
     }
 
 

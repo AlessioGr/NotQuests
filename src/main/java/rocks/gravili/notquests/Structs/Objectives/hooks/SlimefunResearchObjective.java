@@ -23,25 +23,18 @@ import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.ActiveObjective;
 import rocks.gravili.notquests.Structs.Objectives.Objective;
-import rocks.gravili.notquests.Structs.Quest;
 
 public class SlimefunResearchObjective extends Objective {
 
-    private final NotQuests main;
 
-
-    public SlimefunResearchObjective(NotQuests main, final Quest quest, final int objectiveID, int progressNeeded) {
-        super(main, quest, objectiveID, progressNeeded);
-        this.main = main;
-
+    public SlimefunResearchObjective(NotQuests main) {
+        super(main);
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
@@ -53,16 +46,10 @@ public class SlimefunResearchObjective extends Objective {
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount to spend on research"))
                 .meta(CommandMeta.DESCRIPTION, "Adds a new SlimefunResearch Objective to a quest")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-                    final Quest quest = context.get("quest");
+                    SlimefunResearchObjective slimefunResearchobjective = new SlimefunResearchObjective(main);
+                    slimefunResearchobjective.setProgressNeeded(context.get("amount"));
 
-                    SlimefunResearchObjective slimefunResearchobjective = new SlimefunResearchObjective(main, quest, quest.getObjectives().size() + 1, context.get("amount"));
-
-                    quest.addObjective(slimefunResearchobjective, true);
-                    audience.sendMessage(MiniMessage.miniMessage().parse(
-                            NotQuestColors.successGradient + "SlimefunResearch objective successfully added to Quest " + NotQuestColors.highlightGradient + quest.getQuestName() + "</gradient>!</gradient>"
-                    ));
-
+                    main.getObjectiveManager().addObjective(slimefunResearchobjective, context);
                 }));
     }
 
@@ -73,7 +60,12 @@ public class SlimefunResearchObjective extends Objective {
     }
 
     @Override
-    public void save() {
+    public void save(FileConfiguration configuration, String initialPath) {
+
+    }
+
+    @Override
+    public void load(FileConfiguration configuration, String initialPath) {
 
     }
 

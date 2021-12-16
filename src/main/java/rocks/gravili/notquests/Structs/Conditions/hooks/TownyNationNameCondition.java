@@ -28,6 +28,7 @@ import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
 import net.kyori.adventure.audience.Audience;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Conditions.Condition;
@@ -39,12 +40,10 @@ import java.util.List;
 
 public class TownyNationNameCondition extends Condition {
 
-    private final NotQuests main;
     private String townyNationName = "";
 
     public TownyNationNameCondition(final NotQuests main) {
         super(main);
-        this.main = main;
     }
 
     public void setTownyNationName(final String newTownyNationName){
@@ -128,15 +127,16 @@ public class TownyNationNameCondition extends Condition {
         return "§7-- Member of nation: " + getTownyNationName() + "\n";
     }
 
+
     @Override
-    public void save(String initialPath) {
-        main.getDataManager().getQuestsConfig().set(initialPath + ".specifics.townyNationName", getTownyNationName());
+    public void save(FileConfiguration configuration, String initialPath) {
+        configuration.set(initialPath + ".specifics.townyNationName", getTownyNationName());
 
     }
 
     @Override
-    public void load(String initialPath) {
-        this.townyNationName = main.getDataManager().getQuestsConfig().getString(initialPath + ".specifics.townyNationName");
+    public void load(FileConfiguration configuration, String initialPath) {
+        this.townyNationName = configuration.getString(initialPath + ".specifics.townyNationName");
 
     }
 }

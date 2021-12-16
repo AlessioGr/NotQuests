@@ -23,41 +23,17 @@ import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
-import rocks.gravili.notquests.Commands.NotQuestColors;
+import org.bukkit.configuration.file.FileConfiguration;
 import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.Structs.Quest;
-import rocks.gravili.notquests.Structs.Triggers.Action;
 import rocks.gravili.notquests.Structs.Triggers.Trigger;
 
 public class DisconnectTrigger extends Trigger {
 
-    private final NotQuests main;
 
-    public DisconnectTrigger(final NotQuests main, final Quest quest, final int triggerID, Action action, int applyOn, String worldName, long amountNeeded) {
-        super(main, quest, triggerID, action, applyOn, worldName, amountNeeded);
-        this.main = main;
+    public DisconnectTrigger(final NotQuests main) {
+        super(main);
     }
-
-    @Override
-    public void save() {
-
-    }
-
-    @Override
-    public String getTriggerDescription() {
-        return null;
-    }
-
-
-
-
-    /*@Override
-    public void isCompleted(){
-
-    }*/
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addTriggerBuilder) {
         manager.command(addTriggerBuilder.literal("DISCONNECT")
@@ -66,27 +42,25 @@ public class DisconnectTrigger extends Trigger {
                 .flag(main.getCommandManager().triggerWorldString)
                 .meta(CommandMeta.DESCRIPTION, "Triggers when a the Player disconnects from the server.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
+                    DisconnectTrigger disconnectTrigger = new DisconnectTrigger(main);
 
-                    final Quest quest = context.get("quest");
-                    final Action action = context.get("action");
-
-                    int amountOfDisconnects = context.get("amount");
-
-                    final int applyOn = context.flags().getValue(main.getCommandManager().applyOn, 0); //0 = Quest
-                    final String worldString = context.flags().getValue(main.getCommandManager().triggerWorldString, null);
-
-
-                    DisconnectTrigger disconnectTrigger = new DisconnectTrigger(main, quest, quest.getTriggers().size() + 1, action, applyOn, worldString, amountOfDisconnects);
-
-                    quest.addTrigger(disconnectTrigger);
-
-                    audience.sendMessage(MiniMessage.miniMessage().parse(
-                            NotQuestColors.successGradient + "DISCONNECT Trigger successfully added to Quest " + NotQuestColors.highlightGradient
-                                    + quest.getQuestName() + "</gradient>!</gradient>"
-                    ));
-
+                    main.getTriggerManager().addTrigger(disconnectTrigger, context);
                 }));
+    }
+
+    @Override
+    public void save(FileConfiguration configuration, String initialPath) {
+
+    }
+
+    @Override
+    public String getTriggerDescription() {
+        return null;
+    }
+
+    @Override
+    public void load(FileConfiguration configuration, String initialPath) {
+
     }
 
 }

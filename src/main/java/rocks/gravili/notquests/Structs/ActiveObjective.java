@@ -29,7 +29,6 @@ import rocks.gravili.notquests.Structs.Objectives.EscortNPCObjective;
 import rocks.gravili.notquests.Structs.Objectives.Objective;
 import rocks.gravili.notquests.Structs.Objectives.OtherQuestObjective;
 
-import java.util.ArrayList;
 import java.util.UUID;
 
 /**

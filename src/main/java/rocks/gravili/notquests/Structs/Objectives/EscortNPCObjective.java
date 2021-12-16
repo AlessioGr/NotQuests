@@ -28,78 +28,23 @@ import net.citizensnpcs.api.npc.NPC;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.ActiveObjective;
-import rocks.gravili.notquests.Structs.Quest;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class EscortNPCObjective extends Objective {
 
-    private final NotQuests main;
-    private final int npcToEscortID;
-    private final int npcToEscortToID;
+    private int npcToEscortID = -1;
+    private int npcToEscortToID = -1;
 
-    public EscortNPCObjective(NotQuests main, final Quest quest, final int objectiveID, final int npcToEscortID, final int npcToEscortToID) {
-        super(main, quest, objectiveID, 1);
-        this.main = main;
-        this.npcToEscortID = npcToEscortID;
-        this.npcToEscortToID = npcToEscortToID;
+    public EscortNPCObjective(NotQuests main) {
+        super(main);
     }
-
-    public EscortNPCObjective(NotQuests main, Quest quest, int objectiveNumber, int progressNeeded) {
-        super(main, quest, objectiveNumber, progressNeeded);
-        final String questName = quest.getQuestName();
-        this.main = main;
-
-        npcToEscortID = main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.NPCToEscortID");
-        npcToEscortToID = main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.destinationNPCID");
-
-    }
-
-    @Override
-    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
-        String toReturn = "";
-        if (main.isCitizensEnabled()) {
-            final NPC npc = CitizensAPI.getNPCRegistry().getById(getNpcToEscortID());
-            final NPC npcDestination = CitizensAPI.getNPCRegistry().getById(getNpcToEscortToID());
-
-            if (npc != null && npcDestination != null) {
-                toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.escortNPC.base", player)
-                        .replace("%EVENTUALCOLOR%", eventualColor)
-                        .replace("%NPCNAME%", "" + npc.getName())
-                        .replace("%DESTINATIONNPCNAME%", "" + npcDestination.getName());
-            } else {
-                toReturn = "    §7" + eventualColor + "The target or destination NPC is currently not available!";
-            }
-        } else {
-            toReturn += "    §cError: Citizens plugin not installed. Contact an admin.";
-        }
-        return toReturn;
-    }
-
-    @Override
-    public void save() {
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.NPCToEscortID", getNpcToEscortID());
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.destinationNPCID", getNpcToEscortToID());
-    }
-
-    @Override
-    public void onObjectiveUnlock(final ActiveObjective activeObjective) {
-
-    }
-
-    public final int getNpcToEscortID() {
-        return npcToEscortID;
-    }
-
-    public final int getNpcToEscortToID() {
-        return npcToEscortToID;
-    }
-
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
         if (!main.isCitizensEnabled()) {
@@ -139,19 +84,11 @@ public class EscortNPCObjective extends Objective {
                 }).build(), ArgumentDescription.of("ID of the destination Citizens NPC where the player has to escort the NPC to escort to."))
                 .meta(CommandMeta.DESCRIPTION, "Adds a new EscortNPC Objective to a quest.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-                    if (!main.isCitizensEnabled()) {
-                        audience.sendMessage(MiniMessage.miniMessage().parse(
-                                NotQuestColors.errorGradient + "Error: Any kind of NPC stuff has been disabled, because you don't have the Citizens plugin installed on your server. You need to install the Citizens plugin in order to use Citizen NPCs. You can, however, use armor stands as an alternative. To do that, just enter 'armorstand' instead of the NPC ID."
-                        ));
-                        return;
-                    }
-                    final Quest quest = context.get("quest");
-
                     final int toEscortNPCID = context.get("NPC to escort");
                     final int destinationNPCID = context.get("Destination NPC");
 
                     if (toEscortNPCID == destinationNPCID) {
+                        final Audience audience = main.adventure().sender(context.getSender());
                         audience.sendMessage(
                                 MiniMessage.miniMessage().parse(
                                         NotQuestColors.errorGradient + "Error: Um... an NPC cannot themselves himself, to.. themselves?"
@@ -160,15 +97,67 @@ public class EscortNPCObjective extends Objective {
                         return;
                     }
 
-                    EscortNPCObjective escortNPCObjective = new EscortNPCObjective(main, quest, quest.getObjectives().size() + 1, toEscortNPCID, destinationNPCID);
-                    quest.addObjective(escortNPCObjective, true);
+                    EscortNPCObjective escortNPCObjective = new EscortNPCObjective(main);
 
-                    audience.sendMessage(MiniMessage.miniMessage().parse(
-                            NotQuestColors.successGradient + "EscortNPC Objective successfully added to Quest " + NotQuestColors.highlightGradient
-                                    + quest.getQuestName() + "</gradient>!</gradient>"
-                    ));
+                    escortNPCObjective.setNpcToEscortID(toEscortNPCID);
+                    escortNPCObjective.setNpcToEscortToID(destinationNPCID);
 
-
+                    main.getObjectiveManager().addObjective(escortNPCObjective, context);
                 }));
+    }
+
+    public void setNpcToEscortID(final int npcToEscortID) {
+        this.npcToEscortID = npcToEscortID;
+    }
+
+    @Override
+    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
+        String toReturn = "";
+        if (main.isCitizensEnabled()) {
+            final NPC npc = CitizensAPI.getNPCRegistry().getById(getNpcToEscortID());
+            final NPC npcDestination = CitizensAPI.getNPCRegistry().getById(getNpcToEscortToID());
+
+            if (npc != null && npcDestination != null) {
+                toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.escortNPC.base", player)
+                        .replace("%EVENTUALCOLOR%", eventualColor)
+                        .replace("%NPCNAME%", "" + npc.getName())
+                        .replace("%DESTINATIONNPCNAME%", "" + npcDestination.getName());
+            } else {
+                toReturn = "    §7" + eventualColor + "The target or destination NPC is currently not available!";
+            }
+        } else {
+            toReturn += "    §cError: Citizens plugin not installed. Contact an admin.";
+        }
+        return toReturn;
+    }
+
+    public void setNpcToEscortToID(final int npcToEscortToID) {
+        this.npcToEscortToID = npcToEscortToID;
+    }
+
+    @Override
+    public void save(FileConfiguration configuration, String initialPath) {
+        configuration.set(initialPath + ".specifics.NPCToEscortID", getNpcToEscortID());
+        configuration.set(initialPath + ".specifics.destinationNPCID", getNpcToEscortToID());
+    }
+
+
+    @Override
+    public void onObjectiveUnlock(final ActiveObjective activeObjective) {
+
+    }
+
+    public final int getNpcToEscortID() {
+        return npcToEscortID;
+    }
+
+    public final int getNpcToEscortToID() {
+        return npcToEscortToID;
+    }
+
+    @Override
+    public void load(FileConfiguration configuration, String initialPath) {
+        npcToEscortID = configuration.getInt(initialPath + ".specifics.NPCToEscortID");
+        npcToEscortToID = configuration.getInt(initialPath + ".specifics.destinationNPCID");
     }
 }

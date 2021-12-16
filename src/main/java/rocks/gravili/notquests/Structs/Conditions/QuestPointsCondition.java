@@ -24,18 +24,17 @@ import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.QuestPlayer;
 
 public class QuestPointsCondition extends Condition {
 
-    private final NotQuests main;
     private boolean deductQuestPoints = false;
 
 
     public QuestPointsCondition(NotQuests main) {
         super(main);
-        this.main = main;
     }
 
     public void setDeductQuestPoints(final boolean deductQuestPoints){
@@ -68,13 +67,13 @@ public class QuestPointsCondition extends Condition {
     }
 
     @Override
-    public void save(final String initialPath) {
-        main.getDataManager().getQuestsConfig().set(initialPath + ".specifics.deductQuestPoints", isDeductQuestPoints());
+    public void save(FileConfiguration configuration, final String initialPath) {
+        configuration.set(initialPath + ".specifics.deductQuestPoints", isDeductQuestPoints());
     }
 
     @Override
-    public void load(String initialPath) {
-        this.deductQuestPoints = main.getDataManager().getQuestsConfig().getBoolean(initialPath + ".specifics.deductQuestPoints");
+    public void load(FileConfiguration configuration, String initialPath) {
+        this.deductQuestPoints = configuration.getBoolean(initialPath + ".specifics.deductQuestPoints");
 
     }
 

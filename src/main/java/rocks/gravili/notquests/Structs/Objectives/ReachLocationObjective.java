@@ -24,71 +24,22 @@ import cloud.commandframework.arguments.standard.StringArrayArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.ActiveObjective;
-import rocks.gravili.notquests.Structs.Quest;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ReachLocationObjective extends Objective {
-    private final Location min, max;
-    private final NotQuests main;
-    private final String locationName;
+    private Location min, max;
+    private String locationName;
 
-    public ReachLocationObjective(NotQuests main, final Quest quest, final int objectiveID, final Location minLocation, final Location maxLocation, final String locationName) {
-        super(main, quest, objectiveID, 1);
-        this.main = main;
-        this.min = minLocation;
-        this.max = maxLocation;
-        this.locationName = locationName;
-    }
-
-    public ReachLocationObjective(NotQuests main, Quest quest, int objectiveNumber, int progressNeeded) {
-        super(main, quest, objectiveNumber, progressNeeded);
-        final String questName = quest.getQuestName();
-        this.main = main;
-
-        min = main.getDataManager().getQuestsConfig().getLocation("quests." + questName + ".objectives." + objectiveNumber + ".specifics.minLocation");
-        max = main.getDataManager().getQuestsConfig().getLocation("quests." + questName + ".objectives." + objectiveNumber + ".specifics.maxLocation");
-        locationName = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.locationName");
-
-    }
-
-    @Override
-    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.reachLocation.base", player)
-                .replace("%EVENTUALCOLOR%", eventualColor)
-                .replace("%LOCATIONNAME%", getLocationName());
-    }
-
-    @Override
-    public void save() {
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.minLocation", getMinLocation());
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.maxLocation", getMaxLocation());
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.locationName", getLocationName());
-    }
-
-    @Override
-    public void onObjectiveUnlock(ActiveObjective activeObjective) {
-
-    }
-
-    public final Location getMinLocation() {
-        return min;
-    }
-
-    public final Location getMaxLocation() {
-        return max;
-    }
-
-    public final String getLocationName() {
-        return locationName;
+    public ReachLocationObjective(NotQuests main) {
+        super(main);
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
@@ -111,27 +62,60 @@ public class ReachLocationObjective extends Objective {
                 ), ArgumentDescription.of("Location name"))
                 .meta(CommandMeta.DESCRIPTION, "Adds a new ReachLocation Objective to a quest")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-
-                    if (!main.isWorldEditEnabled()) {
-                        audience.sendMessage(MiniMessage.miniMessage().parse(
-                                NotQuestColors.errorGradient + "Error: The plugin 'WorldEdit' needs to be enabled in order to use this feature."
-                        ));
-                        return;
-                    }
-
-                    final Quest quest = context.get("quest");
-
                     final String locationName = String.join(" ", (String[]) context.get("Location Name"));
 
-
-                    main.getWorldEditHook().handleReachLocationObjectiveCreation((Player) context.getSender(), quest, locationName);
-
-                    audience.sendMessage(MiniMessage.miniMessage().parse(
-                            NotQuestColors.successGradient + "ReachLocation Objective successfully added to Quest " + NotQuestColors.highlightGradient
-                                    + quest.getQuestName() + "</gradient>!</gradient>"
-                    ));
+                    main.getWorldEditHook().handleReachLocationObjectiveCreation((Player) context.getSender(), locationName, context);
 
                 }));
+    }
+
+    public void setMinLocation(final Location minLocation) {
+        this.min = minLocation;
+    }
+
+    public void setMaxLocation(final Location maxLocation) {
+        this.max = maxLocation;
+    }
+
+    @Override
+    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.reachLocation.base", player)
+                .replace("%EVENTUALCOLOR%", eventualColor)
+                .replace("%LOCATIONNAME%", getLocationName());
+    }
+
+    public void setLocationName(final String locationName) {
+        this.locationName = locationName;
+    }
+
+    @Override
+    public void save(FileConfiguration configuration, String initialPath) {
+        configuration.set(initialPath + ".specifics.minLocation", getMinLocation());
+        configuration.set(initialPath + ".specifics.maxLocation", getMaxLocation());
+        configuration.set(initialPath + ".specifics.locationName", getLocationName());
+    }
+
+    @Override
+    public void onObjectiveUnlock(ActiveObjective activeObjective) {
+
+    }
+
+    public final Location getMinLocation() {
+        return min;
+    }
+
+    public final Location getMaxLocation() {
+        return max;
+    }
+
+    public final String getLocationName() {
+        return locationName;
+    }
+
+    @Override
+    public void load(FileConfiguration configuration, String initialPath) {
+        min = configuration.getLocation(initialPath + ".specifics.minLocation");
+        max = configuration.getLocation(initialPath + ".specifics.maxLocation");
+        locationName = configuration.getString(initialPath + ".specifics.locationName");
     }
 }

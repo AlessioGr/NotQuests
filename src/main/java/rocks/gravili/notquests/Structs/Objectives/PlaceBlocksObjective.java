@@ -24,36 +24,20 @@ import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.bukkit.parsers.MaterialArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.ActiveObjective;
-import rocks.gravili.notquests.Structs.Quest;
 
 public class PlaceBlocksObjective extends Objective {
 
-    private final NotQuests main;
-    private final Material blockToPlace;
-    private final boolean deductIfBlockIsBroken;
+    private Material blockToPlace;
+    private boolean deductIfBlockIsBroken = true;
 
-    public PlaceBlocksObjective(NotQuests main, final Quest quest, final int objectiveID, Material blockToPlace, int amountToPlace, boolean deductIfBlockIsBroken) {
-        super(main, quest, objectiveID, amountToPlace);
-        this.main = main;
-        this.blockToPlace = blockToPlace;
-        this.deductIfBlockIsBroken = deductIfBlockIsBroken;
-    }
-
-    public PlaceBlocksObjective(NotQuests main, Quest quest, int objectiveNumber, int progressNeeded) {
-        super(main, quest, objectiveNumber, progressNeeded);
-        final String questName = quest.getQuestName();
-
-        this.main = main;
-        blockToPlace = Material.valueOf(main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.blockToPlace.material"));
-        deductIfBlockIsBroken = main.getDataManager().getQuestsConfig().getBoolean("quests." + questName + ".objectives." + objectiveNumber + ".specifics.deductIfBlockBroken", true);
+    public PlaceBlocksObjective(NotQuests main) {
+        super(main);
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
@@ -66,20 +50,25 @@ public class PlaceBlocksObjective extends Objective {
                 )
                 .meta(CommandMeta.DESCRIPTION, "Adds a new PlaceBlocks Objective to a quest")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-                    final Quest quest = context.get("quest");
                     final Material material = context.get("material");
                     final int amount = context.get("amount");
                     final boolean deductIfBlockIsBroken = !context.flags().isPresent("doNotDeductIfBlockIsBroken");
 
-                    PlaceBlocksObjective placeBlocksObjective = new PlaceBlocksObjective(main, quest, quest.getObjectives().size() + 1, material, amount, deductIfBlockIsBroken);
-                    quest.addObjective(placeBlocksObjective, true);
-                    audience.sendMessage(MiniMessage.miniMessage().parse(
-                            NotQuestColors.successGradient + "PlaceBlocks Objective successfully added to Quest " + NotQuestColors.highlightGradient
-                                    + quest.getQuestName() + "</gradient>!</gradient>"
-                    ));
+                    PlaceBlocksObjective placeBlocksObjective = new PlaceBlocksObjective(main);
+                    placeBlocksObjective.setBlockToPlace(material);
+                    placeBlocksObjective.setDeductIfBlockIsBroken(deductIfBlockIsBroken);
+                    placeBlocksObjective.setProgressNeeded(amount);
 
+                    main.getObjectiveManager().addObjective(placeBlocksObjective, context);
                 }));
+    }
+
+    public void setBlockToPlace(final Material blockToPlace) {
+        this.blockToPlace = blockToPlace;
+    }
+
+    public void setDeductIfBlockIsBroken(final boolean deductIfBlockIsBroken) {
+        this.deductIfBlockIsBroken = deductIfBlockIsBroken;
     }
 
     @Override
@@ -90,11 +79,17 @@ public class PlaceBlocksObjective extends Objective {
     }
 
     @Override
-    public void save() {
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.blockToPlace.material", getBlockToPlace().toString());
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.deductIfBlockBroken", isDeductIfBlockBroken());
-
+    public void save(FileConfiguration configuration, String initialPath) {
+        configuration.set(initialPath + ".specifics.blockToPlace.material", getBlockToPlace().toString());
+        configuration.set(initialPath + ".specifics.deductIfBlockBroken", isDeductIfBlockBroken());
     }
+
+    @Override
+    public void load(FileConfiguration configuration, String initialPath) {
+        blockToPlace = Material.valueOf(configuration.getString(initialPath + ".specifics.blockToPlace.material"));
+        deductIfBlockIsBroken = configuration.getBoolean(initialPath + ".specifics.deductIfBlockBroken", true);
+    }
+
 
     @Override
     public void onObjectiveUnlock(ActiveObjective activeObjective) {

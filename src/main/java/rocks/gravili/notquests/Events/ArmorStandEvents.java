@@ -264,10 +264,12 @@ public class ArmorStandEvents implements Listener {
 
                     } else if (id == 5) { //Add Objective TalkToNPC
 
-
                         final Quest quest = main.getQuestManager().getQuest(questName);
                         if (quest != null) {
-                            TalkToNPCObjective talkToNPCObjective = new TalkToNPCObjective(main, quest, quest.getObjectives().size() + 1, -1, armorStand.getUniqueId());
+                            TalkToNPCObjective talkToNPCObjective = new TalkToNPCObjective(main);
+                            talkToNPCObjective.setQuest(quest);
+                            talkToNPCObjective.setObjectiveID(quest.getObjectives().size() + 1);
+                            talkToNPCObjective.setArmorStandUUID(armorStand.getUniqueId());
                             quest.addObjective(talkToNPCObjective, true);
                             player.sendMessage("§aObjective successfully added to quest §b" + quest.getQuestName() + "§a!");
 
@@ -311,7 +313,13 @@ public class ArmorStandEvents implements Listener {
                             final ItemStack itemToDeliver = main.getDataManager().getItemStackCache().get(itemStackCache);
 
                             if (itemToDeliver != null) {
-                                DeliverItemsObjective deliverItemsObjective = new DeliverItemsObjective(main, quest, quest.getObjectives().size() + 1, itemToDeliver, amountToDeliver, armorStand.getUniqueId());
+                                DeliverItemsObjective deliverItemsObjective = new DeliverItemsObjective(main);
+                                deliverItemsObjective.setItemToDeliver(itemToDeliver);
+                                deliverItemsObjective.setProgressNeeded(amountToDeliver);
+                                deliverItemsObjective.setRecipientArmorStandUUID(armorStand.getUniqueId());
+                                deliverItemsObjective.setQuest(quest);
+                                deliverItemsObjective.setObjectiveID(quest.getObjectives().size() + 1);
+
                                 quest.addObjective(deliverItemsObjective, true);
 
                                 main.adventure().player(player).sendMessage(MiniMessage.miniMessage().parse(

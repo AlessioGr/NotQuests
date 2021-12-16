@@ -29,9 +29,9 @@ import rocks.gravili.notquests.Events.notquests.QuestCompletedEvent;
 import rocks.gravili.notquests.Events.notquests.QuestFinishAcceptEvent;
 import rocks.gravili.notquests.Events.notquests.QuestPointsChangeEvent;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.Actions.Action;
 import rocks.gravili.notquests.Structs.Conditions.Condition;
 import rocks.gravili.notquests.Structs.Objectives.OtherQuestObjective;
-import rocks.gravili.notquests.Structs.Rewards.Reward;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -246,8 +246,9 @@ public class QuestPlayer {
     }*/
 
     public void giveReward(Quest quest) {
-        for (Reward reward : quest.getRewards()) {
-            reward.giveReward(getPlayer(), quest);
+        main.getLogManager().debug("QuestPlayer.giveReward(). Quest: " + quest.getQuestName());
+        for (Action action : quest.getRewards()) {
+            action.execute(getPlayer(), quest);
         }
         Objects.requireNonNull(getPlayer()).sendMessage(main.getLanguageManager().getString("chat.quest-completed-and-rewards-given", getPlayer(), quest));
 

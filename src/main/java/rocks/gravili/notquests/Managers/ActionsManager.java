@@ -24,15 +24,15 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.Structs.Triggers.Action;
+import rocks.gravili.notquests.Structs.Actions.Action;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ActionsManager {
     private final NotQuests main;
-    private final ArrayList<Action> actions;
+    private final HashMap<String, Action> actionsAndIdentifiers;
     /**
      * actions.yml Configuration File
      */
@@ -45,7 +45,7 @@ public class ActionsManager {
 
     public ActionsManager(final NotQuests main) {
         this.main = main;
-        actions = new ArrayList<>();
+        actionsAndIdentifiers = new HashMap<>();
 
         setupFiles();
     }
@@ -91,28 +91,40 @@ public class ActionsManager {
 
         final ConfigurationSection actionsConfigurationSection = getActionsConfig().getConfigurationSection("actions");
         if (actionsConfigurationSection != null) {
-            for (final String actionName : actionsConfigurationSection.getKeys(false)) {
-                final String consoleCommand = getActionsConfig().getString("actions." + actionName + ".specifics.consoleCommand", "");
-                if (consoleCommand.equalsIgnoreCase("")) {
-                    main.getLogManager().warn("Action has an empty console command. This should NOT be possible! Creating an action with an empty console command... Action name: <AQUA>" + actionName + "</AQUA>");
-                }
-                boolean nameAlreadyExists = false;
-                for (final Action action : actions) {
-                    if (action.getActionName().equalsIgnoreCase(actionName)) {
-                        nameAlreadyExists = true;
-                        break;
-                    }
-                }
-
-                if (!nameAlreadyExists) {
-                    final Action newAction = new Action(main, actionName, consoleCommand);
-                    actions.add(newAction);
-                    getActionsConfig().set("actions." + actionName + ".type", "ConsoleCommand");
-                    getActionsConfig().set("actions." + actionName + ".specifics.consoleCommand", consoleCommand);
-
-                } else {
-                    main.getDataManager().disablePluginAndSaving("Action already exists. This should NOT be possible! Action name: <AQUA>" + actionName + "</AQUA>");
+            for (final String actionIdentifier : actionsConfigurationSection.getKeys(false)) {
+                if (actionsAndIdentifiers.get(actionIdentifier) != null) {
+                    main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading actions.yml actions data: The action " + actionIdentifier + " already exists.");
                     return;
+                }
+                Class<? extends Action> actionType = null;
+
+                try {
+                    actionType = main.getActionManager().getActionClass(actionsConfigurationSection.getString(actionIdentifier + ".actionType"));
+                } catch (java.lang.NullPointerException ex) {
+                    main.getDataManager().disablePluginAndSaving("Error parsing actions.yml action Type of action with name <AQUA>" + actionIdentifier + "</AQUA>.", ex);
+                }
+
+                if (!actionIdentifier.isBlank() && actionType != null) {
+                    Action action = null;
+
+                    try {
+                        action = actionType.getDeclaredConstructor(NotQuests.class).newInstance(main);
+                        action.setActionName(actionIdentifier);
+                        action.load(getActionsConfig(), "actions." + actionIdentifier);
+
+                    } catch (Exception ex) {
+                        main.getDataManager().disablePluginAndSaving("Error parsing action Type of actions.yml action with name <AQUA>" + actionIdentifier + "</AQUA>.", ex);
+                    }
+
+                    if (action != null) {
+                        final String actionsDisplayName = actionsConfigurationSection.getString(actionIdentifier + ".displayName", "");
+                        if (!actionsDisplayName.isBlank()) {
+                            action.setActionName(actionsDisplayName);
+                        }
+                        actionsAndIdentifiers.put(actionIdentifier, action);
+                    } else {
+                        main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading actions.yml actions data.");
+                    }
                 }
 
             }
@@ -135,33 +147,28 @@ public class ActionsManager {
         return actionsConfig;
     }
 
-    public final ArrayList<Action> getActions() {
-        return actions;
+    public final HashMap<String, Action> getActionsAndIdentifiers() {
+        return actionsAndIdentifiers;
     }
 
-    public final Action getAction(String actionName) {
-        for (Action action : actions) {
-            if (action.getActionName().equalsIgnoreCase(actionName)) {
-                return action;
-            }
-        }
-        return null;
+    public final Action getAction(String actionIdentifer) {
+        return actionsAndIdentifiers.get(actionIdentifer);
     }
 
-    public final String createAction(String actionName, String consoleCommand) {
-        boolean nameAlreadyExists = false;
-        for (Action action : actions) {
-            if (action.getActionName().equalsIgnoreCase(actionName)) {
-                nameAlreadyExists = true;
-                break;
-            }
-        }
+
+    public final String addAction(String actionIdentifier, Action action) {
+        boolean nameAlreadyExists = getActionsAndIdentifiers().get(actionIdentifier) != null;
+
 
         if (!nameAlreadyExists) {
-            final Action newAction = new Action(main, actionName, consoleCommand);
-            actions.add(newAction);
-            getActionsConfig().set("actions." + actionName + ".type", "ConsoleCommand");
-            getActionsConfig().set("actions." + actionName + ".specifics.consoleCommand", consoleCommand);
+            actionsAndIdentifiers.put(actionIdentifier, action);
+
+            getActionsConfig().set("actions." + actionIdentifier + ".actionType", action.getActionType());
+            if (!action.getActionName().isBlank()) {
+                getActionsConfig().set("actions." + actionIdentifier + ".displayName", action.getActionName());
+            }
+
+            action.save(getActionsConfig(), "actions." + actionIdentifier);
 
             saveActions();
 
@@ -171,10 +178,10 @@ public class ActionsManager {
         }
     }
 
-    public String removeAction(Action actionToDelete) {
-        actions.remove(actionToDelete);
-        main.getDataManager().getQuestsConfig().set("actions." + actionToDelete.getActionName(), null);
-        return "§aAction successfully deleted!";
 
+    public String removeAction(String actionToDeleteIdentifier) {
+        actionsAndIdentifiers.remove(actionToDeleteIdentifier);
+        main.getDataManager().getQuestsConfig().set("actions." + actionToDeleteIdentifier, null);
+        return "§aAction " + actionToDeleteIdentifier + " successfully deleted!";
     }
 }

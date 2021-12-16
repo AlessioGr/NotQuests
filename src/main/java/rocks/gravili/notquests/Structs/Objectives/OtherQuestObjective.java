@@ -23,37 +23,49 @@ import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.Commands.newCMDs.arguments.QuestSelector;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.ActiveObjective;
 import rocks.gravili.notquests.Structs.Quest;
 
 public class OtherQuestObjective extends Objective {
-    private final NotQuests main;
-    private final String otherQuestName;
-    private final boolean countPreviousCompletions;
+    private String otherQuestName = "";
+    private boolean countPreviousCompletions = false;
 
 
-    public OtherQuestObjective(NotQuests main, final Quest quest, final int objectiveID, String otherQuestName, int amountOfCompletionsNeeded, boolean countPreviousCompletions) {
-        super(main, quest, objectiveID, amountOfCompletionsNeeded);
-        this.main = main;
-        this.otherQuestName = otherQuestName;
-        this.countPreviousCompletions = countPreviousCompletions;
-
+    public OtherQuestObjective(NotQuests main) {
+        super(main);
     }
 
-    public OtherQuestObjective(NotQuests main, Quest quest, int objectiveNumber, int progressNeeded) {
-        super(main, quest, objectiveNumber, progressNeeded);
-        final String questName = quest.getQuestName();
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
+        manager.command(addObjectiveBuilder.literal("OtherQuest")
+                .argument(QuestSelector.of("other quest name", main), ArgumentDescription.of("Name of the other Quest the player has to complete."))
+                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of times the Quest needs to be completed."))
+                .flag(
+                        manager.flagBuilder("countPreviouslyCompletedQuests")
+                                .withDescription(ArgumentDescription.of("Makes it so quests completed before this OtherQuest objective becomes active will be counted towards the progress too."))
+                )
+                .meta(CommandMeta.DESCRIPTION, "Adds a new OtherQuest Objective to a quest")
+                .handler((context) -> {
+                    final Quest otherQuest = context.get("other quest name");
+                    final int amount = context.get("amount");
+                    final boolean countPreviouslyCompletedQuests = context.flags().isPresent("countPreviouslyCompletedQuests");
 
-        this.main = main;
-        otherQuestName = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.otherQuestName");
-        countPreviousCompletions = main.getDataManager().getQuestsConfig().getBoolean("quests." + questName + ".objectives." + objectiveNumber + ".specifics.countPreviousCompletions");
+                    OtherQuestObjective otherQuestObjective = new OtherQuestObjective(main);
+
+                    otherQuestObjective.setOtherQuestName(otherQuest.getQuestName());
+                    otherQuestObjective.setCountPreviousCompletions(countPreviouslyCompletedQuests);
+                    otherQuestObjective.setProgressNeeded(amount);
+
+                    main.getObjectiveManager().addObjective(otherQuestObjective, context);
+                }));
+    }
+
+    public void setOtherQuestName(final String otherQuestName) {
+        this.otherQuestName = otherQuestName;
     }
 
     @Override
@@ -63,10 +75,14 @@ public class OtherQuestObjective extends Objective {
                 .replace("%OTHERQUESTNAME%", "" + getOtherQuest().getQuestName());
     }
 
+    public void setCountPreviousCompletions(final boolean countPreviousCompletions) {
+        this.countPreviousCompletions = countPreviousCompletions;
+    }
+
     @Override
-    public void save() {
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.otherQuestName", getOtherQuestName());
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.countPreviousCompletions", isCountPreviousCompletions());
+    public void save(FileConfiguration configuration, String initialPath) {
+        configuration.set(initialPath + ".specifics.otherQuestName", getOtherQuestName());
+        configuration.set(initialPath + ".specifics.countPreviousCompletions", isCountPreviousCompletions());
     }
 
     @Override
@@ -90,31 +106,9 @@ public class OtherQuestObjective extends Objective {
         return countPreviousCompletions;
     }
 
-
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
-        manager.command(addObjectiveBuilder.literal("OtherQuest")
-                .argument(QuestSelector.of("other quest name", main), ArgumentDescription.of("Name of the other Quest the player has to complete."))
-                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of times the Quest needs to be completed."))
-                .flag(
-                        manager.flagBuilder("countPreviouslyCompletedQuests")
-                                .withDescription(ArgumentDescription.of("Makes it so quests completed before this OtherQuest objective becomes active will be counted towards the progress too."))
-                )
-                .meta(CommandMeta.DESCRIPTION, "Adds a new OtherQuest Objective to a quest")
-                .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-                    final Quest quest = context.get("quest");
-                    final Quest otherQuest = context.get("other quest name");
-                    final int amount = context.get("amount");
-                    final boolean countPreviouslyCompletedQuests = context.flags().isPresent("countPreviouslyCompletedQuests");
-
-                    OtherQuestObjective otherQuestObjective = new OtherQuestObjective(main, quest, quest.getObjectives().size() + 1, otherQuest.getQuestName(), amount, countPreviouslyCompletedQuests);
-
-                    quest.addObjective(otherQuestObjective, true);
-                    audience.sendMessage(MiniMessage.miniMessage().parse(
-                            NotQuestColors.successGradient + "OtherQuest Objective successfully added to Quest " + NotQuestColors.highlightGradient
-                                    + quest.getQuestName() + "</gradient>!</gradient>"
-                    ));
-
-                }));
+    @Override
+    public void load(FileConfiguration configuration, String initialPath) {
+        otherQuestName = configuration.getString(initialPath + ".specifics.otherQuestName");
+        countPreviousCompletions = configuration.getBoolean(initialPath + ".specifics.countPreviousCompletions");
     }
 }

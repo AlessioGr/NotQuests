@@ -50,15 +50,15 @@ import rocks.gravili.notquests.Hooks.Citizens.CitizensManager;
 import rocks.gravili.notquests.Hooks.Luckperms.LuckpermsManager;
 import rocks.gravili.notquests.Managers.*;
 import rocks.gravili.notquests.Managers.Packets.PacketManager;
+import rocks.gravili.notquests.Managers.Registering.ActionManager;
 import rocks.gravili.notquests.Managers.Registering.ConditionsManager;
 import rocks.gravili.notquests.Managers.Registering.ObjectiveManager;
-import rocks.gravili.notquests.Managers.Registering.RewardManager;
 import rocks.gravili.notquests.Managers.Registering.TriggerManager;
 import rocks.gravili.notquests.Placeholders.QuestPlaceholders;
+import rocks.gravili.notquests.Structs.Actions.Action;
 import rocks.gravili.notquests.Structs.Conditions.Condition;
 import rocks.gravili.notquests.Structs.Objectives.Objective;
 import rocks.gravili.notquests.Structs.Quest;
-import rocks.gravili.notquests.Structs.Rewards.Reward;
 import rocks.gravili.notquests.Structs.Triggers.Trigger;
 
 import java.util.ArrayList;
@@ -95,7 +95,7 @@ public final class NotQuests extends JavaPlugin {
     //Registering Managers
     private ObjectiveManager objectiveManager;
     private ConditionsManager conditionsManager;
-    private RewardManager rewardManager;
+    private ActionManager actionManager;
     private TriggerManager triggerManager;
 
 
@@ -247,7 +247,7 @@ public final class NotQuests extends JavaPlugin {
         //Registering Managers
         objectiveManager = new ObjectiveManager(this);
         conditionsManager = new ConditionsManager(this);
-        rewardManager = new RewardManager(this);
+        actionManager = new ActionManager(this);
         triggerManager = new TriggerManager(this);
 
         commandManager.setupCommands();
@@ -376,15 +376,25 @@ public final class NotQuests extends JavaPlugin {
             }
         }));
 
-        metrics.addCustomChart(new AdvancedPie("RewardTypes", new Callable<Map<String, Integer>>() {
+        metrics.addCustomChart(new AdvancedPie("ActionTypes", new Callable<Map<String, Integer>>() {
             @Override
             public Map<String, Integer> call() throws Exception {
                 Map<String, Integer> map = new HashMap<>();
                 for (Quest quest : getQuestManager().getAllQuests()) {
-                    for (Reward reward : quest.getRewards()) {
-                        String rewardType = getRewardManager().getRewardType(reward.getClass());
-                        map.put(rewardType, map.getOrDefault(rewardType, 0) + 1);
+                    for (Action action : quest.getRewards()) {
+                        String actionType = action.getActionType();
+                        map.put(actionType, map.getOrDefault(actionType, 0) + 1);
                     }
+                    for (Objective objective : quest.getObjectives()) {
+                        for (Action action : objective.getRewards()) {
+                            String actionType = action.getActionType();
+                            map.put(actionType, map.getOrDefault(actionType, 0) + 1);
+                        }
+                    }
+                }
+                for (Action action : getActionsManager().getActionsAndIdentifiers().values()) {
+                    String actionType = action.getActionType();
+                    map.put(actionType, map.getOrDefault(actionType, 0) + 1);
                 }
                 return map;
             }
@@ -783,8 +793,8 @@ public final class NotQuests extends JavaPlugin {
         return conditionsManager;
     }
 
-    public RewardManager getRewardManager() {
-        return rewardManager;
+    public ActionManager getActionManager() {
+        return actionManager;
     }
 
     public TriggerManager getTriggerManager() {

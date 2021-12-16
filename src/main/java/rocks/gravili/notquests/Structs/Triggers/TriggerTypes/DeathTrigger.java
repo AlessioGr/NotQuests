@@ -23,33 +23,16 @@ import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
-import rocks.gravili.notquests.Commands.NotQuestColors;
+import org.bukkit.configuration.file.FileConfiguration;
 import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.Structs.Quest;
-import rocks.gravili.notquests.Structs.Triggers.Action;
 import rocks.gravili.notquests.Structs.Triggers.Trigger;
 
 public class DeathTrigger extends Trigger {
 
-    private final NotQuests main;
 
-
-    public DeathTrigger(final NotQuests main, final Quest quest, final int triggerID, Action action, int applyOn, String worldName, long amountNeeded) {
-        super(main, quest, triggerID, action, applyOn, worldName, amountNeeded);
-        this.main = main;
-    }
-
-    @Override
-    public void save() {
-
-    }
-
-    @Override
-    public String getTriggerDescription() {
-        return null;
+    public DeathTrigger(final NotQuests main) {
+        super(main);
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addTriggerBuilder) {
@@ -59,38 +42,26 @@ public class DeathTrigger extends Trigger {
                 .flag(main.getCommandManager().triggerWorldString)
                 .meta(CommandMeta.DESCRIPTION, "Triggers when a the Player dies.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
+                    DeathTrigger deathTrigger = new DeathTrigger(main);
 
-                    final Quest quest = context.get("quest");
-                    final Action action = context.get("action");
-
-                    int amountOfDeaths = context.get("amount");
-
-                    final int applyOn = context.flags().getValue(main.getCommandManager().applyOn, 0); //0 = Quest
-                    final String worldString = context.flags().getValue(main.getCommandManager().triggerWorldString, null);
-
-
-                    DeathTrigger deathTrigger = new DeathTrigger(main, quest, quest.getTriggers().size() + 1, action, applyOn, worldString, amountOfDeaths);
-
-                    quest.addTrigger(deathTrigger);
-
-                    audience.sendMessage(MiniMessage.miniMessage().parse(
-                            NotQuestColors.successGradient + "DEATH Trigger successfully added to Quest " + NotQuestColors.highlightGradient
-                                    + quest.getQuestName() + "</gradient>!</gradient>"
-                    ));
-
+                    main.getTriggerManager().addTrigger(deathTrigger, context);
                 }));
     }
 
+    @Override
+    public void save(FileConfiguration configuration, String initialPath) {
 
+    }
 
+    @Override
+    public String getTriggerDescription() {
+        return null;
+    }
 
+    @Override
+    public void load(FileConfiguration configuration, String initialPath) {
 
-
-    /*@Override
-    public void isCompleted(){
-
-    }*/
+    }
 
 
 }

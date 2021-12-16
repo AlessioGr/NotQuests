@@ -18,20 +18,20 @@
 
 package rocks.gravili.notquests.Structs.Conditions;
 
+import org.bukkit.configuration.file.FileConfiguration;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Objectives.Objective;
 import rocks.gravili.notquests.Structs.Quest;
 import rocks.gravili.notquests.Structs.QuestPlayer;
 
 public abstract class Condition {
-    private final NotQuests main;
+    protected final NotQuests main;
     private long progressNeeded = 1;
     private Quest quest;
     private Objective objective;
 
     public Condition(NotQuests main) {
         this.main = main;
-
     }
 
     public void setProgressNeeded(final long progressNeeded){
@@ -69,6 +69,7 @@ public abstract class Condition {
 
     public abstract String getConditionDescription();
 
-    public abstract void save(final String initialPath);
-    public abstract void load(final String initialPath);
+    public abstract void save(final FileConfiguration configuration, final String initialPath);
+
+    public abstract void load(final FileConfiguration configuration, final String initialPath);
 }

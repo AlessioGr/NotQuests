@@ -20,29 +20,49 @@ package rocks.gravili.notquests.Structs.Triggers;
 
 
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.Actions.Action;
 import rocks.gravili.notquests.Structs.ActiveQuest;
 import rocks.gravili.notquests.Structs.Quest;
 
 public abstract class Trigger {
-    private final NotQuests main;
-    private final Quest quest;
-    private final int triggerID;
-    private final Action action;
-    private final int applyOn; // 0 is for the whole quest. Positive numbers = objectives (JUST INTERNALLY HERE, NOT IN THE ADMIN COMMAND)
-    private final String worldName;
-    private final long amountNeeded; // 0 or 1 means every trigger() triggers it
+    protected final NotQuests main;
+    private Quest quest = null;
+    private int triggerID = 1;
+    private Action action = null;
+    private int applyOn = 0; // 0 is for the whole quest. Positive numbers = objectives (JUST INTERNALLY HERE, NOT IN THE ADMIN COMMAND)
+    private String worldName = null;
+    private long amountNeeded = 0; // 0 or 1 means every trigger() triggers it
 
 
-    public Trigger(final NotQuests main, final Quest quest, final int triggerID, Action action, int applyOn, String worldName, long amountNeeded) {
+    public Trigger(final NotQuests main) {
         this.main = main;
+    }
+
+    public void setQuest(final Quest quest) {
         this.quest = quest;
+    }
+
+    public void setTriggerID(final int triggerID) {
         this.triggerID = triggerID;
+    }
+
+    public void setAction(final Action action) {
         this.action = action;
+    }
+
+    public void setApplyOn(final int applyOn) {
         this.applyOn = applyOn;
-        this.amountNeeded = amountNeeded;
+    }
+
+    public void setWorldName(final String worldName) {
         this.worldName = worldName;
+    }
+
+    public void setAmountNeeded(final long amountNeeded) {
+        this.amountNeeded = amountNeeded;
     }
 
     public final Quest getQuest() {
@@ -78,14 +98,16 @@ public abstract class Trigger {
         final Player player = Bukkit.getPlayer(activeQuest.getQuestPlayer().getUUID());
 
         if (player != null) {
-            action.execute(player, activeQuest);
+            action.execute(player);
         } else {
             main.getLogManager().warn("Tried to execute trigger for offline player - ABORTED!");
 
         }
     }
 
-    public abstract void save();
+    public abstract void save(final FileConfiguration configuration, final String initialPath);
+
+    public abstract void load(final FileConfiguration configuration, final String initialPath);
 
     public abstract String getTriggerDescription();
 

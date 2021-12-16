@@ -27,10 +27,9 @@ import com.palmergames.bukkit.towny.TownyUniverse;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.ActiveObjective;
 import rocks.gravili.notquests.Structs.Objectives.Objective;
@@ -38,19 +37,11 @@ import rocks.gravili.notquests.Structs.Quest;
 
 public class TownyReachResidentCountObjective extends Objective {
 
-    private final NotQuests main;
-    private final boolean countPreviousResidents;
+    private boolean countPreviousResidents = true;
 
 
-    public TownyReachResidentCountObjective(NotQuests main, final Quest quest, final int objectiveID, int progressNeeded, boolean countPreviousResidents) {
-        super(main, quest, objectiveID, progressNeeded);
-        this.main = main;
-        this.countPreviousResidents = countPreviousResidents;
-    }
-    public TownyReachResidentCountObjective(NotQuests main, final Quest quest, final int objectiveID, int progressNeeded) {
-        super(main, quest, objectiveID, progressNeeded);
-        this.main = main;
-        countPreviousResidents = main.getDataManager().getQuestsConfig().getBoolean("quests." + quest.getQuestName() + ".objectives." + objectiveID + ".specifics.countPreviousResidents");
+    public TownyReachResidentCountObjective(NotQuests main) {
+        super(main);
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
@@ -73,21 +64,23 @@ public class TownyReachResidentCountObjective extends Objective {
                     final boolean countPreviousResidents = !context.flags().isPresent("doNotCountPreviousResidents");
 
 
-                    TownyReachResidentCountObjective townyReachResidentCountObjective = new TownyReachResidentCountObjective(main, quest, quest.getObjectives().size() + 1, amount, countPreviousResidents);
+                    TownyReachResidentCountObjective townyReachResidentCountObjective = new TownyReachResidentCountObjective(main);
+                    townyReachResidentCountObjective.setProgressNeeded(amount);
+                    townyReachResidentCountObjective.setCountPreviousResidents(countPreviousResidents);
 
-                    quest.addObjective(townyReachResidentCountObjective, true);
-                    audience.sendMessage(MiniMessage.miniMessage().parse(
-                            NotQuestColors.successGradient + "TownyReachResidentCount objective successfully added to Quest " + NotQuestColors.highlightGradient + quest.getQuestName() + "</gradient>!</gradient>"
-                    ));
-
+                    main.getObjectiveManager().addObjective(townyReachResidentCountObjective, context);
                 }));
     }
 
-    public final long getAmountOfResidentsToReach(){
+    public void setCountPreviousResidents(final boolean countPreviousResidents) {
+        this.countPreviousResidents = countPreviousResidents;
+    }
+
+    public final long getAmountOfResidentsToReach() {
         return getProgressNeeded();
     }
 
-    public final boolean isCountPreviousResidents(){
+    public final boolean isCountPreviousResidents() {
         return countPreviousResidents;
     }
 
@@ -99,15 +92,20 @@ public class TownyReachResidentCountObjective extends Objective {
     }
 
     @Override
-    public void save() {
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.countPreviousResidents", isCountPreviousResidents());
-
+    public void save(FileConfiguration configuration, String initialPath) {
+        configuration.set(initialPath + ".specifics.countPreviousResidents", isCountPreviousResidents());
     }
+
+    @Override
+    public void load(FileConfiguration configuration, String initialPath) {
+        countPreviousResidents = configuration.getBoolean(initialPath + ".specifics.countPreviousResidents");
+    }
+
 
     @Override
     public void onObjectiveUnlock(ActiveObjective activeObjective) {
         activeObjective.getQuestPlayer().sendDebugMessage("TownyReachResidentCountObjective onObjectiveUnlock");
-        if(!isCountPreviousResidents()){
+        if (!isCountPreviousResidents()) {
             activeObjective.getQuestPlayer().sendDebugMessage("TownyReachResidentCountObjective onObjectiveUnlock cancel 1");
             return;
         }

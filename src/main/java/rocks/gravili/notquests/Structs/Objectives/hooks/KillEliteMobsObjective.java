@@ -26,58 +26,32 @@ import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent;
-import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.ActiveObjective;
 import rocks.gravili.notquests.Structs.Objectives.Objective;
-import rocks.gravili.notquests.Structs.Quest;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class KillEliteMobsObjective extends Objective {
 
-    private final NotQuests main;
-    private final String eliteMobToKillContainsName; //Blank: doesn't matter
-    private final int minimumLevel, maximumLevel; //-1: doesn't matter
-    private final String spawnReason; //Optional. If blank, any spawn reason will be used
-    private final int minimumDamagePercentage; //How much damage the player has to do to the mob minimum. -1: Doesn't matter
-    private final int amountToKill;
+    private String eliteMobToKillContainsName; //Blank: doesn't matter
+    private int minimumLevel, maximumLevel; //-1: doesn't matter
+    private String spawnReason; //Optional. If blank, any spawn reason will be used
+    private int minimumDamagePercentage; //How much damage the player has to do to the mob minimum. -1: Doesn't matter
 
-    public KillEliteMobsObjective(NotQuests main, final Quest quest, final int objectiveID, String eliteMobToKillContainsName, int minimumLevel, int maximumLevel, String spawnReason, int minimumDamagePercentage, int amountToKill) {
-        super(main, quest, objectiveID, amountToKill);
-        this.main = main;
-        this.eliteMobToKillContainsName = eliteMobToKillContainsName;
-        this.minimumLevel = minimumLevel;
-        this.maximumLevel = maximumLevel;
-        this.spawnReason = spawnReason;
-        this.minimumDamagePercentage = minimumDamagePercentage;
-        this.amountToKill = amountToKill;
-    }
-
-    public KillEliteMobsObjective(NotQuests main, Quest quest, int objectiveNumber, int progressNeeded) {
-        super(main, quest, objectiveNumber, progressNeeded);
-        final String questName = quest.getQuestName();
-
-        this.main = main;
-        eliteMobToKillContainsName = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.eliteMobToKill");
-        minimumLevel = main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.minimumLevel");
-        maximumLevel = main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.maximumLevel");
-        spawnReason = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.spawnReason");
-        minimumDamagePercentage = main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.minimumDamagePercentage");
-        amountToKill = main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".objectives." + objectiveNumber + ".specifics.amountToKill");
-
+    public KillEliteMobsObjective(NotQuests main) {
+        super(main);
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
         if (!main.isEliteMobsEnabled()) {
             return;
         }
-
 
         CommandFlag<String> mobname = CommandFlag
                 .newBuilder("mobname")
@@ -171,17 +145,6 @@ public class KillEliteMobsObjective extends Objective {
 
                 .meta(CommandMeta.DESCRIPTION, "Adds a new KillEliteMobs Objective to a quest")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-
-                    //Cancel if EliteMobs is not found
-                    if (!main.isEliteMobsEnabled()) {
-                        audience.sendMessage(MiniMessage.miniMessage().parse(
-                                NotQuestColors.errorGradient + "Error: The Elite Mobs integration is not enabled. Thus, you cannot create an EliteMobs Objective."
-                        ));
-                        return;
-                    }
-                    final Quest quest = context.get("quest");
-
                     final int amount = context.get("amount");
 
                     String mobNameString = context.flags().getValue(mobname, "");
@@ -219,29 +182,38 @@ public class KillEliteMobsObjective extends Objective {
                     } catch (NumberFormatException ignored) {
                     }
 
-                    KillEliteMobsObjective killEliteMobsObjective = new KillEliteMobsObjective(main, quest, quest.getObjectives().size() + 1,
-                            mobNameString, minimumLevelInt, maximumLevelInt, spawnReasonString, minimumDamagePercentageInt, amount);
+                    KillEliteMobsObjective killEliteMobsObjective = new KillEliteMobsObjective(main);
+                    killEliteMobsObjective.setEliteMobToKillContainsName(mobNameString);
+                    killEliteMobsObjective.setMaximumLevel(maximumLevelInt);
+                    killEliteMobsObjective.setMinimumLevel(minimumLevelInt);
+                    killEliteMobsObjective.setProgressNeeded(amount);
+                    killEliteMobsObjective.setSpawnReason(spawnReasonString);
+                    killEliteMobsObjective.setMinimumDamagePercentage(minimumDamagePercentageInt);
 
-                    quest.addObjective(killEliteMobsObjective, true);
-
-                    audience.sendMessage(MiniMessage.miniMessage().parse(
-                            NotQuestColors.successGradient + "KillEliteMobs Objective successfully added to Quest " + NotQuestColors.highlightGradient
-                                    + quest.getQuestName() + "</gradient>!</gradient>"
-                    ));
-
+                    main.getObjectiveManager().addObjective(killEliteMobsObjective, context);
                 }));
     }
 
-    @Override
-    public void save() {
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.eliteMobToKill", getEliteMobToKillContainsName());
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.minimumLevel", getMinimumLevel());
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.maximumLevel", getMaximumLevel());
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.spawnReason", getSpawnReason());
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.minimumDamagePercentage", getMinimumDamagePercentage());
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.amountToKill", getAmountToKill());
-
+    public void setEliteMobToKillContainsName(final String eliteMobToKillContainsName) {
+        this.eliteMobToKillContainsName = eliteMobToKillContainsName;
     }
+
+    public void setMinimumLevel(final int minimumLevel) {
+        this.minimumLevel = minimumLevel;
+    }
+
+    public void setMaximumLevel(final int maximumLevel) {
+        this.maximumLevel = maximumLevel;
+    }
+
+    public void setSpawnReason(final String spawnReason) {
+        this.spawnReason = spawnReason;
+    }
+
+    public void setMinimumDamagePercentage(final int minimumDamagePercentage) {
+        this.minimumDamagePercentage = minimumDamagePercentage;
+    }
+
 
     @Override
     public void onObjectiveUnlock(final ActiveObjective activeObjective) {
@@ -252,8 +224,8 @@ public class KillEliteMobsObjective extends Objective {
         return eliteMobToKillContainsName;
     }
 
-    public final int getAmountToKill() {
-        return amountToKill;
+    public final long getAmountToKill() {
+        return getProgressNeeded();
     }
 
     public final int getMinimumLevel() {
@@ -303,5 +275,26 @@ public class KillEliteMobsObjective extends Objective {
             toReturn += "\n        §7" + eventualColor + "Inflict minimum damage: §f" + eventualColor + getMinimumDamagePercentage() + "%";
         }
         return toReturn;
+    }
+
+    @Override
+    public void save(FileConfiguration configuration, String initialPath) {
+        configuration.set(initialPath + ".specifics.eliteMobToKill", getEliteMobToKillContainsName());
+        configuration.set(initialPath + ".specifics.minimumLevel", getMinimumLevel());
+        configuration.set(initialPath + ".specifics.maximumLevel", getMaximumLevel());
+        configuration.set(initialPath + ".specifics.spawnReason", getSpawnReason());
+        configuration.set(initialPath + ".specifics.minimumDamagePercentage", getMinimumDamagePercentage());
+        configuration.set(initialPath + ".specifics.amountToKill", getAmountToKill());
+
+    }
+
+    @Override
+    public void load(FileConfiguration configuration, String initialPath) {
+        eliteMobToKillContainsName = configuration.getString(initialPath + ".specifics.eliteMobToKill");
+        minimumLevel = configuration.getInt(initialPath + ".specifics.minimumLevel");
+        maximumLevel = configuration.getInt(initialPath + ".specifics.maximumLevel");
+        spawnReason = configuration.getString(initialPath + ".specifics.spawnReason");
+        minimumDamagePercentage = configuration.getInt(initialPath + ".specifics.minimumDamagePercentage");
+
     }
 }

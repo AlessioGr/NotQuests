@@ -18,7 +18,7 @@
 
 package rocks.gravili.notquests.Conversation;
 
-import rocks.gravili.notquests.Structs.Triggers.Action;
+import rocks.gravili.notquests.Structs.Actions.Action;
 
 import java.util.ArrayList;
 

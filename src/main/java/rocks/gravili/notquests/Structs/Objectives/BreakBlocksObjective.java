@@ -24,36 +24,50 @@ import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.bukkit.parsers.MaterialArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.ActiveObjective;
-import rocks.gravili.notquests.Structs.Quest;
 
 public class BreakBlocksObjective extends Objective {
+    private Material blockToBreak;
+    private boolean deductIfBlockIsPlaced = true;
 
-    private final NotQuests main;
-    private final Material blockToBreak;
-    private final boolean deductIfBlockIsPlaced;
 
-    public BreakBlocksObjective(NotQuests main, final Quest quest, final int objectiveID, Material blockToBreak, int amountToBreak, boolean deductIfBlockIsPlaced) {
-        super(main, quest, objectiveID, amountToBreak);
-        this.main = main;
-        this.blockToBreak = blockToBreak;
-        this.deductIfBlockIsPlaced = deductIfBlockIsPlaced;
+    public BreakBlocksObjective(NotQuests main) {
+        super(main);
     }
 
-    public BreakBlocksObjective(NotQuests main, Quest quest, int objectiveNumber, int progressNeeded) {
-        super(main, quest, objectiveNumber, progressNeeded);
-        final String questName = quest.getQuestName();
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
+        manager.command(addObjectiveBuilder.literal("BreakBlocks")
+                .argument(MaterialArgument.of("material"), ArgumentDescription.of("Material of the block which needs to be broken."))
+                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of blocks which need to be broken"))
+                .flag(
+                        manager.flagBuilder("doNotDeductIfBlockIsPlaced")
+                                .withDescription(ArgumentDescription.of("Makes it so Quest progress is not removed if the block is placed"))
+                )
+                .meta(CommandMeta.DESCRIPTION, "Adds a new BreakBlocks Objective to a quest")
+                .handler((context) -> {
+                    final Material material = context.get("material");
+                    final int amount = context.get("amount");
+                    final boolean deductIfBlockIsPlaced = !context.flags().isPresent("doNotDeductIfBlockIsPlaced");
 
-        this.main = main;
-        blockToBreak = Material.valueOf(main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.blockToBreak.material"));
-        deductIfBlockIsPlaced = main.getDataManager().getQuestsConfig().getBoolean("quests." + questName + ".objectives." + objectiveNumber + ".specifics.deductIfBlockPlaced", true);
+                    BreakBlocksObjective breakBlocksObjective = new BreakBlocksObjective(main)
+                            .setBlockToBreak(material);
+                    breakBlocksObjective.setBlockToBreak(material);
+                    breakBlocksObjective.setProgressNeeded(amount);
+                    breakBlocksObjective.setDeductIfBlockIsPlaced(deductIfBlockIsPlaced);
+
+                    main.getObjectiveManager().addObjective(breakBlocksObjective, context);
+
+                }));
+    }
+
+    public BreakBlocksObjective setBlockToBreak(final Material blockToBreak) {
+        this.blockToBreak = blockToBreak;
+        return this;
     }
 
     @Override
@@ -63,12 +77,16 @@ public class BreakBlocksObjective extends Objective {
                 .replace("%BLOCKTOBREAK%", getBlockToBreak().toString());
     }
 
-    @Override
-    public void save() {
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.blockToBreak.material", getBlockToBreak().toString());
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.deductIfBlockPlaced", isDeductIfBlockPlaced());
-
+    public void setDeductIfBlockIsPlaced(final boolean deductIfBlockIsPlaced) {
+        this.deductIfBlockIsPlaced = deductIfBlockIsPlaced;
     }
+
+    @Override
+    public void save(FileConfiguration configuration, String initialPath) {
+        configuration.set(initialPath + ".specifics.blockToBreak.material", getBlockToBreak().toString());
+        configuration.set(initialPath + ".specifics.deductIfBlockPlaced", isDeductIfBlockPlaced());
+    }
+
 
     @Override
     public void onObjectiveUnlock(final ActiveObjective activeObjective) {
@@ -88,29 +106,9 @@ public class BreakBlocksObjective extends Objective {
         return deductIfBlockIsPlaced;
     }
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
-        manager.command(addObjectiveBuilder.literal("BreakBlocks")
-                .argument(MaterialArgument.of("material"), ArgumentDescription.of("Material of the block which needs to be broken."))
-                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of blocks which need to be broken"))
-                .flag(
-                        manager.flagBuilder("doNotDeductIfBlockIsPlaced")
-                                .withDescription(ArgumentDescription.of("Makes it so Quest progress is not removed if the block is placed"))
-                )
-                .meta(CommandMeta.DESCRIPTION, "Adds a new BreakBlocks Objective to a quest")
-                .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-                    final Quest quest = context.get("quest");
-                    final Material material = context.get("material");
-                    final int amount = context.get("amount");
-                    final boolean deductIfBlockIsPlaced = !context.flags().isPresent("doNotDeductIfBlockIsPlaced");
-
-                    BreakBlocksObjective breakBlocksObjective = new BreakBlocksObjective(main, quest, quest.getObjectives().size() + 1, material, amount, deductIfBlockIsPlaced);
-                    quest.addObjective(breakBlocksObjective, true);
-                    audience.sendMessage(MiniMessage.miniMessage().parse(
-                            NotQuestColors.successGradient + "BreakBlocks Objective successfully added to Quest " + NotQuestColors.highlightGradient
-                                    + quest.getQuestName() + "</gradient>!</gradient>"
-                    ));
-
-                }));
+    @Override
+    public void load(FileConfiguration configuration, String initialPath) {
+        blockToBreak = Material.valueOf(configuration.getString(initialPath + ".specifics.blockToBreak.material"));
+        deductIfBlockIsPlaced = configuration.getBoolean(initialPath + ".specifics.deductIfBlockPlaced", true);
     }
 }

@@ -70,9 +70,9 @@ public class ConditionsManager {
         conditions.put(identifier, condition);
 
         try {
-            Method commandHandler = condition.getMethod("handleCommands", main.getClass(), PaperCommandManager.class, Command.Builder.class);
-            commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddRequirementCommandBuilder(), ConditionFor.QUESTREQUIREMENT);
-            commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddConditionCommandBuilder(), ConditionFor.OBJECTIVECONDITION);
+            Method commandHandler = condition.getMethod("handleCommands", main.getClass(), PaperCommandManager.class, Command.Builder.class, ConditionFor.class);
+            commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddRequirementCommandBuilder(), ConditionFor.QUEST);
+            commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddConditionCommandBuilder(), ConditionFor.OBJECTIVE);
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -92,7 +92,7 @@ public class ConditionsManager {
         return null;
     }
 
-    public final HashMap<String, Class<? extends Condition>> getConditionsAndIdentfiers() {
+    public final HashMap<String, Class<? extends Condition>> getConditionsAndIdentifiers() {
         return conditions;
     }
 
@@ -104,27 +104,31 @@ public class ConditionsManager {
         return conditions.keySet();
     }
 
-    public void addCondition(Condition condition, CommandContext<CommandSender> context){
+    public void addCondition(Condition condition, CommandContext<CommandSender> context) {
         Audience audience = main.adventure().sender(context.getSender());
 
         Quest quest = context.getOrDefault("quest", null);
-        Objective objectiveOfQuest = quest != null ? quest.getObjectiveFromID(context.get("Objective ID")) : null;
+        Objective objectiveOfQuest = null;
+        if (quest != null && context.contains("Objective ID")) {
+            int objectiveID = context.get("Objective ID");
+            objectiveOfQuest = quest.getObjectiveFromID(objectiveID);
+        }
 
-        if(quest != null){
+        if (quest != null) {
             condition.setQuest(quest);
-            if(objectiveOfQuest != null){//Objective Condition
+            if (objectiveOfQuest != null) {//Objective Condition
                 condition.setObjective(objectiveOfQuest);
 
                 objectiveOfQuest.addCondition(condition, true);
 
                 audience.sendMessage(MiniMessage.miniMessage().parse(
-                        NotQuestColors.successGradient + main.getConditionsManager().getConditionType(condition.getClass()) + " Condition successfully added to Objective " + NotQuestColors.highlightGradient
+                        NotQuestColors.successGradient + getConditionType(condition.getClass()) + " Condition successfully added to Objective " + NotQuestColors.highlightGradient
                                 + objectiveOfQuest.getObjectiveFinalName() + "</gradient>!</gradient>"));
             }else{ //Quest Requirement
-                quest.addRequirement(condition);
+                quest.addRequirement(condition, true);
 
                 audience.sendMessage(MiniMessage.miniMessage().parse(
-                        NotQuestColors.successGradient + main.getConditionsManager().getConditionType(condition.getClass()) + " Requirement successfully added to Quest " + NotQuestColors.highlightGradient
+                        NotQuestColors.successGradient + getConditionType(condition.getClass()) + " Requirement successfully added to Quest " + NotQuestColors.highlightGradient
                                 + quest.getQuestName() + "</gradient>!</gradient>"
                 ));
             }

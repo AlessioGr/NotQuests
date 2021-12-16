@@ -24,33 +24,35 @@ import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.Commands.newCMDs.arguments.EntityTypeSelector;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.ActiveObjective;
-import rocks.gravili.notquests.Structs.Quest;
 
 public class BreedObjective extends Objective {
-    private final NotQuests main;
-    private final String entityToBreedType;
+    private String entityToBreedType = "";
 
-    public BreedObjective(NotQuests main, Quest quest, int objectiveID, int progressNeeded, String entityToBreedType) {
-        super(main, quest, objectiveID, progressNeeded);
-        this.main = main;
-        this.entityToBreedType = entityToBreedType;
+    public BreedObjective(NotQuests main) {
+        super(main);
     }
 
-    public BreedObjective(NotQuests main, Quest quest, int objectiveNumber, int progressNeeded) {
-        super(main, quest, objectiveNumber, progressNeeded);
-        this.main = main;
-        final String questName = quest.getQuestName();
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
+        manager.command(addObjectiveBuilder.literal("BreedMobs")
+                .argument(EntityTypeSelector.of("entityType", main), ArgumentDescription.of("Type of Entity the player has to breed."))
+                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of times the player needs to breed this entity."))
+                .meta(CommandMeta.DESCRIPTION, "Adds a new BreedMobs Objective to a quest")
+                .handler((context) -> {
+                    final String entityType = context.get("entityType");
+                    final int amount = context.get("amount");
 
-        this.entityToBreedType = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.mobToBreed");
+                    BreedObjective breedObjective = new BreedObjective(main);
+                    breedObjective.setEntityToBreedType(entityType);
+                    breedObjective.setProgressNeeded(amount);
 
+                    main.getObjectiveManager().addObjective(breedObjective, context);
+                }));
     }
 
     @Override
@@ -60,10 +62,13 @@ public class BreedObjective extends Objective {
                 .replace("%ENTITYTOBREED%", getEntityToBreedType());
     }
 
-    @Override
-    public void save() {
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.mobToBreed", getEntityToBreedType());
+    public void setEntityToBreedType(final String entityToBreedType) {
+        this.entityToBreedType = entityToBreedType;
+    }
 
+    @Override
+    public void save(FileConfiguration configuration, String initialPath) {
+        configuration.set(initialPath + ".specifics.mobToBreed", getEntityToBreedType());
     }
 
     @Override
@@ -75,25 +80,8 @@ public class BreedObjective extends Objective {
         return entityToBreedType;
     }
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
-        manager.command(addObjectiveBuilder.literal("BreedMobs")
-                .argument(EntityTypeSelector.of("entityType", main), ArgumentDescription.of("Type of Entity the player has to breed."))
-                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of times the player needs to breed this entity."))
-                .meta(CommandMeta.DESCRIPTION, "Adds a new BreedMobs Objective to a quest")
-                .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-                    final Quest quest = context.get("quest");
-                    final String entityType = context.get("entityType");
-                    final int amount = context.get("amount");
-
-                    BreedObjective breedObjective = new BreedObjective(main, quest, quest.getObjectives().size() + 1, amount, entityType);
-                    quest.addObjective(breedObjective, true);
-
-                    audience.sendMessage(MiniMessage.miniMessage().parse(
-                            NotQuestColors.successGradient + "BreedMobs Objective successfully added to Quest " + NotQuestColors.highlightGradient
-                                    + quest.getQuestName() + "</gradient>!</gradient>"
-                    ));
-
-                }));
+    @Override
+    public void load(FileConfiguration configuration, String initialPath) {
+        this.entityToBreedType = configuration.getString(initialPath + ".specifics.mobToBreed");
     }
 }

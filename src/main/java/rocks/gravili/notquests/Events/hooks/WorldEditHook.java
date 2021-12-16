@@ -18,6 +18,7 @@
 
 package rocks.gravili.notquests.Events.hooks;
 
+import cloud.commandframework.context.CommandContext;
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.LocalSession;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -26,11 +27,12 @@ import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.session.SessionManager;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Objectives.ReachLocationObjective;
-import rocks.gravili.notquests.Structs.Quest;
 
 public class WorldEditHook {
     private final NotQuests main;
@@ -39,7 +41,7 @@ public class WorldEditHook {
         this.main = main;
     }
 
-    public void handleReachLocationObjectiveCreation(final Player player, final Quest quest, final String locationName) {
+    public void handleReachLocationObjectiveCreation(final Player player, final String locationName, final @NonNull CommandContext<CommandSender> context) {
         BukkitPlayer actor = BukkitAdapter.adapt(player); // WorldEdit's native Player class extends Actor
         SessionManager manager = main.getWorldEdit().getWorldEdit().getSessionManager();
         LocalSession localSession = manager.get(actor);
@@ -54,12 +56,13 @@ public class WorldEditHook {
             final Location max = new Location(BukkitAdapter.adapt(selectionWorld), region.getMaximumPoint().getX(), region.getMaximumPoint().getY(), region.getMaximumPoint().getZ());
 
             //Create Objective
-            ReachLocationObjective reachLocationObjective = new ReachLocationObjective(main, quest, quest.getObjectives().size() + 1, min, max, locationName);
-            quest.addObjective(reachLocationObjective, true);
-            main.adventure().player(player).sendMessage(MiniMessage.miniMessage().parse(
-                    NotQuestColors.successGradient + "ReachLocation Objective successfully added to Quest " + NotQuestColors.highlightGradient
-                            + quest.getQuestName() + "</gradient>!</gradient>"
-            ));
+            ReachLocationObjective reachLocationObjective = new ReachLocationObjective(main);
+            reachLocationObjective.setLocationName(locationName);
+            reachLocationObjective.setMinLocation(min);
+            reachLocationObjective.setMaxLocation(max);
+
+            main.getObjectiveManager().addObjective(reachLocationObjective, context);
+
 
         } catch (IncompleteRegionException ex) {
             main.adventure().player(player).sendMessage(MiniMessage.miniMessage().parse(

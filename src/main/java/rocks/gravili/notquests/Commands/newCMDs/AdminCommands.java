@@ -23,7 +23,6 @@ import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
-import cloud.commandframework.arguments.standard.StringArrayArgument;
 import cloud.commandframework.bukkit.arguments.selector.SinglePlayerSelector;
 import cloud.commandframework.bukkit.parsers.selector.SinglePlayerSelectorArgument;
 import cloud.commandframework.meta.CommandMeta;
@@ -39,10 +38,10 @@ import org.bukkit.entity.Player;
 import rocks.gravili.notquests.Commands.newCMDs.arguments.ActiveQuestSelector;
 import rocks.gravili.notquests.Commands.newCMDs.arguments.QuestSelector;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.Actions.Action;
 import rocks.gravili.notquests.Structs.*;
 import rocks.gravili.notquests.Structs.Objectives.Objective;
 import rocks.gravili.notquests.Structs.Objectives.TriggerCommandObjective;
-import rocks.gravili.notquests.Structs.Triggers.Action;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -353,13 +352,13 @@ public class AdminCommands {
                     }
                 }));
 
-        manager.command(builder.literal("listRewardTypes")
-                .meta(CommandMeta.DESCRIPTION, "Shows you a list of all available Reward Types.")
+        manager.command(builder.literal("listActionTypes", "listRewardTyües")
+                .meta(CommandMeta.DESCRIPTION, "Shows you a list of all available Action (Reward) Types.")
                 .handler((context) -> {
                     final Audience audience = main.adventure().sender(context.getSender());
                     audience.sendMessage(Component.empty());
                     audience.sendMessage(miniMessage.parse(highlightGradient + "All reward types:</gradient>"));
-                    for (final String rewardType : main.getRewardManager().getRewardIdentifiers()) {
+                    for (final String rewardType : main.getActionManager().getActionIdentifiers()) {
                         audience.sendMessage(miniMessage.parse(mainGradient + rewardType));
                     }
                 }));
@@ -855,66 +854,8 @@ public class AdminCommands {
 
 
     public void handleActions() {
-        //Actions
-        manager.command(builder.literal("actions")
-                .literal("add")
-                .argument(StringArgument.<CommandSender>newBuilder("Action Name").withSuggestionsProvider(
-                        (context, lastString) -> {
-                            final List<String> allArgs = context.getRawInput();
-                            final Audience audience = main.adventure().sender(context.getSender());
-                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[New, unique Action Name]", "<New console command>");
-
-                            ArrayList<String> completions = new ArrayList<>();
-
-                            completions.add("<Enter new, unique Action Name>");
-                            return completions;
-                        }
-                ).single().build(), ArgumentDescription.of("Action Name"))
-                .argument(StringArrayArgument.of("Console Command",
-                        (context, lastString) -> {
-                            final List<String> allArgs = context.getRawInput();
-                            final Audience audience = main.adventure().sender(context.getSender());
-                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "<New console command>", "");
-
-                            ArrayList<String> completions = new ArrayList<>();
-
-                            if (lastString.startsWith("{")) {
-                                completions.addAll(placeholders);
-                            } else {
-                                completions.add("<Enter Console Command>");
-                            }
-
-                            return completions;
-                        }
-                ), ArgumentDescription.of("Console Command"))
-                .meta(CommandMeta.DESCRIPTION, "Create a new action.")
-                .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-                    final String actionName = context.get("Action Name");
-
-                    boolean alreadyExists = false;
-                    for (final Action action : main.getActionsManager().getActions()) {
-                        if (action.getActionName().equalsIgnoreCase(actionName)) {
-                            alreadyExists = true;
-                            break;
-                        }
-                    }
-
-                    if (!alreadyExists) {
-                        final String consoleCommand = String.join(" ", (String[]) context.get("Console Command"));
-
-                        audience.sendMessage(miniMessage.parse(mainGradient + "Trying to create Action with the name "
-                                + highlightGradient + actionName + "</gradient> and console command " + highlight2Gradient + consoleCommand + "</gradient>...</gradient>"
-                        ));
-
-                        audience.sendMessage(miniMessage.parse(mainGradient + "Status: " + main.getActionsManager().createAction(actionName, consoleCommand)));
-
-                    } else {
-                        audience.sendMessage(miniMessage.parse(errorGradient + "Error! An action with the name " + highlightGradient + actionName + "</gradient> already exists!</gradient>"));
-
-                    }
-                }));
-        manager.command(builder.literal("actions")
+        //Actions.yml actions
+        /*manager.command(builder.literal("actions")
                 .literal("edit")
                 .argument(StringArgument.<CommandSender>newBuilder("Action Name").withSuggestionsProvider(
                         (context, lastString) -> {
@@ -922,12 +863,7 @@ public class AdminCommands {
                             final Audience audience = main.adventure().sender(context.getSender());
                             main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Action Name]", "[...]");
 
-                            ArrayList<String> completions = new ArrayList<>();
-
-                            for (final Action action : main.getActionsManager().getActions()) {
-                                completions.add(action.getActionName());
-                            }
-                            return completions;
+                            return new ArrayList<>(main.getActionsManager().getActionsAndIdentifiers().keySet());
                         }
                 ).single().build(), ArgumentDescription.of("Action Name"))
                 .literal("setCommand")
@@ -952,16 +888,10 @@ public class AdminCommands {
                 .handler((context) -> {
                     final Audience audience = main.adventure().sender(context.getSender());
 
-                    final String actionName = context.get("Action Name");
+                    final String actionIdentifier = context.get("Action Identifier");
                     final String consoleCommand = String.join(" ", (String[]) context.get("Console Command"));
 
-                    Action foundAction = null;
-                    for (final Action action : main.getActionsManager().getActions()) {
-                        if (action.getActionName().equalsIgnoreCase(actionName)) {
-                            foundAction = action;
-                            break;
-                        }
-                    }
+                    Action foundAction = main.getActionsManager().getAction(actionIdentifier);
                     if (foundAction != null) {
                         foundAction.setConsoleCommand(consoleCommand);
                         audience.sendMessage(miniMessage.parse(successGradient + "Console command of action " + highlightGradient + foundAction.getActionName() + "</gradient> has been set to " + highlight2Gradient + consoleCommand + "</gradient> </gradient>"));
@@ -969,7 +899,7 @@ public class AdminCommands {
                         audience.sendMessage(miniMessage.parse(errorGradient + "Error! Action with the name " + highlightGradient + actionName + "</gradient> does not exist!</gradient>"));
 
                     }
-                }));
+                }));*/
 
 
         manager.command(builder.literal("actions")
@@ -980,12 +910,8 @@ public class AdminCommands {
                             final Audience audience = main.adventure().sender(context.getSender());
                             main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Action Name]", "[...]");
 
-                            ArrayList<String> completions = new ArrayList<>();
+                            return new ArrayList<>(main.getActionsManager().getActionsAndIdentifiers().keySet());
 
-                            for (final Action action : main.getActionsManager().getActions()) {
-                                completions.add(action.getActionName());
-                            }
-                            return completions;
                         }
                 ).single().build(), ArgumentDescription.of("Action Name"))
                 .literal("delete", "remove")
@@ -993,24 +919,15 @@ public class AdminCommands {
                 .handler((context) -> {
                     final Audience audience = main.adventure().sender(context.getSender());
 
-                    final String actionName = context.get("Action Name");
+                    final String actionIdentifier = context.get("Action Identifier");
 
-                    Action foundAction = null;
-                    for (final Action action : main.getActionsManager().getActions()) {
-                        if (action.getActionName().equalsIgnoreCase(actionName)) {
-                            foundAction = action;
-                            break;
-                        }
-                    }
+                    if (main.getActionsManager().getAction(actionIdentifier) != null) {
 
-
-                    if (foundAction != null) {
-
-                        main.getActionsManager().removeAction(foundAction);
-                        audience.sendMessage(miniMessage.parse(successGradient + "Action with the name " + highlightGradient + foundAction.getActionName() + "</gradient> has been deleted.</gradient>"));
+                        main.getActionsManager().removeAction(actionIdentifier);
+                        audience.sendMessage(miniMessage.parse(successGradient + "Action with the name " + highlightGradient + actionIdentifier + "</gradient> has been deleted.</gradient>"));
 
                     } else {
-                        audience.sendMessage(miniMessage.parse(errorGradient + "Error! Action with the name " + highlightGradient + actionName + "</gradient> does not exist!</gradient>"));
+                        audience.sendMessage(miniMessage.parse(errorGradient + "Error! Action with the name " + highlightGradient + actionIdentifier + "</gradient> does not exist!</gradient>"));
                     }
 
                 }));
@@ -1022,9 +939,10 @@ public class AdminCommands {
                     final Audience audience = main.adventure().sender(context.getSender());
                     int counter = 1;
                     audience.sendMessage(miniMessage.parse(highlightGradient + "All Actions:"));
-                    for (final Action action : main.getActionsManager().getActions()) {
-                        audience.sendMessage(miniMessage.parse(highlightGradient + counter + ".</gradient> " + mainGradient + action.getActionName()));
-                        audience.sendMessage(miniMessage.parse(veryUnimportant + "  └─ " + unimportant + "Command: " + highlight2Gradient + action.getConsoleCommand()));
+                    for (final String actionIdentifier : main.getActionsManager().getActionsAndIdentifiers().keySet()) {
+                        final Action action = main.getActionsManager().getAction(actionIdentifier);
+                        audience.sendMessage(miniMessage.parse(highlightGradient + counter + ".</gradient> " + mainGradient + actionIdentifier));
+                        audience.sendMessage(miniMessage.parse(veryUnimportant + "  └─ " + unimportant + "Type: " + highlight2Gradient + action.getActionType()));
                         counter += 1;
                     }
                 }));

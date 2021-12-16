@@ -21,26 +21,32 @@ package rocks.gravili.notquests.Structs.Triggers.TriggerTypes;
 import cloud.commandframework.Command;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
-import rocks.gravili.notquests.Commands.NotQuestColors;
+import org.bukkit.configuration.file.FileConfiguration;
 import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.Structs.Quest;
-import rocks.gravili.notquests.Structs.Triggers.Action;
 import rocks.gravili.notquests.Structs.Triggers.Trigger;
 
 public class FailTrigger extends Trigger {
 
-    private final NotQuests main;
 
-    public FailTrigger(final NotQuests main, final Quest quest, final int triggerID, Action action, int applyOn, String worldName, long amountNeeded) {
-        super(main, quest, triggerID, action, applyOn, worldName, amountNeeded);
-        this.main = main;
+    public FailTrigger(final NotQuests main) {
+        super(main);
+    }
+
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addTriggerBuilder) {
+        manager.command(addTriggerBuilder.literal("FAIL")
+                .flag(main.getCommandManager().applyOn)
+                .flag(main.getCommandManager().triggerWorldString)
+                .meta(CommandMeta.DESCRIPTION, "Triggers when a Quest is failed.")
+                .handler((context) -> {
+                    FailTrigger failTrigger = new FailTrigger(main);
+
+                    main.getTriggerManager().addTrigger(failTrigger, context);
+                }));
     }
 
     @Override
-    public void save() {
+    public void save(FileConfiguration configuration, String initialPath) {
 
     }
 
@@ -49,41 +55,9 @@ public class FailTrigger extends Trigger {
         return null;
     }
 
+    @Override
+    public void load(FileConfiguration configuration, String initialPath) {
 
-
-
-    /*@Override
-    public void isCompleted(){
-
-    }*/
-
-
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addTriggerBuilder) {
-        manager.command(addTriggerBuilder.literal("FAIL")
-                .flag(main.getCommandManager().applyOn)
-                .flag(main.getCommandManager().triggerWorldString)
-                .meta(CommandMeta.DESCRIPTION, "Triggers when a Quest is failed.")
-                .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-
-                    final Quest quest = context.get("quest");
-                    final Action action = context.get("action");
-
-
-                    final int applyOn = context.flags().getValue(main.getCommandManager().applyOn, 0); //0 = Quest
-                    final String worldString = context.flags().getValue(main.getCommandManager().triggerWorldString, null);
-
-
-                    FailTrigger failTrigger = new FailTrigger(main, quest, quest.getTriggers().size() + 1, action, applyOn, worldString, 1);
-
-                    quest.addTrigger(failTrigger);
-
-                    audience.sendMessage(MiniMessage.miniMessage().parse(
-                            NotQuestColors.successGradient + "FAIL Trigger successfully added to Quest " + NotQuestColors.highlightGradient
-                                    + quest.getQuestName() + "</gradient>!</gradient>"
-                    ));
-
-                }));
     }
 
 

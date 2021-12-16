@@ -25,41 +25,23 @@ import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.ActiveObjective;
-import rocks.gravili.notquests.Structs.Quest;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class RunCommandObjective extends Objective {
 
-    private final NotQuests main;
-    private final String commandToRun;
-    private final boolean ignoreCase;
-    private final boolean cancelCommand;
+    private String commandToRun;
+    private boolean ignoreCase;
+    private boolean cancelCommand;
 
-    public RunCommandObjective(NotQuests main, final Quest quest, final int objectiveID, int amountToRun, String commandToRun, boolean ignoreCase, boolean cancelCommand) {
-        super(main, quest, objectiveID, amountToRun);
-        this.main = main;
-        this.commandToRun = commandToRun;
-        this.ignoreCase = ignoreCase;
-        this.cancelCommand = cancelCommand;
-    }
-
-    public RunCommandObjective(NotQuests main, Quest quest, int objectiveNumber, int progressNeeded) {
-        super(main, quest, objectiveNumber, progressNeeded);
-        final String questName = quest.getQuestName();
-
-        this.main = main;
-        commandToRun = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.commandToRun");
-        ignoreCase = main.getDataManager().getQuestsConfig().getBoolean("quests." + questName + ".objectives." + objectiveNumber + ".specifics.ignoreCase", false);
-        cancelCommand = main.getDataManager().getQuestsConfig().getBoolean("quests." + questName + ".objectives." + objectiveNumber + ".specifics.cancelCommand", false);
-
+    public RunCommandObjective(NotQuests main) {
+        super(main);
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
@@ -87,8 +69,6 @@ public class RunCommandObjective extends Objective {
                 )
                 .meta(CommandMeta.DESCRIPTION, "Adds a new RunCommand Objective to a quest")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-                    final Quest quest = context.get("quest");
                     String command = context.get("Command");
                     final int amount = context.get("amount");
                     final boolean ignoreCase = context.flags().isPresent("ignoreCase");
@@ -98,14 +78,26 @@ public class RunCommandObjective extends Objective {
                         command = "/" + command;
                     }
 
-                    RunCommandObjective runCommandObjective = new RunCommandObjective(main, quest, quest.getObjectives().size() + 1, amount, command, ignoreCase, cancelCommand);
-                    quest.addObjective(runCommandObjective, true);
-                    audience.sendMessage(MiniMessage.miniMessage().parse(
-                            NotQuestColors.successGradient + "RunCommands Objective successfully added to Quest " + NotQuestColors.highlightGradient
-                                    + quest.getQuestName() + "</gradient>!</gradient>"
-                    ));
+                    RunCommandObjective runCommandObjective = new RunCommandObjective(main);
+                    runCommandObjective.setProgressNeeded(amount);
+                    runCommandObjective.setCommandToRun(command);
+                    runCommandObjective.setIgnoreCase(ignoreCase);
+                    runCommandObjective.setCancelCommand(cancelCommand);
 
+                    main.getObjectiveManager().addObjective(runCommandObjective, context);
                 }));
+    }
+
+    public void setCommandToRun(final String commandToRun) {
+        this.commandToRun = commandToRun;
+    }
+
+    public void setIgnoreCase(final boolean ignoreCase) {
+        this.ignoreCase = ignoreCase;
+    }
+
+    public void setCancelCommand(final boolean cancelCommand) {
+        this.cancelCommand = cancelCommand;
     }
 
     @Override
@@ -116,12 +108,19 @@ public class RunCommandObjective extends Objective {
     }
 
     @Override
-    public void save() {
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.commandToRun", getCommandToRun());
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.ignoreCase", isIgnoreCase());
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.cancelCommand", isCancelCommand());
-
+    public void save(FileConfiguration configuration, String initialPath) {
+        configuration.set(initialPath + ".specifics.commandToRun", getCommandToRun());
+        configuration.set(initialPath + ".specifics.ignoreCase", isIgnoreCase());
+        configuration.set(initialPath + ".specifics.cancelCommand", isCancelCommand());
     }
+
+    @Override
+    public void load(FileConfiguration configuration, String initialPath) {
+        commandToRun = configuration.getString(initialPath + ".specifics.commandToRun");
+        ignoreCase = configuration.getBoolean(initialPath + ".specifics.ignoreCase", false);
+        cancelCommand = configuration.getBoolean(initialPath + ".specifics.cancelCommand", false);
+    }
+
 
     @Override
     public void onObjectiveUnlock(ActiveObjective activeObjective) {

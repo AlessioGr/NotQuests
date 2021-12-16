@@ -27,6 +27,7 @@ import cloud.commandframework.paper.PaperCommandManager;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.ActiveQuest;
 import rocks.gravili.notquests.Structs.Objectives.Objective;
@@ -41,14 +42,11 @@ import static rocks.gravili.notquests.Commands.NotQuestColors.errorGradient;
 
 public class ObjectiveCompletedCondition extends Condition {
 
-    private final NotQuests main;
     private int objectiveID;
 
 
     public ObjectiveCompletedCondition(NotQuests main) {
         super(main);
-        this.main = main;
-
     }
 
     public void setObjectiveID(final int objectiveID){
@@ -101,19 +99,8 @@ public class ObjectiveCompletedCondition extends Condition {
 
     }
 
-    @Override
-    public void save(String initialPath) {
-        main.getDataManager().getQuestsConfig().set(initialPath + ".specifics.objectiveID", getObjectiveToCompleteID());
-    }
-
-    @Override
-    public void load(String initialPath) {
-        objectiveID = main.getDataManager().getQuestsConfig().getInt(initialPath + ".specifics.objectiveID");
-    }
-
-
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
-        if(conditionFor == ConditionFor.OBJECTIVECONDITION){
+        if (conditionFor == ConditionFor.OBJECTIVE) {
             manager.command(builder.literal("CompleteObjective")
                     .argument(IntegerArgument.<CommandSender>newBuilder("Depending Objective ID").withMin(1).withSuggestionsProvider(
                                     (context, lastString) -> {
@@ -172,5 +159,15 @@ public class ObjectiveCompletedCondition extends Condition {
 
                     }));
         }
+    }
+
+    @Override
+    public void save(FileConfiguration configuration, String initialPath) {
+        configuration.set(initialPath + ".specifics.objectiveID", getObjectiveToCompleteID());
+    }
+
+    @Override
+    public void load(FileConfiguration configuration, String initialPath) {
+        objectiveID = configuration.getInt(initialPath + ".specifics.objectiveID");
     }
 }

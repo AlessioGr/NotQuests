@@ -26,44 +26,70 @@ import cloud.commandframework.paper.PaperCommandManager;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.Commands.newCMDs.arguments.EntityTypeSelector;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.ActiveObjective;
-import rocks.gravili.notquests.Structs.Quest;
 
 public class KillMobsObjective extends Objective {
 
-    private final NotQuests main;
-    private final String mobToKillType;
+    private String mobToKillType;
     private String nameTagContainsAny = "";
     private String nameTagEquals = "";
 
-    public KillMobsObjective(NotQuests main, final Quest quest, final int objectiveID, String mobToKill, int amountToKill) {
-        super(main, quest, objectiveID, amountToKill);
-        this.main = main;
-        this.mobToKillType = mobToKill;
+    public KillMobsObjective(NotQuests main) {
+        super(main);
     }
 
-    public KillMobsObjective(NotQuests main, Quest quest, int objectiveNumber, int progressNeeded) {
-        super(main, quest, objectiveNumber, progressNeeded);
-        final String questName = quest.getQuestName();
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
+        manager.command(addObjectiveBuilder.literal("KillMobs")
+                .argument(EntityTypeSelector.of("entityType", main), ArgumentDescription.of("Type of Entity the player has to kill."))
+                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of kills needed"))
+                .flag(main.getCommandManager().nametag_equals)
+                .flag(main.getCommandManager().nametag_containsany)
+                .meta(CommandMeta.DESCRIPTION, "Adds a new KillMobs Objective to a quest")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
 
-        this.main = main;
-        mobToKillType = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".specifics.mobToKill");
+                    final String entityType = context.get("entityType");
+                    final int amountToKill = context.get("amount");
 
-        //Extras
-        final String nameTagContains = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".extras.nameTagContainsAny", "");
-        if (!nameTagContains.isBlank()) {
-            setNameTagContainsAny(nameTagContains);
-        }
+                    final String[] a = context.flags().getValue(main.getCommandManager().nametag_equals, new String[]{""});
+                    final String[] b = context.flags().getValue(main.getCommandManager().nametag_containsany, new String[]{""});
+                    final String nametag_equals = String.join(" ", a);
+                    final String nametag_containsany = String.join(" ", b);
 
-        final String nameTagEquals = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".extras.nameTagEquals", "");
-        if (!nameTagEquals.isBlank()) {
-            setNameTagEquals(nameTagEquals);
-        }
+                    KillMobsObjective killMobsObjective = new KillMobsObjective(main);
+
+                    killMobsObjective.setMobToKillType(entityType);
+                    killMobsObjective.setProgressNeeded(amountToKill);
+
+                    //Add flags
+                    killMobsObjective.setNameTagEquals(nametag_equals);
+                    killMobsObjective.setNameTagContainsAny(nametag_containsany);
+
+
+                    main.getObjectiveManager().addObjective(killMobsObjective, context);
+
+
+                    if (!nametag_equals.isBlank()) {
+                        audience.sendMessage(MiniMessage.miniMessage().parse(
+                                NotQuestColors.mainGradient + "With nametag_equals flag:  " + NotQuestColors.highlightGradient
+                                        + nametag_equals + "</gradient>!</gradient>"
+                        ));
+                    }
+                    if (!nametag_containsany.isBlank()) {
+                        audience.sendMessage(MiniMessage.miniMessage().parse(
+                                NotQuestColors.mainGradient + "With nametag_containsany flag:  " + NotQuestColors.highlightGradient
+                                        + nametag_containsany + "</gradient>!</gradient>"
+                        ));
+                    }
+
+                }));
     }
+
 
     @Override
     public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
@@ -72,16 +98,20 @@ public class KillMobsObjective extends Objective {
                 .replace("%MOBTOKILL%", "" + getMobToKill());
     }
 
+    public void setMobToKillType(final String mobToKillType) {
+        this.mobToKillType = mobToKillType;
+    }
+
     @Override
-    public void save() {
-        main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".specifics.mobToKill", getMobToKill());
+    public void save(FileConfiguration configuration, String initialPath) {
+        configuration.set(initialPath + ".specifics.mobToKill", getMobToKill());
 
         //Extra args
         if (!getNameTagContainsAny().isBlank()) {
-            main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".extras.nameTagContainsAny", getNameTagContainsAny());
+            configuration.set(initialPath + ".extras.nameTagContainsAny", getNameTagContainsAny());
         }
         if (!getNameTagEquals().isBlank()) {
-            main.getDataManager().getQuestsConfig().set("quests." + getQuest().getQuestName() + ".objectives." + getObjectiveID() + ".extras.nameTagEquals", getNameTagEquals());
+            configuration.set(initialPath + ".extras.nameTagEquals", getNameTagEquals());
         }
     }
 
@@ -116,53 +146,19 @@ public class KillMobsObjective extends Objective {
         this.nameTagEquals = nameTagEquals;
     }
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
-        manager.command(addObjectiveBuilder.literal("KillMobs")
-                .argument(EntityTypeSelector.of("entityType", main), ArgumentDescription.of("Type of Entity the player has to kill."))
-                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of kills needed"))
-                .flag(main.getCommandManager().nametag_equals)
-                .flag(main.getCommandManager().nametag_containsany)
-                .meta(CommandMeta.DESCRIPTION, "Adds a new KillMobs Objective to a quest")
-                .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-                    final Quest quest = context.get("quest");
+    @Override
+    public void load(FileConfiguration configuration, String initialPath) {
+        mobToKillType = configuration.getString(initialPath + ".specifics.mobToKill");
 
-                    final String entityType = context.get("entityType");
-                    final int amountToKill = context.get("amount");
+        //Extras
+        final String nameTagContains = configuration.getString(initialPath + ".extras.nameTagContainsAny", "");
+        if (!nameTagContains.isBlank()) {
+            setNameTagContainsAny(nameTagContains);
+        }
 
-                    final String[] a = context.flags().getValue(main.getCommandManager().nametag_equals, new String[]{""});
-                    final String[] b = context.flags().getValue(main.getCommandManager().nametag_containsany, new String[]{""});
-                    final String nametag_equals = String.join(" ", a);
-                    final String nametag_containsany = String.join(" ", b);
-
-                    KillMobsObjective killMobsObjective = new KillMobsObjective(main, quest, quest.getObjectives().size() + 1, entityType, amountToKill);
-
-                    //Add flags
-                    killMobsObjective.setNameTagEquals(nametag_equals);
-                    killMobsObjective.setNameTagContainsAny(nametag_containsany);
-
-
-                    quest.addObjective(killMobsObjective, true);
-
-                    audience.sendMessage(MiniMessage.miniMessage().parse(
-                            NotQuestColors.successGradient + "KillMobs Objective successfully added to Quest " + NotQuestColors.highlightGradient
-                                    + quest.getQuestName() + "</gradient>!</gradient>"
-                    ));
-
-
-                    if (nametag_equals != null && !nametag_equals.isBlank()) {
-                        audience.sendMessage(MiniMessage.miniMessage().parse(
-                                NotQuestColors.mainGradient + "With nametag_equals flag:  " + NotQuestColors.highlightGradient
-                                        + nametag_equals + "</gradient>!</gradient>"
-                        ));
-                    }
-                    if (nametag_containsany != null && !nametag_containsany.isBlank()) {
-                        audience.sendMessage(MiniMessage.miniMessage().parse(
-                                NotQuestColors.mainGradient + "With nametag_containsany flag:  " + NotQuestColors.highlightGradient
-                                        + nametag_containsany + "</gradient>!</gradient>"
-                        ));
-                    }
-
-                }));
+        final String nameTagEquals = configuration.getString(initialPath + ".extras.nameTagEquals", "");
+        if (!nameTagEquals.isBlank()) {
+            setNameTagEquals(nameTagEquals);
+        }
     }
 }
