@@ -317,6 +317,9 @@ public class QuestManager {
                                     main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading quests reward data.");
                                     return;
                                 }
+                            } else {
+                                main.getDataManager().disablePluginAndSaving("Error loading Quest reward " + rewardNumber + " for Quest " + questName);
+                                return;
                             }
 
 
@@ -497,6 +500,9 @@ public class QuestManager {
                                         main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading objective reward data.");
                                         return;
                                     }
+                                } else {
+                                    main.getDataManager().disablePluginAndSaving("Error loading Objective reward " + objectiveRewardNumber + " for Objective " + objective.getObjectiveID() + " and Quest " + questName);
+                                    return;
                                 }
 
                             }
