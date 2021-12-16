@@ -1076,7 +1076,7 @@ public class QuestManager {
             }
 
         } else {
-            main.getLogManager().warn("NotQuests > Tried to load NPC data before quest data was loaded. skipping scheduling another load...");
+            main.getLogManager().warn("NotQuests > Tried to load NPC data before quest data was loaded. NotQuests is scheduling another load...");
 
             Bukkit.getScheduler().runTaskLaterAsynchronously(main, () -> {
                 if(!main.getDataManager().isAlreadyLoadedNPCs()){

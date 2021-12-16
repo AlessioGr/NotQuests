@@ -47,7 +47,7 @@ public class GiveItemAction extends Action {
         manager.command(builder.literal("GiveItem")
                 .argument(MaterialOrHandArgument.of("material", main), ArgumentDescription.of("Material of the item which the player should receive. If you use 'hand', the item you are holding in your main hand will be used."))
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of items which the player will receive."))
-                .meta(CommandMeta.DESCRIPTION, "Adds a new Item Reward to a quest")
+                .meta(CommandMeta.DESCRIPTION, "Adds a new GiveItem Reward to a quest")
                 .handler((context) -> {
                     final Audience audience = main.adventure().sender(context.getSender());
 

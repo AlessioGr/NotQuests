@@ -33,12 +33,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class GivePermissionAction extends Action {
+public class GrantPermissionAction extends Action {
 
     private String rewardedPermission = "";
 
 
-    public GivePermissionAction(final NotQuests main) {
+    public GrantPermissionAction(final NotQuests main) {
         super(main);
     }
 
@@ -47,7 +47,7 @@ public class GivePermissionAction extends Action {
             return;
         }
 
-        manager.command(builder.literal("GivePermission")
+        manager.command(builder.literal("GrantPermission")
                 .argument(StringArgument.<CommandSender>newBuilder("Permission").withSuggestionsProvider(
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
@@ -60,14 +60,14 @@ public class GivePermissionAction extends Action {
                             return completions;
                         }
                 ).single().build(), ArgumentDescription.of("Permission node which the player will receive as a reward"))
-                .meta(CommandMeta.DESCRIPTION, "Adds a new Permission Reward to a quest")
+                .meta(CommandMeta.DESCRIPTION, "Adds a new GrantPermission Reward to a quest")
                 .handler((context) -> {
                     final String permissionNode = context.get("Permission");
 
-                    GivePermissionAction givePermissionAction = new GivePermissionAction(main);
-                    givePermissionAction.setRewardedPermissionNode(permissionNode);
+                    GrantPermissionAction grantPermissionAction = new GrantPermissionAction(main);
+                    grantPermissionAction.setRewardedPermissionNode(permissionNode);
 
-                    main.getActionManager().addAction(givePermissionAction, context);
+                    main.getActionManager().addAction(grantPermissionAction, context);
 
                 }));
     }

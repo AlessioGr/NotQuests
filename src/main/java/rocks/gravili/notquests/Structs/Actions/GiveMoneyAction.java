@@ -45,7 +45,7 @@ public class GiveMoneyAction extends Action {
 
         manager.command(builder.literal("GiveMoney")
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of money the player will receive."))
-                .meta(CommandMeta.DESCRIPTION, "Adds a new Money Reward to a quest")
+                .meta(CommandMeta.DESCRIPTION, "Adds a new GiveMoney Reward to a quest")
                 .handler((context) -> {
                     final int moneyAmount = context.get("amount");
 

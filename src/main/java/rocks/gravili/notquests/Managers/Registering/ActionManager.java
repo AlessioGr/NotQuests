@@ -57,7 +57,7 @@ public class ActionManager {
         registerAction("GiveQuestPoints", GiveQuestPointsAction.class);
         registerAction("GiveItem", GiveItemAction.class);
         registerAction("GiveMoney", GiveMoneyAction.class);
-        registerAction("GivePermission", GivePermissionAction.class);
+        registerAction("GrantPermission", GrantPermissionAction.class);
     }
 
 

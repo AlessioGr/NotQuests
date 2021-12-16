@@ -133,6 +133,12 @@ public class UpdateManager {
             return "";
         }
 
+        //Old reward types to new reward types
+        oldRewardType = oldRewardType.replace("QuestPoints", "GiveQuestPoints")
+                .replace("Item", "GiveItem")
+                .replace("Money", "GiveMoney")
+                .replace("Permission", "GrantPermission");
+
         main.getDataManager().getQuestsConfig().set("quests." + questName + ".rewards." + rewardNumber + ".rewardType", null);
         main.getDataManager().getQuestsConfig().set("quests." + questName + ".rewards." + rewardNumber + ".actionType", oldRewardType);
         main.getDataManager().saveQuestsConfig();

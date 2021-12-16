@@ -41,7 +41,7 @@ public class GiveQuestPointsAction extends Action {
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor rewardFor) {
         manager.command(builder.literal("GiveQuestPoints")
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of QuestPoints the player will receive."))
-                .meta(CommandMeta.DESCRIPTION, "Adds a new QuestPoints Reward to a quest")
+                .meta(CommandMeta.DESCRIPTION, "Adds a new GiveQuestPoints Reward to a quest")
                 .handler((context) -> {
                     final int questPointsAmount = context.get("amount");
 
