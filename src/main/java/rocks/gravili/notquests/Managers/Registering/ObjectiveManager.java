@@ -27,9 +27,10 @@ import org.bukkit.command.CommandSender;
 import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Objectives.*;
-import rocks.gravili.notquests.Structs.Objectives.hooks.KillEliteMobsObjective;
-import rocks.gravili.notquests.Structs.Objectives.hooks.SlimefunResearchObjective;
-import rocks.gravili.notquests.Structs.Objectives.hooks.TownyReachResidentCountObjective;
+import rocks.gravili.notquests.Structs.Objectives.hooks.EliteMobs.KillEliteMobsObjective;
+import rocks.gravili.notquests.Structs.Objectives.hooks.Slimefun.SlimefunResearchObjective;
+import rocks.gravili.notquests.Structs.Objectives.hooks.Towny.TownyNationReachTownCountObjective;
+import rocks.gravili.notquests.Structs.Objectives.hooks.Towny.TownyReachResidentCountObjective;
 import rocks.gravili.notquests.Structs.Quest;
 
 import java.lang.reflect.InvocationTargetException;
@@ -73,8 +74,10 @@ public class ObjectiveManager {
         registerObjective("Interact", InteractObjective.class);
         registerObjective("Jump", JumpObjective.class);
         registerObjective("SmeltItems", SmeltObjective.class);
-        registerObjective("TownyReachResidentCount", TownyReachResidentCountObjective.class);
 
+        //Towny
+        registerObjective("TownyReachResidentCount", TownyReachResidentCountObjective.class);
+        registerObjective("TownyNationReachTownCount", TownyNationReachTownCountObjective.class);
 
 
         //registerObjectiveCommandCompletionHandler("KillMobs", this::eee);

@@ -26,7 +26,7 @@ import org.bukkit.event.Listener;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.ActiveObjective;
 import rocks.gravili.notquests.Structs.ActiveQuest;
-import rocks.gravili.notquests.Structs.Objectives.hooks.KillEliteMobsObjective;
+import rocks.gravili.notquests.Structs.Objectives.hooks.EliteMobs.KillEliteMobsObjective;
 import rocks.gravili.notquests.Structs.QuestPlayer;
 
 import java.util.Locale;

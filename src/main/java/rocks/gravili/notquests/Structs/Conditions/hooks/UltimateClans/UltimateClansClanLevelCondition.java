@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.Structs.Conditions.hooks;
+package rocks.gravili.notquests.Structs.Conditions.hooks.UltimateClans;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;

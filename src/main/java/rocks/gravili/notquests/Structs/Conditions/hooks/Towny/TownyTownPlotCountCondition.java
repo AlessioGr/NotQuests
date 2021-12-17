@@ -1,4 +1,4 @@
-package rocks.gravili.notquests.Structs.Conditions.hooks;
+package rocks.gravili.notquests.Structs.Conditions.hooks.Towny;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
@@ -16,11 +16,11 @@ import rocks.gravili.notquests.Structs.Conditions.Condition;
 import rocks.gravili.notquests.Structs.Conditions.ConditionFor;
 import rocks.gravili.notquests.Structs.QuestPlayer;
 
-public class TownyTownResidentCountCondition extends Condition {
+public class TownyTownPlotCountCondition extends Condition {
 
-    private int minTownResidentCount = 1;
+    private int minTownPlotCount = 1;
 
-    public TownyTownResidentCountCondition(final NotQuests main) {
+    public TownyTownPlotCountCondition(final NotQuests main) {
         super(main);
     }
 
@@ -29,26 +29,26 @@ public class TownyTownResidentCountCondition extends Condition {
             return;
         }
 
-        manager.command(builder.literal("TownyTownResidentCount")
-                .argument(IntegerArgument.<CommandSender>newBuilder("min Resident Count").withMin(1), ArgumentDescription.of("Minimum Town resident count"))
-                .meta(CommandMeta.DESCRIPTION, "Creates a new TownyTownResidentCount Condition")
+        manager.command(builder.literal("TownyTownPlotCount")
+                .argument(IntegerArgument.<CommandSender>newBuilder("min Plot Count").withMin(1), ArgumentDescription.of("Minimum Town plot count"))
+                .meta(CommandMeta.DESCRIPTION, "Creates a new TownyTownPlotCount Condition")
                 .handler((context) -> {
-                    final int minResidentCount = context.get("min Resident Count");
+                    final int minPlotCount = context.get("min Plot Count");
 
-                    TownyTownResidentCountCondition townyTownResidentCountCondition = new TownyTownResidentCountCondition(main);
-                    townyTownResidentCountCondition.setMinTownResidentCount(minResidentCount);
+                    TownyTownPlotCountCondition townyTownPlotCountCondition = new TownyTownPlotCountCondition(main);
+                    townyTownPlotCountCondition.setMinTownPlotCount(minPlotCount);
 
 
-                    main.getConditionsManager().addCondition(townyTownResidentCountCondition, context);
+                    main.getConditionsManager().addCondition(townyTownPlotCountCondition, context);
                 }));
     }
 
-    public final int getMinTownResidentCount() {
-        return minTownResidentCount;
+    public final int getMinTownPlotCount() {
+        return minTownPlotCount;
     }
 
-    public void setMinTownResidentCount(final int minTownResidentCount) {
-        this.minTownResidentCount = minTownResidentCount;
+    public void setMinTownPlotCount(final int minTownPlotCount) {
+        this.minTownPlotCount = minTownPlotCount;
     }
 
     @Override
@@ -62,10 +62,10 @@ public class TownyTownResidentCountCondition extends Condition {
             Resident resident = TownyUniverse.getInstance().getResident(questPlayer.getUUID());
             if (resident != null && resident.getTownOrNull() != null && resident.hasTown()) {
                 Town town = resident.getTownOrNull();
-                if (town.getNumResidents() >= getMinTownResidentCount()) {
+                if (town.getPlotGroups().size() >= getMinTownPlotCount()) {
                     return "";
                 } else {
-                    return "\n§eYour town needs to have at least §b" + getMinTownResidentCount() + "§e residents.";
+                    return "\n§eYour town needs to have at least §b" + getMinTownPlotCount() + "§e plot groups.";
                 }
             } else {
                 return "\n§eYou need to be in a town";
@@ -73,26 +73,25 @@ public class TownyTownResidentCountCondition extends Condition {
 
 
         } else {
-            return "\n§eError reading TownyTownResidentCount requirement...";
-
+            return "\n§eError reading TownyTownPlotCount requirement...";
         }
     }
 
     @Override
     public String getConditionDescription() {
-        return "§7-- Minimum town residents: " + getMinTownResidentCount() + "\n";
+        return "§7-- Minimum town plots: " + getMinTownPlotCount() + "\n";
     }
 
 
     @Override
     public void save(FileConfiguration configuration, String initialPath) {
-        configuration.set(initialPath + ".specifics.minTownResidentCount", getMinTownResidentCount());
+        configuration.set(initialPath + ".specifics.minTownPlotCount", getMinTownPlotCount());
 
     }
 
     @Override
     public void load(FileConfiguration configuration, String initialPath) {
-        this.minTownResidentCount = configuration.getInt(initialPath + ".specifics.minTownResidentCount");
+        this.minTownPlotCount = configuration.getInt(initialPath + ".specifics.minTownPlotCount");
 
     }
 }

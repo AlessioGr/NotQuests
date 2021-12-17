@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.Structs.Objectives.hooks;
+package rocks.gravili.notquests.Structs.Objectives.hooks.Towny;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
@@ -100,7 +100,7 @@ public class TownyReachResidentCountObjective extends Objective {
     @Override
     public void onObjectiveUnlock(ActiveObjective activeObjective) {
         activeObjective.getQuestPlayer().sendDebugMessage("TownyReachResidentCountObjective onObjectiveUnlock");
-        if (!isCountPreviousResidents()) {
+        if (!main.isTownyEnabled() || !isCountPreviousResidents()) {
             activeObjective.getQuestPlayer().sendDebugMessage("TownyReachResidentCountObjective onObjectiveUnlock cancel 1");
             return;
         }
@@ -126,6 +126,6 @@ public class TownyReachResidentCountObjective extends Objective {
 
         activeObjective.getQuestPlayer().sendDebugMessage("TownyReachResidentCountObjective addProgress: " + town.getNumResidents());
 
-        activeObjective.addProgress(town.getNumResidents(), -1);
+        activeObjective.addProgress(town.getNumResidents());
     }
 }

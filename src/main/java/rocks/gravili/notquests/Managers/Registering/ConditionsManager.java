@@ -27,9 +27,11 @@ import org.bukkit.command.CommandSender;
 import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Conditions.*;
-import rocks.gravili.notquests.Structs.Conditions.hooks.TownyNationNameCondition;
-import rocks.gravili.notquests.Structs.Conditions.hooks.TownyTownResidentCountCondition;
-import rocks.gravili.notquests.Structs.Conditions.hooks.UltimateClansClanLevelCondition;
+import rocks.gravili.notquests.Structs.Conditions.hooks.Towny.TownyNationNameCondition;
+import rocks.gravili.notquests.Structs.Conditions.hooks.Towny.TownyNationTownCountCondition;
+import rocks.gravili.notquests.Structs.Conditions.hooks.Towny.TownyTownPlotCountCondition;
+import rocks.gravili.notquests.Structs.Conditions.hooks.Towny.TownyTownResidentCountCondition;
+import rocks.gravili.notquests.Structs.Conditions.hooks.UltimateClans.UltimateClansClanLevelCondition;
 import rocks.gravili.notquests.Structs.Objectives.Objective;
 import rocks.gravili.notquests.Structs.Quest;
 
@@ -61,8 +63,12 @@ public class ConditionsManager {
         registerCondition("WorldTime", WorldTimeCondition.class);
         registerCondition("UltimateClansClanLevel", UltimateClansClanLevelCondition.class);
         registerCondition("ObjectiveCompleted", ObjectiveCompletedCondition.class);
+
+        //Towny
         registerCondition("TownyNationName", TownyNationNameCondition.class);
+        registerCondition("TownyNationTownCount", TownyNationTownCountCondition.class);
         registerCondition("TownyTownResidentCount", TownyTownResidentCountCondition.class);
+        registerCondition("TownyTownPlotCount", TownyTownPlotCountCondition.class);
 
     }
 
