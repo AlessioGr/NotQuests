@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'rocks.gravili.notquests'
-version = '3.0.0-BETA1'
+version = '3.0.0-BETA2'
 
 repositories {
     mavenCentral()
@@ -146,7 +146,7 @@ dependencies {
     implementation group: 'io.leangen.geantyref', name: 'geantyref', version: '1.3.13'
 
 
-    implementation 'com.github.retrooper.packetevents:bukkit:2.0-69cffe5b3d-1'
+    implementation 'com.github.retrooper.packetevents:bukkit:2.0-SNAPSHOT'
     //implementation 'com.github.AlessioGr.packetevents:bukkit:2.0-SNAPSHOT'
 
 }
@@ -235,7 +235,7 @@ publishing {
         maven(MavenPublication) {
             groupId = 'rocks.gravili.notquests'
             artifactId = 'NotQuests'
-            version = '3.0.0-BETA1'
+            version = '3.0.0-BETA2'
 
             from components.java
         }
