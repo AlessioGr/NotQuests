@@ -216,6 +216,11 @@ public class AdminConversationCommands {
                                     unimportant + "  1. Condition: " + unimportantClose + mainGradient + conversationLine.getConditions().get(0).getConditionType()
                             ));
                         }
+                        if (conversationLine.getActions().size() > 0) {
+                            audience.sendMessage(miniMessage.parse(
+                                    unimportant + "  1. Action: " + unimportantClose + mainGradient + conversationLine.getActions().get(0).getActionType()
+                            ));
+                        }
 
 
                         audience.sendMessage(miniMessage.parse(
@@ -237,6 +242,11 @@ public class AdminConversationCommands {
                                 if (next.getConditions().size() > 0) {
                                     audience.sendMessage(miniMessage.parse(
                                             "  " + unimportant + "  1. Condition: " + unimportantClose + mainGradient + next.getConditions().get(0).getConditionType()
+                                    ));
+                                }
+                                if (next.getActions().size() > 0) {
+                                    audience.sendMessage(miniMessage.parse(
+                                            "  " + unimportant + "  1. Action: " + unimportantClose + mainGradient + next.getActions().get(0).getActionType()
                                     ));
                                 }
                                 audience.sendMessage(miniMessage.parse(
@@ -261,6 +271,11 @@ public class AdminConversationCommands {
                                                     "    " + unimportant + "  1. Condition: " + unimportantClose + mainGradient + nextnext.getConditions().get(0).getConditionType()
                                             ));
                                         }
+                                        if (nextnext.getActions().size() > 0) {
+                                            audience.sendMessage(miniMessage.parse(
+                                                    "    " + unimportant + "  1. Action: " + unimportantClose + mainGradient + nextnext.getActions().get(0).getActionType()
+                                            ));
+                                        }
                                         audience.sendMessage(miniMessage.parse(
                                                 "    " + unimportant + "  Message: " + unimportantClose + mainGradient + nextnext.getMessage()
                                         ));
@@ -281,6 +296,11 @@ public class AdminConversationCommands {
                                                             "      " + unimportant + "  1. Condition: " + unimportantClose + mainGradient + nextnextnext.getConditions().get(0).getConditionType()
                                                     ));
                                                 }
+                                                if (nextnextnext.getActions().size() > 0) {
+                                                    audience.sendMessage(miniMessage.parse(
+                                                            "      " + unimportant + "  1. Action: " + unimportantClose + mainGradient + nextnextnext.getActions().get(0).getActionType()
+                                                    ));
+                                                }
                                                 audience.sendMessage(miniMessage.parse(
                                                         "      " + unimportant + "  Message: " + unimportantClose + mainGradient + nextnextnext.getMessage()
                                                 ));
@@ -298,6 +318,11 @@ public class AdminConversationCommands {
                                                         if (nextnextnextnext.getConditions().size() > 0) {
                                                             audience.sendMessage(miniMessage.parse(
                                                                     "        " + unimportant + "  1. Condition: " + unimportantClose + mainGradient + nextnextnextnext.getConditions().get(0).getConditionType()
+                                                            ));
+                                                        }
+                                                        if (nextnextnextnext.getActions().size() > 0) {
+                                                            audience.sendMessage(miniMessage.parse(
+                                                                    "        " + unimportant + "  1. Action: " + unimportantClose + mainGradient + nextnextnextnext.getActions().get(0).getActionType()
                                                             ));
                                                         }
                                                         audience.sendMessage(miniMessage.parse(

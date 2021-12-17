@@ -150,6 +150,7 @@ dependencies {
 
     implementation 'commons-io:commons-io:2.11.0'
     implementation 'org.apache.commons:commons-text:1.9'
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
     //implementation 'org.apache.commons:commons-lang:3.1'
 }
 
@@ -161,26 +162,29 @@ shadowJar {
     minimize()
 
 
+
     dependencies {
 
-        exclude(dependency('com.mojang:brigadier'))
+        exclude('com.mojang:brigadier')
 
 
-        relocate 'io.papermc.lib', path + '.paper'
-        relocate('org.bstats', path + '.bstats')
-        relocate('cloud.commandframework', path + '.cloud')
-        relocate('net.kyori', path + '.kyori')
-        relocate('io.leangen.geantyref', path + '.geantyref')
-        relocate("de.themoep", path + '.de.themoep')
-        //relocate("org.apache.commons.io", path + '.commons.io')
-        //relocate("org.apache.commons.text", path + '.commons.text')
-        relocate("org.apache.commons", path + '.commons')
+        relocate('io.papermc.lib', path.concat('.paper'))
+        relocate('org.bstats', path.concat('.bstats'))
+        relocate('cloud.commandframework', path.concat('.cloud'))
+        relocate('net.kyori', path.concat('.kyori'))
+        relocate('io.leangen.geantyref', path.concat('.geantyref'))
+        relocate("de.themoep", path.concat('.de.themoep'))
+
+        relocate("org.apache.commons.io", path.concat('.commons.io'))
+        relocate("org.apache.commons.text", path.concat('.commons.text'))
+        relocate("org.apache.commons.lang3", path.concat('.commons.lang'))
+
+        include dependency('org.apache.commons:')
+        include dependency('commons-io:commons-io:')
+
 
         include dependency('io.papermc:paperlib')
         include dependency("de.themoep:inventorygui:1.5-SNAPSHOT")
-        include dependency('commons.io:')
-        //include dependency('org.apache.commons:commons-text')
-        include dependency('org.apache.commons:')
         include dependency('org.bstats:')
         include dependency('net.kyori:')
         include dependency('cloud.commandframework:')
@@ -193,11 +197,8 @@ shadowJar {
         //include dependency('com.github.AlessioGr.packetevents:')
     }
 
-    relocate("io.github.retrooper.packetevents", path + '.packetevents.bukkit')
-    relocate("com.github.retrooper.packetevents", path + '.packetevents.api')
-
-
-
+    relocate("io.github.retrooper.packetevents", path.concat('.packetevents.bukkit'))
+    relocate("com.github.retrooper.packetevents", path.concat('.packetevents.api'))
 
 
     archiveClassifier.set(null)

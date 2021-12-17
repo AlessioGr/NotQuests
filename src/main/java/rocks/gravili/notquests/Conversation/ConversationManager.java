@@ -245,7 +245,7 @@ public class ConversationManager {
 
 
             //Prepare all starter conversation lines to feed them into deep diving
-            final String starterLines = config.getString("start", "").replace("", " ");
+            final String starterLines = config.getString("start", "").replace(" ", "");
             for (final String starterLine : starterLines.split(",")) {
                 final String initialLine = "Lines." + starterLine;
                 final String message = config.getString(initialLine + ".text", "-");
@@ -312,13 +312,17 @@ public class ConversationManager {
             main.getLogManager().debug("Deep diving conversation line <AQUA>" + fullIdentifier + "</AQUA>...");
 
 
-            final String nextString = config.getString("Lines." + fullIdentifier + ".next", "");
+            final String nextString = config.getString("Lines." + fullIdentifier + ".next", "").replace(" ", "");
+            ;
             if (!nextString.isBlank()) {
                 //Dive deep
                 final ArrayList<ConversationLine> keepDiving = new ArrayList<>();
 
                 outerLoop:
                 for (final String nextLineFullIdentifier : nextString.split(",")) {
+                    main.getLogManager().debug("Deep diving next string <AQUA>" + nextLineFullIdentifier + "</AQUA> for conversation line <AQUA>" + fullIdentifier + "</AQUA>...");
+
+
                     final String initialLine = "Lines." + nextLineFullIdentifier;
 
                     final String message = config.getString(initialLine + ".text", "");
@@ -326,7 +330,6 @@ public class ConversationManager {
                     final ArrayList<Action> actions = parseActionString(config.getStringList(initialLine + ".actions"));
                     final boolean shouting = config.getBoolean(initialLine + ".shout", false);
 
-                    main.getLogManager().debug("Deep diving next string <AQUA>" + nextLineFullIdentifier + "</AQUA> for conversation line <AQUA>" + fullIdentifier + "</AQUA>...");
                     main.getLogManager().debug("---- Message: <AQUA>" + message + "</AQUA> | Next: <AQUA>" + next + "</AQUA>");
 
                     //Skip if we already added this line
@@ -362,6 +365,7 @@ public class ConversationManager {
                     ConversationLine newLine = new ConversationLine(foundSpeaker, nextLineFullIdentifier.split("\\.")[1], message);
                     if (actions != null && actions.size() > 0) {
                         for (Action action : actions) {
+                            main.getLogManager().debug("Found an action!");
                             newLine.addAction(action);
                         }
                     }
@@ -453,12 +457,13 @@ public class ConversationManager {
 
                 if (foundCondition != null) {
                     main.getLogManager().debug("Found conversation line condition: " + foundCondition.getConditionType());
+                    conditions.add(foundCondition);
                 }
 
-                return conditions;
 
             }
-            return null;
+            return conditions;
+
         }
         return null;
     }
@@ -470,17 +475,19 @@ public class ConversationManager {
                 main.getLogManager().debug("<GREEN>Trying to find action in: " + actionString);
                 if (actionString.startsWith("action ")) {
 
-                    final Action foundAction = main.getActionsManager().getAction(actionString);
+                    final Action foundAction = main.getActionsManager().getAction(actionString.replace("action ", "").replace(" ", ""));
                     if (foundAction != null) {
                         main.getLogManager().debug("Found conversation line action: " + foundAction.getActionName());
+                        actions.add(foundAction);
+                    } else {
+                        main.getLogManager().warn("Unable to find conversation line action: " + actionString);
                     }
 
-                    return actions;
                 } else {
                     main.getLogManager().warn("Inline-defining actions is not possible in this version yet.");
                 }
             }
-            return null;
+            return actions;
         }
         return null;
     }

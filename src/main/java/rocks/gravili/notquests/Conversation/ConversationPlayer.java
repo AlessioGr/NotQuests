@@ -217,6 +217,7 @@ public class ConversationPlayer {
 
         if (conversationLine.getActions() != null && conversationLine.getActions().size() > 0) {
             for (final Action action : conversationLine.getActions()) {
+                main.getLogManager().debug("Executing action for conversation line...");
                 action.execute(questPlayer.getPlayer());
             }
         }
@@ -264,6 +265,7 @@ public class ConversationPlayer {
                 //Trigger its actions first:
                 if (playerOptionLine.getActions() != null && playerOptionLine.getActions().size() > 0) {
                     for (final Action action : playerOptionLine.getActions()) {
+                        main.getLogManager().debug("Executing action for conversation line...");
                         action.execute(questPlayer.getPlayer());
                     }
                 }
