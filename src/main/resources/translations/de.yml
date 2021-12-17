@@ -69,6 +69,10 @@ chat:
         base: '    &8└─ &7%EVENTUALCOLOR%Springe &f%EVENTUALCOLOR%%AMOUNTOFJUMPS% &7%EVENTUALCOLOR%mal'
       smelt:
         base: '    &8└─ &7%EVENTUALCOLOR%Items schmelzen: &f%EVENTUALCOLOR%%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+      townyReachResidentCount:
+        base: '    &8└─ &7%EVENTUALCOLOR%Erreiche folgende Anzahl an Stadtbewohnern: &f%EVENTUALCOLOR%%AMOUNT%'
+      townyNationReachTownCount:
+        base: '    &8└─ &7%EVENTUALCOLOR%Erreiche folgende Anzahl an Städten in deiner Nation: &f%EVENTUALCOLOR%%AMOUNT%'
 titles:
   quest-accepted:
     title: '&fQuest akzeptiert'
