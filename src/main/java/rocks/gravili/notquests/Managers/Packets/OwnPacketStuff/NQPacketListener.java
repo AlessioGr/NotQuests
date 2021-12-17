@@ -6,6 +6,8 @@ import io.netty.channel.ChannelPromise;
 import net.kyori.adventure.platform.bukkit.MinecraftComponentSerializer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
+import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.Managers.Packets.OwnPacketStuff.Wrappers.WrappedChatPacket;
 import rocks.gravili.notquests.Managers.Packets.OwnPacketStuff.Wrappers.WrappedChatType;
@@ -33,11 +35,13 @@ public class NQPacketListener extends ChannelDuplexHandler {
             //main.getLogManager().debug("Sending " + msg.getClass().getSimpleName());
 
             try {
-                WrappedChatPacket wrappedChatPacket = new WrappedChatPacket(msg);
+                final WrappedChatPacket wrappedChatPacket = new WrappedChatPacket(msg);
+
+
                 if (wrappedChatPacket.getType() == WrappedChatType.GAME_INFO) { //Skip actionbar messages
                     return;
                 }
-                //main.getLogManager().debug("Valid chat packet! Type: " + wrappedChatPacket.getType().toString());
+                main.getLogManager().debug("Valid chat packet! Type: " + wrappedChatPacket.getType().toString());
 
                 handleMainChatHistorySavingLogic(wrappedChatPacket, player);
             } catch (Exception e) {
@@ -55,19 +59,29 @@ public class NQPacketListener extends ChannelDuplexHandler {
     public void handleMainChatHistorySavingLogic(final WrappedChatPacket wrappedChatPacket, final Player player) {
         Component component;
         try {
-            Object message = wrappedChatPacket.getMessage();
-            if (message == null) {
+            Object vanillaMessage = wrappedChatPacket.getMessage();
+            BaseComponent[] spigotComponent = wrappedChatPacket.getSpigotComponent();
+            Component adventureComponent = wrappedChatPacket.getAdventureComponent();
+            if (vanillaMessage == null && spigotComponent == null && adventureComponent == null) {
+                main.getLogManager().debug("All null :o");
                 return;
             }
 
             component = wrappedChatPacket.getAdventureComponent();
 
             if (component == null) { //Spigot shit
-                if (!MinecraftComponentSerializer.isSupported()) {
-                    return;
+
+                if (spigotComponent != null) {
+                    component = BungeeComponentSerializer.get().deserialize(spigotComponent);
+
+                } else {//vanilla shit
+                    if (!MinecraftComponentSerializer.isSupported()) {
+                        return;
+                    }
+                    component = MinecraftComponentSerializer.get().deserialize(vanillaMessage);
+                    main.getLogManager().debug("vanilla serializer");
+                    // component = GsonComponentSerializer.builder().build().deserialize(wrappedChatPacket.getChatComponentJson());
                 }
-                component = MinecraftComponentSerializer.get().deserialize(message);
-                // component = GsonComponentSerializer.builder().build().deserialize(wrappedChatPacket.getChatComponentJson());
             }
 
 

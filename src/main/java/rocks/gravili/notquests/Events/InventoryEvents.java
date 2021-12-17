@@ -78,7 +78,7 @@ public class InventoryEvents implements Listener {
 
         if (isItemSlotWorld(player.getWorld().getName())) {
             player.getInventory().remove(journal);
-            player.getInventory().setItem(8, journal);
+            player.getInventory().setItem(main.getDataManager().getConfiguration().journalInventorySlot, journal);
         }
     }
 
@@ -98,10 +98,10 @@ public class InventoryEvents implements Listener {
     public void onPlayerRespawn(PlayerRespawnEvent e) {
         final Player player = e.getPlayer();
         if (isItemSlotWorld(player.getWorld().getName()) && e.getRespawnLocation().getWorld() != null && isItemSlotWorld(e.getRespawnLocation().getWorld().getName())) {
-            final ItemStack journalItem = player.getInventory().getItem(8);
+            final ItemStack journalItem = player.getInventory().getItem(main.getDataManager().getConfiguration().journalInventorySlot);
             if (journalItem == null || !journalItem.isSimilar(journal)) {
                 player.getInventory().remove(journal);
-                player.getInventory().setItem(8, journal);
+                player.getInventory().setItem(main.getDataManager().getConfiguration().journalInventorySlot, journal);
             }
         }
     }
@@ -158,10 +158,10 @@ public class InventoryEvents implements Listener {
                 }
 
 
-                final ItemStack journalItem = player.getInventory().getItem(8);
+                final ItemStack journalItem = player.getInventory().getItem(main.getDataManager().getConfiguration().journalInventorySlot);
                 if (journalItem == null || !journalItem.isSimilar(journal)) {
                     player.getInventory().remove(journal);
-                    player.getInventory().setItem(8, journal);
+                    player.getInventory().setItem(main.getDataManager().getConfiguration().journalInventorySlot, journal);
                 }
             }
         }
@@ -175,7 +175,7 @@ public class InventoryEvents implements Listener {
 
         if (isItemSlotWorld(player.getWorld().getName())) {
             player.getInventory().remove(journal);
-            player.getInventory().setItem(8, journal);
+            player.getInventory().setItem(main.getDataManager().getConfiguration().journalInventorySlot, journal);
         }
 
     }

@@ -50,17 +50,25 @@ public class PacketManager implements Listener {
     }
 
     public void initialize() {
-        if (usePacketEvents && main.getDataManager().getConfiguration().packetMagic) {
-            WrapperPlayServerChatMessage.HANDLE_JSON = false;
-            PacketEvents.getAPI().getEventManager().registerListener(new PacketEventsPacketListener(main), PacketListenerPriority.LOW);
+        if (main.getDataManager().getConfiguration().packetMagic) {
+            if (usePacketEvents) {
+                WrapperPlayServerChatMessage.HANDLE_JSON = false;
+                PacketEvents.getAPI().getEventManager().registerListener(new PacketEventsPacketListener(main), PacketListenerPriority.LOW);
 
-            PacketEventsSettings settings = PacketEvents.getAPI().getSettings();
-            settings.bStats(false).checkForUpdates(false).debug(false);
+                PacketEventsSettings settings = PacketEvents.getAPI().getSettings();
+                settings.bStats(false).checkForUpdates(false).debug(false);
 
-            PacketEvents.getAPI().init();
-        } else {
-            this.injector = new PacketInjector(main);
-            Bukkit.getServer().getPluginManager().registerEvents(this, main);
+                PacketEvents.getAPI().init();
+            } else {
+                this.injector = new PacketInjector(main);
+                Bukkit.getServer().getPluginManager().registerEvents(this, main);
+
+                //For Serverutils reload
+                for (final Player player : Bukkit.getOnlinePlayers()) {
+                    main.getLogManager().debug("Added SU player for packet injector. Name: " + player.getName());
+                    injector.addPlayer(player);
+                }
+            }
 
         }
     }

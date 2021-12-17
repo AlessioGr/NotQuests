@@ -19,6 +19,7 @@ general:
   journal-item:
     enabled-worlds:
       - ''
+    inventory-slot: 8
   packet-magic:
     enabled: true
     #Possible modes: "internal" and "packetevents"

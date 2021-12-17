@@ -62,6 +62,7 @@ public class Configuration {
     private boolean armorStandPreventEditing = true;
 
     public List<String> journalItemEnabledWorlds;
+    public int journalInventorySlot = 8;
 
 
     public boolean packetMagic = false;

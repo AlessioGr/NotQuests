@@ -1,6 +1,7 @@
 package rocks.gravili.notquests.Managers.Packets.OwnPacketStuff.Wrappers;
 
 import net.kyori.adventure.text.Component;
+import net.md_5.bungee.api.chat.BaseComponent;
 import rocks.gravili.notquests.Managers.Packets.OwnPacketStuff.Reflection;
 
 import java.util.UUID;
@@ -12,6 +13,7 @@ public class WrappedChatPacket {
     private final String json; //Type: UUID
     private Object message; //Type: Component
     private Component adventureComponent;
+    private BaseComponent[] spigotComponent;
 
     public WrappedChatPacket(Object packetObject) {
         this.packetObject = packetObject;
@@ -33,11 +35,17 @@ public class WrappedChatPacket {
             throw new RuntimeException(e);
         }
 
+
+        try {//spigot only
+            spigotComponent = (BaseComponent[]) Reflection.getFieldValueOfObject(packetObject, "components");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
         try {//paper only
-            //message = Reflection.getFieldValueOfObject(packetObject, "a");
             adventureComponent = (Component) Reflection.getFieldValueOfObject(packetObject, "adventure$message");
-        } catch (Exception ignored) {
-            //throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
 
         if (message != null) {
@@ -48,19 +56,22 @@ public class WrappedChatPacket {
             }
         } else {
             json = null;
-            //System.out.println(Arrays.toString(packetObject.getClass().getDeclaredFields()));
-            //throw new RuntimeException("Message is null.");
+            //NotQuests.getInstance().getLogManager().debug("Message is null. Fields: " + Arrays.toString(packetObject.getClass().getDeclaredFields()));
         }
 
 
     }
 
-    public Object getMessage() { //Type: Component
+    public Object getMessage() { //Type: Component (Vanilla)
         return message;
     }
 
-    public Component getAdventureComponent() { //Type: Component //paper only
+    public Component getAdventureComponent() { //Type: Component //paper+ only
         return adventureComponent;
+    }
+
+    public BaseComponent[] getSpigotComponent() { //Type: BaseComponent //spigot+ only
+        return spigotComponent;
     }
 
     public WrappedChatType getType() { //Type: ChatType

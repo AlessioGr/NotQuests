@@ -741,6 +741,13 @@ public class DataManager {
         }
         configuration.journalItemEnabledWorlds = getGeneralConfig().getStringList(key);
 
+        key = "general.journal-item.inventory-slot";
+        if (!getGeneralConfig().isInt(key)) {
+            getGeneralConfig().set(key, 8);
+            valueChanged = true;
+        }
+        configuration.journalInventorySlot = getGeneralConfig().getInt(key);
+
         key = "general.packet-magic.enabled";
         if (!getGeneralConfig().isBoolean(key)) {
             getGeneralConfig().set(key, true);
