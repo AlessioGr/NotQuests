@@ -6,6 +6,7 @@ Lines:
     greeting1:
       text: "Hello traveler! I am atlas, the keeper of time!"
       next: Player.greeting1,Player.greeting2
+      shout: true
     answer1:
       text: "That's a secret, but without me, you all wouldn't exist."
       next: Atlas.answer3
@@ -26,6 +27,7 @@ Lines:
     nicebye:
       text: "You're very welcome. Good luck on your ventures!"
       actions:
+        - "action givetestquest"
         - "action givetestquest"
   Player:
     greeting1:
