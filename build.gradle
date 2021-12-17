@@ -114,8 +114,7 @@ dependencies {
     compileOnly 'me.clip:placeholderapi:2.10.10'
     compileOnly 'com.github.MilkBowl:VaultAPI:1.7'
     implementation 'de.themoep:inventorygui:1.5-SNAPSHOT'
-    implementation 'commons-io:commons-io:2.11.0'
-    implementation 'org.apache.commons:commons-text:1.9'
+
 
     implementation 'io.lumine.xikage:MythicMobs:4.12.0'
     compileOnly files('libs/EliteMobs.jar')
@@ -149,6 +148,9 @@ dependencies {
     implementation 'com.github.retrooper.packetevents:bukkit:2.0-SNAPSHOT'
     //implementation 'com.github.AlessioGr.packetevents:bukkit:2.0-SNAPSHOT'
 
+    implementation 'commons-io:commons-io:2.11.0'
+    implementation 'org.apache.commons:commons-text:1.9'
+    //implementation 'org.apache.commons:commons-lang:3.1'
 }
 
 /**
@@ -170,14 +172,15 @@ shadowJar {
         relocate('net.kyori', path + '.kyori')
         relocate('io.leangen.geantyref', path + '.geantyref')
         relocate("de.themoep", path + '.de.themoep')
-        relocate("org.apache.commons.io", path + '.commons.io')
-        relocate("org.apache.commons.text", path + '.commons.text')
-
+        //relocate("org.apache.commons.io", path + '.commons.io')
+        //relocate("org.apache.commons.text", path + '.commons.text')
+        relocate("org.apache.commons", path + '.commons')
 
         include dependency('io.papermc:paperlib')
         include dependency("de.themoep:inventorygui:1.5-SNAPSHOT")
         include dependency('commons.io:')
-        include dependency('org.apache.commons:commons-text')
+        //include dependency('org.apache.commons:commons-text')
+        include dependency('org.apache.commons:')
         include dependency('org.bstats:')
         include dependency('net.kyori:')
         include dependency('cloud.commandframework:')
