@@ -20,9 +20,11 @@ general:
     enabled-worlds:
       - ''
   packet-magic:
-    enabled: false
+    enabled: true
+    #Possible modes: "internal" and "packetevents"
+    mode: "internal"
     conversations:
-      delete-previous: false
+      delete-previous: true
       history-size: 20
 visual:
   #Sets which language to use. Default is languages/en.yml

@@ -65,6 +65,7 @@ public class Configuration {
 
 
     public boolean packetMagic = false;
+    public boolean usePacketEvents = false;
     public boolean deletePreviousConversations = false;
     public int previousConversationsHistorySize = 20;
 

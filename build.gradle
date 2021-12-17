@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'rocks.gravili.notquests'
-version = '3.0.0-BETA2'
+version = '3.0.0-BETA3'
 
 repositories {
     mavenCentral()
@@ -145,13 +145,15 @@ dependencies {
     implementation group: 'io.leangen.geantyref', name: 'geantyref', version: '1.3.13'
 
 
-    implementation 'com.github.retrooper.packetevents:bukkit:2.0-SNAPSHOT'
-    //implementation 'com.github.AlessioGr.packetevents:bukkit:2.0-SNAPSHOT'
+    //implementation 'com.github.retrooper.packetevents:bukkit:2.0-SNAPSHOT'
+    implementation 'com.github.AlessioGr.packetevents:bukkit:2.0-SNAPSHOT'
 
     implementation 'commons-io:commons-io:2.11.0'
     implementation 'org.apache.commons:commons-text:1.9'
     implementation 'org.apache.commons:commons-lang3:3.12.0'
     //implementation 'org.apache.commons:commons-lang:3.1'
+
+    implementation 'io.netty:netty-all:4.1.72.Final'
 }
 
 /**
@@ -191,10 +193,10 @@ shadowJar {
         include dependency('io.leangen.geantyref:')
         include dependency('me.lucko:')
 
-        include dependency('com.github.retrooper.packetevents:')
-        include dependency('io.github.retrooper.packetevents:')
+        //include dependency('com.github.retrooper.packetevents:')
+        //include dependency('io.github.retrooper.packetevents:')
 
-        //include dependency('com.github.AlessioGr.packetevents:')
+        include dependency('com.github.AlessioGr.packetevents:')
     }
 
     relocate("io.github.retrooper.packetevents", path.concat('.packetevents.bukkit'))
@@ -239,7 +241,7 @@ publishing {
         maven(MavenPublication) {
             groupId = 'rocks.gravili.notquests'
             artifactId = 'NotQuests'
-            version = '3.0.0-BETA2'
+            version = '3.0.0-BETA3'
 
             from components.java
         }

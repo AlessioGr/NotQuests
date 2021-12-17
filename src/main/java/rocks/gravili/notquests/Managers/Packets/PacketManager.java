@@ -23,46 +23,83 @@ import com.github.retrooper.packetevents.event.PacketListenerPriority;
 import com.github.retrooper.packetevents.factory.bukkit.BukkitPacketEventsBuilder;
 import com.github.retrooper.packetevents.settings.PacketEventsSettings;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerChatMessage;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import rocks.gravili.notquests.Managers.Packets.OwnPacketStuff.PacketInjector;
+import rocks.gravili.notquests.Managers.Packets.packetevents.PacketEventsPacketListener;
 import rocks.gravili.notquests.NotQuests;
 
-public class PacketManager {
+public class PacketManager implements Listener {
     private final NotQuests main;
 
+    private final boolean usePacketEvents;
+    private PacketInjector injector;
 
     public PacketManager(final NotQuests main) {
         this.main = main;
+        usePacketEvents = main.getDataManager().getConfiguration().usePacketEvents;
+    }
+
+    public final PacketInjector getPacketInjector() {
+        return injector;
+    }
+
+    public void initialize() {
+        if (usePacketEvents && main.getDataManager().getConfiguration().packetMagic) {
+            WrapperPlayServerChatMessage.HANDLE_JSON = false;
+            PacketEvents.getAPI().getEventManager().registerListener(new PacketEventsPacketListener(main), PacketListenerPriority.LOW);
+
+            PacketEventsSettings settings = PacketEvents.getAPI().getSettings();
+            settings.bStats(false).checkForUpdates(false).debug(false);
+
+            PacketEvents.getAPI().init();
+        } else {
+            this.injector = new PacketInjector(main);
+            Bukkit.getServer().getPluginManager().registerEvents(this, main);
+
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onJoin(PlayerJoinEvent e) {
+        if (!usePacketEvents && main.getDataManager().getConfiguration().packetMagic) {
+            Player player = e.getPlayer();
+            main.getLogManager().debug("Added player for packet injector. Name: " + player.getName());
+
+            injector.addPlayer(player);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onQuit(PlayerQuitEvent e) {
+        if (!usePacketEvents && main.getDataManager().getConfiguration().packetMagic) {
+            Player player = e.getPlayer();
+            main.getLogManager().debug("Removed player for packet injector. Name: " + player.getName());
+
+            injector.removePlayer(player);
+        }
 
     }
 
 
-
-
     public void onLoad() {
-        if (main.getDataManager().getConfiguration().packetMagic) {
+        if (usePacketEvents && main.getDataManager().getConfiguration().packetMagic) {
             PacketEvents.setAPI(BukkitPacketEventsBuilder.build(main));
             PacketEvents.getAPI().load();
         }
     }
 
-    public void initialize() {
-        if (main.getDataManager().getConfiguration().packetMagic) {
-            WrapperPlayServerChatMessage.HANDLE_JSON = false;
-            PacketEvents.getAPI().getEventManager().registerListener(new NQPacketListener(main), PacketListenerPriority.LOW);
 
 
-            PacketEventsSettings settings = PacketEvents.getAPI().getSettings();
-            settings.bStats(false).checkForUpdates(false).debug(false);
 
-
-            PacketEvents.getAPI().init();
-
-
-        }
-
-    }
 
     public void terminate() {
-        if (main.getDataManager().getConfiguration().packetMagic) {
+        if (usePacketEvents && main.getDataManager().getConfiguration().packetMagic) {
             PacketEvents.getAPI().terminate();
         }
 

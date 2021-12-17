@@ -743,10 +743,17 @@ public class DataManager {
 
         key = "general.packet-magic.enabled";
         if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, false);
+            getGeneralConfig().set(key, true);
             valueChanged = true;
         }
         configuration.packetMagic = getGeneralConfig().getBoolean(key);
+
+        key = "general.mode";
+        if (!getGeneralConfig().isString(key)) {
+            getGeneralConfig().set(key, "internal");
+            valueChanged = true;
+        }
+        configuration.usePacketEvents = getGeneralConfig().getString(key, "internal").equalsIgnoreCase("packetevents");
 
         main.getLogManager().info("Detected version: " + Bukkit.getBukkitVersion());
 
@@ -757,7 +764,7 @@ public class DataManager {
 
         key = "general.packet-magic.conversations.delete-previous";
         if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, false);
+            getGeneralConfig().set(key, true);
             valueChanged = true;
         }
         configuration.deletePreviousConversations = getGeneralConfig().getBoolean(key);

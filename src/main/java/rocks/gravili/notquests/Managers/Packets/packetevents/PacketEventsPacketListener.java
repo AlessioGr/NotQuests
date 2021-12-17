@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.Managers.Packets;
+package rocks.gravili.notquests.Managers.Packets.packetevents;
 
 import com.github.retrooper.packetevents.event.PacketListener;
 import com.github.retrooper.packetevents.event.impl.PacketSendEvent;
@@ -31,13 +31,11 @@ import rocks.gravili.notquests.NotQuests;
 
 import java.util.ArrayList;
 
-public class NQPacketListener implements PacketListener {
+public class PacketEventsPacketListener implements PacketListener {
     private final NotQuests main;
 
 
-
-
-    public NQPacketListener(final NotQuests main) {
+    public PacketEventsPacketListener(final NotQuests main) {
         this.main = main;
 
     }
