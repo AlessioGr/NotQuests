@@ -87,18 +87,17 @@ public class UltimateClansClanLevelCondition extends Condition {
 
     @Override
     public String check(QuestPlayer questPlayer, boolean enforce) {
+        if (!main.isUltimateClansEnabled()) {
+            return "\n§eError: The server does not have UltimateClans enabled. Please ask the Owner to install UltimateClans for UltimateClans stuff to work.";
+        }
+
         final Player player = questPlayer.getPlayer();
         if (player != null) {
-            if (!main.isUltimateClansEnabled()) {
-                return "\n§eError: The server does not have UltimateClans enabled. Please ask the Owner to install UltimateClans for UltimateClans stuff to work.";
-            } else {
-                if (PlayerAPI.getInstance().getPlayerClan(player.getName()) != null && PlayerAPI.getInstance().getPlayerClan(player.getName()).getLevel() >= getMinClanLevel()) {
-                    return "";
-
-                }
-                return "\n§eYou need to be in a Clan with at least level §b" + getMinClanLevel() + "§e.";
+            if (PlayerAPI.getInstance().getPlayerClan(player.getName()) != null && PlayerAPI.getInstance().getPlayerClan(player.getName()).getLevel() >= getMinClanLevel()) {
+                return "";
 
             }
+            return "\n§eYou need to be in a Clan with at least level §b" + getMinClanLevel() + "§e.";
         } else {
             return "\n§eError reading UltimateClans requirement...";
 

@@ -86,35 +86,27 @@ public class TownyNationNameCondition extends Condition {
 
     @Override
     public String check(QuestPlayer questPlayer, boolean enforce) {
+        if (!main.isTownyEnabled()) {
+            return "\n§eError: The server does not have Towny enabled. Please ask the Owner to install Towny for Towny stuff to work.";
+        }
+
         final Player player = questPlayer.getPlayer();
         if (player != null) {
-            if (!main.isTownyEnabled()) {
-                return "\n§eError: The server does not have Towny enabled. Please ask the Owner to install Towny for Towny stuff to work.";
-            } else {
-                Resident resident = TownyUniverse.getInstance().getResident(questPlayer.getUUID());
-                try{
-                    if(resident != null && resident.getTown() != null && resident.hasTown() && resident.getTown().hasNation()){
+            Resident resident = TownyUniverse.getInstance().getResident(questPlayer.getUUID());
+            if (resident != null && resident.getTownOrNull() != null && resident.hasTown() && resident.getTownOrNull().hasNation()) {
 
-                        Nation nation = resident.getNationOrNull();
-                        if(nation != null && nation.getName().replace("_", " ").equals(getTownyNationName())){
-                            return "";
-                        }else{
-                            if(nation != null){
-                                return "\n§eYou need to be in the nation §b" + getTownyNationName() + "§e. However, you are currently in §b" + nation.getName().replace("_", " ");
-                            }else{
-                                return "\n§eYou need to be in the nation §b" + getTownyNationName();
-                            }
-                        }
-                    }else{
+                Nation nation = resident.getNationOrNull();
+                if (nation != null && nation.getName().replace("_", " ").equals(getTownyNationName())) {
+                    return "";
+                } else {
+                    if (nation != null) {
+                        return "\n§eYou need to be in the nation §b" + getTownyNationName() + "§e. However, you are currently in §b" + nation.getName().replace("_", " ");
+                    } else {
                         return "\n§eYou need to be in the nation §b" + getTownyNationName();
                     }
-                }catch (Exception e){
-                    return "\n§eYou need to be in the nation §b" + getTownyNationName();
                 }
-
-
-
-
+            } else {
+                return "\n§eYou need to be in the nation §b" + getTownyNationName();
             }
         } else {
             return "\n§eError reading TownyNationName requirement...";

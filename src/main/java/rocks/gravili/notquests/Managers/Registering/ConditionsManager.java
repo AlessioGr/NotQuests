@@ -28,6 +28,7 @@ import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Conditions.*;
 import rocks.gravili.notquests.Structs.Conditions.hooks.TownyNationNameCondition;
+import rocks.gravili.notquests.Structs.Conditions.hooks.TownyTownResidentCountCondition;
 import rocks.gravili.notquests.Structs.Conditions.hooks.UltimateClansClanLevelCondition;
 import rocks.gravili.notquests.Structs.Objectives.Objective;
 import rocks.gravili.notquests.Structs.Quest;
@@ -61,6 +62,7 @@ public class ConditionsManager {
         registerCondition("UltimateClansClanLevel", UltimateClansClanLevelCondition.class);
         registerCondition("ObjectiveCompleted", ObjectiveCompletedCondition.class);
         registerCondition("TownyNationName", TownyNationNameCondition.class);
+        registerCondition("TownyTownResidentCount", TownyTownResidentCountCondition.class);
 
     }
 

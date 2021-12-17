@@ -26,14 +26,12 @@ import cloud.commandframework.paper.PaperCommandManager;
 import com.palmergames.bukkit.towny.TownyUniverse;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
-import net.kyori.adventure.audience.Audience;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.ActiveObjective;
 import rocks.gravili.notquests.Structs.Objectives.Objective;
-import rocks.gravili.notquests.Structs.Quest;
 
 public class TownyReachResidentCountObjective extends Objective {
 
@@ -57,9 +55,6 @@ public class TownyReachResidentCountObjective extends Objective {
                 )
                 .meta(CommandMeta.DESCRIPTION, "Adds a new TownyReachResidentCount Objective to a quest")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-                    final Quest quest = context.get("quest");
-
                     int amount = context.get("amount");
                     final boolean countPreviousResidents = !context.flags().isPresent("doNotCountPreviousResidents");
 

@@ -97,10 +97,14 @@ public class ActionsManager {
                     return;
                 }
                 Class<? extends Action> actionType = null;
+                String actionTypeString = actionsConfigurationSection.getString(actionIdentifier + ".actionType", "");
+                if (actionTypeString.isBlank()) {
+                    actionTypeString = main.getUpdateManager().convertActionsYMLTypeToActionType(actionsConfigurationSection, actionIdentifier);
+                }
 
                 try {
-                    actionType = main.getActionManager().getActionClass(actionsConfigurationSection.getString(actionIdentifier + ".actionType"));
-                } catch (java.lang.NullPointerException ex) {
+                    actionType = main.getActionManager().getActionClass(actionTypeString);
+                } catch (NullPointerException ex) {
                     main.getDataManager().disablePluginAndSaving("Error parsing actions.yml action Type of action with name <AQUA>" + actionIdentifier + "</AQUA>.", ex);
                 }
 

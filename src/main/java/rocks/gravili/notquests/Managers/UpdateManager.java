@@ -144,4 +144,27 @@ public class UpdateManager {
         main.getDataManager().saveQuestsConfig();
         return oldRewardType;
     }
+
+
+    //Converts type => actionType converter for action.yml actions
+    public String convertActionsYMLTypeToActionType(final ConfigurationSection actionsConfigurationSection, final String actionIdentifier) { //Pre-3.0
+        main.getLogManager().info("Converting old Quest action.yml types to actionType...");
+        String oldActionType = actionsConfigurationSection.getString(actionIdentifier + ".type", "");
+        if (oldActionType.isBlank()) {
+            main.getLogManager().warn("There was an error converting the old actions.yml action type to actionType: Old type is empty. Skipping conversion...");
+            return "";
+        }
+
+        //Old reward types to new reward types
+        oldActionType = oldActionType.replace("QuestPoints", "GiveQuestPoints")
+                .replace("Item", "GiveItem")
+                .replace("Money", "GiveMoney")
+                .replace("Permission", "GrantPermission");
+
+        actionsConfigurationSection.set(actionIdentifier + ".type", null);
+        actionsConfigurationSection.set(actionIdentifier + ".actionType", oldActionType);
+
+        main.getActionsManager().saveActions();
+        return oldActionType;
+    }
 }
