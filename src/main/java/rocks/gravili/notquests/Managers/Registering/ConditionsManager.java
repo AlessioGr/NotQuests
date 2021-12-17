@@ -132,7 +132,7 @@ public class ConditionsManager {
                 audience.sendMessage(MiniMessage.miniMessage().parse(
                         NotQuestColors.successGradient + getConditionType(condition.getClass()) + " Condition successfully added to Objective " + NotQuestColors.highlightGradient
                                 + objectiveOfQuest.getObjectiveFinalName() + "</gradient>!</gradient>"));
-            }else{ //Quest Requirement
+            } else { //Quest Requirement
                 quest.addRequirement(condition, true);
 
                 audience.sendMessage(MiniMessage.miniMessage().parse(
@@ -141,5 +141,9 @@ public class ConditionsManager {
                 ));
             }
         }
+    }
+
+    public final Condition getConditionFromString(final String conditionString) {
+        return null; //TODO
     }
 }

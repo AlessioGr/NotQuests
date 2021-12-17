@@ -26,6 +26,8 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.Actions.Action;
+import rocks.gravili.notquests.Structs.Conditions.Condition;
 import rocks.gravili.notquests.Structs.QuestPlayer;
 
 import java.util.ArrayList;
@@ -160,14 +162,26 @@ public class ConversationPlayer {
         if (conversationLines.size() == 0) {
             return null;
         } else {
+            conversationLineLoop:
             for (final ConversationLine conversationLineToCheck : conversationLines) {
                 if (conversationLineToCheck.getSpeaker().isPlayer()) {
                     nextLines.add(conversationLineToCheck);
                 } else {
-                    if (nextLines.isEmpty()) {
-                        nextLines.add(conversationLineToCheck);
-                        return nextLines; //TODO CONDITIONS
+                    if (nextLines.isEmpty()) { //So we don't mingle it with player lines if there already is one.
+                        if (conversationLineToCheck.getConditions().isEmpty()) {
+                            nextLines.add(conversationLineToCheck);
+                            return nextLines;
+                        } else { //Check conditions
+                            for (final Condition condition : conversationLineToCheck.getConditions()) {
+                                if (!condition.check(getQuestPlayer(), false).isBlank()) {
+                                    continue conversationLineLoop;
+                                }
+                            }
+                            //If this is reached, all conditions passed
+                            nextLines.add(conversationLineToCheck);
+                            return nextLines;
 
+                        }
                     }
                 }
             }
@@ -201,8 +215,10 @@ public class ConversationPlayer {
 
         audience.sendMessage(line);
 
-        if (conversationLine.getAction() != null) {
-            conversationLine.getAction().execute(questPlayer.getPlayer());
+        if (conversationLine.getActions() != null && conversationLine.getActions().size() > 0) {
+            for (final Action action : conversationLine.getActions()) {
+                action.execute(questPlayer.getPlayer());
+            }
         }
 
 
@@ -245,9 +261,11 @@ public class ConversationPlayer {
             questPlayer.sendDebugMessage("Looking through current player line: <AQUA>" + playerOptionLine.getMessage());
             if (playerOptionLine.getMessage().equalsIgnoreCase(option)) {
 
-                //Trigger its action first:
-                if (playerOptionLine.getAction() != null) {
-                    playerOptionLine.getAction().execute(questPlayer.getPlayer());
+                //Trigger its actions first:
+                if (playerOptionLine.getActions() != null && playerOptionLine.getActions().size() > 0) {
+                    for (final Action action : playerOptionLine.getActions()) {
+                        action.execute(questPlayer.getPlayer());
+                    }
                 }
 
 

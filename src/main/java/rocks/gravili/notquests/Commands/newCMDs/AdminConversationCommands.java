@@ -211,6 +211,13 @@ public class AdminConversationCommands {
                         audience.sendMessage(miniMessage.parse(
                                 unimportant + "  Speaker: " + unimportantClose + mainGradient + conversationLine.getSpeaker().getSpeakerName()
                         ));
+                        if (conversationLine.getConditions().size() > 0) {
+                            audience.sendMessage(miniMessage.parse(
+                                    unimportant + "  1. Condition: " + unimportantClose + mainGradient + conversationLine.getConditions().get(0).getConditionType()
+                            ));
+                        }
+
+
                         audience.sendMessage(miniMessage.parse(
                                 unimportant + "  Message: " + unimportantClose + mainGradient + conversationLine.getMessage()
                         ));
@@ -227,6 +234,11 @@ public class AdminConversationCommands {
                                 audience.sendMessage(miniMessage.parse(
                                         "  " + unimportant + "  Speaker: " + unimportantClose + mainGradient + next.getSpeaker().getSpeakerName()
                                 ));
+                                if (next.getConditions().size() > 0) {
+                                    audience.sendMessage(miniMessage.parse(
+                                            "  " + unimportant + "  1. Condition: " + unimportantClose + mainGradient + next.getConditions().get(0).getConditionType()
+                                    ));
+                                }
                                 audience.sendMessage(miniMessage.parse(
                                         "  " + unimportant + "  Message: " + unimportantClose + mainGradient + next.getMessage()
                                 ));
@@ -244,6 +256,11 @@ public class AdminConversationCommands {
                                         audience.sendMessage(miniMessage.parse(
                                                 "    " + unimportant + "  Speaker: " + unimportantClose + mainGradient + nextnext.getSpeaker().getSpeakerName()
                                         ));
+                                        if (nextnext.getConditions().size() > 0) {
+                                            audience.sendMessage(miniMessage.parse(
+                                                    "    " + unimportant + "  1. Condition: " + unimportantClose + mainGradient + nextnext.getConditions().get(0).getConditionType()
+                                            ));
+                                        }
                                         audience.sendMessage(miniMessage.parse(
                                                 "    " + unimportant + "  Message: " + unimportantClose + mainGradient + nextnext.getMessage()
                                         ));
@@ -259,6 +276,11 @@ public class AdminConversationCommands {
                                                 audience.sendMessage(miniMessage.parse(
                                                         "      " + unimportant + "  Speaker: " + unimportantClose + mainGradient + nextnextnext.getSpeaker().getSpeakerName()
                                                 ));
+                                                if (nextnextnext.getConditions().size() > 0) {
+                                                    audience.sendMessage(miniMessage.parse(
+                                                            "      " + unimportant + "  1. Condition: " + unimportantClose + mainGradient + nextnextnext.getConditions().get(0).getConditionType()
+                                                    ));
+                                                }
                                                 audience.sendMessage(miniMessage.parse(
                                                         "      " + unimportant + "  Message: " + unimportantClose + mainGradient + nextnextnext.getMessage()
                                                 ));
@@ -273,6 +295,11 @@ public class AdminConversationCommands {
                                                         audience.sendMessage(miniMessage.parse(
                                                                 "        " + unimportant + "  Speaker: " + unimportantClose + mainGradient + nextnextnextnext.getSpeaker().getSpeakerName()
                                                         ));
+                                                        if (nextnextnextnext.getConditions().size() > 0) {
+                                                            audience.sendMessage(miniMessage.parse(
+                                                                    "        " + unimportant + "  1. Condition: " + unimportantClose + mainGradient + nextnextnextnext.getConditions().get(0).getConditionType()
+                                                            ));
+                                                        }
                                                         audience.sendMessage(miniMessage.parse(
                                                                 "        " + unimportant + "  Message: " + unimportantClose + mainGradient + nextnextnextnext.getMessage()
                                                         ));

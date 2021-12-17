@@ -19,6 +19,7 @@
 package rocks.gravili.notquests.Conversation;
 
 import rocks.gravili.notquests.Structs.Actions.Action;
+import rocks.gravili.notquests.Structs.Conditions.Condition;
 
 import java.util.ArrayList;
 
@@ -26,11 +27,11 @@ public class ConversationLine {
     private final Speaker speaker;
     private final String message; //minimessage
     private final ArrayList<ConversationLine> next;
-    //private final ArrayList<Condition> conditions;
+    private final ArrayList<Action> actions;
+    private final ArrayList<Condition> conditions;
     private String color = "<GRAY>";
     private boolean shout = false;
 
-    private Action action;
 
     private final String identifier;
     private final String fullIdentifier;
@@ -40,8 +41,18 @@ public class ConversationLine {
         this.identifier = identifier;
         this.message = message;
         next = new ArrayList<>();
+        conditions = new ArrayList<>();
+        actions = new ArrayList<>();
 
         this.fullIdentifier = speaker.getSpeakerName() + "." + identifier;
+    }
+
+    public final ArrayList<Condition> getConditions() {
+        return conditions;
+    }
+
+    public void addCondition(final Condition condition) {
+        this.conditions.add(condition);
     }
 
     public final String getFullIdentifier() {
@@ -84,11 +95,11 @@ public class ConversationLine {
         this.shout = shouting;
     }
 
-    public final Action getAction() {
-        return action;
+    public final ArrayList<Action> getActions() {
+        return actions;
     }
 
-    public void setAction(final Action newAction) {
-        this.action = newAction;
+    public void addAction(final Action newAction) {
+        this.actions.add(newAction);
     }
 }

@@ -31,12 +31,14 @@ import org.bukkit.persistence.PersistentDataType;
 import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Actions.Action;
+import rocks.gravili.notquests.Structs.Conditions.Condition;
 import rocks.gravili.notquests.Structs.QuestPlayer;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 import static rocks.gravili.notquests.Commands.NotQuestColors.highlight2Gradient;
@@ -159,20 +161,27 @@ public class ConversationManager {
 
     }
 
-
-    public void loadConversationsFromConfig() {
-        conversations.clear();
-        openConversations.clear();
-
+    public boolean prepareConversationsFolder() {
+        //Create the Conversations Folder if it does not exist yet (the NotQuests/conversations folder)
         conversationsFolder = new File(main.getDataFolder().getPath() + "/conversations/");
         if (!conversationsFolder.exists()) {
             main.getLogManager().info("Conversations Folder not found. Creating a new one...");
 
             if (!conversationsFolder.mkdirs()) {
                 main.getDataManager().disablePluginAndSaving("There was an error creating the NotQuests conversations folder.");
-                return;
+                return false;
             }
+        }
+        return true;
+    }
 
+
+    public void loadConversationsFromConfig() {
+        conversations.clear();
+        openConversations.clear();
+
+        if (!prepareConversationsFolder()) {
+            return;
         }
 
         for (File conversationFile : main.getUtilManager().listFilesRecursively(conversationsFolder)) {
@@ -214,11 +223,10 @@ public class ConversationManager {
                     }
 
 
-                    final ConfigurationSection speakerLines = speakersAndLinesConfigurationSection.getConfigurationSection(speakerName);
+                    /*final ConfigurationSection speakerLines = speakersAndLinesConfigurationSection.getConfigurationSection(speakerName);
 
                     if (speakerLines == null) {
                         main.getLogManager().warn("No lines found for conversation <AQUA>" + conversationFile.getName() + "</AQUA>.");
-
                         continue;
                     }
 
@@ -226,47 +234,59 @@ public class ConversationManager {
                         if (line.equals("color")) {
                             continue;
                         }
-                    }
+                    }*/
 
                 }
 
             }
 
+            //This ArrayList will be filled
             final ArrayList<ConversationLine> conversationLines = new ArrayList<>();
 
 
-            final String starterLines = config.getString("start", "");
-
+            //Prepare all starter conversation lines to feed them into deep diving
+            final String starterLines = config.getString("start", "").replace("", " ");
             for (final String starterLine : starterLines.split(",")) {
-                final String message = config.getString("Lines." + starterLine + ".text", "-");
+                final String initialLine = "Lines." + starterLine;
+                final String message = config.getString(initialLine + ".text", "-");
+                final ArrayList<Action> actions = parseActionString(config.getStringList(initialLine + ".actions"));
+                final boolean shouting = config.getBoolean(initialLine + ".shout", false);
 
-                final String actionString = config.getString("Lines." + starterLine + ".action", "");
-                final Action action = parseActionString(actionString);
-
+                //Message
                 if (message.equals("-")) {
                     main.getLogManager().warn("Warning: couldn't find message for starter line <AQUA>" + starterLine + "</AQUA> of conversation <AQUA>" + conversationFile.getName() + "</AQUA>");
-
                 }
 
+                //Speaker
                 Speaker foundSpeaker = null;
                 for (final Speaker speaker : allSpeakers) {
                     if (speaker.getSpeakerName().equals(starterLine.split("\\.")[0].replaceAll("\\s", ""))) {
                         foundSpeaker = speaker;
                     }
                 }
-
                 if (foundSpeaker == null) {
                     main.getLogManager().warn("Warning: couldn't find speaker for a conversation line. Skipping...");
                     continue;
                 }
 
+                //Construct the ConversationLine
                 ConversationLine startLine = new ConversationLine(foundSpeaker, starterLine.split("\\.")[1], message);
-                if (action != null) {
-                    startLine.setAction(action);
+                if (actions != null && actions.size() > 0) {
+                    for (Action action : actions) {
+                        startLine.addAction(action);
+                    }
+                }
+                startLine.setShouting(shouting);
+
+                //Conditions
+                final ArrayList<Condition> conditions = parseConditionsString(config.getStringList(initialLine + ".conditions"));
+                if (conditions != null && conditions.size() > 0) {
+                    for (Condition condition : conditions) {
+                        startLine.addCondition(condition);
+                    }
                 }
 
                 conversationLines.add(startLine);
-
                 conversation.addStarterConversationLine(startLine);
             }
 
@@ -297,63 +317,71 @@ public class ConversationManager {
                 //Dive deep
                 final ArrayList<ConversationLine> keepDiving = new ArrayList<>();
 
+                outerLoop:
                 for (final String nextLineFullIdentifier : nextString.split(",")) {
+                    final String initialLine = "Lines." + nextLineFullIdentifier;
 
-                    final String message = config.getString("Lines." + nextLineFullIdentifier + ".text", "");
-                    final String next = config.getString("Lines." + nextLineFullIdentifier + ".next", "");
-                    final String actionString = config.getString("Lines." + nextLineFullIdentifier + ".action", "");
-                    final Action action = parseActionString(actionString);
+                    final String message = config.getString(initialLine + ".text", "");
+                    final String next = config.getString(initialLine + ".next", "");
+                    final ArrayList<Action> actions = parseActionString(config.getStringList(initialLine + ".actions"));
+                    final boolean shouting = config.getBoolean(initialLine + ".shout", false);
 
                     main.getLogManager().debug("Deep diving next string <AQUA>" + nextLineFullIdentifier + "</AQUA> for conversation line <AQUA>" + fullIdentifier + "</AQUA>...");
                     main.getLogManager().debug("---- Message: <AQUA>" + message + "</AQUA> | Next: <AQUA>" + next + "</AQUA>");
 
-
-                    boolean alreadyExists = false;
+                    //Skip if we already added this line
                     for (final ConversationLine existingLine : linesForOneFile) {
                         final String fullExistingLineIdentifier = existingLine.getFullIdentifier();
                         if (nextLineFullIdentifier.equalsIgnoreCase(fullExistingLineIdentifier)) {
-                            alreadyExists = true;
                             conversationLine.addNext(existingLine);
-                            continue;
+                            continue outerLoop; //Skip this line
                         }
                     }
-                    if (!alreadyExists) {
 
-                        final String nextLineSpeakerName = nextLineFullIdentifier.split("\\.")[0].replaceAll("\\s", "");
-                        main.getLogManager().debug("Trying to find speaker: <AQUA>" + nextLineSpeakerName + "</AQUA>...");
 
-                        Speaker foundSpeaker = null;
-                        for (final Speaker speaker : conversation.getSpeakers()) {
-                            if (speaker.getSpeakerName().equals(nextLineSpeakerName)) {
-                                foundSpeaker = speaker;
-                            }
+                    final String nextLineSpeakerName = nextLineFullIdentifier.split("\\.")[0].replaceAll("\\s", "");
+                    main.getLogManager().debug("Trying to find speaker: <AQUA>" + nextLineSpeakerName + "</AQUA>...");
 
+                    Speaker foundSpeaker = null;
+                    for (final Speaker speaker : conversation.getSpeakers()) {
+                        if (speaker.getSpeakerName().equals(nextLineSpeakerName)) {
+                            foundSpeaker = speaker;
                         }
+                    }
+                    if (foundSpeaker == null) {
+                        main.getLogManager().warn("Warning: couldn't find speaker for next conversation line <AQUA>" + nextLineFullIdentifier + "</AQUA>. Skipping line...");
+                        continue;
+                    }
 
+                    main.getLogManager().debug("---- Speaker: <AQUA>" + foundSpeaker.getSpeakerName() + "</AQUA> | Is Player?: <AQUA>" + foundSpeaker.isPlayer() + "</AQUA>");
 
-                        if (foundSpeaker == null) {
-                            main.getLogManager().warn("Warning: couldn't find speaker for next conversation line <AQUA>" + nextLineFullIdentifier + "</AQUA>. Skipping line...");
-                            continue;
+                    if (!conversation.hasSpeaker(foundSpeaker) && !conversation.addSpeaker(foundSpeaker, false)) {
+                        main.getLogManager().warn("Speaker " + highlightGradient + foundSpeaker.getSpeakerName() + "</gradient> could not be added to conversation " + highlight2Gradient + conversation.getIdentifier() + "</gradient>. Does the speaker already exist?");
+                    }
+
+                    ConversationLine newLine = new ConversationLine(foundSpeaker, nextLineFullIdentifier.split("\\.")[1], message);
+                    if (actions != null && actions.size() > 0) {
+                        for (Action action : actions) {
+                            newLine.addAction(action);
                         }
+                    }
 
-                        main.getLogManager().debug("---- Speaker: <AQUA>" + foundSpeaker.getSpeakerName() + "</AQUA> | Is Player?: <AQUA>" + foundSpeaker.isPlayer() + "</AQUA>");
+                    newLine.setShouting(shouting);
 
-
-                        if (!conversation.hasSpeaker(foundSpeaker) && !conversation.addSpeaker(foundSpeaker, false)) {
-                            main.getLogManager().warn("Speaker " + highlightGradient + foundSpeaker.getSpeakerName() + "</gradient> could not be added to conversation " + highlight2Gradient + conversation.getIdentifier() + "</gradient>. Does the speaker already exist?");
+                    //Conditions
+                    final ArrayList<Condition> conditions = parseConditionsString(config.getStringList(initialLine + ".conditions"));
+                    if (conditions != null && conditions.size() > 0) {
+                        for (Condition condition : conditions) {
+                            newLine.addCondition(condition);
                         }
+                    }
 
-                        ConversationLine newLine = new ConversationLine(foundSpeaker, nextLineFullIdentifier.split("\\.")[1], message);
-                        if (action != null) {
-                            newLine.setAction(action);
-                        }
-                        conversationLine.addNext(newLine);
-                        linesForOneFile.add(newLine);
 
-                        if (!next.isBlank()) {
-                            keepDiving.add(newLine);
-                        }
+                    conversationLine.addNext(newLine);
+                    linesForOneFile.add(newLine);
 
+                    if (!next.isBlank()) {
+                        keepDiving.add(newLine);
                     }
 
                 }
@@ -415,24 +443,46 @@ public class ConversationManager {
         }*/
     }
 
+    public final ArrayList<Condition> parseConditionsString(final List<String> allConditionsString) {
+        if (allConditionsString != null && !allConditionsString.isEmpty()) {
+            ArrayList<Condition> conditions = new ArrayList<>();
+            for (String conditionString : allConditionsString) {
+                main.getLogManager().debug("<GREEN>Trying to find condition in: " + conditionString);
 
-    public final Action parseActionString(final String actionString) {
-        if (!actionString.isBlank()) {
-            main.getLogManager().debug("<GREEN>Trying to find action: " + actionString);
+                final Condition foundCondition = main.getConditionsManager().getConditionFromString(conditionString);
 
-            if (actionString.startsWith("action ")) {
-                final String existingActionName = actionString.split(" ")[1];
-
-                final Action foundAction = main.getActionsManager().getAction(existingActionName);
-                if (foundAction != null) {
-                    main.getLogManager().debug("Found conversation line action: " + foundAction.getActionName());
+                if (foundCondition != null) {
+                    main.getLogManager().debug("Found conversation line condition: " + foundCondition.getConditionType());
                 }
 
-                return foundAction;
+                return conditions;
+
             }
             return null;
         }
-        return null; //TODO:
+        return null;
+    }
+
+    public final ArrayList<Action> parseActionString(final List<String> allActionsString) {
+        if (allActionsString != null && !allActionsString.isEmpty()) {
+            ArrayList<Action> actions = new ArrayList<>();
+            for (String actionString : allActionsString) {
+                main.getLogManager().debug("<GREEN>Trying to find action in: " + actionString);
+                if (actionString.startsWith("action ")) {
+
+                    final Action foundAction = main.getActionsManager().getAction(actionString);
+                    if (foundAction != null) {
+                        main.getLogManager().debug("Found conversation line action: " + foundAction.getActionName());
+                    }
+
+                    return actions;
+                } else {
+                    main.getLogManager().warn("Inline-defining actions is not possible in this version yet.");
+                }
+            }
+            return null;
+        }
+        return null;
     }
 
 

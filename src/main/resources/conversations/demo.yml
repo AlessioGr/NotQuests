@@ -25,7 +25,8 @@ Lines:
       next: Player.bye
     nicebye:
       text: "You're very welcome. Good luck on your ventures!"
-      action: "action givetestquest"
+      actions:
+        - "action givetestquest"
   Player:
     greeting1:
       text: "Nice to meet you! Why do you need to keep time?"
