@@ -64,7 +64,11 @@ public class ConversationLine {
     }
 
     public final String getMessage() {
-        return message;
+        if (isShouting()) {
+            return "<BOLD>" + message;
+        } else {
+            return message;
+        }
     }
 
     public final Speaker getSpeaker() {
