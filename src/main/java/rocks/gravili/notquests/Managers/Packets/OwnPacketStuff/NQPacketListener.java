@@ -7,6 +7,7 @@ import net.kyori.adventure.platform.bukkit.MinecraftComponentSerializer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.Managers.Packets.OwnPacketStuff.Wrappers.WrappedChatPacket;
@@ -35,7 +36,7 @@ public class NQPacketListener extends ChannelDuplexHandler {
             //main.getLogManager().debug("Sending " + msg.getClass().getSimpleName());
 
             try {
-                final WrappedChatPacket wrappedChatPacket = new WrappedChatPacket(msg);
+                final WrappedChatPacket wrappedChatPacket = new WrappedChatPacket(msg, ctx);
 
 
                 if (wrappedChatPacket.getType() == WrappedChatType.GAME_INFO) { //Skip actionbar messages
@@ -57,17 +58,20 @@ public class NQPacketListener extends ChannelDuplexHandler {
 
 
     public void handleMainChatHistorySavingLogic(final WrappedChatPacket wrappedChatPacket, final Player player) {
-        Component component;
         try {
+            Component component = null;
             Object vanillaMessage = wrappedChatPacket.getMessage();
             BaseComponent[] spigotComponent = wrappedChatPacket.getSpigotComponent();
-            Component adventureComponent = wrappedChatPacket.getAdventureComponent();
+            Object adventureComponent = wrappedChatPacket.getAdventureComponent();
             if (vanillaMessage == null && spigotComponent == null && adventureComponent == null) {
                 main.getLogManager().debug("All null :o");
                 return;
             }
 
-            component = wrappedChatPacket.getAdventureComponent();
+            if (adventureComponent != null) {
+                component = GsonComponentSerializer.gson().deserialize(wrappedChatPacket.getPaperJson());
+            }
+
 
             if (component == null) { //Spigot shit
 
