@@ -26,7 +26,7 @@ public class JobsRebornEvents implements Listener {
                         for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
                             if (activeObjective.isUnlocked()) {
                                 if (activeObjective.getObjective() instanceof JobsRebornReachJobLevel jobsRebornReachJobLevel) {
-                                    if (!e.getJob().getName().equals(jobsRebornReachJobLevel.getJobName())) {
+                                    if (!e.getJob().getName().equalsIgnoreCase(jobsRebornReachJobLevel.getJobName())) {
                                         continue;
                                     }
                                     activeObjective.addProgress(1);
