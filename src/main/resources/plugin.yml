@@ -21,6 +21,7 @@ softdepend:
   - LuckPerms
   - UClans
   - Towny
+  - Jobs
 load: POSTWORLD
 commands:
   notquests:

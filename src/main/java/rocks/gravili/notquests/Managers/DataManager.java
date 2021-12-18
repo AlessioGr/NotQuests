@@ -700,6 +700,12 @@ public class DataManager {
         }
         configuration.setIntegrationTownyEnabled(getGeneralConfig().getBoolean(key));
 
+        key = "integrations.jobs-reborn.enabled";
+        if (!getGeneralConfig().isBoolean(key)) {
+            getGeneralConfig().set(key, true);
+            valueChanged = true;
+        }
+        configuration.setIntegrationJobsRebornEnabled(getGeneralConfig().getBoolean(key));
 
         key = "visual.fancy-command-completion.actionbar-enabled";
         if (!getGeneralConfig().isBoolean(key)) {

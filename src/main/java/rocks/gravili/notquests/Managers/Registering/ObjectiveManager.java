@@ -28,6 +28,7 @@ import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Objectives.*;
 import rocks.gravili.notquests.Structs.Objectives.hooks.EliteMobs.KillEliteMobsObjective;
+import rocks.gravili.notquests.Structs.Objectives.hooks.JobsReborn.JobsRebornReachJobLevel;
 import rocks.gravili.notquests.Structs.Objectives.hooks.Slimefun.SlimefunResearchObjective;
 import rocks.gravili.notquests.Structs.Objectives.hooks.Towny.TownyNationReachTownCountObjective;
 import rocks.gravili.notquests.Structs.Objectives.hooks.Towny.TownyReachResidentCountObjective;
@@ -79,6 +80,8 @@ public class ObjectiveManager {
         registerObjective("TownyReachResidentCount", TownyReachResidentCountObjective.class);
         registerObjective("TownyNationReachTownCount", TownyNationReachTownCountObjective.class);
 
+        //Jobs
+        registerObjective("JobsRebornReachJobLevel", JobsRebornReachJobLevel.class);
 
         //registerObjectiveCommandCompletionHandler("KillMobs", this::eee);
     }

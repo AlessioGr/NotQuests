@@ -73,6 +73,8 @@ chat:
         base: '    &8└─ &7%EVENTUALCOLOR%Reach resident amount: &f%EVENTUALCOLOR%%AMOUNT%'
       townyNationReachTownCount:
         base: '    &8└─ &7%EVENTUALCOLOR%Reach town amount with your nation: &f%EVENTUALCOLOR%%AMOUNT%'
+      jobsRebornReachJobLevel:
+        base: '    &8└─ &7%EVENTUALCOLOR%Reach job level &f%EVENTUALCOLOR%%AMOUNT% &7with job &f%EVENTUALCOLOR%%JOB%'
 titles:
   quest-accepted:
     title: '&fQuest accepted'

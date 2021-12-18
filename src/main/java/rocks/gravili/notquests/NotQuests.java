@@ -133,6 +133,7 @@ public final class NotQuests extends JavaPlugin {
     private boolean ultimateClansEnabled = false;
 
     private boolean townyEnabled = false;
+    private boolean jobsRebornEnabled = false;
 
 
     private BukkitAudiences adventure;
@@ -283,6 +284,9 @@ public final class NotQuests extends JavaPlugin {
 
         if (isTownyEnabled()) {
             getServer().getPluginManager().registerEvents(new TownyEvents(this), this);
+        }
+        if (isJobsRebornEnabled()) {
+            getServer().getPluginManager().registerEvents(new JobsRebornEvents(this), this);
         }
 
 
@@ -511,6 +515,7 @@ public final class NotQuests extends JavaPlugin {
             if (getServer().getPluginManager().getPlugin("LuckPerms") != null) {
                 luckpermsManager = new LuckpermsManager(this);
                 luckpermsEnabled = true;
+                getLogManager().info("LuckPerms found! Enabling SlimeFun support...");
             }
 
         }
@@ -519,14 +524,23 @@ public final class NotQuests extends JavaPlugin {
         if (getDataManager().getConfiguration().isIntegrationUltimateClansEnabled()) {
             if (getServer().getPluginManager().getPlugin("UClans") != null) {
                 ultimateClansEnabled = true;
+                getLogManager().info("UltimateClans found! Enabling SlimeFun support...");
             }
-
         }
 
         //Towny
-        if (getDataManager().getConfiguration().isIntegrationUltimateClansEnabled()) {
+        if (getDataManager().getConfiguration().isIntegrationTownyEnabled()) {
             if (getServer().getPluginManager().getPlugin("Towny") != null) {
                 townyEnabled = true;
+                getLogManager().info("Towny found! Enabling SlimeFun support...");
+            }
+        }
+
+        //JobsReborn
+        if (getDataManager().getConfiguration().isIntegrationJobsRebornEnabled()) {
+            if (getServer().getPluginManager().getPlugin("Jobs") != null) {
+                jobsRebornEnabled = true;
+                getLogManager().info("Jobs Reborn found! Enabling SlimeFun support...");
             }
 
         }
@@ -759,10 +773,14 @@ public final class NotQuests extends JavaPlugin {
     public boolean isUltimateClansEnabled() {
         return ultimateClansEnabled;
     }
+
     public boolean isTownyEnabled() {
         return townyEnabled;
     }
 
+    public boolean isJobsRebornEnabled() {
+        return jobsRebornEnabled;
+    }
 
 
     public LanguageManager getLanguageManager() {

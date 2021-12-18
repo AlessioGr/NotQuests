@@ -101,6 +101,7 @@ public class Configuration {
     private boolean integrationLuckPermsEnabled = true;
     private boolean integrationUltimateClansEnabled = true;
     private boolean integrationTownyEnabled = true;
+    private boolean integrationJobsRebornEnabled = true;
 
 
     //Other
@@ -490,5 +491,13 @@ public class Configuration {
 
     public void setIntegrationTownyEnabled(boolean integrationTownyEnabled) {
         this.integrationTownyEnabled = integrationTownyEnabled;
+    }
+
+    public boolean isIntegrationJobsRebornEnabled() {
+        return integrationJobsRebornEnabled;
+    }
+
+    public void setIntegrationJobsRebornEnabled(boolean integrationJobsRebornEnabled) {
+        this.integrationJobsRebornEnabled = integrationJobsRebornEnabled;
     }
 }
