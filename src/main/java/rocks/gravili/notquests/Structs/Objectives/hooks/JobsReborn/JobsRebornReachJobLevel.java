@@ -63,7 +63,9 @@ public class JobsRebornReachJobLevel extends Objective {
                             main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Job Name]", "");
 
                             ArrayList<String> completions = new ArrayList<>();
-                            completions.add("[Enter Job Name]");
+                            for (Job job : Jobs.getJobs()) {
+                                completions.add(job.getName());
+                            }
                             return completions;
                         }
                 ).single().build(), ArgumentDescription.of("Name of the job (case-sensitive)"))
