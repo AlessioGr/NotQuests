@@ -20,10 +20,22 @@ general:
     enabled-worlds:
       - ''
     inventory-slot: 8
+    item:
+      ==: org.bukkit.inventory.ItemStack
+      v: 2865
+      type: ENCHANTED_BOOK
+      meta:
+        ==: ItemMeta
+        meta-type: ENCHANTED
+        display-name: '{"extra":[{"bold":false,"italic":true,"underlined":false,"strikethrough":false,"obfuscated":false,"color":"blue","text":"Journal"}],"text":""}'
+        lore:
+          - '{"extra":[{"bold":false,"italic":false,"underlined":false,"strikethrough":false,"obfuscated":false,"color":"gray","text":"A
+                book containing all your quest information"}],"text":""}'
   packet-magic:
     enabled: true
     #Possible modes: "internal" and "packetevents"
     mode: "internal"
+    unsafe-disregard-version: false
     conversations:
       delete-previous: true
       history-size: 20

@@ -19,6 +19,7 @@
 package rocks.gravili.notquests.Managers;
 
 import org.bukkit.Particle;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
@@ -63,10 +64,12 @@ public class Configuration {
 
     public List<String> journalItemEnabledWorlds;
     public int journalInventorySlot = 8;
+    public ItemStack journalItem = null;
 
 
     public boolean packetMagic = false;
     public boolean usePacketEvents = false;
+    public boolean packetMagicUnsafeDisregardVersion = false;
     public boolean deletePreviousConversations = false;
     public int previousConversationsHistorySize = 20;
 

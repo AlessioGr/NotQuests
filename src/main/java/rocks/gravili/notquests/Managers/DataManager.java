@@ -23,12 +23,14 @@ import net.citizensnpcs.api.npc.NPC;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import rocks.gravili.notquests.NotQuests;
 
 import java.io.*;
@@ -748,6 +750,23 @@ public class DataManager {
         }
         configuration.journalInventorySlot = getGeneralConfig().getInt(key);
 
+        key = "general.journal-item.item";
+        ItemStack journal = new ItemStack(Material.ENCHANTED_BOOK, 1);
+        ItemMeta im = journal.getItemMeta();
+        ArrayList<String> lore = new ArrayList<>();
+        lore.add("§7A book containing all your quest information");
+        if (im != null) {
+            im.setDisplayName("§9§oJournal");
+            im.setLore(lore);
+        }
+        journal.setItemMeta(im);
+        if (!getGeneralConfig().isItemStack(key)) {
+            getGeneralConfig().set(key, journal);
+            valueChanged = true;
+        }
+
+        configuration.journalItem = getGeneralConfig().getItemStack(key);
+
         key = "general.packet-magic.enabled";
         if (!getGeneralConfig().isBoolean(key)) {
             getGeneralConfig().set(key, true);
@@ -755,18 +774,29 @@ public class DataManager {
         }
         configuration.packetMagic = getGeneralConfig().getBoolean(key);
 
-        key = "general.mode";
+        key = "general.packet-magic.mode";
         if (!getGeneralConfig().isString(key)) {
             getGeneralConfig().set(key, "internal");
             valueChanged = true;
         }
         configuration.usePacketEvents = getGeneralConfig().getString(key, "internal").equalsIgnoreCase("packetevents");
 
+        key = "general.packet-magic.unsafe-disregard-version";
+        if (!getGeneralConfig().isBoolean(key)) {
+            getGeneralConfig().set(key, true);
+            valueChanged = true;
+        }
+        configuration.packetMagicUnsafeDisregardVersion = getGeneralConfig().getBoolean(key);
+
         main.getLogManager().info("Detected version: " + Bukkit.getBukkitVersion());
 
         if (!Bukkit.getBukkitVersion().contains("1.18") && !Bukkit.getBukkitVersion().contains("1.17")) {
-            configuration.packetMagic = false;
-            main.getLogManager().info("Packet magic has been disabled, because you are using an unsupported bukkit version...");
+            if (configuration.packetMagicUnsafeDisregardVersion) {
+                configuration.packetMagic = false;
+                main.getLogManager().info("Packet magic has been disabled, because you are using an unsupported bukkit version...");
+            } else {
+                main.getLogManager().info("You are using an unsupported version for packet magic. However, because the unsafe-disregard-version flag which is set to true in your config, we will try to do some packet magic anyways. Let's hope it works - good luck!");
+            }
         }
 
         key = "general.packet-magic.conversations.delete-previous";
