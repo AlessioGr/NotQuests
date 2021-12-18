@@ -746,7 +746,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
 
                                             String descriptionToDisplay = main.getLanguageManager().getString("gui.progress.button.unlockedObjective.description-empty", player);
                                             if (!activeObjective.getObjective().getObjectiveDescription().isBlank()) {
-                                                descriptionToDisplay = activeObjective.getObjective().getObjectiveDescription(main.getDataManager().getConfiguration().guiObjectiveDescriptionMaxLineLength);
+                                                descriptionToDisplay = activeObjective.getObjective().getLegacyObjectiveDescription(main.getDataManager().getConfiguration().guiObjectiveDescriptionMaxLineLength);
                                             }
 
                                             group.addElement(new StaticGuiElement('e',
@@ -797,7 +797,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
 
                                         String descriptionToDisplay = main.getLanguageManager().getString("gui.progress.button.completedObjective.description-empty", player, activeObjective, questPlayer);
                                         if (!activeObjective.getObjective().getObjectiveDescription().isBlank()) {
-                                            descriptionToDisplay = activeObjective.getObjective().getObjectiveDescription(main.getDataManager().getConfiguration().guiObjectiveDescriptionMaxLineLength);
+                                            descriptionToDisplay = activeObjective.getObjective().getLegacyObjectiveDescription(main.getDataManager().getConfiguration().guiObjectiveDescriptionMaxLineLength);
                                         }
 
 

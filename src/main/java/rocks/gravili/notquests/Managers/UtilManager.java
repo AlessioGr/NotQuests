@@ -23,6 +23,8 @@ import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.title.Title;
 import org.apache.commons.text.WordUtils;
 import org.bukkit.Bukkit;
@@ -331,7 +333,15 @@ public class UtilManager {
             }
         }*/
         //return descriptionWithLineBreaks.toString();
-        return WordUtils.wrap(unwrappedText, maxLineLength, "\n§8", main.getDataManager().getConfiguration().wrapLongWords);
+        return WordUtils.wrap(unwrappedText.replace("\\n", "\n"), maxLineLength, "\n§8", main.getDataManager().getConfiguration().wrapLongWords);
 
+    }
+
+    public final String replaceLegacyWithMiniMessage(String toReplace) {
+        Component component = LegacyComponentSerializer.builder().hexColors().build().deserialize(toReplace.replaceAll("&", "§"));
+        String finalS = MiniMessage.miniMessage().serialize(component);
+
+        main.getLogManager().debug("Converted <RESET>" + toReplace + "</RESET> to <RESET>" + finalS + "</RESET>");
+        return finalS;
     }
 }

@@ -178,8 +178,12 @@ public abstract class Objective {
         }
     }
 
-    public final String getObjectiveDescription() {
-        return LegacyComponentSerializer.builder().hexColors().build().serialize(MiniMessage.miniMessage().parse(objectiveDescription)).replace("&", "§");
+    public final String getLegacyObjectiveDescription() { //MiniMessage =>
+        return LegacyComponentSerializer.builder().build().serialize(MiniMessage.miniMessage().parse(objectiveDescription)).replace("&", "§");
+    }
+
+    public final String getObjectiveDescription() { //MiniMessage
+        return objectiveDescription;
     }
 
 
@@ -192,6 +196,10 @@ public abstract class Objective {
      */
     public final String getObjectiveDescription(final int maxLengthPerLine) {
         return main.getUtilManager().wrapText(getObjectiveDescription(), maxLengthPerLine);
+    }
+
+    public final String getLegacyObjectiveDescription(final int maxLengthPerLine) {
+        return main.getUtilManager().wrapText(getLegacyObjectiveDescription(), maxLengthPerLine);
     }
 
 

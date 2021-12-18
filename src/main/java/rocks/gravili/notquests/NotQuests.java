@@ -91,6 +91,7 @@ public final class NotQuests extends JavaPlugin {
     private CitizensManager citizensManager;
     private PacketManager packetManager;
     private UpdateManager updateManager;
+    private GUIManager guiManager;
 
     //Registering Managers
     private ObjectiveManager objectiveManager;
@@ -221,6 +222,8 @@ public final class NotQuests extends JavaPlugin {
         languageManager = new LanguageManager(this);
 
         updateManager = new UpdateManager(this);
+
+        guiManager = new GUIManager(this);
 
         /*
          * Tell the Data Manager: Hey, NPCs have not been loaded yet. If this is set to false, the plugin will
@@ -886,5 +889,9 @@ public final class NotQuests extends JavaPlugin {
 
     public UpdateManager getUpdateManager() {
         return updateManager;
+    }
+
+    public GUIManager getGuiManager() {
+        return guiManager;
     }
 }

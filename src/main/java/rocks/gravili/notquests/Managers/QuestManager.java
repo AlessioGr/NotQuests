@@ -186,7 +186,7 @@ public class QuestManager {
                                 if (objective != null) {
 
                                     final String objectiveDisplayName = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".displayName", "");
-                                    final String objectiveDescription = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".description", "");
+                                    String objectiveDescription = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".description", "");
                                     final int completionNPCID = main.getDataManager().getQuestsConfig().getInt("quests." + quest.getQuestName() + ".objectives." + objectiveNumber + ".completionNPCID", -1);
                                     final String completionArmorStandUUIDString = main.getDataManager().getQuestsConfig().getString("quests." + quest.getQuestName() + ".objectives." + objectiveNumber + ".completionArmorStandUUID", null);
                                     if (completionArmorStandUUIDString != null) {
@@ -194,8 +194,19 @@ public class QuestManager {
                                         objective.setCompletionArmorStandUUID(completionArmorStandUUID, false);
                                     }
 
-                                    objective.setObjectiveDisplayName(objectiveDisplayName, false);
-                                    objective.setObjectiveDescription(objectiveDescription, false);
+                                    //Legacy conversion
+                                    if (objectiveDescription.replace("& ", "").contains("&")) {
+                                        objective.setObjectiveDescription(main.getUtilManager().replaceLegacyWithMiniMessage(objectiveDescription), true);
+                                    } else {
+                                        objective.setObjectiveDescription(objectiveDescription, false);
+                                    }
+
+                                    if (objectiveDisplayName.replace("& ", "").contains("&")) {
+                                        objective.setObjectiveDisplayName(main.getUtilManager().replaceLegacyWithMiniMessage(objectiveDisplayName), true);
+                                    } else {
+                                        objective.setObjectiveDisplayName(objectiveDisplayName, false);
+                                    }
+
                                     objective.setCompletionNPCID(completionNPCID, false);
                                     quest.addObjective(objective, false);
                                 } else {
