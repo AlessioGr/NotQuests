@@ -146,6 +146,7 @@ public class JobsRebornReachJobLevel extends Objective {
 
     @Override
     public void onObjectiveUnlock(ActiveObjective activeObjective) {
+        activeObjective.addProgress(1); //Job levels start at 1 and not 0
         if (!main.isJobsRebornEnabled() || !isCountPreviousLevels()) {
             return;
         }

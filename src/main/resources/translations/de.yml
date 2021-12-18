@@ -73,6 +73,8 @@ chat:
         base: '    &8└─ &7%EVENTUALCOLOR%Erreiche folgende Anzahl an Stadtbewohnern: &f%EVENTUALCOLOR%%AMOUNT%'
       townyNationReachTownCount:
         base: '    &8└─ &7%EVENTUALCOLOR%Erreiche folgende Anzahl an Städten in deiner Nation: &f%EVENTUALCOLOR%%AMOUNT%'
+      jobsRebornReachJobLevel:
+        base: '    &8└─ &7%EVENTUALCOLOR%Erreiche Job Level &f%EVENTUALCOLOR%%AMOUNT% &7als &f%EVENTUALCOLOR%%JOB%'
 titles:
   quest-accepted:
     title: '&fQuest akzeptiert'
