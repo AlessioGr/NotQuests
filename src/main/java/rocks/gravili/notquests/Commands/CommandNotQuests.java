@@ -22,11 +22,13 @@ import de.themoep.inventorygui.GuiElementGroup;
 import de.themoep.inventorygui.GuiPageElement;
 import de.themoep.inventorygui.InventoryGui;
 import de.themoep.inventorygui.StaticGuiElement;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -55,6 +57,8 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
 
     private final Component firstLevelCommands;
 
+    private final MiniMessage miniMessage = MiniMessage.miniMessage();
+
     public CommandNotQuests(NotQuests main) {
         this.main = main;
 
@@ -81,6 +85,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (sender instanceof final Player player) {
+            final Audience audience = main.adventure().player(player);
             final boolean guiEnabled = main.getDataManager().getConfiguration().isUserCommandsUseGUI();
             if (sender.hasPermission("notquests.use")) {
                 final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer((player.getUniqueId()));
@@ -227,7 +232,9 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                 sender.sendMessage(main.getLanguageManager().getString("chat.active-quests-label", player));
                                 int counter = 1;
                                 for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-                                    sender.sendMessage("§a" + counter + ". §e" + activeQuest.getQuest().getQuestFinalName());
+                                    audience.sendMessage(miniMessage.parse(
+                                            "<GREEN>" + counter + ". <YELLOW>" + activeQuest.getQuest().getQuestFinalName()
+                                    ));
                                     counter += 1;
                                 }
                             }
@@ -259,7 +266,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                         count++;
                                     }
 
-                                    String displayName = quest.getQuestFinalName();
+                                    String displayName = main.getUtilManager().miniMessageToLegacy(quest.getQuestFinalName());
 
                                     displayName = main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.questNamePrefix", player, quest) + displayName;
 
@@ -268,7 +275,11 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                     }
                                     String description = "";
                                     if (!quest.getQuestDescription().isBlank()) {
-                                        description = main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.questDescriptionPrefix", player, quest) + quest.getQuestDescription(main.getDataManager().getConfiguration().guiQuestDescriptionMaxLineLength);
+
+                                        description = main.getUtilManager().miniMessageToLegacy(
+                                                main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.questDescriptionPrefix", player, quest)
+                                                        + quest.getQuestDescription(main.getDataManager().getConfiguration().guiQuestDescriptionMaxLineLength
+                                                ));
                                     }
 
                                     group.addElement(new StaticGuiElement('e',
@@ -402,7 +413,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                     if (main.getDataManager().getConfiguration().showQuestItemAmount) {
                                         count++;
                                     }
-                                    String displayName = quest.getQuestFinalName();
+                                    String displayName = main.getUtilManager().miniMessageToLegacy(quest.getQuestFinalName());
 
                                     displayName = main.getLanguageManager().getString("gui.previewQuestChoose.button.questPreview.questNamePrefix", player) + displayName;
 
@@ -411,7 +422,10 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                     }
                                     String description = "";
                                     if (!quest.getQuestDescription().isBlank()) {
-                                        description = main.getLanguageManager().getString("gui.previewQuestChoose.button.questPreview.questDescriptionPrefix", player) + quest.getQuestDescription(main.getDataManager().getConfiguration().guiQuestDescriptionMaxLineLength);
+                                        description = main.getUtilManager().miniMessageToLegacy(
+                                                main.getLanguageManager().getString("gui.previewQuestChoose.button.questPreview.questDescriptionPrefix", player)
+                                                        + quest.getQuestDescription(main.getDataManager().getConfiguration().guiQuestDescriptionMaxLineLength)
+                                        );
                                     }
 
                                     group.addElement(new StaticGuiElement('e',
@@ -835,9 +849,13 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
 
                                     gui.show(player);
                                 } else {
-                                    sender.sendMessage("§aCompleted Objectives for Quest §b" + requestedActiveQuest.getQuest().getQuestFinalName() + "§e:");
+                                    audience.sendMessage(miniMessage.parse(
+                                            "<GREEN>Completed Objectives for Quest <AQUA>" + requestedActiveQuest.getQuest().getQuestFinalName() + "<YELLOW>:"
+                                    ));
                                     main.getQuestManager().sendCompletedObjectivesAndProgress(player, requestedActiveQuest);
-                                    sender.sendMessage("§eActive Objectives for Quest §b" + requestedActiveQuest.getQuest().getQuestFinalName() + "§e:");
+                                    audience.sendMessage(miniMessage.parse(
+                                            "<GREEN>Active Objectives for Quest <AQUA>" + requestedActiveQuest.getQuest().getQuestFinalName() + "<YELLOW>:"
+                                    ));
                                     main.getQuestManager().sendActiveObjectivesAndProgress(player, requestedActiveQuest);
                                 }
 
@@ -846,7 +864,9 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                 sender.sendMessage(main.getLanguageManager().getString("chat.active-quests-label", player, questPlayer));
                                 int counter = 1;
                                 for (ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-                                    sender.sendMessage("§a" + counter + ". §e" + activeQuest.getQuest().getQuestFinalName());
+                                    audience.sendMessage(miniMessage.parse(
+                                            "<GREEN>" + counter + ". <YELLOW>" + activeQuest.getQuest().getQuestFinalName()
+                                    ));
                                     counter += 1;
                                 }
                             }

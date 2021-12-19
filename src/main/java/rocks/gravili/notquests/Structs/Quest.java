@@ -20,8 +20,6 @@ package rocks.gravili.notquests.Structs;
 
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Material;
 import rocks.gravili.notquests.Hooks.Citizens.QuestGiverNPCTrait;
 import rocks.gravili.notquests.NotQuests;
@@ -208,23 +206,23 @@ public class Quest {
     }
 
     public final String getQuestDescription() {
-
-        return LegacyComponentSerializer.builder().hexColors().build().serialize(MiniMessage.miniMessage().parse(description)).replace("&", "§");
+        return description;
     }
-
-    public final String getQuestDescription(final int maxLengthPerLine) {
-        return LegacyComponentSerializer.builder().hexColors().build().serialize(MiniMessage.miniMessage().parse(main.getUtilManager().wrapText(description, maxLengthPerLine))).replace("&", "§");
-    }
-
 
     public void setQuestDescription(String newQuestDescription) {
+        newQuestDescription = main.getUtilManager().replaceLegacyWithMiniMessage(newQuestDescription);
+
         this.description = newQuestDescription;
         main.getDataManager().getQuestsConfig().set("quests." + questName + ".description", newQuestDescription);
 
     }
 
+    public final String getQuestDescription(final int maxLengthPerLine) {
+        return main.getUtilManager().wrapText(description, maxLengthPerLine);
+    }
+
     public final String getQuestDisplayName() {
-        return LegacyComponentSerializer.builder().hexColors().build().serialize(MiniMessage.miniMessage().parse(displayName)).replace("&", "§");
+        return displayName;
     }
 
 
@@ -242,6 +240,8 @@ public class Quest {
     }
 
     public void setQuestDisplayName(String newQuestDisplayName) {
+        newQuestDisplayName = main.getUtilManager().replaceLegacyWithMiniMessage(newQuestDisplayName);
+
         this.displayName = newQuestDisplayName;
         main.getDataManager().getQuestsConfig().set("quests." + questName + ".displayName", newQuestDisplayName);
 

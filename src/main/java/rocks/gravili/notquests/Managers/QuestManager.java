@@ -136,9 +136,15 @@ public class QuestManager {
                     quest.setMaxAccepts(main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".maxAccepts", -1));
                     quest.setTakeEnabled(main.getDataManager().getQuestsConfig().getBoolean("quests." + questName + ".takeEnabled", true));
                     quest.setAcceptCooldown(main.getDataManager().getQuestsConfig().getLong("quests." + questName + ".acceptCooldown", -1));
-                    quest.setQuestDescription(main.getDataManager().getQuestsConfig().getString("quests." + questName + ".description", ""));
-                    quest.setQuestDisplayName(main.getDataManager().getQuestsConfig().getString("quests." + questName + ".displayName", ""));
 
+                    quest.setQuestDescription(
+                            main.getDataManager().getQuestsConfig().getString("quests." + questName + ".description", "")
+                                    .replace("\\n", "\n")
+                    );
+                    quest.setQuestDisplayName(
+                            main.getDataManager().getQuestsConfig().getString("quests." + questName + ".displayName", "")
+                                    .replace("\\n", "\n")
+                    );
 
                     //Objectives:
                     final ConfigurationSection objectivesConfigurationSection = main.getDataManager().getQuestsConfig().getConfigurationSection("quests." + questName + ".objectives");
