@@ -20,7 +20,7 @@ package rocks.gravili.notquests.Structs.Objectives.hooks.ProjectKorra;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
-import cloud.commandframework.arguments.standard.IntegerArgument;
+import cloud.commandframework.arguments.standard.LongArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
@@ -58,7 +58,7 @@ public class ProjectKorraUseAbilityObjective extends Objective {
                             return main.getIntegrationsManager().getProjectKorraManager().getAbilityCompletions();
                         }
                 ).single().build(), ArgumentDescription.of("Name of the ability"))
-                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of times to use the ability"))
+                .argument(LongArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of times to use the ability"))
                 .meta(CommandMeta.DESCRIPTION, "Adds a new ProjectKorraUseAbility Objective to a quest")
                 .handler((context) -> {
                     String abilityName = context.get("Ability");
