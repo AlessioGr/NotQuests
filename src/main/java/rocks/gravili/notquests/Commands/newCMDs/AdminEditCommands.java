@@ -1103,10 +1103,11 @@ public class AdminEditCommands {
                     final Quest quest = context.get("quest");
 
                     audience.sendMessage(miniMessage.parse(highlightGradient + "Rewards for Quest " + highlight2Gradient + quest.getQuestName() + "</gradient>:</gradient>"));
+                    int counter = 1;
                     for (final Action action : quest.getRewards()) {
-                        audience.sendMessage(miniMessage.parse(highlightGradient + quest.getRewards().indexOf(action) + ". </gradient>" + mainGradient + action.getActionType() + "</gradient>"));
+                        audience.sendMessage(miniMessage.parse(highlightGradient + counter + ". </gradient>" + mainGradient + action.getActionType() + "</gradient>"));
                         audience.sendMessage(miniMessage.parse(unimportant + "-- " + unimportantClose + mainGradient + action.getActionDescription() + "</gradient>"));
-
+                        counter++;
                     }
 
                 }));
@@ -1133,7 +1134,7 @@ public class AdminEditCommands {
 
                                     final Quest quest = context.get("quest");
                                     for (final Action action : quest.getRewards()) {
-                                        completions.add("" + quest.getRewards().indexOf(action));
+                                        completions.add("" + (quest.getRewards().indexOf(action) + 1));
                                     }
 
                                     return completions;
@@ -1141,7 +1142,7 @@ public class AdminEditCommands {
                         ).withParser((context, lastString) -> { //TODO: Fix this parser. It isn't run at all.
                             final int ID = context.get("Reward ID");
                             final Quest quest = context.get("quest");
-                            final Action foundReward = quest.getRewards().get(ID);
+                            final Action foundReward = quest.getRewards().get(ID - 1);
                             if (foundReward == null) {
                                 return ArgumentParseResult.failure(new IllegalArgumentException("Reward with the ID '" + ID + "' does not belong to Quest '" + quest.getQuestName() + "'!"));
                             } else {
@@ -1159,7 +1160,7 @@ public class AdminEditCommands {
                 .meta(CommandMeta.DESCRIPTION, "Shows everything there is to know about this reward.")
                 .handler((context) -> {
                     final Audience audience = main.adventure().sender(context.getSender());
-                    final int ID = context.get("Reward ID");
+                    final int ID = (int) context.get("Reward ID") - 1;
                     final Quest quest = context.get("quest");
                     final Action foundReward = quest.getRewards().get(ID);
                     audience.sendMessage(Component.empty());
@@ -1183,7 +1184,7 @@ public class AdminEditCommands {
                 .meta(CommandMeta.DESCRIPTION, "Removes the reward from the Quest.")
                 .handler((context) -> {
                     final Audience audience = main.adventure().sender(context.getSender());
-                    final int ID = context.get("Reward ID");
+                    final int ID = (int) context.get("Reward ID") - 1;
                     final Quest quest = context.get("quest");
                     final Action foundReward = quest.getRewards().get(ID);
                     audience.sendMessage(Component.empty());
@@ -1205,7 +1206,7 @@ public class AdminEditCommands {
                 .meta(CommandMeta.DESCRIPTION, "Shows current reward Display Name.")
                 .handler((context) -> {
                     final Audience audience = main.adventure().sender(context.getSender());
-                    final int ID = context.get("Reward ID");
+                    final int ID = (int) context.get("Reward ID") - 1;
                     final Quest quest = context.get("quest");
                     final Action foundReward = quest.getRewards().get(ID);
                     audience.sendMessage(Component.empty());
@@ -1231,7 +1232,7 @@ public class AdminEditCommands {
                 .meta(CommandMeta.DESCRIPTION, "Removes current reward Display Name.")
                 .handler((context) -> {
                     final Audience audience = main.adventure().sender(context.getSender());
-                    final int ID = context.get("Reward ID");
+                    final int ID = (int) context.get("Reward ID") - 1;
                     final Quest quest = context.get("quest");
                     final Action foundReward = quest.getRewards().get(ID);
                     audience.sendMessage(Component.empty());
@@ -1267,7 +1268,7 @@ public class AdminEditCommands {
                 .meta(CommandMeta.DESCRIPTION, "Sets new reward Display Name. Only rewards with a Display Name will be displayed.")
                 .handler((context) -> {
                     final Audience audience = main.adventure().sender(context.getSender());
-                    final int ID = context.get("Reward ID");
+                    final int ID = (int) context.get("Reward ID") - 1;
                     final Quest quest = context.get("quest");
                     final Action foundReward = quest.getRewards().get(ID);
                     audience.sendMessage(Component.empty());

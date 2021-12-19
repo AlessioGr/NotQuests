@@ -631,7 +631,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                             click -> {
                                                 return true; // returning true will cancel the click event and stop taking the item
                                             },
-                                            main.getUtilManager().miniMessageToLegacyWithoutRGB(main.getLanguageManager().getString("gui.previewQuest.button.description.text", player, questPlayer)
+                                            main.getUtilManager().miniMessageToLegacyWithSpigotRGB(main.getLanguageManager().getString("gui.previewQuest.button.description.text", player, questPlayer)
                                                     .replace("%QUESTDESCRIPTION%", description))
 
 

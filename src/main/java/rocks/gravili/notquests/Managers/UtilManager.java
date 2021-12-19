@@ -359,8 +359,8 @@ public class UtilManager {
         return legacy;
     }
 
-    public String miniMessageToLegacyWithoutRGB(String miniMessageString) {
-        String legacy = LegacyComponentSerializer.legacyAmpersand().serialize(MiniMessage.miniMessage().parse(miniMessageString));
+    public String miniMessageToLegacyWithSpigotRGB(String miniMessageString) {
+        String legacy = LegacyComponentSerializer.builder().hexColors().useUnusualXRepeatedCharacterHexFormat().build().serialize(MiniMessage.miniMessage().parse(miniMessageString));
         main.getLogManager().debug("mm => legacy: Converted <RESET>" + miniMessageString + "</RESET> to <RESET>" + legacy + "</RESET>");
 
         return legacy;
