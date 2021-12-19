@@ -24,6 +24,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import rocks.gravili.notquests.NotQuests;
 
 import java.util.logging.Level;
@@ -59,7 +60,7 @@ public class LogManager {
         if (main.isAdventureEnabled() && consoleSender != null) {
             consoleSender.sendMessage(MiniMessage.miniMessage().parse(prefixText + color + message));
         } else {
-            main.getLogger().log(level, LegacyComponentSerializer.builder().build().serialize(MiniMessage.miniMessage().parse(color + message)).replace("&", "§"));
+            main.getLogger().log(level, ChatColor.translateAlternateColorCodes('&', LegacyComponentSerializer.builder().build().serialize(MiniMessage.miniMessage().parse(color + message))));
         }
 
 

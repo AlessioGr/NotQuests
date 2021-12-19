@@ -293,9 +293,9 @@ public class LanguageManager {
                 return "Language string not found: " + languageString;
             }
             if (!main.getDataManager().getConfiguration().supportPlaceholderAPIInTranslationStrings || !main.isPlaceholderAPIEnabled() || targetPlayer == null) {
-                return applySpecial(applyColor(applyInternalPlaceholders(translatedString, internalPlaceholderObjects)));
+                return applySpecial(ChatColor.translateAlternateColorCodes('&', applyInternalPlaceholders(translatedString, internalPlaceholderObjects))); //Removed applyColor( for minimessage support
             } else {
-                return applySpecial(applyColor(PlaceholderAPI.setPlaceholders(targetPlayer, applyInternalPlaceholders(translatedString, internalPlaceholderObjects))));
+                return applySpecial(ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.setPlaceholders(targetPlayer, applyInternalPlaceholders(translatedString, internalPlaceholderObjects))));
             }
         }
     }
@@ -369,7 +369,7 @@ public class LanguageManager {
             message = before + hexColor + after;
             matcher = hexPattern.matcher(message);
         }
-        return LegacyComponentSerializer.builder().hexColors().build().serialize(MiniMessage.miniMessage().parse(message)).replace("&", "§");
+        return org.bukkit.ChatColor.translateAlternateColorCodes('&', LegacyComponentSerializer.builder().hexColors().build().serialize(MiniMessage.miniMessage().parse(message)));
     }
 
 

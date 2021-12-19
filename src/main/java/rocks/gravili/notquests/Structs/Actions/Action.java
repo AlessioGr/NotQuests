@@ -21,6 +21,7 @@ package rocks.gravili.notquests.Structs.Actions;
 
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.NotQuests;
@@ -45,7 +46,7 @@ public abstract class Action {
     }
 
     public final String getActionName() {
-        return LegacyComponentSerializer.builder().hexColors().build().serialize(MiniMessage.miniMessage().parse(actionName)).replace("&", "§");
+        return ChatColor.translateAlternateColorCodes('&', LegacyComponentSerializer.builder().hexColors().build().serialize(MiniMessage.miniMessage().parse(actionName)));
     }
 
     public void setActionName(final String actionName) {

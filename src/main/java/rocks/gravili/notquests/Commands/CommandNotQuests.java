@@ -497,7 +497,9 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                             } else {
                                 sender.sendMessage(main.getLanguageManager().getString("chat.quest-successfully-accepted", player, quest));
                                 if (!quest.getQuestDescription().isBlank()) {
-                                    sender.sendMessage(main.getLanguageManager().getString("chat.quest-description", player, quest));
+                                    audience.sendMessage(miniMessage.parse(
+                                            main.getLanguageManager().getString("chat.quest-description", player, quest)
+                                    ));
                                 } else {
                                     sender.sendMessage(main.getLanguageManager().getString("chat.missing-quest-description", player));
                                 }
@@ -627,12 +629,10 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                             new ItemStack(Material.BOOKSHELF),
                                             1, // Display a number as the item count
                                             click -> {
-
                                                 return true; // returning true will cancel the click event and stop taking the item
-
                                             },
-                                            main.getLanguageManager().getString("gui.previewQuest.button.description.text", player, questPlayer)
-                                                    .replace("%QUESTDESCRIPTION%", description)
+                                            main.getUtilManager().miniMessageToLegacyWithoutRGB(main.getLanguageManager().getString("gui.previewQuest.button.description.text", player, questPlayer)
+                                                    .replace("%QUESTDESCRIPTION%", description))
 
 
                                     ));
@@ -773,9 +773,11 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                                         return true; // returning true will cancel the click event and stop taking the item
 
                                                     },
-                                                    main.getLanguageManager().getString("gui.progress.button.unlockedObjective.text", player, activeObjective, questPlayer)
-                                                            .replace("%OBJECTIVEDESCRIPTION%", descriptionToDisplay)
-                                                            .replace("%ACTIVEOBJECTIVEDESCRIPTION%", main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), false, player))
+                                                    main.getUtilManager().miniMessageToLegacy(
+                                                            main.getLanguageManager().getString("gui.progress.button.unlockedObjective.text", player, activeObjective, questPlayer)
+                                                                    .replace("%OBJECTIVEDESCRIPTION%", descriptionToDisplay)
+                                                                    .replace("%ACTIVEOBJECTIVEDESCRIPTION%", main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), false, player))
+                                                    )
 
 
                                             ));
@@ -827,9 +829,11 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                                     return true; // returning true will cancel the click event and stop taking the item
 
                                                 },
-                                                main.getLanguageManager().getString("gui.progress.button.completedObjective.text", player, activeObjective, questPlayer)
-                                                        .replace("%OBJECTIVEDESCRIPTION%", descriptionToDisplay)
-                                                        .replace("%COMPLETEDOBJECTIVEDESCRIPTION%", main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), true, player))
+                                                main.getUtilManager().miniMessageToLegacy(
+                                                        main.getLanguageManager().getString("gui.progress.button.completedObjective.text", player, activeObjective, questPlayer)
+                                                                .replace("%OBJECTIVEDESCRIPTION%", descriptionToDisplay)
+                                                                .replace("%COMPLETEDOBJECTIVEDESCRIPTION%", main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), true, player))
+                                                )
 
 
                                         ));

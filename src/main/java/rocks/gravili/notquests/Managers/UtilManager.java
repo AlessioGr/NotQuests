@@ -28,6 +28,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.title.Title;
 import org.apache.commons.text.WordUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -342,15 +343,26 @@ public class UtilManager {
         if (!toReplace.replace("& ", "").contains("&")) {
             return toReplace;
         }
-        Component component = LegacyComponentSerializer.builder().hexColors().build().deserialize(toReplace.replaceAll("&", "§"));
+        Component component = LegacyComponentSerializer.builder().hexColors().build().deserialize(ChatColor.translateAlternateColorCodes('&', toReplace));
         String finalS = MiniMessage.miniMessage().serialize(component);
 
-        main.getLogManager().debug("Converted <RESET>" + toReplace + "</RESET> to <RESET>" + finalS + "</RESET>");
+        main.getLogManager().debug("legacy => minimessage Converted <RESET>" + toReplace + "</RESET> to <RESET>" + finalS + "</RESET>");
         return finalS;
     }
 
     public final String miniMessageToLegacy(String miniMessageString) {
-        return LegacyComponentSerializer.builder().hexColors().build().serialize(MiniMessage.miniMessage().parse(miniMessageString)).replace("&", "§");
+        String legacy = ChatColor.translateAlternateColorCodes('&',
+                LegacyComponentSerializer.builder().hexColors().build().serialize(MiniMessage.miniMessage().parse(miniMessageString))
+        );
+        main.getLogManager().debug("mm => legacy: Converted <RESET>" + miniMessageString + "</RESET> to <RESET>" + legacy + "</RESET>");
+
+        return legacy;
     }
 
+    public String miniMessageToLegacyWithoutRGB(String miniMessageString) {
+        String legacy = LegacyComponentSerializer.legacyAmpersand().serialize(MiniMessage.miniMessage().parse(miniMessageString));
+        main.getLogManager().debug("mm => legacy: Converted <RESET>" + miniMessageString + "</RESET> to <RESET>" + legacy + "</RESET>");
+
+        return legacy;
+    }
 }
