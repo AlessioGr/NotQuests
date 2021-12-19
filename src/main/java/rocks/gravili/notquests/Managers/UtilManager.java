@@ -269,8 +269,9 @@ public class UtilManager {
         String[] lines = miniMessageToLegacy(message).split("\n", 40);//TODO: Rethink with minimessage in mind
         StringBuilder returnMessage = new StringBuilder();
 
-
+        int lineCounter = 0;
         for (String line : lines) {//TODO: Rethink with minimessage in mind
+            lineCounter++;
             int messagePxSize = 0;
             boolean previousCode = false;
             boolean isBold = false;
@@ -295,7 +296,10 @@ public class UtilManager {
                 sb.append(" ");
                 compensated += spaceLength;
             }
-            returnMessage.append(sb).append(line).append("\n");
+            returnMessage.append(sb).append(line);
+            if (lineCounter != lines.length) {
+                returnMessage.append("\n");
+            }
         }
 
         main.getLogManager().debug("Centered message! Old message:\n" + message + "\nCentered Message:\n" + returnMessage);
