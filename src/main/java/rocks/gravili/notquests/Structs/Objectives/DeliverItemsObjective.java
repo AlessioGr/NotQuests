@@ -243,7 +243,7 @@ public class DeliverItemsObjective extends Objective {
                     .replace("%ITEMTODELIVERTYPE%", "" + getItemToDeliver().getType())
                     .replace("%ITEMTODELIVERNAME%", "" + displayName)
                     .replace("%(%", "(")
-                    .replace("%)%", "§f)");
+                    .replace("%)%", "<RESET>)");
         } else {
             toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.base", player)
                     .replace("%EVENTUALCOLOR%", eventualColor)
@@ -257,20 +257,20 @@ public class DeliverItemsObjective extends Objective {
         if (main.isCitizensEnabled() && getRecipientNPCID() != -1) {
             final NPC npc = CitizensAPI.getNPCRegistry().getById(getRecipientNPCID());
             if (npc != null) {
-                toReturn += "\n      §7" + eventualColor + "Deliver it to §f" + eventualColor + npc.getName();
+                toReturn += "\n      <GRAY>" + eventualColor + "Deliver it to <WHITE>" + eventualColor + npc.getName();
             } else {
-                toReturn += "\n      §7" + eventualColor + "The delivery NPC is currently not available!";
+                toReturn += "\n      <GRAY>" + eventualColor + "The delivery NPC is currently not available!";
             }
         } else {
 
             if (getRecipientNPCID() != -1) {
-                toReturn += "    §cError: Citizens plugin not installed. Contact an admin.";
+                toReturn += "    <RED>Error: Citizens plugin not installed. Contact an admin.";
             } else { //Armor Stands
                 final UUID armorStandUUID = getRecipientArmorStandUUID();
                 if (armorStandUUID != null) {
-                    toReturn += "    §7" + eventualColor + "Deliver it to §f" + eventualColor + main.getArmorStandManager().getArmorStandName(armorStandUUID);
+                    toReturn += "    <GRAY>" + eventualColor + "Deliver it to <WHITE>" + eventualColor + main.getArmorStandManager().getArmorStandName(armorStandUUID);
                 } else {
-                    toReturn += "    §7" + eventualColor + "The target Armor Stand is currently not available!";
+                    toReturn += "    <GRAY>" + eventualColor + "The target Armor Stand is currently not available!";
                 }
             }
 

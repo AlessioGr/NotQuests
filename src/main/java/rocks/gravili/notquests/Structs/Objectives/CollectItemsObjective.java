@@ -102,7 +102,7 @@ public class CollectItemsObjective extends Objective {
                     .replace("%ITEMTOCOLLECTTYPE%", "" + getItemToCollect().getType())
                     .replace("%ITEMTOCOLLECTNAME%", "" + displayName)
                     .replace("%(%", "(")
-                    .replace("%)%", "§f)");
+                    .replace("%)%", "<RESET>)");
         } else {
             return main.getLanguageManager().getString("chat.objectives.taskDescription.collectItems.base", player)
                     .replace("%EVENTUALCOLOR%", eventualColor)

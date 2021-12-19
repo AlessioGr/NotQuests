@@ -75,6 +75,8 @@ chat:
         base: '    &8└─ &7%EVENTUALCOLOR%Reach town amount with your nation: &f%EVENTUALCOLOR%%AMOUNT%'
       jobsRebornReachJobLevel:
         base: '    &8└─ &7%EVENTUALCOLOR%Reach job level &f%EVENTUALCOLOR%%AMOUNT% &7with job &f%EVENTUALCOLOR%%JOB%'
+      SlimefunResearch:
+        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Spend on research'
 titles:
   quest-accepted:
     title: '&fQuest accepted'

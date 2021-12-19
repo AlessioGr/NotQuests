@@ -711,7 +711,7 @@ public final class NotQuests extends JavaPlugin {
      */
     public Economy getEconomy() {
         if(!isVaultEnabled()){
-            getLogManager().severe("§cError: Tried to load Economy when Vault is not enabled. Please report this to the plugin author (and I also recommend you installing Vault for money stuff to work)");
+            getLogManager().severe("Error: Tried to load Economy when Vault is not enabled. Please report this to the plugin author (and I also recommend you installing Vault for money stuff to work)");
 
             return null;
         }

@@ -107,7 +107,7 @@ public class SmeltObjective extends Objective {
                     .replace("%ITEMTOSMELTTYPE%", "" + getItemToSmelt().getType())
                     .replace("%ITEMTOSMELTNAME%", "" + displayName)
                     .replace("%(%", "(")
-                    .replace("%)%", "§f)");
+                    .replace("%)%", "<RESET>)");
         } else {
             return main.getLanguageManager().getString("chat.objectives.taskDescription.smelt.base", player)
                     .replace("%EVENTUALCOLOR%", eventualColor)

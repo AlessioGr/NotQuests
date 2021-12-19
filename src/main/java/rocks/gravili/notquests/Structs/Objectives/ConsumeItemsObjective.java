@@ -108,7 +108,7 @@ public class ConsumeItemsObjective extends Objective {
                     .replace("%ITEMTOCONSUMETYPE%", "" + getItemToConsume().getType())
                     .replace("%ITEMTOCONSUMENAME%", "" + displayName)
                     .replace("%(%", "(")
-                    .replace("%)%", "§f)");
+                    .replace("%)%", "<RESET>)");
         } else {
             return main.getLanguageManager().getString("chat.objectives.taskDescription.consumeItems.base", player)
                     .replace("%EVENTUALCOLOR%", eventualColor)

@@ -123,10 +123,10 @@ public class EscortNPCObjective extends Objective {
                         .replace("%NPCNAME%", "" + npc.getName())
                         .replace("%DESTINATIONNPCNAME%", "" + npcDestination.getName());
             } else {
-                toReturn = "    §7" + eventualColor + "The target or destination NPC is currently not available!";
+                toReturn = "    <GRAY>" + eventualColor + "The target or destination NPC is currently not available!";
             }
         } else {
-            toReturn += "    §cError: Citizens plugin not installed. Contact an admin.";
+            toReturn += "    <RED>Error: Citizens plugin not installed. Contact an admin.";
         }
         return toReturn;
     }

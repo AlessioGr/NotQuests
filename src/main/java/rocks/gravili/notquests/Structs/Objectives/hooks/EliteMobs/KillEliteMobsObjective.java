@@ -257,22 +257,22 @@ public class KillEliteMobsObjective extends Objective {
         }
         if (getMinimumLevel() != -1) {
             if (getMaximumLevel() != -1) {
-                toReturn += "\n        §7" + eventualColor + "Level: §f" + eventualColor + getMinimumLevel() + "-" + getMaximumLevel();
+                toReturn += "\n        <GRAY>" + eventualColor + "Level: <WHITE>" + eventualColor + getMinimumLevel() + "-" + getMaximumLevel();
             } else {
-                toReturn += "\n        §7" + eventualColor + "Minimum Level: §f" + eventualColor + getMinimumLevel();
+                toReturn += "\n        <GRAY>" + eventualColor + "Minimum Level: <WHITE>" + eventualColor + getMinimumLevel();
             }
         } else {
             if (getMaximumLevel() != -1) {
-                toReturn += "\n        §7" + eventualColor + "Maximum Level: §f" + eventualColor + getMaximumLevel();
+                toReturn += "\n        <GRAY>" + eventualColor + "Maximum Level: <WHITE>" + eventualColor + getMaximumLevel();
             }
         }
 
         if (!getSpawnReason().isBlank()) {
-            toReturn += "\n        §7" + eventualColor + "Spawned from: §f" + eventualColor + getSpawnReason();
+            toReturn += "\n        <GRAY>" + eventualColor + "Spawned from: <WHITE>" + eventualColor + getSpawnReason();
         }
 
         if (getMinimumDamagePercentage() != -1) {
-            toReturn += "\n        §7" + eventualColor + "Inflict minimum damage: §f" + eventualColor + getMinimumDamagePercentage() + "%";
+            toReturn += "\n        <GRAY>" + eventualColor + "Inflict minimum damage: <WHITE>" + eventualColor + getMinimumDamagePercentage() + "%";
         }
         return toReturn;
     }

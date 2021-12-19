@@ -167,11 +167,11 @@ public class TalkToNPCObjective extends Objective {
                         .replace("%EVENTUALCOLOR%", eventualColor)
                         .replace("%NAME%", npc.getName());
             } else {
-                toReturn = "    §7" + eventualColor + "The target NPC is currently not available!";
+                toReturn = "    <GRAY>" + eventualColor + "The target NPC is currently not available!";
             }
         } else {
             if (getNPCtoTalkID() != -1) {
-                toReturn += "    §cError: Citizens plugin not installed. Contact an admin.";
+                toReturn += "    <RED>Error: Citizens plugin not installed. Contact an admin.";
             } else { //Armor Stands
                 final UUID armorStandUUID = getArmorStandUUID();
                 if (armorStandUUID != null) {
@@ -179,7 +179,7 @@ public class TalkToNPCObjective extends Objective {
                             .replace("%EVENTUALCOLOR%", eventualColor)
                             .replace("%NAME%", main.getArmorStandManager().getArmorStandName(armorStandUUID));
                 } else {
-                    toReturn += "    §7" + eventualColor + "The target Armor Stand is currently not available!";
+                    toReturn += "    <GRAY>" + eventualColor + "The target Armor Stand is currently not available!";
                 }
             }
         }
