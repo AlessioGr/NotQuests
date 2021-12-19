@@ -49,6 +49,8 @@ public class Configuration {
     private boolean userCommandsUseGUI = true;
     private boolean mySQLEnabled = false;
 
+    public boolean storageCreateBackupsWhenSavingQuests = true;
+
     public String placeholder_player_active_quests_list_horizontal_separator = " | ";
 
     public int placeholder_player_active_quests_list_horizontal_limit = -1;

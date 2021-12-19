@@ -92,6 +92,7 @@ public final class NotQuests extends JavaPlugin {
     private PacketManager packetManager;
     private UpdateManager updateManager;
     private GUIManager guiManager;
+    private BackupManager backupManager;
 
     //Registering Managers
     private ObjectiveManager objectiveManager;
@@ -147,7 +148,7 @@ public final class NotQuests extends JavaPlugin {
         //Create a new instance of the Log Manager which will be re-used everywhere
         logManager = new LogManager(this);
 
-
+        backupManager = new BackupManager(this);
         //Create a new instance of the Data Manager which will be re-used everywhere
         dataManager = new DataManager(this);
         //Load general config first, because we'll need it for the integrations
@@ -894,4 +895,9 @@ public final class NotQuests extends JavaPlugin {
     public GUIManager getGuiManager() {
         return guiManager;
     }
+
+    public BackupManager getBackupManager() {
+        return backupManager;
+    }
 }
+

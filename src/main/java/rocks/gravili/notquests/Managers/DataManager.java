@@ -345,6 +345,13 @@ public class DataManager {
         }
         configuration.savePlayerData = generalConfig.getBoolean(key);
 
+        key = "storage.backups.create-before-saving-quests";
+        if (!getGeneralConfig().isBoolean(key)) {
+            getGeneralConfig().set(key, true);
+            valueChanged = true;
+        }
+        configuration.storageCreateBackupsWhenSavingQuests = generalConfig.getBoolean(key);
+
         //For upgrades from older versions who didn't have the enable flag but still used MySQL
         if (mysqlstorageenabledbooleannotloadedyet && !errored) {
             configuration.setMySQLEnabled(true);
@@ -846,6 +853,7 @@ public class DataManager {
     public void saveQuestsConfig() {
         if (isCurrentlyLoading()) {
             main.getLogManager().warn("Quest data saving has been skipped, because the plugin is currently loading.");
+            return;
         }
         if (isSavingEnabled()) {
             if (questsConfig == null || questsConfigFile == null) {
@@ -853,6 +861,9 @@ public class DataManager {
                 return;
             }
             try {
+                if (getConfiguration().storageCreateBackupsWhenSavingQuests) {
+                    main.getBackupManager().backupQuests();
+                }
                 getQuestsConfig().save(questsConfigFile);
                 main.getLogManager().info("Saved Data to quests.yml");
             } catch (IOException e) {
