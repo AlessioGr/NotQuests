@@ -64,17 +64,17 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
 
         firstLevelCommands = Component.text("NotQuests Player Commands:", NamedTextColor.BLUE, TextDecoration.BOLD)
                 .append(Component.newline())
-                .append(Component.text("/nquests §6take §3[Quest Name]", NamedTextColor.YELLOW).clickEvent(ClickEvent.suggestCommand("/nquests take ")).hoverEvent(HoverEvent.showText(Component.text("Takes/Starts a Quest", NamedTextColor.GREEN))))
+                .append(miniMessage.parse("<YELLOW>/nquests <GOLD>take <DARK_AQUA>[Quest Name]").clickEvent(ClickEvent.suggestCommand("/nquests take ")).hoverEvent(HoverEvent.showText(Component.text("Takes/Starts a Quest", NamedTextColor.GREEN))))
                 .append(Component.newline())
-                .append(Component.text("/nquests §6abort §3[Quest Name]", NamedTextColor.YELLOW).clickEvent(ClickEvent.suggestCommand("/nquests abort ")).hoverEvent(HoverEvent.showText(Component.text("Fails a Quest", NamedTextColor.GREEN))))
+                .append(miniMessage.parse("<YELLOW>/nquests <GOLD>abort <DARK_AQUA>[Quest Name]").clickEvent(ClickEvent.suggestCommand("/nquests abort ")).hoverEvent(HoverEvent.showText(Component.text("Fails a Quest", NamedTextColor.GREEN))))
                 .append(Component.newline())
-                .append(Component.text("/nquests §6preview §3[Quest Name]", NamedTextColor.YELLOW).clickEvent(ClickEvent.suggestCommand("/nquests preview ")).hoverEvent(HoverEvent.showText(Component.text("Shows more information about a Quest", NamedTextColor.GREEN))))
+                .append(miniMessage.parse("<YELLOW>/nquests <GOLD>preview <DARK_AQUA>[Quest Name]").clickEvent(ClickEvent.suggestCommand("/nquests preview ")).hoverEvent(HoverEvent.showText(Component.text("Shows more information about a Quest", NamedTextColor.GREEN))))
                 .append(Component.newline())
-                .append(Component.text("/nquests §6activeQuests", NamedTextColor.YELLOW).clickEvent(ClickEvent.runCommand("/nquests activeQuests")).hoverEvent(HoverEvent.showText(Component.text("Shows all your active Quests", NamedTextColor.GREEN))))
+                .append(miniMessage.parse("<YELLOW>/nquests <GOLD>activeQuests").clickEvent(ClickEvent.runCommand("/nquests activeQuests")).hoverEvent(HoverEvent.showText(Component.text("Shows all your active Quests", NamedTextColor.GREEN))))
                 .append(Component.newline())
-                .append(Component.text("/nquests §6progress §3[Quest Name]", NamedTextColor.YELLOW).clickEvent(ClickEvent.suggestCommand("/nquests progress ")).hoverEvent(HoverEvent.showText(Component.text("Shows the progress of an active Quest", NamedTextColor.GREEN))))
+                .append(miniMessage.parse("<YELLOW>/nquests <GOLD>progress <DARK_AQUA>[Quest Name]").clickEvent(ClickEvent.suggestCommand("/nquests progress ")).hoverEvent(HoverEvent.showText(Component.text("Shows the progress of an active Quest", NamedTextColor.GREEN))))
                 .append(Component.newline())
-                .append(Component.text("/nquests §6questPoints", NamedTextColor.YELLOW).clickEvent(ClickEvent.runCommand("/nquests questPoints")).hoverEvent(HoverEvent.showText(Component.text("Shows how many Quest Points you have", NamedTextColor.GREEN))))
+                .append(miniMessage.parse("<YELLOW>/nquests <GOLD>questPoints").clickEvent(ClickEvent.runCommand("/nquests questPoints")).hoverEvent(HoverEvent.showText(Component.text("Shows how many Quest Points you have", NamedTextColor.GREEN))))
                 .append(Component.newline()
 
                 );
@@ -323,7 +323,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                             gui.show(player);
                         } else {
                             audience.sendMessage(miniMessage.parse(
-                                    "<RED>Please specify the <AQUA>name of the quest§c you wish to take.\n"
+                                    "<RED>Please specify the <AQUA>name of the quest</AQUA> you wish to take.\n"
                                             + "<YELLOW>/nquests <GOLD>take <DARK_AQUA>[Quest Name]"
                             ));
 

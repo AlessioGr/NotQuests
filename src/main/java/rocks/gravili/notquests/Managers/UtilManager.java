@@ -336,7 +336,7 @@ public class UtilManager {
             }
         }*/
         //return descriptionWithLineBreaks.toString();
-        return WordUtils.wrap(unwrappedText.replace("\\n", "\n"), maxLineLength, "\n§8", main.getDataManager().getConfiguration().wrapLongWords);
+        return WordUtils.wrap(unwrappedText.replace("\\n", "\n"), maxLineLength, "\n<GRAY>", main.getDataManager().getConfiguration().wrapLongWords);
 
     }
 

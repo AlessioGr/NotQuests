@@ -186,6 +186,6 @@ public class ActionsManager {
     public String removeAction(String actionToDeleteIdentifier) {
         actionsAndIdentifiers.remove(actionToDeleteIdentifier);
         main.getDataManager().getQuestsConfig().set("actions." + actionToDeleteIdentifier, null);
-        return "§aAction " + actionToDeleteIdentifier + " successfully deleted!";
+        return NotQuestColors.successGradient + "Action " + NotQuestColors.highlightGradient + actionToDeleteIdentifier + "</gradient> successfully deleted!";
     }
 }

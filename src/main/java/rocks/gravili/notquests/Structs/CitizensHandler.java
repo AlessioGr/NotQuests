@@ -22,6 +22,9 @@ import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.trait.FollowTrait;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.NotQuests;
@@ -73,6 +76,7 @@ public class CitizensHandler {
             if (followerTrait != null) {
                 final Player player = Bukkit.getPlayer(activeQuest.getQuestPlayer().getUUID());
                 if (player != null) {
+                    Audience audience = main.adventure().player(player);
                     if (!npcToEscort.isSpawned()) {
                         npcToEscort.spawn(player.getLocation());
                     }
@@ -88,8 +92,9 @@ public class CitizensHandler {
                         }
                     }
 
-
-                    player.sendMessage("§aEscort quest started! Please escort §b" + npcToEscort.getName() + " §ato §b" + destinationNPC.getName() + "§a.");
+                    audience.sendMessage(MiniMessage.miniMessage().parse(
+                            "<GREEN>Escort quest started! Please escort <AQUA>" + npcToEscort.getName() + "</AQUA> to <AQUA>" + destinationNPC.getName() + "</AQUA>."
+                    ));
                 } else {
                     main.getLogManager().warn("Error: The escort objective could not be started, because the player with the UUID <AQUA>" + activeQuest.getQuestPlayer().getUUID() + "</AQUA> was not found!");
 
@@ -98,7 +103,8 @@ public class CitizensHandler {
             } else {
                 final Player player = Bukkit.getPlayer(activeQuest.getQuestPlayer().getUUID());
                 if (player != null) {
-                    player.sendMessage("The NPC you have to escort is not configured properly. Please consult an admin.");
+                    Audience audience = main.adventure().player(player);
+                    audience.sendMessage(Component.text("The NPC you have to escort is not configured properly. Please consult an admin."));
                 }
                 main.getLogManager().warn("Error: The escort NPC with the ID <AQUA>" + npcToEscortID + "</AQUA> is not configured properly (Follow trait not found)!");
 
@@ -107,7 +113,8 @@ public class CitizensHandler {
             if (destinationNPC == null) {
                 final Player player = Bukkit.getPlayer(activeQuest.getQuestPlayer().getUUID());
                 if (player != null) {
-                    player.sendMessage("The Destination NPC does not exist. Please consult an admin.");
+                    Audience audience = main.adventure().player(player);
+                    audience.sendMessage(Component.text("The Destination NPC does not exist. Please consult an admin."));
                 }
                 main.getLogManager().warn("Error: The destination NPC with the ID <AQUA>" + npcToEscortID + "</AQUA> was not found!");
 
@@ -115,7 +122,8 @@ public class CitizensHandler {
             if (npcToEscort == null) {
                 final Player player = Bukkit.getPlayer(activeQuest.getQuestPlayer().getUUID());
                 if (player != null) {
-                    player.sendMessage("The NPC you have to escort does not exist. Please consult an admin.");
+                    Audience audience = main.adventure().player(player);
+                    audience.sendMessage(Component.text("The NPC you have to escort does not exist. Please consult an admin."));
                 }
                 main.getLogManager().warn("Error: The escort NPC with the ID <AQUA>" + npcToEscortID + "</AQUA> was not found!");
 
