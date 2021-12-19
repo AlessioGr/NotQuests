@@ -109,22 +109,22 @@ gui:
           <GREEN>Take a Quest
           <GRAY>Start a new Quest!
 
-          <DARK_GRAY>Some Quests cannot be
+          <DARK_GRAY>Some Quests cannot be</DARK_GRAY>
           <DARK_GRAY>started like this.
       abortquest:
         text: |-
           <RED>Abort a Quest
-          <GRAY>Aborting a Quest may
+          <GRAY>Aborting a Quest may</GRAY>
           <GRAY>lead to punishments.
       previewquest:
         text: |-
           <BLUE>Preview Quest (Quest Info)
-          <GRAY>Show more information
+          <GRAY>Show more information</GRAY>
           <GRAY>about a Quest.
       activequests:
         text: |-
           <DARK_AQUA>Active Quests
-          <GRAY>Shows all of your
+          <GRAY>Shows all of your</GRAY>
           <GRAY>active Quests.
   activeQuests:
     title: '             <BLUE>Active Quests'
@@ -132,7 +132,7 @@ gui:
       activeQuestButton:
         text: |-
           <AQUA>%QUESTNAME% <GREEN>[ACTIVE]
-          <GRAY>Progress: <GREEN>%COMPLETEDOBJECTIVESCOUNT% <WHITE>/ %ALLOBJECTIVESCOUNT%
+          <GRAY>Progress: <GREEN>%COMPLETEDOBJECTIVESCOUNT% <WHITE>/ %ALLOBJECTIVESCOUNT%</WHITE>
           <WHITE>Click to see details!
   takeQuestChoose:
     title: '<BLUE>Which Quest do you want to take?'
@@ -168,7 +168,7 @@ gui:
           <RED>Click to abort the quest <AQUA>%QUESTNAME%<RED>!
       cancelAbort:
         text: |-
-          <GREEN>Click to NOT abort this quest
+          <GREEN>Click to NOT abort this quest</GREEN>
           <GREEN>and cancel this action
   previewQuest:
     title: '<BLUE>Preview for Quest <AQUA>%QUESTNAME%'
@@ -194,7 +194,7 @@ gui:
           <GREEN>Click to take the quest <AQUA>%QUESTNAME%<GREEN>!
       cancelTake:
         text: |-
-          <RED>Click to NOT take this quest
+          <RED>Click to NOT take this quest</RED>
           <RED>and cancel this action
   progress:
     title: '<BLUE>Details for Quest <AQUA>%QUESTNAME%'
@@ -202,9 +202,9 @@ gui:
       unlockedObjective:
         text: |-
           <YELLOW>%ACTIVEOBJECTIVEID%. <AQUA>%OBJECTIVENAME%
-          <GOLD><BOLD>ACTIVE
+          <GOLD><BOLD>ACTIVE</BOLD>
           <DARK_GRAY>%OBJECTIVEDESCRIPTION%
-          %ACTIVEOBJECTIVEDESCRIPTION%
+          <GRAY>%ACTIVEOBJECTIVEDESCRIPTION%</GRAY>
 
           <GRAY>Progress: <GREEN>%ACTIVEOBJECTIVEPROGRESS% <WHITE>/ %OBJECTIVEPROGRESSNEEDED%
         description-empty: No Description
@@ -216,9 +216,9 @@ gui:
       completedObjective:
         text: |-
           <GREEN><strikethrough>%ACTIVEOBJECTIVEID%. <DARK_GREEN><strikethrough>%OBJECTIVENAME%
-          <GREEN><BOLD>COMPLETED
+          <GREEN><BOLD>COMPLETED</BOLD>
           <DARK_GRAY><strikethrough>%OBJECTIVEDESCRIPTION%
-          %COMPLETEDOBJECTIVEDESCRIPTION%
+          <GRAY>%COMPLETEDOBJECTIVEDESCRIPTION%</GRAY>
 
           <GRAY><strikethrough>Progress: <GREEN><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <WHITE><strikethrough>/ %OBJECTIVEPROGRESSNEEDED%
         description-empty: No Description

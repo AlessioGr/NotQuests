@@ -266,11 +266,11 @@ public class UtilManager {
 
 
     public final String getCenteredMessage(final String message) {
-        String[] lines = message.split("\n", 40);
+        String[] lines = miniMessageToLegacy(message).split("\n", 40);//TODO: Rethink with minimessage in mind
         StringBuilder returnMessage = new StringBuilder();
 
 
-        for (String line : lines) {
+        for (String line : lines) {//TODO: Rethink with minimessage in mind
             int messagePxSize = 0;
             boolean previousCode = false;
             boolean isBold = false;
