@@ -45,6 +45,8 @@ public class UtilManager {
 
     private final static int CENTER_PX = 154;
 
+    private final MiniMessage miniMessage = MiniMessage.miniMessage();
+
     public UtilManager(NotQuests main) {
         this.main = main;
         playersAndBossBars = new HashMap<>();
@@ -152,9 +154,10 @@ public class UtilManager {
 
         Component currentCompletion;
         if (args[args.length - 1].isBlank()) {
-            currentCompletion = Component.text("" + hintCurrentArg, NotQuestColors.highlight, TextDecoration.BOLD).decoration(TextDecoration.ITALIC, false);
+            currentCompletion = miniMessage.parse("<RESET>" + NotQuestColors.highlight + "<BOLD>" + hintCurrentArg);
         } else {
-            currentCompletion = Component.text("" + args[args.length - 1], NamedTextColor.YELLOW, TextDecoration.BOLD).decoration(TextDecoration.ITALIC, false);
+            currentCompletion = miniMessage.parse("<RESET><YELLOW><BOLD>" + args[args.length - 1]);
+
         }
 
         if (!hintNextArgs.isBlank()) {
@@ -162,17 +165,16 @@ public class UtilManager {
             if (hintNextArgs.length() > 15) {
                 hintNextArgs = hintNextArgs.substring(0, 14) + "...";
             }
-
-            return Component.text(argsTogether.toString(), NotQuestColors.lightHighlight, TextDecoration.ITALIC)
+            return miniMessage.parse(NotQuestColors.lightHighlight + "<ITALIC>" + argsTogether)
                     .append(currentCompletion)
-                    .append(Component.text(" " + hintNextArgs, NamedTextColor.GRAY));
+                    .append(miniMessage.parse("<GRAY> " + hintNextArgs));
         } else {
             if (!args[args.length - 1].isBlank()) { //Command finished
-                return Component.text(argsTogether.toString(), NotQuestColors.lightHighlight, TextDecoration.ITALIC)
+                return miniMessage.parse(NotQuestColors.lightHighlight + "<ITALIC>" + argsTogether)
                         .append(currentCompletion)
                         .append(Component.text(" ✓", NamedTextColor.GREEN, TextDecoration.BOLD));
             } else {
-                return Component.text(argsTogether.toString(), NotQuestColors.lightHighlight, TextDecoration.ITALIC)
+                return miniMessage.parse(NotQuestColors.lightHighlight + "<ITALIC>" + argsTogether)
                         .append(currentCompletion);
             }
 
@@ -344,7 +346,7 @@ public class UtilManager {
             return toReplace;
         }
         Component component = LegacyComponentSerializer.builder().hexColors().build().deserialize(ChatColor.translateAlternateColorCodes('&', toReplace));
-        String finalS = MiniMessage.miniMessage().serialize(component);
+        String finalS = miniMessage.serialize(component);
 
         main.getLogManager().debug("legacy => minimessage Converted <RESET>" + toReplace + "</RESET> to <RESET>" + finalS + "</RESET>");
         return finalS;
@@ -352,7 +354,7 @@ public class UtilManager {
 
     public final String miniMessageToLegacy(String miniMessageString) {
         String legacy = ChatColor.translateAlternateColorCodes('&',
-                LegacyComponentSerializer.builder().hexColors().build().serialize(MiniMessage.miniMessage().parse(miniMessageString))
+                LegacyComponentSerializer.builder().hexColors().build().serialize(miniMessage.parse(miniMessageString))
         );
         main.getLogManager().debug("mm => legacy: Converted <RESET>" + miniMessageString + "</RESET> to <RESET>" + legacy + "</RESET>");
 
@@ -360,7 +362,7 @@ public class UtilManager {
     }
 
     public String miniMessageToLegacyWithSpigotRGB(String miniMessageString) {
-        String legacy = LegacyComponentSerializer.builder().hexColors().useUnusualXRepeatedCharacterHexFormat().build().serialize(MiniMessage.miniMessage().parse(miniMessageString));
+        String legacy = LegacyComponentSerializer.builder().hexColors().useUnusualXRepeatedCharacterHexFormat().build().serialize(miniMessage.parse(miniMessageString));
         main.getLogManager().debug("mm => legacy: Converted <RESET>" + miniMessageString + "</RESET> to <RESET>" + legacy + "</RESET>");
 
         return legacy;

@@ -71,8 +71,7 @@ public class UltimateClansClanLevelCondition extends Condition {
 
     @Override
     public String getConditionDescription() {
-
-        return "§7-- Member of clan with min. level: " + getMinClanLevel() + "\n";
+        return "<GRAY>-- Member of clan with min. level: " + getMinClanLevel();
     }
 
     @Override
@@ -88,7 +87,7 @@ public class UltimateClansClanLevelCondition extends Condition {
     @Override
     public String check(QuestPlayer questPlayer, boolean enforce) {
         if (!main.isUltimateClansEnabled()) {
-            return "\n§eError: The server does not have UltimateClans enabled. Please ask the Owner to install UltimateClans for UltimateClans stuff to work.";
+            return "<YELLOW>Error: The server does not have UltimateClans enabled. Please ask the Owner to install UltimateClans for UltimateClans stuff to work.";
         }
 
         final Player player = questPlayer.getPlayer();
@@ -97,9 +96,9 @@ public class UltimateClansClanLevelCondition extends Condition {
                 return "";
 
             }
-            return "\n§eYou need to be in a Clan with at least level §b" + getMinClanLevel() + "§e.";
+            return "<YELLOW>You need to be in a Clan with at least level <AQUA>" + getMinClanLevel() + "</AQUA>.";
         } else {
-            return "\n§eError reading UltimateClans requirement...";
+            return "<YELLOW>Error reading UltimateClans requirement...";
 
         }
     }

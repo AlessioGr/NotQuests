@@ -54,7 +54,7 @@ public class TownyNationTownCountCondition extends Condition {
     @Override
     public String check(QuestPlayer questPlayer, boolean enforce) {
         if (!main.isTownyEnabled()) {
-            return "\n§eError: The server does not have Towny enabled. Please ask the Owner to install Towny for Towny stuff to work.";
+            return "<YELLOW>Error: The server does not have Towny enabled. Please ask the Owner to install Towny for Towny stuff to work.";
         }
 
         final Player player = questPlayer.getPlayer();
@@ -65,22 +65,22 @@ public class TownyNationTownCountCondition extends Condition {
                 if (nation.getNumTowns() >= getMinTownCount()) {
                     return "";
                 } else {
-                    return "\n§eYour nation needs to have at least §b" + getMinTownCount() + "§e towns.";
+                    return "<YELLOW>Your nation needs to have at least <AQUA>" + getMinTownCount() + "</AQUA> towns.";
                 }
             } else {
-                return "\n§eYou need to be in a nation";
+                return "<YELLOW>You need to be in a nation";
             }
 
 
         } else {
-            return "\n§eError reading TownyTownResidentCount requirement...";
+            return "<YELLOW>Error reading TownyTownResidentCount requirement...";
 
         }
     }
 
     @Override
     public String getConditionDescription() {
-        return "§7-- Minimum towns in nation: " + getMinTownCount() + "\n";
+        return "<GRAY>-- Minimum towns in nation: " + getMinTownCount();
     }
 
 

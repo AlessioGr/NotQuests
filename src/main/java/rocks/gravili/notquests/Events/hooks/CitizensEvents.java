@@ -26,6 +26,8 @@ import net.citizensnpcs.api.event.NPCRightClickEvent;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.trait.FollowTrait;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -107,6 +109,7 @@ public class CitizensEvents implements Listener {
         final Player player = event.getClicker();
         final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
         if (questPlayer != null) {
+            Audience audience = main.adventure().player(player);
             if (questPlayer.getActiveQuests().size() > 0) {
                 for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                     for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
@@ -155,7 +158,9 @@ public class CitizensEvents implements Listener {
                                     if (npcToEscort != null) {
                                         if (npcToEscort.isSpawned() && (npcToEscort.getEntity().getLocation().distance(player.getLocation()) < 6)) {
                                             activeObjective.addProgress(1, npc.getId());
-                                            player.sendMessage("§aYou have successfully delivered the NPC §b" + npcToEscort.getName());
+                                            audience.sendMessage(MiniMessage.miniMessage().parse(
+                                                    "<GREEN>You have successfully delivered the NPC <AQUA>" + npcToEscort.getName()
+                                            ));
 
                                             FollowTrait followerTrait = null;
                                             for (final Trait trait : npcToEscort.getTraits()) {

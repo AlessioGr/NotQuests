@@ -72,7 +72,7 @@ public class OtherQuestCondition extends Condition {
             }
         }
         if (otherQuestCompletedAmount < getProgressNeeded()) {
-            return "\n§eFinish the following quest: §b" + otherQuest.getQuestFinalName() + " §7(" + getProgressNeeded() + " times)\n";
+            return "<YELLOW>Finish the following quest: <AQUA>" + otherQuest.getQuestFinalName() + " <GRAY>(" + getProgressNeeded() + " times)";
         } else {
             return "";
         }
@@ -83,9 +83,9 @@ public class OtherQuestCondition extends Condition {
     public String getConditionDescription() {
         final Quest otherQuest = getOtherQuest();
         if (otherQuest != null) {
-            return "§7-- Finish Quest first: " + otherQuest.getQuestFinalName();
+            return "<GRAY>-- Finish Quest first: " + otherQuest.getQuestFinalName();
         } else {
-            return "§7-- Finish Quest first: " + getOtherQuestName();
+            return "<GRAY>-- Finish Quest first: " + getOtherQuestName();
         }
 
     }

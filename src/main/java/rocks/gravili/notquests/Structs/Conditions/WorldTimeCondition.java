@@ -88,20 +88,20 @@ public class WorldTimeCondition extends Condition {
             if (currentTime <= getMaxTime() && currentTime >= getMinTime()) {
                 return "";
             } else {
-                return "\n§eCome back between §b" + getMinTime() + " §7and §b" + getMaxTime() + " §e(It's now " + currentTime + ")\n";
+                return "<YELLOW>Come back between <AQUA>" + getMinTime() + "</AQUA> and <AQUA>" + getMaxTime() + "</AQUA> (It's now " + currentTime + ")";
             }
         } else { //Maxtime is the next day
             if (currentTime <= getMinTime()) { //Chec for next day
                 if (currentTime <= getMaxTime()) {
                     return "";
                 } else {
-                    return "\n§eCome back between §b" + getMinTime() + " §7and §b" + getMaxTime() + " §e(It's now " + currentTime + ")\n";
+                    return "<YELLOW>Come back between <AQUA>" + getMinTime() + "</AQUA> and <AQUA>" + getMaxTime() + "</AQUA> (It's now " + currentTime + ")";
                 }
             } else { //Check for current day
                 if (currentTime >= getMinTime() && currentTime <= 24) {
                     return "";
                 } else {
-                    return "\n§eCome back between §b" + getMinTime() + " §7and §b" + getMaxTime() + " §e(It's now " + currentTime + ")\n";
+                    return "<YELLOW>Come back between <AQUA>" + getMinTime() + "</AQUA> and <AQUA>" + getMaxTime() + "</AQUA> (It's now " + currentTime + ")";
                 }
             }
 
@@ -114,7 +114,7 @@ public class WorldTimeCondition extends Condition {
 
     @Override
     public String getConditionDescription() {
-        return "§7-- World time: " + getMinTime() + " - " + getMaxTime();
+        return "<GRAY>-- World time: " + getMinTime() + " - " + getMaxTime();
     }
 
     @Override

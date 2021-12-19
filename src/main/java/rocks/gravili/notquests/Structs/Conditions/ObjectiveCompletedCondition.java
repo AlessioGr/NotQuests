@@ -67,21 +67,21 @@ public class ObjectiveCompletedCondition extends Condition {
     public String check(final QuestPlayer questPlayer, final boolean enforce) {
         final Objective objectiveToComplete = getObjectiveToComplete();
         if(objectiveToComplete == null){
-            return "§cError: Cannot find objective you have to complete first.";
+            return "<RED>Error: Cannot find objective you have to complete first.";
         }
 
         final Quest quest = getQuest();
         if(quest == null){
-            return "§cError: Cannot find current quest.";
+            return "<RED>Error: Cannot find current quest.";
         }
 
         ActiveQuest activeQuest = questPlayer.getActiveQuest(quest);
         if(activeQuest == null){
-            return "§cError: Cannot find current active quest.";
+            return "<RED>Error: Cannot find current active quest.";
         }
 
         if(activeQuest.getActiveObjectiveFromID(getObjectiveToCompleteID()) != null){
-            return "\n§eFinish the following objective first: §b" + objectiveToComplete.getObjectiveFinalName() + "\n";
+            return "<YELLOW>Finish the following objective first: <AQUA>" + objectiveToComplete.getObjectiveFinalName();
         }
         return "";
 
@@ -92,9 +92,9 @@ public class ObjectiveCompletedCondition extends Condition {
     public String getConditionDescription() {
         final Objective otherObjective = getObjectiveToComplete();
         if (otherObjective != null) {
-            return "§7-- Finish Objective first: " + otherObjective.getObjectiveFinalName();
+            return "<GRAY>-- Finish Objective first: " + otherObjective.getObjectiveFinalName();
         } else {
-            return "§7-- Finish otherObjective first: " + getObjectiveToCompleteID();
+            return "<GRAY>-- Finish otherObjective first: " + getObjectiveToCompleteID();
         }
 
     }
@@ -116,7 +116,6 @@ public class ObjectiveCompletedCondition extends Condition {
                                                 completions.add("" + objective.getObjectiveID());
                                             }
                                         }
-
                                         return completions;
                                     }
                             ).withParser((context, lastString) -> {

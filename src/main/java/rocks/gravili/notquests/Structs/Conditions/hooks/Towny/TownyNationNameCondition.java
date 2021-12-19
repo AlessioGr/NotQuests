@@ -87,7 +87,7 @@ public class TownyNationNameCondition extends Condition {
     @Override
     public String check(QuestPlayer questPlayer, boolean enforce) {
         if (!main.isTownyEnabled()) {
-            return "\n§eError: The server does not have Towny enabled. Please ask the Owner to install Towny for Towny stuff to work.";
+            return "<YELLOW>Error: The server does not have Towny enabled. Please ask the Owner to install Towny for Towny stuff to work.";
         }
 
         final Player player = questPlayer.getPlayer();
@@ -100,23 +100,23 @@ public class TownyNationNameCondition extends Condition {
                     return "";
                 } else {
                     if (nation != null) {
-                        return "\n§eYou need to be in the nation §b" + getTownyNationName() + "§e. However, you are currently in §b" + nation.getName().replace("_", " ");
+                        return "<YELLOW>You need to be in the nation <AQUA>" + getTownyNationName() + "</AQUA>. However, you are currently in <AQUA>" + nation.getName().replace("_", " ");
                     } else {
-                        return "\n§eYou need to be in the nation §b" + getTownyNationName();
+                        return "<YELLOW>You need to be in the nation <AQUA>" + getTownyNationName();
                     }
                 }
             } else {
-                return "\n§eYou need to be in the nation §b" + getTownyNationName();
+                return "<YELLOW>You need to be in the nation <AQUA>" + getTownyNationName();
             }
         } else {
-            return "\n§eError reading TownyNationName requirement...";
+            return "<YELLOW>Error reading TownyNationName requirement...";
 
         }
     }
 
     @Override
     public String getConditionDescription() {
-        return "§7-- Member of nation: " + getTownyNationName() + "\n";
+        return "<GRAY>-- Member of nation: " + getTownyNationName();
     }
 
 

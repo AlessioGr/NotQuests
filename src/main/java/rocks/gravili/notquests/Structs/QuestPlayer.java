@@ -19,7 +19,9 @@
 package rocks.gravili.notquests.Structs;
 
 
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
@@ -33,8 +35,8 @@ import rocks.gravili.notquests.Structs.Actions.Action;
 import rocks.gravili.notquests.Structs.Conditions.Condition;
 import rocks.gravili.notquests.Structs.Objectives.OtherQuestObjective;
 
+import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -72,7 +74,7 @@ public class QuestPlayer {
 
         //Configuration Option: general.max-active-quests-per-player
         if(main.getDataManager().getConfiguration().getMaxActiveQuestsPerPlayer() != -1 && activeQuests.size() >= main.getDataManager().getConfiguration().getMaxActiveQuestsPerPlayer()){
-            return "§cYou can not accept more than §b" + main.getDataManager().getConfiguration().getMaxActiveQuestsPerPlayer() + " §cQuests.";
+            return "<RED>You can not accept more than <AQUA>" + main.getDataManager().getConfiguration().getMaxActiveQuestsPerPlayer() + "</AQUA> Quests.";
         }
 
         for (ActiveQuest activeQuest : activeQuests) {
@@ -110,16 +112,20 @@ public class QuestPlayer {
                 StringBuilder requirementsStillNeeded = new StringBuilder();
 
                 if (getPlayer() == null) {
-                    requirementsStillNeeded.append("\n§eError: Player object not found. Please report this to the plugin developer.");
+                    requirementsStillNeeded.append("\n<YELLOW>Error: Player object not found. Please report this to the plugin developer.");
                 }
 
                 for (final Condition condition : quest.getQuest().getRequirements()) {
-                    requirementsStillNeeded.append(condition.check(this, false));
+                    final String check = condition.check(this, false);
+                    if (!check.isBlank()) {
+                        requirementsStillNeeded.append("\n").append(check);
+
+                    }
                 }
 
 
                 if (!requirementsStillNeeded.toString().isBlank()) {
-                    return "§cYou do not fulfill all the requirements this quest needs! Requirement still needed:" + requirementsStillNeeded;
+                    return "<RED>You do not fulfill all the requirements this quest needs! Requirement still needed:" + requirementsStillNeeded;
                 }else{
                     //Now loop through all the requirements again in order to enforce them
                     for (final Condition condition : quest.getQuest().getRequirements()) {
@@ -135,14 +141,20 @@ public class QuestPlayer {
                 if (sendQuestInfo) {
                     final Player player = getPlayer();
                     if (player != null) {
-                        player.sendMessage(main.getLanguageManager().getString("chat.objectives-label-after-quest-accepting", player));
+                        Audience audience = main.adventure().player(player);
+
+                        audience.sendMessage(MiniMessage.miniMessage().parse(
+                                main.getLanguageManager().getString("chat.objectives-label-after-quest-accepting", player)
+                        ));
                         main.getQuestManager().sendActiveObjectivesAndProgress(player, quest);
 
                         if (main.getDataManager().getConfiguration().visualTitleQuestSuccessfullyAccepted_enabled) {
 
-                            player.sendTitle(main.getLanguageManager().getString("titles.quest-accepted.title", player), main.getLanguageManager().getString("titles.quest-accepted.subtitle", player, quest), 2, 60, 8);
-
-
+                            audience.showTitle(
+                                    Title.title(MiniMessage.miniMessage().parse(main.getLanguageManager().getString("titles.quest-accepted.title", player)),
+                                            MiniMessage.miniMessage().parse(main.getLanguageManager().getString("titles.quest-accepted.subtitle", player, this, quest)),
+                                            Title.Times.times(Duration.ofMillis(2), Duration.ofSeconds(3), Duration.ofMillis(8))
+                                    ));
                         }
 
 
@@ -156,21 +168,21 @@ public class QuestPlayer {
                 return "accepted";
             } else {
                 if (timeToWaitInMinutes < 60) {
-                    return "§cThis quest is on a cooldown! You have to wait another §b" + timeToWaitInMinutes + " minutes §cuntil you can take it again.";
+                    return "<RED>This quest is on a cooldown! You have to wait another <AQUA>" + timeToWaitInMinutes + " minutes</AQUA> until you can take it again.";
                 } else {
                     if (timeToWaitInHours < 24) {
                         if (timeToWaitInHours == 1) {
-                            return "§cThis quest is on a cooldown! You have to wait another §b" + timeToWaitInHours + " hour §cuntil you can take it again.";
+                            return "<RED>This quest is on a cooldown! You have to wait another <AQUA>" + timeToWaitInHours + " hour</AQUA> until you can take it again.";
 
                         } else {
-                            return "§cThis quest is on a cooldown! You have to wait another §b" + timeToWaitInHours + " hours §cuntil you can take it again.";
+                            return "<RED>This quest is on a cooldown! You have to wait another <AQUA>" + timeToWaitInHours + " hours</AQUA> until you can take it again.";
                         }
                     } else {
                         if (timeToWaitInDays == 1) {
-                            return "§cThis quest is on a cooldown! You have to wait another §b" + timeToWaitInDays + " day §cuntil you can take it again.";
+                            return "<RED>This quest is on a cooldown! You have to wait another <AQUA>" + timeToWaitInDays + " day</AQUA> until you can take it again.";
 
                         } else {
-                            return "§cThis quest is on a cooldown! You have to wait another §b" + timeToWaitInDays + " days §cuntil you can take it again.";
+                            return "<RED>This quest is on a cooldown! You have to wait another <AQUA>" + timeToWaitInDays + " days</AQUA> until you can take it again.";
                         }
                     }
 
@@ -179,7 +191,7 @@ public class QuestPlayer {
             }
 
         } else {
-            return "§cYou have finished this quests too many times already. You can only accept ot §b" + quest.getQuest().getMaxAccepts() + " §ctimes, but you have already accepted it §b" + completedAmount + " §c times.";
+            return "<RED>You have finished this quests too many times already. You can only accept it <AQUA>" + quest.getQuest().getMaxAccepts() + "</AQUA> times, but you have already accepted it <AQUA>" + completedAmount + "</AQUA> times.";
         }
 
 
@@ -218,7 +230,7 @@ public class QuestPlayer {
             }
         }
         finishAddingQuest(quest, triggerAcceptQuestTrigger, false);
-        return "§aSuccessfully accepted the quest (Forced).";
+        return "<GREEN>Successfully accepted the quest (Forced).";
     }
 
     public final UUID getUUID() {
@@ -250,14 +262,22 @@ public class QuestPlayer {
         for (Action action : quest.getRewards()) {
             action.execute(getPlayer(), quest);
         }
-        Objects.requireNonNull(getPlayer()).sendMessage(main.getLanguageManager().getString("chat.quest-completed-and-rewards-given", getPlayer(), quest));
+
+        final Player player = getPlayer();
+        if (player != null) {
+            Audience audience = main.adventure().player(player);
+            audience.sendMessage(MiniMessage.miniMessage().parse(
+                    main.getLanguageManager().getString("chat.quest-completed-and-rewards-given", getPlayer(), quest)
+            ));
+        }
 
     }
 
     public void sendMessage(String message) {
         final Player player = getPlayer();
         if (player != null) {
-            player.sendMessage(message);
+            Audience audience = main.adventure().player(player);
+            audience.sendMessage(MiniMessage.miniMessage().parse(message));
         }
     }
 
@@ -297,7 +317,12 @@ public class QuestPlayer {
         final Player player = getPlayer();
         if (player != null) {
             if (main.getDataManager().getConfiguration().visualTitleQuestCompleted_enabled) {
-                player.sendTitle(main.getLanguageManager().getString("titles.quest-completed.title", player), main.getLanguageManager().getString("titles.quest-accepted.subtitle", player, this, activeQuest), 2, 60, 8);
+                Audience audience = main.adventure().player(player);
+                audience.showTitle(
+                        Title.title(MiniMessage.miniMessage().parse(main.getLanguageManager().getString("titles.quest-completed.title", player)),
+                                MiniMessage.miniMessage().parse(main.getLanguageManager().getString("titles.quest-completed.subtitle", player, this, activeQuest)),
+                                Title.Times.times(Duration.ofMillis(2), Duration.ofSeconds(3), Duration.ofMillis(8))
+                        ));
 
             }
 
@@ -346,7 +371,12 @@ public class QuestPlayer {
             final Player player = getPlayer();
             if (player != null) {
                 if (main.getDataManager().getConfiguration().visualTitleQuestCompleted_enabled) {
-                    player.sendTitle(main.getLanguageManager().getString("titles.quest-completed.title", player), main.getLanguageManager().getString("titles.quest-accepted.subtitle", player, this, activeQuest), 2, 60, 8);
+                    Audience audience = main.adventure().player(player);
+                    audience.showTitle(
+                            Title.title(MiniMessage.miniMessage().parse(main.getLanguageManager().getString("titles.quest-completed.title", player)),
+                                    MiniMessage.miniMessage().parse(main.getLanguageManager().getString("titles.quest-completed.subtitle", player, this, activeQuest)),
+                                    Title.Times.times(Duration.ofMillis(2), Duration.ofSeconds(3), Duration.ofMillis(8))
+                            ));
                 }
                 player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.MASTER, 100, 40);
             }
@@ -386,7 +416,10 @@ public class QuestPlayer {
             if (notifyPlayer) {
                 final Player player = getPlayer();
                 if (player != null) {
-                    player.sendMessage("§eYour quest points have been set to §b" + newQuestPoints + "§e.");
+                    Audience audience = main.adventure().player(player);
+                    audience.sendMessage(MiniMessage.miniMessage().parse(
+                            "<YELLOW>Your quest points have been set to <AQUA>" + newQuestPoints + "</AQUA>."
+                    ));
                 }
             }
         }
@@ -397,7 +430,10 @@ public class QuestPlayer {
         if (notifyPlayer) {
             final Player player = getPlayer();
             if (player != null) {
-                player.sendMessage("§b+" + questPointsToAdd + " §aquest points!");
+                Audience audience = main.adventure().player(player);
+                audience.sendMessage(MiniMessage.miniMessage().parse(
+                        "<AQUA>+" + questPointsToAdd + " <GREEN>quest points!"
+                ));
             }
         }
     }
@@ -407,7 +443,10 @@ public class QuestPlayer {
         if (notifyPlayer) {
             final Player player = getPlayer();
             if (player != null) {
-                player.sendMessage("§b-" + questPointsToRemove + " §cquest points!");
+                Audience audience = main.adventure().player(player);
+                audience.sendMessage(MiniMessage.miniMessage().parse(
+                        "<AQUA>>-" + questPointsToRemove + " <RED>>quest points!"
+                ));
             }
         }
     }
@@ -445,13 +484,15 @@ public class QuestPlayer {
                 final Player player = getPlayer();
 
                 if (player != null) {
+                    Audience audience = main.adventure().player(player);
                     if (main.getDataManager().getConfiguration().visualTitleQuestFailed_enabled) {
-
-                        player.sendTitle(main.getLanguageManager().getString("titles.quest-failed.title", player), main.getLanguageManager().getString("titles.quest-failed.subtitle", player, this, activeQuestToFail), 2, 60, 8);
+                        audience.showTitle(
+                                Title.title(MiniMessage.miniMessage().parse(main.getLanguageManager().getString("titles.quest-failed.title", player)),
+                                        MiniMessage.miniMessage().parse(main.getLanguageManager().getString("titles.quest-failed.subtitle", player, this, activeQuestToFail)),
+                                        Title.Times.times(Duration.ofMillis(2), Duration.ofSeconds(3), Duration.ofMillis(8))
+                                ));
                     }
-
                     player.playSound(player.getLocation(), Sound.ENTITY_RAVAGER_DEATH, SoundCategory.MASTER, 100, 1);
-
                 }
             }
         }

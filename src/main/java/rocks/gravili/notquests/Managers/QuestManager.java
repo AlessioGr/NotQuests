@@ -26,6 +26,9 @@ import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -669,6 +672,8 @@ public class QuestManager {
             return false;
         }
 
+        Audience audience = main.adventure().player(player);
+
         if (main.getDataManager().getConfiguration().isQuestPreviewUseGUI()) {
             String[] guiSetup = {
                     "xxxxxxxxx",
@@ -707,7 +712,6 @@ public class QuestManager {
                         count, // Display a number as the item count
                         click -> {
                             player.chat("/notquests preview " + quest.getQuestName());
-                            //click.getEvent().getWhoClicked().sendMessage(ChatColor.RED + "I am Redstone!");
                             return true; // returning true will cancel the click event and stop taking the item
 
                         },
@@ -743,24 +747,22 @@ public class QuestManager {
         } else {
             main.getLogManager().info("NotQuests > All quest count: <AQUA>" + quests.size() + "</AQUA>");
 
-            player.sendMessage("");
-            player.sendMessage("§9" + questsAttachedToNPC.size() + " Available Quests:");
+            audience.sendMessage(Component.empty());
+            audience.sendMessage(miniMessage.parse(
+                    "<BLUE>" + questsAttachedToNPC.size() + " Available Quests:"
+            ));
             int counter = 1;
 
             for (Quest quest : questsAttachedToNPC) {
 
+                Component acceptComponent = miniMessage.parse("<GREEN><BOLD>[CHOOSE]")
+                        .clickEvent(ClickEvent.runCommand("/nquests preview " + quest.getQuestName()))
+                        .hoverEvent(HoverEvent.showText(MiniMessage.miniMessage().parse("<GREEN>Click to preview/choose the quest <AQUA>" + quest.getQuestFinalName())));
 
-                net.md_5.bungee.api.chat.BaseComponent component;
+                Component component = miniMessage.parse("<YELLOW>" + counter + ". <AQUA>" + quest.getQuestFinalName() + " ")
+                        .append(acceptComponent);
 
-
-                net.md_5.bungee.api.chat.BaseComponent acceptComponent = new net.md_5.bungee.api.chat.TextComponent("§a§l[CHOOSE]");
-                acceptComponent.setClickEvent(new net.md_5.bungee.api.chat.ClickEvent(net.md_5.bungee.api.chat.ClickEvent.Action.RUN_COMMAND, "/nquests preview " + quest.getQuestName()));
-                acceptComponent.setHoverEvent(new net.md_5.bungee.api.chat.HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT, new net.md_5.bungee.api.chat.ComponentBuilder("§aClick to preview/choose the quest §b" + quest.getQuestFinalName()).create()));
-                component = new net.md_5.bungee.api.chat.TextComponent("§e" + counter + ". §b" + quest.getQuestFinalName() + " ");
-
-                component.addExtra(acceptComponent);
-
-                player.spigot().sendMessage(component);
+                audience.sendMessage(component);
 
 
                 counter++;
@@ -780,6 +782,7 @@ public class QuestManager {
         if(questsAttachedToNPC.size() == 0){
             return;
         }
+        Audience audience = main.adventure().player(player);
 
         if (main.getDataManager().getConfiguration().isQuestPreviewUseGUI()) {
             String[] guiSetup = {
@@ -820,7 +823,6 @@ public class QuestManager {
                         count, // Display a number as the item count
                         click -> {
                             player.chat("/notquests preview " + quest.getQuestName());
-                            //click.getEvent().getWhoClicked().sendMessage(ChatColor.RED + "I am Redstone!");
                             return true; // returning true will cancel the click event and stop taking the item
 
                         },
@@ -856,25 +858,22 @@ public class QuestManager {
         } else {
             main.getLogManager().info("NotQuests > All quest count: <AQUA>" + quests.size() + "</AQUA>");
 
-            player.sendMessage("");
-            player.sendMessage("§9" + questsAttachedToNPC.size() + " Available Quests:");
+            audience.sendMessage(Component.empty());
+            audience.sendMessage(miniMessage.parse(
+                    "<BLUE>" + questsAttachedToNPC.size() + " Availahle Quests:"
+            ));
             int counter = 1;
 
             for (Quest quest : questsAttachedToNPC) {
 
+                Component acceptComponent = miniMessage.parse("<GREEN><BOLD>[CHOOSE]")
+                        .clickEvent(ClickEvent.runCommand("/nquests preview " + quest.getQuestName()))
+                        .hoverEvent(HoverEvent.showText(MiniMessage.miniMessage().parse("<GREEN>Click to preview/choose the quest <AQUA>" + quest.getQuestFinalName())));
 
-                net.md_5.bungee.api.chat.BaseComponent component;
+                Component component = miniMessage.parse("<YELLOW>" + counter + ". <AQUA>" + quest.getQuestFinalName() + " ")
+                        .append(acceptComponent);
 
-
-                net.md_5.bungee.api.chat.BaseComponent acceptComponent = new net.md_5.bungee.api.chat.TextComponent("§a§l[CHOOSE]");
-                acceptComponent.setClickEvent(new net.md_5.bungee.api.chat.ClickEvent(net.md_5.bungee.api.chat.ClickEvent.Action.RUN_COMMAND, "/nquests preview " + quest.getQuestName()));
-                acceptComponent.setHoverEvent(new net.md_5.bungee.api.chat.HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT, new net.md_5.bungee.api.chat.ComponentBuilder("§aClick to preview/choose the quest §b" + quest.getQuestFinalName()).create()));
-                component = new net.md_5.bungee.api.chat.TextComponent("§e" + counter + ". §b" + quest.getQuestFinalName() + " ");
-
-                component.addExtra(acceptComponent);
-
-                player.spigot().sendMessage(component);
-
+                audience.sendMessage(component);
 
                 counter++;
             }
@@ -890,9 +889,9 @@ public class QuestManager {
             if(counter != 1){
                 requirements.append("\n");
             }
-            requirements.append("§a").append(counter).append(". §e").append(condition.getConditionType()).append("\n");
+            requirements.append("<GREEN>").append(counter).append(". <YELLOW>").append(condition.getConditionType()).append("\n");
 
-            requirements.append(condition.getConditionDescription());
+            requirements.append(condition.getConditionDescription()).append("\n");
 
 
             counter += 1;
@@ -908,9 +907,9 @@ public class QuestManager {
                 rewards.append("\n");
             }
             if (!reward.getActionName().isBlank()) {
-                rewards.append("§a").append(counter).append(". §9").append(reward.getActionName());
+                rewards.append("<GREEN>").append(counter).append(". <BLUE>").append(reward.getActionName());
             } else {
-                rewards.append("§a").append(counter).append(main.getLanguageManager().getString("gui.reward-hidden-text", null, quest, reward));
+                rewards.append("<GREEN>").append(counter).append(main.getLanguageManager().getString("gui.reward-hidden-text", null, quest, reward));
 
             }
             counter += 1;
@@ -920,41 +919,48 @@ public class QuestManager {
     }
 
     public void sendSingleQuestPreview(Player player, Quest quest) {
-        player.sendMessage("");
-        player.sendMessage("§7-----------------------------------");
-        player.sendMessage("§9Quest Preview for Quest §b" + quest.getQuestFinalName() + "§9:");
+        Audience audience = main.adventure().player(player);
+        audience.sendMessage(Component.empty());
+        audience.sendMessage(miniMessage.parse("<GRAY>-----------------------------------"));
+        audience.sendMessage(miniMessage.parse(
+                "<BLUE>Quest Preview for Quest <AQUA>" + quest.getQuestFinalName() + "</AQUA>:"
+        ));
 
 
         if (quest.getQuestDescription().length() >= 1) {
-            player.sendMessage("§eQuest description: §7" + quest.getQuestDescription());
+            audience.sendMessage(miniMessage.parse(
+                    "<YELLOW>Quest description: <GRAY>" + quest.getQuestDescription()
+            ));
         } else {
-            player.sendMessage(main.getLanguageManager().getString("chat.missing-quest-description", player));
+            audience.sendMessage(miniMessage.parse(
+                    main.getLanguageManager().getString("chat.missing-quest-description", player)
+            ));
         }
 
-        player.sendMessage("§9Quest Requirements:");
+        audience.sendMessage(miniMessage.parse(
+                "<BLUE>Quest Requirements:"
+        ));
 
-        player.sendMessage(getQuestRequirements(quest));
+        audience.sendMessage(miniMessage.parse(
+                getQuestRequirements(quest)
+        ));
 
-        player.sendMessage("§9Quest Rewards:");
+        audience.sendMessage(miniMessage.parse(
+                "<BLUE>Quest Rewards:"
+        ));
+        audience.sendMessage(miniMessage.parse(
+                getQuestRewards(quest)
+        ));
 
-        player.sendMessage(getQuestRewards(quest));
-
-
-        net.md_5.bungee.api.chat.BaseComponent acceptComponent = new net.md_5.bungee.api.chat.TextComponent("§a§l[ACCEPT THIS QUEST]");
-        acceptComponent.setClickEvent(new net.md_5.bungee.api.chat.ClickEvent(net.md_5.bungee.api.chat.ClickEvent.Action.RUN_COMMAND, "/nquests take " + quest.getQuestName()));
-        acceptComponent.setHoverEvent(new net.md_5.bungee.api.chat.HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT, new net.md_5.bungee.api.chat.ComponentBuilder("§aClick to accept this quest").create()));
-
-
-
-       /*Paper only Component acceptQuestComponent = Component.text("[ACCEPT THIS QUEST]", NamedTextColor.GREEN, TextDecoration.BOLD)
+        Component acceptComponent = miniMessage.parse("<GREEN><BOLD>[ACCEPT THIS QUEST]")
                 .clickEvent(ClickEvent.runCommand("/nquests take " + quest.getQuestName()))
-                .hoverEvent(HoverEvent.showText(Component.text("Click to accept this quest", NamedTextColor.GREEN)));*/
+                .hoverEvent(HoverEvent.showText(MiniMessage.miniMessage().parse("<GREEN>Click to accept the Quest <AQUA>" + quest.getQuestFinalName())));
 
-
-        player.sendMessage("");
-        //only paper player.sendMessage(acceptQuestComponent);
-        player.spigot().sendMessage(acceptComponent);
-        player.sendMessage("§7-----------------------------------");
+        audience.sendMessage(Component.empty());
+        audience.sendMessage(acceptComponent);
+        audience.sendMessage(miniMessage.parse(
+                "<GRAY>-----------------------------------"
+        ));
 
 
     }
@@ -1180,8 +1186,12 @@ public class QuestManager {
                     "    <strikethrough><GRAY>Description: <WHITE>" + objectiveDescription + "</strikethrough>"
             ));
 
-            player.sendMessage(getObjectiveTaskDescription(activeObjective.getObjective(), true, player));
-            player.sendMessage("   §7§mProgress: §f§m" + activeObjective.getCurrentProgress() + " / " + activeObjective.getProgressNeeded());
+            audience.sendMessage(miniMessage.parse(
+                    getObjectiveTaskDescription(activeObjective.getObjective(), true, player)
+            ));
+            audience.sendMessage(miniMessage.parse(
+                    "   <strikethrough><GRAY>Progress: <WHITE>" + activeObjective.getCurrentProgress() + " / " + activeObjective.getProgressNeeded() + "</strikethrough>"
+            ));
         }
     }
 
@@ -1190,7 +1200,7 @@ public class QuestManager {
         String toReturn = "";
         String eventualColor = "";
         if (completed) {
-            eventualColor = "§m";
+            eventualColor = "<strikethrough>";
         }
         toReturn += objective.getObjectiveTaskDescription(eventualColor, player);
 
@@ -1198,16 +1208,16 @@ public class QuestManager {
             if (main.isCitizensEnabled()) {
                 final NPC npc = CitizensAPI.getNPCRegistry().getById(objective.getCompletionNPCID());
                 if (npc != null) {
-                    toReturn += "\n    §7" + eventualColor + "To complete: Talk to §b" + eventualColor + npc.getName();
+                    toReturn += "\n    <GRAY>" + eventualColor + "To complete: Talk to <AQUA>" + eventualColor + npc.getName();
                 } else {
-                    toReturn += "\n    §7" + eventualColor + "To complete: Talk to NPC with ID §b" + eventualColor + objective.getCompletionNPCID() + " §c" + eventualColor + "[Currently not available]";
+                    toReturn += "\n    <GRAY>" + eventualColor + "To complete: Talk to NPC with ID <AQUA>" + eventualColor + objective.getCompletionNPCID() + " <RED>" + eventualColor + "[Currently not available]";
                 }
             } else {
-                toReturn += "    §cError: Citizens plugin not installed. Contact an admin.";
+                toReturn += "    <RED>Error: Citizens plugin not installed. Contact an admin.";
             }
         }
         if (objective.getCompletionArmorStandUUID() != null) {
-            toReturn += "\n    §7" + eventualColor + "To complete: Talk to §b" + eventualColor + "" + main.getArmorStandManager().getArmorStandName(objective.getCompletionArmorStandUUID());
+            toReturn += "\n    <GRAY>" + eventualColor + "To complete: Talk to <AQUA>" + eventualColor + "" + main.getArmorStandManager().getArmorStandName(objective.getCompletionArmorStandUUID());
         }
         return toReturn;
     }
@@ -1218,7 +1228,9 @@ public class QuestManager {
 
             if (activeObjective.isUnlocked()) {
                 final String objectiveDescription = activeObjective.getObjective().getObjectiveDescription();
-                player.sendMessage(main.getLanguageManager().getString("chat.objectives.counter", player, activeQuest, activeObjective));
+                audience.sendMessage(miniMessage.parse(
+                        main.getLanguageManager().getString("chat.objectives.counter", player, activeQuest, activeObjective)
+                ));
 
                 if (!objectiveDescription.isBlank()) {
                     audience.sendMessage(MiniMessage.miniMessage().parse(
@@ -1227,11 +1239,17 @@ public class QuestManager {
                     ));
                 }
 
-                player.sendMessage(getObjectiveTaskDescription(activeObjective.getObjective(), false, player));
+                audience.sendMessage(miniMessage.parse(
+                        getObjectiveTaskDescription(activeObjective.getObjective(), false, player)
+                ));
 
-                player.sendMessage(main.getLanguageManager().getString("chat.objectives.progress", player, activeQuest, activeObjective));
+                audience.sendMessage(miniMessage.parse(
+                        main.getLanguageManager().getString("chat.objectives.progress", player, activeQuest, activeObjective)
+                ));
             } else {
-                player.sendMessage(main.getLanguageManager().getString("chat.objectives.hidden", player, activeObjective, activeObjective));
+                audience.sendMessage(miniMessage.parse(
+                        main.getLanguageManager().getString("chat.objectives.hidden", player, activeObjective, activeObjective)
+                ));
 
             }
 
@@ -1239,16 +1257,22 @@ public class QuestManager {
     }
 
     public void sendObjectives(final Player player, final Quest quest) {
+        Audience audience = main.adventure().player(player);
         for (final Objective objective : quest.getObjectives()) {
             final String objectiveDescription = objective.getObjectiveDescription();
-            player.sendMessage("§a" + objective.getObjectiveID() + ". §e" + objective.getObjectiveFinalName());
+            audience.sendMessage(miniMessage.parse(
+                    "<GREEN>" + objective.getObjectiveID() + ". <YELLOW>" + objective.getObjectiveFinalName()
+            ));
 
 
             if (!objectiveDescription.isBlank()) {
-                player.sendMessage("   §9Description: §6" + objectiveDescription);
+                audience.sendMessage(miniMessage.parse(
+                        "   <BLUE>Description: <GOLD>" + objectiveDescription
+                ));
             }
-
-            player.sendMessage(getObjectiveTaskDescription(objective, false, player));
+            audience.sendMessage(miniMessage.parse(
+                    getObjectiveTaskDescription(objective, false, player)
+            ));
 
 
         }
@@ -1295,24 +1319,32 @@ public class QuestManager {
 
 
     public void sendActiveObjective(final Player player, ActiveObjective activeObjective) {
-
+        Audience audience = main.adventure().player(player);
         if (activeObjective.isUnlocked()) {
             final String objectiveDescription = activeObjective.getObjective().getObjectiveDescription();
 
-            player.sendMessage("§e" + activeObjective.getObjective().getObjectiveID() + ". " + activeObjective.getObjective().getObjectiveFinalName() + ":");
+            audience.sendMessage(miniMessage.parse(
+                    "YELLOW" + activeObjective.getObjective().getObjectiveID() + ". " + activeObjective.getObjective().getObjectiveFinalName() + ":"
+            ));
 
 
             if (!objectiveDescription.isBlank()) {
-                player.sendMessage("   §9Description: §6" + objectiveDescription);
+                audience.sendMessage(miniMessage.parse(
+                        "   <BLUE>Description: <GOLD>" + objectiveDescription
+                ));
             }
 
-            player.sendMessage(getObjectiveTaskDescription(activeObjective.getObjective(), false, player));
+            audience.sendMessage(miniMessage.parse(
+                    getObjectiveTaskDescription(activeObjective.getObjective(), false, player)
+            ));
 
-
-            player.sendMessage("   §7Progress: §f" + activeObjective.getCurrentProgress() + " / " + activeObjective.getProgressNeeded());
+            audience.sendMessage(miniMessage.parse(
+                    "   <GRAY>Progress: <WHITE>" + activeObjective.getCurrentProgress() + " / " + activeObjective.getProgressNeeded()
+            ));
         } else {
-            player.sendMessage("§e" + activeObjective.getObjective().getObjectiveID() + ". §7§l[HIDDEN]");
-
+            audience.sendMessage(miniMessage.parse(
+                    "<YELLOW>" + activeObjective.getObjective().getObjectiveID() + ". <GRAY><BOLD>[HIDDEN]"
+            ));
         }
 
 

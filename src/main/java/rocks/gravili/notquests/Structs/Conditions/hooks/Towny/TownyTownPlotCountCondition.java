@@ -54,7 +54,7 @@ public class TownyTownPlotCountCondition extends Condition {
     @Override
     public String check(QuestPlayer questPlayer, boolean enforce) {
         if (!main.isTownyEnabled()) {
-            return "\n§eError: The server does not have Towny enabled. Please ask the Owner to install Towny for Towny stuff to work.";
+            return "<YELLOW>Error: The server does not have Towny enabled. Please ask the Owner to install Towny for Towny stuff to work.";
         }
 
         final Player player = questPlayer.getPlayer();
@@ -65,21 +65,21 @@ public class TownyTownPlotCountCondition extends Condition {
                 if (town.getPlotGroups().size() >= getMinTownPlotCount()) {
                     return "";
                 } else {
-                    return "\n§eYour town needs to have at least §b" + getMinTownPlotCount() + "§e plot groups.";
+                    return "<YELLOW>Your town needs to have at least <AQUA>" + getMinTownPlotCount() + "</AQUA> plot groups.";
                 }
             } else {
-                return "\n§eYou need to be in a town";
+                return "<YELLOW>You need to be in a town";
             }
 
 
         } else {
-            return "\n§eError reading TownyTownPlotCount requirement...";
+            return "<YELLOW>Error reading TownyTownPlotCount requirement...";
         }
     }
 
     @Override
     public String getConditionDescription() {
-        return "§7-- Minimum town plots: " + getMinTownPlotCount() + "\n";
+        return "<GRAY>-- Minimum town plots: " + getMinTownPlotCount();
     }
 
 

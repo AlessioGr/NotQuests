@@ -23,6 +23,8 @@ import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -81,12 +83,12 @@ public class MoneyCondition extends Condition {
 
     @Override
     public String getConditionDescription() {
-        String description = "§7-- Money needed: " + getMoneyRequirement() + "\n";
+        String description = "<GRAY>-- Money needed: " + getMoneyRequirement();
 
         if (isDeductMoney()) {
-            description += "§7--- §cMoney WILL BE DEDUCTED!";
+            description += "\n<GRAY>--- <RED>Money WILL BE DEDUCTED!";
         } else {
-            description += "§7--- Will money be deducted?: No";
+            description += "\n<GRAY>--- Will money be deducted?: No";
         }
         return description;
     }
@@ -109,8 +111,10 @@ public class MoneyCondition extends Condition {
         }
         main.getEconomy().withdrawPlayer(player, worldName, moneyToDeduct);
         if (notifyPlayer) {
-            player.sendMessage("§b-" + moneyToDeduct + " §c$!");
-
+            Audience audience = main.adventure().player(player);
+            audience.sendMessage(MiniMessage.miniMessage().parse(
+                    "<AQUA>-" + moneyToDeduct + " <RED>$!"
+            ));
         }
     }
 
@@ -122,9 +126,9 @@ public class MoneyCondition extends Condition {
         final Player player = questPlayer.getPlayer();
         if (player != null) {
             if (!main.isVaultEnabled() || main.getEconomy() == null) {
-                return "\n§eError: The server does not have vault enabled. Please ask the Owner to install Vault for money stuff to work.";
+                return "<YELLOW>Error: The server does not have vault enabled. Please ask the Owner to install Vault for money stuff to work.";
             } else if (main.getEconomy().getBalance(player, player.getWorld().getName()) < moneyRequirementAmount) {
-                return "\n§eYou need §b" + (moneyRequirementAmount - main.getEconomy().getBalance(player, player.getWorld().getName())) + " §emore money.";
+                return "<YELLOW>You need <AQUA>" + (moneyRequirementAmount - main.getEconomy().getBalance(player, player.getWorld().getName())) + "</AQUA> more money.";
             } else {
                 if (enforce && deductMoney && moneyRequirementAmount > 0) {
 
@@ -133,7 +137,7 @@ public class MoneyCondition extends Condition {
                     } else {
                         main.getLogManager().warn("Warning: Could not deduct money, because Vault was not found. Please install Vault for money stuff to work.");
                         main.getLogManager().warn("Error: Tried to load Economy when Vault is not enabled. Please report this to the plugin author (and I also recommend you installing Vault for money stuff to work)");
-                        return "§cError deducting money, because Vault has not been found. Report this to an Admin.";
+                        return "<RED>Error deducting money, because Vault has not been found. Report this to an Admin.";
                     }
 
 
@@ -141,7 +145,7 @@ public class MoneyCondition extends Condition {
                 return "";
             }
         } else {
-            return "\n§eError reading money requirement...";
+            return "<YELLOW>Error reading money requirement...";
 
         }
     }

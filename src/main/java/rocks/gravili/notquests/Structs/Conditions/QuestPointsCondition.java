@@ -57,7 +57,7 @@ public class QuestPointsCondition extends Condition {
         final boolean deductQuestPoints = isDeductQuestPoints();
 
         if (questPlayer.getQuestPoints() < questPointRequirementAmount) {
-            return "\n§eYou need §b" + (questPointRequirementAmount - questPlayer.getQuestPoints()) + " §emore quest points.";
+            return "<YELLOW>You need <AQUA>" + (questPointRequirementAmount - questPlayer.getQuestPoints()) + "</AQUA> more quest points.";
         } else {
             if (enforce && deductQuestPoints && questPointRequirementAmount > 0) {
                 questPlayer.removeQuestPoints(questPointRequirementAmount, true);
@@ -79,11 +79,11 @@ public class QuestPointsCondition extends Condition {
 
     @Override
     public String getConditionDescription() {
-        String description = "§7-- Quest points needed: " + getQuestPointRequirement() + "\n";
+        String description = "<GRAY>-- Quest points needed: " + getQuestPointRequirement();
         if (isDeductQuestPoints()) {
-            description += "§7--- §cQuest points WILL BE DEDUCTED!";
+            description += "\n<GRAY>--- <RED>Quest points WILL BE DEDUCTED!";
         } else {
-            description += "§7--- Will quest points be deducted?: No";
+            description += "\n<GRAY>--- Will quest points be deducted?: No";
         }
         return description;
     }
