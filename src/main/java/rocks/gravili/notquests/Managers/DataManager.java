@@ -844,6 +844,9 @@ public class DataManager {
         }
     }
     public void saveQuestsConfig() {
+        if (isCurrentlyLoading()) {
+            main.getLogManager().warn("Quest data saving has been skipped, because the plugin is currently loading.");
+        }
         if (isSavingEnabled()) {
             if (questsConfig == null || questsConfigFile == null) {
                 main.getLogManager().severe("Could not save data to quests.yml");

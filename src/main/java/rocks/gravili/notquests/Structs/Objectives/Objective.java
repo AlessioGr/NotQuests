@@ -18,8 +18,6 @@
 
 package rocks.gravili.notquests.Structs.Objectives;
 
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.NotQuests;
@@ -153,7 +151,7 @@ public abstract class Objective {
     }
 
     public final String getObjectiveDisplayName() {
-        return LegacyComponentSerializer.builder().hexColors().build().serialize(MiniMessage.miniMessage().parse(objectiveDisplayName)).replace("&", "§");
+        return objectiveDisplayName;
     }
 
     public final String getObjectiveFinalName() {
@@ -164,7 +162,8 @@ public abstract class Objective {
         }
     }
 
-    public void setObjectiveDisplayName(final String newObjectiveDisplayName, boolean save) {
+    public void setObjectiveDisplayName(String newObjectiveDisplayName, boolean save) {
+        newObjectiveDisplayName = main.getUtilManager().replaceLegacyWithMiniMessage(newObjectiveDisplayName);
         this.objectiveDisplayName = newObjectiveDisplayName;
         if (save) {
             main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".displayName", newObjectiveDisplayName);
@@ -178,9 +177,6 @@ public abstract class Objective {
         }
     }
 
-    public final String getLegacyObjectiveDescription() { //MiniMessage =>
-        return LegacyComponentSerializer.builder().build().serialize(MiniMessage.miniMessage().parse(objectiveDescription)).replace("&", "§");
-    }
 
     public final String getObjectiveDescription() { //MiniMessage
         return objectiveDescription;
@@ -198,12 +194,9 @@ public abstract class Objective {
         return main.getUtilManager().wrapText(getObjectiveDescription(), maxLengthPerLine);
     }
 
-    public final String getLegacyObjectiveDescription(final int maxLengthPerLine) {
-        return main.getUtilManager().wrapText(getLegacyObjectiveDescription(), maxLengthPerLine);
-    }
 
-
-    public void setObjectiveDescription(final String newObjectiveDescription, boolean save) {
+    public void setObjectiveDescription(String newObjectiveDescription, boolean save) {
+        newObjectiveDescription = main.getUtilManager().replaceLegacyWithMiniMessage(newObjectiveDescription);
         this.objectiveDescription = newObjectiveDescription;
         if (save) {
             main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".description", newObjectiveDescription);

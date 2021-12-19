@@ -337,11 +337,20 @@ public class UtilManager {
 
     }
 
+
     public final String replaceLegacyWithMiniMessage(String toReplace) {
+        if (!toReplace.replace("& ", "").contains("&")) {
+            return toReplace;
+        }
         Component component = LegacyComponentSerializer.builder().hexColors().build().deserialize(toReplace.replaceAll("&", "§"));
         String finalS = MiniMessage.miniMessage().serialize(component);
 
         main.getLogManager().debug("Converted <RESET>" + toReplace + "</RESET> to <RESET>" + finalS + "</RESET>");
         return finalS;
     }
+
+    public final String miniMessageToLegacy(String miniMessageString) {
+        return LegacyComponentSerializer.builder().hexColors().build().serialize(MiniMessage.miniMessage().parse(miniMessageString)).replace("&", "§");
+    }
+
 }

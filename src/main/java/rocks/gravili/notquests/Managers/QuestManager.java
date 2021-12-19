@@ -194,18 +194,10 @@ public class QuestManager {
                                         objective.setCompletionArmorStandUUID(completionArmorStandUUID, false);
                                     }
 
-                                    //Legacy conversion
-                                    if (objectiveDescription.replace("& ", "").contains("&")) {
-                                        objective.setObjectiveDescription(main.getUtilManager().replaceLegacyWithMiniMessage(objectiveDescription), true);
-                                    } else {
-                                        objective.setObjectiveDescription(objectiveDescription, false);
-                                    }
+                                    objective.setObjectiveDescription(objectiveDescription.replace("\\n", "\n"), false);
 
-                                    if (objectiveDisplayName.replace("& ", "").contains("&")) {
-                                        objective.setObjectiveDisplayName(main.getUtilManager().replaceLegacyWithMiniMessage(objectiveDisplayName), true);
-                                    } else {
-                                        objective.setObjectiveDisplayName(objectiveDisplayName, false);
-                                    }
+                                    objective.setObjectiveDisplayName(objectiveDisplayName.replace("\\n", "\n"), false);
+
 
                                     objective.setCompletionNPCID(completionNPCID, false);
                                     quest.addObjective(objective, false);
@@ -1168,17 +1160,19 @@ public class QuestManager {
 
 
     public void sendCompletedObjectivesAndProgress(final Player player, final ActiveQuest activeQuest) {
-
+        Audience audience = main.adventure().player(player);
         for (ActiveObjective activeObjective : activeQuest.getCompletedObjectives()) {
 
             final String objectiveDescription = activeObjective.getObjective().getObjectiveDescription();
 
-            player.sendMessage("§7§m" + activeObjective.getObjective().getObjectiveID() + ". " + activeObjective.getObjective().getObjectiveFinalName() + ":");
 
+            audience.sendMessage(MiniMessage.miniMessage().parse(
+                    "<strikethrough><GRAY>" + activeObjective.getObjective().getObjectiveID() + ". " + activeObjective.getObjective().getObjectiveFinalName() + ":" + "</strikethrough>"
+            ));
 
-            if (!objectiveDescription.isBlank()) {
-                player.sendMessage("   §7§mDescription: §f§m" + objectiveDescription);
-            }
+            audience.sendMessage(MiniMessage.miniMessage().parse(
+                    "    <strikethrough><GRAY>Description: <WHITE>" + objectiveDescription + "</strikethrough>"
+            ));
 
             player.sendMessage(getObjectiveTaskDescription(activeObjective.getObjective(), true, player));
             player.sendMessage("   §7§mProgress: §f§m" + activeObjective.getCurrentProgress() + " / " + activeObjective.getProgressNeeded());
@@ -1213,7 +1207,7 @@ public class QuestManager {
     }
 
     public void sendActiveObjectivesAndProgress(final Player player, final ActiveQuest activeQuest) {
-
+        Audience audience = main.adventure().player(player);
         for (ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
 
             if (activeObjective.isUnlocked()) {
@@ -1221,8 +1215,10 @@ public class QuestManager {
                 player.sendMessage(main.getLanguageManager().getString("chat.objectives.counter", player, activeQuest, activeObjective));
 
                 if (!objectiveDescription.isBlank()) {
-                    player.sendMessage(main.getLanguageManager().getString("chat.objectives.description", player, activeQuest, activeObjective)
-                            .replace("%OBJECTIVEDESCRIPTION%", activeObjective.getObjective().getObjectiveDescription()));
+                    audience.sendMessage(MiniMessage.miniMessage().parse(
+                            main.getLanguageManager().getString("chat.objectives.description", player, activeQuest, activeObjective)
+                                    .replace("%OBJECTIVEDESCRIPTION%", activeObjective.getObjective().getObjectiveDescription())
+                    ));
                 }
 
                 player.sendMessage(getObjectiveTaskDescription(activeObjective.getObjective(), false, player));
