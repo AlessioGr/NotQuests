@@ -154,7 +154,7 @@ public class UtilManager {
 
         Component currentCompletion;
         if (args[args.length - 1].isBlank()) {
-            currentCompletion = miniMessage.parse("<RESET>" + NotQuestColors.highlight + "<BOLD>" + hintCurrentArg);
+            currentCompletion = miniMessage.parse("<RESET>" + NotQuestColors.highlightMM + "<BOLD>" + hintCurrentArg);
         } else {
             currentCompletion = miniMessage.parse("<RESET><YELLOW><BOLD>" + args[args.length - 1]);
 
@@ -165,16 +165,16 @@ public class UtilManager {
             if (hintNextArgs.length() > 15) {
                 hintNextArgs = hintNextArgs.substring(0, 14) + "...";
             }
-            return miniMessage.parse(NotQuestColors.lightHighlight + "<ITALIC>" + argsTogether)
+            return miniMessage.parse(NotQuestColors.lightHighlightMM + "<ITALIC>" + argsTogether)
                     .append(currentCompletion)
                     .append(miniMessage.parse("<GRAY> " + hintNextArgs));
         } else {
             if (!args[args.length - 1].isBlank()) { //Command finished
-                return miniMessage.parse(NotQuestColors.lightHighlight + "<ITALIC>" + argsTogether)
+                return miniMessage.parse(NotQuestColors.lightHighlightMM + "<ITALIC>" + argsTogether)
                         .append(currentCompletion)
                         .append(Component.text(" ✓", NamedTextColor.GREEN, TextDecoration.BOLD));
             } else {
-                return miniMessage.parse(NotQuestColors.lightHighlight + "<ITALIC>" + argsTogether)
+                return miniMessage.parse(NotQuestColors.lightHighlightMM + "<ITALIC>" + argsTogether)
                         .append(currentCompletion);
             }
 

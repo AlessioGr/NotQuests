@@ -22,9 +22,13 @@ import net.kyori.adventure.text.format.TextColor;
 
 public class NotQuestColors {
     public static TextColor main = TextColor.color(0x1985ff);
+    public static String mainMM = "<#1985ff>";
     public static TextColor highlight = TextColor.color(0xff45ae);
+    public static String highlightMM = "<#ff45ae>";
     public static TextColor highlight2 = TextColor.color(0xff004c);
     public static TextColor lightHighlight = TextColor.color(0x4da0ff);
+    public static String lightHighlightMM = "<#4da0ff>";
+
     public static String successGradient = "<gradient:#54b2ff:#ff5ecc>";
     public static String errorGradient = "<gradient:#ff004c:#a80000>";
     public static String mainGradient = "<gradient:#1985ff:#2bc7ff>";
