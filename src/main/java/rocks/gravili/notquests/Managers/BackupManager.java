@@ -14,7 +14,6 @@ public class BackupManager {
     public BackupManager(final NotQuests main) {
         this.main = main;
         backupFileDateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
-
     }
 
 
