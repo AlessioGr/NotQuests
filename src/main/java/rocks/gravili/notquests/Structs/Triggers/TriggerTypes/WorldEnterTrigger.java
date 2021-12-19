@@ -91,7 +91,7 @@ public class WorldEnterTrigger extends Trigger {
 
     @Override
     public String getTriggerDescription() {
-        return "World to enter: §f" + getWorldToEnterName();
+        return "World to enter: <WHITE>" + getWorldToEnterName();
     }
 
     @Override

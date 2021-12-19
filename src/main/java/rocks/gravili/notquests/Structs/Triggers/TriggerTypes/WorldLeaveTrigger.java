@@ -91,7 +91,7 @@ public class WorldLeaveTrigger extends Trigger {
 
     @Override
     public String getTriggerDescription() {
-        return "World to leave: §f" + getWorldToLeaveName();
+        return "World to leave: <WHITE>" + getWorldToLeaveName();
     }
 
     @Override

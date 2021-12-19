@@ -85,7 +85,7 @@ public class NPCDeathTrigger extends Trigger {
 
     @Override
     public String getTriggerDescription() {
-        return "NPC to die ID: §f" + getNpcToDieID();
+        return "NPC to die ID: <WHITE>" + getNpcToDieID();
     }
 
     @Override
