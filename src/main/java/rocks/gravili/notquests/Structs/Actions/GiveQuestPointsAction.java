@@ -23,6 +23,8 @@ import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -68,8 +70,10 @@ public class GiveQuestPointsAction extends Action {
 
         } else {
             main.getLogManager().warn("Error giving quest point reward to player <AQUA>" + player.getName() + "</AQUA>");
-
-            player.sendMessage("§cError giving quest point reward.");
+            Audience audience = main.adventure().player(player);
+            audience.sendMessage(MiniMessage.miniMessage().parse(
+                    "<RED>Error giving quest point reward."
+            ));
         }
 
     }

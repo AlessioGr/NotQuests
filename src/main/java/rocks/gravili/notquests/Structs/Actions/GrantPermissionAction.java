@@ -24,6 +24,7 @@ import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -83,7 +84,10 @@ public class GrantPermissionAction extends Action {
             return;
         }
         if (!main.isLuckpermsEnabled()) {
-            player.sendMessage("§cError: cannot give you the permission reward because Luckperms (needed for money giving to work) is not installed on the server.");
+            Audience audience = main.adventure().player(player);
+            audience.sendMessage(MiniMessage.miniMessage().parse(
+                    "<RED>Error: cannot give you the permission reward because Luckperms (needed for money giving to work) is not installed on the server."
+            ));
             return;
         }
         main.getLuckPermsManager().givePermission(player.getUniqueId(), rewardedPermission);

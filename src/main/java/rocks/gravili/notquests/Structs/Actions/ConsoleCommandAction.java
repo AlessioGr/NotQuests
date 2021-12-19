@@ -82,7 +82,7 @@ public class ConsoleCommandAction extends Action {
     @Override
     public void execute(final Player player, Object... objects) {
         if (consoleCommand.isBlank()) {
-            main.getLogManager().warn("Tried to give consolecommand reward with invalid console command.");
+            main.getLogManager().warn("Tried to give ConsoleCommand action with invalid console command.");
             return;
         }
         Quest quest = getQuest();
@@ -103,8 +103,6 @@ public class ConsoleCommandAction extends Action {
             rewardConsoleCommand = rewardConsoleCommand.replace("{QUEST}", "" + quest.getQuestName());
         }
         ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
-
-        //DEBUG: main.getLogManager().info("Giving reward command: §b" + consoleCommand);
 
         if (Bukkit.isPrimaryThread()) {
             Bukkit.dispatchCommand(console, rewardConsoleCommand);
