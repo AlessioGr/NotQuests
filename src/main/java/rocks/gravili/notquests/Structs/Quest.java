@@ -385,10 +385,10 @@ public class Quest {
 
             triggers.remove(triggers.get((triggerID - 1)));
             main.getDataManager().getQuestsConfig().set("quests." + questName + ".triggers." + triggerID, null);
-            return "§aTrigger successfully removed!";
+            return "<AQUA>Trigger successfully removed!";
 
         } else {
-            return "§cError: Trigger not found!";
+            return "<RED>Error: Trigger not found!";
         }
     }
 

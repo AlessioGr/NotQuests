@@ -133,12 +133,16 @@ public class CitizensEvents implements Listener {
                                                 if (progressLeft < itemStack.getAmount()) { //We can finish it with this itemStack
                                                     itemStack.setAmount((itemStack.getAmount() - (int) progressLeft));
                                                     activeObjective.addProgress(progressLeft, npc.getId());
-                                                    player.sendMessage("§aYou have delivered §b" + progressLeft + " §aitems to §b" + npc.getName());
+                                                    audience.sendMessage(MiniMessage.miniMessage().parse(
+                                                            "<GREEN>You have delivered <AQUA>" + progressLeft + "</AQUA> items to <AQUA>" + npc.getName()
+                                                    ));
                                                     break;
                                                 } else {
                                                     player.getInventory().removeItem(itemStack);
                                                     activeObjective.addProgress(itemStack.getAmount(), npc.getId());
-                                                    player.sendMessage("§aYou have delivered §b" + itemStack.getAmount() + " §aitems to §b" + npc.getName());
+                                                    audience.sendMessage(MiniMessage.miniMessage().parse(
+                                                            "<GREEN>You have delivered <AQUA>" + itemStack.getAmount() + "</AQUA> items to <AQUA>" + npc.getName()
+                                                    ));
                                                 }
                                             }
                                         }
@@ -149,8 +153,9 @@ public class CitizensEvents implements Listener {
                             } else if (activeObjective.getObjective() instanceof final TalkToNPCObjective talkToNPCObjective) {
                                 if (talkToNPCObjective.getNPCtoTalkID() != -1 && talkToNPCObjective.getNPCtoTalkID() == npc.getId()) {
                                     activeObjective.addProgress(1, npc.getId());
-                                    player.sendMessage("§aYou talked to §b" + npc.getName());
-
+                                    audience.sendMessage(MiniMessage.miniMessage().parse(
+                                            "<GREEN>You talked to <AQUA>" + npc.getName()
+                                    ));
                                 }
                             } else if (activeObjective.getObjective() instanceof final EscortNPCObjective escortNPCObjective) {
                                 if (escortNPCObjective.getNpcToEscortToID() == npc.getId()) {
@@ -174,7 +179,9 @@ public class CitizensEvents implements Listener {
 
                                             npcToEscort.despawn();
                                         } else {
-                                            player.sendMessage("§cThe NPC you have to escort is not close enough to you!");
+                                            audience.sendMessage(MiniMessage.miniMessage().parse(
+                                                    "<RED>The NPC you have to escort is not close enough to you!"
+                                            ));
                                         }
                                     }
 

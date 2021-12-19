@@ -397,14 +397,16 @@ public class ArmorStandEvents implements Listener {
 
 
                                     if (existingAttachedConversation != null) {
-
-                                        player.sendMessage("§cError: That armor stand already has the Conversation §b" + existingAttachedConversation + " §cattached to it!");
-
+                                        audience.sendMessage(miniMessage.parse(
+                                                "<RED>Error: That armor stand already has the Conversation <AQUA>" + existingAttachedConversation + "</AQUA> attached to it!"
+                                        ));
                                     }
 
                                 } else {
                                     armorStandPDB.set(attachedConversationKey, PersistentDataType.STRING, conversation.getIdentifier());
-                                    player.sendMessage("§aConversation with the name §b" + conversation.getIdentifier() + " §awas added to this poor little armorstand!");
+                                    audience.sendMessage(miniMessage.parse(
+                                            "<GREEN>Conversation with the name <AQUA>" + conversation.getIdentifier() + "</AQUA> was added to this poor little armorstand!"
+                                    ));
 
                                     //Since this is the first Quest added to it:
                                     main.getArmorStandManager().addArmorStandWithQuestsOrConversationAttachedToThem(armorStand);
@@ -434,10 +436,14 @@ public class ArmorStandEvents implements Listener {
                         if (armorStandPDB.has(attachedConversationKey, PersistentDataType.STRING)) {
                             armorStandPDB.remove(attachedConversationKey);
                             main.getArmorStandManager().removeArmorStandWithQuestsOrConversationAttachedToThem(armorStand);
-                            player.sendMessage("§aAll conversations were removed from this armorStand!");
+                            audience.sendMessage(miniMessage.parse(
+                                    "<GREEN>All conversations were removed from this armorStand!"
+                            ));
 
                         } else {
-                            player.sendMessage("§cThis armorstand doesn't have the conversation attached to it.");
+                            audience.sendMessage(miniMessage.parse(
+                                    "<RED>This armorstand doesn't have the conversation attached to it."
+                            ));
                         }
 
 
@@ -466,6 +472,7 @@ public class ArmorStandEvents implements Listener {
                 for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                     for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
                         if (activeObjective.isUnlocked()) {
+                            Audience audience = main.adventure().player(player);
 
                             if (activeObjective.getObjective() instanceof final DeliverItemsObjective deliverItemsObjective) {
                                 if (deliverItemsObjective.getRecipientNPCID() == -1 && deliverItemsObjective.getRecipientArmorStandUUID().equals(armorStand.getUniqueId())) {
@@ -484,12 +491,16 @@ public class ArmorStandEvents implements Listener {
                                                 if (progressLeft < itemStack.getAmount()) { //We can finish it with this itemStack
                                                     itemStack.setAmount((itemStack.getAmount() - (int) progressLeft));
                                                     activeObjective.addProgress(progressLeft, armorStand.getUniqueId());
-                                                    player.sendMessage("§aYou have delivered §b" + progressLeft + " §aitems to §b" + main.getArmorStandManager().getArmorStandName(armorStand));
+                                                    audience.sendMessage(miniMessage.parse(
+                                                            "<GREEN>You have delivered <AQUA>" + progressLeft + "</AQUA> items to <AQUA>" + main.getArmorStandManager().getArmorStandName(armorStand)
+                                                    ));
                                                     break;
                                                 } else {
                                                     player.getInventory().removeItem(itemStack);
                                                     activeObjective.addProgress(itemStack.getAmount(), armorStand.getUniqueId());
-                                                    player.sendMessage("§aYou have delivered §b" + itemStack.getAmount() + " §aitems to §b" + main.getArmorStandManager().getArmorStandName(armorStand));
+                                                    audience.sendMessage(miniMessage.parse(
+                                                            "<GREEN>You have delivered <AQUA>" + itemStack.getAmount() + "</AQUA> items to <AQUA>" + main.getArmorStandManager().getArmorStandName(armorStand)
+                                                    ));
                                                 }
                                             }
                                         }
@@ -500,7 +511,9 @@ public class ArmorStandEvents implements Listener {
                             } else if (activeObjective.getObjective() instanceof final TalkToNPCObjective talkToNPCObjective) {
                                 if (talkToNPCObjective.getNPCtoTalkID() == -1 && (talkToNPCObjective.getArmorStandUUID().equals(armorStand.getUniqueId()))) {
                                     activeObjective.addProgress(1, armorStand.getUniqueId());
-                                    player.sendMessage("§aYou talked to §b" + main.getArmorStandManager().getArmorStandName(armorStand));
+                                    audience.sendMessage(miniMessage.parse(
+                                            "<GREEN>You talked to <AQUA>" + main.getArmorStandManager().getArmorStandName(armorStand)
+                                    ));
                                     handledObjective = true;
                                 }
                             }
