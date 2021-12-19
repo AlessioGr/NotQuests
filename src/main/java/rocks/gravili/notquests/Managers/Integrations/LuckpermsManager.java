@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.Hooks.Luckperms;
+package rocks.gravili.notquests.Managers.Integrations;
 
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.node.Node;

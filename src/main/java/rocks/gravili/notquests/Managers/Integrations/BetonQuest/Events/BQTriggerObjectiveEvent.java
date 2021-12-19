@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.Hooks.BetonQuest.Events;
+package rocks.gravili.notquests.Managers.Integrations.BetonQuest.Events;
 
 import org.betonquest.betonquest.Instruction;
 import org.betonquest.betonquest.api.QuestEvent;
@@ -25,15 +25,17 @@ import org.betonquest.betonquest.exceptions.QuestRuntimeException;
 import org.betonquest.betonquest.utils.PlayerConverter;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.ActiveObjective;
 import rocks.gravili.notquests.Structs.ActiveQuest;
+import rocks.gravili.notquests.Structs.Objectives.Objective;
+import rocks.gravili.notquests.Structs.Objectives.TriggerCommandObjective;
 import rocks.gravili.notquests.Structs.Quest;
 import rocks.gravili.notquests.Structs.QuestPlayer;
 
-public class BQFailQuestEvent extends QuestEvent {
+public class BQTriggerObjectiveEvent extends QuestEvent {
 
+    private final String triggerName;
     private final NotQuests main;
-    private Quest quest;
-
 
     /**
      * Creates new instance of the event. The event should parse instruction
@@ -46,24 +48,25 @@ public class BQFailQuestEvent extends QuestEvent {
      *                    {@link InstructionParseException} if there is anything wrong
      * @throws InstructionParseException when the is an error in the syntax or argument parsing
      */
-    public BQFailQuestEvent(Instruction instruction) throws InstructionParseException {
+    public BQTriggerObjectiveEvent(Instruction instruction) throws InstructionParseException {
         super(instruction, false);
+        this.triggerName = instruction.getPart(1);
         this.main = NotQuests.getInstance();
 
-        final String questName = instruction.getPart(1);
-
-
-        boolean foundQuest = false;
+        boolean foundTrigger = false;
         for (Quest quest : main.getQuestManager().getAllQuests()) {
-            if (quest.getQuestName().equalsIgnoreCase(questName)) {
-                foundQuest = true;
-                this.quest = quest;
-                break;
+            for (Objective objective : quest.getObjectives()) {
+                if (objective instanceof final TriggerCommandObjective triggerCommandObjective) {
+                    if (triggerCommandObjective.getTriggerName().equalsIgnoreCase(triggerName)) {
+                        foundTrigger = true;
+                        break;
+                    }
+                }
             }
         }
 
-        if (!foundQuest) {
-            throw new InstructionParseException("NotQuests Quest with the name '" + questName + "' does not exist.");
+        if (!foundTrigger) {
+            throw new InstructionParseException("NotQuests TriggerObjective trigger with the name '" + triggerName + "' does not exist.");
         }
 
     }
@@ -71,34 +74,32 @@ public class BQFailQuestEvent extends QuestEvent {
     @Override
     protected Void execute(String playerID) throws QuestRuntimeException {
 
-        if (quest != null) {
+        final Player player = PlayerConverter.getPlayer(playerID);
 
 
-            final Player player = PlayerConverter.getPlayer(playerID);
-
-
-            if (player != null) {
-                final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
-                if (questPlayer != null) {
-                    ActiveQuest questToFail = null;
+        if (player != null) {
+            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+            if (questPlayer != null) {
+                if (questPlayer.getActiveQuests().size() > 0) {
                     for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-                        if (activeQuest.getQuest().getQuestName().equalsIgnoreCase(this.quest.getQuestName())) {
-                            questToFail = activeQuest;
-                            break;
-                        }
-                    }
-                    if (questToFail != null) {
-                        questPlayer.failQuest(questToFail);
-                    }
-                }
+                        for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
+                            if (activeObjective.isUnlocked()) {
+                                if (activeObjective.getObjective() instanceof final TriggerCommandObjective triggerCommandObjective) {
+                                    if (triggerCommandObjective.getTriggerName().equalsIgnoreCase(triggerName)) {
+                                        activeObjective.addProgress(1, -1);
 
+                                    }
+                                }
+                            }
+
+                        }
+                        activeQuest.removeCompletedObjectives(true);
+                    }
+                    questPlayer.removeCompletedQuests();
+                }
             }
 
-        } else {
-            throw new QuestRuntimeException("NotQuests Quest of this BetonQuest event does not exist.");
         }
-
         return null;
     }
-
 }

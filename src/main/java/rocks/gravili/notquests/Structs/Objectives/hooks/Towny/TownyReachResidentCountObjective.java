@@ -43,7 +43,7 @@ public class TownyReachResidentCountObjective extends Objective {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
-        if (!main.isTownyEnabled()) {
+        if (!main.getIntegrationsManager().isTownyEnabled()) {
             return;
         }
 
@@ -100,7 +100,7 @@ public class TownyReachResidentCountObjective extends Objective {
     @Override
     public void onObjectiveUnlock(ActiveObjective activeObjective) {
         activeObjective.getQuestPlayer().sendDebugMessage("TownyReachResidentCountObjective onObjectiveUnlock");
-        if (!main.isTownyEnabled() || !isCountPreviousResidents()) {
+        if (!main.getIntegrationsManager().isTownyEnabled() || !isCountPreviousResidents()) {
             activeObjective.getQuestPlayer().sendDebugMessage("TownyReachResidentCountObjective onObjectiveUnlock cancel 1");
             return;
         }

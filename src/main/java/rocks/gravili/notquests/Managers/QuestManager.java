@@ -117,8 +117,8 @@ public class QuestManager {
 
     public void loadQuestsFromConfig() {
 
-        if(main.isCitizensEnabled()){
-            main.getCitizensManager().registerQuestGiverTrait();
+        if (main.getIntegrationsManager().isCitizensEnabled()) {
+            main.getIntegrationsManager().getCitizensManager().registerQuestGiverTrait();
         }
 
 
@@ -674,7 +674,7 @@ public class QuestManager {
 
         Audience audience = main.adventure().player(player);
 
-        if (main.getDataManager().getConfiguration().isQuestPreviewUseGUI()) {
+        if (main.getConfiguration().isQuestPreviewUseGUI()) {
             String[] guiSetup = {
                     "xxxxxxxxx",
                     "xgggggggx",
@@ -702,7 +702,7 @@ public class QuestManager {
                 }
                 String description = "";
                 if (!quest.getQuestDescription().isBlank()) {
-                    description = main.getLanguageManager().getString("gui.availableQuests.button.questPreview.questDescriptionPrefix", player, quest) + quest.getQuestDescription(main.getDataManager().getConfiguration().guiQuestDescriptionMaxLineLength);
+                    description = main.getLanguageManager().getString("gui.availableQuests.button.questPreview.questDescriptionPrefix", player, quest) + quest.getQuestDescription(main.getConfiguration().guiQuestDescriptionMaxLineLength);
                 }
                 count++;
 
@@ -784,7 +784,7 @@ public class QuestManager {
         }
         Audience audience = main.adventure().player(player);
 
-        if (main.getDataManager().getConfiguration().isQuestPreviewUseGUI()) {
+        if (main.getConfiguration().isQuestPreviewUseGUI()) {
             String[] guiSetup = {
                     "xxxxxxxxx",
                     "xgggggggx",
@@ -813,7 +813,7 @@ public class QuestManager {
                 }
                 String description = "";
                 if (!quest.getQuestDescription().isBlank()) {
-                    description = main.getLanguageManager().getString("gui.availableQuests.button.questPreview.questDescriptionPrefix", player, quest) + quest.getQuestDescription(main.getDataManager().getConfiguration().guiQuestDescriptionMaxLineLength);
+                    description = main.getLanguageManager().getString("gui.availableQuests.button.questPreview.questDescriptionPrefix", player, quest) + quest.getQuestDescription(main.getConfiguration().guiQuestDescriptionMaxLineLength);
                 }
                 count++;
 
@@ -968,7 +968,7 @@ public class QuestManager {
     public void loadNPCData() {
         main.getLogManager().info("Loading NPC data...");
 
-        if(!main.isCitizensEnabled()){
+        if (!main.getIntegrationsManager().isCitizensEnabled()) {
             main.getLogManager().warn("NPC data loading has been cancelled, because Citizens is not installed. Install the Citizens plugin if you want NPC stuff to work.");
             return;
         }
@@ -1105,7 +1105,7 @@ public class QuestManager {
     }
 
     public void cleanupBuggedNPCs() {
-        if(!main.isCitizensEnabled()){
+        if (!main.getIntegrationsManager().isCitizensEnabled()) {
             main.getLogManager().warn("Checking for bugged NPCs has been cancelled, because Citizens is not installed on your server. The Citizens plugin is needed for NPC stuff to work.");
 
             return;
@@ -1205,7 +1205,7 @@ public class QuestManager {
         toReturn += objective.getObjectiveTaskDescription(eventualColor, player);
 
         if (objective.getCompletionNPCID() != -1) {
-            if (main.isCitizensEnabled()) {
+            if (main.getIntegrationsManager().isCitizensEnabled()) {
                 final NPC npc = CitizensAPI.getNPCRegistry().getById(objective.getCompletionNPCID());
                 if (npc != null) {
                     toReturn += "\n    <GRAY>" + eventualColor + "To complete: Talk to <AQUA>" + eventualColor + npc.getName();
@@ -1372,7 +1372,7 @@ public class QuestManager {
 
 
         //Then Citizens
-        if(main.isCitizensEnabled()){
+        if (main.getIntegrationsManager().isCitizensEnabled()) {
             for (NPC npc : getAllNPCsAttachedToQuest(quest)) {
                 if (npc == null || npc.getEntity() == null) {
                     main.getLogManager().warn("A quest has an invalid npc attached to it, which should be removed. Report it to an admin. Quest name: <AQUA>" + quest.getQuestName() + "</AQUA>");

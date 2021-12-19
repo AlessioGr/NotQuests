@@ -41,10 +41,10 @@ public class InventoryEvents implements Listener {
     }
 
     public boolean isItemSlotWorld(final String worldName) {
-        if (main.getDataManager().getConfiguration().journalItemEnabledWorlds.contains("*")) {
+        if (main.getConfiguration().journalItemEnabledWorlds.contains("*")) {
             return true;
         }
-        for (final String itemSlotWorldName : main.getDataManager().getConfiguration().journalItemEnabledWorlds) {
+        for (final String itemSlotWorldName : main.getConfiguration().journalItemEnabledWorlds) {
             if (worldName.equalsIgnoreCase(itemSlotWorldName)) {
                 return true;
             }
@@ -57,8 +57,8 @@ public class InventoryEvents implements Listener {
         final Player player = e.getPlayer();
 
         if (isItemSlotWorld(player.getWorld().getName())) {
-            player.getInventory().remove(main.getDataManager().getConfiguration().journalItem);
-            player.getInventory().setItem(main.getDataManager().getConfiguration().journalInventorySlot, main.getDataManager().getConfiguration().journalItem);
+            player.getInventory().remove(main.getConfiguration().journalItem);
+            player.getInventory().setItem(main.getConfiguration().journalInventorySlot, main.getConfiguration().journalItem);
         }
     }
 
@@ -68,7 +68,7 @@ public class InventoryEvents implements Listener {
         final Player player = event.getPlayer();
         final ItemStack itemInHand = player.getInventory().getItemInMainHand();
         if (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-            if (itemInHand.isSimilar(main.getDataManager().getConfiguration().journalItem)) {
+            if (itemInHand.isSimilar(main.getConfiguration().journalItem)) {
                 player.performCommand("notquests activeQuests");
             }
         }
@@ -78,10 +78,10 @@ public class InventoryEvents implements Listener {
     public void onPlayerRespawn(PlayerRespawnEvent e) {
         final Player player = e.getPlayer();
         if (isItemSlotWorld(player.getWorld().getName()) && e.getRespawnLocation().getWorld() != null && isItemSlotWorld(e.getRespawnLocation().getWorld().getName())) {
-            final ItemStack journalItem = player.getInventory().getItem(main.getDataManager().getConfiguration().journalInventorySlot);
-            if (journalItem == null || !journalItem.isSimilar(main.getDataManager().getConfiguration().journalItem)) {
-                player.getInventory().remove(main.getDataManager().getConfiguration().journalItem);
-                player.getInventory().setItem(main.getDataManager().getConfiguration().journalInventorySlot, main.getDataManager().getConfiguration().journalItem);
+            final ItemStack journalItem = player.getInventory().getItem(main.getConfiguration().journalInventorySlot);
+            if (journalItem == null || !journalItem.isSimilar(main.getConfiguration().journalItem)) {
+                player.getInventory().remove(main.getConfiguration().journalItem);
+                player.getInventory().setItem(main.getConfiguration().journalInventorySlot, main.getConfiguration().journalItem);
             }
         }
     }
@@ -90,7 +90,7 @@ public class InventoryEvents implements Listener {
     public void onDeath(EntityDeathEvent e) {
         if (e.getEntity() instanceof Player player) {
             if (isItemSlotWorld(player.getWorld().getName())) {
-                e.getDrops().remove(main.getDataManager().getConfiguration().journalItem);
+                e.getDrops().remove(main.getConfiguration().journalItem);
             }
         }
 
@@ -102,7 +102,7 @@ public class InventoryEvents implements Listener {
         if (e.getEntity() instanceof Player player) {
 
             if (isItemSlotWorld(player.getWorld().getName())) {
-                if (e.getItem().getItemStack().isSimilar(main.getDataManager().getConfiguration().journalItem)) {
+                if (e.getItem().getItemStack().isSimilar(main.getConfiguration().journalItem)) {
                     e.setCancelled(true);
                 }
             }
@@ -116,7 +116,7 @@ public class InventoryEvents implements Listener {
 
         if (isItemSlotWorld(player.getWorld().getName())) {
 
-            if (e.getItemDrop().getItemStack().isSimilar(main.getDataManager().getConfiguration().journalItem)) {
+            if (e.getItemDrop().getItemStack().isSimilar(main.getConfiguration().journalItem)) {
                 e.setCancelled(true);
             }
         }
@@ -128,7 +128,7 @@ public class InventoryEvents implements Listener {
             if (isItemSlotWorld(player.getWorld().getName())) {
                 ItemStack item = e.getCurrentItem();
 
-                if (item != null && item.isSimilar(main.getDataManager().getConfiguration().journalItem)) {
+                if (item != null && item.isSimilar(main.getConfiguration().journalItem)) {
                     e.setCancelled(true);
 
                     if (player.getGameMode().equals(GameMode.CREATIVE)) {
@@ -138,10 +138,10 @@ public class InventoryEvents implements Listener {
                 }
 
 
-                final ItemStack journalItem = player.getInventory().getItem(main.getDataManager().getConfiguration().journalInventorySlot);
-                if (journalItem == null || !journalItem.isSimilar(main.getDataManager().getConfiguration().journalItem)) {
-                    player.getInventory().remove(main.getDataManager().getConfiguration().journalItem);
-                    player.getInventory().setItem(main.getDataManager().getConfiguration().journalInventorySlot, main.getDataManager().getConfiguration().journalItem);
+                final ItemStack journalItem = player.getInventory().getItem(main.getConfiguration().journalInventorySlot);
+                if (journalItem == null || !journalItem.isSimilar(main.getConfiguration().journalItem)) {
+                    player.getInventory().remove(main.getConfiguration().journalItem);
+                    player.getInventory().setItem(main.getConfiguration().journalInventorySlot, main.getConfiguration().journalItem);
                 }
             }
         }
@@ -154,8 +154,8 @@ public class InventoryEvents implements Listener {
         final Player player = e.getPlayer();
 
         if (isItemSlotWorld(player.getWorld().getName())) {
-            player.getInventory().remove(main.getDataManager().getConfiguration().journalItem);
-            player.getInventory().setItem(main.getDataManager().getConfiguration().journalInventorySlot, main.getDataManager().getConfiguration().journalItem);
+            player.getInventory().remove(main.getConfiguration().journalItem);
+            player.getInventory().setItem(main.getConfiguration().journalInventorySlot, main.getConfiguration().journalItem);
         }
 
     }

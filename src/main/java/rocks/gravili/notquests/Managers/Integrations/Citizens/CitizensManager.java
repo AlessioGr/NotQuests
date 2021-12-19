@@ -16,28 +16,112 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.Structs;
+package rocks.gravili.notquests.Managers.Integrations.Citizens;
 
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
+import net.citizensnpcs.api.trait.TraitInfo;
 import net.citizensnpcs.trait.FollowTrait;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import rocks.gravili.notquests.Conversation.Conversation;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.ActiveObjective;
+import rocks.gravili.notquests.Structs.ActiveQuest;
 import rocks.gravili.notquests.Structs.Objectives.EscortNPCObjective;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
-public class CitizensHandler {
+public class CitizensManager {
     private final NotQuests main;
 
-    public CitizensHandler(final NotQuests main) {
+    public CitizensManager(final NotQuests main) {
         this.main = main;
     }
+
+    public void registerQuestGiverTrait() {
+        main.getLogManager().info("Registering Citizens nquestgiver trait...");
+
+        final ArrayList<TraitInfo> toDeregister = new ArrayList<>();
+        for (final TraitInfo traitInfo : net.citizensnpcs.api.CitizensAPI.getTraitFactory().getRegisteredTraits()) {
+            if (traitInfo.getTraitName().equals("nquestgiver")) {
+                toDeregister.add(traitInfo);
+
+            }
+        }
+        for (final TraitInfo traitInfo : toDeregister) {
+            net.citizensnpcs.api.CitizensAPI.getTraitFactory().deregisterTrait(traitInfo);
+        }
+
+        net.citizensnpcs.api.CitizensAPI.getTraitFactory().registerTrait(net.citizensnpcs.api.trait.TraitInfo.create(QuestGiverNPCTrait.class).withName("nquestgiver"));
+        main.getLogManager().info("Citizens nquestgiver trait has been registered!");
+        if (!main.getDataManager().isAlreadyLoadedNPCs()) {
+            main.getDataManager().loadNPCData();
+        }
+
+        postRegister();
+    }
+
+    private void postRegister() {
+        if (main.getConversationManager() != null) {
+            main.getLogManager().info("Trying to bind Conversations to NPCs...");
+            for (Conversation conversation : main.getConversationManager().getAllConversations()) {
+                if (!Bukkit.isPrimaryThread()) {
+                    Bukkit.getScheduler().runTask(main, conversation::bindToCitizensNPC);
+                } else {
+                    conversation.bindToCitizensNPC();
+                }
+
+            }
+        }
+
+    }
+
+    public void onDisable() {
+        /*
+         * All Citizen NPCs which have quests attached to them have the Citizens NPC trait "nquestgiver".
+         * When the plugin is disabled right here, this piece of code will try removing this trait from all+
+         * NPCs which currently have this trait.
+         */
+        final ArrayList<Trait> traitsToRemove = new ArrayList<>();
+        for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
+            for (final Trait trait : npc.getTraits()) {
+                if (trait.getName().equalsIgnoreCase("nquestgiver")) {
+                    traitsToRemove.add(trait);
+
+                }
+            }
+            for (final Trait traitToRemove : traitsToRemove) {
+                npc.removeTrait(traitToRemove.getClass());
+                main.getLogManager().info("Removed nquestgiver trait from NPC with the ID <AQUA>" + npc.getId());
+            }
+            traitsToRemove.clear();
+
+        }
+
+        /*
+         * Next, the nquestgiver trait itself which is registered via the Citizens API on startup is being
+         * de-registered.
+         */
+        main.getLogManager().info("Deregistering nquestgiver trait...");
+        final ArrayList<TraitInfo> toDeregister = new ArrayList<>();
+        for (final TraitInfo traitInfo : net.citizensnpcs.api.CitizensAPI.getTraitFactory().getRegisteredTraits()) {
+            if (traitInfo.getTraitName().equals("nquestgiver")) {
+                toDeregister.add(traitInfo);
+
+            }
+        }
+        //Actual nquestgiver trait de-registering happens here, to prevent a ConcurrentModificationException
+        for (final TraitInfo traitInfo : toDeregister) {
+            net.citizensnpcs.api.CitizensAPI.getTraitFactory().deregisterTrait(traitInfo);
+        }
+    }
+
 
     public void handleEscortObjective(final ActiveObjective activeObjective) {
         final NPC npcToEscort = CitizensAPI.getNPCRegistry().getById(((EscortNPCObjective) activeObjective.getObjective()).getNpcToEscortID());

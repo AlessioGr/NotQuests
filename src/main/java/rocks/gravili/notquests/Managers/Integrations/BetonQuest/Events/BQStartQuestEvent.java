@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.Hooks.BetonQuest.Events;
+package rocks.gravili.notquests.Managers.Integrations.BetonQuest.Events;
 
 import org.betonquest.betonquest.Instruction;
 import org.betonquest.betonquest.api.QuestEvent;
@@ -25,15 +25,15 @@ import org.betonquest.betonquest.exceptions.QuestRuntimeException;
 import org.betonquest.betonquest.utils.PlayerConverter;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.Structs.QuestPlayer;
+import rocks.gravili.notquests.Structs.Quest;
 
-public class BQQuestPointsEvent extends QuestEvent {
+public class BQStartQuestEvent extends QuestEvent {
 
     private final NotQuests main;
+    boolean forced = false;
     boolean silent = false;
-    private String action = "";
-    private final long amount;
-
+    boolean triggers = true;
+    private Quest quest;
 
     /**
      * Creates new instance of the event. The event should parse instruction
@@ -46,26 +46,34 @@ public class BQQuestPointsEvent extends QuestEvent {
      *                    {@link InstructionParseException} if there is anything wrong
      * @throws InstructionParseException when the is an error in the syntax or argument parsing
      */
-    public BQQuestPointsEvent(Instruction instruction) throws InstructionParseException {
+    public BQStartQuestEvent(Instruction instruction) throws InstructionParseException {
         super(instruction, false);
         this.main = NotQuests.getInstance();
 
-        action = instruction.getPart(1);
-        try {
-            amount = Long.parseLong(instruction.getPart(2));
-        } catch (NumberFormatException e) {
-            throw new InstructionParseException("Invalid QuestPoints amount. It has to be a number.");
+        final String questName = instruction.getPart(1);
 
+        if (instruction.getInstruction().contains("-force")) {
+            forced = true;
         }
-
-
         if (instruction.getInstruction().contains("-silent")) {
             silent = true;
         }
+        if (instruction.getInstruction().contains("-notriggers")) {
+            triggers = false;
+        }
 
 
-        if (!action.equalsIgnoreCase("add") && !action.equalsIgnoreCase("remove") && !action.equalsIgnoreCase("set")) {
-            throw new InstructionParseException("Wrong questpoints action ('" + action + "'). Valid actions are: 'add', 'remove', 'set'.");
+        boolean foundQuest = false;
+        for (Quest quest : main.getQuestManager().getAllQuests()) {
+            if (quest.getQuestName().equalsIgnoreCase(questName)) {
+                foundQuest = true;
+                this.quest = quest;
+                break;
+            }
+        }
+
+        if (!foundQuest) {
+            throw new InstructionParseException("NotQuests Quest with the name '" + questName + "' does not exist.");
         }
 
     }
@@ -73,29 +81,24 @@ public class BQQuestPointsEvent extends QuestEvent {
     @Override
     protected Void execute(String playerID) throws QuestRuntimeException {
 
+        if (quest != null) {
 
-        final Player player = PlayerConverter.getPlayer(playerID);
+
+            final Player player = PlayerConverter.getPlayer(playerID);
 
 
-        if (player != null) {
-            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
-            if (questPlayer != null) {
-
-                if (action.equalsIgnoreCase("set")) {
-                    questPlayer.setQuestPoints(amount, !silent);
-                } else if (action.equalsIgnoreCase("add")) {
-                    questPlayer.addQuestPoints(amount, !silent);
-                } else if (action.equalsIgnoreCase("remove")) {
-                    questPlayer.removeQuestPoints(amount, !silent);
+            if (player != null) {
+                if (!forced) {
+                    main.getQuestPlayerManager().acceptQuest(player, quest, triggers, !silent);
                 } else {
-                    throw new QuestRuntimeException("Invalid QuestPoints action.");
+                    main.getQuestPlayerManager().forceAcceptQuest(player.getUniqueId(), quest);
                 }
 
             }
 
-
+        } else {
+            throw new QuestRuntimeException("NotQuests Quest of this BetonQuest event does not exist.");
         }
-
 
         return null;
     }

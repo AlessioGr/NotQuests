@@ -80,8 +80,8 @@ public class ActiveObjective {
                 objective.onObjectiveUnlock(this);
 
                 if (objective instanceof EscortNPCObjective escortNPCObjective) {
-                    if (main.isCitizensEnabled()) {
-                        activeQuest.getCitizensHandler().handleEscortNPCObjectiveForActiveObjective(escortNPCObjective, activeQuest);
+                    if (main.getIntegrationsManager().isCitizensEnabled()) {
+                        main.getIntegrationsManager().getCitizensManager().handleEscortNPCObjectiveForActiveObjective(escortNPCObjective, activeQuest);
                     }
 
                 }

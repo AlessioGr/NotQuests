@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.Hooks.BetonQuest.Events;
+package rocks.gravili.notquests.Managers.Integrations.BetonQuest.Events;
 
 import org.betonquest.betonquest.Instruction;
 import org.betonquest.betonquest.api.QuestEvent;
@@ -25,15 +25,15 @@ import org.betonquest.betonquest.exceptions.QuestRuntimeException;
 import org.betonquest.betonquest.utils.PlayerConverter;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.ActiveQuest;
 import rocks.gravili.notquests.Structs.Quest;
+import rocks.gravili.notquests.Structs.QuestPlayer;
 
-public class BQStartQuestEvent extends QuestEvent {
+public class BQFailQuestEvent extends QuestEvent {
 
     private final NotQuests main;
-    boolean forced = false;
-    boolean silent = false;
-    boolean triggers = true;
     private Quest quest;
+
 
     /**
      * Creates new instance of the event. The event should parse instruction
@@ -46,21 +46,11 @@ public class BQStartQuestEvent extends QuestEvent {
      *                    {@link InstructionParseException} if there is anything wrong
      * @throws InstructionParseException when the is an error in the syntax or argument parsing
      */
-    public BQStartQuestEvent(Instruction instruction) throws InstructionParseException {
+    public BQFailQuestEvent(Instruction instruction) throws InstructionParseException {
         super(instruction, false);
         this.main = NotQuests.getInstance();
 
         final String questName = instruction.getPart(1);
-
-        if (instruction.getInstruction().contains("-force")) {
-            forced = true;
-        }
-        if (instruction.getInstruction().contains("-silent")) {
-            silent = true;
-        }
-        if (instruction.getInstruction().contains("-notriggers")) {
-            triggers = false;
-        }
 
 
         boolean foundQuest = false;
@@ -88,10 +78,18 @@ public class BQStartQuestEvent extends QuestEvent {
 
 
             if (player != null) {
-                if (!forced) {
-                    main.getQuestPlayerManager().acceptQuest(player, quest, triggers, !silent);
-                } else {
-                    main.getQuestPlayerManager().forceAcceptQuest(player.getUniqueId(), quest);
+                final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                if (questPlayer != null) {
+                    ActiveQuest questToFail = null;
+                    for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+                        if (activeQuest.getQuest().getQuestName().equalsIgnoreCase(this.quest.getQuestName())) {
+                            questToFail = activeQuest;
+                            break;
+                        }
+                    }
+                    if (questToFail != null) {
+                        questPlayer.failQuest(questToFail);
+                    }
                 }
 
             }

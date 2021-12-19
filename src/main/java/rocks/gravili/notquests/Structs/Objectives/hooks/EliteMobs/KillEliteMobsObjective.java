@@ -49,7 +49,7 @@ public class KillEliteMobsObjective extends Objective {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
-        if (!main.isEliteMobsEnabled()) {
+        if (!main.getIntegrationsManager().isEliteMobsEnabled()) {
             return;
         }
 
@@ -64,7 +64,7 @@ public class KillEliteMobsObjective extends Objective {
                             ArrayList<String> completions = new ArrayList<>();
 
                             completions.add("any");
-                            if (main.isEliteMobsEnabled()) {
+                            if (main.getIntegrationsManager().isEliteMobsEnabled()) {
                                 completions.addAll(main.getDataManager().standardEliteMobNamesCompletions);
                             }
                             return completions;

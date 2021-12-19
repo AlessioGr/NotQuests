@@ -110,7 +110,7 @@ public class LogManager {
     }
 
     public void debug(final LogCategory logCategory, final String message) {
-        if (main.getDataManager().getConfiguration().debug) {
+        if (main.getConfiguration().debug) {
             log(Level.FINE, logCategory, "<GRAY>", message);
         }
     }

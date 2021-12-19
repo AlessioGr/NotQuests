@@ -21,7 +21,7 @@ package rocks.gravili.notquests.Structs;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
 import org.bukkit.Material;
-import rocks.gravili.notquests.Hooks.Citizens.QuestGiverNPCTrait;
+import rocks.gravili.notquests.Managers.Integrations.Citizens.QuestGiverNPCTrait;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Actions.Action;
 import rocks.gravili.notquests.Structs.Conditions.Condition;
@@ -258,7 +258,7 @@ public class Quest {
     }
 
     public void removeAllNPCs() {
-        if(!main.isCitizensEnabled()){
+        if (!main.getIntegrationsManager().isCitizensEnabled()) {
             main.getLogManager().severe("The removal of all NPCs from Quest <AQUA>" + questName + "</AQUA> has been cancelled, because the Citizens plugin is not installed on this server. You will need the Citizens plugin to do NPC stuff.");
             return;
         }
@@ -276,7 +276,7 @@ public class Quest {
     }
 
     public void bindToNPC(NPC npc, boolean showQuest) {
-        if(!main.isCitizensEnabled()){
+        if (!main.getIntegrationsManager().isCitizensEnabled()) {
             main.getLogManager().severe("The binding to NPC in Quest <AQUA>" + questName + "</AQUA> has been cancelled, because the Citizens plugin is not installed on this server. You will need the Citizens plugin to do NPC stuff.");
             return;
         }
@@ -317,7 +317,7 @@ public class Quest {
     }
 
     public void removeNPC(final NPC npc) {
-        if(!main.isCitizensEnabled()){
+        if (!main.getIntegrationsManager().isCitizensEnabled()) {
             main.getLogManager().severe("The NPC removal in Quest <AQUA>" + questName + "</AQUA> has been cancelled, because the Citizens plugin is not installed on this server. You will need the Citizens plugin to do NPC stuff.");
             return;
         }

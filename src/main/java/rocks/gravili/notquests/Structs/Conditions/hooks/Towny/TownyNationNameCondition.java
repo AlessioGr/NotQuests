@@ -51,7 +51,7 @@ public class TownyNationNameCondition extends Condition {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
-        if (!main.isTownyEnabled()) {
+        if (!main.getIntegrationsManager().isTownyEnabled()) {
             return;
         }
 
@@ -86,7 +86,7 @@ public class TownyNationNameCondition extends Condition {
 
     @Override
     public String check(QuestPlayer questPlayer, boolean enforce) {
-        if (!main.isTownyEnabled()) {
+        if (!main.getIntegrationsManager().isTownyEnabled()) {
             return "<YELLOW>Error: The server does not have Towny enabled. Please ask the Owner to install Towny for Towny stuff to work.";
         }
 

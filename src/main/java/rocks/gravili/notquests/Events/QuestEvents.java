@@ -21,7 +21,10 @@ package rocks.gravili.notquests.Events;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -31,7 +34,10 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityBreedEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
-import org.bukkit.event.inventory.*;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.*;
 import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.inventory.CraftingInventory;
@@ -47,6 +53,7 @@ import rocks.gravili.notquests.Structs.QuestPlayer;
 import rocks.gravili.notquests.Structs.Triggers.ActiveTrigger;
 import rocks.gravili.notquests.Structs.Triggers.TriggerTypes.WorldEnterTrigger;
 import rocks.gravili.notquests.Structs.Triggers.TriggerTypes.WorldLeaveTrigger;
+
 import java.util.Locale;
 
 import static rocks.gravili.notquests.Commands.NotQuestColors.*;
@@ -898,7 +905,7 @@ public class QuestEvents implements Listener {
     //For ReachLocation
     @EventHandler
     public void onMove(PlayerMoveEvent e) {
-        if (!main.getDataManager().getConfiguration().isMoveEventEnabled()) {
+        if (!main.getConfiguration().isMoveEventEnabled()) {
             return;
         }
 
@@ -950,12 +957,12 @@ public class QuestEvents implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     protected void onPluginEnable(final PluginEnableEvent event) {
-        if (event.getPlugin().getName().equals("MythicMobs") && !main.isMythicMobsEnabled()) {
+        if (event.getPlugin().getName().equals("MythicMobs") && !main.getIntegrationsManager().isMythicMobsEnabled()) {
             // Turn on support for the plugin
-            main.enableMythicMobs();
-        } else if (event.getPlugin().getName().equals("Citizens") && !main.isCitizensEnabled()) {
+            main.getIntegrationsManager().enableMythicMobs();
+        } else if (event.getPlugin().getName().equals("Citizens") && !main.getIntegrationsManager().isCitizensEnabled()) {
             // Turn on support for the plugin
-            main.enableCitizens();
+            main.getIntegrationsManager().enableCitizens();
         }
 
     }

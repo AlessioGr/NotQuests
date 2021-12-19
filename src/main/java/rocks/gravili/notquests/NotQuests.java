@@ -19,23 +19,12 @@
 
 package rocks.gravili.notquests;
 
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
-import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.papermc.lib.PaperLib;
-import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.npc.NPC;
-import net.citizensnpcs.api.trait.Trait;
-import net.citizensnpcs.api.trait.TraitInfo;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
-import net.milkbowl.vault.chat.Chat;
-import net.milkbowl.vault.economy.Economy;
-import net.milkbowl.vault.permission.Permission;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.AdvancedPie;
 import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import rocks.gravili.notquests.Conversation.ConversationEvents;
 import rocks.gravili.notquests.Conversation.ConversationManager;
@@ -43,28 +32,21 @@ import rocks.gravili.notquests.Events.ArmorStandEvents;
 import rocks.gravili.notquests.Events.InventoryEvents;
 import rocks.gravili.notquests.Events.QuestEvents;
 import rocks.gravili.notquests.Events.TriggerEvents;
-import rocks.gravili.notquests.Events.hooks.*;
 import rocks.gravili.notquests.Events.notquests.other.PlayerJumpEvent;
-import rocks.gravili.notquests.Hooks.BetonQuest.BetonQuestIntegration;
-import rocks.gravili.notquests.Hooks.Citizens.CitizensManager;
-import rocks.gravili.notquests.Hooks.Luckperms.LuckpermsManager;
 import rocks.gravili.notquests.Managers.*;
 import rocks.gravili.notquests.Managers.Packets.PacketManager;
 import rocks.gravili.notquests.Managers.Registering.ActionManager;
 import rocks.gravili.notquests.Managers.Registering.ConditionsManager;
 import rocks.gravili.notquests.Managers.Registering.ObjectiveManager;
 import rocks.gravili.notquests.Managers.Registering.TriggerManager;
-import rocks.gravili.notquests.Placeholders.QuestPlaceholders;
 import rocks.gravili.notquests.Structs.Actions.Action;
 import rocks.gravili.notquests.Structs.Conditions.Condition;
 import rocks.gravili.notquests.Structs.Objectives.Objective;
 import rocks.gravili.notquests.Structs.Quest;
 import rocks.gravili.notquests.Structs.Triggers.Trigger;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.Callable;
 
 /**
@@ -88,7 +70,6 @@ public final class NotQuests extends JavaPlugin {
     private PerformanceManager performanceManager;
     private CommandManager commandManager;
     private ConversationManager conversationManager;
-    private CitizensManager citizensManager;
     private PacketManager packetManager;
     private UpdateManager updateManager;
     private GUIManager guiManager;
@@ -99,43 +80,10 @@ public final class NotQuests extends JavaPlugin {
     private ConditionsManager conditionsManager;
     private ActionManager actionManager;
     private TriggerManager triggerManager;
-
-
-    //Vault
-    private Economy econ = null;
-    private Permission perms = null;
-    private Chat chat = null;
+    private IntegrationsManager integrationsManager;
 
     //Metrics
     private Metrics metrics;
-
-    //Enabled Features
-    private boolean vaultEnabled = false;
-    private boolean citizensEnabled = false;
-    private boolean slimefunEnabled = false;
-
-    //Enabled Hooks
-    private boolean mythicMobsEnabled = false;
-    private MythicMobs mythicMobs;
-
-    private boolean eliteMobsEnabled = false;
-    private boolean placeholderAPIEnabled = false;
-    private boolean betonQuestEnabled = false;
-    private BetonQuestIntegration betonQuestIntegration;
-
-    private boolean worldEditEnabled = false;
-    private WorldEditPlugin worldEditPlugin;
-    private WorldEditHook worldEditHook;
-
-    private Slimefun slimefun;
-
-    private boolean luckpermsEnabled = false;
-    private LuckpermsManager luckpermsManager;
-
-    private boolean ultimateClansEnabled = false;
-
-    private boolean townyEnabled = false;
-    private boolean jobsRebornEnabled = false;
 
 
     private BukkitAudiences adventure;
@@ -149,10 +97,14 @@ public final class NotQuests extends JavaPlugin {
         logManager = new LogManager(this);
 
         backupManager = new BackupManager(this);
+
+        integrationsManager = new IntegrationsManager(this);
+
+
         //Create a new instance of the Data Manager which will be re-used everywhere
         dataManager = new DataManager(this);
         //Load general config first, because we'll need it for the integrations
-        if(!dataManager.isAlreadyLoadedGeneral()){
+        if (!dataManager.isAlreadyLoadedGeneral()) {
             dataManager.loadGeneralConfig();
         }
 
@@ -175,6 +127,10 @@ public final class NotQuests extends JavaPlugin {
 
     public static NotQuests getInstance() {
         return instance;
+    }
+
+    public Configuration getConfiguration() {
+        return dataManager.getConfiguration();
     }
 
     /**
@@ -207,8 +163,7 @@ public final class NotQuests extends JavaPlugin {
         actionsManager = new ActionsManager(this);
 
 
-
-        enableIntegrations();
+        integrationsManager.enableIntegrations();
 
 
         dataManager.loadStandardCompletions();
@@ -271,33 +226,7 @@ public final class NotQuests extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ArmorStandEvents(this), this);
 
 
-        //Register the Event Listeners in CitizensEvents, if Citizens integration is enabled
-        if (isCitizensEnabled()) {
-            getServer().getPluginManager().registerEvents(new CitizensEvents(this), this);
-        }
-
-        //Register the Event Listeners in MythicMobsEvents, if MythicMobs integration is enabled
-        if (isMythicMobsEnabled()) {
-            getServer().getPluginManager().registerEvents(new MythicMobsEvents(this), this);
-        }
-
-        //Register the Event Listeners in EliteMobsEvents, if EliteMobs integration is enabled
-        if (isEliteMobsEnabled()) {
-            getServer().getPluginManager().registerEvents(new EliteMobsEvents(this), this);
-        }
-
-        if (isTownyEnabled()) {
-            getServer().getPluginManager().registerEvents(new TownyEvents(this), this);
-        }
-        if (isJobsRebornEnabled()) {
-            getServer().getPluginManager().registerEvents(new JobsRebornEvents(this), this);
-        }
-
-
-        //Register the Event Listeners in SlimefunEvents, if Slimefun integration is enabled
-        if (isSlimefunEnabled()) {
-            getServer().getPluginManager().registerEvents(new SlimefunEvents(this), this);
-        }
+        integrationsManager.registerEvents();
 
         //Load actions first, as they are needed for triggers loading in dataManager.reloadData()
         actionsManager.loadActions();
@@ -307,16 +236,7 @@ public final class NotQuests extends JavaPlugin {
 
         //This registers all PlaceholderAPI placeholders, if loading is enabled
         if (getDataManager().isLoadingEnabled()) {
-
-
-            if (getDataManager().getConfiguration().isIntegrationPlaceholderAPIEnabled()) {
-                if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-                    placeholderAPIEnabled = true;
-                    getLogManager().info("PlaceholderAPI found! Enabling PlaceholderAPI support...");
-                    new QuestPlaceholders(this).register();
-                }
-            }
-
+            integrationsManager.enableIntegrationsAfterDataLoad();
 
             //Update Checker
             updateManager.checkForPluginUpdates();
@@ -430,126 +350,7 @@ public final class NotQuests extends JavaPlugin {
         packetManager.initialize();
     }
 
-    private void enableIntegrations() {
-        //Vault Hook
-        if (getDataManager().getConfiguration().isIntegrationVaultEnabled()) {
-            if (!setupEconomy()) {
-                getLogManager().warn("Vault Dependency not found! Some features have been disabled. I recommend you to install Vault for the best experience.");
-            } else {
-                setupPermissions();
-                setupChat();
-                vaultEnabled = true;
-                getLogManager().info("Vault found! Enabling Vault support...");
-            }
-        }
 
-        //MythicMobs Hook
-        if (getDataManager().getConfiguration().isIntegrationMythicMobsEnabled()) {
-            if (getServer().getPluginManager().getPlugin("MythicMobs") != null && Objects.requireNonNull(getServer().getPluginManager().getPlugin("MythicMobs")).isEnabled()) {
-                mythicMobsEnabled = true;
-                getLogManager().info("MythicMobs found! Enabling MythicMobs support...");
-                this.mythicMobs = MythicMobs.inst();
-            }
-        }
-
-
-        //EliteMobs Hook
-        if (getDataManager().getConfiguration().isIntegrationEliteMobsEnabled()) {
-            if (getServer().getPluginManager().getPlugin("EliteMobs") != null && Objects.requireNonNull(getServer().getPluginManager().getPlugin("EliteMobs")).isEnabled()) {
-                eliteMobsEnabled = true;
-                getLogManager().info("EliteMobs found! Enabling EliteMobs support...");
-            }
-        }
-
-        //BetonQuest Hook
-        if (getDataManager().getConfiguration().isIntegrationBetonQuestEnabled()) {
-            if (getServer().getPluginManager().getPlugin("BetonQuest") != null && Objects.requireNonNull(getServer().getPluginManager().getPlugin("BetonQuest")).isEnabled()) {
-                betonQuestEnabled = true;
-                getLogManager().info("BetonQuest found! Enabling BetonQuest support...");
-                betonQuestIntegration = new BetonQuestIntegration(this);
-            }
-        }
-
-
-        //WorldEdit
-        if (getDataManager().getConfiguration().isIntegrationWorldEditEnabled()) {
-            worldEditPlugin = (WorldEditPlugin) Bukkit.getServer().getPluginManager().getPlugin("WorldEdit");
-            if (worldEditPlugin == null) {
-                worldEditEnabled = false;
-
-            } else {
-                getLogManager().info("WorldEdit found! Enabling WorldEdit support...");
-                worldEditEnabled = true;
-                worldEditHook = new WorldEditHook(this);
-            }
-        }
-
-
-        //Enable 'Citizens' integration. If it's not found, it will just disable some NPC features which can mostly be replaced by armor stands
-        if (getDataManager().getConfiguration().isIntegrationCitizensEnabled()) {
-            if (getServer().getPluginManager().getPlugin("Citizens") == null || !Objects.requireNonNull(getServer().getPluginManager().getPlugin("Citizens")).isEnabled()) {
-                getLogManager().info("Citizens Dependency not found! Congratulations! In NotQuests, you can use armor stands instead of Citizens NPCs");
-
-            } else {
-                citizensManager = new CitizensManager(this);
-
-                citizensEnabled = true;
-                getLogManager().info("Citizens found! Enabling Citizens support...");
-            }
-        }
-
-        //Enable 'SlimeFun' integration.
-        if (getDataManager().getConfiguration().isIntegrationSlimeFunEnabled()) {
-            if (getServer().getPluginManager().getPlugin("Slimefun") == null || !Objects.requireNonNull(getServer().getPluginManager().getPlugin("Slimefun")).isEnabled()) {
-                slimefunEnabled = false;
-            } else {
-                slimefun = Slimefun.instance();
-                if (slimefun == null) {
-                    slimefunEnabled = false;
-
-                } else {
-                    getLogManager().info("SlimeFun found! Enabling SlimeFun support...");
-                    slimefunEnabled = true;
-                }
-            }
-        }
-
-        //Luckperms
-        if (getDataManager().getConfiguration().isIntegrationLuckPermsEnabled()) {
-            if (getServer().getPluginManager().getPlugin("LuckPerms") != null) {
-                luckpermsManager = new LuckpermsManager(this);
-                luckpermsEnabled = true;
-                getLogManager().info("LuckPerms found! Enabling LuckPerms support...");
-            }
-
-        }
-
-        //UltimateClans
-        if (getDataManager().getConfiguration().isIntegrationUltimateClansEnabled()) {
-            if (getServer().getPluginManager().getPlugin("UClans") != null) {
-                ultimateClansEnabled = true;
-                getLogManager().info("UltimateClans found! Enabling UltimateClans support...");
-            }
-        }
-
-        //Towny
-        if (getDataManager().getConfiguration().isIntegrationTownyEnabled()) {
-            if (getServer().getPluginManager().getPlugin("Towny") != null) {
-                townyEnabled = true;
-                getLogManager().info("Towny found! Enabling Towny support...");
-            }
-        }
-
-        //JobsReborn
-        if (getDataManager().getConfiguration().isIntegrationJobsRebornEnabled()) {
-            if (getServer().getPluginManager().getPlugin("Jobs") != null) {
-                jobsRebornEnabled = true;
-                getLogManager().info("Jobs Reborn found! Enabling Jobs Reborn support...");
-            }
-
-        }
-
-    }
 
 
     /**
@@ -570,47 +371,7 @@ public final class NotQuests extends JavaPlugin {
          */
         getDataManager().setAlreadyLoadedNPCs(false);
 
-
-        //Do Citizens stuff if the Citizens integration is enabled
-        if(isCitizensEnabled()){
-            /*
-             * All Citizen NPCs which have quests attached to them have the Citizens NPC trait "nquestgiver".
-             * When the plugin is disabled right here, this piece of code will try removing this trait from all+
-             * NPCs which currently have this trait.
-             */
-            final ArrayList<Trait> traitsToRemove = new ArrayList<>();
-            for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
-                for (final Trait trait : npc.getTraits()) {
-                    if (trait.getName().equalsIgnoreCase("nquestgiver")) {
-                        traitsToRemove.add(trait);
-
-                    }
-                }
-                for (final Trait traitToRemove : traitsToRemove) {
-                    npc.removeTrait(traitToRemove.getClass());
-                    getLogManager().info("Removed nquestgiver trait from NPC with the ID <AQUA>" + npc.getId());
-                }
-                traitsToRemove.clear();
-
-            }
-
-            /*
-             * Next, the nquestgiver trait itself which is registered via the Citizens API on startup is being
-             * de-registered.
-             */
-            getLogManager().info("Deregistering nquestgiver trait...");
-            final ArrayList<TraitInfo> toDeregister = new ArrayList<>();
-            for (final TraitInfo traitInfo : net.citizensnpcs.api.CitizensAPI.getTraitFactory().getRegisteredTraits()) {
-                if (traitInfo.getTraitName().equals("nquestgiver")) {
-                    toDeregister.add(traitInfo);
-
-                }
-            }
-            //Actual nquestgiver trait de-registering happens here, to prevent a ConcurrentModificationException
-            for (final TraitInfo traitInfo : toDeregister) {
-                net.citizensnpcs.api.CitizensAPI.getTraitFactory().deregisterTrait(traitInfo);
-            }
-        }
+        integrationsManager.onDisable();
 
 
         if (this.adventure != null) {
@@ -655,135 +416,12 @@ public final class NotQuests extends JavaPlugin {
     }
 
     /**
-     * Sets up the Economy from the Vault plugin.
-     *
-     * @return if the economy has been set up successfully and if Vault has been found
-     */
-    private boolean setupEconomy() {
-        if (getServer().getPluginManager().getPlugin("Vault") == null) {
-            return false;
-        }
-        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
-        if (rsp == null) {
-            return false;
-        }
-        econ = rsp.getProvider();
-        return true;
-    }
-
-
-    /**
-     * Sets up the Chat from the Vault plugin.
-     *
-     * @return if vault chat has been set up successfully
-     */
-    private boolean setupChat() {
-        RegisteredServiceProvider<Chat> rsp = getServer().getServicesManager().getRegistration(Chat.class);
-        if(rsp != null){
-            chat = rsp.getProvider();
-            return true;
-        }else{
-            return false;
-        }
-
-    }
-
-    /**
-     * Sets up the Permissions from the Vault plugin.
-     *
-     * @return if permissions from the vault plugin have been set up successfully
-     */
-    private boolean setupPermissions() {
-        RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
-        if(rsp != null){
-            perms = rsp.getProvider();
-            return true;
-        }else{
-            return false;
-        }
-
-    }
-
-    /**
-     * Returns an instance of Economy which has been set up in setupEconomy()
-     *
-     * @return an instance of Economy which has been set up in setupEconomy()
-     */
-    public Economy getEconomy() {
-        if(!isVaultEnabled()){
-            getLogManager().severe("Error: Tried to load Economy when Vault is not enabled. Please report this to the plugin author (and I also recommend you installing Vault for money stuff to work)");
-
-            return null;
-        }
-        return econ;
-    }
-
-
-    /**
      * Returns an instance of the bStats Metrics object
      *
      * @return bStats Metrics object
      */
     public Metrics getMetrics() {
         return metrics;
-    }
-
-    /**
-     * Returns if Vault integration is enabled or not. It's usually disabled when Vault is not found on the Server.
-     *
-     * @return if Vault is enabled
-     */
-    public boolean isVaultEnabled(){
-        return vaultEnabled;
-    }
-
-    /**
-     * Returns if Citizens integration is enabled or not. It's usually disabled when Citizens is not found on the Server.
-     *
-     * @return if Citizens is enabled
-     */
-    public boolean isCitizensEnabled() {
-        return citizensEnabled;
-    }
-
-    public boolean isMythicMobsEnabled() {
-        return mythicMobsEnabled;
-    }
-
-    public boolean isEliteMobsEnabled() {
-        return eliteMobsEnabled;
-    }
-
-    public boolean isSlimefunEnabled() {
-        return slimefunEnabled;
-    }
-
-    public boolean isPlaceholderAPIEnabled() {
-        return placeholderAPIEnabled;
-    }
-
-    public boolean isBetonQuestEnabled() {
-        return betonQuestEnabled;
-    }
-
-    public boolean isWorldEditEnabled() {
-        return worldEditEnabled;
-    }
-
-    public boolean isLuckpermsEnabled() {
-        return luckpermsEnabled;
-    }
-
-    public boolean isUltimateClansEnabled() {
-        return ultimateClansEnabled;
-    }
-
-    public boolean isTownyEnabled() {
-        return townyEnabled;
-    }
-
-    public boolean isJobsRebornEnabled() {
-        return jobsRebornEnabled;
     }
 
 
@@ -823,54 +461,6 @@ public final class NotQuests extends JavaPlugin {
         return triggerManager;
     }
 
-    public MythicMobs getMythicMobs() {
-        return mythicMobs;
-    }
-
-
-    public BetonQuestIntegration getBetonQuestIntegration() {
-        return betonQuestIntegration;
-    }
-
-    public WorldEditPlugin getWorldEdit() {
-        return worldEditPlugin;
-    }
-
-    public Slimefun getSlimefun() {
-        return slimefun;
-    }
-
-    public WorldEditHook getWorldEditHook() {
-        return worldEditHook;
-    }
-
-    public LuckpermsManager getLuckPermsManager() {
-        return luckpermsManager;
-    }
-
-    public void enableMythicMobs() {
-        if (getDataManager().getConfiguration().isIntegrationMythicMobsEnabled()) {
-            mythicMobsEnabled = true;
-            getLogManager().info("MythicMobs found! Enabling MythicMobs support (late)...");
-            this.mythicMobs = MythicMobs.inst();
-            getServer().getPluginManager().registerEvents(new MythicMobsEvents(this), this);
-
-            dataManager.loadStandardCompletions();
-        }
-    }
-
-    public void enableCitizens() {
-        if (getDataManager().getConfiguration().isIntegrationCitizensEnabled()) {
-            citizensEnabled = true;
-            getLogManager().info("Citizens found! Enabling Citizens support (late)...");
-            getDataManager().setAlreadyLoadedNPCs(false);
-            getServer().getPluginManager().registerEvents(new CitizensEvents(this), this);
-            if(!getDataManager().isAlreadyLoadedNPCs()){ //Just making sure
-                getDataManager().loadNPCData();
-            }
-        }
-
-    }
 
     public CommandManager getCommandManager() {
         return this.commandManager;
@@ -880,9 +470,6 @@ public final class NotQuests extends JavaPlugin {
         return this.conversationManager;
     }
 
-    public CitizensManager getCitizensManager() {
-        return citizensManager;
-    }
 
     public PacketManager getPacketManager() {
         return packetManager;
@@ -898,6 +485,10 @@ public final class NotQuests extends JavaPlugin {
 
     public BackupManager getBackupManager() {
         return backupManager;
+    }
+
+    public IntegrationsManager getIntegrationsManager() {
+        return integrationsManager;
     }
 }
 

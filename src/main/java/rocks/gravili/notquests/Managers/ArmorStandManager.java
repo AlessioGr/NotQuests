@@ -46,7 +46,7 @@ public class ArmorStandManager {
         attachedQuestsNonShowingKey = new NamespacedKey(main, "notquests-attachedQuests-nonshowing");
         attachedConversationKey = new NamespacedKey(main, "notquests-attachedConversation");
 
-        if (main.getDataManager().getConfiguration().isArmorStandQuestGiverIndicatorParticleEnabled()) {
+        if (main.getConfiguration().isArmorStandQuestGiverIndicatorParticleEnabled()) {
             startQuestGiverIndicatorParticleRunnable();
         }
     }
@@ -104,7 +104,7 @@ public class ArmorStandManager {
         Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(main, () -> {
 
             //Disable if Server TPS is too low
-            double minimumTPS = main.getDataManager().getConfiguration().getArmorStandQuestGiverIndicatorParticleDisableIfTPSBelow();
+            double minimumTPS = main.getConfiguration().getArmorStandQuestGiverIndicatorParticleDisableIfTPSBelow();
             if (minimumTPS >= 0) {
                 if (main.getPerformanceManager().getTPS() < minimumTPS) {
                     return;
@@ -113,10 +113,10 @@ public class ArmorStandManager {
 
             for (final ArmorStand armorStand : armorStandsWithQuestsOrConversationAttachedToThem) {
                 final Location location = armorStand.getLocation();
-                armorStand.getWorld().spawnParticle(main.getDataManager().getConfiguration().getArmorStandQuestGiverIndicatorParticleType(), location.getX() - 0.25 + (Math.random() / 2), location.getY() + 1.75 + (Math.random() / 2), location.getZ() - 0.25 + (Math.random() / 2), main.getDataManager().getConfiguration().getArmorStandQuestGiverIndicatorParticleCount());
+                armorStand.getWorld().spawnParticle(main.getConfiguration().getArmorStandQuestGiverIndicatorParticleType(), location.getX() - 0.25 + (Math.random() / 2), location.getY() + 1.75 + (Math.random() / 2), location.getZ() - 0.25 + (Math.random() / 2), main.getConfiguration().getArmorStandQuestGiverIndicatorParticleCount());
 
             }
-        }, main.getDataManager().getConfiguration().getArmorStandQuestGiverIndicatorParticleSpawnInterval(), main.getDataManager().getConfiguration().getArmorStandQuestGiverIndicatorParticleSpawnInterval());
+        }, main.getConfiguration().getArmorStandQuestGiverIndicatorParticleSpawnInterval(), main.getConfiguration().getArmorStandQuestGiverIndicatorParticleSpawnInterval());
     }
 
     public final String getArmorStandName(final UUID armorStandUUID) {

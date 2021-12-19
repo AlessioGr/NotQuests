@@ -56,7 +56,6 @@ public class ActiveQuest {
 
     private final QuestPlayer questPlayer;
 
-    private CitizensHandler citizensHandler;
 
 
     public ActiveQuest(NotQuests main, Quest quest, QuestPlayer questPlayer) {
@@ -68,9 +67,6 @@ public class ActiveQuest {
         completedObjectives = new ArrayList<>();
         activeTriggers = new ArrayList<>();
 
-        if (main.isCitizensEnabled()) {
-            citizensHandler = new CitizensHandler(main);
-        }
 
 
         int triggerID = 1;
@@ -201,8 +197,8 @@ public class ActiveQuest {
 
         for (final ActiveObjective activeObjective : getActiveObjectives()) {
             if (activeObjective.getObjective() instanceof EscortNPCObjective) {
-                if (main.isCitizensEnabled() && citizensHandler != null) {
-                    citizensHandler.handleEscortObjective(activeObjective);
+                if (main.getIntegrationsManager().isCitizensEnabled() && main.getIntegrationsManager().getCitizensManager() != null) {
+                    main.getIntegrationsManager().getCitizensManager().handleEscortObjective(activeObjective);
 
 
                 }
@@ -227,7 +223,4 @@ public class ActiveQuest {
         return null;
     }
 
-    public final CitizensHandler getCitizensHandler() {
-        return citizensHandler;
-    }
 }

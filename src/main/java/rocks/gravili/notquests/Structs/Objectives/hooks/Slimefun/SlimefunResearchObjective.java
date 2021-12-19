@@ -38,7 +38,7 @@ public class SlimefunResearchObjective extends Objective {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
-        if (!main.isSlimefunEnabled()) {
+        if (!main.getIntegrationsManager().isSlimefunEnabled()) {
             return;
         }
 

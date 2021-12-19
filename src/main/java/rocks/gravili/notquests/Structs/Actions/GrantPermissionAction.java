@@ -44,7 +44,7 @@ public class GrantPermissionAction extends Action {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor rewardFor) {
-        if (!main.isLuckpermsEnabled()) {
+        if (!main.getIntegrationsManager().isLuckpermsEnabled()) {
             return;
         }
 
@@ -83,14 +83,14 @@ public class GrantPermissionAction extends Action {
             main.getLogManager().warn("Tried to give permission reward, but the rewarded permission node is empty.");
             return;
         }
-        if (!main.isLuckpermsEnabled()) {
+        if (!main.getIntegrationsManager().isLuckpermsEnabled()) {
             Audience audience = main.adventure().player(player);
             audience.sendMessage(MiniMessage.miniMessage().parse(
                     "<RED>Error: cannot give you the permission reward because Luckperms (needed for money giving to work) is not installed on the server."
             ));
             return;
         }
-        main.getLuckPermsManager().givePermission(player.getUniqueId(), rewardedPermission);
+        main.getIntegrationsManager().getLuckPermsManager().givePermission(player.getUniqueId(), rewardedPermission);
 
 
     }

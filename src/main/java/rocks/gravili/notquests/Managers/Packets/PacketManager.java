@@ -42,7 +42,7 @@ public class PacketManager implements Listener {
 
     public PacketManager(final NotQuests main) {
         this.main = main;
-        usePacketEvents = main.getDataManager().getConfiguration().usePacketEvents;
+        usePacketEvents = main.getConfiguration().usePacketEvents;
     }
 
     public final PacketInjector getPacketInjector() {
@@ -50,7 +50,7 @@ public class PacketManager implements Listener {
     }
 
     public void initialize() {
-        if (main.getDataManager().getConfiguration().packetMagic) {
+        if (main.getConfiguration().packetMagic) {
             if (usePacketEvents) {
                 WrapperPlayServerChatMessage.HANDLE_JSON = false;
                 PacketEvents.getAPI().getEventManager().registerListener(new PacketEventsPacketListener(main), PacketListenerPriority.LOW);
@@ -75,7 +75,7 @@ public class PacketManager implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onJoin(PlayerJoinEvent e) {
-        if (!usePacketEvents && main.getDataManager().getConfiguration().packetMagic) {
+        if (!usePacketEvents && main.getConfiguration().packetMagic) {
             Player player = e.getPlayer();
             main.getLogManager().debug("Added player for packet injector. Name: " + player.getName());
 
@@ -85,7 +85,7 @@ public class PacketManager implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onQuit(PlayerQuitEvent e) {
-        if (!usePacketEvents && main.getDataManager().getConfiguration().packetMagic) {
+        if (!usePacketEvents && main.getConfiguration().packetMagic) {
             Player player = e.getPlayer();
             main.getLogManager().debug("Removed player for packet injector. Name: " + player.getName());
 
@@ -96,7 +96,7 @@ public class PacketManager implements Listener {
 
 
     public void onLoad() {
-        if (usePacketEvents && main.getDataManager().getConfiguration().packetMagic) {
+        if (usePacketEvents && main.getConfiguration().packetMagic) {
             PacketEvents.setAPI(BukkitPacketEventsBuilder.build(main));
             PacketEvents.getAPI().load();
         }
@@ -107,7 +107,7 @@ public class PacketManager implements Listener {
 
 
     public void terminate() {
-        if (usePacketEvents && main.getDataManager().getConfiguration().packetMagic) {
+        if (usePacketEvents && main.getConfiguration().packetMagic) {
             PacketEvents.getAPI().terminate();
         }
 

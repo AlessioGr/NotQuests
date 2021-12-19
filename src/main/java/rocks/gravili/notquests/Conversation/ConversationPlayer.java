@@ -126,7 +126,7 @@ public class ConversationPlayer {
         audience.sendMessage(Component.empty());
         audience.sendMessage(component);
 
-        if (main.getDataManager().getConfiguration().deletePreviousConversations) {
+        if (main.getConfiguration().deletePreviousConversations) {
             ArrayList<Component> hist = main.getConversationManager().getConversationChatHistory().get(player.getUniqueId());
             if (hist == null) {
                 hist = new ArrayList<>();
@@ -141,7 +141,7 @@ public class ConversationPlayer {
             sendOptionLine(playerLine);
         }
 
-        if (main.getDataManager().getConfiguration().deletePreviousConversations) {
+        if (main.getConfiguration().deletePreviousConversations) {
             ArrayList<Component> hist = main.getConversationManager().getConversationChatHistory().get(player.getUniqueId());
             if (hist == null) {
                 hist = new ArrayList<>();
@@ -204,7 +204,7 @@ public class ConversationPlayer {
         }
 
 
-        if (main.getDataManager().getConfiguration().deletePreviousConversations) {
+        if (main.getConfiguration().deletePreviousConversations) {
             ArrayList<Component> hist = main.getConversationManager().getConversationChatHistory().get(player.getUniqueId());
             if (hist == null) {
                 hist = new ArrayList<>();
@@ -237,7 +237,7 @@ public class ConversationPlayer {
         ).clickEvent(ClickEvent.runCommand("/notquests continueConversation " + conversationLine.getMessage())).hoverEvent(HoverEvent.showText(Component.text("Click to answer", NamedTextColor.AQUA)));
 
 
-        if (main.getDataManager().getConfiguration().deletePreviousConversations) {
+        if (main.getConfiguration().deletePreviousConversations) {
             ArrayList<Component> hist = main.getConversationManager().getConversationChatHistory().get(player.getUniqueId());
             if (hist == null) {
                 hist = new ArrayList<>();
@@ -309,7 +309,7 @@ public class ConversationPlayer {
      * Resends the chat history without ANY conversation messages
      */
     public void removeOldMessages() {
-        if (!main.getDataManager().getConfiguration().deletePreviousConversations) {
+        if (!main.getConfiguration().deletePreviousConversations) {
             return;
         }
         //Send back old messages

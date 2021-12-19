@@ -169,7 +169,7 @@ public class LanguageManager {
     public final void loadLanguageConfig() {
         loadMissingDefaultLanguageFiles();
 
-        final String languageCode = main.getDataManager().getConfiguration().getLanguageCode();
+        final String languageCode = main.getConfiguration().getLanguageCode();
         main.getLogManager().info(LogCategory.LANGUAGE, "Loading language config <AQUA>" + languageCode + ".yml");
 
         /*
@@ -197,10 +197,10 @@ public class LanguageManager {
 
             }
 
-            languageConfigFile = new File(languageFolder, main.getDataManager().getConfiguration().getLanguageCode() + ".yml");
+            languageConfigFile = new File(languageFolder, main.getConfiguration().getLanguageCode() + ".yml");
 
             if (!languageConfigFile.exists()) {
-                main.getLogManager().info(LogCategory.LANGUAGE, "Language Configuration (" + main.getDataManager().getConfiguration().getLanguageCode() + ".yml) does not exist. Creating a new one...");
+                main.getLogManager().info(LogCategory.LANGUAGE, "Language Configuration (" + main.getConfiguration().getLanguageCode() + ".yml) does not exist. Creating a new one...");
 
                 //Does not work yet, since comments are overridden if something is saved
                 //saveDefaultConfig();
@@ -210,12 +210,12 @@ public class LanguageManager {
                     //Try to create the language.yml config file, and throw an error if it fails.
 
                     if (!languageConfigFile.createNewFile()) {
-                        main.getDataManager().disablePluginAndSaving("There was an error creating the " + main.getDataManager().getConfiguration().getLanguageCode() + ".yml language file.");
+                        main.getDataManager().disablePluginAndSaving("There was an error creating the " + main.getConfiguration().getLanguageCode() + ".yml language file.");
                         return;
 
                     }
                 } catch (IOException ioException) {
-                    main.getDataManager().disablePluginAndSaving("There was an error creating the " + main.getDataManager().getConfiguration().getLanguageCode() + ".yml config file. (2)", ioException);
+                    main.getDataManager().disablePluginAndSaving("There was an error creating the " + main.getConfiguration().getLanguageCode() + ".yml config file. (2)", ioException);
                     return;
                 }
             }
@@ -292,7 +292,7 @@ public class LanguageManager {
             if (translatedString == null) {
                 return "Language string not found: " + languageString;
             }
-            if (!main.getDataManager().getConfiguration().supportPlaceholderAPIInTranslationStrings || !main.isPlaceholderAPIEnabled() || targetPlayer == null) {
+            if (!main.getConfiguration().supportPlaceholderAPIInTranslationStrings || !main.getIntegrationsManager().isPlaceholderAPIEnabled() || targetPlayer == null) {
                 return applySpecial(ChatColor.translateAlternateColorCodes('&', applyInternalPlaceholders(translatedString, internalPlaceholderObjects))); //Removed applyColor( for minimessage support
             } else {
                 return applySpecial(ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.setPlaceholders(targetPlayer, applyInternalPlaceholders(translatedString, internalPlaceholderObjects))));

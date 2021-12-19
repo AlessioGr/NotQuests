@@ -43,7 +43,7 @@ public class TownyNationReachTownCountObjective extends Objective {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
-        if (!main.isTownyEnabled()) {
+        if (!main.getIntegrationsManager().isTownyEnabled()) {
             return;
         }
 
@@ -99,7 +99,7 @@ public class TownyNationReachTownCountObjective extends Objective {
 
     @Override
     public void onObjectiveUnlock(ActiveObjective activeObjective) {
-        if (!main.isTownyEnabled() || !isCountPreviousTowns()) {
+        if (!main.getIntegrationsManager().isTownyEnabled() || !isCountPreviousTowns()) {
             return;
         }
 

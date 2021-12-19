@@ -41,7 +41,7 @@ public class GiveMoneyAction extends Action {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor rewardFor) {
-        if (!main.isVaultEnabled()) {
+        if (!main.getIntegrationsManager().isVaultEnabled()) {
             return;
         }
 
@@ -69,7 +69,7 @@ public class GiveMoneyAction extends Action {
             return;
         }
 
-        if (!main.isVaultEnabled() || main.getEconomy() == null) {
+        if (!main.getIntegrationsManager().isVaultEnabled() || main.getIntegrationsManager().getVaultManager().getEconomy() == null) {
             Audience audience = main.adventure().player(player);
             audience.sendMessage(MiniMessage.miniMessage().parse(
                     "<RED>Error: cannot give you the money reward because Vault (needed for money stuff to work) is not installed on the server."
@@ -77,9 +77,9 @@ public class GiveMoneyAction extends Action {
             return;
         }
         if (rewardedMoney > 0) {
-            main.getEconomy().depositPlayer(player, rewardedMoney);
+            main.getIntegrationsManager().getVaultManager().getEconomy().depositPlayer(player, rewardedMoney);
         } else if (rewardedMoney < 0) {
-            main.getEconomy().withdrawPlayer(player, Math.abs(rewardedMoney));
+            main.getIntegrationsManager().getVaultManager().getEconomy().withdrawPlayer(player, Math.abs(rewardedMoney));
         }
     }
 

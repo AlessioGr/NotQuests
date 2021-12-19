@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.Hooks.BetonQuest.Events;
+package rocks.gravili.notquests.Managers.Integrations.BetonQuest.Events;
 
 import org.betonquest.betonquest.Instruction;
 import org.betonquest.betonquest.api.QuestEvent;
@@ -25,17 +25,15 @@ import org.betonquest.betonquest.exceptions.QuestRuntimeException;
 import org.betonquest.betonquest.utils.PlayerConverter;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.Structs.ActiveObjective;
-import rocks.gravili.notquests.Structs.ActiveQuest;
-import rocks.gravili.notquests.Structs.Objectives.Objective;
-import rocks.gravili.notquests.Structs.Objectives.TriggerCommandObjective;
-import rocks.gravili.notquests.Structs.Quest;
 import rocks.gravili.notquests.Structs.QuestPlayer;
 
-public class BQTriggerObjectiveEvent extends QuestEvent {
+public class BQQuestPointsEvent extends QuestEvent {
 
-    private final String triggerName;
     private final NotQuests main;
+    boolean silent = false;
+    private String action = "";
+    private final long amount;
+
 
     /**
      * Creates new instance of the event. The event should parse instruction
@@ -48,25 +46,26 @@ public class BQTriggerObjectiveEvent extends QuestEvent {
      *                    {@link InstructionParseException} if there is anything wrong
      * @throws InstructionParseException when the is an error in the syntax or argument parsing
      */
-    public BQTriggerObjectiveEvent(Instruction instruction) throws InstructionParseException {
+    public BQQuestPointsEvent(Instruction instruction) throws InstructionParseException {
         super(instruction, false);
-        this.triggerName = instruction.getPart(1);
         this.main = NotQuests.getInstance();
 
-        boolean foundTrigger = false;
-        for (Quest quest : main.getQuestManager().getAllQuests()) {
-            for (Objective objective : quest.getObjectives()) {
-                if (objective instanceof final TriggerCommandObjective triggerCommandObjective) {
-                    if (triggerCommandObjective.getTriggerName().equalsIgnoreCase(triggerName)) {
-                        foundTrigger = true;
-                        break;
-                    }
-                }
-            }
+        action = instruction.getPart(1);
+        try {
+            amount = Long.parseLong(instruction.getPart(2));
+        } catch (NumberFormatException e) {
+            throw new InstructionParseException("Invalid QuestPoints amount. It has to be a number.");
+
         }
 
-        if (!foundTrigger) {
-            throw new InstructionParseException("NotQuests TriggerObjective trigger with the name '" + triggerName + "' does not exist.");
+
+        if (instruction.getInstruction().contains("-silent")) {
+            silent = true;
+        }
+
+
+        if (!action.equalsIgnoreCase("add") && !action.equalsIgnoreCase("remove") && !action.equalsIgnoreCase("set")) {
+            throw new InstructionParseException("Wrong questpoints action ('" + action + "'). Valid actions are: 'add', 'remove', 'set'.");
         }
 
     }
@@ -74,32 +73,31 @@ public class BQTriggerObjectiveEvent extends QuestEvent {
     @Override
     protected Void execute(String playerID) throws QuestRuntimeException {
 
+
         final Player player = PlayerConverter.getPlayer(playerID);
 
 
         if (player != null) {
             final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
             if (questPlayer != null) {
-                if (questPlayer.getActiveQuests().size() > 0) {
-                    for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-                        for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-                            if (activeObjective.isUnlocked()) {
-                                if (activeObjective.getObjective() instanceof final TriggerCommandObjective triggerCommandObjective) {
-                                    if (triggerCommandObjective.getTriggerName().equalsIgnoreCase(triggerName)) {
-                                        activeObjective.addProgress(1, -1);
 
-                                    }
-                                }
-                            }
-
-                        }
-                        activeQuest.removeCompletedObjectives(true);
-                    }
-                    questPlayer.removeCompletedQuests();
+                if (action.equalsIgnoreCase("set")) {
+                    questPlayer.setQuestPoints(amount, !silent);
+                } else if (action.equalsIgnoreCase("add")) {
+                    questPlayer.addQuestPoints(amount, !silent);
+                } else if (action.equalsIgnoreCase("remove")) {
+                    questPlayer.removeQuestPoints(amount, !silent);
+                } else {
+                    throw new QuestRuntimeException("Invalid QuestPoints action.");
                 }
+
             }
 
+
         }
+
+
         return null;
     }
+
 }

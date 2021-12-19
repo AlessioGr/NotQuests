@@ -78,7 +78,7 @@ public class TalkToNPCObjective extends Objective {
 
 
                     if (!npcIDOrArmorstand.equalsIgnoreCase("armorstand")) {
-                        if (!main.isCitizensEnabled()) {
+                        if (!main.getIntegrationsManager().isCitizensEnabled()) {
                             audience.sendMessage(MiniMessage.miniMessage().parse(
                                     NotQuestColors.errorGradient + "Error: Any kind of NPC stuff has been disabled, because you don't have the Citizens plugin installed on your server. You need to install the Citizens plugin in order to use Citizen NPCs. You can, however, use armor stands as an alternative. To do that, just enter 'armorstand' instead of the NPC ID."
                             ));
@@ -160,7 +160,7 @@ public class TalkToNPCObjective extends Objective {
     @Override
     public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
         String toReturn = "";
-        if (main.isCitizensEnabled() && getNPCtoTalkID() != -1) {
+        if (main.getIntegrationsManager().isCitizensEnabled() && getNPCtoTalkID() != -1) {
             final NPC npc = CitizensAPI.getNPCRegistry().getById(getNPCtoTalkID());
             if (npc != null) {
                 toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.talkToNPC.base", player)

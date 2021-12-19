@@ -119,7 +119,7 @@ public class UtilManager {
     }
 
     private Component getFancyCommandTabCompletion(final String[] args, final String hintCurrentArg, String hintNextArgs) {
-        final int maxPreviousArgs = main.getDataManager().getConfiguration().getFancyCommandCompletionMaxPreviousArgumentsDisplayed();
+        final int maxPreviousArgs = main.getConfiguration().getFancyCommandCompletionMaxPreviousArgumentsDisplayed();
 
         final StringBuilder argsTogether = new StringBuilder();
 
@@ -184,18 +184,18 @@ public class UtilManager {
 
 
     public void sendFancyCommandCompletion(final Audience audience, final String[] args, final String hintCurrentArg, final String hintNextArgs) {
-        if (!main.getDataManager().getConfiguration().isActionBarFancyCommandCompletionEnabled() && !main.getDataManager().getConfiguration().isTitleFancyCommandCompletionEnabled() && !main.getDataManager().getConfiguration().isBossBarFancyCommandCompletionEnabled()) {
+        if (!main.getConfiguration().isActionBarFancyCommandCompletionEnabled() && !main.getConfiguration().isTitleFancyCommandCompletionEnabled() && !main.getConfiguration().isBossBarFancyCommandCompletionEnabled()) {
             return;
         }
 
         final Component fancyTabCompletion = getFancyCommandTabCompletion(args, hintCurrentArg, hintNextArgs);
-        if (main.getDataManager().getConfiguration().isActionBarFancyCommandCompletionEnabled()) {
+        if (main.getConfiguration().isActionBarFancyCommandCompletionEnabled()) {
             audience.sendActionBar(fancyTabCompletion);
         }
-        if (main.getDataManager().getConfiguration().isTitleFancyCommandCompletionEnabled()) {
+        if (main.getConfiguration().isTitleFancyCommandCompletionEnabled()) {
             audience.showTitle(Title.title(Component.text(""), fancyTabCompletion));
         }
-        if (main.getDataManager().getConfiguration().isBossBarFancyCommandCompletionEnabled()) {
+        if (main.getConfiguration().isBossBarFancyCommandCompletionEnabled()) {
 
             final BossBar oldBossBar = playersAndBossBars.get(audience);
             if (oldBossBar != null) {
@@ -342,7 +342,7 @@ public class UtilManager {
             }
         }*/
         //return descriptionWithLineBreaks.toString();
-        return WordUtils.wrap(unwrappedText.replace("\\n", "\n"), maxLineLength, "\n<GRAY>", main.getDataManager().getConfiguration().wrapLongWords);
+        return WordUtils.wrap(unwrappedText.replace("\\n", "\n"), maxLineLength, "\n<GRAY>", main.getConfiguration().wrapLongWords);
 
     }
 
@@ -359,9 +359,7 @@ public class UtilManager {
     }
 
     public final String miniMessageToLegacy(String miniMessageString) {
-        String legacy = ChatColor.translateAlternateColorCodes('&',
-                LegacyComponentSerializer.builder().hexColors().build().serialize(miniMessage.parse(miniMessageString))
-        );
+        String legacy = LegacyComponentSerializer.builder().hexColors().build().serialize(miniMessage.parse(miniMessageString));
         main.getLogManager().debug("mm => legacy: Converted <RESET>" + miniMessageString + "</RESET> to <RESET>" + legacy + "</RESET>");
 
         return legacy;

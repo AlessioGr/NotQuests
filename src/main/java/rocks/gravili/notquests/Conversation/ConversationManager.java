@@ -77,7 +77,7 @@ public class ConversationManager {
     }
 
     public final int getMaxChatHistory() {
-        return main.getDataManager().getConfiguration().previousConversationsHistorySize;
+        return main.getConfiguration().previousConversationsHistorySize;
     }
 
     public File getConversationsFolder() {

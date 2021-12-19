@@ -51,7 +51,7 @@ public class JobsRebornReachJobLevel extends Objective {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
-        if (!main.isJobsRebornEnabled()) {
+        if (!main.getIntegrationsManager().isJobsRebornEnabled()) {
             return;
         }
 
@@ -68,7 +68,7 @@ public class JobsRebornReachJobLevel extends Objective {
                             }
                             return completions;
                         }
-                ).single().build(), ArgumentDescription.of("Name of the job (case-sensitive)"))
+                ).single().build(), ArgumentDescription.of("Name of the job"))
                 .argument(IntegerArgument.<CommandSender>newBuilder("level").withMin(1), ArgumentDescription.of("Job Level which needs to be reached"))
                 .flag(
                         manager.flagBuilder("doNotCountPreviousLevels")
@@ -147,7 +147,7 @@ public class JobsRebornReachJobLevel extends Objective {
     @Override
     public void onObjectiveUnlock(ActiveObjective activeObjective) {
         activeObjective.addProgress(1); //Job levels start at 1 and not 0
-        if (!main.isJobsRebornEnabled() || !isCountPreviousLevels()) {
+        if (!main.getIntegrationsManager().isJobsRebornEnabled() || !isCountPreviousLevels()) {
             return;
         }
 

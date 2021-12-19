@@ -47,7 +47,7 @@ public class EscortNPCObjective extends Objective {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
-        if (!main.isCitizensEnabled()) {
+        if (!main.getIntegrationsManager().isCitizensEnabled()) {
             return;
         }
 
@@ -113,7 +113,7 @@ public class EscortNPCObjective extends Objective {
     @Override
     public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
         String toReturn = "";
-        if (main.isCitizensEnabled()) {
+        if (main.getIntegrationsManager().isCitizensEnabled()) {
             final NPC npc = CitizensAPI.getNPCRegistry().getById(getNpcToEscortID());
             final NPC npcDestination = CitizensAPI.getNPCRegistry().getById(getNpcToEscortToID());
 

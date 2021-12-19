@@ -43,7 +43,7 @@ public class ReachLocationObjective extends Objective {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
-        if (!main.isWorldEditEnabled()) {
+        if (!main.getIntegrationsManager().isWorldEditEnabled()) {
             return;
         }
 
@@ -64,7 +64,7 @@ public class ReachLocationObjective extends Objective {
                 .handler((context) -> {
                     final String locationName = String.join(" ", (String[]) context.get("Location Name"));
 
-                    main.getWorldEditHook().handleReachLocationObjectiveCreation((Player) context.getSender(), locationName, context);
+                    main.getIntegrationsManager().getWorldEditManager().handleReachLocationObjectiveCreation((Player) context.getSender(), locationName, context);
 
                 }));
     }

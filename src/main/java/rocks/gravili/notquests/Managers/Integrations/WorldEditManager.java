@@ -16,16 +16,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.Events.hooks;
+package rocks.gravili.notquests.Managers.Integrations;
 
 import cloud.commandframework.context.CommandContext;
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.LocalSession;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.bukkit.BukkitPlayer;
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.session.SessionManager;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -34,16 +36,19 @@ import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Objectives.ReachLocationObjective;
 
-public class WorldEditHook {
+public class WorldEditManager {
     private final NotQuests main;
+    private final WorldEditPlugin worldEditPlugin;
 
-    public WorldEditHook(final NotQuests main) {
+
+    public WorldEditManager(final NotQuests main) {
         this.main = main;
+        worldEditPlugin = (WorldEditPlugin) Bukkit.getServer().getPluginManager().getPlugin("WorldEdit");
     }
 
     public void handleReachLocationObjectiveCreation(final Player player, final String locationName, final @NonNull CommandContext<CommandSender> context) {
         BukkitPlayer actor = BukkitAdapter.adapt(player); // WorldEdit's native Player class extends Actor
-        SessionManager manager = main.getWorldEdit().getWorldEdit().getSessionManager();
+        SessionManager manager = main.getIntegrationsManager().getWorldEditManager().getWorldEdit().getWorldEdit().getSessionManager();
         LocalSession localSession = manager.get(actor);
 
 
@@ -70,4 +75,9 @@ public class WorldEditHook {
             ));
         }
     }
+
+    public WorldEditPlugin getWorldEdit() {
+        return worldEditPlugin;
+    }
+
 }

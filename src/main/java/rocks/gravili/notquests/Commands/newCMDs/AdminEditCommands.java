@@ -198,7 +198,7 @@ public class AdminEditCommands {
                     }
                 }));
 
-        if (main.isCitizensEnabled()) {
+        if (main.getIntegrationsManager().isCitizensEnabled()) {
             final Command.Builder<CommandSender> citizensNPCsBuilder = editBuilder.literal("npcs");
             handleCitizensNPCs(citizensNPCsBuilder);
         }

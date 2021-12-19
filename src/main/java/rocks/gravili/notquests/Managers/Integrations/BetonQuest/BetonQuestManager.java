@@ -16,26 +16,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.Hooks.BetonQuest;
+package rocks.gravili.notquests.Managers.Integrations.BetonQuest;
 
 import org.betonquest.betonquest.BetonQuest;
-import rocks.gravili.notquests.Hooks.BetonQuest.Conditions.BQRequirementsCondition;
-import rocks.gravili.notquests.Hooks.BetonQuest.Events.*;
+import rocks.gravili.notquests.Managers.Integrations.BetonQuest.Conditions.BQRequirementsCondition;
+import rocks.gravili.notquests.Managers.Integrations.BetonQuest.Events.*;
 import rocks.gravili.notquests.NotQuests;
 
-public class BetonQuestIntegration {
+public class BetonQuestManager {
     private final NotQuests main;
     private final BetonQuest betonQuest;
 
 
-    public BetonQuestIntegration(final NotQuests main) {
+    public BetonQuestManager(final NotQuests main) {
         this.main = main;
         betonQuest = BetonQuest.getInstance();
         initialize();
     }
 
     public void initialize() {
-        if (main.isBetonQuestEnabled()) {
+        if (main.getIntegrationsManager().isBetonQuestEnabled()) {
             //Register events
             betonQuest.registerEvents("notquests_triggerobjective", BQTriggerObjectiveEvent.class); //notquests_triggerobjective triggername
             betonQuest.registerEvents("notquests_action", BQActionEvent.class); //notquests_action actionname questname(optional - only used for {QUEST} placeholder in the action)

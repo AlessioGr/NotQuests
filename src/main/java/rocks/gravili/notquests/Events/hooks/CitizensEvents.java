@@ -206,7 +206,7 @@ public class CitizensEvents implements Listener {
     @EventHandler
     private void onCitizensEnable(CitizensEnableEvent e) {
         main.getLogManager().info("Processing Citizens Enable Event...");
-        main.getCitizensManager().registerQuestGiverTrait();
+        main.getIntegrationsManager().getCitizensManager().registerQuestGiverTrait();
 
 
     }
@@ -215,7 +215,7 @@ public class CitizensEvents implements Listener {
     private void onCitizensReload(CitizensReloadEvent e) {
         main.getLogManager().info("Processing Citizens Reload Event...");
 
-        main.getCitizensManager().registerQuestGiverTrait();
+        main.getIntegrationsManager().getCitizensManager().registerQuestGiverTrait();
 
     }
 }

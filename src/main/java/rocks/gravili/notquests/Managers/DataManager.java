@@ -714,6 +714,13 @@ public class DataManager {
         }
         configuration.setIntegrationJobsRebornEnabled(getGeneralConfig().getBoolean(key));
 
+        key = "integrations.project-korra.enabled";
+        if (!getGeneralConfig().isBoolean(key)) {
+            getGeneralConfig().set(key, true);
+            valueChanged = true;
+        }
+        configuration.setIntegrationProjectKorraEnabled(getGeneralConfig().getBoolean(key));
+
         key = "visual.fancy-command-completion.actionbar-enabled";
         if (!getGeneralConfig().isBoolean(key)) {
             getGeneralConfig().set(key, true);
@@ -1049,7 +1056,7 @@ public class DataManager {
             main.getQuestPlayerManager().loadPlayerData();
 
             //Citizens stuff if Citizens is enabled
-            if (main.isCitizensEnabled()) {
+            if (main.getIntegrationsManager().isCitizensEnabled()) {
                 //IF an NPC exist, try to load NPC data.
                 boolean foundNPC = false;
                 for (final NPC ignored : CitizensAPI.getNPCRegistry().sorted()) {
@@ -1313,12 +1320,12 @@ public class DataManager {
             standardEntityTypeCompletions.add(entityType.toString());
         }
         //Add extra Mythic Mobs completions, if enabled
-        if (main.isMythicMobsEnabled()) {
-            standardEntityTypeCompletions.addAll(main.getMythicMobs().getMobManager().getMobNames());
+        if (main.getIntegrationsManager().isMythicMobsEnabled()) {
+            standardEntityTypeCompletions.addAll(main.getIntegrationsManager().getMythicMobsManager().getMythicMobs().getMobManager().getMobNames());
         }
 
         //Fill up standardEliteMobNamesCompletions if the EliteMobs integration is enabled
-        if (main.isEliteMobsEnabled()) {
+        if (main.getIntegrationsManager().isEliteMobsEnabled()) {
             standardEliteMobNamesCompletions.add("Elite_Blaze");
             standardEliteMobNamesCompletions.add("Elite_Cave_Spider");
             standardEliteMobNamesCompletions.add("Elite_Creeper");

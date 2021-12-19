@@ -136,12 +136,12 @@ public class QuestPlaceholders extends PlaceholderExpansion {
                 for(ActiveQuest activeQuest : questPlayer.getActiveQuests()){
                     amount++;
                     //return if it's bigger than limit
-                    if(main.getDataManager().getConfiguration().placeholder_player_active_quests_list_horizontal_limit >=0 && amount > main.getDataManager().getConfiguration().placeholder_player_active_quests_list_horizontal_limit){
+                    if (main.getConfiguration().placeholder_player_active_quests_list_horizontal_limit >= 0 && amount > main.getConfiguration().placeholder_player_active_quests_list_horizontal_limit) {
                         return list.toString();
                     }
 
                     String nameToAdd = activeQuest.getQuest().getQuestName();
-                    if(main.getDataManager().getConfiguration().placeholder_player_active_quests_list_horizontal_use_displayname_if_available){
+                    if (main.getConfiguration().placeholder_player_active_quests_list_horizontal_use_displayname_if_available) {
                         if (!activeQuest.getQuest().getQuestDisplayName().isBlank()) {
                             nameToAdd = activeQuest.getQuest().getQuestDisplayName();
                         }
@@ -150,7 +150,7 @@ public class QuestPlaceholders extends PlaceholderExpansion {
                     if(amount == 1){
                         list = new StringBuilder(nameToAdd);
                     }else{
-                        list.append(main.getDataManager().getConfiguration().placeholder_player_active_quests_list_horizontal_separator).append(nameToAdd);
+                        list.append(main.getConfiguration().placeholder_player_active_quests_list_horizontal_separator).append(nameToAdd);
                     }
 
                 }
@@ -167,12 +167,12 @@ public class QuestPlaceholders extends PlaceholderExpansion {
                 for(ActiveQuest activeQuest : questPlayer.getActiveQuests()){
                     amount++;
                     //return if it's bigger than limit
-                    if(main.getDataManager().getConfiguration().placeholder_player_active_quests_list_vertical_limit >=0 && amount > main.getDataManager().getConfiguration().placeholder_player_active_quests_list_vertical_limit){
+                    if (main.getConfiguration().placeholder_player_active_quests_list_vertical_limit >= 0 && amount > main.getConfiguration().placeholder_player_active_quests_list_vertical_limit) {
                         return list.toString();
                     }
 
                     String nameToAdd = activeQuest.getQuest().getQuestName();
-                    if(main.getDataManager().getConfiguration().placeholder_player_active_quests_list_vertical_use_displayname_if_available){
+                    if (main.getConfiguration().placeholder_player_active_quests_list_vertical_use_displayname_if_available) {
                         if (!activeQuest.getQuest().getQuestDisplayName().isBlank()) {
                             nameToAdd = activeQuest.getQuest().getQuestDisplayName();
                         }

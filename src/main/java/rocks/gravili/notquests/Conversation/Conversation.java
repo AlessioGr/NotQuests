@@ -23,7 +23,7 @@ import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
 import org.bukkit.configuration.file.YamlConfiguration;
-import rocks.gravili.notquests.Hooks.Citizens.QuestGiverNPCTrait;
+import rocks.gravili.notquests.Managers.Integrations.Citizens.QuestGiverNPCTrait;
 import rocks.gravili.notquests.NotQuests;
 
 import java.io.File;
@@ -132,7 +132,7 @@ public class Conversation {
         if (npcID < 0) {
             return;
         }
-        if (!main.isCitizensEnabled()) {
+        if (!main.getIntegrationsManager().isCitizensEnabled()) {
             main.getLogManager().warn("The binding to NPC in Conversation <AQUA>" + identifier + "</AQUA> has been cancelled, because the Citizens plugin is not installed on this server. You will need the Citizens plugin to do NPC stuff.");
             return;
         }

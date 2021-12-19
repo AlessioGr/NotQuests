@@ -46,7 +46,7 @@ public class UltimateClansClanLevelCondition extends Condition {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
-        if (!main.isUltimateClansEnabled()) {
+        if (!main.getIntegrationsManager().isUltimateClansEnabled()) {
             return;
         }
 
@@ -86,7 +86,7 @@ public class UltimateClansClanLevelCondition extends Condition {
 
     @Override
     public String check(QuestPlayer questPlayer, boolean enforce) {
-        if (!main.isUltimateClansEnabled()) {
+        if (!main.getIntegrationsManager().isUltimateClansEnabled()) {
             return "<YELLOW>Error: The server does not have UltimateClans enabled. Please ask the Owner to install UltimateClans for UltimateClans stuff to work.";
         }
 

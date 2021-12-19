@@ -73,8 +73,8 @@ public class QuestPlayer {
     public String addActiveQuest(final ActiveQuest quest, final boolean triggerAcceptQuestTrigger, final boolean sendQuestInfo) {
 
         //Configuration Option: general.max-active-quests-per-player
-        if(main.getDataManager().getConfiguration().getMaxActiveQuestsPerPlayer() != -1 && activeQuests.size() >= main.getDataManager().getConfiguration().getMaxActiveQuestsPerPlayer()){
-            return "<RED>You can not accept more than <AQUA>" + main.getDataManager().getConfiguration().getMaxActiveQuestsPerPlayer() + "</AQUA> Quests.";
+        if (main.getConfiguration().getMaxActiveQuestsPerPlayer() != -1 && activeQuests.size() >= main.getConfiguration().getMaxActiveQuestsPerPlayer()) {
+            return "<RED>You can not accept more than <AQUA>" + main.getConfiguration().getMaxActiveQuestsPerPlayer() + "</AQUA> Quests.";
         }
 
         for (ActiveQuest activeQuest : activeQuests) {
@@ -148,7 +148,7 @@ public class QuestPlayer {
                         ));
                         main.getQuestManager().sendActiveObjectivesAndProgress(player, quest);
 
-                        if (main.getDataManager().getConfiguration().visualTitleQuestSuccessfullyAccepted_enabled) {
+                        if (main.getConfiguration().visualTitleQuestSuccessfullyAccepted_enabled) {
 
                             audience.showTitle(
                                     Title.title(MiniMessage.miniMessage().parse(main.getLanguageManager().getString("titles.quest-accepted.title", player)),
@@ -316,7 +316,7 @@ public class QuestPlayer {
 
         final Player player = getPlayer();
         if (player != null) {
-            if (main.getDataManager().getConfiguration().visualTitleQuestCompleted_enabled) {
+            if (main.getConfiguration().visualTitleQuestCompleted_enabled) {
                 Audience audience = main.adventure().player(player);
                 audience.showTitle(
                         Title.title(MiniMessage.miniMessage().parse(main.getLanguageManager().getString("titles.quest-completed.title", player)),
@@ -370,7 +370,7 @@ public class QuestPlayer {
             giveReward(activeQuest.getQuest());
             final Player player = getPlayer();
             if (player != null) {
-                if (main.getDataManager().getConfiguration().visualTitleQuestCompleted_enabled) {
+                if (main.getConfiguration().visualTitleQuestCompleted_enabled) {
                     Audience audience = main.adventure().player(player);
                     audience.showTitle(
                             Title.title(MiniMessage.miniMessage().parse(main.getLanguageManager().getString("titles.quest-completed.title", player)),
@@ -485,7 +485,7 @@ public class QuestPlayer {
 
                 if (player != null) {
                     Audience audience = main.adventure().player(player);
-                    if (main.getDataManager().getConfiguration().visualTitleQuestFailed_enabled) {
+                    if (main.getConfiguration().visualTitleQuestFailed_enabled) {
                         audience.showTitle(
                                 Title.title(MiniMessage.miniMessage().parse(main.getLanguageManager().getString("titles.quest-failed.title", player)),
                                         MiniMessage.miniMessage().parse(main.getLanguageManager().getString("titles.quest-failed.subtitle", player, this, activeQuestToFail)),

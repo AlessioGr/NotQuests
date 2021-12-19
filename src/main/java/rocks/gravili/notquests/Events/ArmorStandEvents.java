@@ -534,7 +534,7 @@ public class ArmorStandEvents implements Listener {
 
         //Show quests
         if (handledObjective) {
-            if (main.getDataManager().getConfiguration().isArmorStandPreventEditing()) {
+            if (main.getConfiguration().isArmorStandPreventEditing()) {
                 event.setCancelled(true);
             }
             return;
@@ -542,7 +542,7 @@ public class ArmorStandEvents implements Listener {
 
 
         //If Armor Stand has Quests attached to it and it prevent-editing is true in the config
-        if (main.getQuestManager().sendQuestsPreviewOfQuestShownArmorstands(armorStand, player) && main.getDataManager().getConfiguration().isArmorStandPreventEditing()) {
+        if (main.getQuestManager().sendQuestsPreviewOfQuestShownArmorstands(armorStand, player) && main.getConfiguration().isArmorStandPreventEditing()) {
             event.setCancelled(true);
         }
 
@@ -550,7 +550,7 @@ public class ArmorStandEvents implements Listener {
         final Conversation foundConversation = main.getConversationManager().getConversationAttachedToArmorstand(armorStand);
         if (foundConversation != null) {
             main.getConversationManager().playConversation(player, foundConversation);
-            if (main.getDataManager().getConfiguration().isArmorStandPreventEditing()) {
+            if (main.getConfiguration().isArmorStandPreventEditing()) {
                 event.setCancelled(true);
             }
         }
@@ -560,7 +560,7 @@ public class ArmorStandEvents implements Listener {
 
     @EventHandler
     private void onArmorStandLoad(EntitiesLoadEvent event) {
-        if (!main.getDataManager().getConfiguration().isArmorStandQuestGiverIndicatorParticleEnabled()) {
+        if (!main.getConfiguration().isArmorStandQuestGiverIndicatorParticleEnabled()) {
             return;
         }
         for(final Entity entity : event.getEntities()){
@@ -580,7 +580,7 @@ public class ArmorStandEvents implements Listener {
 
     @EventHandler
     private void onArmorStandUnload(EntitiesUnloadEvent event) {
-        if (!main.getDataManager().getConfiguration().isArmorStandQuestGiverIndicatorParticleEnabled()) {
+        if (!main.getConfiguration().isArmorStandQuestGiverIndicatorParticleEnabled()) {
             return;
         }
         for (final Entity entity : event.getEntities()) {
@@ -602,7 +602,7 @@ public class ArmorStandEvents implements Listener {
     @EventHandler
     public void onArmorStandSpawn(EntitySpawnEvent event) {
         if (event.getEntity() instanceof final ArmorStand armorStand) {
-            if (!main.getDataManager().getConfiguration().isArmorStandQuestGiverIndicatorParticleEnabled()) {
+            if (!main.getConfiguration().isArmorStandQuestGiverIndicatorParticleEnabled()) {
                 return;
             }
             final PersistentDataContainer armorStandPDB = armorStand.getPersistentDataContainer();
@@ -620,7 +620,7 @@ public class ArmorStandEvents implements Listener {
     @EventHandler
     public void onArmorStandDeath(EntityDeathEvent event) {
         if (event.getEntity() instanceof final ArmorStand armorStand) {
-            if (!main.getDataManager().getConfiguration().isArmorStandQuestGiverIndicatorParticleEnabled()) {
+            if (!main.getConfiguration().isArmorStandQuestGiverIndicatorParticleEnabled()) {
                 return;
             }
             final PersistentDataContainer armorStandPDB = armorStand.getPersistentDataContainer();

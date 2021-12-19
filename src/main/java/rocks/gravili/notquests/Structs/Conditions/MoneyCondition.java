@@ -58,7 +58,7 @@ public class MoneyCondition extends Condition {
 
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
-        if (!main.isVaultEnabled()) {
+        if (!main.getIntegrationsManager().isVaultEnabled()) {
             return;
         }
 
@@ -105,11 +105,11 @@ public class MoneyCondition extends Condition {
     }
 
     private void removeMoney(final Player player, final String worldName, final long moneyToDeduct, final boolean notifyPlayer) {
-        if (!main.isVaultEnabled() || main.getEconomy() == null) {
+        if (!main.getIntegrationsManager().isVaultEnabled() || main.getIntegrationsManager().getVaultManager().getEconomy() == null) {
             main.getLogManager().warn("Warning: Could not deduct money, because Vault was not found. Please install Vault for money stuff to work.");
             return;
         }
-        main.getEconomy().withdrawPlayer(player, worldName, moneyToDeduct);
+        main.getIntegrationsManager().getVaultManager().getEconomy().withdrawPlayer(player, worldName, moneyToDeduct);
         if (notifyPlayer) {
             Audience audience = main.adventure().player(player);
             audience.sendMessage(MiniMessage.miniMessage().parse(
@@ -125,14 +125,14 @@ public class MoneyCondition extends Condition {
         final boolean deductMoney = isDeductMoney();
         final Player player = questPlayer.getPlayer();
         if (player != null) {
-            if (!main.isVaultEnabled() || main.getEconomy() == null) {
+            if (!main.getIntegrationsManager().isVaultEnabled() || main.getIntegrationsManager().getVaultManager().getEconomy() == null) {
                 return "<YELLOW>Error: The server does not have vault enabled. Please ask the Owner to install Vault for money stuff to work.";
-            } else if (main.getEconomy().getBalance(player, player.getWorld().getName()) < moneyRequirementAmount) {
-                return "<YELLOW>You need <AQUA>" + (moneyRequirementAmount - main.getEconomy().getBalance(player, player.getWorld().getName())) + "</AQUA> more money.";
+            } else if (main.getIntegrationsManager().getVaultManager().getEconomy().getBalance(player, player.getWorld().getName()) < moneyRequirementAmount) {
+                return "<YELLOW>You need <AQUA>" + (moneyRequirementAmount - main.getIntegrationsManager().getVaultManager().getEconomy().getBalance(player, player.getWorld().getName())) + "</AQUA> more money.";
             } else {
                 if (enforce && deductMoney && moneyRequirementAmount > 0) {
 
-                    if (main.isVaultEnabled()) {
+                    if (main.getIntegrationsManager().isVaultEnabled()) {
                         removeMoney(player, player.getWorld().getName(), moneyRequirementAmount, true);
                     } else {
                         main.getLogManager().warn("Warning: Could not deduct money, because Vault was not found. Please install Vault for money stuff to work.");

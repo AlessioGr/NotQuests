@@ -46,7 +46,7 @@ public class NQPacketListener extends ChannelDuplexHandler {
 
                 handleMainChatHistorySavingLogic(wrappedChatPacket, player);
             } catch (Exception e) {
-                if (main.getDataManager().getConfiguration().debug) {
+                if (main.getConfiguration().debug) {
                     e.printStackTrace();
                 }
                 //main.getLogManager().warn("Disabling packet stuff because there was an error reading chat messages...");
@@ -115,7 +115,7 @@ public class NQPacketListener extends ChannelDuplexHandler {
 
 
         } catch (Exception e) {
-            if (main.getDataManager().getConfiguration().debug) {
+            if (main.getConfiguration().debug) {
                 main.getLogManager().warn("Exception reading chat packet: ");
                 e.printStackTrace();
             }

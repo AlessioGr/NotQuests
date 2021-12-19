@@ -77,6 +77,8 @@ chat:
         base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Reach job level <WHITE>%EVENTUALCOLOR%%AMOUNT% <GRAY>with job <WHITE>%EVENTUALCOLOR%%JOB%'
       SlimefunResearch:
         base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Spend on research'
+      ProjectKorraUseAbility:
+        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Use Ability: <WHITE>%EVENTUALCOLOR%%ABILITY%'
 titles:
   quest-accepted:
     title: '<WHITE>Quest accepted'

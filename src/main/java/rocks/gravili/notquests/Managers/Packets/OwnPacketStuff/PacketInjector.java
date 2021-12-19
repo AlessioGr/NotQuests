@@ -47,8 +47,8 @@ public class PacketInjector {
 
     public void setPacketStuffEnabled(final boolean packetStuffEnabled) {
         this.packetStuffEnabled = packetStuffEnabled;
-        main.getDataManager().getConfiguration().packetMagic = false;
-        main.getDataManager().getConfiguration().deletePreviousConversations = false;
+        main.getConfiguration().packetMagic = false;
+        main.getConfiguration().deletePreviousConversations = false;
     }
 
     public void initializeNMSStuff() {
@@ -63,7 +63,7 @@ public class PacketInjector {
             packetListenerField = Reflection.getField(NetworkManager, "m");
 
         } catch (Throwable t) {
-            if (main.getDataManager().getConfiguration().debug) {
+            if (main.getConfiguration().debug) {
                 t.printStackTrace();
             }
             main.getLogManager().warn("Disabling packet stuff because something went wrong...");
@@ -81,7 +81,7 @@ public class PacketInjector {
             //paperGsonComponentSerializer = Class.forName("net.kyori.adventure.text.serializer.gson" Reflection.getField("net.kyori.adventure.text.serializer.gson")
         } catch (Exception e) {
             paperGsonComponentSerializer = null;
-            if (main.getDataManager().getConfiguration().debug) {
+            if (main.getConfiguration().debug) {
                 e.printStackTrace();
             }
         }
@@ -95,7 +95,7 @@ public class PacketInjector {
                 ch.pipeline().addBefore("packet_handler", "PacketInjector", h);
             }
         } catch (Throwable t) {
-            if (main.getDataManager().getConfiguration().debug) {
+            if (main.getConfiguration().debug) {
                 t.printStackTrace();
             }
             main.getLogManager().warn("Disabling packet stuff because something went wrong...");
@@ -110,7 +110,7 @@ public class PacketInjector {
                 ch.pipeline().remove("PacketInjector");
             }
         } catch (Throwable t) {
-            if (main.getDataManager().getConfiguration().debug) {
+            if (main.getConfiguration().debug) {
                 t.printStackTrace();
             }
             main.getLogManager().warn("Disabling packet stuff because something went wrong...");
@@ -130,7 +130,7 @@ public class PacketInjector {
             try {
                 ch = Reflection.getFieldValue(packetListenerField, networkManager);
             } catch (Exception e2) {
-                if (main.getDataManager().getConfiguration().debug) {
+                if (main.getConfiguration().debug) {
                     e2.printStackTrace();
                 }
                 main.getLogManager().warn("Disabling packet stuff because something went wrong...");

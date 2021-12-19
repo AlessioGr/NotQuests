@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.Hooks.BetonQuest.Conditions;
+package rocks.gravili.notquests.Managers.Integrations.BetonQuest.Conditions;
 
 import org.betonquest.betonquest.Instruction;
 import org.betonquest.betonquest.exceptions.InstructionParseException;
@@ -26,9 +26,9 @@ import org.betonquest.betonquest.utils.PlayerConverter;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.CompletedQuest;
+import rocks.gravili.notquests.Structs.Conditions.*;
 import rocks.gravili.notquests.Structs.Quest;
 import rocks.gravili.notquests.Structs.QuestPlayer;
-import rocks.gravili.notquests.Structs.Conditions.*;
 
 public class BQRequirementsCondition extends org.betonquest.betonquest.api.Condition { //TODO: Make it dynamic for future or API requirements
 
@@ -134,10 +134,10 @@ public class BQRequirementsCondition extends org.betonquest.betonquest.api.Condi
             } else if (condition instanceof final MoneyCondition moneyRequirement) {
                 final long moneyRequirementAmount = moneyRequirement.getMoneyRequirement();
 
-                if (!main.isVaultEnabled() || main.getEconomy() == null) {
+                if (!main.getIntegrationsManager().isVaultEnabled() || main.getIntegrationsManager().getVaultManager().getEconomy() == null) {
                     throw new QuestRuntimeException("The server does not have vault enabled. Please install Vault for money requirements to work.");
                 } else
-                    return !(main.getEconomy().getBalance(player, player.getWorld().getName()) < moneyRequirementAmount);
+                    return !(main.getIntegrationsManager().getVaultManager().getEconomy().getBalance(player, player.getWorld().getName()) < moneyRequirementAmount);
 
 
             } else if (condition instanceof final PermissionCondition permissionRequirement) {

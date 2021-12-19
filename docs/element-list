@@ -10,8 +10,8 @@ rocks.gravili.notquests.Events
 rocks.gravili.notquests.Events.hooks
 rocks.gravili.notquests.Events.notquests
 rocks.gravili.notquests.Hooks.BetonQuest
-rocks.gravili.notquests.Hooks.BetonQuest.Conditions
-rocks.gravili.notquests.Hooks.BetonQuest.Events
+rocks.gravili.notquests.Managers.Integrations.BetonQuest.Conditions
+rocks.gravili.notquests.Managers.Integrations.BetonQuest.Events
 rocks.gravili.notquests.Hooks.Citizens
 rocks.gravili.notquests.Managers
 rocks.gravili.notquests.Managers.Registering

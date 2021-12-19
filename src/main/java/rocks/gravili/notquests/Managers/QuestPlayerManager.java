@@ -44,7 +44,7 @@ public class QuestPlayerManager {
     }
 
     public void loadPlayerData() {
-        if (!main.getDataManager().getConfiguration().loadPlayerData) {
+        if (!main.getConfiguration().loadPlayerData) {
             main.getLogManager().info("Loading of playerdata has been skipped...");
             return;
         }
@@ -224,7 +224,7 @@ public class QuestPlayerManager {
     }
 
     public void savePlayerData() {
-        if (!main.getDataManager().getConfiguration().savePlayerData) {
+        if (!main.getConfiguration().savePlayerData) {
             main.getLogManager().info("Saving of playerdata has been skipped...");
             return;
         }

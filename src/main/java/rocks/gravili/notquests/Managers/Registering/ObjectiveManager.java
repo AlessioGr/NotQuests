@@ -29,6 +29,7 @@ import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Objectives.*;
 import rocks.gravili.notquests.Structs.Objectives.hooks.EliteMobs.KillEliteMobsObjective;
 import rocks.gravili.notquests.Structs.Objectives.hooks.JobsReborn.JobsRebornReachJobLevel;
+import rocks.gravili.notquests.Structs.Objectives.hooks.ProjectKorra.ProjectKorraUseAbilityObjective;
 import rocks.gravili.notquests.Structs.Objectives.hooks.Slimefun.SlimefunResearchObjective;
 import rocks.gravili.notquests.Structs.Objectives.hooks.Towny.TownyNationReachTownCountObjective;
 import rocks.gravili.notquests.Structs.Objectives.hooks.Towny.TownyReachResidentCountObjective;
@@ -82,6 +83,10 @@ public class ObjectiveManager {
 
         //Jobs
         registerObjective("JobsRebornReachJobLevel", JobsRebornReachJobLevel.class);
+
+        //ProjectKorra
+        registerObjective("ProjectKorraUseAbility", ProjectKorraUseAbilityObjective.class);
+
 
         //registerObjectiveCommandCompletionHandler("KillMobs", this::eee);
     }

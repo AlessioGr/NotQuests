@@ -66,7 +66,7 @@ public class DeliverItemsObjective extends Objective {
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of items which need to be delivered."))
                 .argument(StringArgument.<CommandSender>newBuilder("NPC or Armorstand").withSuggestionsProvider((context, lastString) -> {
                     ArrayList<String> completions = new ArrayList<>();
-                    if (main.isCitizensEnabled()) {
+                    if (main.getIntegrationsManager().isCitizensEnabled()) {
                         for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
                             completions.add("" + npc.getId());
                         }
@@ -104,7 +104,7 @@ public class DeliverItemsObjective extends Objective {
 
 
                     if (!npcIDOrArmorstand.equalsIgnoreCase("armorstand")) {
-                        if (!main.isCitizensEnabled()) {
+                        if (!main.getIntegrationsManager().isCitizensEnabled()) {
                             audience.sendMessage(MiniMessage.miniMessage().parse(
                                     NotQuestColors.errorGradient + "Error: Any kind of NPC stuff has been disabled, because you don't have the Citizens plugin installed on your server. You need to install the Citizens plugin in order to use Citizen NPCs. You can, however, use armor stands as an alternative. To do that, just enter 'armorstand' instead of the NPC ID."
                             ));
@@ -254,7 +254,7 @@ public class DeliverItemsObjective extends Objective {
         }
 
 
-        if (main.isCitizensEnabled() && getRecipientNPCID() != -1) {
+        if (main.getIntegrationsManager().isCitizensEnabled() && getRecipientNPCID() != -1) {
             final NPC npc = CitizensAPI.getNPCRegistry().getById(getRecipientNPCID());
             if (npc != null) {
                 toReturn += "\n      <GRAY>" + eventualColor + "Deliver it to <WHITE>" + eventualColor + npc.getName();
