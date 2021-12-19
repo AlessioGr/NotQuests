@@ -298,6 +298,8 @@ public class UtilManager {
             returnMessage.append(sb).append(line).append("\n");
         }
 
+        main.getLogManager().debug("Centered message! Old message:\n" + message + "\nCentered Message:\n" + returnMessage);
+
         return returnMessage.toString();
     }
 

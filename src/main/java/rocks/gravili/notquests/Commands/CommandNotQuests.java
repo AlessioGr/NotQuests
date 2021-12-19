@@ -566,7 +566,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                         "xlmnopqrx",
                                         "xxxxxxxxx"
                                 };
-                                InventoryGui gui = new InventoryGui(main, player, main.getLanguageManager().getString("gui.abortQuest.title", player), guiSetup);
+                                InventoryGui gui = new InventoryGui(main, player, convert(main.getLanguageManager().getString("gui.abortQuest.title", player)), guiSetup);
                                 gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
 
                                 final ActiveQuest activeQuest = questsToFail.get(0);
