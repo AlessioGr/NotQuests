@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'rocks.gravili.notquests'
-version = '3.0.0-BETA5'
+version = '3.0.0-BETA6'
 
 repositories {
     mavenCentral()
@@ -152,8 +152,8 @@ dependencies {
     //implementation("org.incendo.interfaces:interfaces-paper:1.0.0-SNAPSHOT")
 
 
-    //implementation 'com.github.retrooper.packetevents:bukkit:2.0-SNAPSHOT'
-    implementation 'com.github.AlessioGr.packetevents:bukkit:2.0-SNAPSHOT'
+    implementation 'com.github.retrooper.packetevents:bukkit:2.0-SNAPSHOT'
+    //implementation 'com.github.AlessioGr.packetevents:bukkit:2.0-SNAPSHOT'
 
     implementation 'commons-io:commons-io:2.11.0'
     implementation 'org.apache.commons:commons-text:1.9'
@@ -199,10 +199,10 @@ shadowJar {
         include dependency('io.leangen.geantyref:')
         include dependency('me.lucko:')
 
-        //include dependency('com.github.retrooper.packetevents:')
+        include dependency('com.github.retrooper.packetevents:')
         //include dependency('io.github.retrooper.packetevents:')
 
-        include dependency('com.github.AlessioGr.packetevents:')
+        //include dependency('com.github.AlessioGr.packetevents:')
     }
 
 
@@ -246,7 +246,7 @@ publishing {
         maven(MavenPublication) {
             groupId = 'rocks.gravili.notquests'
             artifactId = 'NotQuests'
-            version = '3.0.0-BETA5'
+            version = '3.0.0-BETA6'
 
             from components.java
         }
