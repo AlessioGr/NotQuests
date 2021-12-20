@@ -53,11 +53,13 @@ public class ActionManager {
 
     public void registerDefaultActions() {
         actions.clear();
+        registerAction("Action", ActionAction.class);
         registerAction("ConsoleCommand", ConsoleCommandAction.class);
         registerAction("GiveQuestPoints", GiveQuestPointsAction.class);
         registerAction("GiveItem", GiveItemAction.class);
         registerAction("GiveMoney", GiveMoneyAction.class);
         registerAction("GrantPermission", GrantPermissionAction.class);
+
     }
 
 

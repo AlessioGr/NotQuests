@@ -116,7 +116,7 @@ public class ConsoleCommandAction extends Action {
 
     @Override
     public void save(FileConfiguration configuration, String initialPath) {
-        main.getDataManager().getQuestsConfig().set(initialPath + ".specifics.consoleCommand", getConsoleCommand());
+        configuration.set(initialPath + ".specifics.consoleCommand", getConsoleCommand());
     }
 
     @Override

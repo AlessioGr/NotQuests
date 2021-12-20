@@ -22,6 +22,7 @@ softdepend:
   - UClans
   - Towny
   - Jobs
+  - ProjectKorra
 load: POSTWORLD
 commands:
   notquests:
