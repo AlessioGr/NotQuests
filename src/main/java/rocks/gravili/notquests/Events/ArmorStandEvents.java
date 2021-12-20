@@ -140,14 +140,14 @@ public class ArmorStandEvents implements Listener {
 
                             audience.sendMessage(miniMessage.parse(
                                     "<GREEN>Quest with the name <AQUA>" + questName + "</AQUA> was added to this poor little armorstand!"
-                                            + "<DARK_GREEN>Attached Quests: <AQUA>" + existingAttachedQuests
+                                            + " <DARK_GREEN>Attached Quests: <AQUA>" + existingAttachedQuests
                             ));
 
                         }else {
                             armorStandPDB.set(attachedQuestsKey, PersistentDataType.STRING, "°" + questName + "°");
                             audience.sendMessage(miniMessage.parse(
                                     "<GREEN>Quest with the name <AQUA>" + questName + "</AQUA> was added to this poor little armorstand!"
-                                            + "<DARK_GREEN>Attached Quests: <AQUA>" + "°" + questName + "°"
+                                            + " <DARK_GREEN>Attached Quests: <AQUA>" + "°" + questName + "°"
                             ));
 
                             //Since this is the first Quest added to it:
