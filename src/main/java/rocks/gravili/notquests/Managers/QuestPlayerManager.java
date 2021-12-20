@@ -300,11 +300,7 @@ public class QuestPlayerManager {
     }
 
     public String acceptQuest(final Player player, final Quest quest, final boolean triggerAcceptQuestTrigger, final boolean sendQuestInfo) {
-        QuestPlayer questPlayer = getQuestPlayer(player.getUniqueId());
-        if (questPlayer == null) {
-            questPlayer = new QuestPlayer(main, player.getUniqueId());
-            questPlayersAndUUIDs.put(player.getUniqueId(), questPlayer);
-        }
+        QuestPlayer questPlayer = getOrCreateQuestPlayer(player.getUniqueId());
         final ActiveQuest newActiveQuest = new ActiveQuest(main, quest, questPlayer);
 
         return questPlayer.addActiveQuest(newActiveQuest, triggerAcceptQuestTrigger, sendQuestInfo);
@@ -323,11 +319,8 @@ public class QuestPlayerManager {
     }
 
     public String forceAcceptQuest(UUID uuid, Quest quest) { //Ignores max amount limit, cooldown and requirements
-        QuestPlayer questPlayer = getQuestPlayer(uuid);
-        if (questPlayer == null) {
-            questPlayer = new QuestPlayer(main, uuid);
-            questPlayersAndUUIDs.put(uuid, questPlayer);
-        }
+        QuestPlayer questPlayer = getOrCreateQuestPlayer(uuid);
+
         return questPlayer.forceAddActiveQuest(new ActiveQuest(main, quest, questPlayer), true);
     }
 }
