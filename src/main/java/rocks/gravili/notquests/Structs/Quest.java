@@ -21,6 +21,7 @@ package rocks.gravili.notquests.Structs;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.Managers.Integrations.Citizens.QuestGiverNPCTrait;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Actions.Action;
@@ -53,7 +54,7 @@ public class Quest {
     private boolean takeEnabled = true;
     private String description = "";
     private String displayName = "";
-    private Material takeItem = Material.BOOK;
+    private ItemStack takeItem = new ItemStack(Material.BOOK);
 
     public Quest(NotQuests main, String questName) {
         this.main = main;
@@ -392,13 +393,16 @@ public class Quest {
         }
     }
 
-    public final Material getTakeItem() {
+    public final ItemStack getTakeItem() {
         return takeItem;
     }
 
-    public void setTakeItem(final Material takeItem) {
-        this.takeItem = takeItem;
-        main.getDataManager().getQuestsConfig().set("quests." + questName + ".takeItem", takeItem.name());
+    public void setTakeItem(final ItemStack takeItem) {
+        if (takeItem != null) {
+            this.takeItem = takeItem;
+            main.getDataManager().getQuestsConfig().set("quests." + questName + ".takeItem", takeItem);
+        }
+
     }
 
 }

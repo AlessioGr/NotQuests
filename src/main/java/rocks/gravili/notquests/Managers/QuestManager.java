@@ -523,7 +523,7 @@ public class QuestManager {
 
 
                     //TakeItem:
-                    quest.setTakeItem(Material.valueOf(main.getDataManager().getQuestsConfig().getString("quests." + questName + ".takeItem", "BOOK")));
+                    quest.setTakeItem(main.getUpdateManager().convertTakeItemMaterialToItemStack(questName));
 
                     quests.add(quest);
                 }
@@ -690,7 +690,7 @@ public class QuestManager {
             GuiElementGroup group = new GuiElementGroup('g');
 
             for (final Quest quest : questsAttachedToNPC) {
-                final Material materialToUse = quest.getTakeItem();
+                final ItemStack materialToUse = quest.getTakeItem();
 
                 String displayName = quest.getQuestFinalName();
 
@@ -708,7 +708,7 @@ public class QuestManager {
 
 
                 group.addElement(new StaticGuiElement('e',
-                        new ItemStack(materialToUse),
+                        materialToUse,
                         count, // Display a number as the item count
                         click -> {
                             player.chat("/notquests preview " + quest.getQuestName());
@@ -800,7 +800,7 @@ public class QuestManager {
             GuiElementGroup group = new GuiElementGroup('g');
 
             for (final Quest quest : questsAttachedToNPC) {
-                final Material materialToUse = quest.getTakeItem();
+                final ItemStack materialToUse = quest.getTakeItem();
 
 
                 String displayName = quest.getQuestFinalName();
@@ -819,7 +819,7 @@ public class QuestManager {
 
 
                 group.addElement(new StaticGuiElement('e',
-                        new ItemStack(materialToUse),
+                        materialToUse,
                         count, // Display a number as the item count
                         click -> {
                             player.chat("/notquests preview " + quest.getQuestName());

@@ -1,6 +1,8 @@
 package rocks.gravili.notquests.Managers;
 
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Actions.ConsoleCommandAction;
 import rocks.gravili.notquests.Structs.Conditions.ObjectiveCompletedCondition;
@@ -166,5 +168,18 @@ public class UpdateManager {
 
         main.getActionsManager().saveActions();
         return oldActionType;
+    }
+
+    //BETA-6 => BETA-7
+    public ItemStack convertTakeItemMaterialToItemStack(String questName) {
+        if (main.getDataManager().getQuestsConfig().isString("quests." + questName + ".takeItem")) {
+            //Convert to ItemStack
+            ItemStack newItemStack = new ItemStack(Material.valueOf(main.getDataManager().getQuestsConfig().getString("quests." + questName + ".takeItem", "BOOK")));
+            main.getDataManager().getQuestsConfig().set("quests." + questName + ".takeItem", newItemStack);
+            main.getDataManager().saveQuestsConfig();
+            return newItemStack;
+        } else {
+            return main.getDataManager().getQuestsConfig().getItemStack("quests." + questName + ".takeItem");
+        }
     }
 }

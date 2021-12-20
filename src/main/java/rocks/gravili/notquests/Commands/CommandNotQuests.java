@@ -192,11 +192,11 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
 
                                 for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
 
-                                    final Material materialToUse;
+                                    final ItemStack materialToUse;
                                     if (!activeQuest.isCompleted()) {
                                         materialToUse = activeQuest.getQuest().getTakeItem();
                                     } else {
-                                        materialToUse = Material.EMERALD_BLOCK;
+                                        materialToUse = new ItemStack(Material.EMERALD_BLOCK);
                                     }
 
                                     if (main.getConfiguration().showQuestItemAmount) {
@@ -204,9 +204,8 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                     }
 
 
-
                                     group.addElement(new StaticGuiElement('e',
-                                            new ItemStack(materialToUse),
+                                            materialToUse,
                                             count, // Display a number as the item count
                                             click -> {
                                                 player.chat("/notquests progress " + activeQuest.getQuest().getQuestName());
@@ -268,7 +267,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
 
                             for (final Quest quest : main.getQuestManager().getAllQuests()) {
                                 if (quest.isTakeEnabled()) {
-                                    final Material materialToUse = quest.getTakeItem();
+                                    final ItemStack materialToUse = quest.getTakeItem();
 
                                     if (main.getConfiguration().showQuestItemAmount) {
                                         count++;
@@ -290,7 +289,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                     }
 
                                     group.addElement(new StaticGuiElement('e',
-                                            new ItemStack(materialToUse),
+                                            materialToUse,
                                             count, // Display a number as the item count
                                             click -> {
                                                 player.chat("/notquests preview " + quest.getQuestName());
@@ -350,11 +349,11 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
 
                                 for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
 
-                                    final Material materialToUse;
+                                    final ItemStack materialToUse;
                                     if (!activeQuest.isCompleted()) {
                                         materialToUse = activeQuest.getQuest().getTakeItem();
                                     } else {
-                                        materialToUse = Material.EMERALD_BLOCK;
+                                        materialToUse = new ItemStack(Material.EMERALD_BLOCK);
                                     }
 
 
@@ -363,7 +362,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                     }
 
                                     group.addElement(new StaticGuiElement('e',
-                                            new ItemStack(materialToUse),
+                                            materialToUse,
                                             count, // Display a number as the item count
                                             click -> {
                                                 player.chat("/notquests abort " + activeQuest.getQuest().getQuestName());
@@ -420,7 +419,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
 
                             for (final Quest quest : main.getQuestManager().getAllQuests()) {
                                 if (quest.isTakeEnabled()) {
-                                    final Material materialToUse = quest.getTakeItem();
+                                    final ItemStack materialToUse = quest.getTakeItem();
 
 
                                     if (main.getConfiguration().showQuestItemAmount) {
@@ -440,7 +439,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                     }
 
                                     group.addElement(new StaticGuiElement('e',
-                                            new ItemStack(materialToUse),
+                                            materialToUse,
                                             count, // Display a number as the item count
                                             click -> {
                                                 player.chat("/notquests preview " + quest.getQuestName());

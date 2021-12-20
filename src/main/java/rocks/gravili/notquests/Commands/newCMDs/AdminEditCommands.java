@@ -25,7 +25,6 @@ import cloud.commandframework.arguments.standard.BooleanArgument;
 import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.arguments.standard.StringArrayArgument;
-import cloud.commandframework.bukkit.parsers.MaterialArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import net.citizensnpcs.api.CitizensAPI;
@@ -33,14 +32,19 @@ import net.citizensnpcs.api.npc.NPC;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+import rocks.gravili.notquests.Commands.NotQuestColors;
+import rocks.gravili.notquests.Commands.newCMDs.arguments.MaterialOrHandArgument;
+import rocks.gravili.notquests.Commands.newCMDs.arguments.wrappers.MaterialOrHand;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Actions.Action;
 import rocks.gravili.notquests.Structs.Conditions.Condition;
@@ -228,17 +232,51 @@ public class AdminEditCommands {
                 }));
 
         manager.command(editBuilder.literal("takeItem")
-                .argument(MaterialArgument.of("material"), ArgumentDescription.of("Material of item displayed in the Quest take GUI."))
+
+                .argument(MaterialOrHandArgument.of("material", main), ArgumentDescription.of("Material of item displayed in the Quest take GUI."))
+                .flag(
+                        manager.flagBuilder("glow")
+                                .withDescription(ArgumentDescription.of("Makes the item have the enchanted glow."))
+                )
                 .meta(CommandMeta.DESCRIPTION, "Sets the item displayed in the Quest take GUI (default: book).")
                 .handler((context) -> {
                     final Audience audience = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
+                    final boolean glow = context.flags().isPresent("glow");
 
-                    final Material takeItem = context.get("material");
+                    final MaterialOrHand materialOrHand = context.get("material");
+                    ItemStack takeItem;
+                    if (materialOrHand.hand) { //"hand"
+                        if (context.getSender() instanceof Player player) {
+                            takeItem = player.getInventory().getItemInMainHand();
+                        } else {
+                            audience.sendMessage(MiniMessage.miniMessage().parse(
+                                    NotQuestColors.errorGradient + "This must be run by a player."
+                            ));
+                            return;
+                        }
+                    } else {
+                        takeItem = new ItemStack(materialOrHand.material, 1);
+                    }
+                    if (glow) {
+                        takeItem.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 1);
+                        ItemMeta meta = takeItem.getItemMeta();
+                        if (meta == null) {
+                            meta = Bukkit.getItemFactory().getItemMeta(takeItem.getType());
+                            ;
+                        }
+                        if (meta != null) {
+                            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                            takeItem.setItemMeta(meta);
+                        }
+
+                    }
+
+
                     quest.setTakeItem(takeItem);
                     audience.sendMessage(miniMessage.parse(
                             successGradient + "Take Item Material for Quest " + highlightGradient + quest.getQuestName()
-                                    + "</gradient> has been set to " + highlight2Gradient + takeItem.name() + "</gradient>!</gradient>"
+                                    + "</gradient> has been set to " + highlight2Gradient + takeItem.getType().name() + "</gradient>!</gradient>"
                     ));
 
 
