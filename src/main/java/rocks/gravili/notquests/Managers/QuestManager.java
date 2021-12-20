@@ -683,7 +683,7 @@ public class QuestManager {
                     "xgggggggx",
                     "pxxxxxxxn"
             };
-            InventoryGui gui = new InventoryGui(main, player, main.getLanguageManager().getString("gui.availableQuests.title", player), guiSetup);
+            InventoryGui gui = new InventoryGui(main, player, main.getUtilManager().miniMessageToLegacyWithSpigotRGB(main.getLanguageManager().getString("gui.availableQuests.title", player)), guiSetup);
             gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
 
             int count = 0;
@@ -715,9 +715,9 @@ public class QuestManager {
                             return true; // returning true will cancel the click event and stop taking the item
 
                         },
-                        displayName,
-                        description,
-                        main.getLanguageManager().getString("gui.availableQuests.button.questPreview.bottomText", player, questPlayer, quest)
+                        main.getUtilManager().miniMessageToLegacyWithSpigotRGB(displayName),
+                        main.getUtilManager().miniMessageToLegacyWithSpigotRGB(description),
+                        main.getUtilManager().miniMessageToLegacyWithSpigotRGB(main.getLanguageManager().getString("gui.availableQuests.button.questPreview.bottomText", player, questPlayer, quest))
                 ));
 
             }
@@ -793,7 +793,7 @@ public class QuestManager {
                     "xgggggggx",
                     "pxxxxxxxn"
             };
-            InventoryGui gui = new InventoryGui(main, player, main.getLanguageManager().getString("gui.availableQuests.title", player), guiSetup);
+            InventoryGui gui = new InventoryGui(main, player, main.getUtilManager().miniMessageToLegacyWithSpigotRGB(main.getLanguageManager().getString("gui.availableQuests.title", player)), guiSetup);
             gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
 
             int count = 0;
@@ -826,9 +826,9 @@ public class QuestManager {
                             return true; // returning true will cancel the click event and stop taking the item
 
                         },
-                        displayName,
-                        description,
-                        main.getLanguageManager().getString("gui.availableQuests.button.questPreview.bottomText", player, questPlayer, quest)
+                        main.getUtilManager().miniMessageToLegacyWithSpigotRGB(displayName),
+                        main.getUtilManager().miniMessageToLegacyWithSpigotRGB(description),
+                        main.getUtilManager().miniMessageToLegacyWithSpigotRGB(main.getLanguageManager().getString("gui.availableQuests.button.questPreview.bottomText", player, questPlayer, quest))
                 ));
 
             }
