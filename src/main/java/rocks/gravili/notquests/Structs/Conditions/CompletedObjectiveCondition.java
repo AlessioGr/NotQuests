@@ -40,16 +40,16 @@ import java.util.List;
 import static rocks.gravili.notquests.Commands.NotQuestColors.errorGradient;
 
 
-public class ObjectiveCompletedCondition extends Condition {
+public class CompletedObjectiveCondition extends Condition {
 
     private int objectiveID;
 
 
-    public ObjectiveCompletedCondition(NotQuests main) {
+    public CompletedObjectiveCondition(NotQuests main) {
         super(main);
     }
 
-    public void setObjectiveID(final int objectiveID){
+    public void setObjectiveID(final int objectiveID) {
         this.objectiveID = objectiveID;
     }
 
@@ -101,7 +101,7 @@ public class ObjectiveCompletedCondition extends Condition {
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
         if (conditionFor == ConditionFor.OBJECTIVE) {
-            manager.command(builder.literal("CompleteObjective")
+            manager.command(builder.literal("CompletedObjective")
                     .argument(IntegerArgument.<CommandSender>newBuilder("Depending Objective ID").withMin(1).withSuggestionsProvider(
                                     (context, lastString) -> {
                                         final List<String> allArgs = context.getRawInput();
@@ -148,10 +148,10 @@ public class ObjectiveCompletedCondition extends Condition {
 
                         if (dependingObjective != objective) {
 
-                            ObjectiveCompletedCondition objectiveCompletedCondition = new ObjectiveCompletedCondition(main);
-                            objectiveCompletedCondition.setObjectiveID(dependingObjectiveID);
+                            CompletedObjectiveCondition completedObjectiveCondition = new CompletedObjectiveCondition(main);
+                            completedObjectiveCondition.setObjectiveID(dependingObjectiveID);
 
-                            main.getConditionsManager().addCondition(objectiveCompletedCondition, context);
+                            main.getConditionsManager().addCondition(completedObjectiveCondition, context);
                         } else {
                             audience.sendMessage(MiniMessage.miniMessage().parse(errorGradient + "Error: You cannot set an objective to depend on itself!"));
                         }

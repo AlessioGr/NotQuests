@@ -60,13 +60,14 @@ public class ConditionsManager {
     public void registerDefaultConditions() {
         conditions.clear();
         registerCondition("CompletedQuest", CompletedQuestCondition.class);
+        registerCondition("CompletedObjective", CompletedObjectiveCondition.class);
+        registerCondition("ActiveQuest", ActiveQuestCondition.class);
 
         registerCondition("QuestPoints", QuestPointsCondition.class);
         registerCondition("Permission", PermissionCondition.class);
         registerCondition("Money", MoneyCondition.class);
         registerCondition("WorldTime", WorldTimeCondition.class);
         registerCondition("UltimateClansClanLevel", UltimateClansClanLevelCondition.class);
-        registerCondition("ObjectiveCompleted", ObjectiveCompletedCondition.class);
 
         //Towny
         registerCondition("TownyNationName", TownyNationNameCondition.class);

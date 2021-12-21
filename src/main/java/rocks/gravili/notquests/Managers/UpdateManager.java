@@ -5,7 +5,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Actions.ConsoleCommandAction;
-import rocks.gravili.notquests.Structs.Conditions.ObjectiveCompletedCondition;
+import rocks.gravili.notquests.Structs.Conditions.CompletedObjectiveCondition;
 import rocks.gravili.notquests.Structs.Objectives.Objective;
 import rocks.gravili.notquests.Structs.Quest;
 
@@ -61,11 +61,11 @@ public class UpdateManager {
                     main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + objective.getObjectiveID() + ".dependantObjectives", null);
 
                     //Create new stuff with old stuff
-                    ObjectiveCompletedCondition objectiveCompletedCondition = new ObjectiveCompletedCondition(main);
-                    objectiveCompletedCondition.setQuest(quest);
-                    objectiveCompletedCondition.setObjective(objective);
-                    objectiveCompletedCondition.setObjectiveID(dependantObjectiveID);
-                    objective.addCondition(objectiveCompletedCondition, true);
+                    CompletedObjectiveCondition completedObjectiveCondition = new CompletedObjectiveCondition(main);
+                    completedObjectiveCondition.setQuest(quest);
+                    completedObjectiveCondition.setObjective(objective);
+                    completedObjectiveCondition.setObjectiveID(dependantObjectiveID);
+                    objective.addCondition(completedObjectiveCondition, true);
 
                     //Conversion done. Now save conversion
                     main.getDataManager().saveQuestsConfig();
@@ -192,6 +192,12 @@ public class UpdateManager {
         if (oldConditionType.equals("OtherQuest")) {
             main.getLogManager().info("Converting old OtherQuest Condition Type to new CompletedQuest Condition Type...");
             return "CompletedQuest";
+        } else if (oldConditionType.equals("CompleteObjective")) { //TODO: Might be unneeded
+            main.getLogManager().info("Converting old CompleteObjective Condition Type to new CompletedObjective Condition Type...");
+            return "CompletedObjective";
+        } else if (oldConditionType.equals("ObjectiveCompleted")) {
+            main.getLogManager().info("Converting old ObjectiveCompleted Condition Type to new CompletedObjective Condition Type...");
+            return "CompletedObjective";
         }
         return oldConditionType;
     }
