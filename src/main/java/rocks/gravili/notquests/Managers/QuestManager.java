@@ -158,7 +158,7 @@ public class QuestManager {
                             try {
                                 objectiveType = main.getObjectiveManager().getObjectiveClass(main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".objectiveType"));
                             } catch (java.lang.NullPointerException ex) {
-                                main.getDataManager().disablePluginAndSaving("Error parsing objective Type of objective with ID <AQUA>" + objectiveNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "</AQUA>.", ex);
+                                main.getDataManager().disablePluginAndSaving("Error parsing objective Type of objective with ID <AQUA>" + objectiveNumber + "</AQUA>.", quest, ex);
                                 return;
                             }
                             final int progressNeeded = main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".objectives." + objectiveNumber + ".progressNeeded", 1);
@@ -169,7 +169,7 @@ public class QuestManager {
                                 objectiveID = Integer.parseInt(objectiveNumber);
                             } catch (java.lang.NumberFormatException ex) {
                                 validObjectiveID = false;
-                                main.getDataManager().disablePluginAndSaving("Error parsing loaded objective ID <AQUA>" + objectiveNumber + "</AQUA>.", ex);
+                                main.getDataManager().disablePluginAndSaving("Error parsing loaded objective ID <AQUA>" + objectiveNumber + "</AQUA>.", quest, ex);
                                 return;
 
                             }
@@ -187,7 +187,7 @@ public class QuestManager {
                                     objective.load(main.getDataManager().getQuestsConfig(), "quests." + questName + ".objectives." + objectiveNumber);
 
                                 } catch (Exception ex) {
-                                    main.getDataManager().disablePluginAndSaving("Error parsing objective Type of objective with ID <AQUA>" + objectiveNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "</AQUA>.", ex);
+                                    main.getDataManager().disablePluginAndSaving("Error parsing objective Type of objective with ID <AQUA>" + objectiveNumber + "</AQUA>.", quest, ex);
                                     return;
                                 }
 
@@ -211,12 +211,12 @@ public class QuestManager {
                                     objective.setCompletionNPCID(completionNPCID, false);
                                     quest.addObjective(objective, false);
                                 } else {
-                                    main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading quests objective data.");
+                                    main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading quests objective data. Objective ID: <AQUA>" + objectiveNumber, quest);
                                     return;
                                 }
 
                             } else {
-                                main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading quests objective data (2).");
+                                main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading quests objective data (2). Objective ID: <AQUA>" + objectiveNumber, quest);
                                 return;
                             }
                         }
@@ -233,7 +233,7 @@ public class QuestManager {
                                 requirementID = Integer.parseInt(requirementNumber);
                             } catch (java.lang.NumberFormatException ex) {
                                 validRequirementID = false;
-                                main.getDataManager().disablePluginAndSaving("Error parsing loaded requirement ID <AQUA>" + requirementNumber + "</AQUA>.", ex);
+                                main.getDataManager().disablePluginAndSaving("Error parsing loaded requirement ID <AQUA>" + requirementNumber + "</AQUA>.", quest, ex);
                                 return;
                             }
 
@@ -248,7 +248,7 @@ public class QuestManager {
 
                                 conditionType = main.getConditionsManager().getConditionClass(conditionTypeString);
                             } catch (java.lang.NullPointerException ex) {
-                                main.getDataManager().disablePluginAndSaving("Error parsing requirement Type of requirement with ID <AQUA>" + requirementNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "<AQUA>.", ex);
+                                main.getDataManager().disablePluginAndSaving("Error parsing requirement Type of requirement with ID <AQUA>" + requirementNumber + "</AQUA>.", quest, ex);
                                 return;
                             }
 
@@ -264,7 +264,7 @@ public class QuestManager {
                                     condition.setQuest(quest);
                                     condition.load(main.getDataManager().getQuestsConfig(), "quests." + questName + ".requirements." + requirementID);
                                 } catch (Exception ex) {
-                                    main.getDataManager().disablePluginAndSaving("Error parsing requirement Type of requirement with ID <AQUA>" + requirementNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "</AQUA>.");
+                                    main.getDataManager().disablePluginAndSaving("Error parsing requirement Type of requirement with ID <AQUA>" + requirementNumber + "</AQUA>.", quest, ex);
                                     return;
                                 }
                                 if (condition != null) {
@@ -272,7 +272,7 @@ public class QuestManager {
                                 }
 
                             } else {
-                                main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading quests requirement data. Valid Requirement ID: " + validRequirementID + ". requirementID > 0: " + (requirementID > 0) + ". conditionType != null: " + (conditionType != null) + " ConditionTypeString: " + conditionTypeString + " Quest Name: " + questName + " Requirement ID: " + requirementNumber);
+                                main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading quests requirement data. Valid Requirement ID: " + validRequirementID + ". requirementID > 0: " + (requirementID > 0) + ". conditionType != null: " + (conditionType != null) + " ConditionTypeString: " + conditionTypeString + " Quest Name: " + questName + " Requirement ID: " + requirementNumber, quest);
                                 return;
                             }
 
@@ -291,7 +291,7 @@ public class QuestManager {
                                 rewardID = Integer.parseInt(rewardNumber);
                             } catch (java.lang.NumberFormatException ex) {
                                 validRewardID = false;
-                                main.getDataManager().disablePluginAndSaving("Error parsing loaded reward ID <AQUA>" + rewardNumber + "</AQUA>.", ex);
+                                main.getDataManager().disablePluginAndSaving("Error parsing loaded reward ID <AQUA>" + rewardNumber + "</AQUA>.", quest, ex);
                                 return;
                             }
 
@@ -304,7 +304,7 @@ public class QuestManager {
                             try {
                                 actionType = main.getActionManager().getActionClass(actionTypeString);
                             } catch (java.lang.NullPointerException ex) {
-                                main.getDataManager().disablePluginAndSaving("Error parsing reward Type of reward with ID <AQUA>" + rewardNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "<AQUA>.", ex);
+                                main.getDataManager().disablePluginAndSaving("Error parsing reward Type of reward with ID <AQUA>" + rewardNumber + "</AQUA>.", quest, ex);
                                 return;
                             }
 
@@ -317,7 +317,7 @@ public class QuestManager {
                                     reward.load(main.getDataManager().getQuestsConfig(), "quests." + questName + ".rewards." + rewardID);
 
                                 } catch (Exception ex) {
-                                    main.getDataManager().disablePluginAndSaving("Error parsing reward Type of reward with ID <AQUA>" + rewardNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "</AQUA>.", ex);
+                                    main.getDataManager().disablePluginAndSaving("Error parsing reward Type of reward with ID <AQUA>" + rewardNumber + "</AQUA>.", quest, ex);
                                     return;
                                 }
 
@@ -326,11 +326,11 @@ public class QuestManager {
                                     reward.setActionName(rewardDisplayName);
                                     quest.addReward(reward, false);
                                 } else {
-                                    main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading quests reward data.");
+                                    main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading quests reward data for Reward with the ID <AQUA>" + rewardNumber + "</AQUA>.", quest);
                                     return;
                                 }
                             } else {
-                                main.getDataManager().disablePluginAndSaving("Error loading Quest reward <AQUA>" + rewardNumber + "</AQUA> for Quest <AQUA>" + questName + "</AQUA>");
+                                main.getDataManager().disablePluginAndSaving("Error loading Quest reward <AQUA>" + rewardNumber + "</AQUA>.", quest);
                                 return;
                             }
 
@@ -351,7 +351,7 @@ public class QuestManager {
                                 triggerID = Integer.parseInt(triggerNumber);
                             } catch (java.lang.NumberFormatException ex) {
                                 validTriggerID = false;
-                                main.getDataManager().disablePluginAndSaving("Error parsing loaded trigger ID ID <AQUA>" + triggerNumber + "</AQUA>.", ex);
+                                main.getDataManager().disablePluginAndSaving("Error parsing loaded trigger ID ID <AQUA>" + triggerNumber + "</AQUA>.", quest, ex);
                                 return;
                             }
 
@@ -361,7 +361,7 @@ public class QuestManager {
                             try {
                                 triggerType = main.getTriggerManager().getTriggerClass(triggerTypeString);
                             } catch (java.lang.NullPointerException ex) {
-                                main.getDataManager().disablePluginAndSaving("Error parsing trigger Type of trigger with ID <AQUA>" + triggerNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "<AQUA>.");
+                                main.getDataManager().disablePluginAndSaving("Error parsing trigger Type of trigger with ID <AQUA>" + triggerNumber + "</AQUA>.", quest);
                                 return;
                             }
 
@@ -393,7 +393,7 @@ public class QuestManager {
 
                                     trigger.load(main.getDataManager().getQuestsConfig(), "quests." + questName + ".triggers." + triggerNumber);
                                 } catch (Exception ex) {
-                                    main.getDataManager().disablePluginAndSaving("Error parsing requirement Type of trigger with ID <AQUA>" + triggerNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "</AQUA>.", ex);
+                                    main.getDataManager().disablePluginAndSaving("Error parsing requirement Type of trigger with ID <AQUA>" + triggerNumber + "</AQUA>.", quest, ex);
                                     return;
                                 }
                                 if (trigger != null) {
@@ -401,7 +401,7 @@ public class QuestManager {
                                 }
 
                             } else {
-                                main.getDataManager().disablePluginAndSaving("ERROR when loading trigger with the triggerNumber <AQUA>" + triggerNumber + " </AQUA>: Action could not be loaded.");
+                                main.getDataManager().disablePluginAndSaving("ERROR when loading trigger with the triggerNumber <AQUA>" + triggerNumber + " </AQUA>: Action could not be loaded.", quest);
                                 return;
                             }
 
@@ -426,7 +426,7 @@ public class QuestManager {
                                     conditionID = Integer.parseInt(objectiveConditionNumber);
                                 } catch (java.lang.NumberFormatException ex) {
                                     validConditionID = false;
-                                    main.getDataManager().disablePluginAndSaving("Error parsing loaded condition ID <AQUA>" + objectiveConditionNumber + "</AQUA>.", ex);
+                                    main.getDataManager().disablePluginAndSaving("Error parsing loaded condition ID <AQUA>" + objectiveConditionNumber + "</AQUA>.", quest, objective, ex);
                                     return;
                                 }
 
@@ -436,7 +436,7 @@ public class QuestManager {
                                 try {
                                     conditionType = main.getConditionsManager().getConditionClass(conditionTypeString);
                                 } catch (java.lang.NullPointerException ex) {
-                                    main.getDataManager().disablePluginAndSaving("Error parsing condition Type of requirement with ID <AQUA>" + objectiveConditionNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "<AQUA>.", ex);
+                                    main.getDataManager().disablePluginAndSaving("Error parsing condition Type of requirement with ID <AQUA>" + objectiveConditionNumber + "</AQUA>.", quest, objective, ex);
                                     return;
                                 }
 
@@ -452,7 +452,7 @@ public class QuestManager {
                                         condition.setObjective(objective);
                                         condition.load(main.getDataManager().getQuestsConfig(), "quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditions." + objectiveConditionNumber);
                                     } catch (Exception ex) {
-                                        main.getDataManager().disablePluginAndSaving("Error parsing condition Type of requirement with ID <AQUA>" + objectiveConditionNumber + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "</AQUA>.", ex);
+                                        main.getDataManager().disablePluginAndSaving("Error parsing condition Type of requirement with ID <AQUA>" + objectiveConditionNumber + "</AQUA>.", quest, objective, ex);
                                         return;
                                     }
                                     if (condition != null) {
@@ -460,7 +460,7 @@ public class QuestManager {
                                     }
 
                                 } else {
-                                    main.getDataManager().disablePluginAndSaving("Error loading condition. ValidRequirementID: " + validConditionID + " conditionID: " + conditionID + " ConditionTypeNull?" + (conditionType == null) + " ConditionType: " + (conditionType != null ? conditionType.toString() : "null") + " conditionTypeString: " + conditionTypeString);
+                                    main.getDataManager().disablePluginAndSaving("Error loading condition. ValidRequirementID: " + validConditionID + " conditionID: " + conditionID + " ConditionTypeNull?" + (conditionType == null) + " ConditionType: " + (conditionType != null ? conditionType.toString() : "null") + " conditionTypeString: " + conditionTypeString, quest, objective);
                                     return;
                                 }
                             }
@@ -477,7 +477,7 @@ public class QuestManager {
                                     rewardID = Integer.parseInt(objectiveRewardNumber);
                                 } catch (java.lang.NumberFormatException ex) {
                                     validRewardID = false;
-                                    main.getDataManager().disablePluginAndSaving("Error parsing loaded objective reward ID <AQUA>" + objectiveRewardNumber + "</AQUA>.", ex);
+                                    main.getDataManager().disablePluginAndSaving("Error parsing loaded objective reward ID <AQUA>" + objectiveRewardNumber + "</AQUA>.", quest, objective, ex);
                                     return;
                                 }
 
@@ -487,7 +487,7 @@ public class QuestManager {
                                 try {
                                     actionType = main.getActionManager().getActionClass(actionTypeString);
                                 } catch (java.lang.NullPointerException ex) {
-                                    main.getDataManager().disablePluginAndSaving("Error parsing action Type of objective reward with ID <AQUA>" + objectiveRewardNumber + "</AQUA>, Objective with ID <AQUA>" + objective.getObjectiveID() + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "<AQUA>.", ex);
+                                    main.getDataManager().disablePluginAndSaving("Error parsing action Type of objective reward with ID <AQUA>" + objectiveRewardNumber + "</AQUA>.", quest, objective, ex);
                                     return;
                                 }
 
@@ -500,7 +500,7 @@ public class QuestManager {
                                         reward.load(main.getDataManager().getQuestsConfig(), initialObjectiveRewardsPath + rewardID);
 
                                     } catch (Exception ex) {
-                                        main.getDataManager().disablePluginAndSaving("Error parsing reward Type of reward with ID <AQUA>" + objectiveRewardNumber + "</AQUA>, Objective with ID <AQUA>" + objective.getObjectiveID() + "</AQUA> and Quest <AQUA>" + quest.getQuestName() + "</AQUA>.", ex);
+                                        main.getDataManager().disablePluginAndSaving("Error parsing reward Type of reward with ID <AQUA>" + objectiveRewardNumber + "</AQUA>.", quest, objective, ex);
                                         return;
                                     }
 
@@ -513,7 +513,7 @@ public class QuestManager {
                                         return;
                                     }
                                 } else {
-                                    main.getDataManager().disablePluginAndSaving("Error loading Objective reward <AQUA>" + objectiveRewardNumber + "</AQUA> for Objective <AQUA>" + objective.getObjectiveID() + "</AQUA> and Quest <AQUA>" + questName + "</AQUA>");
+                                    main.getDataManager().disablePluginAndSaving("Error loading Objective reward <AQUA>" + objectiveRewardNumber + "</AQUA>.", quest, objective);
                                     return;
                                 }
 

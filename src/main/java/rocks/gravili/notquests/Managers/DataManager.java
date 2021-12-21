@@ -31,7 +31,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.Objectives.Objective;
+import rocks.gravili.notquests.Structs.Quest;
 
 import java.io.*;
 import java.sql.Connection;
@@ -895,10 +898,22 @@ public class DataManager {
         main.getServer().getPluginManager().disablePlugin(main);
     }
 
-    public void disablePluginAndSaving(final String reason, Throwable throwable) {
-        main.getLogManager().severe("Error message:");
-        throwable.printStackTrace();
-        disablePluginAndSaving(reason);
+    public void disablePluginAndSaving(final String reason, Object... objects) {
+
+        main.getLogManager().severe("Plugin, saving and loading has been disabled. Reason: " + reason);
+        setSavingEnabled(false);
+        setLoadingEnabled(false);
+        main.getServer().getPluginManager().disablePlugin(main);
+        for (Object object : objects) {
+            if (object instanceof Throwable throwable) {
+                main.getLogManager().severe("Error message:");
+                throwable.printStackTrace();
+            } else if (object instanceof Quest quest) {
+                main.getLogManager().severe("  <DARK_GRAY>└─</DARK_GRAY> Quest: " + NotQuestColors.highlightGradient + quest.getQuestName() + "</gradient>");
+            } else if (object instanceof Objective objective) {
+                main.getLogManager().severe("  <DARK_GRAY>└─</DARK_GRAY> Objective ID: " + NotQuestColors.highlightGradient + objective.getObjectiveID() + "</gradient> of Quest: " + NotQuestColors.highlight2Gradient + ((Objective) object).getQuest().getQuestName() + "</gradient>");
+            }
+        }
     }
 
     /**
