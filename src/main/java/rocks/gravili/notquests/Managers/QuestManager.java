@@ -240,11 +240,13 @@ public class QuestManager {
                             Class<? extends Condition> conditionType = null;
                             String conditionTypeString = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".requirements." + requirementNumber + ".conditionType", "");
 
+
                             try {
 
                                 if(conditionTypeString.isBlank()){//User might be using old system with requirementType instead of conditionType. Let's convert it!
                                     conditionTypeString = main.getUpdateManager().convertQuestRequirementTypeToConditionType(questName, requirementNumber);
                                 }
+                                conditionTypeString = main.getUpdateManager().convertOldConditionTypesToNewConditionTypes(conditionTypeString);
 
                                 conditionType = main.getConditionsManager().getConditionClass(conditionTypeString);
                             } catch (java.lang.NullPointerException ex) {
@@ -431,7 +433,8 @@ public class QuestManager {
                                 }
 
                                 Class<? extends Condition> conditionType = null;
-                                final String conditionTypeString = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + (objective.getObjectiveID())  + ".conditions."  + objectiveConditionNumber + ".conditionType", "");
+                                String conditionTypeString = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditions." + objectiveConditionNumber + ".conditionType", "");
+                                conditionTypeString = main.getUpdateManager().convertOldConditionTypesToNewConditionTypes(conditionTypeString);
 
                                 try {
                                     conditionType = main.getConditionsManager().getConditionClass(conditionTypeString);
@@ -440,7 +443,7 @@ public class QuestManager {
                                     return;
                                 }
 
-                                int progressNeeded = main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".objectives." + (objective.getObjectiveID())  + ".conditions."  + objectiveConditionNumber + ".progressNeeded");
+                                int progressNeeded = main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditions." + objectiveConditionNumber + ".progressNeeded");
 
                                 if (validConditionID && conditionID > 0 && conditionType != null) {
                                     Condition condition = null;

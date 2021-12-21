@@ -23,6 +23,7 @@ import cloud.commandframework.Command;
 import cloud.commandframework.arguments.flags.CommandFlag;
 import cloud.commandframework.arguments.parser.ArgumentParseResult;
 import cloud.commandframework.arguments.standard.IntegerArgument;
+import cloud.commandframework.arguments.standard.LongArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.arguments.standard.StringArrayArgument;
 import cloud.commandframework.bukkit.CloudBukkitCapabilities;
@@ -97,6 +98,9 @@ public class CommandManager {
     public final CommandFlag<Integer> applyOn; //0 = Quest
     public final CommandFlag<World> world;
     public final CommandFlag<String> triggerWorldString;
+
+    public final CommandFlag<Long> minimumTimeAfterCompletion;
+
 
     public CommandManager(final NotQuests main) {
         this.main = main;
@@ -206,6 +210,12 @@ public class CommandManager {
                 ).single().build())
                 .withDescription(ArgumentDescription.of("World where the Trigger applies (Examples: 'world_the_end', 'farmworld', 'world', 'ALL')."))
                 .build();
+
+        minimumTimeAfterCompletion = CommandFlag
+                .newBuilder("waitTimeAfterCompletion")
+                .withArgument(LongArgument.of("waitTimeAfterCompletion"))
+                .withDescription(ArgumentDescription.of("Enter minimum time you have to wait after completion."))
+                .build(); //0 = Quest
     }
 
     public void preSetupCommands() {

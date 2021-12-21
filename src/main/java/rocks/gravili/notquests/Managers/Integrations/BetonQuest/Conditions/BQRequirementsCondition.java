@@ -60,7 +60,7 @@ public class BQRequirementsCondition extends org.betonquest.betonquest.api.Condi
         }
 
         int requirementInt = 0;
-        if (requirementType == OtherQuestCondition.class) {
+        if (requirementType == CompletedQuestCondition.class) {
             String requirementString = instruction.getPart(2);
             try {
                 requirementInt = Integer.parseInt(instruction.getPart(3));
@@ -68,9 +68,9 @@ public class BQRequirementsCondition extends org.betonquest.betonquest.api.Condi
                 throw new RuntimeException("Invalid number for second argument (amount of requirements needed).");
             }
 
-            condition = new OtherQuestCondition(main);
+            condition = new CompletedQuestCondition(main);
             condition.setProgressNeeded(requirementInt);
-            ((OtherQuestCondition)condition).setOtherQuestName(requirementString);
+            ((CompletedQuestCondition) condition).setOtherQuestName(requirementString);
 
         } else if (requirementType == MoneyCondition.class) {
             try {
@@ -107,7 +107,7 @@ public class BQRequirementsCondition extends org.betonquest.betonquest.api.Condi
         if (condition != null) {
             final Player player = PlayerConverter.getPlayer(playerID);
 
-            if (condition instanceof final OtherQuestCondition otherQuestRequirement) {
+            if (condition instanceof final CompletedQuestCondition otherQuestRequirement) {
                 final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
                 if (questPlayer != null) {
                     final Quest otherQuest = otherQuestRequirement.getOtherQuest();

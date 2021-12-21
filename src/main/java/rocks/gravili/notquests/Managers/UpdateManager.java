@@ -186,4 +186,13 @@ public class UpdateManager {
             return main.getDataManager().getQuestsConfig().getItemStack("quests." + questName + ".takeItem");
         }
     }
+
+    //3.0BETA-9 => 3.0 Release
+    public String convertOldConditionTypesToNewConditionTypes(final String oldConditionType) {
+        if (oldConditionType.equals("OtherQuest")) {
+            main.getLogManager().info("Converting old OtherQuest Condition Type to new CompletedQuest Condition Type...");
+            return "CompletedQuest";
+        }
+        return oldConditionType;
+    }
 }

@@ -185,8 +185,6 @@ public class QuestPlayer {
                             return "<RED>This quest is on a cooldown! You have to wait another <AQUA>" + timeToWaitInDays + " days</AQUA> until you can take it again.";
                         }
                     }
-
-
                 }
             }
 

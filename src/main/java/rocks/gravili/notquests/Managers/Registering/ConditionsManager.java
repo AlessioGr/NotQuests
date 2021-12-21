@@ -59,7 +59,8 @@ public class ConditionsManager {
 
     public void registerDefaultConditions() {
         conditions.clear();
-        registerCondition("OtherQuest", OtherQuestCondition.class);
+        registerCondition("CompletedQuest", CompletedQuestCondition.class);
+
         registerCondition("QuestPoints", QuestPointsCondition.class);
         registerCondition("Permission", PermissionCondition.class);
         registerCondition("Money", MoneyCondition.class);
