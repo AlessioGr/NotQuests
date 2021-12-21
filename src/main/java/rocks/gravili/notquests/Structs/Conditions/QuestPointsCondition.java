@@ -79,7 +79,7 @@ public class QuestPointsCondition extends Condition {
 
     @Override
     public String getConditionDescription() {
-        String description = "<GRAY>-- Quest points needed: " + getQuestPointRequirement();
+        String description = "<GRAY>-- Quest points needed: " + getQuestPointRequirement() + "</GRAY>";
         if (isDeductQuestPoints()) {
             description += "\n<GRAY>--- <RED>Quest points WILL BE DEDUCTED!";
         } else {
