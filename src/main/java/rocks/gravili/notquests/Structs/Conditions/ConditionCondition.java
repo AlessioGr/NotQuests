@@ -47,40 +47,38 @@ public class ConditionCondition extends Condition {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
-        if (conditionFor == ConditionFor.OBJECTIVE) {
-            manager.command(builder.literal("Condition")
-                    .argument(StringArgument.<CommandSender>newBuilder("Condition Identifier").withSuggestionsProvider(
-                            (context, lastString) -> {
-                                final List<String> allArgs = context.getRawInput();
-                                final Audience audience = main.adventure().sender(context.getSender());
-                                main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Condition Identifier (name)]", "");
+        manager.command(builder.literal("Condition")
+                .argument(StringArgument.<CommandSender>newBuilder("Condition Identifier").withSuggestionsProvider(
+                        (context, lastString) -> {
+                            final List<String> allArgs = context.getRawInput();
+                            final Audience audience = main.adventure().sender(context.getSender());
+                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Condition Identifier (name)]", "");
 
-                                return new ArrayList<>(main.getConditionsYMLManager().getConditionsAndIdentifiers().keySet());
+                            return new ArrayList<>(main.getConditionsYMLManager().getConditionsAndIdentifiers().keySet());
 
-                            }
-                    ).single().build(), ArgumentDescription.of("Condition Identifier"))
-                    .meta(CommandMeta.DESCRIPTION, "Adds a new Condition Condition to a quest (checks for another condition from conditions.yml)")
-                    .handler((context) -> {
-                        final Audience audience = main.adventure().sender(context.getSender());
-
-
-                        final String conditionIdentifier = context.get("Condition Identifier");
-
-                        final Condition foundCondition = main.getConditionsYMLManager().getCondition(conditionIdentifier);
-
-                        if (foundCondition != null) {
-
-                            ConditionCondition conditionCondition = new ConditionCondition(main);
-                            conditionCondition.setCondition(foundCondition);
-
-                            main.getConditionsManager().addCondition(conditionCondition, context);
-                        } else {
-                            audience.sendMessage(MiniMessage.miniMessage().parse(errorGradient + "Error! Condition with the name " + highlightGradient + conditionIdentifier + "</gradient> does not exist!</gradient>"));
                         }
+                ).single().build(), ArgumentDescription.of("Condition Identifier"))
+                .meta(CommandMeta.DESCRIPTION, "Adds a new Condition Condition to a quest (checks for another condition from conditions.yml)")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
 
 
-                    }));
-        }
+                    final String conditionIdentifier = context.get("Condition Identifier");
+
+                    final Condition foundCondition = main.getConditionsYMLManager().getCondition(conditionIdentifier);
+
+                    if (foundCondition != null) {
+
+                        ConditionCondition conditionCondition = new ConditionCondition(main);
+                        conditionCondition.setCondition(foundCondition);
+
+                        main.getConditionsManager().addCondition(conditionCondition, context);
+                    } else {
+                        audience.sendMessage(MiniMessage.miniMessage().parse(errorGradient + "Error! Condition with the name " + highlightGradient + conditionIdentifier + "</gradient> does not exist!</gradient>"));
+                    }
+
+
+                }));
     }
 
     public final Condition getCondition() {
