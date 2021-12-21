@@ -377,35 +377,37 @@ public class AdminConversationCommands {
                 }));
 
 
-        manager.command(conversationBuilder.literal("edit")
-                .argument(ConversationSelector.of("conversation", main), ArgumentDescription.of("Name of the Conversation."))
-                .literal("npc")
-                .argument(IntegerArgument.<CommandSender>newBuilder("NPC").withSuggestionsProvider((context, lastString) -> {
-                    ArrayList<String> completions = new ArrayList<>();
-                    completions.add("-1");
-                    for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
-                        completions.add("" + npc.getId());
-                    }
-                    final List<String> allArgs = context.getRawInput();
-                    final Audience audience = main.adventure().sender(context.getSender());
-                    main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[NPC ID]", "");
+        if (main.getIntegrationsManager().isCitizensEnabled()) {
+            manager.command(conversationBuilder.literal("edit")
+                    .argument(ConversationSelector.of("conversation", main), ArgumentDescription.of("Name of the Conversation."))
+                    .literal("npc")
+                    .argument(IntegerArgument.<CommandSender>newBuilder("NPC").withSuggestionsProvider((context, lastString) -> {
+                        ArrayList<String> completions = new ArrayList<>();
+                        completions.add("-1");
+                        for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
+                            completions.add("" + npc.getId());
+                        }
+                        final List<String> allArgs = context.getRawInput();
+                        final Audience audience = main.adventure().sender(context.getSender());
+                        main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[NPC ID]", "");
 
-                    return completions;
-                }).build(), ArgumentDescription.of("ID of the Citizens NPC which should start the conversation (set to -1 to disable)"))
-                .meta(CommandMeta.DESCRIPTION, "Set conversation NPC (-1 = disabled)")
-                .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
+                        return completions;
+                    }).build(), ArgumentDescription.of("ID of the Citizens NPC which should start the conversation (set to -1 to disable)"))
+                    .meta(CommandMeta.DESCRIPTION, "Set conversation NPC (-1 = disabled)")
+                    .handler((context) -> {
+                        final Audience audience = main.adventure().sender(context.getSender());
 
-                    final Conversation foundConversation = context.get("conversation");
-                    final int npcID = context.get("NPC");
+                        final Conversation foundConversation = context.get("conversation");
+                        final int npcID = context.get("NPC");
 
-                    foundConversation.setNPC(npcID);
+                        foundConversation.setNPC(npcID);
 
-                    audience.sendMessage(miniMessage.parse(
-                            mainGradient + "NPC of conversation " + highlightGradient + foundConversation.getIdentifier() + "</gradient> has been set to "
-                                    + highlight2Gradient + npcID + "</gradient>!"
-                    ));
-                }));
+                        audience.sendMessage(miniMessage.parse(
+                                mainGradient + "NPC of conversation " + highlightGradient + foundConversation.getIdentifier() + "</gradient> has been set to "
+                                        + highlight2Gradient + npcID + "</gradient>!"
+                        ));
+                    }));
+        }
 
 
         manager.command(conversationBuilder.literal("edit")
