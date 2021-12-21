@@ -1,5 +1,5 @@
 npcID: -1
-start: Atlas.greeting1
+start: Atlas.specialgreeting,Atlas.greeting1
 Lines:
   Atlas:
     color: "<BLUE>"
@@ -7,6 +7,10 @@ Lines:
       text: "Hello traveler! I am atlas, the keeper of time!"
       next: Player.greeting1,Player.greeting2
       shout: true
+    specialgreeting:
+      text: "I don't wanna talk to you fulfill this condition. Bye!"
+      conditions:
+        - condition hasAActive
     answer1:
       text: "That's a secret, but without me, you all wouldn't exist."
       next: Atlas.answer3
