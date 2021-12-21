@@ -1,6 +1,7 @@
 package rocks.gravili.notquests.Managers.Integrations;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
+import io.lumine.xikage.mythicmobs.api.exceptions.InvalidMobTypeException;
 import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import org.bukkit.Location;
 import rocks.gravili.notquests.NotQuests;
@@ -33,8 +34,13 @@ public class MythicMobsManager {
             return;
         }
 
-        for (int i = 0; i < amount; i++) {
-            mythicMobs.getMobManager().spawnMob(foundMythicMob.getEntityType(), location);
+
+        try {
+            for (int i = 0; i < amount; i++) {
+                mythicMobs.getAPIHelper().spawnMythicMob(foundMythicMob, location, 1);
+            }
+        } catch (InvalidMobTypeException e) {
+            main.getLogManager().warn("Tried to spawn mythic mob, but the mythic mob " + mobToSpawnType + " is invalid.");
         }
 
 
