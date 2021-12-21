@@ -24,6 +24,7 @@ import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.bukkit.parsers.WorldArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
@@ -135,6 +136,18 @@ public class SpawnMobAction extends Action {
 
     @Override
     public void execute(final Player player, Object... objects) {
+        if (!Bukkit.isPrimaryThread()) { //Can only be run in main thread (at least for bukkit entities) :(
+            Bukkit.getScheduler().runTask(main, () -> {
+                execute2(player, objects);
+            });
+        } else {
+            execute2(player, objects);
+        }
+
+
+    }
+
+    public void execute2(final Player player, Object... objects) {
         try {
             EntityType entityType = EntityType.valueOf(getMobToSpawnType());
 
@@ -164,7 +177,6 @@ public class SpawnMobAction extends Action {
                 }
             }
         }
-
     }
 
     @Override
