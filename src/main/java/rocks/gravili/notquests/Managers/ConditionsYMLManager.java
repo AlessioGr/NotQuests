@@ -137,7 +137,7 @@ public class ConditionsYMLManager {
     public void saveConditions() {
         try {
             conditionsConfig.save(conditionsConfigFile);
-            main.getLogManager().info("Saved Data to condition.yml");
+            main.getLogManager().info("Saved Data to conditions.yml");
         } catch (IOException e) {
             main.getLogManager().severe("Error saving condition. Condition were not saved...");
 
@@ -165,9 +165,9 @@ public class ConditionsYMLManager {
         if (!nameAlreadyExists) {
             conditionsAndIdentifiers.put(conditionIdentifier, condition);
 
-            getConditionsConfig().set("condition." + conditionIdentifier + ".conditionType", condition.getConditionType());
+            getConditionsConfig().set("conditions." + conditionIdentifier + ".conditionType", condition.getConditionType());
 
-            condition.save(getConditionsConfig(), "condition." + conditionIdentifier);
+            condition.save(getConditionsConfig(), "conditions." + conditionIdentifier);
 
             saveConditions();
 
