@@ -274,6 +274,7 @@ public class ConversationManager {
 
                 //Construct the ConversationLine
                 ConversationLine startLine = new ConversationLine(foundSpeaker, starterLine.split("\\.")[1], message);
+                //Actions
                 if (actions != null && actions.size() > 0) {
                     for (Action action : actions) {
                         startLine.addAction(action);
@@ -366,6 +367,7 @@ public class ConversationManager {
                     }
 
                     ConversationLine newLine = new ConversationLine(foundSpeaker, nextLineFullIdentifier.split("\\.")[1], message);
+                    //Actions
                     if (actions != null && actions.size() > 0) {
                         for (Action action : actions) {
                             main.getLogManager().debug("Found an action!");
@@ -455,18 +457,21 @@ public class ConversationManager {
             ArrayList<Condition> conditions = new ArrayList<>();
             for (String conditionString : allConditionsString) {
                 main.getLogManager().debug("<GREEN>Trying to find condition in: " + conditionString);
+                if (conditionString.startsWith("condition ")) {
 
-                final Condition foundCondition = main.getConditionsManager().getConditionFromString(conditionString);
+                    final Condition foundCondition = main.getConditionsYMLManager().getCondition(conditionString.replace("condition ", "").replace(" ", ""));
+                    if (foundCondition != null) {
+                        main.getLogManager().debug("Found conversation line condition: " + foundCondition.getConditionName());
+                        conditions.add(foundCondition);
+                    } else {
+                        main.getLogManager().warn("Unable to find conversation line condition: " + conditionString);
+                    }
 
-                if (foundCondition != null) {
-                    main.getLogManager().debug("Found conversation line condition: " + foundCondition.getConditionType());
-                    conditions.add(foundCondition);
+                } else {
+                    main.getLogManager().warn("Inline-defining condition is not possible in this version yet.");
                 }
-
-
             }
             return conditions;
-
         }
         return null;
     }
@@ -478,7 +483,7 @@ public class ConversationManager {
                 main.getLogManager().debug("<GREEN>Trying to find action in: " + actionString);
                 if (actionString.startsWith("action ")) {
 
-                    final Action foundAction = main.getActionsManager().getAction(actionString.replace("action ", "").replace(" ", ""));
+                    final Action foundAction = main.getActionsYMLManager().getAction(actionString.replace("action ", "").replace(" ", ""));
                     if (foundAction != null) {
                         main.getLogManager().debug("Found conversation line action: " + foundAction.getActionName());
                         actions.add(foundAction);

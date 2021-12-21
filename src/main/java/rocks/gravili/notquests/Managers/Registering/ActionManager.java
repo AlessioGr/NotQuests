@@ -142,8 +142,8 @@ public class ActionManager {
         } else {
             if (actionIdentifier != null && !actionIdentifier.isBlank()) { //actions.yml
 
-                if (main.getActionsManager().getAction(actionIdentifier) == null) {
-                    main.getActionsManager().addAction(actionIdentifier, action);
+                if (main.getActionsYMLManager().getAction(actionIdentifier) == null) {
+                    main.getActionsYMLManager().addAction(actionIdentifier, action);
                     audience.sendMessage(MiniMessage.miniMessage().parse(
                             NotQuestColors.successGradient + getActionType(action.getClass()) + " Action with the name " + NotQuestColors.highlightGradient
                                     + actionIdentifier + "</gradient> has been created successfully!</gradient>"

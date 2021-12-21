@@ -75,6 +75,8 @@ public class CommandManager {
     private Command.Builder<CommandSender> adminEditObjectiveAddRewardCommandBuilder;
 
     private Command.Builder<CommandSender> adminAddActionCommandBuilder;
+    private Command.Builder<CommandSender> adminAddConditionCommandBuilder;
+
 
     private Command.Builder<CommandSender> editObjectivesBuilder;
 
@@ -286,6 +288,21 @@ public class CommandManager {
                     .literal("rewards", "rew")
                     .literal("add");
 
+
+            adminAddConditionCommandBuilder = adminCommandBuilder.literal("conditions")
+                    .literal("add")
+                    .argument(StringArgument.<CommandSender>newBuilder("Condition Identifier").withSuggestionsProvider(
+                            (context, lastString) -> {
+                                final List<String> allArgs = context.getRawInput();
+                                final Audience audience = main.adventure().sender(context.getSender());
+                                main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[New, unique Condition Identifier]", "...");
+
+                                ArrayList<String> completions = new ArrayList<>();
+
+                                completions.add("[Enter new, unique Condition Identifier]");
+                                return completions;
+                            }));
+
             adminAddActionCommandBuilder = adminCommandBuilder.literal("actions")
                     .literal("add")
                     .argument(StringArgument.<CommandSender>newBuilder("Action Identifier").withSuggestionsProvider(
@@ -483,6 +500,10 @@ public class CommandManager {
 
     public final Command.Builder<CommandSender> getAdminAddActionCommandBuilder() {
         return adminAddActionCommandBuilder;
+    }
+
+    public final Command.Builder<CommandSender> getAdminAddConditionCommandBuilder() {
+        return adminAddConditionCommandBuilder;
     }
 
     public final Command.Builder<CommandSender> getEditObjectivesBuilder() {

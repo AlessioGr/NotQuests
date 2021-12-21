@@ -26,6 +26,7 @@ import rocks.gravili.notquests.Structs.QuestPlayer;
 
 public abstract class Condition {
     protected final NotQuests main;
+    private String conditionName = "";
     private long progressNeeded = 1;
     private Quest quest;
     private Objective objective;
@@ -56,8 +57,16 @@ public abstract class Condition {
         return quest;
     }
 
-    public final Objective getObjective(){
+    public final Objective getObjective() {
         return objective;
+    }
+
+    public final String getConditionName() {
+        return conditionName;
+    }
+
+    public void setConditionName(final String conditionName) {
+        this.conditionName = conditionName;
     }
 
 

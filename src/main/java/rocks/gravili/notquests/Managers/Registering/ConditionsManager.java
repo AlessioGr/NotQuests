@@ -40,6 +40,9 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
 
+import static rocks.gravili.notquests.Commands.NotQuestColors.errorGradient;
+import static rocks.gravili.notquests.Commands.NotQuestColors.highlightGradient;
+
 public class ConditionsManager {
     private final NotQuests main;
 
@@ -81,6 +84,7 @@ public class ConditionsManager {
             Method commandHandler = condition.getMethod("handleCommands", main.getClass(), PaperCommandManager.class, Command.Builder.class, ConditionFor.class);
             commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddRequirementCommandBuilder(), ConditionFor.QUEST);
             commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddConditionCommandBuilder(), ConditionFor.OBJECTIVE);
+            commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminAddConditionCommandBuilder(), ConditionFor.ConditionsYML); //For Actions.yml
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -122,6 +126,8 @@ public class ConditionsManager {
             objectiveOfQuest = quest.getObjectiveFromID(objectiveID);
         }
 
+        String conditionIdentifier = context.getOrDefault("Condition Identifier", "");
+
         if (quest != null) {
             condition.setQuest(quest);
             if (objectiveOfQuest != null) {//Objective Condition
@@ -139,6 +145,20 @@ public class ConditionsManager {
                         NotQuestColors.successGradient + getConditionType(condition.getClass()) + " Requirement successfully added to Quest " + NotQuestColors.highlightGradient
                                 + quest.getQuestName() + "</gradient>!</gradient>"
                 ));
+            }
+        } else {
+            if (conditionIdentifier != null && !conditionIdentifier.isBlank()) { //actions.yml
+
+                if (main.getConditionsYMLManager().getCondition(conditionIdentifier) == null) {
+                    main.getConditionsYMLManager().addCondition(conditionIdentifier, condition);
+                    audience.sendMessage(MiniMessage.miniMessage().parse(
+                            NotQuestColors.successGradient + getConditionType(condition.getClass()) + " Condition with the name " + NotQuestColors.highlightGradient
+                                    + conditionIdentifier + "</gradient> has been created successfully!</gradient>"
+                    ));
+                } else {
+                    audience.sendMessage(MiniMessage.miniMessage().parse(errorGradient + "Error! A condition with the name " + highlightGradient + conditionIdentifier + "</gradient> already exists!</gradient>"));
+
+                }
             }
         }
     }

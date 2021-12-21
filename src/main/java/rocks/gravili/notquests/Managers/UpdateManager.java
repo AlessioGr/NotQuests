@@ -94,7 +94,7 @@ public class UpdateManager {
                 consoleCommandAction.setConsoleCommand(consoleCommand);
                 consoleCommandAction.setActionName(actionIdentifier);
 
-                main.getActionsManager().addAction(actionIdentifier, consoleCommandAction);
+                main.getActionsYMLManager().addAction(actionIdentifier, consoleCommandAction);
 
                 main.getLogManager().info("Migrated the following action from quests.yml to actions.yml: <AQUA>" + actionIdentifier + "</AQUA>");
             }
@@ -106,12 +106,12 @@ public class UpdateManager {
 
 
         //save them to write them to the actions.yml (in case of migration)
-        main.getActionsManager().saveActions();
+        main.getActionsYMLManager().saveActions();
     }
 
     public void convertActionsYMLBeforeVersion3() { //Pre-3.0
         boolean convertedSomething = false;
-        final ConfigurationSection oldActionsConfigurationSection = main.getActionsManager().getActionsConfig().getConfigurationSection("actions");
+        final ConfigurationSection oldActionsConfigurationSection = main.getActionsYMLManager().getActionsConfig().getConfigurationSection("actions");
         if (oldActionsConfigurationSection != null) {
             for (final String actionIdentifier : oldActionsConfigurationSection.getKeys(false)) {
                 String oldActionsType = oldActionsConfigurationSection.getString(actionIdentifier + ".type", "");
@@ -124,7 +124,7 @@ public class UpdateManager {
         }
         if (convertedSomething) {
             //save them to write them to the actions.yml (in case of migration)
-            main.getActionsManager().saveActions();
+            main.getActionsYMLManager().saveActions();
             main.getLogManager().info("Updated old actions.yml!");
         }
 
@@ -170,7 +170,7 @@ public class UpdateManager {
         actionsConfigurationSection.set(actionIdentifier + ".type", null);
         actionsConfigurationSection.set(actionIdentifier + ".actionType", oldActionType);
 
-        main.getActionsManager().saveActions();
+        main.getActionsYMLManager().saveActions();
         return oldActionType;
     }
 

@@ -30,7 +30,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
-public class ActionsManager {
+public class ActionsYMLManager {
     private final NotQuests main;
     private final HashMap<String, Action> actionsAndIdentifiers;
     /**
@@ -43,7 +43,7 @@ public class ActionsManager {
     private FileConfiguration actionsConfig;
 
 
-    public ActionsManager(final NotQuests main) {
+    public ActionsYMLManager(final NotQuests main) {
         this.main = main;
         actionsAndIdentifiers = new HashMap<>();
 
@@ -155,8 +155,8 @@ public class ActionsManager {
         return actionsAndIdentifiers;
     }
 
-    public final Action getAction(String actionIdentifer) {
-        return actionsAndIdentifiers.get(actionIdentifer);
+    public final Action getAction(String actionIdentifier) {
+        return actionsAndIdentifiers.get(actionIdentifier);
     }
 
 
@@ -185,7 +185,7 @@ public class ActionsManager {
 
     public String removeAction(String actionToDeleteIdentifier) {
         actionsAndIdentifiers.remove(actionToDeleteIdentifier);
-        main.getDataManager().getQuestsConfig().set("actions." + actionToDeleteIdentifier, null);
+        getActionsConfig().set("actions." + actionToDeleteIdentifier, null);
         return NotQuestColors.successGradient + "Action " + NotQuestColors.highlightGradient + actionToDeleteIdentifier + "</gradient> successfully deleted!";
     }
 }

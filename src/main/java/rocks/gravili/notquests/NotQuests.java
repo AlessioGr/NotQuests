@@ -62,7 +62,8 @@ public final class NotQuests extends JavaPlugin {
     private UtilManager utilManager;
     private LogManager logManager;
     private DataManager dataManager;
-    private ActionsManager actionsManager;
+    private ActionsYMLManager actionsYMLManager;
+    private ConditionsYMLManager conditionsYMLManager;
     private QuestManager questManager;
     private QuestPlayerManager questPlayerManager;
     private LanguageManager languageManager;
@@ -155,12 +156,12 @@ public final class NotQuests extends JavaPlugin {
         utilManager = new UtilManager(this);
 
 
-
         //Create a new instance of the Performance Manager which will be re-used everywhere
         performanceManager = new PerformanceManager(this);
 
 
-        actionsManager = new ActionsManager(this);
+        actionsYMLManager = new ActionsYMLManager(this);
+        conditionsYMLManager = new ConditionsYMLManager(this);
 
 
         integrationsManager.enableIntegrations();
@@ -228,8 +229,11 @@ public final class NotQuests extends JavaPlugin {
 
         integrationsManager.registerEvents();
 
+        conditionsYMLManager.loadConditions();
+
+
         //Load actions first, as they are needed for triggers loading in dataManager.reloadData()
-        actionsManager.loadActions();
+        actionsYMLManager.loadActions();
 
         //This finally starts loading all Config-, Quest-, and Player Data. Reload = Load
         dataManager.reloadData();
@@ -320,7 +324,7 @@ public final class NotQuests extends JavaPlugin {
                         }
                     }
                 }
-                for (Action action : getActionsManager().getActionsAndIdentifiers().values()) {
+                for (Action action : getActionsYMLManager().getActionsAndIdentifiers().values()) {
                     String actionType = action.getActionType();
                     map.put(actionType, map.getOrDefault(actionType, 0) + 1);
                 }
@@ -411,8 +415,12 @@ public final class NotQuests extends JavaPlugin {
         return dataManager;
     }
 
-    public ActionsManager getActionsManager() {
-        return actionsManager;
+    public ActionsYMLManager getActionsYMLManager() {
+        return actionsYMLManager;
+    }
+
+    public ConditionsYMLManager getConditionsYMLManager() {
+        return conditionsYMLManager;
     }
 
     /**

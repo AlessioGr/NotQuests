@@ -40,6 +40,7 @@ import rocks.gravili.notquests.Commands.newCMDs.arguments.QuestSelector;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Actions.Action;
 import rocks.gravili.notquests.Structs.*;
+import rocks.gravili.notquests.Structs.Conditions.Condition;
 import rocks.gravili.notquests.Structs.Objectives.Objective;
 import rocks.gravili.notquests.Structs.Objectives.TriggerCommandObjective;
 
@@ -116,7 +117,7 @@ public class AdminCommands {
                     audience.sendMessage(miniMessage.parse(main.getQuestManager().deleteQuest(context.get("Quest Name"))));
                 }));
 
-
+        handleConditions();
         handleActions();
 
         manager.command(builder.literal("give")
@@ -904,9 +905,55 @@ public class AdminCommands {
                 }));
 
 
-
     }
 
+
+    public void handleConditions() {
+
+        manager.command(builder.literal("conditions")
+                .literal("edit")
+                .argument(StringArgument.<CommandSender>newBuilder("Condition Identifier").withSuggestionsProvider(
+                        (context, lastString) -> {
+                            final List<String> allArgs = context.getRawInput();
+                            final Audience audience = main.adventure().sender(context.getSender());
+                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Condition Identifier (name)]", "[...]");
+
+                            return new ArrayList<>(main.getConditionsYMLManager().getConditionsAndIdentifiers().keySet());
+
+                        }
+                ).single().build(), ArgumentDescription.of("Condition Identifier"))
+                .literal("delete", "remove")
+                .meta(CommandMeta.DESCRIPTION, "Removes a condition")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+
+                    final String conditionIdentifier = context.get("Condition Identifier");
+
+                    if (main.getConditionsYMLManager().getCondition(conditionIdentifier) != null) {
+
+                        main.getConditionsYMLManager().removeCondition(conditionIdentifier);
+                        audience.sendMessage(miniMessage.parse(successGradient + "Condition with the name " + highlightGradient + conditionIdentifier + "</gradient> has been deleted.</gradient>"));
+
+                    } else {
+                        audience.sendMessage(miniMessage.parse(errorGradient + "Error! Condition with the name " + highlightGradient + conditionIdentifier + "</gradient> does not exist!</gradient>"));
+                    }
+                }));
+
+        manager.command(builder.literal("conditions")
+                .literal("list")
+                .meta(CommandMeta.DESCRIPTION, "Shows all existing conditions.")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+                    int counter = 1;
+                    audience.sendMessage(miniMessage.parse(highlightGradient + "All Conditions:"));
+                    for (final String conditionIdentifier : main.getConditionsYMLManager().getConditionsAndIdentifiers().keySet()) {
+                        final Condition condition = main.getConditionsYMLManager().getCondition(conditionIdentifier);
+                        audience.sendMessage(miniMessage.parse(highlightGradient + counter + ".</gradient> " + mainGradient + conditionIdentifier));
+                        audience.sendMessage(miniMessage.parse(veryUnimportant + "  └─ " + unimportant + "Type: " + highlight2Gradient + condition.getConditionType()));
+                        counter += 1;
+                    }
+                }));
+    }
 
     public void handleActions() {
 
@@ -918,7 +965,7 @@ public class AdminCommands {
                             final Audience audience = main.adventure().sender(context.getSender());
                             main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Action Identifier (name)]", "[...]");
 
-                            return new ArrayList<>(main.getActionsManager().getActionsAndIdentifiers().keySet());
+                            return new ArrayList<>(main.getActionsYMLManager().getActionsAndIdentifiers().keySet());
 
                         }
                 ).single().build(), ArgumentDescription.of("Action Identifier"))
@@ -929,9 +976,9 @@ public class AdminCommands {
 
                     final String actionIdentifier = context.get("Action Identifier");
 
-                    if (main.getActionsManager().getAction(actionIdentifier) != null) {
+                    if (main.getActionsYMLManager().getAction(actionIdentifier) != null) {
 
-                        main.getActionsManager().removeAction(actionIdentifier);
+                        main.getActionsYMLManager().removeAction(actionIdentifier);
                         audience.sendMessage(miniMessage.parse(successGradient + "Action with the name " + highlightGradient + actionIdentifier + "</gradient> has been deleted.</gradient>"));
 
                     } else {
@@ -947,8 +994,8 @@ public class AdminCommands {
                     final Audience audience = main.adventure().sender(context.getSender());
                     int counter = 1;
                     audience.sendMessage(miniMessage.parse(highlightGradient + "All Actions:"));
-                    for (final String actionIdentifier : main.getActionsManager().getActionsAndIdentifiers().keySet()) {
-                        final Action action = main.getActionsManager().getAction(actionIdentifier);
+                    for (final String actionIdentifier : main.getActionsYMLManager().getActionsAndIdentifiers().keySet()) {
+                        final Action action = main.getActionsYMLManager().getAction(actionIdentifier);
                         audience.sendMessage(miniMessage.parse(highlightGradient + counter + ".</gradient> " + mainGradient + actionIdentifier));
                         audience.sendMessage(miniMessage.parse(veryUnimportant + "  └─ " + unimportant + "Type: " + highlight2Gradient + action.getActionType()));
                         counter += 1;

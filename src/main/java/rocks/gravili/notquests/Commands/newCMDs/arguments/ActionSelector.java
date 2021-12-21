@@ -111,7 +111,7 @@ public class ActionSelector<C> extends CommandArgument<C, Action> {
         @NotNull
         @Override
         public List<String> suggestions(@NotNull CommandContext<C> context, @NotNull String input) {
-            List<String> questNames = new java.util.ArrayList<>(main.getActionsManager().getActionsAndIdentifiers().keySet());
+            List<String> questNames = new java.util.ArrayList<>(main.getActionsYMLManager().getActionsAndIdentifiers().keySet());
             final Audience audience = main.adventure().sender((CommandSender) context.getSender());
             final List<String> allArgs = context.getRawInput();
 
@@ -126,7 +126,7 @@ public class ActionSelector<C> extends CommandArgument<C, Action> {
                 return ArgumentParseResult.failure(new NoInputProvidedException(ActionsParser.class, context));
             }
             final String input = inputQueue.peek();
-            final Action foundAction = main.getActionsManager().getAction(input);
+            final Action foundAction = main.getActionsYMLManager().getAction(input);
             inputQueue.remove();
 
             if (foundAction == null) {

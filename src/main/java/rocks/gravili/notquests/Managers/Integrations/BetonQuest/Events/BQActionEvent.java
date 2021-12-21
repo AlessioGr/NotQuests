@@ -74,7 +74,7 @@ public class BQActionEvent extends QuestEvent {
             }
         }
 
-        this.action = main.getActionsManager().getAction(actionName);
+        this.action = main.getActionsYMLManager().getAction(actionName);
 
         if (action == null) {
             throw new InstructionParseException("NotQuests Action with the name '" + actionName + "' does not exist.");

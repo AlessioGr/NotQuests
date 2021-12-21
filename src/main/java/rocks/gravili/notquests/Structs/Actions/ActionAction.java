@@ -98,7 +98,7 @@ public class ActionAction extends Action {
     @Override
     public void load(final FileConfiguration configuration, String initialPath) {
         String actionName = configuration.getString(initialPath + ".specifics.action");
-        this.action = main.getActionsManager().getAction(actionName);
+        this.action = main.getActionsYMLManager().getAction(actionName);
         if (action == null) {
             main.getLogManager().warn("Error: ActionAction cannot find the action with name " + actionName + ". Action Path: " + initialPath);
         }

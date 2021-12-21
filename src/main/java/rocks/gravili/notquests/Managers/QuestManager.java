@@ -377,7 +377,7 @@ public class QuestManager {
                             }
 
 
-                            Action foundAction = main.getActionsManager().getAction(triggerActionName);
+                            Action foundAction = main.getActionsYMLManager().getAction(triggerActionName);
 
                             if (validTriggerID && triggerID > 0 && triggerType != null && foundAction != null) {
                                 Trigger trigger = null;
