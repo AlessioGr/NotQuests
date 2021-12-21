@@ -615,6 +615,61 @@ public class AdminCommands {
                     audience.sendMessage(miniMessage.parse(mainGradient + "Current NotQuests version: " + highlightGradient + main.getDescription().getVersion()));
                 }));
 
+
+        manager.command(builder.literal("debug")
+                .literal("testcommand")
+                .meta(CommandMeta.DESCRIPTION, "You can probably ignore this.")
+                .senderType(Player.class)
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+                    audience.sendMessage(Component.empty());
+                    Player player = (Player) context.getSender();
+                    ArrayList<Component> history = main.getConversationManager().getChatHistory().get(player.getUniqueId());
+                    if (history != null) {
+                        Component collectiveComponent = Component.text("");
+                        for (Component component : history) {
+                            if (component != null) {
+                                // audience.sendMessage(component.append(Component.text("fg9023zf729ofz")));
+                                collectiveComponent = collectiveComponent.append(component).append(Component.newline());
+                            }
+                        }
+
+                        audience.sendMessage(collectiveComponent);
+
+                    } else {
+                        audience.sendMessage(miniMessage.parse(errorGradient + "No chat history!"));
+                    }
+
+                }));
+
+
+        manager.command(builder.literal("debug")
+                .literal("testcommand2")
+                .meta(CommandMeta.DESCRIPTION, "You can probably ignore this.")
+                .senderType(Player.class)
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+                    audience.sendMessage(Component.empty());
+                    Player player = (Player) context.getSender();
+                    ArrayList<Component> history = main.getConversationManager().getChatHistory().get(player.getUniqueId());
+                    if (history != null) {
+                        Component collectiveComponent = Component.text("");
+                        for (int i = 0; i < history.size(); i++) {
+                            Component component = history.get(i);
+                            if (component != null) {
+                                // audience.sendMessage(component.append(Component.text("fg9023zf729ofz")));
+                                collectiveComponent = collectiveComponent.append(Component.text(i + ".", NamedTextColor.RED).append(component)).append(Component.newline());
+                            }
+                        }
+
+                        audience.sendMessage(collectiveComponent);
+
+                    } else {
+                        audience.sendMessage(miniMessage.parse(errorGradient + "No chat history!"));
+                    }
+
+                }));
+
     }
 
 
@@ -898,61 +953,6 @@ public class AdminCommands {
                         audience.sendMessage(miniMessage.parse(veryUnimportant + "  └─ " + unimportant + "Type: " + highlight2Gradient + action.getActionType()));
                         counter += 1;
                     }
-                }));
-
-
-        manager.command(builder.literal("debug")
-                .literal("testcommand")
-                .meta(CommandMeta.DESCRIPTION, "You can probably ignore this.")
-                .senderType(Player.class)
-                .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-                    audience.sendMessage(Component.empty());
-                    Player player = (Player) context.getSender();
-                    ArrayList<Component> history = main.getConversationManager().getChatHistory().get(player.getUniqueId());
-                    if (history != null) {
-                        Component collectiveComponent = Component.text("");
-                        for (Component component : history) {
-                            if (component != null) {
-                                // audience.sendMessage(component.append(Component.text("fg9023zf729ofz")));
-                                collectiveComponent = collectiveComponent.append(component).append(Component.newline());
-                            }
-                        }
-
-                        audience.sendMessage(collectiveComponent);
-
-                    } else {
-                        audience.sendMessage(miniMessage.parse(errorGradient + "No chat history!"));
-                    }
-
-                }));
-
-
-        manager.command(builder.literal("debug")
-                .literal("testcommand2")
-                .meta(CommandMeta.DESCRIPTION, "You can probably ignore this.")
-                .senderType(Player.class)
-                .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-                    audience.sendMessage(Component.empty());
-                    Player player = (Player) context.getSender();
-                    ArrayList<Component> history = main.getConversationManager().getChatHistory().get(player.getUniqueId());
-                    if (history != null) {
-                        Component collectiveComponent = Component.text("");
-                        for (int i = 0; i < history.size(); i++) {
-                            Component component = history.get(i);
-                            if (component != null) {
-                                // audience.sendMessage(component.append(Component.text("fg9023zf729ofz")));
-                                collectiveComponent = collectiveComponent.append(Component.text(i + ".", NamedTextColor.RED).append(component)).append(Component.newline());
-                            }
-                        }
-
-                        audience.sendMessage(collectiveComponent);
-
-                    } else {
-                        audience.sendMessage(miniMessage.parse(errorGradient + "No chat history!"));
-                    }
-
                 }));
     }
 
