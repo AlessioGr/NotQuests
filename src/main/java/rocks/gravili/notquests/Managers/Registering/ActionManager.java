@@ -65,6 +65,7 @@ public class ActionManager {
         registerAction("GiveItem", GiveItemAction.class);
         registerAction("GiveMoney", GiveMoneyAction.class);
         registerAction("GrantPermission", GrantPermissionAction.class);
+        registerAction("SpawnMob", SpawnMobAction.class);
 
     }
 
