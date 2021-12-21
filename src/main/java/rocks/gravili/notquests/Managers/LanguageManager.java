@@ -84,6 +84,7 @@ public class LanguageManager {
         languageFiles.add("vi.yml");
         languageFiles.add("gr.yml");
         languageFiles.add("pl.yml");
+        languageFiles.add("cs.yml");
 
         if (!languageFolder.exists()) {
             main.getLogManager().info(LogCategory.LANGUAGE, "Languages Folder not found. Creating a new one...");
