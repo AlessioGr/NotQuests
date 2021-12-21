@@ -458,6 +458,7 @@ public class AdminConversationCommands {
                 }));
 
         manager.command(conversationBuilder.literal("edit")
+                .argument(ConversationSelector.of("conversation", main), ArgumentDescription.of("Name of the Conversation."))
                 .literal("armorstand")
                 .literal("remove", "delete")
                 .senderType(Player.class)
