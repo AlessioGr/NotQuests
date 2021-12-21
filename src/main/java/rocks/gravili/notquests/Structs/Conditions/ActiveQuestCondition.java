@@ -46,10 +46,10 @@ public class ActiveQuestCondition extends Condition {
                 .handler((context) -> {
                     final Quest otherQuest = context.get("otherQuest");
 
-                    CompletedQuestCondition completedQuestCondition = new CompletedQuestCondition(main);
-                    completedQuestCondition.setOtherQuestName(otherQuest.getQuestName());
+                    ActiveQuestCondition activeQuestCondition = new ActiveQuestCondition(main);
+                    activeQuestCondition.setOtherQuestName(otherQuest.getQuestName());
 
-                    main.getConditionsManager().addCondition(completedQuestCondition, context);
+                    main.getConditionsManager().addCondition(activeQuestCondition, context);
                 }));
     }
 
