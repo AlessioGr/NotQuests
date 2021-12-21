@@ -8,7 +8,7 @@ Lines:
       next: Player.greeting1,Player.greeting2
       shout: true
     specialgreeting:
-      text: "I don't wanna talk to you fulfill this condition. Bye!"
+      text: "I don't wanna talk to you while you fulfill this condition. Bye!"
       conditions:
         - condition hasAActive
     answer1:
