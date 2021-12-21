@@ -854,66 +854,19 @@ public class AdminCommands {
 
 
     public void handleActions() {
-        //Actions.yml actions
-        /*manager.command(builder.literal("actions")
-                .literal("edit")
-                .argument(StringArgument.<CommandSender>newBuilder("Action Name").withSuggestionsProvider(
-                        (context, lastString) -> {
-                            final List<String> allArgs = context.getRawInput();
-                            final Audience audience = main.adventure().sender(context.getSender());
-                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Action Name]", "[...]");
-
-                            return new ArrayList<>(main.getActionsManager().getActionsAndIdentifiers().keySet());
-                        }
-                ).single().build(), ArgumentDescription.of("Action Name"))
-                .literal("setCommand")
-                .argument(StringArrayArgument.of("Console Command",
-                        (context, lastString) -> {
-                            final List<String> allArgs = context.getRawInput();
-                            final Audience audience = main.adventure().sender(context.getSender());
-                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "<New console command>", "");
-
-                            ArrayList<String> completions = new ArrayList<>();
-
-                            if (lastString.startsWith("{")) {
-                                completions.addAll(placeholders);
-                            } else {
-                                completions.add("<Enter Console Command>");
-                            }
-
-                            return completions;
-                        }
-                ), ArgumentDescription.of("Console Command"))
-                .meta(CommandMeta.DESCRIPTION, "Edits an action's command")
-                .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-
-                    final String actionIdentifier = context.get("Action Identifier");
-                    final String consoleCommand = String.join(" ", (String[]) context.get("Console Command"));
-
-                    Action foundAction = main.getActionsManager().getAction(actionIdentifier);
-                    if (foundAction != null) {
-                        foundAction.setConsoleCommand(consoleCommand);
-                        audience.sendMessage(miniMessage.parse(successGradient + "Console command of action " + highlightGradient + foundAction.getActionName() + "</gradient> has been set to " + highlight2Gradient + consoleCommand + "</gradient> </gradient>"));
-                    } else {
-                        audience.sendMessage(miniMessage.parse(errorGradient + "Error! Action with the name " + highlightGradient + actionName + "</gradient> does not exist!</gradient>"));
-
-                    }
-                }));*/
-
 
         manager.command(builder.literal("actions")
                 .literal("edit")
-                .argument(StringArgument.<CommandSender>newBuilder("Action Name").withSuggestionsProvider(
+                .argument(StringArgument.<CommandSender>newBuilder("Action Identifier").withSuggestionsProvider(
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
                             final Audience audience = main.adventure().sender(context.getSender());
-                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Action Name]", "[...]");
+                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Action Identifier (name)]", "[...]");
 
                             return new ArrayList<>(main.getActionsManager().getActionsAndIdentifiers().keySet());
 
                         }
-                ).single().build(), ArgumentDescription.of("Action Name"))
+                ).single().build(), ArgumentDescription.of("Action Identifier"))
                 .literal("delete", "remove")
                 .meta(CommandMeta.DESCRIPTION, "Removes an action")
                 .handler((context) -> {
