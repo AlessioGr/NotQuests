@@ -91,7 +91,11 @@ public class ActionAction extends Action {
 
     @Override
     public void save(FileConfiguration configuration, String initialPath) {
-        configuration.set(initialPath + ".specifics.action", getAction().getActionName());
+        if (getAction() != null) {
+            configuration.set(initialPath + ".specifics.action", getAction().getActionName());
+        } else {
+            main.getLogManager().warn("Error: cannot save Action for action action, because it's null. Configuration path: " + initialPath);
+        }
         configuration.set(initialPath + ".specifics.amount", getAmount());
     }
 
@@ -104,12 +108,11 @@ public class ActionAction extends Action {
         }
 
         this.amount = configuration.getInt(initialPath + ".specifics.amount", 1);
-
     }
 
 
     @Override
     public String getActionDescription() {
-        return "Execute Action: " + getAction().getActionName();
+        return "Executes Action: " + getAction().getActionName();
     }
 }

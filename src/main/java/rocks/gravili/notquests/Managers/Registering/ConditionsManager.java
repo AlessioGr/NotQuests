@@ -59,6 +59,8 @@ public class ConditionsManager {
 
     public void registerDefaultConditions() {
         conditions.clear();
+        registerCondition("Condition", ConditionCondition.class);
+
         registerCondition("CompletedQuest", CompletedQuestCondition.class);
         registerCondition("CompletedObjective", CompletedObjectiveCondition.class);
         registerCondition("ActiveQuest", ActiveQuestCondition.class);
