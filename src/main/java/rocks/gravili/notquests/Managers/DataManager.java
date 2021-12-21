@@ -901,9 +901,7 @@ public class DataManager {
     public void disablePluginAndSaving(final String reason, Object... objects) {
 
         main.getLogManager().severe("Plugin, saving and loading has been disabled. Reason: " + reason);
-        setSavingEnabled(false);
-        setLoadingEnabled(false);
-        main.getServer().getPluginManager().disablePlugin(main);
+
         for (Object object : objects) {
             if (object instanceof Throwable throwable) {
                 main.getLogManager().severe("Error message:");
@@ -914,6 +912,9 @@ public class DataManager {
                 main.getLogManager().severe("  <DARK_GRAY>└─</DARK_GRAY> Objective ID: " + NotQuestColors.highlightGradient + objective.getObjectiveID() + "</gradient> of Quest: " + NotQuestColors.highlight2Gradient + ((Objective) object).getQuest().getQuestName() + "</gradient>");
             }
         }
+        setSavingEnabled(false);
+        setLoadingEnabled(false);
+        main.getServer().getPluginManager().disablePlugin(main);
     }
 
     /**
