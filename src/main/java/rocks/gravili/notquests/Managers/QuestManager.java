@@ -1324,7 +1324,7 @@ public class QuestManager {
             final String objectiveDescription = activeObjective.getObjective().getObjectiveDescription();
 
             audience.sendMessage(miniMessage.parse(
-                    "YELLOW" + activeObjective.getObjective().getObjectiveID() + ". " + activeObjective.getObjective().getObjectiveFinalName() + ":"
+                    "<YELLOW>" + activeObjective.getObjective().getObjectiveID() + ". " + activeObjective.getObjective().getObjectiveFinalName() + ":"
             ));
 
 
