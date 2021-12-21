@@ -152,18 +152,21 @@ public class AdminConversationCommands {
                 }));
 
 
-        manager.command(conversationBuilder.literal("test")
-                .senderType(Player.class)
-                .meta(CommandMeta.DESCRIPTION, "Starts a test conversation.")
-                .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-                    final Player player = (Player) context.getSender();
+        if (main.getConfiguration().debug) {
+            manager.command(conversationBuilder.literal("test")
+                    .senderType(Player.class)
+                    .meta(CommandMeta.DESCRIPTION, "Starts a test conversation.")
+                    .handler((context) -> {
+                        final Audience audience = main.adventure().sender(context.getSender());
+                        final Player player = (Player) context.getSender();
 
-                    audience.sendMessage(miniMessage.parse(
-                            mainGradient + "Playing test conversation..."
-                    ));
-                    conversationManager.playConversation(player, conversationManager.createTestConversation());
-                }));
+                        audience.sendMessage(miniMessage.parse(
+                                mainGradient + "Playing test conversation..."
+                        ));
+                        conversationManager.playConversation(player, conversationManager.createTestConversation());
+                    }));
+        }
+
 
         manager.command(conversationBuilder.literal("list")
                 .meta(CommandMeta.DESCRIPTION, "Lists all conversations.")
