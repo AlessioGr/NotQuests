@@ -58,6 +58,7 @@ public class ActionManager {
         registerAction("CompleteQuest", CompleteQuestAction.class);
         registerAction("FailQuest", FailQuestAction.class);
         registerAction("TriggerCommand", TriggerCommandAction.class);
+        registerAction("StartConversation", StartConversationAction.class);
 
         registerAction("ConsoleCommand", ConsoleCommandAction.class);
         registerAction("GiveQuestPoints", GiveQuestPointsAction.class);
