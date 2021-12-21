@@ -58,6 +58,7 @@ public class ActiveTrigger {
     public void addAndCheckTrigger(ActiveQuest activeQuest) {
         addProgress(1);
         if (isCompleted()) {
+            activeQuest.getQuestPlayer().sendDebugMessage("Trigger: Triggering trigger " + trigger.getTriggerType() + " for Quest " + activeQuest.getQuest().getQuestName());
             trigger.trigger(activeQuest);
         }
     }

@@ -162,7 +162,7 @@ public class ActionsManager {
 
     public final String addAction(String actionIdentifier, Action action) {
         boolean nameAlreadyExists = getActionsAndIdentifiers().get(actionIdentifier) != null;
-
+        action.setActionName(actionIdentifier);
 
         if (!nameAlreadyExists) {
             actionsAndIdentifiers.put(actionIdentifier, action);

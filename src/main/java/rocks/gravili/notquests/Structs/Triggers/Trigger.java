@@ -33,7 +33,7 @@ public abstract class Trigger {
     private int triggerID = 1;
     private Action action = null;
     private int applyOn = 0; // 0 is for the whole quest. Positive numbers = objectives (JUST INTERNALLY HERE, NOT IN THE ADMIN COMMAND)
-    private String worldName = null;
+    private String worldName = "ALL";
     private long amountNeeded = 0; // 0 or 1 means every trigger() triggers it
 
 
@@ -98,6 +98,7 @@ public abstract class Trigger {
         final Player player = Bukkit.getPlayer(activeQuest.getQuestPlayer().getUUID());
 
         if (player != null) {
+            activeQuest.getQuestPlayer().sendDebugMessage("Trigger: Executing action " + action.getActionName() + " for Quest " + activeQuest.getQuest().getQuestName());
             action.execute(player);
         } else {
             main.getLogManager().warn("Tried to execute trigger for offline player - ABORTED!");

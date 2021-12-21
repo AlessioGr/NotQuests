@@ -111,11 +111,12 @@ public class TriggerManager {
 
         final Action action = context.get("action");
 
+
         int applyOn = 0;
         if (context.flags().contains(main.getCommandManager().applyOn)) {
             applyOn = context.flags().getValue(main.getCommandManager().applyOn, 0);
         }
-        final String worldString = context.flags().getValue(main.getCommandManager().triggerWorldString, null);
+        final String worldString = context.flags().getValue(main.getCommandManager().triggerWorldString, "ALL");
 
         int amount = 1;
         if (context.contains("amount")) {
