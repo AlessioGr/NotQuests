@@ -81,8 +81,12 @@ public class UpdateManager {
         final ConfigurationSection oldActionsConfigurationSection = main.getDataManager().getQuestsConfig().getConfigurationSection("actions");
         if (oldActionsConfigurationSection != null) {
             for (final String actionIdentifier : oldActionsConfigurationSection.getKeys(false)) {
-                final String consoleCommand = main.getDataManager().getQuestsConfig().getString("actions." + actionIdentifier + ".consoleCommand", "");
-                if (consoleCommand.equalsIgnoreCase("")) {
+                String consoleCommand = main.getDataManager().getQuestsConfig().getString("actions." + actionIdentifier + ".consoleCommand", "");
+                if (consoleCommand.isBlank()) {
+                    consoleCommand = main.getDataManager().getQuestsConfig().getString("actions." + actionIdentifier + ".specifics.consoleCommand", ""); //TODO: Potentially unneeded and might be better to just use that directly. I think it ALWAYS uses the sepcifics. prefix in old versions.
+                }
+
+                if (consoleCommand.isBlank()) {
                     main.getLogManager().warn("Action has an empty console command. This should NOT be possible! Creating an action with an empty console command... Action name: <AQUA>" + actionIdentifier + "</AQUA>");
                 }
 
