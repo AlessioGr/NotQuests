@@ -184,6 +184,7 @@ public class SpawnMobAction extends Action {
         configuration.set(initialPath + ".specifics.mobToSpawn", getMobToSpawnType());
         configuration.set(initialPath + ".specifics.spawnLocation", getSpawnLocation());
         configuration.set(initialPath + ".specifics.usePlayerLocation", isUsePlayerLocation());
+        configuration.set(initialPath + ".specifics.amount", getSpawnAmount());
 
     }
 
@@ -192,6 +193,7 @@ public class SpawnMobAction extends Action {
         this.mobToSpawnType = configuration.getString(initialPath + ".specifics.mobToSpawn", "");
         this.spawnLocation = configuration.getLocation(initialPath + ".specifics.spawnLocation");
         this.usePlayerLocation = configuration.getBoolean(initialPath + ".specifics.usePlayerLocation");
+        this.spawnAmount = configuration.getInt(initialPath + ".specifics.amount", 1);
     }
 
 
