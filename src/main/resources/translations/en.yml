@@ -111,22 +111,22 @@ gui:
           <GREEN>Take a Quest
           <GRAY>Start a new Quest!
 
-          <DARK_GRAY>Some Quests cannot be</DARK_GRAY>
+          <DARK_GRAY>Some Quests cannot be
           <DARK_GRAY>started like this.
       abortquest:
         text: |-
           <RED>Abort a Quest
-          <GRAY>Aborting a Quest may</GRAY>
+          <GRAY>Aborting a Quest may
           <GRAY>lead to punishments.
       previewquest:
         text: |-
           <BLUE>Preview Quest (Quest Info)
-          <GRAY>Show more information</GRAY>
+          <GRAY>Show more information
           <GRAY>about a Quest.
       activequests:
         text: |-
           <DARK_AQUA>Active Quests
-          <GRAY>Shows all of your</GRAY>
+          <GRAY>Shows all of your
           <GRAY>active Quests.
   activeQuests:
     title: '             <BLUE>Active Quests'
@@ -134,7 +134,7 @@ gui:
       activeQuestButton:
         text: |-
           <AQUA>%QUESTNAME% <GREEN>[ACTIVE]
-          <GRAY>Progress: <GREEN>%COMPLETEDOBJECTIVESCOUNT% <WHITE>/ %ALLOBJECTIVESCOUNT%</WHITE>
+          <GRAY>Progress: <GREEN>%COMPLETEDOBJECTIVESCOUNT% <WHITE>/ %ALLOBJECTIVESCOUNT%
           <WHITE>Click to see details!
   takeQuestChoose:
     title: '<BLUE>Which Quest do you want to take?'
@@ -170,7 +170,7 @@ gui:
           <RED>Click to abort the quest <AQUA>%QUESTNAME%<RED>!
       cancelAbort:
         text: |-
-          <GREEN>Click to NOT abort this quest</GREEN>
+          <GREEN>Click to NOT abort this quest
           <GREEN>and cancel this action
   previewQuest:
     title: '<BLUE>Preview for Quest <AQUA>%QUESTNAME%'
@@ -193,10 +193,10 @@ gui:
       confirmTake:
         text: |-
           <AQUA>%QUESTNAME%
-          <GREEN>Click to take the quest <AQUA>%QUESTNAME%</AQUA>!
+          <GREEN>Click to take the quest <AQUA>%QUESTNAME%
       cancelTake:
         text: |-
-          <RED>Click to NOT take this quest</RED>
+          <RED>Click to NOT take this quest
           <RED>and cancel this action
   progress:
     title: '<BLUE>Details for Quest <AQUA>%QUESTNAME%'
@@ -206,7 +206,7 @@ gui:
           <YELLOW>%ACTIVEOBJECTIVEID%. <AQUA>%OBJECTIVENAME%
           <GOLD><BOLD>ACTIVE</BOLD>
           <DARK_GRAY>%OBJECTIVEDESCRIPTION%
-          <GRAY>%ACTIVEOBJECTIVEDESCRIPTION%</GRAY>
+          <GRAY>%ACTIVEOBJECTIVEDESCRIPTION%
 
           <GRAY>Progress: <GREEN>%ACTIVEOBJECTIVEPROGRESS% <WHITE>/ %OBJECTIVEPROGRESSNEEDED%
         description-empty: No Description
@@ -220,7 +220,7 @@ gui:
           <GREEN><strikethrough>%ACTIVEOBJECTIVEID%. <DARK_GREEN><strikethrough>%OBJECTIVENAME%
           <GREEN><BOLD>COMPLETED</BOLD>
           <DARK_GRAY><strikethrough>%OBJECTIVEDESCRIPTION%
-          <GRAY>%COMPLETEDOBJECTIVEDESCRIPTION%</GRAY>
+          <GRAY>%COMPLETEDOBJECTIVEDESCRIPTION%
 
           <GRAY><strikethrough>Progress: <GREEN><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <WHITE><strikethrough>/ %OBJECTIVEPROGRESSNEEDED%
         description-empty: No Description
