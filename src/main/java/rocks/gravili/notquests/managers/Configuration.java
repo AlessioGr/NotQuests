@@ -137,6 +137,8 @@ public class Configuration {
     public int guiObjectiveDescriptionMaxLineLength = 50;
     public boolean wrapLongWords = false;
 
+    public boolean hideRewardsWithoutName = true;
+
 
     public Configuration() {
 

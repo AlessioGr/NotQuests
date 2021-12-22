@@ -427,6 +427,13 @@ public class DataManager {
         }
         configuration.setCitizensNPCQuestGiverIndicatorParticleDisableIfTPSBelow(getGeneralConfig().getDouble(key));
 
+        key = "visual.hide-rewards-without-name";
+        if (!getGeneralConfig().isBoolean(key)) {
+            getGeneralConfig().set(key, true);
+            valueChanged = true;
+        }
+        configuration.hideRewardsWithoutName = getGeneralConfig().getBoolean(key);
+
 
         //Prevent armorstand editing
         key = "visual.armorstands.prevent-editing";

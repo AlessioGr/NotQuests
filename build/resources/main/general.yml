@@ -75,6 +75,7 @@ visual:
       enabled: true
     quest-completed:
       enabled: true
+  hide-rewards-without-name: true
 
 gui:
   show-quest-item-amount: false

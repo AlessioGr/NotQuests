@@ -912,7 +912,11 @@ public class QuestManager {
             if (!reward.getActionName().isBlank()) {
                 rewards.append("<GREEN>").append(counter).append(". <BLUE>").append(reward.getActionName()).append("</GREEN>");
             } else {
-                rewards.append("<GREEN>").append(counter).append(main.getLanguageManager().getString("gui.reward-hidden-text", null, quest, reward)).append("</GREEN>");
+                if (main.getConfiguration().hideRewardsWithoutName) {
+                    rewards.append("<GREEN>").append(counter).append(main.getLanguageManager().getString("gui.reward-hidden-text", null, quest, reward)).append("</GREEN>");
+                } else {
+                    rewards.append("<GREEN>").append(counter).append(". <BLUE>").append(reward.getActionDescription()).append("</GREEN>");
+                }
 
             }
             counter += 1;
