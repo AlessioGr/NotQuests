@@ -100,9 +100,9 @@ public abstract class Trigger {
         if (player != null) {
             activeQuest.getQuestPlayer().sendDebugMessage("Trigger: Executing action " + action.getActionName() + " for Quest " + activeQuest.getQuest().getQuestName());
             if (quest != null) {
-                main.getActionManager().executeActionWithConditions(action, player, null, true, quest);
+                main.getActionManager().executeActionWithConditions(action, activeQuest.getQuestPlayer(), null, true, quest);
             } else {
-                main.getActionManager().executeActionWithConditions(action, player, null, true);
+                main.getActionManager().executeActionWithConditions(action, activeQuest.getQuestPlayer(), null, true);
             }
         } else {
             main.getLogManager().warn("Tried to execute trigger for offline player - ABORTED!");

@@ -92,12 +92,14 @@ public class ActionAction extends Action {
             return;
         }
 
+        main.getLogManager().debug("Executing Action action. IsIgnoreConditions: " + isIgnoreConditions());
+
         if (!isIgnoreConditions()) {
             if (amount == 1) {
-                main.getActionManager().executeActionWithConditions(action, player, null, true, objects);
+                main.getActionManager().executeActionWithConditions(action, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), null, true, objects);
             } else {
                 for (int i = 0; i < amount; i++) {
-                    main.getActionManager().executeActionWithConditions(action, player, null, true, objects);
+                    main.getActionManager().executeActionWithConditions(action, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), null, true, objects);
                 }
             }
         } else {

@@ -1089,7 +1089,7 @@ public class AdminCommands {
                             foundAction.execute(player);
                             audience.sendMessage(miniMessage.parse(successGradient + "Action with the name " + highlightGradient + actionIdentifier + "</gradient> has been executed!</gradient>"));
                         } else {
-                            main.getActionManager().executeActionWithConditions(foundAction, player, audience, false);
+                            main.getActionManager().executeActionWithConditions(foundAction, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), audience, false);
                         }
 
 

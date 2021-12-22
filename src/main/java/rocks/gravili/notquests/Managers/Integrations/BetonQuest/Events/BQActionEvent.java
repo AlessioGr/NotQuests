@@ -102,12 +102,12 @@ public class BQActionEvent extends QuestEvent {
                             }
                         }
                         if (foundActiveQuest != null) {
-                            main.getActionManager().executeActionWithConditions(action, questPlayer.getPlayer(), null, true, foundActiveQuest);
+                            main.getActionManager().executeActionWithConditions(action, questPlayer, null, true, foundActiveQuest);
                         }
                     }
                 }
             } else {
-                main.getActionManager().executeActionWithConditions(action, player, null, true);
+                main.getActionManager().executeActionWithConditions(action, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), null, true);
             }
 
         } else {

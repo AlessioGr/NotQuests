@@ -24,7 +24,6 @@ import cloud.commandframework.paper.PaperCommandManager;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Actions.*;
@@ -161,32 +160,38 @@ public class ActionManager {
     }
 
 
-    public void executeActionWithConditions(Action action, Player player, Audience audience, boolean silent, Object... objects) {
+    public void executeActionWithConditions(Action action, QuestPlayer questPlayer, Audience audience, boolean silent, Object... objects) {
+        main.getLogManager().debug("Executing Action with conditions!");
+
         if (action.getConditions().size() == 0) {
-            action.execute(player, objects);
+            main.getLogManager().debug("   Skipping Conditions");
+            action.execute(questPlayer.getPlayer(), objects);
             if (!silent) {
                 audience.sendMessage(MiniMessage.miniMessage().parse(successGradient + "Action with the name " + highlightGradient + action.getActionName() + "</gradient> has been executed!</gradient>"));
             }
             return;
         }
 
-        QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
         StringBuilder unfulfilledConditions = new StringBuilder();
         for (final Condition condition : action.getConditions()) {
             final String check = condition.check(questPlayer, false);
+            main.getLogManager().debug("   Condition Check Result: " + check);
             if (!check.isBlank()) {
                 unfulfilledConditions.append("\n").append(check);
             }
         }
 
-        if (!unfulfilledConditions.toString().isBlank() && !silent) {
-            audience.sendMessage(MiniMessage.miniMessage().parse(errorGradient + "You do not fulfill all the conditions this action needs! Conditions still needed:" + unfulfilledConditions));
+        if (!unfulfilledConditions.toString().isBlank()) {
+            if (!silent) {
+                audience.sendMessage(MiniMessage.miniMessage().parse(errorGradient + "You do not fulfill all the conditions this action needs! Conditions still needed:" + unfulfilledConditions));
+            }
         } else {
+            main.getLogManager().debug("   All Conditions fulfilled!");
             //Now loop through all the requirements again in order to enforce them
             for (final Condition condition : action.getConditions()) {
                 condition.check(questPlayer, true);
             }
-            action.execute(player, objects);
+            action.execute(questPlayer.getPlayer(), objects);
             if (!silent) {
                 audience.sendMessage(MiniMessage.miniMessage().parse(successGradient + "Action with the name " + highlightGradient + action.getActionName() + "</gradient> has been executed!</gradient>"));
             }
