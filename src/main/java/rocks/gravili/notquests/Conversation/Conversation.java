@@ -47,7 +47,7 @@ public class Conversation {
         this.configFile = configFile;
         this.config = config;
         this.identifier = identifier;
-        this.npcID = npcID;
+        setNPC(npcID);
         start = new ArrayList<>();
         speakers = new ArrayList<>();
     }
