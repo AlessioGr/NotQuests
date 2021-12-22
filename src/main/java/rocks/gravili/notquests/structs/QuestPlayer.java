@@ -308,9 +308,11 @@ public class QuestPlayer {
             return;
         }
 
+        questsToComplete.add(activeQuest);
+
+        completedQuests.add(new CompletedQuest(activeQuest.getQuest(), this));
 
         giveReward(activeQuest.getQuest());
-        questsToComplete.add(activeQuest);
 
         final Player player = getPlayer();
         if (player != null) {
