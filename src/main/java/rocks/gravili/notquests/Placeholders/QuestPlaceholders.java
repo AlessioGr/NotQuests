@@ -135,6 +135,14 @@ public class QuestPlaceholders extends PlaceholderExpansion {
             return "0";
         }
 
+        if (identifier.startsWith("player_active_quests_amount")) {
+            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+            if (questPlayer != null) {
+                return "" + questPlayer.getActiveQuests().size();
+            }
+            return "0";
+        }
+
         if (identifier.startsWith("player_active_quests_list_horizontal")) {
             final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
             if (questPlayer != null) {
