@@ -234,8 +234,8 @@ public class CommandManager {
             }
 
 
-            adminCommandBuilder = commandManager.commandBuilder("notquestsadmin", ArgumentDescription.of("Admin commands for NotQuests"),
-                            "nquestsadmin", "nquestadmin", "notquestadmin", "qadmin", "questadmin", "qa", "qag", "nqa")
+            adminCommandBuilder = commandManager.commandBuilder("nqa", ArgumentDescription.of("Admin commands for NotQuests"),
+                            "nquestsadmin", "nquestadmin", "notquestadmin", "qadmin", "questadmin", "qa", "qag", "notquestsadmin")
                     .permission("notquests.admin");
 
             adminEditCommandBuilder = adminCommandBuilder
