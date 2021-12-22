@@ -6,7 +6,7 @@
 <meta content="width=device-width, initial-scale=1" name="viewport">
 <meta content="text/html; charset=utf8" http-equiv="Content-Type">
 <meta content="2021-11-27" name="dc.created">
-<meta content="declaration: package: rocks.gravili.notquests.Structs.Conditions, class: Requirement" name="description">
+<meta content="declaration: package: rocks.gravili.notquests.structs.conditions, class: Requirement" name="description">
 <meta content="javadoc/ClassWriterImpl" name="generator">
 <link href="../../../../../stylesheet.css" rel="stylesheet" title="Style" type="text/css">
 <link href="../../../../../script-dir/jquery-ui.min.css" rel="stylesheet" title="Style" type="text/css">
@@ -69,16 +69,21 @@ loadScripts(document, 'script');</script>
 <main role="main">
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
-<div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">rocks.gravili.notquests.Structs.Conditions</a></div>
+    <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">rocks.gravili.notquests.structs.conditions</a>
+    </div>
 <h1 class="title" title="Class Requirement">Class Requirement</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang">java.lang.Object</a>
-<div class="inheritance">rocks.gravili.notquests.Structs.Conditions.Condition</div>
+    <div class="inheritance">rocks.gravili.notquests.structs.conditions.Condition</div>
 </div>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>Direct Known Subclasses:</dt>
-<dd><code><a href="MoneyRequirement.html" title="class in rocks.gravili.notquests.Structs.Conditions">MoneyRequirement</a></code>, <code><a href="OtherQuestRequirement.html" title="class in rocks.gravili.notquests.Structs.Conditions">OtherQuestRequirement</a></code>, <code><a href="PermissionRequirement.html" title="class in rocks.gravili.notquests.Structs.Conditions">PermissionRequirement</a></code>, <code><a href="QuestPointsRequirement.html" title="class in rocks.gravili.notquests.Structs.Conditions">QuestPointsRequirement</a></code></dd>
+    <dd><code><a href="MoneyRequirement.html" title="class in rocks.gravili.notquests.structs.conditions">MoneyRequirement</a></code>,
+        <code><a href="OtherQuestRequirement.html" title="class in rocks.gravili.notquests.structs.conditions">OtherQuestRequirement</a></code>,
+        <code><a href="PermissionRequirement.html" title="class in rocks.gravili.notquests.structs.conditions">PermissionRequirement</a></code>,
+        <code><a href="QuestPointsRequirement.html" title="class in rocks.gravili.notquests.structs.conditions">QuestPointsRequirement</a></code>
+    </dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public abstract class </span><span class="element-name type-name-label">Requirement</span>
@@ -101,7 +106,9 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color"><code>private final long</code></div>
 <div class="col-second odd-row-color"><code><a class="member-name-link" href="#progressNeeded">progressNeeded</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>private final <a href="../Quest.html" title="class in rocks.gravili.notquests.Structs">Quest</a></code></div>
+    <div class="col-first even-row-color"><code>private final <a href="../Quest.html"
+                                                                 title="class in rocks.gravili.notquests.structs">Quest</a></code>
+    </div>
 <div class="col-second even-row-color"><code><a class="member-name-link" href="#quest">quest</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>private final int</code></div>
@@ -118,10 +125,13 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a class="member-name-link" href="#%3Cinit%3E(rocks.gravili.notquests.NotQuests,rocks.gravili.notquests.Structs.Quest,int,long)">Requirement</a><wbr>(<a href="../../NotQuests.html" title="class in rocks.gravili.notquests">NotQuests</a>&nbsp;main,
- <a href="../Quest.html" title="class in rocks.gravili.notquests.Structs">Quest</a>&nbsp;quest,
- int&nbsp;requirementID,
- long&nbsp;progressNeeded)</code></div>
+    <div class="col-constructor-name even-row-color"><code><a class="member-name-link"
+                                                              href="#%3Cinit%3E(rocks.gravili.notquests.NotQuests,rocks.gravili.notquests.structs.Quest,int,long)">Requirement</a>
+        <wbr>
+        (<a href="../../NotQuests.html" title="class in rocks.gravili.notquests">NotQuests</a>&nbsp;main,
+        <a href="../Quest.html" title="class in rocks.gravili.notquests.structs">Quest</a>&nbsp;quest,
+        int&nbsp;requirementID,
+        long&nbsp;progressNeeded)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -138,13 +148,17 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>abstract <a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a class="member-name-link" href="#check(rocks.gravili.notquests.Structs.QuestPlayer,boolean)">check</a><wbr>(<a href="../QuestPlayer.html" title="class in rocks.gravili.notquests.Structs">QuestPlayer</a>&nbsp;questPlayer,
- boolean&nbsp;enforce)</code></div>
+    <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+        <code><a class="member-name-link" href="#check(rocks.gravili.notquests.structs.QuestPlayer,boolean)">check</a>
+            <wbr>
+            (<a href="../QuestPlayer.html" title="class in rocks.gravili.notquests.structs">QuestPlayer</a>&nbsp;questPlayer,
+            boolean&nbsp;enforce)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final long</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#getProgressNeeded()">getProgressNeeded</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="../Quest.html" title="class in rocks.gravili.notquests.Structs">Quest</a></code></div>
+    <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+        <code>final <a href="../Quest.html" title="class in rocks.gravili.notquests.structs">Quest</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#getQuest()">getQuest</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>abstract <a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang">String</a></code></div>
@@ -197,7 +211,9 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="quest">
 <h3>quest</h3>
-<div class="member-signature"><span class="modifiers">private final</span>&nbsp;<span class="return-type"><a href="../Quest.html" title="class in rocks.gravili.notquests.Structs">Quest</a></span>&nbsp;<span class="element-name">quest</span></div>
+    <div class="member-signature"><span class="modifiers">private final</span>&nbsp;<span class="return-type"><a
+            href="../Quest.html" title="class in rocks.gravili.notquests.structs">Quest</a></span>&nbsp;<span
+            class="element-name">quest</span></div>
 </section>
 </li>
 </ul>
@@ -209,13 +225,18 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(rocks.gravili.notquests.NotQuests,rocks.gravili.notquests.Structs.Quest,int,long)">
-<h3>Requirement</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Requirement</span><wbr><span class="parameters">(<a href="../../NotQuests.html" title="class in rocks.gravili.notquests">NotQuests</a>&nbsp;main,
- <a href="../Quest.html" title="class in rocks.gravili.notquests.Structs">Quest</a>&nbsp;quest,
+    <section class="detail"
+             id="&lt;init&gt;(rocks.gravili.notquests.NotQuests,rocks.gravili.notquests.structs.Quest,int,long)">
+        <h3>Requirement</h3>
+        <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span
+                class="element-name">Requirement</span>
+            <wbr>
+            <span class="parameters">(<a href="../../NotQuests.html"
+                                         title="class in rocks.gravili.notquests">NotQuests</a>&nbsp;main,
+ <a href="../Quest.html" title="class in rocks.gravili.notquests.structs">Quest</a>&nbsp;quest,
  int&nbsp;requirementID,
  long&nbsp;progressNeeded)</span></div>
-</section>
+    </section>
 </li>
 </ul>
 </section>
@@ -240,7 +261,10 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="getQuest()">
 <h3>getQuest</h3>
-<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type"><a href="../Quest.html" title="class in rocks.gravili.notquests.Structs">Quest</a></span>&nbsp;<span class="element-name">getQuest</span>()</div>
+    <div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type"><a
+            href="../Quest.html" title="class in rocks.gravili.notquests.structs">Quest</a></span>&nbsp;<span
+            class="element-name">getQuest</span>()
+    </div>
 </section>
 </li>
 <li>
@@ -250,15 +274,22 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="check(rocks.gravili.notquests.Structs.QuestPlayer,boolean)">
-<h3>check</h3>
-<div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type"><a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang">String</a></span>&nbsp;<span class="element-name">check</span><wbr><span class="parameters">(<a href="../QuestPlayer.html" title="class in rocks.gravili.notquests.Structs">QuestPlayer</a>&nbsp;questPlayer,
+    <section class="detail" id="check(rocks.gravili.notquests.structs.QuestPlayer,boolean)">
+        <h3>check</h3>
+        <div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type"><a
+                class="external-link"
+                href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html"
+                title="class or interface in java.lang">String</a></span>&nbsp;<span class="element-name">check</span>
+            <wbr>
+            <span class="parameters">(<a href="../QuestPlayer.html" title="class in rocks.gravili.notquests.structs">QuestPlayer</a>&nbsp;questPlayer,
  boolean&nbsp;enforce)</span></div>
-<dl class="notes">
-<dt>Returns:</dt>
-<dd>String if the condition is not fulfilled. Empty string if the condition is fulfilled. The String should say the still-required requirements.</dd>
-</dl>
-</section>
+        <dl class="notes">
+            <dt>Returns:</dt>
+            <dd>String if the condition is not fulfilled. Empty string if the condition is fulfilled. The String should
+                say the still-required requirements.
+            </dd>
+        </dl>
+    </section>
 </li>
 <li>
 <section class="detail" id="getRequirementDescription()">

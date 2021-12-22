@@ -6,7 +6,8 @@
 <meta content="width=device-width, initial-scale=1" name="viewport">
 <meta content="text/html; charset=utf8" http-equiv="Content-Type">
 <meta content="2021-11-27" name="dc.created">
-<meta content="declaration: package: rocks.gravili.notquests.Commands.old, class: CommandNotQuestsAdmin" name="description">
+<meta content="declaration: package: rocks.gravili.notquests.commands.old, class: CommandNotQuestsAdmin"
+      name="description">
 <meta content="javadoc/ClassWriterImpl" name="generator">
 <link href="../../../../../stylesheet.css" rel="stylesheet" title="Style" type="text/css">
 <link href="../../../../../script-dir/jquery-ui.min.css" rel="stylesheet" title="Style" type="text/css">
@@ -69,11 +70,12 @@ loadScripts(document, 'script');</script>
 <main role="main">
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
-<div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">rocks.gravili.notquests.Commands.old</a></div>
+    <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">rocks.gravili.notquests.commands.old</a>
+    </div>
 <h1 class="title" title="Class CommandNotQuestsAdmin">Class CommandNotQuestsAdmin</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang">java.lang.Object</a>
-<div class="inheritance">rocks.gravili.notquests.Commands.old.CommandNotQuestsAdmin</div>
+    <div class="inheritance">rocks.gravili.notquests.commands.old.CommandNotQuestsAdmin</div>
 </div>
 <section class="class-description" id="class-description">
 <dl class="notes">
@@ -96,7 +98,9 @@ implements org.bukkit.command.CommandExecutor, org.bukkit.command.TabCompleter</
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>private final <a href="AdminCommands/ArmorStandsAdminCommand.html" title="class in rocks.gravili.notquests.Commands.old.AdminCommands">ArmorStandsAdminCommand</a></code></div>
+    <div class="col-first even-row-color"><code>private final <a href="AdminCommands/ArmorStandsAdminCommand.html"
+                                                                 title="class in rocks.gravili.notquests.commands.old.AdminCommands">ArmorStandsAdminCommand</a></code>
+    </div>
 <div class="col-second even-row-color"><code><a class="member-name-link" href="#armorStandsAdminCommand">armorStandsAdminCommand</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>private final net.kyori.adventure.text.Component</code></div>
@@ -105,16 +109,24 @@ implements org.bukkit.command.CommandExecutor, org.bukkit.command.TabCompleter</
 <div class="col-first even-row-color"><code>private final <a href="../../NotQuests.html" title="class in rocks.gravili.notquests">NotQuests</a></code></div>
 <div class="col-second even-row-color"><code><a class="member-name-link" href="#main">main</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>private final <a href="AdminCommands/ObjectivesAdminCommand.html" title="class in rocks.gravili.notquests.Commands.old.AdminCommands">ObjectivesAdminCommand</a></code></div>
+    <div class="col-first odd-row-color"><code>private final <a href="AdminCommands/ObjectivesAdminCommand.html"
+                                                                title="class in rocks.gravili.notquests.commands.old.AdminCommands">ObjectivesAdminCommand</a></code>
+    </div>
 <div class="col-second odd-row-color"><code><a class="member-name-link" href="#objectivesAdminCommand">objectivesAdminCommand</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>private final <a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util">ArrayList</a>&lt;<a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang">String</a>&gt;</code></div>
 <div class="col-second even-row-color"><code><a class="member-name-link" href="#placeholders">placeholders</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>private final <a href="AdminCommands/QuestPointsAdminCommand.html" title="class in rocks.gravili.notquests.Commands.old.AdminCommands">QuestPointsAdminCommand</a></code></div>
+    <div class="col-first odd-row-color"><code>private final <a href="AdminCommands/QuestPointsAdminCommand.html"
+                                                                title="class in rocks.gravili.notquests.commands.old.AdminCommands">QuestPointsAdminCommand</a></code>
+    </div>
 <div class="col-second odd-row-color"><code><a class="member-name-link" href="#questPointsAdminCommand">questPointsAdminCommand</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>(package private) final <a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../Structs/ActiveQuest.html" title="class in rocks.gravili.notquests.Structs">ActiveQuest</a>&gt;</code></div>
+    <div class="col-first even-row-color"><code>(package private) final <a class="external-link"
+                                                                           href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html"
+                                                                           title="class or interface in java.util">ArrayList</a>&lt;<a
+            href="../../Structs/ActiveQuest.html"
+            title="class in rocks.gravili.notquests.structs">ActiveQuest</a>&gt;</code></div>
 <div class="col-second even-row-color"><code><a class="member-name-link" href="#questsToFail">questsToFail</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>private final <a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Date.html" title="class or interface in java.util">Date</a></code></div>
@@ -153,9 +165,16 @@ implements org.bukkit.command.CommandExecutor, org.bukkit.command.TabCompleter</
  <a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang">String</a>&nbsp;questName)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#handleCommandsEditRewards(org.bukkit.command.CommandSender,java.lang.String%5B%5D,rocks.gravili.notquests.Structs.Quest)">handleCommandsEditRewards</a><wbr>(org.bukkit.command.CommandSender&nbsp;sender,
- <a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang">String</a>[]&nbsp;args,
- <a href="../../Structs/Quest.html" title="class in rocks.gravili.notquests.Structs">Quest</a>&nbsp;quest)</code></div>
+    <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+        <code><a class="member-name-link"
+                 href="#handleCommandsEditRewards(org.bukkit.command.CommandSender,java.lang.String%5B%5D,rocks.gravili.notquests.structs.Quest)">handleCommandsEditRewards</a>
+            <wbr>
+            (org.bukkit.command.CommandSender&nbsp;sender,
+            <a class="external-link"
+               href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html"
+               title="class or interface in java.lang">String</a>[]&nbsp;args,
+            <a href="../../Structs/Quest.html"
+               title="class in rocks.gravili.notquests.structs">Quest</a>&nbsp;quest)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util">List</a>&lt;<a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang">String</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#handleCompletionsActions(java.lang.String%5B%5D,org.bukkit.command.CommandSender)">handleCompletionsActions</a><wbr>(<a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang">String</a>[]&nbsp;args,
@@ -209,7 +228,12 @@ implements org.bukkit.command.CommandExecutor, org.bukkit.command.TabCompleter</
 <li>
 <section class="detail" id="questsToFail">
 <h3>questsToFail</h3>
-<div class="member-signature"><span class="modifiers">final</span>&nbsp;<span class="return-type"><a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../Structs/ActiveQuest.html" title="class in rocks.gravili.notquests.Structs">ActiveQuest</a>&gt;</span>&nbsp;<span class="element-name">questsToFail</span></div>
+    <div class="member-signature"><span class="modifiers">final</span>&nbsp;<span class="return-type"><a
+            class="external-link"
+            href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html"
+            title="class or interface in java.util">ArrayList</a>&lt;<a href="../../Structs/ActiveQuest.html"
+                                                                        title="class in rocks.gravili.notquests.structs">ActiveQuest</a>&gt;</span>&nbsp;<span
+            class="element-name">questsToFail</span></div>
 </section>
 </li>
 <li>
@@ -221,19 +245,28 @@ implements org.bukkit.command.CommandExecutor, org.bukkit.command.TabCompleter</
 <li>
 <section class="detail" id="questPointsAdminCommand">
 <h3>questPointsAdminCommand</h3>
-<div class="member-signature"><span class="modifiers">private final</span>&nbsp;<span class="return-type"><a href="AdminCommands/QuestPointsAdminCommand.html" title="class in rocks.gravili.notquests.Commands.old.AdminCommands">QuestPointsAdminCommand</a></span>&nbsp;<span class="element-name">questPointsAdminCommand</span></div>
+    <div class="member-signature"><span class="modifiers">private final</span>&nbsp;<span class="return-type"><a
+            href="AdminCommands/QuestPointsAdminCommand.html"
+            title="class in rocks.gravili.notquests.commands.old.AdminCommands">QuestPointsAdminCommand</a></span>&nbsp;<span
+            class="element-name">questPointsAdminCommand</span></div>
 </section>
 </li>
 <li>
 <section class="detail" id="objectivesAdminCommand">
 <h3>objectivesAdminCommand</h3>
-<div class="member-signature"><span class="modifiers">private final</span>&nbsp;<span class="return-type"><a href="AdminCommands/ObjectivesAdminCommand.html" title="class in rocks.gravili.notquests.Commands.old.AdminCommands">ObjectivesAdminCommand</a></span>&nbsp;<span class="element-name">objectivesAdminCommand</span></div>
+    <div class="member-signature"><span class="modifiers">private final</span>&nbsp;<span class="return-type"><a
+            href="AdminCommands/ObjectivesAdminCommand.html"
+            title="class in rocks.gravili.notquests.commands.old.AdminCommands">ObjectivesAdminCommand</a></span>&nbsp;<span
+            class="element-name">objectivesAdminCommand</span></div>
 </section>
 </li>
 <li>
 <section class="detail" id="armorStandsAdminCommand">
 <h3>armorStandsAdminCommand</h3>
-<div class="member-signature"><span class="modifiers">private final</span>&nbsp;<span class="return-type"><a href="AdminCommands/ArmorStandsAdminCommand.html" title="class in rocks.gravili.notquests.Commands.old.AdminCommands">ArmorStandsAdminCommand</a></span>&nbsp;<span class="element-name">armorStandsAdminCommand</span></div>
+    <div class="member-signature"><span class="modifiers">private final</span>&nbsp;<span class="return-type"><a
+            href="AdminCommands/ArmorStandsAdminCommand.html"
+            title="class in rocks.gravili.notquests.commands.old.AdminCommands">ArmorStandsAdminCommand</a></span>&nbsp;<span
+            class="element-name">armorStandsAdminCommand</span></div>
 </section>
 </li>
 <li>
@@ -300,12 +333,17 @@ implements org.bukkit.command.CommandExecutor, org.bukkit.command.TabCompleter</
 </section>
 </li>
 <li>
-<section class="detail" id="handleCommandsEditRewards(org.bukkit.command.CommandSender,java.lang.String[],rocks.gravili.notquests.Structs.Quest)">
-<h3>handleCommandsEditRewards</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">handleCommandsEditRewards</span><wbr><span class="parameters">(org.bukkit.command.CommandSender&nbsp;sender,
- <a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang">String</a>[]&nbsp;args,
- <a href="../../Structs/Quest.html" title="class in rocks.gravili.notquests.Structs">Quest</a>&nbsp;quest)</span></div>
-</section>
+    <section class="detail"
+             id="handleCommandsEditRewards(org.bukkit.command.CommandSender,java.lang.String[],rocks.gravili.notquests.structs.Quest)">
+        <h3>handleCommandsEditRewards</h3>
+        <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span
+                class="element-name">handleCommandsEditRewards</span>
+            <wbr>
+            <span class="parameters">(org.bukkit.command.CommandSender&nbsp;sender,
+ <a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html"
+    title="class or interface in java.lang">String</a>[]&nbsp;args,
+ <a href="../../Structs/Quest.html" title="class in rocks.gravili.notquests.structs">Quest</a>&nbsp;quest)</span></div>
+    </section>
 </li>
 <li>
 <section class="detail" id="onTabComplete(org.bukkit.command.CommandSender,org.bukkit.command.Command,java.lang.String,java.lang.String[])">

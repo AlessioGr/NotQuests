@@ -6,7 +6,8 @@
 <meta content="width=device-width, initial-scale=1" name="viewport">
 <meta content="text/html; charset=utf8" http-equiv="Content-Type">
 <meta content="2021-11-27" name="dc.created">
-<meta content="declaration: package: rocks.gravili.notquests.Managers.Registering, class: ObjectiveManager" name="description">
+<meta content="declaration: package: rocks.gravili.notquests.managers.registering, class: ObjectiveManager"
+      name="description">
 <meta content="javadoc/ClassWriterImpl" name="generator">
 <link href="../../../../../stylesheet.css" rel="stylesheet" title="Style" type="text/css">
 <link href="../../../../../script-dir/jquery-ui.min.css" rel="stylesheet" title="Style" type="text/css">
@@ -69,11 +70,12 @@ loadScripts(document, 'script');</script>
 <main role="main">
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
-<div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">rocks.gravili.notquests.Managers.Registering</a></div>
+    <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">rocks.gravili.notquests.managers.registering</a>
+    </div>
 <h1 class="title" title="Class ObjectiveManager">Class ObjectiveManager</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang">java.lang.Object</a>
-<div class="inheritance">rocks.gravili.notquests.Managers.Registering.ObjectiveManager</div>
+    <div class="inheritance">rocks.gravili.notquests.managers.registering.ObjectiveManager</div>
 </div>
 <section class="class-description" id="class-description">
 <hr>
@@ -94,7 +96,18 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code>private final <a href="../../NotQuests.html" title="class in rocks.gravili.notquests">NotQuests</a></code></div>
 <div class="col-second even-row-color"><code><a class="member-name-link" href="#main">main</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>private final <a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/HashMap.html" title="class or interface in java.util">HashMap</a>&lt;<a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang">String</a>,<wbr><a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang">Class</a>&lt;? extends <a href="../../Structs/Objectives/Objective.html" title="class in rocks.gravili.notquests.Structs.Objectives">Objective</a>&gt;&gt;</code></div>
+    <div class="col-first odd-row-color"><code>private final <a class="external-link"
+                                                                href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/HashMap.html"
+                                                                title="class or interface in java.util">HashMap</a>&lt;<a
+            class="external-link"
+            href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html"
+            title="class or interface in java.lang">String</a>,
+        <wbr>
+        <a class="external-link"
+           href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html"
+           title="class or interface in java.lang">Class</a>&lt;? extends <a
+                href="../../Structs/Objectives/Objective.html"
+                title="class in rocks.gravili.notquests.structs.objectives">Objective</a>&gt;&gt;</code></div>
 <div class="col-second odd-row-color"><code><a class="member-name-link" href="#objectives">objectives</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 </div>
@@ -124,27 +137,69 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang">Class</a>&lt;? extends <a href="../../Structs/Objectives/Objective.html" title="class in rocks.gravili.notquests.Structs.Objectives">Objective</a>&gt;</code></div>
+    <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+        <code>final <a class="external-link"
+                       href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html"
+                       title="class or interface in java.lang">Class</a>&lt;? extends <a
+                href="../../Structs/Objectives/Objective.html"
+                title="class in rocks.gravili.notquests.structs.objectives">Objective</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#getObjectiveClass(java.lang.String)">getObjectiveClass</a><wbr>(<a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang">String</a>&nbsp;type)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util">Collection</a>&lt;<a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang">String</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#getObjectiveIdentifiers()">getObjectiveIdentifiers</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util">Collection</a>&lt;<a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang">Class</a>&lt;? extends <a href="../../Structs/Objectives/Objective.html" title="class in rocks.gravili.notquests.Structs.Objectives">Objective</a>&gt;&gt;</code></div>
+    <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+        <code>final <a class="external-link"
+                       href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html"
+                       title="class or interface in java.util">Collection</a>&lt;<a class="external-link"
+                                                                                    href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html"
+                                                                                    title="class or interface in java.lang">Class</a>&lt;?
+            extends <a href="../../Structs/Objectives/Objective.html"
+                       title="class in rocks.gravili.notquests.structs.objectives">Objective</a>&gt;&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#getObjectives()">getObjectives</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/HashMap.html" title="class or interface in java.util">HashMap</a>&lt;<a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang">String</a>,<wbr><a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang">Class</a>&lt;? extends <a href="../../Structs/Objectives/Objective.html" title="class in rocks.gravili.notquests.Structs.Objectives">Objective</a>&gt;&gt;</code></div>
+    <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final
+        <a class="external-link"
+           href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/HashMap.html"
+           title="class or interface in java.util">HashMap</a>&lt;<a class="external-link"
+                                                                     href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html"
+                                                                     title="class or interface in java.lang">String</a>,
+        <wbr>
+        <a class="external-link"
+           href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html"
+           title="class or interface in java.lang">Class</a>&lt;? extends <a
+                href="../../Structs/Objectives/Objective.html"
+                title="class in rocks.gravili.notquests.structs.objectives">Objective</a>&gt;&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#getObjectivesAndIdentfiers()">getObjectivesAndIdentfiers</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#getObjectiveType(java.lang.Class)">getObjectiveType</a><wbr>(<a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang">Class</a>&lt;? extends <a href="../../Structs/Objectives/Objective.html" title="class in rocks.gravili.notquests.Structs.Objectives">Objective</a>&gt;&nbsp;objective)</code></div>
+    <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+        <code><a class="member-name-link" href="#getObjectiveType(java.lang.Class)">getObjectiveType</a>
+            <wbr>
+            (<a class="external-link"
+                href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html"
+                title="class or interface in java.lang">Class</a>&lt;? extends <a
+                    href="../../Structs/Objectives/Objective.html"
+                    title="class in rocks.gravili.notquests.structs.objectives">Objective</a>&gt;&nbsp;objective)</code>
+    </div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#registerDefaultObjectives()">registerDefaultObjectives</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#registerObjective(java.lang.String,java.lang.Class)">registerObjective</a><wbr>(<a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang">String</a>&nbsp;identifier,
- <a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang">Class</a>&lt;? extends <a href="../../Structs/Objectives/Objective.html" title="class in rocks.gravili.notquests.Structs.Objectives">Objective</a>&gt;&nbsp;objective)</code></div>
+    <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+        <code><a class="member-name-link"
+                 href="#registerObjective(java.lang.String,java.lang.Class)">registerObjective</a>
+            <wbr>
+            (<a class="external-link"
+                href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html"
+                title="class or interface in java.lang">String</a>&nbsp;identifier,
+            <a class="external-link"
+               href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html"
+               title="class or interface in java.lang">Class</a>&lt;? extends <a
+                    href="../../Structs/Objectives/Objective.html"
+                    title="class in rocks.gravili.notquests.structs.objectives">Objective</a>&gt;&nbsp;objective)</code>
+    </div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
@@ -172,7 +227,17 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="objectives">
 <h3>objectives</h3>
-<div class="member-signature"><span class="modifiers">private final</span>&nbsp;<span class="return-type"><a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/HashMap.html" title="class or interface in java.util">HashMap</a>&lt;<a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang">String</a>,<wbr><a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang">Class</a>&lt;? extends <a href="../../Structs/Objectives/Objective.html" title="class in rocks.gravili.notquests.Structs.Objectives">Objective</a>&gt;&gt;</span>&nbsp;<span class="element-name">objectives</span></div>
+    <div class="member-signature"><span class="modifiers">private final</span>&nbsp;<span class="return-type"><a
+            class="external-link"
+            href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/HashMap.html"
+            title="class or interface in java.util">HashMap</a>&lt;<a class="external-link"
+                                                                      href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html"
+                                                                      title="class or interface in java.lang">String</a>,<wbr><a
+            class="external-link"
+            href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html"
+            title="class or interface in java.lang">Class</a>&lt;? extends <a
+            href="../../Structs/Objectives/Objective.html" title="class in rocks.gravili.notquests.structs.objectives">Objective</a>&gt;&gt;</span>&nbsp;<span
+            class="element-name">objectives</span></div>
 </section>
 </li>
 </ul>
@@ -206,32 +271,79 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="registerObjective(java.lang.String,java.lang.Class)">
 <h3>registerObjective</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerObjective</span><wbr><span class="parameters">(<a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang">String</a>&nbsp;identifier,
- <a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang">Class</a>&lt;? extends <a href="../../Structs/Objectives/Objective.html" title="class in rocks.gravili.notquests.Structs.Objectives">Objective</a>&gt;&nbsp;objective)</span></div>
+    <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span
+            class="element-name">registerObjective</span>
+        <wbr>
+        <span class="parameters">(<a class="external-link"
+                                     href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html"
+                                     title="class or interface in java.lang">String</a>&nbsp;identifier,
+ <a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html"
+    title="class or interface in java.lang">Class</a>&lt;? extends <a href="../../Structs/Objectives/Objective.html"
+                                                                      title="class in rocks.gravili.notquests.structs.objectives">Objective</a>&gt;&nbsp;objective)</span>
+    </div>
 </section>
 </li>
 <li>
 <section class="detail" id="getObjectiveClass(java.lang.String)">
 <h3>getObjectiveClass</h3>
-<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type"><a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang">Class</a>&lt;? extends <a href="../../Structs/Objectives/Objective.html" title="class in rocks.gravili.notquests.Structs.Objectives">Objective</a>&gt;</span>&nbsp;<span class="element-name">getObjectiveClass</span><wbr><span class="parameters">(<a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang">String</a>&nbsp;type)</span></div>
+    <div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type"><a
+            class="external-link"
+            href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html"
+            title="class or interface in java.lang">Class</a>&lt;? extends <a
+            href="../../Structs/Objectives/Objective.html" title="class in rocks.gravili.notquests.structs.objectives">Objective</a>&gt;</span>&nbsp;<span
+            class="element-name">getObjectiveClass</span>
+        <wbr>
+        <span class="parameters">(<a class="external-link"
+                                     href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html"
+                                     title="class or interface in java.lang">String</a>&nbsp;type)</span></div>
 </section>
 </li>
 <li>
 <section class="detail" id="getObjectiveType(java.lang.Class)">
 <h3>getObjectiveType</h3>
-<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type"><a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang">String</a></span>&nbsp;<span class="element-name">getObjectiveType</span><wbr><span class="parameters">(<a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang">Class</a>&lt;? extends <a href="../../Structs/Objectives/Objective.html" title="class in rocks.gravili.notquests.Structs.Objectives">Objective</a>&gt;&nbsp;objective)</span></div>
+    <div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type"><a
+            class="external-link"
+            href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html"
+            title="class or interface in java.lang">String</a></span>&nbsp;<span
+            class="element-name">getObjectiveType</span>
+        <wbr>
+        <span class="parameters">(<a class="external-link"
+                                     href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html"
+                                     title="class or interface in java.lang">Class</a>&lt;? extends <a
+                href="../../Structs/Objectives/Objective.html"
+                title="class in rocks.gravili.notquests.structs.objectives">Objective</a>&gt;&nbsp;objective)</span>
+    </div>
 </section>
 </li>
 <li>
 <section class="detail" id="getObjectivesAndIdentfiers()">
 <h3>getObjectivesAndIdentfiers</h3>
-<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type"><a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/HashMap.html" title="class or interface in java.util">HashMap</a>&lt;<a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang">String</a>,<wbr><a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang">Class</a>&lt;? extends <a href="../../Structs/Objectives/Objective.html" title="class in rocks.gravili.notquests.Structs.Objectives">Objective</a>&gt;&gt;</span>&nbsp;<span class="element-name">getObjectivesAndIdentfiers</span>()</div>
+    <div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type"><a
+            class="external-link"
+            href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/HashMap.html"
+            title="class or interface in java.util">HashMap</a>&lt;<a class="external-link"
+                                                                      href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html"
+                                                                      title="class or interface in java.lang">String</a>,<wbr><a
+            class="external-link"
+            href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html"
+            title="class or interface in java.lang">Class</a>&lt;? extends <a
+            href="../../Structs/Objectives/Objective.html" title="class in rocks.gravili.notquests.structs.objectives">Objective</a>&gt;&gt;</span>&nbsp;<span
+            class="element-name">getObjectivesAndIdentfiers</span>()
+    </div>
 </section>
 </li>
 <li>
 <section class="detail" id="getObjectives()">
 <h3>getObjectives</h3>
-<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type"><a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util">Collection</a>&lt;<a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang">Class</a>&lt;? extends <a href="../../Structs/Objectives/Objective.html" title="class in rocks.gravili.notquests.Structs.Objectives">Objective</a>&gt;&gt;</span>&nbsp;<span class="element-name">getObjectives</span>()</div>
+    <div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type"><a
+            class="external-link"
+            href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html"
+            title="class or interface in java.util">Collection</a>&lt;<a class="external-link"
+                                                                         href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html"
+                                                                         title="class or interface in java.lang">Class</a>&lt;? extends <a
+            href="../../Structs/Objectives/Objective.html" title="class in rocks.gravili.notquests.structs.objectives">Objective</a>&gt;&gt;</span>&nbsp;<span
+            class="element-name">getObjectives</span>()
+    </div>
 </section>
 </li>
 <li>

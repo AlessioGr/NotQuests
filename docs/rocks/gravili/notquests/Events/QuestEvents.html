@@ -6,7 +6,7 @@
 <meta content="width=device-width, initial-scale=1" name="viewport">
 <meta content="text/html; charset=utf8" http-equiv="Content-Type">
 <meta content="2021-11-27" name="dc.created">
-<meta content="declaration: package: rocks.gravili.notquests.Events, class: QuestEvents" name="description">
+<meta content="declaration: package: rocks.gravili.notquests.events, class: QuestEvents" name="description">
 <meta content="javadoc/ClassWriterImpl" name="generator">
 <link href="../../../../stylesheet.css" rel="stylesheet" title="Style" type="text/css">
 <link href="../../../../script-dir/jquery-ui.min.css" rel="stylesheet" title="Style" type="text/css">
@@ -69,11 +69,12 @@ loadScripts(document, 'script');</script>
 <main role="main">
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
-<div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">rocks.gravili.notquests.Events</a></div>
+    <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">rocks.gravili.notquests.events</a>
+    </div>
 <h1 class="title" title="Class QuestEvents">Class QuestEvents</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang">java.lang.Object</a>
-<div class="inheritance">rocks.gravili.notquests.Events.QuestEvents</div>
+    <div class="inheritance">rocks.gravili.notquests.events.QuestEvents</div>
 </div>
 <section class="class-description" id="class-description">
 <dl class="notes">
@@ -138,8 +139,13 @@ implements org.bukkit.event.Listener</span></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#getMaxCraftAmount(org.bukkit.inventory.CraftingInventory)">getMaxCraftAmount</a><wbr>(org.bukkit.inventory.CraftingInventory&nbsp;inv)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>private void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#handleGeneralTrigger(rocks.gravili.notquests.Structs.QuestPlayer,rocks.gravili.notquests.Structs.Triggers.ActiveTrigger)">handleGeneralTrigger</a><wbr>(<a href="../Structs/QuestPlayer.html" title="class in rocks.gravili.notquests.Structs">QuestPlayer</a>&nbsp;questPlayer,
- <a href="../Structs/Triggers/ActiveTrigger.html" title="class in rocks.gravili.notquests.Structs.Triggers">ActiveTrigger</a>&nbsp;activeTrigger)</code></div>
+    <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+        <code><a class="member-name-link"
+                 href="#handleGeneralTrigger(rocks.gravili.notquests.structs.QuestPlayer,rocks.gravili.notquests.structs.triggers.ActiveTrigger)">handleGeneralTrigger</a>
+            <wbr>
+            (<a href="../Structs/QuestPlayer.html" title="class in rocks.gravili.notquests.structs">QuestPlayer</a>&nbsp;questPlayer,
+            <a href="../Structs/Triggers/ActiveTrigger.html" title="class in rocks.gravili.notquests.structs.triggers">ActiveTrigger</a>&nbsp;activeTrigger)</code>
+    </div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">This method handles the most commonly used type of trigger, which should simply add to the progress.</div>
 </div>
@@ -298,17 +304,25 @@ implements org.bukkit.event.Listener</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="handleGeneralTrigger(rocks.gravili.notquests.Structs.QuestPlayer,rocks.gravili.notquests.Structs.Triggers.ActiveTrigger)">
-<h3>handleGeneralTrigger</h3>
-<div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">handleGeneralTrigger</span><wbr><span class="parameters">(<a href="../Structs/QuestPlayer.html" title="class in rocks.gravili.notquests.Structs">QuestPlayer</a>&nbsp;questPlayer,
- <a href="../Structs/Triggers/ActiveTrigger.html" title="class in rocks.gravili.notquests.Structs.Triggers">ActiveTrigger</a>&nbsp;activeTrigger)</span></div>
-<div class="block">This method handles the most commonly used type of trigger, which should simply add to the progress.
- Apart from adding the progress, this method checks for the triggers applyOn and the triggers worldName</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>questPlayer</code> - is the QuestPlayer object, used to check the world of the player</dd>
-<dd><code>activeTrigger</code> - is the trigger which we need in order to add progress to it</dd>
-</dl>
+    <section class="detail"
+             id="handleGeneralTrigger(rocks.gravili.notquests.structs.QuestPlayer,rocks.gravili.notquests.structs.triggers.ActiveTrigger)">
+        <h3>handleGeneralTrigger</h3>
+        <div class="member-signature"><span class="modifiers">private</span>&nbsp;<span class="return-type">void</span>&nbsp;<span
+                class="element-name">handleGeneralTrigger</span>
+            <wbr>
+            <span class="parameters">(<a href="../Structs/QuestPlayer.html"
+                                         title="class in rocks.gravili.notquests.structs">QuestPlayer</a>&nbsp;questPlayer,
+ <a href="../Structs/Triggers/ActiveTrigger.html" title="class in rocks.gravili.notquests.structs.triggers">ActiveTrigger</a>&nbsp;activeTrigger)</span>
+        </div>
+        <div class="block">This method handles the most commonly used type of trigger, which should simply add to the
+            progress.
+            Apart from adding the progress, this method checks for the triggers applyOn and the triggers worldName
+        </div>
+        <dl class="notes">
+            <dt>Parameters:</dt>
+            <dd><code>questPlayer</code> - is the QuestPlayer object, used to check the world of the player</dd>
+            <dd><code>activeTrigger</code> - is the trigger which we need in order to add progress to it</dd>
+        </dl>
 </section>
 </li>
 <li>

@@ -6,7 +6,7 @@
 <meta content="width=device-width, initial-scale=1" name="viewport">
 <meta content="text/html; charset=utf8" http-equiv="Content-Type">
 <meta content="2021-11-27" name="dc.created">
-<meta content="declaration: package: rocks.gravili.notquests.Structs.Objectives, class: Objective" name="description">
+<meta content="declaration: package: rocks.gravili.notquests.structs.objectives, class: Objective" name="description">
 <meta content="javadoc/ClassWriterImpl" name="generator">
 <link href="../../../../../stylesheet.css" rel="stylesheet" title="Style" type="text/css">
 <link href="../../../../../script-dir/jquery-ui.min.css" rel="stylesheet" title="Style" type="text/css">
@@ -69,16 +69,33 @@ loadScripts(document, 'script');</script>
 <main role="main">
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
-<div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">rocks.gravili.notquests.Structs.Objectives</a></div>
+    <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">rocks.gravili.notquests.structs.objectives</a>
+    </div>
 <h1 class="title" title="Class Objective">Class Objective</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang">java.lang.Object</a>
-<div class="inheritance">rocks.gravili.notquests.Structs.Objectives.Objective</div>
+    <div class="inheritance">rocks.gravili.notquests.structs.objectives.Objective</div>
 </div>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>Direct Known Subclasses:</dt>
-<dd><code><a href="BreakBlocksObjective.html" title="class in rocks.gravili.notquests.Structs.Objectives">BreakBlocksObjective</a></code>, <code><a href="BreedObjective.html" title="class in rocks.gravili.notquests.Structs.Objectives">BreedObjective</a></code>, <code><a href="CollectItemsObjective.html" title="class in rocks.gravili.notquests.Structs.Objectives">CollectItemsObjective</a></code>, <code><a href="ConsumeItemsObjective.html" title="class in rocks.gravili.notquests.Structs.Objectives">ConsumeItemsObjective</a></code>, <code><a href="CraftItemsObjective.html" title="class in rocks.gravili.notquests.Structs.Objectives">CraftItemsObjective</a></code>, <code><a href="DeliverItemsObjective.html" title="class in rocks.gravili.notquests.Structs.Objectives">DeliverItemsObjective</a></code>, <code><a href="EscortNPCObjective.html" title="class in rocks.gravili.notquests.Structs.Objectives">EscortNPCObjective</a></code>, <code><a href="hooks/KillEliteMobsObjective.html" title="class in rocks.gravili.notquests.Structs.Objectives.hooks">KillEliteMobsObjective</a></code>, <code><a href="KillMobsObjective.html" title="class in rocks.gravili.notquests.Structs.Objectives">KillMobsObjective</a></code>, <code><a href="OtherQuestObjective.html" title="class in rocks.gravili.notquests.Structs.Objectives">OtherQuestObjective</a></code>, <code><a href="ReachLocationObjective.html" title="class in rocks.gravili.notquests.Structs.Objectives">ReachLocationObjective</a></code>, <code><a href="SlimefunResearchObjective.html" title="class in rocks.gravili.notquests.Structs.Objectives">SlimefunResearchObjective</a></code>, <code><a href="TalkToNPCObjective.html" title="class in rocks.gravili.notquests.Structs.Objectives">TalkToNPCObjective</a></code>, <code><a href="TriggerCommandObjective.html" title="class in rocks.gravili.notquests.Structs.Objectives">TriggerCommandObjective</a></code></dd>
+    <dd><code><a href="BreakBlocksObjective.html" title="class in rocks.gravili.notquests.structs.objectives">BreakBlocksObjective</a></code>,
+        <code><a href="BreedObjective.html"
+                 title="class in rocks.gravili.notquests.structs.objectives">BreedObjective</a></code>, <code><a
+                href="CollectItemsObjective.html" title="class in rocks.gravili.notquests.structs.objectives">CollectItemsObjective</a></code>,
+        <code><a href="ConsumeItemsObjective.html" title="class in rocks.gravili.notquests.structs.objectives">ConsumeItemsObjective</a></code>,
+        <code><a href="CraftItemsObjective.html" title="class in rocks.gravili.notquests.structs.objectives">CraftItemsObjective</a></code>,
+        <code><a href="DeliverItemsObjective.html" title="class in rocks.gravili.notquests.structs.objectives">DeliverItemsObjective</a></code>,
+        <code><a href="EscortNPCObjective.html" title="class in rocks.gravili.notquests.structs.objectives">EscortNPCObjective</a></code>,
+        <code><a href="hooks/KillEliteMobsObjective.html"
+                 title="class in rocks.gravili.notquests.structs.objectives.hooks">KillEliteMobsObjective</a></code>,
+        <code><a href="KillMobsObjective.html" title="class in rocks.gravili.notquests.structs.objectives">KillMobsObjective</a></code>,
+        <code><a href="OtherQuestObjective.html" title="class in rocks.gravili.notquests.structs.objectives">OtherQuestObjective</a></code>,
+        <code><a href="ReachLocationObjective.html" title="class in rocks.gravili.notquests.structs.objectives">ReachLocationObjective</a></code>,
+        <code><a href="SlimefunResearchObjective.html" title="class in rocks.gravili.notquests.structs.objectives">SlimefunResearchObjective</a></code>,
+        <code><a href="TalkToNPCObjective.html" title="class in rocks.gravili.notquests.structs.objectives">TalkToNPCObjective</a></code>,
+        <code><a href="TriggerCommandObjective.html" title="class in rocks.gravili.notquests.structs.objectives">TriggerCommandObjective</a></code>
+    </dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public abstract class </span><span class="element-name type-name-label">Objective</span>
@@ -101,7 +118,11 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color"><code>private int</code></div>
 <div class="col-second odd-row-color"><code><a class="member-name-link" href="#completionNPCID">completionNPCID</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>private final <a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util">ArrayList</a>&lt;<a href="Objective.html" title="class in rocks.gravili.notquests.Structs.Objectives">Objective</a>&gt;</code></div>
+    <div class="col-first even-row-color"><code>private final <a class="external-link"
+                                                                 href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html"
+                                                                 title="class or interface in java.util">ArrayList</a>&lt;<a
+            href="Objective.html" title="class in rocks.gravili.notquests.structs.objectives">Objective</a>&gt;</code>
+    </div>
 <div class="col-second even-row-color"><code><a class="member-name-link" href="#dependantObjectives">dependantObjectives</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>private final <a href="../../NotQuests.html" title="class in rocks.gravili.notquests">NotQuests</a></code></div>
@@ -119,7 +140,9 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color"><code>private final long</code></div>
 <div class="col-second odd-row-color"><code><a class="member-name-link" href="#progressNeeded">progressNeeded</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>private final <a href="../Quest.html" title="class in rocks.gravili.notquests.Structs">Quest</a></code></div>
+    <div class="col-first even-row-color"><code>private final <a href="../Quest.html"
+                                                                 title="class in rocks.gravili.notquests.structs">Quest</a></code>
+    </div>
 <div class="col-second even-row-color"><code><a class="member-name-link" href="#quest">quest</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
@@ -133,10 +156,13 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a class="member-name-link" href="#%3Cinit%3E(rocks.gravili.notquests.NotQuests,rocks.gravili.notquests.Structs.Quest,int,int)">Objective</a><wbr>(<a href="../../NotQuests.html" title="class in rocks.gravili.notquests">NotQuests</a>&nbsp;main,
- <a href="../Quest.html" title="class in rocks.gravili.notquests.Structs">Quest</a>&nbsp;quest,
- int&nbsp;objectiveID,
- int&nbsp;progressNeeded)</code></div>
+    <div class="col-constructor-name even-row-color"><code><a class="member-name-link"
+                                                              href="#%3Cinit%3E(rocks.gravili.notquests.NotQuests,rocks.gravili.notquests.structs.Quest,int,int)">Objective</a>
+        <wbr>
+        (<a href="../../NotQuests.html" title="class in rocks.gravili.notquests">NotQuests</a>&nbsp;main,
+        <a href="../Quest.html" title="class in rocks.gravili.notquests.structs">Quest</a>&nbsp;quest,
+        int&nbsp;objectiveID,
+        int&nbsp;progressNeeded)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -153,8 +179,12 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#addDependantObjective(rocks.gravili.notquests.Structs.Objectives.Objective,boolean)">addDependantObjective</a><wbr>(<a href="Objective.html" title="class in rocks.gravili.notquests.Structs.Objectives">Objective</a>&nbsp;objective,
- boolean&nbsp;save)</code></div>
+    <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+        <code><a class="member-name-link"
+                 href="#addDependantObjective(rocks.gravili.notquests.structs.objectives.Objective,boolean)">addDependantObjective</a>
+            <wbr>
+            (<a href="Objective.html" title="class in rocks.gravili.notquests.structs.objectives">Objective</a>&nbsp;objective,
+            boolean&nbsp;save)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#clearDependantObjectives()">clearDependantObjectives</a>()</code></div>
@@ -165,7 +195,12 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#getCompletionNPCID()">getCompletionNPCID</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util">ArrayList</a>&lt;<a href="Objective.html" title="class in rocks.gravili.notquests.Structs.Objectives">Objective</a>&gt;</code></div>
+    <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+        <code>final <a class="external-link"
+                       href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html"
+                       title="class or interface in java.util">ArrayList</a>&lt;<a href="Objective.html"
+                                                                                   title="class in rocks.gravili.notquests.structs.objectives">Objective</a>&gt;</code>
+    </div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#getDependantObjectives()">getDependantObjectives</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang">String</a></code></div>
@@ -193,12 +228,17 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final long</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#getProgressNeeded()">getProgressNeeded</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="../Quest.html" title="class in rocks.gravili.notquests.Structs">Quest</a></code></div>
+    <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+        <code>final <a href="../Quest.html" title="class in rocks.gravili.notquests.structs">Quest</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#getQuest()">getQuest</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#removeDependantObjective(rocks.gravili.notquests.Structs.Objectives.Objective,boolean)">removeDependantObjective</a><wbr>(<a href="Objective.html" title="class in rocks.gravili.notquests.Structs.Objectives">Objective</a>&nbsp;objective,
- boolean&nbsp;save)</code></div>
+    <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+        <code><a class="member-name-link"
+                 href="#removeDependantObjective(rocks.gravili.notquests.structs.objectives.Objective,boolean)">removeDependantObjective</a>
+            <wbr>
+            (<a href="Objective.html" title="class in rocks.gravili.notquests.structs.objectives">Objective</a>&nbsp;objective,
+            boolean&nbsp;save)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#removeObjectiveDescription(boolean)">removeObjectiveDescription</a><wbr>(boolean&nbsp;save)</code></div>
@@ -245,7 +285,12 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="dependantObjectives">
 <h3>dependantObjectives</h3>
-<div class="member-signature"><span class="modifiers">private final</span>&nbsp;<span class="return-type"><a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util">ArrayList</a>&lt;<a href="Objective.html" title="class in rocks.gravili.notquests.Structs.Objectives">Objective</a>&gt;</span>&nbsp;<span class="element-name">dependantObjectives</span></div>
+    <div class="member-signature"><span class="modifiers">private final</span>&nbsp;<span class="return-type"><a
+            class="external-link"
+            href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html"
+            title="class or interface in java.util">ArrayList</a>&lt;<a href="Objective.html"
+                                                                        title="class in rocks.gravili.notquests.structs.objectives">Objective</a>&gt;</span>&nbsp;<span
+            class="element-name">dependantObjectives</span></div>
 </section>
 </li>
 <li>
@@ -257,7 +302,9 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="quest">
 <h3>quest</h3>
-<div class="member-signature"><span class="modifiers">private final</span>&nbsp;<span class="return-type"><a href="../Quest.html" title="class in rocks.gravili.notquests.Structs">Quest</a></span>&nbsp;<span class="element-name">quest</span></div>
+    <div class="member-signature"><span class="modifiers">private final</span>&nbsp;<span class="return-type"><a
+            href="../Quest.html" title="class in rocks.gravili.notquests.structs">Quest</a></span>&nbsp;<span
+            class="element-name">quest</span></div>
 </section>
 </li>
 <li>
@@ -305,13 +352,18 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(rocks.gravili.notquests.NotQuests,rocks.gravili.notquests.Structs.Quest,int,int)">
-<h3>Objective</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Objective</span><wbr><span class="parameters">(<a href="../../NotQuests.html" title="class in rocks.gravili.notquests">NotQuests</a>&nbsp;main,
- <a href="../Quest.html" title="class in rocks.gravili.notquests.Structs">Quest</a>&nbsp;quest,
+    <section class="detail"
+             id="&lt;init&gt;(rocks.gravili.notquests.NotQuests,rocks.gravili.notquests.structs.Quest,int,int)">
+        <h3>Objective</h3>
+        <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span
+                class="element-name">Objective</span>
+            <wbr>
+            <span class="parameters">(<a href="../../NotQuests.html"
+                                         title="class in rocks.gravili.notquests">NotQuests</a>&nbsp;main,
+ <a href="../Quest.html" title="class in rocks.gravili.notquests.structs">Quest</a>&nbsp;quest,
  int&nbsp;objectiveID,
  int&nbsp;progressNeeded)</span></div>
-</section>
+    </section>
 </li>
 </ul>
 </section>
@@ -362,22 +414,36 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="getDependantObjectives()">
 <h3>getDependantObjectives</h3>
-<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type"><a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util">ArrayList</a>&lt;<a href="Objective.html" title="class in rocks.gravili.notquests.Structs.Objectives">Objective</a>&gt;</span>&nbsp;<span class="element-name">getDependantObjectives</span>()</div>
+    <div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type"><a
+            class="external-link"
+            href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ArrayList.html"
+            title="class or interface in java.util">ArrayList</a>&lt;<a href="Objective.html"
+                                                                        title="class in rocks.gravili.notquests.structs.objectives">Objective</a>&gt;</span>&nbsp;<span
+            class="element-name">getDependantObjectives</span>()
+    </div>
 </section>
 </li>
 <li>
-<section class="detail" id="addDependantObjective(rocks.gravili.notquests.Structs.Objectives.Objective,boolean)">
-<h3>addDependantObjective</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">addDependantObjective</span><wbr><span class="parameters">(<a href="Objective.html" title="class in rocks.gravili.notquests.Structs.Objectives">Objective</a>&nbsp;objective,
+    <section class="detail" id="addDependantObjective(rocks.gravili.notquests.structs.objectives.Objective,boolean)">
+        <h3>addDependantObjective</h3>
+        <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span
+                class="element-name">addDependantObjective</span>
+            <wbr>
+            <span class="parameters">(<a href="Objective.html"
+                                         title="class in rocks.gravili.notquests.structs.objectives">Objective</a>&nbsp;objective,
  boolean&nbsp;save)</span></div>
-</section>
+    </section>
 </li>
 <li>
-<section class="detail" id="removeDependantObjective(rocks.gravili.notquests.Structs.Objectives.Objective,boolean)">
-<h3>removeDependantObjective</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">removeDependantObjective</span><wbr><span class="parameters">(<a href="Objective.html" title="class in rocks.gravili.notquests.Structs.Objectives">Objective</a>&nbsp;objective,
+    <section class="detail" id="removeDependantObjective(rocks.gravili.notquests.structs.objectives.Objective,boolean)">
+        <h3>removeDependantObjective</h3>
+        <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span
+                class="element-name">removeDependantObjective</span>
+            <wbr>
+            <span class="parameters">(<a href="Objective.html"
+                                         title="class in rocks.gravili.notquests.structs.objectives">Objective</a>&nbsp;objective,
  boolean&nbsp;save)</span></div>
-</section>
+    </section>
 </li>
 <li>
 <section class="detail" id="clearDependantObjectives()">
@@ -446,7 +512,10 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="getQuest()">
 <h3>getQuest</h3>
-<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type"><a href="../Quest.html" title="class in rocks.gravili.notquests.Structs">Quest</a></span>&nbsp;<span class="element-name">getQuest</span>()</div>
+    <div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type"><a
+            href="../Quest.html" title="class in rocks.gravili.notquests.structs">Quest</a></span>&nbsp;<span
+            class="element-name">getQuest</span>()
+    </div>
 </section>
 </li>
 <li>

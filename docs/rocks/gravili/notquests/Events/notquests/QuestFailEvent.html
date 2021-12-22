@@ -6,7 +6,8 @@
 <meta content="width=device-width, initial-scale=1" name="viewport">
 <meta content="text/html; charset=utf8" http-equiv="Content-Type">
 <meta content="2021-11-27" name="dc.created">
-<meta content="declaration: package: rocks.gravili.notquests.Events.notquests, class: QuestFailEvent" name="description">
+<meta content="declaration: package: rocks.gravili.notquests.events.notquests, class: QuestFailEvent"
+      name="description">
 <meta content="javadoc/ClassWriterImpl" name="generator">
 <link href="../../../../../stylesheet.css" rel="stylesheet" title="Style" type="text/css">
 <link href="../../../../../script-dir/jquery-ui.min.css" rel="stylesheet" title="Style" type="text/css">
@@ -69,12 +70,13 @@ loadScripts(document, 'script');</script>
 <main role="main">
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
-<div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">rocks.gravili.notquests.Events.notquests</a></div>
+    <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">rocks.gravili.notquests.events.notquests</a>
+    </div>
 <h1 class="title" title="Class QuestFailEvent">Class QuestFailEvent</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang">java.lang.Object</a>
 <div class="inheritance">org.bukkit.event.Event
-<div class="inheritance">rocks.gravili.notquests.Events.notquests.QuestFailEvent</div>
+    <div class="inheritance">rocks.gravili.notquests.events.notquests.QuestFailEvent</div>
 </div>
 </div>
 <section class="class-description" id="class-description">
@@ -107,7 +109,9 @@ implements org.bukkit.event.Cancellable</span></div>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>private final <a href="../../Structs/ActiveQuest.html" title="class in rocks.gravili.notquests.Structs">ActiveQuest</a></code></div>
+    <div class="col-first even-row-color"><code>private final <a href="../../Structs/ActiveQuest.html"
+                                                                 title="class in rocks.gravili.notquests.structs">ActiveQuest</a></code>
+    </div>
 <div class="col-second even-row-color"><code><a class="member-name-link" href="#activeQuest">activeQuest</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>private static final org.bukkit.event.HandlerList</code></div>
@@ -116,7 +120,9 @@ implements org.bukkit.event.Cancellable</span></div>
 <div class="col-first even-row-color"><code>private boolean</code></div>
 <div class="col-second even-row-color"><code><a class="member-name-link" href="#isCancelled">isCancelled</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>private final <a href="../../Structs/QuestPlayer.html" title="class in rocks.gravili.notquests.Structs">QuestPlayer</a></code></div>
+    <div class="col-first odd-row-color"><code>private final <a href="../../Structs/QuestPlayer.html"
+                                                                title="class in rocks.gravili.notquests.structs">QuestPlayer</a></code>
+    </div>
 <div class="col-second odd-row-color"><code><a class="member-name-link" href="#questPlayer">questPlayer</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 </div>
@@ -130,8 +136,12 @@ implements org.bukkit.event.Cancellable</span></div>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a class="member-name-link" href="#%3Cinit%3E(rocks.gravili.notquests.Structs.QuestPlayer,rocks.gravili.notquests.Structs.ActiveQuest)">QuestFailEvent</a><wbr>(<a href="../../Structs/QuestPlayer.html" title="class in rocks.gravili.notquests.Structs">QuestPlayer</a>&nbsp;questPlayer,
- <a href="../../Structs/ActiveQuest.html" title="class in rocks.gravili.notquests.Structs">ActiveQuest</a>&nbsp;activeQuest)</code></div>
+    <div class="col-constructor-name even-row-color"><code><a class="member-name-link"
+                                                              href="#%3Cinit%3E(rocks.gravili.notquests.structs.QuestPlayer,rocks.gravili.notquests.structs.ActiveQuest)">QuestFailEvent</a>
+        <wbr>
+        (<a href="../../Structs/QuestPlayer.html" title="class in rocks.gravili.notquests.structs">QuestPlayer</a>&nbsp;questPlayer,
+        <a href="../../Structs/ActiveQuest.html" title="class in rocks.gravili.notquests.structs">ActiveQuest</a>&nbsp;activeQuest)</code>
+    </div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -147,7 +157,9 @@ implements org.bukkit.event.Cancellable</span></div>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../Structs/ActiveQuest.html" title="class in rocks.gravili.notquests.Structs">ActiveQuest</a></code></div>
+    <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+        <code><a href="../../Structs/ActiveQuest.html" title="class in rocks.gravili.notquests.structs">ActiveQuest</a></code>
+    </div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#getActiveQuest()">getActiveQuest</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static org.bukkit.event.HandlerList</code></div>
@@ -156,7 +168,9 @@ implements org.bukkit.event.Cancellable</span></div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>org.bukkit.event.HandlerList</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#getHandlers()">getHandlers</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../Structs/QuestPlayer.html" title="class in rocks.gravili.notquests.Structs">QuestPlayer</a></code></div>
+    <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a
+            href="../../Structs/QuestPlayer.html"
+            title="class in rocks.gravili.notquests.structs">QuestPlayer</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#getQuestPlayer()">getQuestPlayer</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
@@ -194,13 +208,19 @@ implements org.bukkit.event.Cancellable</span></div>
 <li>
 <section class="detail" id="questPlayer">
 <h3>questPlayer</h3>
-<div class="member-signature"><span class="modifiers">private final</span>&nbsp;<span class="return-type"><a href="../../Structs/QuestPlayer.html" title="class in rocks.gravili.notquests.Structs">QuestPlayer</a></span>&nbsp;<span class="element-name">questPlayer</span></div>
+    <div class="member-signature"><span class="modifiers">private final</span>&nbsp;<span class="return-type"><a
+            href="../../Structs/QuestPlayer.html"
+            title="class in rocks.gravili.notquests.structs">QuestPlayer</a></span>&nbsp;<span class="element-name">questPlayer</span>
+    </div>
 </section>
 </li>
 <li>
 <section class="detail" id="activeQuest">
 <h3>activeQuest</h3>
-<div class="member-signature"><span class="modifiers">private final</span>&nbsp;<span class="return-type"><a href="../../Structs/ActiveQuest.html" title="class in rocks.gravili.notquests.Structs">ActiveQuest</a></span>&nbsp;<span class="element-name">activeQuest</span></div>
+    <div class="member-signature"><span class="modifiers">private final</span>&nbsp;<span class="return-type"><a
+            href="../../Structs/ActiveQuest.html"
+            title="class in rocks.gravili.notquests.structs">ActiveQuest</a></span>&nbsp;<span class="element-name">activeQuest</span>
+    </div>
 </section>
 </li>
 <li>
@@ -218,11 +238,16 @@ implements org.bukkit.event.Cancellable</span></div>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(rocks.gravili.notquests.Structs.QuestPlayer,rocks.gravili.notquests.Structs.ActiveQuest)">
-<h3>QuestFailEvent</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">QuestFailEvent</span><wbr><span class="parameters">(<a href="../../Structs/QuestPlayer.html" title="class in rocks.gravili.notquests.Structs">QuestPlayer</a>&nbsp;questPlayer,
- <a href="../../Structs/ActiveQuest.html" title="class in rocks.gravili.notquests.Structs">ActiveQuest</a>&nbsp;activeQuest)</span></div>
-</section>
+    <section class="detail"
+             id="&lt;init&gt;(rocks.gravili.notquests.structs.QuestPlayer,rocks.gravili.notquests.structs.ActiveQuest)">
+        <h3>QuestFailEvent</h3>
+        <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">QuestFailEvent</span>
+            <wbr>
+            <span class="parameters">(<a href="../../Structs/QuestPlayer.html"
+                                         title="class in rocks.gravili.notquests.structs">QuestPlayer</a>&nbsp;questPlayer,
+ <a href="../../Structs/ActiveQuest.html" title="class in rocks.gravili.notquests.structs">ActiveQuest</a>&nbsp;activeQuest)</span>
+        </div>
+    </section>
 </li>
 </ul>
 </section>
@@ -272,13 +297,19 @@ implements org.bukkit.event.Cancellable</span></div>
 <li>
 <section class="detail" id="getQuestPlayer()">
 <h3>getQuestPlayer</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../Structs/QuestPlayer.html" title="class in rocks.gravili.notquests.Structs">QuestPlayer</a></span>&nbsp;<span class="element-name">getQuestPlayer</span>()</div>
+    <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a
+            href="../../Structs/QuestPlayer.html"
+            title="class in rocks.gravili.notquests.structs">QuestPlayer</a></span>&nbsp;<span class="element-name">getQuestPlayer</span>()
+    </div>
 </section>
 </li>
 <li>
 <section class="detail" id="getActiveQuest()">
 <h3>getActiveQuest</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../Structs/ActiveQuest.html" title="class in rocks.gravili.notquests.Structs">ActiveQuest</a></span>&nbsp;<span class="element-name">getActiveQuest</span>()</div>
+    <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a
+            href="../../Structs/ActiveQuest.html"
+            title="class in rocks.gravili.notquests.structs">ActiveQuest</a></span>&nbsp;<span class="element-name">getActiveQuest</span>()
+    </div>
 </section>
 </li>
 </ul>

@@ -6,7 +6,7 @@
 <meta content="width=device-width, initial-scale=1" name="viewport">
 <meta content="text/html; charset=utf8" http-equiv="Content-Type">
 <meta content="2021-11-27" name="dc.created">
-<meta content="declaration: package: rocks.gravili.notquests.Managers, class: LogManager" name="description">
+<meta content="declaration: package: rocks.gravili.notquests.managers, class: LogManager" name="description">
 <meta content="javadoc/ClassWriterImpl" name="generator">
 <link href="../../../../stylesheet.css" rel="stylesheet" title="Style" type="text/css">
 <link href="../../../../script-dir/jquery-ui.min.css" rel="stylesheet" title="Style" type="text/css">
@@ -69,11 +69,12 @@ loadScripts(document, 'script');</script>
 <main role="main">
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
-<div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">rocks.gravili.notquests.Managers</a></div>
+    <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">rocks.gravili.notquests.managers</a>
+    </div>
 <h1 class="title" title="Class LogManager">Class LogManager</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang">java.lang.Object</a>
-<div class="inheritance">rocks.gravili.notquests.Managers.LogManager</div>
+    <div class="inheritance">rocks.gravili.notquests.managers.LogManager</div>
 </div>
 <section class="class-description" id="class-description">
 <hr>
@@ -138,9 +139,17 @@ loadScripts(document, 'script');</script>
  <a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang">String</a>&nbsp;message)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#log(java.util.logging.Level,rocks.gravili.notquests.Managers.LogCategory,java.lang.String)">log</a><wbr>(<a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.logging/java/util/logging/Level.html" title="class or interface in java.util.logging">Level</a>&nbsp;level,
- <a href="LogCategory.html" title="enum class in rocks.gravili.notquests.Managers">LogCategory</a>&nbsp;logCategory,
- <a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang">String</a>&nbsp;message)</code></div>
+    <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+        <code><a class="member-name-link"
+                 href="#log(java.util.logging.Level,rocks.gravili.notquests.managers.LogCategory,java.lang.String)">log</a>
+            <wbr>
+            (<a class="external-link"
+                href="https://docs.oracle.com/en/java/javase/17/docs/api/java.logging/java/util/logging/Level.html"
+                title="class or interface in java.util.logging">Level</a>&nbsp;level,
+            <a href="LogCategory.html" title="enum class in rocks.gravili.notquests.managers">LogCategory</a>&nbsp;logCategory,
+            <a class="external-link"
+               href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html"
+               title="class or interface in java.lang">String</a>&nbsp;message)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a class="member-name-link" href="#severe(java.lang.String)">severe</a><wbr>(<a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang">String</a>&nbsp;message)</code></div>
@@ -219,12 +228,19 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="log(java.util.logging.Level,rocks.gravili.notquests.Managers.LogCategory,java.lang.String)">
-<h3>log</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">log</span><wbr><span class="parameters">(<a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.logging/java/util/logging/Level.html" title="class or interface in java.util.logging">Level</a>&nbsp;level,
- <a href="LogCategory.html" title="enum class in rocks.gravili.notquests.Managers">LogCategory</a>&nbsp;logCategory,
- <a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang">String</a>&nbsp;message)</span></div>
-</section>
+    <section class="detail"
+             id="log(java.util.logging.Level,rocks.gravili.notquests.managers.LogCategory,java.lang.String)">
+        <h3>log</h3>
+        <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span
+                class="element-name">log</span>
+            <wbr>
+            <span class="parameters">(<a class="external-link"
+                                         href="https://docs.oracle.com/en/java/javase/17/docs/api/java.logging/java/util/logging/Level.html"
+                                         title="class or interface in java.util.logging">Level</a>&nbsp;level,
+ <a href="LogCategory.html" title="enum class in rocks.gravili.notquests.managers">LogCategory</a>&nbsp;logCategory,
+ <a class="external-link" href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html"
+    title="class or interface in java.lang">String</a>&nbsp;message)</span></div>
+    </section>
 </li>
 <li>
 <section class="detail" id="info(java.lang.String)">
