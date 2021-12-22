@@ -195,25 +195,32 @@ public class AdminConversationCommands {
 
         manager.command(conversationBuilder.literal("analyze")
                 .argument(ConversationSelector.of("conversation", main), ArgumentDescription.of("Name of the Conversation."))
-
+                .flag(
+                        manager.flagBuilder("printToConsole")
+                                .withDescription(ArgumentDescription.of("Prints the output to the console"))
+                )
                 .meta(CommandMeta.DESCRIPTION, "Analyze specific conversations.")
                 .handler((context) -> {
                     final Audience audience = main.adventure().sender(context.getSender());
 
-
                     final Conversation foundConversation = context.get("conversation");
 
+                    boolean printToConsole = context.flags().contains("printToConsole");
 
-                    audience.sendMessage(miniMessage.parse(
-                            highlightGradient + "Conversation lines:"
-                    ));
+                    for (ConversationLine conversationLine : foundConversation.getStartingLines()) {
+                        final String analyzed = main.getConversationManager().analyze(conversationLine, "  ");
 
-                    for (final ConversationLine conversationLine : foundConversation.getStartingLines()) {
-                        audience.sendMessage(miniMessage.parse(
-                                main.getConversationManager().analyze(foundConversation, conversationLine, "  ")
-                        ));
+                        if (printToConsole) {
+                            main.getLogManager().info("\n" + analyzed);
+                            audience.sendMessage(miniMessage.parse(
+                                    successGradient + "Analyze Output has been printed to your console!"
+                            ));
+                        } else {
+                            audience.sendMessage(miniMessage.parse(
+                                    analyzed
+                            ));
+                        }
                     }
-
                 }));
 
         manager.command(conversationBuilder.literal("start")

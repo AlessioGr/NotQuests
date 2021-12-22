@@ -522,9 +522,9 @@ public class ConversationManager {
 
     }
 
-    public String analyze(final Conversation foundConversation, ConversationLine conversationLine, String beginningSpaces) {
+    public String analyze(final ConversationLine conversationLine, String beginningSpaces) {
         StringBuilder toReturn = new StringBuilder();
-        toReturn.append(beginningSpaces).append(highlightGradient).append(conversationLine.getIdentifier()).append(":\n");
+        toReturn.append(beginningSpaces).append(unimportant).append(" └").append(highlightGradient).append(conversationLine.getIdentifier()).append(":\n");
         toReturn.append(beginningSpaces).append(unimportant).append("  Speaker: ").append(unimportantClose).append(mainGradient).append(conversationLine.getSpeaker().getSpeakerName()).append("\n");
 
 
@@ -535,18 +535,15 @@ public class ConversationManager {
             toReturn.append(beginningSpaces).append(unimportant).append("  1. Action: ").append(unimportantClose).append(mainGradient).append(conversationLine.getActions().get(0).getActionType()).append("\n");
         }
 
-        toReturn.append(beginningSpaces).append(unimportant).append("  Message: ").append(unimportantClose).append(mainGradient).append(conversationLine.getMessage()).append("\n");
+        toReturn.append(beginningSpaces).append(unimportant).append("  Message: ").append(unimportantClose).append(mainGradient).append(conversationLine.getMessage()).append("<RESET>\n");
 
-        if (conversationLine.getIdentifier().equals("greeting1")) {
-            for (ConversationLine next : conversationLine.getNext()) {
-                main.getLogManager().debug("N: " + next.getIdentifier());
-            }
-        }
 
         if (conversationLine.getNext().size() >= 1) {
-            toReturn.append(beginningSpaces).append(toReturn.append(unimportant).append("  Next: \n"));
+            toReturn.append(beginningSpaces).append(unimportant).append("  Next: \n");
+            int counter = 0;
             for (ConversationLine next : conversationLine.getNext()) {
-                String nextS = analyze(foundConversation, next, beginningSpaces + "  ");
+                counter++;
+                String nextS = analyze(next, beginningSpaces + "  ");
                 //main.getLogManager().debug(" ");
                 //main.getLogManager().debug("Next of " + conversationLine.getIdentifier() + "\n" +nextS);
                 //main.getLogManager().debug(" ");
@@ -555,7 +552,7 @@ public class ConversationManager {
         }
 
 
-        return toReturn.toString();
+        return toReturn.toString().toString();
 
     }
 }
