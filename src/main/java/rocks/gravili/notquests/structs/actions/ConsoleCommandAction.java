@@ -20,20 +20,16 @@ package rocks.gravili.notquests.structs.actions;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
-import cloud.commandframework.arguments.standard.StringArrayArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
-import net.kyori.adventure.audience.Audience;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.commands.newcmds.arguments.CommandSelector;
 import rocks.gravili.notquests.structs.Quest;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ConsoleCommandAction extends Action {
 
@@ -46,26 +42,10 @@ public class ConsoleCommandAction extends Action {
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor rewardFor) {
         manager.command(builder.literal("ConsoleCommand")
-                .argument(StringArrayArgument.of("ConsoleCommand",
-                        (context, lastString) -> {
-                            final List<String> allArgs = context.getRawInput();
-                            final Audience audience = main.adventure().sender(context.getSender());
-                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "<Enter Console Command>", "");
-                            ArrayList<String> completions = new ArrayList<>();
-
-                            if (lastString.startsWith("{")) {
-                                completions.addAll(main.getCommandManager().getAdminCommands().placeholders);
-                            } else {
-                                completions.add("<Enter Console Command>");
-                            }
-
-                            return completions;
-
-                        }
-                ), ArgumentDescription.of("Command which will be executed from the console as a reward. A '/' at the beginning is not required."))
+                .argument(CommandSelector.<CommandSender>newBuilder("Console Command", main).build(), ArgumentDescription.of("Command which will be executed from the console as a reward. A '/' at the beginning is not required."))
                 .meta(CommandMeta.DESCRIPTION, "Adds a new ConsoleCommand Reward to a quest")
                 .handler((context) -> {
-                    final String consoleCommand = String.join(" ", (String[]) context.get("ConsoleCommand"));
+                    final String consoleCommand = String.join(" ", (String[]) context.get("Console Command"));
 
                     ConsoleCommandAction consoleCommandAction = new ConsoleCommandAction(main);
                     consoleCommandAction.setConsoleCommand(consoleCommand);

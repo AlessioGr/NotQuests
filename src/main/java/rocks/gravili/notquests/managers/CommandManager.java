@@ -26,6 +26,7 @@ import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.arguments.standard.LongArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.arguments.standard.StringArrayArgument;
+import cloud.commandframework.brigadier.CloudBrigadierManager;
 import cloud.commandframework.bukkit.CloudBukkitCapabilities;
 import cloud.commandframework.bukkit.parsers.WorldArgument;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
@@ -33,11 +34,14 @@ import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.minecraft.extras.MinecraftExceptionHandler;
 import cloud.commandframework.minecraft.extras.MinecraftHelp;
 import cloud.commandframework.paper.PaperCommandManager;
+import com.mojang.brigadier.arguments.StringArgumentType;
+import io.leangen.geantyref.TypeToken;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import rocks.gravili.notquests.NotQuests;
@@ -48,11 +52,13 @@ import rocks.gravili.notquests.commands.newcmds.AdminConversationCommands;
 import rocks.gravili.notquests.commands.newcmds.AdminEditCommands;
 import rocks.gravili.notquests.commands.newcmds.arguments.ActionSelector;
 import rocks.gravili.notquests.commands.newcmds.arguments.ApplyOnSelector;
+import rocks.gravili.notquests.commands.newcmds.arguments.CommandSelector;
 import rocks.gravili.notquests.commands.newcmds.arguments.QuestSelector;
 import rocks.gravili.notquests.conversation.ConversationManager;
 import rocks.gravili.notquests.structs.Quest;
 import rocks.gravili.notquests.structs.objectives.Objective;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -103,9 +109,20 @@ public class CommandManager {
 
     public final CommandFlag<Long> minimumTimeAfterCompletion;
 
+    private CommandMap commandMap;
+
 
     public CommandManager(final NotQuests main) {
         this.main = main;
+
+        try {
+            Field commandMapField = Bukkit.getServer().getClass().getDeclaredField("commandMap");
+            commandMapField.setAccessible(true);
+            commandMap = (CommandMap) commandMapField.get(Bukkit.getServer());
+        } catch (Exception ignored) {
+            commandMap = null;
+        }
+
 
         nametag_containsany = CommandFlag
                 .newBuilder("nametag_containsany")
@@ -219,6 +236,10 @@ public class CommandManager {
                 .withArgument(LongArgument.of("waitTimeAfterCompletion"))
                 .withDescription(ArgumentDescription.of("Enter minimum time you have to wait after completion."))
                 .build(); //0 = Quest
+    }
+
+    public final CommandMap getCommandMap() {
+        return commandMap;
     }
 
     public void preSetupCommands() {
@@ -353,14 +374,21 @@ public class CommandManager {
             //brigadier/commodore
             try {
                 commandManager.registerBrigadier();
-                if (commandManager.brigadierManager() != null) {
-                    commandManager.brigadierManager().setNativeNumberSuggestions(false);
+                CloudBrigadierManager<CommandSender, ?> cloudBrigadierManager = commandManager.brigadierManager();
+                if (cloudBrigadierManager != null) {
+                    cloudBrigadierManager.setNativeNumberSuggestions(false);
+
+
+                    cloudBrigadierManager.registerMapping(new TypeToken<CommandSelector.CommandParser<CommandSender>>() {
+                    }, builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
+
                 } else {
-                    main.getLogger().warning("Failed to initialize Brigadier support. Brigardier manager is null.");
+                    main.getLogger().warning("Failed to initialize Brigadier support. Brigadier manager is null.");
                 }
             } catch (final Exception e) {
                 main.getLogger().warning("Failed to initialize Brigadier support: " + e.getMessage());
             }
+
 
             minecraftHelp = new MinecraftHelp<>(
                     "/qa help",

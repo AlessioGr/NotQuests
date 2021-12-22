@@ -95,7 +95,6 @@ public class AdminCommands {
                     audience.sendMessage(miniMessage.parse(main.getQuestManager().createQuest(context.get("Quest Name"))));
                 }));
 
-
         manager.command(builder.literal("delete")
                 .argument(StringArgument.<CommandSender>newBuilder("Quest Name").withSuggestionsProvider(
                         (context, lastString) -> {

@@ -161,6 +161,8 @@ dependencies {
     //implementation 'org.apache.commons:commons-lang:3.1'
 
     implementation 'io.netty:netty-all:4.1.72.Final'
+
+    compileOnly 'com.mojang:brigadier:1.0.18'
 }
 
 /**
@@ -170,7 +172,7 @@ String path = 'rocks.gravili.notquests.shadow'
 shadowJar {
     minimize()
 
-    exclude('com.mojang:brigadier')
+    //exclude('com.mojang:brigadier')
 
 
     relocate('io.papermc.lib', path.concat('.paper'))
