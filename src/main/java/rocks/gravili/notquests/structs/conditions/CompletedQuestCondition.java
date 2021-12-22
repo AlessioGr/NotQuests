@@ -99,6 +99,10 @@ public class CompletedQuestCondition extends Condition {
     public String check(final QuestPlayer questPlayer, final boolean enforce) {
         final Quest otherQuest = getOtherQuest();
 
+        if (otherQuest == null) {
+            return "<YELLOW> Cannot check CompletedQuest Condition because the specified Quest is null. Report this to the server owner.";
+        }
+
         int otherQuestCompletedAmount = 0;
         long mostRecentAcceptTime = 0;
 
@@ -196,7 +200,15 @@ public class CompletedQuestCondition extends Condition {
 
     @Override
     public void load(FileConfiguration configuration, String initialPath) {
-        otherQuestName = configuration.getString(initialPath + ".specifics.otherQuest");
+        otherQuestName = configuration.getString(initialPath + ".specifics.otherQuest", "");
+        if (otherQuestName.isBlank()) { //Converter
+            otherQuestName = configuration.getString(initialPath + ".specifics.otherQuestRequirememt", "");
+            if (!otherQuestName.isBlank()) {
+                configuration.set(initialPath + ".specifics.otherQuestRequirememt", null);
+                configuration.set(initialPath + ".specifics.otherQuest", otherQuestName);
+            }
+        }
+
         minimumTimeAfterCompletion = configuration.getLong(initialPath + ".specifics.waitTimeAfterCompletion", -1L);
     }
 }
