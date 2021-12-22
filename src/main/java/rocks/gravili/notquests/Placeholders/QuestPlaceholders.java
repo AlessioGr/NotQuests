@@ -125,7 +125,14 @@ public class QuestPlaceholders extends PlaceholderExpansion {
                 return "" + questPlayer.getQuestPoints();
             }
             return "0";
+        }
 
+        if (identifier.startsWith("player_completed_quests_amount")) {
+            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+            if (questPlayer != null) {
+                return "" + questPlayer.getCompletedQuests().size();
+            }
+            return "0";
         }
 
         if (identifier.startsWith("player_active_quests_list_horizontal")) {
@@ -133,7 +140,7 @@ public class QuestPlaceholders extends PlaceholderExpansion {
             if (questPlayer != null) {
                 StringBuilder list = new StringBuilder();
                 int amount = 0;
-                for(ActiveQuest activeQuest : questPlayer.getActiveQuests()){
+                for (ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                     amount++;
                     //return if it's bigger than limit
                     if (main.getConfiguration().placeholder_player_active_quests_list_horizontal_limit >= 0 && amount > main.getConfiguration().placeholder_player_active_quests_list_horizontal_limit) {

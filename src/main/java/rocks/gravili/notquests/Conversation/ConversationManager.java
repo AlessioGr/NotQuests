@@ -41,8 +41,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-import static rocks.gravili.notquests.Commands.NotQuestColors.highlight2Gradient;
-import static rocks.gravili.notquests.Commands.NotQuestColors.highlightGradient;
+import static rocks.gravili.notquests.Commands.NotQuestColors.*;
 
 public class ConversationManager {
     private final NotQuests main;
@@ -520,6 +519,43 @@ public class ConversationManager {
             return getConversation(attachedConversation);
         }
         return null;
+
+    }
+
+    public String analyze(final Conversation foundConversation, ConversationLine conversationLine, String beginningSpaces) {
+        StringBuilder toReturn = new StringBuilder();
+        toReturn.append(beginningSpaces).append(highlightGradient).append(conversationLine.getIdentifier()).append(":\n");
+        toReturn.append(beginningSpaces).append(unimportant).append("  Speaker: ").append(unimportantClose).append(mainGradient).append(conversationLine.getSpeaker().getSpeakerName()).append("\n");
+
+
+        if (conversationLine.getConditions().size() > 0) {
+            toReturn.append(beginningSpaces).append(unimportant).append("  1. Condition: ").append(unimportantClose).append(mainGradient).append(conversationLine.getConditions().get(0).getConditionType()).append("\n");
+        }
+        if (conversationLine.getActions().size() > 0) {
+            toReturn.append(beginningSpaces).append(unimportant).append("  1. Action: ").append(unimportantClose).append(mainGradient).append(conversationLine.getActions().get(0).getActionType()).append("\n");
+        }
+
+        toReturn.append(beginningSpaces).append(unimportant).append("  Message: ").append(unimportantClose).append(mainGradient).append(conversationLine.getMessage()).append("\n");
+
+        if (conversationLine.getIdentifier().equals("greeting1")) {
+            for (ConversationLine next : conversationLine.getNext()) {
+                main.getLogManager().debug("N: " + next.getIdentifier());
+            }
+        }
+
+        if (conversationLine.getNext().size() >= 1) {
+            toReturn.append(beginningSpaces).append(toReturn.append(unimportant).append("  Next: \n"));
+            for (ConversationLine next : conversationLine.getNext()) {
+                String nextS = analyze(foundConversation, next, beginningSpaces + "  ");
+                //main.getLogManager().debug(" ");
+                //main.getLogManager().debug("Next of " + conversationLine.getIdentifier() + "\n" +nextS);
+                //main.getLogManager().debug(" ");
+                toReturn.append(nextS);
+            }
+        }
+
+
+        return toReturn.toString();
 
     }
 }
