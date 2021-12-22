@@ -1,5 +1,5 @@
 plugins {
-    id 'com.github.johnrengelman.shadow' version '7.1.0'
+    id 'com.github.johnrengelman.shadow' version '7.1.1'
     id 'java'
     id 'maven-publish'
 }
@@ -111,7 +111,7 @@ dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.18.1-R0.1-SNAPSHOT'
     //does not work  implementation "net.kyori:adventure-platform-bukkit:4.0.0"
     implementation 'org.bstats:bstats-bukkit:2.2.1'
-    compileOnly 'net.citizensnpcs:citizens-main:2.0.28-SNAPSHOT'
+    compileOnly 'net.citizensnpcs:citizens-main:2.0.29-SNAPSHOT'
     compileOnly 'me.clip:placeholderapi:2.10.10'
     compileOnly 'com.github.MilkBowl:VaultAPI:1.7'
     implementation 'de.themoep:inventorygui:1.5-SNAPSHOT'
