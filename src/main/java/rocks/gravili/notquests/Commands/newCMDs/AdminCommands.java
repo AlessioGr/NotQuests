@@ -1059,6 +1059,10 @@ public class AdminCommands {
                 ).single().build(), ArgumentDescription.of("Action Identifier"))
                 .literal("execute", "run")
                 .argument(SinglePlayerSelectorArgument.optional("player selector"), ArgumentDescription.of("Player for which the action will be executed"))
+                .flag(
+                        manager.flagBuilder("ignoreConditions")
+                                .withDescription(ArgumentDescription.of("Ignores action conditions"))
+                )
                 .meta(CommandMeta.DESCRIPTION, "Executes an action")
                 .handler((context) -> {
                     final Audience audience = main.adventure().sender(context.getSender());
@@ -1080,9 +1084,14 @@ public class AdminCommands {
                             audience.sendMessage(miniMessage.parse(errorGradient + "Error! Player object not found!</gradient>"));
                             return;
                         }
-                        foundAction.execute(player);
 
-                        audience.sendMessage(miniMessage.parse(successGradient + "Action with the name " + highlightGradient + actionIdentifier + "</gradient> has been executed!</gradient>"));
+                        if (context.flags().contains("ignoreConditions")) {
+                            foundAction.execute(player);
+                            audience.sendMessage(miniMessage.parse(successGradient + "Action with the name " + highlightGradient + actionIdentifier + "</gradient> has been executed!</gradient>"));
+                        } else {
+                            main.getActionManager().executeActionWithConditions(foundAction, player, audience, false);
+                        }
+
 
                     } else {
                         audience.sendMessage(miniMessage.parse(errorGradient + "Error! Action with the name " + highlightGradient + actionIdentifier + "</gradient> does not exist!</gradient>"));
@@ -1103,6 +1112,83 @@ public class AdminCommands {
                         audience.sendMessage(miniMessage.parse(veryUnimportant + "  └─ " + unimportant + "Type: " + highlight2Gradient + action.getActionType()));
                         counter += 1;
                     }
+                }));
+
+        manager.command(builder.literal("actions")
+                .literal("edit")
+                .argument(StringArgument.<CommandSender>newBuilder("Action Identifier").withSuggestionsProvider(
+                        (context, lastString) -> {
+                            final List<String> allArgs = context.getRawInput();
+                            final Audience audience = main.adventure().sender(context.getSender());
+                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Action Identifier (name)]", "[...]");
+
+                            return new ArrayList<>(main.getActionsYMLManager().getActionsAndIdentifiers().keySet());
+
+                        }
+                ).single().build(), ArgumentDescription.of("Action Identifier"))
+                .literal("conditions")
+                .literal("clear")
+                .meta(CommandMeta.DESCRIPTION, "Removes all conditions from this objective.")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+
+                    final String actionIdentifier = context.get("Action Identifier");
+                    final Action foundAction = main.getActionsYMLManager().getAction(actionIdentifier);
+
+                    if (foundAction != null) {
+                        foundAction.clearConditions(main.getActionsYMLManager().getActionsConfig(), "actions." + actionIdentifier);
+                        audience.sendMessage(miniMessage.parse(
+                                successGradient + "All conditions of action with identifier " + highlightGradient + actionIdentifier
+                                        + "</gradient> have been removed!</gradient>"
+                        ));
+                    } else {
+                        audience.sendMessage(miniMessage.parse(errorGradient + "Error! Action with the name " + highlightGradient + actionIdentifier + "</gradient> does not exist!</gradient>"));
+                    }
+
+
+                }));
+
+        manager.command(builder.literal("actions")
+                .literal("edit")
+                .argument(StringArgument.<CommandSender>newBuilder("Action Identifier").withSuggestionsProvider(
+                        (context, lastString) -> {
+                            final List<String> allArgs = context.getRawInput();
+                            final Audience audience = main.adventure().sender(context.getSender());
+                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Action Identifier (name)]", "[...]");
+
+                            return new ArrayList<>(main.getActionsYMLManager().getActionsAndIdentifiers().keySet());
+
+                        }
+                ).single().build(), ArgumentDescription.of("Action Identifier"))
+                .literal("conditions")
+                .literal("list", "show")
+                .meta(CommandMeta.DESCRIPTION, "Lists all conditions of this objective.")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+
+                    final String actionIdentifier = context.get("Action Identifier");
+                    final Action foundAction = main.getActionsYMLManager().getAction(actionIdentifier);
+
+                    if (foundAction != null) {
+                        audience.sendMessage(miniMessage.parse(
+                                highlightGradient + "Conditions of action with identifier " + highlight2Gradient + actionIdentifier
+                                        + "</gradient>:</gradient>"
+                        ));
+                        int counter = 1;
+                        for (Condition condition : foundAction.getConditions()) {
+                            audience.sendMessage(miniMessage.parse(highlightGradient + counter + ". </gradient>" + mainGradient + condition.getConditionType() + "</gradient>"));
+                            audience.sendMessage(miniMessage.parse(mainGradient + condition.getConditionDescription()));
+                            counter += 1;
+                        }
+
+                        if (counter == 1) {
+                            audience.sendMessage(miniMessage.parse(warningGradient + "This action has no conditions!"));
+                        }
+                    } else {
+                        audience.sendMessage(miniMessage.parse(errorGradient + "Error! Action with the name " + highlightGradient + actionIdentifier + "</gradient> does not exist!</gradient>"));
+                    }
+
+
                 }));
     }
 

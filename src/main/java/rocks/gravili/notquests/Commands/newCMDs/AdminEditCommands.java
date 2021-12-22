@@ -737,7 +737,6 @@ public class AdminEditCommands {
                     if (counter == 1) {
                         audience.sendMessage(miniMessage.parse(warningGradient + "This objective has no conditions!"));
                     }
-
                 }));
        /* manager.command(builder.literal("dependencies")
                 .literal("add")

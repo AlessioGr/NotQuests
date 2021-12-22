@@ -26,6 +26,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
 import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.Actions.Action;
 import rocks.gravili.notquests.Structs.Conditions.*;
 import rocks.gravili.notquests.Structs.Conditions.hooks.Towny.TownyNationNameCondition;
 import rocks.gravili.notquests.Structs.Conditions.hooks.Towny.TownyNationTownCountCondition;
@@ -89,6 +90,7 @@ public class ConditionsManager {
             commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddRequirementCommandBuilder(), ConditionFor.QUEST);
             commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddConditionCommandBuilder(), ConditionFor.OBJECTIVE);
             commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminAddConditionCommandBuilder(), ConditionFor.ConditionsYML); //For Actions.yml
+            commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditActionsAddConditionCommandBuilder(), ConditionFor.Action); //For Actions.yml
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -132,6 +134,8 @@ public class ConditionsManager {
 
         String conditionIdentifier = context.getOrDefault("Condition Identifier", "");
 
+        String actionIdentifier = context.getOrDefault("Action Identifier", "");
+
         if (quest != null) {
             condition.setQuest(quest);
             if (objectiveOfQuest != null) {//Objective Condition
@@ -151,7 +155,7 @@ public class ConditionsManager {
                 ));
             }
         } else {
-            if (conditionIdentifier != null && !conditionIdentifier.isBlank()) { //actions.yml
+            if (conditionIdentifier != null && !conditionIdentifier.isBlank()) { //conditions.yml
 
                 if (main.getConditionsYMLManager().getCondition(conditionIdentifier) == null) {
                     main.getConditionsYMLManager().addCondition(conditionIdentifier, condition);
@@ -161,7 +165,17 @@ public class ConditionsManager {
                     ));
                 } else {
                     audience.sendMessage(MiniMessage.miniMessage().parse(errorGradient + "Error! A condition with the name " + highlightGradient + conditionIdentifier + "</gradient> already exists!</gradient>"));
-
+                }
+            } else { //Condition for Actions.yml action
+                if (actionIdentifier != null && !actionIdentifier.isBlank()) {
+                    Action foundAction = main.getActionsYMLManager().getAction(actionIdentifier);
+                    if (foundAction != null) {
+                        foundAction.addCondition(condition, true, main.getActionsYMLManager().getActionsConfig(), "actions." + actionIdentifier);
+                        main.getActionsYMLManager().saveActions();
+                        audience.sendMessage(MiniMessage.miniMessage().parse(
+                                NotQuestColors.successGradient + getConditionType(condition.getClass()) + " Condition successfully added to Action " + NotQuestColors.highlightGradient
+                                        + foundAction.getActionName() + "</gradient>!</gradient>"));
+                    }
                 }
             }
         }

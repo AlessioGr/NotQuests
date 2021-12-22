@@ -33,6 +33,7 @@ public class ActionAction extends Action {
 
     private Action action = null;
     private int amount = 1;
+    private boolean ignoreConditions = false;
 
 
     public ActionAction(final NotQuests main) {
@@ -43,6 +44,10 @@ public class ActionAction extends Action {
         manager.command(builder.literal("Action")
                 .argument(ActionSelector.of("Action", main), ArgumentDescription.of("Name of the action which will be executed"))
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").asOptionalWithDefault(1).withMin(1), ArgumentDescription.of("Amount of times the action will be executed."))
+                .flag(
+                        manager.flagBuilder("ignoreConditions")
+                                .withDescription(ArgumentDescription.of("Ignores action conditions"))
+                )
                 .meta(CommandMeta.DESCRIPTION, "Creates a new (actions.yml) Action")
                 .handler((context) -> {
                     Action foundAction = context.get("Action");
@@ -72,20 +77,38 @@ public class ActionAction extends Action {
         this.amount = amount;
     }
 
+    public final boolean isIgnoreConditions() {
+        return ignoreConditions;
+    }
+
+    public void setIgnoreConditions(final boolean ignoreConditions) {
+        this.ignoreConditions = ignoreConditions;
+    }
+
     @Override
     public void execute(final Player player, Object... objects) {
         if (action == null) {
             main.getLogManager().warn("Tried to execute Action of Action action with null action.");
             return;
         }
-        if (amount == 1) {
-            action.execute(player, objects);
+
+        if (!isIgnoreConditions()) {
+            if (amount == 1) {
+                main.getActionManager().executeActionWithConditions(action, player, null, true, objects);
+            } else {
+                for (int i = 0; i < amount; i++) {
+                    main.getActionManager().executeActionWithConditions(action, player, null, true, objects);
+                }
+            }
         } else {
-            for (int i = 0; i < amount; i++) {
+            if (amount == 1) {
                 action.execute(player, objects);
+            } else {
+                for (int i = 0; i < amount; i++) {
+                    action.execute(player, objects);
+                }
             }
         }
-
 
     }
 
@@ -97,6 +120,7 @@ public class ActionAction extends Action {
             main.getLogManager().warn("Error: cannot save Action for action action, because it's null. Configuration path: " + initialPath);
         }
         configuration.set(initialPath + ".specifics.amount", getAmount());
+        configuration.set(initialPath + ".specifics.ignoreConditions", isIgnoreConditions());
     }
 
     @Override
@@ -108,6 +132,8 @@ public class ActionAction extends Action {
         }
 
         this.amount = configuration.getInt(initialPath + ".specifics.amount", 1);
+        this.ignoreConditions = configuration.getBoolean(initialPath + ".specifics.ignoreConditions", false);
+
     }
 
 

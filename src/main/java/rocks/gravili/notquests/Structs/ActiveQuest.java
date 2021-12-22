@@ -138,7 +138,7 @@ public class ActiveQuest {
             for (Action rewardAction : activeObjective.getObjective().getRewards()) {
                 questPlayer.sendDebugMessage("Executing a rewardAction for an objective");
                 main.getLogManager().debug("Executing a rewardAction for an objective");
-                rewardAction.execute(questPlayer.getPlayer(), getQuest());
+                main.getActionManager().executeActionWithConditions(rewardAction, questPlayer.getPlayer(), null, true, getQuest());
             }
 
         }

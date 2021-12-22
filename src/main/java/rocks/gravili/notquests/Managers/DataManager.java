@@ -33,6 +33,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.Actions.Action;
 import rocks.gravili.notquests.Structs.Objectives.Objective;
 import rocks.gravili.notquests.Structs.Quest;
 
@@ -910,6 +911,8 @@ public class DataManager {
                 main.getLogManager().severe("  <DARK_GRAY>└─</DARK_GRAY> Quest: " + NotQuestColors.highlightGradient + quest.getQuestName() + "</gradient>");
             } else if (object instanceof Objective objective) {
                 main.getLogManager().severe("  <DARK_GRAY>└─</DARK_GRAY> Objective ID: " + NotQuestColors.highlightGradient + objective.getObjectiveID() + "</gradient> of Quest: " + NotQuestColors.highlight2Gradient + ((Objective) object).getQuest().getQuestName() + "</gradient>");
+            } else if (object instanceof Action action) {
+                main.getLogManager().severe("  <DARK_GRAY>└─</DARK_GRAY> Action Name: " + NotQuestColors.highlightGradient + action.getActionName() + "</gradient> of Type: " + NotQuestColors.highlight2Gradient + action.getActionType() + "</gradient>");
             }
         }
         setSavingEnabled(false);

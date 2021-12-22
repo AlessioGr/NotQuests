@@ -22,8 +22,11 @@ package rocks.gravili.notquests.Structs.Actions;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.Structs.Conditions.Condition;
 import rocks.gravili.notquests.Structs.Objectives.Objective;
 import rocks.gravili.notquests.Structs.Quest;
+
+import java.util.ArrayList;
 
 public abstract class Action {
 
@@ -32,10 +35,12 @@ public abstract class Action {
     private String actionName = "";
     private Quest quest;
     private Objective objective;
+    private final ArrayList<Condition> conditions;
 
 
     public Action(NotQuests main) {
         this.main = main;
+        conditions = new ArrayList<>();
     }
 
     public final String getActionType() {
@@ -78,8 +83,32 @@ public abstract class Action {
 
     public abstract void load(final FileConfiguration configuration, final String initialPath);
 
-    /* public void setConsoleCommand(String newConsoleCommand) {
-        this.consoleCommand = newConsoleCommand;
-        main.getActionsManager().getActionsConfig().set("actions." + actionName + ".consoleCommand", newConsoleCommand);
-    }*/
+    public final ArrayList<Condition> getConditions() {
+        return conditions;
+    }
+
+    public void addCondition(final Condition condition, final boolean save, final FileConfiguration configuration, final String initialPath) {
+        conditions.add(condition);
+        if (save) {
+            configuration.set(initialPath + ".conditions." + conditions.size() + ".conditionType", condition.getConditionType());
+            configuration.set(initialPath + ".conditions." + conditions.size() + ".progressNeeded", condition.getProgressNeeded());
+
+            condition.save(configuration, initialPath + ".conditions." + conditions.size());
+        }
+    }
+
+    public void removeCondition(final Condition condition, final boolean save, final FileConfiguration configuration, final String initialPath) {
+        int conditionID = conditions.indexOf(condition);
+        conditions.remove(condition);
+        if (save) {
+            configuration.set(initialPath + ".conditions." + conditionID, null);
+        }
+    }
+
+    public void clearConditions(final FileConfiguration configuration, final String initialPath) {
+        conditions.clear();
+        configuration.set(initialPath + ".conditions", null);
+    }
+
+
 }

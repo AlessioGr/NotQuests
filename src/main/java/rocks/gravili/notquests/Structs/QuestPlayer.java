@@ -258,7 +258,7 @@ public class QuestPlayer {
     public void giveReward(Quest quest) {
         main.getLogManager().debug("QuestPlayer.giveReward(). Quest: " + quest.getQuestName());
         for (Action action : quest.getRewards()) {
-            action.execute(getPlayer(), quest);
+            main.getActionManager().executeActionWithConditions(action, getPlayer(), null, true, quest);
         }
 
         final Player player = getPlayer();

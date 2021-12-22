@@ -78,6 +78,8 @@ public class CommandManager {
     private Command.Builder<CommandSender> adminAddActionCommandBuilder;
     private Command.Builder<CommandSender> adminAddConditionCommandBuilder;
 
+    private Command.Builder<CommandSender> adminEditActionsAddConditionCommandBuilder;
+
 
     private Command.Builder<CommandSender> editObjectivesBuilder;
 
@@ -294,6 +296,21 @@ public class CommandManager {
                     .literal("conditions")
                     .literal("add");
 
+            adminEditActionsAddConditionCommandBuilder = adminCommandBuilder.literal("actions")
+                    .literal("edit")
+                    .argument(StringArgument.<CommandSender>newBuilder("Action Identifier").withSuggestionsProvider(
+                            (context, lastString) -> {
+                                final List<String> allArgs = context.getRawInput();
+                                final Audience audience = main.adventure().sender(context.getSender());
+                                main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Action Identifier (name)]", "[...]");
+
+                                return new ArrayList<>(main.getActionsYMLManager().getActionsAndIdentifiers().keySet());
+
+                            }
+                    ).single().build(), ArgumentDescription.of("Action Identifier"))
+                    .literal("conditions")
+                    .literal("add");
+
             adminEditObjectiveAddRewardCommandBuilder = editObjectivesBuilder
                     .literal("rewards", "rew")
                     .literal("add");
@@ -502,6 +519,10 @@ public class CommandManager {
 
     public final Command.Builder<CommandSender> getAdminEditObjectiveAddConditionCommandBuilder() {
         return adminEditObjectiveAddConditionCommandBuilder;
+    }
+
+    public final Command.Builder<CommandSender> getAdminEditActionsAddConditionCommandBuilder() {
+        return adminEditActionsAddConditionCommandBuilder;
     }
 
     public final Command.Builder<CommandSender> getAdminEditObjectiveAddRewardCommandBuilder() {

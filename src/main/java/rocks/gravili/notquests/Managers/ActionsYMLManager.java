@@ -25,6 +25,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import rocks.gravili.notquests.Commands.NotQuestColors;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.Structs.Actions.Action;
+import rocks.gravili.notquests.Structs.Conditions.Condition;
 
 import java.io.File;
 import java.io.IOException;
@@ -116,9 +117,12 @@ public class ActionsYMLManager {
                         action.setActionName(actionIdentifier);
                         action.load(getActionsConfig(), "actions." + actionIdentifier);
 
+                        loadActionConditions(action);
+
                     } catch (Exception ex) {
                         main.getDataManager().disablePluginAndSaving("Error parsing action Type of actions.yml action with name <AQUA>" + actionIdentifier + "</AQUA>.", ex);
                     }
+
 
                     if (action != null) {
                         final String actionsDisplayName = actionsConfigurationSection.getString(actionIdentifier + ".displayName", "");
@@ -134,6 +138,55 @@ public class ActionsYMLManager {
             }
         }
 
+    }
+
+    private void loadActionConditions(Action action) {
+        final ConfigurationSection actionsConditionsConfigurationSection = getActionsConfig().getConfigurationSection("actions." + action.getActionName() + ".conditions.");
+
+        if (actionsConditionsConfigurationSection != null) {
+            for (String actionConditionNumber : actionsConditionsConfigurationSection.getKeys(false)) {
+                int conditionID = -1;
+                boolean validConditionID = true;
+                try {
+                    conditionID = Integer.parseInt(actionConditionNumber);
+                } catch (java.lang.NumberFormatException ex) {
+                    validConditionID = false;
+                    main.getDataManager().disablePluginAndSaving("Error parsing loaded condition ID <AQUA>" + actionConditionNumber + "</AQUA>.", action, ex);
+                    return;
+                }
+
+                Class<? extends Condition> conditionType = null;
+                String conditionTypeString = getActionsConfig().getString("actions." + action.getActionName() + ".conditions." + actionConditionNumber + ".conditionType", "");
+                try {
+                    conditionType = main.getConditionsManager().getConditionClass(conditionTypeString);
+                } catch (java.lang.NullPointerException ex) {
+                    main.getDataManager().disablePluginAndSaving("Error parsing condition Type of action with ID <AQUA>" + action.getActionName() + "</AQUA>.", action, ex);
+                    return;
+                }
+
+                int progressNeeded = getActionsConfig().getInt("actions." + action.getActionName() + ".conditions." + actionConditionNumber + ".progressNeeded");
+
+                if (validConditionID && conditionID > 0 && conditionType != null) {
+                    Condition condition = null;
+
+                    try {
+                        condition = conditionType.getDeclaredConstructor(NotQuests.class).newInstance(main);
+                        condition.setProgressNeeded(progressNeeded);
+                        condition.load(getActionsConfig(), "actions." + action.getActionName() + ".conditions." + actionConditionNumber);
+                    } catch (Exception ex) {
+                        main.getDataManager().disablePluginAndSaving("Error parsing condition Type of condition with ID <AQUA>" + actionConditionNumber + "</AQUA>.", action, ex);
+                        return;
+                    }
+                    if (condition != null) {
+                        action.addCondition(condition, false, getActionsConfig(), "actions." + action.getActionName());
+                    }
+
+                } else {
+                    main.getDataManager().disablePluginAndSaving("Error loading condition. ValidRequirementID: " + validConditionID + " conditionID: " + conditionID + " ConditionTypeNull?" + (conditionType == null) + " ConditionType: " + (conditionType != null ? conditionType.toString() : "null") + " conditionTypeString: " + conditionTypeString, action);
+                    return;
+                }
+            }
+        }
     }
 
     public void saveActions() {
