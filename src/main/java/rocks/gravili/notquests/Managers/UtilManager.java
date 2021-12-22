@@ -22,6 +22,7 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -342,7 +343,7 @@ public class UtilManager {
             }
         }*/
         //return descriptionWithLineBreaks.toString();
-        return WordUtils.wrap(unwrappedText.replace("\\n", "\n"), maxLineLength, "\n<GRAY>", main.getConfiguration().wrapLongWords);
+        return WordUtils.wrap(unwrappedText.replace("\\n", "\n"), maxLineLength, "\n", main.getConfiguration().wrapLongWords);
 
     }
 
@@ -354,21 +355,57 @@ public class UtilManager {
         Component component = LegacyComponentSerializer.builder().hexColors().build().deserialize(ChatColor.translateAlternateColorCodes('&', toReplace));
         String finalS = miniMessage.serialize(component);
 
-        main.getLogManager().debug("legacy => minimessage Converted <RESET>" + toReplace + "</RESET> to <RESET>" + finalS + "</RESET>");
+        //main.getLogManager().debug("legacy => minimessage Converted <RESET>" + toReplace + "</RESET> to <RESET>" + finalS + "</RESET>");
         return finalS;
     }
 
     public final String miniMessageToLegacy(String miniMessageString) {
         String legacy = LegacyComponentSerializer.builder().hexColors().build().serialize(miniMessage.parse(miniMessageString));
-        main.getLogManager().debug("mm => legacy: Converted <RESET>" + miniMessageString + "</RESET> to <RESET>" + legacy + "</RESET>");
+        //main.getLogManager().debug("mm => legacy: Converted <RESET>" + miniMessageString + "</RESET> to <RESET>" + legacy + "</RESET>");
 
         return legacy;
     }
 
     public String miniMessageToLegacyWithSpigotRGB(String miniMessageString) {
-        String legacy = LegacyComponentSerializer.builder().hexColors().useUnusualXRepeatedCharacterHexFormat().build().serialize(miniMessage.parse(miniMessageString));
-        main.getLogManager().debug("mm => legacy: Converted <RESET>" + miniMessageString + "</RESET> to <RESET>" + legacy + "</RESET>");
+        Component fullComponent = Component.empty();
+        TextColor lastColor = null;
+        int counter = 0;
+        for (String splitString : miniMessageString.split("\n")) {
+            Component splitComponent = miniMessage.parse(splitString);
+            //main.getLogManager().debug("Split Component old: " + miniMessage.serialize(splitComponent));
 
-        return legacy;
+
+            if (lastColor != null) {
+                //main.getLogManager().debug("Appending color: " + lastColor.toString());
+                splitComponent = Component.text("", lastColor).append(splitComponent);
+            }
+            //main.getLogManager().debug("Split Component new: " + miniMessage.serialize(splitComponent));
+
+            if (splitComponent.children().size() >= 1) {
+                if (splitComponent.children().get(splitComponent.children().size() - 1).color() != null) {
+                    lastColor = splitComponent.children().get(splitComponent.children().size() - 1).color();
+                }
+            } else {
+                if (splitComponent.color() != null) {
+                    lastColor = splitComponent.color();
+                }
+            }
+
+
+            if (counter > 0) {
+                fullComponent = fullComponent.append(Component.newline()).append(splitComponent);
+            } else {
+                fullComponent = fullComponent.append(splitComponent);
+            }
+            counter++;
+        }
+
+
+        //main.getLogManager().debug("Full Component: " + miniMessage.serialize(fullComponent));
+
+
+        //main.getLogManager().debug("mm => legacy: Converted <RESET>" + miniMessageString + "</RESET> to <RESET>" + legacy + "</RESET>");
+
+        return LegacyComponentSerializer.builder().hexColors().useUnusualXRepeatedCharacterHexFormat().build().serialize(fullComponent);
     }
 }

@@ -273,7 +273,7 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                         count++;
                                     }
 
-                                    String displayName = main.getUtilManager().miniMessageToLegacyWithSpigotRGB(quest.getQuestFinalName());
+                                    String displayName = convert(quest.getQuestFinalName());
 
                                     displayName = main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.questNamePrefix", player, quest) + displayName;
 
@@ -670,8 +670,8 @@ public class CommandNotQuests implements CommandExecutor, TabCompleter {
                                             click -> {
                                                 return true; // returning true will cancel the click event and stop taking the item
                                             },
-                                            convert(main.getUtilManager().miniMessageToLegacyWithSpigotRGB(main.getLanguageManager().getString("gui.previewQuest.button.description.text", player, questPlayer)
-                                                    .replace("%QUESTDESCRIPTION%", description)))
+                                            convert(main.getLanguageManager().getString("gui.previewQuest.button.description.text", player, questPlayer)
+                                                    .replace("%QUESTDESCRIPTION%", description))
 
 
                                     ));
