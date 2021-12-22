@@ -940,6 +940,64 @@ public class AdminCommands {
                 }));
 
         manager.command(builder.literal("conditions")
+                .literal("edit")
+                .argument(StringArgument.<CommandSender>newBuilder("Condition Identifier").withSuggestionsProvider(
+                        (context, lastString) -> {
+                            final List<String> allArgs = context.getRawInput();
+                            final Audience audience = main.adventure().sender(context.getSender());
+                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Condition Identifier (name)]", "[...]");
+
+                            return new ArrayList<>(main.getConditionsYMLManager().getConditionsAndIdentifiers().keySet());
+
+                        }
+                ).single().build(), ArgumentDescription.of("Condition Identifier"))
+                .literal("check")
+                .argument(SinglePlayerSelectorArgument.optional("player selector"), ArgumentDescription.of("Player for which the condition will be checked"))
+                .flag(
+                        manager.flagBuilder("enforce")
+                                .withDescription(ArgumentDescription.of("Should the condition be able to change/enforce stuff (for example the money condition would deduct your money if it's set to deduct your money)"))
+                )
+                .meta(CommandMeta.DESCRIPTION, "Checks a condition")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+
+                    final String conditionIdentifier = context.get("Condition Identifier");
+                    final Condition foundCondition = main.getConditionsYMLManager().getCondition(conditionIdentifier);
+
+                    if (foundCondition != null) {
+
+                        Player player = null;
+                        if (context.contains("player selector")) {
+                            final SinglePlayerSelector singlePlayerSelector = context.get("player selector");
+                            player = singlePlayerSelector.getPlayer();
+                        } else if (context.getSender() instanceof Player senderPlayer) {
+                            player = senderPlayer;
+                        }
+
+                        if (player == null) {
+                            audience.sendMessage(miniMessage.parse(errorGradient + "Error! Player object not found!</gradient>"));
+                            return;
+                        }
+                        final boolean enforce = context.flags().isPresent("enforce");
+
+
+                        QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
+                        String result = foundCondition.check(questPlayer, enforce);
+                        if (result.isBlank()) {
+                            result = successGradient + "Condition fulfilled!";
+                        }
+                        if (!enforce) {
+                            audience.sendMessage(miniMessage.parse(successGradient + "Condition with the name " + highlightGradient + conditionIdentifier + "</gradient> has been checked! Result:</gradient>\n" + result));
+                        } else {
+                            audience.sendMessage(miniMessage.parse(successGradient + "Condition with the name " + highlightGradient + conditionIdentifier + "</gradient> has been checked and enforced! Result:</gradient>\n" + result));
+                        }
+
+                    } else {
+                        audience.sendMessage(miniMessage.parse(errorGradient + "Error! Condition with the name " + highlightGradient + conditionIdentifier + "</gradient> does not exist!</gradient>"));
+                    }
+                }));
+
+        manager.command(builder.literal("conditions")
                 .literal("list")
                 .meta(CommandMeta.DESCRIPTION, "Shows all existing conditions.")
                 .handler((context) -> {
