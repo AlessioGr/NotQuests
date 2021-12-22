@@ -163,9 +163,10 @@ public class CommandManager {
                             main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Enter speaker color (default: <WHITE>)]", "");
 
                             ArrayList<String> completions = new ArrayList<>();
+                            for (NamedTextColor namedTextColor : NamedTextColor.NAMES.values()) {
+                                completions.add("<" + namedTextColor.toString() + ">");
 
-                            completions.add("<WHITE>");
-                            completions.add("<BLUE>");
+                            }
                             return completions;
                         }
                 ).single())
