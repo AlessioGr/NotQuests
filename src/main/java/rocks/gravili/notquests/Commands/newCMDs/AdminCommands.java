@@ -988,6 +988,51 @@ public class AdminCommands {
                 }));
 
         manager.command(builder.literal("actions")
+                .literal("edit")
+                .argument(StringArgument.<CommandSender>newBuilder("Action Identifier").withSuggestionsProvider(
+                        (context, lastString) -> {
+                            final List<String> allArgs = context.getRawInput();
+                            final Audience audience = main.adventure().sender(context.getSender());
+                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Action Identifier (name)]", "[...]");
+
+                            return new ArrayList<>(main.getActionsYMLManager().getActionsAndIdentifiers().keySet());
+
+                        }
+                ).single().build(), ArgumentDescription.of("Action Identifier"))
+                .literal("execute", "run")
+                .argument(SinglePlayerSelectorArgument.optional("player selector"), ArgumentDescription.of("Player for which the action will be executed"))
+                .meta(CommandMeta.DESCRIPTION, "Executes an action")
+                .handler((context) -> {
+                    final Audience audience = main.adventure().sender(context.getSender());
+
+                    final String actionIdentifier = context.get("Action Identifier");
+                    final Action foundAction = main.getActionsYMLManager().getAction(actionIdentifier);
+
+                    if (foundAction != null) {
+
+                        Player player = null;
+                        if (context.contains("player selector")) {
+                            final SinglePlayerSelector singlePlayerSelector = context.get("player selector");
+                            player = singlePlayerSelector.getPlayer();
+                        } else if (context.getSender() instanceof Player senderPlayer) {
+                            player = senderPlayer;
+                        }
+
+                        if (player == null) {
+                            audience.sendMessage(miniMessage.parse(errorGradient + "Error! Player object not found!</gradient>"));
+                            return;
+                        }
+                        foundAction.execute(player);
+
+                        audience.sendMessage(miniMessage.parse(successGradient + "Action with the name " + highlightGradient + actionIdentifier + "</gradient> has been executed!</gradient>"));
+
+                    } else {
+                        audience.sendMessage(miniMessage.parse(errorGradient + "Error! Action with the name " + highlightGradient + actionIdentifier + "</gradient> does not exist!</gradient>"));
+                    }
+
+                }));
+
+        manager.command(builder.literal("actions")
                 .literal("list")
                 .meta(CommandMeta.DESCRIPTION, "Shows all existing actions.")
                 .handler((context) -> {
