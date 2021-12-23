@@ -34,8 +34,6 @@ public class InventoryEvents implements Listener {
     private final NotQuests main;
 
 
-
-
     public InventoryEvents(NotQuests main) {
         this.main = main;
     }
@@ -57,8 +55,7 @@ public class InventoryEvents implements Listener {
         final Player player = e.getPlayer();
 
         if (isItemSlotWorld(player.getWorld().getName())) {
-            player.getInventory().remove(main.getConfiguration().journalItem);
-            player.getInventory().setItem(main.getConfiguration().journalInventorySlot, main.getConfiguration().journalItem);
+            addJournalToInventory(player);
         }
     }
 
@@ -69,7 +66,7 @@ public class InventoryEvents implements Listener {
         final ItemStack itemInHand = player.getInventory().getItemInMainHand();
         if (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             if (itemInHand.isSimilar(main.getConfiguration().journalItem)) {
-                player.performCommand("notquests activeQuests");
+                main.getGuiManager().showActiveQuests(main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId()), player);
             }
         }
     }
@@ -80,8 +77,7 @@ public class InventoryEvents implements Listener {
         if (isItemSlotWorld(player.getWorld().getName()) && e.getRespawnLocation().getWorld() != null && isItemSlotWorld(e.getRespawnLocation().getWorld().getName())) {
             final ItemStack journalItem = player.getInventory().getItem(main.getConfiguration().journalInventorySlot);
             if (journalItem == null || !journalItem.isSimilar(main.getConfiguration().journalItem)) {
-                player.getInventory().remove(main.getConfiguration().journalItem);
-                player.getInventory().setItem(main.getConfiguration().journalInventorySlot, main.getConfiguration().journalItem);
+                addJournalToInventory(player);
             }
         }
     }
@@ -137,11 +133,9 @@ public class InventoryEvents implements Listener {
                     }
                 }
 
-
                 final ItemStack journalItem = player.getInventory().getItem(main.getConfiguration().journalInventorySlot);
                 if (journalItem == null || !journalItem.isSimilar(main.getConfiguration().journalItem)) {
-                    player.getInventory().remove(main.getConfiguration().journalItem);
-                    player.getInventory().setItem(main.getConfiguration().journalInventorySlot, main.getConfiguration().journalItem);
+                    addJournalToInventory(player);
                 }
             }
         }
@@ -154,9 +148,12 @@ public class InventoryEvents implements Listener {
         final Player player = e.getPlayer();
 
         if (isItemSlotWorld(player.getWorld().getName())) {
-            player.getInventory().remove(main.getConfiguration().journalItem);
-            player.getInventory().setItem(main.getConfiguration().journalInventorySlot, main.getConfiguration().journalItem);
+            addJournalToInventory(player);
         }
+    }
 
+    public void addJournalToInventory(Player player) {
+        player.getInventory().remove(main.getConfiguration().journalItem);
+        player.getInventory().setItem(main.getConfiguration().journalInventorySlot, main.getConfiguration().journalItem);
     }
 }

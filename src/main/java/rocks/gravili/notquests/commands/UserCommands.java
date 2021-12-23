@@ -29,7 +29,7 @@ import rocks.gravili.notquests.structs.QuestPlayer;
 
 
 public class UserCommands {
-    protected final MiniMessage miniMessage = MiniMessage.miniMessage();
+    private final MiniMessage miniMessage = MiniMessage.miniMessage();
     private final NotQuests main;
     private final PaperCommandManager<CommandSender> manager;
     private final Command.Builder<CommandSender> builder;
@@ -280,59 +280,8 @@ public class UserCommands {
                 .handler((context) -> {
                     final Player player = (Player) context.getSender();
                     final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
-                    final Audience audience = main.adventure().player(player);
-                    if (questPlayer != null) {
-                        String[] guiSetup = {
-                                "zxxxxxxxx",
-                                "xgggggggx",
-                                "xgggggggx",
-                                "xgggggggx",
-                                "xgggggggx",
-                                "pxxxxxxxn"
-                        };
-                        InventoryGui gui = new InventoryGui(main, player, convert(main.getLanguageManager().getString("gui.activeQuests.title", player)), guiSetup);
-                        gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
 
-                        int count = 0;
-                        GuiElementGroup group = new GuiElementGroup('g');
-
-                        for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-
-                            final ItemStack materialToUse;
-                            if (!activeQuest.isCompleted()) {
-                                materialToUse = activeQuest.getQuest().getTakeItem();
-                            } else {
-                                materialToUse = new ItemStack(Material.EMERALD_BLOCK);
-                            }
-
-                            if (main.getConfiguration().showQuestItemAmount) {
-                                count++;
-                            }
-
-                            group.addElement(new StaticGuiElement('e',
-                                    materialToUse,
-                                    count,
-                                    click -> {
-                                        player.chat("/notquests progress " + activeQuest.getQuest().getQuestName());
-                                        return true;
-                                    },
-                                    convert(main.getLanguageManager().getString("gui.activeQuests.button.activeQuestButton.text", player, activeQuest))
-                            ));
-                        }
-
-                        gui.addElement(group);
-
-                        // Previous page
-                        gui.addElement(new GuiPageElement('p', new ItemStack(Material.SPECTRAL_ARROW), GuiPageElement.PageAction.PREVIOUS, "Go to previous page (%prevpage%)"));
-                        // Next page
-                        gui.addElement(new GuiPageElement('n', new ItemStack(Material.ARROW), GuiPageElement.PageAction.NEXT, "Go to next page (%nextpage%)"));
-
-                        gui.show(player);
-                    } else {
-                        audience.sendMessage(miniMessage.parse(
-                                main.getLanguageManager().getString("chat.no-quests-accepted", player)
-                        ));
-                    }
+                    main.getGuiManager().showActiveQuests(questPlayer, player);
                 }));
 
 

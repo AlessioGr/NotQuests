@@ -1,65 +1,84 @@
 package rocks.gravili.notquests.managers;
 
+import de.themoep.inventorygui.GuiElementGroup;
+import de.themoep.inventorygui.GuiPageElement;
+import de.themoep.inventorygui.InventoryGui;
+import de.themoep.inventorygui.StaticGuiElement;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.structs.ActiveQuest;
+import rocks.gravili.notquests.structs.QuestPlayer;
 
 public class GUIManager {
-    private final NotQuests notQuests;
+    private final NotQuests main;
+    private final MiniMessage miniMessage = MiniMessage.miniMessage();
 
-    public GUIManager(final NotQuests notQuests) {
-        this.notQuests = notQuests;
+    public GUIManager(final NotQuests main) {
+        this.main = main;
+    }
 
-        /*ChestInterface infoInterface = ChestInterface.builder()
-                // This interface will have one row.
-                .rows(1)
-                // This interface will update every five ticks.
-                .updates(true, 5)
-                // Cancel all inventory click events
-                .clickHandler(ClickHandler.cancel())
-                // Fill the background with black stained glass panes
-                .addTransform(PaperTransform.chestFill(
-                        ItemStackElement.of(new ItemStack(Material.BLACK_STAINED_GLASS_PANE))
-                ))
-                // Add some information to the pane
-                .addTransform((pane, view) -> {
-                    // Get the view arguments
-                    // (Keep in mind - these arguments may be coming from a Supplier, so their values can change!)
-                    final @NonNull String time = view.argument().get("time");
-                    final @NonNull Player player = view.argument().get("player");
+    public final String convert(final String old) { //Converts MiniMessage to legacy
+        return main.getUtilManager().miniMessageToLegacyWithSpigotRGB(old);
+    }
 
-                    // Return a pane with
-                    return pane.element(ItemStackElement.of(PaperItemBuilder.paper(Material.PAPER)
-                                    // Add icon name
-                                    .name(Component.text()
-                                            .append(player.displayName())
-                                            .append(Component.text("'s info"))
-                                            .decoration(TextDecoration.ITALIC, false)
-                                            .asComponent())
-                                    // Add icon lore
-                                    .loreComponents(
-                                            Component.text()
-                                                    .append(Component.text("Current time: "))
-                                                    .append(Component.text(time))
-                                                    .color(NamedTextColor.GRAY)
-                                                    .decoration(TextDecoration.ITALIC, false)
-                                                    .asComponent(),
-                                            Component.text()
-                                                    .append(Component.text("Health: "))
-                                                    .append(Component.text(Double.toString(player.getHealth())))
-                                                    .color(NamedTextColor.GRAY)
-                                                    .decoration(TextDecoration.ITALIC, false)
-                                                    .asComponent())
-                                    .build(),
-                            // Handle click
-                            (clickEvent, clickView) -> {
-                                final @NonNull InterfaceArgument argument = clickView.argument();
-                                argument.set("clicks", ((Integer) argument.get("clicks")) + 1);
-                                clickView.parent().open(clickView.viewer(), argument);
-                            }
-                    ), 4, 0);
-                })
-                // Set the title
-                .title(Component.text("interfaces demo"))
-                // Build the interface
-                .build()*/
+    public void showActiveQuests(QuestPlayer questPlayer, Player player) {
+        final Audience audience = main.adventure().player(player);
+
+        if (questPlayer != null) {
+            String[] guiSetup = {
+                    "zxxxxxxxx",
+                    "xgggggggx",
+                    "xgggggggx",
+                    "xgggggggx",
+                    "xgggggggx",
+                    "pxxxxxxxn"
+            };
+            InventoryGui gui = new InventoryGui(main, player, convert(main.getLanguageManager().getString("gui.activeQuests.title", player)), guiSetup);
+            gui.setFiller(new ItemStack(Material.AIR, 1));
+
+            int count = 0;
+            GuiElementGroup group = new GuiElementGroup('g');
+
+            for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+
+                final ItemStack materialToUse;
+                if (!activeQuest.isCompleted()) {
+                    materialToUse = activeQuest.getQuest().getTakeItem();
+                } else {
+                    materialToUse = new ItemStack(Material.EMERALD_BLOCK);
+                }
+
+                if (main.getConfiguration().showQuestItemAmount) {
+                    count++;
+                }
+
+                group.addElement(new StaticGuiElement('e',
+                        materialToUse,
+                        count,
+                        click -> {
+                            player.chat("/notquests progress " + activeQuest.getQuest().getQuestName());
+                            return true;
+                        },
+                        convert(main.getLanguageManager().getString("gui.activeQuests.button.activeQuestButton.text", player, activeQuest))
+                ));
+            }
+
+            gui.addElement(group);
+
+            // Previous page
+            gui.addElement(new GuiPageElement('p', new ItemStack(Material.SPECTRAL_ARROW), GuiPageElement.PageAction.PREVIOUS, "Go to previous page (%prevpage%)"));
+            // Next page
+            gui.addElement(new GuiPageElement('n', new ItemStack(Material.ARROW), GuiPageElement.PageAction.NEXT, "Go to next page (%nextpage%)"));
+
+            gui.show(player);
+        } else {
+            audience.sendMessage(miniMessage.parse(
+                    main.getLanguageManager().getString("chat.no-quests-accepted", player)
+            ));
+        }
     }
 }
