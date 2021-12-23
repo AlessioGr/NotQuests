@@ -66,6 +66,8 @@ chat:
         taskDescriptionProvided: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%%TASKDESCRIPTION%'
       jump:
         base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Jump <WHITE>%EVENTUALCOLOR%%AMOUNTOFJUMPS%</WHITE> %EVENTUALCOLOR%times'
+      sneak:
+        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Sneak <WHITE>%EVENTUALCOLOR%%AMOUNTOFSNEAKS%</WHITE> %EVENTUALCOLOR%times'
       smelt:
         base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Items to smelt: <WHITE>%EVENTUALCOLOR%%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       townyReachResidentCount:

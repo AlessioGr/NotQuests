@@ -982,7 +982,6 @@ public class QuestEvents implements Listener {
     }
 
     private void handleConversation(Player player, String option) {
-
         final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
         if (main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId()) == null) {
             return;
@@ -995,10 +994,37 @@ public class QuestEvents implements Listener {
             questPlayer.sendDebugMessage("Tried to choose conversation option, but the conversationPlayer was not found! Active conversationPlayers count: " + NotQuestColors.highlightGradient + main.getConversationManager().getOpenConversations().size());
             questPlayer.sendDebugMessage("All active conversationPlayers: " + NotQuestColors.highlightGradient + main.getConversationManager().getOpenConversations().toString());
             questPlayer.sendDebugMessage("Current QuestPlayer: " + questPlayer);
+        }
+    }
 
 
+    @EventHandler
+    public void onPlayerSneak(final PlayerToggleSneakEvent e) {
+        if (!e.isSneaking()) {
+            return;
         }
 
+        final Player player = e.getPlayer();
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+        if (questPlayer == null) {
+            return;
+        }
+        if (questPlayer.getActiveQuests().size() == 0) {
+            return;
+        }
+
+        for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+            for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
+                if (activeObjective.isUnlocked()) {
+                    if (activeObjective.getObjective() instanceof SneakObjective) {
+                        activeObjective.addProgress(1);
+                    }
+                }
+
+            }
+            activeQuest.removeCompletedObjectives(true);
+        }
+        questPlayer.removeCompletedQuests();
     }
 
 }

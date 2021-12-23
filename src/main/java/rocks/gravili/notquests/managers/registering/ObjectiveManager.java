@@ -75,6 +75,7 @@ public class ObjectiveManager {
         registerObjective("RunCommand", RunCommandObjective.class);
         registerObjective("Interact", InteractObjective.class);
         registerObjective("Jump", JumpObjective.class);
+        registerObjective("Sneak", SneakObjective.class);
         registerObjective("SmeltItems", SmeltObjective.class);
 
         //Towny
