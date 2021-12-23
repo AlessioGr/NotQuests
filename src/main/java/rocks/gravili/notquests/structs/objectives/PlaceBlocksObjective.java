@@ -30,8 +30,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.commands.NotQuestColors;
-import rocks.gravili.notquests.commands.newcmds.arguments.MaterialOrHandArgument;
-import rocks.gravili.notquests.commands.newcmds.arguments.wrappers.MaterialOrHand;
+import rocks.gravili.notquests.commands.arguments.MaterialOrHandArgument;
+import rocks.gravili.notquests.commands.arguments.wrappers.MaterialOrHand;
 import rocks.gravili.notquests.structs.ActiveObjective;
 
 public class PlaceBlocksObjective extends Objective {

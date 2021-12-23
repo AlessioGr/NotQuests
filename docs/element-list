@@ -1,8 +1,8 @@
 rocks.gravili.notquests
 rocks.gravili.notquests.commands
 rocks.gravili.notquests.commands.newcmds
-rocks.gravili.notquests.commands.newcmds.arguments
-rocks.gravili.notquests.commands.newcmds.arguments.wrappers
+rocks.gravili.notquests.commands.arguments
+rocks.gravili.notquests.commands.arguments.wrappers
 rocks.gravili.notquests.conversation
 rocks.gravili.notquests.events
 rocks.gravili.notquests.events.hooks

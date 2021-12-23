@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.commands.newcmds.arguments;
+package rocks.gravili.notquests.commands.arguments;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.arguments.CommandArgument;
@@ -30,14 +30,15 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.conversation.Conversation;
 
 import java.util.List;
 import java.util.Queue;
 import java.util.function.BiFunction;
 
-public class EntityTypeSelector<C> extends CommandArgument<C, String> {
+public class ConversationSelector<C> extends CommandArgument<C, Conversation> {
 
-    protected EntityTypeSelector(
+    protected ConversationSelector(
             final boolean required,
             final @NonNull String name,
             final @NonNull String defaultValue,
@@ -46,40 +47,41 @@ public class EntityTypeSelector<C> extends CommandArgument<C, String> {
             final @NonNull ArgumentDescription defaultDescription,
             NotQuests main
     ) {
-        super(required, name, new EntityTypeParser<>(main), defaultValue, String.class, suggestionsProvider);
+        super(required, name, new ConversationsParser<>(main), defaultValue, Conversation.class, suggestionsProvider);
     }
 
-    public static <C> EntityTypeSelector.@NonNull Builder<C> newBuilder(final @NonNull String name, final NotQuests main) {
-        return new EntityTypeSelector.Builder<>(name, main);
+    public static <C> ConversationSelector.@NonNull Builder<C> newBuilder(final @NonNull String name, final NotQuests main) {
+        return new ConversationSelector.Builder<>(name, main);
     }
 
-    public static <C> @NonNull CommandArgument<C, String> of(final @NonNull String name, final NotQuests main) {
-        return EntityTypeSelector.<C>newBuilder(name, main).asRequired().build();
+    public static <C> @NonNull CommandArgument<C, Conversation> of(final @NonNull String name, final NotQuests main) {
+        return ConversationSelector.<C>newBuilder(name, main).asRequired().build();
     }
 
-    public static <C> @NonNull CommandArgument<C, String> optional(final @NonNull String name, final NotQuests main) {
-        return EntityTypeSelector.<C>newBuilder(name, main).asOptional().build();
+    public static <C> @NonNull CommandArgument<C, Conversation> optional(final @NonNull String name, final NotQuests main) {
+        return ConversationSelector.<C>newBuilder(name, main).asOptional().build();
     }
 
-    public static <C> @NonNull CommandArgument<C, String> optional(
+    public static <C> @NonNull CommandArgument<C, Conversation> optional(
             final @NonNull String name,
-            final @NonNull String entityType,
+            final @NonNull Conversation conversation,
             final NotQuests main
     ) {
-        return EntityTypeSelector.<C>newBuilder(name, main).asOptionalWithDefault(entityType).build();
+        return ConversationSelector.<C>newBuilder(name, main).asOptionalWithDefault(conversation.getIdentifier()).build();
     }
 
-    public static final class Builder<C> extends CommandArgument.Builder<C, String> {
+
+    public static final class Builder<C> extends CommandArgument.Builder<C, Conversation> {
         private final NotQuests main;
 
         private Builder(final @NonNull String name, NotQuests main) {
-            super(String.class, name);
+            super(Conversation.class, name);
             this.main = main;
         }
 
         @Override
-        public @NonNull CommandArgument<C, String> build() {
-            return new EntityTypeSelector<>(
+        public @NonNull CommandArgument<C, Conversation> build() {
+            return new ConversationSelector<>(
                     this.isRequired(),
                     this.getName(),
                     this.getDefaultValue(),
@@ -91,15 +93,15 @@ public class EntityTypeSelector<C> extends CommandArgument<C, String> {
     }
 
 
-    public static final class EntityTypeParser<C> implements ArgumentParser<C, String> {
+    public static final class ConversationsParser<C> implements ArgumentParser<C, Conversation> {
 
         private final NotQuests main;
 
 
         /**
-         * Constructs a new EntityTypePare.
+         * Constructs a new PluginsParser.
          */
-        public EntityTypeParser(
+        public ConversationsParser(
                 NotQuests main
         ) {
             this.main = main;
@@ -109,31 +111,33 @@ public class EntityTypeSelector<C> extends CommandArgument<C, String> {
         @NotNull
         @Override
         public List<String> suggestions(@NotNull CommandContext<C> context, @NotNull String input) {
-            List<String> completions = new java.util.ArrayList<>(main.getDataManager().standardEntityTypeCompletions);
-            completions.add("ANY");
-
+            List<String> questNames = new java.util.ArrayList<>();
+            for (Conversation conversation : main.getConversationManager().getAllConversations()) {
+                questNames.add(conversation.getIdentifier());
+            }
             final Audience audience = main.adventure().sender((CommandSender) context.getSender());
             final List<String> allArgs = context.getRawInput();
 
-            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Mob Name / 'ANY']", "[...]");
+            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Conversation Name]", "[...]");
 
-
-            return completions;
+            return questNames;
         }
 
         @Override
-        public @NonNull ArgumentParseResult<String> parse(@NonNull CommandContext<@NonNull C> context, @NonNull Queue<@NonNull String> inputQueue) {
+        public @NonNull ArgumentParseResult<Conversation> parse(@NonNull CommandContext<@NonNull C> context, @NonNull Queue<@NonNull String> inputQueue) {
             if (inputQueue.isEmpty()) {
-                return ArgumentParseResult.failure(new NoInputProvidedException(EntityTypeParser.class, context));
+                return ArgumentParseResult.failure(new NoInputProvidedException(ConversationsParser.class, context));
             }
-            final String input = inputQueue.peek();
+            final String conversationIdentifierInput = inputQueue.peek();
+            final Conversation foundConversation = main.getConversationManager().getConversation(conversationIdentifierInput);
             inputQueue.remove();
 
-            if (!main.getDataManager().standardEntityTypeCompletions.contains(input) && !input.equalsIgnoreCase("ANY")) {
-                return ArgumentParseResult.failure(new IllegalArgumentException("Entity type '" + input + "' does not exist!"));
+            if (foundConversation == null) {
+                return ArgumentParseResult.failure(new IllegalArgumentException("Conversation '" + conversationIdentifierInput + "' does not exist!"
+                ));
             }
 
-            return ArgumentParseResult.success(input);
+            return ArgumentParseResult.success(foundConversation);
 
         }
 

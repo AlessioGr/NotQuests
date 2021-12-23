@@ -37,23 +37,18 @@ import cloud.commandframework.paper.PaperCommandManager;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import io.leangen.geantyref.TypeToken;
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.PluginCommand;
 import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.commands.CommandNotQuests;
-import rocks.gravili.notquests.commands.NotQuestColors;
-import rocks.gravili.notquests.commands.newcmds.AdminCommands;
-import rocks.gravili.notquests.commands.newcmds.AdminConversationCommands;
-import rocks.gravili.notquests.commands.newcmds.AdminEditCommands;
-import rocks.gravili.notquests.commands.newcmds.arguments.ActionSelector;
-import rocks.gravili.notquests.commands.newcmds.arguments.ApplyOnSelector;
-import rocks.gravili.notquests.commands.newcmds.arguments.CommandSelector;
-import rocks.gravili.notquests.commands.newcmds.arguments.QuestSelector;
+import rocks.gravili.notquests.commands.*;
+import rocks.gravili.notquests.commands.arguments.ActionSelector;
+import rocks.gravili.notquests.commands.arguments.ApplyOnSelector;
+import rocks.gravili.notquests.commands.arguments.CommandSelector;
+import rocks.gravili.notquests.commands.arguments.QuestSelector;
 import rocks.gravili.notquests.conversation.ConversationManager;
 import rocks.gravili.notquests.structs.Quest;
 import rocks.gravili.notquests.structs.objectives.Objective;
@@ -65,49 +60,40 @@ import java.util.function.Function;
 
 public class CommandManager {
     private final NotQuests main;
-    private final boolean useNewCommands = true;
     private PaperCommandManager<CommandSender> commandManager;
-    private MinecraftHelp<CommandSender> minecraftHelp;
+
+    //Re-usable value flags
+    public CommandFlag<String[]> nametag_containsany;
+    public CommandFlag<String[]> nametag_equals;
+    public CommandFlag<String> taskDescription;
+    public CommandFlag<Integer> maxDistance;
     private Command.Builder<CommandSender> adminCommandBuilder;
     private Command.Builder<CommandSender> adminEditCommandBuilder;
     private Command.Builder<CommandSender> adminConversationCommandBuilder;
-
-
     private Command.Builder<CommandSender> adminEditAddObjectiveCommandBuilder;
     private Command.Builder<CommandSender> adminEditAddRequirementCommandBuilder;
     private Command.Builder<CommandSender> adminEditAddRewardCommandBuilder;
     private Command.Builder<CommandSender> adminEditAddTriggerCommandBuilder;
-
     private Command.Builder<CommandSender> adminEditObjectiveAddConditionCommandBuilder;
     private Command.Builder<CommandSender> adminEditObjectiveAddRewardCommandBuilder;
-
     private Command.Builder<CommandSender> adminAddActionCommandBuilder;
     private Command.Builder<CommandSender> adminAddConditionCommandBuilder;
-
     private Command.Builder<CommandSender> adminEditActionsAddConditionCommandBuilder;
-
-
-    private Command.Builder<CommandSender> editObjectivesBuilder;
-
+    public CommandFlag<String> speakerColor;
     private AdminCommands adminCommands;
     private AdminEditCommands adminEditCommands;
     private AdminConversationCommands adminConversationCommands;
-
-
-    //Re-usable value flags
-    public final CommandFlag<String[]> nametag_containsany;
-    public final CommandFlag<String[]> nametag_equals;
-    public final CommandFlag<String> taskDescription;
-    public final CommandFlag<Integer> maxDistance;
-
-
-    public final CommandFlag<String> speakerColor;
-
-    public final CommandFlag<Integer> applyOn; //0 = Quest
-    public final CommandFlag<World> world;
-    public final CommandFlag<String> triggerWorldString;
-
-    public final CommandFlag<Long> minimumTimeAfterCompletion;
+    public CommandFlag<Integer> applyOn; //0 = Quest
+    public CommandFlag<World> world;
+    public CommandFlag<String> triggerWorldString;
+    public CommandFlag<Long> minimumTimeAfterCompletion;
+    //User
+    private MinecraftHelp<CommandSender> minecraftUserHelp;
+    private Command.Builder<CommandSender> userCommandBuilder;
+    private UserCommands userCommands;
+    //Admin
+    private MinecraftHelp<CommandSender> minecraftAdminHelp;
+    private Command.Builder<CommandSender> adminEditObjectivesBuilder;
 
     private CommandMap commandMap;
 
@@ -123,7 +109,10 @@ public class CommandManager {
             commandMap = null;
         }
 
+        createCommandFlags();
+    }
 
+    public void createCommandFlags() {
         nametag_containsany = CommandFlag
                 .newBuilder("nametag_containsany")
                 .withArgument(StringArrayArgument.of("nametag_containsany",
@@ -243,169 +232,194 @@ public class CommandManager {
     }
 
     public void preSetupCommands() {
-        if (useNewCommands) {
-            //Cloud command framework
-            try {
-                commandManager = new PaperCommandManager<>(
-                        /* Owning plugin */ main,
-                        /* Coordinator function */ CommandExecutionCoordinator.simpleCoordinator(),
-                        /* Command Sender -> C */ Function.identity(),
-                        /* C -> Command Sender */ Function.identity()
-                );
-            } catch (final Exception e) {
-                main.getLogManager().severe("There was an error setting up the commands.");
-                return;
-            }
-
-
-            adminCommandBuilder = commandManager.commandBuilder("nqa", ArgumentDescription.of("Admin commands for NotQuests"),
-                            "nquestsadmin", "nquestadmin", "notquestadmin", "qadmin", "questadmin", "qa", "qag", "notquestsadmin")
-                    .permission("notquests.admin");
-
-            adminEditCommandBuilder = adminCommandBuilder
-                    .literal("edit", "e")
-                    .argument(QuestSelector.of("quest", main), ArgumentDescription.of("Quest Name"));
-
-            adminConversationCommandBuilder = adminCommandBuilder
-                    .literal("conversations", "c");
-
-
-            adminEditAddObjectiveCommandBuilder = adminEditCommandBuilder
-                    .literal("objectives", "o")
-                    .literal("add");
-            adminEditAddRequirementCommandBuilder = adminEditCommandBuilder
-                    .literal("requirements", "req")
-                    .literal("add");
-            adminEditAddRewardCommandBuilder = adminEditCommandBuilder
-                    .literal("rewards", "rew")
-                    .literal("add");
-            adminEditAddTriggerCommandBuilder = adminEditCommandBuilder
-                    .literal("triggers", "t")
-                    .literal("add")
-                    .argument(ActionSelector.of("action", main), ArgumentDescription.of("Action which will be executed when the Trigger triggers."));
-
-
-            editObjectivesBuilder = adminEditCommandBuilder.literal("objectives").literal("edit")
-                    .argument(IntegerArgument.<CommandSender>newBuilder("Objective ID").withMin(1).withSuggestionsProvider(
-                                    (context, lastString) -> {
-                                        final List<String> allArgs = context.getRawInput();
-                                        final Audience audience = main.adventure().sender(context.getSender());
-                                        main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Objective ID]", "[...]");
-
-                                        ArrayList<String> completions = new ArrayList<>();
-
-                                        final Quest quest = context.get("quest");
-                                        for (final Objective objective : quest.getObjectives()) {
-                                            completions.add("" + objective.getObjectiveID());
-                                        }
-
-                                        return completions;
-                                    }
-                            ).withParser((context, lastString) -> { //TODO: Fix this parser. It isn't run at all.
-                                final int ID = context.get("Objective ID");
-                                final Quest quest = context.get("quest");
-                                final Objective foundObjective = quest.getObjectiveFromID(ID);
-                                if (foundObjective == null) {
-                                    return ArgumentParseResult.failure(new IllegalArgumentException("Objective with the ID '" + ID + "' does not belong to Quest '" + quest.getQuestName() + "'!"));
-                                } else {
-                                    return ArgumentParseResult.success(ID);
-                                }
-                            })
-                            , ArgumentDescription.of("Objective ID"));
-
-
-            adminEditObjectiveAddConditionCommandBuilder = editObjectivesBuilder
-                    .literal("conditions")
-                    .literal("add");
-
-            adminEditActionsAddConditionCommandBuilder = adminCommandBuilder.literal("actions")
-                    .literal("edit")
-                    .argument(StringArgument.<CommandSender>newBuilder("Action Identifier").withSuggestionsProvider(
-                            (context, lastString) -> {
-                                final List<String> allArgs = context.getRawInput();
-                                final Audience audience = main.adventure().sender(context.getSender());
-                                main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Action Identifier (name)]", "[...]");
-
-                                return new ArrayList<>(main.getActionsYMLManager().getActionsAndIdentifiers().keySet());
-
-                            }
-                    ).single().build(), ArgumentDescription.of("Action Identifier"))
-                    .literal("conditions")
-                    .literal("add");
-
-            adminEditObjectiveAddRewardCommandBuilder = editObjectivesBuilder
-                    .literal("rewards", "rew")
-                    .literal("add");
-
-
-            adminAddConditionCommandBuilder = adminCommandBuilder.literal("conditions")
-                    .literal("add")
-                    .argument(StringArgument.<CommandSender>newBuilder("Condition Identifier").withSuggestionsProvider(
-                            (context, lastString) -> {
-                                final List<String> allArgs = context.getRawInput();
-                                final Audience audience = main.adventure().sender(context.getSender());
-                                main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[New, unique Condition Identifier]", "...");
-
-                                ArrayList<String> completions = new ArrayList<>();
-
-                                completions.add("[Enter new, unique Condition Identifier]");
-                                return completions;
-                            }));
-
-            adminAddActionCommandBuilder = adminCommandBuilder.literal("actions")
-                    .literal("add")
-                    .argument(StringArgument.<CommandSender>newBuilder("Action Identifier").withSuggestionsProvider(
-                            (context, lastString) -> {
-                                final List<String> allArgs = context.getRawInput();
-                                final Audience audience = main.adventure().sender(context.getSender());
-                                main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[New, unique Action Identifier]", "...");
-
-                                ArrayList<String> completions = new ArrayList<>();
-
-                                completions.add("[Enter new, unique Action Identifier]");
-                                return completions;
-                            }));
-
-            //asynchronous completions
-            if (commandManager.queryCapability(CloudBukkitCapabilities.ASYNCHRONOUS_COMPLETION)) {
-                commandManager.registerAsynchronousCompletions();
-            }
-
-            //brigadier/commodore
-            try {
-                commandManager.registerBrigadier();
-                CloudBrigadierManager<CommandSender, ?> cloudBrigadierManager = commandManager.brigadierManager();
-                if (cloudBrigadierManager != null) {
-                    cloudBrigadierManager.setNativeNumberSuggestions(false);
-
-
-                    cloudBrigadierManager.registerMapping(new TypeToken<CommandSelector.CommandParser<CommandSender>>() {
-                    }, builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
-
-                } else {
-                    main.getLogger().warning("Failed to initialize Brigadier support. Brigadier manager is null.");
-                }
-            } catch (final Exception e) {
-                main.getLogger().warning("Failed to initialize Brigadier support: " + e.getMessage());
-            }
-
-
-            minecraftHelp = new MinecraftHelp<>(
-                    "/qa help",
-                    main.adventure()::sender,
-                    commandManager
+        //Cloud command framework
+        try {
+            commandManager = new PaperCommandManager<>(
+                    /* Owning plugin */ main,
+                    /* Coordinator function */ CommandExecutionCoordinator.simpleCoordinator(),
+                    /* Command Sender -> C */ Function.identity(),
+                    /* C -> Command Sender */ Function.identity()
             );
-
-            minecraftHelp.setHelpColors(MinecraftHelp.HelpColors.of(
-                    NotQuestColors.main,
-                    NamedTextColor.WHITE,
-                    NotQuestColors.highlight,
-                    NamedTextColor.GRAY,
-                    NamedTextColor.DARK_GRAY
-            ));
+        } catch (final Exception e) {
+            main.getLogManager().severe("There was an error setting up the commands.");
+            return;
         }
 
+        preSetupGeneralCommands();
+        preSetupUserCommands();
+        preSetupAdminCommands();
     }
+
+    public void preSetupGeneralCommands() {
+        //asynchronous completions
+        if (commandManager.queryCapability(CloudBukkitCapabilities.ASYNCHRONOUS_COMPLETION)) {
+            commandManager.registerAsynchronousCompletions();
+        }
+
+        //brigadier/commodore
+        try {
+            commandManager.registerBrigadier();
+            CloudBrigadierManager<CommandSender, ?> cloudBrigadierManager = commandManager.brigadierManager();
+            if (cloudBrigadierManager != null) {
+                cloudBrigadierManager.setNativeNumberSuggestions(false);
+
+
+                cloudBrigadierManager.registerMapping(new TypeToken<CommandSelector.CommandParser<CommandSender>>() {
+                }, builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
+
+            } else {
+                main.getLogger().warning("Failed to initialize Brigadier support. Brigadier manager is null.");
+            }
+        } catch (final Exception e) {
+            main.getLogger().warning("Failed to initialize Brigadier support: " + e.getMessage());
+        }
+    }
+
+    public void preSetupUserCommands() {
+        minecraftUserHelp = new MinecraftHelp<>(
+                "/nq help",
+                main.adventure()::sender,
+                commandManager
+        );
+
+        minecraftUserHelp.setHelpColors(MinecraftHelp.HelpColors.of(
+                NotQuestColors.main,
+                NamedTextColor.WHITE,
+                NotQuestColors.highlight,
+                NamedTextColor.GRAY,
+                NamedTextColor.DARK_GRAY
+        ));
+
+        userCommandBuilder = commandManager.commandBuilder("nq", ArgumentDescription.of("Player commands for NotQuests"),
+                        "notquests", "nquests", "nquest", "notquest", "quest", "quests", "q", "qg")
+                .permission("notquests.use");
+    }
+
+    public void preSetupAdminCommands() {
+
+        minecraftAdminHelp = new MinecraftHelp<>(
+                "/qa help",
+                main.adventure()::sender,
+                commandManager
+        );
+
+        minecraftAdminHelp.setHelpColors(MinecraftHelp.HelpColors.of(
+                NotQuestColors.main,
+                NamedTextColor.WHITE,
+                NotQuestColors.highlight,
+                NamedTextColor.GRAY,
+                NamedTextColor.DARK_GRAY
+        ));
+
+        adminCommandBuilder = commandManager.commandBuilder("nqa", ArgumentDescription.of("Admin commands for NotQuests"),
+                        "nquestsadmin", "nquestadmin", "notquestadmin", "qadmin", "questadmin", "qa", "qag", "notquestsadmin")
+                .permission("notquests.admin");
+
+        adminEditCommandBuilder = adminCommandBuilder
+                .literal("edit", "e")
+                .argument(QuestSelector.of("quest", main), ArgumentDescription.of("Quest Name"));
+
+        adminConversationCommandBuilder = adminCommandBuilder
+                .literal("conversations", "c");
+
+
+        adminEditAddObjectiveCommandBuilder = adminEditCommandBuilder
+                .literal("objectives", "o")
+                .literal("add");
+        adminEditAddRequirementCommandBuilder = adminEditCommandBuilder
+                .literal("requirements", "req")
+                .literal("add");
+        adminEditAddRewardCommandBuilder = adminEditCommandBuilder
+                .literal("rewards", "rew")
+                .literal("add");
+        adminEditAddTriggerCommandBuilder = adminEditCommandBuilder
+                .literal("triggers", "t")
+                .literal("add")
+                .argument(ActionSelector.of("action", main), ArgumentDescription.of("Action which will be executed when the Trigger triggers."));
+
+
+        adminEditObjectivesBuilder = adminEditCommandBuilder.literal("objectives").literal("edit")
+                .argument(IntegerArgument.<CommandSender>newBuilder("Objective ID").withMin(1).withSuggestionsProvider(
+                                (context, lastString) -> {
+                                    final List<String> allArgs = context.getRawInput();
+                                    final Audience audience = main.adventure().sender(context.getSender());
+                                    main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Objective ID]", "[...]");
+
+                                    ArrayList<String> completions = new ArrayList<>();
+
+                                    final Quest quest = context.get("quest");
+                                    for (final Objective objective : quest.getObjectives()) {
+                                        completions.add("" + objective.getObjectiveID());
+                                    }
+
+                                    return completions;
+                                }
+                        ).withParser((context, lastString) -> { //TODO: Fix this parser. It isn't run at all.
+                            final int ID = context.get("Objective ID");
+                            final Quest quest = context.get("quest");
+                            final Objective foundObjective = quest.getObjectiveFromID(ID);
+                            if (foundObjective == null) {
+                                return ArgumentParseResult.failure(new IllegalArgumentException("Objective with the ID '" + ID + "' does not belong to Quest '" + quest.getQuestName() + "'!"));
+                            } else {
+                                return ArgumentParseResult.success(ID);
+                            }
+                        })
+                        , ArgumentDescription.of("Objective ID"));
+
+
+        adminEditObjectiveAddConditionCommandBuilder = adminEditObjectivesBuilder
+                .literal("conditions")
+                .literal("add");
+
+        adminEditActionsAddConditionCommandBuilder = adminCommandBuilder.literal("actions")
+                .literal("edit")
+                .argument(StringArgument.<CommandSender>newBuilder("Action Identifier").withSuggestionsProvider(
+                        (context, lastString) -> {
+                            final List<String> allArgs = context.getRawInput();
+                            final Audience audience = main.adventure().sender(context.getSender());
+                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Action Identifier (name)]", "[...]");
+
+                            return new ArrayList<>(main.getActionsYMLManager().getActionsAndIdentifiers().keySet());
+
+                        }
+                ).single().build(), ArgumentDescription.of("Action Identifier"))
+                .literal("conditions")
+                .literal("add");
+
+        adminEditObjectiveAddRewardCommandBuilder = adminEditObjectivesBuilder
+                .literal("rewards", "rew")
+                .literal("add");
+
+
+        adminAddConditionCommandBuilder = adminCommandBuilder.literal("conditions")
+                .literal("add")
+                .argument(StringArgument.<CommandSender>newBuilder("Condition Identifier").withSuggestionsProvider(
+                        (context, lastString) -> {
+                            final List<String> allArgs = context.getRawInput();
+                            final Audience audience = main.adventure().sender(context.getSender());
+                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[New, unique Condition Identifier]", "...");
+
+                            ArrayList<String> completions = new ArrayList<>();
+
+                            completions.add("[Enter new, unique Condition Identifier]");
+                            return completions;
+                        }));
+
+        adminAddActionCommandBuilder = adminCommandBuilder.literal("actions")
+                .literal("add")
+                .argument(StringArgument.<CommandSender>newBuilder("Action Identifier").withSuggestionsProvider(
+                        (context, lastString) -> {
+                            final List<String> allArgs = context.getRawInput();
+                            final Audience audience = main.adventure().sender(context.getSender());
+                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[New, unique Action Identifier]", "...");
+
+                            ArrayList<String> completions = new ArrayList<>();
+
+                            completions.add("[Enter new, unique Action Identifier]");
+                            return completions;
+                        }));
+    }
+
 
     public void setupCommands() {
 
@@ -419,68 +433,61 @@ public class CommandManager {
             registerCommodoreCompletions(commodore, notQuestsAdminCommand);
         }*/
         //Register the notquests command & tab completer. This command will be used by Players
-        final PluginCommand notQuestsCommand = main.getCommand("notquests");
+        /*final PluginCommand notQuestsCommand = main.getCommand("notquests");
         if (notQuestsCommand != null) {
             final CommandNotQuests commandNotQuests = new CommandNotQuests(main);
             notQuestsCommand.setExecutor(commandNotQuests);
             notQuestsCommand.setTabCompleter(commandNotQuests);
 
 
-        }
+        }*/
 
 
-        if (!useNewCommands) {
-            /*final PluginCommand notQuestsAdminCommand = main.getCommand("notquestsadmin");
-            if (notQuestsAdminCommand != null) {
-                final CommandNotQuestsAdmin commandNotQuestsAdmin = new CommandNotQuestsAdmin(main);
-                notQuestsAdminCommand.setTabCompleter(commandNotQuestsAdmin);
-                notQuestsAdminCommand.setExecutor(commandNotQuestsAdmin);
-            }
-            //Register the notquests command & tab completer. This command will be used by Players
-            final PluginCommand notQuestsCommand = main.getCommand("notquests");
-            if (notQuestsCommand != null) {
-                final CommandNotQuests commandNotQuests = new CommandNotQuests(main);
-                notQuestsCommand.setExecutor(commandNotQuests);
-                notQuestsCommand.setTabCompleter(commandNotQuests);
-            }*/
-        } else {
-
-
-
-
-
-            constructCommands();
-        }
-
-
+        constructCommands();
     }
 
 
     public void constructCommands() {
 
+        //General Stuff
+        MinecraftExceptionHandler<CommandSender> exceptionHandler = new MinecraftExceptionHandler<CommandSender>()
+                .withArgumentParsingHandler()
+                .withInvalidSenderHandler()
+                .withInvalidSyntaxHandler()
+                .withNoPermissionHandler()
+                .withCommandExecutionHandler()
+                .withDecorator(message -> {
+                            return MiniMessage.miniMessage().parse(NotQuestColors.mainGradient + "NotQuests > ").append(MiniMessage.miniMessage().parse(MiniMessage.miniMessage().serialize(message)));
+                        }
+                )
+                .withHandler(MinecraftExceptionHandler.ExceptionType.INVALID_SYNTAX, (sender, e) -> {
+                    minecraftAdminHelp.queryCommands(e.getMessage().split("syntax is: ")[1], sender);
 
-       /* final Command.Builder<CommandSender> helpBuilder = commandManager.commandBuilder("notquestsadmin", "qa");
-        commandManager.command(helpBuilder.meta(CommandMeta.DESCRIPTION, "fwefwe")
-                .senderType(Player.class)
-                .handler(commandContext -> {
-                    minecraftHelp.queryCommands(commandContext.getOrDefault("", ""), commandContext.getSender());
-                }));
+                    return MiniMessage.miniMessage().parse(NotQuestColors.errorGradient + e.getMessage());
+                });
 
-        helpBuilder.literal("notquestsadmin",
-                ArgumentDescription.of("Your Description"));*/
+        exceptionHandler.apply(commandManager, main.adventure()::sender);
 
 
-       /* commandManager.command(
-                builder.literal("help", new String[0])
-                .argument(com.magmaguy.shaded.cloud.arguments.standard.StringArgument.optional("query", com.magmaguy.shaded.cloud.arguments.standard.StringArgument.StringMode.GREEDY)).handler((context) -> {
-                    this.minecraftHelp.queryCommands((String)context.getOrDefault("query", ""), context.getSender());
-                })
-        );*/
-
-
+        //User Stuff
         //Help menu
+
+        commandManager.command(
+                userCommandBuilder.literal("help")
+                        .argument(StringArgument.optional("query", StringArgument.StringMode.GREEDY))
+                        .handler(context -> {
+                            minecraftUserHelp.queryCommands(context.getOrDefault("query", "nq *"), context.getSender());
+                        })
+        );
+
+
+        userCommands = new UserCommands(main, commandManager, userCommandBuilder);
+
+
+        //Admin Stuff
+        //Help Menu
         commandManager.command(adminCommandBuilder.meta(CommandMeta.DESCRIPTION, "Opens the help menu").handler((context) -> {
-            minecraftHelp.queryCommands("qa *", context.getSender());
+            minecraftAdminHelp.queryCommands("qa *", context.getSender());
             final Audience audience = main.adventure().sender(context.getSender());
             final List<String> allArgs = context.getRawInput();
             main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[What would you like to do?]", "[...]");
@@ -491,29 +498,10 @@ public class CommandManager {
                         .argument(StringArgument.optional("query", StringArgument.StringMode.GREEDY))
 
                         .handler(context -> {
-                            minecraftHelp.queryCommands(context.getOrDefault("query", "qa *"), context.getSender());
+                            minecraftAdminHelp.queryCommands(context.getOrDefault("query", "qa *"), context.getSender());
                         })
         );
 
-
-        MinecraftExceptionHandler<CommandSender> exceptionHandler = new MinecraftExceptionHandler<CommandSender>()
-                .withArgumentParsingHandler()
-                .withInvalidSenderHandler()
-                .withInvalidSyntaxHandler()
-                .withNoPermissionHandler()
-                .withCommandExecutionHandler()
-                .withDecorator(message -> {
-
-                            return Component.text("NotQuests > ").color(NotQuestColors.main).append(Component.space()).append(message);
-                        }
-                )
-                .withHandler(MinecraftExceptionHandler.ExceptionType.INVALID_SYNTAX, (sender, e) -> {
-                    minecraftHelp.queryCommands(e.getMessage().split("syntax is: ")[1], sender);
-
-                    return Component.text(e.getMessage(), NamedTextColor.RED);
-                });
-
-        exceptionHandler.apply(commandManager, main.adventure()::sender);
 
         adminCommands = new AdminCommands(main, commandManager, adminCommandBuilder);
 
@@ -566,8 +554,8 @@ public class CommandManager {
         return adminAddConditionCommandBuilder;
     }
 
-    public final Command.Builder<CommandSender> getEditObjectivesBuilder() {
-        return editObjectivesBuilder;
+    public final Command.Builder<CommandSender> getAdminEditObjectivesBuilder() {
+        return adminEditObjectivesBuilder;
     }
 
 
@@ -590,5 +578,15 @@ public class CommandManager {
 
     public final AdminConversationCommands getAdminConversationCommands() {
         return adminConversationCommands;
+    }
+
+
+    //Player Stuff
+    public final UserCommands getUserCommands() {
+        return userCommands;
+    }
+
+    public final Command.Builder<CommandSender> getUserCommandBuilder() {
+        return userCommandBuilder;
     }
 }

@@ -33,7 +33,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.commands.newcmds.arguments.EntityTypeSelector;
+import rocks.gravili.notquests.commands.arguments.EntityTypeSelector;
 
 public class SpawnMobAction extends Action {
 

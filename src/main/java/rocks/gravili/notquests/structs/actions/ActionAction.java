@@ -27,7 +27,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.commands.newcmds.arguments.ActionSelector;
+import rocks.gravili.notquests.commands.arguments.ActionSelector;
 
 public class ActionAction extends Action {
 

@@ -28,7 +28,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.commands.newcmds.arguments.CommandSelector;
+import rocks.gravili.notquests.commands.arguments.CommandSelector;
 import rocks.gravili.notquests.structs.Quest;
 
 public class ConsoleCommandAction extends Action {

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.commands.newcmds.arguments.wrappers;
+package rocks.gravili.notquests.commands.arguments.wrappers;
 
 public class MaterialOrHand {
     public String material;

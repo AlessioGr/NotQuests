@@ -26,7 +26,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.commands.newcmds.arguments.ConversationSelector;
+import rocks.gravili.notquests.commands.arguments.ConversationSelector;
 import rocks.gravili.notquests.conversation.Conversation;
 import rocks.gravili.notquests.conversation.ConversationPlayer;
 

@@ -30,7 +30,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.commands.NotQuestColors;
-import rocks.gravili.notquests.commands.newcmds.arguments.EntityTypeSelector;
+import rocks.gravili.notquests.commands.arguments.EntityTypeSelector;
 import rocks.gravili.notquests.structs.ActiveObjective;
 
 public class KillMobsObjective extends Objective {

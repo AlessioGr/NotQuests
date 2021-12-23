@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.commands.newcmds.arguments;
+package rocks.gravili.notquests.commands.arguments;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.arguments.CommandArgument;
@@ -26,6 +26,7 @@ import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.exceptions.parsing.NoInputProvidedException;
 import net.kyori.adventure.audience.Audience;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jetbrains.annotations.NotNull;
@@ -37,6 +38,7 @@ import java.util.Queue;
 import java.util.function.BiFunction;
 
 public class QuestSelector<C> extends CommandArgument<C, Quest> {
+    private boolean takeEnabledOnly = false;
 
     protected QuestSelector(
             final boolean required,
@@ -45,9 +47,11 @@ public class QuestSelector<C> extends CommandArgument<C, Quest> {
             final @Nullable BiFunction<@NonNull CommandContext<C>, @NonNull String,
                     @NonNull List<@NonNull String>> suggestionsProvider,
             final @NonNull ArgumentDescription defaultDescription,
-            NotQuests main
+            NotQuests main,
+            boolean takeEnabledOnly
     ) {
-        super(required, name, new QuestsParser<>(main), defaultValue, Quest.class, suggestionsProvider);
+        super(required, name, new QuestsParser<>(main, takeEnabledOnly), defaultValue, Quest.class, suggestionsProvider);
+        this.takeEnabledOnly = takeEnabledOnly;
     }
 
 
@@ -71,12 +75,22 @@ public class QuestSelector<C> extends CommandArgument<C, Quest> {
         return QuestSelector.<C>newBuilder(name, main).asOptionalWithDefault(quest.getQuestName()).build();
     }
 
+    public @NonNull boolean isTakeEnabledOnly() {
+        return this.takeEnabledOnly;
+    }
+
     public static final class Builder<C> extends CommandArgument.Builder<C, Quest> {
         private final NotQuests main;
+        private boolean takeEnabledOnly = false;
 
         private Builder(final @NonNull String name, NotQuests main) {
             super(Quest.class, name);
             this.main = main;
+        }
+
+        public CommandArgument.Builder<C, Quest> takeEnabledOnly() {
+            this.takeEnabledOnly = true;
+            return this;
         }
 
         @Override
@@ -87,7 +101,8 @@ public class QuestSelector<C> extends CommandArgument<C, Quest> {
                     this.getDefaultValue(),
                     this.getSuggestionsProvider(),
                     this.getDefaultDescription(),
-                    this.main
+                    this.main,
+                    this.takeEnabledOnly
             );
         }
     }
@@ -96,15 +111,18 @@ public class QuestSelector<C> extends CommandArgument<C, Quest> {
     public static final class QuestsParser<C> implements ArgumentParser<C, Quest> {
 
         private final NotQuests main;
+        private final boolean takeEnabledOnly;
 
 
         /**
          * Constructs a new PluginsParser.
          */
         public QuestsParser(
-                NotQuests main
+                NotQuests main,
+                boolean takeEnabledOnly
         ) {
             this.main = main;
+            this.takeEnabledOnly = takeEnabledOnly;
         }
 
 
@@ -113,7 +131,9 @@ public class QuestSelector<C> extends CommandArgument<C, Quest> {
         public List<String> suggestions(@NotNull CommandContext<C> context, @NotNull String input) {
             List<String> questNames = new java.util.ArrayList<>();
             for (Quest quest : main.getQuestManager().getAllQuests()) {
-                questNames.add(quest.getQuestName());
+                if (!this.takeEnabledOnly || quest.isTakeEnabled()) {
+                    questNames.add(quest.getQuestName());
+                }
             }
 
             final Audience audience = main.adventure().sender((CommandSender) context.getSender());
@@ -133,8 +153,20 @@ public class QuestSelector<C> extends CommandArgument<C, Quest> {
             inputQueue.remove();
             final Quest foundQuest = main.getQuestManager().getQuest(input);
             if (foundQuest == null) {
-                return ArgumentParseResult.failure(new IllegalArgumentException("Quest '" + input + "' does not exist!"
-                ));
+                if (context.getSender() instanceof Player player) {
+                    return ArgumentParseResult.failure(new IllegalArgumentException(main.getLanguageManager().getString("chat.quest-does-not-exist", player).replace("%QUESTNAME%", input)));
+                } else {
+                    return ArgumentParseResult.failure(new IllegalArgumentException(main.getLanguageManager().getString("chat.quest-does-not-exist", null).replace("%QUESTNAME%", input)));
+                }
+            }
+            if (this.takeEnabledOnly && !foundQuest.isTakeEnabled()) {
+                if (context.getSender() instanceof Player player) {
+                    return ArgumentParseResult.failure(new IllegalArgumentException(main.getLanguageManager().getString("chat.take-disabled", player, foundQuest)));
+                } else {
+                    return ArgumentParseResult.failure(new IllegalArgumentException(main.getLanguageManager().getString("chat.take-disabled", null, foundQuest)));
+                }
+
+
             }
 
 

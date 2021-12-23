@@ -21,8 +21,7 @@ chat:
   quest-does-not-exist: '<RED>Quest <AQUA>%QUESTNAME%</AQUA> does not exist!'
   quest-not-found-or-does-not-exist: '<RED>Quest <AQUA>%QUESTNAME%</AQUA> not found or not active!'
   active-quests-label: '<YELLOW>Active quests:'
-  take-disabled-preview: '<RED>Previewing the quest <AQUA>%QUESTNAME%</AQUA> is disabled with the <YELLOW>/nquests preview</YELLOW> command.'
-  take-disabled-accept: '<RED>Accepting the quest <AQUA>%QUESTNAME%</AQUA> is disabled with the <YELLOW>/nquests take</YELLOW> command.'
+  take-disabled: '<RED>Accepting or previewing the quest <AQUA>%QUESTNAME%</AQUA> is disabled.'
   quest-not-active-error: '<RED>Error: <AQUA>%QUESTNAME%</AQUA> is not an active Quest!'
   objectives:
     counter: '<YELLOW>%OBJECTIVEID%. %OBJECTIVENAME%:'

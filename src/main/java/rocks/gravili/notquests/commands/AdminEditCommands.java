@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.commands.newcmds;
+package rocks.gravili.notquests.commands;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
@@ -43,9 +43,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.commands.NotQuestColors;
-import rocks.gravili.notquests.commands.newcmds.arguments.MaterialOrHandArgument;
-import rocks.gravili.notquests.commands.newcmds.arguments.wrappers.MaterialOrHand;
+import rocks.gravili.notquests.commands.arguments.MaterialOrHandArgument;
+import rocks.gravili.notquests.commands.arguments.wrappers.MaterialOrHand;
 import rocks.gravili.notquests.structs.Quest;
 import rocks.gravili.notquests.structs.actions.Action;
 import rocks.gravili.notquests.structs.conditions.Condition;
@@ -575,7 +574,7 @@ public class AdminEditCommands {
                 }));
 
 
-        handleEditObjectives(main.getCommandManager().getEditObjectivesBuilder());
+        handleEditObjectives(main.getCommandManager().getAdminEditObjectivesBuilder());
 
 
     }

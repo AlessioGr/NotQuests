@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.commands.newcmds.arguments;
+package rocks.gravili.notquests.commands.arguments;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.arguments.CommandArgument;
@@ -28,6 +28,7 @@ import cloud.commandframework.exceptions.parsing.NoInputProvidedException;
 import net.kyori.adventure.audience.Audience;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jetbrains.annotations.NotNull;
@@ -124,13 +125,18 @@ public class ActiveQuestSelector<C> extends CommandArgument<C, ActiveQuest> {
         public List<String> suggestions(@NotNull CommandContext<C> context, @NotNull String input) {
             List<String> questNames = new java.util.ArrayList<>();
 
-            SinglePlayerSelector singlePlayerSelector = context.get(playerContext);
             UUID uuid;
-            if (singlePlayerSelector.getPlayer() != null) {
-                uuid = singlePlayerSelector.getPlayer().getUniqueId();
+            if (playerContext != null) {
+                SinglePlayerSelector singlePlayerSelector = context.get(playerContext);
+                if (singlePlayerSelector.getPlayer() != null) {
+                    uuid = singlePlayerSelector.getPlayer().getUniqueId();
+                } else {
+                    uuid = Bukkit.getOfflinePlayer(singlePlayerSelector.getSelector()).getUniqueId();
+                }
             } else {
-                uuid = Bukkit.getOfflinePlayer(singlePlayerSelector.getSelector()).getUniqueId();
+                uuid = ((Player) context.getSender()).getUniqueId();
             }
+
 
             final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(uuid);
             if (questPlayer != null) {
@@ -157,24 +163,33 @@ public class ActiveQuestSelector<C> extends CommandArgument<C, ActiveQuest> {
             }
             final String input = inputQueue.peek();
 
-            SinglePlayerSelector singlePlayerSelector = context.get(playerContext);
             UUID uuid;
-            if (singlePlayerSelector.getPlayer() != null) {
-                uuid = singlePlayerSelector.getPlayer().getUniqueId();
+            Player player = null;
+            if (playerContext != null) {
+                SinglePlayerSelector singlePlayerSelector = context.get(playerContext);
+                if (singlePlayerSelector.getPlayer() != null) {
+                    player = singlePlayerSelector.getPlayer();
+                    uuid = player.getUniqueId();
+                } else {
+                    uuid = Bukkit.getOfflinePlayer(singlePlayerSelector.getSelector()).getUniqueId();
+                }
             } else {
-                uuid = Bukkit.getOfflinePlayer(singlePlayerSelector.getSelector()).getUniqueId();
+                player = ((Player) context.getSender());
+                uuid = player.getUniqueId();
             }
+
 
             final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(uuid);
             if (questPlayer == null) {
-                return ArgumentParseResult.failure(new IllegalArgumentException("Quest '" + input + "' is not active!"
-                ));
+
+                return ArgumentParseResult.failure(new IllegalArgumentException(main.getLanguageManager().getString("chat.quest-not-active-error", player).replace("%QUESTNAME%", input)));
+
             }
 
             final Quest foundQuest = main.getQuestManager().getQuest(input);
             if (foundQuest == null) {
-                return ArgumentParseResult.failure(new IllegalArgumentException("Quest '" + input + "' does not exist!"
-                ));
+                return ArgumentParseResult.failure(new IllegalArgumentException(main.getLanguageManager().getString("chat.quest-not-active-error", player, questPlayer).replace("%QUESTNAME%", input)));
+
             }
             inputQueue.remove();
 
@@ -184,8 +199,7 @@ public class ActiveQuestSelector<C> extends CommandArgument<C, ActiveQuest> {
                 }
             }
 
-            return ArgumentParseResult.failure(new IllegalArgumentException("Quest '" + input + "' is not active!"
-            ));
+            return ArgumentParseResult.failure(new IllegalArgumentException(main.getLanguageManager().getString("chat.quest-not-active-error", player, questPlayer).replace("%QUESTNAME%", input)));
 
 
         }

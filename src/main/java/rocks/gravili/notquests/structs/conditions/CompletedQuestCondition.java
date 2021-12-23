@@ -26,7 +26,7 @@ import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.commands.newcmds.arguments.QuestSelector;
+import rocks.gravili.notquests.commands.arguments.QuestSelector;
 import rocks.gravili.notquests.structs.CompletedQuest;
 import rocks.gravili.notquests.structs.Quest;
 import rocks.gravili.notquests.structs.QuestPlayer;

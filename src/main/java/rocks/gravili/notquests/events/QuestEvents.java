@@ -45,6 +45,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.commands.NotQuestColors;
+import rocks.gravili.notquests.conversation.ConversationPlayer;
 import rocks.gravili.notquests.events.notquests.other.PlayerJumpEvent;
 import rocks.gravili.notquests.structs.ActiveObjective;
 import rocks.gravili.notquests.structs.ActiveQuest;
@@ -967,5 +969,36 @@ public class QuestEvents implements Listener {
 
     }
 
+
+    @EventHandler
+    public void playerChatEvent(PlayerCommandPreprocessEvent e) {
+        if (e.getMessage().startsWith("/notquests continueConversation ")) {
+            final Player player = e.getPlayer();
+            if (player.hasPermission("notquests.use")) {
+                handleConversation(player, e.getMessage().split("/notquests continueConversation ")[1]);
+                e.setCancelled(true);
+            }
+        }
+    }
+
+    private void handleConversation(Player player, String option) {
+
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+        if (main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId()) == null) {
+            return;
+        }
+        //Check if the player has an open conversation
+        final ConversationPlayer conversationPlayer = main.getConversationManager().getOpenConversation(player.getUniqueId());
+        if (conversationPlayer != null) {
+            conversationPlayer.chooseOption(option);
+        } else {
+            questPlayer.sendDebugMessage("Tried to choose conversation option, but the conversationPlayer was not found! Active conversationPlayers count: " + NotQuestColors.highlightGradient + main.getConversationManager().getOpenConversations().size());
+            questPlayer.sendDebugMessage("All active conversationPlayers: " + NotQuestColors.highlightGradient + main.getConversationManager().getOpenConversations().toString());
+            questPlayer.sendDebugMessage("Current QuestPlayer: " + questPlayer);
+
+
+        }
+
+    }
 
 }

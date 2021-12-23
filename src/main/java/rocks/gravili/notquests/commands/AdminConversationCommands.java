@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.commands.newcmds;
+package rocks.gravili.notquests.commands;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
@@ -38,8 +38,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.commands.newcmds.arguments.ConversationSelector;
-import rocks.gravili.notquests.commands.newcmds.arguments.SpeakerSelector;
+import rocks.gravili.notquests.commands.arguments.ConversationSelector;
+import rocks.gravili.notquests.commands.arguments.SpeakerSelector;
 import rocks.gravili.notquests.conversation.Conversation;
 import rocks.gravili.notquests.conversation.ConversationLine;
 import rocks.gravili.notquests.conversation.ConversationManager;

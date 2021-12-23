@@ -33,8 +33,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.commands.NotQuestColors;
-import rocks.gravili.notquests.commands.newcmds.arguments.MaterialOrHandArgument;
-import rocks.gravili.notquests.commands.newcmds.arguments.wrappers.MaterialOrHand;
+import rocks.gravili.notquests.commands.arguments.MaterialOrHandArgument;
+import rocks.gravili.notquests.commands.arguments.wrappers.MaterialOrHand;
 
 public class GiveItemAction extends Action {
 

@@ -24,12 +24,6 @@ softdepend:
   - Jobs
   - ProjectKorra
 load: POSTWORLD
-commands:
-  notquests:
-    description: Accept quests
-    usage: /notquests
-    aliases: [ nquests, nquest, notquest, quest, quests, q, qg, nq ]
-    permission: notquests.use
 permissions:
   notquests.admin:
     default: op

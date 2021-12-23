@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.commands.newcmds;
+package rocks.gravili.notquests.commands;
 
 
 import cloud.commandframework.ArgumentDescription;
@@ -36,8 +36,8 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.commands.newcmds.arguments.ActiveQuestSelector;
-import rocks.gravili.notquests.commands.newcmds.arguments.QuestSelector;
+import rocks.gravili.notquests.commands.arguments.ActiveQuestSelector;
+import rocks.gravili.notquests.commands.arguments.QuestSelector;
 import rocks.gravili.notquests.structs.*;
 import rocks.gravili.notquests.structs.actions.Action;
 import rocks.gravili.notquests.structs.conditions.Condition;
