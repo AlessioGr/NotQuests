@@ -23,12 +23,13 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.commands.NotQuestColors;
 import rocks.gravili.notquests.structs.conditions.Condition;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+
+import static rocks.gravili.notquests.commands.NotQuestColors.*;
 
 public class ConditionsYMLManager {
     private final NotQuests main;
@@ -170,10 +171,9 @@ public class ConditionsYMLManager {
             condition.save(getConditionsConfig(), "conditions." + conditionIdentifier);
 
             saveConditions();
-
-            return (NotQuestColors.successGradient + "Condition successfully created!");
+            return (successGradient + "Condition " + highlightGradient + conditionIdentifier + "</gradient> successfully created!");
         } else {
-            return (NotQuestColors.errorGradient + "Condition already exists!");
+            return (errorGradient + "Condition " + highlightGradient + conditionIdentifier + "</gradient> already exists!");
         }
     }
 
@@ -181,6 +181,6 @@ public class ConditionsYMLManager {
     public String removeCondition(String conditionToDeleteIdentifier) {
         conditionsAndIdentifiers.remove(conditionToDeleteIdentifier);
         getConditionsConfig().set("conditions." + conditionToDeleteIdentifier, null);
-        return NotQuestColors.successGradient + "Condition " + NotQuestColors.highlightGradient + conditionToDeleteIdentifier + "</gradient> successfully deleted!";
+        return successGradient + "Condition " + highlightGradient + conditionToDeleteIdentifier + "</gradient> successfully deleted!";
     }
 }

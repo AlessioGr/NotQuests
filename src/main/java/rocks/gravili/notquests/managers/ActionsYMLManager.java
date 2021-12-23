@@ -23,13 +23,14 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.commands.NotQuestColors;
 import rocks.gravili.notquests.structs.actions.Action;
 import rocks.gravili.notquests.structs.conditions.Condition;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+
+import static rocks.gravili.notquests.commands.NotQuestColors.*;
 
 public class ActionsYMLManager {
     private final NotQuests main;
@@ -228,10 +229,9 @@ public class ActionsYMLManager {
             action.save(getActionsConfig(), "actions." + actionIdentifier);
 
             saveActions();
-
-            return (NotQuestColors.successGradient + "Action successfully created!");
+            return (successGradient + "Action " + highlightGradient + actionIdentifier + "</gradient> successfully created!");
         } else {
-            return (NotQuestColors.errorGradient + "Action already exists!");
+            return (errorGradient + "Action " + highlightGradient + actionIdentifier + "</gradient> already exists!");
         }
     }
 
@@ -239,6 +239,6 @@ public class ActionsYMLManager {
     public String removeAction(String actionToDeleteIdentifier) {
         actionsAndIdentifiers.remove(actionToDeleteIdentifier);
         getActionsConfig().set("actions." + actionToDeleteIdentifier, null);
-        return NotQuestColors.successGradient + "Action " + NotQuestColors.highlightGradient + actionToDeleteIdentifier + "</gradient> successfully deleted!";
+        return successGradient + "Action " + highlightGradient + actionToDeleteIdentifier + "</gradient> successfully deleted!";
     }
 }
