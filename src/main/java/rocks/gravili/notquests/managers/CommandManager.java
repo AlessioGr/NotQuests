@@ -462,7 +462,6 @@ public class CommandManager {
                 )
                 .withHandler(MinecraftExceptionHandler.ExceptionType.INVALID_SYNTAX, (sender, e) -> {
                     minecraftAdminHelp.queryCommands(e.getMessage().split("syntax is: ")[1], sender);
-
                     return MiniMessage.miniMessage().parse(NotQuestColors.errorGradient + e.getMessage());
                 });
 
