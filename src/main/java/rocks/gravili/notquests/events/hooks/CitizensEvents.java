@@ -119,8 +119,8 @@ public class CitizensEvents implements Listener {
                                     for (final ItemStack itemStack : player.getInventory().getContents()) {
                                         if (itemStack != null) {
 
-                                            if (deliverItemsObjective.getItemToDeliver().getType().equals(itemStack.getType())) {
-                                                if (deliverItemsObjective.getItemToDeliver().getItemMeta() != null && !deliverItemsObjective.getItemToDeliver().getItemMeta().equals(itemStack.getItemMeta())) {
+                                            if (deliverItemsObjective.isDeliverAnyItem() || deliverItemsObjective.getItemToDeliver().getType().equals(itemStack.getType())) {
+                                                if (!deliverItemsObjective.isDeliverAnyItem() && deliverItemsObjective.getItemToDeliver().getItemMeta() != null && !deliverItemsObjective.getItemToDeliver().getItemMeta().equals(itemStack.getItemMeta())) {
                                                     continue;
                                                 }
 

@@ -21,19 +21,22 @@ package rocks.gravili.notquests.structs.objectives;
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.IntegerArgument;
-import cloud.commandframework.bukkit.parsers.MaterialArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
-import org.bukkit.Material;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.commands.NotQuestColors;
+import rocks.gravili.notquests.commands.newcmds.arguments.MaterialOrHandArgument;
+import rocks.gravili.notquests.commands.newcmds.arguments.wrappers.MaterialOrHand;
 import rocks.gravili.notquests.structs.ActiveObjective;
 
 public class PlaceBlocksObjective extends Objective {
 
-    private Material blockToPlace;
+    private String blockToPlace;
     private boolean deductIfBlockIsBroken = true;
 
     public PlaceBlocksObjective(NotQuests main) {
@@ -42,7 +45,7 @@ public class PlaceBlocksObjective extends Objective {
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
         manager.command(addObjectiveBuilder.literal("PlaceBlocks")
-                .argument(MaterialArgument.of("material"), ArgumentDescription.of("Material of the block which needs to be place."))
+                .argument(MaterialOrHandArgument.of("material", main), ArgumentDescription.of("Material of the block which needs to be place."))
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of blocks which need to be placed"))
                 .flag(
                         manager.flagBuilder("doNotDeductIfBlockIsBroken")
@@ -50,12 +53,27 @@ public class PlaceBlocksObjective extends Objective {
                 )
                 .meta(CommandMeta.DESCRIPTION, "Adds a new PlaceBlocks Objective to a quest")
                 .handler((context) -> {
-                    final Material material = context.get("material");
                     final int amount = context.get("amount");
                     final boolean deductIfBlockIsBroken = !context.flags().isPresent("doNotDeductIfBlockIsBroken");
 
+                    final MaterialOrHand materialOrHand = context.get("material");
+                    final String materialToPlace;
+                    if (materialOrHand.hand) { //"hand"
+                        if (context.getSender() instanceof Player player) {
+                            materialToPlace = player.getInventory().getItemInMainHand().getType().name();
+                        } else {
+                            final Audience audience = main.adventure().sender(context.getSender());
+                            audience.sendMessage(MiniMessage.miniMessage().parse(
+                                    NotQuestColors.errorGradient + "This must be run by a player."
+                            ));
+                            return;
+                        }
+                    } else {
+                        materialToPlace = materialOrHand.material;
+                    }
+
                     PlaceBlocksObjective placeBlocksObjective = new PlaceBlocksObjective(main);
-                    placeBlocksObjective.setBlockToPlace(material);
+                    placeBlocksObjective.setBlockToPlace(materialToPlace);
                     placeBlocksObjective.setDeductIfBlockIsBroken(deductIfBlockIsBroken);
                     placeBlocksObjective.setProgressNeeded(amount);
 
@@ -63,8 +81,11 @@ public class PlaceBlocksObjective extends Objective {
                 }));
     }
 
-    public void setBlockToPlace(final Material blockToPlace) {
-        this.blockToPlace = blockToPlace;
+    @Override
+    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.placeBlocks.base", player)
+                .replace("%EVENTUALCOLOR%", eventualColor)
+                .replace("%BLOCKTOPLACE%", getBlockToPlace());
     }
 
     public void setDeductIfBlockIsBroken(final boolean deductIfBlockIsBroken) {
@@ -72,22 +93,19 @@ public class PlaceBlocksObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.placeBlocks.base", player)
-                .replace("%EVENTUALCOLOR%", eventualColor)
-                .replace("%BLOCKTOPLACE%", getBlockToPlace().toString());
-    }
-
-    @Override
     public void save(FileConfiguration configuration, String initialPath) {
-        configuration.set(initialPath + ".specifics.blockToPlace.material", getBlockToPlace().toString());
+        configuration.set(initialPath + ".specifics.blockToPlace.material", getBlockToPlace());
         configuration.set(initialPath + ".specifics.deductIfBlockBroken", isDeductIfBlockBroken());
     }
 
     @Override
     public void load(FileConfiguration configuration, String initialPath) {
-        blockToPlace = Material.valueOf(configuration.getString(initialPath + ".specifics.blockToPlace.material"));
+        blockToPlace = configuration.getString(initialPath + ".specifics.blockToPlace.material");
         deductIfBlockIsBroken = configuration.getBoolean(initialPath + ".specifics.deductIfBlockBroken", true);
+    }
+
+    public final String getBlockToPlace() {
+        return blockToPlace;
     }
 
 
@@ -96,8 +114,8 @@ public class PlaceBlocksObjective extends Objective {
 
     }
 
-    public final Material getBlockToPlace() {
-        return blockToPlace;
+    public void setBlockToPlace(final String blockToPlace) {
+        this.blockToPlace = blockToPlace;
     }
 
     public final long getAmountToPlace() {

@@ -256,7 +256,11 @@ public class AdminEditCommands {
                             return;
                         }
                     } else {
-                        takeItem = new ItemStack(materialOrHand.material, 1);
+                        if (materialOrHand.material.equalsIgnoreCase("any")) {
+                            takeItem = new ItemStack(Material.BOOK, 1);
+                        } else {
+                            takeItem = new ItemStack(Material.valueOf(materialOrHand.material), 1);
+                        }
                     }
                     if (glow) {
                         takeItem.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 1);

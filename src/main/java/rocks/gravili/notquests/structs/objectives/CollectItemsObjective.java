@@ -25,6 +25,7 @@ import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -39,6 +40,7 @@ public class CollectItemsObjective extends Objective {
 
     private ItemStack itemToCollect;
     private boolean deductIfItemIsDropped = true;
+    private boolean collectAnyItem = false;
 
     public CollectItemsObjective(NotQuests main) {
         super(main);
@@ -57,6 +59,8 @@ public class CollectItemsObjective extends Objective {
                     final int amount = context.get("amount");
                     final boolean deductIfItemIsDropped = !context.flags().isPresent("doNotDeductIfItemIsDropped");
 
+                    boolean collectAnyItem = false;
+
                     final MaterialOrHand materialOrHand = context.get("material");
                     ItemStack itemToCollect;
                     if (materialOrHand.hand) { //"hand"
@@ -70,16 +74,30 @@ public class CollectItemsObjective extends Objective {
                             return;
                         }
                     } else {
-                        itemToCollect = new ItemStack(materialOrHand.material, 1);
+                        if (materialOrHand.material.equalsIgnoreCase("any")) {
+                            collectAnyItem = true;
+                            itemToCollect = null;
+                        } else {
+                            itemToCollect = new ItemStack(Material.valueOf(materialOrHand.material), 1);
+                        }
                     }
 
                     CollectItemsObjective collectItemsObjective = new CollectItemsObjective(main);
                     collectItemsObjective.setItemToCollect(itemToCollect);
+                    collectItemsObjective.setCollectAnyItem(collectAnyItem);
                     collectItemsObjective.setProgressNeeded(amount);
                     collectItemsObjective.setDeductIfItemIsDropped(deductIfItemIsDropped);
 
                     main.getObjectiveManager().addObjective(collectItemsObjective, context);
                 }));
+    }
+
+    public final boolean isCollectAnyItem() {
+        return collectAnyItem;
+    }
+
+    public void setCollectAnyItem(final boolean collectAnyItem) {
+        this.collectAnyItem = collectAnyItem;
     }
 
     public void setItemToCollect(final ItemStack itemToCollect) {
@@ -89,10 +107,14 @@ public class CollectItemsObjective extends Objective {
     @Override
     public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
         final String displayName;
-        if (getItemToCollect().getItemMeta() != null) {
-            displayName = getItemToCollect().getItemMeta().getDisplayName();
+        if (isCollectAnyItem()) {
+            if (getItemToCollect().getItemMeta() != null) {
+                displayName = getItemToCollect().getItemMeta().getDisplayName();
+            } else {
+                displayName = getItemToCollect().getType().name();
+            }
         } else {
-            displayName = getItemToCollect().getType().name();
+            displayName = "Any";
         }
 
 
@@ -121,13 +143,15 @@ public class CollectItemsObjective extends Objective {
     @Override
     public void save(FileConfiguration configuration, String initialPath) {
         configuration.set(initialPath + ".specifics.itemToCollect.itemstack", getItemToCollect());
-        configuration.set(initialPath + ".specifics.deductIfItemDropped", deductIfItemIsDropped);
+        configuration.set(initialPath + ".specifics.deductIfItemDropped", isDeductIfItemIsDropped());
+        configuration.set(initialPath + ".specifics.collectAnyItem", isCollectAnyItem());
     }
 
     @Override
     public void load(FileConfiguration configuration, String initialPath) {
         itemToCollect = configuration.getItemStack(initialPath + ".specifics.itemToCollect.itemstack");
         deductIfItemIsDropped = configuration.getBoolean(initialPath + ".specifics.deductIfItemDropped", true);
+        collectAnyItem = configuration.getBoolean(initialPath + ".specifics.collectAnyItem", false);
     }
 
     public final ItemStack getItemToCollect() {

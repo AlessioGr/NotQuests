@@ -54,6 +54,8 @@ public class DeliverItemsObjective extends Objective {
     private ItemStack itemToDeliver = null;
     private int recipientNPCID = -1;
     private UUID recipientArmorStandUUID = null;
+    private boolean deliverAnyItem = false;
+
 
     //For Citizens NPCs
     public DeliverItemsObjective(NotQuests main) {
@@ -84,6 +86,8 @@ public class DeliverItemsObjective extends Objective {
                     final Quest quest = context.get("quest");
                     final int amountToDeliver = context.get("amount");
 
+                    boolean deliverAnyItem = false;
+
                     final MaterialOrHand materialOrHand = context.get("material");
                     ItemStack itemToDeliver;
                     if (materialOrHand.hand) { //"hand"
@@ -96,7 +100,12 @@ public class DeliverItemsObjective extends Objective {
                             return;
                         }
                     } else {
-                        itemToDeliver = new ItemStack(materialOrHand.material, 1);
+                        if (materialOrHand.material.equalsIgnoreCase("any")) {
+                            deliverAnyItem = true;
+                            itemToDeliver = null;
+                        } else {
+                            itemToDeliver = new ItemStack(Material.valueOf(materialOrHand.material), 1);
+                        }
                     }
 
 
@@ -125,6 +134,7 @@ public class DeliverItemsObjective extends Objective {
                         deliverItemsObjective.setItemToDeliver(itemToDeliver);
                         deliverItemsObjective.setProgressNeeded(amountToDeliver);
                         deliverItemsObjective.setRecipientNPCID(npcID);
+                        deliverItemsObjective.setDeliverAnyItem(deliverAnyItem);
 
                         main.getObjectiveManager().addObjective(deliverItemsObjective, context);
                     } else {//Armorstands
@@ -145,6 +155,8 @@ public class DeliverItemsObjective extends Objective {
 
                             NamespacedKey ItemStackKey = new NamespacedKey(main, "notquests-itemstackcache");
                             NamespacedKey ItemStackAmountKey = new NamespacedKey(main, "notquests-itemstackamount");
+                            NamespacedKey deliverAnyKey = new NamespacedKey(main, "notquests-anyitemstack");
+
 
                             ItemMeta itemMeta = itemStack.getItemMeta();
                             //Only paper List<Component> lore = new ArrayList<>();
@@ -158,6 +170,12 @@ public class DeliverItemsObjective extends Objective {
 
                             itemMeta.getPersistentDataContainer().set(ItemStackKey, PersistentDataType.INTEGER, randomNum);
                             itemMeta.getPersistentDataContainer().set(ItemStackAmountKey, PersistentDataType.INTEGER, amountToDeliver);
+
+                            if (deliverAnyItem) {
+                                itemMeta.getPersistentDataContainer().set(deliverAnyKey, PersistentDataType.BYTE, (byte) 1);
+                            } else {
+                                itemMeta.getPersistentDataContainer().set(deliverAnyKey, PersistentDataType.BYTE, (byte) 0);
+                            }
 
 
                             //Only paper itemMeta.displayName(Component.text("§dCheck Armor Stand", NamedTextColor.LIGHT_PURPLE));
@@ -192,6 +210,14 @@ public class DeliverItemsObjective extends Objective {
 
 
                 }));
+    }
+
+    public final boolean isDeliverAnyItem() {
+        return deliverAnyItem;
+    }
+
+    public void setDeliverAnyItem(final boolean deliverAnyItem) {
+        this.deliverAnyItem = deliverAnyItem;
     }
 
     public void setItemToDeliver(final ItemStack itemToDeliver) {
@@ -231,11 +257,16 @@ public class DeliverItemsObjective extends Objective {
     @Override
     public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
         final String displayName;
-        if (getItemToDeliver().getItemMeta() != null) {
-            displayName = getItemToDeliver().getItemMeta().getDisplayName();
+        if (!isDeliverAnyItem()) {
+            if (getItemToDeliver().getItemMeta() != null) {
+                displayName = getItemToDeliver().getItemMeta().getDisplayName();
+            } else {
+                displayName = getItemToDeliver().getType().name();
+            }
         } else {
-            displayName = getItemToDeliver().getType().name();
+            displayName = "Any";
         }
+
         String toReturn;
         if (!displayName.isBlank()) {
             toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.base", player)
@@ -288,6 +319,7 @@ public class DeliverItemsObjective extends Objective {
         } else {
             configuration.set(initialPath + ".specifics.recipientArmorStandID", null);
         }
+        configuration.set(initialPath + ".specifics.deliverAnyItem", isDeliverAnyItem());
     }
 
     @Override
@@ -305,5 +337,8 @@ public class DeliverItemsObjective extends Objective {
                 recipientArmorStandUUID = null;
             }
         }
+
+        deliverAnyItem = configuration.getBoolean(initialPath + ".specifics.deliverAnyItem", false);
+
     }
 }

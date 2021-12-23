@@ -25,6 +25,7 @@ import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -38,6 +39,7 @@ import rocks.gravili.notquests.structs.ActiveObjective;
 public class CraftItemsObjective extends Objective {
 
     private ItemStack itemToCraft;
+    private boolean craftAnyItem = false;
 
     public CraftItemsObjective(NotQuests main) {
         super(main);
@@ -51,6 +53,7 @@ public class CraftItemsObjective extends Objective {
                 .handler((context) -> {
                     final int amount = context.get("amount");
 
+                    boolean craftAnyItem = false;
                     final MaterialOrHand materialOrHand = context.get("material");
                     ItemStack itemToCraft;
                     if (materialOrHand.hand) { //"hand"
@@ -64,15 +67,29 @@ public class CraftItemsObjective extends Objective {
                             return;
                         }
                     } else {
-                        itemToCraft = new ItemStack(materialOrHand.material, 1);
+                        if (materialOrHand.material.equalsIgnoreCase("any")) {
+                            craftAnyItem = true;
+                            itemToCraft = null;
+                        } else {
+                            itemToCraft = new ItemStack(Material.valueOf(materialOrHand.material), 1);
+                        }
                     }
 
                     CraftItemsObjective craftItemsObjective = new CraftItemsObjective(main);
                     craftItemsObjective.setItemToCraft(itemToCraft);
+                    craftItemsObjective.setCraftAnyItem(craftAnyItem);
                     craftItemsObjective.setProgressNeeded(amount);
 
                     main.getObjectiveManager().addObjective(craftItemsObjective, context);
                 }));
+    }
+
+    public final boolean isCraftAnyItem() {
+        return craftAnyItem;
+    }
+
+    public void setCraftAnyItem(final boolean craftAnyItem) {
+        this.craftAnyItem = craftAnyItem;
     }
 
     public void setItemToCraft(final ItemStack itemToCraft) {
@@ -95,11 +112,16 @@ public class CraftItemsObjective extends Objective {
     @Override
     public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
         final String displayName;
-        if (getItemToCraft().getItemMeta() != null) {
-            displayName = getItemToCraft().getItemMeta().getDisplayName();
+        if (!isCraftAnyItem()) {
+            if (getItemToCraft().getItemMeta() != null) {
+                displayName = getItemToCraft().getItemMeta().getDisplayName();
+            } else {
+                displayName = getItemToCraft().getType().name();
+            }
         } else {
-            displayName = getItemToCraft().getType().name();
+            displayName = "Any";
         }
+
 
         if (!displayName.isBlank()) {
             return main.getLanguageManager().getString("chat.objectives.taskDescription.craftItems.base", player)
@@ -123,10 +145,12 @@ public class CraftItemsObjective extends Objective {
     @Override
     public void save(FileConfiguration configuration, String initialPath) {
         configuration.set(initialPath + ".specifics.itemToCraft.itemstack", getItemToCraft());
+        configuration.set(initialPath + ".specifics.craftAnyItem", isCraftAnyItem());
     }
 
     @Override
     public void load(FileConfiguration configuration, String initialPath) {
         itemToCraft = configuration.getItemStack(initialPath + ".specifics.itemToCraft.itemstack");
+        craftAnyItem = configuration.getBoolean(initialPath + ".specifics.craftAnyItem", false);
     }
 }

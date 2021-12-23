@@ -106,7 +106,7 @@ public class MaterialOrHandArgument<C> extends CommandArgument<C, MaterialOrHand
             final @NonNull MaterialOrHand material,
             final NotQuests main
     ) {
-        return MaterialOrHandArgument.<C>newBuilder(name, main).asOptionalWithDefault(material.material.name().toLowerCase()).build();
+        return MaterialOrHandArgument.<C>newBuilder(name, main).asOptionalWithDefault(material.material.toLowerCase()).build();
     }
 
     public static final class Builder<C> extends CommandArgument.Builder<C, MaterialOrHand> {
@@ -164,10 +164,15 @@ public class MaterialOrHandArgument<C> extends CommandArgument<C, MaterialOrHand
                     materialOrHand.hand = true;
                     inputQueue.remove();
                     return ArgumentParseResult.success(materialOrHand);
+                } else if (input.equalsIgnoreCase("any")) {
+                    materialOrHand.material = "any";
+                    inputQueue.remove();
+                    return ArgumentParseResult.success(materialOrHand);
+                } else {
+                    materialOrHand.material = Material.valueOf(input.toUpperCase()).name();
+                    inputQueue.remove();
+                    return ArgumentParseResult.success(materialOrHand);
                 }
-                materialOrHand.material = Material.valueOf(input.toUpperCase());
-                inputQueue.remove();
-                return ArgumentParseResult.success(materialOrHand);
             } catch (final IllegalArgumentException exception) {
                 return ArgumentParseResult.failure(new MaterialOrHandArgument.MaterialParseException(input, commandContext));
             }
@@ -183,12 +188,13 @@ public class MaterialOrHandArgument<C> extends CommandArgument<C, MaterialOrHand
                 completions.add(value.name().toLowerCase());
             }
             completions.add("hand");
+            completions.add("any");
 
 
             final Audience audience = main.adventure().sender((CommandSender) context.getSender());
             final List<String> allArgs = context.getRawInput();
 
-            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Item Name / 'hand']", "[...]");
+            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Item Name / 'hand' / 'any']", "[...]");
 
             return completions;
         }

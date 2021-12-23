@@ -26,6 +26,7 @@ import cloud.commandframework.paper.PaperCommandManager;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -66,7 +67,13 @@ public class GiveItemAction extends Action {
                             return;
                         }
                     } else {
-                        itemStack = new ItemStack(materialOrHand.material, itemRewardAmount);
+                        if (materialOrHand.material.equalsIgnoreCase("any")) {
+                            audience.sendMessage(MiniMessage.miniMessage().parse(
+                                    NotQuestColors.errorGradient + "You cannot use 'any' here!"
+                            ));
+                            return;
+                        }
+                        itemStack = new ItemStack(Material.valueOf(materialOrHand.material), itemRewardAmount);
                     }
 
                     GiveItemAction giveItemAction = new GiveItemAction(main);

@@ -25,6 +25,7 @@ import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -38,6 +39,7 @@ import rocks.gravili.notquests.structs.ActiveObjective;
 public class ConsumeItemsObjective extends Objective {
 
     private ItemStack itemToConsume;
+    private boolean consumeAnyItem = false;
 
     public ConsumeItemsObjective(NotQuests main) {
         super(main);
@@ -50,6 +52,8 @@ public class ConsumeItemsObjective extends Objective {
                 .meta(CommandMeta.DESCRIPTION, "Adds a new ConsumeItems Objective to a quest.")
                 .handler((context) -> {
                     final int amount = context.get("amount");
+
+                    boolean consumeAnyItem = false;
 
                     final MaterialOrHand materialOrHand = context.get("material");
                     ItemStack itemToConsume;
@@ -64,16 +68,30 @@ public class ConsumeItemsObjective extends Objective {
                             return;
                         }
                     } else {
-                        itemToConsume = new ItemStack(materialOrHand.material, 1);
+                        if (materialOrHand.material.equalsIgnoreCase("any")) {
+                            consumeAnyItem = true;
+                            itemToConsume = null;
+                        } else {
+                            itemToConsume = new ItemStack(Material.valueOf(materialOrHand.material), 1);
+                        }
                     }
 
                     ConsumeItemsObjective consumeItemsObjective = new ConsumeItemsObjective(main);
                     consumeItemsObjective.setItemToConsume(itemToConsume);
+                    consumeItemsObjective.setConsumeAnyItem(consumeAnyItem);
                     consumeItemsObjective.setProgressNeeded(amount);
 
                     main.getObjectiveManager().addObjective(consumeItemsObjective, context);
 
                 }));
+    }
+
+    public final boolean isConsumeAnyItem() {
+        return consumeAnyItem;
+    }
+
+    public void setConsumeAnyItem(final boolean consumeAnyItem) {
+        this.consumeAnyItem = consumeAnyItem;
     }
 
     public void setItemToConsume(final ItemStack itemToConsume) {
@@ -96,11 +114,16 @@ public class ConsumeItemsObjective extends Objective {
     @Override
     public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
         final String displayName;
-        if (getItemToConsume().getItemMeta() != null) {
-            displayName = getItemToConsume().getItemMeta().getDisplayName();
+        if (isConsumeAnyItem()) {
+            if (getItemToConsume().getItemMeta() != null) {
+                displayName = getItemToConsume().getItemMeta().getDisplayName();
+            } else {
+                displayName = getItemToConsume().getType().name();
+            }
         } else {
-            displayName = getItemToConsume().getType().name();
+            displayName = "Any";
         }
+
 
         if (!displayName.isBlank()) {
             return main.getLanguageManager().getString("chat.objectives.taskDescription.consumeItems.base", player)
@@ -124,10 +147,12 @@ public class ConsumeItemsObjective extends Objective {
     @Override
     public void save(FileConfiguration configuration, String initialPath) {
         configuration.set(initialPath + ".specifics.itemToConsume.itemstack", getItemToConsume());
+        configuration.set(initialPath + ".specifics.consumeAnyItem", isConsumeAnyItem());
     }
 
     @Override
     public void load(FileConfiguration configuration, String initialPath) {
         itemToConsume = configuration.getItemStack(initialPath + ".specifics.itemToConsume.itemstack");
+        consumeAnyItem = configuration.getBoolean(initialPath + ".specifics.consumeAnyItem", false);
     }
 }

@@ -21,18 +21,21 @@ package rocks.gravili.notquests.structs.objectives;
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.IntegerArgument;
-import cloud.commandframework.bukkit.parsers.MaterialArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
-import org.bukkit.Material;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.commands.NotQuestColors;
+import rocks.gravili.notquests.commands.newcmds.arguments.MaterialOrHandArgument;
+import rocks.gravili.notquests.commands.newcmds.arguments.wrappers.MaterialOrHand;
 import rocks.gravili.notquests.structs.ActiveObjective;
 
 public class BreakBlocksObjective extends Objective {
-    private Material blockToBreak;
+    private String blockToBreak;
     private boolean deductIfBlockIsPlaced = true;
 
 
@@ -42,7 +45,7 @@ public class BreakBlocksObjective extends Objective {
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
         manager.command(addObjectiveBuilder.literal("BreakBlocks")
-                .argument(MaterialArgument.of("material"), ArgumentDescription.of("Material of the block which needs to be broken."))
+                .argument(MaterialOrHandArgument.of("material", main), ArgumentDescription.of("Material of the block which needs to be broken."))
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of blocks which need to be broken"))
                 .flag(
                         manager.flagBuilder("doNotDeductIfBlockIsPlaced")
@@ -50,13 +53,28 @@ public class BreakBlocksObjective extends Objective {
                 )
                 .meta(CommandMeta.DESCRIPTION, "Adds a new BreakBlocks Objective to a quest")
                 .handler((context) -> {
-                    final Material material = context.get("material");
+
                     final int amount = context.get("amount");
                     final boolean deductIfBlockIsPlaced = !context.flags().isPresent("doNotDeductIfBlockIsPlaced");
 
-                    BreakBlocksObjective breakBlocksObjective = new BreakBlocksObjective(main)
-                            .setBlockToBreak(material);
-                    breakBlocksObjective.setBlockToBreak(material);
+                    final MaterialOrHand materialOrHand = context.get("material");
+                    final String materialToBreak;
+                    if (materialOrHand.hand) { //"hand"
+                        if (context.getSender() instanceof Player player) {
+                            materialToBreak = player.getInventory().getItemInMainHand().getType().name();
+                        } else {
+                            final Audience audience = main.adventure().sender(context.getSender());
+                            audience.sendMessage(MiniMessage.miniMessage().parse(
+                                    NotQuestColors.errorGradient + "This must be run by a player."
+                            ));
+                            return;
+                        }
+                    } else {
+                        materialToBreak = materialOrHand.material;
+                    }
+
+                    BreakBlocksObjective breakBlocksObjective = new BreakBlocksObjective(main);
+                    breakBlocksObjective.setBlockToBreak(materialToBreak);
                     breakBlocksObjective.setProgressNeeded(amount);
                     breakBlocksObjective.setDeductIfBlockIsPlaced(deductIfBlockIsPlaced);
 
@@ -65,26 +83,25 @@ public class BreakBlocksObjective extends Objective {
                 }));
     }
 
-    public BreakBlocksObjective setBlockToBreak(final Material blockToBreak) {
-        this.blockToBreak = blockToBreak;
-        return this;
-    }
-
     @Override
     public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
         return main.getLanguageManager().getString("chat.objectives.taskDescription.breakBlocks.base", player)
                 .replace("%EVENTUALCOLOR%", eventualColor)
-                .replace("%BLOCKTOBREAK%", getBlockToBreak().toString());
+                .replace("%BLOCKTOBREAK%", getBlockToBreak());
+    }
+
+    @Override
+    public void save(FileConfiguration configuration, String initialPath) {
+        configuration.set(initialPath + ".specifics.blockToBreak.material", getBlockToBreak());
+        configuration.set(initialPath + ".specifics.deductIfBlockPlaced", isDeductIfBlockPlaced());
     }
 
     public void setDeductIfBlockIsPlaced(final boolean deductIfBlockIsPlaced) {
         this.deductIfBlockIsPlaced = deductIfBlockIsPlaced;
     }
 
-    @Override
-    public void save(FileConfiguration configuration, String initialPath) {
-        configuration.set(initialPath + ".specifics.blockToBreak.material", getBlockToBreak().toString());
-        configuration.set(initialPath + ".specifics.deductIfBlockPlaced", isDeductIfBlockPlaced());
+    public final String getBlockToBreak() {
+        return blockToBreak;
     }
 
 
@@ -93,9 +110,8 @@ public class BreakBlocksObjective extends Objective {
 
     }
 
-
-    public final Material getBlockToBreak() {
-        return blockToBreak;
+    public void setBlockToBreak(final String blockToBreak) {
+        this.blockToBreak = blockToBreak;
     }
 
     public final long getAmountToBreak() {
@@ -108,7 +124,7 @@ public class BreakBlocksObjective extends Objective {
 
     @Override
     public void load(FileConfiguration configuration, String initialPath) {
-        blockToBreak = Material.valueOf(configuration.getString(initialPath + ".specifics.blockToBreak.material"));
+        blockToBreak = configuration.getString(initialPath + ".specifics.blockToBreak.material");
         deductIfBlockIsPlaced = configuration.getBoolean(initialPath + ".specifics.deductIfBlockPlaced", true);
     }
 }

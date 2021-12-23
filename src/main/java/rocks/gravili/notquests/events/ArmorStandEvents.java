@@ -346,6 +346,12 @@ public class ArmorStandEvents implements Listener {
                             final NamespacedKey itemStackCacheKey = new NamespacedKey(main, "notquests-itemstackcache");
                             final int itemStackCache = container.get(itemStackCacheKey, PersistentDataType.INTEGER);
 
+                            final NamespacedKey deliverAnyKey = new NamespacedKey(main, "notquests-anyitemstack");
+                            boolean deliverAny = false;
+                            if (container.has(deliverAnyKey, PersistentDataType.BYTE) && container.get(deliverAnyKey, PersistentDataType.BYTE) == 1) {
+                                deliverAny = true;
+                            }
+
                             final ItemStack itemToDeliver = main.getDataManager().getItemStackCache().get(itemStackCache);
 
                             if (itemToDeliver != null) {
@@ -355,6 +361,7 @@ public class ArmorStandEvents implements Listener {
                                 deliverItemsObjective.setRecipientArmorStandUUID(armorStand.getUniqueId());
                                 deliverItemsObjective.setQuest(quest);
                                 deliverItemsObjective.setObjectiveID(quest.getObjectives().size() + 1);
+                                deliverItemsObjective.setDeliverAnyItem(deliverAny);
 
                                 quest.addObjective(deliverItemsObjective, true);
 
@@ -478,8 +485,8 @@ public class ArmorStandEvents implements Listener {
                                 if (deliverItemsObjective.getRecipientNPCID() == -1 && deliverItemsObjective.getRecipientArmorStandUUID().equals(armorStand.getUniqueId())) {
                                     for (final ItemStack itemStack : player.getInventory().getContents()) {
                                         if (itemStack != null) {
-                                            if (deliverItemsObjective.getItemToDeliver().getType().equals(itemStack.getType())) {
-                                                if (deliverItemsObjective.getItemToDeliver().getItemMeta() != null && !deliverItemsObjective.getItemToDeliver().getItemMeta().equals(itemStack.getItemMeta())) {
+                                            if (deliverItemsObjective.isDeliverAnyItem() || deliverItemsObjective.getItemToDeliver().getType().equals(itemStack.getType())) {
+                                                if (!deliverItemsObjective.isDeliverAnyItem() && deliverItemsObjective.getItemToDeliver().getItemMeta() != null && !deliverItemsObjective.getItemToDeliver().getItemMeta().equals(itemStack.getItemMeta())) {
                                                     continue;
                                                 }
                                                 final long progressLeft = activeObjective.getProgressNeeded() - activeObjective.getCurrentProgress();

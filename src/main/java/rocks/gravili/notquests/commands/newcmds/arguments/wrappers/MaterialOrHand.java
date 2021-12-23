@@ -18,9 +18,7 @@
 
 package rocks.gravili.notquests.commands.newcmds.arguments.wrappers;
 
-import org.bukkit.Material;
-
 public class MaterialOrHand {
-    public Material material;
+    public String material;
     public boolean hand = false;
 }
