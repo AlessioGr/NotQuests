@@ -23,7 +23,6 @@ import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
-import me.ulrich.clans.api.PlayerAPI;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -92,9 +91,8 @@ public class UltimateClansClanLevelCondition extends Condition {
 
         final Player player = questPlayer.getPlayer();
         if (player != null) {
-            if (PlayerAPI.getInstance().getPlayerClan(player.getName()) != null && PlayerAPI.getInstance().getPlayerClan(player.getName()).getLevel() >= getMinClanLevel()) {
+            if (main.getIntegrationsManager().getUltimateClansManager().isInClanWithMinLevel(player, getMinClanLevel())) {
                 return "";
-
             }
             return "<YELLOW>You need to be in a Clan with at least level <AQUA>" + getMinClanLevel() + "</AQUA>.";
         } else {

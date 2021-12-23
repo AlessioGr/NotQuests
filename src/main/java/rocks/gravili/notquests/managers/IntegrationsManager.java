@@ -35,6 +35,7 @@ public class IntegrationsManager {
     private SlimefunManager slimefunManager;
     private LuckpermsManager luckpermsManager;
     private ProjectKorraManager projectKorraManager;
+    private UltimateClansManager ultimateClansManager;
 
     public IntegrationsManager(final NotQuests main) {
         this.main = main;
@@ -131,8 +132,9 @@ public class IntegrationsManager {
 
         //UltimateClans
         if (main.getConfiguration().isIntegrationUltimateClansEnabled()) {
-            if (main.getServer().getPluginManager().getPlugin("UClans") != null) {
+            if (main.getServer().getPluginManager().getPlugin("UltimateClans") != null) {
                 ultimateClansEnabled = true;
+                ultimateClansManager = new UltimateClansManager(main);
                 main.getLogManager().info("UltimateClans found! Enabling UltimateClans support...");
             }
         }
@@ -322,6 +324,10 @@ public class IntegrationsManager {
 
     public final ProjectKorraManager getProjectKorraManager() {
         return projectKorraManager;
+    }
+
+    public final UltimateClansManager getUltimateClansManager() {
+        return ultimateClansManager;
     }
 
     public final VaultManager getVaultManager() {
