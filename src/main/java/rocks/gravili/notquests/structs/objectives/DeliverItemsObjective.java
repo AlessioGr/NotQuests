@@ -267,18 +267,21 @@ public class DeliverItemsObjective extends Objective {
             displayName = "Any";
         }
 
+        String itemType = isDeliverAnyItem() ? "Any" : getItemToDeliver().getType().name();
+
+
         String toReturn;
         if (!displayName.isBlank()) {
             toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.base", player)
                     .replace("%EVENTUALCOLOR%", eventualColor)
-                    .replace("%ITEMTODELIVERTYPE%", "" + getItemToDeliver().getType())
+                    .replace("%ITEMTODELIVERTYPE%", "" + itemType)
                     .replace("%ITEMTODELIVERNAME%", "" + displayName)
                     .replace("%(%", "(")
                     .replace("%)%", "<RESET>)");
         } else {
             toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.base", player)
                     .replace("%EVENTUALCOLOR%", eventualColor)
-                    .replace("%ITEMTODELIVERTYPE%", "" + getItemToDeliver().getType())
+                    .replace("%ITEMTODELIVERTYPE%", "" + itemType)
                     .replace("%ITEMTODELIVERNAME%", "")
                     .replace("%(%", "")
                     .replace("%)%", "");

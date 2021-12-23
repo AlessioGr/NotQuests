@@ -124,18 +124,19 @@ public class ConsumeItemsObjective extends Objective {
             displayName = "Any";
         }
 
+        String itemType = isConsumeAnyItem() ? "Any" : getItemToConsume().getType().name();
 
         if (!displayName.isBlank()) {
             return main.getLanguageManager().getString("chat.objectives.taskDescription.consumeItems.base", player)
                     .replace("%EVENTUALCOLOR%", eventualColor)
-                    .replace("%ITEMTOCONSUMETYPE%", "" + getItemToConsume().getType())
+                    .replace("%ITEMTOCONSUMETYPE%", "" + itemType)
                     .replace("%ITEMTOCONSUMENAME%", "" + displayName)
                     .replace("%(%", "(")
                     .replace("%)%", "<RESET>)");
         } else {
             return main.getLanguageManager().getString("chat.objectives.taskDescription.consumeItems.base", player)
                     .replace("%EVENTUALCOLOR%", eventualColor)
-                    .replace("%ITEMTOCONSUMETYPE%", "" + getItemToConsume().getType())
+                    .replace("%ITEMTOCONSUMETYPE%", "" + itemType)
                     .replace("%ITEMTOCONSUMENAME%", "")
                     .replace("%(%", "")
                     .replace("%)%", ")");

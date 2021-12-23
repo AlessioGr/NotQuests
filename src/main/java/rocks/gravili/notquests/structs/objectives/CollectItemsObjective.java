@@ -117,18 +117,19 @@ public class CollectItemsObjective extends Objective {
             displayName = "Any";
         }
 
+        String itemType = isCollectAnyItem() ? "Any" : getItemToCollect().getType().name();
 
         if (!displayName.isBlank()) {
             return main.getLanguageManager().getString("chat.objectives.taskDescription.collectItems.base", player)
                     .replace("%EVENTUALCOLOR%", eventualColor)
-                    .replace("%ITEMTOCOLLECTTYPE%", "" + getItemToCollect().getType())
+                    .replace("%ITEMTOCOLLECTTYPE%", "" + itemType)
                     .replace("%ITEMTOCOLLECTNAME%", "" + displayName)
                     .replace("%(%", "(")
                     .replace("%)%", "<RESET>)");
         } else {
             return main.getLanguageManager().getString("chat.objectives.taskDescription.collectItems.base", player)
                     .replace("%EVENTUALCOLOR%", eventualColor)
-                    .replace("%ITEMTOCOLLECTTYPE%", "" + getItemToCollect().getType())
+                    .replace("%ITEMTOCOLLECTTYPE%", "" + itemType)
                     .replace("%ITEMTOCOLLECTNAME%", "")
                     .replace("%(%", "")
                     .replace("%)%", "");

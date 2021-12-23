@@ -122,18 +122,20 @@ public class CraftItemsObjective extends Objective {
             displayName = "Any";
         }
 
+        String itemType = isCraftAnyItem() ? "Any" : getItemToCraft().getType().name();
+
 
         if (!displayName.isBlank()) {
             return main.getLanguageManager().getString("chat.objectives.taskDescription.craftItems.base", player)
                     .replace("%EVENTUALCOLOR%", eventualColor)
-                    .replace("%ITEMTOCRAFTTYPE%", "" + getItemToCraft().getType())
+                    .replace("%ITEMTOCRAFTTYPE%", "" + itemType)
                     .replace("%ITEMTOCRAFTNAME%", "" + displayName)
                     .replace("%(%", "(")
                     .replace("%)%", "<RESET>)");
         } else {
             return main.getLanguageManager().getString("chat.objectives.taskDescription.craftItems.base", player)
                     .replace("%EVENTUALCOLOR%", eventualColor)
-                    .replace("%ITEMTOCRAFTTYPE%", "" + getItemToCraft().getType())
+                    .replace("%ITEMTOCRAFTTYPE%", "" + itemType)
                     .replace("%ITEMTOCRAFTNAME%", "")
                     .replace("%(%", "")
                     .replace("%)%", "");

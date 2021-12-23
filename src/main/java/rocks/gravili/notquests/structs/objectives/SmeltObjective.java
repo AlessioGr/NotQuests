@@ -124,17 +124,20 @@ public class SmeltObjective extends Objective {
         }
 
 
+        String itemType = isSmeltAnyItem() ? "Any" : getItemToSmelt().getType().name();
+
+
         if (!displayName.isBlank()) {
             return main.getLanguageManager().getString("chat.objectives.taskDescription.smelt.base", player)
                     .replace("%EVENTUALCOLOR%", eventualColor)
-                    .replace("%ITEMTOSMELTTYPE%", "" + getItemToSmelt().getType())
+                    .replace("%ITEMTOSMELTTYPE%", "" + itemType)
                     .replace("%ITEMTOSMELTNAME%", "" + displayName)
                     .replace("%(%", "(")
                     .replace("%)%", "<RESET>)");
         } else {
             return main.getLanguageManager().getString("chat.objectives.taskDescription.smelt.base", player)
                     .replace("%EVENTUALCOLOR%", eventualColor)
-                    .replace("%ITEMTOSMELTTYPE%", "" + getItemToSmelt().getType())
+                    .replace("%ITEMTOSMELTTYPE%", "" + itemType)
                     .replace("%ITEMTOSMELTNAME%", "")
                     .replace("%(%", "")
                     .replace("%)%", "");
