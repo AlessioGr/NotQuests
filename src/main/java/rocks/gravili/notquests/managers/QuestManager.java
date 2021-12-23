@@ -42,7 +42,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.commands.NotQuestColors;
 import rocks.gravili.notquests.structs.ActiveObjective;
 import rocks.gravili.notquests.structs.ActiveQuest;
 import rocks.gravili.notquests.structs.Quest;
@@ -79,14 +78,14 @@ public class QuestManager {
     public final String createQuest(String questName) {
         if (getQuest(questName) == null) {
             if(questName.contains("°")){
-                return (NotQuestColors.errorGradient + "The symbol ° cannot be used, because it's used for some important, plugin-internal stuff.");
+                return (errorGradient + "The symbol ° cannot be used, because it's used for some important, plugin-internal stuff.");
             }
             Quest newQuest = new Quest(main, questName);
             quests.add(newQuest);
             main.getDataManager().getQuestsConfig().set("quests." + questName, "");
-            return (NotQuestColors.successGradient + "Quest successfully created!");
+            return (successGradient + "Quest " + highlightGradient + questName + "</gradient> successfully created!");
         } else {
-            return (NotQuestColors.errorGradient + "Quest already exists!");
+            return (errorGradient + "Quest " + highlightGradient + questName + "</gradient> already exists!");
         }
     }
 
@@ -95,9 +94,9 @@ public class QuestManager {
             Quest questToDelete = getQuest(questName);
             quests.remove(questToDelete);
             main.getDataManager().getQuestsConfig().set("quests." + questName, null);
-            return (NotQuestColors.successGradient + "Quest successfully deleted!");
+            return (successGradient + "Quest " + highlightGradient + questName + "</gradient> successfully deleted!");
         } else {
-            return (NotQuestColors.errorGradient + "Quest doesn't exists!");
+            return (errorGradient + "Quest " + highlightGradient + questName + "</gradient> doesn't exists!");
         }
     }
 
