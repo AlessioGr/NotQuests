@@ -114,7 +114,7 @@ public class ConsumeItemsObjective extends Objective {
     @Override
     public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
         final String displayName;
-        if (isConsumeAnyItem()) {
+        if (!isConsumeAnyItem()) {
             if (getItemToConsume().getItemMeta() != null) {
                 displayName = getItemToConsume().getItemMeta().getDisplayName();
             } else {

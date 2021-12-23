@@ -107,7 +107,7 @@ public class CollectItemsObjective extends Objective {
     @Override
     public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
         final String displayName;
-        if (isCollectAnyItem()) {
+        if (!isCollectAnyItem()) {
             if (getItemToCollect().getItemMeta() != null) {
                 displayName = getItemToCollect().getItemMeta().getDisplayName();
             } else {
