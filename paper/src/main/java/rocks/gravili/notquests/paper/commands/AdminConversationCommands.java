@@ -27,6 +27,7 @@ import cloud.commandframework.paper.PaperCommandManager;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.apache.commons.io.IOUtils;
 import org.bukkit.Material;
@@ -281,8 +282,7 @@ public class AdminConversationCommands {
                     NamespacedKey conversationIdentifierKey = new NamespacedKey(main.getMain(), "notquests-conversation");
 
                     ItemMeta itemMeta = itemStack.getItemMeta();
-                    //Only paper List<Component> lore = new ArrayList<>();
-                    List<String> lore = new ArrayList<>();
+                    List<Component> lore = new ArrayList<>();
 
                     assert itemMeta != null;
 
@@ -290,15 +290,17 @@ public class AdminConversationCommands {
                     itemMeta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, 8);
 
 
-                    //Only paper itemMeta.displayName(Component.text("§dCheck Armor Stand", NamedTextColor.LIGHT_PURPLE));
-                    itemMeta.setDisplayName("§dAdd conversation §b" + foundConversation.getIdentifier() + " §dto this Armor Stand");
-                    //Only paper lore.add(Component.text("§fRight-click an Armor Stand to see which Quests are attached to it."));
-                    lore.add("§fRight-click an Armor Stand to add the conversation §b" + foundConversation.getIdentifier() + " §fto it.");
+                    itemMeta.displayName(miniMessage.parse(
+                            "<LIGHT_PURPLE>Add conversation <AQUA>" + foundConversation.getIdentifier() + "</AQUA> to this Armor Stand"
+                    ));
+                    lore.add(miniMessage.parse(
+                            "<WHITE>Right-click an Armor Stand to add the conversation <AQUA>" + foundConversation.getIdentifier() + "</AQUA> to it."
+                    ));
 
                     itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-                    //Only paper itemMeta.lore(lore);
 
-                    itemMeta.setLore(lore);
+                    itemMeta.lore(lore);
+
                     itemStack.setItemMeta(itemMeta);
 
                     player.getInventory().addItem(itemStack);
@@ -325,23 +327,23 @@ public class AdminConversationCommands {
                     NamespacedKey conversationIdentifierKey = new NamespacedKey(main.getMain(), "notquests-conversation");
 
                     ItemMeta itemMeta = itemStack.getItemMeta();
-                    //Only paper List<Component> lore = new ArrayList<>();
-                    List<String> lore = new ArrayList<>();
+                    List<Component> lore = new ArrayList<>();
 
                     assert itemMeta != null;
 
                     itemMeta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, 9);
 
 
-                    //Only paper itemMeta.displayName(Component.text("§dCheck Armor Stand", NamedTextColor.LIGHT_PURPLE));
-                    itemMeta.setDisplayName("§dRemove all conversations from this Armor Stand");
-                    //Only paper lore.add(Component.text("§fRight-click an Armor Stand to see which Quests are attached to it."));
-                    lore.add("§fRight-click an Armor Stand to remove all conversations attached to it.");
+                    itemMeta.displayName(miniMessage.parse(
+                            "<LIGHT_PURPLE>Remove all conversations from this Armor Stand"
+                    ));
+                    lore.add(miniMessage.parse(
+                            "<WHITE>Right-click an Armor Stand to remove all conversations attached to it."
+                    ));
 
                     itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-                    //Only paper itemMeta.lore(lore);
+                    itemMeta.lore(lore);
 
-                    itemMeta.setLore(lore);
                     itemStack.setItemMeta(itemMeta);
 
                     player.getInventory().addItem(itemStack);

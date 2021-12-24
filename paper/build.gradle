@@ -148,8 +148,8 @@ dependencies {
     //Else it errors:
     implementation group: 'io.leangen.geantyref', name: 'geantyref', version: '1.3.13'
     //Interfaces
-    //implementation("org.incendo.interfaces:interfaces-core:1.0.0-SNAPSHOT")
-    //implementation("org.incendo.interfaces:interfaces-paper:1.0.0-SNAPSHOT")
+    implementation("org.incendo.interfaces:interfaces-core:1.0.0-SNAPSHOT")
+    implementation("org.incendo.interfaces:interfaces-paper:1.0.0-SNAPSHOT")
 
 
     //implementation 'com.github.retrooper.packetevents:bukkit:2.0-SNAPSHOT'
@@ -196,7 +196,7 @@ shadowJar {
     //MiniMessage
     relocate('net.kyori.adventure.text.minimessage', path.concat('.kyori.minimessage'))
 
-    //relocate("org.incendo.interfaces", path.concat('.interfaces'))
+    relocate("org.incendo.interfaces", path.concat('.interfaces'))
 
 
     dependencies {
@@ -214,7 +214,7 @@ shadowJar {
         //include dependency('io.github.retrooper.packetevents:')
 
         include dependency('com.github.AlessioGr.packetevents:')
-        // include dependency('org.incendo.interfaces:')
+        include dependency('org.incendo.interfaces:')
 
         //include dependency('net.kyori:adventure-platform-bukkit:')
         include dependency("net.kyori:adventure-text-minimessage:")

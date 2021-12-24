@@ -376,25 +376,24 @@ public class AdminEditCommands {
                     NamespacedKey key = new NamespacedKey(main.getMain(), "notquests-item");
 
                     ItemMeta itemMeta = itemStack.getItemMeta();
-                    //Only paper List<Component> lore = new ArrayList<>();
-                    List<String> lore = new ArrayList<>();
+                    List<Component> lore = new ArrayList<>();
 
                     assert itemMeta != null;
 
 
                     itemMeta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, 4);
 
-                    //Only paper itemMeta.displayName(Component.text("§dCheck Armor Stand", NamedTextColor.LIGHT_PURPLE));
-                    itemMeta.setDisplayName("§dCheck Armor Stand");
+                    itemMeta.displayName(miniMessage.parse(
+                            "<LIGHT_PURPLE>Check Armor Stand"
+                    ));
                     //Only paper lore.add(Component.text("§fRight-click an Armor Stand to see which Quests are attached to it."));
-                    lore.add("§fRight-click an Armor Stand to see which Quests are attached to it.");
+                    lore.add(miniMessage.parse(
+                            "<WHITE>"
+                    ));
 
                     itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
-
-                    //Only paper itemMeta.lore(lore);
-
-                    itemMeta.setLore(lore);
+                    itemMeta.lore(lore);
 
                     itemStack.setItemMeta(itemMeta);
 
@@ -427,31 +426,32 @@ public class AdminEditCommands {
                         context.getSender().sendMessage(miniMessage.parse(errorGradient + "Error: ItemMeta is null."));
                         return;
                     }
-                    //only paper List<Component> lore = new ArrayList<>();
-                    List<String> lore = new ArrayList<>();
+                    List<Component> lore = new ArrayList<>();
 
                     if (showInArmorStand) {
                         itemMeta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, 0);
-                        //only paper itemMeta.displayName(Component.text("§6Add showing Quest §b" + quest.getQuestName() + " §6to Armor Stand", NamedTextColor.GOLD));
-                        itemMeta.setDisplayName("§6Add showing Quest §b" + quest.getQuestName() + " §6to Armor Stand");
-                        //only paper lore.add(Component.text("§fHit an armor stand to add the showing Quest §b" + quest.getQuestName() + " §fto it."));
-                        lore.add("§fHit an armor stand to add the showing Quest §b" + quest.getQuestName() + " §fto it.");
+                        itemMeta.displayName(miniMessage.parse(
+                                "<GOLD>Add showing Quest <AQUA>" + quest.getQuestName() + "</AQUA> to Armor Stand"
+                        ));
+                        lore.add(miniMessage.parse(
+                                "<WHITE>Hit an armor stand to add the showing Quest <AQUA>" + quest.getQuestName() + "</AQUA> to it."
+                        ));
 
                     } else {
                         itemMeta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, 1);
-                        //only paper itemMeta.displayName(Component.text("§6Add non-showing Quest §b" + quest.getQuestName() + " §6to Armor Stand", NamedTextColor.GOLD));
-                        itemMeta.setDisplayName("§6Add non-showing Quest §b" + quest.getQuestName() + " §6to Armor Stand");
-                        //only paper lore.add(Component.text("§fHit an armor stand to add the non-showing Quest §b" + quest.getQuestName() + " §fto it."));
-
-                        lore.add("§fHit an armor stand to add the non-showing Quest §b" + quest.getQuestName() + " §fto it.");
+                        itemMeta.displayName(miniMessage.parse(
+                                "<GOLD>Add non-showing Quest </AQUA>" + quest.getQuestName() + "</AQUA> to Armor Stand"
+                        ));
+                        lore.add(miniMessage.parse(
+                                "<WHITE>Hit an armor stand to add the non-showing Quest <AQUA>" + quest.getQuestName() + "</AQUA> to it."
+                        ));
 
                     }
                     itemMeta.getPersistentDataContainer().set(QuestNameKey, PersistentDataType.STRING, quest.getQuestName());
                     itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
 
-                    //only paper itemMeta.lore(lore);
-                    itemMeta.setLore(lore);
+                    itemMeta.lore(lore);
                     itemStack.setItemMeta(itemMeta);
                     player.getInventory().addItem(itemStack);
                     context.getSender().sendMessage(miniMessage.parse(successGradient + "You have been given an item with which you can add this quest to armor stands!"));
@@ -497,30 +497,35 @@ public class AdminEditCommands {
                         return;
                     }
 
-                    //only paper List<Component> lore = new ArrayList<>();
-                    List<String> lore = new ArrayList<>();
+                    List<Component> lore = new ArrayList<>();
 
                     if (showInArmorStand) {
                         itemMeta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, 2);
-                        //itemMeta.displayName(Component.text("§cRemove showing Quest §b" + quest.getQuestName() + " §cfrom Armor Stand", NamedTextColor.RED));
-                        itemMeta.setDisplayName("§cRemove showing Quest §b" + quest.getQuestName() + " §cfrom Armor Stand");
+                        itemMeta.displayName(miniMessage.parse(
+                                "<RED>Remove showing Quest <AQUA>" + quest.getQuestName() + "</AQUA> from Armor Stand"
+                        ));
 
-                        //only paper lore.add(Component.text("§fHit an armor stand to remove the showing Quest §b" + quest.getQuestName() + " §ffrom it."));
-                        lore.add("§fHit an armor stand to remove the showing Quest §b" + quest.getQuestName() + " §ffrom it.");
+                        lore.add(miniMessage.parse(
+                                "<WHITE>Hit an armor stand to remove the showing Quest <AQUA>" + quest.getQuestName() + "</AQUA> from it."
+                        ));
+
                     } else {
                         itemMeta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, 3);
-                        //only paper itemMeta.displayName(Component.text("§cRemove non-showing Quest §b" + quest.getQuestName() + " §cfrom Armor Stand", NamedTextColor.RED));
-                        itemMeta.setDisplayName("§cRemove non-showing Quest §b" + quest.getQuestName() + " §cfrom Armor Stand");
-                        //only paper lore.add(Component.text("§fHit an armor stand to remove the non-showing Quest §b" + quest.getQuestName() + " §ffrom it."));
-                        lore.add("§fHit an armor stand to remove the non-showing Quest §b" + quest.getQuestName() + " §ffrom it.");
+
+                        itemMeta.displayName(miniMessage.parse(
+                                "<RED>Remove non-showing Quest <AQUA>" + quest.getQuestName() + "</AQUA> from Armor Stand"
+                        ));
+
+                        lore.add(miniMessage.parse(
+                                "<WHITE>Hit an armor stand to remove the non-showing Quest <AQUA>" + quest.getQuestName() + "</AQUA> from it."
+                        ));
                     }
                     itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
                     itemMeta.getPersistentDataContainer().set(QuestNameKey, PersistentDataType.STRING, quest.getQuestName());
 
 
-                    //only paper itemMeta.lore(lore);
-                    itemMeta.setLore(lore);
+                    itemMeta.lore(lore);
 
                     itemStack.setItemMeta(itemMeta);
 
@@ -638,8 +643,7 @@ public class AdminEditCommands {
                             NamespacedKey ObjectiveIDKey = new NamespacedKey(main.getMain(), "notquests-objectiveid");
 
                             ItemMeta itemMeta = itemStack.getItemMeta();
-                            //Only paper List<Component> lore = new ArrayList<>();
-                            List<String> lore = new ArrayList<>();
+                            List<Component> lore = new ArrayList<>();
 
                             assert itemMeta != null;
 
@@ -648,15 +652,18 @@ public class AdminEditCommands {
                             itemMeta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, 6);
 
 
-                            //Only paper itemMeta.displayName(Component.text("§dCheck Armor Stand", NamedTextColor.LIGHT_PURPLE));
-                            itemMeta.setDisplayName("§dSet completionNPC of Quest §b" + quest.getQuestName() + " §dto this Armor Stand");
+                            itemMeta.displayName(miniMessage.parse(
+                                    "<LIGHT_PURPLE>Set completionNPC of Quest <AQUA>" + quest.getQuestName() + "</AQUA> to this Armor Stand"
+                            ));
                             //Only paper lore.add(Component.text("§fRight-click an Armor Stand to see which Quests are attached to it."));
-                            lore.add("§fRight-click an Armor Stand to set it as the completionNPC of Quest §b" + quest.getQuestName() + " §fand ObjectiveID §b" + objectiveID + "§f.");
+                            lore.add(miniMessage.parse(
+                                    "<WHITE>Right-click an Armor Stand to set it as the completionNPC of Quest <AQUA>" + quest.getQuestName() + "</AQUA> and ObjectiveID <AQUA>" + objectiveID + "</AQUA>."
+                            ));
 
                             itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-                            //Only paper itemMeta.lore(lore);
 
-                            itemMeta.setLore(lore);
+                            itemMeta.lore(lore);
+
                             itemStack.setItemMeta(itemMeta);
 
                             player.getInventory().addItem(itemStack);

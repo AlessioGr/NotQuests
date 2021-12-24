@@ -20,6 +20,8 @@ package rocks.gravili.notquests.paper.managers;
 
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
@@ -784,11 +786,13 @@ public class DataManager {
         key = "general.journal-item.item";
         ItemStack journal = new ItemStack(Material.ENCHANTED_BOOK, 1);
         ItemMeta im = journal.getItemMeta();
-        ArrayList<String> lore = new ArrayList<>();
-        lore.add("§7A book containing all your quest information");
+        ArrayList<Component> lore = new ArrayList<>();
+        lore.add(MiniMessage.miniMessage().parse("<GRAY>A book containing all your quest information"));
         if (im != null) {
-            im.setDisplayName("§9§oJournal");
-            im.setLore(lore);
+            im.displayName(MiniMessage.miniMessage().parse(
+                    "<BLUE><ITALIC>Journal"
+            ));
+            im.lore(lore);
         }
         journal.setItemMeta(im);
         if (!getGeneralConfig().isItemStack(key)) {
