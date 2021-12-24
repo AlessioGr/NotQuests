@@ -819,7 +819,7 @@ public class DataManager {
         }
         configuration.packetMagicUnsafeDisregardVersion = getGeneralConfig().getBoolean(key);
 
-        main.getLogManager().info("Detected version: " + Bukkit.getBukkitVersion());
+        main.getLogManager().info("Detected version: " + Bukkit.getBukkitVersion() + " <AQUA>(Paper)");
 
         if (!Bukkit.getBukkitVersion().contains("1.18") && !Bukkit.getBukkitVersion().contains("1.17")) {
             if (configuration.packetMagicUnsafeDisregardVersion) {
