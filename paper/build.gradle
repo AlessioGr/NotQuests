@@ -178,8 +178,6 @@ shadowJar {
     //relocate('io.papermc.lib', path.concat('.paper'))
     relocate('org.bstats', path.concat('.bstats'))
     relocate('cloud.commandframework', path.concat('.cloud'))
-    relocate('net.kyori.adventure.text.serializer.bungeecord', path.concat('.kyori.bungeecord'))
-    relocate('net.kyori.adventure.platform.bukkit', path.concat('.kyori.platform-bukkit'))
     relocate('io.leangen.geantyref', path.concat('.geantyref'))
     relocate("de.themoep", path.concat('.de.themoep'))
 
@@ -189,6 +187,11 @@ shadowJar {
 
     relocate("io.github.retrooper.packetevents", path.concat('.packetevents.bukkit'))
     relocate("com.github.retrooper.packetevents", path.concat('.packetevents.api'))
+
+    relocate('net.kyori.adventure.text.serializer.bungeecord', path.concat('.kyori.bungeecord'))
+    relocate('net.kyori.adventure.platform.bukkit', path.concat('.kyori.platform-bukkit'))
+    relocate('net.kyori.adventure.text.serializer.bungeecord', path.concat('.kyori.bungeecord'))
+    relocate('net.kyori.adventure.text.minimessage', path.concat('.kyori.minimessage'))
 
     //relocate("org.incendo.interfaces", path.concat('.interfaces'))
 
@@ -200,7 +203,6 @@ shadowJar {
         //include dependency('io.papermc:paperlib')
         include dependency("de.themoep:inventorygui:1.5-SNAPSHOT")
         include dependency('org.bstats:')
-        include dependency('net.kyori:adventure-platform-bukkit:')
         include dependency('cloud.commandframework:')
         include dependency('io.leangen.geantyref:')
         include dependency('me.lucko:')
@@ -210,6 +212,9 @@ shadowJar {
 
         include dependency('com.github.AlessioGr.packetevents:')
         // include dependency('org.incendo.interfaces:')
+
+        include dependency('net.kyori:adventure-platform-bukkit:')
+        include dependency("net.kyori:adventure-text-minimessage:")
 
     }
 
