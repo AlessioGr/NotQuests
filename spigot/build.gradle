@@ -163,7 +163,7 @@ dependencies {
 /**
  * Configure NotQuests for shading
  */
-String path = 'rocks.gravili.notquestsspigot.shadow'
+String path = 'rocks.gravili.notquests.spigot.shadow'
 shadowJar {
     minimize()
     relocate('net.kyori', path.concat('.kyori'))

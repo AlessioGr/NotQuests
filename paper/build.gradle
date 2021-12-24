@@ -169,7 +169,7 @@ dependencies {
 /**
  * Configure NotQuests for shading
  */
-String path = 'rocks.gravili.notquests.shadow'
+String path = 'rocks.gravili.notquests.paper.shadow'
 shadowJar {
     minimize()
 
