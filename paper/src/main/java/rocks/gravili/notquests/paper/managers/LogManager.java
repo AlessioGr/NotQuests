@@ -34,13 +34,14 @@ public class LogManager {
 
     public LogManager(final NotQuests main) {
         this.main = main;
+        consoleSender = Bukkit.getConsoleSender();
 
         prefixText = "<#393e46>[<gradient:#E0EAFC:#CFDEF3>NotQuests<#393e46>]<#636c73>: ";
         prefix = MiniMessage.miniMessage().parse(prefixText);
     }
 
     public void lateInit() {
-        consoleSender = Bukkit.getConsoleSender();
+
     }
 
 
