@@ -3,7 +3,6 @@ package rocks.gravili.notquests.paper.managers.packets.ownpacketstuff;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
-import net.kyori.adventure.platform.bukkit.MinecraftComponentSerializer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
@@ -14,7 +13,9 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.packets.ownpacketstuff.wrappers.WrappedChatPacket;
 import rocks.gravili.notquests.paper.managers.packets.ownpacketstuff.wrappers.WrappedChatType;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Locale;
 
 public class NQPacketListener extends ChannelDuplexHandler {
@@ -79,12 +80,32 @@ public class NQPacketListener extends ChannelDuplexHandler {
                     component = BungeeComponentSerializer.get().deserialize(spigotComponent);
 
                 } else {//vanilla shit
-                    if (!MinecraftComponentSerializer.isSupported()) {
-                        return;
+                    try {//paper only
+                        if (NotQuests.getInstance().getPacketManager().getPacketInjector().getPaperAdventureClass() != null) {
+                            Class<?> adventureClass = NotQuests.getInstance().getPacketManager().getPacketInjector().getPaperAdventureClass();
+
+
+
+                            Method asAdventure = adventureClass.getMethod("asAdventure", Class.forName("net.minecraft.network.chat.IChatBaseComponent"));
+                            asAdventure.setAccessible(true);
+
+                            component = (Component)asAdventure.invoke(null, vanillaMessage);
+
+                            main.getLogManager().debug("vanilla serializer: " + component.getClass().toString());
+
+
+                            //adventureComponent = Reflection.getFieldValueOfObject(null, "adventure$message");
+
+
+                        } else {
+                            NotQuests.getInstance().getLogManager().debug("Null mc component serializer :(");
+                        }
+                    } catch (Exception e) {
+                        if (main.getConfiguration().debug) {
+                            e.printStackTrace();
+                        }
                     }
-                    component = MinecraftComponentSerializer.get().deserialize(vanillaMessage);
-                    main.getLogManager().debug("vanilla serializer");
-                    // component = GsonComponentSerializer.builder().build().deserialize(wrappedChatPacket.getChatComponentJson());
+
                 }
             }
 

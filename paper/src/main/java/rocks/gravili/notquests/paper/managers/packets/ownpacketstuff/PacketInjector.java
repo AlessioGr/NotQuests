@@ -23,7 +23,13 @@ public class PacketInjector {
     private Field packetListenerField;
     private boolean packetStuffEnabled = true; //disabled if there is an error
 
+    //Paper
+    private Object paperMinecraftSerializer;
+    private Class<?> paperAdventureClass;
 
+    public final Class<?> getPaperAdventureClass() {
+        return paperAdventureClass;
+    }
 
 
     public PacketInjector(final NotQuests main) {
@@ -58,6 +64,20 @@ public class PacketInjector {
             }
             main.getLogManager().warn("Disabling packet stuff because something went wrong...");
             setPacketStuffEnabled(false);
+        }
+
+        //Paper
+        try {
+            //Method gsonMethod = Class.forName(nkat + ".serializer.gson.GsonComponentSerializer").getDeclaredMethod("gson");
+            paperAdventureClass = Class.forName("io.papermc.paper.adventure.PaperAdventure");
+            //paperGsonComponentSerializer = gson.getClass().getDeclaredMethod(); Reflection.getMethodValueOfObject(gson, "serialize");
+
+            //paperGsonComponentSerializer = Class.forName("net.kyori.adventure.text.serializer.gson" Reflection.getField("net.kyori.adventure.text.serializer.gson")
+        } catch (Exception e) {
+            paperAdventureClass = null;
+            if (main.getConfiguration().debug) {
+                e.printStackTrace();
+            }
         }
 
     }

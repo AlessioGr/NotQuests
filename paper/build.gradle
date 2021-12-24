@@ -140,7 +140,7 @@ dependencies {
 
     //Shaded
     implementation "net.kyori:adventure-text-minimessage:4.10.0-SNAPSHOT"
-    implementation 'net.kyori:adventure-platform-bukkit:4.0.1'
+    implementation 'net.kyori:adventure-text-serializer-bungeecord:4.0.1'
 
     //CloudCommands
     implementation group: 'cloud.commandframework', name: 'cloud-paper', version: '1.6.1'
@@ -188,9 +188,12 @@ shadowJar {
     relocate("io.github.retrooper.packetevents", path.concat('.packetevents.bukkit'))
     relocate("com.github.retrooper.packetevents", path.concat('.packetevents.api'))
 
+    //Packet Stuff
+    //relocate('net.kyori.adventure.text.serializer.bungeecord', path.concat('.kyori.bungeecord'))
+    //relocate('net.kyori.adventure.platform.bukkit', path.concat('.kyori.platform-bukkit'))
     relocate('net.kyori.adventure.text.serializer.bungeecord', path.concat('.kyori.bungeecord'))
-    relocate('net.kyori.adventure.platform.bukkit', path.concat('.kyori.platform-bukkit'))
-    relocate('net.kyori.adventure.text.serializer.bungeecord', path.concat('.kyori.bungeecord'))
+
+    //MiniMessage
     relocate('net.kyori.adventure.text.minimessage', path.concat('.kyori.minimessage'))
 
     //relocate("org.incendo.interfaces", path.concat('.interfaces'))
@@ -213,8 +216,9 @@ shadowJar {
         include dependency('com.github.AlessioGr.packetevents:')
         // include dependency('org.incendo.interfaces:')
 
-        include dependency('net.kyori:adventure-platform-bukkit:')
+        //include dependency('net.kyori:adventure-platform-bukkit:')
         include dependency("net.kyori:adventure-text-minimessage:")
+        include dependency("net.kyori:adventure-text-serializer-bungeecord:")
 
     }
 
