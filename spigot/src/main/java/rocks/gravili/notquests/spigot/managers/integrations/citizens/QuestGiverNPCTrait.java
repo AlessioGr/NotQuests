@@ -45,7 +45,7 @@ public class QuestGiverNPCTrait extends Trait {
 
     private int particleTimer = 0;
 
-    public QuestGiverNPCTrait(NotQuests main) {
+    public QuestGiverNPCTrait() {
         super("nquestgiver");
         this.main = NotQuests.getInstance();
     }
