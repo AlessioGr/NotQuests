@@ -123,9 +123,12 @@ shadowJar {
     minimize()
     relocate('rocks.gravili.notquests.spigot', path.concat('.spigot'))
     relocate('rocks.gravili.notquests.paper', path.concat('.paper'))
+    relocate('io.papermc.lib', path.concat('.paperlib'))
+
     dependencies {
         include dependency(':spigot')
         include dependency(':paper')
+        include dependency('io.papermc:paperlib:')
     }
 
 
