@@ -16,18 +16,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.structs;
+package rocks.gravili.notquests.paper.structs;
 
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.managers.integrations.citizens.QuestGiverNPCTrait;
-import rocks.gravili.notquests.structs.actions.Action;
-import rocks.gravili.notquests.structs.conditions.Condition;
-import rocks.gravili.notquests.structs.objectives.Objective;
-import rocks.gravili.notquests.structs.triggers.Trigger;
+import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.managers.integrations.citizens.QuestGiverNPCTrait;
+import rocks.gravili.notquests.paper.structs.actions.Action;
+import rocks.gravili.notquests.paper.structs.conditions.Condition;
+import rocks.gravili.notquests.paper.structs.objectives.Objective;
+import rocks.gravili.notquests.paper.structs.triggers.Trigger;
 
 import java.util.ArrayList;
 

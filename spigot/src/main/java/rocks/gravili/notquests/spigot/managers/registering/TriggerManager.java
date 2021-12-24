@@ -30,7 +30,6 @@ import rocks.gravili.notquests.spigot.NotQuests;
 import rocks.gravili.notquests.spigot.commands.NotQuestColors;
 import rocks.gravili.notquests.spigot.structs.Quest;
 import rocks.gravili.notquests.spigot.structs.actions.Action;
-import rocks.gravili.notquestsspigot.structs.triggers.types.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

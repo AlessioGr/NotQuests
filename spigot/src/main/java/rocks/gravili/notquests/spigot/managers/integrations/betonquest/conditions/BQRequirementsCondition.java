@@ -29,7 +29,6 @@ import rocks.gravili.notquests.spigot.NotQuests;
 import rocks.gravili.notquests.spigot.conditions.*;
 import rocks.gravili.notquests.spigot.structs.Quest;
 import rocks.gravili.notquests.spigot.structs.QuestPlayer;
-import rocks.gravili.notquestsspigot.conditions.*;
 
 public class BQRequirementsCondition extends org.betonquest.betonquest.api.Condition { //TODO: Make it dynamic for future or API requirements
 

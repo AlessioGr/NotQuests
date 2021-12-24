@@ -120,8 +120,21 @@ dependencies {
  */
 String path = 'rocks.gravili.notquests.shadow'
 shadowJar {
+    minimize()
+    relocate('rocks.gravili.notquests.spigot', path.concat('.spigot'))
+    relocate('rocks.gravili.notquests.paper', path.concat('.paper'))
+    dependencies {
+        include dependency(':spigot')
+        include dependency(':paper')
+    }
 
 
+    //exclude('com.mojang:brigadier')
+
+    //relocate('io.papermc.lib', path.concat('.paper'))
+    relocate('org.bstats', path.concat('.bstats'))
+
+    archiveClassifier.set(null)
 }
 
 

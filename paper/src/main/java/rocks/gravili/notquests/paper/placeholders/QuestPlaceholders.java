@@ -16,12 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.placeholders;
+package rocks.gravili.notquests.paper.placeholders;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
-import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.structs.*;
+import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.structs.*;
 
 /**
  * This class will be registered through the register-method in the

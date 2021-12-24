@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.managers.registering;
+package rocks.gravili.notquests.paper.managers.registering;
 
 import cloud.commandframework.Command;
 import cloud.commandframework.context.CommandContext;
@@ -24,25 +24,24 @@ import cloud.commandframework.paper.PaperCommandManager;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
-import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.commands.NotQuestColors;
-import rocks.gravili.notquests.structs.Quest;
-import rocks.gravili.notquests.structs.actions.Action;
-import rocks.gravili.notquests.structs.conditions.*;
-import rocks.gravili.notquests.structs.conditions.hooks.towny.TownyNationNameCondition;
-import rocks.gravili.notquests.structs.conditions.hooks.towny.TownyNationTownCountCondition;
-import rocks.gravili.notquests.structs.conditions.hooks.towny.TownyTownPlotCountCondition;
-import rocks.gravili.notquests.structs.conditions.hooks.towny.TownyTownResidentCountCondition;
-import rocks.gravili.notquests.structs.conditions.hooks.ultimateclans.UltimateClansClanLevelCondition;
-import rocks.gravili.notquests.structs.objectives.Objective;
+import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.NotQuestColors;
+import rocks.gravili.notquests.paper.structs.Quest;
+import rocks.gravili.notquests.paper.structs.actions.Action;
+import rocks.gravili.notquests.paper.structs.conditions.*;
+import rocks.gravili.notquests.paper.structs.conditions.hooks.towny.TownyNationNameCondition;
+import rocks.gravili.notquests.paper.structs.conditions.hooks.towny.TownyNationTownCountCondition;
+import rocks.gravili.notquests.paper.structs.conditions.hooks.towny.TownyTownPlotCountCondition;
+import rocks.gravili.notquests.paper.structs.conditions.hooks.towny.TownyTownResidentCountCondition;
+import rocks.gravili.notquests.paper.structs.conditions.hooks.ultimateclans.UltimateClansClanLevelCondition;
+import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
 
-import static rocks.gravili.notquests.commands.NotQuestColors.errorGradient;
-import static rocks.gravili.notquests.commands.NotQuestColors.highlightGradient;
+import static rocks.gravili.notquests.paper.commands.NotQuestColors.*;
 
 public class ConditionsManager {
     private final NotQuests main;
@@ -123,7 +122,6 @@ public class ConditionsManager {
     }
 
     public void addCondition(Condition condition, CommandContext<CommandSender> context) {
-        Audience audience = main.adventure().sender(context.getSender());
 
         Quest quest = context.getOrDefault("quest", null);
         Objective objectiveOfQuest = null;
@@ -143,13 +141,13 @@ public class ConditionsManager {
 
                 objectiveOfQuest.addCondition(condition, true);
 
-                audience.sendMessage(MiniMessage.miniMessage().parse(
+                context.getSender().sendMessage(MiniMessage.miniMessage().parse(
                         NotQuestColors.successGradient + getConditionType(condition.getClass()) + " Condition successfully added to Objective " + NotQuestColors.highlightGradient
                                 + objectiveOfQuest.getObjectiveFinalName() + "</gradient>!</gradient>"));
             } else { //Quest Requirement
                 quest.addRequirement(condition, true);
 
-                audience.sendMessage(MiniMessage.miniMessage().parse(
+                context.getSender().sendMessage(MiniMessage.miniMessage().parse(
                         NotQuestColors.successGradient + getConditionType(condition.getClass()) + " Requirement successfully added to Quest " + NotQuestColors.highlightGradient
                                 + quest.getQuestName() + "</gradient>!</gradient>"
                 ));
@@ -159,12 +157,12 @@ public class ConditionsManager {
 
                 if (main.getConditionsYMLManager().getCondition(conditionIdentifier) == null) {
                     main.getConditionsYMLManager().addCondition(conditionIdentifier, condition);
-                    audience.sendMessage(MiniMessage.miniMessage().parse(
+                    context.getSender().sendMessage(MiniMessage.miniMessage().parse(
                             NotQuestColors.successGradient + getConditionType(condition.getClass()) + " Condition with the name " + NotQuestColors.highlightGradient
                                     + conditionIdentifier + "</gradient> has been created successfully!</gradient>"
                     ));
                 } else {
-                    audience.sendMessage(MiniMessage.miniMessage().parse(errorGradient + "Error! A condition with the name " + highlightGradient + conditionIdentifier + "</gradient> already exists!</gradient>"));
+                    context.getSender().sendMessage(MiniMessage.miniMessage().parse(errorGradient + "Error! A condition with the name " + highlightGradient + conditionIdentifier + "</gradient> already exists!</gradient>"));
                 }
             } else { //Condition for Actions.yml action
                 if (actionIdentifier != null && !actionIdentifier.isBlank()) {
@@ -172,7 +170,7 @@ public class ConditionsManager {
                     if (foundAction != null) {
                         foundAction.addCondition(condition, true, main.getActionsYMLManager().getActionsConfig(), "actions." + actionIdentifier);
                         main.getActionsYMLManager().saveActions();
-                        audience.sendMessage(MiniMessage.miniMessage().parse(
+                        context.getSender().sendMessage(MiniMessage.miniMessage().parse(
                                 NotQuestColors.successGradient + getConditionType(condition.getClass()) + " Condition successfully added to Action " + NotQuestColors.highlightGradient
                                         + foundAction.getActionName() + "</gradient>!</gradient>"));
                     }

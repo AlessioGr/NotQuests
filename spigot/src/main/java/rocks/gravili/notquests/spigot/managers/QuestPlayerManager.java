@@ -34,7 +34,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
 
-import static rocks.gravili.notquests.commands.NotQuestColors.*;
+import static rocks.gravili.notquests.spigot.commands.NotQuestColors.*;
 
 public class QuestPlayerManager {
     private final NotQuests main;

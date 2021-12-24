@@ -101,7 +101,7 @@ repositories {
 }
 
 dependencies {
-    implementation project(':common')
+    //implementation project(':common')
 
     implementation 'net.kyori:adventure-platform-bukkit:4.0.1'
     compileOnly 'org.spigotmc:spigot-api:1.18.1-R0.1-SNAPSHOT'
@@ -211,12 +211,7 @@ shadowJar {
 
     }
 
-
-
-
     archiveClassifier.set(null)
-
-
 }
 
 

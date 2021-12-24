@@ -16,9 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.structs.triggers;
+package rocks.gravili.notquests.paper.structs.triggers;
 
-import rocks.gravili.notquests.structs.ActiveQuest;
+import rocks.gravili.notquests.paper.structs.ActiveQuest;
 
 public class ActiveTrigger {
     private final Trigger trigger;

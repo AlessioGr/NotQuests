@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.commands.arguments;
+package rocks.gravili.notquests.paper.commands.arguments;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.arguments.CommandArgument;
@@ -24,13 +24,12 @@ import cloud.commandframework.arguments.parser.ArgumentParseResult;
 import cloud.commandframework.arguments.parser.ArgumentParser;
 import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.exceptions.parsing.NoInputProvidedException;
-import net.kyori.adventure.audience.Audience;
 import org.bukkit.command.CommandSender;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jetbrains.annotations.NotNull;
-import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.structs.actions.Action;
+import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.structs.actions.Action;
 
 import java.util.List;
 import java.util.Queue;
@@ -112,10 +111,9 @@ public class ActionSelector<C> extends CommandArgument<C, Action> {
         @Override
         public List<String> suggestions(@NotNull CommandContext<C> context, @NotNull String input) {
             List<String> questNames = new java.util.ArrayList<>(main.getActionsYMLManager().getActionsAndIdentifiers().keySet());
-            final Audience audience = main.adventure().sender((CommandSender) context.getSender());
             final List<String> allArgs = context.getRawInput();
 
-            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Action Name]", "[...]");
+            main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.getSender(), allArgs.toArray(new String[0]), "[Action Name]", "[...]");
 
             return questNames;
         }

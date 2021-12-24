@@ -16,16 +16,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.structs.triggers;
+package rocks.gravili.notquests.paper.structs.triggers;
 
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.structs.ActiveQuest;
-import rocks.gravili.notquests.structs.Quest;
-import rocks.gravili.notquests.structs.actions.Action;
+import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.structs.ActiveQuest;
+import rocks.gravili.notquests.paper.structs.Quest;
+import rocks.gravili.notquests.paper.structs.actions.Action;
 
 public abstract class Trigger {
     protected final NotQuests main;

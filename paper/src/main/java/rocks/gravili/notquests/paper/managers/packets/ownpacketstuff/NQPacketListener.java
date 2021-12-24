@@ -1,4 +1,4 @@
-package rocks.gravili.notquests.managers.packets.ownpacketstuff;
+package rocks.gravili.notquests.paper.managers.packets.ownpacketstuff;
 
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -10,9 +10,9 @@ import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.entity.Player;
-import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.managers.packets.ownpacketstuff.wrappers.WrappedChatPacket;
-import rocks.gravili.notquests.managers.packets.ownpacketstuff.wrappers.WrappedChatType;
+import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.managers.packets.ownpacketstuff.wrappers.WrappedChatPacket;
+import rocks.gravili.notquests.paper.managers.packets.ownpacketstuff.wrappers.WrappedChatType;
 
 import java.util.ArrayList;
 import java.util.Locale;

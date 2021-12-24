@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.structs.conditions.hooks.towny;
+package rocks.gravili.notquests.paper.structs.conditions.hooks.towny;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
@@ -30,10 +30,10 @@ import net.kyori.adventure.audience.Audience;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.structs.QuestPlayer;
-import rocks.gravili.notquests.structs.conditions.Condition;
-import rocks.gravili.notquests.structs.conditions.ConditionFor;
+import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
+import rocks.gravili.notquests.paper.structs.conditions.Condition;
+import rocks.gravili.notquests.paper.structs.conditions.ConditionFor;
 
 import java.util.ArrayList;
 import java.util.List;

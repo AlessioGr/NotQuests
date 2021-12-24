@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.commands;
+package rocks.gravili.notquests.paper.commands;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
@@ -29,7 +29,6 @@ import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
-import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
@@ -42,19 +41,19 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
-import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.commands.arguments.MaterialOrHandArgument;
-import rocks.gravili.notquests.commands.arguments.wrappers.MaterialOrHand;
-import rocks.gravili.notquests.structs.Quest;
-import rocks.gravili.notquests.structs.actions.Action;
-import rocks.gravili.notquests.structs.conditions.Condition;
-import rocks.gravili.notquests.structs.objectives.Objective;
-import rocks.gravili.notquests.structs.triggers.Trigger;
+import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
+import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
+import rocks.gravili.notquests.paper.structs.Quest;
+import rocks.gravili.notquests.paper.structs.actions.Action;
+import rocks.gravili.notquests.paper.structs.conditions.Condition;
+import rocks.gravili.notquests.paper.structs.objectives.Objective;
+import rocks.gravili.notquests.paper.structs.triggers.Trigger;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static rocks.gravili.notquests.commands.NotQuestColors.*;
+import static rocks.gravili.notquests.paper.commands.NotQuestColors.*;
 
 public class AdminEditCommands {
     private final NotQuests main;
@@ -77,18 +76,17 @@ public class AdminEditCommands {
                 }).build(), ArgumentDescription.of("New accept cooldown in minutes. Set it to -1, to disable the quest accept cooldown."))
                 .meta(CommandMeta.DESCRIPTION, "Sets the time players have to wait between accepting quests.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
                     int cooldownInMinutes = context.get("minutes");
                     if (cooldownInMinutes > 0) {
                         quest.setAcceptCooldown(cooldownInMinutes);
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 successGradient + "Cooldown for Quest " + highlightGradient + quest.getQuestName() + "</gradient> has been set to "
                                         + highlight2Gradient + cooldownInMinutes + "</gradient> minutes!"
                         ));
                     } else {
                         quest.setAcceptCooldown(-1);
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 successGradient + "Cooldown for Quest " + highlightGradient + quest.getQuestName() + "</gradient> has been "
                                         + highlight2Gradient + "disabled</gradient>!"
                         ));
@@ -104,8 +102,7 @@ public class AdminEditCommands {
                 .argument(StringArrayArgument.of("Description",
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
-                            final Audience audience = main.adventure().sender(context.getSender());
-                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "<Enter new Quest description>", "");
+                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "<Enter new Quest description>", "");
                             ArrayList<String> completions = new ArrayList<>();
                             if (lastString.startsWith("{")) {
                                 completions.addAll(main.getCommandManager().getAdminCommands().placeholders);
@@ -118,19 +115,18 @@ public class AdminEditCommands {
                 ), ArgumentDescription.of("Quest description"))
                 .meta(CommandMeta.DESCRIPTION, "Sets the new description of the Quest.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
 
                     final String description = String.join(" ", (String[]) context.get("Description"));
 
                     if (description.equalsIgnoreCase("clear")) {
                         quest.setQuestDescription("");
-                        audience.sendMessage(miniMessage.parse(successGradient + "Description successfully removed from quest "
+                        context.getSender().sendMessage(miniMessage.parse(successGradient + "Description successfully removed from quest "
                                 + highlightGradient + quest.getQuestName() + "</gradient>!"
                         ));
                     } else {
                         quest.setQuestDescription(description);
-                        audience.sendMessage(miniMessage.parse(successGradient + "Description successfully added to quest "
+                        context.getSender().sendMessage(miniMessage.parse(successGradient + "Description successfully added to quest "
                                 + highlightGradient + quest.getQuestName() + "</gradient>! New description: "
                                 + highlight2Gradient + quest.getQuestDescription()
                         ));
@@ -141,8 +137,7 @@ public class AdminEditCommands {
                 .argument(StringArrayArgument.of("DisplayName",
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
-                            final Audience audience = main.adventure().sender(context.getSender());
-                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "<Enter new Quest display name>", "");
+                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "<Enter new Quest display name>", "");
                             ArrayList<String> completions = new ArrayList<>();
                             if (lastString.startsWith("{")) {
                                 completions.addAll(main.getCommandManager().getAdminCommands().placeholders);
@@ -155,19 +150,18 @@ public class AdminEditCommands {
                 ), ArgumentDescription.of("Quest display name"))
                 .meta(CommandMeta.DESCRIPTION, "Sets the new display name of the Quest.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
 
                     final String displayName = String.join(" ", (String[]) context.get("DisplayName"));
 
                     if (displayName.equalsIgnoreCase("clear")) {
                         quest.setQuestDisplayName("");
-                        audience.sendMessage(miniMessage.parse(successGradient + "Display name successfully removed from quest "
+                        context.getSender().sendMessage(miniMessage.parse(successGradient + "Display name successfully removed from quest "
                                 + highlightGradient + quest.getQuestName() + "</gradient>!"
                         ));
                     } else {
                         quest.setQuestDisplayName(displayName);
-                        audience.sendMessage(miniMessage.parse(successGradient + "Display name successfully added to quest "
+                        context.getSender().sendMessage(miniMessage.parse(successGradient + "Display name successfully added to quest "
                                 + highlightGradient + quest.getQuestName() + "</gradient>! New display name: "
                                 + highlight2Gradient + quest.getQuestDisplayName()
                         ));
@@ -183,18 +177,17 @@ public class AdminEditCommands {
                 }).build(), ArgumentDescription.of("Maximum amount of accepts. Set to -1 for unlimited (default)."))
                 .meta(CommandMeta.DESCRIPTION, "Sets the maximum amount of times you can start/accept this Quest.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
                     int maxAccepts = context.get("max. accepts");
                     if (maxAccepts > 0) {
                         quest.setMaxAccepts(maxAccepts);
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 successGradient + "Maximum amount of accepts for Quest " + highlightGradient + quest.getQuestName() + "</gradient> has been set to "
                                         + highlight2Gradient + maxAccepts + "</gradient>!"
                         ));
                     } else {
                         quest.setMaxAccepts(-1);
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 successGradient + "Maximum amount of accepts for Quest " + highlightGradient + quest.getQuestName() + "</gradient> has been set to "
                                         + highlight2Gradient + "unlimited (default)</gradient>!"
                         ));
@@ -211,18 +204,17 @@ public class AdminEditCommands {
                         ArgumentDescription.of("Enabled by default. Yes / no"))
                 .meta(CommandMeta.DESCRIPTION, "Sets if players can accept the Quest using /notquests take.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
                     boolean takeEnabled = context.get("Take Enabled");
                     quest.setTakeEnabled(takeEnabled);
                     if (takeEnabled) {
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 successGradient + "Quest taking (/notquests take) for the Quest "
                                         + highlightGradient + quest.getQuestName() + "</gradient> has been set to "
                                         + highlight2Gradient + "enabled</gradient>!</gradient>"
                         ));
                     } else {
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 successGradient + "Quest taking (/notquests take) for the Quest "
                                         + highlightGradient + quest.getQuestName() + "</gradient> has been set to "
                                         + highlight2Gradient + "disabled</gradient>!</gradient>"
@@ -239,7 +231,6 @@ public class AdminEditCommands {
                 )
                 .meta(CommandMeta.DESCRIPTION, "Sets the item displayed in the Quest take GUI (default: book).")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
                     final boolean glow = context.flags().isPresent("glow");
 
@@ -249,7 +240,7 @@ public class AdminEditCommands {
                         if (context.getSender() instanceof Player player) {
                             takeItem = player.getInventory().getItemInMainHand();
                         } else {
-                            audience.sendMessage(MiniMessage.miniMessage().parse(
+                            context.getSender().sendMessage(MiniMessage.miniMessage().parse(
                                     NotQuestColors.errorGradient + "This must be run by a player."
                             ));
                             return;
@@ -277,7 +268,7 @@ public class AdminEditCommands {
 
 
                     quest.setTakeItem(takeItem);
-                    audience.sendMessage(miniMessage.parse(
+                    context.getSender().sendMessage(miniMessage.parse(
                             successGradient + "Take Item Material for Quest " + highlightGradient + quest.getQuestName()
                                     + "</gradient> has been set to " + highlight2Gradient + takeItem.getType().name() + "</gradient>!</gradient>"
                     ));
@@ -304,8 +295,7 @@ public class AdminEditCommands {
                         completions.add("" + npc.getId());
                     }
                     final List<String> allArgs = context.getRawInput();
-                    final Audience audience = main.adventure().sender(context.getSender());
-                    main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[ID of the NPC you wish to add]", "(optional: --hideInNPC)");
+                    main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[ID of the NPC you wish to add]", "(optional: --hideInNPC)");
 
                     return completions;
                 }).build(), ArgumentDescription.of("ID of the Citizens NPC to whom the Quest should be attached."))
@@ -315,7 +305,6 @@ public class AdminEditCommands {
                 )
                 .meta(CommandMeta.DESCRIPTION, "Attaches the Quest to a Citizens NPC.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
                     boolean showInNPC = !context.flags().isPresent("hideInNPC");
 
@@ -325,13 +314,13 @@ public class AdminEditCommands {
                     if (npc != null) {
                         if (!quest.getAttachedNPCsWithQuestShowing().contains(npc) && !quest.getAttachedNPCsWithoutQuestShowing().contains(npc)) {
                             quest.bindToNPC(npc, showInNPC);
-                            audience.sendMessage(miniMessage.parse(
+                            context.getSender().sendMessage(miniMessage.parse(
                                     successGradient + "Quest " + highlightGradient + quest.getQuestName()
                                             + "</gradient> has been bound to the NPC with the ID " + highlight2Gradient + npcID
                                             + "</gradient>! Showing Quest: " + highlightGradient + showInNPC + "</gradient>."
                             ));
                         } else {
-                            audience.sendMessage(miniMessage.parse(
+                            context.getSender().sendMessage(miniMessage.parse(
                                     warningGradient + "Quest " + highlightGradient + quest.getQuestName()
                                             + "</gradient> has already been bound to the NPC with the ID " + highlight2Gradient + npcID
                                             + "</gradient>!"
@@ -339,7 +328,7 @@ public class AdminEditCommands {
                         }
 
                     } else {
-                        audience.sendMessage(miniMessage.parse(errorGradient + "NPC with the ID " + highlightGradient + npcID + "</gradient> was not found!"));
+                        context.getSender().sendMessage(miniMessage.parse(errorGradient + "NPC with the ID " + highlightGradient + npcID + "</gradient> was not found!"));
                     }
 
                 }));
@@ -347,28 +336,26 @@ public class AdminEditCommands {
         manager.command(builder.literal("clear")
                 .meta(CommandMeta.DESCRIPTION, "De-attaches this Quest from all Citizens NPCs.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
                     quest.removeAllNPCs();
-                    audience.sendMessage(miniMessage.parse(successGradient + "All NPCs of Quest " + highlightGradient + quest.getQuestName() + "</gradient> have been removed!"));
+                    context.getSender().sendMessage(miniMessage.parse(successGradient + "All NPCs of Quest " + highlightGradient + quest.getQuestName() + "</gradient> have been removed!"));
 
                 }));
 
         manager.command(builder.literal("list")
                 .meta(CommandMeta.DESCRIPTION, "Lists all Citizens NPCs which have this Quest attached.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
-                    audience.sendMessage(miniMessage.parse(highlightGradient + "NPCs bound to quest " + highlight2Gradient + quest.getQuestName() + "</gradient> with Quest showing:</gradient>"));
+                    context.getSender().sendMessage(miniMessage.parse(highlightGradient + "NPCs bound to quest " + highlight2Gradient + quest.getQuestName() + "</gradient> with Quest showing:</gradient>"));
                     int counter = 1;
                     for (final NPC npc : quest.getAttachedNPCsWithQuestShowing()) {
-                        audience.sendMessage(miniMessage.parse(highlightGradient + counter + ".</gradient> " + mainGradient + "ID:</gradient> " + highlight2Gradient + npc.getId()));
+                        context.getSender().sendMessage(miniMessage.parse(highlightGradient + counter + ".</gradient> " + mainGradient + "ID:</gradient> " + highlight2Gradient + npc.getId()));
                         counter++;
                     }
                     counter = 1;
-                    audience.sendMessage(miniMessage.parse(highlightGradient + "NPCs bound to quest " + highlight2Gradient + quest.getQuestName() + "</gradient> without Quest showing:</gradient>"));
+                    context.getSender().sendMessage(miniMessage.parse(highlightGradient + "NPCs bound to quest " + highlight2Gradient + quest.getQuestName() + "</gradient> without Quest showing:</gradient>"));
                     for (NPC npc : quest.getAttachedNPCsWithoutQuestShowing()) {
-                        audience.sendMessage(miniMessage.parse(highlightGradient + counter + ".</gradient> " + mainGradient + "ID:</gradient> " + highlight2Gradient + npc.getId()));
+                        context.getSender().sendMessage(miniMessage.parse(highlightGradient + counter + ".</gradient> " + mainGradient + "ID:</gradient> " + highlight2Gradient + npc.getId()));
                         counter++;
                     }
                 }));
@@ -381,7 +368,6 @@ public class AdminEditCommands {
                 .senderType(Player.class)
                 .meta(CommandMeta.DESCRIPTION, "Gives you an item with which you check what Quests are attached to an armor stand.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final Player player = (Player) context.getSender();
 
                     ItemStack itemStack = new ItemStack(Material.LEATHER, 1);
@@ -414,7 +400,7 @@ public class AdminEditCommands {
 
                     player.getInventory().addItem(itemStack);
 
-                    audience.sendMessage(miniMessage.parse(successGradient + "You have been given an item with which you can check armor stands!"));
+                    context.getSender().sendMessage(miniMessage.parse(successGradient + "You have been given an item with which you can check armor stands!"));
                 }));
 
 
@@ -426,7 +412,6 @@ public class AdminEditCommands {
                 )
                 .meta(CommandMeta.DESCRIPTION, "Gives you an item with which you can add the quest to an armor stand.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
                     boolean showInArmorStand = !context.flags().isPresent("hideInArmorStand");
                     final Player player = (Player) context.getSender();
@@ -439,7 +424,7 @@ public class AdminEditCommands {
                     ItemMeta itemMeta = itemStack.getItemMeta();
 
                     if (itemMeta == null) {
-                        audience.sendMessage(miniMessage.parse(errorGradient + "Error: ItemMeta is null."));
+                        context.getSender().sendMessage(miniMessage.parse(errorGradient + "Error: ItemMeta is null."));
                         return;
                     }
                     //only paper List<Component> lore = new ArrayList<>();
@@ -469,23 +454,21 @@ public class AdminEditCommands {
                     itemMeta.setLore(lore);
                     itemStack.setItemMeta(itemMeta);
                     player.getInventory().addItem(itemStack);
-                    audience.sendMessage(miniMessage.parse(successGradient + "You have been given an item with which you can add this quest to armor stands!"));
+                    context.getSender().sendMessage(miniMessage.parse(successGradient + "You have been given an item with which you can add this quest to armor stands!"));
                 }));
 
         manager.command(builder.literal("clear")
                 .senderType(Player.class)
                 .meta(CommandMeta.DESCRIPTION, "This command is not done yet.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-                    audience.sendMessage(miniMessage.parse(errorGradient + "Sorry, this command is not done yet! I'll add it in future versions."));
+                    context.getSender().sendMessage(miniMessage.parse(errorGradient + "Sorry, this command is not done yet! I'll add it in future versions."));
                 }));
 
         manager.command(builder.literal("list")
                 .senderType(Player.class)
                 .meta(CommandMeta.DESCRIPTION, "This command is not done yet.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-                    audience.sendMessage(miniMessage.parse(errorGradient + "Sorry, this command is not done yet! I'll add it in future versions."));
+                    context.getSender().sendMessage(miniMessage.parse(errorGradient + "Sorry, this command is not done yet! I'll add it in future versions."));
                 }));
 
 
@@ -497,7 +480,6 @@ public class AdminEditCommands {
                 )
                 .meta(CommandMeta.DESCRIPTION, "Gives you an item with which you can remove the quest from an armor stand.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
                     boolean showInArmorStand = !context.flags().isPresent("hideInArmorStand");
                     final Player player = (Player) context.getSender();
@@ -511,7 +493,7 @@ public class AdminEditCommands {
                     ItemMeta itemMeta = itemStack.getItemMeta();
 
                     if (itemMeta == null) {
-                        audience.sendMessage(miniMessage.parse(errorGradient + "Error: ItemMeta is null."));
+                        context.getSender().sendMessage(miniMessage.parse(errorGradient + "Error: ItemMeta is null."));
                         return;
                     }
 
@@ -544,7 +526,7 @@ public class AdminEditCommands {
 
                     player.getInventory().addItem(itemStack);
 
-                    audience.sendMessage(miniMessage.parse(successGradient + "You have been given an item with which you can remove this quest from armor stands!"));
+                    context.getSender().sendMessage(miniMessage.parse(successGradient + "You have been given an item with which you can remove this quest from armor stands!"));
                 }));
     }
 
@@ -554,11 +536,10 @@ public class AdminEditCommands {
         manager.command(builder.literal("clear")
                 .meta(CommandMeta.DESCRIPTION, "Removes all objectives from a Quest.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
                     quest.removeAllObjectives();
-                    audience.sendMessage(Component.empty());
-                    audience.sendMessage(miniMessage.parse(
+                    context.getSender().sendMessage(Component.empty());
+                    context.getSender().sendMessage(miniMessage.parse(
                             successGradient + "All objectives of Quest " + highlightGradient + quest.getQuestName()
                                     + "</gradient> have been removed!</gradient>"
                     ));
@@ -566,11 +547,10 @@ public class AdminEditCommands {
         manager.command(builder.literal("list")
                 .meta(CommandMeta.DESCRIPTION, "Lists all objectives of a Quest.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
-                    audience.sendMessage(Component.empty());
-                    audience.sendMessage(miniMessage.parse(highlightGradient + "Objectives for Quest " + highlight2Gradient + quest.getQuestName() + "</gradient>:</gradient>"));
-                    main.getQuestManager().sendObjectivesAdmin(audience, quest);
+                    context.getSender().sendMessage(Component.empty());
+                    context.getSender().sendMessage(miniMessage.parse(highlightGradient + "Objectives for Quest " + highlight2Gradient + quest.getQuestName() + "</gradient>:</gradient>"));
+                    main.getQuestManager().sendObjectivesAdmin(context.getSender(), quest);
                 }));
 
 
@@ -584,23 +564,22 @@ public class AdminEditCommands {
                 .literal("show", "view")
                 .meta(CommandMeta.DESCRIPTION, "Shows the completionNPC of an objective.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
                     final int objectiveID = context.get("Objective ID");
                     final Objective objective = quest.getObjectiveFromID(objectiveID);
                     assert objective != null; //Shouldn't be null
 
-                    audience.sendMessage(miniMessage.parse(
+                    context.getSender().sendMessage(miniMessage.parse(
                             mainGradient + "The completionNPCID of the objective with the ID " + highlightGradient + objectiveID + "</gradient> is "
                                     + highlight2Gradient + objective.getCompletionNPCID() + "</gradient>!</gradient>"
                     ));
                     if (objective.getCompletionArmorStandUUID() != null) {
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 mainGradient + "The completionNPCUUID (for armor stands) of the objective with the ID " + highlightGradient + objectiveID + "</gradient> is "
                                         + highlight2Gradient + objective.getCompletionArmorStandUUID() + "</gradient>!</gradient>"
                         ));
                     } else {
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 mainGradient + "The completionNPCUUID (for armor stands) of the objective with the ID " + highlightGradient + objectiveID + "</gradient> is "
                                         + highlight2Gradient + "null</gradient>!</gradient>"
                         ));
@@ -611,8 +590,7 @@ public class AdminEditCommands {
                 .argument(StringArgument.<CommandSender>newBuilder("Completion NPC").withSuggestionsProvider(
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
-                            final Audience audience = main.adventure().sender(context.getSender());
-                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Completion NPC ID / 'armorstand']", "");
+                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Completion NPC ID / 'armorstand']", "");
 
                             ArrayList<String> completions = new ArrayList<>();
 
@@ -625,7 +603,6 @@ public class AdminEditCommands {
                 ).single().build(), ArgumentDescription.of("Completion NPC"))
                 .meta(CommandMeta.DESCRIPTION, "Sets the completionNPC of an objective.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
                     final int objectiveID = context.get("Objective ID");
                     final Objective objective = quest.getObjectiveFromID(objectiveID);
@@ -637,7 +614,7 @@ public class AdminEditCommands {
 
                         objective.setCompletionNPCID(-1, true);
                         objective.setCompletionArmorStandUUID(null, true);
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 successGradient + "The completionNPC of the objective with the ID " + highlightGradient + objectiveID + "</gradient> has been removed!</gradient>"
                         ));
 
@@ -645,7 +622,7 @@ public class AdminEditCommands {
                         final int completionNPCID = Integer.parseInt(completionNPC);
 
                         objective.setCompletionNPCID(completionNPCID, true);
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 successGradient + "The completionNPC of the objective with the ID " + highlightGradient + objectiveID
                                         + "</gradient> has been set to the NPC with the ID " + highlight2Gradient + completionNPCID + "</gradient>!</gradient>"
                         ));
@@ -684,12 +661,12 @@ public class AdminEditCommands {
 
                             player.getInventory().addItem(itemStack);
 
-                            audience.sendMessage(miniMessage.parse(
+                            context.getSender().sendMessage(miniMessage.parse(
                                     successGradient + "You have been given an item with which you can add the completionNPC of this Objective to an armor stand. Check your inventory!"
                             ));
 
                         } else {
-                            audience.sendMessage(miniMessage.parse(errorGradient + "Error: this command can only be run as a player."));
+                            context.getSender().sendMessage(miniMessage.parse(errorGradient + "Error: this command can only be run as a player."));
                         }
 
 
@@ -701,14 +678,13 @@ public class AdminEditCommands {
                 .literal("clear")
                 .meta(CommandMeta.DESCRIPTION, "Removes all conditions from this objective.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
                     final int objectiveID = context.get("Objective ID");
                     final Objective objective = quest.getObjectiveFromID(objectiveID);
                     assert objective != null; //Shouldn't be null
 
                     objective.clearConditions();
-                    audience.sendMessage(miniMessage.parse(
+                    context.getSender().sendMessage(miniMessage.parse(
                             successGradient + "All conditions of objective with ID " + highlightGradient + objectiveID
                                     + "</gradient> have been removed!</gradient>"
                     ));
@@ -719,26 +695,25 @@ public class AdminEditCommands {
                 .literal("list", "show")
                 .meta(CommandMeta.DESCRIPTION, "Lists all conditions of this objective.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
                     final int objectiveID = context.get("Objective ID");
                     final Objective objective = quest.getObjectiveFromID(objectiveID);
                     assert objective != null; //Shouldn't be null
 
 
-                    audience.sendMessage(miniMessage.parse(
+                    context.getSender().sendMessage(miniMessage.parse(
                             highlightGradient + "Conditions of objective with ID " + highlight2Gradient + objectiveID
                                     + "</gradient>:</gradient>"
                     ));
                     int counter = 1;
                     for (Condition condition : objective.getConditions()) {
-                        audience.sendMessage(miniMessage.parse(highlightGradient + counter + ". </gradient>" + mainGradient + condition.getConditionType() + "</gradient>"));
-                        audience.sendMessage(miniMessage.parse(mainGradient + condition.getConditionDescription()));
+                        context.getSender().sendMessage(miniMessage.parse(highlightGradient + counter + ". </gradient>" + mainGradient + condition.getConditionType() + "</gradient>"));
+                        context.getSender().sendMessage(miniMessage.parse(mainGradient + condition.getConditionDescription()));
                         counter += 1;
                     }
 
                     if (counter == 1) {
-                        audience.sendMessage(miniMessage.parse(warningGradient + "This objective has no conditions!"));
+                        context.getSender().sendMessage(miniMessage.parse(warningGradient + "This objective has no conditions!"));
                     }
                 }));
        /* manager.command(builder.literal("dependencies")
@@ -747,8 +722,8 @@ public class AdminEditCommands {
                 .argument(IntegerArgument.<CommandSender>newBuilder("Depending Objective ID").withMin(1).withSuggestionsProvider(
                                 (context, lastString) -> {
                                     final List<String> allArgs = context.getRawInput();
-                                    final Audience audience = main.adventure().sender(context.getSender());
-                                    main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Depending Objective ID]", "");
+                                    final context.getSender() context.getSender() = main.adventure().sender(context.getSender());
+                                    main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Depending Objective ID]", "");
 
                                     ArrayList<String> completions = new ArrayList<>();
 
@@ -776,7 +751,7 @@ public class AdminEditCommands {
                         })
                         .build(), ArgumentDescription.of("Depending Objective ID"))
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
+                    final context.getSender() context.getSender() = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
                     final int objectiveID = context.get("Objective ID");
                     final Objective objective = quest.getObjectiveFromID(objectiveID);
@@ -788,13 +763,13 @@ public class AdminEditCommands {
 
                     if (dependingObjective != objective) {
                         objective.addDependantObjective(dependingObjective, true);
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 successGradient + "The objective with the ID " + highlightGradient + dependingObjectiveID
                                         + "</gradient> has been added as a dependency to the objective with the ID " + highlight2Gradient + objectiveID
                                         + "</gradient>!</gradient>"
                         ));
                     } else {
-                        audience.sendMessage(miniMessage.parse(errorGradient + "Error: You cannot set an objective to depend on itself!"));
+                        context.getSender().sendMessage(miniMessage.parse(errorGradient + "Error: You cannot set an objective to depend on itself!"));
                     }
                 }));
         manager.command(builder.literal("dependencies")
@@ -803,8 +778,8 @@ public class AdminEditCommands {
                 .argument(IntegerArgument.<CommandSender>newBuilder("Depending Objective ID").withMin(1).withSuggestionsProvider(
                                 (context, lastString) -> {
                                     final List<String> allArgs = context.getRawInput();
-                                    final Audience audience = main.adventure().sender(context.getSender());
-                                    main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Depending Objective ID]", "");
+                                    final context.getSender() context.getSender() = main.adventure().sender(context.getSender());
+                                    main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Depending Objective ID]", "");
 
                                     ArrayList<String> completions = new ArrayList<>();
 
@@ -843,7 +818,7 @@ public class AdminEditCommands {
                         })
                         .build(), ArgumentDescription.of("Depending Objective ID"))
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
+                    final context.getSender() context.getSender() = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
                     final int objectiveID = context.get("Objective ID");
                     final Objective objective = quest.getObjectiveFromID(objectiveID);
@@ -854,7 +829,7 @@ public class AdminEditCommands {
                     assert dependingObjective != null; //Shouldn't be null
 
                     objective.removeDependantObjective(dependingObjective, true);
-                    audience.sendMessage(miniMessage.parse(
+                    context.getSender().sendMessage(miniMessage.parse(
                             successGradient + "The objective with the ID " + highlightGradient + dependingObjectiveID
                                     + "</gradient> has been removed as a dependency from the objective with the ID " + highlight2Gradient + objectiveID
                                     + "</gradient>!</gradient>"
@@ -867,38 +842,38 @@ public class AdminEditCommands {
                 .literal("list")
                 .meta(CommandMeta.DESCRIPTION, "Lists all dependencies of this objective.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
+                    final context.getSender() context.getSender() = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
                     final int objectiveID = context.get("Objective ID");
                     final Objective objective = quest.getObjectiveFromID(objectiveID);
                     assert objective != null; //Shouldn't be null
 
 
-                    audience.sendMessage(miniMessage.parse(
+                    context.getSender().sendMessage(miniMessage.parse(
                             highlightGradient + "Depending objectives of objective with ID " + highlight2Gradient + objectiveID
                                     + "</gradient> " + unimportant + "(What needs to be completed BEFORE this objective can be started)" + unimportantClose + ":</gradient>"
                     ));
                     int counter = 1;
                     for (final Objective dependantObjective : objective.getDependantObjectives()) {
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 highlightGradient + counter + ".</gradient> " + mainGradient + " Objective ID: </gradient>"
                                         + highlight2Gradient + dependantObjective.getObjectiveID() + "</gradient>"
                         ));
                         counter++;
                     }
                     if (counter == 1) {
-                        audience.sendMessage(miniMessage.parse(warningGradient + "No depending objectives found!"));
+                        context.getSender().sendMessage(miniMessage.parse(warningGradient + "No depending objectives found!"));
                     }
-                    audience.sendMessage(miniMessage.parse(unimportant + "------" + unimportantClose));
+                    context.getSender().sendMessage(miniMessage.parse(unimportant + "------" + unimportantClose));
 
-                    audience.sendMessage(miniMessage.parse(
+                    context.getSender().sendMessage(miniMessage.parse(
                             highlightGradient + "Objectives where this objective with ID " + highlight2Gradient + objectiveID
                                     + "</gradient> is a dependant on  " + unimportant + "(What can only be started AFTER this objective is completed)" + unimportantClose + ":</gradient>"
                     ));
                     int counter2 = 1;
                     for (final Objective otherObjective : quest.getObjectives()) {
                         if (otherObjective.getDependantObjectives().contains(objective)) {
-                            audience.sendMessage(miniMessage.parse(
+                            context.getSender().sendMessage(miniMessage.parse(
                                     highlightGradient + counter2 + ".</gradient> " + mainGradient + " Objective ID: </gradient>"
                                             + highlight2Gradient + otherObjective.getObjectiveID() + "</gradient>"
                             ));
@@ -906,7 +881,7 @@ public class AdminEditCommands {
                         }
                     }
                     if (counter2 == 1) {
-                        audience.sendMessage(miniMessage.parse(warningGradient + "No objectives where this objective is a dependant of found!"));
+                        context.getSender().sendMessage(miniMessage.parse(warningGradient + "No objectives where this objective is a dependant of found!"));
                     }
 
                 }));*/
@@ -916,13 +891,12 @@ public class AdminEditCommands {
                 .literal("show")
                 .meta(CommandMeta.DESCRIPTION, "Shows current objective description.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
                     final int objectiveID = context.get("Objective ID");
                     final Objective objective = quest.getObjectiveFromID(objectiveID);
                     assert objective != null; //Shouldn't be null
 
-                    audience.sendMessage(miniMessage.parse(
+                    context.getSender().sendMessage(miniMessage.parse(
                             mainGradient + "Current description of objective with ID " + highlightGradient + objectiveID + "</gradient>: "
                                     + highlight2Gradient + objective.getObjectiveDescription() + "</gradient></gradient>"
                     ));
@@ -931,14 +905,13 @@ public class AdminEditCommands {
                 .literal("remove")
                 .meta(CommandMeta.DESCRIPTION, "Removes current objective description.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
                     final int objectiveID = context.get("Objective ID");
                     final Objective objective = quest.getObjectiveFromID(objectiveID);
                     assert objective != null; //Shouldn't be null
 
                     objective.removeObjectiveDescription(true);
-                    audience.sendMessage(miniMessage.parse(
+                    context.getSender().sendMessage(miniMessage.parse(
                             mainGradient + "Description successfully removed from objective with ID " + highlightGradient + objectiveID + "</gradient>! New description: "
                                     + highlight2Gradient + objective.getObjectiveDescription() + "</gradient></gradient>"
                     ));
@@ -949,8 +922,7 @@ public class AdminEditCommands {
                 .argument(StringArrayArgument.of("Objective Description",
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
-                            final Audience audience = main.adventure().sender(context.getSender());
-                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "<Enter new Objective description>", "");
+                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "<Enter new Objective description>", "");
                             ArrayList<String> completions = new ArrayList<>();
                             if (lastString.startsWith("{")) {
                                 completions.addAll(main.getCommandManager().getAdminCommands().placeholders);
@@ -962,7 +934,6 @@ public class AdminEditCommands {
                 ), ArgumentDescription.of("Objective description"))
                 .meta(CommandMeta.DESCRIPTION, "Sets current objective description.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
                     final int objectiveID = context.get("Objective ID");
                     final Objective objective = quest.getObjectiveFromID(objectiveID);
@@ -970,7 +941,7 @@ public class AdminEditCommands {
 
                     final String description = String.join(" ", (String[]) context.get("Objective Description"));
                     objective.setObjectiveDescription(description, true);
-                    audience.sendMessage(miniMessage.parse(
+                    context.getSender().sendMessage(miniMessage.parse(
                             mainGradient + "Description successfully added to objective with ID " + highlightGradient + objectiveID + "</gradient>! New description: "
                                     + highlight2Gradient + objective.getObjectiveDescription() + "</gradient></gradient>"
                     ));
@@ -981,13 +952,12 @@ public class AdminEditCommands {
                 .literal("show")
                 .meta(CommandMeta.DESCRIPTION, "Shows current objective displayname.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
                     final int objectiveID = context.get("Objective ID");
                     final Objective objective = quest.getObjectiveFromID(objectiveID);
                     assert objective != null; //Shouldn't be null
 
-                    audience.sendMessage(miniMessage.parse(
+                    context.getSender().sendMessage(miniMessage.parse(
                             mainGradient + "Current displayname of objective with ID " + highlightGradient + objectiveID + "</gradient>: "
                                     + highlight2Gradient + objective.getObjectiveDisplayName() + "</gradient></gradient>"
                     ));
@@ -996,14 +966,13 @@ public class AdminEditCommands {
                 .literal("remove")
                 .meta(CommandMeta.DESCRIPTION, "Removes current objective displayname.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
                     final int objectiveID = context.get("Objective ID");
                     final Objective objective = quest.getObjectiveFromID(objectiveID);
                     assert objective != null; //Shouldn't be null
 
                     objective.removeObjectiveDisplayName(true);
-                    audience.sendMessage(miniMessage.parse(
+                    context.getSender().sendMessage(miniMessage.parse(
                             mainGradient + "Displayname successfully removed from objective with ID " + highlightGradient + objectiveID + "</gradient>! New displayname: "
                                     + highlight2Gradient + objective.getObjectiveDescription() + "</gradient></gradient>"
                     ));
@@ -1014,8 +983,7 @@ public class AdminEditCommands {
                 .argument(StringArrayArgument.of("Objective Displayname",
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
-                            final Audience audience = main.adventure().sender(context.getSender());
-                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "<Enter new Objective displayname>", "");
+                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "<Enter new Objective displayname>", "");
                             ArrayList<String> completions = new ArrayList<>();
                             if (lastString.startsWith("{")) {
                                 completions.addAll(main.getCommandManager().getAdminCommands().placeholders);
@@ -1027,7 +995,6 @@ public class AdminEditCommands {
                 ), ArgumentDescription.of("Objective displayname"))
                 .meta(CommandMeta.DESCRIPTION, "Sets current objective displayname.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
                     final int objectiveID = context.get("Objective ID");
                     final Objective objective = quest.getObjectiveFromID(objectiveID);
@@ -1035,7 +1002,7 @@ public class AdminEditCommands {
 
                     final String description = String.join(" ", (String[]) context.get("Objective Displayname"));
                     objective.setObjectiveDisplayName(description, true);
-                    audience.sendMessage(miniMessage.parse(
+                    context.getSender().sendMessage(miniMessage.parse(
                             mainGradient + "Displayname successfully added to objective with ID " + highlightGradient + objectiveID + "</gradient>! New displayname: "
                                     + highlight2Gradient + objective.getObjectiveDisplayName() + "</gradient></gradient>"
                     ));
@@ -1045,39 +1012,38 @@ public class AdminEditCommands {
         manager.command(builder.literal("info")
                 .meta(CommandMeta.DESCRIPTION, "Shows everything there is to know about this objective.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
                     final int objectiveID = context.get("Objective ID");
                     final Objective objective = quest.getObjectiveFromID(objectiveID);
                     assert objective != null; //Shouldn't be null
 
-                    audience.sendMessage(Component.empty());
-                    audience.sendMessage(miniMessage.parse(
+                    context.getSender().sendMessage(Component.empty());
+                    context.getSender().sendMessage(miniMessage.parse(
                             highlightGradient + "Information of objective with the ID " + highlight2Gradient + objectiveID
                                     + "</gradient> from Quest " + highlight2Gradient + quest.getQuestName() + "</gradient>:</gradient>"
                     ));
-                    audience.sendMessage(miniMessage.parse(
+                    context.getSender().sendMessage(miniMessage.parse(
                             highlightGradient + "Objective Type: " + mainGradient + main.getObjectiveManager().getObjectiveType(objective.getClass()) + "</gradient></gradient>"
                     ));
-                    audience.sendMessage(miniMessage.parse(
+                    context.getSender().sendMessage(miniMessage.parse(
                             highlightGradient + "Objective Content:</gradient>"
                     ));
 
-                    audience.sendMessage(miniMessage.parse(main.getQuestManager().getObjectiveTaskDescription(objective, false, null)));
+                    context.getSender().sendMessage(miniMessage.parse(main.getQuestManager().getObjectiveTaskDescription(objective, false, null)));
 
-                    audience.sendMessage(miniMessage.parse(
+                    context.getSender().sendMessage(miniMessage.parse(
                             highlightGradient + "Objective DisplayName: " + mainGradient + objective.getObjectiveDisplayName() + "</gradient></gradient>"
                     ));
-                    audience.sendMessage(miniMessage.parse(
+                    context.getSender().sendMessage(miniMessage.parse(
                             highlightGradient + "Objective Description: " + mainGradient + objective.getObjectiveDescription() + "</gradient></gradient>"
                     ));
 
-                    audience.sendMessage(miniMessage.parse(
+                    context.getSender().sendMessage(miniMessage.parse(
                             highlightGradient + "Objective Conditions:</gradient>"
                     ));
                     int counter = 1;
                     for (final Condition condition : objective.getConditions()) {
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 highlightGradient + "    " + counter + ". Description: " + condition.getConditionDescription()
                         ));
                         counter++;
@@ -1087,14 +1053,13 @@ public class AdminEditCommands {
         manager.command(builder.literal("remove", "delete")
                 .meta(CommandMeta.DESCRIPTION, "Removes the objective from the Quest.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
                     final int objectiveID = context.get("Objective ID");
                     final Objective objective = quest.getObjectiveFromID(objectiveID);
                     assert objective != null; //Shouldn't be null
 
                     quest.removeObjective(objective);
-                    audience.sendMessage(miniMessage.parse(
+                    context.getSender().sendMessage(miniMessage.parse(
                             successGradient + "Objective with the ID " + highlightGradient + objectiveID + "</gradient> has been successfully removed from Quest "
                                     + highlight2Gradient + quest.getQuestName() + "</gradient>!</gradient>"
                     ));
@@ -1109,14 +1074,13 @@ public class AdminEditCommands {
         manager.command(builder.literal("list", "show")
                 .meta(CommandMeta.DESCRIPTION, "Lists all the requirements this Quest has.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
 
-                    audience.sendMessage(miniMessage.parse(highlightGradient + "Requirements for Quest " + highlight2Gradient + quest.getQuestName() + "</gradient>:</gradient>"));
+                    context.getSender().sendMessage(miniMessage.parse(highlightGradient + "Requirements for Quest " + highlight2Gradient + quest.getQuestName() + "</gradient>:</gradient>"));
                     int counter = 1;
                     for (Condition condition : quest.getRequirements()) {
-                        audience.sendMessage(miniMessage.parse(highlightGradient + counter + ". </gradient>" + mainGradient + condition.getConditionType() + "</gradient>"));
-                        audience.sendMessage(miniMessage.parse(mainGradient + condition.getConditionDescription()));
+                        context.getSender().sendMessage(miniMessage.parse(highlightGradient + counter + ". </gradient>" + mainGradient + condition.getConditionType() + "</gradient>"));
+                        context.getSender().sendMessage(miniMessage.parse(mainGradient + condition.getConditionDescription()));
                         counter += 1;
                     }
                 }));
@@ -1124,11 +1088,10 @@ public class AdminEditCommands {
         manager.command(builder.literal("clear")
                 .meta(CommandMeta.DESCRIPTION, "Clears all the requirements this Quest has.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
 
                     quest.removeAllRequirements();
-                    audience.sendMessage(miniMessage.parse(successGradient + "All requirements of Quest " + highlightGradient + quest.getQuestName() + "</gradient> have been removed!</gradient>"));
+                    context.getSender().sendMessage(miniMessage.parse(successGradient + "All requirements of Quest " + highlightGradient + quest.getQuestName() + "</gradient> have been removed!</gradient>"));
                 }));
 
     }
@@ -1139,14 +1102,13 @@ public class AdminEditCommands {
         manager.command(builder.literal("list", "show")
                 .meta(CommandMeta.DESCRIPTION, "Lists all the rewards this Quest has.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
 
-                    audience.sendMessage(miniMessage.parse(highlightGradient + "Rewards for Quest " + highlight2Gradient + quest.getQuestName() + "</gradient>:</gradient>"));
+                    context.getSender().sendMessage(miniMessage.parse(highlightGradient + "Rewards for Quest " + highlight2Gradient + quest.getQuestName() + "</gradient>:</gradient>"));
                     int counter = 1;
                     for (final Action action : quest.getRewards()) {
-                        audience.sendMessage(miniMessage.parse(highlightGradient + counter + ". </gradient>" + mainGradient + action.getActionType() + "</gradient>"));
-                        audience.sendMessage(miniMessage.parse(unimportant + "-- " + unimportantClose + mainGradient + action.getActionDescription() + "</gradient>"));
+                        context.getSender().sendMessage(miniMessage.parse(highlightGradient + counter + ". </gradient>" + mainGradient + action.getActionType() + "</gradient>"));
+                        context.getSender().sendMessage(miniMessage.parse(unimportant + "-- " + unimportantClose + mainGradient + action.getActionDescription() + "</gradient>"));
                         counter++;
                     }
 
@@ -1155,11 +1117,10 @@ public class AdminEditCommands {
         manager.command(builder.literal("clear")
                 .meta(CommandMeta.DESCRIPTION, "Clears all the rewards this Quest has.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
 
                     quest.removeAllRewards();
-                    audience.sendMessage(miniMessage.parse(successGradient + "All rewards of Quest " + highlightGradient + quest.getQuestName() + "</gradient> have been removed!</gradient>"));
+                    context.getSender().sendMessage(miniMessage.parse(successGradient + "All rewards of Quest " + highlightGradient + quest.getQuestName() + "</gradient> have been removed!</gradient>"));
                 }));
 
 
@@ -1167,8 +1128,7 @@ public class AdminEditCommands {
                 .argument(IntegerArgument.<CommandSender>newBuilder("Reward ID").withMin(1).withSuggestionsProvider(
                                 (context, lastString) -> {
                                     final List<String> allArgs = context.getRawInput();
-                                    final Audience audience = main.adventure().sender(context.getSender());
-                                    main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Reward ID]", "[...]");
+                                    main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Reward ID]", "[...]");
 
                                     ArrayList<String> completions = new ArrayList<>();
 
@@ -1199,22 +1159,21 @@ public class AdminEditCommands {
         manager.command(builder.literal("info")
                 .meta(CommandMeta.DESCRIPTION, "Shows everything there is to know about this reward.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final int ID = (int) context.get("Reward ID") - 1;
                     final Quest quest = context.get("quest");
                     final Action foundReward = quest.getRewards().get(ID);
-                    audience.sendMessage(Component.empty());
+                    context.getSender().sendMessage(Component.empty());
                     if (foundReward == null) {
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 errorGradient + "Invalid reward."
                         ));
                         return;
                     }
 
-                    audience.sendMessage(miniMessage.parse(
+                    context.getSender().sendMessage(miniMessage.parse(
                             mainGradient + "Reward " + highlightGradient + ID + "</gradient> for Quest " + highlight2Gradient + quest.getQuestName() + "</gradient>:</gradient>"
                     ));
-                    audience.sendMessage(miniMessage.parse(
+                    context.getSender().sendMessage(miniMessage.parse(
                             unimportant + "-- " + unimportantClose + mainGradient + foundReward.getActionDescription() + "</gradient>"
                     ));
 
@@ -1223,19 +1182,18 @@ public class AdminEditCommands {
         manager.command(builder.literal("remove")
                 .meta(CommandMeta.DESCRIPTION, "Removes the reward from the Quest.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final int ID = (int) context.get("Reward ID") - 1;
                     final Quest quest = context.get("quest");
                     final Action foundReward = quest.getRewards().get(ID);
-                    audience.sendMessage(Component.empty());
+                    context.getSender().sendMessage(Component.empty());
                     if (foundReward == null) {
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 errorGradient + "Invalid reward."
                         ));
                         return;
                     }
                     quest.removeReward(foundReward);
-                    audience.sendMessage(miniMessage.parse(
+                    context.getSender().sendMessage(miniMessage.parse(
                             successGradient + "The reward with the ID " + highlightGradient + ID + "</gradient> has been removed from the Quest "
                                     + highlight2Gradient + quest.getQuestName() + "</gradient>!</gradient>"
                     ));
@@ -1245,23 +1203,22 @@ public class AdminEditCommands {
                 .literal("show")
                 .meta(CommandMeta.DESCRIPTION, "Shows current reward Display Name.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final int ID = (int) context.get("Reward ID") - 1;
                     final Quest quest = context.get("quest");
                     final Action foundReward = quest.getRewards().get(ID);
-                    audience.sendMessage(Component.empty());
+                    context.getSender().sendMessage(Component.empty());
                     if (foundReward == null) {
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 errorGradient + "Invalid reward."
                         ));
                         return;
                     }
                     if (foundReward.getActionName().isBlank()) {
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 mainGradient + "This reward has no display name set."
                         ));
                     } else {
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 mainGradient + "Reward display name: " + highlightGradient + foundReward.getActionName() + "</gradient></gradient>"
                         ));
                     }
@@ -1271,20 +1228,19 @@ public class AdminEditCommands {
                 .literal("remove", "delete")
                 .meta(CommandMeta.DESCRIPTION, "Removes current reward Display Name.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final int ID = (int) context.get("Reward ID") - 1;
                     final Quest quest = context.get("quest");
                     final Action foundReward = quest.getRewards().get(ID);
-                    audience.sendMessage(Component.empty());
+                    context.getSender().sendMessage(Component.empty());
                     if (foundReward == null) {
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 errorGradient + "Invalid reward."
                         ));
                         return;
                     }
                     foundReward.removeActionName();
                     main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + (ID + 1) + ".displayName", null);
-                    audience.sendMessage(miniMessage.parse(
+                    context.getSender().sendMessage(miniMessage.parse(
                             successGradient + "Display Name of reward with the ID " + highlightGradient + ID + "</gradient> has been removed successfully.</gradient>"
                     ));
                 }));
@@ -1294,8 +1250,7 @@ public class AdminEditCommands {
                 .argument(StringArrayArgument.of("DisplayName",
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
-                            final Audience audience = main.adventure().sender(context.getSender());
-                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "<Enter new Reward display name>", "");
+                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "<Enter new Reward display name>", "");
                             ArrayList<String> completions = new ArrayList<>();
                             if (lastString.startsWith("{")) {
                                 completions.addAll(main.getCommandManager().getAdminCommands().placeholders);
@@ -1307,13 +1262,12 @@ public class AdminEditCommands {
                 ), ArgumentDescription.of("Reward display name"))
                 .meta(CommandMeta.DESCRIPTION, "Sets new reward Display Name. Only rewards with a Display Name will be displayed.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final int ID = (int) context.get("Reward ID") - 1;
                     final Quest quest = context.get("quest");
                     final Action foundReward = quest.getRewards().get(ID);
-                    audience.sendMessage(Component.empty());
+                    context.getSender().sendMessage(Component.empty());
                     if (foundReward == null) {
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 errorGradient + "Invalid reward."
                         ));
                         return;
@@ -1324,7 +1278,7 @@ public class AdminEditCommands {
 
                     foundReward.setActionName(displayName);
                     main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + (ID + 1) + ".displayName", foundReward.getActionName());
-                    audience.sendMessage(miniMessage.parse(
+                    context.getSender().sendMessage(miniMessage.parse(
                             successGradient + "Display Name successfully added to reward with ID " + highlightGradient + ID + "</gradient>! New display name: "
                                     + highlight2Gradient + foundReward.getActionName() + "</gradient></gradient>"
                     ));
@@ -1336,11 +1290,10 @@ public class AdminEditCommands {
         manager.command(builder.literal("clear")
                 .meta(CommandMeta.DESCRIPTION, "Removes all the triggers this Quest has.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
 
                     quest.removeAllTriggers();
-                    audience.sendMessage(miniMessage.parse(
+                    context.getSender().sendMessage(miniMessage.parse(
                             successGradient + "All Triggers of Quest " + highlightGradient + quest.getQuestName() + "</gradient> have been removed!</gradient>"
                     ));
 
@@ -1349,37 +1302,36 @@ public class AdminEditCommands {
         manager.command(builder.literal("list", "show")
                 .meta(CommandMeta.DESCRIPTION, "Lists all the triggers this Quest has.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
 
 
-                    audience.sendMessage(miniMessage.parse(highlightGradient + "Triggers for Quest " + highlight2Gradient + quest.getQuestName() + "</gradient>:</gradient>"));
+                    context.getSender().sendMessage(miniMessage.parse(highlightGradient + "Triggers for Quest " + highlight2Gradient + quest.getQuestName() + "</gradient>:</gradient>"));
 
                     int counter = 1;
                     for (Trigger trigger : quest.getTriggers()) {
-                        audience.sendMessage(miniMessage.parse(highlightGradient + counter + ". </gradient> Type: " + mainGradient + trigger.getTriggerType() + "</gradient>"));
+                        context.getSender().sendMessage(miniMessage.parse(highlightGradient + counter + ". </gradient> Type: " + mainGradient + trigger.getTriggerType() + "</gradient>"));
 
 
                         final String triggerDescription = trigger.getTriggerDescription();
                         if (triggerDescription != null && !triggerDescription.isBlank()) {
-                            audience.sendMessage(miniMessage.parse(unimportant + "-- " + unimportantClose + mainGradient + triggerDescription + "</gradient>"));
+                            context.getSender().sendMessage(miniMessage.parse(unimportant + "-- " + unimportantClose + mainGradient + triggerDescription + "</gradient>"));
                         }
 
-                        audience.sendMessage(miniMessage.parse(unimportant + "--- Action Name: " + unimportantClose + mainGradient + trigger.getTriggerAction().getActionName() + "</gradient>"));
-                        audience.sendMessage(miniMessage.parse(unimportant + "------ Description: " + unimportantClose + mainGradient + trigger.getTriggerAction().getActionDescription() + "</gradient>"));
-                        audience.sendMessage(miniMessage.parse(unimportant + "--- Amount of triggers needed for first execution: " + unimportantClose + mainGradient + trigger.getAmountNeeded() + "</gradient>"));
+                        context.getSender().sendMessage(miniMessage.parse(unimportant + "--- Action Name: " + unimportantClose + mainGradient + trigger.getTriggerAction().getActionName() + "</gradient>"));
+                        context.getSender().sendMessage(miniMessage.parse(unimportant + "------ Description: " + unimportantClose + mainGradient + trigger.getTriggerAction().getActionDescription() + "</gradient>"));
+                        context.getSender().sendMessage(miniMessage.parse(unimportant + "--- Amount of triggers needed for first execution: " + unimportantClose + mainGradient + trigger.getAmountNeeded() + "</gradient>"));
 
                         if (trigger.getApplyOn() == 0) {
-                            audience.sendMessage(miniMessage.parse(unimportant + "--- Apply on: " + unimportantClose + mainGradient + "Quest</gradient>"));
+                            context.getSender().sendMessage(miniMessage.parse(unimportant + "--- Apply on: " + unimportantClose + mainGradient + "Quest</gradient>"));
 
                         } else {
-                            audience.sendMessage(miniMessage.parse(unimportant + "--- Apply on: " + unimportantClose + mainGradient + "Objective " + trigger.getApplyOn() + "</gradient>"));
+                            context.getSender().sendMessage(miniMessage.parse(unimportant + "--- Apply on: " + unimportantClose + mainGradient + "Objective " + trigger.getApplyOn() + "</gradient>"));
                         }
 
                         if (trigger.getWorldName() == null || trigger.getWorldName().isBlank() || trigger.getWorldName().equalsIgnoreCase("ALL")) {
-                            audience.sendMessage(miniMessage.parse(unimportant + "--- In World: " + unimportantClose + mainGradient + "Any World</gradient>"));
+                            context.getSender().sendMessage(miniMessage.parse(unimportant + "--- In World: " + unimportantClose + mainGradient + "Any World</gradient>"));
                         } else {
-                            audience.sendMessage(miniMessage.parse(unimportant + "--- In World: " + unimportantClose + mainGradient + trigger.getWorldName() + "</gradient>"));
+                            context.getSender().sendMessage(miniMessage.parse(unimportant + "--- In World: " + unimportantClose + mainGradient + trigger.getWorldName() + "</gradient>"));
                         }
 
                         counter++;
@@ -1392,8 +1344,7 @@ public class AdminEditCommands {
                 .argument(IntegerArgument.<CommandSender>newBuilder("Trigger ID").withMin(1).withSuggestionsProvider(
                                 (context, lastString) -> {
                                     final List<String> allArgs = context.getRawInput();
-                                    final Audience audience = main.adventure().sender(context.getSender());
-                                    main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Trigger ID]", "");
+                                    main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Trigger ID]", "");
 
                                     ArrayList<String> completions = new ArrayList<>();
 
@@ -1417,12 +1368,11 @@ public class AdminEditCommands {
                         , ArgumentDescription.of("Trigger ID"))
                 .meta(CommandMeta.DESCRIPTION, "Removes all the triggers this Quest has.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
 
                     final int triggerID = context.get("Trigger ID");
 
-                    audience.sendMessage(miniMessage.parse(
+                    context.getSender().sendMessage(miniMessage.parse(
                             quest.removeTrigger(triggerID)
                     ));
 

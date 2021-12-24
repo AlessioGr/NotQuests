@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.structs;
+package rocks.gravili.notquests.paper.structs;
 
 /**
  * This is a special object for completed quests. Unlike the ActiveQuest object, it does not need to contain the progress, as it's already expected

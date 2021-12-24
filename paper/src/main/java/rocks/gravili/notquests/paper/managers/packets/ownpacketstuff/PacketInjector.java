@@ -1,8 +1,8 @@
-package rocks.gravili.notquests.managers.packets.ownpacketstuff;
+package rocks.gravili.notquests.paper.managers.packets.ownpacketstuff;
 
 import io.netty.channel.Channel;
 import org.bukkit.entity.Player;
-import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.paper.NotQuests;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

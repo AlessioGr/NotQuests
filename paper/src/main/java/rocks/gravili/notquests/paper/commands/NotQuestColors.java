@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.commands;
+package rocks.gravili.notquests.paper.commands;
 
 import net.kyori.adventure.text.format.TextColor;
 

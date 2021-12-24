@@ -16,21 +16,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.structs;
+package rocks.gravili.notquests.paper.structs;
 
 
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
-import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.events.notquests.ObjectiveCompleteEvent;
-import rocks.gravili.notquests.events.notquests.QuestFailEvent;
-import rocks.gravili.notquests.structs.actions.Action;
-import rocks.gravili.notquests.structs.objectives.EscortNPCObjective;
-import rocks.gravili.notquests.structs.objectives.Objective;
-import rocks.gravili.notquests.structs.triggers.ActiveTrigger;
-import rocks.gravili.notquests.structs.triggers.Trigger;
+import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.events.notquests.ObjectiveCompleteEvent;
+import rocks.gravili.notquests.paper.events.notquests.QuestFailEvent;
+import rocks.gravili.notquests.paper.structs.actions.Action;
+import rocks.gravili.notquests.paper.structs.objectives.EscortNPCObjective;
+import rocks.gravili.notquests.paper.structs.objectives.Objective;
+import rocks.gravili.notquests.paper.structs.triggers.ActiveTrigger;
+import rocks.gravili.notquests.paper.structs.triggers.Trigger;
 
 import java.util.ArrayList;
 import java.util.UUID;

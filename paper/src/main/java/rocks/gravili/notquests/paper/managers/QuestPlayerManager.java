@@ -16,12 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.managers;
+package rocks.gravili.notquests.paper.managers;
 
 import org.bukkit.entity.Player;
-import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.structs.*;
-import rocks.gravili.notquests.structs.triggers.ActiveTrigger;
+import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.structs.*;
+import rocks.gravili.notquests.paper.structs.triggers.ActiveTrigger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -30,7 +30,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
 
-import static rocks.gravili.notquests.commands.NotQuestColors.*;
+import static rocks.gravili.notquests.paper.commands.NotQuestColors.*;
 
 public class QuestPlayerManager {
     private final NotQuests main;

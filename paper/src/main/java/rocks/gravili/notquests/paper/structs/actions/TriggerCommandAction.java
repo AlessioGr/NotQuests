@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.structs.actions;
+package rocks.gravili.notquests.paper.structs.actions;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
@@ -27,13 +27,13 @@ import net.kyori.adventure.audience.Audience;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.structs.ActiveObjective;
-import rocks.gravili.notquests.structs.ActiveQuest;
-import rocks.gravili.notquests.structs.Quest;
-import rocks.gravili.notquests.structs.QuestPlayer;
-import rocks.gravili.notquests.structs.objectives.Objective;
-import rocks.gravili.notquests.structs.objectives.TriggerCommandObjective;
+import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.structs.ActiveObjective;
+import rocks.gravili.notquests.paper.structs.ActiveQuest;
+import rocks.gravili.notquests.paper.structs.Quest;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
+import rocks.gravili.notquests.paper.structs.objectives.Objective;
+import rocks.gravili.notquests.paper.structs.objectives.TriggerCommandObjective;
 
 import java.util.ArrayList;
 import java.util.List;

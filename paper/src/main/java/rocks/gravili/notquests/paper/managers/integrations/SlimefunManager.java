@@ -1,7 +1,7 @@
-package rocks.gravili.notquests.managers.integrations;
+package rocks.gravili.notquests.paper.managers.integrations;
 
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
-import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.paper.NotQuests;
 
 public class SlimefunManager {
     private final NotQuests main;

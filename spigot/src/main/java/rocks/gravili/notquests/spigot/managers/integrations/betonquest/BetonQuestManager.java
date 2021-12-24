@@ -22,7 +22,6 @@ import org.betonquest.betonquest.BetonQuest;
 import rocks.gravili.notquests.spigot.NotQuests;
 import rocks.gravili.notquests.spigot.managers.integrations.betonquest.conditions.BQRequirementsCondition;
 import rocks.gravili.notquests.spigot.managers.integrations.betonquest.events.*;
-import rocks.gravili.notquestsspigot.managers.integrations.betonquest.events.*;
 
 public class BetonQuestManager {
     private final NotQuests main;

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.managers;
+package rocks.gravili.notquests.paper.managers;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -28,13 +28,13 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.structs.ActiveObjective;
-import rocks.gravili.notquests.structs.ActiveQuest;
-import rocks.gravili.notquests.structs.Quest;
-import rocks.gravili.notquests.structs.QuestPlayer;
-import rocks.gravili.notquests.structs.objectives.Objective;
-import rocks.gravili.notquests.structs.triggers.Trigger;
+import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.structs.ActiveObjective;
+import rocks.gravili.notquests.paper.structs.ActiveQuest;
+import rocks.gravili.notquests.paper.structs.Quest;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
+import rocks.gravili.notquests.paper.structs.objectives.Objective;
+import rocks.gravili.notquests.paper.structs.triggers.Trigger;
 
 import java.io.*;
 import java.util.ArrayList;

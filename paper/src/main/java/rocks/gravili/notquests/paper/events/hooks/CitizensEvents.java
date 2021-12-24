@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.events.hooks;
+package rocks.gravili.notquests.paper.events.hooks;
 
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.event.CitizensEnableEvent;
@@ -33,15 +33,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
-import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.structs.ActiveObjective;
-import rocks.gravili.notquests.structs.ActiveQuest;
-import rocks.gravili.notquests.structs.QuestPlayer;
-import rocks.gravili.notquests.structs.objectives.DeliverItemsObjective;
-import rocks.gravili.notquests.structs.objectives.EscortNPCObjective;
-import rocks.gravili.notquests.structs.objectives.TalkToNPCObjective;
-import rocks.gravili.notquests.structs.triggers.ActiveTrigger;
-import rocks.gravili.notquests.structs.triggers.types.NPCDeathTrigger;
+import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.structs.ActiveObjective;
+import rocks.gravili.notquests.paper.structs.ActiveQuest;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
+import rocks.gravili.notquests.paper.structs.objectives.DeliverItemsObjective;
+import rocks.gravili.notquests.paper.structs.objectives.EscortNPCObjective;
+import rocks.gravili.notquests.paper.structs.objectives.TalkToNPCObjective;
+import rocks.gravili.notquests.paper.structs.triggers.ActiveTrigger;
+import rocks.gravili.notquests.paper.structs.triggers.types.NPCDeathTrigger;
 
 import java.util.Locale;
 
@@ -109,7 +109,6 @@ public class CitizensEvents implements Listener {
         final Player player = event.getClicker();
         final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
         if (questPlayer != null) {
-            Audience audience = main.adventure().player(player);
             if (questPlayer.getActiveQuests().size() > 0) {
                 for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                     for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
@@ -133,14 +132,14 @@ public class CitizensEvents implements Listener {
                                                 if (progressLeft < itemStack.getAmount()) { //We can finish it with this itemStack
                                                     itemStack.setAmount((itemStack.getAmount() - (int) progressLeft));
                                                     activeObjective.addProgress(progressLeft, npc.getId());
-                                                    audience.sendMessage(MiniMessage.miniMessage().parse(
+                                                    player.sendMessage(MiniMessage.miniMessage().parse(
                                                             "<GREEN>You have delivered <AQUA>" + progressLeft + "</AQUA> items to <AQUA>" + npc.getName()
                                                     ));
                                                     break;
                                                 } else {
                                                     player.getInventory().removeItem(itemStack);
                                                     activeObjective.addProgress(itemStack.getAmount(), npc.getId());
-                                                    audience.sendMessage(MiniMessage.miniMessage().parse(
+                                                    player.sendMessage(MiniMessage.miniMessage().parse(
                                                             "<GREEN>You have delivered <AQUA>" + itemStack.getAmount() + "</AQUA> items to <AQUA>" + npc.getName()
                                                     ));
                                                 }
@@ -153,7 +152,7 @@ public class CitizensEvents implements Listener {
                             } else if (activeObjective.getObjective() instanceof final TalkToNPCObjective talkToNPCObjective) {
                                 if (talkToNPCObjective.getNPCtoTalkID() != -1 && talkToNPCObjective.getNPCtoTalkID() == npc.getId()) {
                                     activeObjective.addProgress(1, npc.getId());
-                                    audience.sendMessage(MiniMessage.miniMessage().parse(
+                                    player.sendMessage(MiniMessage.miniMessage().parse(
                                             "<GREEN>You talked to <AQUA>" + npc.getName()
                                     ));
                                 }
@@ -163,7 +162,7 @@ public class CitizensEvents implements Listener {
                                     if (npcToEscort != null) {
                                         if (npcToEscort.isSpawned() && (npcToEscort.getEntity().getLocation().distance(player.getLocation()) < 6)) {
                                             activeObjective.addProgress(1, npc.getId());
-                                            audience.sendMessage(MiniMessage.miniMessage().parse(
+                                            player.sendMessage(MiniMessage.miniMessage().parse(
                                                     "<GREEN>You have successfully delivered the NPC <AQUA>" + npcToEscort.getName()
                                             ));
 
@@ -179,7 +178,7 @@ public class CitizensEvents implements Listener {
 
                                             npcToEscort.despawn();
                                         } else {
-                                            audience.sendMessage(MiniMessage.miniMessage().parse(
+                                            player.sendMessage(MiniMessage.miniMessage().parse(
                                                     "<RED>The NPC you have to escort is not close enough to you!"
                                             ));
                                         }

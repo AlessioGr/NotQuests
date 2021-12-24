@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.commands.arguments;
+package rocks.gravili.notquests.paper.commands.arguments;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.arguments.CommandArgument;
@@ -29,8 +29,8 @@ import org.bukkit.command.CommandSender;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jetbrains.annotations.NotNull;
-import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.conversation.Conversation;
+import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.conversation.Conversation;
 
 import java.util.List;
 import java.util.Queue;
@@ -115,10 +115,9 @@ public class ConversationSelector<C> extends CommandArgument<C, Conversation> {
             for (Conversation conversation : main.getConversationManager().getAllConversations()) {
                 questNames.add(conversation.getIdentifier());
             }
-            final Audience audience = main.adventure().sender((CommandSender) context.getSender());
             final List<String> allArgs = context.getRawInput();
 
-            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Conversation Name]", "[...]");
+            main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.getSender(), allArgs.toArray(new String[0]), "[Conversation Name]", "[...]");
 
             return questNames;
         }

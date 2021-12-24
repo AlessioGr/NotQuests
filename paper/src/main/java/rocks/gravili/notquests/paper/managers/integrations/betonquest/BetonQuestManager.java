@@ -16,12 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.managers.integrations.betonquest;
+package rocks.gravili.notquests.paper.managers.integrations.betonquest;
 
 import org.betonquest.betonquest.BetonQuest;
-import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.managers.integrations.betonquest.conditions.BQRequirementsCondition;
-import rocks.gravili.notquests.managers.integrations.betonquest.events.*;
+import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.managers.integrations.betonquest.conditions.BQRequirementsCondition;
+import rocks.gravili.notquests.paper.managers.integrations.betonquest.events.*;
 
 public class BetonQuestManager {
     private final NotQuests main;

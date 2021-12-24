@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.structs.objectives.hooks.elitemobs;
+package rocks.gravili.notquests.paper.structs.objectives.hooks.elitemobs;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
@@ -30,9 +30,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent;
-import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.structs.ActiveObjective;
-import rocks.gravili.notquests.structs.objectives.Objective;
+import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.structs.ActiveObjective;
+import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
 import java.util.ArrayList;
 import java.util.List;

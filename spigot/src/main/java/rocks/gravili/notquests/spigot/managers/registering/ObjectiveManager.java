@@ -30,7 +30,6 @@ import rocks.gravili.notquests.spigot.objectives.hooks.towny.TownyNationReachTow
 import rocks.gravili.notquests.spigot.objectives.hooks.towny.TownyReachResidentCountObjective;
 import rocks.gravili.notquests.spigot.NotQuests;
 import rocks.gravili.notquests.spigot.commands.NotQuestColors;
-import rocks.gravili.notquestsspigot.objectives.*;
 import rocks.gravili.notquests.spigot.objectives.hooks.elitemobs.KillEliteMobsObjective;
 import rocks.gravili.notquests.spigot.objectives.hooks.jobsreborn.JobsRebornReachJobLevel;
 import rocks.gravili.notquests.spigot.objectives.hooks.projectkorra.ProjectKorraUseAbilityObjective;

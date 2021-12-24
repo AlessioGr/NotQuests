@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.managers;
+package rocks.gravili.notquests.paper.managers;
 
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
@@ -31,11 +31,11 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.commands.NotQuestColors;
-import rocks.gravili.notquests.structs.Quest;
-import rocks.gravili.notquests.structs.actions.Action;
-import rocks.gravili.notquests.structs.objectives.Objective;
+import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.NotQuestColors;
+import rocks.gravili.notquests.paper.structs.Quest;
+import rocks.gravili.notquests.paper.structs.actions.Action;
+import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
 import java.io.*;
 import java.sql.Connection;

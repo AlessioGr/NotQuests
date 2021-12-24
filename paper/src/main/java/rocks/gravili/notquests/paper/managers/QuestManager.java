@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.managers;
+package rocks.gravili.notquests.paper.managers;
 
 import de.themoep.inventorygui.GuiElementGroup;
 import de.themoep.inventorygui.GuiPageElement;
@@ -41,20 +41,20 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.structs.ActiveObjective;
-import rocks.gravili.notquests.structs.ActiveQuest;
-import rocks.gravili.notquests.structs.Quest;
-import rocks.gravili.notquests.structs.QuestPlayer;
-import rocks.gravili.notquests.structs.actions.Action;
-import rocks.gravili.notquests.structs.conditions.Condition;
-import rocks.gravili.notquests.structs.objectives.Objective;
-import rocks.gravili.notquests.structs.triggers.Trigger;
+import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.structs.ActiveObjective;
+import rocks.gravili.notquests.paper.structs.ActiveQuest;
+import rocks.gravili.notquests.paper.structs.Quest;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
+import rocks.gravili.notquests.paper.structs.actions.Action;
+import rocks.gravili.notquests.paper.structs.conditions.Condition;
+import rocks.gravili.notquests.paper.structs.objectives.Objective;
+import rocks.gravili.notquests.paper.structs.triggers.Trigger;
 
 import java.util.ArrayList;
 import java.util.UUID;
 
-import static rocks.gravili.notquests.commands.NotQuestColors.*;
+import static rocks.gravili.notquests.paper.commands.NotQuestColors.*;
 
 
 public class QuestManager {

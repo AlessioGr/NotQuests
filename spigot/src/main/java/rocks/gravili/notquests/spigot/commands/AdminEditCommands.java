@@ -54,7 +54,7 @@ import rocks.gravili.notquests.spigot.structs.Quest;
 import java.util.ArrayList;
 import java.util.List;
 
-import static rocks.gravili.notquests.commands.NotQuestColors.*;
+import static rocks.gravili.notquests.spigot.commands.NotQuestColors.*;
 
 public class AdminEditCommands {
     private final NotQuests main;

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.events;
+package rocks.gravili.notquests.paper.events;
 
 
 import org.bukkit.Bukkit;
@@ -44,21 +44,21 @@ import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
-import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.commands.NotQuestColors;
-import rocks.gravili.notquests.conversation.ConversationPlayer;
-import rocks.gravili.notquests.events.notquests.other.PlayerJumpEvent;
-import rocks.gravili.notquests.structs.ActiveObjective;
-import rocks.gravili.notquests.structs.ActiveQuest;
-import rocks.gravili.notquests.structs.QuestPlayer;
-import rocks.gravili.notquests.structs.objectives.*;
-import rocks.gravili.notquests.structs.triggers.ActiveTrigger;
-import rocks.gravili.notquests.structs.triggers.types.WorldEnterTrigger;
-import rocks.gravili.notquests.structs.triggers.types.WorldLeaveTrigger;
+import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.NotQuestColors;
+import rocks.gravili.notquests.paper.conversation.ConversationPlayer;
+import rocks.gravili.notquests.paper.events.notquests.other.PlayerJumpEvent;
+import rocks.gravili.notquests.paper.structs.ActiveObjective;
+import rocks.gravili.notquests.paper.structs.ActiveQuest;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
+import rocks.gravili.notquests.paper.structs.objectives.*;
+import rocks.gravili.notquests.paper.structs.triggers.ActiveTrigger;
+import rocks.gravili.notquests.paper.structs.triggers.types.WorldEnterTrigger;
+import rocks.gravili.notquests.paper.structs.triggers.types.WorldLeaveTrigger;
 
 import java.util.Locale;
 
-import static rocks.gravili.notquests.commands.NotQuestColors.*;
+import static rocks.gravili.notquests.paper.commands.NotQuestColors.*;
 
 
 public class QuestEvents implements Listener {

@@ -16,13 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.managers.integrations;
+package rocks.gravili.notquests.paper.managers.integrations;
 
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.node.Node;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
-import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.paper.NotQuests;
 
 import java.util.UUID;
 

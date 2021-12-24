@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.managers;
+package rocks.gravili.notquests.paper.managers;
 
 import org.bukkit.Particle;
 import org.bukkit.inventory.ItemStack;

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.managers.integrations;
+package rocks.gravili.notquests.paper.managers.integrations;
 
 import cloud.commandframework.context.CommandContext;
 import com.sk89q.worldedit.IncompleteRegionException;
@@ -32,9 +32,9 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.commands.NotQuestColors;
-import rocks.gravili.notquests.structs.objectives.ReachLocationObjective;
+import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.NotQuestColors;
+import rocks.gravili.notquests.paper.structs.objectives.ReachLocationObjective;
 
 public class WorldEditManager {
     private final NotQuests main;
@@ -70,7 +70,7 @@ public class WorldEditManager {
 
 
         } catch (IncompleteRegionException ex) {
-            main.adventure().player(player).sendMessage(MiniMessage.miniMessage().parse(
+            player.sendMessage(MiniMessage.miniMessage().parse(
                     NotQuestColors.errorGradient + "Please make a region selection using WorldEdit first.</gradient>"
             ));
         }

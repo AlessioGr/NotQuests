@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.commands;
+package rocks.gravili.notquests.paper.commands;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
@@ -37,13 +37,13 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
-import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.commands.arguments.ConversationSelector;
-import rocks.gravili.notquests.commands.arguments.SpeakerSelector;
-import rocks.gravili.notquests.conversation.Conversation;
-import rocks.gravili.notquests.conversation.ConversationLine;
-import rocks.gravili.notquests.conversation.ConversationManager;
-import rocks.gravili.notquests.conversation.Speaker;
+import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.arguments.ConversationSelector;
+import rocks.gravili.notquests.paper.commands.arguments.SpeakerSelector;
+import rocks.gravili.notquests.paper.conversation.Conversation;
+import rocks.gravili.notquests.paper.conversation.ConversationLine;
+import rocks.gravili.notquests.paper.conversation.ConversationManager;
+import rocks.gravili.notquests.paper.conversation.Speaker;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -52,7 +52,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import static rocks.gravili.notquests.commands.NotQuestColors.*;
+import static rocks.gravili.notquests.paper.commands.NotQuestColors.*;
 
 public class AdminConversationCommands {
     protected final MiniMessage miniMessage = MiniMessage.miniMessage();
@@ -75,8 +75,7 @@ public class AdminConversationCommands {
                 .argument(StringArgument.<CommandSender>newBuilder("Conversation Name").withSuggestionsProvider(
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
-                            final Audience audience = main.adventure().sender(context.getSender());
-                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[New Conversation Name]", "");
+                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[New Conversation Name]", "");
 
                             ArrayList<String> completions = new ArrayList<>();
 
@@ -90,8 +89,6 @@ public class AdminConversationCommands {
                 )
                 .meta(CommandMeta.DESCRIPTION, "Creates a new conversation file.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-
                     final String conversationName = context.get("Conversation Name");
                     final boolean demo = context.flags().isPresent("demo");
 
@@ -104,7 +101,7 @@ public class AdminConversationCommands {
                         try {
                             if (!newConversationFile.exists()) {
                                 if (!newConversationFile.createNewFile()) {
-                                    audience.sendMessage(miniMessage.parse(
+                                    context.getSender().sendMessage(miniMessage.parse(
                                             errorGradient + "Error: couldn't create conversation file."
                                     ));
                                     return;
@@ -121,11 +118,11 @@ public class AdminConversationCommands {
                                     try (OutputStream outputStream = new FileOutputStream(newConversationFile)) {
                                         IOUtils.copy(inputStream, outputStream);
                                         main.getConversationManager().loadConversationsFromConfig();
-                                        audience.sendMessage(miniMessage.parse(
+                                        context.getSender().sendMessage(miniMessage.parse(
                                                 successGradient + "The conversation has been created successfully! There are currently no commands to edit them - you have to edit the conversation file. You can find it at " + highlightGradient + "plugins/NotQuests/conversations/" + conversationName + ".yml"
                                         ));
                                     } catch (Exception e) {
-                                        audience.sendMessage(miniMessage.parse(
+                                        context.getSender().sendMessage(miniMessage.parse(
                                                 errorGradient + "Error: couldn't create conversation file. There was an exception. (2)"
                                         ));
                                         return;
@@ -137,13 +134,13 @@ public class AdminConversationCommands {
 
 
                         } catch (Exception e) {
-                            audience.sendMessage(miniMessage.parse(
+                            context.getSender().sendMessage(miniMessage.parse(
                                     errorGradient + "Error: couldn't create conversation file. There was an exception."
                             ));
                         }
 
                     } else {
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 errorGradient + "Error: the conversation " + highlightGradient + existingConversation.getIdentifier() + "</gradient> already exists!"
                         ));
                     }
@@ -157,10 +154,9 @@ public class AdminConversationCommands {
                     .senderType(Player.class)
                     .meta(CommandMeta.DESCRIPTION, "Starts a test conversation.")
                     .handler((context) -> {
-                        final Audience audience = main.adventure().sender(context.getSender());
                         final Player player = (Player) context.getSender();
 
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 mainGradient + "Playing test conversation..."
                         ));
                         conversationManager.playConversation(player, conversationManager.createTestConversation());
@@ -171,22 +167,20 @@ public class AdminConversationCommands {
         manager.command(conversationBuilder.literal("list")
                 .meta(CommandMeta.DESCRIPTION, "Lists all conversations.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-
-                    audience.sendMessage(miniMessage.parse(
+                    context.getSender().sendMessage(miniMessage.parse(
                             highlightGradient + "All conversations:"
                     ));
                     int counter = 1;
                     for (final Conversation conversation : conversationManager.getAllConversations()) {
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 highlightGradient + counter + ". </gradient>" + mainGradient + conversation.getIdentifier()
                         ));
 
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 unimportant + "--- Attached to NPC: " + unimportantClose + mainGradient + conversation.getNPCID()
                         ));
 
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 unimportant + "--- Amount of starting conversation lines: " + unimportantClose + mainGradient + conversation.getStartingLines().size()
                         ));
                     }
@@ -201,8 +195,6 @@ public class AdminConversationCommands {
                 )
                 .meta(CommandMeta.DESCRIPTION, "Analyze specific conversations.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-
                     final Conversation foundConversation = context.get("conversation");
 
                     boolean printToConsole = context.flags().contains("printToConsole");
@@ -212,11 +204,11 @@ public class AdminConversationCommands {
 
                         if (printToConsole) {
                             main.getLogManager().info("\n" + analyzed);
-                            audience.sendMessage(miniMessage.parse(
+                            context.getSender().sendMessage(miniMessage.parse(
                                     successGradient + "Analyze Output has been printed to your console!"
                             ));
                         } else {
-                            audience.sendMessage(miniMessage.parse(
+                            context.getSender().sendMessage(miniMessage.parse(
                                     analyzed
                             ));
                         }
@@ -228,13 +220,12 @@ public class AdminConversationCommands {
                 .senderType(Player.class)
                 .meta(CommandMeta.DESCRIPTION, "Starts a conversation.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final Player player = (Player) context.getSender();
 
                     final Conversation foundConversation = context.get("conversation");
 
 
-                    audience.sendMessage(miniMessage.parse(
+                    context.getSender().sendMessage(miniMessage.parse(
                             mainGradient + "Playing " + foundConversation.getIdentifier() + " conversation..."
                     ));
                     conversationManager.playConversation(player, foundConversation);
@@ -252,21 +243,18 @@ public class AdminConversationCommands {
                             completions.add("" + npc.getId());
                         }
                         final List<String> allArgs = context.getRawInput();
-                        final Audience audience = main.adventure().sender(context.getSender());
-                        main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[NPC ID]", "");
+                        main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[NPC ID]", "");
 
                         return completions;
                     }).build(), ArgumentDescription.of("ID of the Citizens NPC which should start the conversation (set to -1 to disable)"))
                     .meta(CommandMeta.DESCRIPTION, "Set conversation NPC (-1 = disabled)")
                     .handler((context) -> {
-                        final Audience audience = main.adventure().sender(context.getSender());
-
                         final Conversation foundConversation = context.get("conversation");
                         final int npcID = context.get("NPC");
 
                         foundConversation.setNPC(npcID);
 
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 mainGradient + "NPC of conversation " + highlightGradient + foundConversation.getIdentifier() + "</gradient> has been set to "
                                         + highlight2Gradient + npcID + "</gradient>!"
                         ));
@@ -281,7 +269,6 @@ public class AdminConversationCommands {
                 .senderType(Player.class)
                 .meta(CommandMeta.DESCRIPTION, "Gives you an item to add conversation to an armorstand")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final Player player = (Player) context.getSender();
 
                     final Conversation foundConversation = context.get("conversation");
@@ -316,7 +303,7 @@ public class AdminConversationCommands {
 
                     player.getInventory().addItem(itemStack);
 
-                    audience.sendMessage(miniMessage.parse(
+                    context.getSender().sendMessage(miniMessage.parse(
                             successGradient + "You have been given an item with which you can add the conversation " + highlightGradient + foundConversation.getIdentifier() + "</gradient> to an armor stand. Check your inventory!"
                     ));
                 }));
@@ -328,7 +315,6 @@ public class AdminConversationCommands {
                 .senderType(Player.class)
                 .meta(CommandMeta.DESCRIPTION, "Gives you an item to remove all conversations from an armorstand")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final Player player = (Player) context.getSender();
 
 
@@ -360,7 +346,7 @@ public class AdminConversationCommands {
 
                     player.getInventory().addItem(itemStack);
 
-                    audience.sendMessage(miniMessage.parse(
+                    context.getSender().sendMessage(miniMessage.parse(
                             successGradient + "You have been given an item with which you remove all conversations from an armor stand. Check your inventory!"
                     ));
                 }));
@@ -373,8 +359,7 @@ public class AdminConversationCommands {
                 .argument(StringArgument.<CommandSender>newBuilder("Speaker Name").withSuggestionsProvider(
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
-                            final Audience audience = main.adventure().sender(context.getSender());
-                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[New Speaker Name]", "");
+                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[New Speaker Name]", "");
 
                             ArrayList<String> completions = new ArrayList<>();
 
@@ -385,8 +370,6 @@ public class AdminConversationCommands {
                 .flag(main.getCommandManager().speakerColor)
                 .meta(CommandMeta.DESCRIPTION, "Adds / creates a new speaker for the conversation.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-
                     final Conversation foundConversation = context.get("conversation");
 
 
@@ -399,12 +382,12 @@ public class AdminConversationCommands {
                     }
 
                     if (foundConversation.addSpeaker(speaker, true)) {
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 successGradient + "Speaker " + highlightGradient + speaker.getSpeakerName() + "</gradient> was successfully added to conversation "
                                         + highlight2Gradient + foundConversation.getIdentifier() + "</gradient>!"
                         ));
                     } else {
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 errorGradient + "Speaker " + highlightGradient + speaker.getSpeakerName() + "</gradient> could not be added to "
                                         + highlight2Gradient + foundConversation.getIdentifier() + "</gradient>! Does it already exist?"
                         ));
@@ -419,21 +402,19 @@ public class AdminConversationCommands {
                 .literal("list", "show")
                 .meta(CommandMeta.DESCRIPTION, "Adds / creates a new speaker for the conversation.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-
                     final Conversation foundConversation = context.get("conversation");
 
                     if (foundConversation.getSpeakers().size() == 0) {
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 successGradient + "This conversation has no speakers."
                         ));
                     } else {
-                        audience.sendMessage(miniMessage.parse(highlightGradient + "Speakers of conversation " + highlight2Gradient + foundConversation.getIdentifier() + "</gradient>:</gradient>"));
+                        context.getSender().sendMessage(miniMessage.parse(highlightGradient + "Speakers of conversation " + highlight2Gradient + foundConversation.getIdentifier() + "</gradient>:</gradient>"));
                         int counter = 0;
                         for (final Speaker speaker : foundConversation.getSpeakers()) {
                             counter++;
 
-                            audience.sendMessage(miniMessage.parse(highlightGradient + counter + ".</gradient> " + mainGradient + "Name:</gradient> " + highlight2Gradient + speaker.getSpeakerName() + "</gradient> Color: " + highlight2Gradient + speaker.getColor() + speaker.getColor().replace("<", "").replace(">", "") + "</gradient>"));
+                            context.getSender().sendMessage(miniMessage.parse(highlightGradient + counter + ".</gradient> " + mainGradient + "Name:</gradient> " + highlight2Gradient + speaker.getSpeakerName() + "</gradient> Color: " + highlight2Gradient + speaker.getColor() + speaker.getColor().replace("<", "").replace(">", "") + "</gradient>"));
                         }
                     }
 
@@ -447,8 +428,6 @@ public class AdminConversationCommands {
 
                 .meta(CommandMeta.DESCRIPTION, "Adds / creates a new speaker for the conversation.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-
                     final Conversation foundConversation = context.get("conversation");
 
 
@@ -457,12 +436,12 @@ public class AdminConversationCommands {
 
                     if (foundConversation.hasSpeaker(speaker) && foundConversation.removeSpeaker(speaker, true)) {
                         //TODO: Reload conversation here
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 successGradient + "Speaker " + highlightGradient + speaker.getSpeakerName() + "</gradient> was successfully removed from conversation "
                                         + highlight2Gradient + foundConversation.getIdentifier() + "</gradient>!"
                         ));
                     } else {
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 errorGradient + "Speaker " + highlightGradient + speaker.getSpeakerName() + "</gradient> could not be removed from "
                                         + highlight2Gradient + foundConversation.getIdentifier() + "</gradient>! Does it exist?"
                         ));

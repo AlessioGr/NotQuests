@@ -41,7 +41,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-import static rocks.gravili.notquests.commands.NotQuestColors.*;
+import static rocks.gravili.notquests.spigot.commands.NotQuestColors.*;
 
 public class ConversationManager {
     private final NotQuests main;

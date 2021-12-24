@@ -16,10 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.conversation;
+package rocks.gravili.notquests.paper.conversation;
 
 import org.bukkit.event.Listener;
-import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.paper.NotQuests;
 
 public class ConversationEvents implements Listener {
     private final NotQuests main;

@@ -7,8 +7,6 @@ import rocks.gravili.notquests.spigot.managers.integrations.betonquest.BetonQues
 import rocks.gravili.notquests.spigot.managers.integrations.citizens.CitizensManager;
 import rocks.gravili.notquests.spigot.placeholders.QuestPlaceholders;
 import rocks.gravili.notquests.spigot.NotQuests;
-import rocks.gravili.notquestsspigot.events.hooks.*;
-import rocks.gravili.notquestsspigot.managers.integrations.*;
 
 import java.util.Objects;
 

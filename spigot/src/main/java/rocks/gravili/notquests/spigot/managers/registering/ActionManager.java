@@ -31,14 +31,13 @@ import rocks.gravili.notquests.spigot.objectives.Objective;
 import rocks.gravili.notquests.spigot.structs.Quest;
 import rocks.gravili.notquests.spigot.structs.QuestPlayer;
 import rocks.gravili.notquests.spigot.structs.actions.*;
-import rocks.gravili.notquestsspigot.structs.actions.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
 
-import static rocks.gravili.notquests.commands.NotQuestColors.*;
+import static rocks.gravili.notquests.spigot.commands.NotQuestColors.*;
 
 public class ActionManager {
     private final NotQuests main;

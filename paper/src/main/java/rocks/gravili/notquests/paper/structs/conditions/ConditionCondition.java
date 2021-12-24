@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.structs.conditions;
+package rocks.gravili.notquests.paper.structs.conditions;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
@@ -27,14 +27,13 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.structs.QuestPlayer;
+import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static rocks.gravili.notquests.commands.NotQuestColors.errorGradient;
-import static rocks.gravili.notquests.commands.NotQuestColors.highlightGradient;
+import static rocks.gravili.notquests.paper.commands.NotQuestColors.*;
 
 
 public class ConditionCondition extends Condition {

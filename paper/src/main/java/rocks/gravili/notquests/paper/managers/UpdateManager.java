@@ -1,13 +1,13 @@
-package rocks.gravili.notquests.managers;
+package rocks.gravili.notquests.paper.managers;
 
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
-import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.structs.Quest;
-import rocks.gravili.notquests.structs.actions.ConsoleCommandAction;
-import rocks.gravili.notquests.structs.conditions.CompletedObjectiveCondition;
-import rocks.gravili.notquests.structs.objectives.Objective;
+import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.structs.Quest;
+import rocks.gravili.notquests.paper.structs.actions.ConsoleCommandAction;
+import rocks.gravili.notquests.paper.structs.conditions.CompletedObjectiveCondition;
+import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
 public class UpdateManager {
     final UpdateChecker updateChecker;

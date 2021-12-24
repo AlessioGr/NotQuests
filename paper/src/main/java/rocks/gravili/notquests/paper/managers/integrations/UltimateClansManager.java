@@ -1,9 +1,9 @@
-package rocks.gravili.notquests.managers.integrations;
+package rocks.gravili.notquests.paper.managers.integrations;
 
 import me.ulrich.clans.packets.interfaces.UClans;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.paper.NotQuests;
 
 public class UltimateClansManager {
     private final NotQuests main;

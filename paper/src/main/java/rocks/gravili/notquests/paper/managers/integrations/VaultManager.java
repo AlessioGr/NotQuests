@@ -1,10 +1,10 @@
-package rocks.gravili.notquests.managers.integrations;
+package rocks.gravili.notquests.paper.managers.integrations;
 
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.plugin.RegisteredServiceProvider;
-import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.paper.NotQuests;
 
 public class VaultManager {
     private final NotQuests main;

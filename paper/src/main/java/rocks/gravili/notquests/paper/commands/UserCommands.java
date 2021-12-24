@@ -1,4 +1,4 @@
-package rocks.gravili.notquests.commands;
+package rocks.gravili.notquests.paper.commands;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
@@ -8,7 +8,6 @@ import de.themoep.inventorygui.GuiElementGroup;
 import de.themoep.inventorygui.GuiPageElement;
 import de.themoep.inventorygui.InventoryGui;
 import de.themoep.inventorygui.StaticGuiElement;
-import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -19,13 +18,13 @@ import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.commands.arguments.ActiveQuestSelector;
-import rocks.gravili.notquests.commands.arguments.QuestSelector;
-import rocks.gravili.notquests.structs.ActiveObjective;
-import rocks.gravili.notquests.structs.ActiveQuest;
-import rocks.gravili.notquests.structs.Quest;
-import rocks.gravili.notquests.structs.QuestPlayer;
+import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.arguments.ActiveQuestSelector;
+import rocks.gravili.notquests.paper.commands.arguments.QuestSelector;
+import rocks.gravili.notquests.paper.structs.ActiveObjective;
+import rocks.gravili.notquests.paper.structs.ActiveQuest;
+import rocks.gravili.notquests.paper.structs.Quest;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 
 public class UserCommands {
@@ -76,7 +75,6 @@ public class UserCommands {
                 .argument(QuestSelector.<CommandSender>newBuilder("Quest Name", main).takeEnabledOnly().build(), ArgumentDescription.of("Quest Name"))
                 .meta(CommandMeta.DESCRIPTION, "Starts a Quest.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
 
                     final Quest quest = context.get("Quest Name");
 
@@ -84,19 +82,19 @@ public class UserCommands {
 
                     final String result = main.getQuestPlayerManager().acceptQuest(player, quest, true, true);
                     if (!result.equals("accepted")) {
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 result
                         ));
                     } else {
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 main.getLanguageManager().getString("chat.quest-successfully-accepted", player, quest)
                         ));
                         if (!quest.getQuestDescription().isBlank()) {
-                            audience.sendMessage(miniMessage.parse(
+                            context.getSender().sendMessage(miniMessage.parse(
                                     main.getLanguageManager().getString("chat.quest-description", player, quest)
                             ));
                         } else {
-                            audience.sendMessage(miniMessage.parse(
+                            context.getSender().sendMessage(miniMessage.parse(
                                     main.getLanguageManager().getString("chat.missing-quest-description", player)
                             ));
                         }
@@ -108,16 +106,15 @@ public class UserCommands {
                 .senderType(Player.class)
                 .meta(CommandMeta.DESCRIPTION, "Starts a Quest.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final Player player = (Player) context.getSender();
                     QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
 
                     if (questPlayer != null) {
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 main.getLanguageManager().getString("chat.questpoints.query", player, questPlayer)
                         ));
                     } else {
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 main.getLanguageManager().getString("chat.questpoints.none", player)
                         ));
                     }
@@ -291,7 +288,6 @@ public class UserCommands {
                 .handler((context) -> {
                     final Player player = (Player) context.getSender();
                     final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
-                    final Audience audience = main.adventure().player(player);
                     if (questPlayer != null) {
                         String[] guiSetup = {
                                 "zxxxxxxxx",
@@ -342,7 +338,7 @@ public class UserCommands {
 
                         gui.show(player);
                     } else {
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 main.getLanguageManager().getString("chat.no-quests-accepted", player)
                         ));
                     }
@@ -420,7 +416,6 @@ public class UserCommands {
                 .meta(CommandMeta.DESCRIPTION, "Aborts an active Quest")
                 .handler((context) -> {
                     final Player player = (Player) context.getSender();
-                    final Audience audience = main.adventure().player(player);
                     QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
                     if (questPlayer != null && questPlayer.getActiveQuests().size() > 0) {
                         final ActiveQuest activeQuest = context.get("Active Quest");
@@ -442,7 +437,7 @@ public class UserCommands {
                                 1,
                                 click -> {
                                     questPlayer.failQuest(activeQuest);
-                                    audience.sendMessage(miniMessage.parse(
+                                    context.getSender().sendMessage(miniMessage.parse(
                                             main.getLanguageManager().getString("chat.quest-aborted", player, activeQuest)
                                     ));
                                     gui.close();
@@ -463,7 +458,7 @@ public class UserCommands {
                         gui.show(player);
 
                     } else {
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 main.getLanguageManager().getString("chat.no-quests-accepted", player)
                         ));
                     }
@@ -577,7 +572,6 @@ public class UserCommands {
                 .meta(CommandMeta.DESCRIPTION, "Shows progress for an active Quest")
                 .handler((context) -> {
                     final Player player = (Player) context.getSender();
-                    final Audience audience = main.adventure().player(player);
                     QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
                     if (questPlayer != null && questPlayer.getActiveQuests().size() > 0) {
                         final ActiveQuest activeQuest = context.get("Active Quest");
@@ -670,7 +664,7 @@ public class UserCommands {
                         gui.show(player);
 
                     } else {
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 main.getLanguageManager().getString("chat.no-quests-accepted", player)
                         ));
                     }
@@ -682,10 +676,8 @@ public class UserCommands {
                 .senderType(Player.class)
                 .meta(CommandMeta.DESCRIPTION, "Opens NotQuests GUI.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-
-                    audience.sendMessage(Component.empty());
-                    audience.sendMessage(firstLevelCommands);
+                    context.getSender().sendMessage(Component.empty());
+                    context.getSender().sendMessage(firstLevelCommands);
                 }));
 
 
@@ -693,9 +685,7 @@ public class UserCommands {
                 .senderType(Player.class)
                 .meta(CommandMeta.DESCRIPTION, "Starts a Quest.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-
-                    audience.sendMessage(miniMessage.parse(
+                    context.getSender().sendMessage(miniMessage.parse(
                             "<RED>Please specify the <AQUA>name of the quest</AQUA> you wish to take.\n"
                                     + "<YELLOW>/nquests <GOLD>take <DARK_AQUA>[Quest Name]"
                     ));
@@ -707,22 +697,20 @@ public class UserCommands {
                 .meta(CommandMeta.DESCRIPTION, "Shows your active Quests.")
                 .handler((context) -> {
                     final Player player = (Player) context.getSender();
-                    final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
-                    final Audience audience = main.adventure().player(player);
-                    if (questPlayer != null) {
-                        audience.sendMessage(miniMessage.parse(
+                    final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());if (questPlayer != null) {
+                        context.getSender().sendMessage(miniMessage.parse(
                                 main.getLanguageManager().getString("chat.active-quests-label", player)
                         ));
                         int counter = 1;
                         for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-                            audience.sendMessage(miniMessage.parse(
+                            context.getSender().sendMessage(miniMessage.parse(
                                     "<GREEN>" + counter + ". <YELLOW>" + activeQuest.getQuest().getQuestFinalName()
                             ));
                             counter += 1;
                         }
 
                     } else {
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 main.getLanguageManager().getString("chat.no-quests-accepted", player)
                         ));
                     }
@@ -734,15 +722,13 @@ public class UserCommands {
                 .meta(CommandMeta.DESCRIPTION, "Aborts an active Quest.")
                 .handler((context) -> {
                     final Player player = (Player) context.getSender();
-                    final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
-                    final Audience audience = main.adventure().player(player);
-                    if (questPlayer != null) {
-                        audience.sendMessage(miniMessage.parse(
+                    final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());if (questPlayer != null) {
+                        context.getSender().sendMessage(miniMessage.parse(
                                 "<RED>Please specify the <AQUA>name of the quest</AQUA> you wish to abort (fail).\n"
                                         + "<YELLOW>/nquests <GOLD>abort <DARK_AQUA>[Quest Name]"
                         ));
                     } else {
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 main.getLanguageManager().getString("chat.no-quests-accepted", player)
                         ));
                     }
@@ -753,9 +739,7 @@ public class UserCommands {
                 .meta(CommandMeta.DESCRIPTION, "Shows a Preview for a Quest.")
                 .handler((context) -> {
                     final Player player = (Player) context.getSender();
-                    final Audience audience = main.adventure().player(player);
-
-                    audience.sendMessage(miniMessage.parse(
+                    context.getSender().sendMessage(miniMessage.parse(
                             "<RED>Please specify the <AQUA>name of the quest</AQUA> you wish to preview.\n"
                                     + "<YELLOW>/nquests <GOLD>preview <DARK_AQUA>[Quest Name]"
                     ));
@@ -768,18 +752,17 @@ public class UserCommands {
                 .meta(CommandMeta.DESCRIPTION, "Aborts an active Quest")
                 .handler((context) -> {
                     final Player player = (Player) context.getSender();
-                    final Audience audience = main.adventure().player(player);
                     QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
                     if (questPlayer != null && questPlayer.getActiveQuests().size() > 0) {
                         final ActiveQuest activeQuest = context.get("Active Quest");
 
                         questPlayer.failQuest(activeQuest);
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 main.getLanguageManager().getString("chat.quest-aborted", player, activeQuest)
                         ));
 
                     } else {
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 main.getLanguageManager().getString("chat.no-quests-accepted", player)
                         ));
                     }
@@ -804,22 +787,21 @@ public class UserCommands {
                 .meta(CommandMeta.DESCRIPTION, "Shows progress for an active Quest")
                 .handler((context) -> {
                     final Player player = (Player) context.getSender();
-                    final Audience audience = main.adventure().player(player);
                     QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
                     if (questPlayer != null && questPlayer.getActiveQuests().size() > 0) {
                         final ActiveQuest activeQuest = context.get("Active Quest");
 
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 "<GREEN>Completed Objectives for Quest <AQUA>" + activeQuest.getQuest().getQuestFinalName() + "<YELLOW>:"
                         ));
                         main.getQuestManager().sendCompletedObjectivesAndProgress(player, activeQuest);
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 "<GREEN>Active Objectives for Quest <AQUA>" + activeQuest.getQuest().getQuestFinalName() + "<YELLOW>:"
                         ));
                         main.getQuestManager().sendActiveObjectivesAndProgress(player, activeQuest);
 
                     } else {
-                        audience.sendMessage(miniMessage.parse(
+                        context.getSender().sendMessage(miniMessage.parse(
                                 main.getLanguageManager().getString("chat.no-quests-accepted", player)
                         ));
                     }

@@ -1,27 +1,28 @@
-package rocks.gravili.notquests;
+package rocks.gravili.notquests.paper;
 
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.AdvancedPie;
 import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
-import rocks.gravili.notquests.conversation.ConversationEvents;
-import rocks.gravili.notquests.conversation.ConversationManager;
-import rocks.gravili.notquests.events.ArmorStandEvents;
-import rocks.gravili.notquests.events.InventoryEvents;
-import rocks.gravili.notquests.events.QuestEvents;
-import rocks.gravili.notquests.events.TriggerEvents;
-import rocks.gravili.notquests.events.notquests.other.PlayerJumpEvent;
-import rocks.gravili.notquests.managers.*;
-import rocks.gravili.notquests.managers.packets.PacketManager;
-import rocks.gravili.notquests.managers.registering.ActionManager;
-import rocks.gravili.notquests.managers.registering.ConditionsManager;
-import rocks.gravili.notquests.managers.registering.ObjectiveManager;
-import rocks.gravili.notquests.managers.registering.TriggerManager;
-import rocks.gravili.notquests.structs.Quest;
-import rocks.gravili.notquests.structs.actions.Action;
-import rocks.gravili.notquests.structs.conditions.Condition;
-import rocks.gravili.notquests.structs.objectives.Objective;
-import rocks.gravili.notquests.structs.triggers.Trigger;
+import org.bukkit.plugin.java.JavaPlugin;
+import rocks.gravili.notquests.paper.conversation.ConversationEvents;
+import rocks.gravili.notquests.paper.conversation.ConversationManager;
+import rocks.gravili.notquests.paper.events.ArmorStandEvents;
+import rocks.gravili.notquests.paper.events.InventoryEvents;
+import rocks.gravili.notquests.paper.events.QuestEvents;
+import rocks.gravili.notquests.paper.events.TriggerEvents;
+import rocks.gravili.notquests.paper.events.notquests.other.PlayerJumpEvent;
+import rocks.gravili.notquests.paper.managers.*;
+import rocks.gravili.notquests.paper.managers.packets.PacketManager;
+import rocks.gravili.notquests.paper.managers.registering.ActionManager;
+import rocks.gravili.notquests.paper.managers.registering.ConditionsManager;
+import rocks.gravili.notquests.paper.managers.registering.ObjectiveManager;
+import rocks.gravili.notquests.paper.managers.registering.TriggerManager;
+import rocks.gravili.notquests.paper.structs.Quest;
+import rocks.gravili.notquests.paper.structs.actions.Action;
+import rocks.gravili.notquests.paper.structs.conditions.Condition;
+import rocks.gravili.notquests.paper.structs.objectives.Objective;
+import rocks.gravili.notquests.paper.structs.triggers.Trigger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +30,7 @@ import java.util.concurrent.Callable;
 
 public class NotQuests {
     private static NotQuests instance;
-    private final Main main;
+    private final JavaPlugin main;
 
     //Managers
     private UtilManager utilManager;
@@ -59,11 +60,11 @@ public class NotQuests {
     //Metrics
     private Metrics metrics;
 
-    public final Main getMain(){
+    public final JavaPlugin getMain(){
         return main;
     }
 
-    public NotQuests(Main main){
+    public NotQuests(JavaPlugin main){
         this.main = main;
     }
 

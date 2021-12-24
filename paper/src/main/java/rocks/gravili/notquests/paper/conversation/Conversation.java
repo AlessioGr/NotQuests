@@ -16,15 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.conversation;
+package rocks.gravili.notquests.paper.conversation;
 
 
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
 import org.bukkit.configuration.file.YamlConfiguration;
-import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.managers.integrations.citizens.QuestGiverNPCTrait;
+import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.managers.integrations.citizens.QuestGiverNPCTrait;
 
 import java.io.File;
 import java.io.IOException;

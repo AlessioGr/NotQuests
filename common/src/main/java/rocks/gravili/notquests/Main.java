@@ -32,14 +32,14 @@ public final class Main extends JavaPlugin {
 
     private static Main instance;
 
-    private rocks.gravili.notquests.NotQuests notQuests;
+    private rocks.gravili.notquests.paper.NotQuests notQuests;
     private rocks.gravili.notquests.spigot.NotQuests notQuestsSpigot;
 
 
     @Override
     public void onLoad() {
         if(PaperLib.isPaper()){
-            notQuests = new rocks.gravili.notquests.NotQuests(this);
+            notQuests = new rocks.gravili.notquests.paper.NotQuests(this);
             notQuests.onLoad();
         }else{
             notQuestsSpigot = new rocks.gravili.notquests.spigot.NotQuests(this);
@@ -47,7 +47,7 @@ public final class Main extends JavaPlugin {
         }
     }
 
-    public rocks.gravili.notquests.NotQuests getNotQuests(){
+    public rocks.gravili.notquests.paper.NotQuests getNotQuests(){
         return notQuests;
     }
     public rocks.gravili.notquests.spigot.NotQuests getNotQuestsSpigot(){

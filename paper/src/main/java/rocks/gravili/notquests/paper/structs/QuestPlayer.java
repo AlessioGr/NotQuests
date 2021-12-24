@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.structs;
+package rocks.gravili.notquests.paper.structs;
 
 
 import net.kyori.adventure.audience.Audience;
@@ -26,14 +26,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
-import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.commands.NotQuestColors;
-import rocks.gravili.notquests.events.notquests.QuestCompletedEvent;
-import rocks.gravili.notquests.events.notquests.QuestFinishAcceptEvent;
-import rocks.gravili.notquests.events.notquests.QuestPointsChangeEvent;
-import rocks.gravili.notquests.structs.actions.Action;
-import rocks.gravili.notquests.structs.conditions.Condition;
-import rocks.gravili.notquests.structs.objectives.OtherQuestObjective;
+import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.NotQuestColors;
+import rocks.gravili.notquests.paper.events.notquests.QuestCompletedEvent;
+import rocks.gravili.notquests.paper.events.notquests.QuestFinishAcceptEvent;
+import rocks.gravili.notquests.paper.events.notquests.QuestPointsChangeEvent;
+import rocks.gravili.notquests.paper.structs.actions.Action;
+import rocks.gravili.notquests.paper.structs.conditions.Condition;
+import rocks.gravili.notquests.paper.structs.objectives.OtherQuestObjective;
 
 import java.time.Duration;
 import java.util.ArrayList;

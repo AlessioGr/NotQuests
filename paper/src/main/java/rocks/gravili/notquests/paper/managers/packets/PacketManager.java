@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.managers.packets;
+package rocks.gravili.notquests.paper.managers.packets;
 
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.event.PacketListenerPriority;
@@ -30,9 +30,9 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.managers.packets.ownpacketstuff.PacketInjector;
-import rocks.gravili.notquests.managers.packets.packetevents.PacketEventsPacketListener;
+import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.managers.packets.ownpacketstuff.PacketInjector;
+import rocks.gravili.notquests.paper.managers.packets.packetevents.PacketEventsPacketListener;
 
 public class PacketManager implements Listener {
     private final NotQuests main;

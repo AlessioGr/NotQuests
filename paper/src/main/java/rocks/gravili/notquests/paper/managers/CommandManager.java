@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.managers;
+package rocks.gravili.notquests.paper.managers;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
@@ -31,6 +31,7 @@ import cloud.commandframework.bukkit.CloudBukkitCapabilities;
 import cloud.commandframework.bukkit.parsers.WorldArgument;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
 import cloud.commandframework.meta.CommandMeta;
+import cloud.commandframework.minecraft.extras.AudienceProvider;
 import cloud.commandframework.minecraft.extras.MinecraftExceptionHandler;
 import cloud.commandframework.minecraft.extras.MinecraftHelp;
 import cloud.commandframework.paper.PaperCommandManager;
@@ -43,15 +44,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
-import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.commands.*;
-import rocks.gravili.notquests.commands.arguments.ActionSelector;
-import rocks.gravili.notquests.commands.arguments.ApplyOnSelector;
-import rocks.gravili.notquests.commands.arguments.CommandSelector;
-import rocks.gravili.notquests.commands.arguments.QuestSelector;
-import rocks.gravili.notquests.conversation.ConversationManager;
-import rocks.gravili.notquests.structs.Quest;
-import rocks.gravili.notquests.structs.objectives.Objective;
+import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.*;
+import rocks.gravili.notquests.paper.commands.arguments.ActionSelector;
+import rocks.gravili.notquests.paper.commands.arguments.ApplyOnSelector;
+import rocks.gravili.notquests.paper.commands.arguments.CommandSelector;
+import rocks.gravili.notquests.paper.commands.arguments.QuestSelector;
+import rocks.gravili.notquests.paper.conversation.ConversationManager;
+import rocks.gravili.notquests.paper.structs.Quest;
+import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -240,6 +241,7 @@ public class CommandManager {
             return;
         }
 
+
         preSetupGeneralCommands();
         preSetupUserCommands();
         preSetupAdminCommands();
@@ -273,9 +275,10 @@ public class CommandManager {
     public void preSetupUserCommands() {
         minecraftUserHelp = new MinecraftHelp<>(
                 "/nq help",
-                main.adventure()::sender,
+                AudienceProvider.nativeAudience(),
                 commandManager
         );
+
 
         minecraftUserHelp.setHelpColors(MinecraftHelp.HelpColors.of(
                 NotQuestColors.main,
@@ -294,7 +297,7 @@ public class CommandManager {
 
         minecraftAdminHelp = new MinecraftHelp<>(
                 "/qa help",
-                main.adventure()::sender,
+                AudienceProvider.nativeAudience(),
                 commandManager
         );
 
@@ -337,8 +340,7 @@ public class CommandManager {
                 .argument(IntegerArgument.<CommandSender>newBuilder("Objective ID").withMin(1).withSuggestionsProvider(
                                 (context, lastString) -> {
                                     final List<String> allArgs = context.getRawInput();
-                                    final Audience audience = main.adventure().sender(context.getSender());
-                                    main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Objective ID]", "[...]");
+                                    main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Objective ID]", "[...]");
 
                                     ArrayList<String> completions = new ArrayList<>();
 
@@ -371,8 +373,7 @@ public class CommandManager {
                 .argument(StringArgument.<CommandSender>newBuilder("Action Identifier").withSuggestionsProvider(
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
-                            final Audience audience = main.adventure().sender(context.getSender());
-                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Action Identifier (name)]", "[...]");
+                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Action Identifier (name)]", "[...]");
 
                             return new ArrayList<>(main.getActionsYMLManager().getActionsAndIdentifiers().keySet());
 
@@ -391,8 +392,7 @@ public class CommandManager {
                 .argument(StringArgument.<CommandSender>newBuilder("Condition Identifier").withSuggestionsProvider(
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
-                            final Audience audience = main.adventure().sender(context.getSender());
-                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[New, unique Condition Identifier]", "...");
+                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[New, unique Condition Identifier]", "...");
 
                             ArrayList<String> completions = new ArrayList<>();
 
@@ -405,8 +405,7 @@ public class CommandManager {
                 .argument(StringArgument.<CommandSender>newBuilder("Action Identifier").withSuggestionsProvider(
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
-                            final Audience audience = main.adventure().sender(context.getSender());
-                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[New, unique Action Identifier]", "...");
+                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[New, unique Action Identifier]", "...");
 
                             ArrayList<String> completions = new ArrayList<>();
 
@@ -460,7 +459,7 @@ public class CommandManager {
                     return MiniMessage.miniMessage().parse(NotQuestColors.errorGradient + e.getMessage());
                 });
 
-        exceptionHandler.apply(commandManager, main.adventure()::sender);
+        exceptionHandler.apply(commandManager, AudienceProvider.nativeAudience());
 
 
         //User Stuff
@@ -482,9 +481,8 @@ public class CommandManager {
         //Help Menu
         commandManager.command(adminCommandBuilder.meta(CommandMeta.DESCRIPTION, "Opens the help menu").handler((context) -> {
             minecraftAdminHelp.queryCommands("qa *", context.getSender());
-            final Audience audience = main.adventure().sender(context.getSender());
-            final List<String> allArgs = context.getRawInput();
-            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[What would you like to do?]", "[...]");
+           final List<String> allArgs = context.getRawInput();
+            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[What would you like to do?]", "[...]");
 
         }));
         commandManager.command(

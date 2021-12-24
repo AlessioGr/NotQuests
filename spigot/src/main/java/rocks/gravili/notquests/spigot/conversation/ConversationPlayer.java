@@ -32,7 +32,7 @@ import rocks.gravili.notquests.spigot.structs.actions.Action;
 
 import java.util.ArrayList;
 
-import static rocks.gravili.notquests.commands.NotQuestColors.mainGradient;
+import static rocks.gravili.notquests.spigot.commands.NotQuestColors.*;
 
 public class ConversationPlayer {
     private final NotQuests main;

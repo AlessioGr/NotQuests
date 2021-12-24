@@ -52,7 +52,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import static rocks.gravili.notquests.commands.NotQuestColors.*;
+import static rocks.gravili.notquests.spigot.commands.NotQuestColors.*;
 
 public class AdminConversationCommands {
     protected final MiniMessage miniMessage = MiniMessage.miniMessage();

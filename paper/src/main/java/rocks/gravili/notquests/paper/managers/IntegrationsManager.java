@@ -1,12 +1,12 @@
-package rocks.gravili.notquests.managers;
+package rocks.gravili.notquests.paper.managers;
 
 import org.bukkit.Bukkit;
-import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.events.hooks.*;
-import rocks.gravili.notquests.managers.integrations.*;
-import rocks.gravili.notquests.managers.integrations.betonquest.BetonQuestManager;
-import rocks.gravili.notquests.managers.integrations.citizens.CitizensManager;
-import rocks.gravili.notquests.placeholders.QuestPlaceholders;
+import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.events.hooks.*;
+import rocks.gravili.notquests.paper.managers.integrations.*;
+import rocks.gravili.notquests.paper.managers.integrations.betonquest.BetonQuestManager;
+import rocks.gravili.notquests.paper.managers.integrations.citizens.CitizensManager;
+import rocks.gravili.notquests.paper.placeholders.QuestPlaceholders;
 
 import java.util.Objects;
 

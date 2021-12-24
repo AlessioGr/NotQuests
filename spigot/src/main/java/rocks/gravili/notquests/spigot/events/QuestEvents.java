@@ -55,11 +55,10 @@ import rocks.gravili.notquests.spigot.structs.triggers.ActiveTrigger;
 import rocks.gravili.notquests.spigot.structs.triggers.types.WorldEnterTrigger;
 import rocks.gravili.notquests.spigot.structs.triggers.types.WorldLeaveTrigger;
 import rocks.gravili.notquests.spigot.NotQuests;
-import rocks.gravili.notquestsspigot.objectives.*;
 
 import java.util.Locale;
 
-import static rocks.gravili.notquests.commands.NotQuestColors.*;
+import static rocks.gravili.notquests.spigot.commands.NotQuestColors.*;
 
 
 public class QuestEvents implements Listener {
@@ -69,11 +68,6 @@ public class QuestEvents implements Listener {
     public QuestEvents(NotQuests main) {
         this.main = main;
     }
-
-
-
-
-
 
 
 

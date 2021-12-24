@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.managers.registering;
+package rocks.gravili.notquests.paper.managers.registering;
 
 import cloud.commandframework.Command;
 import cloud.commandframework.context.CommandContext;
@@ -24,16 +24,16 @@ import cloud.commandframework.paper.PaperCommandManager;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
-import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.commands.NotQuestColors;
-import rocks.gravili.notquests.structs.Quest;
-import rocks.gravili.notquests.structs.objectives.*;
-import rocks.gravili.notquests.structs.objectives.hooks.elitemobs.KillEliteMobsObjective;
-import rocks.gravili.notquests.structs.objectives.hooks.jobsreborn.JobsRebornReachJobLevel;
-import rocks.gravili.notquests.structs.objectives.hooks.projectkorra.ProjectKorraUseAbilityObjective;
-import rocks.gravili.notquests.structs.objectives.hooks.slimefun.SlimefunResearchObjective;
-import rocks.gravili.notquests.structs.objectives.hooks.towny.TownyNationReachTownCountObjective;
-import rocks.gravili.notquests.structs.objectives.hooks.towny.TownyReachResidentCountObjective;
+import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.NotQuestColors;
+import rocks.gravili.notquests.paper.structs.Quest;
+import rocks.gravili.notquests.paper.structs.objectives.*;
+import rocks.gravili.notquests.paper.structs.objectives.hooks.elitemobs.KillEliteMobsObjective;
+import rocks.gravili.notquests.paper.structs.objectives.hooks.jobsreborn.JobsRebornReachJobLevel;
+import rocks.gravili.notquests.paper.structs.objectives.hooks.projectkorra.ProjectKorraUseAbilityObjective;
+import rocks.gravili.notquests.paper.structs.objectives.hooks.slimefun.SlimefunResearchObjective;
+import rocks.gravili.notquests.paper.structs.objectives.hooks.towny.TownyNationReachTownCountObjective;
+import rocks.gravili.notquests.paper.structs.objectives.hooks.towny.TownyReachResidentCountObjective;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -140,14 +140,13 @@ public class ObjectiveManager {
 
 
     public void addObjective(Objective objective, CommandContext<CommandSender> context) {
-        Audience audience = main.adventure().sender(context.getSender());
 
         Quest quest = context.getOrDefault("quest", null);
 
         if (quest != null) {
             objective.setQuest(quest);
             objective.setObjectiveID(quest.getObjectives().size() + 1);
-            audience.sendMessage(MiniMessage.miniMessage().parse(
+            context.getSender().sendMessage(MiniMessage.miniMessage().parse(
                     NotQuestColors.successGradient + getObjectiveType(objective.getClass()) + " Objective successfully added to Quest " + NotQuestColors.highlightGradient
                             + quest.getQuestName() + "</gradient>!</gradient>"
             ));

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.managers.registering;
+package rocks.gravili.notquests.paper.managers.registering;
 
 import cloud.commandframework.Command;
 import cloud.commandframework.context.CommandContext;
@@ -24,12 +24,12 @@ import cloud.commandframework.paper.PaperCommandManager;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
-import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.commands.NotQuestColors;
-import rocks.gravili.notquests.structs.Quest;
-import rocks.gravili.notquests.structs.actions.Action;
-import rocks.gravili.notquests.structs.triggers.Trigger;
-import rocks.gravili.notquests.structs.triggers.types.*;
+import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.NotQuestColors;
+import rocks.gravili.notquests.paper.structs.Quest;
+import rocks.gravili.notquests.paper.structs.actions.Action;
+import rocks.gravili.notquests.paper.structs.triggers.Trigger;
+import rocks.gravili.notquests.paper.structs.triggers.types.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -105,8 +105,6 @@ public class TriggerManager {
 
 
     public void addTrigger(Trigger trigger, CommandContext<CommandSender> context) {
-        Audience audience = main.adventure().sender(context.getSender());
-
         Quest quest = context.getOrDefault("quest", null);
 
         final Action action = context.get("action");
@@ -133,7 +131,7 @@ public class TriggerManager {
 
             quest.addTrigger(trigger, true);
 
-            audience.sendMessage(MiniMessage.miniMessage().parse(
+            context.getSender().sendMessage(MiniMessage.miniMessage().parse(
                     NotQuestColors.successGradient + getTriggerType(trigger.getClass()) + " Trigger successfully added to Quest " + NotQuestColors.highlightGradient
                             + quest.getQuestName() + "</gradient>!</gradient>"
             ));

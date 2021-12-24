@@ -33,8 +33,7 @@ import rocks.gravili.notquests.spigot.structs.QuestPlayer;
 import java.util.ArrayList;
 import java.util.List;
 
-import static rocks.gravili.notquests.commands.NotQuestColors.errorGradient;
-import static rocks.gravili.notquests.commands.NotQuestColors.highlightGradient;
+import static rocks.gravili.notquests.spigot.commands.NotQuestColors.*;
 
 
 public class ConditionCondition extends Condition {

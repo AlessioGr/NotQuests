@@ -29,7 +29,6 @@ import rocks.gravili.notquests.spigot.structs.ActiveQuest;
 import rocks.gravili.notquests.spigot.structs.QuestPlayer;
 import rocks.gravili.notquests.spigot.structs.triggers.ActiveTrigger;
 import rocks.gravili.notquests.spigot.NotQuests;
-import rocks.gravili.notquestsspigot.events.notquests.*;
 
 public class TriggerEvents implements Listener {
     private final NotQuests main;

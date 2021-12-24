@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.events;
+package rocks.gravili.notquests.paper.events;
 
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -28,7 +28,7 @@ import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
-import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.paper.NotQuests;
 
 public class InventoryEvents implements Listener {
     private final NotQuests main;

@@ -1,4 +1,4 @@
-package rocks.gravili.notquests.events.hooks;
+package rocks.gravili.notquests.paper.events.hooks;
 
 import com.palmergames.bukkit.towny.event.NationAddTownEvent;
 import com.palmergames.bukkit.towny.event.TownAddResidentEvent;
@@ -6,12 +6,12 @@ import com.palmergames.bukkit.towny.event.TownRemoveResidentEvent;
 import com.palmergames.bukkit.towny.object.Resident;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.structs.ActiveObjective;
-import rocks.gravili.notquests.structs.ActiveQuest;
-import rocks.gravili.notquests.structs.QuestPlayer;
-import rocks.gravili.notquests.structs.objectives.hooks.towny.TownyNationReachTownCountObjective;
-import rocks.gravili.notquests.structs.objectives.hooks.towny.TownyReachResidentCountObjective;
+import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.structs.ActiveObjective;
+import rocks.gravili.notquests.paper.structs.ActiveQuest;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
+import rocks.gravili.notquests.paper.structs.objectives.hooks.towny.TownyNationReachTownCountObjective;
+import rocks.gravili.notquests.paper.structs.objectives.hooks.towny.TownyReachResidentCountObjective;
 
 public class TownyEvents implements Listener {
     private final NotQuests main;

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.commands.arguments;
+package rocks.gravili.notquests.paper.commands.arguments;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.arguments.CommandArgument;
@@ -28,7 +28,7 @@ import net.kyori.adventure.audience.Audience;
 import org.bukkit.command.CommandSender;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.NotNull;
-import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.paper.NotQuests;
 
 import java.util.List;
 import java.util.Queue;
@@ -108,8 +108,6 @@ public class CommandSelector<C> extends CommandArgument<C, String[]> {
         @NotNull
         @Override
         public List<String> suggestions(@NotNull CommandContext<C> context, @NotNull String input) {
-            final Audience audience = main.adventure().sender((CommandSender) context.getSender());
-
             String cmd = context.getRawInputJoined().substring(
                     context.getRawInputJoined().indexOf("ConsoleCommand ") + 15
             );
@@ -140,7 +138,7 @@ public class CommandSelector<C> extends CommandArgument<C, String[]> {
             final List<String> allArgs = context.getRawInput();
 
 
-            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "<Enter Console Command>", "");
+            main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.getSender(), allArgs.toArray(new String[0]), "<Enter Console Command>", "");
 
 
             return completions;

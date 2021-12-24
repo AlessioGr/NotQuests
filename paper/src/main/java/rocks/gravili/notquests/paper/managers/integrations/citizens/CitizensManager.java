@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.managers.integrations.citizens;
+package rocks.gravili.notquests.paper.managers.integrations.citizens;
 
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
@@ -28,11 +28,11 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.conversation.Conversation;
-import rocks.gravili.notquests.structs.ActiveObjective;
-import rocks.gravili.notquests.structs.ActiveQuest;
-import rocks.gravili.notquests.structs.objectives.EscortNPCObjective;
+import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.conversation.Conversation;
+import rocks.gravili.notquests.paper.structs.ActiveObjective;
+import rocks.gravili.notquests.paper.structs.ActiveQuest;
+import rocks.gravili.notquests.paper.structs.objectives.EscortNPCObjective;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -160,7 +160,6 @@ public class CitizensManager {
             if (followerTrait != null) {
                 final Player player = Bukkit.getPlayer(activeQuest.getQuestPlayer().getUUID());
                 if (player != null) {
-                    Audience audience = main.adventure().player(player);
                     if (!npcToEscort.isSpawned()) {
                         npcToEscort.spawn(player.getLocation());
                     }
@@ -176,7 +175,7 @@ public class CitizensManager {
                         }
                     }
 
-                    audience.sendMessage(MiniMessage.miniMessage().parse(
+                    player.sendMessage(MiniMessage.miniMessage().parse(
                             "<GREEN>Escort quest started! Please escort <AQUA>" + npcToEscort.getName() + "</AQUA> to <AQUA>" + destinationNPC.getName() + "</AQUA>."
                     ));
                 } else {
@@ -187,8 +186,7 @@ public class CitizensManager {
             } else {
                 final Player player = Bukkit.getPlayer(activeQuest.getQuestPlayer().getUUID());
                 if (player != null) {
-                    Audience audience = main.adventure().player(player);
-                    audience.sendMessage(Component.text("The NPC you have to escort is not configured properly. Please consult an admin."));
+                    player.sendMessage(Component.text("The NPC you have to escort is not configured properly. Please consult an admin."));
                 }
                 main.getLogManager().warn("Error: The escort NPC with the ID <AQUA>" + npcToEscortID + "</AQUA> is not configured properly (Follow trait not found)!");
 
@@ -197,8 +195,7 @@ public class CitizensManager {
             if (destinationNPC == null) {
                 final Player player = Bukkit.getPlayer(activeQuest.getQuestPlayer().getUUID());
                 if (player != null) {
-                    Audience audience = main.adventure().player(player);
-                    audience.sendMessage(Component.text("The Destination NPC does not exist. Please consult an admin."));
+                    player.sendMessage(Component.text("The Destination NPC does not exist. Please consult an admin."));
                 }
                 main.getLogManager().warn("Error: The destination NPC with the ID <AQUA>" + npcToEscortID + "</AQUA> was not found!");
 
@@ -206,8 +203,7 @@ public class CitizensManager {
             if (npcToEscort == null) {
                 final Player player = Bukkit.getPlayer(activeQuest.getQuestPlayer().getUUID());
                 if (player != null) {
-                    Audience audience = main.adventure().player(player);
-                    audience.sendMessage(Component.text("The NPC you have to escort does not exist. Please consult an admin."));
+                    player.sendMessage(Component.text("The NPC you have to escort does not exist. Please consult an admin."));
                 }
                 main.getLogManager().warn("Error: The escort NPC with the ID <AQUA>" + npcToEscortID + "</AQUA> was not found!");
 

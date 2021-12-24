@@ -1,11 +1,11 @@
-package rocks.gravili.notquests.managers.packets.ownpacketstuff.wrappers;
+package rocks.gravili.notquests.paper.managers.packets.ownpacketstuff.wrappers;
 
 import io.netty.channel.ChannelHandlerContext;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.md_5.bungee.api.chat.BaseComponent;
-import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.managers.packets.ownpacketstuff.Reflection;
+import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.managers.packets.ownpacketstuff.Reflection;
 
 import java.lang.reflect.Method;
 import java.util.UUID;

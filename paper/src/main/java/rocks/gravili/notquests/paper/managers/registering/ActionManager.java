@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.managers.registering;
+package rocks.gravili.notquests.paper.managers.registering;
 
 import cloud.commandframework.Command;
 import cloud.commandframework.context.CommandContext;
@@ -24,20 +24,20 @@ import cloud.commandframework.paper.PaperCommandManager;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
-import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.commands.NotQuestColors;
-import rocks.gravili.notquests.structs.Quest;
-import rocks.gravili.notquests.structs.QuestPlayer;
-import rocks.gravili.notquests.structs.actions.*;
-import rocks.gravili.notquests.structs.conditions.Condition;
-import rocks.gravili.notquests.structs.objectives.Objective;
+import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.NotQuestColors;
+import rocks.gravili.notquests.paper.structs.Quest;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
+import rocks.gravili.notquests.paper.structs.actions.*;
+import rocks.gravili.notquests.paper.structs.conditions.Condition;
+import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
 
-import static rocks.gravili.notquests.commands.NotQuestColors.*;
+import static rocks.gravili.notquests.paper.commands.NotQuestColors.*;
 
 public class ActionManager {
     private final NotQuests main;
@@ -114,8 +114,6 @@ public class ActionManager {
     }
 
     public void addAction(Action action, CommandContext<CommandSender> context) {
-        Audience audience = main.adventure().sender(context.getSender());
-
         Quest quest = context.getOrDefault("quest", null);
         Objective objectiveOfQuest = null;
         if (quest != null && context.contains("Objective ID")) {
@@ -131,13 +129,13 @@ public class ActionManager {
 
                 objectiveOfQuest.addReward(action, true); //TODO: Also do addAction which are executed when the objective is unlocked (and not just when completed)
 
-                audience.sendMessage(MiniMessage.miniMessage().parse(
+                context.getSender().sendMessage(MiniMessage.miniMessage().parse(
                         NotQuestColors.successGradient + getActionType(action.getClass()) + " Reward successfully added to Objective " + NotQuestColors.highlightGradient
                                 + objectiveOfQuest.getObjectiveFinalName() + "</gradient>!</gradient>"));
             } else { //Quest Reward
                 quest.addReward(action, true);
 
-                audience.sendMessage(MiniMessage.miniMessage().parse(
+                context.getSender().sendMessage(MiniMessage.miniMessage().parse(
                         NotQuestColors.successGradient + getActionType(action.getClass()) + " Reward successfully added to Quest " + NotQuestColors.highlightGradient
                                 + quest.getQuestName() + "</gradient>!</gradient>"
                 ));
@@ -147,12 +145,12 @@ public class ActionManager {
 
                 if (main.getActionsYMLManager().getAction(actionIdentifier) == null) {
                     main.getActionsYMLManager().addAction(actionIdentifier, action);
-                    audience.sendMessage(MiniMessage.miniMessage().parse(
+                    context.getSender().sendMessage(MiniMessage.miniMessage().parse(
                             NotQuestColors.successGradient + getActionType(action.getClass()) + " Action with the name " + NotQuestColors.highlightGradient
                                     + actionIdentifier + "</gradient> has been created successfully!</gradient>"
                     ));
                 } else {
-                    audience.sendMessage(MiniMessage.miniMessage().parse(errorGradient + "Error! An action with the name " + highlightGradient + actionIdentifier + "</gradient> already exists!</gradient>"));
+                    context.getSender().sendMessage(MiniMessage.miniMessage().parse(errorGradient + "Error! An action with the name " + highlightGradient + actionIdentifier + "</gradient> already exists!</gradient>"));
 
                 }
             }
@@ -162,14 +160,14 @@ public class ActionManager {
     }
 
 
-    public void executeActionWithConditions(Action action, QuestPlayer questPlayer, Audience audience, boolean silent, Object... objects) {
+    public void executeActionWithConditions(Action action, QuestPlayer questPlayer, CommandSender sender, boolean silent, Object... objects) {
         main.getLogManager().debug("Executing Action with conditions!");
 
         if (action.getConditions().size() == 0) {
             main.getLogManager().debug("   Skipping Conditions");
             action.execute(questPlayer.getPlayer(), objects);
             if (!silent) {
-                audience.sendMessage(MiniMessage.miniMessage().parse(successGradient + "Action with the name " + highlightGradient + action.getActionName() + "</gradient> has been executed!</gradient>"));
+                sender.sendMessage(MiniMessage.miniMessage().parse(successGradient + "Action with the name " + highlightGradient + action.getActionName() + "</gradient> has been executed!</gradient>"));
             }
             return;
         }
@@ -185,7 +183,7 @@ public class ActionManager {
 
         if (!unfulfilledConditions.toString().isBlank()) {
             if (!silent) {
-                audience.sendMessage(MiniMessage.miniMessage().parse(errorGradient + "You do not fulfill all the conditions this action needs! Conditions still needed:" + unfulfilledConditions));
+                sender.sendMessage(MiniMessage.miniMessage().parse(errorGradient + "You do not fulfill all the conditions this action needs! Conditions still needed:" + unfulfilledConditions));
             }
         } else {
             main.getLogManager().debug("   All Conditions fulfilled!");
@@ -195,7 +193,7 @@ public class ActionManager {
             }
             action.execute(questPlayer.getPlayer(), objects);
             if (!silent) {
-                audience.sendMessage(MiniMessage.miniMessage().parse(successGradient + "Action with the name " + highlightGradient + action.getActionName() + "</gradient> has been executed!</gradient>"));
+                sender.sendMessage(MiniMessage.miniMessage().parse(successGradient + "Action with the name " + highlightGradient + action.getActionName() + "</gradient> has been executed!</gradient>"));
             }
         }
     }

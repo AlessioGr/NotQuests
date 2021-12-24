@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.structs.objectives.hooks.slimefun;
+package rocks.gravili.notquests.paper.structs.objectives.hooks.slimefun;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
@@ -26,9 +26,9 @@ import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.structs.ActiveObjective;
-import rocks.gravili.notquests.structs.objectives.Objective;
+import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.structs.ActiveObjective;
+import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
 public class SlimefunResearchObjective extends Objective {
 

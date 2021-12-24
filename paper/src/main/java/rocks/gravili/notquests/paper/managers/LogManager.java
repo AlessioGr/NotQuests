@@ -16,17 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.managers;
+package rocks.gravili.notquests.paper.managers;
 
-import io.papermc.lib.PaperLib;
-import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
-import rocks.gravili.notquests.NotQuests;
+import rocks.gravili.notquests.paper.NotQuests;
 
 import java.util.logging.Level;
 
@@ -39,13 +35,8 @@ public class LogManager {
     public LogManager(final NotQuests main) {
         this.main = main;
 
-        if (PaperLib.isPaper()) {
-            prefixText = "<#393e46>[<gradient:#E0EAFC:#CFDEF3>NotQuests<#393e46>]<#636c73>: ";
-            prefix = MiniMessage.miniMessage().parse(prefixText);
-        } else {
-            prefixText = "<DARK_GRAY>[<WHITE>NotQuests<DARK_GRAY>]<GRAY>: ";
-            prefix = MiniMessage.miniMessage().parse(prefixText);
-        }
+        prefixText = "<#393e46>[<gradient:#E0EAFC:#CFDEF3>NotQuests<#393e46>]<#636c73>: ";
+        prefix = MiniMessage.miniMessage().parse(prefixText);
     }
 
     public void lateInit() {

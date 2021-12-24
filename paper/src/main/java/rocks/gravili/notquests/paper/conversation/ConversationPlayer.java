@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.conversation;
+package rocks.gravili.notquests.paper.conversation;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
@@ -25,20 +25,19 @@ import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.entity.Player;
-import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.structs.QuestPlayer;
-import rocks.gravili.notquests.structs.actions.Action;
-import rocks.gravili.notquests.structs.conditions.Condition;
+import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
+import rocks.gravili.notquests.paper.structs.actions.Action;
+import rocks.gravili.notquests.paper.structs.conditions.Condition;
 
 import java.util.ArrayList;
 
-import static rocks.gravili.notquests.commands.NotQuestColors.mainGradient;
+import static rocks.gravili.notquests.paper.commands.NotQuestColors.*;
 
 public class ConversationPlayer {
     private final NotQuests main;
     private final QuestPlayer questPlayer;
     private final Player player;
-    private final Audience audience;
 
     private final Conversation conversation;
 
@@ -48,7 +47,6 @@ public class ConversationPlayer {
         this.main = main;
         this.questPlayer = questPlayer;
         this.player = player;
-        this.audience = main.adventure().player(player);
 
         this.conversation = conversation;
 
@@ -123,8 +121,8 @@ public class ConversationPlayer {
                 mainGradient + "Choose your answer:</gradient>"
 
         );
-        audience.sendMessage(Component.empty());
-        audience.sendMessage(component);
+        player.sendMessage(Component.empty());
+        player.sendMessage(component);
 
         if (main.getConfiguration().deletePreviousConversations) {
             ArrayList<Component> hist = main.getConversationManager().getConversationChatHistory().get(player.getUniqueId());
@@ -150,7 +148,7 @@ public class ConversationPlayer {
         }
 
 
-        audience.sendMessage(Component.empty());
+        player.sendMessage(Component.empty());
 
 
         return true;
@@ -213,12 +211,12 @@ public class ConversationPlayer {
             main.getConversationManager().getConversationChatHistory().put(player.getUniqueId(), hist);
         }
 
-        audience.sendMessage(line);
+        player.sendMessage(line);
 
         if (conversationLine.getActions() != null && conversationLine.getActions().size() > 0) {
             for (final Action action : conversationLine.getActions()) {
                 main.getLogManager().debug("Executing action for conversation line...");
-                main.getActionManager().executeActionWithConditions(action, questPlayer, audience, true);
+                main.getActionManager().executeActionWithConditions(action, questPlayer, player, true);
             }
         }
 
@@ -246,7 +244,7 @@ public class ConversationPlayer {
             main.getConversationManager().getConversationChatHistory().put(player.getUniqueId(), hist);
         }
 
-        audience.sendMessage(toSend);
+        player.sendMessage(toSend);
 
 
     }
@@ -266,7 +264,7 @@ public class ConversationPlayer {
                 if (playerOptionLine.getActions() != null && playerOptionLine.getActions().size() > 0) {
                     for (final Action action : playerOptionLine.getActions()) {
                         main.getLogManager().debug("Executing action for conversation line...");
-                        main.getActionManager().executeActionWithConditions(action, questPlayer, audience, true);
+                        main.getActionManager().executeActionWithConditions(action, questPlayer, player, true);
                     }
                 }
 
@@ -327,7 +325,7 @@ public class ConversationPlayer {
         }
         main.getLogManager().debug("Conversation stop stage 2");
 
-        final Audience audience = main.adventure().player(getQuestPlayer().getPlayer());
+        final Player player = getQuestPlayer().getPlayer();
 
 
         Component collectiveComponent = Component.text("");
@@ -338,7 +336,7 @@ public class ConversationPlayer {
                 collectiveComponent = collectiveComponent.append(component).append(Component.newline());
             }
         }
-        audience.sendMessage(collectiveComponent);
+        player.sendMessage(collectiveComponent);
 
         allChatHistory.removeAll(allConversationHistory);
         allConversationHistory.clear();

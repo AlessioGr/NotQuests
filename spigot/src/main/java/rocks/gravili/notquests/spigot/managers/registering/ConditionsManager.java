@@ -32,7 +32,6 @@ import rocks.gravili.notquests.spigot.conditions.hooks.towny.TownyTownResidentCo
 import rocks.gravili.notquests.spigot.conditions.hooks.ultimateclans.UltimateClansClanLevelCondition;
 import rocks.gravili.notquests.spigot.NotQuests;
 import rocks.gravili.notquests.spigot.commands.NotQuestColors;
-import rocks.gravili.notquestsspigot.conditions.*;
 import rocks.gravili.notquests.spigot.objectives.Objective;
 import rocks.gravili.notquests.spigot.structs.Quest;
 import rocks.gravili.notquests.spigot.structs.actions.Action;
@@ -42,8 +41,7 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
 
-import static rocks.gravili.notquests.commands.NotQuestColors.errorGradient;
-import static rocks.gravili.notquests.commands.NotQuestColors.highlightGradient;
+import static rocks.gravili.notquests.spigot.commands.NotQuestColors.*;
 
 public class ConditionsManager {
     private final NotQuests main;

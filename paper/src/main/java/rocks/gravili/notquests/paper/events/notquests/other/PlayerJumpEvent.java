@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.events.notquests.other;
+package rocks.gravili.notquests.paper.events.notquests.other;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Statistic;

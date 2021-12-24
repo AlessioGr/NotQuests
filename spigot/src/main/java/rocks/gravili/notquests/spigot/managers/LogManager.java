@@ -18,9 +18,7 @@
 
 package rocks.gravili.notquests.spigot.managers;
 
-import io.papermc.lib.PaperLib;
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
@@ -32,19 +30,12 @@ import java.util.logging.Level;
 public class LogManager {
     private final NotQuests main;
     private Audience consoleSender;
-    private final Component prefix;
     private final String prefixText;
 
     public LogManager(final NotQuests main) {
         this.main = main;
 
-        if (PaperLib.isPaper()) {
-            prefixText = "<#393e46>[<gradient:#E0EAFC:#CFDEF3>NotQuests<#393e46>]<#636c73>: ";
-            prefix = MiniMessage.miniMessage().parse(prefixText);
-        } else {
-            prefixText = "<DARK_GRAY>[<WHITE>NotQuests<DARK_GRAY>]<GRAY>: ";
-            prefix = MiniMessage.miniMessage().parse(prefixText);
-        }
+        prefixText = "<DARK_GRAY>[<WHITE>NotQuests<DARK_GRAY>]<GRAY>: ";
     }
 
     public void lateInit() {
@@ -69,23 +60,11 @@ public class LogManager {
 
     public void info(final LogCategory logCategory, final String message) {
         if (logCategory == LogCategory.DEFAULT) {
-            if (PaperLib.isPaper()) {
-                log(Level.INFO, logCategory, "<gradient:#37a659:#56B4D3>", message);
-            } else {
-                log(Level.INFO, logCategory, "<GREEN>", message);
-            }
+            log(Level.INFO, logCategory, "<GREEN>", message);
         } else if (logCategory == LogCategory.DATA) {
-            if (PaperLib.isPaper()) {
-                log(Level.INFO, logCategory, "<gradient:#1FA2FF:#12D8FA:#A6FFCB>", message);
-            } else {
-                log(Level.INFO, logCategory, "<BLUE>", message);
-            }
+            log(Level.INFO, logCategory, "<BLUE>", message);
         } else if (logCategory == LogCategory.LANGUAGE) {
-            if (PaperLib.isPaper()) {
-                log(Level.INFO, logCategory, "<gradient:#AA076B:#61045F>", message);
-            } else {
-                log(Level.INFO, logCategory, "<DARK_PURPLE>", message);
-            }
+            log(Level.INFO, logCategory, "<DARK_PURPLE>", message);
         }
     }
 

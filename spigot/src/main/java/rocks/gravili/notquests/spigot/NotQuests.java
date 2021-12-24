@@ -5,7 +5,7 @@ import org.bstats.bukkit.Metrics;
 import org.bstats.charts.AdvancedPie;
 import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
-import rocks.gravili.notquests.Main;
+import org.bukkit.plugin.java.JavaPlugin;
 import rocks.gravili.notquests.spigot.conditions.Condition;
 import rocks.gravili.notquests.spigot.conversation.ConversationEvents;
 import rocks.gravili.notquests.spigot.conversation.ConversationManager;
@@ -31,7 +31,7 @@ import java.util.concurrent.Callable;
 
 public class NotQuests {
     private static NotQuests instance;
-    private final Main main;
+    private final JavaPlugin main;
 
     //Managers
     private UtilManager utilManager;
@@ -64,11 +64,11 @@ public class NotQuests {
 
     private BukkitAudiences adventure;
 
-    public NotQuests(Main main){
+    public NotQuests(JavaPlugin main){
         this.main = main;
     }
 
-    public final Main getMain(){
+    public final JavaPlugin getMain(){
         return main;
     }
 

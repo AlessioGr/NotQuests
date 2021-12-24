@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.managers.integrations.citizens;
+package rocks.gravili.notquests.paper.managers.integrations.citizens;
 
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.util.DataKey;
@@ -25,10 +25,9 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.plugin.java.JavaPlugin;
-import rocks.gravili.notquests.Main;
-import rocks.gravili.notquests.NotQuests;
-import rocks.gravili.notquests.conversation.Conversation;
-import rocks.gravili.notquests.structs.Quest;
+import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.conversation.Conversation;
+import rocks.gravili.notquests.paper.structs.Quest;
 
 /**
  * This handles the QuestGiver NPC Trait which is given directly to Citizens NPCs via their API.
@@ -43,13 +42,13 @@ import rocks.gravili.notquests.structs.Quest;
  */
 public class QuestGiverNPCTrait extends Trait {
 
-    Main plugin = null;
+    NotQuests notQuests;
 
     private int particleTimer = 0;
 
-    public QuestGiverNPCTrait() {
+    public QuestGiverNPCTrait(final NotQuests notQuests) {
         super("nquestgiver");
-        plugin = JavaPlugin.getPlugin(Main.class);
+        this.notQuests = notQuests;
     }
 
     // Here you should load up any values you have previously saved (optional).
@@ -79,12 +78,12 @@ public class QuestGiverNPCTrait extends Trait {
         //npc.getTrait(FollowTrait.class) new FollowTrait();
         if (event.getNPC() == this.getNPC()) {
             final Player player = event.getClicker();
-            plugin.getNotQuests().getQuestManager().sendQuestsPreviewOfQuestShownNPCs(getNPC(), player);
+            notQuests.getQuestManager().sendQuestsPreviewOfQuestShownNPCs(getNPC(), player);
 
             //Conversations
-            final Conversation foundConversation = plugin.getNotQuests().getConversationManager().getConversationForNPCID(getNPC().getId());
+            final Conversation foundConversation = notQuests.getConversationManager().getConversationForNPCID(getNPC().getId());
             if (foundConversation != null) {
-                plugin.getNotQuests().getConversationManager().playConversation(player, foundConversation);
+                notQuests.getConversationManager().playConversation(player, foundConversation);
             }
         }
 
@@ -98,21 +97,21 @@ public class QuestGiverNPCTrait extends Trait {
     public void run() {
 
         //Disable if Server TPS is too low
-        final double minimumTPS = plugin.getNotQuests().getDataManager().getConfiguration().getCitizensNPCQuestGiverIndicatorParticleDisableIfTPSBelow();
+        final double minimumTPS = notQuests.getDataManager().getConfiguration().getCitizensNPCQuestGiverIndicatorParticleDisableIfTPSBelow();
         if (minimumTPS >= 0) {
-            if (plugin.getNotQuests().getPerformanceManager().getTPS() < minimumTPS) {
+            if (notQuests.getPerformanceManager().getTPS() < minimumTPS) {
                 return;
             }
         }
 
-        if (plugin.getNotQuests().getDataManager().getConfiguration().isCitizensNPCQuestGiverIndicatorParticleEnabled() && npc.isSpawned()) {
-            if (particleTimer >= plugin.getNotQuests().getDataManager().getConfiguration().getCitizensNPCQuestGiverIndicatorParticleSpawnInterval()) {
+        if (notQuests.getDataManager().getConfiguration().isCitizensNPCQuestGiverIndicatorParticleEnabled() && npc.isSpawned()) {
+            if (particleTimer >= notQuests.getDataManager().getConfiguration().getCitizensNPCQuestGiverIndicatorParticleSpawnInterval()) {
                 particleTimer = 0;
 
                 final Entity npcEntity = getNPC().getEntity();
                 final Location location = npcEntity.getLocation();
 
-                npcEntity.getWorld().spawnParticle(plugin.getNotQuests().getDataManager().getConfiguration().getCitizensNPCQuestGiverIndicatorParticleType(), location.getX() - 0.25 + (Math.random() / 2), location.getY() + 1.75 + (Math.random() / 2), location.getZ() - 0.25 + (Math.random() / 2), plugin.getNotQuests().getDataManager().getConfiguration().getCitizensNPCQuestGiverIndicatorParticleCount());
+                npcEntity.getWorld().spawnParticle(notQuests.getDataManager().getConfiguration().getCitizensNPCQuestGiverIndicatorParticleType(), location.getX() - 0.25 + (Math.random() / 2), location.getY() + 1.75 + (Math.random() / 2), location.getZ() - 0.25 + (Math.random() / 2), notQuests.getDataManager().getConfiguration().getCitizensNPCQuestGiverIndicatorParticleCount());
 
                 //System.out.println("§eSpawned particle!");
             }
@@ -130,7 +129,7 @@ public class QuestGiverNPCTrait extends Trait {
      */
     @Override
     public void onAttach() {
-        plugin.getNotQuests().getLogManager().info("NPC with the ID <AQUA>" + npc.getId() + "</AQUA> and name <AQUA>" + npc.getName() + "</AQUA> has been assigned the Quest Giver trait!");
+        notQuests.getLogManager().info("NPC with the ID <AQUA>" + npc.getId() + "</AQUA> and name <AQUA>" + npc.getName() + "</AQUA> has been assigned the Quest Giver trait!");
     }
 
     // Run code when the NPC is despawned. This is called before the entity actually despawns so npc.getEntity() is still valid.
@@ -154,8 +153,8 @@ public class QuestGiverNPCTrait extends Trait {
     @Override
     public void onRemove() {
         //REMOVEEEE FROM QUEST
-        plugin.getNotQuests().getLogManager().info("NPC with the ID <AQUA>" + npc.getId() + " </AQUA>and name <AQUA>" + npc.getName() + " </AQUA>has been removed!");
-        for (Quest quest : plugin.getNotQuests().getQuestManager().getAllQuestsAttachedToNPC(getNPC())) {
+        notQuests.getLogManager().info("NPC with the ID <AQUA>" + npc.getId() + " </AQUA>and name <AQUA>" + npc.getName() + " </AQUA>has been removed!");
+        for (Quest quest : notQuests.getQuestManager().getAllQuestsAttachedToNPC(getNPC())) {
             quest.removeNPC(getNPC());
         }
     }

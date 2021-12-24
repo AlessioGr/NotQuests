@@ -54,7 +54,7 @@ import rocks.gravili.notquests.spigot.structs.QuestPlayer;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import static rocks.gravili.notquests.commands.NotQuestColors.*;
+import static rocks.gravili.notquests.spigot.commands.NotQuestColors.*;
 
 
 public class QuestManager {
