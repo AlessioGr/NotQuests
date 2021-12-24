@@ -1,2 +1,5 @@
 rootProject.name = 'notquests'
-include("spigot")
+
+include ':common'
+include ':paper'
+include ':spigot'
