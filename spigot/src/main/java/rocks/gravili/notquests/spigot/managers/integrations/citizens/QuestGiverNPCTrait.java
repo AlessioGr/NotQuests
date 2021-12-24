@@ -47,7 +47,7 @@ public class QuestGiverNPCTrait extends Trait {
 
     public QuestGiverNPCTrait(NotQuests main) {
         super("nquestgiver");
-        this.main = main;
+        this.main = NotQuests.getInstance();
     }
 
     // Here you should load up any values you have previously saved (optional).

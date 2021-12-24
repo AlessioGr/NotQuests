@@ -46,9 +46,9 @@ public class QuestGiverNPCTrait extends Trait {
 
     private int particleTimer = 0;
 
-    public QuestGiverNPCTrait(final NotQuests notQuests) {
+    public QuestGiverNPCTrait() {
         super("nquestgiver");
-        this.notQuests = notQuests;
+        this.notQuests = NotQuests.getInstance();
     }
 
     // Here you should load up any values you have previously saved (optional).
