@@ -171,9 +171,9 @@ public class DataManager {
 
     public void prepareDataFolder(){
         //Create the Data Folder if it does not exist yet (the NotQuests folder)
-        if (!main.getDataFolder().exists()) {
+        if (!main.getMain().getDataFolder().exists()) {
             main.getLogManager().info("Data Folder not found. Creating a new one...");
-            if (!main.getDataFolder().mkdirs()) {
+            if (!main.getMain().getDataFolder().mkdirs()) {
                 disablePluginAndSaving("There was an error creating the NotQuests data folder.");
             }
         }
@@ -191,7 +191,7 @@ public class DataManager {
             //Create the Data Folder if it does not exist yet (the NotQuests folder)
             prepareDataFolder();
 
-            questsConfigFile = new File(main.getDataFolder(), "quests.yml");
+            questsConfigFile = new File(main.getMain().getDataFolder(), "quests.yml");
             if (!questsConfigFile.exists()) {
                 main.getLogManager().info("Quests Configuration (quests.yml) does not exist. Creating a new one...");
                 try {
@@ -235,7 +235,7 @@ public class DataManager {
             //Create the Data Folder if it does not exist yet (the NotQuests folder)
             prepareDataFolder();
 
-            generalConfigFile = new File(main.getDataFolder(), "general.yml");
+            generalConfigFile = new File(main.getMain().getDataFolder(), "general.yml");
 
             if (!generalConfigFile.exists()) {
                 main.getLogManager().info("General Configuration (general.yml) does not exist. Creating a new one...");
@@ -248,7 +248,7 @@ public class DataManager {
                     main.getLogManager().info("Loading default <AQUA>general.yml</AQUA>...");
 
                     //Instead of creating a new general.yml file, we will copy the one from inside of the plugin jar into the plugin folder:
-                    InputStream inputStream = main.getResource("general.yml");
+                    InputStream inputStream = main.getMain().getResource("general.yml");
                     if (inputStream != null) {
                         try (OutputStream outputStream = new FileOutputStream(generalConfigFile)) {
                             IOUtils.copy(inputStream, outputStream);
@@ -903,7 +903,7 @@ public class DataManager {
         main.getLogManager().severe("Plugin, saving and loading has been disabled. Reason: " + reason);
         setSavingEnabled(false);
         setLoadingEnabled(false);
-        main.getServer().getPluginManager().disablePlugin(main);
+        main.getMain().getServer().getPluginManager().disablePlugin(main.getMain());
     }
 
     public void disablePluginAndSaving(final String reason, Object... objects) {
@@ -924,7 +924,7 @@ public class DataManager {
         }
         setSavingEnabled(false);
         setLoadingEnabled(false);
-        main.getServer().getPluginManager().disablePlugin(main);
+        main.getMain().getServer().getPluginManager().disablePlugin(main.getMain());
     }
 
     /**
@@ -961,7 +961,7 @@ public class DataManager {
     public void refreshDatabaseConnection(final boolean newTask) {
         if (newTask) {
             if (Bukkit.isPrimaryThread()) {
-                Bukkit.getScheduler().runTaskAsynchronously(main, () -> {
+                Bukkit.getScheduler().runTaskAsynchronously(main.getMain(), () -> {
                     openConnection();
                     try {
                         statement = connection.createStatement();
@@ -1009,7 +1009,7 @@ public class DataManager {
             }
 
             if (Bukkit.isPrimaryThread()) {
-                Bukkit.getScheduler().runTaskAsynchronously(main, () -> {
+                Bukkit.getScheduler().runTaskAsynchronously(main.getMain(), () -> {
                     reloadData2();
                     currentlyLoading = false;
                 });
@@ -1143,7 +1143,7 @@ public class DataManager {
                 return;
             }
             if(!getConfiguration().isMySQLEnabled()){
-                File dataFolder = new File(main.getDataFolder(), "database_sqlite.db");
+                File dataFolder = new File(main.getMain().getDataFolder(), "database_sqlite.db");
                 if (!dataFolder.exists()){
                     try {
                         if(!dataFolder.createNewFile()){
@@ -1231,7 +1231,7 @@ public class DataManager {
      */
     public void loadNPCData() {
         if (Bukkit.isPrimaryThread()) {
-            Bukkit.getScheduler().runTaskAsynchronously(main, () -> {
+            Bukkit.getScheduler().runTaskAsynchronously(main.getMain(), () -> {
                 if (!isAlreadyLoadedQuests()) {
                     loadQuestsConfig();
                 }

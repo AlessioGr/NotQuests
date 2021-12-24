@@ -123,7 +123,7 @@ public class ActiveQuest {
         if (!main.getDataManager().isCurrentlyLoading()) {
             ObjectiveCompleteEvent objectiveCompleteEvent = new ObjectiveCompleteEvent(getQuestPlayer(), activeObjective, this);
             if (Bukkit.isPrimaryThread()) {
-                Bukkit.getScheduler().runTaskAsynchronously(main, () -> {
+                Bukkit.getScheduler().runTaskAsynchronously(main.getMain(), () -> {
                     Bukkit.getPluginManager().callEvent(objectiveCompleteEvent);
                 });
             } else {
@@ -182,7 +182,7 @@ public class ActiveQuest {
 
         QuestFailEvent questFailEvent = new QuestFailEvent(getQuestPlayer(), this);
         if (Bukkit.isPrimaryThread()) {
-            Bukkit.getScheduler().runTaskAsynchronously(main, () -> Bukkit.getPluginManager().callEvent(questFailEvent));
+            Bukkit.getScheduler().runTaskAsynchronously(main.getMain(), () -> Bukkit.getPluginManager().callEvent(questFailEvent));
         } else {
             Bukkit.getPluginManager().callEvent(questFailEvent);
         }

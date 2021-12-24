@@ -111,9 +111,9 @@ public class AdminConversationCommands {
                                 }
                                 InputStream inputStream;
                                 if (!demo) {
-                                    inputStream = main.getResource("conversations/empty.yml");
+                                    inputStream = main.getMain().getResource("conversations/empty.yml");
                                 } else {
-                                    inputStream = main.getResource("conversations/demo.yml");
+                                    inputStream = main.getMain().getResource("conversations/demo.yml");
                                 }
 
                                 //Instead of creating a new language file, we will copy the one from inside of the plugin jar into the plugin folder:
@@ -290,8 +290,8 @@ public class AdminConversationCommands {
                     ItemStack itemStack = new ItemStack(Material.PAPER, 1);
                     //give a specialitem. clicking an armorstand with that special item will remove the pdb.
 
-                    NamespacedKey key = new NamespacedKey(main, "notquests-item");
-                    NamespacedKey conversationIdentifierKey = new NamespacedKey(main, "notquests-conversation");
+                    NamespacedKey key = new NamespacedKey(main.getMain(), "notquests-item");
+                    NamespacedKey conversationIdentifierKey = new NamespacedKey(main.getMain(), "notquests-conversation");
 
                     ItemMeta itemMeta = itemStack.getItemMeta();
                     //Only paper List<Component> lore = new ArrayList<>();
@@ -335,8 +335,8 @@ public class AdminConversationCommands {
                     ItemStack itemStack = new ItemStack(Material.PAPER, 1);
                     //give a specialitem. clicking an armorstand with that special item will remove the pdb.
 
-                    NamespacedKey key = new NamespacedKey(main, "notquests-item");
-                    NamespacedKey conversationIdentifierKey = new NamespacedKey(main, "notquests-conversation");
+                    NamespacedKey key = new NamespacedKey(main.getMain(), "notquests-item");
+                    NamespacedKey conversationIdentifierKey = new NamespacedKey(main.getMain(), "notquests-conversation");
 
                     ItemMeta itemMeta = itemStack.getItemMeta();
                     //Only paper List<Component> lore = new ArrayList<>();

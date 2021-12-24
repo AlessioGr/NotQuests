@@ -63,8 +63,7 @@ public class BreakBlocksObjective extends Objective {
                         if (context.getSender() instanceof Player player) {
                             materialToBreak = player.getInventory().getItemInMainHand().getType().name();
                         } else {
-                            final Audience audience = main.adventure().sender(context.getSender());
-                            audience.sendMessage(MiniMessage.miniMessage().parse(
+                            context.getSender().sendMessage(MiniMessage.miniMessage().parse(
                                     NotQuestColors.errorGradient + "This must be run by a player."
                             ));
                             return;

@@ -61,7 +61,7 @@ public class PacketManager implements Listener {
                 PacketEvents.getAPI().init();
             } else {
                 this.injector = new PacketInjector(main);
-                Bukkit.getServer().getPluginManager().registerEvents(this, main);
+                Bukkit.getServer().getPluginManager().registerEvents(this, main.getMain());
 
                 //For Serverutils reload
                 for (final Player player : Bukkit.getOnlinePlayers()) {
@@ -97,7 +97,7 @@ public class PacketManager implements Listener {
 
     public void onLoad() {
         if (usePacketEvents && main.getConfiguration().packetMagic) {
-            PacketEvents.setAPI(BukkitPacketEventsBuilder.build(main));
+            PacketEvents.setAPI(BukkitPacketEventsBuilder.build(main.getMain()));
             PacketEvents.getAPI().load();
         }
     }

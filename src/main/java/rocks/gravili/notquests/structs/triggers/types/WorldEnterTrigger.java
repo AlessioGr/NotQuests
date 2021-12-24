@@ -48,8 +48,7 @@ public class WorldEnterTrigger extends Trigger {
                 .argument(StringArgument.<CommandSender>newBuilder("world to enter").withSuggestionsProvider(
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
-                            final Audience audience = main.adventure().sender(context.getSender());
-                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[World Name / 'ALL']", "[Amount of Enters]");
+                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[World Name / 'ALL']", "[Amount of Enters]");
 
                             ArrayList<String> completions = new ArrayList<>();
 

@@ -387,7 +387,7 @@ public class AdminEditCommands {
                     ItemStack itemStack = new ItemStack(Material.LEATHER, 1);
                     //give a specialitem. clicking an armorstand with that special item will remove the pdb.
 
-                    NamespacedKey key = new NamespacedKey(main, "notquests-item");
+                    NamespacedKey key = new NamespacedKey(main.getMain(), "notquests-item");
 
                     ItemMeta itemMeta = itemStack.getItemMeta();
                     //Only paper List<Component> lore = new ArrayList<>();
@@ -434,8 +434,8 @@ public class AdminEditCommands {
                     ItemStack itemStack = new ItemStack(Material.GHAST_TEAR, 1);
                     //give a specialitem. clicking an armorstand with that special item will give it the pdb.
 
-                    NamespacedKey key = new NamespacedKey(main, "notquests-item");
-                    NamespacedKey QuestNameKey = new NamespacedKey(main, "notquests-questname");
+                    NamespacedKey key = new NamespacedKey(main.getMain(), "notquests-item");
+                    NamespacedKey QuestNameKey = new NamespacedKey(main.getMain(), "notquests-questname");
                     ItemMeta itemMeta = itemStack.getItemMeta();
 
                     if (itemMeta == null) {
@@ -505,8 +505,8 @@ public class AdminEditCommands {
                     ItemStack itemStack = new ItemStack(Material.NETHER_STAR, 1);
                     //give a specialitem. clicking an armorstand with that special item will remove the pdb.
 
-                    NamespacedKey key = new NamespacedKey(main, "notquests-item");
-                    NamespacedKey QuestNameKey = new NamespacedKey(main, "notquests-questname");
+                    NamespacedKey key = new NamespacedKey(main.getMain(), "notquests-item");
+                    NamespacedKey QuestNameKey = new NamespacedKey(main.getMain(), "notquests-questname");
 
                     ItemMeta itemMeta = itemStack.getItemMeta();
 
@@ -656,9 +656,9 @@ public class AdminEditCommands {
                             ItemStack itemStack = new ItemStack(Material.PAPER, 1);
                             //give a specialitem. clicking an armorstand with that special item will remove the pdb.
 
-                            NamespacedKey key = new NamespacedKey(main, "notquests-item");
-                            NamespacedKey QuestNameKey = new NamespacedKey(main, "notquests-questname");
-                            NamespacedKey ObjectiveIDKey = new NamespacedKey(main, "notquests-objectiveid");
+                            NamespacedKey key = new NamespacedKey(main.getMain(), "notquests-item");
+                            NamespacedKey QuestNameKey = new NamespacedKey(main.getMain(), "notquests-questname");
+                            NamespacedKey ObjectiveIDKey = new NamespacedKey(main.getMain(), "notquests-objectiveid");
 
                             ItemMeta itemMeta = itemStack.getItemMeta();
                             //Only paper List<Component> lore = new ArrayList<>();

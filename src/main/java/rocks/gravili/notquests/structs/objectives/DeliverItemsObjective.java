@@ -27,6 +27,7 @@ import cloud.commandframework.paper.PaperCommandManager;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -75,14 +76,12 @@ public class DeliverItemsObjective extends Objective {
                     }
                     completions.add("armorstand");
                     final List<String> allArgs = context.getRawInput();
-                    final Audience audience = main.adventure().sender(context.getSender());
-                    main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Recipient NPC ID / 'armorstand']", "");
+                    main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Recipient NPC ID / 'armorstand']", "");
 
                     return completions;
                 }).build(), ArgumentDescription.of("ID of the Citizens NPC or 'armorstand' to whom the items should be delivered."))
                 .meta(CommandMeta.DESCRIPTION, "Adds a new DeliverItems Objective to a quest.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
                     final int amountToDeliver = context.get("amount");
 
@@ -94,7 +93,7 @@ public class DeliverItemsObjective extends Objective {
                         if (context.getSender() instanceof Player player) {
                             itemToDeliver = player.getInventory().getItemInMainHand();
                         } else {
-                            audience.sendMessage(MiniMessage.miniMessage().parse(
+                            context.getSender().sendMessage(MiniMessage.miniMessage().parse(
                                     NotQuestColors.errorGradient + "This must be run by a player."
                             ));
                             return;
@@ -114,7 +113,7 @@ public class DeliverItemsObjective extends Objective {
 
                     if (!npcIDOrArmorstand.equalsIgnoreCase("armorstand")) {
                         if (!main.getIntegrationsManager().isCitizensEnabled()) {
-                            audience.sendMessage(MiniMessage.miniMessage().parse(
+                            context.getSender().sendMessage(MiniMessage.miniMessage().parse(
                                     NotQuestColors.errorGradient + "Error: Any kind of NPC stuff has been disabled, because you don't have the Citizens plugin installed on your server. You need to install the Citizens plugin in order to use Citizen NPCs. You can, however, use armor stands as an alternative. To do that, just enter 'armorstand' instead of the NPC ID."
                             ));
                             return;
@@ -123,7 +122,7 @@ public class DeliverItemsObjective extends Objective {
                         try {
                             npcID = Integer.parseInt(npcIDOrArmorstand);
                         } catch (NumberFormatException e) {
-                            audience.sendMessage(
+                            context.getSender().sendMessage(
                                     MiniMessage.miniMessage().parse(
                                             NotQuestColors.errorGradient + "Invalid NPC ID."
                                     )
@@ -150,17 +149,16 @@ public class DeliverItemsObjective extends Objective {
                             ItemStack itemStack = new ItemStack(Material.PAPER, 1);
                             //give a specialitem. clicking an armorstand with that special item will remove the pdb.
 
-                            NamespacedKey key = new NamespacedKey(main, "notquests-item");
-                            NamespacedKey QuestNameKey = new NamespacedKey(main, "notquests-questname");
+                            NamespacedKey key = new NamespacedKey(main.getMain(), "notquests-item");
+                            NamespacedKey QuestNameKey = new NamespacedKey(main.getMain(), "notquests-questname");
 
-                            NamespacedKey ItemStackKey = new NamespacedKey(main, "notquests-itemstackcache");
-                            NamespacedKey ItemStackAmountKey = new NamespacedKey(main, "notquests-itemstackamount");
-                            NamespacedKey deliverAnyKey = new NamespacedKey(main, "notquests-anyitemstack");
+                            NamespacedKey ItemStackKey = new NamespacedKey(main.getMain(), "notquests-itemstackcache");
+                            NamespacedKey ItemStackAmountKey = new NamespacedKey(main.getMain(), "notquests-itemstackamount");
+                            NamespacedKey deliverAnyKey = new NamespacedKey(main.getMain(), "notquests-anyitemstack");
 
 
                             ItemMeta itemMeta = itemStack.getItemMeta();
-                            //Only paper List<Component> lore = new ArrayList<>();
-                            List<String> lore = new ArrayList<>();
+                             List<Component> lore = new ArrayList<>();
 
                             assert itemMeta != null;
 
@@ -178,21 +176,26 @@ public class DeliverItemsObjective extends Objective {
                             }
 
 
-                            //Only paper itemMeta.displayName(Component.text("§dCheck Armor Stand", NamedTextColor.LIGHT_PURPLE));
-                            itemMeta.setDisplayName("§dAdd DeliverItems Objective to Armor Stand");
-                            //Only paper lore.add(Component.text("§fRight-click an Armor Stand to see which Quests are attached to it."));
-                            lore.add("§fRight-click an Armor Stand to add the following objective to it:");
-                            lore.add("§eDeliverItems §fObjective of Quest §b" + quest.getQuestName() + "§f.");
+                            itemMeta.displayName(MiniMessage.miniMessage().parse(
+                                    "<LIGHT_PURPLE>Add DeliverItems Objective to Armor Stand"
+                            ));
+
+                            lore.add(MiniMessage.miniMessage().parse(
+                                    "<WHITE>Right-click an Armor Stand to add the following objective to it:"
+                            ));
+                            lore.add(MiniMessage.miniMessage().parse(
+                                    "<YELLOW>DeliverItems <WHITE>Objective of Quest <AQUA>" + quest.getQuestName() + "</AQUA>."
+                            ));
 
                             itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-                            //Only paper itemMeta.lore(lore);
 
-                            itemMeta.setLore(lore);
+                            itemMeta.lore(lore);
+
                             itemStack.setItemMeta(itemMeta);
 
                             player.getInventory().addItem(itemStack);
 
-                            audience.sendMessage(
+                            context.getSender().sendMessage(
                                     MiniMessage.miniMessage().parse(
                                             NotQuestColors.successGradient + "You have been given an item with which you can add the DeliverItems Objective to an armor stand. Check your inventory!"
                                     )
@@ -200,7 +203,7 @@ public class DeliverItemsObjective extends Objective {
 
 
                         } else {
-                            audience.sendMessage(
+                            context.getSender().sendMessage(
                                     MiniMessage.miniMessage().parse(
                                             NotQuestColors.errorGradient + "Must be a player!"
                                     )

@@ -21,8 +21,6 @@ package rocks.gravili.notquests.managers;
 import org.bukkit.Bukkit;
 import rocks.gravili.notquests.NotQuests;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.text.DecimalFormat;
 
 public class PerformanceManager {
@@ -32,53 +30,28 @@ public class PerformanceManager {
 
     //Inaccurate way of getting TPS through calculating tick times every time a task runs
     private final float tps = 20;
-    //Accurate way of getting the TPS through reflection
-    private final String name = Bukkit.getServer().getClass().getPackage().getName();
     private final DecimalFormat format = new DecimalFormat("##.##");
     private long lastMS = 0;
     private float tickCounter = 0;
     private long msPerTick = 50;
     private long msCounter = 0;
-    private Object serverInstance;
-    private Field tpsField;
 
 
     public PerformanceManager(final NotQuests main) {
         this.main = main;
 
-        if (accurateTPS) {
-            try {
-                serverInstance = getNMSClass("MinecraftServer").getMethod("getServer").invoke(null);
-                tpsField = serverInstance.getClass().getField("recentTps");
-            } catch (NoSuchFieldException | SecurityException | IllegalAccessException | IllegalArgumentException
-                    | InvocationTargetException | NoSuchMethodException e) {
-                e.printStackTrace();
-            }
-        } else {
+        if (!accurateTPS) {
             startMonitoringInaccurateTPS();
         }
 
     }
 
 
-    //value of 0 will get the tps for the last minute, value of 1 will be 5min and 2 would be 15min
-    public final String getTPSString(int time) {
-        try {
-            double[] tps = ((double[]) tpsField.get(serverInstance));
-            return format.format(tps[time]);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     //value of 0 will get the tps for the last minute, value of 1 will be 5min and 2 would be 15min
     public final double getTPSDouble(int time) {
-        try {
-            double[] tps = ((double[]) tpsField.get(serverInstance));
-            return tps[time];
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+        double[] tps = Bukkit.getTPS();
+        return tps[time];
     }
 
     public final double getTPS() {
@@ -86,19 +59,9 @@ public class PerformanceManager {
     }
 
 
-    private Class<?> getNMSClass(final String className) {
-        try {
-            return Class.forName("net.minecraft.server." + className);
-
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-
     //Inaccurate
     public void startMonitoringInaccurateTPS() {
-        main.getServer().getScheduler().scheduleSyncRepeatingTask(main, () -> {
+        main.getMain().getServer().getScheduler().scheduleSyncRepeatingTask(main.getMain(), () -> {
 
             long timeNow = System.currentTimeMillis();
             if (lastMS != 0) {

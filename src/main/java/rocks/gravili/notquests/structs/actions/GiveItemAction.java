@@ -50,8 +50,6 @@ public class GiveItemAction extends Action {
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of items which the player will receive."))
                 .meta(CommandMeta.DESCRIPTION, "Adds a new GiveItem Reward to a quest")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-
                     final MaterialOrHand materialOrHand = context.get("material");
                     final int itemRewardAmount = context.get("amount");
 
@@ -61,14 +59,14 @@ public class GiveItemAction extends Action {
                             itemStack = player.getInventory().getItemInMainHand().clone();
                             itemStack.setAmount(itemRewardAmount);
                         } else {
-                            audience.sendMessage(MiniMessage.miniMessage().parse(
+                            context.getSender().sendMessage(MiniMessage.miniMessage().parse(
                                     NotQuestColors.errorGradient + "This must be run by a player."
                             ));
                             return;
                         }
                     } else {
                         if (materialOrHand.material.equalsIgnoreCase("any")) {
-                            audience.sendMessage(MiniMessage.miniMessage().parse(
+                            context.getSender().sendMessage(MiniMessage.miniMessage().parse(
                                     NotQuestColors.errorGradient + "You cannot use 'any' here!"
                             ));
                             return;
@@ -101,7 +99,7 @@ public class GiveItemAction extends Action {
         if (Bukkit.isPrimaryThread()) {
             player.getInventory().addItem(item);
         } else {
-            Bukkit.getScheduler().runTask(main, () -> player.getInventory().addItem(item)); //TODO: Check if I can't just run it async if it already is async`?
+            Bukkit.getScheduler().runTask(main.getMain(), () -> player.getInventory().addItem(item)); //TODO: Check if I can't just run it async if it already is async`?
         }
 
 

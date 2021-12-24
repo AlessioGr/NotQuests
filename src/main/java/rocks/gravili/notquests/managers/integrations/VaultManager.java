@@ -25,7 +25,7 @@ public class VaultManager {
      * @return if vault chat has been set up successfully
      */
     public boolean setupChat() {
-        RegisteredServiceProvider<Chat> rsp = main.getServer().getServicesManager().getRegistration(Chat.class);
+        RegisteredServiceProvider<Chat> rsp = main.getMain().getServer().getServicesManager().getRegistration(Chat.class);
         if (rsp != null) {
             chat = rsp.getProvider();
             return true;
@@ -41,7 +41,7 @@ public class VaultManager {
      * @return if permissions from the vault plugin have been set up successfully
      */
     public boolean setupPermissions() {
-        RegisteredServiceProvider<Permission> rsp = main.getServer().getServicesManager().getRegistration(Permission.class);
+        RegisteredServiceProvider<Permission> rsp = main.getMain().getServer().getServicesManager().getRegistration(Permission.class);
         if (rsp != null) {
             perms = rsp.getProvider();
             return true;
@@ -56,10 +56,10 @@ public class VaultManager {
      * @return if the economy has been set up successfully and if Vault has been found
      */
     public boolean setupEconomy() {
-        if (main.getServer().getPluginManager().getPlugin("Vault") == null) {
+        if (main.getMain().getServer().getPluginManager().getPlugin("Vault") == null) {
             return false;
         }
-        RegisteredServiceProvider<Economy> rsp = main.getServer().getServicesManager().getRegistration(Economy.class);
+        RegisteredServiceProvider<Economy> rsp = main.getMain().getServer().getServicesManager().getRegistration(Economy.class);
         if (rsp == null) {
             return false;
         }

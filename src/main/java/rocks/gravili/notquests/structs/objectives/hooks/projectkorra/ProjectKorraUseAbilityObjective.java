@@ -52,8 +52,7 @@ public class ProjectKorraUseAbilityObjective extends Objective {
                 .argument(StringArgument.<CommandSender>newBuilder("Ability").withSuggestionsProvider(
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
-                            final Audience audience = main.adventure().sender(context.getSender());
-                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Ability Name]", "");
+                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Ability Name]", "");
 
                             return main.getIntegrationsManager().getProjectKorraManager().getAbilityCompletions();
                         }
@@ -64,8 +63,7 @@ public class ProjectKorraUseAbilityObjective extends Objective {
                     String abilityName = context.get("Ability");
 
                     if (!main.getIntegrationsManager().getProjectKorraManager().isAbility(abilityName)) {
-                        Audience audience = main.adventure().sender(context.getSender());
-                        audience.sendMessage(MiniMessage.miniMessage().parse(
+                        context.getSender().sendMessage(MiniMessage.miniMessage().parse(
                                 NotQuestColors.errorGradient + "Error: The ability " + NotQuestColors.highlightGradient + abilityName + "</gradient> was not found."
                         ));
                         return;

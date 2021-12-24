@@ -58,7 +58,7 @@ public class ActionsYMLManager {
 
             main.getDataManager().prepareDataFolder();
 
-            actionsConfigFile = new File(main.getDataFolder(), "actions.yml");
+            actionsConfigFile = new File(main.getMain().getDataFolder(), "actions.yml");
 
             if (!actionsConfigFile.exists()) {
                 main.getLogManager().info("Actions Configuration (actions.yml) does not exist. Creating a new one...");

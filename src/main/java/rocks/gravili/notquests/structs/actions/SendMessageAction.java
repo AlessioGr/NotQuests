@@ -47,8 +47,7 @@ public class SendMessageAction extends Action {
                 .argument(StringArgument.<CommandSender>newBuilder("Message").withSuggestionsProvider(
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
-                            final Audience audience = main.adventure().sender(context.getSender());
-                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "<Message to send>", "");
+                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "<Message to send>", "");
 
                             ArrayList<String> completions = new ArrayList<>();
 
@@ -79,9 +78,7 @@ public class SendMessageAction extends Action {
 
     @Override
     public void execute(final Player player, Object... objects) {
-        Audience audience = main.adventure().player(player);
-
-        audience.sendMessage(MiniMessage.miniMessage().parse(
+        player.sendMessage(MiniMessage.miniMessage().parse(
                 getMessageToSend()
         ));
     }

@@ -58,8 +58,7 @@ public class EscortNPCObjective extends Objective {
                         completions.add("" + npc.getId());
                     }
                     final List<String> allArgs = context.getRawInput();
-                    final Audience audience = main.adventure().sender(context.getSender());
-                    main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[NPC to escort ID]", "[Destination NPC ID]");
+                    main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[NPC to escort ID]", "[Destination NPC ID]");
 
                     return completions;
                 }).build(), ArgumentDescription.of("ID of the Citizens NPC the player has to escort."))
@@ -77,8 +76,7 @@ public class EscortNPCObjective extends Objective {
                     }
 
                     final List<String> allArgs = context.getRawInput();
-                    final Audience audience = main.adventure().sender(context.getSender());
-                    main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Destination NPC ID]", "");
+                    main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Destination NPC ID]", "");
 
                     return completions;
                 }).build(), ArgumentDescription.of("ID of the destination Citizens NPC where the player has to escort the NPC to escort to."))
@@ -88,8 +86,7 @@ public class EscortNPCObjective extends Objective {
                     final int destinationNPCID = context.get("Destination NPC");
 
                     if (toEscortNPCID == destinationNPCID) {
-                        final Audience audience = main.adventure().sender(context.getSender());
-                        audience.sendMessage(
+                        context.getSender().sendMessage(
                                 MiniMessage.miniMessage().parse(
                                         NotQuestColors.errorGradient + "Error: Um... an NPC cannot themselves himself, to.. themselves?"
                                 )

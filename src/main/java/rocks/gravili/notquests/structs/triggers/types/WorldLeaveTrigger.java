@@ -48,8 +48,7 @@ public class WorldLeaveTrigger extends Trigger {
                 .argument(StringArgument.<CommandSender>newBuilder("world to leave").withSuggestionsProvider(
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
-                            final Audience audience = main.adventure().sender(context.getSender());
-                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[World Name / 'ALL']", "[Amount of Leaves]");
+                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[World Name / 'ALL']", "[Amount of Leaves]");
 
                             ArrayList<String> completions = new ArrayList<>();
 

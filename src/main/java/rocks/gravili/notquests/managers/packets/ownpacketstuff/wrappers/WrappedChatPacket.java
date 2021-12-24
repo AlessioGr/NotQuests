@@ -1,6 +1,8 @@
 package rocks.gravili.notquests.managers.packets.ownpacketstuff.wrappers;
 
 import io.netty.channel.ChannelHandlerContext;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import rocks.gravili.notquests.NotQuests;
 import rocks.gravili.notquests.managers.packets.ownpacketstuff.Reflection;
@@ -64,18 +66,10 @@ public class WrappedChatPacket {
         //System.out.println("READ: " + readString());
 
         try {//paper only
-            if (NotQuests.getInstance().getPacketManager().getPacketInjector().getPaperGsonComponentSerializer() != null) {
-                adventureComponent = Reflection.getFieldValueOfObject(packetObject, "adventure$message");
-
-                Method method = NotQuests.getInstance().getPacketManager().getPacketInjector().getPaperGsonComponentSerializer().getClass().getMethod("serialize", NotQuests.getInstance().getPacketManager().getPacketInjector().getPaperComponentClass());
-                method.setAccessible(true);
-                paperJson = (String) method.invoke(NotQuests.getInstance().getPacketManager().getPacketInjector().getPaperGsonComponentSerializer(), adventureComponent);
-                //NotQuests.getInstance().getLogManager().debug("Paper json: " + paperJson);
+            adventureComponent = Reflection.getFieldValueOfObject(packetObject, "adventure$message");
+            paperJson = GsonComponentSerializer.gson().serialize((Component) adventureComponent);
 
 
-            } else {
-                //NotQuests.getInstance().getLogManager().debug("Null gson serializer :(");
-            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

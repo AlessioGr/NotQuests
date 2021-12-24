@@ -50,8 +50,7 @@ public class RunCommandObjective extends Objective {
                 .argument(StringArgument.<CommandSender>newBuilder("Command").withSuggestionsProvider(
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
-                            final Audience audience = main.adventure().sender(context.getSender());
-                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Enter command (put between \" \" if you want to use spaces)]", "");
+                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Enter command (put between \" \" if you want to use spaces)]", "");
 
                             ArrayList<String> completions = new ArrayList<>();
 

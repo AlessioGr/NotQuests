@@ -140,7 +140,7 @@ public class UserCommands {
                             "xlmnopqrx",
                             "xxxxxxxxx"
                     };
-                    InventoryGui gui = new InventoryGui(main, player, convert(main.getLanguageManager().getString("gui.main.title", player)), guiSetup);
+                    InventoryGui gui = new InventoryGui(main.getMain(), player, convert(main.getLanguageManager().getString("gui.main.title", player)), guiSetup);
                     gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
 
                     gui.addElement(new StaticGuiElement('8',
@@ -219,7 +219,7 @@ public class UserCommands {
                             "xgggggggx",
                             "pxxxxxxxn"
                     };
-                    InventoryGui gui = new InventoryGui(main, player, convert(main.getLanguageManager().getString("gui.takeQuestChoose.title", player)), guiSetup);
+                    InventoryGui gui = new InventoryGui(main.getMain(), player, convert(main.getLanguageManager().getString("gui.takeQuestChoose.title", player)), guiSetup);
                     gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
 
                     int count = 0;
@@ -301,7 +301,7 @@ public class UserCommands {
                                 "xgggggggx",
                                 "pxxxxxxxn"
                         };
-                        InventoryGui gui = new InventoryGui(main, player, convert(main.getLanguageManager().getString("gui.abortQuestChoose.title", player)), guiSetup);
+                        InventoryGui gui = new InventoryGui(main.getMain(), player, convert(main.getLanguageManager().getString("gui.abortQuestChoose.title", player)), guiSetup);
                         gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
 
                         GuiElementGroup group = new GuiElementGroup('g');
@@ -363,7 +363,7 @@ public class UserCommands {
                             "xgggggggx",
                             "pxxxxxxxn"
                     };
-                    InventoryGui gui = new InventoryGui(main, player, convert(main.getLanguageManager().getString("gui.previewQuestChoose.title", player)), guiSetup);
+                    InventoryGui gui = new InventoryGui(main.getMain(), player, convert(main.getLanguageManager().getString("gui.previewQuestChoose.title", player)), guiSetup);
                     gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
 
                     int count = 0;
@@ -433,7 +433,7 @@ public class UserCommands {
                                 "xlmnopqrx",
                                 "xxxxxxxxx"
                         };
-                        InventoryGui gui = new InventoryGui(main, player, convert(main.getLanguageManager().getString("gui.abortQuest.title", player)), guiSetup);
+                        InventoryGui gui = new InventoryGui(main.getMain(), player, convert(main.getLanguageManager().getString("gui.abortQuest.title", player)), guiSetup);
                         gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
 
 
@@ -488,7 +488,7 @@ public class UserCommands {
                             "xxxxxxxxx"
                     };
 
-                    InventoryGui gui = new InventoryGui(main, player, convert(main.getLanguageManager().getString("gui.previewQuest.title", player, quest, questPlayer)), guiSetup);
+                    InventoryGui gui = new InventoryGui(main.getMain(), player, convert(main.getLanguageManager().getString("gui.previewQuest.title", player, quest, questPlayer)), guiSetup);
                     gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
 
                     if (main.getConfiguration().isGuiQuestPreviewDescription_enabled()) {
@@ -591,7 +591,7 @@ public class UserCommands {
                                 "pxxxxxxxn"
                         };
 
-                        InventoryGui gui = new InventoryGui(main, player, convert(main.getLanguageManager().getString("gui.progress.title", player, activeQuest, questPlayer)), guiSetup);
+                        InventoryGui gui = new InventoryGui(main.getMain(), player, convert(main.getLanguageManager().getString("gui.progress.title", player, activeQuest, questPlayer)), guiSetup);
                         gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
 
                         GuiElementGroup group = new GuiElementGroup('g');

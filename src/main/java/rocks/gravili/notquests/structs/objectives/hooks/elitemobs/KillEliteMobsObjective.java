@@ -58,8 +58,7 @@ public class KillEliteMobsObjective extends Objective {
                 .withArgument(StringArgument.<CommandSender>newBuilder("Mob name contains").withSuggestionsProvider(
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
-                            final Audience audience = main.adventure().sender(context.getSender());
-                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Part of Elite Mob Name]", "");
+                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Part of Elite Mob Name]", "");
 
                             ArrayList<String> completions = new ArrayList<>();
 
@@ -77,8 +76,7 @@ public class KillEliteMobsObjective extends Objective {
                 .withArgument(StringArgument.<CommandSender>newBuilder("Minimum level").withSuggestionsProvider(
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
-                            final Audience audience = main.adventure().sender(context.getSender());
-                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Minimum Level]", "");
+                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Minimum Level]", "");
 
                             return new ArrayList<>(main.getDataManager().numberPositiveCompletions);
                         }
@@ -90,8 +88,7 @@ public class KillEliteMobsObjective extends Objective {
                 .withArgument(StringArgument.<CommandSender>newBuilder("Maximum level").withSuggestionsProvider(
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
-                            final Audience audience = main.adventure().sender(context.getSender());
-                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Maximum Level]", "");
+                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Maximum Level]", "");
 
                             return new ArrayList<>(main.getDataManager().numberPositiveCompletions);
                         }
@@ -104,8 +101,7 @@ public class KillEliteMobsObjective extends Objective {
                 .withArgument(StringArgument.<CommandSender>newBuilder("Spawn Reason").withSuggestionsProvider(
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
-                            final Audience audience = main.adventure().sender(context.getSender());
-                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Spawn Reason]", "");
+                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Spawn Reason]", "");
 
                             ArrayList<String> completions = new ArrayList<>();
                             for (final CreatureSpawnEvent.SpawnReason spawnReasonS : CreatureSpawnEvent.SpawnReason.values()) {
@@ -121,8 +117,7 @@ public class KillEliteMobsObjective extends Objective {
                 .withArgument(StringArgument.<CommandSender>newBuilder("Minimum Damage Percentage").withSuggestionsProvider(
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
-                            final Audience audience = main.adventure().sender(context.getSender());
-                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Minimum Damage Percentage]", "");
+                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Minimum Damage Percentage]", "");
 
                             ArrayList<String> completions = new ArrayList<>();
                             for (int i = 50; i <= 100; i++) {

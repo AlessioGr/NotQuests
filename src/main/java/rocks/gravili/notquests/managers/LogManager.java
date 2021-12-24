@@ -25,13 +25,14 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.ConsoleCommandSender;
 import rocks.gravili.notquests.NotQuests;
 
 import java.util.logging.Level;
 
 public class LogManager {
     private final NotQuests main;
-    private Audience consoleSender;
+    private ConsoleCommandSender consoleSender;
     private final Component prefix;
     private final String prefixText;
 
@@ -48,7 +49,7 @@ public class LogManager {
     }
 
     public void lateInit() {
-        consoleSender = main.adventure().sender(Bukkit.getConsoleSender());
+        consoleSender = Bukkit.getConsoleSender();
     }
 
 
@@ -57,35 +58,17 @@ public class LogManager {
     }
 
     private void log(final Level level, final LogCategory logCategory, final String color, final String message) {
-        if (main.isAdventureEnabled() && consoleSender != null) {
-            consoleSender.sendMessage(MiniMessage.miniMessage().parse(prefixText + color + message));
-        } else {
-            main.getLogger().log(level, ChatColor.translateAlternateColorCodes('&', LegacyComponentSerializer.builder().build().serialize(MiniMessage.miniMessage().parse(color + message))));
-        }
-
-
+        consoleSender.sendMessage(MiniMessage.miniMessage().parse(prefixText + color + message));
     }
 
 
     public void info(final LogCategory logCategory, final String message) {
         if (logCategory == LogCategory.DEFAULT) {
-            if (PaperLib.isPaper()) {
-                log(Level.INFO, logCategory, "<gradient:#37a659:#56B4D3>", message);
-            } else {
-                log(Level.INFO, logCategory, "<GREEN>", message);
-            }
+            log(Level.INFO, logCategory, "<gradient:#37a659:#56B4D3>", message);
         } else if (logCategory == LogCategory.DATA) {
-            if (PaperLib.isPaper()) {
-                log(Level.INFO, logCategory, "<gradient:#1FA2FF:#12D8FA:#A6FFCB>", message);
-            } else {
-                log(Level.INFO, logCategory, "<BLUE>", message);
-            }
+            log(Level.INFO, logCategory, "<gradient:#1FA2FF:#12D8FA:#A6FFCB>", message);
         } else if (logCategory == LogCategory.LANGUAGE) {
-            if (PaperLib.isPaper()) {
-                log(Level.INFO, logCategory, "<gradient:#AA076B:#61045F>", message);
-            } else {
-                log(Level.INFO, logCategory, "<DARK_PURPLE>", message);
-            }
+            log(Level.INFO, logCategory, "<gradient:#AA076B:#61045F>", message);
         }
     }
 

@@ -52,8 +52,7 @@ public class TriggerCommandAction extends Action {
                 .argument(StringArgument.<CommandSender>newBuilder("Trigger Name").withSuggestionsProvider(
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
-                            final Audience audience = main.adventure().sender(context.getSender());
-                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Trigger Name]", "");
+                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Trigger Name]", "");
 
                             ArrayList<String> completions = new ArrayList<>();
                             for (final Quest quest : main.getQuestManager().getAllQuests()) {

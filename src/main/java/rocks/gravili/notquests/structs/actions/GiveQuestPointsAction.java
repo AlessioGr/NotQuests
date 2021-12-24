@@ -70,8 +70,7 @@ public class GiveQuestPointsAction extends Action {
 
         } else {
             main.getLogManager().warn("Error giving quest point reward to player <AQUA>" + player.getName() + "</AQUA>");
-            Audience audience = main.adventure().player(player);
-            audience.sendMessage(MiniMessage.miniMessage().parse(
+            player.sendMessage(MiniMessage.miniMessage().parse(
                     "<RED>Error giving quest point reward."
             ));
         }

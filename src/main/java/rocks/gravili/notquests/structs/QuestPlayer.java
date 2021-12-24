@@ -141,16 +141,15 @@ public class QuestPlayer {
                 if (sendQuestInfo) {
                     final Player player = getPlayer();
                     if (player != null) {
-                        Audience audience = main.adventure().player(player);
 
-                        audience.sendMessage(MiniMessage.miniMessage().parse(
+                        player.sendMessage(MiniMessage.miniMessage().parse(
                                 main.getLanguageManager().getString("chat.objectives-label-after-quest-accepting", player)
                         ));
                         main.getQuestManager().sendActiveObjectivesAndProgress(player, quest);
 
                         if (main.getConfiguration().visualTitleQuestSuccessfullyAccepted_enabled) {
 
-                            audience.showTitle(
+                            player.showTitle(
                                     Title.title(MiniMessage.miniMessage().parse(main.getLanguageManager().getString("titles.quest-accepted.title", player)),
                                             MiniMessage.miniMessage().parse(main.getLanguageManager().getString("titles.quest-accepted.subtitle", player, this, quest)),
                                             Title.Times.times(Duration.ofMillis(2), Duration.ofSeconds(3), Duration.ofMillis(8))
@@ -200,7 +199,7 @@ public class QuestPlayer {
 
         QuestFinishAcceptEvent questFinishAcceptEvent = new QuestFinishAcceptEvent(this, activeQuest, triggerAcceptQuestTrigger);
         if (Bukkit.isPrimaryThread()) {
-            Bukkit.getScheduler().runTaskAsynchronously(main, () -> {
+            Bukkit.getScheduler().runTaskAsynchronously(main.getMain(), () -> {
                 Bukkit.getPluginManager().callEvent(questFinishAcceptEvent);
             });
         } else {
@@ -263,8 +262,7 @@ public class QuestPlayer {
 
         final Player player = getPlayer();
         if (player != null) {
-            Audience audience = main.adventure().player(player);
-            audience.sendMessage(MiniMessage.miniMessage().parse(
+            player.sendMessage(MiniMessage.miniMessage().parse(
                     main.getLanguageManager().getString("chat.quest-completed-and-rewards-given", getPlayer(), quest)
             ));
         }
@@ -274,8 +272,7 @@ public class QuestPlayer {
     public void sendMessage(String message) {
         final Player player = getPlayer();
         if (player != null) {
-            Audience audience = main.adventure().player(player);
-            audience.sendMessage(MiniMessage.miniMessage().parse(message));
+            player.sendMessage(MiniMessage.miniMessage().parse(message));
         }
     }
 
@@ -283,7 +280,7 @@ public class QuestPlayer {
         final Player player = getPlayer();
         if (player != null) {
             if (main.getQuestManager().isDebugEnabledPlayer(player)) {
-                main.adventure().player(player).sendMessage(MiniMessage.miniMessage().parse(NotQuestColors.debugTitleGradient + "[NotQuests Debug]</gradient> " + NotQuestColors.debugGradient + message + "</gradient>"));
+                player.sendMessage(MiniMessage.miniMessage().parse(NotQuestColors.debugTitleGradient + "[NotQuests Debug]</gradient> " + NotQuestColors.debugGradient + message + "</gradient>"));
             }
 
         }
@@ -297,7 +294,7 @@ public class QuestPlayer {
     public void forceActiveQuestCompleted(ActiveQuest activeQuest) {
         QuestCompletedEvent questCompletedEvent = new QuestCompletedEvent(this, activeQuest, true);
         if (Bukkit.isPrimaryThread()) {
-            Bukkit.getScheduler().runTaskAsynchronously(main, () -> {
+            Bukkit.getScheduler().runTaskAsynchronously(main.getMain(), () -> {
                 Bukkit.getPluginManager().callEvent(questCompletedEvent);
             });
         } else {
@@ -317,8 +314,7 @@ public class QuestPlayer {
         final Player player = getPlayer();
         if (player != null) {
             if (main.getConfiguration().visualTitleQuestCompleted_enabled) {
-                Audience audience = main.adventure().player(player);
-                audience.showTitle(
+                player.showTitle(
                         Title.title(MiniMessage.miniMessage().parse(main.getLanguageManager().getString("titles.quest-completed.title", player)),
                                 MiniMessage.miniMessage().parse(main.getLanguageManager().getString("titles.quest-completed.subtitle", player, this, activeQuest)),
                                 Title.Times.times(Duration.ofMillis(2), Duration.ofSeconds(3), Duration.ofMillis(8))
@@ -348,7 +344,7 @@ public class QuestPlayer {
     public void notifyActiveQuestCompleted(ActiveQuest activeQuest) {
         QuestCompletedEvent questCompletedEvent = new QuestCompletedEvent(this, activeQuest, false);
         if (Bukkit.isPrimaryThread()) {
-            Bukkit.getScheduler().runTaskAsynchronously(main, () -> {
+            Bukkit.getScheduler().runTaskAsynchronously(main.getMain(), () -> {
                 Bukkit.getPluginManager().callEvent(questCompletedEvent);
             });
         } else {
@@ -371,8 +367,7 @@ public class QuestPlayer {
             final Player player = getPlayer();
             if (player != null) {
                 if (main.getConfiguration().visualTitleQuestCompleted_enabled) {
-                    Audience audience = main.adventure().player(player);
-                    audience.showTitle(
+                    player.showTitle(
                             Title.title(MiniMessage.miniMessage().parse(main.getLanguageManager().getString("titles.quest-completed.title", player)),
                                     MiniMessage.miniMessage().parse(main.getLanguageManager().getString("titles.quest-completed.subtitle", player, this, activeQuest)),
                                     Title.Times.times(Duration.ofMillis(2), Duration.ofSeconds(3), Duration.ofMillis(8))
@@ -401,7 +396,7 @@ public class QuestPlayer {
         }
         QuestPointsChangeEvent questPointsChangeEvent = new QuestPointsChangeEvent(this, newQuestPoints);
         if (Bukkit.isPrimaryThread()) {
-            Bukkit.getScheduler().runTaskAsynchronously(main, () -> {
+            Bukkit.getScheduler().runTaskAsynchronously(main.getMain(), () -> {
                 Bukkit.getPluginManager().callEvent(questPointsChangeEvent);
             });
         } else {
@@ -416,8 +411,7 @@ public class QuestPlayer {
             if (notifyPlayer) {
                 final Player player = getPlayer();
                 if (player != null) {
-                    Audience audience = main.adventure().player(player);
-                    audience.sendMessage(MiniMessage.miniMessage().parse(
+                    player.sendMessage(MiniMessage.miniMessage().parse(
                             "<YELLOW>Your quest points have been set to <AQUA>" + newQuestPoints + "</AQUA>."
                     ));
                 }
@@ -430,8 +424,7 @@ public class QuestPlayer {
         if (notifyPlayer) {
             final Player player = getPlayer();
             if (player != null) {
-                Audience audience = main.adventure().player(player);
-                audience.sendMessage(MiniMessage.miniMessage().parse(
+                player.sendMessage(MiniMessage.miniMessage().parse(
                         "<AQUA>+" + questPointsToAdd + " <GREEN>quest points!"
                 ));
             }
@@ -443,8 +436,7 @@ public class QuestPlayer {
         if (notifyPlayer) {
             final Player player = getPlayer();
             if (player != null) {
-                Audience audience = main.adventure().player(player);
-                audience.sendMessage(MiniMessage.miniMessage().parse(
+                player.sendMessage(MiniMessage.miniMessage().parse(
                         "<AQUA>>-" + questPointsToRemove + " <RED>>quest points!"
                 ));
             }
@@ -484,9 +476,8 @@ public class QuestPlayer {
                 final Player player = getPlayer();
 
                 if (player != null) {
-                    Audience audience = main.adventure().player(player);
                     if (main.getConfiguration().visualTitleQuestFailed_enabled) {
-                        audience.showTitle(
+                        player.showTitle(
                                 Title.title(MiniMessage.miniMessage().parse(main.getLanguageManager().getString("titles.quest-failed.title", player)),
                                         MiniMessage.miniMessage().parse(main.getLanguageManager().getString("titles.quest-failed.subtitle", player, this, activeQuestToFail)),
                                         Title.Times.times(Duration.ofMillis(2), Duration.ofSeconds(3), Duration.ofMillis(8))

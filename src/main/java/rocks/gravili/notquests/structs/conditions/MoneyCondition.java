@@ -111,8 +111,7 @@ public class MoneyCondition extends Condition {
         }
         main.getIntegrationsManager().getVaultManager().getEconomy().withdrawPlayer(player, worldName, moneyToDeduct);
         if (notifyPlayer) {
-            Audience audience = main.adventure().player(player);
-            audience.sendMessage(MiniMessage.miniMessage().parse(
+            player.sendMessage(MiniMessage.miniMessage().parse(
                     "<AQUA>-" + moneyToDeduct + " <RED>$!"
             ));
         }

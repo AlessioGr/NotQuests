@@ -122,7 +122,7 @@ public class CommandSelector<C> extends CommandArgument<C, String[]> {
             //));
 
             if (main.getCommandManager().getCommandMap() != null) {
-                List<String> compl = main.getCommandManager().getCommandMap().tabComplete(main.getServer().getConsoleSender(), cmd);
+                List<String> compl = main.getCommandManager().getCommandMap().tabComplete(main.getMain().getServer().getConsoleSender(), cmd);
                 if (compl != null) {
                     for (String cmd1 : compl) {
                         completions.add(cmd1);

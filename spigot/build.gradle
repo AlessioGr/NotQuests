@@ -1,0 +1,236 @@
+plugins {
+    id 'com.github.johnrengelman.shadow'
+    id 'java'
+    id 'maven-publish'
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        name = 'papermc-repo'
+        url = 'https://papermc.io/repo/repository/maven-public/'
+    }
+    maven {
+        name = 'spigot repo (bstats)'
+        url = 'https://hub.spigotmc.org/nexus/content/groups/public/'
+        content {
+            includeGroup 'org.spigotmc'
+        }
+    }
+    maven {
+        name = 'sonatype'
+        url = 'https://oss.sonatype.org/content/groups/public/'
+    }
+    maven {
+        name = 'citizens'
+        url = 'https://repo.citizensnpcs.co/'
+        content {
+            includeGroup 'net.citizensnpcs'
+        }
+    }
+    maven {
+        name = 'placeholderapi'
+        url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
+
+        content {
+            includeGroup 'me.clip'
+        }
+    }
+    maven {
+        name = 'jitpack'
+        url = 'https://jitpack.io'
+        content {
+            includeGroup 'com.github.MilkBowl'
+            includeGroup 'com.github.TheBusyBiscuit'
+            includeGroup 'com.github.retrooper'
+            includeGroup 'com.github.retrooper.packetevents'
+            includeGroup 'io.github.retrooper'
+            includeGroup 'com.github.AlessioGr'
+            includeGroup 'com.github.AlessioGr.packetevents'
+            includeGroup 'com.github.TownyAdvanced'
+            includeGroup 'com.github.Zrips'
+        }
+        metadataSources {
+            artifact()
+        }
+    }
+    maven {
+        name = 'inventorygui (minebench)'
+        url = 'https://repo.minebench.de/'
+        content {
+            includeGroup 'de.themoep'
+        }
+    }
+    maven {
+        url 'https://oss.sonatype.org/content/repositories/snapshots/'
+        content {
+            includeGroup 'net.kyori'
+        }
+    }
+    maven {
+        url 'https://mvn.lumine.io/repository/maven-public/'
+        content {
+            includeGroup 'io.lumine.xikage'
+        }
+    }
+    maven {
+        url 'https://betonquest.org/nexus/repository/betonquest/'
+        content {
+            includeGroup 'org.betonquest'
+        }
+        metadataSources {
+            artifact()
+        }
+    }
+
+    maven {
+        url 'https://maven.enginehub.org/repo/'
+        content {
+            includeGroup 'com.sk89q.worldedit'
+        }
+        metadataSources {
+            artifact()
+        }
+    }
+
+    maven {
+        url "https://repo.incendo.org/content/repositories/snapshots"
+    }
+
+    maven { url 'https://libraries.minecraft.net/' }
+}
+
+dependencies {
+    implementation 'net.kyori:adventure-platform-bukkit:4.0.1'
+    compileOnly 'org.spigotmc:spigot-api:1.18.1-R0.1-SNAPSHOT'
+    //does not work  implementation "net.kyori:adventure-platform-bukkit:4.0.0"
+    implementation 'org.bstats:bstats-bukkit:2.2.1'
+    compileOnly 'net.citizensnpcs:citizens-main:2.0.29-SNAPSHOT'
+    compileOnly 'me.clip:placeholderapi:2.11.0'
+    compileOnly 'com.github.MilkBowl:VaultAPI:1.7'
+    implementation 'de.themoep:inventorygui:1.5-SNAPSHOT'
+
+
+    implementation 'io.lumine.xikage:MythicMobs:4.12.0'
+    compileOnly files('libs/EliteMobs.jar')
+    compileOnly files('libs/UClans-API.jar')
+    compileOnly files('libs/ProjectKorra-1.9.2.jar')
+
+    compileOnly 'org.betonquest:betonquest:2.0.0-SNAPSHOT'
+
+    compileOnly 'com.sk89q.worldedit:worldedit-core:7.3.0-SNAPSHOT'
+    compileOnly 'com.sk89q.worldedit:worldedit-bukkit:7.3.0-SNAPSHOT'
+
+    compileOnly 'com.github.TheBusyBiscuit:Slimefun4:RC-29'
+
+    compileOnly 'net.luckperms:api:5.3'
+
+    //compileOnly 'com.github.NEZNAMY:TAB:2.9.2'
+    compileOnly 'com.github.TownyAdvanced:Towny:0.97.5.0'
+
+    implementation 'com.github.Zrips:Jobs:v4.17.2'
+
+
+    //Shaded
+    implementation 'io.papermc:paperlib:1.0.7'
+    implementation "net.kyori:adventure-text-minimessage:4.10.0-SNAPSHOT"
+
+    //CloudCommands
+    implementation group: 'cloud.commandframework', name: 'cloud-paper', version: '1.6.1'
+    implementation group: 'cloud.commandframework', name: 'cloud-minecraft-extras', version: '1.6.1'
+    //Else it errors:
+    implementation group: 'io.leangen.geantyref', name: 'geantyref', version: '1.3.13'
+    //Interfaces
+    //implementation("org.incendo.interfaces:interfaces-core:1.0.0-SNAPSHOT")
+    //implementation("org.incendo.interfaces:interfaces-paper:1.0.0-SNAPSHOT")
+
+
+    //implementation 'com.github.retrooper.packetevents:bukkit:2.0-SNAPSHOT'
+    implementation 'com.github.AlessioGr.packetevents:bukkit:2.0-SNAPSHOT'
+
+    implementation 'commons-io:commons-io:2.11.0'
+    implementation 'org.apache.commons:commons-text:1.9'
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+    //implementation 'org.apache.commons:commons-lang:3.1'
+
+    implementation 'io.netty:netty-all:4.1.72.Final'
+
+    compileOnly 'com.mojang:brigadier:1.0.18'
+}
+
+/**
+ * Configure NotQuests for shading
+ */
+String path = 'rocks.gravili.notquestsspigot.shadow'
+shadowJar {
+    minimize()
+    relocate('net.kyori', path.concat('.kyori'))
+
+
+
+    //exclude('com.mojang:brigadier')
+
+    relocate('io.papermc.lib', path.concat('.paper'))
+    relocate('org.bstats', path.concat('.bstats'))
+    relocate('cloud.commandframework', path.concat('.cloud'))
+    relocate('net.kyori', path.concat('.kyori'))
+    relocate('io.leangen.geantyref', path.concat('.geantyref'))
+    relocate("de.themoep", path.concat('.de.themoep'))
+
+    relocate("org.apache.commons.io", path.concat('.commons.io'))
+    relocate("org.apache.commons.text", path.concat('.commons.text'))
+    relocate("org.apache.commons.lang3", path.concat('.commons.lang'))
+
+    relocate("io.github.retrooper.packetevents", path.concat('.packetevents.bukkit'))
+    relocate("com.github.retrooper.packetevents", path.concat('.packetevents.api'))
+
+    //relocate("org.incendo.interfaces", path.concat('.interfaces'))
+
+
+    dependencies {
+        include dependency('net.kyori:adventure-platform-bukkit:')
+
+        include dependency('org.apache.commons:')
+        include dependency('commons-io:commons-io:')
+
+        include dependency('io.papermc:paperlib')
+        include dependency("de.themoep:inventorygui:1.5-SNAPSHOT")
+        include dependency('org.bstats:')
+        include dependency('net.kyori:')
+        include dependency('cloud.commandframework:')
+        include dependency('io.leangen.geantyref:')
+        include dependency('me.lucko:')
+
+        include dependency('com.github.retrooper.packetevents:')
+        //include dependency('io.github.retrooper.packetevents:')
+
+        include dependency('com.github.AlessioGr.packetevents:')
+        // include dependency('org.incendo.interfaces:')
+
+    }
+
+
+
+
+    archiveClassifier.set(null)
+
+
+}
+
+
+def targetJavaVersion = 16
+java {
+    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    sourceCompatibility = 17
+    targetCompatibility = 16
+    if (JavaVersion.current() < javaVersion) {
+        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+        options.release = targetJavaVersion
+        options.encoding = "UTF-8"
+    }
+}

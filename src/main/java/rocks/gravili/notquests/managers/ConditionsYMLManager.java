@@ -57,7 +57,7 @@ public class ConditionsYMLManager {
 
             main.getDataManager().prepareDataFolder();
 
-            conditionsConfigFile = new File(main.getDataFolder(), "conditions.yml");
+            conditionsConfigFile = new File(main.getMain().getDataFolder(), "conditions.yml");
 
             if (!conditionsConfigFile.exists()) {
                 main.getLogManager().info("Conditions Configuration (conditions.yml) does not exist. Creating a new one...");

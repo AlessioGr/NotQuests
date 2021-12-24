@@ -26,8 +26,6 @@ public class GUIManager {
     }
 
     public void showActiveQuests(QuestPlayer questPlayer, Player player) {
-        final Audience audience = main.adventure().player(player);
-
         if (questPlayer != null) {
             String[] guiSetup = {
                     "zxxxxxxxx",
@@ -37,7 +35,7 @@ public class GUIManager {
                     "xgggggggx",
                     "pxxxxxxxn"
             };
-            InventoryGui gui = new InventoryGui(main, player, convert(main.getLanguageManager().getString("gui.activeQuests.title", player)), guiSetup);
+            InventoryGui gui = new InventoryGui(main.getMain(), player, convert(main.getLanguageManager().getString("gui.activeQuests.title", player)), guiSetup);
             gui.setFiller(new ItemStack(Material.AIR, 1));
 
             int count = 0;
@@ -76,7 +74,7 @@ public class GUIManager {
 
             gui.show(player);
         } else {
-            audience.sendMessage(miniMessage.parse(
+            player.sendMessage(miniMessage.parse(
                     main.getLanguageManager().getString("chat.no-quests-accepted", player)
             ));
         }

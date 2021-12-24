@@ -544,8 +544,8 @@ public class QuestManager {
     public final ArrayList<Quest> getAllQuestsAttachedToArmorstand(final ArmorStand armorstand) {
         return new ArrayList<>() {{
             PersistentDataContainer armorstandPDB = armorstand.getPersistentDataContainer();
-            NamespacedKey attachedShowingQuestsKey = new NamespacedKey(main, "notquests-attachedQuests-showing");
-            NamespacedKey attachedNonShowingQuestsKey = new NamespacedKey(main, "notquests-attachedQuests-nonshowing");
+            NamespacedKey attachedShowingQuestsKey = new NamespacedKey(main.getMain(), "notquests-attachedQuests-showing");
+            NamespacedKey attachedNonShowingQuestsKey = new NamespacedKey(main.getMain(), "notquests-attachedQuests-nonshowing");
 
             //Showing
             if (armorstandPDB.has(attachedShowingQuestsKey, PersistentDataType.STRING)) {
@@ -580,7 +580,7 @@ public class QuestManager {
     public final ArrayList<Quest> getQuestsAttachedToArmorstandWithShowing(final ArmorStand armorstand) {
         return new ArrayList<>() {{
             PersistentDataContainer armorstandPDB = armorstand.getPersistentDataContainer();
-            NamespacedKey attachedQuestsKey = new NamespacedKey(main, "notquests-attachedQuests-showing");
+            NamespacedKey attachedQuestsKey = new NamespacedKey(main.getMain(), "notquests-attachedQuests-showing");
 
             if (armorstandPDB.has(attachedQuestsKey, PersistentDataType.STRING)) {
                 String existingAttachedQuests = armorstandPDB.get(attachedQuestsKey, PersistentDataType.STRING);
@@ -600,7 +600,7 @@ public class QuestManager {
     public final ArrayList<Quest> getQuestsAttachedToArmorstandWithoutShowing(final ArmorStand armorstand) {
         return new ArrayList<>() {{
             PersistentDataContainer armorstandPDB = armorstand.getPersistentDataContainer();
-            NamespacedKey attachedQuestsKey = new NamespacedKey(main, "notquests-attachedQuests-nonshowing");
+            NamespacedKey attachedQuestsKey = new NamespacedKey(main.getMain(), "notquests-attachedQuests-nonshowing");
 
             if (armorstandPDB.has(attachedQuestsKey, PersistentDataType.STRING)) {
                 String existingAttachedQuests = armorstandPDB.get(attachedQuestsKey, PersistentDataType.STRING);
@@ -674,8 +674,6 @@ public class QuestManager {
             return false;
         }
 
-        Audience audience = main.adventure().player(player);
-
         if (main.getConfiguration().isQuestPreviewUseGUI()) {
             String[] guiSetup = {
                     "xxxxxxxxx",
@@ -685,7 +683,7 @@ public class QuestManager {
                     "xgggggggx",
                     "pxxxxxxxn"
             };
-            InventoryGui gui = new InventoryGui(main, player, main.getUtilManager().miniMessageToLegacyWithSpigotRGB(main.getLanguageManager().getString("gui.availableQuests.title", player)), guiSetup);
+            InventoryGui gui = new InventoryGui(main.getMain(), player, main.getUtilManager().miniMessageToLegacyWithSpigotRGB(main.getLanguageManager().getString("gui.availableQuests.title", player)), guiSetup);
             gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
 
             int count = 0;
@@ -749,8 +747,8 @@ public class QuestManager {
         } else {
             main.getLogManager().info("NotQuests > All quest count: <AQUA>" + quests.size() + "</AQUA>");
 
-            audience.sendMessage(Component.empty());
-            audience.sendMessage(miniMessage.parse(
+            player.sendMessage(Component.empty());
+            player.sendMessage(miniMessage.parse(
                     "<BLUE>" + questsAttachedToNPC.size() + " Available Quests:"
             ));
             int counter = 1;
@@ -764,7 +762,7 @@ public class QuestManager {
                 Component component = miniMessage.parse("<YELLOW>" + counter + ". <AQUA>" + quest.getQuestFinalName() + " ")
                         .append(acceptComponent);
 
-                audience.sendMessage(component);
+                player.sendMessage(component);
 
 
                 counter++;
@@ -784,8 +782,6 @@ public class QuestManager {
         if(questsAttachedToNPC.size() == 0){
             return;
         }
-        Audience audience = main.adventure().player(player);
-
         if (main.getConfiguration().isQuestPreviewUseGUI()) {
             String[] guiSetup = {
                     "xxxxxxxxx",
@@ -795,7 +791,7 @@ public class QuestManager {
                     "xgggggggx",
                     "pxxxxxxxn"
             };
-            InventoryGui gui = new InventoryGui(main, player, main.getUtilManager().miniMessageToLegacyWithSpigotRGB(main.getLanguageManager().getString("gui.availableQuests.title", player)), guiSetup);
+            InventoryGui gui = new InventoryGui(main.getMain(), player, main.getUtilManager().miniMessageToLegacyWithSpigotRGB(main.getLanguageManager().getString("gui.availableQuests.title", player)), guiSetup);
             gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
 
             int count = 0;
@@ -860,8 +856,8 @@ public class QuestManager {
         } else {
             main.getLogManager().info("NotQuests > All quest count: <AQUA>" + quests.size() + "</AQUA>");
 
-            audience.sendMessage(Component.empty());
-            audience.sendMessage(miniMessage.parse(
+            player.sendMessage(Component.empty());
+            player.sendMessage(miniMessage.parse(
                     "<BLUE>" + questsAttachedToNPC.size() + " Availahle Quests:"
             ));
             int counter = 1;
@@ -875,7 +871,7 @@ public class QuestManager {
                 Component component = miniMessage.parse("<YELLOW>" + counter + ". <AQUA>" + quest.getQuestFinalName() + " ")
                         .append(acceptComponent);
 
-                audience.sendMessage(component);
+                player.sendMessage(component);
 
                 counter++;
             }
@@ -925,36 +921,35 @@ public class QuestManager {
     }
 
     public void sendSingleQuestPreview(Player player, Quest quest) {
-        Audience audience = main.adventure().player(player);
-        audience.sendMessage(Component.empty());
-        audience.sendMessage(miniMessage.parse("<GRAY>-----------------------------------"));
-        audience.sendMessage(miniMessage.parse(
+        player.sendMessage(Component.empty());
+        player.sendMessage(miniMessage.parse("<GRAY>-----------------------------------"));
+        player.sendMessage(miniMessage.parse(
                 "<BLUE>Quest Preview for Quest <AQUA>" + quest.getQuestFinalName() + "</AQUA>:"
         ));
 
 
         if (quest.getQuestDescription().length() >= 1) {
-            audience.sendMessage(miniMessage.parse(
+            player.sendMessage(miniMessage.parse(
                     "<YELLOW>Quest description: <GRAY>" + quest.getQuestDescription()
             ));
         } else {
-            audience.sendMessage(miniMessage.parse(
+            player.sendMessage(miniMessage.parse(
                     main.getLanguageManager().getString("chat.missing-quest-description", player)
             ));
         }
 
-        audience.sendMessage(miniMessage.parse(
+        player.sendMessage(miniMessage.parse(
                 "<BLUE>Quest Requirements:"
         ));
 
-        audience.sendMessage(miniMessage.parse(
+        player.sendMessage(miniMessage.parse(
                 getQuestRequirements(quest)
         ));
 
-        audience.sendMessage(miniMessage.parse(
+        player.sendMessage(miniMessage.parse(
                 "<BLUE>Quest Rewards:"
         ));
-        audience.sendMessage(miniMessage.parse(
+        player.sendMessage(miniMessage.parse(
                 getQuestRewards(quest)
         ));
 
@@ -962,9 +957,9 @@ public class QuestManager {
                 .clickEvent(ClickEvent.runCommand("/nquests take " + quest.getQuestName()))
                 .hoverEvent(HoverEvent.showText(MiniMessage.miniMessage().parse("<GREEN>Click to accept the Quest <AQUA>" + quest.getQuestFinalName())));
 
-        audience.sendMessage(Component.empty());
-        audience.sendMessage(acceptComponent);
-        audience.sendMessage(miniMessage.parse(
+        player.sendMessage(Component.empty());
+        player.sendMessage(acceptComponent);
+        player.sendMessage(miniMessage.parse(
                 "<GRAY>-----------------------------------"
         ));
 
@@ -985,7 +980,7 @@ public class QuestManager {
                 final ConfigurationSection questsConfigurationSetting = main.getDataManager().getQuestsConfig().getConfigurationSection("quests");
                 if (questsConfigurationSetting != null) {
                     if (!Bukkit.isPrimaryThread()) {
-                        Bukkit.getScheduler().runTask(main, () -> {
+                        Bukkit.getScheduler().runTask(main.getMain(), () -> {
                             for (String questName : questsConfigurationSetting.getKeys(false)) {
                                 Quest quest = getQuest(questName);
 
@@ -1099,7 +1094,7 @@ public class QuestManager {
         } else {
             main.getLogManager().warn("NotQuests > Tried to load NPC data before quest data was loaded. NotQuests is scheduling another load...");
 
-            Bukkit.getScheduler().runTaskLaterAsynchronously(main, () -> {
+            Bukkit.getScheduler().runTaskLaterAsynchronously(main.getMain(), () -> {
                 if (!main.getDataManager().isAlreadyLoadedNPCs()) {
                     main.getLogManager().warn("NotQuests > Trying to load NPC quest data again...");
                     main.getDataManager().loadNPCData();
@@ -1135,7 +1130,7 @@ public class QuestManager {
 
 
                 if (!Bukkit.isPrimaryThread()) {
-                    Bukkit.getScheduler().runTask(main, () -> {
+                    Bukkit.getScheduler().runTask(main.getMain(), () -> {
                         for (Trait trait : traitsToRemove) {
                             npc.removeTrait(trait.getClass());
                         }
@@ -1178,24 +1173,23 @@ public class QuestManager {
 
 
     public void sendCompletedObjectivesAndProgress(final Player player, final ActiveQuest activeQuest) {
-        Audience audience = main.adventure().player(player);
         for (ActiveObjective activeObjective : activeQuest.getCompletedObjectives()) {
 
             final String objectiveDescription = activeObjective.getObjective().getObjectiveDescription();
 
 
-            audience.sendMessage(MiniMessage.miniMessage().parse(
+            player.sendMessage(MiniMessage.miniMessage().parse(
                     "<strikethrough><GRAY>" + activeObjective.getObjective().getObjectiveID() + ". " + activeObjective.getObjective().getObjectiveFinalName() + ":" + "</strikethrough>"
             ));
 
-            audience.sendMessage(MiniMessage.miniMessage().parse(
+            player.sendMessage(MiniMessage.miniMessage().parse(
                     "    <strikethrough><GRAY>Description: <WHITE>" + objectiveDescription + "</strikethrough>"
             ));
 
-            audience.sendMessage(miniMessage.parse(
+            player.sendMessage(miniMessage.parse(
                     getObjectiveTaskDescription(activeObjective.getObjective(), true, player)
             ));
-            audience.sendMessage(miniMessage.parse(
+            player.sendMessage(miniMessage.parse(
                     "   <strikethrough><GRAY>Progress: <WHITE>" + activeObjective.getCurrentProgress() + " / " + activeObjective.getProgressNeeded() + "</strikethrough>"
             ));
         }
@@ -1229,31 +1223,30 @@ public class QuestManager {
     }
 
     public void sendActiveObjectivesAndProgress(final Player player, final ActiveQuest activeQuest) {
-        Audience audience = main.adventure().player(player);
         for (ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
 
             if (activeObjective.isUnlocked()) {
                 final String objectiveDescription = activeObjective.getObjective().getObjectiveDescription();
-                audience.sendMessage(miniMessage.parse(
+                player.sendMessage(miniMessage.parse(
                         main.getLanguageManager().getString("chat.objectives.counter", player, activeQuest, activeObjective)
                 ));
 
                 if (!objectiveDescription.isBlank()) {
-                    audience.sendMessage(MiniMessage.miniMessage().parse(
+                    player.sendMessage(MiniMessage.miniMessage().parse(
                             main.getLanguageManager().getString("chat.objectives.description", player, activeQuest, activeObjective)
                                     .replace("%OBJECTIVEDESCRIPTION%", activeObjective.getObjective().getObjectiveDescription())
                     ));
                 }
 
-                audience.sendMessage(miniMessage.parse(
+                player.sendMessage(miniMessage.parse(
                         getObjectiveTaskDescription(activeObjective.getObjective(), false, player)
                 ));
 
-                audience.sendMessage(miniMessage.parse(
+                player.sendMessage(miniMessage.parse(
                         main.getLanguageManager().getString("chat.objectives.progress", player, activeQuest, activeObjective)
                 ));
             } else {
-                audience.sendMessage(miniMessage.parse(
+                player.sendMessage(miniMessage.parse(
                         main.getLanguageManager().getString("chat.objectives.hidden", player, activeObjective, activeObjective)
                 ));
 
@@ -1263,20 +1256,19 @@ public class QuestManager {
     }
 
     public void sendObjectives(final Player player, final Quest quest) {
-        Audience audience = main.adventure().player(player);
         for (final Objective objective : quest.getObjectives()) {
             final String objectiveDescription = objective.getObjectiveDescription();
-            audience.sendMessage(miniMessage.parse(
+            player.sendMessage(miniMessage.parse(
                     "<GREEN>" + objective.getObjectiveID() + ". <YELLOW>" + objective.getObjectiveFinalName()
             ));
 
 
             if (!objectiveDescription.isBlank()) {
-                audience.sendMessage(miniMessage.parse(
+                player.sendMessage(miniMessage.parse(
                         "   <BLUE>Description: <GOLD>" + objectiveDescription
                 ));
             }
-            audience.sendMessage(miniMessage.parse(
+            player.sendMessage(miniMessage.parse(
                     getObjectiveTaskDescription(objective, false, player)
             ));
 
@@ -1325,30 +1317,29 @@ public class QuestManager {
 
 
     public void sendActiveObjective(final Player player, ActiveObjective activeObjective) {
-        Audience audience = main.adventure().player(player);
         if (activeObjective.isUnlocked()) {
             final String objectiveDescription = activeObjective.getObjective().getObjectiveDescription();
 
-            audience.sendMessage(miniMessage.parse(
+            player.sendMessage(miniMessage.parse(
                     "<YELLOW>" + activeObjective.getObjective().getObjectiveID() + ". " + activeObjective.getObjective().getObjectiveFinalName() + ":"
             ));
 
 
             if (!objectiveDescription.isBlank()) {
-                audience.sendMessage(miniMessage.parse(
+                player.sendMessage(miniMessage.parse(
                         "   <BLUE>Description: <GOLD>" + objectiveDescription
                 ));
             }
 
-            audience.sendMessage(miniMessage.parse(
+            player.sendMessage(miniMessage.parse(
                     getObjectiveTaskDescription(activeObjective.getObjective(), false, player)
             ));
 
-            audience.sendMessage(miniMessage.parse(
+            player.sendMessage(miniMessage.parse(
                     "   <GRAY>Progress: <WHITE>" + activeObjective.getCurrentProgress() + " / " + activeObjective.getProgressNeeded()
             ));
         } else {
-            audience.sendMessage(miniMessage.parse(
+            player.sendMessage(miniMessage.parse(
                     "<YELLOW>" + activeObjective.getObjective().getObjectiveID() + ". <GRAY><BOLD>[HIDDEN]"
             ));
         }

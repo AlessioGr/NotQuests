@@ -18,7 +18,6 @@
 
 package rocks.gravili.notquests.managers;
 
-import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -32,6 +31,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.NotQuests;
@@ -42,7 +42,7 @@ import java.util.*;
 
 public class UtilManager {
     private final NotQuests main;
-    private final HashMap<Audience, BossBar> playersAndBossBars;
+    private final HashMap<Player, BossBar> playersAndBossBars;
 
     private final static int CENTER_PX = 154;
 
@@ -184,33 +184,36 @@ public class UtilManager {
     }
 
 
-    public void sendFancyCommandCompletion(final Audience audience, final String[] args, final String hintCurrentArg, final String hintNextArgs) {
+    public void sendFancyCommandCompletion(final CommandSender sender, final String[] args, final String hintCurrentArg, final String hintNextArgs) {
         if (!main.getConfiguration().isActionBarFancyCommandCompletionEnabled() && !main.getConfiguration().isTitleFancyCommandCompletionEnabled() && !main.getConfiguration().isBossBarFancyCommandCompletionEnabled()) {
             return;
         }
 
-        final Component fancyTabCompletion = getFancyCommandTabCompletion(args, hintCurrentArg, hintNextArgs);
-        if (main.getConfiguration().isActionBarFancyCommandCompletionEnabled()) {
-            audience.sendActionBar(fancyTabCompletion);
-        }
-        if (main.getConfiguration().isTitleFancyCommandCompletionEnabled()) {
-            audience.showTitle(Title.title(Component.text(""), fancyTabCompletion));
-        }
-        if (main.getConfiguration().isBossBarFancyCommandCompletionEnabled()) {
-
-            final BossBar oldBossBar = playersAndBossBars.get(audience);
-            if (oldBossBar != null) {
-                oldBossBar.name(fancyTabCompletion);
-                playersAndBossBars.replace(audience, oldBossBar);
-                audience.showBossBar(oldBossBar);
-
-            } else {
-                BossBar bossBarToShow = BossBar.bossBar(fancyTabCompletion, 1.0f, BossBar.Color.BLUE, BossBar.Overlay.PROGRESS);
-                playersAndBossBars.put(audience, bossBarToShow);
-                audience.showBossBar(bossBarToShow);
+        if(sender instanceof Player player){
+            final Component fancyTabCompletion = getFancyCommandTabCompletion(args, hintCurrentArg, hintNextArgs);
+            if (main.getConfiguration().isActionBarFancyCommandCompletionEnabled()) {
+                player.sendActionBar(fancyTabCompletion);
             }
+            if (main.getConfiguration().isTitleFancyCommandCompletionEnabled()) {
+                player.showTitle(Title.title(Component.text(""), fancyTabCompletion));
+            }
+            if (main.getConfiguration().isBossBarFancyCommandCompletionEnabled()) {
 
+                final BossBar oldBossBar = playersAndBossBars.get(player);
+                if (oldBossBar != null) {
+                    oldBossBar.name(fancyTabCompletion);
+                    playersAndBossBars.replace(player, oldBossBar);
+                    player.showBossBar(oldBossBar);
+
+                } else {
+                    BossBar bossBarToShow = BossBar.bossBar(fancyTabCompletion, 1.0f, BossBar.Color.BLUE, BossBar.Overlay.PROGRESS);
+                    playersAndBossBars.put(player, bossBarToShow);
+                    player.showBossBar(bossBarToShow);
+                }
+
+            }
         }
+
 
     }
 

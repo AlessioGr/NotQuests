@@ -21,7 +21,7 @@ public class BackupManager {
         //Create the Data Folder if it does not exist yet (the NotQuests folder)
         main.getDataManager().prepareDataFolder();
         if (backupFolder == null) {
-            backupFolder = new File(main.getDataFolder().getPath() + "/backups/");
+            backupFolder = new File(main.getMain().getDataFolder().getPath() + "/backups/");
         }
 
         if (!backupFolder.exists()) {
@@ -39,7 +39,7 @@ public class BackupManager {
         if (!prepareBackupFolder()) {
             return;
         }
-        File newQuestsBackupFile = new File(main.getDataFolder().getPath() + "/backups/" + "quests-backup-" + backupFileDateFormat.format(new Date(System.currentTimeMillis())) + ".yml");
+        File newQuestsBackupFile = new File(main.getMain().getDataFolder().getPath() + "/backups/" + "quests-backup-" + backupFileDateFormat.format(new Date(System.currentTimeMillis())) + ".yml");
 
         if (!newQuestsBackupFile.exists()) {
             try {

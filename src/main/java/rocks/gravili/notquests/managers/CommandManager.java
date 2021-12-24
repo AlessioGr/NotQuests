@@ -118,8 +118,7 @@ public class CommandManager {
                 .withArgument(StringArrayArgument.of("nametag_containsany",
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
-                            final Audience audience = main.adventure().sender((CommandSender) context.getSender());
-                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "<Enter nametag_containsany flag value>", "");
+                            main.getUtilManager().sendFancyCommandCompletion((CommandSender)context.getSender(), allArgs.toArray(new String[0]), "<Enter nametag_containsany flag value>", "");
                             ArrayList<String> completions = new ArrayList<>();
                             completions.add("<nametag_containsany flag value>");
                             return completions;
@@ -133,8 +132,7 @@ public class CommandManager {
                 .withArgument(StringArrayArgument.of("nametag_equals",
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
-                            final Audience audience = main.adventure().sender((CommandSender) context.getSender());
-                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "<Enter nametag_equals flag value>", "");
+                            main.getUtilManager().sendFancyCommandCompletion((CommandSender)context.getSender(), allArgs.toArray(new String[0]), "<Enter nametag_equals flag value>", "");
                             ArrayList<String> completions = new ArrayList<>();
                             completions.add("<nametag_equals flag value>");
                             return completions;
@@ -148,8 +146,7 @@ public class CommandManager {
                 .withArgument(StringArgument.<CommandSender>newBuilder("Task Description").withSuggestionsProvider(
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
-                            final Audience audience = main.adventure().sender(context.getSender());
-                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Enter task description (put between \" \" if you want to use spaces)]", "");
+                            main.getUtilManager().sendFancyCommandCompletion((CommandSender)context.getSender(), allArgs.toArray(new String[0]), "[Enter task description (put between \" \" if you want to use spaces)]", "");
 
                             ArrayList<String> completions = new ArrayList<>();
 
@@ -165,8 +162,7 @@ public class CommandManager {
                 .withArgument(StringArgument.<CommandSender>newBuilder("Speaker Color").withSuggestionsProvider(
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
-                            final Audience audience = main.adventure().sender(context.getSender());
-                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Enter speaker color (default: <WHITE>)]", "");
+                            main.getUtilManager().sendFancyCommandCompletion((CommandSender)context.getSender(), allArgs.toArray(new String[0]), "[Enter speaker color (default: <WHITE>)]", "");
 
                             ArrayList<String> completions = new ArrayList<>();
                             for (NamedTextColor namedTextColor : NamedTextColor.NAMES.values()) {
@@ -203,8 +199,7 @@ public class CommandManager {
                 .withArgument(StringArgument.<CommandSender>newBuilder("world_name").withSuggestionsProvider(
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
-                            final Audience audience = main.adventure().sender(context.getSender());
-                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[World Name / 'ALL']", "");
+                            main.getUtilManager().sendFancyCommandCompletion((CommandSender)context.getSender(), allArgs.toArray(new String[0]), "[World Name / 'ALL']", "");
 
                             ArrayList<String> completions = new ArrayList<>();
 
@@ -235,7 +230,7 @@ public class CommandManager {
         //Cloud command framework
         try {
             commandManager = new PaperCommandManager<>(
-                    /* Owning plugin */ main,
+                    /* Owning plugin */ main.getMain(),
                     /* Coordinator function */ CommandExecutionCoordinator.simpleCoordinator(),
                     /* Command Sender -> C */ Function.identity(),
                     /* C -> Command Sender */ Function.identity()
@@ -268,10 +263,10 @@ public class CommandManager {
                 }, builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
 
             } else {
-                main.getLogger().warning("Failed to initialize Brigadier support. Brigadier manager is null.");
+                main.getMain().getLogger().warning("Failed to initialize Brigadier support. Brigadier manager is null.");
             }
         } catch (final Exception e) {
-            main.getLogger().warning("Failed to initialize Brigadier support: " + e.getMessage());
+            main.getMain().getLogger().warning("Failed to initialize Brigadier support: " + e.getMessage());
         }
     }
 

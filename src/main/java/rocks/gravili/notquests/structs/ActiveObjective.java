@@ -66,7 +66,7 @@ public class ActiveObjective {
 
                 ObjectiveUnlockEvent objectiveUnlockEvent = new ObjectiveUnlockEvent(getQuestPlayer(), this, activeQuest, triggerAcceptQuestTrigger);
                 if (Bukkit.isPrimaryThread()) {
-                    Bukkit.getScheduler().runTaskAsynchronously(main, () -> {
+                    Bukkit.getScheduler().runTaskAsynchronously(main.getMain(), () -> {
                         Bukkit.getPluginManager().callEvent(objectiveUnlockEvent);
                     });
                 } else {

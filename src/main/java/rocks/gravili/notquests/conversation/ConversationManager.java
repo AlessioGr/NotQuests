@@ -163,7 +163,7 @@ public class ConversationManager {
     public boolean prepareConversationsFolder() {
         //Create the Conversations Folder if it does not exist yet (the NotQuests/conversations folder)
         if (conversationsFolder == null) {
-            conversationsFolder = new File(main.getDataFolder().getPath() + "/conversations/");
+            conversationsFolder = new File(main.getMain().getDataFolder().getPath() + "/conversations/");
         }
 
         if (!conversationsFolder.exists()) {

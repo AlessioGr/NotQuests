@@ -35,7 +35,7 @@ public class UpdateChecker {
 
     public UpdateChecker(NotQuests main, int projectId) {
         this.main = main;
-        this.newVersion = main.getDescription().getVersion();
+        this.newVersion = main.getMain().getDescription().getVersion();
         this.projectId = projectId;
         try {
             this.checkURL = new URL("https://api.spigotmc.org/legacy/update.php?resource=" + projectId);
@@ -65,7 +65,7 @@ public class UpdateChecker {
         }
 
         if (con == null || newVersion == null) return false;
-        return !main.getDescription().getVersion().equalsIgnoreCase(newVersion);
+        return !main.getMain().getDescription().getVersion().equalsIgnoreCase(newVersion);
     }
 
 }

@@ -61,8 +61,7 @@ public class ConsumeItemsObjective extends Objective {
                         if (context.getSender() instanceof Player player) {
                             itemToConsume = player.getInventory().getItemInMainHand();
                         } else {
-                            final Audience audience = main.adventure().sender(context.getSender());
-                            audience.sendMessage(MiniMessage.miniMessage().parse(
+                            context.getSender().sendMessage(MiniMessage.miniMessage().parse(
                                     NotQuestColors.errorGradient + "This must be run by a player."
                             ));
                             return;

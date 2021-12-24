@@ -59,8 +59,7 @@ public class TownyNationNameCondition extends Condition {
                 .argument(StringArgument.<CommandSender>newBuilder("Nation Name").withSuggestionsProvider(
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
-                            final Audience audience = main.adventure().sender(context.getSender());
-                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Required nation name (put between \"\" if using spaces)]", "");
+                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Required nation name (put between \"\" if using spaces)]", "");
 
                             ArrayList<String> completions = new ArrayList<>();
                             completions.add("<Enter required nation name (put between \"\" if using spaces)>");

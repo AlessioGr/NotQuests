@@ -42,9 +42,9 @@ public class ArmorStandManager {
     public ArmorStandManager(NotQuests main) {
         this.main = main;
         armorStandsWithQuestsOrConversationAttachedToThem = new ArrayList<>();
-        attachedQuestsShowingKey = new NamespacedKey(main, "notquests-attachedQuests-showing");
-        attachedQuestsNonShowingKey = new NamespacedKey(main, "notquests-attachedQuests-nonshowing");
-        attachedConversationKey = new NamespacedKey(main, "notquests-attachedConversation");
+        attachedQuestsShowingKey = new NamespacedKey(main.getMain(), "notquests-attachedQuests-showing");
+        attachedQuestsNonShowingKey = new NamespacedKey(main.getMain(), "notquests-attachedQuests-nonshowing");
+        attachedConversationKey = new NamespacedKey(main.getMain(), "notquests-attachedConversation");
 
         if (main.getConfiguration().isArmorStandQuestGiverIndicatorParticleEnabled()) {
             startQuestGiverIndicatorParticleRunnable();
@@ -101,7 +101,7 @@ public class ArmorStandManager {
 
 
     public void startQuestGiverIndicatorParticleRunnable() {
-        Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(main, () -> {
+        Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(main.getMain(), () -> {
 
             //Disable if Server TPS is too low
             double minimumTPS = main.getConfiguration().getArmorStandQuestGiverIndicatorParticleDisableIfTPSBelow();

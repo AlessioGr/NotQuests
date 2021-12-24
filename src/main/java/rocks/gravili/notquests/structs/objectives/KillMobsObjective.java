@@ -51,7 +51,6 @@ public class KillMobsObjective extends Objective {
                 .flag(main.getCommandManager().nametag_containsany)
                 .meta(CommandMeta.DESCRIPTION, "Adds a new KillMobs Objective to a quest")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
 
                     final String entityType = context.get("entityType");
                     final int amountToKill = context.get("amount");
@@ -75,13 +74,13 @@ public class KillMobsObjective extends Objective {
 
 
                     if (!nametag_equals.isBlank()) {
-                        audience.sendMessage(MiniMessage.miniMessage().parse(
+                        context.getSender().sendMessage(MiniMessage.miniMessage().parse(
                                 NotQuestColors.mainGradient + "With nametag_equals flag:  " + NotQuestColors.highlightGradient
                                         + nametag_equals + "</gradient>!</gradient>"
                         ));
                     }
                     if (!nametag_containsany.isBlank()) {
-                        audience.sendMessage(MiniMessage.miniMessage().parse(
+                        context.getSender().sendMessage(MiniMessage.miniMessage().parse(
                                 NotQuestColors.mainGradient + "With nametag_containsany flag:  " + NotQuestColors.highlightGradient
                                         + nametag_containsany + "</gradient>!</gradient>"
                         ));

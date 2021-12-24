@@ -72,17 +72,17 @@ public class ArmorStandEvents implements Listener {
             if (player.hasPermission("notquests.admin.armorstandeditingitems") && heldItem.getType() != Material.AIR && heldItem.getItemMeta() != null) {
                 final PersistentDataContainer container = heldItem.getItemMeta().getPersistentDataContainer();
 
-                final NamespacedKey specialItemKey = new NamespacedKey(main, "notquests-item");
+                final NamespacedKey specialItemKey = new NamespacedKey(main.getMain(), "notquests-item");
 
 
                 if (container.has(specialItemKey, PersistentDataType.INTEGER)) {
 
                     int id = container.get(specialItemKey, PersistentDataType.INTEGER); //Not null, because we check for it in container.has()
 
-                    final NamespacedKey questsKey = new NamespacedKey(main, "notquests-questname");
+                    final NamespacedKey questsKey = new NamespacedKey(main.getMain(), "notquests-questname");
                     final String questName = container.get(questsKey, PersistentDataType.STRING);
 
-                    final NamespacedKey objectiveIDKey = new NamespacedKey(main, "notquests-objectiveid");
+                    final NamespacedKey objectiveIDKey = new NamespacedKey(main.getMain(), "notquests-objectiveid");
                     int objectiveID = -1;
                     if (container.has(objectiveIDKey, PersistentDataType.INTEGER)) {
                         objectiveID = container.get(objectiveIDKey, PersistentDataType.INTEGER);
@@ -340,13 +340,13 @@ public class ArmorStandEvents implements Listener {
 
                         final Quest quest = main.getQuestManager().getQuest(questName);
                         if (quest != null) {
-                            final NamespacedKey amountToDeliverKey = new NamespacedKey(main, "notquests-itemstackamount");
+                            final NamespacedKey amountToDeliverKey = new NamespacedKey(main.getMain(), "notquests-itemstackamount");
                             final int amountToDeliver = container.get(amountToDeliverKey, PersistentDataType.INTEGER);
 
-                            final NamespacedKey itemStackCacheKey = new NamespacedKey(main, "notquests-itemstackcache");
+                            final NamespacedKey itemStackCacheKey = new NamespacedKey(main.getMain(), "notquests-itemstackcache");
                             final int itemStackCache = container.get(itemStackCacheKey, PersistentDataType.INTEGER);
 
-                            final NamespacedKey deliverAnyKey = new NamespacedKey(main, "notquests-anyitemstack");
+                            final NamespacedKey deliverAnyKey = new NamespacedKey(main.getMain(), "notquests-anyitemstack");
                             boolean deliverAny = false;
                             if (container.has(deliverAnyKey, PersistentDataType.BYTE) && container.get(deliverAnyKey, PersistentDataType.BYTE) == 1) {
                                 deliverAny = true;
@@ -386,7 +386,7 @@ public class ArmorStandEvents implements Listener {
                     } else if (id == 8) { //Add conversation to armorstand
 
 
-                        NamespacedKey conversationIdentifierKey = new NamespacedKey(main, "notquests-conversation");
+                        NamespacedKey conversationIdentifierKey = new NamespacedKey(main.getMain(), "notquests-conversation");
 
                         final String conversationIdentifier = container.get(conversationIdentifierKey, PersistentDataType.STRING);
                         if (conversationIdentifier != null && !conversationIdentifier.isBlank()) {

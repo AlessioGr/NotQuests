@@ -74,7 +74,7 @@ public class LanguageManager {
 
     public void loadMissingDefaultLanguageFiles() {
         //Create the Language Data Folder if it does not exist yet (the NotQuests/languages folder)
-        languageFolder = new File(main.getDataFolder().getPath() + "/languages/");
+        languageFolder = new File(main.getMain().getDataFolder().getPath() + "/languages/");
 
 
         final ArrayList<String> languageFiles = new ArrayList<>();
@@ -107,7 +107,7 @@ public class LanguageManager {
                         return;
                     }
 
-                    InputStream inputStream = main.getResource("translations/" + fileName);
+                    InputStream inputStream = main.getMain().getResource("translations/" + fileName);
                     //Instead of creating a new language file, we will copy the one from inside of the plugin jar into the plugin folder:
                     if (inputStream != null) {
                         try (OutputStream outputStream = new FileOutputStream(file)) {
@@ -127,7 +127,7 @@ public class LanguageManager {
                     main.getLogManager().info(LogCategory.LANGUAGE, "Creating default.yml...");
                     File defaultFile = new File(languageFolder, "default.yml");
 
-                    InputStream inputStream = main.getResource("translations/en.yml");
+                    InputStream inputStream = main.getMain().getResource("translations/en.yml");
                     //Instead of creating a new language file, we will copy the one from inside of the plugin jar into the plugin folder:
                     if (inputStream != null) {
                         try (OutputStream defaultOutputStream = new FileOutputStream(defaultFile)) {
@@ -185,7 +185,7 @@ public class LanguageManager {
 
 
             if (languageFolder == null) {
-                languageFolder = new File(main.getDataFolder().getPath() + "/languages/");
+                languageFolder = new File(main.getMain().getDataFolder().getPath() + "/languages/");
             }
 
             if (!languageFolder.exists()) {

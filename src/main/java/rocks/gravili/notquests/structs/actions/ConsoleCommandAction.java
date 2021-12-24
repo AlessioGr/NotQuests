@@ -88,7 +88,7 @@ public class ConsoleCommandAction extends Action {
             Bukkit.dispatchCommand(console, rewardConsoleCommand);
         } else {
             final String finalRewardConsoleCommand = rewardConsoleCommand;
-            Bukkit.getScheduler().runTask(main, () -> Bukkit.dispatchCommand(console, finalRewardConsoleCommand));
+            Bukkit.getScheduler().runTask(main.getMain(), () -> Bukkit.dispatchCommand(console, finalRewardConsoleCommand));
         }
 
 

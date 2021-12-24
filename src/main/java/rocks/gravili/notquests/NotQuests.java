@@ -1,31 +1,9 @@
-
-/*
- * NotQuests - A Questing plugin for Minecraft Servers
- * Copyright (C) 2021 Alessio Gravili
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package rocks.gravili.notquests;
 
-import io.papermc.lib.PaperLib;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.AdvancedPie;
 import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.java.JavaPlugin;
 import rocks.gravili.notquests.conversation.ConversationEvents;
 import rocks.gravili.notquests.conversation.ConversationManager;
 import rocks.gravili.notquests.events.ArmorStandEvents;
@@ -49,14 +27,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-/**
- * This is the entry point of NotQuests. All kinds of managers, commands and other shit is reistered here.
- *
- * @author Alessio Gravili
- */
-public final class NotQuests extends JavaPlugin {
-
+public class NotQuests {
     private static NotQuests instance;
+    private final Main main;
 
     //Managers
     private UtilManager utilManager;
@@ -86,11 +59,14 @@ public final class NotQuests extends JavaPlugin {
     //Metrics
     private Metrics metrics;
 
+    public final Main getMain(){
+        return main;
+    }
 
-    private BukkitAudiences adventure;
+    public NotQuests(Main main){
+        this.main = main;
+    }
 
-
-    @Override
     public void onLoad() {
 
 
@@ -115,16 +91,6 @@ public final class NotQuests extends JavaPlugin {
         }
     }
 
-    public boolean isAdventureEnabled() {
-        return this.adventure != null;
-    }
-
-    public BukkitAudiences adventure() {
-        if (this.adventure == null) {
-            throw new IllegalStateException("Tried to access Adventure when the plugin was disabled!");
-        }
-        return this.adventure;
-    }
 
     public static NotQuests getInstance() {
         return instance;
@@ -137,19 +103,14 @@ public final class NotQuests extends JavaPlugin {
     /**
      * Called when the plugin is enabled. A bunch of stuff is initialized here
      */
-    @Override
     public void onEnable() {
         instance = this;
 
-        // Initialize an audiences instance for the plugin
-        this.adventure = BukkitAudiences.create(this);
-
         logManager.lateInit(); //To initialize adventure
 
-        getLogManager().info("NotQuests is starting...");
+        getLogManager().info("NotQuests (Paper) is starting...");
 
-        //PaperLib for paper-specific methods (like getting TPS)
-        PaperLib.suggestPaper(this);
+
 
 
         //Create a new instance of the Util Manager which will be re-used everywhere
@@ -169,7 +130,7 @@ public final class NotQuests extends JavaPlugin {
 
         dataManager.loadStandardCompletions();
 
-        Bukkit.getServer().getPluginManager().registerEvents(PlayerJumpEvent.listener, this);
+        Bukkit.getServer().getPluginManager().registerEvents(PlayerJumpEvent.listener, main);
 
 
         //Create a new instance of the Quest Manager which will be re-used everywhere
@@ -215,16 +176,16 @@ public final class NotQuests extends JavaPlugin {
 
 
         //Register the Event Listeners in QuestEvents
-        getServer().getPluginManager().registerEvents(new QuestEvents(this), this);
+        main.getServer().getPluginManager().registerEvents(new QuestEvents(this), main);
 
         //Register the Event Listeners in InventoryEvents
-        getServer().getPluginManager().registerEvents(new InventoryEvents(this), this);
+        main.getServer().getPluginManager().registerEvents(new InventoryEvents(this), main);
 
         //Register the Event Listeners in TriggerEvents
-        getServer().getPluginManager().registerEvents(new TriggerEvents(this), this);
+        main.getServer().getPluginManager().registerEvents(new TriggerEvents(this), main);
 
         //Register the Event Listeners in ArmorStandEvents
-        getServer().getPluginManager().registerEvents(new ArmorStandEvents(this), this);
+        main.getServer().getPluginManager().registerEvents(new ArmorStandEvents(this), main);
 
 
         integrationsManager.registerEvents();
@@ -254,7 +215,7 @@ public final class NotQuests extends JavaPlugin {
 
 
         //Register the Event Listeners in ConversationEvents
-        getServer().getPluginManager().registerEvents(new ConversationEvents(this, conversationManager), this);
+        main.getServer().getPluginManager().registerEvents(new ConversationEvents(this, conversationManager), main);
 
         commandManager.setupAdminConversationCommands(conversationManager);
 
@@ -263,7 +224,7 @@ public final class NotQuests extends JavaPlugin {
     public void setupBStats() {
         //bStats statistics
         final int pluginId = 12824; // <- Plugin ID (on bstats)
-        metrics = new Metrics(this, pluginId);
+        metrics = new Metrics(main, pluginId);
 
         metrics.addCustomChart(new SingleLineChart("quests", new Callable<Integer>() {
             @Override
@@ -360,7 +321,6 @@ public final class NotQuests extends JavaPlugin {
     /**
      * Called when the plugin is disabled or reloaded via ServerUtils / PlugMan
      */
-    @Override
     public void onDisable() {
         getLogManager().info("NotQuests is shutting down...");
 
@@ -376,12 +336,6 @@ public final class NotQuests extends JavaPlugin {
         getDataManager().setAlreadyLoadedNPCs(false);
 
         integrationsManager.onDisable();
-
-
-        if (this.adventure != null) {
-            this.adventure.close();
-            this.adventure = null;
-        }
 
         packetManager.terminate();
 
@@ -499,4 +453,3 @@ public final class NotQuests extends JavaPlugin {
         return integrationsManager;
     }
 }
-

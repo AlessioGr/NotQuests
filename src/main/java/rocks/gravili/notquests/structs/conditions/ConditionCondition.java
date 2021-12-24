@@ -51,8 +51,7 @@ public class ConditionCondition extends Condition {
                 .argument(StringArgument.<CommandSender>newBuilder("Condition Identifier").withSuggestionsProvider(
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
-                            final Audience audience = main.adventure().sender(context.getSender());
-                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Condition Identifier (name)]", "");
+                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Condition Identifier (name)]", "");
 
                             return new ArrayList<>(main.getConditionsYMLManager().getConditionsAndIdentifiers().keySet());
 
@@ -60,8 +59,6 @@ public class ConditionCondition extends Condition {
                 ).single().build(), ArgumentDescription.of("Condition Identifier"))
                 .meta(CommandMeta.DESCRIPTION, "Adds a new Condition Condition to a quest (checks for another condition from conditions.yml)")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
-
 
                     final String conditionIdentifier = context.get("Condition Identifier");
 
@@ -74,7 +71,7 @@ public class ConditionCondition extends Condition {
 
                         main.getConditionsManager().addCondition(conditionCondition, context);
                     } else {
-                        audience.sendMessage(MiniMessage.miniMessage().parse(errorGradient + "Error! Condition with the name " + highlightGradient + conditionIdentifier + "</gradient> does not exist!</gradient>"));
+                        context.getSender().sendMessage(MiniMessage.miniMessage().parse(errorGradient + "Error! Condition with the name " + highlightGradient + conditionIdentifier + "</gradient> does not exist!</gradient>"));
                     }
 
 

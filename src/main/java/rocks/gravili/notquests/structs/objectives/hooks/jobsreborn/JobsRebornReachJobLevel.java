@@ -28,7 +28,6 @@ import com.gamingmesh.jobs.Jobs;
 import com.gamingmesh.jobs.container.Job;
 import com.gamingmesh.jobs.container.JobProgression;
 import com.gamingmesh.jobs.container.JobsPlayer;
-import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -59,8 +58,7 @@ public class JobsRebornReachJobLevel extends Objective {
                 .argument(StringArgument.<CommandSender>newBuilder("Job Name").withSuggestionsProvider(
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
-                            final Audience audience = main.adventure().sender(context.getSender());
-                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Job Name]", "");
+                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Job Name]", "");
 
                             ArrayList<String> completions = new ArrayList<>();
                             for (Job job : Jobs.getJobs()) {
@@ -76,13 +74,12 @@ public class JobsRebornReachJobLevel extends Objective {
                 )
                 .meta(CommandMeta.DESCRIPTION, "Adds a new JobsRebornReachJobLevel Objective to a quest")
                 .handler((context) -> {
-                    Audience audience = main.adventure().sender(context.getSender());
                     int amount = context.get("level");
                     final boolean countPreviousLevels = !context.flags().isPresent("doNotCountPreviousLevels");
                     final String jobName = context.get("Job Name");
 
                     if (Jobs.getJob(jobName) == null) {
-                        audience.sendMessage(MiniMessage.miniMessage().parse(
+                        context.getSender().sendMessage(MiniMessage.miniMessage().parse(
                                 NotQuestColors.errorGradient + "Error: The Job with the name " + NotQuestColors.highlightGradient + jobName + "</GRADIENT> was not found!"
                         ));
                         return;

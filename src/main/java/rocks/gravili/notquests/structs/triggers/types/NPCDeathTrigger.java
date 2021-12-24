@@ -51,8 +51,7 @@ public class NPCDeathTrigger extends Trigger {
                         completions.add("" + npc.getId());
                     }
                     final List<String> allArgs = context.getRawInput();
-                    final Audience audience = main.adventure().sender(context.getSender());
-                    main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[NPC ID]", "[Amount of Deaths]");
+                    main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[NPC ID]", "[Amount of Deaths]");
 
                     return completions;
                 }).build(), ArgumentDescription.of("ID of the Citizens NPC the player has to escort."))

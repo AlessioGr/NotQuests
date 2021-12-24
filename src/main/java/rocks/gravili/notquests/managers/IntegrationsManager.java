@@ -44,7 +44,7 @@ public class IntegrationsManager {
     public void enableIntegrations() {
         //Vault Hook
         if (main.getConfiguration().isIntegrationVaultEnabled()) {
-            if (main.getServer().getPluginManager().getPlugin("Vault") != null) {
+            if (main.getMain().getServer().getPluginManager().getPlugin("Vault") != null) {
                 vaultManager = new VaultManager(main);
                 if (!vaultManager.setupEconomy()) {
                     main.getLogManager().warn("Vault Dependency not found! Some features have been disabled. I recommend you to install Vault for the best experience.");
@@ -60,7 +60,7 @@ public class IntegrationsManager {
 
         //MythicMobs Hook
         if (main.getConfiguration().isIntegrationMythicMobsEnabled()) {
-            if (main.getServer().getPluginManager().getPlugin("MythicMobs") != null && Objects.requireNonNull(main.getServer().getPluginManager().getPlugin("MythicMobs")).isEnabled()) {
+            if (main.getMain().getServer().getPluginManager().getPlugin("MythicMobs") != null && Objects.requireNonNull(main.getMain().getServer().getPluginManager().getPlugin("MythicMobs")).isEnabled()) {
                 mythicMobsEnabled = true;
                 main.getLogManager().info("MythicMobs found! Enabling MythicMobs support...");
                 mythicMobsManager = new MythicMobsManager(main);
@@ -70,7 +70,7 @@ public class IntegrationsManager {
 
         //EliteMobs Hook
         if (main.getConfiguration().isIntegrationEliteMobsEnabled()) {
-            if (main.getServer().getPluginManager().getPlugin("EliteMobs") != null && Objects.requireNonNull(main.getServer().getPluginManager().getPlugin("EliteMobs")).isEnabled()) {
+            if (main.getMain().getServer().getPluginManager().getPlugin("EliteMobs") != null && Objects.requireNonNull(main.getMain().getServer().getPluginManager().getPlugin("EliteMobs")).isEnabled()) {
                 eliteMobsEnabled = true;
                 main.getLogManager().info("EliteMobs found! Enabling EliteMobs support...");
             }
@@ -78,7 +78,7 @@ public class IntegrationsManager {
 
         //BetonQuest Hook
         if (main.getConfiguration().isIntegrationBetonQuestEnabled()) {
-            if (main.getServer().getPluginManager().getPlugin("BetonQuest") != null && Objects.requireNonNull(main.getServer().getPluginManager().getPlugin("BetonQuest")).isEnabled()) {
+            if (main.getMain().getServer().getPluginManager().getPlugin("BetonQuest") != null && Objects.requireNonNull(main.getMain().getServer().getPluginManager().getPlugin("BetonQuest")).isEnabled()) {
                 betonQuestEnabled = true;
                 main.getLogManager().info("BetonQuest found! Enabling BetonQuest support...");
                 betonQuestManager = new BetonQuestManager(main);
@@ -88,7 +88,7 @@ public class IntegrationsManager {
 
         //WorldEdit
         if (main.getConfiguration().isIntegrationWorldEditEnabled()) {
-            if (main.getServer().getPluginManager().getPlugin("WorldEdit") != null) {
+            if (main.getMain().getServer().getPluginManager().getPlugin("WorldEdit") != null) {
                 worldEditManager = new WorldEditManager(main);
                 worldEditEnabled = false;
                 main.getLogManager().info("WorldEdit found! Enabling WorldEdit support...");
@@ -99,7 +99,7 @@ public class IntegrationsManager {
 
         //Enable 'Citizens' integration. If it's not found, it will just disable some NPC features which can mostly be replaced by armor stands
         if (main.getConfiguration().isIntegrationCitizensEnabled()) {
-            if (main.getServer().getPluginManager().getPlugin("Citizens") == null || !Objects.requireNonNull(main.getServer().getPluginManager().getPlugin("Citizens")).isEnabled()) {
+            if (main.getMain().getServer().getPluginManager().getPlugin("Citizens") == null || !Objects.requireNonNull(main.getMain().getServer().getPluginManager().getPlugin("Citizens")).isEnabled()) {
                 main.getLogManager().info("Citizens Dependency not found! Congratulations! In NotQuests, you can use armor stands instead of Citizens NPCs");
 
             } else {
@@ -111,7 +111,7 @@ public class IntegrationsManager {
 
         //Enable 'SlimeFun' integration.
         if (main.getConfiguration().isIntegrationSlimeFunEnabled()) {
-            if (main.getServer().getPluginManager().getPlugin("Slimefun") == null || !Objects.requireNonNull(main.getServer().getPluginManager().getPlugin("Slimefun")).isEnabled()) {
+            if (main.getMain().getServer().getPluginManager().getPlugin("Slimefun") == null || !Objects.requireNonNull(main.getMain().getServer().getPluginManager().getPlugin("Slimefun")).isEnabled()) {
                 slimefunEnabled = false;
             } else {
                 slimefunManager = new SlimefunManager(main);
@@ -122,7 +122,7 @@ public class IntegrationsManager {
 
         //LuckPerms
         if (main.getConfiguration().isIntegrationLuckPermsEnabled()) {
-            if (main.getServer().getPluginManager().getPlugin("LuckPerms") != null) {
+            if (main.getMain().getServer().getPluginManager().getPlugin("LuckPerms") != null) {
                 luckpermsManager = new LuckpermsManager(main);
                 luckpermsEnabled = true;
                 main.getLogManager().info("LuckPerms found! Enabling LuckPerms support...");
@@ -132,7 +132,7 @@ public class IntegrationsManager {
 
         //UltimateClans
         if (main.getConfiguration().isIntegrationUltimateClansEnabled()) {
-            if (main.getServer().getPluginManager().getPlugin("UltimateClans") != null) {
+            if (main.getMain().getServer().getPluginManager().getPlugin("UltimateClans") != null) {
                 ultimateClansEnabled = true;
                 ultimateClansManager = new UltimateClansManager(main);
                 main.getLogManager().info("UltimateClans found! Enabling UltimateClans support...");
@@ -141,7 +141,7 @@ public class IntegrationsManager {
 
         //Towny
         if (main.getConfiguration().isIntegrationTownyEnabled()) {
-            if (main.getServer().getPluginManager().getPlugin("Towny") != null) {
+            if (main.getMain().getServer().getPluginManager().getPlugin("Towny") != null) {
                 townyEnabled = true;
                 main.getLogManager().info("Towny found! Enabling Towny support...");
             }
@@ -149,7 +149,7 @@ public class IntegrationsManager {
 
         //JobsReborn
         if (main.getConfiguration().isIntegrationJobsRebornEnabled()) {
-            if (main.getServer().getPluginManager().getPlugin("Jobs") != null) {
+            if (main.getMain().getServer().getPluginManager().getPlugin("Jobs") != null) {
                 jobsRebornEnabled = true;
                 main.getLogManager().info("Jobs Reborn found! Enabling Jobs Reborn support...");
             }
@@ -157,7 +157,7 @@ public class IntegrationsManager {
 
         //Project Korra
         if (main.getConfiguration().isIntegrationJobsRebornEnabled()) {
-            if (main.getServer().getPluginManager().getPlugin("ProjectKorra") != null) {
+            if (main.getMain().getServer().getPluginManager().getPlugin("ProjectKorra") != null) {
                 projectKorraManager = new ProjectKorraManager(main);
                 projectKorraEnabled = true;
                 main.getLogManager().info("Project Korra found! Enabling Project Korra support...");
@@ -183,31 +183,31 @@ public class IntegrationsManager {
 
     public void registerEvents() {
         if (isCitizensEnabled()) {
-            main.getServer().getPluginManager().registerEvents(new CitizensEvents(main), main);
+            main.getMain().getServer().getPluginManager().registerEvents(new CitizensEvents(main), main.getMain());
         }
 
         if (isMythicMobsEnabled()) {
-            main.getServer().getPluginManager().registerEvents(new MythicMobsEvents(main), main);
+            main.getMain().getServer().getPluginManager().registerEvents(new MythicMobsEvents(main), main.getMain());
         }
 
         if (isEliteMobsEnabled()) {
-            main.getServer().getPluginManager().registerEvents(new EliteMobsEvents(main), main);
+            main.getMain().getServer().getPluginManager().registerEvents(new EliteMobsEvents(main), main.getMain());
         }
 
         if (isTownyEnabled()) {
-            main.getServer().getPluginManager().registerEvents(new TownyEvents(main), main);
+            main.getMain().getServer().getPluginManager().registerEvents(new TownyEvents(main), main.getMain());
         }
 
         if (isJobsRebornEnabled()) {
-            main.getServer().getPluginManager().registerEvents(new JobsRebornEvents(main), main);
+            main.getMain().getServer().getPluginManager().registerEvents(new JobsRebornEvents(main), main.getMain());
         }
 
         if (isProjectKorraEnabled()) {
-            main.getServer().getPluginManager().registerEvents(new ProjectKorraEvents(main), main);
+            main.getMain().getServer().getPluginManager().registerEvents(new ProjectKorraEvents(main), main.getMain());
         }
 
         if (isSlimefunEnabled()) {
-            main.getServer().getPluginManager().registerEvents(new SlimefunEvents(main), main);
+            main.getMain().getServer().getPluginManager().registerEvents(new SlimefunEvents(main), main.getMain());
         }
     }
 
@@ -217,7 +217,7 @@ public class IntegrationsManager {
             mythicMobsEnabled = true;
             main.getLogManager().info("MythicMobs found! Enabling MythicMobs support (late)...");
             mythicMobsManager = new MythicMobsManager(main);
-            main.getServer().getPluginManager().registerEvents(new MythicMobsEvents(main), main);
+            main.getMain().getServer().getPluginManager().registerEvents(new MythicMobsEvents(main), main.getMain());
 
             main.getDataManager().loadStandardCompletions();
         }
@@ -231,7 +231,7 @@ public class IntegrationsManager {
             citizensEnabled = true;
             main.getLogManager().info("Citizens found! Enabling Citizens support (late)...");
             main.getDataManager().setAlreadyLoadedNPCs(false);
-            main.getServer().getPluginManager().registerEvents(new CitizensEvents(main), main);
+            main.getMain().getServer().getPluginManager().registerEvents(new CitizensEvents(main), main.getMain());
             if (!main.getDataManager().isAlreadyLoadedNPCs()) { //Just making sure
                 main.getDataManager().loadNPCData();
             }

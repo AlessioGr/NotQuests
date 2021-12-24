@@ -105,8 +105,7 @@ public class CompletedObjectiveCondition extends Condition {
                     .argument(IntegerArgument.<CommandSender>newBuilder("Depending Objective ID").withMin(1).withSuggestionsProvider(
                                     (context, lastString) -> {
                                         final List<String> allArgs = context.getRawInput();
-                                        final Audience audience = main.adventure().sender(context.getSender());
-                                        main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[Depending Objective ID]", "");
+                                        main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Depending Objective ID]", "");
 
                                         ArrayList<String> completions = new ArrayList<>();
 
@@ -134,8 +133,6 @@ public class CompletedObjectiveCondition extends Condition {
                             .build(), ArgumentDescription.of("Depending Objective ID"))
                     .meta(CommandMeta.DESCRIPTION, "Adds a new OtherQuest Requirement to a quest")
                     .handler((context) -> {
-                        final Audience audience = main.adventure().sender(context.getSender());
-
                         final Quest quest = context.get("quest");
 
                         final int objectiveID = context.get("Objective ID");
@@ -153,7 +150,7 @@ public class CompletedObjectiveCondition extends Condition {
 
                             main.getConditionsManager().addCondition(completedObjectiveCondition, context);
                         } else {
-                            audience.sendMessage(MiniMessage.miniMessage().parse(errorGradient + "Error: You cannot set an objective to depend on itself!"));
+                            context.getSender().sendMessage(MiniMessage.miniMessage().parse(errorGradient + "Error: You cannot set an objective to depend on itself!"));
                         }
 
                     }));

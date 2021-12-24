@@ -50,8 +50,7 @@ public class TriggerCommandObjective extends Objective {
                 .argument(StringArgument.<CommandSender>newBuilder("Trigger name").withSuggestionsProvider(
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
-                            final Audience audience = main.adventure().sender(context.getSender());
-                            main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[New Trigger Name]", "[Amount of triggers needed]");
+                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[New Trigger Name]", "[Amount of triggers needed]");
 
                             ArrayList<String> completions = new ArrayList<>();
                             completions.add("<Enter new TriggerCommand name>");

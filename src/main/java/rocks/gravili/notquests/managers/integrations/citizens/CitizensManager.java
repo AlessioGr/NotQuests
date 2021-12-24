@@ -72,7 +72,7 @@ public class CitizensManager {
             main.getLogManager().info("Trying to bind Conversations to NPCs...");
             for (Conversation conversation : main.getConversationManager().getAllConversations()) {
                 if (!Bukkit.isPrimaryThread()) {
-                    Bukkit.getScheduler().runTask(main, conversation::bindToCitizensNPC);
+                    Bukkit.getScheduler().runTask(main.getMain(), conversation::bindToCitizensNPC);
                 } else {
                     conversation.bindToCitizensNPC();
                 }
@@ -168,7 +168,7 @@ public class CitizensManager {
                     if (followerTrait.getFollowingPlayer() == null || !followerTrait.getFollowingPlayer().equals(player)) {
                         if (!Bukkit.isPrimaryThread()) {
                             final FollowTrait finalFollowerTrait = followerTrait;
-                            Bukkit.getScheduler().runTask(main, () -> {
+                            Bukkit.getScheduler().runTask(main.getMain(), () -> {
                                 finalFollowerTrait.toggle(player, false);
                             });
                         } else {

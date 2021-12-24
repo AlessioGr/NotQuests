@@ -26,6 +26,8 @@ import cloud.commandframework.paper.PaperCommandManager;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -64,14 +66,12 @@ public class TalkToNPCObjective extends Objective {
                     }
                     completions.add("armorstand");
                     final List<String> allArgs = context.getRawInput();
-                    final Audience audience = main.adventure().sender(context.getSender());
-                    main.getUtilManager().sendFancyCommandCompletion(audience, allArgs.toArray(new String[0]), "[NPC ID / 'armorstand']", "");
+                    main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[NPC ID / 'armorstand']", "");
 
                     return completions;
                 }).build(), ArgumentDescription.of("ID of the Citizens NPC or 'armorstand' to whom you should talk."))
                 .meta(CommandMeta.DESCRIPTION, "Adds a new TalkToNPC Objective to a quest.")
                 .handler((context) -> {
-                    final Audience audience = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
 
                     final String npcIDOrArmorstand = context.get("NPC or Armorstand");
@@ -79,7 +79,7 @@ public class TalkToNPCObjective extends Objective {
 
                     if (!npcIDOrArmorstand.equalsIgnoreCase("armorstand")) {
                         if (!main.getIntegrationsManager().isCitizensEnabled()) {
-                            audience.sendMessage(MiniMessage.miniMessage().parse(
+                            context.getSender().sendMessage(MiniMessage.miniMessage().parse(
                                     NotQuestColors.errorGradient + "Error: Any kind of NPC stuff has been disabled, because you don't have the Citizens plugin installed on your server. You need to install the Citizens plugin in order to use Citizen NPCs. You can, however, use armor stands as an alternative. To do that, just enter 'armorstand' instead of the NPC ID."
                             ));
                             return;
@@ -88,7 +88,7 @@ public class TalkToNPCObjective extends Objective {
                         try {
                             npcID = Integer.parseInt(npcIDOrArmorstand);
                         } catch (NumberFormatException e) {
-                            audience.sendMessage(
+                            context.getSender().sendMessage(
                                     MiniMessage.miniMessage().parse(
                                             NotQuestColors.errorGradient + "Invalid NPC ID."
                                     )
@@ -106,33 +106,34 @@ public class TalkToNPCObjective extends Objective {
                             ItemStack itemStack = new ItemStack(Material.PAPER, 1);
                             //give a specialitem. clicking an armorstand with that special item will remove the pdb.
 
-                            NamespacedKey key = new NamespacedKey(main, "notquests-item");
-                            NamespacedKey QuestNameKey = new NamespacedKey(main, "notquests-questname");
+                            NamespacedKey key = new NamespacedKey(main.getMain(), "notquests-item");
+                            NamespacedKey QuestNameKey = new NamespacedKey(main.getMain(), "notquests-questname");
 
                             ItemMeta itemMeta = itemStack.getItemMeta();
-                            //Only paper List<Component> lore = new ArrayList<>();
-                            List<String> lore = new ArrayList<>();
+                            List<Component> lore = new ArrayList<>();
 
                             assert itemMeta != null;
 
                             itemMeta.getPersistentDataContainer().set(QuestNameKey, PersistentDataType.STRING, quest.getQuestName());
                             itemMeta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, 5);
 
-                            //Only paper itemMeta.displayName(Component.text("§dCheck Armor Stand", NamedTextColor.LIGHT_PURPLE));
-                            itemMeta.setDisplayName("§dAdd TalkToNPC Objective to Armor Stand");
-                            //Only paper lore.add(Component.text("§fRight-click an Armor Stand to see which Quests are attached to it."));
-                            lore.add("§fRight-click an Armor Stand to add the following objective to it:");
-                            lore.add("§eTalkToNPC §fObjective of Quest §b" + quest.getQuestName() + "§f.");
+                            itemMeta.displayName(MiniMessage.miniMessage().parse("<LIGHT_PURPLE>Add TalkToNPC Objective to Armor Stand"));
+
+                            lore.add(MiniMessage.miniMessage().parse(
+                                    "<WHITE>Right-click an Armor Stand to add the following objective to it:"
+                            ));
+                            lore.add(MiniMessage.miniMessage().parse(
+                                    "<YELLOW>TalkToNPC <WHITE>Objective of Quest <AQUA>" + quest.getQuestName() + "</AQUA>."
+                            ));
 
                             itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-                            //Only paper itemMeta.lore(lore);
+                            itemMeta.lore(lore);
 
-                            itemMeta.setLore(lore);
                             itemStack.setItemMeta(itemMeta);
 
                             player.getInventory().addItem(itemStack);
 
-                            audience.sendMessage(
+                            context.getSender().sendMessage(
                                     MiniMessage.miniMessage().parse(
                                             NotQuestColors.successGradient + "You have been given an item with which you can add the TalkToNPC Objective to an armor stand. Check your inventory!"
                                     )
@@ -140,7 +141,7 @@ public class TalkToNPCObjective extends Objective {
 
 
                         } else {
-                            audience.sendMessage(
+                            context.getSender().sendMessage(
                                     MiniMessage.miniMessage().parse(
                                             NotQuestColors.errorGradient + "Must be a player!"
                                     )
