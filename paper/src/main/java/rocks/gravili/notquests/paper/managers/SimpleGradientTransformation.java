@@ -24,14 +24,6 @@
 package rocks.gravili.notquests.paper.managers;
 
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.PrimitiveIterator;
-import java.util.stream.Stream;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.flattener.ComponentFlattener;
@@ -46,6 +38,9 @@ import net.kyori.adventure.text.minimessage.transformation.Transformation;
 import net.kyori.adventure.text.minimessage.transformation.inbuild.ComponentTransformation;
 import net.kyori.examination.ExaminableProperty;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * A transformation that applies a colour gradient. Source code has been copied from @{@link net.kyori.adventure.text.minimessage.transformation.inbuild.GradientTransformation}
@@ -130,6 +125,23 @@ public final class SimpleGradientTransformation extends Transformation implement
         final List<String> args = new ArrayList<>();
         args.add("#fff700");
         args.add("#ffa629");
+
+        return create(args);
+    }
+
+
+    public static SimpleGradientTransformation positive(final String name, final List<TagPart> args2) {
+        final List<String> args = new ArrayList<>();
+        args.add("#73ff00");
+        args.add("#00ffd0");
+
+        return create(args);
+    }
+
+    public static SimpleGradientTransformation negative(final String name, final List<TagPart> args2) {
+        final List<String> args = new ArrayList<>();
+        args.add("#ff006f");
+        args.add("#ff002f");
 
         return create(args);
     }

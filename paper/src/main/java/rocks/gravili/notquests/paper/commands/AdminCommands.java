@@ -46,8 +46,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static rocks.gravili.notquests.paper.commands.NotQuestColors.*;
-
 public class AdminCommands {
     private final NotQuests main;
     private final PaperCommandManager<CommandSender> manager;
@@ -301,7 +299,7 @@ public class AdminCommands {
                         if (questPlayer != null) {
                             questPlayer.forceActiveQuestCompleted(activeQuest);
                             context.getSender().sendMessage(main.parse(
-                                    "<success>The active quest <highlight>" + activeQuest.getQuest().getQuestName() + "</highlight> has been completed for player <highlight2>" + player.getName() + "</highlight2>!</gradient>"
+                                    "<success>The active quest <highlight>" + activeQuest.getQuest().getQuestName() + "</highlight> has been completed for player <highlight2>" + player.getName() + "</highlight2>!"
                             ));
 
                         } else {

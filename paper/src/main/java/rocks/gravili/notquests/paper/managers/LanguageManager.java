@@ -19,7 +19,6 @@
 package rocks.gravili.notquests.paper.managers;
 
 import me.clip.placeholderapi.PlaceholderAPI;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.io.IOUtils;
@@ -294,9 +293,9 @@ public class LanguageManager {
                 return "Language string not found: " + languageString;
             }
             if (!main.getConfiguration().supportPlaceholderAPIInTranslationStrings || !main.getIntegrationsManager().isPlaceholderAPIEnabled() || targetPlayer == null) {
-                return applySpecial(ChatColor.translateAlternateColorCodes('&', applyInternalPlaceholders(translatedString, internalPlaceholderObjects))); //Removed applyColor( for minimessage support
+                return applySpecial(applyInternalPlaceholders(translatedString, internalPlaceholderObjects)); //Removed applyColor( for minimessage support
             } else {
-                return applySpecial(ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.setPlaceholders(targetPlayer, applyInternalPlaceholders(translatedString, internalPlaceholderObjects))));
+                return applySpecial(PlaceholderAPI.setPlaceholders(targetPlayer, applyInternalPlaceholders(translatedString, internalPlaceholderObjects)));
             }
         }
     }

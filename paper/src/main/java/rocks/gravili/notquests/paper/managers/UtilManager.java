@@ -152,9 +152,9 @@ public class UtilManager {
 
         Component currentCompletion;
         if (args[args.length - 1].isBlank()) {
-            currentCompletion = main.parse("<RESET>" + NotQuestColors.highlightMM + "**" + hintCurrentArg);
+            currentCompletion = main.parse(NotQuestColors.highlightMM + "<bold>" + hintCurrentArg + "</bold>");
         } else {
-            currentCompletion = main.parse("<RESET><YELLOW>**" + args[args.length - 1]);
+            currentCompletion = main.parse("<YELLOW><bold>" + args[args.length - 1] + "</bold>");
 
         }
 
@@ -163,16 +163,16 @@ public class UtilManager {
             if (hintNextArgs.length() > 15) {
                 hintNextArgs = hintNextArgs.substring(0, 14) + "...";
             }
-            return main.parse(NotQuestColors.lightHighlightMM + "<ITALIC>" + argsTogether)
+            return main.parse(NotQuestColors.lightHighlightMM + argsTogether)
                     .append(currentCompletion)
                     .append(main.parse("<GRAY> " + hintNextArgs));
         } else {
             if (!args[args.length - 1].isBlank()) { //Command finished
-                return main.parse(NotQuestColors.lightHighlightMM + "<ITALIC>" + argsTogether)
+                return main.parse(NotQuestColors.lightHighlightMM + argsTogether)
                         .append(currentCompletion)
                         .append(Component.text(" ✓", NamedTextColor.GREEN, TextDecoration.BOLD));
             } else {
-                return main.parse(NotQuestColors.lightHighlightMM + "<ITALIC>" + argsTogether)
+                return main.parse(NotQuestColors.lightHighlightMM +  argsTogether)
                         .append(currentCompletion);
             }
 
@@ -267,11 +267,15 @@ public class UtilManager {
 
 
     public final String getCenteredMessage(final String message) {
-        String[] lines = miniMessageToLegacy(message).split("\n", 40);//TODO: Rethink with minimessage in mind
+        //String[] lines = miniMessageToLegacy(message).split("\n", 40);//TODO: Rethink with minimessage in mind
         StringBuilder returnMessage = new StringBuilder();
 
+        String[] lines = main.getMiniMessage().stripTokens(message).split("\n", 40);
+        String[] miniMessageLines = message.split("\n", 40);
+
+
         int lineCounter = 0;
-        for (String line : lines) {//TODO: Rethink with minimessage in mind
+        for (String line : lines) { //TODO: Rethink with minimessage in mind
             lineCounter++;
             int messagePxSize = 0;
             boolean previousCode = false;
@@ -297,7 +301,7 @@ public class UtilManager {
                 sb.append(" ");
                 compensated += spaceLength;
             }
-            returnMessage.append(sb).append(line);
+            returnMessage.append(sb).append(miniMessageLines[lineCounter-1]);
             if (lineCounter != lines.length) {
                 returnMessage.append("\n");
             }

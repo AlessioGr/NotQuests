@@ -100,7 +100,7 @@ dependencies {
     implementation("org.bstats:bstats-bukkit:2.2.1")
     implementation("de.themoep:inventorygui:1.5-SNAPSHOT")
 
-    compileOnly("io.papermc.paper:paper-api:1.18.1-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.18.1-R0.1-SNAPSHOT!!")
     compileOnly("net.citizensnpcs:citizens-main:2.0.29-SNAPSHOT")
     compileOnly("me.clip:placeholderapi:2.11.0")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7")
@@ -128,12 +128,22 @@ dependencies {
 
 
     //Shaded
-    implementation("net.kyori:adventure-text-minimessage:4.10.0-SNAPSHOT")
-    implementation("net.kyori:adventure-text-serializer-bungeecord:4.0.1")
+    implementation("net.kyori:adventure-text-minimessage:4.10.0-SNAPSHOT") {
+        exclude(group = "net.kyori", module = "adventure-api")
+        exclude(group = "net.kyori", module = "adventure-bom")
+    }
+
+    implementation("net.kyori:adventure-text-serializer-bungeecord:4.0.1"){
+        exclude(group= "net.kyori", module= "adventure-api")
+    }
 
     //CloudCommands
-    implementation("cloud.commandframework:cloud-paper:1.6.1")
-    implementation("cloud.commandframework:cloud-minecraft-extras:1.6.1")
+    implementation("cloud.commandframework:cloud-paper:1.6.1"){
+        exclude(group= "net.kyori", module= "adventure-api")
+    }
+    implementation("cloud.commandframework:cloud-minecraft-extras:1.6.1"){
+        exclude(group= "net.kyori", module= "adventure-api")
+    }
     //Else it errors:
     implementation("io.leangen.geantyref:geantyref:1.3.13")
     //Interfaces

@@ -53,6 +53,15 @@ public class MessageManager {
                 SimpleGradientTransformation::veryUnimportant
         );
 
+        TransformationType<?> negative = TransformationType.transformationType(
+                TransformationType.acceptingNames("negative"),
+                SimpleGradientTransformation::negative
+        );
+        TransformationType<?> positive = TransformationType.transformationType(
+                TransformationType.acceptingNames("positive"),
+                SimpleGradientTransformation::positive
+        );
+
 
         TransformationRegistry transformationRegistry = TransformationRegistry.standard().toBuilder()
                 .add(mainGradient)
@@ -63,10 +72,10 @@ public class MessageManager {
                 .add(unimportant)
                 .add(veryUnimportant)
                 .add(warn)
+                .add(negative)
+                .add(positive)
+
                 .build();
-
-
-
 
 
         miniMessage = MiniMessage.builder().transformations(transformationRegistry).build();

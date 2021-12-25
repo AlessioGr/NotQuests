@@ -1,107 +1,107 @@
 chat:
-  wrong-command-usage: '<RED>Wrong command usage!'
-  missing-permission: '<RED>No permission! Required permission node: <YELLOW>%PERMISSION%'
-  too-many-arguments: '<RED>Too many arguments!'
-  quest-successfully-accepted: '<GREEN>You have successfully accepted the Quest <AQUA>%QUESTNAME%<GREEN>.'
-  quest-description: '<YELLOW>Quest description: <GRAY>%QUESTDESCRIPTION%'
-  quest-already-accepted: '<RED>Quest already accepted.'
-  quest-failed: '<YELLOW>You have <RED><BOLD>FAILED</BOLD></RED> the Quest <AQUA>%QUESTNAME%</AQUA>!'
-  quest-aborted: '<GREEN>The active quest <AQUA>%QUESTNAME%</AQUA> has been aborted!'
+  wrong-command-usage: '<error>Wrong command usage!'
+  missing-permission: '<error>No permission! Required permission node: <highlight>%PERMISSION%'
+  too-many-arguments: '<error>Too many arguments!'
+  quest-successfully-accepted: '<success>You have successfully accepted the Quest <highlight>%QUESTNAME%</highlight>.'
+  quest-description: '<main>Quest description: <highlight>%QUESTDESCRIPTION%'
+  quest-already-accepted: '<error>Quest already accepted.'
+  quest-failed: '<main>You have <negative><BOLD>FAILED</BOLD></negative> the Quest <highlight>%QUESTNAME%</highlight>!'
+  quest-aborted: '<main>The active quest <highlight>%QUESTNAME%</highlight> has been aborted!'
   quest-completed-and-rewards-given: |2+
 
-    <CENTER><GREEN>[Quest Completed]
-    <CENTER><AQUA><BOLD>%QUESTNAME%
+    <CENTER><positive>[Quest Completed]
+    <CENTER><highlight><BOLD>%QUESTNAME%
     <EMPTY>
-  missing-quest-description: '<YELLOW>This quest has no quest description.'
-  objectives-label-after-quest-accepting: '<BLUE>Objectives:'
+  missing-quest-description: '<unimportant>This quest has no quest description.'
+  objectives-label-after-quest-accepting: '<highlight>Objectives:'
   questpoints:
-    query: '<YELLOW>You currently have <AQUA>%QUESTPOINTS%</AQUA> quest points.'
-    none: '<RED>Seems like you don''t have any quest points!'
-  no-quests-accepted: '<RED>Seems like you don''t have any active quests!'
-  quest-does-not-exist: '<RED>Quest <AQUA>%QUESTNAME%</AQUA> does not exist!'
-  quest-not-found-or-does-not-exist: '<RED>Quest <AQUA>%QUESTNAME%</AQUA> not found or not active!'
-  active-quests-label: '<YELLOW>Active quests:'
-  take-disabled: '<RED>Accepting or previewing the quest <AQUA>%QUESTNAME%</AQUA> is disabled.'
-  quest-not-active-error: '<RED>Error: <AQUA>%QUESTNAME%</AQUA> is not an active Quest!'
+    query: '<main>You currently have <highlight>%QUESTPOINTS%</highlight> quest points.'
+    none: '<error>Seems like you don''t have any quest points!'
+  no-quests-accepted: '<error>Seems like you don''t have any active quests!'
+  quest-does-not-exist: '<error>Quest <highlight>%QUESTNAME%</highlight> does not exist!'
+  quest-not-found-or-does-not-exist: '<error>Quest <highlight>%QUESTNAME%</highlight> not found or not active!'
+  active-quests-label: '<highlight>Active quests:'
+  take-disabled: '<error>Accepting or previewing the quest <highlight>%QUESTNAME%</highlight> is disabled.'
+  quest-not-active-error: '<error>Error: <highlight>%QUESTNAME%</highlight> is not an active Quest!'
   objectives:
-    counter: '<YELLOW>%OBJECTIVEID%. %OBJECTIVENAME%:'
-    hidden: '<YELLOW>%OBJECTIVEID%. <GRAY><BOLD>[HIDDEN]'
-    description: '   <BLUE>Description: <GOLD>%OBJECTIVEDESCRIPTION%'
-    progress: '   <GRAY>Progress: <WHITE>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
-    successfully-completed: '<GREEN>You have successfully completed the objective <YELLOW>%OBJECTIVENAME%</YELLOW> for quest <AQUA>%QUESTNAME%</AQUA>!'
+    counter: '<highlight>%OBJECTIVEID%.</highlight> <main>%OBJECTIVENAME%:'
+    hidden: '<highlight>%OBJECTIVEID%.</highlight> <unimportant><BOLD>[HIDDEN]'
+    description: '   <highlight>Description: <main>%OBJECTIVEDESCRIPTION%'
+    progress: '   <highlight>Progress: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
+    successfully-completed: '<success>You have successfully completed the objective <highlight>%OBJECTIVENAME%</highlight> for quest <highlight2>%QUESTNAME%</highlight2>!'
     taskDescription:
       breakBlocks:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Block to break: <WHITE>%EVENTUALCOLOR%%BLOCKTOBREAK%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Block to break: <highlight2>%EVENTUALCOLOR%%BLOCKTOBREAK%'
       breed:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Mob to breed: <WHITE>%EVENTUALCOLOR%%ENTITYTOBREED%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Mob to breed: <highlight2>%EVENTUALCOLOR%%ENTITYTOBREED%'
       collectItems:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Items to collect: <WHITE>%EVENTUALCOLOR%%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Items to collect: <highlight2>%EVENTUALCOLOR%%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
       consumeItems:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Items to consume: <WHITE>%EVENTUALCOLOR%%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Items to consume: <highlight2>%EVENTUALCOLOR%%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Items to craft: <WHITE>%EVENTUALCOLOR%%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Items to craft: <highlight2>%EVENTUALCOLOR%%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Items to deliver: <WHITE>%EVENTUALCOLOR%%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Items to deliver: <highlight2>%EVENTUALCOLOR%%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
       escortNPC:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Escort <WHITE>%EVENTUALCOLOR%%NPCNAME%</WHITE> %EVENTUALCOLOR%to <WHITE>%EVENTUALCOLOR%%DESTINATIONNPCNAME%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Escort <highlight2>%EVENTUALCOLOR%%NPCNAME%</highlight2> %EVENTUALCOLOR%to <highlight2>%EVENTUALCOLOR%%DESTINATIONNPCNAME%'
       killMobs:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Mobs to kill: <WHITE>%EVENTUALCOLOR%%MOBTOKILL%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Mobs to kill: <highlight2>%EVENTUALCOLOR%%MOBTOKILL%'
       otherQuest:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Quest completion: <WHITE>%EVENTUALCOLOR%%OTHERQUESTNAME%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Quest completion: <highlight2>%EVENTUALCOLOR%%OTHERQUESTNAME%'
       placeBlocks:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Block to place: <WHITE>%EVENTUALCOLOR%%BLOCKTOPLACE%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Block to place: <highlight2>%EVENTUALCOLOR%%BLOCKTOPLACE%'
       reachLocation:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Reach Location: <WHITE>%EVENTUALCOLOR%%LOCATIONNAME%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Reach Location: <highlight2>%EVENTUALCOLOR%%LOCATIONNAME%'
       talkToNPC:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Talk to <WHITE>%EVENTUALCOLOR%%NAME%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Talk to <highlight2>%EVENTUALCOLOR%%NAME%'
       triggerCommand:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Goal: <WHITE>%EVENTUALCOLOR%%TRIGGERNAME%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Goal: <highlight2>%EVENTUALCOLOR%%TRIGGERNAME%'
       killEliteMobs:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Kill Elite Mob: <WHITE>%EVENTUALCOLOR%%ELITEMOBNAME%'
-        any: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Kill any Elite Mob!'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Kill Elite Mob: <highlight2>%EVENTUALCOLOR%%ELITEMOBNAME%'
+        any: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Kill any Elite Mob!'
       runCommand:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Run command: <WHITE>%EVENTUALCOLOR%%COMMANDTORUN%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Run command: <highlight2>%EVENTUALCOLOR%%COMMANDTORUN%'
       interact:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%%INTERACTTYPE% Location: <WHITE>%EVENTUALCOLOR%%COORDINATES% <WHITE>%EVENTUALCOLOR%in world %EVENTUALCOLOR%%WORLDNAME%'
-        taskDescriptionProvided: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%%TASKDESCRIPTION%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%%INTERACTTYPE% Location: <highlight2>%EVENTUALCOLOR%%COORDINATES% <highlight2>%EVENTUALCOLOR%in world %EVENTUALCOLOR%%WORLDNAME%'
+        taskDescriptionProvided: '    <veryUnimportant>└─ <GRAY>%EVENTUALCOLOR%%TASKDESCRIPTION%'
       jump:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Jump <WHITE>%EVENTUALCOLOR%%AMOUNTOFJUMPS%</WHITE> %EVENTUALCOLOR%times'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Jump <highlight2>%EVENTUALCOLOR%%AMOUNTOFJUMPS%</highlight2> %EVENTUALCOLOR%times'
       sneak:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Sneak <WHITE>%EVENTUALCOLOR%%AMOUNTOFSNEAKS%</WHITE> %EVENTUALCOLOR%times'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Sneak <highlight2>%EVENTUALCOLOR%%AMOUNTOFSNEAKS%</highlight2> %EVENTUALCOLOR%times'
       smelt:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Items to smelt: <WHITE>%EVENTUALCOLOR%%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Items to smelt: <highlight2>%EVENTUALCOLOR%%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       townyReachResidentCount:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Reach resident amount: <WHITE>%EVENTUALCOLOR%%AMOUNT%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Reach resident amount: <highlight2>%EVENTUALCOLOR%%AMOUNT%'
       townyNationReachTownCount:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Reach town amount with your nation: <WHITE>%EVENTUALCOLOR%%AMOUNT%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Reach town amount with your nation: <highlight2>%EVENTUALCOLOR%%AMOUNT%'
       jobsRebornReachJobLevel:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Reach job level <WHITE>%EVENTUALCOLOR%%AMOUNT%</WHITE> with job <WHITE>%EVENTUALCOLOR%%JOB%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Reach job level <highlight2>%EVENTUALCOLOR%%AMOUNT%</highlight2> with job <highlight2>%EVENTUALCOLOR%%JOB%'
       SlimefunResearch:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Spend on research'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Spend on research'
       ProjectKorraUseAbility:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Use Ability: <WHITE>%EVENTUALCOLOR%%ABILITY%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Use Ability: <highlight2>%EVENTUALCOLOR%%ABILITY%'
 titles:
   quest-accepted:
-    title: '<WHITE>Quest accepted'
-    subtitle: <#b617ff>%QUESTNAME%
+    title: '<main>Quest accepted'
+    subtitle: <highlight>%QUESTNAME%
   quest-completed:
-    title: '<GREEN>Quest Completed'
-    subtitle: <#b617ff>%QUESTNAME%
+    title: '<positive>Quest Completed'
+    subtitle: <highlight>%QUESTNAME%
   quest-failed:
-    title: '<RED>Quest Failed'
-    subtitle: <#b617ff>%QUESTNAME%
+    title: '<negative>Quest Failed'
+    subtitle: <highlight>%QUESTNAME%
 gui:
-  reward-hidden-text: '. <GRAY>[HIDDEN]'
+  reward-hidden-text: '. <unimportant>[HIDDEN]'
   availableQuests:
-    title: '         <BLUE>Available Quests'
+    title: '         <highlight2>Available Quests'
     button:
       questPreview:
-        acceptedSuffix: ' <GREEN>[ACCEPTED]'
-        questNamePrefix: '<AQUA>'
-        questDescriptionPrefix: '<DARK_GRAY>'
-        bottomText: '<GREEN>Click to open Quest'
+        acceptedSuffix: ' <positive>[ACCEPTED]'
+        questNamePrefix: '<highlight>'
+        questDescriptionPrefix: '<veryUnimportant>'
+        bottomText: '<main>Click to open Quest'
   main:
-    title: '                <BLUE>Quests'
+    title: '                <highlight2>Quests'
     button:
       questpoints:
         text: |-
@@ -112,118 +112,121 @@ gui:
           <GREEN>Take a Quest
           <GRAY>Start a new Quest!
 
-          <DARK_GRAY>Some Quests cannot be
-          <DARK_GRAY>started like this.
+          <veryUnimportant>Some Quests cannot be
+          <veryUnimportant>started like this.
       abortquest:
         text: |-
-          <RED>Abort a Quest
-          <GRAY>Aborting a Quest may
-          <GRAY>lead to punishments.
+          <negative>Abort a Quest
+
+          <veryUnimportant>Aborting a Quest may
+          <veryUnimportant>lead to punishments.
       previewquest:
         text: |-
-          <BLUE>Preview Quest (Quest Info)
-          <GRAY>Show more information
-          <GRAY>about a Quest.
+          <main>Preview Quest (Quest Info)
+
+          <veryUnimportant>Show more information
+          <veryUnimportant>about a Quest.
       activequests:
         text: |-
-          <DARK_AQUA>Active Quests
-          <GRAY>Shows all of your
-          <GRAY>active Quests.
+          <highlight>Active Quests
+
+          <veryUnimportant>Shows all of your
+          <veryUnimportant>active Quests.
   activeQuests:
-    title: '             <BLUE>Active Quests'
+    title: '             <highlight2>Active Quests'
     button:
       activeQuestButton:
         text: |-
-          <AQUA>%QUESTNAME% <GREEN>[ACTIVE]
-          <GRAY>Progress: <GREEN>%COMPLETEDOBJECTIVESCOUNT% <WHITE>/ %ALLOBJECTIVESCOUNT%
-          <WHITE>Click to see details!
+          <highlight>%QUESTNAME% <positive>[ACTIVE]
+          <unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%
+          <main>Click to see details!
   takeQuestChoose:
-    title: '<BLUE>Which Quest do you want to take?'
+    title: '<highlight2>Which Quest do you want to take?'
     button:
       questPreview:
-        acceptedSuffix: ' <GREEN>[ACCEPTED]'
-        questNamePrefix: '<AQUA>'
-        questDescriptionPrefix: '<DARK_GRAY>'
-        bottomText: '<GREEN>Click to preview Quest!'
+        acceptedSuffix: ' <positive>[ACCEPTED]'
+        questNamePrefix: '<highlight>'
+        questDescriptionPrefix: '<veryUnimportant>'
+        bottomText: '<main>Click to preview Quest!'
   abortQuestChoose:
-    title: '  <BLUE>Active Quests you can abort'
+    title: '  <highlight2>Active Quests you can abort'
     button:
       abortQuestPreview:
         text: |-
-          <AQUA>%QUESTNAME% <GREEN>[ACTIVE]
-          <GRAY>Progress: <GREEN>%COMPLETEDOBJECTIVESCOUNT% <WHITE>/ %ALLOBJECTIVESCOUNT%
-          <RED>Click to abort Quest!
+          <highlight>%QUESTNAME% <positive>[ACTIVE]
+          <unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%
+          <negative>Click to abort Quest!
   previewQuestChoose:
-    title: '     <BLUE>Choose Quest to preview'
+    title: '     <highlight2>Choose Quest to preview'
     button:
       questPreview:
-        acceptedSuffix: ' <GREEN>[ACCEPTED]'
-        questNamePrefix: '<AQUA>'
-        questDescriptionPrefix: '<DARK_GRAY>'
-        bottomText: '<GREEN>Click to preview Quest!'
+        acceptedSuffix: ' <positive>[ACCEPTED]'
+        questNamePrefix: '<highlight>'
+        questDescriptionPrefix: '<veryUnimportant>'
+        bottomText: '<main>Click to preview Quest!'
   abortQuest:
-    title: '         <RED>Abort Confirmation'
+    title: '         <negative>Abort Confirmation'
     button:
       confirmAbort:
         text: |-
-          <AQUA>%QUESTNAME% <GREEN>[ACTIVE]
-          <GRAY>Progress: <GREEN>%COMPLETEDOBJECTIVESCOUNT% <WHITE>/ %ALLOBJECTIVESCOUNT%
-          <RED>Click to abort the quest <AQUA>%QUESTNAME%<RED>!
+          <highlight>%QUESTNAME% <positive>[ACTIVE]
+          <unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%
+          <negative>Click to abort the quest <highlight>%QUESTNAME%</highlight>!
       cancelAbort:
         text: |-
-          <GREEN>Click to NOT abort this quest
-          <GREEN>and cancel this action
+          <positive>Click to NOT abort this quest
+          <positive>and cancel this action
   previewQuest:
-    title: '<BLUE>Preview for Quest <AQUA>%QUESTNAME%'
+    title: '<highlight2>Preview for Quest <black>%QUESTNAME%'
     button:
       description:
         text: |-
-          <YELLOW>Description
-          <DARK_GRAY>%QUESTDESCRIPTION%
+          <highlight>Description
+          <veryUnimportant>%QUESTDESCRIPTION%
         empty: ???
       rewards:
         text: |-
-          <GREEN>Rewards
+          <positive>Rewards
           <WHITE>%QUESTREWARDS%
-        empty: '<DARK_GRAY>None or hidden'
+        empty: '<veryUnimportant>None or hidden'
       requirements:
         text: |-
-          <RED>Requirements
+          <negative>Requirements
           <WHITE>%QUESTREQUIREMENTS%
-        empty: '<DARK_GRAY>-'
+        empty: '<veryUnimportant>-'
       confirmTake:
         text: |-
-          <AQUA>%QUESTNAME%
-          <GREEN>Click to take the quest <AQUA>%QUESTNAME%
+          <highlight>%QUESTNAME%
+          <positive>Click to take the quest <highlight>%QUESTNAME%
       cancelTake:
         text: |-
-          <RED>Click to NOT take this quest
-          <RED>and cancel this action
+          <negative>Click to NOT take this quest
+          <negative>and cancel this action
   progress:
-    title: '<BLUE>Details for Quest <AQUA>%QUESTNAME%'
+    title: '<highlight2>Details for Quest <black>%QUESTNAME%'
     button:
       unlockedObjective:
         text: |-
-          <YELLOW>%ACTIVEOBJECTIVEID%. <AQUA>%OBJECTIVENAME%
-          <GOLD><BOLD>ACTIVE</BOLD>
-          <DARK_GRAY>%OBJECTIVEDESCRIPTION%
-          <GRAY>%ACTIVEOBJECTIVEDESCRIPTION%
+          <highlight2>%ACTIVEOBJECTIVEID%. <highlight>%OBJECTIVENAME%
+          <main><BOLD>ACTIVE</BOLD>
+          <veryUnimportant>%OBJECTIVEDESCRIPTION%
+          <unimportant>%ACTIVEOBJECTIVEDESCRIPTION%
 
-          <GRAY>Progress: <GREEN>%ACTIVEOBJECTIVEPROGRESS% <WHITE>/ %OBJECTIVEPROGRESSNEEDED%
+          <unimportant>Progress: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%
         description-empty: No Description
       lockedObjective:
         text: |-
-          <YELLOW>%ACTIVEOBJECTIVEID%. <GRAY><BOLD>[HIDDEN]
-          <YELLOW>This objective has not yet
-          <YELLOW>been unlocked!
+          <highlight2>%ACTIVEOBJECTIVEID%. <unimportant><BOLD>[HIDDEN]
+          <warn>This objective has not yet
+          <warn>been unlocked!
       completedObjective:
         text: |-
-          <GREEN><strikethrough>%ACTIVEOBJECTIVEID%. <DARK_GREEN><strikethrough>%OBJECTIVENAME%
-          <GREEN><BOLD>COMPLETED</BOLD>
-          <DARK_GRAY><strikethrough>%OBJECTIVEDESCRIPTION%
-          <GRAY>%COMPLETEDOBJECTIVEDESCRIPTION%
+          <highlight2><strikethrough>%ACTIVEOBJECTIVEID%. <positive><strikethrough>%OBJECTIVENAME%
+          <positive><BOLD>COMPLETED</BOLD>
+          <veryUnimportant><strikethrough>%OBJECTIVEDESCRIPTION%
+          <veryUnimportant>%COMPLETEDOBJECTIVEDESCRIPTION%
 
-          <GRAY><strikethrough>Progress: <GREEN><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <WHITE><strikethrough>/ %OBJECTIVEPROGRESSNEEDED%
+          <unimportant><strikethrough>Progress: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%
         description-empty: No Description
       previousPage:
         text: Go to previous page (%prevpage%)

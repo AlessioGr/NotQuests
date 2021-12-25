@@ -28,13 +28,13 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import rocks.gravili.notquests.spigot.objectives.Objective;
-import rocks.gravili.notquests.spigot.structs.triggers.Trigger;
 import rocks.gravili.notquests.spigot.NotQuests;
+import rocks.gravili.notquests.spigot.objectives.Objective;
 import rocks.gravili.notquests.spigot.structs.ActiveObjective;
 import rocks.gravili.notquests.spigot.structs.ActiveQuest;
 import rocks.gravili.notquests.spigot.structs.Quest;
 import rocks.gravili.notquests.spigot.structs.QuestPlayer;
+import rocks.gravili.notquests.spigot.structs.triggers.Trigger;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -294,9 +294,49 @@ public class LanguageManager {
                 return "Language string not found: " + languageString;
             }
             if (!main.getConfiguration().supportPlaceholderAPIInTranslationStrings || !main.getIntegrationsManager().isPlaceholderAPIEnabled() || targetPlayer == null) {
-                return applySpecial(ChatColor.translateAlternateColorCodes('&', applyInternalPlaceholders(translatedString, internalPlaceholderObjects))); //Removed applyColor( for minimessage support
+                return applySpecial(ChatColor.translateAlternateColorCodes('&', applyInternalPlaceholders(translatedString, internalPlaceholderObjects)))//Removed applyColor( for minimessage support
+                        .replace("<main>", "<gradient:#1985ff:#2bc7ff")
+                        .replace("</main>", "</gradient>")
+                        .replace("<highlight>", "<gradient:#00fffb:#00ffc3>")
+                        .replace("</highlight>", "</gradient>")
+                        .replace("<highlight2>", "<gradient:#ff2465:#ff24a0>")
+                        .replace("</highlight2>", "</gradient>")
+                        .replace("<error>", "<gradient:#ff004c:#a80000>")
+                        .replace("</error>", "</gradient>")
+                        .replace("<success>", "<gradient:#54b2ff:#ff5ecc>")
+                        .replace("</success>", "</gradient>")
+                        .replace("<unimportant>", "<gradient:#9c9c9c:#858383>")
+                        .replace("</unimportant>", "</gradient>")
+                        .replace("<veryUnimportant>", "<gradient:#5c5c5c:#454545>")
+                        .replace("</veryUnimportant>", "</gradient>")
+                        .replace("<warn>", "<gradient:#fff700:#ffa629>")
+                        .replace("</warn>", "</gradient>")
+                        .replace("<negative>", "<gradient:#ff004c:#a80000>")
+                        .replace("</negative>", "</gradient>")
+                        .replace("<positive>", "<gradient:#54b2ff:#ff5ecc>")
+                        .replace("</positive>", "</gradient>");
             } else {
-                return applySpecial(ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.setPlaceholders(targetPlayer, applyInternalPlaceholders(translatedString, internalPlaceholderObjects))));
+                return applySpecial(ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.setPlaceholders(targetPlayer, applyInternalPlaceholders(translatedString, internalPlaceholderObjects))))
+                        .replace("<main>", "<gradient:#1985ff:#2bc7ff")
+                        .replace("</main>", "</gradient>")
+                        .replace("<highlight>", "<gradient:#00fffb:#00ffc3>")
+                        .replace("</highlight>", "</gradient>")
+                        .replace("<highlight2>", "<gradient:#ff2465:#ff24a0>")
+                        .replace("</highlight2>", "</gradient>")
+                        .replace("<error>", "<gradient:#ff004c:#a80000>")
+                        .replace("</error>", "</gradient>")
+                        .replace("<success>", "<gradient:#54b2ff:#ff5ecc>")
+                        .replace("</success>", "</gradient>")
+                        .replace("<unimportant>", "<gradient:#9c9c9c:#858383>")
+                        .replace("</unimportant>", "</gradient>")
+                        .replace("<veryUnimportant>", "<gradient:#5c5c5c:#454545>")
+                        .replace("</veryUnimportant>", "</gradient>")
+                        .replace("<warn>", "<gradient:#fff700:#ffa629>")
+                        .replace("</warn>", "</gradient>")
+                        .replace("<negative>", "<gradient:#ff004c:#a80000>")
+                        .replace("</negative>", "</gradient>")
+                        .replace("<positive>", "<gradient:#54b2ff:#ff5ecc>")
+                        .replace("</positive>", "</gradient>");
             }
         }
     }

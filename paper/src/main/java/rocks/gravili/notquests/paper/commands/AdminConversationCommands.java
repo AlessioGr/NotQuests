@@ -26,9 +26,7 @@ import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
-import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.apache.commons.io.IOUtils;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -52,8 +50,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
-
-import static rocks.gravili.notquests.paper.commands.NotQuestColors.*;
 
 public class AdminConversationCommands {
     private final NotQuests main;
@@ -410,7 +406,7 @@ public class AdminConversationCommands {
                                 "<success>This conversation has no speakers."
                         ));
                     } else {
-                        context.getSender().sendMessage(main.parse("<highlight>Speakers of conversation <highlight2>" + foundConversation.getIdentifier() + "</highlight2>:</gradient>"));
+                        context.getSender().sendMessage(main.parse("<highlight>Speakers of conversation <highlight2>" + foundConversation.getIdentifier() + "</highlight2>:"));
                         int counter = 0;
                         for (final Speaker speaker : foundConversation.getSpeakers()) {
                             counter++;

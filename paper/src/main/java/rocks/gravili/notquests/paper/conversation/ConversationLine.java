@@ -65,7 +65,7 @@ public class ConversationLine {
 
     public final String getMessage() {
         if (isShouting()) {
-            return "**" + message + "**";
+            return "<bold>" + message + "</bold>";
         } else {
             return message;
         }
