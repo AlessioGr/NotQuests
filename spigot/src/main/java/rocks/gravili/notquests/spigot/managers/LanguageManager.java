@@ -295,7 +295,7 @@ public class LanguageManager {
             }
             if (!main.getConfiguration().supportPlaceholderAPIInTranslationStrings || !main.getIntegrationsManager().isPlaceholderAPIEnabled() || targetPlayer == null) {
                 return applySpecial(ChatColor.translateAlternateColorCodes('&', applyInternalPlaceholders(translatedString, internalPlaceholderObjects)))//Removed applyColor( for minimessage support
-                        .replace("<main>", "<gradient:#1985ff:#2bc7ff")
+                        .replace("<main>", "<gradient:#1985ff:#2bc7ff>")
                         .replace("</main>", "</gradient>")
                         .replace("<highlight>", "<gradient:#00fffb:#00ffc3>")
                         .replace("</highlight>", "</gradient>")
@@ -317,7 +317,7 @@ public class LanguageManager {
                         .replace("</positive>", "</gradient>");
             } else {
                 return applySpecial(ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.setPlaceholders(targetPlayer, applyInternalPlaceholders(translatedString, internalPlaceholderObjects))))
-                        .replace("<main>", "<gradient:#1985ff:#2bc7ff")
+                        .replace("<main>", "<gradient:#1985ff:#2bc7ff>")
                         .replace("</main>", "</gradient>")
                         .replace("<highlight>", "<gradient:#00fffb:#00ffc3>")
                         .replace("</highlight>", "</gradient>")
