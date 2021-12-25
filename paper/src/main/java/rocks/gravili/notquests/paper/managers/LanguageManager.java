@@ -96,7 +96,7 @@ public class LanguageManager {
 
         for (final String fileName : languageFiles) {
             try {
-                main.getLogManager().info(LogCategory.LANGUAGE, "Creating the <AQUA>" + fileName + "</AQUA> language file...");
+                main.getLogManager().info(LogCategory.LANGUAGE, "Creating the <highlight>" + fileName + "</highlight> language file...");
 
                 File file = new File(languageFolder, fileName);
 
@@ -171,7 +171,7 @@ public class LanguageManager {
         loadMissingDefaultLanguageFiles();
 
         final String languageCode = main.getConfiguration().getLanguageCode();
-        main.getLogManager().info(LogCategory.LANGUAGE, "Loading language config <AQUA>" + languageCode + ".yml");
+        main.getLogManager().info(LogCategory.LANGUAGE, "Loading language config <highlight>" + languageCode + ".yml");
 
         /*
          * If the generalConfigFile Object doesn't exist yet, this will load the file
@@ -233,7 +233,7 @@ public class LanguageManager {
 
 
         if (setupDefaultStrings()) {
-            main.getLogManager().info("<DARK_PURPLE>Language Configuration <AQUA>" + languageCode + ".yml <DARK_PURPLE>was updated with new values! Saving it...");
+            main.getLogManager().info("<DARK_PURPLE>Language Configuration <highlight>" + languageCode + ".yml <DARK_PURPLE>was updated with new values! Saving it...");
             saveLanguageConfig();
         }
 
@@ -256,12 +256,12 @@ public class LanguageManager {
             for (final String defaultString : defaultConfigurationSection.getKeys(true)) {
 
                 if (!defaultConfigurationSection.isString(defaultString)) {
-                    //main.getLogManager().log(Level.INFO, "Skipping: <AQUA>" + defaultString + "</AQUA>");
+                    //main.getLogManager().log(Level.INFO, "Skipping: <highlight>" + defaultString + "</highlight>");
                     continue;
                 }
 
                 if (!getLanguageConfig().isString(defaultString)) {
-                    main.getLogManager().info(LogCategory.LANGUAGE, "Updating string: <AQUA>" + defaultString + "</AQUA>");
+                    main.getLogManager().info(LogCategory.LANGUAGE, "Updating string: <highlight>" + defaultString + "</highlight>");
 
                     getLanguageConfig().set(defaultString, defaultConfigurationSection.getString(defaultString));
                     valueChanged = true;
@@ -370,7 +370,7 @@ public class LanguageManager {
             message = before + hexColor + after;
             matcher = hexPattern.matcher(message);
         }
-        return org.bukkit.ChatColor.translateAlternateColorCodes('&', LegacyComponentSerializer.builder().hexColors().build().serialize(MiniMessage.miniMessage().parse(message)));
+        return org.bukkit.ChatColor.translateAlternateColorCodes('&', LegacyComponentSerializer.builder().hexColors().build().serialize(main.parse(message)));
     }
 
 

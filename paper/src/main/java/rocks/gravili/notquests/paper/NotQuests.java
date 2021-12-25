@@ -1,5 +1,7 @@
 package rocks.gravili.notquests.paper;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.AdvancedPie;
 import org.bstats.charts.SingleLineChart;
@@ -455,4 +457,13 @@ public class NotQuests {
     public final MessageManager getMessageManager(){
         return messageManager;
     }
+
+    public final MiniMessage getMiniMessage(){
+        return messageManager.getMiniMessage();
+    }
+
+    public final Component parse(String miniMessage){
+        return getMiniMessage().parse(miniMessage);
+    }
+
 }

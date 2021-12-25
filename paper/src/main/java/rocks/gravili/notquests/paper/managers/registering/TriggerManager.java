@@ -66,7 +66,7 @@ public class TriggerManager {
 
 
     public void registerTrigger(final String identifier, final Class<? extends Trigger> trigger) {
-        main.getLogManager().info("Registering trigger <AQUA>" + identifier);
+        main.getLogManager().info("Registering trigger <highlight>" + identifier);
         triggers.put(identifier, trigger);
 
         try {
@@ -131,9 +131,9 @@ public class TriggerManager {
 
             quest.addTrigger(trigger, true);
 
-            context.getSender().sendMessage(MiniMessage.miniMessage().parse(
-                    NotQuestColors.successGradient + getTriggerType(trigger.getClass()) + " Trigger successfully added to Quest " + NotQuestColors.highlightGradient
-                            + quest.getQuestName() + "</gradient>!</gradient>"
+            context.getSender().sendMessage(main.parse(
+                    "<success>" + getTriggerType(trigger.getClass()) + " Trigger successfully added to Quest <highlight>"
+                            + quest.getQuestName() + "</highlight>!"
             ));
         }
     }

@@ -64,7 +64,6 @@ public class QuestManager {
     private final ArrayList<Quest> quests;
 
     private final ArrayList<Player> debugEnabledPlayers;
-    protected final MiniMessage miniMessage = MiniMessage.miniMessage();
 
 
     public QuestManager(NotQuests main) {
@@ -78,14 +77,14 @@ public class QuestManager {
     public final String createQuest(String questName) {
         if (getQuest(questName) == null) {
             if(questName.contains("°")){
-                return (errorGradient + "The symbol ° cannot be used, because it's used for some important, plugin-internal stuff.");
+                return ("<error>The symbol <highlight>°</highlight> cannot be used, because it's used for some important, plugin-internal stuff.");
             }
             Quest newQuest = new Quest(main, questName);
             quests.add(newQuest);
             main.getDataManager().getQuestsConfig().set("quests." + questName, "");
-            return (successGradient + "Quest " + highlightGradient + questName + "</gradient> successfully created!");
+            return ("<success>Quest <highlight>" + questName + "</highlight> successfully created!");
         } else {
-            return (errorGradient + "Quest " + highlightGradient + questName + "</gradient> already exists!");
+            return ("<error>Quest <highlight>" + questName + "</highlight> already exists!");
         }
     }
 
@@ -94,9 +93,9 @@ public class QuestManager {
             Quest questToDelete = getQuest(questName);
             quests.remove(questToDelete);
             main.getDataManager().getQuestsConfig().set("quests." + questName, null);
-            return (successGradient + "Quest " + highlightGradient + questName + "</gradient> successfully deleted!");
+            return ("<success>Quest <highlight>" + questName + "</highlight> successfully deleted!");
         } else {
-            return (errorGradient + "Quest " + highlightGradient + questName + "</gradient> doesn't exists!");
+            return ("<error>Quest <highlight>" + questName + "</highlight> doesn't exists!");
         }
     }
 
@@ -157,7 +156,7 @@ public class QuestManager {
                             try {
                                 objectiveType = main.getObjectiveManager().getObjectiveClass(main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".objectiveType"));
                             } catch (java.lang.NullPointerException ex) {
-                                main.getDataManager().disablePluginAndSaving("Error parsing objective Type of objective with ID <AQUA>" + objectiveNumber + "</AQUA>.", quest, ex);
+                                main.getDataManager().disablePluginAndSaving("Error parsing objective Type of objective with ID <highlight>" + objectiveNumber + "</highlight>.", quest, ex);
                                 return;
                             }
                             final int progressNeeded = main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".objectives." + objectiveNumber + ".progressNeeded", 1);
@@ -168,7 +167,7 @@ public class QuestManager {
                                 objectiveID = Integer.parseInt(objectiveNumber);
                             } catch (java.lang.NumberFormatException ex) {
                                 validObjectiveID = false;
-                                main.getDataManager().disablePluginAndSaving("Error parsing loaded objective ID <AQUA>" + objectiveNumber + "</AQUA>.", quest, ex);
+                                main.getDataManager().disablePluginAndSaving("Error parsing loaded objective ID <highlight>" + objectiveNumber + "</highlight>.", quest, ex);
                                 return;
 
                             }
@@ -186,7 +185,7 @@ public class QuestManager {
                                     objective.load(main.getDataManager().getQuestsConfig(), "quests." + questName + ".objectives." + objectiveNumber);
 
                                 } catch (Exception ex) {
-                                    main.getDataManager().disablePluginAndSaving("Error parsing objective Type of objective with ID <AQUA>" + objectiveNumber + "</AQUA>.", quest, ex);
+                                    main.getDataManager().disablePluginAndSaving("Error parsing objective Type of objective with ID <highlight>" + objectiveNumber + "</highlight>.", quest, ex);
                                     return;
                                 }
 
@@ -210,12 +209,12 @@ public class QuestManager {
                                     objective.setCompletionNPCID(completionNPCID, false);
                                     quest.addObjective(objective, false);
                                 } else {
-                                    main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading quests objective data. Objective ID: <AQUA>" + objectiveNumber, quest);
+                                    main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading quests objective data. Objective ID: <highlight>" + objectiveNumber, quest);
                                     return;
                                 }
 
                             } else {
-                                main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading quests objective data (2). Objective ID: <AQUA>" + objectiveNumber, quest);
+                                main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading quests objective data (2). Objective ID: <highlight>" + objectiveNumber, quest);
                                 return;
                             }
                         }
@@ -232,7 +231,7 @@ public class QuestManager {
                                 requirementID = Integer.parseInt(requirementNumber);
                             } catch (java.lang.NumberFormatException ex) {
                                 validRequirementID = false;
-                                main.getDataManager().disablePluginAndSaving("Error parsing loaded requirement ID <AQUA>" + requirementNumber + "</AQUA>.", quest, ex);
+                                main.getDataManager().disablePluginAndSaving("Error parsing loaded requirement ID <highlight>" + requirementNumber + "</highlight>.", quest, ex);
                                 return;
                             }
 
@@ -249,7 +248,7 @@ public class QuestManager {
 
                                 conditionType = main.getConditionsManager().getConditionClass(conditionTypeString);
                             } catch (java.lang.NullPointerException ex) {
-                                main.getDataManager().disablePluginAndSaving("Error parsing requirement Type of requirement with ID <AQUA>" + requirementNumber + "</AQUA>.", quest, ex);
+                                main.getDataManager().disablePluginAndSaving("Error parsing requirement Type of requirement with ID <highlight>" + requirementNumber + "</highlight>.", quest, ex);
                                 return;
                             }
 
@@ -265,7 +264,7 @@ public class QuestManager {
                                     condition.setQuest(quest);
                                     condition.load(main.getDataManager().getQuestsConfig(), "quests." + questName + ".requirements." + requirementID);
                                 } catch (Exception ex) {
-                                    main.getDataManager().disablePluginAndSaving("Error parsing requirement Type of requirement with ID <AQUA>" + requirementNumber + "</AQUA>.", quest, ex);
+                                    main.getDataManager().disablePluginAndSaving("Error parsing requirement Type of requirement with ID <highlight>" + requirementNumber + "</highlight>.", quest, ex);
                                     return;
                                 }
                                 if (condition != null) {
@@ -292,7 +291,7 @@ public class QuestManager {
                                 rewardID = Integer.parseInt(rewardNumber);
                             } catch (java.lang.NumberFormatException ex) {
                                 validRewardID = false;
-                                main.getDataManager().disablePluginAndSaving("Error parsing loaded reward ID <AQUA>" + rewardNumber + "</AQUA>.", quest, ex);
+                                main.getDataManager().disablePluginAndSaving("Error parsing loaded reward ID <highlight>" + rewardNumber + "</highlight>.", quest, ex);
                                 return;
                             }
 
@@ -305,7 +304,7 @@ public class QuestManager {
                             try {
                                 actionType = main.getActionManager().getActionClass(actionTypeString);
                             } catch (java.lang.NullPointerException ex) {
-                                main.getDataManager().disablePluginAndSaving("Error parsing reward Type of reward with ID <AQUA>" + rewardNumber + "</AQUA>.", quest, ex);
+                                main.getDataManager().disablePluginAndSaving("Error parsing reward Type of reward with ID <highlight>" + rewardNumber + "</highlight>.", quest, ex);
                                 return;
                             }
 
@@ -318,7 +317,7 @@ public class QuestManager {
                                     reward.load(main.getDataManager().getQuestsConfig(), "quests." + questName + ".rewards." + rewardID);
 
                                 } catch (Exception ex) {
-                                    main.getDataManager().disablePluginAndSaving("Error parsing reward Type of reward with ID <AQUA>" + rewardNumber + "</AQUA>.", quest, ex);
+                                    main.getDataManager().disablePluginAndSaving("Error parsing reward Type of reward with ID <highlight>" + rewardNumber + "</highlight>.", quest, ex);
                                     return;
                                 }
 
@@ -327,11 +326,11 @@ public class QuestManager {
                                     reward.setActionName(rewardDisplayName);
                                     quest.addReward(reward, false);
                                 } else {
-                                    main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading quests reward data for Reward with the ID <AQUA>" + rewardNumber + "</AQUA>.", quest);
+                                    main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading quests reward data for Reward with the ID <highlight>" + rewardNumber + "</highlight>.", quest);
                                     return;
                                 }
                             } else {
-                                main.getDataManager().disablePluginAndSaving("Error loading Quest reward <AQUA>" + rewardNumber + "</AQUA>.", quest);
+                                main.getDataManager().disablePluginAndSaving("Error loading Quest reward <highlight>" + rewardNumber + "</highlight>.", quest);
                                 return;
                             }
 
@@ -352,7 +351,7 @@ public class QuestManager {
                                 triggerID = Integer.parseInt(triggerNumber);
                             } catch (java.lang.NumberFormatException ex) {
                                 validTriggerID = false;
-                                main.getDataManager().disablePluginAndSaving("Error parsing loaded trigger ID ID <AQUA>" + triggerNumber + "</AQUA>.", quest, ex);
+                                main.getDataManager().disablePluginAndSaving("Error parsing loaded trigger ID ID <highlight>" + triggerNumber + "</highlight>.", quest, ex);
                                 return;
                             }
 
@@ -362,7 +361,7 @@ public class QuestManager {
                             try {
                                 triggerType = main.getTriggerManager().getTriggerClass(triggerTypeString);
                             } catch (java.lang.NullPointerException ex) {
-                                main.getDataManager().disablePluginAndSaving("Error parsing trigger Type of trigger with ID <AQUA>" + triggerNumber + "</AQUA>.", quest);
+                                main.getDataManager().disablePluginAndSaving("Error parsing trigger Type of trigger with ID <highlight>" + triggerNumber + "</highlight>.", quest);
                                 return;
                             }
 
@@ -374,7 +373,7 @@ public class QuestManager {
                             final String worldName = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".triggers." + triggerNumber + ".worldName", "ALL");
 
                             if (Bukkit.getWorld(worldName) == null) {
-                                main.getLogManager().warn("The world of the trigger <AQUA>" + triggerNumber + "</AQUA> of Quest <AQUA>" + questName + "</AQUA> was not found.");
+                                main.getLogManager().warn("The world of the trigger <highlight>" + triggerNumber + "</highlight> of Quest <highlight>" + questName + "</highlight> was not found.");
                             }
 
 
@@ -394,7 +393,7 @@ public class QuestManager {
 
                                     trigger.load(main.getDataManager().getQuestsConfig(), "quests." + questName + ".triggers." + triggerNumber);
                                 } catch (Exception ex) {
-                                    main.getDataManager().disablePluginAndSaving("Error parsing requirement Type of trigger with ID <AQUA>" + triggerNumber + "</AQUA>.", quest, ex);
+                                    main.getDataManager().disablePluginAndSaving("Error parsing requirement Type of trigger with ID <highlight>" + triggerNumber + "</highlight>.", quest, ex);
                                     return;
                                 }
                                 if (trigger != null) {
@@ -402,7 +401,7 @@ public class QuestManager {
                                 }
 
                             } else {
-                                main.getDataManager().disablePluginAndSaving("ERROR when loading trigger with the triggerNumber <AQUA>" + triggerNumber + " </AQUA>: Action could not be loaded.", quest);
+                                main.getDataManager().disablePluginAndSaving("ERROR when loading trigger with the triggerNumber <highlight>" + triggerNumber + " </highlight>: Action could not be loaded.", quest);
                                 return;
                             }
 
@@ -427,7 +426,7 @@ public class QuestManager {
                                     conditionID = Integer.parseInt(objectiveConditionNumber);
                                 } catch (java.lang.NumberFormatException ex) {
                                     validConditionID = false;
-                                    main.getDataManager().disablePluginAndSaving("Error parsing loaded condition ID <AQUA>" + objectiveConditionNumber + "</AQUA>.", quest, objective, ex);
+                                    main.getDataManager().disablePluginAndSaving("Error parsing loaded condition ID <highlight>" + objectiveConditionNumber + "</highlight>.", quest, objective, ex);
                                     return;
                                 }
 
@@ -438,7 +437,7 @@ public class QuestManager {
                                 try {
                                     conditionType = main.getConditionsManager().getConditionClass(conditionTypeString);
                                 } catch (java.lang.NullPointerException ex) {
-                                    main.getDataManager().disablePluginAndSaving("Error parsing condition Type of requirement with ID <AQUA>" + objectiveConditionNumber + "</AQUA>.", quest, objective, ex);
+                                    main.getDataManager().disablePluginAndSaving("Error parsing condition Type of requirement with ID <highlight>" + objectiveConditionNumber + "</highlight>.", quest, objective, ex);
                                     return;
                                 }
 
@@ -454,7 +453,7 @@ public class QuestManager {
                                         condition.setObjective(objective);
                                         condition.load(main.getDataManager().getQuestsConfig(), "quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditions." + objectiveConditionNumber);
                                     } catch (Exception ex) {
-                                        main.getDataManager().disablePluginAndSaving("Error parsing condition Type of requirement with ID <AQUA>" + objectiveConditionNumber + "</AQUA>.", quest, objective, ex);
+                                        main.getDataManager().disablePluginAndSaving("Error parsing condition Type of requirement with ID <highlight>" + objectiveConditionNumber + "</highlight>.", quest, objective, ex);
                                         return;
                                     }
                                     if (condition != null) {
@@ -479,7 +478,7 @@ public class QuestManager {
                                     rewardID = Integer.parseInt(objectiveRewardNumber);
                                 } catch (java.lang.NumberFormatException ex) {
                                     validRewardID = false;
-                                    main.getDataManager().disablePluginAndSaving("Error parsing loaded objective reward ID <AQUA>" + objectiveRewardNumber + "</AQUA>.", quest, objective, ex);
+                                    main.getDataManager().disablePluginAndSaving("Error parsing loaded objective reward ID <highlight>" + objectiveRewardNumber + "</highlight>.", quest, objective, ex);
                                     return;
                                 }
 
@@ -489,7 +488,7 @@ public class QuestManager {
                                 try {
                                     actionType = main.getActionManager().getActionClass(actionTypeString);
                                 } catch (java.lang.NullPointerException ex) {
-                                    main.getDataManager().disablePluginAndSaving("Error parsing action Type of objective reward with ID <AQUA>" + objectiveRewardNumber + "</AQUA>.", quest, objective, ex);
+                                    main.getDataManager().disablePluginAndSaving("Error parsing action Type of objective reward with ID <highlight>" + objectiveRewardNumber + "</highlight>.", quest, objective, ex);
                                     return;
                                 }
 
@@ -502,7 +501,7 @@ public class QuestManager {
                                         reward.load(main.getDataManager().getQuestsConfig(), initialObjectiveRewardsPath + rewardID);
 
                                     } catch (Exception ex) {
-                                        main.getDataManager().disablePluginAndSaving("Error parsing reward Type of reward with ID <AQUA>" + objectiveRewardNumber + "</AQUA>.", quest, objective, ex);
+                                        main.getDataManager().disablePluginAndSaving("Error parsing reward Type of reward with ID <highlight>" + objectiveRewardNumber + "</highlight>.", quest, objective, ex);
                                         return;
                                     }
 
@@ -515,7 +514,7 @@ public class QuestManager {
                                         return;
                                     }
                                 } else {
-                                    main.getDataManager().disablePluginAndSaving("Error loading Objective reward <AQUA>" + objectiveRewardNumber + "</AQUA>.", quest, objective);
+                                    main.getDataManager().disablePluginAndSaving("Error loading Objective reward <highlight>" + objectiveRewardNumber + "</highlight>.", quest, objective);
                                     return;
                                 }
 
@@ -745,21 +744,21 @@ public class QuestManager {
 
             gui.show(player);
         } else {
-            main.getLogManager().info("NotQuests > All quest count: <AQUA>" + quests.size() + "</AQUA>");
+            main.getLogManager().info("NotQuests > All quest count: <highlight>" + quests.size() + "</highlight>");
 
             player.sendMessage(Component.empty());
-            player.sendMessage(miniMessage.parse(
+            player.sendMessage(main.parse(
                     "<BLUE>" + questsAttachedToNPC.size() + " Available Quests:"
             ));
             int counter = 1;
 
             for (Quest quest : questsAttachedToNPC) {
 
-                Component acceptComponent = miniMessage.parse("<GREEN><BOLD>[CHOOSE]")
+                Component acceptComponent = main.parse("<GREEN>**[CHOOSE]")
                         .clickEvent(ClickEvent.runCommand("/nquests preview " + quest.getQuestName()))
-                        .hoverEvent(HoverEvent.showText(MiniMessage.miniMessage().parse("<GREEN>Click to preview/choose the quest <AQUA>" + quest.getQuestFinalName())));
+                        .hoverEvent(HoverEvent.showText(main.parse("<GREEN>Click to preview/choose the quest <highlight>" + quest.getQuestFinalName())));
 
-                Component component = miniMessage.parse("<YELLOW>" + counter + ". <AQUA>" + quest.getQuestFinalName() + " ")
+                Component component = main.parse("<YELLOW>" + counter + ". <highlight>" + quest.getQuestFinalName() + " ")
                         .append(acceptComponent);
 
                 player.sendMessage(component);
@@ -854,21 +853,21 @@ public class QuestManager {
 
             gui.show(player);
         } else {
-            main.getLogManager().info("NotQuests > All quest count: <AQUA>" + quests.size() + "</AQUA>");
+            main.getLogManager().info("NotQuests > All quest count: <highlight>" + quests.size() + "</highlight>");
 
             player.sendMessage(Component.empty());
-            player.sendMessage(miniMessage.parse(
+            player.sendMessage(main.parse(
                     "<BLUE>" + questsAttachedToNPC.size() + " Availahle Quests:"
             ));
             int counter = 1;
 
             for (Quest quest : questsAttachedToNPC) {
 
-                Component acceptComponent = miniMessage.parse("<GREEN><BOLD>[CHOOSE]")
+                Component acceptComponent = main.parse("<GREEN>**[CHOOSE]")
                         .clickEvent(ClickEvent.runCommand("/nquests preview " + quest.getQuestName()))
-                        .hoverEvent(HoverEvent.showText(MiniMessage.miniMessage().parse("<GREEN>Click to preview/choose the quest <AQUA>" + quest.getQuestFinalName())));
+                        .hoverEvent(HoverEvent.showText(main.parse("<GREEN>Click to preview/choose the quest <highlight>" + quest.getQuestFinalName())));
 
-                Component component = miniMessage.parse("<YELLOW>" + counter + ". <AQUA>" + quest.getQuestFinalName() + " ")
+                Component component = main.parse("<YELLOW>" + counter + ". <highlight>" + quest.getQuestFinalName() + " ")
                         .append(acceptComponent);
 
                 player.sendMessage(component);
@@ -922,44 +921,44 @@ public class QuestManager {
 
     public void sendSingleQuestPreview(Player player, Quest quest) {
         player.sendMessage(Component.empty());
-        player.sendMessage(miniMessage.parse("<GRAY>-----------------------------------"));
-        player.sendMessage(miniMessage.parse(
-                "<BLUE>Quest Preview for Quest <AQUA>" + quest.getQuestFinalName() + "</AQUA>:"
+        player.sendMessage(main.parse("<GRAY>-----------------------------------"));
+        player.sendMessage(main.parse(
+                "<BLUE>Quest Preview for Quest <highlight>" + quest.getQuestFinalName() + "</highlight>:"
         ));
 
 
         if (quest.getQuestDescription().length() >= 1) {
-            player.sendMessage(miniMessage.parse(
+            player.sendMessage(main.parse(
                     "<YELLOW>Quest description: <GRAY>" + quest.getQuestDescription()
             ));
         } else {
-            player.sendMessage(miniMessage.parse(
+            player.sendMessage(main.parse(
                     main.getLanguageManager().getString("chat.missing-quest-description", player)
             ));
         }
 
-        player.sendMessage(miniMessage.parse(
+        player.sendMessage(main.parse(
                 "<BLUE>Quest Requirements:"
         ));
 
-        player.sendMessage(miniMessage.parse(
+        player.sendMessage(main.parse(
                 getQuestRequirements(quest)
         ));
 
-        player.sendMessage(miniMessage.parse(
+        player.sendMessage(main.parse(
                 "<BLUE>Quest Rewards:"
         ));
-        player.sendMessage(miniMessage.parse(
+        player.sendMessage(main.parse(
                 getQuestRewards(quest)
         ));
 
-        Component acceptComponent = miniMessage.parse("<GREEN><BOLD>[ACCEPT THIS QUEST]")
+        Component acceptComponent = main.parse("<GREEN>**[ACCEPT THIS QUEST]")
                 .clickEvent(ClickEvent.runCommand("/nquests take " + quest.getQuestName()))
-                .hoverEvent(HoverEvent.showText(MiniMessage.miniMessage().parse("<GREEN>Click to accept the Quest <AQUA>" + quest.getQuestFinalName())));
+                .hoverEvent(HoverEvent.showText(main.parse("<GREEN>Click to accept the Quest <highlight>" + quest.getQuestFinalName())));
 
         player.sendMessage(Component.empty());
         player.sendMessage(acceptComponent);
-        player.sendMessage(miniMessage.parse(
+        player.sendMessage(main.parse(
                 "<GRAY>-----------------------------------"
         ));
 
@@ -1002,15 +1001,15 @@ public class QuestManager {
 
 
                                                     // call the callback with the result
-                                                    main.getLogManager().info("Attaching Quest with the name <AQUA>" + quest.getQuestName() + "</AQUA> to NPC with the ID <AQUA>" + npc.getId() + " </AQUA>and name <AQUA>" + npc.getName());
+                                                    main.getLogManager().info("Attaching Quest with the name <highlight>" + quest.getQuestName() + "</highlight> to NPC with the ID <highlight>" + npc.getId() + " </highlight>and name <highlight>" + npc.getName());
 
                                                     quest.removeNPC(npc);
                                                     quest.bindToNPC(npc, questShowing);
 
 
                                                 } else {
-                                                    main.getLogManager().warn("Error attaching npc with ID <AQUA>" + main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".npcs." + npcNumber + ".npcID")
-                                                            + "</AQUA> to quest <AQUA>" + quest.getQuestName() + "</AQUA> - NPC not found.");
+                                                    main.getLogManager().warn("Error attaching npc with ID <highlight>" + main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".npcs." + npcNumber + ".npcID")
+                                                            + "</highlight> to quest <highlight>" + quest.getQuestName() + "</highlight> - NPC not found.");
 
                                                 }
                                             } else {
@@ -1049,15 +1048,15 @@ public class QuestManager {
                                         if (npc != null) {
 
                                             // call the callback with the result
-                                            main.getLogManager().info("Attaching Quest with the name <AQUA>" + quest.getQuestName() + " </AQUA>to NPC with the ID <AQUA>" + npc.getId() + " </AQUA>and name <AQUA>" + npc.getName());
+                                            main.getLogManager().info("Attaching Quest with the name <highlight>" + quest.getQuestName() + " </highlight>to NPC with the ID <highlight>" + npc.getId() + " </highlight>and name <highlight>" + npc.getName());
 
                                             quest.removeNPC(npc);
                                             quest.bindToNPC(npc, questShowing);
 
 
                                         } else {
-                                            main.getLogManager().warn("Error attaching npc with ID <AQUA>" + main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".npcs." + npcNumber + ".npcID")
-                                                    + "</AQUA> to quest <AQUA>" + quest.getQuestName() + "</AQUA> - NPC not found.");
+                                            main.getLogManager().warn("Error attaching npc with ID <highlight>" + main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".npcs." + npcNumber + ".npcID")
+                                                    + "</highlight> to quest <highlight>" + quest.getQuestName() + "</highlight> - NPC not found.");
                                         }
 
                                     }
@@ -1143,7 +1142,7 @@ public class QuestManager {
 
                 if (!traitsToRemove.isEmpty()) {
                     buggedNPCsFound += 1;
-                    main.getLogManager().info("NotQuests > Bugged trait removed from npc with ID <AQUA>" + npc.getId() + "</AQUA> and name <AQUA>" + npc.getName() + "</AQUA>!");
+                    main.getLogManager().info("NotQuests > Bugged trait removed from npc with ID <highlight>" + npc.getId() + "</highlight> and name <highlight>" + npc.getName() + "</highlight>!");
 
                 }
 
@@ -1154,17 +1153,17 @@ public class QuestManager {
                 for (final Quest attachedQuest : getAllQuestsAttachedToNPC(npc)) {
                     attachedQuestNames.add(attachedQuest.getQuestName());
                 }
-                main.getLogManager().info("NPC with the ID: <AQUA>" + npc.getId() + "</AQUA> is not bugged, because it has the following quests attached: <AQUA>" + attachedQuestNames + "</AQUA>");
+                main.getLogManager().info("NPC with the ID: <highlight>" + npc.getId() + "</highlight> is not bugged, because it has the following quests attached: <highlight>" + attachedQuestNames + "</highlight>");
 
             }
             traitsToRemove.clear();
 
         }
         if (buggedNPCsFound == 0) {
-            main.getLogManager().info("No bugged NPCs found! Amount of checked NPCs: <AQUA>" + allNPCsFound + "</AQUA>");
+            main.getLogManager().info("No bugged NPCs found! Amount of checked NPCs: <highlight>" + allNPCsFound + "</highlight>");
 
         } else {
-            main.getLogManager().info("<YELLOW><AQUA>" + buggedNPCsFound + "</AQUA> bugged NPCs have been found and removed! Amount of checked NPCs: <AQUA>" + allNPCsFound + "</AQUA>");
+            main.getLogManager().info("<YELLOW><highlight>" + buggedNPCsFound + "</highlight> bugged NPCs have been found and removed! Amount of checked NPCs: <highlight>" + allNPCsFound + "</highlight>");
 
         }
     }
@@ -1178,18 +1177,18 @@ public class QuestManager {
             final String objectiveDescription = activeObjective.getObjective().getObjectiveDescription();
 
 
-            player.sendMessage(MiniMessage.miniMessage().parse(
+            player.sendMessage(main.parse(
                     "<strikethrough><GRAY>" + activeObjective.getObjective().getObjectiveID() + ". " + activeObjective.getObjective().getObjectiveFinalName() + ":" + "</strikethrough>"
             ));
 
-            player.sendMessage(MiniMessage.miniMessage().parse(
+            player.sendMessage(main.parse(
                     "    <strikethrough><GRAY>Description: <WHITE>" + objectiveDescription + "</strikethrough>"
             ));
 
-            player.sendMessage(miniMessage.parse(
+            player.sendMessage(main.parse(
                     getObjectiveTaskDescription(activeObjective.getObjective(), true, player)
             ));
-            player.sendMessage(miniMessage.parse(
+            player.sendMessage(main.parse(
                     "   <strikethrough><GRAY>Progress: <WHITE>" + activeObjective.getCurrentProgress() + " / " + activeObjective.getProgressNeeded() + "</strikethrough>"
             ));
         }
@@ -1208,16 +1207,16 @@ public class QuestManager {
             if (main.getIntegrationsManager().isCitizensEnabled()) {
                 final NPC npc = CitizensAPI.getNPCRegistry().getById(objective.getCompletionNPCID());
                 if (npc != null) {
-                    toReturn += "\n    <GRAY>" + eventualColor + "To complete: Talk to <AQUA>" + eventualColor + npc.getName();
+                    toReturn += "\n    <GRAY>" + eventualColor + "To complete: Talk to <highlight>" + eventualColor + npc.getName();
                 } else {
-                    toReturn += "\n    <GRAY>" + eventualColor + "To complete: Talk to NPC with ID <AQUA>" + eventualColor + objective.getCompletionNPCID() + " <RED>" + eventualColor + "[Currently not available]";
+                    toReturn += "\n    <GRAY>" + eventualColor + "To complete: Talk to NPC with ID <highlight>" + eventualColor + objective.getCompletionNPCID() + " <RED>" + eventualColor + "[Currently not available]";
                 }
             } else {
                 toReturn += "    <RED>Error: Citizens plugin not installed. Contact an admin.";
             }
         }
         if (objective.getCompletionArmorStandUUID() != null) {
-            toReturn += "\n    <GRAY>" + eventualColor + "To complete: Talk to <AQUA>" + eventualColor + "" + main.getArmorStandManager().getArmorStandName(objective.getCompletionArmorStandUUID());
+            toReturn += "\n    <GRAY>" + eventualColor + "To complete: Talk to <highlight>" + eventualColor + "" + main.getArmorStandManager().getArmorStandName(objective.getCompletionArmorStandUUID());
         }
         return toReturn;
     }
@@ -1227,26 +1226,26 @@ public class QuestManager {
 
             if (activeObjective.isUnlocked()) {
                 final String objectiveDescription = activeObjective.getObjective().getObjectiveDescription();
-                player.sendMessage(miniMessage.parse(
+                player.sendMessage(main.parse(
                         main.getLanguageManager().getString("chat.objectives.counter", player, activeQuest, activeObjective)
                 ));
 
                 if (!objectiveDescription.isBlank()) {
-                    player.sendMessage(MiniMessage.miniMessage().parse(
+                    player.sendMessage(main.parse(
                             main.getLanguageManager().getString("chat.objectives.description", player, activeQuest, activeObjective)
                                     .replace("%OBJECTIVEDESCRIPTION%", activeObjective.getObjective().getObjectiveDescription())
                     ));
                 }
 
-                player.sendMessage(miniMessage.parse(
+                player.sendMessage(main.parse(
                         getObjectiveTaskDescription(activeObjective.getObjective(), false, player)
                 ));
 
-                player.sendMessage(miniMessage.parse(
+                player.sendMessage(main.parse(
                         main.getLanguageManager().getString("chat.objectives.progress", player, activeQuest, activeObjective)
                 ));
             } else {
-                player.sendMessage(miniMessage.parse(
+                player.sendMessage(main.parse(
                         main.getLanguageManager().getString("chat.objectives.hidden", player, activeObjective, activeObjective)
                 ));
 
@@ -1258,17 +1257,17 @@ public class QuestManager {
     public void sendObjectives(final Player player, final Quest quest) {
         for (final Objective objective : quest.getObjectives()) {
             final String objectiveDescription = objective.getObjectiveDescription();
-            player.sendMessage(miniMessage.parse(
+            player.sendMessage(main.parse(
                     "<GREEN>" + objective.getObjectiveID() + ". <YELLOW>" + objective.getObjectiveFinalName()
             ));
 
 
             if (!objectiveDescription.isBlank()) {
-                player.sendMessage(miniMessage.parse(
+                player.sendMessage(main.parse(
                         "   <BLUE>Description: <GOLD>" + objectiveDescription
                 ));
             }
-            player.sendMessage(miniMessage.parse(
+            player.sendMessage(main.parse(
                     getObjectiveTaskDescription(objective, false, player)
             ));
 
@@ -1282,35 +1281,35 @@ public class QuestManager {
         for (final Objective objective : quest.getObjectives()) {
 
             final String objectiveDescription = objective.getObjectiveDescription();
-            audience.sendMessage(miniMessage.parse(
-                    highlightGradient + objective.getObjectiveID() + ".</gradient> " + mainGradient + objective.getObjectiveFinalName()
+            audience.sendMessage(main.parse(
+                    "<highlight>" + objective.getObjectiveID() + ".</highlight> <main>" + objective.getObjectiveFinalName()
             ));
 
 
             if (!objectiveDescription.isBlank()) {
-                audience.sendMessage(miniMessage.parse(
-                        highlightGradient + "   Description:</gradient> " + mainGradient + objectiveDescription
+                audience.sendMessage(main.parse(
+                        "   <highlight>Description:</highlight> <main>" + objectiveDescription
                 ));
             }
 
 
-            audience.sendMessage(miniMessage.parse(
-                    highlightGradient + "   Conditions:</gradient>"
+            audience.sendMessage(main.parse(
+                    "   <highlight>Conditions:"
             ));
             int counter2 = 1;
             for (final Condition condition : objective.getConditions()) {
-                audience.sendMessage(miniMessage.parse(
-                        highlightGradient + "         " + counter2 + ".</gradient>" + mainGradient + " Condition: </gradient>" + highlight2Gradient + condition.getConditionDescription()
+                audience.sendMessage(main.parse(
+                        "         <highlight>" + counter2 + ".</highlight> <main>Condition:</main> <highlight2>" + condition.getConditionDescription()
                 ));
                 counter2++;
             }
             if (counter2 == 1) {
-                audience.sendMessage(miniMessage.parse(
-                        unimportant + "      No conditions found!"
+                audience.sendMessage(main.parse(
+                        "      <unimportant>No conditions found!"
                 ));
             }
 
-            audience.sendMessage(miniMessage.parse(getObjectiveTaskDescription(objective, false, null)));
+            audience.sendMessage(main.parse(getObjectiveTaskDescription(objective, false, null)));
 
         }
     }
@@ -1320,27 +1319,27 @@ public class QuestManager {
         if (activeObjective.isUnlocked()) {
             final String objectiveDescription = activeObjective.getObjective().getObjectiveDescription();
 
-            player.sendMessage(miniMessage.parse(
+            player.sendMessage(main.parse(
                     "<YELLOW>" + activeObjective.getObjective().getObjectiveID() + ". " + activeObjective.getObjective().getObjectiveFinalName() + ":"
             ));
 
 
             if (!objectiveDescription.isBlank()) {
-                player.sendMessage(miniMessage.parse(
+                player.sendMessage(main.parse(
                         "   <BLUE>Description: <GOLD>" + objectiveDescription
                 ));
             }
 
-            player.sendMessage(miniMessage.parse(
+            player.sendMessage(main.parse(
                     getObjectiveTaskDescription(activeObjective.getObjective(), false, player)
             ));
 
-            player.sendMessage(miniMessage.parse(
+            player.sendMessage(main.parse(
                     "   <GRAY>Progress: <WHITE>" + activeObjective.getCurrentProgress() + " / " + activeObjective.getProgressNeeded()
             ));
         } else {
-            player.sendMessage(miniMessage.parse(
-                    "<YELLOW>" + activeObjective.getObjective().getObjectiveID() + ". <GRAY><BOLD>[HIDDEN]"
+            player.sendMessage(main.parse(
+                    "<YELLOW>" + activeObjective.getObjective().getObjectiveID() + ". <GRAY>**[HIDDEN]"
             ));
         }
 
@@ -1372,7 +1371,7 @@ public class QuestManager {
         if (main.getIntegrationsManager().isCitizensEnabled()) {
             for (NPC npc : getAllNPCsAttachedToQuest(quest)) {
                 if (npc == null || npc.getEntity() == null) {
-                    main.getLogManager().warn("A quest has an invalid npc attached to it, which should be removed. Report it to an admin. Quest name: <AQUA>" + quest.getQuestName() + "</AQUA>");
+                    main.getLogManager().warn("A quest has an invalid npc attached to it, which should be removed. Report it to an admin. Quest name: <highlight>" + quest.getQuestName() + "</highlight>");
                     continue;
                 }
                 final Location npcLocation = npc.getEntity().getLocation();

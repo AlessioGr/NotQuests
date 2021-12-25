@@ -98,7 +98,7 @@ public class CitizensManager {
             }
             for (final Trait traitToRemove : traitsToRemove) {
                 npc.removeTrait(traitToRemove.getClass());
-                main.getLogManager().info("Removed nquestgiver trait from NPC with the ID <AQUA>" + npc.getId());
+                main.getLogManager().info("Removed nquestgiver trait from NPC with the ID <highlight>" + npc.getId());
             }
             traitsToRemove.clear();
 
@@ -175,11 +175,11 @@ public class CitizensManager {
                         }
                     }
 
-                    player.sendMessage(MiniMessage.miniMessage().parse(
-                            "<GREEN>Escort quest started! Please escort <AQUA>" + npcToEscort.getName() + "</AQUA> to <AQUA>" + destinationNPC.getName() + "</AQUA>."
+                    player.sendMessage(main.parse(
+                            "<GREEN>Escort quest started! Please escort <highlight>" + npcToEscort.getName() + "</highlight> to <highlight>" + destinationNPC.getName() + "</highlight>."
                     ));
                 } else {
-                    main.getLogManager().warn("Error: The escort objective could not be started, because the player with the UUID <AQUA>" + activeQuest.getQuestPlayer().getUUID() + "</AQUA> was not found!");
+                    main.getLogManager().warn("Error: The escort objective could not be started, because the player with the UUID <highlight>" + activeQuest.getQuestPlayer().getUUID() + "</highlight> was not found!");
 
 
                 }
@@ -188,7 +188,7 @@ public class CitizensManager {
                 if (player != null) {
                     player.sendMessage(Component.text("The NPC you have to escort is not configured properly. Please consult an admin."));
                 }
-                main.getLogManager().warn("Error: The escort NPC with the ID <AQUA>" + npcToEscortID + "</AQUA> is not configured properly (Follow trait not found)!");
+                main.getLogManager().warn("Error: The escort NPC with the ID <highlight>" + npcToEscortID + "</highlight> is not configured properly (Follow trait not found)!");
 
             }
         } else {
@@ -197,7 +197,7 @@ public class CitizensManager {
                 if (player != null) {
                     player.sendMessage(Component.text("The Destination NPC does not exist. Please consult an admin."));
                 }
-                main.getLogManager().warn("Error: The destination NPC with the ID <AQUA>" + npcToEscortID + "</AQUA> was not found!");
+                main.getLogManager().warn("Error: The destination NPC with the ID <highlight>" + npcToEscortID + "</highlight> was not found!");
 
             }
             if (npcToEscort == null) {
@@ -205,7 +205,7 @@ public class CitizensManager {
                 if (player != null) {
                     player.sendMessage(Component.text("The NPC you have to escort does not exist. Please consult an admin."));
                 }
-                main.getLogManager().warn("Error: The escort NPC with the ID <AQUA>" + npcToEscortID + "</AQUA> was not found!");
+                main.getLogManager().warn("Error: The escort NPC with the ID <highlight>" + npcToEscortID + "</highlight> was not found!");
 
             }
 

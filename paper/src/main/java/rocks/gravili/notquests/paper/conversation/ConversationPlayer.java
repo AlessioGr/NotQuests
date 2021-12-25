@@ -76,13 +76,13 @@ public class ConversationPlayer {
         ArrayList<ConversationLine> next = findConversationLinesWhichFulfillsCondition(currentLine.getNext());
 
         if (next == null) {
-            questPlayer.sendDebugMessage("Next of <AQUA>" + currentLine.getFullIdentifier() + "</AQUA> is empty. Ending conversation...");
+            questPlayer.sendDebugMessage("Next of <highlight>" + currentLine.getFullIdentifier() + "</highlight> is empty. Ending conversation...");
             main.getConversationManager().stopConversation(this);
             return false;
         } else {
             if (next.size() == 1) {
                 if (!next.get(0).getSpeaker().isPlayer()) {
-                    questPlayer.sendDebugMessage("Line <AQUA>" + currentLine.getFullIdentifier() + "</AQUA> has one next: <AQUA>" + next.get(0).getFullIdentifier());
+                    questPlayer.sendDebugMessage("Line <highlight>" + currentLine.getFullIdentifier() + "</highlight> has one next: <highlight>" + next.get(0).getFullIdentifier());
 
                     if (!currentLine.getSpeaker().isPlayer()) { //Two consecutive non-playerl ines
                         return next(next.get(0), false); //Setting it to false won't remove the previous lines (if packet stuff enabled). Otherwise, the first line wouldn't even be visible to the player
@@ -91,7 +91,7 @@ public class ConversationPlayer {
                     }
 
                 } else {
-                    questPlayer.sendDebugMessage("Line <AQUA>" + currentLine.getFullIdentifier() + "</AQUA> has one PLAYER next: <AQUA>" + next.get(0).getFullIdentifier());
+                    questPlayer.sendDebugMessage("Line <highlight>" + currentLine.getFullIdentifier() + "</highlight> has one PLAYER next: <highlight>" + next.get(0).getFullIdentifier());
 
                     nextPlayer(next);
                 }
@@ -117,8 +117,8 @@ public class ConversationPlayer {
         questPlayer.sendDebugMessage("Adding " + playerLines.size() + " currentPlayerLines");
         currentPlayerLines.addAll(playerLines);
 
-        Component component = MiniMessage.miniMessage().parse(
-                mainGradient + "Choose your answer:</gradient>"
+        Component component = main.parse(
+                "<main>Choose your answer:</main>"
 
         );
         player.sendMessage(Component.empty());
@@ -194,7 +194,7 @@ public class ConversationPlayer {
      * @param conversationLine
      */
     public void sendLine(final ConversationLine conversationLine, boolean deletePrevious) {
-        Component line = MiniMessage.miniMessage().parse(
+        Component line = main.parse(
                 conversationLine.getSpeaker().getColor() + "[" + conversationLine.getSpeaker().getSpeakerName() + "] <GRAY>" + conversationLine.getMessage()
         );
         if (deletePrevious) {
@@ -230,7 +230,7 @@ public class ConversationPlayer {
      * @param conversationLine
      */
     public void sendOptionLine(final ConversationLine conversationLine) {
-        Component toSend = MiniMessage.miniMessage().parse(
+        Component toSend = main.parse(
                 conversationLine.getSpeaker().getColor() + " > <GRAY>" + conversationLine.getMessage()
         ).clickEvent(ClickEvent.runCommand("/notquests continueConversation " + conversationLine.getMessage())).hoverEvent(HoverEvent.showText(Component.text("Click to answer", NamedTextColor.AQUA)));
 
@@ -257,7 +257,7 @@ public class ConversationPlayer {
     public void chooseOption(final String option) {
         questPlayer.sendDebugMessage("Conversation option triggered: " + option + ". currentPlayerLines count: " + currentPlayerLines.size());
         for (final ConversationLine playerOptionLine : currentPlayerLines) {
-            questPlayer.sendDebugMessage("Looking through current player line: <AQUA>" + playerOptionLine.getMessage());
+            questPlayer.sendDebugMessage("Looking through current player line: <highlight>" + playerOptionLine.getMessage());
             if (playerOptionLine.getMessage().equalsIgnoreCase(option)) {
 
                 //Trigger its actions first:

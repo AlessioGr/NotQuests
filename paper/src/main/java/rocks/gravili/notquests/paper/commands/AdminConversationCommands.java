@@ -56,7 +56,6 @@ import java.util.List;
 import static rocks.gravili.notquests.paper.commands.NotQuestColors.*;
 
 public class AdminConversationCommands {
-    protected final MiniMessage miniMessage = MiniMessage.miniMessage();
     private final NotQuests main;
     private final PaperCommandManager<CommandSender> manager;
     private final Command.Builder<CommandSender> conversationBuilder;
@@ -102,8 +101,8 @@ public class AdminConversationCommands {
                         try {
                             if (!newConversationFile.exists()) {
                                 if (!newConversationFile.createNewFile()) {
-                                    context.getSender().sendMessage(miniMessage.parse(
-                                            errorGradient + "Error: couldn't create conversation file."
+                                    context.getSender().sendMessage(main.parse(
+                                            "<error>Error: couldn't create conversation file."
                                     ));
                                     return;
                                 }
@@ -119,12 +118,12 @@ public class AdminConversationCommands {
                                     try (OutputStream outputStream = new FileOutputStream(newConversationFile)) {
                                         IOUtils.copy(inputStream, outputStream);
                                         main.getConversationManager().loadConversationsFromConfig();
-                                        context.getSender().sendMessage(miniMessage.parse(
-                                                successGradient + "The conversation has been created successfully! There are currently no commands to edit them - you have to edit the conversation file. You can find it at " + highlightGradient + "plugins/NotQuests/conversations/" + conversationName + ".yml"
+                                        context.getSender().sendMessage(main.parse(
+                                                "<success>The conversation has been created successfully! There are currently no commands to edit them - you have to edit the conversation file. You can find it at <highlight>plugins/NotQuests/conversations/" + conversationName + ".yml"
                                         ));
                                     } catch (Exception e) {
-                                        context.getSender().sendMessage(miniMessage.parse(
-                                                errorGradient + "Error: couldn't create conversation file. There was an exception. (2)"
+                                        context.getSender().sendMessage(main.parse(
+                                                "<error>Error: couldn't create conversation file. There was an exception. (2)"
                                         ));
                                         return;
                                     }
@@ -135,14 +134,14 @@ public class AdminConversationCommands {
 
 
                         } catch (Exception e) {
-                            context.getSender().sendMessage(miniMessage.parse(
-                                    errorGradient + "Error: couldn't create conversation file. There was an exception."
+                            context.getSender().sendMessage(main.parse(
+                                    "<error>Error: couldn't create conversation file. There was an exception."
                             ));
                         }
 
                     } else {
-                        context.getSender().sendMessage(miniMessage.parse(
-                                errorGradient + "Error: the conversation " + highlightGradient + existingConversation.getIdentifier() + "</gradient> already exists!"
+                        context.getSender().sendMessage(main.parse(
+                                "<error>Error: the conversation <highlight>" + existingConversation.getIdentifier() + "</highlight> already exists!"
                         ));
                     }
 
@@ -157,8 +156,8 @@ public class AdminConversationCommands {
                     .handler((context) -> {
                         final Player player = (Player) context.getSender();
 
-                        context.getSender().sendMessage(miniMessage.parse(
-                                mainGradient + "Playing test conversation..."
+                        context.getSender().sendMessage(main.parse(
+                                "<main>Playing test conversation..."
                         ));
                         conversationManager.playConversation(player, conversationManager.createTestConversation());
                     }));
@@ -168,21 +167,21 @@ public class AdminConversationCommands {
         manager.command(conversationBuilder.literal("list")
                 .meta(CommandMeta.DESCRIPTION, "Lists all conversations.")
                 .handler((context) -> {
-                    context.getSender().sendMessage(miniMessage.parse(
-                            highlightGradient + "All conversations:"
+                    context.getSender().sendMessage(main.parse(
+                            "<highlight>All conversations:"
                     ));
                     int counter = 1;
                     for (final Conversation conversation : conversationManager.getAllConversations()) {
-                        context.getSender().sendMessage(miniMessage.parse(
-                                highlightGradient + counter + ". </gradient>" + mainGradient + conversation.getIdentifier()
+                        context.getSender().sendMessage(main.parse(
+                                "<highlight>" + counter + ".</highlight> <main>" + conversation.getIdentifier()
                         ));
 
-                        context.getSender().sendMessage(miniMessage.parse(
-                                unimportant + "--- Attached to NPC: " + unimportantClose + mainGradient + conversation.getNPCID()
+                        context.getSender().sendMessage(main.parse(
+                                "<unimportant>--- Attached to NPC:</unimportant> <main>" + conversation.getNPCID()
                         ));
 
-                        context.getSender().sendMessage(miniMessage.parse(
-                                unimportant + "--- Amount of starting conversation lines: " + unimportantClose + mainGradient + conversation.getStartingLines().size()
+                        context.getSender().sendMessage(main.parse(
+                                "<unimportant>--- Amount of starting conversation lines:</unimportant> <main>" + conversation.getStartingLines().size()
                         ));
                     }
 
@@ -205,11 +204,11 @@ public class AdminConversationCommands {
 
                         if (printToConsole) {
                             main.getLogManager().info("\n" + analyzed);
-                            context.getSender().sendMessage(miniMessage.parse(
-                                    successGradient + "Analyze Output has been printed to your console!"
+                            context.getSender().sendMessage(main.parse(
+                                    "<success>Analyze Output has been printed to your console!"
                             ));
                         } else {
-                            context.getSender().sendMessage(miniMessage.parse(
+                            context.getSender().sendMessage(main.parse(
                                     analyzed
                             ));
                         }
@@ -226,8 +225,8 @@ public class AdminConversationCommands {
                     final Conversation foundConversation = context.get("conversation");
 
 
-                    context.getSender().sendMessage(miniMessage.parse(
-                            mainGradient + "Playing " + foundConversation.getIdentifier() + " conversation..."
+                    context.getSender().sendMessage(main.parse(
+                            "<main>Playing <highlight>" + foundConversation.getIdentifier() + "</highlight> conversation..."
                     ));
                     conversationManager.playConversation(player, foundConversation);
                 }));
@@ -255,9 +254,9 @@ public class AdminConversationCommands {
 
                         foundConversation.setNPC(npcID);
 
-                        context.getSender().sendMessage(miniMessage.parse(
-                                mainGradient + "NPC of conversation " + highlightGradient + foundConversation.getIdentifier() + "</gradient> has been set to "
-                                        + highlight2Gradient + npcID + "</gradient>!"
+                        context.getSender().sendMessage(main.parse(
+                                "<main>NPC of conversation <highlight>" + foundConversation.getIdentifier() + "</highlight> has been set to <highlight>"
+                                        + npcID + "</highlight2>!"
                         ));
                     }));
         }
@@ -290,11 +289,11 @@ public class AdminConversationCommands {
                     itemMeta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, 8);
 
 
-                    itemMeta.displayName(miniMessage.parse(
-                            "<LIGHT_PURPLE>Add conversation <AQUA>" + foundConversation.getIdentifier() + "</AQUA> to this Armor Stand"
+                    itemMeta.displayName(main.parse(
+                            "<LIGHT_PURPLE>Add conversation <highlight>" + foundConversation.getIdentifier() + "</highlight> to this Armor Stand"
                     ));
-                    lore.add(miniMessage.parse(
-                            "<WHITE>Right-click an Armor Stand to add the conversation <AQUA>" + foundConversation.getIdentifier() + "</AQUA> to it."
+                    lore.add(main.parse(
+                            "<WHITE>Right-click an Armor Stand to add the conversation <highlight>" + foundConversation.getIdentifier() + "</highlight> to it."
                     ));
 
                     itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -305,8 +304,8 @@ public class AdminConversationCommands {
 
                     player.getInventory().addItem(itemStack);
 
-                    context.getSender().sendMessage(miniMessage.parse(
-                            successGradient + "You have been given an item with which you can add the conversation " + highlightGradient + foundConversation.getIdentifier() + "</gradient> to an armor stand. Check your inventory!"
+                    context.getSender().sendMessage(main.parse(
+                            "<success>You have been given an item with which you can add the conversation <highlight>" + foundConversation.getIdentifier() + "</highlight> to an armor stand. Check your inventory!"
                     ));
                 }));
 
@@ -334,10 +333,10 @@ public class AdminConversationCommands {
                     itemMeta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, 9);
 
 
-                    itemMeta.displayName(miniMessage.parse(
+                    itemMeta.displayName(main.parse(
                             "<LIGHT_PURPLE>Remove all conversations from this Armor Stand"
                     ));
-                    lore.add(miniMessage.parse(
+                    lore.add(main.parse(
                             "<WHITE>Right-click an Armor Stand to remove all conversations attached to it."
                     ));
 
@@ -348,8 +347,8 @@ public class AdminConversationCommands {
 
                     player.getInventory().addItem(itemStack);
 
-                    context.getSender().sendMessage(miniMessage.parse(
-                            successGradient + "You have been given an item with which you remove all conversations from an armor stand. Check your inventory!"
+                    context.getSender().sendMessage(main.parse(
+                            "<success>You have been given an item with which you remove all conversations from an armor stand. Check your inventory!"
                     ));
                 }));
 
@@ -384,14 +383,14 @@ public class AdminConversationCommands {
                     }
 
                     if (foundConversation.addSpeaker(speaker, true)) {
-                        context.getSender().sendMessage(miniMessage.parse(
-                                successGradient + "Speaker " + highlightGradient + speaker.getSpeakerName() + "</gradient> was successfully added to conversation "
-                                        + highlight2Gradient + foundConversation.getIdentifier() + "</gradient>!"
+                        context.getSender().sendMessage(main.parse(
+                                "<success>Speaker <highlight>" + speaker.getSpeakerName() + "</highlight> was successfully added to conversation <highlight2>"
+                                        + foundConversation.getIdentifier() + "</highlight2>!"
                         ));
                     } else {
-                        context.getSender().sendMessage(miniMessage.parse(
-                                errorGradient + "Speaker " + highlightGradient + speaker.getSpeakerName() + "</gradient> could not be added to "
-                                        + highlight2Gradient + foundConversation.getIdentifier() + "</gradient>! Does it already exist?"
+                        context.getSender().sendMessage(main.parse(
+                                "<error>Speaker <highlight>" + speaker.getSpeakerName() + "</highlight> could not be added to <highlight2>"
+                                        + foundConversation.getIdentifier() + "</highlight2>! Does it already exist?"
                         ));
                     }
 
@@ -407,16 +406,16 @@ public class AdminConversationCommands {
                     final Conversation foundConversation = context.get("conversation");
 
                     if (foundConversation.getSpeakers().size() == 0) {
-                        context.getSender().sendMessage(miniMessage.parse(
-                                successGradient + "This conversation has no speakers."
+                        context.getSender().sendMessage(main.parse(
+                                "<success>This conversation has no speakers."
                         ));
                     } else {
-                        context.getSender().sendMessage(miniMessage.parse(highlightGradient + "Speakers of conversation " + highlight2Gradient + foundConversation.getIdentifier() + "</gradient>:</gradient>"));
+                        context.getSender().sendMessage(main.parse("<highlight>Speakers of conversation <highlight2>" + foundConversation.getIdentifier() + "</highlight2>:</gradient>"));
                         int counter = 0;
                         for (final Speaker speaker : foundConversation.getSpeakers()) {
                             counter++;
 
-                            context.getSender().sendMessage(miniMessage.parse(highlightGradient + counter + ".</gradient> " + mainGradient + "Name:</gradient> " + highlight2Gradient + speaker.getSpeakerName() + "</gradient> Color: " + highlight2Gradient + speaker.getColor() + speaker.getColor().replace("<", "").replace(">", "") + "</gradient>"));
+                            context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>Name:</main> <highlight2>" + speaker.getSpeakerName() + "</highlight2> Color: <highlight2>" + speaker.getColor() + speaker.getColor().replace("<", "").replace(">", "") + "</highlight2>"));
                         }
                     }
 
@@ -438,14 +437,14 @@ public class AdminConversationCommands {
 
                     if (foundConversation.hasSpeaker(speaker) && foundConversation.removeSpeaker(speaker, true)) {
                         //TODO: Reload conversation here
-                        context.getSender().sendMessage(miniMessage.parse(
-                                successGradient + "Speaker " + highlightGradient + speaker.getSpeakerName() + "</gradient> was successfully removed from conversation "
-                                        + highlight2Gradient + foundConversation.getIdentifier() + "</gradient>!"
+                        context.getSender().sendMessage(main.parse(
+                                "<success>Speaker <highlight>" + speaker.getSpeakerName() + "</highlight> was successfully removed from conversation <highlight2>"
+                                        + foundConversation.getIdentifier() + "</highlight2>!"
                         ));
                     } else {
-                        context.getSender().sendMessage(miniMessage.parse(
-                                errorGradient + "Speaker " + highlightGradient + speaker.getSpeakerName() + "</gradient> could not be removed from "
-                                        + highlight2Gradient + foundConversation.getIdentifier() + "</gradient>! Does it exist?"
+                        context.getSender().sendMessage(main.parse(
+                                "<error>Speaker <highlight>" + speaker.getSpeakerName() + "</highlight> could not be removed from <highlight2>"
+                                        + foundConversation.getIdentifier() + "</highlight2>! Does it exist?"
                         ));
                     }
 
@@ -466,14 +465,14 @@ public class AdminConversationCommands {
 
                     final Conversation foundConversation = context.get("conversation");
 
-                    audience.sendMessage(miniMessage.parse(
+                    audience.sendMessage(main.parse(
                             highlightGradient + "Starting lines (max. 3 levels of next):"
                     ));
                     final int npcID = context.get("NPC");
 
                     foundConversation.setNPC(npcID);
 
-                    audience.sendMessage(miniMessage.parse(
+                    audience.sendMessage(main.parse(
                             mainGradient + "NPC of conversation " + highlightGradient + foundConversation.getIdentifier() + "</gradient> has been set to "
                                     + highlight2Gradient + npcID + "</gradient>!"
                     ));

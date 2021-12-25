@@ -117,7 +117,7 @@ dependencies {
     implementation 'de.themoep:inventorygui:1.5-SNAPSHOT'
 
 
-    implementation 'io.lumine.xikage:MythicMobs:4.12.0'
+    compileOnly 'io.lumine.xikage:MythicMobs:4.12.0'
     compileOnly files('libs/EliteMobs.jar')
     compileOnly files('libs/UClans-API.jar')
     compileOnly files('libs/ProjectKorra-1.9.2.jar')
@@ -135,7 +135,7 @@ dependencies {
     //compileOnly 'com.github.NEZNAMY:TAB:2.9.2'
     compileOnly 'com.github.TownyAdvanced:Towny:0.97.5.0'
 
-    implementation 'com.github.Zrips:Jobs:v4.17.2'
+    compileOnly 'com.github.Zrips:Jobs:v4.17.2'
 
 
     //Shaded
@@ -155,9 +155,9 @@ dependencies {
     //implementation 'com.github.retrooper.packetevents:bukkit:2.0-SNAPSHOT'
     implementation 'com.github.AlessioGr.packetevents:bukkit:2.0-SNAPSHOT'
 
-    implementation 'commons-io:commons-io:2.11.0'
-    implementation 'org.apache.commons:commons-text:1.9'
-    implementation 'org.apache.commons:commons-lang3:3.12.0'
+    //implementation 'commons-io:commons-io:2.11.0'
+    //implementation 'org.apache.commons:commons-text:1.9'
+    //implementation 'org.apache.commons:commons-lang3:3.12.0'
     //implementation 'org.apache.commons:commons-lang:3.1'
 
     implementation 'io.netty:netty-all:4.1.72.Final'
@@ -181,9 +181,9 @@ shadowJar {
     relocate('io.leangen.geantyref', path.concat('.geantyref'))
     relocate("de.themoep", path.concat('.de.themoep'))
 
-    relocate("org.apache.commons.io", path.concat('.commons.io'))
-    relocate("org.apache.commons.text", path.concat('.commons.text'))
-    relocate("org.apache.commons.lang3", path.concat('.commons.lang'))
+    //relocate("org.apache.commons.io", path.concat('.commons.io'))
+    //relocate("org.apache.commons.text", path.concat('.commons.text'))
+    //relocate("org.apache.commons.lang3", path.concat('.commons.lang'))
 
     relocate("io.github.retrooper.packetevents", path.concat('.packetevents.bukkit'))
     relocate("com.github.retrooper.packetevents", path.concat('.packetevents.api'))
@@ -200,8 +200,8 @@ shadowJar {
 
 
     dependencies {
-        include dependency('org.apache.commons:')
-        include dependency('commons-io:commons-io:')
+        //include dependency('org.apache.commons:')
+        //include dependency('commons-io:commons-io:')
 
         //include dependency('io.papermc:paperlib')
         include dependency("de.themoep:inventorygui:1.5-SNAPSHOT")

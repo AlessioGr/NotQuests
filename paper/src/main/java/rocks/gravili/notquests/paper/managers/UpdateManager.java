@@ -21,8 +21,8 @@ public class UpdateManager {
     public void checkForPluginUpdates() {
         try {
             if (updateChecker.checkForUpdates()) {
-                main.getLogManager().info("<GOLD>The version <Yellow>" + main.getMain().getDescription().getVersion()
-                        + " <GOLD>is not the latest version (<Green>" + updateChecker.getLatestVersion() + "<GOLD>)! Please update the plugin here: <Aqua>https://www.spigotmc.org/resources/95872/ <DARK_GRAY>(If your version is newer, the spigot API might not be updated yet).");
+                main.getLogManager().info("<warn>The version <highlight>" + main.getMain().getDescription().getVersion()
+                        + "</highlight> is not the latest version (<Green>" + updateChecker.getLatestVersion() + "</green>)! Please update the plugin here: <highlight2>https://www.spigotmc.org/resources/95872/</highlight2> <veryUnimportant>(If your version is newer, the spigot API might not be updated yet).");
             } else {
                 main.getLogManager().info("NotQuests seems to be up to date! :)");
             }
@@ -87,7 +87,7 @@ public class UpdateManager {
                 }
 
                 if (consoleCommand.isBlank()) {
-                    main.getLogManager().warn("Action has an empty console command. This should NOT be possible! Creating an action with an empty console command... Action name: <AQUA>" + actionIdentifier + "</AQUA>");
+                    main.getLogManager().warn("Action has an empty console command. This should NOT be possible! Creating an action with an empty console command... Action name: <highlight>" + actionIdentifier + "</highlight>");
                 }
 
                 ConsoleCommandAction consoleCommandAction = new ConsoleCommandAction(main);
@@ -96,7 +96,7 @@ public class UpdateManager {
 
                 main.getActionsYMLManager().addAction(actionIdentifier, consoleCommandAction);
 
-                main.getLogManager().info("Migrated the following action from quests.yml to actions.yml: <AQUA>" + actionIdentifier + "</AQUA>");
+                main.getLogManager().info("Migrated the following action from quests.yml to actions.yml: <highlight>" + actionIdentifier + "</highlight>");
             }
         }
 

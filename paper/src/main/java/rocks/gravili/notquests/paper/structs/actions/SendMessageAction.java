@@ -78,7 +78,7 @@ public class SendMessageAction extends Action {
 
     @Override
     public void execute(final Player player, Object... objects) {
-        player.sendMessage(MiniMessage.miniMessage().parse(
+        player.sendMessage(main.parse(
                 getMessageToSend()
         ));
     }

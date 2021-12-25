@@ -74,7 +74,7 @@ public class ActionManager {
 
 
     public void registerAction(final String identifier, final Class<? extends Action> action) {
-        main.getLogManager().info("Registering action <AQUA>" + identifier);
+        main.getLogManager().info("Registering action <highlight>" + identifier);
         actions.put(identifier, action);
 
         try {
@@ -129,15 +129,15 @@ public class ActionManager {
 
                 objectiveOfQuest.addReward(action, true); //TODO: Also do addAction which are executed when the objective is unlocked (and not just when completed)
 
-                context.getSender().sendMessage(MiniMessage.miniMessage().parse(
-                        NotQuestColors.successGradient + getActionType(action.getClass()) + " Reward successfully added to Objective " + NotQuestColors.highlightGradient
-                                + objectiveOfQuest.getObjectiveFinalName() + "</gradient>!</gradient>"));
+                context.getSender().sendMessage(main.parse(
+                        "<success>" + getActionType(action.getClass()) + " Reward successfully added to Objective <highlight>"
+                                + objectiveOfQuest.getObjectiveFinalName() + "</highlight>!"));
             } else { //Quest Reward
                 quest.addReward(action, true);
 
-                context.getSender().sendMessage(MiniMessage.miniMessage().parse(
-                        NotQuestColors.successGradient + getActionType(action.getClass()) + " Reward successfully added to Quest " + NotQuestColors.highlightGradient
-                                + quest.getQuestName() + "</gradient>!</gradient>"
+                context.getSender().sendMessage(main.parse(
+                        "<success>" + getActionType(action.getClass()) + " Reward successfully added to Quest <highlight>"
+                                + quest.getQuestName() + "</highlight>!"
                 ));
             }
         } else {
@@ -145,12 +145,12 @@ public class ActionManager {
 
                 if (main.getActionsYMLManager().getAction(actionIdentifier) == null) {
                     main.getActionsYMLManager().addAction(actionIdentifier, action);
-                    context.getSender().sendMessage(MiniMessage.miniMessage().parse(
-                            NotQuestColors.successGradient + getActionType(action.getClass()) + " Action with the name " + NotQuestColors.highlightGradient
-                                    + actionIdentifier + "</gradient> has been created successfully!</gradient>"
+                    context.getSender().sendMessage(main.parse(
+                            "<success>" + getActionType(action.getClass()) + " Action with the name <highlight>"
+                                    + actionIdentifier + "</highlight> has been created successfully!"
                     ));
                 } else {
-                    context.getSender().sendMessage(MiniMessage.miniMessage().parse(errorGradient + "Error! An action with the name " + highlightGradient + actionIdentifier + "</gradient> already exists!</gradient>"));
+                    context.getSender().sendMessage(main.parse("<error>Error! An action with the name <highlight>" + actionIdentifier + "</highlight> already exists!"));
 
                 }
             }
@@ -167,7 +167,7 @@ public class ActionManager {
             main.getLogManager().debug("   Skipping Conditions");
             action.execute(questPlayer.getPlayer(), objects);
             if (!silent) {
-                sender.sendMessage(MiniMessage.miniMessage().parse(successGradient + "Action with the name " + highlightGradient + action.getActionName() + "</gradient> has been executed!</gradient>"));
+                sender.sendMessage(main.parse("<success>Action with the name <highlight>" + action.getActionName() + "</highlight> has been executed!"));
             }
             return;
         }
@@ -183,7 +183,7 @@ public class ActionManager {
 
         if (!unfulfilledConditions.toString().isBlank()) {
             if (!silent) {
-                sender.sendMessage(MiniMessage.miniMessage().parse(errorGradient + "You do not fulfill all the conditions this action needs! Conditions still needed:" + unfulfilledConditions));
+                sender.sendMessage(main.parse("<error>You do not fulfill all the conditions this action needs! Conditions still needed:" + unfulfilledConditions));
             }
         } else {
             main.getLogManager().debug("   All Conditions fulfilled!");
@@ -193,7 +193,7 @@ public class ActionManager {
             }
             action.execute(questPlayer.getPlayer(), objects);
             if (!silent) {
-                sender.sendMessage(MiniMessage.miniMessage().parse(successGradient + "Action with the name " + highlightGradient + action.getActionName() + "</gradient> has been executed!</gradient>"));
+                sender.sendMessage(main.parse("<success>Action with the name <highlight>" + action.getActionName() + "</highlight> has been executed!"));
             }
         }
     }

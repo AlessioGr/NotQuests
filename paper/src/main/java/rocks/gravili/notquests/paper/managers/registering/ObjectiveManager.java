@@ -94,13 +94,13 @@ public class ObjectiveManager {
 
 
    /* public void registerObjectiveCommandCompletionHandler(final String identifier, final String commandCompletionHandler){
-        main.getLogManager().info("Registering command completions for objective <AQUA>" + identifier);
+        main.getLogManager().info("Registering command completions for objective <highlight>" + identifier);
         objectiveCommandCompletionHandlers.put(identifier, commandCompletionHandler);
 
     }*/
 
     public void registerObjective(final String identifier, final Class<? extends Objective> objective) {
-        main.getLogManager().info("Registering objective <AQUA>" + identifier);
+        main.getLogManager().info("Registering objective <highlight>" + identifier);
         objectives.put(identifier, objective);
 
         try {
@@ -146,9 +146,9 @@ public class ObjectiveManager {
         if (quest != null) {
             objective.setQuest(quest);
             objective.setObjectiveID(quest.getObjectives().size() + 1);
-            context.getSender().sendMessage(MiniMessage.miniMessage().parse(
-                    NotQuestColors.successGradient + getObjectiveType(objective.getClass()) + " Objective successfully added to Quest " + NotQuestColors.highlightGradient
-                            + quest.getQuestName() + "</gradient>!</gradient>"
+            context.getSender().sendMessage(main.parse(
+                    "<success>" + getObjectiveType(objective.getClass()) + " Objective successfully added to Quest <highlight>"
+                            + quest.getQuestName() + "</highlight>!"
             ));
 
             quest.addObjective(objective, true);

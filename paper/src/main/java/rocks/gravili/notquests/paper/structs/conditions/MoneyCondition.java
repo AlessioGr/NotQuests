@@ -111,8 +111,8 @@ public class MoneyCondition extends Condition {
         }
         main.getIntegrationsManager().getVaultManager().getEconomy().withdrawPlayer(player, worldName, moneyToDeduct);
         if (notifyPlayer) {
-            player.sendMessage(MiniMessage.miniMessage().parse(
-                    "<AQUA>-" + moneyToDeduct + " <RED>$!"
+            player.sendMessage(main.parse(
+                    "<highlight>-" + moneyToDeduct + " <RED>$!"
             ));
         }
     }
@@ -127,7 +127,7 @@ public class MoneyCondition extends Condition {
             if (!main.getIntegrationsManager().isVaultEnabled() || main.getIntegrationsManager().getVaultManager().getEconomy() == null) {
                 return "<YELLOW>Error: The server does not have vault enabled. Please ask the Owner to install Vault for money stuff to work.";
             } else if (main.getIntegrationsManager().getVaultManager().getEconomy().getBalance(player, player.getWorld().getName()) < moneyRequirementAmount) {
-                return "<YELLOW>You need <AQUA>" + (moneyRequirementAmount - main.getIntegrationsManager().getVaultManager().getEconomy().getBalance(player, player.getWorld().getName())) + "</AQUA> more money.";
+                return "<YELLOW>You need <highlight>" + (moneyRequirementAmount - main.getIntegrationsManager().getVaultManager().getEconomy().getBalance(player, player.getWorld().getName())) + "</highlight> more money.";
             } else {
                 if (enforce && deductMoney && moneyRequirementAmount > 0) {
 

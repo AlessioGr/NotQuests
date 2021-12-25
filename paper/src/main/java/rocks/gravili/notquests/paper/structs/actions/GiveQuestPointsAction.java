@@ -69,8 +69,8 @@ public class GiveQuestPointsAction extends Action {
             questPlayer.addQuestPoints(rewardedQuestPoints, true);
 
         } else {
-            main.getLogManager().warn("Error giving quest point reward to player <AQUA>" + player.getName() + "</AQUA>");
-            player.sendMessage(MiniMessage.miniMessage().parse(
+            main.getLogManager().warn("Error giving quest point reward to player <highlight>" + player.getName() + "</highlight>");
+            player.sendMessage(main.parse(
                     "<RED>Error giving quest point reward."
             ));
         }

@@ -58,7 +58,7 @@ public class BackupManager {
             //Now save
             try {
                 main.getDataManager().getQuestsConfig().save(newQuestsBackupFile);
-                main.getLogManager().info("Your quests.yml has been successfully backed up to <AQUA>" + newQuestsBackupFile.getPath());
+                main.getLogManager().info("Your quests.yml has been successfully backed up to <highlight>" + newQuestsBackupFile.getPath());
             } catch (Exception e) {
                 main.getLogManager().warn("There was an error saving the backup file for your quests.yml. Error:");
                 e.printStackTrace();

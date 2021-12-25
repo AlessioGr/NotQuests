@@ -19,7 +19,6 @@
 package rocks.gravili.notquests.paper.managers;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -37,7 +36,7 @@ public class LogManager {
         consoleSender = Bukkit.getConsoleSender();
 
         prefixText = "<#393e46>[<gradient:#E0EAFC:#CFDEF3>NotQuests<#393e46>]<#636c73>: ";
-        prefix = main.getMessageManager().getMiniMessage().parse(prefixText);
+        prefix = main.parse(prefixText);
     }
 
     public void lateInit() {
@@ -50,13 +49,13 @@ public class LogManager {
     }
 
     private void log(final Level level, final LogCategory logCategory, final String color, final String message) {
-        consoleSender.sendMessage(main.getMessageManager().getMiniMessage().parse(prefixText + color + message));
+        consoleSender.sendMessage(main.parse(prefixText + color + message));
     }
 
 
     public void info(final LogCategory logCategory, final String message) {
         if (logCategory == LogCategory.DEFAULT) {
-            log(Level.INFO, logCategory, "<gradient:#37a659:#56B4D3>", message);
+            log(Level.INFO, logCategory, "<main>", message);
         } else if (logCategory == LogCategory.DATA) {
             log(Level.INFO, logCategory, "<gradient:#1FA2FF:#12D8FA:#A6FFCB>", message);
         } else if (logCategory == LogCategory.LANGUAGE) {
@@ -69,7 +68,7 @@ public class LogManager {
     }
 
     public void warn(final LogCategory logCategory, final String message) {
-        log(Level.WARNING, logCategory, "<YELLOW>", message);
+        log(Level.WARNING, logCategory, "<warn>", message);
     }
 
     public void warn(final String message) {
@@ -77,7 +76,7 @@ public class LogManager {
     }
 
     public void severe(final LogCategory logCategory, final String message) {
-        log(Level.SEVERE, logCategory, "<RED>", message);
+        log(Level.SEVERE, logCategory, "<error>", message);
     }
 
     public void severe(final String message) {
@@ -86,7 +85,7 @@ public class LogManager {
 
     public void debug(final LogCategory logCategory, final String message) {
         if (main.getConfiguration().debug) {
-            log(Level.FINE, logCategory, "<GRAY>", message);
+            log(Level.FINE, logCategory, "<unimportant>", message);
         }
     }
 

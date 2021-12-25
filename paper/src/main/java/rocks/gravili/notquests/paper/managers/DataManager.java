@@ -247,7 +247,7 @@ public class DataManager {
                         disablePluginAndSaving("There was an error creating the general.yml config file (1).");
                         return;
                     }
-                    main.getLogManager().info("Loading default <AQUA>general.yml</AQUA>...");
+                    main.getLogManager().info("Loading default <highlight>general.yml</highlight>...");
 
                     //Instead of creating a new general.yml file, we will copy the one from inside of the plugin jar into the plugin folder:
                     InputStream inputStream = main.getMain().getResource("general.yml");
@@ -787,9 +787,9 @@ public class DataManager {
         ItemStack journal = new ItemStack(Material.ENCHANTED_BOOK, 1);
         ItemMeta im = journal.getItemMeta();
         ArrayList<Component> lore = new ArrayList<>();
-        lore.add(MiniMessage.miniMessage().parse("<GRAY>A book containing all your quest information"));
+        lore.add(main.parse("<GRAY>A book containing all your quest information"));
         if (im != null) {
-            im.displayName(MiniMessage.miniMessage().parse(
+            im.displayName(main.parse(
                     "<BLUE><ITALIC>Journal"
             ));
             im.lore(lore);
@@ -824,7 +824,7 @@ public class DataManager {
         }
         configuration.packetMagicUnsafeDisregardVersion = getGeneralConfig().getBoolean(key);
 
-        main.getLogManager().info("Detected version: " + Bukkit.getBukkitVersion() + " <AQUA>(Paper)");
+        main.getLogManager().info("Detected version: " + Bukkit.getBukkitVersion() + " <highlight>(Paper)");
 
         if (!Bukkit.getBukkitVersion().contains("1.18") && !Bukkit.getBukkitVersion().contains("1.17")) {
             if (configuration.packetMagicUnsafeDisregardVersion) {
@@ -850,7 +850,7 @@ public class DataManager {
         configuration.previousConversationsHistorySize = getGeneralConfig().getInt(key);
 
         if (valueChanged) {
-            main.getLogManager().info("<AQUA>General.yml</AQUA> Configuration was updated with new values! Saving it...");
+            main.getLogManager().info("<highlight>General.yml</highlight> Configuration was updated with new values! Saving it...");
             saveGeneralConfig();
         }
 
@@ -890,7 +890,7 @@ public class DataManager {
                 getQuestsConfig().save(questsConfigFile);
                 main.getLogManager().info("Saved Data to quests.yml");
             } catch (IOException e) {
-                main.getLogManager().severe("Could not save quests config to <AQUA>" + questsConfigFile + "</AQUA>. Stacktrace:");
+                main.getLogManager().severe("Could not save quests config to <highlight>" + questsConfigFile + "</highlight>. Stacktrace:");
                 e.printStackTrace();
             }
         } else {
@@ -920,11 +920,11 @@ public class DataManager {
                 main.getLogManager().severe("Error message:");
                 throwable.printStackTrace();
             } else if (object instanceof Quest quest) {
-                main.getLogManager().severe("  <DARK_GRAY>└─</DARK_GRAY> Quest: " + NotQuestColors.highlightGradient + quest.getQuestName() + "</gradient>");
+                main.getLogManager().severe("  <DARK_GRAY>└─</DARK_GRAY> Quest: <highlight>"+ quest.getQuestName());
             } else if (object instanceof Objective objective) {
-                main.getLogManager().severe("  <DARK_GRAY>└─</DARK_GRAY> Objective ID: " + NotQuestColors.highlightGradient + objective.getObjectiveID() + "</gradient> of Quest: " + NotQuestColors.highlight2Gradient + ((Objective) object).getQuest().getQuestName() + "</gradient>");
+                main.getLogManager().severe("  <DARK_GRAY>└─</DARK_GRAY> Objective ID: <highlight>" + objective.getObjectiveID() + "</highlight> of Quest: <highlight2>" + ((Objective) object).getQuest().getQuestName());
             } else if (object instanceof Action action) {
-                main.getLogManager().severe("  <DARK_GRAY>└─</DARK_GRAY> Action Name: " + NotQuestColors.highlightGradient + action.getActionName() + "</gradient> of Type: " + NotQuestColors.highlight2Gradient + action.getActionType() + "</gradient>");
+                main.getLogManager().severe("  <DARK_GRAY>└─</DARK_GRAY> Action Name: <highlight>" + action.getActionName() + "</highlight> of Type: <highlight2>" + action.getActionType());
             }
         }
         setSavingEnabled(false);

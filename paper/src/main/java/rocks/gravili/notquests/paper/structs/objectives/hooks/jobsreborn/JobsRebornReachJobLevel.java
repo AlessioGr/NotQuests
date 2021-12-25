@@ -79,8 +79,8 @@ public class JobsRebornReachJobLevel extends Objective {
                     final String jobName = context.get("Job Name");
 
                     if (Jobs.getJob(jobName) == null) {
-                        context.getSender().sendMessage(MiniMessage.miniMessage().parse(
-                                NotQuestColors.errorGradient + "Error: The Job with the name " + NotQuestColors.highlightGradient + jobName + "</GRADIENT> was not found!"
+                        context.getSender().sendMessage(main.parse(
+                                "<error>Error: The Job with the name <highlight>"+ jobName + "</highlight> was not found!"
                         ));
                         return;
                     }
@@ -136,7 +136,7 @@ public class JobsRebornReachJobLevel extends Objective {
         //Warn
         final Job job = Jobs.getJob(getJobName());
         if (job == null) {
-            main.getLogManager().warn("The job <AQUA>" + getJobName() + "</AQUA> does not exist.");
+            main.getLogManager().warn("The job <highlight>" + getJobName() + "</highlight> does not exist.");
         }
     }
 
@@ -150,7 +150,7 @@ public class JobsRebornReachJobLevel extends Objective {
 
         final Job job = Jobs.getJob(getJobName());
         if (job == null) {
-            main.getLogManager().warn("The job <AQUA>" + getJobName() + "</AQUA> does not exist.");
+            main.getLogManager().warn("The job <highlight>" + getJobName() + "</highlight> does not exist.");
             return;
         }
 

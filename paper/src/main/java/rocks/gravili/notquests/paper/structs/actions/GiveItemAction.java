@@ -59,15 +59,15 @@ public class GiveItemAction extends Action {
                             itemStack = player.getInventory().getItemInMainHand().clone();
                             itemStack.setAmount(itemRewardAmount);
                         } else {
-                            context.getSender().sendMessage(MiniMessage.miniMessage().parse(
-                                    NotQuestColors.errorGradient + "This must be run by a player."
+                            context.getSender().sendMessage(main.parse(
+                                    "<error>This must be run by a player."
                             ));
                             return;
                         }
                     } else {
                         if (materialOrHand.material.equalsIgnoreCase("any")) {
-                            context.getSender().sendMessage(MiniMessage.miniMessage().parse(
-                                    NotQuestColors.errorGradient + "You cannot use 'any' here!"
+                            context.getSender().sendMessage(main.parse(
+                                    "<error>You cannot use <highlight>'any'</highlight> here!"
                             ));
                             return;
                         }

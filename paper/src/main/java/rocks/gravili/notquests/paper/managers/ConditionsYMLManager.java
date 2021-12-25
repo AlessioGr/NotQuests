@@ -104,7 +104,7 @@ public class ConditionsYMLManager {
                 try {
                     conditionType = main.getConditionsManager().getConditionClass(conditionTypeString);
                 } catch (NullPointerException ex) {
-                    main.getDataManager().disablePluginAndSaving("Error parsing conditions.yml condition Type of condition with name <AQUA>" + conditionIdentifier + "</AQUA>.", ex);
+                    main.getDataManager().disablePluginAndSaving("Error parsing conditions.yml condition Type of condition with name <highlight>" + conditionIdentifier + "</highlight>.", ex);
                 }
 
                 if (!conditionIdentifier.isBlank() && conditionType != null) {
@@ -116,7 +116,7 @@ public class ConditionsYMLManager {
                         condition.load(getConditionsConfig(), "conditions." + conditionIdentifier);
 
                     } catch (Exception ex) {
-                        main.getDataManager().disablePluginAndSaving("Error parsing condition Type of conditions.yml condition with name <AQUA>" + conditionIdentifier + "</AQUA>.", ex);
+                        main.getDataManager().disablePluginAndSaving("Error parsing condition Type of conditions.yml condition with name <highlight>" + conditionIdentifier + "</highlight>.", ex);
                     }
 
                     if (condition != null) {
@@ -171,9 +171,9 @@ public class ConditionsYMLManager {
             condition.save(getConditionsConfig(), "conditions." + conditionIdentifier);
 
             saveConditions();
-            return (successGradient + "Condition " + highlightGradient + conditionIdentifier + "</gradient> successfully created!");
+            return ("<success>Condition <highlight>" + conditionIdentifier + "</highlight> successfully created!");
         } else {
-            return (errorGradient + "Condition " + highlightGradient + conditionIdentifier + "</gradient> already exists!");
+            return ("<error>Condition <highlight>" + conditionIdentifier + "</highlight> already exists!");
         }
     }
 
@@ -181,6 +181,6 @@ public class ConditionsYMLManager {
     public String removeCondition(String conditionToDeleteIdentifier) {
         conditionsAndIdentifiers.remove(conditionToDeleteIdentifier);
         getConditionsConfig().set("conditions." + conditionToDeleteIdentifier, null);
-        return successGradient + "Condition " + highlightGradient + conditionToDeleteIdentifier + "</gradient> successfully deleted!";
+        return "<success>Condition <highlight>" + conditionToDeleteIdentifier + "</highlight> successfully deleted!";
     }
 }

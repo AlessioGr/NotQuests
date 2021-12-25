@@ -87,8 +87,8 @@ public class EscortNPCObjective extends Objective {
 
                     if (toEscortNPCID == destinationNPCID) {
                         context.getSender().sendMessage(
-                                MiniMessage.miniMessage().parse(
-                                        NotQuestColors.errorGradient + "Error: Um... an NPC cannot themselves himself, to.. themselves?"
+                                main.parse(
+                                        "<error>Error: Um... an NPC cannot themselves himself, to.. themselves?"
                                 )
                         );
                         return;

@@ -88,20 +88,20 @@ public class WorldTimeCondition extends Condition {
             if (currentTime <= getMaxTime() && currentTime >= getMinTime()) {
                 return "";
             } else {
-                return "<YELLOW>Come back between <AQUA>" + getMinTime() + "</AQUA> and <AQUA>" + getMaxTime() + "</AQUA> (It's now " + currentTime + ")";
+                return "<YELLOW>Come back between <highlight>" + getMinTime() + "</highlight> and <highlight>" + getMaxTime() + "</highlight> (It's now " + currentTime + ")";
             }
         } else { //Maxtime is the next day
             if (currentTime <= getMinTime()) { //Chec for next day
                 if (currentTime <= getMaxTime()) {
                     return "";
                 } else {
-                    return "<YELLOW>Come back between <AQUA>" + getMinTime() + "</AQUA> and <AQUA>" + getMaxTime() + "</AQUA> (It's now " + currentTime + ")";
+                    return "<YELLOW>Come back between <highlight>" + getMinTime() + "</highlight> and <highlight>" + getMaxTime() + "</highlight> (It's now " + currentTime + ")";
                 }
             } else { //Check for current day
                 if (currentTime >= getMinTime() && currentTime <= 24) {
                     return "";
                 } else {
-                    return "<YELLOW>Come back between <AQUA>" + getMinTime() + "</AQUA> and <AQUA>" + getMaxTime() + "</AQUA> (It's now " + currentTime + ")";
+                    return "<YELLOW>Come back between <highlight>" + getMinTime() + "</highlight> and <highlight>" + getMaxTime() + "</highlight> (It's now " + currentTime + ")";
                 }
             }
 

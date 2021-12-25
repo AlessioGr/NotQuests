@@ -99,13 +99,13 @@ public class TownyNationNameCondition extends Condition {
                     return "";
                 } else {
                     if (nation != null) {
-                        return "<YELLOW>You need to be in the nation <AQUA>" + getTownyNationName() + "</AQUA>. However, you are currently in <AQUA>" + nation.getName().replace("_", " ");
+                        return "<YELLOW>You need to be in the nation <highlight>" + getTownyNationName() + "</highlight>. However, you are currently in <highlight>" + nation.getName().replace("_", " ");
                     } else {
-                        return "<YELLOW>You need to be in the nation <AQUA>" + getTownyNationName();
+                        return "<YELLOW>You need to be in the nation <highlight>" + getTownyNationName();
                     }
                 }
             } else {
-                return "<YELLOW>You need to be in the nation <AQUA>" + getTownyNationName();
+                return "<YELLOW>You need to be in the nation <highlight>" + getTownyNationName();
             }
         } else {
             return "<YELLOW>Error reading TownyNationName requirement...";

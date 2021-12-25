@@ -29,17 +29,6 @@ public class NotQuestColors {
     public static TextColor lightHighlight = TextColor.color(0x4da0ff);
     public static String lightHighlightMM = "<#4da0ff>";
 
-    public static String successGradient = "<gradient:#54b2ff:#ff5ecc>";
-    public static String errorGradient = "<gradient:#ff004c:#a80000>";
-    public static String mainGradient = "<gradient:#1985ff:#2bc7ff>";
-    public static String highlightGradient = "<gradient:#00fffb:#00ffc3>";
-    public static String highlight2Gradient = "<gradient:#ff2465:#ff24a0>";
-    public static String unimportant = "<GRAY>";
-    public static String veryUnimportant = "<DARK_GRAY>";
-
-    public static String unimportantClose = "</GRAY>";
-
-    public static String warningGradient = "<gradient:#fff700:#ffa629>";
 
     public static String debugTitleGradient = "<gradient:#abfff5:#c7fff8>";
     public static String debugGradient = "<gradient:#8a98c2:#8ac2bb>";

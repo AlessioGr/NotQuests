@@ -74,7 +74,7 @@ public class QuestPlayer {
 
         //Configuration Option: general.max-active-quests-per-player
         if (main.getConfiguration().getMaxActiveQuestsPerPlayer() != -1 && activeQuests.size() >= main.getConfiguration().getMaxActiveQuestsPerPlayer()) {
-            return "<RED>You can not accept more than <AQUA>" + main.getConfiguration().getMaxActiveQuestsPerPlayer() + "</AQUA> Quests.";
+            return "<RED>You can not accept more than <highlight>" + main.getConfiguration().getMaxActiveQuestsPerPlayer() + "</highlight> Quests.";
         }
 
         for (ActiveQuest activeQuest : activeQuests) {
@@ -142,7 +142,7 @@ public class QuestPlayer {
                     final Player player = getPlayer();
                     if (player != null) {
 
-                        player.sendMessage(MiniMessage.miniMessage().parse(
+                        player.sendMessage(main.parse(
                                 main.getLanguageManager().getString("chat.objectives-label-after-quest-accepting", player)
                         ));
                         main.getQuestManager().sendActiveObjectivesAndProgress(player, quest);
@@ -150,8 +150,8 @@ public class QuestPlayer {
                         if (main.getConfiguration().visualTitleQuestSuccessfullyAccepted_enabled) {
 
                             player.showTitle(
-                                    Title.title(MiniMessage.miniMessage().parse(main.getLanguageManager().getString("titles.quest-accepted.title", player)),
-                                            MiniMessage.miniMessage().parse(main.getLanguageManager().getString("titles.quest-accepted.subtitle", player, this, quest)),
+                                    Title.title(main.parse(main.getLanguageManager().getString("titles.quest-accepted.title", player)),
+                                            main.parse(main.getLanguageManager().getString("titles.quest-accepted.subtitle", player, this, quest)),
                                             Title.Times.times(Duration.ofMillis(2), Duration.ofSeconds(3), Duration.ofMillis(8))
                                     ));
                         }
@@ -167,28 +167,28 @@ public class QuestPlayer {
                 return "accepted";
             } else {
                 if (timeToWaitInMinutes < 60) {
-                    return "<RED>This quest is on a cooldown! You have to wait another <AQUA>" + timeToWaitInMinutes + " minutes</AQUA> until you can take it again.";
+                    return "<RED>This quest is on a cooldown! You have to wait another <highlight>" + timeToWaitInMinutes + " minutes</highlight> until you can take it again.";
                 } else {
                     if (timeToWaitInHours < 24) {
                         if (timeToWaitInHours == 1) {
-                            return "<RED>This quest is on a cooldown! You have to wait another <AQUA>" + timeToWaitInHours + " hour</AQUA> until you can take it again.";
+                            return "<RED>This quest is on a cooldown! You have to wait another <highlight>" + timeToWaitInHours + " hour</highlight> until you can take it again.";
 
                         } else {
-                            return "<RED>This quest is on a cooldown! You have to wait another <AQUA>" + timeToWaitInHours + " hours</AQUA> until you can take it again.";
+                            return "<RED>This quest is on a cooldown! You have to wait another <highlight>" + timeToWaitInHours + " hours</highlight> until you can take it again.";
                         }
                     } else {
                         if (timeToWaitInDays == 1) {
-                            return "<RED>This quest is on a cooldown! You have to wait another <AQUA>" + timeToWaitInDays + " day</AQUA> until you can take it again.";
+                            return "<RED>This quest is on a cooldown! You have to wait another <highlight>" + timeToWaitInDays + " day</highlight> until you can take it again.";
 
                         } else {
-                            return "<RED>This quest is on a cooldown! You have to wait another <AQUA>" + timeToWaitInDays + " days</AQUA> until you can take it again.";
+                            return "<RED>This quest is on a cooldown! You have to wait another <highlight>" + timeToWaitInDays + " days</highlight> until you can take it again.";
                         }
                     }
                 }
             }
 
         } else {
-            return "<RED>You have finished this quests too many times already. You can only accept it <AQUA>" + quest.getQuest().getMaxAccepts() + "</AQUA> times, but you have already accepted it <AQUA>" + completedAmount + "</AQUA> times.";
+            return "<RED>You have finished this quests too many times already. You can only accept it <highlight>" + quest.getQuest().getMaxAccepts() + "</highlight> times, but you have already accepted it <highlight>" + completedAmount + "</highlight> times.";
         }
 
 
@@ -262,7 +262,7 @@ public class QuestPlayer {
 
         final Player player = getPlayer();
         if (player != null) {
-            player.sendMessage(MiniMessage.miniMessage().parse(
+            player.sendMessage(main.parse(
                     main.getLanguageManager().getString("chat.quest-completed-and-rewards-given", getPlayer(), quest)
             ));
         }
@@ -272,7 +272,7 @@ public class QuestPlayer {
     public void sendMessage(String message) {
         final Player player = getPlayer();
         if (player != null) {
-            player.sendMessage(MiniMessage.miniMessage().parse(message));
+            player.sendMessage(main.parse(message));
         }
     }
 
@@ -280,7 +280,7 @@ public class QuestPlayer {
         final Player player = getPlayer();
         if (player != null) {
             if (main.getQuestManager().isDebugEnabledPlayer(player)) {
-                player.sendMessage(MiniMessage.miniMessage().parse(NotQuestColors.debugTitleGradient + "[NotQuests Debug]</gradient> " + NotQuestColors.debugGradient + message + "</gradient>"));
+                player.sendMessage(main.parse(NotQuestColors.debugTitleGradient + "[NotQuests Debug]</gradient> " + NotQuestColors.debugGradient + message + "</gradient>"));
             }
 
         }
@@ -315,8 +315,8 @@ public class QuestPlayer {
         if (player != null) {
             if (main.getConfiguration().visualTitleQuestCompleted_enabled) {
                 player.showTitle(
-                        Title.title(MiniMessage.miniMessage().parse(main.getLanguageManager().getString("titles.quest-completed.title", player)),
-                                MiniMessage.miniMessage().parse(main.getLanguageManager().getString("titles.quest-completed.subtitle", player, this, activeQuest)),
+                        Title.title(main.parse(main.getLanguageManager().getString("titles.quest-completed.title", player)),
+                                main.parse(main.getLanguageManager().getString("titles.quest-completed.subtitle", player, this, activeQuest)),
                                 Title.Times.times(Duration.ofMillis(2), Duration.ofSeconds(3), Duration.ofMillis(8))
                         ));
 
@@ -368,8 +368,8 @@ public class QuestPlayer {
             if (player != null) {
                 if (main.getConfiguration().visualTitleQuestCompleted_enabled) {
                     player.showTitle(
-                            Title.title(MiniMessage.miniMessage().parse(main.getLanguageManager().getString("titles.quest-completed.title", player)),
-                                    MiniMessage.miniMessage().parse(main.getLanguageManager().getString("titles.quest-completed.subtitle", player, this, activeQuest)),
+                            Title.title(main.parse(main.getLanguageManager().getString("titles.quest-completed.title", player)),
+                                    main.parse(main.getLanguageManager().getString("titles.quest-completed.subtitle", player, this, activeQuest)),
                                     Title.Times.times(Duration.ofMillis(2), Duration.ofSeconds(3), Duration.ofMillis(8))
                             ));
                 }
@@ -411,8 +411,8 @@ public class QuestPlayer {
             if (notifyPlayer) {
                 final Player player = getPlayer();
                 if (player != null) {
-                    player.sendMessage(MiniMessage.miniMessage().parse(
-                            "<YELLOW>Your quest points have been set to <AQUA>" + newQuestPoints + "</AQUA>."
+                    player.sendMessage(main.parse(
+                            "<YELLOW>Your quest points have been set to <highlight>" + newQuestPoints + "</highlight>."
                     ));
                 }
             }
@@ -424,8 +424,8 @@ public class QuestPlayer {
         if (notifyPlayer) {
             final Player player = getPlayer();
             if (player != null) {
-                player.sendMessage(MiniMessage.miniMessage().parse(
-                        "<AQUA>+" + questPointsToAdd + " <GREEN>quest points!"
+                player.sendMessage(main.parse(
+                        "<highlight>+" + questPointsToAdd + " <GREEN>quest points!"
                 ));
             }
         }
@@ -436,8 +436,8 @@ public class QuestPlayer {
         if (notifyPlayer) {
             final Player player = getPlayer();
             if (player != null) {
-                player.sendMessage(MiniMessage.miniMessage().parse(
-                        "<AQUA>>-" + questPointsToRemove + " <RED>>quest points!"
+                player.sendMessage(main.parse(
+                        "<highlight>>-" + questPointsToRemove + " <RED>>quest points!"
                 ));
             }
         }
@@ -478,8 +478,8 @@ public class QuestPlayer {
                 if (player != null) {
                     if (main.getConfiguration().visualTitleQuestFailed_enabled) {
                         player.showTitle(
-                                Title.title(MiniMessage.miniMessage().parse(main.getLanguageManager().getString("titles.quest-failed.title", player)),
-                                        MiniMessage.miniMessage().parse(main.getLanguageManager().getString("titles.quest-failed.subtitle", player, this, activeQuestToFail)),
+                                Title.title(main.parse(main.getLanguageManager().getString("titles.quest-failed.title", player)),
+                                        main.parse(main.getLanguageManager().getString("titles.quest-failed.subtitle", player, this, activeQuestToFail)),
                                         Title.Times.times(Duration.ofMillis(2), Duration.ofSeconds(3), Duration.ofMillis(8))
                                 ));
                     }

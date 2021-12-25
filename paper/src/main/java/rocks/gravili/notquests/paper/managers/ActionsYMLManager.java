@@ -107,7 +107,7 @@ public class ActionsYMLManager {
                 try {
                     actionType = main.getActionManager().getActionClass(actionTypeString);
                 } catch (NullPointerException ex) {
-                    main.getDataManager().disablePluginAndSaving("Error parsing actions.yml action Type of action with name <AQUA>" + actionIdentifier + "</AQUA>.", ex);
+                    main.getDataManager().disablePluginAndSaving("Error parsing actions.yml action Type of action with name <highlight>" + actionIdentifier + "</highlight>.", ex);
                 }
 
                 if (!actionIdentifier.isBlank() && actionType != null) {
@@ -121,7 +121,7 @@ public class ActionsYMLManager {
                         loadActionConditions(action);
 
                     } catch (Exception ex) {
-                        main.getDataManager().disablePluginAndSaving("Error parsing action Type of actions.yml action with name <AQUA>" + actionIdentifier + "</AQUA>.", ex);
+                        main.getDataManager().disablePluginAndSaving("Error parsing action Type of actions.yml action with name <highlight>" + actionIdentifier + "</highlight>.", ex);
                     }
 
 
@@ -152,7 +152,7 @@ public class ActionsYMLManager {
                     conditionID = Integer.parseInt(actionConditionNumber);
                 } catch (java.lang.NumberFormatException ex) {
                     validConditionID = false;
-                    main.getDataManager().disablePluginAndSaving("Error parsing loaded condition ID <AQUA>" + actionConditionNumber + "</AQUA>.", action, ex);
+                    main.getDataManager().disablePluginAndSaving("Error parsing loaded condition ID <highlight>" + actionConditionNumber + "</highlight>.", action, ex);
                     return;
                 }
 
@@ -161,7 +161,7 @@ public class ActionsYMLManager {
                 try {
                     conditionType = main.getConditionsManager().getConditionClass(conditionTypeString);
                 } catch (java.lang.NullPointerException ex) {
-                    main.getDataManager().disablePluginAndSaving("Error parsing condition Type of action with ID <AQUA>" + action.getActionName() + "</AQUA>.", action, ex);
+                    main.getDataManager().disablePluginAndSaving("Error parsing condition Type of action with ID <highlight>" + action.getActionName() + "</highlight>.", action, ex);
                     return;
                 }
 
@@ -175,7 +175,7 @@ public class ActionsYMLManager {
                         condition.setProgressNeeded(progressNeeded);
                         condition.load(getActionsConfig(), "actions." + action.getActionName() + ".conditions." + actionConditionNumber);
                     } catch (Exception ex) {
-                        main.getDataManager().disablePluginAndSaving("Error parsing condition Type of condition with ID <AQUA>" + actionConditionNumber + "</AQUA>.", action, ex);
+                        main.getDataManager().disablePluginAndSaving("Error parsing condition Type of condition with ID <highlight>" + actionConditionNumber + "</highlight>.", action, ex);
                         return;
                     }
                     if (condition != null) {
@@ -229,9 +229,9 @@ public class ActionsYMLManager {
             action.save(getActionsConfig(), "actions." + actionIdentifier);
 
             saveActions();
-            return (successGradient + "Action " + highlightGradient + actionIdentifier + "</gradient> successfully created!");
+            return ("<success>Action <highlight>" + actionIdentifier + "</highlight> successfully created!");
         } else {
-            return (errorGradient + "Action " + highlightGradient + actionIdentifier + "</gradient> already exists!");
+            return ("<error>Action <highlight>" + actionIdentifier + "</highlight> already exists!");
         }
     }
 
@@ -239,6 +239,6 @@ public class ActionsYMLManager {
     public String removeAction(String actionToDeleteIdentifier) {
         actionsAndIdentifiers.remove(actionToDeleteIdentifier);
         getActionsConfig().set("actions." + actionToDeleteIdentifier, null);
-        return successGradient + "Action " + highlightGradient + actionToDeleteIdentifier + "</gradient> successfully deleted!";
+        return "<success>Action <highlight>" + actionToDeleteIdentifier + "</highlight> successfully deleted!";
     }
 }

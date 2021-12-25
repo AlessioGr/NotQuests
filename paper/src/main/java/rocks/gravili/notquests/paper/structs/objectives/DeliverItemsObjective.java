@@ -93,8 +93,8 @@ public class DeliverItemsObjective extends Objective {
                         if (context.getSender() instanceof Player player) {
                             itemToDeliver = player.getInventory().getItemInMainHand();
                         } else {
-                            context.getSender().sendMessage(MiniMessage.miniMessage().parse(
-                                    NotQuestColors.errorGradient + "This must be run by a player."
+                            context.getSender().sendMessage(main.parse(
+                                    "<error>This must be run by a player."
                             ));
                             return;
                         }
@@ -113,8 +113,8 @@ public class DeliverItemsObjective extends Objective {
 
                     if (!npcIDOrArmorstand.equalsIgnoreCase("armorstand")) {
                         if (!main.getIntegrationsManager().isCitizensEnabled()) {
-                            context.getSender().sendMessage(MiniMessage.miniMessage().parse(
-                                    NotQuestColors.errorGradient + "Error: Any kind of NPC stuff has been disabled, because you don't have the Citizens plugin installed on your server. You need to install the Citizens plugin in order to use Citizen NPCs. You can, however, use armor stands as an alternative. To do that, just enter 'armorstand' instead of the NPC ID."
+                            context.getSender().sendMessage(main.parse(
+                                    "<error>Error: Any kind of NPC stuff has been disabled, because you don't have the Citizens plugin installed on your server. You need to install the Citizens plugin in order to use Citizen NPCs. You can, however, use armor stands as an alternative. To do that, just enter 'armorstand' instead of the NPC ID."
                             ));
                             return;
                         }
@@ -123,8 +123,8 @@ public class DeliverItemsObjective extends Objective {
                             npcID = Integer.parseInt(npcIDOrArmorstand);
                         } catch (NumberFormatException e) {
                             context.getSender().sendMessage(
-                                    MiniMessage.miniMessage().parse(
-                                            NotQuestColors.errorGradient + "Invalid NPC ID."
+                                    main.parse(
+                                            "<error>Invalid NPC ID."
                                     )
                             );
                             return;
@@ -176,15 +176,15 @@ public class DeliverItemsObjective extends Objective {
                             }
 
 
-                            itemMeta.displayName(MiniMessage.miniMessage().parse(
+                            itemMeta.displayName(main.parse(
                                     "<LIGHT_PURPLE>Add DeliverItems Objective to Armor Stand"
                             ));
 
-                            lore.add(MiniMessage.miniMessage().parse(
+                            lore.add(main.parse(
                                     "<WHITE>Right-click an Armor Stand to add the following objective to it:"
                             ));
-                            lore.add(MiniMessage.miniMessage().parse(
-                                    "<YELLOW>DeliverItems <WHITE>Objective of Quest <AQUA>" + quest.getQuestName() + "</AQUA>."
+                            lore.add(main.parse(
+                                    "<YELLOW>DeliverItems <WHITE>Objective of Quest <highlight>" + quest.getQuestName() + "</highlight>."
                             ));
 
                             itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -196,16 +196,16 @@ public class DeliverItemsObjective extends Objective {
                             player.getInventory().addItem(itemStack);
 
                             context.getSender().sendMessage(
-                                    MiniMessage.miniMessage().parse(
-                                            NotQuestColors.successGradient + "You have been given an item with which you can add the DeliverItems Objective to an armor stand. Check your inventory!"
+                                    main.parse(
+                                            "<success>You have been given an item with which you can add the DeliverItems Objective to an armor stand. Check your inventory!"
                                     )
                             );
 
 
                         } else {
                             context.getSender().sendMessage(
-                                    MiniMessage.miniMessage().parse(
-                                            NotQuestColors.errorGradient + "Must be a player!"
+                                    main.parse(
+                                            "<error>Must be a player!"
                                     )
                             );
                         }

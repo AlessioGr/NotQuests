@@ -115,7 +115,7 @@ public class CompletedQuestCondition extends Condition {
             }
         }
         if (otherQuestCompletedAmount < getProgressNeeded()) {
-            return "<YELLOW>Finish the following quest: <AQUA>" + otherQuest.getQuestFinalName() + " <GRAY>(" + getProgressNeeded() + " times)";
+            return "<YELLOW>Finish the following quest: <highlight>" + otherQuest.getQuestFinalName() + " <GRAY>(" + getProgressNeeded() + " times)";
         } else {
             //Now check minimum time after completion
             if (getMinimumTimeAfterCompletion() > 1) {
@@ -131,21 +131,21 @@ public class CompletedQuestCondition extends Condition {
                     return "";
                 } else {
                     if (timeToWaitInMinutes < 60) {
-                        return "<YELLOW>You have to wait another <AQUA>" + timeToWaitInMinutes + " minutes</AQUA>.";
+                        return "<YELLOW>You have to wait another <highlight>" + timeToWaitInMinutes + " minutes</highlight>.";
                     } else {
                         if (timeToWaitInHours < 24) {
                             if (timeToWaitInHours == 1) {
-                                return "<YELLOW>You have to wait another <AQUA>" + timeToWaitInHours + " hour</AQUA>.";
+                                return "<YELLOW>You have to wait another <highlight>" + timeToWaitInHours + " hour</highlight>.";
 
                             } else {
-                                return "<YELLOW>You have to wait another <AQUA>" + timeToWaitInHours + " hours</AQUA>.";
+                                return "<YELLOW>You have to wait another <highlight>" + timeToWaitInHours + " hours</highlight>.";
                             }
                         } else {
                             if (timeToWaitInDays == 1) {
-                                return "<YELLOW>You have to wait another <AQUA>" + timeToWaitInDays + " day</AQUA>.";
+                                return "<YELLOW>You have to wait another <highlight>" + timeToWaitInDays + " day</highlight>.";
 
                             } else {
-                                return "<YELLOW>You have to wait another <AQUA>" + timeToWaitInDays + " days</AQUA>.";
+                                return "<YELLOW>You have to wait another <highlight>" + timeToWaitInDays + " days</highlight>.";
                             }
                         }
                     }

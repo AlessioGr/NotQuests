@@ -58,7 +58,7 @@ public class PermissionCondition extends Condition {
         final Player player = questPlayer.getPlayer();
         if (player != null) {
             if (!player.hasPermission(requiredPermission)) {
-                return "<YELLOW>You need the following permission: <AQUA>" + requiredPermission + "</AQUA>.";
+                return "<YELLOW>You need the following permission: <highlight>" + requiredPermission + "</highlight>.";
             }
         } else {
             return "<YELLOW>You need to be online.";

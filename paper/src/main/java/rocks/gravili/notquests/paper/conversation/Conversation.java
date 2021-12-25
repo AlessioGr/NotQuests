@@ -87,7 +87,7 @@ public class Conversation {
                 return true;
             } catch (IOException e) {
                 e.printStackTrace();
-                main.getLogManager().severe("There was an error saving the configuration of Conversation <AQUA>" + identifier + "</AQUA>.");
+                main.getLogManager().severe("There was an error saving the configuration of Conversation <highlight>" + identifier + "</highlight>.");
                 return false;
             }
         } else {
@@ -115,7 +115,7 @@ public class Conversation {
                 return true;
             } catch (IOException e) {
                 e.printStackTrace();
-                main.getLogManager().severe("There was an error saving the configuration of Conversation <AQUA>" + identifier + "</AQUA>.");
+                main.getLogManager().severe("There was an error saving the configuration of Conversation <highlight>" + identifier + "</highlight>.");
                 return false;
             }
         } else {
@@ -133,7 +133,7 @@ public class Conversation {
             return;
         }
         if (!main.getIntegrationsManager().isCitizensEnabled()) {
-            main.getLogManager().warn("The binding to NPC in Conversation <AQUA>" + identifier + "</AQUA> has been cancelled, because the Citizens plugin is not installed on this server. You will need the Citizens plugin to do NPC stuff.");
+            main.getLogManager().warn("The binding to NPC in Conversation <highlight>" + identifier + "</highlight> has been cancelled, because the Citizens plugin is not installed on this server. You will need the Citizens plugin to do NPC stuff.");
             return;
         }
 
@@ -148,7 +148,7 @@ public class Conversation {
                 }
             }
             if (!npc.hasTrait(QuestGiverNPCTrait.class) && !hasTrait) {
-                main.getLogManager().info("Trying to add Conversation <AQUA>" + identifier + "</AQUA> to NPC with ID <AQUA>" + npc.getId() + "</AQUA>...");
+                main.getLogManager().info("Trying to add Conversation <highlight>" + identifier + "</highlight> to NPC with ID <highlight>" + npc.getId() + "</highlight>...");
 
                 npc.addTrait(QuestGiverNPCTrait.class);
             }
@@ -191,7 +191,7 @@ public class Conversation {
             config.save(configFile);
         } catch (IOException e) {
             e.printStackTrace();
-            main.getLogManager().severe("There was an error saving the configuration of Conversation <AQUA>" + identifier + "</AQUA>.");
+            main.getLogManager().severe("There was an error saving the configuration of Conversation <highlight>" + identifier + "</highlight>.");
         }
 
     }

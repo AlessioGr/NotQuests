@@ -65,7 +65,7 @@ public class TownyTownPlotCountCondition extends Condition {
                 if (town.getPlotGroups().size() >= getMinTownPlotCount()) {
                     return "";
                 } else {
-                    return "<YELLOW>Your town needs to have at least <AQUA>" + getMinTownPlotCount() + "</AQUA> plot groups.";
+                    return "<YELLOW>Your town needs to have at least <highlight>" + getMinTownPlotCount() + "</highlight> plot groups.";
                 }
             } else {
                 return "<YELLOW>You need to be in a town";

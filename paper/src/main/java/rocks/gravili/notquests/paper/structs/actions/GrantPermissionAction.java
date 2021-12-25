@@ -83,7 +83,7 @@ public class GrantPermissionAction extends Action {
             return;
         }
         if (!main.getIntegrationsManager().isLuckpermsEnabled()) {
-            player.sendMessage(MiniMessage.miniMessage().parse(
+            player.sendMessage(main.parse(
                     "<RED>Error: cannot give you the permission reward because Luckperms (needed for money giving to work) is not installed on the server."
             ));
             return;

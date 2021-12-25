@@ -63,8 +63,8 @@ public class ProjectKorraUseAbilityObjective extends Objective {
                     String abilityName = context.get("Ability");
 
                     if (!main.getIntegrationsManager().getProjectKorraManager().isAbility(abilityName)) {
-                        context.getSender().sendMessage(MiniMessage.miniMessage().parse(
-                                NotQuestColors.errorGradient + "Error: The ability " + NotQuestColors.highlightGradient + abilityName + "</gradient> was not found."
+                        context.getSender().sendMessage(main.parse(
+                                "<error>Error: The ability <highlight>" + abilityName + "</highlight> was not found."
                         ));
                         return;
                     }

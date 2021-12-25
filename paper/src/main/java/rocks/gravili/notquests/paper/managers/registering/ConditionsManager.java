@@ -81,7 +81,7 @@ public class ConditionsManager {
 
 
     public void registerCondition(final String identifier, final Class<? extends Condition> condition) {
-        main.getLogManager().info("Registering condition <AQUA>" + identifier);
+        main.getLogManager().info("Registering condition <highlight>" + identifier);
         conditions.put(identifier, condition);
 
         try {
@@ -141,15 +141,15 @@ public class ConditionsManager {
 
                 objectiveOfQuest.addCondition(condition, true);
 
-                context.getSender().sendMessage(MiniMessage.miniMessage().parse(
-                        NotQuestColors.successGradient + getConditionType(condition.getClass()) + " Condition successfully added to Objective " + NotQuestColors.highlightGradient
-                                + objectiveOfQuest.getObjectiveFinalName() + "</gradient>!</gradient>"));
+                context.getSender().sendMessage(main.parse(
+                        "<success>" + getConditionType(condition.getClass()) + " Condition successfully added to Objective <highlight>"
+                                + objectiveOfQuest.getObjectiveFinalName() + "</highlight>!"));
             } else { //Quest Requirement
                 quest.addRequirement(condition, true);
 
-                context.getSender().sendMessage(MiniMessage.miniMessage().parse(
-                        NotQuestColors.successGradient + getConditionType(condition.getClass()) + " Requirement successfully added to Quest " + NotQuestColors.highlightGradient
-                                + quest.getQuestName() + "</gradient>!</gradient>"
+                context.getSender().sendMessage(main.parse(
+                        "<success>" + getConditionType(condition.getClass()) + " Requirement successfully added to Quest <highlight>"
+                                + quest.getQuestName() + "</highlight>!"
                 ));
             }
         } else {
@@ -157,12 +157,12 @@ public class ConditionsManager {
 
                 if (main.getConditionsYMLManager().getCondition(conditionIdentifier) == null) {
                     main.getConditionsYMLManager().addCondition(conditionIdentifier, condition);
-                    context.getSender().sendMessage(MiniMessage.miniMessage().parse(
-                            NotQuestColors.successGradient + getConditionType(condition.getClass()) + " Condition with the name " + NotQuestColors.highlightGradient
-                                    + conditionIdentifier + "</gradient> has been created successfully!</gradient>"
+                    context.getSender().sendMessage(main.parse(
+                            "<success>" + getConditionType(condition.getClass()) + " Condition with the name <highlight>"
+                                    + conditionIdentifier + "</highlight> has been created successfully!"
                     ));
                 } else {
-                    context.getSender().sendMessage(MiniMessage.miniMessage().parse(errorGradient + "Error! A condition with the name " + highlightGradient + conditionIdentifier + "</gradient> already exists!</gradient>"));
+                    context.getSender().sendMessage(main.parse("<error>Error! A condition with the name <highlight>" + conditionIdentifier + "</highlight> already exists!"));
                 }
             } else { //Condition for Actions.yml action
                 if (actionIdentifier != null && !actionIdentifier.isBlank()) {
@@ -170,9 +170,9 @@ public class ConditionsManager {
                     if (foundAction != null) {
                         foundAction.addCondition(condition, true, main.getActionsYMLManager().getActionsConfig(), "actions." + actionIdentifier);
                         main.getActionsYMLManager().saveActions();
-                        context.getSender().sendMessage(MiniMessage.miniMessage().parse(
-                                NotQuestColors.successGradient + getConditionType(condition.getClass()) + " Condition successfully added to Action " + NotQuestColors.highlightGradient
-                                        + foundAction.getActionName() + "</gradient>!</gradient>"));
+                        context.getSender().sendMessage(main.parse(
+                                "<success>" + getConditionType(condition.getClass()) + " Condition successfully added to Action <highlight>"
+                                        + foundAction.getActionName() + "</highlight>!"));
                     }
                 }
             }

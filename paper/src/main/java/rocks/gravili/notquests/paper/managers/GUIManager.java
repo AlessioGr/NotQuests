@@ -15,7 +15,6 @@ import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 public class GUIManager {
     private final NotQuests main;
-    private final MiniMessage miniMessage = MiniMessage.miniMessage();
 
     public GUIManager(final NotQuests main) {
         this.main = main;
@@ -74,7 +73,7 @@ public class GUIManager {
 
             gui.show(player);
         } else {
-            player.sendMessage(miniMessage.parse(
+            player.sendMessage(main.parse(
                     main.getLanguageManager().getString("chat.no-quests-accepted", player)
             ));
         }

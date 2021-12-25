@@ -132,15 +132,15 @@ public class CitizensEvents implements Listener {
                                                 if (progressLeft < itemStack.getAmount()) { //We can finish it with this itemStack
                                                     itemStack.setAmount((itemStack.getAmount() - (int) progressLeft));
                                                     activeObjective.addProgress(progressLeft, npc.getId());
-                                                    player.sendMessage(MiniMessage.miniMessage().parse(
-                                                            "<GREEN>You have delivered <AQUA>" + progressLeft + "</AQUA> items to <AQUA>" + npc.getName()
+                                                    player.sendMessage(main.parse(
+                                                            "<GREEN>You have delivered <highlight>" + progressLeft + "</highlight> items to <highlight>" + npc.getName()
                                                     ));
                                                     break;
                                                 } else {
                                                     player.getInventory().removeItem(itemStack);
                                                     activeObjective.addProgress(itemStack.getAmount(), npc.getId());
-                                                    player.sendMessage(MiniMessage.miniMessage().parse(
-                                                            "<GREEN>You have delivered <AQUA>" + itemStack.getAmount() + "</AQUA> items to <AQUA>" + npc.getName()
+                                                    player.sendMessage(main.parse(
+                                                            "<GREEN>You have delivered <highlight>" + itemStack.getAmount() + "</highlight> items to <highlight>" + npc.getName()
                                                     ));
                                                 }
                                             }
@@ -152,8 +152,8 @@ public class CitizensEvents implements Listener {
                             } else if (activeObjective.getObjective() instanceof final TalkToNPCObjective talkToNPCObjective) {
                                 if (talkToNPCObjective.getNPCtoTalkID() != -1 && talkToNPCObjective.getNPCtoTalkID() == npc.getId()) {
                                     activeObjective.addProgress(1, npc.getId());
-                                    player.sendMessage(MiniMessage.miniMessage().parse(
-                                            "<GREEN>You talked to <AQUA>" + npc.getName()
+                                    player.sendMessage(main.parse(
+                                            "<GREEN>You talked to <highlight>" + npc.getName()
                                     ));
                                 }
                             } else if (activeObjective.getObjective() instanceof final EscortNPCObjective escortNPCObjective) {
@@ -162,8 +162,8 @@ public class CitizensEvents implements Listener {
                                     if (npcToEscort != null) {
                                         if (npcToEscort.isSpawned() && (npcToEscort.getEntity().getLocation().distance(player.getLocation()) < 6)) {
                                             activeObjective.addProgress(1, npc.getId());
-                                            player.sendMessage(MiniMessage.miniMessage().parse(
-                                                    "<GREEN>You have successfully delivered the NPC <AQUA>" + npcToEscort.getName()
+                                            player.sendMessage(main.parse(
+                                                    "<GREEN>You have successfully delivered the NPC <highlight>" + npcToEscort.getName()
                                             ));
 
                                             FollowTrait followerTrait = null;
@@ -178,7 +178,7 @@ public class CitizensEvents implements Listener {
 
                                             npcToEscort.despawn();
                                         } else {
-                                            player.sendMessage(MiniMessage.miniMessage().parse(
+                                            player.sendMessage(main.parse(
                                                     "<RED>The NPC you have to escort is not close enough to you!"
                                             ));
                                         }

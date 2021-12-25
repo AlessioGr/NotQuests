@@ -81,7 +81,7 @@ public class CompletedObjectiveCondition extends Condition {
         }
 
         if(activeQuest.getActiveObjectiveFromID(getObjectiveToCompleteID()) != null){
-            return "<YELLOW>Finish the following objective first: <AQUA>" + objectiveToComplete.getObjectiveFinalName();
+            return "<YELLOW>Finish the following objective first: <highlight>" + objectiveToComplete.getObjectiveFinalName();
         }
         return "";
 
@@ -150,7 +150,7 @@ public class CompletedObjectiveCondition extends Condition {
 
                             main.getConditionsManager().addCondition(completedObjectiveCondition, context);
                         } else {
-                            context.getSender().sendMessage(MiniMessage.miniMessage().parse(errorGradient + "Error: You cannot set an objective to depend on itself!"));
+                            context.getSender().sendMessage(main.parse("<error>Error: You cannot set an objective to depend on itself!"));
                         }
 
                     }));

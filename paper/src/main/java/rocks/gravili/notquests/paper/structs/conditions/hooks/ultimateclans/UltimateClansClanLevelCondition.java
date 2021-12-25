@@ -94,7 +94,7 @@ public class UltimateClansClanLevelCondition extends Condition {
             if (main.getIntegrationsManager().getUltimateClansManager().isInClanWithMinLevel(player, getMinClanLevel())) {
                 return "";
             }
-            return "<YELLOW>You need to be in a Clan with at least level <AQUA>" + getMinClanLevel() + "</AQUA>.";
+            return "<YELLOW>You need to be in a Clan with at least level <highlight>" + getMinClanLevel() + "</highlight>.";
         } else {
             return "<YELLOW>Error reading UltimateClans requirement...";
 

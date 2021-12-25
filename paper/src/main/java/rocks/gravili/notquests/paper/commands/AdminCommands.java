@@ -27,10 +27,8 @@ import cloud.commandframework.bukkit.arguments.selector.SinglePlayerSelector;
 import cloud.commandframework.bukkit.parsers.selector.SinglePlayerSelectorArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
-import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -55,7 +53,6 @@ public class AdminCommands {
     private final PaperCommandManager<CommandSender> manager;
     private final Command.Builder<CommandSender> builder;
     public final ArrayList<String> placeholders;
-    protected final MiniMessage miniMessage = MiniMessage.miniMessage();
     private final Date resultDate;
 
 
@@ -63,6 +60,7 @@ public class AdminCommands {
         this.main = main;
         this.manager = manager;
         this.builder = builder;
+
 
 
         placeholders = new ArrayList<>();
@@ -90,7 +88,7 @@ public class AdminCommands {
                 ).single().build(), ArgumentDescription.of("Quest Name"))
                 .meta(CommandMeta.DESCRIPTION, "Create a new quest.")
                 .handler((context) -> {
-                    context.getSender().sendMessage(miniMessage.parse(main.getQuestManager().createQuest(context.get("Quest Name"))));
+                    context.getSender().sendMessage(main.parse(main.getQuestManager().createQuest(context.get("Quest Name"))));
                 }));
 
         manager.command(builder.literal("delete")
@@ -109,7 +107,7 @@ public class AdminCommands {
                 ).single().build(), ArgumentDescription.of("Quest Name"))
                 .meta(CommandMeta.DESCRIPTION, "Delete an existing Quest.")
                 .handler((context) -> {
-                    context.getSender().sendMessage(miniMessage.parse(main.getQuestManager().deleteQuest(context.get("Quest Name"))));
+                    context.getSender().sendMessage(main.parse(main.getQuestManager().deleteQuest(context.get("Quest Name"))));
                 }));
 
         handleConditions();
@@ -125,9 +123,9 @@ public class AdminCommands {
                     final Quest quest = context.get("quest");
 
                     if (singlePlayerSelector.hasAny() && singlePlayerSelector.getPlayer() != null) {
-                        context.getSender().sendMessage(miniMessage.parse(mainGradient + main.getQuestPlayerManager().acceptQuest(singlePlayerSelector.getPlayer(), quest, true, true)));
+                        context.getSender().sendMessage(main.parse("<main>" + main.getQuestPlayerManager().acceptQuest(singlePlayerSelector.getPlayer(), quest, true, true)));
                     } else {
-                        context.getSender().sendMessage(miniMessage.parse(errorGradient + "Player is not online or was not found!</gradient>"));
+                        context.getSender().sendMessage(main.parse("<error>" + "Player is not online or was not found!"));
                     }
 
                 }));
@@ -143,9 +141,9 @@ public class AdminCommands {
                     final Quest quest = context.get("quest");
 
                     if (singlePlayerSelector.hasAny() && singlePlayerSelector.getPlayer() != null) {
-                        context.getSender().sendMessage(miniMessage.parse(mainGradient + main.getQuestPlayerManager().forceAcceptQuest(singlePlayerSelector.getPlayer().getUniqueId(), quest)));
+                        context.getSender().sendMessage(main.parse("<main>" + main.getQuestPlayerManager().forceAcceptQuest(singlePlayerSelector.getPlayer().getUniqueId(), quest)));
                     } else {
-                        context.getSender().sendMessage(miniMessage.parse(errorGradient + "Player is not online or was not found!</gradient>"));
+                        context.getSender().sendMessage(main.parse("<error>Player is not online or was not found!"));
                     }
 
                 }));
@@ -162,29 +160,29 @@ public class AdminCommands {
                     if (singlePlayerSelector.hasAny() && player != null) {
                         QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
                         if (questPlayer != null) {
-                            context.getSender().sendMessage(miniMessage.parse(mainGradient + "Active quests of player " + highlightGradient + player.getName() + "</gradient> <green>(online)</green>:"));
+                            context.getSender().sendMessage(main.parse("<main>Active quests of player <highlight>" + player.getName() + "</highlight> <green>(online)</green>:"));
                             int counter = 1;
                             for (ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-                                context.getSender().sendMessage(miniMessage.parse(highlightGradient + counter + ".</gradient> " + mainGradient + activeQuest.getQuest().getQuestName()));
+                                context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>" + activeQuest.getQuest().getQuestName()));
                                 counter += 1;
                             }
-                            context.getSender().sendMessage(miniMessage.parse(unimportant + "Total active quests: " + highlight2Gradient + (counter - 1) + "</gradient>."));
+                            context.getSender().sendMessage(main.parse("<unimportant>Total active quests: <highlight2>" + (counter - 1) + "</highlight2>."));
                         } else {
-                            context.getSender().sendMessage(miniMessage.parse(errorGradient + "Seems like the player " + highlightGradient + player.getName() + "</gradient> <green>(online)</green> did not accept any active quests."));
+                            context.getSender().sendMessage(main.parse("<error>Seems like the player <highlight>" + player.getName() + "</highlight> <green>(online)</green> did not accept any active quests."));
                         }
                     } else {
                         OfflinePlayer offlinePlayer = main.getUtilManager().getOfflinePlayer(singlePlayerSelector.getSelector());
                         QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(offlinePlayer.getUniqueId());
                         if (questPlayer != null) {
-                            context.getSender().sendMessage(miniMessage.parse(mainGradient + "Active quests of player " + highlightGradient + offlinePlayer.getName() + "</gradient> <red>(offline)</red>:"));
+                            context.getSender().sendMessage(main.parse("<main>Active quests of player <highlight>" + offlinePlayer.getName() + "</highlight> <red>(offline)</red>:"));
                             int counter = 1;
                             for (ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-                                context.getSender().sendMessage(miniMessage.parse(highlightGradient + counter + ".</gradient> " + mainGradient + activeQuest.getQuest().getQuestName()));
+                                context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>" + activeQuest.getQuest().getQuestName()));
                                 counter += 1;
                             }
-                            context.getSender().sendMessage(miniMessage.parse(unimportant + "Total active quests: " + highlight2Gradient + (counter - 1) + "</gradient>."));
+                            context.getSender().sendMessage(main.parse("<unimportant>Total active quests: <highlight2>" + (counter - 1) + "</highlight2>."));
                         } else {
-                            context.getSender().sendMessage(miniMessage.parse(errorGradient + "Seems like the player " + highlightGradient + offlinePlayer.getName() + "</gradient> <red>(offline)</red> did not accept any active quests."));
+                            context.getSender().sendMessage(main.parse("<error>Seems like the player <highlight>" + offlinePlayer.getName() + "</highlight> <red>(offline)</red> did not accept any active quests."));
                         }
                     }
                 }));
@@ -199,37 +197,37 @@ public class AdminCommands {
                     if (singlePlayerSelector.hasAny() && player != null) {
                         QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
                         if (questPlayer != null) {
-                            context.getSender().sendMessage(miniMessage.parse(mainGradient + "Completed quests of player " + highlightGradient + player.getName() + "</gradient> <green>(online)</green>:"));
+                            context.getSender().sendMessage(main.parse("<main>Completed quests of player <highlight>" + player.getName() + "</highlight> <green>(online)</green>:"));
                             int counter = 1;
                             for (CompletedQuest completedQuest : questPlayer.getCompletedQuests()) {
                                 resultDate.setTime(completedQuest.getTimeCompleted());
-                                context.getSender().sendMessage(miniMessage.parse(highlightGradient + counter + ".</gradient> " + highlight2Gradient + completedQuest.getQuest().getQuestName() + "</gradient>"
-                                        + mainGradient + " Completed: </gradient>" + highlight2Gradient + resultDate + "</gradient>"
+                                context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <highlight2>" + completedQuest.getQuest().getQuestName()
+                                        + "</highlight2> <main>Completed: </main> <highlight2>" + resultDate + "</highlight2>"
                                 ));
                                 counter += 1;
                             }
 
-                            context.getSender().sendMessage(miniMessage.parse(unimportant + "Total completed quests: " + highlight2Gradient + (counter - 1) + "</gradient>."));
+                            context.getSender().sendMessage(main.parse("<unimportant>Total completed quests: <highlight2>" + (counter - 1) + "</highlight2>."));
                         } else {
-                            context.getSender().sendMessage(miniMessage.parse(errorGradient + "Seems like the player " + highlightGradient + player.getName() + "</gradient> <green>(online)</green> never completed any quests."));
+                            context.getSender().sendMessage(main.parse("<error>Seems like the player <highlight>" + player.getName() + "</highlight> <green>(online)</green> never completed any quests."));
                         }
                     } else {
                         OfflinePlayer offlinePlayer = main.getUtilManager().getOfflinePlayer(singlePlayerSelector.getSelector());
                         QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(offlinePlayer.getUniqueId());
                         if (questPlayer != null) {
-                            context.getSender().sendMessage(miniMessage.parse(mainGradient + "Completed quests of player " + highlightGradient + offlinePlayer.getName() + "</gradient> <red>(offline)</red>:"));
+                            context.getSender().sendMessage(main.parse("<main>Completed quests of player <highlight>" + offlinePlayer.getName() + "</highlight> <red>(offline)</red>:"));
                             int counter = 1;
                             for (CompletedQuest completedQuest : questPlayer.getCompletedQuests()) {
                                 resultDate.setTime(completedQuest.getTimeCompleted());
-                                context.getSender().sendMessage(miniMessage.parse(highlightGradient + counter + ".</gradient> " + highlight2Gradient + completedQuest.getQuest().getQuestName() + "</gradient>"
-                                        + mainGradient + " Completed: </gradient>" + highlight2Gradient + resultDate + "</gradient>"
+                                context.getSender().sendMessage(main.parse("<main><highlight>" + counter + ".</highlight> <highlight2>" + completedQuest.getQuest().getQuestName()
+                                        + "</highlight2> Completed: <highlight2>" + resultDate + "</highlight2>"
                                 ));
                                 counter += 1;
                             }
 
-                            context.getSender().sendMessage(miniMessage.parse(unimportant + "Total completed quests: " + highlight2Gradient + (counter - 1) + "</gradient>."));
+                            context.getSender().sendMessage(main.parse("<unimportant>Total completed quests: <highlight2>" + (counter - 1) + "</highlight2>."));
                         } else {
-                            context.getSender().sendMessage(miniMessage.parse(errorGradient + "Seems like the player " + highlightGradient + offlinePlayer.getName() + "</gradient> <red>(offline)</red> never completed any quests."));
+                            context.getSender().sendMessage(main.parse("<error>Seems like the player <highlight>" + offlinePlayer.getName() + "</highlight> <red>(offline)</red> never completed any quests."));
                         }
                     }
                 }));
@@ -243,10 +241,10 @@ public class AdminCommands {
 
                     if (main.getQuestManager().isDebugEnabledPlayer((Player) context.getSender())) {
                         main.getQuestManager().removeDebugEnabledPlayer((Player) context.getSender());
-                        context.getSender().sendMessage(miniMessage.parse(successGradient + "Your debug mode has been disabled."));
+                        context.getSender().sendMessage(main.parse("<success>Your debug mode has been disabled."));
                     } else {
                         main.getQuestManager().addDebugEnabledPlayer((Player) context.getSender());
-                        context.getSender().sendMessage(miniMessage.parse(successGradient + "Your debug mode has been enabled."));
+                        context.getSender().sendMessage(main.parse("<success>Your debug mode has been enabled."));
                     }
 
                 }));
@@ -273,18 +271,18 @@ public class AdminCommands {
                         final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
                         if (questPlayer != null) {
                             questPlayer.failQuest(activeQuest);
-                            context.getSender().sendMessage(miniMessage.parse(
-                                    successGradient + "The active quest " + highlightGradient + activeQuest.getQuest().getQuestName() + "</gradient> has been failed for player " + highlight2Gradient + player.getName() + "</gradient>!</gradient>"
+                            context.getSender().sendMessage(main.parse(
+                                    "<main>The active quest <highlight>" + activeQuest.getQuest().getQuestName() + "</highlight> has been failed for player <highlight2>" + player.getName() + "</highlight2>!"
                             ));
 
                         } else {
-                            context.getSender().sendMessage(miniMessage.parse(
-                                    errorGradient + "Player " + highlightGradient + singlePlayerSelector.getSelector() + "</gradient> seems to not have accepted any quests!</gradient>"
+                            context.getSender().sendMessage(main.parse(
+                                    "<error>Player <highlight>" + singlePlayerSelector.getSelector() + "</highlight> seems to not have accepted any quests!"
                             ));
                         }
                     } else {
-                        context.getSender().sendMessage(miniMessage.parse(
-                                errorGradient + "Player " + highlightGradient + singlePlayerSelector.getSelector() + "</gradient> is not online or was not found!</gradient>"
+                        context.getSender().sendMessage(main.parse(
+                                    "<error>Player <highlight>" + singlePlayerSelector.getSelector() + "</highlight> is not online or was not found!"
                         ));
                     }
                 }));
@@ -302,19 +300,18 @@ public class AdminCommands {
                         final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
                         if (questPlayer != null) {
                             questPlayer.forceActiveQuestCompleted(activeQuest);
-                            context.getSender().sendMessage(miniMessage.parse(
-                                    successGradient + "The active quest " + highlightGradient + activeQuest.getQuest().getQuestName() + "</gradient> has been completed for player " + highlight2Gradient + player.getName() + "</gradient>!</gradient>"
+                            context.getSender().sendMessage(main.parse(
+                                    "<success>The active quest <highlight>" + activeQuest.getQuest().getQuestName() + "</highlight> has been completed for player <highlight2>" + player.getName() + "</highlight2>!</gradient>"
                             ));
-                            return;
 
                         } else {
-                            context.getSender().sendMessage(miniMessage.parse(
-                                    errorGradient + "Player " + highlightGradient + singlePlayerSelector.getSelector() + "</gradient> seems to not have accepted any quests!</gradient>"
+                            context.getSender().sendMessage(main.parse(
+                                    "<error>Player <highlight>" + singlePlayerSelector.getSelector() + "</highlight> seems to not have accepted any quests!"
                             ));
                         }
                     } else {
-                        context.getSender().sendMessage(miniMessage.parse(
-                                errorGradient + "Player " + highlightGradient + singlePlayerSelector.getSelector() + "</gradient> is not online or was not found!</gradient>"
+                        context.getSender().sendMessage(main.parse(
+                                "<error>Player <highlight>" + singlePlayerSelector.getSelector() + "</highlight> is not online or was not found!"
                         ));
                     }
                 }));
@@ -323,9 +320,9 @@ public class AdminCommands {
                 .meta(CommandMeta.DESCRIPTION, "Shows you a list of all available Objective Types.")
                 .handler((context) -> {
                     context.getSender().sendMessage(Component.empty());
-                    context.getSender().sendMessage(miniMessage.parse(highlightGradient + "All objective types:</gradient>"));
+                    context.getSender().sendMessage(main.parse( "<highlight>All objective types:"));
                     for (final String objectiveType : main.getObjectiveManager().getObjectiveIdentifiers()) {
-                        context.getSender().sendMessage(miniMessage.parse(mainGradient + objectiveType));
+                        context.getSender().sendMessage(main.parse("<main>" + objectiveType));
                     }
                 }));
 
@@ -333,9 +330,9 @@ public class AdminCommands {
                 .meta(CommandMeta.DESCRIPTION, "Shows you a list of all available Requirement Types.")
                 .handler((context) -> {
                     context.getSender().sendMessage(Component.empty());
-                    context.getSender().sendMessage(miniMessage.parse(highlightGradient + "All requirement types:</gradient>"));
+                    context.getSender().sendMessage(main.parse("<highlight>All requirement types:"));
                     for (final String requirementType : main.getConditionsManager().getConditionIdentifiers()) {
-                        context.getSender().sendMessage(miniMessage.parse(mainGradient + requirementType));
+                        context.getSender().sendMessage(main.parse("<main>" + requirementType));
                     }
                 }));
 
@@ -343,9 +340,9 @@ public class AdminCommands {
                 .meta(CommandMeta.DESCRIPTION, "Shows you a list of all available Action (Reward) Types.")
                 .handler((context) -> {
                     context.getSender().sendMessage(Component.empty());
-                    context.getSender().sendMessage(miniMessage.parse(highlightGradient + "All reward types:</gradient>"));
+                    context.getSender().sendMessage(main.parse("<highlight>" + "All reward types:"));
                     for (final String rewardType : main.getActionManager().getActionIdentifiers()) {
-                        context.getSender().sendMessage(miniMessage.parse(mainGradient + rewardType));
+                        context.getSender().sendMessage(main.parse("<main>" + rewardType));
                     }
                 }));
 
@@ -353,9 +350,9 @@ public class AdminCommands {
                 .meta(CommandMeta.DESCRIPTION, "Shows you a list of all available Trigger Types.")
                 .handler((context) -> {
                     context.getSender().sendMessage(Component.empty());
-                    context.getSender().sendMessage(miniMessage.parse(highlightGradient + "All trigger types:</gradient>"));
+                    context.getSender().sendMessage(main.parse("<highlight>" + "All trigger types:"));
                     for (final String triggerType : main.getTriggerManager().getTriggerIdentifiers()) {
-                        context.getSender().sendMessage(miniMessage.parse(mainGradient + triggerType));
+                        context.getSender().sendMessage(main.parse("<main>" + triggerType));
                     }
                 }));
 
@@ -364,9 +361,9 @@ public class AdminCommands {
                 .handler((context) -> {
                     context.getSender().sendMessage(Component.empty());
                     int counter = 1;
-                    context.getSender().sendMessage(miniMessage.parse(highlightGradient + "All Quests:</gradient>"));
+                    context.getSender().sendMessage(main.parse("<highlight>" + "All Quests:"));
                     for (final Quest quest : main.getQuestManager().getAllQuests()) {
-                        context.getSender().sendMessage(miniMessage.parse(highlightGradient + counter + ".</gradient> " + mainGradient + quest.getQuestName()));
+                        context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> " + "<main>" + quest.getQuestName()));
                         counter += 1;
                     }
 
@@ -377,14 +374,14 @@ public class AdminCommands {
                 .handler((context) -> {
                     context.getSender().sendMessage(Component.empty());
 
-                    context.getSender().sendMessage(miniMessage.parse(highlightGradient + "All Placeholders (Case-sensitive):</gradient>"));
-                    context.getSender().sendMessage(miniMessage.parse(highlightGradient + "1.</gradient> " + highlight2Gradient + "{PLAYER} </gradient>" + mainGradient + "- Name of the player"));
-                    context.getSender().sendMessage(miniMessage.parse(highlightGradient + "2.</gradient> " + highlight2Gradient + "{PLAYERUUID} </gradient>" + mainGradient + "- UUID of the player"));
-                    context.getSender().sendMessage(miniMessage.parse(highlightGradient + "3.</gradient> " + highlight2Gradient + "{PLAYERX} </gradient>" + mainGradient + "- X coordinates of the player"));
-                    context.getSender().sendMessage(miniMessage.parse(highlightGradient + "4.</gradient> " + highlight2Gradient + "{PLAYERY} </gradient>" + mainGradient + "- Y coordinates of the player"));
-                    context.getSender().sendMessage(miniMessage.parse(highlightGradient + "5.</gradient> " + highlight2Gradient + "{PLAYERZ} </gradient>" + mainGradient + "- Z coordinates of the player"));
-                    context.getSender().sendMessage(miniMessage.parse(highlightGradient + "6.</gradient> " + highlight2Gradient + "{WORLD} </gradient>" + mainGradient + "- World name of the player"));
-                    context.getSender().sendMessage(miniMessage.parse(highlightGradient + "6.</gradient> " + highlight2Gradient + "{QUEST} </gradient>" + mainGradient + "- Quest name (if relevant)"));
+                    context.getSender().sendMessage(main.parse("<highlight>All Placeholders (Case-sensitive):"));
+                    context.getSender().sendMessage(main.parse("<highlight>1.</highlight> <highlight2>{PLAYER}</highlight2> <main>- Name of the player"));
+                    context.getSender().sendMessage(main.parse("<highlight>2.</highlight> <highlight2>{PLAYERUUID}</highlight2> <main>- UUID of the player"));
+                    context.getSender().sendMessage(main.parse("<highlight>3.</highlight> <highlight2>{PLAYERX}</highlight2> <main>- X coordinates of the player"));
+                    context.getSender().sendMessage(main.parse("<highlight>4.</highlight> <highlight2>{PLAYERY}</highlight2> <main>- Y coordinates of the player"));
+                    context.getSender().sendMessage(main.parse("<highlight>5.</highlight> <highlight2>{PLAYERZ}</highlight2> <main>- Z coordinates of the player"));
+                    context.getSender().sendMessage(main.parse("<highlight>6.</highlight> <highlight2>{WORLD}</highlight2> <main>- World name of the player"));
+                    context.getSender().sendMessage(main.parse("<highlight>6.</highlight> <highlight2>{QUEST}</highlight2> <main>- Quest name (if relevant)"));
 
                 }));
 
@@ -436,8 +433,8 @@ public class AdminCommands {
                         }
 
                     } else {
-                        context.getSender().sendMessage(miniMessage.parse(errorGradient + "Objective TriggerCommand failed. Player " + highlightGradient + singlePlayerSelector.getSelector()
-                                + "</gradient> is not online or was not found!</gradient>"
+                        context.getSender().sendMessage(main.parse("<error>Objective TriggerCommand failed. Player <highlight>" + singlePlayerSelector.getSelector()
+                                + "</highlight> is not online or was not found!"
                         ));
                     }
                 }));
@@ -454,9 +451,9 @@ public class AdminCommands {
                         for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                             if (activeQuest.getQuest().equals(quest)) {
                                 activeQuestsToRemove.add(activeQuest);
-                                context.getSender().sendMessage(miniMessage.parse(successGradient + "Removed the quest as an active quest for the player with the UUID "
-                                        + highlightGradient + questPlayer.getUUID().toString() + "</gradient> and name "
-                                        + highlight2Gradient + Bukkit.getOfflinePlayer(questPlayer.getUUID()).getName() + "</gradient>.</gradient>"
+                                context.getSender().sendMessage(main.parse("<success>Removed the quest as an active quest for the player with the UUID <highlight>"
+                                        + questPlayer.getUUID().toString() + "</highlight> and name <highlight2>"
+                                        + Bukkit.getOfflinePlayer(questPlayer.getUUID()).getName() + "</highlight2>."
                                 ));
 
                             }
@@ -469,9 +466,9 @@ public class AdminCommands {
                         for (final CompletedQuest completedQuest : questPlayer.getCompletedQuests()) {
                             if (completedQuest.getQuest().equals(quest)) {
                                 completedQuestsToRemove.add(completedQuest);
-                                context.getSender().sendMessage(miniMessage.parse(successGradient + "Removed the quest as a completed quest for the player with the UUID "
-                                        + highlightGradient + questPlayer.getUUID().toString() + "</gradient> and name "
-                                        + highlight2Gradient + Bukkit.getOfflinePlayer(questPlayer.getUUID()).getName() + "</gradient>.</gradient>"
+                                context.getSender().sendMessage(main.parse("<success>Removed the quest as a completed quest for the player with the UUID <highlight>"
+                                        + questPlayer.getUUID().toString() + "</highlight> and name <highlight2>"
+                                        + Bukkit.getOfflinePlayer(questPlayer.getUUID()).getName() + "</highlight2>."
                                 ));
                             }
 
@@ -479,7 +476,7 @@ public class AdminCommands {
 
                         questPlayer.getCompletedQuests().removeAll(completedQuestsToRemove);
                     }
-                    context.getSender().sendMessage(miniMessage.parse(successGradient + "Operation done!"));
+                    context.getSender().sendMessage(main.parse("<success>Operation done!"));
                 }));
 
         manager.command(builder.literal("resetAndFailQuestForAllPlayers")
@@ -501,9 +498,9 @@ public class AdminCommands {
 
                         for (final ActiveQuest activeQuest : activeQuestsToRemove) {
                             questPlayer.failQuest(activeQuest);
-                            context.getSender().sendMessage(miniMessage.parse(successGradient + "Failed the quest as an active quest for the player with the UUID "
-                                    + highlightGradient + questPlayer.getUUID().toString() + "</gradient> and name "
-                                    + highlight2Gradient + Bukkit.getOfflinePlayer(questPlayer.getUUID()).getName() + "</gradient>.</gradient>"
+                            context.getSender().sendMessage(main.parse("<success>Failed the quest as an active quest for the player with the UUID <highlight>"
+                                    + questPlayer.getUUID().toString() + "</highlight> and name <highlight2>"
+                                    + Bukkit.getOfflinePlayer(questPlayer.getUUID()).getName() + "</highlight2>."
                             ));
 
                         }
@@ -515,9 +512,9 @@ public class AdminCommands {
                         for (final CompletedQuest completedQuest : questPlayer.getCompletedQuests()) {
                             if (completedQuest.getQuest().equals(quest)) {
                                 completedQuestsToRemove.add(completedQuest);
-                                context.getSender().sendMessage(miniMessage.parse(successGradient + "Removed the quest as a completed quest for the player with the UUID "
-                                        + highlightGradient + questPlayer.getUUID().toString() + "</gradient> and name "
-                                        + highlight2Gradient + Bukkit.getOfflinePlayer(questPlayer.getUUID()).getName() + "</gradient>.</gradient>"
+                                context.getSender().sendMessage(main.parse("<success>Removed the quest as a completed quest for the player with the UUID <highlight>"
+                                        + questPlayer.getUUID().toString() + "</highlight> and name <highlight2>"
+                                        + Bukkit.getOfflinePlayer(questPlayer.getUUID()).getName() + "</highlight2>."
                                 ));
                             }
 
@@ -525,7 +522,7 @@ public class AdminCommands {
 
                         questPlayer.getCompletedQuests().removeAll(completedQuestsToRemove);
                     }
-                    context.getSender().sendMessage(miniMessage.parse(successGradient + "Operation done!"));
+                    context.getSender().sendMessage(main.parse("<success>Operation done!"));
 
                 }));
 
@@ -538,7 +535,7 @@ public class AdminCommands {
                     main.getLanguageManager().loadLanguageConfig();
                     main.getConversationManager().loadConversationsFromConfig();
                     context.getSender().sendMessage(Component.empty());
-                    context.getSender().sendMessage(miniMessage.parse(successGradient + "NotQuests general.yml, language configuration and conversations have been re-loaded. </gradient>" + unimportant + "If you want to reload more, please use the ServerUtils plugin (available on spigot) or restart the server. This reload command does not reload the quests file or the database."));
+                    context.getSender().sendMessage(main.parse("<success>NotQuests general.yml, language configuration and conversations have been re-loaded. <unimportant>If you want to reload more, please use the ServerUtils plugin (available on spigot) or restart the server. This reload command does not reload the quests file or the database."));
                 }));
 
         manager.command(builder.literal("reload", "load")
@@ -547,7 +544,7 @@ public class AdminCommands {
                 .handler((context) -> {
                     main.getDataManager().loadGeneralConfig();
                     context.getSender().sendMessage(Component.empty());
-                    context.getSender().sendMessage(miniMessage.parse(successGradient + "General.yml has been reloaded."));
+                    context.getSender().sendMessage(main.parse("<success>General.yml has been reloaded."));
                 }));
 
         manager.command(builder.literal("reload", "load")
@@ -556,7 +553,7 @@ public class AdminCommands {
                 .handler((context) -> {
                     main.getLanguageManager().loadLanguageConfig();
                     context.getSender().sendMessage(Component.empty());
-                    context.getSender().sendMessage(miniMessage.parse(successGradient + "Languages have been reloaded."));
+                    context.getSender().sendMessage(main.parse("<success>Languages have been reloaded."));
                 }));
 
         manager.command(builder.literal("reload", "load")
@@ -565,7 +562,7 @@ public class AdminCommands {
                 .handler((context) -> {
                     main.getConversationManager().loadConversationsFromConfig();
                     context.getSender().sendMessage(Component.empty());
-                    context.getSender().sendMessage(miniMessage.parse(successGradient + "Conversations have been reloaded."));
+                    context.getSender().sendMessage(main.parse("<success>Conversations have been reloaded."));
                 }));
 
         manager.command(builder.literal("save")
@@ -573,13 +570,13 @@ public class AdminCommands {
                 .handler((context) -> {
                     main.getDataManager().saveData();
                     context.getSender().sendMessage(Component.empty());
-                    context.getSender().sendMessage(miniMessage.parse(successGradient + "NotQuests configuration and player data has been saved"));
+                    context.getSender().sendMessage(main.parse("<success>NotQuests configuration and player data has been saved"));
                 }));
 
         manager.command(builder.literal("version")
                 .meta(CommandMeta.DESCRIPTION, "Displays the version of the NotQuests plugin you're using.")
                 .handler((context) -> {
-                    context.getSender().sendMessage(miniMessage.parse(mainGradient + "Current NotQuests version: " + highlightGradient + main.getMain().getDescription().getVersion() + highlight2Gradient + " (Paper)"));
+                    context.getSender().sendMessage(main.parse("<main>Current NotQuests version: <highlight>"+ main.getMain().getDescription().getVersion() + "</highlight> <highlight2>(Paper)"));
 
                 }));
 
@@ -604,7 +601,7 @@ public class AdminCommands {
                         context.getSender().sendMessage(collectiveComponent);
 
                     } else {
-                        context.getSender().sendMessage(miniMessage.parse(errorGradient + "No chat history!"));
+                        context.getSender().sendMessage(main.parse("<error>No chat history!"));
                     }
 
                 }));
@@ -631,7 +628,7 @@ public class AdminCommands {
                         context.getSender().sendMessage(collectiveComponent);
 
                     } else {
-                        context.getSender().sendMessage(miniMessage.parse(errorGradient + "No chat history!"));
+                        context.getSender().sendMessage(main.parse("<error>No chat history!"));
                     }
 
                 }));
@@ -651,9 +648,9 @@ public class AdminCommands {
 
                         final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(singlePlayerSelector.getPlayer().getUniqueId());
                         if (questPlayer != null) {
-                            context.getSender().sendMessage(miniMessage.parse(mainGradient + "Quest points for player " + highlightGradient + singlePlayerSelector.getPlayer().getName() + "</gradient> <green>(online)</green>: " + highlight2Gradient + questPlayer.getQuestPoints()));
+                            context.getSender().sendMessage(main.parse("<main>Quest points for player <highlight>" + singlePlayerSelector.getPlayer().getName() + "</highlight> <green>(online)</green>: <highlight2>" + questPlayer.getQuestPoints()));
                         } else {
-                            context.getSender().sendMessage(miniMessage.parse(errorGradient + "Seems like the player " + highlightGradient + singlePlayerSelector.getPlayer().getName() + "</gradient> <green>(online)</green> does not have any quest points!"));
+                            context.getSender().sendMessage(main.parse("<error>Seems like the player <highlight>" + singlePlayerSelector.getPlayer().getName() + "</highlight> <green>(online)</green> does not have any quest points!"));
                         }
                     } else {
 
@@ -661,9 +658,9 @@ public class AdminCommands {
 
                         final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(offlinePlayer.getUniqueId());
                         if (questPlayer != null) {
-                            context.getSender().sendMessage(miniMessage.parse(mainGradient + "Quest points for player " + highlightGradient + offlinePlayer.getName() + "</gradient> <red>(offline)</red>: " + highlight2Gradient + questPlayer.getQuestPoints()));
+                            context.getSender().sendMessage(main.parse("<main>Quest points for player <highlight>" + offlinePlayer.getName() + "</highlight> <red>(offline)</red>: <highlight2>" + questPlayer.getQuestPoints()));
                         } else {
-                            context.getSender().sendMessage(miniMessage.parse(errorGradient + "Seems like the player " + highlightGradient + offlinePlayer.getName() + "</gradient> <red>(offline)</red> does not have any quest points!"));
+                            context.getSender().sendMessage(main.parse("<error>Seems like the player <highlight>" + offlinePlayer.getName() + "</highlight> <red>(offline)</red> does not have any quest points!"));
                         }
                     }
 
@@ -685,22 +682,22 @@ public class AdminCommands {
                         if (questPlayer != null) {
                             long oldQuestPoints = questPlayer.getQuestPoints();
                             questPlayer.addQuestPoints(questPointsToAdd, false);
-                            context.getSender().sendMessage(miniMessage.parse(mainGradient + "Quest points for player " + highlightGradient + singlePlayerSelector.getPlayer().getName() + "</gradient> <green>(online)</green> have been set from " + unimportant + oldQuestPoints
-                                    + unimportantClose + " to " + highlight2Gradient + (oldQuestPoints + questPointsToAdd) + "</gradient>.</gradient>"));
+                            context.getSender().sendMessage(main.parse("<main>Quest points for player <highlight>" + singlePlayerSelector.getPlayer().getName() + "</highlight> <green>(online)</green> have been set from <unimportant>" + oldQuestPoints
+                                    + "</unimportant> to <highlight2>"+ (oldQuestPoints + questPointsToAdd) + "</highlight2>."));
                         } else {
-                            context.getSender().sendMessage(miniMessage.parse(warningGradient + "Seems like the player " + highlightGradient + singlePlayerSelector.getPlayer().getName() + "</gradient> <green>(online)</green> never accepted any quests! A new QuestPlayer has been created for him."));
-                            context.getSender().sendMessage(miniMessage.parse(mainGradient + "Quest player creation status: " + highlightGradient + main.getQuestPlayerManager().createQuestPlayer(singlePlayerSelector.getPlayer().getUniqueId())));
+                            context.getSender().sendMessage(main.parse("<warn>Seems like the player <highlight>" + singlePlayerSelector.getPlayer().getName() + "</highlight> <green>(online)</green> never accepted any quests! A new QuestPlayer has been created for him."));
+                            context.getSender().sendMessage(main.parse("<main>Quest player creation status: <highlight>" + main.getQuestPlayerManager().createQuestPlayer(singlePlayerSelector.getPlayer().getUniqueId())));
                             final QuestPlayer newQuestPlayer = main.getQuestPlayerManager().getQuestPlayer(singlePlayerSelector.getPlayer().getUniqueId());
                             if (newQuestPlayer != null) {
                                 long oldQuestPoints = newQuestPlayer.getQuestPoints();
                                 newQuestPlayer.addQuestPoints(questPointsToAdd, false);
-                                context.getSender().sendMessage(miniMessage.parse(
-                                        successGradient + "Quest points for player " + highlightGradient + singlePlayerSelector.getPlayer().getName()
-                                                + "</gradient> <green>(online)</green> have been set from " + unimportant + oldQuestPoints + unimportantClose + " to "
-                                                + highlight2Gradient + (oldQuestPoints + questPointsToAdd) + "</gradient>."
+                                context.getSender().sendMessage(main.parse(
+                                        "<success>Quest points for player <highlight>"+ singlePlayerSelector.getPlayer().getName()
+                                                + "</highlight> <green>(online)</green> have been set from <unimportant>" + oldQuestPoints + "</unimportant> to <highlight2>"
+                                                + (oldQuestPoints + questPointsToAdd) + "</highlight2>."
                                 ));
                             } else {
-                                context.getSender().sendMessage(miniMessage.parse(errorGradient + "Something went wrong during the questPlayer creation!"));
+                                context.getSender().sendMessage(main.parse("<error>Something went wrong during the questPlayer creation!"));
                             }
                         }
                     } else {
@@ -709,28 +706,28 @@ public class AdminCommands {
                         if (questPlayer != null) {
                             final long oldQuestPoints = questPlayer.getQuestPoints();
                             questPlayer.addQuestPoints(questPointsToAdd, false);
-                            context.getSender().sendMessage(miniMessage.parse(mainGradient + "Quest points for player " + highlightGradient + offlinePlayer.getName() + "</gradient> <red>(offline)</red> have been set from " + unimportant + oldQuestPoints
-                                    + unimportantClose + " to " + highlight2Gradient + (oldQuestPoints + questPointsToAdd) + "</gradient>.</gradient>"));
+                            context.getSender().sendMessage(main.parse(  "<main>Quest points for player <highlight>" + offlinePlayer.getName() + "</highlight> <red>(offline)</red> have been set from <unimportant>" + oldQuestPoints
+                                    + "</unimportant> to <highlight2>" + (oldQuestPoints + questPointsToAdd) + "</highlight2>."));
                         } else {
-                            context.getSender().sendMessage(miniMessage.parse(warningGradient + "Seems like the player " + highlightGradient + offlinePlayer.getName() + "</gradient> <red>(offline)</red> never accepted any quests! A new QuestPlayer has been created for him."));
-                            context.getSender().sendMessage(miniMessage.parse(mainGradient + "Quest player creation status: " + highlightGradient + main.getQuestPlayerManager().createQuestPlayer(offlinePlayer.getUniqueId())));
+                            context.getSender().sendMessage(main.parse("<warn>Seems like the player <highlight>" + offlinePlayer.getName() + "</highlight> <red>(offline)</red> never accepted any quests! A new QuestPlayer has been created for him."));
+                            context.getSender().sendMessage(main.parse("<main>Quest player creation status: <highlight>" + main.getQuestPlayerManager().createQuestPlayer(offlinePlayer.getUniqueId())));
 
                             final QuestPlayer newQuestPlayer = main.getQuestPlayerManager().getQuestPlayer(offlinePlayer.getUniqueId());
                             if (newQuestPlayer != null) {
                                 final long oldQuestPoints = newQuestPlayer.getQuestPoints();
                                 newQuestPlayer.addQuestPoints(questPointsToAdd, false);
-                                context.getSender().sendMessage(miniMessage.parse(
-                                        successGradient + "Quest points for player " + highlightGradient + offlinePlayer.getName()
-                                                + "</gradient> <red>(offline)</red> have been set from " + unimportant + oldQuestPoints + unimportantClose + " to "
-                                                + highlight2Gradient + (oldQuestPoints + questPointsToAdd) + "</gradient>."));
+                                context.getSender().sendMessage(main.parse(
+                                        "<success>Quest points for player <highlight>" + offlinePlayer.getName()
+                                                + "</highlight> <red>(offline)</red> have been set from <unimportant>" + oldQuestPoints + "</unimportant> to <highlight2>"
+                                                + (oldQuestPoints + questPointsToAdd) + "</highlight2>."));
                             } else {
-                                context.getSender().sendMessage(miniMessage.parse(errorGradient + "Something went wrong during the questPlayer creation!"));
+                                context.getSender().sendMessage(main.parse("<error>Something went wrong during the questPlayer creation!"));
                             }
                         }
                         if (questPlayer != null) {
-                            context.getSender().sendMessage(miniMessage.parse(mainGradient + "Quest points for player " + highlightGradient + offlinePlayer.getName() + "</gradient> <red>(offline)</red>: " + highlight2Gradient + questPlayer.getQuestPoints()));
+                            context.getSender().sendMessage(main.parse("<main>Quest points for player <highlight>" + offlinePlayer.getName() + "</highlight> <red>(offline)</red>: <highlight2>"  + questPlayer.getQuestPoints()));
                         } else {
-                            context.getSender().sendMessage(miniMessage.parse(errorGradient + "Seems like the player " + highlightGradient + offlinePlayer.getName() + "</gradient> <red>(offline)</red> does not have any quest points!"));
+                            context.getSender().sendMessage(main.parse("<error>Seems like the player <highlight>" + offlinePlayer.getName() + "</highlight> <red>(offline)</red> does not have any quest points!"));
                         }
                     }
                 }));
@@ -749,22 +746,22 @@ public class AdminCommands {
                         if (questPlayer != null) {
                             long oldQuestPoints = questPlayer.getQuestPoints();
                             questPlayer.removeQuestPoints(questPointsToRemove, false);
-                            context.getSender().sendMessage(miniMessage.parse(mainGradient + "Quest points for player " + highlightGradient + singlePlayerSelector.getPlayer().getName() + "</gradient> <green>(online)</green> have been set from " + unimportant + oldQuestPoints
-                                    + unimportantClose + " to " + highlight2Gradient + (oldQuestPoints - questPointsToRemove) + "</gradient>.</gradient>"));
+                            context.getSender().sendMessage(main.parse(  "<main>Quest points for player <highlight>" + singlePlayerSelector.getPlayer().getName() + "</highlight> <green>(online)</green> have been set from <unimportant>" + oldQuestPoints
+                                    + "</unimportant> to <highlight2>" + (oldQuestPoints - questPointsToRemove) + "</highlight2>."));
                         } else {
-                            context.getSender().sendMessage(miniMessage.parse(warningGradient + "Seems like the player " + highlightGradient + singlePlayerSelector.getPlayer().getName() + "</gradient> <green>(online)</green> never accepted any quests! A new QuestPlayer has been created for him."));
-                            context.getSender().sendMessage(miniMessage.parse(mainGradient + "Quest player creation status: " + highlightGradient + main.getQuestPlayerManager().createQuestPlayer(singlePlayerSelector.getPlayer().getUniqueId())));
+                            context.getSender().sendMessage(main.parse("<warn>Seems like the player <highlight>" + singlePlayerSelector.getPlayer().getName() + "</highlight> <green>(online)</green> never accepted any quests! A new QuestPlayer has been created for him."));
+                            context.getSender().sendMessage(main.parse("<main>Quest player creation status: <highlight>" + main.getQuestPlayerManager().createQuestPlayer(singlePlayerSelector.getPlayer().getUniqueId())));
                             final QuestPlayer newQuestPlayer = main.getQuestPlayerManager().getQuestPlayer(singlePlayerSelector.getPlayer().getUniqueId());
                             if (newQuestPlayer != null) {
                                 long oldQuestPoints = newQuestPlayer.getQuestPoints();
                                 newQuestPlayer.removeQuestPoints(questPointsToRemove, false);
-                                context.getSender().sendMessage(miniMessage.parse(
-                                        successGradient + "Quest points for player " + highlightGradient + singlePlayerSelector.getPlayer().getName()
-                                                + "</gradient> <green>(online)</green> have been set from " + unimportant + oldQuestPoints + unimportantClose + " to "
-                                                + highlight2Gradient + (oldQuestPoints - questPointsToRemove) + "</gradient>."
+                                context.getSender().sendMessage(main.parse(
+                                        "<success>Quest points for player <highlight>" + singlePlayerSelector.getPlayer().getName()
+                                                + "</highlight> <green>(online)</green> have been set from <unimportant>" + oldQuestPoints + "</unimportant> to <highlight2>"
+                                                + (oldQuestPoints - questPointsToRemove) + "</highlight2>."
                                 ));
                             } else {
-                                context.getSender().sendMessage(miniMessage.parse(errorGradient + "Something went wrong during the questPlayer creation!"));
+                                context.getSender().sendMessage(main.parse( "<error>Something went wrong during the questPlayer creation!"));
                             }
                         }
                     } else {
@@ -773,28 +770,28 @@ public class AdminCommands {
                         if (questPlayer != null) {
                             final long oldQuestPoints = questPlayer.getQuestPoints();
                             questPlayer.removeQuestPoints(questPointsToRemove, false);
-                            context.getSender().sendMessage(miniMessage.parse(mainGradient + "Quest points for player " + highlightGradient + offlinePlayer.getName() + "</gradient> <red>(offline)</red> have been set from " + unimportant + oldQuestPoints
-                                    + unimportantClose + " to " + highlight2Gradient + (oldQuestPoints - questPointsToRemove) + "</gradient>.</gradient>"));
+                            context.getSender().sendMessage(main.parse( "<main>Quest points for player <highlight>" + offlinePlayer.getName() + "</highlight> <red>(offline)</red> have been set from <unimportant>" + oldQuestPoints
+                                    + "</unimportant> to <highlight2>" + (oldQuestPoints - questPointsToRemove) + "</highlight2>."));
                         } else {
-                            context.getSender().sendMessage(miniMessage.parse(warningGradient + "Seems like the player " + highlightGradient + offlinePlayer.getName() + "</gradient> <red>(offline)</red> never accepted any quests! A new QuestPlayer has been created for him."));
-                            context.getSender().sendMessage(miniMessage.parse(mainGradient + "Quest player creation status: " + highlightGradient + main.getQuestPlayerManager().createQuestPlayer(offlinePlayer.getUniqueId())));
+                            context.getSender().sendMessage(main.parse( "<warn>Seems like the player <highlight>" + offlinePlayer.getName() + "</highlight> <red>(offline)</red> never accepted any quests! A new QuestPlayer has been created for him."));
+                            context.getSender().sendMessage(main.parse("<main>Quest player creation status: <highlight>" + main.getQuestPlayerManager().createQuestPlayer(offlinePlayer.getUniqueId())));
 
                             final QuestPlayer newQuestPlayer = main.getQuestPlayerManager().getQuestPlayer(offlinePlayer.getUniqueId());
                             if (newQuestPlayer != null) {
                                 final long oldQuestPoints = newQuestPlayer.getQuestPoints();
                                 newQuestPlayer.removeQuestPoints(questPointsToRemove, false);
-                                context.getSender().sendMessage(miniMessage.parse(
-                                        successGradient + "Quest points for player " + highlightGradient + offlinePlayer.getName()
-                                                + "</gradient> <red>(offline)</red> have been set from " + unimportant + oldQuestPoints + unimportantClose + " to "
-                                                + highlight2Gradient + (oldQuestPoints - questPointsToRemove) + "</gradient>."));
+                                context.getSender().sendMessage(main.parse(
+                                        "<success>Quest points for player <highlight>" + offlinePlayer.getName()
+                                                + "</highlight> <red>(offline)</red> have been set from <unimportant>" + oldQuestPoints + "</unimportant> to <highlight2>"
+                                                + (oldQuestPoints - questPointsToRemove) + "</highlight2>."));
                             } else {
-                                context.getSender().sendMessage(miniMessage.parse(errorGradient + "Something went wrong during the questPlayer creation!"));
+                                context.getSender().sendMessage(main.parse("<error>Something went wrong during the questPlayer creation!"));
                             }
                         }
                         if (questPlayer != null) {
-                            context.getSender().sendMessage(miniMessage.parse(mainGradient + "Quest points for player " + highlightGradient + offlinePlayer.getName() + "</gradient> <red>(offline)</red>: " + highlight2Gradient + questPlayer.getQuestPoints()));
+                            context.getSender().sendMessage(main.parse("<main>Quest points for player <highlight>" + offlinePlayer.getName() + "</highlight> <red>(offline)</red>: <highlight2>" + questPlayer.getQuestPoints()));
                         } else {
-                            context.getSender().sendMessage(miniMessage.parse(errorGradient + "Seems like the player " + highlightGradient + offlinePlayer.getName() + "</gradient> <red>(offline)</red> does not have any quest points!"));
+                            context.getSender().sendMessage(main.parse("<error>Seems like the player <highlight>" + offlinePlayer.getName() + "</highlight> <red>(offline)</red> does not have any quest points!"));
                         }
                     }
                 }));
@@ -814,22 +811,22 @@ public class AdminCommands {
                         if (questPlayer != null) {
                             long oldQuestPoints = questPlayer.getQuestPoints();
                             questPlayer.setQuestPoints(newQuestPointsAmount, false);
-                            context.getSender().sendMessage(miniMessage.parse(mainGradient + "Quest points for player " + highlightGradient + singlePlayerSelector.getPlayer().getName() + "</gradient> <green>(online)</green> have been set from " + unimportant + oldQuestPoints
-                                    + unimportantClose + " to " + highlight2Gradient + (newQuestPointsAmount) + "</gradient>.</gradient>"));
+                            context.getSender().sendMessage(main.parse("<main>Quest points for player <highlight>" + singlePlayerSelector.getPlayer().getName() + "</highlight> <green>(online)</green> have been set from <unimportant>" + oldQuestPoints
+                                    + "</unimportant> to <highlight2>" + (newQuestPointsAmount) + "</highlight2>."));
                         } else {
-                            context.getSender().sendMessage(miniMessage.parse(warningGradient + "Seems like the player " + highlightGradient + singlePlayerSelector.getPlayer().getName() + "</gradient> <green>(online)</green> never accepted any quests! A new QuestPlayer has been created for him."));
-                            context.getSender().sendMessage(miniMessage.parse(mainGradient + "Quest player creation status: " + highlightGradient + main.getQuestPlayerManager().createQuestPlayer(singlePlayerSelector.getPlayer().getUniqueId())));
+                            context.getSender().sendMessage(main.parse( "<warn>Seems like the player <highlight>" + singlePlayerSelector.getPlayer().getName() + "</highlight> <green>(online)</green> never accepted any quests! A new QuestPlayer has been created for him."));
+                            context.getSender().sendMessage(main.parse("<main>Quest player creation status: <highlight>" + main.getQuestPlayerManager().createQuestPlayer(singlePlayerSelector.getPlayer().getUniqueId())));
                             final QuestPlayer newQuestPlayer = main.getQuestPlayerManager().getQuestPlayer(singlePlayerSelector.getPlayer().getUniqueId());
                             if (newQuestPlayer != null) {
                                 long oldQuestPoints = newQuestPlayer.getQuestPoints();
                                 newQuestPlayer.setQuestPoints(newQuestPointsAmount, false);
-                                context.getSender().sendMessage(miniMessage.parse(
-                                        successGradient + "Quest points for player " + highlightGradient + singlePlayerSelector.getPlayer().getName()
-                                                + "</gradient> <green>(online)</green> have been set from " + unimportant + oldQuestPoints + unimportantClose + " to "
-                                                + highlight2Gradient + (newQuestPointsAmount) + "</gradient>."
+                                context.getSender().sendMessage(main.parse(
+                                        "<success>Quest points for player <highlight>" + singlePlayerSelector.getPlayer().getName()
+                                                + "</highlight> <green>(online)</green> have been set from <unimportant>" + oldQuestPoints + "</unimportant> to <highlight2>"
+                                                + (newQuestPointsAmount) + "</highlight2>."
                                 ));
                             } else {
-                                context.getSender().sendMessage(miniMessage.parse(errorGradient + "Something went wrong during the questPlayer creation!"));
+                                context.getSender().sendMessage(main.parse("<error>Something went wrong during the questPlayer creation!"));
                             }
                         }
                     } else {
@@ -838,28 +835,28 @@ public class AdminCommands {
                         if (questPlayer != null) {
                             final long oldQuestPoints = questPlayer.getQuestPoints();
                             questPlayer.setQuestPoints(newQuestPointsAmount, false);
-                            context.getSender().sendMessage(miniMessage.parse(mainGradient + "Quest points for player " + highlightGradient + offlinePlayer.getName() + "</gradient> <red>(offline)</red> have been set from " + unimportant + oldQuestPoints
-                                    + unimportantClose + " to " + highlight2Gradient + (newQuestPointsAmount) + "</gradient>.</gradient>"));
+                            context.getSender().sendMessage(main.parse("<main>Quest points for player <highlight>" + offlinePlayer.getName() + "</highlight2> <red>(offline)</red> have been set from <unimportant>" + oldQuestPoints
+                                    + "</unimportant> to <highlight2>" + (newQuestPointsAmount) + "</highlight2>."));
                         } else {
-                            context.getSender().sendMessage(miniMessage.parse(warningGradient + "Seems like the player " + highlightGradient + offlinePlayer.getName() + "</gradient> <red>(offline)</red> never accepted any quests! A new QuestPlayer has been created for him."));
-                            context.getSender().sendMessage(miniMessage.parse(mainGradient + "Quest player creation status: " + highlightGradient + main.getQuestPlayerManager().createQuestPlayer(offlinePlayer.getUniqueId())));
+                            context.getSender().sendMessage(main.parse("<warn>Seems like the player <highlight>" + offlinePlayer.getName() + "</highlight> <red>(offline)</red> never accepted any quests! A new QuestPlayer has been created for him."));
+                            context.getSender().sendMessage(main.parse("<main>Quest player creation status: <highlight>" + main.getQuestPlayerManager().createQuestPlayer(offlinePlayer.getUniqueId())));
 
                             final QuestPlayer newQuestPlayer = main.getQuestPlayerManager().getQuestPlayer(offlinePlayer.getUniqueId());
                             if (newQuestPlayer != null) {
                                 final long oldQuestPoints = newQuestPlayer.getQuestPoints();
                                 newQuestPlayer.setQuestPoints(newQuestPointsAmount, false);
-                                context.getSender().sendMessage(miniMessage.parse(
-                                        successGradient + "Quest points for player " + highlightGradient + offlinePlayer.getName()
-                                                + "</gradient> <red>(offline)</red> have been set from " + unimportant + oldQuestPoints + unimportantClose + " to "
-                                                + highlight2Gradient + (newQuestPointsAmount) + "</gradient>."));
+                                context.getSender().sendMessage(main.parse(
+                                        "<success>Quest points for player <highlight>" + offlinePlayer.getName()
+                                                + "</highlight> <red>(offline)</red> have been set from <unimportant>" + oldQuestPoints + "</unimportant> to <highlight2>"
+                                                + (newQuestPointsAmount) + "</highlight2>."));
                             } else {
-                                context.getSender().sendMessage(miniMessage.parse(errorGradient + "Something went wrong during the questPlayer creation!"));
+                                context.getSender().sendMessage(main.parse("<error>Something went wrong during the questPlayer creation!"));
                             }
                         }
                         if (questPlayer != null) {
-                            context.getSender().sendMessage(miniMessage.parse(mainGradient + "Quest points for player " + highlightGradient + offlinePlayer.getName() + "</gradient> <red>(offline)</red>: " + highlight2Gradient + questPlayer.getQuestPoints()));
+                            context.getSender().sendMessage(main.parse("<main>Quest points for player <highlight>" + offlinePlayer.getName() + "</highlight> <red>(offline)</red>: <highlight2>" + questPlayer.getQuestPoints()));
                         } else {
-                            context.getSender().sendMessage(miniMessage.parse(errorGradient + "Seems like the player " + highlightGradient + offlinePlayer.getName() + "</gradient> <red>(offline)</red> does not have any quest points!"));
+                            context.getSender().sendMessage(main.parse( "<error>Seems like the player <highlight>" + offlinePlayer.getName() + "</highlight> <red>(offline)</red> does not have any quest points!"));
                         }
                     }
                 }));
@@ -890,10 +887,10 @@ public class AdminCommands {
                     if (main.getConditionsYMLManager().getCondition(conditionIdentifier) != null) {
 
                         main.getConditionsYMLManager().removeCondition(conditionIdentifier);
-                        context.getSender().sendMessage(miniMessage.parse(successGradient + "Condition with the name " + highlightGradient + conditionIdentifier + "</gradient> has been deleted.</gradient>"));
+                        context.getSender().sendMessage(main.parse( "<success>Condition with the name <highlight>" + conditionIdentifier + "</highlight> has been deleted."));
 
                     } else {
-                        context.getSender().sendMessage(miniMessage.parse(errorGradient + "Error! Condition with the name " + highlightGradient + conditionIdentifier + "</gradient> does not exist!</gradient>"));
+                        context.getSender().sendMessage(main.parse("<error>Error! Condition with the name <highlight>" + conditionIdentifier + "</highlight> does not exist!"));
                     }
                 }));
 
@@ -931,7 +928,7 @@ public class AdminCommands {
                         }
 
                         if (player == null) {
-                            context.getSender().sendMessage(miniMessage.parse(errorGradient + "Error! Player object not found!</gradient>"));
+                            context.getSender().sendMessage(main.parse("<error>Error! Player object not found!"));
                             return;
                         }
                         final boolean enforce = context.flags().isPresent("enforce");
@@ -940,16 +937,16 @@ public class AdminCommands {
                         QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
                         String result = foundCondition.check(questPlayer, enforce);
                         if (result.isBlank()) {
-                            result = successGradient + "Condition fulfilled!";
+                            result = "<success>Condition fulfilled!";
                         }
                         if (!enforce) {
-                            context.getSender().sendMessage(miniMessage.parse(successGradient + "Condition with the name " + highlightGradient + conditionIdentifier + "</gradient> has been checked! Result:</gradient>\n" + result));
+                            context.getSender().sendMessage(main.parse("<success>Condition with the name <highlight>" + conditionIdentifier + "</highlight> has been checked! Result:</success>\n" + result));
                         } else {
-                            context.getSender().sendMessage(miniMessage.parse(successGradient + "Condition with the name " + highlightGradient + conditionIdentifier + "</gradient> has been checked and enforced! Result:</gradient>\n" + result));
+                            context.getSender().sendMessage(main.parse("<success>Condition with the name <highlight>" + conditionIdentifier + "</highlight> has been checked and enforced! Result:</success>\n" + result));
                         }
 
                     } else {
-                        context.getSender().sendMessage(miniMessage.parse(errorGradient + "Error! Condition with the name " + highlightGradient + conditionIdentifier + "</gradient> does not exist!</gradient>"));
+                        context.getSender().sendMessage(main.parse("<error>Error! Condition with the name <highlight>" + conditionIdentifier + "</highlight> does not exist!"));
                     }
                 }));
 
@@ -958,11 +955,11 @@ public class AdminCommands {
                 .meta(CommandMeta.DESCRIPTION, "Shows all existing conditions.")
                 .handler((context) -> {
                     int counter = 1;
-                    context.getSender().sendMessage(miniMessage.parse(highlightGradient + "All Conditions:"));
+                    context.getSender().sendMessage(main.parse("<highlight>All Conditions:"));
                     for (final String conditionIdentifier : main.getConditionsYMLManager().getConditionsAndIdentifiers().keySet()) {
                         final Condition condition = main.getConditionsYMLManager().getCondition(conditionIdentifier);
-                        context.getSender().sendMessage(miniMessage.parse(highlightGradient + counter + ".</gradient> " + mainGradient + conditionIdentifier));
-                        context.getSender().sendMessage(miniMessage.parse(veryUnimportant + "  └─ " + unimportant + "Type: " + highlight2Gradient + condition.getConditionType()));
+                        context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>" + conditionIdentifier));
+                        context.getSender().sendMessage(main.parse("  <veryUnimportant>└─</veryUnimportant> <unimportant>Type: <highlight2>" + condition.getConditionType()));
                         counter += 1;
                     }
                 }));
@@ -989,10 +986,10 @@ public class AdminCommands {
                     if (main.getActionsYMLManager().getAction(actionIdentifier) != null) {
 
                         main.getActionsYMLManager().removeAction(actionIdentifier);
-                        context.getSender().sendMessage(miniMessage.parse(successGradient + "Action with the name " + highlightGradient + actionIdentifier + "</gradient> has been deleted.</gradient>"));
+                        context.getSender().sendMessage(main.parse("<successAction with the name <highlight2>" + actionIdentifier + "</highlight2> has been deleted."));
 
                     } else {
-                        context.getSender().sendMessage(miniMessage.parse(errorGradient + "Error! Action with the name " + highlightGradient + actionIdentifier + "</gradient> does not exist!</gradient>"));
+                        context.getSender().sendMessage(main.parse("<error>Error! Action with the name <highlight2>" + actionIdentifier + "</highlight2> does not exist!"));
                     }
 
                 }));
@@ -1030,20 +1027,20 @@ public class AdminCommands {
                         }
 
                         if (player == null) {
-                            context.getSender().sendMessage(miniMessage.parse(errorGradient + "Error! Player object not found!</gradient>"));
+                            context.getSender().sendMessage(main.parse("<error>Error! Player object not found!"));
                             return;
                         }
 
                         if (context.flags().contains("ignoreConditions")) {
                             foundAction.execute(player);
-                            context.getSender().sendMessage(miniMessage.parse(successGradient + "Action with the name " + highlightGradient + actionIdentifier + "</gradient> has been executed!</gradient>"));
+                            context.getSender().sendMessage(main.parse("<success>Action with the name <highlight>" + actionIdentifier + "</highlight> has been executed!"));
                         } else {
                             main.getActionManager().executeActionWithConditions(foundAction, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), player, false);
                         }
 
 
                     } else {
-                        context.getSender().sendMessage(miniMessage.parse(errorGradient + "Error! Action with the name " + highlightGradient + actionIdentifier + "</gradient> does not exist!</gradient>"));
+                        context.getSender().sendMessage(main.parse("<error>Error! Action with the name <highlight>" + actionIdentifier + "</highlight> does not exist!"));
                     }
 
                 }));
@@ -1053,11 +1050,11 @@ public class AdminCommands {
                 .meta(CommandMeta.DESCRIPTION, "Shows all existing actions.")
                 .handler((context) -> {
                     int counter = 1;
-                    context.getSender().sendMessage(miniMessage.parse(highlightGradient + "All Actions:"));
+                    context.getSender().sendMessage(main.parse("<highlight>All Actions:"));
                     for (final String actionIdentifier : main.getActionsYMLManager().getActionsAndIdentifiers().keySet()) {
                         final Action action = main.getActionsYMLManager().getAction(actionIdentifier);
-                        context.getSender().sendMessage(miniMessage.parse(highlightGradient + counter + ".</gradient> " + mainGradient + actionIdentifier));
-                        context.getSender().sendMessage(miniMessage.parse(veryUnimportant + "  └─ " + unimportant + "Type: " + highlight2Gradient + action.getActionType()));
+                        context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>" + actionIdentifier));
+                        context.getSender().sendMessage(main.parse("  <veryUnimportant>└─</veryUnimportant> <unimportant>Type:</unimportant> <highlight2>" + action.getActionType()));
                         counter += 1;
                     }
                 }));
@@ -1083,12 +1080,12 @@ public class AdminCommands {
 
                     if (foundAction != null) {
                         foundAction.clearConditions(main.getActionsYMLManager().getActionsConfig(), "actions." + actionIdentifier);
-                        context.getSender().sendMessage(miniMessage.parse(
-                                successGradient + "All conditions of action with identifier " + highlightGradient + actionIdentifier
-                                        + "</gradient> have been removed!</gradient>"
+                        context.getSender().sendMessage(main.parse(
+                                "<success>All conditions of action with identifier <highlight>" + actionIdentifier
+                                        + "</highlight> have been removed!"
                         ));
                     } else {
-                        context.getSender().sendMessage(miniMessage.parse(errorGradient + "Error! Action with the name " + highlightGradient + actionIdentifier + "</gradient> does not exist!</gradient>"));
+                        context.getSender().sendMessage(main.parse("<error>Error! Action with the name <highlight>" + actionIdentifier + "</highlight> does not exist!"));
                     }
 
 
@@ -1113,22 +1110,22 @@ public class AdminCommands {
                     final Action foundAction = main.getActionsYMLManager().getAction(actionIdentifier);
 
                     if (foundAction != null) {
-                        context.getSender().sendMessage(miniMessage.parse(
-                                highlightGradient + "Conditions of action with identifier " + highlight2Gradient + actionIdentifier
-                                        + "</gradient>:</gradient>"
+                        context.getSender().sendMessage(main.parse(
+                                "<highlight>Conditions of action with identifier <highlight2>" + actionIdentifier
+                                        + "</highlight2>:>"
                         ));
                         int counter = 1;
                         for (Condition condition : foundAction.getConditions()) {
-                            context.getSender().sendMessage(miniMessage.parse(highlightGradient + counter + ". </gradient>" + mainGradient + condition.getConditionType() + "</gradient>"));
-                            context.getSender().sendMessage(miniMessage.parse(mainGradient + condition.getConditionDescription()));
+                            context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>" + condition.getConditionType()));
+                            context.getSender().sendMessage(main.parse("<main>" + condition.getConditionDescription()));
                             counter += 1;
                         }
 
                         if (counter == 1) {
-                            context.getSender().sendMessage(miniMessage.parse(warningGradient + "This action has no conditions!"));
+                            context.getSender().sendMessage(main.parse("<warn>This action has no conditions!"));
                         }
                     } else {
-                        context.getSender().sendMessage(miniMessage.parse(errorGradient + "Error! Action with the name " + highlightGradient + actionIdentifier + "</gradient> does not exist!</gradient>"));
+                        context.getSender().sendMessage(main.parse("<error>Error! Action with the name <highlight>" + actionIdentifier + "</highlight> does not exist!"));
                     }
 
 
@@ -1146,35 +1143,35 @@ public class AdminCommands {
             if (questPlayer != null) {
 
                 if (activeQuest != null) {
-                    sender.sendMessage(miniMessage.parse(
-                            mainGradient + "Completed Objectives for Quest " + highlightGradient + activeQuest.getQuest().getQuestName() + "</gradient> of player "
-                                    + highlight2Gradient + playerName + "</gradient>" + " <green>(online)</green>:</gradient>"
+                    sender.sendMessage(main.parse(
+                            "<main>Completed Objectives for Quest <highlight>" + activeQuest.getQuest().getQuestName() + "</highlight> of player <highlight2>"
+                                    + playerName + "</highlight2> <green>(online)</green>:"
                     ));
                     main.getQuestManager().sendCompletedObjectivesAndProgress((Player) sender, activeQuest);
 
-                    sender.sendMessage(miniMessage.parse(
-                            mainGradient + "Active Objectives for Quest " + highlightGradient + activeQuest.getQuest().getQuestName() + "</gradient> of player "
-                                    + highlight2Gradient + playerName + "</gradient>" + " <green>(online)</green>:</gradient>"
+                    sender.sendMessage(main.parse(
+                            "<main>>Active Objectives for Quest <highlight>" + activeQuest.getQuest().getQuestName() + "</highlight> of player <highlight2>"
+                                    + playerName + "</highlight2> <green>(online)</green>:"
                     ));
                     main.getQuestManager().sendActiveObjectivesAndProgress((Player) sender, activeQuest);
 
 
                 } else {
-                    sender.sendMessage(miniMessage.parse(
-                            errorGradient + "Quest " + highlightGradient + activeQuest.getQuest().getQuestName() + "</gradient> was not found or active!"
+                    sender.sendMessage(main.parse(
+                            "<error>Quest was not found or active!"
                     ));
-                    sender.sendMessage(miniMessage.parse(mainGradient + "Active quests of player " + highlightGradient + player.getName() + "</gradient> <green>(online)</green>:"));
+                    sender.sendMessage(main.parse("<main>Active quests of player <highlight>" + player.getName() + "</highlight> <green>(online)</green>:"));
                     int counter = 1;
                     for (ActiveQuest activeQuest1 : questPlayer.getActiveQuests()) {
-                        sender.sendMessage(miniMessage.parse(highlightGradient + counter + ".</gradient> " + mainGradient + activeQuest1.getQuest().getQuestName()));
+                        sender.sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>" + activeQuest1.getQuest().getQuestName()));
                         counter += 1;
                     }
-                    sender.sendMessage(miniMessage.parse(unimportant + "Total active quests: " + highlight2Gradient + (counter - 1) + "</gradient>."));
+                    sender.sendMessage(main.parse("<unimportant>Total active quests: <highlight2>" + (counter - 1) + "</highlight2>."));
 
                 }
 
             } else {
-                sender.sendMessage(miniMessage.parse(errorGradient + "Seems like the player " + highlightGradient + player.getName() + "</gradient> <green>(online)</green> did not accept any active quests."));
+                sender.sendMessage(main.parse("<error>Seems like the player <highlight>" + player.getName() + "</highlight> <green>(online)</green> did not accept any active quests."));
             }
 
 
@@ -1187,33 +1184,33 @@ public class AdminCommands {
 
                 if (activeQuest != null) {
 
-                    sender.sendMessage(miniMessage.parse(
-                            mainGradient + "Completed Objectives for Quest " + highlightGradient + activeQuest.getQuest().getQuestName() + "</gradient> of player "
-                                    + highlight2Gradient + playerName + "</gradient>" + " <red>(offline)</red>:</gradient>"
+                    sender.sendMessage(main.parse(
+                            "<main>Completed Objectives for Quest <highlight>" + activeQuest.getQuest().getQuestName() + "</highlight> of player <highlight2>"
+                                    + playerName + "</highlight2> <red>(offline)</red>:"
                     ));
                     main.getQuestManager().sendCompletedObjectivesAndProgress((Player) sender, activeQuest);
 
-                    sender.sendMessage(miniMessage.parse(
-                            mainGradient + "Active Objectives for Quest " + highlightGradient + activeQuest.getQuest().getQuestName() + "</gradient> of player "
-                                    + highlight2Gradient + playerName + "</gradient>" + " <red>(offline)</red>:</gradient>"
+                    sender.sendMessage(main.parse(
+                             "<main>Active Objectives for Quest <highlight>" + activeQuest.getQuest().getQuestName() + "</highlight> of player <highlight2>"
+                                    + playerName + "</highlight2> <red>(offline)</red>:"
                     ));
                     main.getQuestManager().sendActiveObjectivesAndProgress((Player) sender, activeQuest);
 
 
                 } else {
-                    sender.sendMessage(miniMessage.parse(
-                            errorGradient + "Quest " + highlightGradient + activeQuest.getQuest().getQuestName() + "</gradient> was not found or active!"
+                    sender.sendMessage(main.parse(
+                            "<error>Quest was not found or active!"
                     ));
-                    sender.sendMessage(miniMessage.parse(mainGradient + "Active quests of player " + highlightGradient + offlinePlayer.getName() + "</gradient> <green>(online)</green>:"));
+                    sender.sendMessage(main.parse( "<main>Active quests of player <highlight>" + offlinePlayer.getName() + "</highlight> <green>(online)</green>:"));
                     int counter = 1;
                     for (ActiveQuest activeQuest1 : questPlayer.getActiveQuests()) {
-                        sender.sendMessage(miniMessage.parse(highlightGradient + counter + ".</gradient> " + mainGradient + activeQuest1.getQuest().getQuestName()));
+                        sender.sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>" + activeQuest1.getQuest().getQuestName()));
                         counter += 1;
                     }
 
                 }
             } else {
-                sender.sendMessage(miniMessage.parse(errorGradient + "Seems like the player " + highlightGradient + offlinePlayer.getName() + "</gradient> <red>(offline)</red> did not accept any active quests."));
+                sender.sendMessage(main.parse("<main>Seems like the player <highlight>" + offlinePlayer.getName() + "</highlight> <red>(offline)</red> did not accept any active quests."));
             }
         }
 

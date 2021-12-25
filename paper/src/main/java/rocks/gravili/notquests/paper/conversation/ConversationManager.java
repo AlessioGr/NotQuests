@@ -152,8 +152,8 @@ public class ConversationManager {
             conversationPlayer.play();
         } else {
             player.sendMessage(
-                    MiniMessage.miniMessage().parse(
-                            NotQuestColors.errorGradient + "You are already in a conversation!"
+                    main.parse(
+                            "<error>You are already in a conversation!"
                     )
             );
         }
@@ -188,14 +188,14 @@ public class ConversationManager {
 
         for (File conversationFile : main.getUtilManager().listFilesRecursively(conversationsFolder)) {
             linesForOneFile.clear();
-            main.getLogManager().info("Reading conversation file <AQUA>" + conversationFile.getName() + "</AQUA>...");
+            main.getLogManager().info("Reading conversation file <highlight>" + conversationFile.getName() + "</highlight>...");
 
             final YamlConfiguration config = new YamlConfiguration();
             try {
                 config.load(conversationFile);
             } catch (IOException | InvalidConfigurationException e) {
                 e.printStackTrace();
-                main.getLogManager().warn("Failed reading conversation file <AQUA>" + conversationFile.getName() + "</AQUA>. It's being skipped.");
+                main.getLogManager().warn("Failed reading conversation file <highlight>" + conversationFile.getName() + "</highlight>. It's being skipped.");
                 continue;
             }
 
@@ -221,14 +221,14 @@ public class ConversationManager {
                     }
                     allSpeakers.add(speaker);
                     if (!conversation.hasSpeaker(speaker) && !conversation.addSpeaker(speaker, false)) {
-                        main.getLogManager().warn("Speaker " + highlightGradient + speaker.getSpeakerName() + "</gradient> could not be added to conversation " + highlight2Gradient + conversation.getIdentifier() + "</gradient>. Does the speaker already exist?");
+                        main.getLogManager().warn("Speaker <highlight>" + speaker.getSpeakerName() + "</highlight> could not be added to conversation <highlight2>" + conversation.getIdentifier() + "</highlight2>. Does the speaker already exist?");
                     }
 
 
                     /*final ConfigurationSection speakerLines = speakersAndLinesConfigurationSection.getConfigurationSection(speakerName);
 
                     if (speakerLines == null) {
-                        main.getLogManager().warn("No lines found for conversation <AQUA>" + conversationFile.getName() + "</AQUA>.");
+                        main.getLogManager().warn("No lines found for conversation <highlight>" + conversationFile.getName() + "</highlight>.");
                         continue;
                     }
 
@@ -256,7 +256,7 @@ public class ConversationManager {
 
                 //Message
                 if (message.equals("-")) {
-                    main.getLogManager().warn("Warning: couldn't find message for starter line <AQUA>" + starterLine + "</AQUA> of conversation <AQUA>" + conversationFile.getName() + "</AQUA>");
+                    main.getLogManager().warn("Warning: couldn't find message for starter line <highlight>" + starterLine + "</highlight> of conversation <highlight>" + conversationFile.getName() + "</highlight>");
                 }
 
                 //Speaker
@@ -312,7 +312,7 @@ public class ConversationManager {
 
             final String fullIdentifier = conversationLine.getFullIdentifier();
 
-            main.getLogManager().debug("Deep diving conversation line <AQUA>" + fullIdentifier + "</AQUA>...");
+            main.getLogManager().debug("Deep diving conversation line <highlight>" + fullIdentifier + "</highlight>...");
 
 
             final String nextString = config.getString("Lines." + fullIdentifier + ".next", "").replace(" ", "");
@@ -323,7 +323,7 @@ public class ConversationManager {
 
                 outerLoop:
                 for (final String nextLineFullIdentifier : nextString.split(",")) {
-                    main.getLogManager().debug("Deep diving next string <AQUA>" + nextLineFullIdentifier + "</AQUA> for conversation line <AQUA>" + fullIdentifier + "</AQUA>...");
+                    main.getLogManager().debug("Deep diving next string <highlight>" + nextLineFullIdentifier + "</highlight> for conversation line <highlight>" + fullIdentifier + "</highlight>...");
 
 
                     final String initialLine = "Lines." + nextLineFullIdentifier;
@@ -333,7 +333,7 @@ public class ConversationManager {
                     final ArrayList<Action> actions = parseActionString(config.getStringList(initialLine + ".actions"));
                     final boolean shouting = config.getBoolean(initialLine + ".shout", false);
 
-                    main.getLogManager().debug("---- Message: <AQUA>" + message + "</AQUA> | Next: <AQUA>" + next + "</AQUA>");
+                    main.getLogManager().debug("---- Message: <highlight>" + message + "</highlight> | Next: <highlight>" + next + "</highlight>");
 
                     //Skip if we already added this line
                     for (final ConversationLine existingLine : linesForOneFile) {
@@ -346,7 +346,7 @@ public class ConversationManager {
 
 
                     final String nextLineSpeakerName = nextLineFullIdentifier.split("\\.")[0].replaceAll("\\s", "");
-                    main.getLogManager().debug("Trying to find speaker: <AQUA>" + nextLineSpeakerName + "</AQUA>...");
+                    main.getLogManager().debug("Trying to find speaker: <highlight>" + nextLineSpeakerName + "</highlight>...");
 
                     Speaker foundSpeaker = null;
                     for (final Speaker speaker : conversation.getSpeakers()) {
@@ -355,14 +355,14 @@ public class ConversationManager {
                         }
                     }
                     if (foundSpeaker == null) {
-                        main.getLogManager().warn("Warning: couldn't find speaker for next conversation line <AQUA>" + nextLineFullIdentifier + "</AQUA>. Skipping line...");
+                        main.getLogManager().warn("Warning: couldn't find speaker for next conversation line <highlight>" + nextLineFullIdentifier + "</highlight>. Skipping line...");
                         continue;
                     }
 
-                    main.getLogManager().debug("---- Speaker: <AQUA>" + foundSpeaker.getSpeakerName() + "</AQUA> | Is Player?: <AQUA>" + foundSpeaker.isPlayer() + "</AQUA>");
+                    main.getLogManager().debug("---- Speaker: <highlight>" + foundSpeaker.getSpeakerName() + "</highlight> | Is Player?: <highlight>" + foundSpeaker.isPlayer() + "</highlight>");
 
                     if (!conversation.hasSpeaker(foundSpeaker) && !conversation.addSpeaker(foundSpeaker, false)) {
-                        main.getLogManager().warn("Speaker " + highlightGradient + foundSpeaker.getSpeakerName() + "</gradient> could not be added to conversation " + highlight2Gradient + conversation.getIdentifier() + "</gradient>. Does the speaker already exist?");
+                        main.getLogManager().warn("Speaker <highlight>" + foundSpeaker.getSpeakerName() + "</highlight> could not be added to conversation <highlight2>" + conversation.getIdentifier() + "</highlight2>. Does the speaker already exist?");
                     }
 
                     ConversationLine newLine = new ConversationLine(foundSpeaker, nextLineFullIdentifier.split("\\.")[1], message);
@@ -524,22 +524,22 @@ public class ConversationManager {
 
     public String analyze(final ConversationLine conversationLine, String beginningSpaces) {
         StringBuilder toReturn = new StringBuilder();
-        toReturn.append(beginningSpaces).append(unimportant).append(" └").append(highlightGradient).append(conversationLine.getIdentifier()).append(":\n");
-        toReturn.append(beginningSpaces).append(unimportant).append("  Speaker: ").append(unimportantClose).append(mainGradient).append(conversationLine.getSpeaker().getSpeakerName()).append("\n");
+        toReturn.append(beginningSpaces).append(" <unimportant>└<highlight>").append(conversationLine.getIdentifier()).append(":\n");
+        toReturn.append(beginningSpaces).append("  <unimportant>Speaker:</unimportant> <main>").append(conversationLine.getSpeaker().getSpeakerName()).append("\n");
 
 
         if (conversationLine.getConditions().size() > 0) {
-            toReturn.append(beginningSpaces).append(unimportant).append("  1. Condition: ").append(unimportantClose).append(mainGradient).append(conversationLine.getConditions().get(0).getConditionType()).append("\n");
+            toReturn.append(beginningSpaces).append("  <unimportant>1. Condition:</unimportant> <main>").append(conversationLine.getConditions().get(0).getConditionType()).append("\n");
         }
         if (conversationLine.getActions().size() > 0) {
-            toReturn.append(beginningSpaces).append(unimportant).append("  1. Action: ").append(unimportantClose).append(mainGradient).append(conversationLine.getActions().get(0).getActionType()).append("\n");
+            toReturn.append(beginningSpaces).append("  <unimportant>1. Action:</unimportant> <main>").append(conversationLine.getActions().get(0).getActionType()).append("\n");
         }
 
-        toReturn.append(beginningSpaces).append(unimportant).append("  Message: ").append(unimportantClose).append(mainGradient).append(conversationLine.getMessage()).append("<RESET>\n");
+        toReturn.append(beginningSpaces).append("  <unimportant>Message:</unimportant> <main>").append(conversationLine.getMessage()).append("<RESET>\n");
 
 
         if (conversationLine.getNext().size() >= 1) {
-            toReturn.append(beginningSpaces).append(unimportant).append("  Next: \n");
+            toReturn.append(beginningSpaces).append("  <unimportant>Next:</unimportant> \n");
             int counter = 0;
             for (ConversationLine next : conversationLine.getNext()) {
                 counter++;

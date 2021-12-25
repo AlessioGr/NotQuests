@@ -61,7 +61,7 @@ public class QuestPlayerManager {
                 final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(uuid);
 
                 final long questPoints = result.getLong("QuestPoints");
-                main.getLogManager().info("Loaded player with uuid <AQUA>" + uuid + "</AQUA> and questPoints: " + questPoints);
+                main.getLogManager().info("Loaded player with uuid <highlight>" + uuid + "</highlight> and questPoints: " + questPoints);
 
                 if (questPlayer != null) {
                     //QuestPoints
@@ -69,7 +69,7 @@ public class QuestPlayerManager {
 
 
                 } else {
-                    main.getLogManager().severe("ERROR: QuestPlayer with the UUID <AQUA>" + uuid + "</AQUA> could not be loaded from database");
+                    main.getLogManager().severe("ERROR: QuestPlayer with the UUID <highlight>" + uuid + "</highlight> could not be loaded from database");
 
                 }
 
@@ -99,11 +99,11 @@ public class QuestPlayerManager {
                             questPlayer.addCompletedQuest(completedQuest);
 
                         } else {
-                            main.getLogManager().warn("ERROR: TimeCompleted from Quest with name <AQUA>" + questName + "</AQUA> could not be loaded from database (requested for loading completed Quests)");
+                            main.getLogManager().warn("ERROR: TimeCompleted from Quest with name <highlight>" + questName + "</highlight> could not be loaded from database (requested for loading completed Quests)");
                         }
 
                     } else {
-                        main.getLogManager().warn("ERROR: Quest with name <AQUA>" + questName + "</AQUA> could not be loaded from database (requested for loading completed Quests)");
+                        main.getLogManager().warn("ERROR: Quest with name <highlight>" + questName + "</highlight> could not be loaded from database (requested for loading completed Quests)");
                     }
                 }
                 completedQuestsResults.close();
@@ -120,7 +120,7 @@ public class QuestPlayerManager {
                         questPlayer.forceAddActiveQuest(activeQuest, false); //Run begin/accept trigger when plugin reloads if true
 
                     } else {
-                        main.getLogManager().warn("ERROR: Quest with name <AQUA>" + questName + "</AQUA> could not be loaded from database");
+                        main.getLogManager().warn("ERROR: Quest with name <highlight>" + questName + "</highlight> could not be loaded from database");
                     }
                 }
                 activeQuestsResults.close();
@@ -147,7 +147,7 @@ public class QuestPlayerManager {
 
 
                         } else {
-                            main.getLogManager().warn("ERROR: TriggerType for the Quest <AQUA>" + activeQuest.getQuest().getQuestName() + "</AQUA> could not be loaded from database");
+                            main.getLogManager().warn("ERROR: TriggerType for the Quest <highlight>" + activeQuest.getQuest().getQuestName() + "</highlight> could not be loaded from database");
 
                         }
                     }
@@ -199,7 +199,7 @@ public class QuestPlayerManager {
 
 
                         } else {
-                            main.getLogManager().warn("ERROR: ObjectiveType for the Quest <AQUA>" + activeQuest.getQuest().getQuestName() + "</AQUA> could not be loaded from database");
+                            main.getLogManager().warn("ERROR: ObjectiveType for the Quest <highlight>" + activeQuest.getQuest().getQuestName() + "</highlight> could not be loaded from database");
 
                         }
                     }
@@ -273,7 +273,7 @@ public class QuestPlayerManager {
 
 
             } catch (SQLException sqlException) {
-                main.getLogManager().warn("There was an error saving the playerdata of player with UUID <AQUA>" + questPlayer.getUUID() + "</AQUA>! Stacktrace:");
+                main.getLogManager().warn("There was an error saving the playerdata of player with UUID <highlight>" + questPlayer.getUUID() + "</highlight>! Stacktrace:");
                 sqlException.printStackTrace();
             }
 
@@ -311,10 +311,10 @@ public class QuestPlayerManager {
         if (questPlayer == null) {
             questPlayer = new QuestPlayer(main, uuid);
             questPlayersAndUUIDs.put(uuid, questPlayer);
-            return successGradient + "Quest player with uuid " + highlightGradient + uuid + "</gradient> has been created successfully!</gradient>";
+            return "<success>Quest player with uuid <highlight>" + uuid + "</highlight> has been created successfully!";
 
         } else {
-            return errorGradient + "Quest player already exists.";
+            return "<error>Quest player already exists.";
         }
     }
 

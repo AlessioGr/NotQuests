@@ -1,3 +1,26 @@
+/*
+ * This file is part of adventure, licensed under the MIT License.
+ *
+ * Copyright (c) 2017-2021 KyoriPowered
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package rocks.gravili.notquests.paper.managers;
 
 
@@ -14,7 +37,6 @@ import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.flattener.ComponentFlattener;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.text.minimessage.parser.ParsingException;
 import net.kyori.adventure.text.minimessage.parser.node.ElementNode;
 import net.kyori.adventure.text.minimessage.parser.node.TagNode;
 import net.kyori.adventure.text.minimessage.parser.node.TagPart;
@@ -26,7 +48,7 @@ import net.kyori.examination.ExaminableProperty;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * A transformation that applies a colour gradient.
+ * A transformation that applies a colour gradient. Source code has been copied from @{@link net.kyori.adventure.text.minimessage.transformation.inbuild.GradientTransformation}
  *
  * @since 4.10.0
  */
@@ -84,6 +106,30 @@ public final class SimpleGradientTransformation extends Transformation implement
         final List<String> args = new ArrayList<>();
         args.add("#54b2ff");
         args.add("#ff5ecc");
+
+        return create(args);
+    }
+
+    public static SimpleGradientTransformation unimportant(final String name, final List<TagPart> args2) {
+        final List<String> args = new ArrayList<>();
+        args.add("#9c9c9c");
+        args.add("#858383");
+
+        return create(args);
+    }
+
+    public static SimpleGradientTransformation veryUnimportant(final String name, final List<TagPart> args2) {
+        final List<String> args = new ArrayList<>();
+        args.add("#5c5c5c");
+        args.add("#454545");
+
+        return create(args);
+    }
+
+    public static SimpleGradientTransformation warn(final String name, final List<TagPart> args2) {
+        final List<String> args = new ArrayList<>();
+        args.add("#fff700");
+        args.add("#ffa629");
 
         return create(args);
     }

@@ -65,7 +65,7 @@ public class TownyNationTownCountCondition extends Condition {
                 if (nation.getNumTowns() >= getMinTownCount()) {
                     return "";
                 } else {
-                    return "<YELLOW>Your nation needs to have at least <AQUA>" + getMinTownCount() + "</AQUA> towns.";
+                    return "<YELLOW>Your nation needs to have at least <highlight>" + getMinTownCount() + "</highlight> towns.";
                 }
             } else {
                 return "<YELLOW>You need to be in a nation";

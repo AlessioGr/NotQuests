@@ -70,7 +70,7 @@ public class ConditionCondition extends Condition {
 
                         main.getConditionsManager().addCondition(conditionCondition, context);
                     } else {
-                        context.getSender().sendMessage(MiniMessage.miniMessage().parse(errorGradient + "Error! Condition with the name " + highlightGradient + conditionIdentifier + "</gradient> does not exist!</gradient>"));
+                        context.getSender().sendMessage(main.parse("<error>Error! Condition with the name <highlight>" + conditionIdentifier + "</highlight> does not exist!"));
                     }
 
 
@@ -88,7 +88,7 @@ public class ConditionCondition extends Condition {
     @Override
     public String check(final QuestPlayer questPlayer, final boolean enforce) {
         if (condition == null) {
-            return "<YELLOW>Error: ConditionCondition cannot be checked because the condition was not found. Report this to the server owner.";
+            return "<warn>Error: ConditionCondition cannot be checked because the condition was not found. Report this to the server owner.";
         }
 
         return condition.check(questPlayer, enforce);
@@ -97,9 +97,9 @@ public class ConditionCondition extends Condition {
     @Override
     public String getConditionDescription() {
         if (condition != null) {
-            return "<GRAY>-- Complete Condition: " + condition.getConditionName();
+            return "<unimportant>-- Complete Condition: <highlight>" + condition.getConditionName();
         } else {
-            return "<GRAY>-- Complete Condition: Condition not found.";
+            return "<unimportant>-- Complete Condition: Condition not found.";
         }
 
     }

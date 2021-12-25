@@ -1,23 +1,10 @@
 package rocks.gravili.notquests.paper.managers;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.minimessage.parser.Token;
-import net.kyori.adventure.text.minimessage.parser.TokenType;
-import net.kyori.adventure.text.minimessage.parser.node.TagPart;
-import net.kyori.adventure.text.minimessage.placeholder.PlaceholderResolver;
-import net.kyori.adventure.text.minimessage.transformation.Transformation;
-import net.kyori.adventure.text.minimessage.transformation.TransformationFactory;
 import net.kyori.adventure.text.minimessage.transformation.TransformationRegistry;
 import net.kyori.adventure.text.minimessage.transformation.TransformationType;
-import net.kyori.adventure.text.minimessage.transformation.inbuild.ColorTransformation;
-import net.kyori.adventure.text.minimessage.transformation.inbuild.GradientTransformation;
-import org.bukkit.Bukkit;
 import rocks.gravili.notquests.paper.NotQuests;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class MessageManager {
     private final NotQuests main;
@@ -52,6 +39,19 @@ public class MessageManager {
                 TransformationType.acceptingNames("success"),
                 SimpleGradientTransformation::success
         );
+        TransformationType<?> unimportant = TransformationType.transformationType(
+                TransformationType.acceptingNames("unimportant"),
+                SimpleGradientTransformation::unimportant
+        );
+
+        TransformationType<?> warn = TransformationType.transformationType(
+                TransformationType.acceptingNames("warn"),
+                SimpleGradientTransformation::warn
+        );
+        TransformationType<?> veryUnimportant = TransformationType.transformationType(
+                TransformationType.acceptingNames("veryUnimportant"),
+                SimpleGradientTransformation::veryUnimportant
+        );
 
 
         TransformationRegistry transformationRegistry = TransformationRegistry.standard().toBuilder()
@@ -60,6 +60,9 @@ public class MessageManager {
                 .add(highlight2)
                 .add(error)
                 .add(success)
+                .add(unimportant)
+                .add(veryUnimportant)
+                .add(warn)
                 .build();
 
 

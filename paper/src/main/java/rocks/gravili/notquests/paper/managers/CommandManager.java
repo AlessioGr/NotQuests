@@ -451,12 +451,12 @@ public class CommandManager {
                 .withNoPermissionHandler()
                 .withCommandExecutionHandler()
                 .withDecorator(message -> {
-                            return MiniMessage.miniMessage().parse(NotQuestColors.mainGradient + "NotQuests > ").append(MiniMessage.miniMessage().parse(MiniMessage.miniMessage().serialize(message)));
+                            return main.parse("<main>NotQuests > ").append(main.parse(main.getMiniMessage().serialize(message)));
                         }
                 )
                 .withHandler(MinecraftExceptionHandler.ExceptionType.INVALID_SYNTAX, (sender, e) -> {
                     minecraftAdminHelp.queryCommands(e.getMessage().split("syntax is: ")[1], sender);
-                    return MiniMessage.miniMessage().parse(NotQuestColors.errorGradient + e.getMessage());
+                    return main.parse("<error>" + e.getMessage());
                 });
 
         exceptionHandler.apply(commandManager, AudienceProvider.nativeAudience());

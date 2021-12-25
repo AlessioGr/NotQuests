@@ -70,7 +70,7 @@ public class ActiveQuestCondition extends Condition {
         final Quest otherQuest = getOtherQuest();
 
         if (otherQuest == null) {
-            return "<RED>Error! Report this to an admin: The following Quest which should be active was not found: <AQUA>" + getOtherQuestName();
+            return "<RED>Error! Report this to an admin: The following Quest which should be active was not found: <highlight>" + getOtherQuestName();
 
         }
 
@@ -79,7 +79,7 @@ public class ActiveQuestCondition extends Condition {
                 return "";
             }
         }
-        return "<YELLOW>Following Quest needs to be active first: <AQUA>" + otherQuest.getQuestFinalName();
+        return "<YELLOW>Following Quest needs to be active first: <highlight>" + otherQuest.getQuestFinalName();
 
     }
 

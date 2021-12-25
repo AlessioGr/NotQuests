@@ -434,8 +434,8 @@ public class QuestEvents implements Listener {
                         if (e.getClickedBlock() != null) {
                             materialName = e.getClickedBlock().getBlockData().getMaterial().name();
                         }
-                        questPlayer.sendDebugMessage("Found InteractObjective Objective in PlayerInteractEvent. Clicked Block material: " + highlightGradient + materialName
-                                + "</gradient>. Action: " + highlight2Gradient + e.getAction() + "</gradient>."
+                        questPlayer.sendDebugMessage("Found InteractObjective Objective in PlayerInteractEvent. Clicked Block material: <highlight>" + materialName
+                                + "</highlight>. Action: <highlight2>" + e.getAction() + "</highlight2>."
                         );
 
                         if (e.getAction() == Action.RIGHT_CLICK_BLOCK && !interactObjective.isRightClick()) {
@@ -485,8 +485,8 @@ public class QuestEvents implements Listener {
             for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
                 if (activeObjective.isUnlocked()) {
                     if (activeObjective.getObjective() instanceof RunCommandObjective runCommandObjective) {
-                        questPlayer.sendDebugMessage("Found RunCommand Objective in PlayerCommandPreprocessEvent. Command: " + highlightGradient + e.getMessage()
-                                + "</gradient> Objective command to run: " + highlight2Gradient + runCommandObjective.getCommandToRun() + "</gradient>."
+                        questPlayer.sendDebugMessage("Found RunCommand Objective in PlayerCommandPreprocessEvent. Command: <highlight>" + e.getMessage()
+                                + "</highlight> Objective command to run: <highlight2>" + runCommandObjective.getCommandToRun() + "</highlight2>."
                         );
 
                         if (runCommandObjective.isIgnoreCase() && !e.getMessage().equalsIgnoreCase(runCommandObjective.getCommandToRun())) {
@@ -991,9 +991,9 @@ public class QuestEvents implements Listener {
         if (conversationPlayer != null) {
             conversationPlayer.chooseOption(option);
         } else {
-            questPlayer.sendDebugMessage("Tried to choose conversation option, but the conversationPlayer was not found! Active conversationPlayers count: " + NotQuestColors.highlightGradient + main.getConversationManager().getOpenConversations().size());
-            questPlayer.sendDebugMessage("All active conversationPlayers: " + NotQuestColors.highlightGradient + main.getConversationManager().getOpenConversations().toString());
-            questPlayer.sendDebugMessage("Current QuestPlayer: " + questPlayer);
+            questPlayer.sendDebugMessage("Tried to choose conversation option, but the conversationPlayer was not found! Active conversationPlayers count: <highlight>" + main.getConversationManager().getOpenConversations().size());
+            questPlayer.sendDebugMessage("All active conversationPlayers: <highlight>" + main.getConversationManager().getOpenConversations().toString());
+            questPlayer.sendDebugMessage("Current QuestPlayer: <highlight>" + questPlayer);
         }
     }
 

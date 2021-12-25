@@ -65,7 +65,7 @@ public class TownyTownResidentCountCondition extends Condition {
                 if (town.getNumResidents() >= getMinTownResidentCount()) {
                     return "";
                 } else {
-                    return "<YELLOW>Your town needs to have at least <AQUA>" + getMinTownResidentCount() + "</AQUA> residents.";
+                    return "<YELLOW>Your town needs to have at least <highlight>" + getMinTownResidentCount() + "</highlight> residents.";
                 }
             } else {
                 return "<YELLOW>You need to be in a town";

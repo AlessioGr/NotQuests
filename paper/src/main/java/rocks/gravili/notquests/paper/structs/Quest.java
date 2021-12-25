@@ -130,7 +130,7 @@ public class Quest {
                 objective.save(main.getDataManager().getQuestsConfig(), "quests." + questName + ".objectives." + objective.getObjectiveID());
             }
         } else {
-            main.getLogManager().warn("ERROR: Tried to add objective to quest <AQUA>" + getQuestName() + "</AQUA> with the ID <AQUA>" + objective.getObjectiveID() + "</AQUA> but the ID was a DUPLICATE!");
+            main.getLogManager().warn("ERROR: Tried to add objective to quest <highlight>" + getQuestName() + "</highlight> with the ID <highlight>" + objective.getObjectiveID() + "</highlight> but the ID was a DUPLICATE!");
         }
     }
 
@@ -260,7 +260,7 @@ public class Quest {
 
     public void removeAllNPCs() {
         if (!main.getIntegrationsManager().isCitizensEnabled()) {
-            main.getLogManager().severe("The removal of all NPCs from Quest <AQUA>" + questName + "</AQUA> has been cancelled, because the Citizens plugin is not installed on this server. You will need the Citizens plugin to do NPC stuff.");
+            main.getLogManager().severe("The removal of all NPCs from Quest <highlight>" + questName + "</highlight> has been cancelled, because the Citizens plugin is not installed on this server. You will need the Citizens plugin to do NPC stuff.");
             return;
         }
         final ArrayList<NPC> arrayList = new ArrayList<>(attachedNPCsWithQuestShowing);
@@ -278,7 +278,7 @@ public class Quest {
 
     public void bindToNPC(NPC npc, boolean showQuest) {
         if (!main.getIntegrationsManager().isCitizensEnabled()) {
-            main.getLogManager().severe("The binding to NPC in Quest <AQUA>" + questName + "</AQUA> has been cancelled, because the Citizens plugin is not installed on this server. You will need the Citizens plugin to do NPC stuff.");
+            main.getLogManager().severe("The binding to NPC in Quest <highlight>" + questName + "</highlight> has been cancelled, because the Citizens plugin is not installed on this server. You will need the Citizens plugin to do NPC stuff.");
             return;
         }
         if (!attachedNPCsWithQuestShowing.contains(npc) && !attachedNPCsWithoutQuestShowing.contains(npc)) {
@@ -319,7 +319,7 @@ public class Quest {
 
     public void removeNPC(final NPC npc) {
         if (!main.getIntegrationsManager().isCitizensEnabled()) {
-            main.getLogManager().severe("The NPC removal in Quest <AQUA>" + questName + "</AQUA> has been cancelled, because the Citizens plugin is not installed on this server. You will need the Citizens plugin to do NPC stuff.");
+            main.getLogManager().severe("The NPC removal in Quest <highlight>" + questName + "</highlight> has been cancelled, because the Citizens plugin is not installed on this server. You will need the Citizens plugin to do NPC stuff.");
             return;
         }
         // System.out.println("§e-2");
@@ -386,7 +386,7 @@ public class Quest {
 
             triggers.remove(triggers.get((triggerID - 1)));
             main.getDataManager().getQuestsConfig().set("quests." + questName + ".triggers." + triggerID, null);
-            return "<AQUA>Trigger successfully removed!";
+            return "<highlight>Trigger successfully removed!";
 
         } else {
             return "<RED>Error: Trigger not found!";

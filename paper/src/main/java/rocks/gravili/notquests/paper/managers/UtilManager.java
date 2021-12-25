@@ -23,10 +23,9 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.title.Title;
-import org.apache.commons.text.WordUtils;
+import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -45,9 +44,7 @@ public class UtilManager {
     private final HashMap<Player, BossBar> playersAndBossBars;
 
     private final static int CENTER_PX = 154;
-
-    private final MiniMessage miniMessage = MiniMessage.miniMessage();
-
+    
     public UtilManager(NotQuests main) {
         this.main = main;
         playersAndBossBars = new HashMap<>();
@@ -155,9 +152,9 @@ public class UtilManager {
 
         Component currentCompletion;
         if (args[args.length - 1].isBlank()) {
-            currentCompletion = miniMessage.parse("<RESET>" + NotQuestColors.highlightMM + "<BOLD>" + hintCurrentArg);
+            currentCompletion = main.parse("<RESET>" + NotQuestColors.highlightMM + "**" + hintCurrentArg);
         } else {
-            currentCompletion = miniMessage.parse("<RESET><YELLOW><BOLD>" + args[args.length - 1]);
+            currentCompletion = main.parse("<RESET><YELLOW>**" + args[args.length - 1]);
 
         }
 
@@ -166,16 +163,16 @@ public class UtilManager {
             if (hintNextArgs.length() > 15) {
                 hintNextArgs = hintNextArgs.substring(0, 14) + "...";
             }
-            return miniMessage.parse(NotQuestColors.lightHighlightMM + "<ITALIC>" + argsTogether)
+            return main.parse(NotQuestColors.lightHighlightMM + "<ITALIC>" + argsTogether)
                     .append(currentCompletion)
-                    .append(miniMessage.parse("<GRAY> " + hintNextArgs));
+                    .append(main.parse("<GRAY> " + hintNextArgs));
         } else {
             if (!args[args.length - 1].isBlank()) { //Command finished
-                return miniMessage.parse(NotQuestColors.lightHighlightMM + "<ITALIC>" + argsTogether)
+                return main.parse(NotQuestColors.lightHighlightMM + "<ITALIC>" + argsTogether)
                         .append(currentCompletion)
                         .append(Component.text(" ✓", NamedTextColor.GREEN, TextDecoration.BOLD));
             } else {
-                return miniMessage.parse(NotQuestColors.lightHighlightMM + "<ITALIC>" + argsTogether)
+                return main.parse(NotQuestColors.lightHighlightMM + "<ITALIC>" + argsTogether)
                         .append(currentCompletion);
             }
 
@@ -356,14 +353,14 @@ public class UtilManager {
             return toReplace;
         }
         Component component = LegacyComponentSerializer.builder().hexColors().build().deserialize(ChatColor.translateAlternateColorCodes('&', toReplace));
-        String finalS = miniMessage.serialize(component);
+        String finalS = main.getMiniMessage().serialize(component);
 
         //main.getLogManager().debug("legacy => minimessage Converted <RESET>" + toReplace + "</RESET> to <RESET>" + finalS + "</RESET>");
         return finalS;
     }
 
     public final String miniMessageToLegacy(String miniMessageString) {
-        String legacy = LegacyComponentSerializer.builder().hexColors().build().serialize(miniMessage.parse(miniMessageString));
+        String legacy = LegacyComponentSerializer.builder().hexColors().build().serialize(main.parse(miniMessageString));
         //main.getLogManager().debug("mm => legacy: Converted <RESET>" + miniMessageString + "</RESET> to <RESET>" + legacy + "</RESET>");
 
         return legacy;
@@ -374,7 +371,7 @@ public class UtilManager {
         TextColor lastColor = null;
         int counter = 0;
         for (String splitString : miniMessageString.split("\n")) {
-            Component splitComponent = miniMessage.parse(splitString);
+            Component splitComponent = main.parse(splitString);
             //main.getLogManager().debug("Split Component old: " + miniMessage.serialize(splitComponent));
 
 

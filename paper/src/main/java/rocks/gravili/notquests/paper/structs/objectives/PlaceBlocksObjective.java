@@ -62,8 +62,8 @@ public class PlaceBlocksObjective extends Objective {
                         if (context.getSender() instanceof Player player) {
                             materialToPlace = player.getInventory().getItemInMainHand().getType().name();
                         } else {
-                            context.getSender().sendMessage(MiniMessage.miniMessage().parse(
-                                    NotQuestColors.errorGradient + "This must be run by a player."
+                            context.getSender().sendMessage(main.parse(
+                                    "<error>This must be run by a player."
                             ));
                             return;
                         }

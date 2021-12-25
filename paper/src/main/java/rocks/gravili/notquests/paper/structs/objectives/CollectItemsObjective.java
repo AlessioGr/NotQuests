@@ -67,8 +67,8 @@ public class CollectItemsObjective extends Objective {
                         if (context.getSender() instanceof Player player) {
                             itemToCollect = player.getInventory().getItemInMainHand();
                         } else {
-                            context.getSender().sendMessage(MiniMessage.miniMessage().parse(
-                                    NotQuestColors.errorGradient + "This must be run by a player."
+                            context.getSender().sendMessage(main.parse(
+                                    "<error>This must be run by a player."
                             ));
                             return;
                         }
