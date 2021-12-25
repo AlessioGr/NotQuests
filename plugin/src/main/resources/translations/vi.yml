@@ -1,220 +1,220 @@
 chat:
-  wrong-command-usage: '&cLệnh sai!'
-  missing-permission: '&cBạn không có quyền: &e%PERMISSION%'
-  too-many-arguments: '&cQuá nhiều cái thừa trong lệnh!'
-  quest-successfully-accepted: '&aBạn đã chấp nhận nhiệm vụ &b%QUESTNAME%&a.'
-  quest-description: '&eMô tả nhiệm vụ: &7%QUESTDESCRIPTION%'
-  quest-already-accepted: '&cNhiệm vụ đã được chấp nhận.'
-  quest-failed: '&eBạn đã &c&lTHÂT BẠI &enhiệm vụ &b%QUESTNAME%&e!'
-  quest-aborted: '&aNhiệm vụ &b%QUESTNAME% &ađã bị bỏ dở!'
+  wrong-command-usage: '<error>Lệnh sai!'
+  missing-permission: '<error>Bạn không có quyền: <warn>%PERMISSION%'
+  too-many-arguments: '<error>Quá nhiều cái thừa trong lệnh!'
+  quest-successfully-accepted: '<success>Bạn đã chấp nhận nhiệm vụ <highlight>%QUESTNAME%<success>.'
+  quest-description: '<warn>Mô tả nhiệm vụ: <unimportant>%QUESTDESCRIPTION%'
+  quest-already-accepted: '<error>Nhiệm vụ đã được chấp nhận.'
+  quest-failed: '<warn>Bạn đã <error><bold>THÂT BẠI <warn>nhiệm vụ <highlight>%QUESTNAME%<warn>!'
+  quest-aborted: '<success>Nhiệm vụ <highlight>%QUESTNAME% <success>đã bị bỏ dở!'
   quest-completed-and-rewards-given: |2+
 
-    <CENTER>&a[Hoàn Thành Nhiệm Vụ]
-    <CENTER>&b&l%QUESTNAME%
+    <CENTER><success>[Hoàn Thành Nhiệm Vụ]
+    <CENTER><highlight><bold>%QUESTNAME%
     <EMPTY>
-  missing-quest-description: '&eNhiệm vụ không có mô tả.'
-  objectives-label-after-quest-accepting: '&9Mục Tiêu:'
+  missing-quest-description: '<warn>Nhiệm vụ không có mô tả.'
+  objectives-label-after-quest-accepting: '<main>Mục Tiêu:'
   questpoints:
-    query: '&eBạn đang có &b%QUESTPOINTS% &eđiểm nhiệm vụ.'
-    none: '&cCó vẻ như bạn không có bất kỳ điểm nhiệm vụ nào!'
-  no-quests-accepted: '&cCó vẻ như bạn không có bất kỳ nhiệm vụ nào đang hoạt động!'
-  quest-does-not-exist: '&cNhiệm vụ &b%QUESTNAME% &ckhông tồn tại!'
-  quest-not-found-or-does-not-exist: '&cNhiệm vụ &b%QUESTNAME% &ckhông tìm thấy hoặc không hoạt động!'
-  active-quests-label: '&eNhiệm vụ hoạt động:'
-  take-disabled-preview: '&cXem trước nhiệm vụ &b%QUESTNAME% &cbị vô hiệu hóa với lệnh &e/nquests preview'
-  take-disabled-accept: '&cChấp nhận nhiệm vụ &b%QUESTNAME% &cvới lệnh &e/nquests take'
-  quest-not-active-error: '&cLỗi: &b%QUESTNAME% &ckhông phải nhiệm vụ hoạt động!'
+    query: '<warn>Bạn đang có <highlight>%QUESTPOINTS% <warn>điểm nhiệm vụ.'
+    none: '<error>Có vẻ như bạn không có bất kỳ điểm nhiệm vụ nào!'
+  no-quests-accepted: '<error>Có vẻ như bạn không có bất kỳ nhiệm vụ nào đang hoạt động!'
+  quest-does-not-exist: '<error>Nhiệm vụ <highlight>%QUESTNAME% <error>không tồn tại!'
+  quest-not-found-or-does-not-exist: '<error>Nhiệm vụ <highlight>%QUESTNAME% <error>không tìm thấy hoặc không hoạt động!'
+  active-quests-label: '<warn>Nhiệm vụ hoạt động:'
+  take-disabled-preview: '<error>Xem trước nhiệm vụ <highlight>%QUESTNAME% <error>bị vô hiệu hóa với lệnh <warn>/nquests preview'
+  take-disabled-accept: '<error>Chấp nhận nhiệm vụ <highlight>%QUESTNAME% <error>với lệnh <warn>/nquests take'
+  quest-not-active-error: '<error>Lỗi: <highlight>%QUESTNAME% <error>không phải nhiệm vụ hoạt động!'
   objectives:
-    counter: '&e%OBJECTIVEID%. %OBJECTIVENAME%:'
-    hidden: '&e%OBJECTIVEID%. &7&l[KHÓA]'
-    description: '   &9Mô Tả: &6%OBJECTIVEDESCRIPTION%'
-    progress: '   &7Tiến Trình: &f%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
-    successfully-completed: '&aBạn đã hoàn thành mục tiêu &e%OBJECTIVENAME% &acho nhiệm vụ &b%QUESTNAME%&a!'
+    counter: '<warn>%OBJECTIVEID%. %OBJECTIVENAME%:'
+    hidden: '<warn>%OBJECTIVEID%. <unimportant><bold>[KHÓA]'
+    description: '   <main>Mô Tả: <highlight>%OBJECTIVEDESCRIPTION%'
+    progress: '   <unimportant>Tiến Trình: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
+    successfully-completed: '<success>Bạn đã hoàn thành mục tiêu <warn>%OBJECTIVENAME% <success>cho nhiệm vụ <highlight>%QUESTNAME%<success>!'
     taskDescription:
       breakBlocks:
-        base: '    &7%EVENTUALCOLOR%Phá Vỡ Khối: &f%EVENTUALCOLOR%%BLOCKTOBREAK%'
+        base: '    <unimportant>%EVENTUALCOLOR%Phá Vỡ Khối: <main>%EVENTUALCOLOR%%BLOCKTOBREAK%'
       breed:
-        base: '    &7%EVENTUALCOLOR%Làm Mob Sinh Sản: &f%EVENTUALCOLOR%%ENTITYTOBREED%'
+        base: '    <unimportant>%EVENTUALCOLOR%Làm Mob Sinh Sản: <main>%EVENTUALCOLOR%%ENTITYTOBREED%'
       collectItems:
-        base: '    &7%EVENTUALCOLOR%Thư Nhập Vật Phẩm: &f%EVENTUALCOLOR%%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
+        base: '    <unimportant>%EVENTUALCOLOR%Thư Nhập Vật Phẩm: <main>%EVENTUALCOLOR%%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
       consumeItems:
-        base: '    &7%EVENTUALCOLOR%Dùng Vật Phẩm: &f%EVENTUALCOLOR%%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
+        base: '    <unimportant>%EVENTUALCOLOR%Dùng Vật Phẩm: <main>%EVENTUALCOLOR%%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
-        base: '    &7%EVENTUALCOLOR%Chế Tạo Vật Phẩm: &f%EVENTUALCOLOR%%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
+        base: '    <unimportant>%EVENTUALCOLOR%Chế Tạo Vật Phẩm: <main>%EVENTUALCOLOR%%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: '    &7%EVENTUALCOLOR%Giao Vật Phẩm: &f%EVENTUALCOLOR%%ITEMTODELIVERTYPE% %(%%ITEMTODELIVERNAME%%)%'
+        base: '    <unimportant>%EVENTUALCOLOR%Giao Vật Phẩm: <main>%EVENTUALCOLOR%%ITEMTODELIVERTYPE% %(%%ITEMTODELIVERNAME%%)%'
       escortNPC:
-        base: '    &7%EVENTUALCOLOR%Đi Theo &f%EVENTUALCOLOR%%NPCNAME% &7%EVENTUALCOLOR% Đến &f%EVENTUALCOLOR%%DESTINATIONNPCNAME%'
+        base: '    <unimportant>%EVENTUALCOLOR%Đi Theo <main>%EVENTUALCOLOR%%NPCNAME% <unimportant>%EVENTUALCOLOR% Đến <main>%EVENTUALCOLOR%%DESTINATIONNPCNAME%'
       killMobs:
-        base: '    &7%EVENTUALCOLOR%Tiêu Diệt Quái: &f%EVENTUALCOLOR%%MOBTOKILL%'
+        base: '    <unimportant>%EVENTUALCOLOR%Tiêu Diệt Quái: <main>%EVENTUALCOLOR%%MOBTOKILL%'
       otherQuest:
-        base: '    &7%EVENTUALCOLOR%Hoàn Thành Nhiệm Vụ: &f%EVENTUALCOLOR%%OTHERQUESTNAME%'
+        base: '    <unimportant>%EVENTUALCOLOR%Hoàn Thành Nhiệm Vụ: <main>%EVENTUALCOLOR%%OTHERQUESTNAME%'
       placeBlocks:
-        base: '    &8└─ &7%EVENTUALCOLOR%Block to place: &f%EVENTUALCOLOR%%BLOCKTOPLACE%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Block to place: <main>%EVENTUALCOLOR%%BLOCKTOPLACE%'
       reachLocation:
-        base: '    &7%EVENTUALCOLOR%Đi Đến Địa Điểm: &f%EVENTUALCOLOR%%LOCATIONNAME%'
+        base: '    <unimportant>%EVENTUALCOLOR%Đi Đến Địa Điểm: <main>%EVENTUALCOLOR%%LOCATIONNAME%'
       talkToNPC:
-        base: '    &7%EVENTUALCOLOR%Nói Chuyện Với &f%EVENTUALCOLOR%%NAME%'
+        base: '    <unimportant>%EVENTUALCOLOR%Nói Chuyện Với <main>%EVENTUALCOLOR%%NAME%'
       triggerCommand:
-        base: '    &7%EVENTUALCOLOR%Dùng Lệnh: &f%EVENTUALCOLOR%%TRIGGERNAME%'
+        base: '    <unimportant>%EVENTUALCOLOR%Dùng Lệnh: <main>%EVENTUALCOLOR%%TRIGGERNAME%'
       killEliteMobs:
-        base: '    &7%EVENTUALCOLOR%Tiêu Diệt Elite Mobs: &f%EVENTUALCOLOR%%ELITEMOBNAME%'
-        any: '    &7%EVENTUALCOLOR%Tiêu Diệt Bất Kì EliteMobs Nào!'
+        base: '    <unimportant>%EVENTUALCOLOR%Tiêu Diệt Elite Mobs: <main>%EVENTUALCOLOR%%ELITEMOBNAME%'
+        any: '    <unimportant>%EVENTUALCOLOR%Tiêu Diệt Bất Kì EliteMobs Nào!'
       runCommand:
-        base: '    &8└─ &7%EVENTUALCOLOR%Dùng Lệnh: &f%EVENTUALCOLOR%%COMMANDTORUN%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Dùng Lệnh: <main>%EVENTUALCOLOR%%COMMANDTORUN%'
       interact:
-        base: '    &8└─ &7%EVENTUALCOLOR%%INTERACTTYPE% Vị Trí: &f%EVENTUALCOLOR%%COORDINATES% &f%EVENTUALCOLOR% Ở Thế Giới%EVENTUALCOLOR% %WORLDNAME%'
-        taskDescriptionProvided: '    &8└─ &7%EVENTUALCOLOR%%TASKDESCRIPTION%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%%INTERACTTYPE% Vị Trí: <main>%EVENTUALCOLOR%%COORDINATES% <main>%EVENTUALCOLOR% Ở Thế Giới%EVENTUALCOLOR% %WORLDNAME%'
+        taskDescriptionProvided: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%%TASKDESCRIPTION%'
       jump:
-        base: '    &8└─ &7%EVENTUALCOLOR%Nhảy &f%EVENTUALCOLOR%%AMOUNTOFJUMPS% &7%EVENTUALCOLOR%times'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Nhảy <main>%EVENTUALCOLOR%%AMOUNTOFJUMPS% <unimportant>%EVENTUALCOLOR%times'
       smelt:
-        base: '    &8└─ &7%EVENTUALCOLOR%Nung Vật Phẩm: &f%EVENTUALCOLOR%%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Nung Vật Phẩm: <main>%EVENTUALCOLOR%%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       townyReachResidentCount:
-        base: '    &8└─ &7%EVENTUALCOLOR%Số Lượng Thành Viên Thị Trấn Đạt Đến: &f%EVENTUALCOLOR%%AMOUNT%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Số Lượng Thành Viên Thị Trấn Đạt Đến: <main>%EVENTUALCOLOR%%AMOUNT%'
 titles:
   quest-accepted:
-    title: '&fChấp Nhận Nhiệm Vụ'
-    subtitle: <#b617ff>%QUESTNAME%
+    title: '<main>Chấp Nhận Nhiệm Vụ'
+    subtitle: <highlight>%QUESTNAME%
   quest-completed:
-    title: '&aHoàn Thành Nhiệm Vụ'
-    subtitle: <#b617ff>%QUESTNAME%
+    title: '<positive>Hoàn Thành Nhiệm Vụ'
+    subtitle: <highlight>%QUESTNAME%
   quest-failed:
-    title: '&cNhiệm Vụ Thất Bại'
-    subtitle: <#b617ff>%QUESTNAME%
+    title: '<negative>Nhiệm Vụ Thất Bại'
+    subtitle: <highlight>%QUESTNAME%
 gui:
-  reward-hidden-text: '. &7[KHÓA]'
+  reward-hidden-text: '. <unimportant>[KHÓA]'
   availableQuests:
-    title: '         &9Nhiệm Vụ Hiện Có'
+    title: '         <main>Nhiệm Vụ Hiện Có'
     button:
       questPreview:
-        acceptedSuffix: ' &a[Đồng Ys]'
-        questNamePrefix: '&b'
-        questDescriptionPrefix: '&8'
-        bottomText: '&aNhấn để xem nhiệm vụ'
+        acceptedSuffix: ' <success>[Đồng Ys]'
+        questNamePrefix: '<highlight>'
+        questDescriptionPrefix: '<veryUnimportant>'
+        bottomText: '<success>Nhấn để xem nhiệm vụ'
   main:
-    title: '                &9Nhiệm Vụ'
+    title: '                <main>Nhiệm Vụ'
     button:
       questpoints:
         text: |-
-          &6Điểm nhiệm vụ
-          &eĐiểm nhiệm vụ hiện tại: &b%QUESTPOINTS%
+          <highlight>Điểm nhiệm vụ
+          <warn>Điểm nhiệm vụ hiện tại: <highlight>%QUESTPOINTS%
       takequest:
         text: |-
-          &aThực hiện một nhiệm vụ
-          &7Bắt đầu một nhiệm vụ!
+          <success>Thực hiện một nhiệm vụ
+          <unimportant>Bắt đầu một nhiệm vụ!
 
-          &8Một vài nhiệm vụ không thể
-          &8thực hiện giống cái này
+          <veryUnimportant>Một vài nhiệm vụ không thể
+          <veryUnimportant>thực hiện giống cái này
       abortquest:
         text: |-
-          &cHuỷ bỏ nhiệm vụ
-          &7Hủy bỏ Nhiệm vụ có thể
-          &7dẫn đến những hình phạt.
+          <error>Huỷ bỏ nhiệm vụ
+          <unimportant>Hủy bỏ Nhiệm vụ có thể
+          <unimportant>dẫn đến những hình phạt.
       previewquest:
         text: |-
-          &9Xem trước nhiệm vụ (Thông tin nhiệm vụ)
-          &7Hiển thị thêm thông tin
-          &7về nhiệm vụ.
+          <main>Xem trước nhiệm vụ (Thông tin nhiệm vụ)
+          <unimportant>Hiển thị thêm thông tin
+          <unimportant>về nhiệm vụ.
       activequests:
         text: |-
-          &3Nhiệm vụ hoạt động
-          &7Hiển thị tất cả nhiệm vụ
+          <main>Nhiệm vụ hoạt động
+          <unimportant>Hiển thị tất cả nhiệm vụ
           &đang hoạt động của bạn.
   activeQuests:
-    title: '             &9Nhiệm Vụ Hoạt Động'
+    title: '             <main>Nhiệm Vụ Hoạt Động'
     button:
       activeQuestButton:
         text: |-
-          &b%QUESTNAME% &a[Hoạt Động]
-          &7Tiến Trình: &a%COMPLETEDOBJECTIVESCOUNT% &f/ %ALLOBJECTIVESCOUNT%
-          &fNhấn vào đây để xem chi tiết!!
+          <highlight>%QUESTNAME% <success>[Hoạt Động]
+          <unimportant>Tiến Trình: <success>%COMPLETEDOBJECTIVESCOUNT% <main>/ %ALLOBJECTIVESCOUNT%
+          <main>Nhấn vào đây để xem chi tiết!!
   takeQuestChoose:
-    title: '&9Bạn muốn nhận nhiệm vụ nào?'
+    title: '<main>Bạn muốn nhận nhiệm vụ nào?'
     button:
       questPreview:
-        acceptedSuffix: ' &a[ĐỒNG Ý]'
-        questNamePrefix: '&b'
-        questDescriptionPrefix: '&8'
-        bottomText: '&aNhấn để xem trước nhiệm vụ'
+        acceptedSuffix: ' <success>[ĐỒNG Ý]'
+        questNamePrefix: '<highlight>'
+        questDescriptionPrefix: '<veryUnimportant>'
+        bottomText: '<success>Nhấn để xem trước nhiệm vụ'
   abortQuestChoose:
-    title: '  &9Nhiệm vụ hoạt động bạn có thể hủy bỏ'
+    title: '  <main>Nhiệm vụ hoạt động bạn có thể hủy bỏ'
     button:
       abortQuestPreview:
         text: |-
-          &b%QUESTNAME% &a[Hoạt Động]
-          &7Tiến Trình: &a%COMPLETEDOBJECTIVESCOUNT% &f/ %ALLOBJECTIVESCOUNT%
-          &cNhấn để hủy nhiệm vụ!
+          <highlight>%QUESTNAME% <success>[Hoạt Động]
+          <unimportant>Tiến Trình: <success>%COMPLETEDOBJECTIVESCOUNT% <main>/ %ALLOBJECTIVESCOUNT%
+          <error>Nhấn để hủy nhiệm vụ!
   previewQuestChoose:
-    title: '     &9Chọn Nhiệm Vụ Xem Trước'
+    title: '     <main>Chọn Nhiệm Vụ Xem Trước'
     button:
       questPreview:
-        acceptedSuffix: ' &a[ĐỒNG Ý]'
-        questNamePrefix: '&b'
-        questDescriptionPrefix: '&8'
-        bottomText: '&aNhấn để xem trước nhiệm vụ'
+        acceptedSuffix: ' <success>[ĐỒNG Ý]'
+        questNamePrefix: '<highlight>'
+        questDescriptionPrefix: '<veryUnimportant>'
+        bottomText: '<success>Nhấn để xem trước nhiệm vụ'
   abortQuest:
-    title: '         &cHủy bỏ xác nhận'
+    title: '         <error>Hủy bỏ xác nhận'
     button:
       confirmAbort:
         text: |-
-          &b%QUESTNAME% &a[Hoạt Động]
-          &7Tiến Trình: &a%COMPLETEDOBJECTIVESCOUNT% &f/ %ALLOBJECTIVESCOUNT%
-          &cNhấp để hủy nhiệm vụ &b%QUESTNAME%&c!
+          <highlight>%QUESTNAME% <success>[Hoạt Động]
+          <unimportant>Tiến Trình: <success>%COMPLETEDOBJECTIVESCOUNT% <main>/ %ALLOBJECTIVESCOUNT%
+          <error>Nhấp để hủy nhiệm vụ <highlight>%QUESTNAME%<error>!
       cancelAbort:
         text: |-
-          &aNhấp để KHÔNG hủy bỏ nhiệm vụ này
-          &avà hủy hành động này
+          <success>Nhấp để KHÔNG hủy bỏ nhiệm vụ này
+          <success>và hủy hành động này
   previewQuest:
-    title: '&9Xem trước cho Nhiệm vụ &b%QUESTNAME%'
+    title: '<main>Xem trước cho Nhiệm vụ <highlight>%QUESTNAME%'
     button:
       description:
         text: |-
-          &eMô Tả
-          &8%QUESTDESCRIPTION%
+          <warn>Mô Tả
+          <veryUnimportant>%QUESTDESCRIPTION%
         empty: ???
       rewards:
         text: |-
-          &aPhần Thưởng
-          &f%QUESTREWARDS%
-        empty: '&8Không có hoặc bị khóa'
+          <success>Phần Thưởng
+          <main>%QUESTREWARDS%
+        empty: '<veryUnimportant>Không có hoặc bị khóa'
       requirements:
         text: |-
-          &cYêu Cầu
-          &f%QUESTREQUIREMENTS%
-        empty: '&8-'
+          <error>Yêu Cầu
+          <main>%QUESTREQUIREMENTS%
+        empty: '<veryUnimportant>-'
       confirmTake:
         text: |-
-          &b%QUESTNAME%
-          &aNhấp để thực hiện nhiệm vụ &b%QUESTNAME%&a!
+          <highlight>%QUESTNAME%
+          <success>Nhấp để thực hiện nhiệm vụ <highlight>%QUESTNAME%<success>!
       cancelTake:
         text: |-
-          &aNhấp để KHÔNG hủy bỏ nhiệm vụ này
-          &avà hủy hành động này
+          <success>Nhấp để KHÔNG hủy bỏ nhiệm vụ này
+          <success>và hủy hành động này
   progress:
-    title: '&9Thông tin chi tiết về Nhiệm vụ &b%QUESTNAME%'
+    title: '<main>Thông tin chi tiết về Nhiệm vụ <highlight>%QUESTNAME%'
     button:
       unlockedObjective:
         text: |-
-          &e%ACTIVEOBJECTIVEID%. &b%OBJECTIVENAME%
-          &6&lHOẠT ĐỘNG
-          &8%OBJECTIVEDESCRIPTION%
+          <warn>%ACTIVEOBJECTIVEID%. <highlight>%OBJECTIVENAME%
+          <highlight><bold>HOẠT ĐỘNG
+          <veryUnimportant>%OBJECTIVEDESCRIPTION%
           %ACTIVEOBJECTIVEDESCRIPTION%
 
-          &7Tiến Trình: &a%ACTIVEOBJECTIVEPROGRESS% &f/ %OBJECTIVEPROGRESSNEEDED%
+          <unimportant>Tiến Trình: <success>%ACTIVEOBJECTIVEPROGRESS% <main>/ %OBJECTIVEPROGRESSNEEDED%
         description-empty: Không có miêu tả
       lockedObjective:
         text: |-
-          &e%ACTIVEOBJECTIVEID%. &7&l[KHÓA]
-          &eMục tiêu này chưa
-          &eđược mở khóa
+          <warn>%ACTIVEOBJECTIVEID%. <unimportant><bold>[KHÓA]
+          <warn>Mục tiêu này chưa
+          <warn>được mở khóa
       completedObjective:
         text: |-
-          &a&m%ACTIVEOBJECTIVEID%. &2&m%OBJECTIVENAME%
-          &a&lĐÃ HOÀN THÀNH
-          &8&m%OBJECTIVEDESCRIPTION%
+          <success><strikethrough>%ACTIVEOBJECTIVEID%. <positive><strikethrough>%OBJECTIVENAME%
+          <success><bold>ĐÃ HOÀN THÀNH
+          <veryUnimportant><strikethrough>%OBJECTIVEDESCRIPTION%
           %COMPLETEDOBJECTIVEDESCRIPTION%
 
-          &7&mProgress: &a&m%ACTIVEOBJECTIVEPROGRESS% &f&m/ %OBJECTIVEPROGRESSNEEDED%
+          <unimportant><strikethrough>Progress: <success><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <main><strikethrough>/ %OBJECTIVEPROGRESSNEEDED%
         description-empty: Không có miêu tả
       previousPage:
         text: Về trang trước (%prevpage%)

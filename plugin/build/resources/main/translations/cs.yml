@@ -2,34 +2,34 @@ chat:
   wrong-command-usage: '<RED>Špatné užití příkazu!'
   missing-permission: '<RED>Na toto nemáš oprávnění! Potřebuješ: <YELLOW>%PERMISSION%'
   too-many-arguments: '<RED>Příliš mnoho argumentů!'
-  quest-successfully-accepted: '<GREEN>Úspěšně jsi přijal/a quest <AQUA>%QUESTNAME%<GREEN>.'
+  quest-successfully-accepted: '<GREEN>Úspěšně jsi přijal/a quest <highlight>%QUESTNAME%<GREEN>.'
   quest-description: '<YELLOW>Popis questu: <GRAY>%QUESTDESCRIPTION%'
   quest-already-accepted: '<RED>Quest jsi již přijal/a.'
-  quest-failed: '<YELLOW>Quest <AQUA>%QUESTNAME%<YELLOW> jsi </AQUA><RED><BOLD>NEDOKONČIL/A</BOLD></RED>!'
-  quest-aborted: '<GREEN>Aktivní quest <AQUA>%QUESTNAME%</AQUA> byl zrušen!'
+  quest-failed: '<YELLOW>Quest <highlight>%QUESTNAME%<YELLOW> jsi </AQUA><RED><BOLD>NEDOKONČIL/A</BOLD></RED>!'
+  quest-aborted: '<GREEN>Aktivní quest <highlight>%QUESTNAME%</AQUA> byl zrušen!'
   quest-completed-and-rewards-given: |2+
 
     <CENTER><GREEN>[Quest Dokončen]
-    <CENTER><AQUA><BOLD>%QUESTNAME%
+    <CENTER><highlight><BOLD>%QUESTNAME%
     <EMPTY>
   missing-quest-description: '<YELLOW>Tento quest nemá popis.'
   objectives-label-after-quest-accepting: '<BLUE>Cíle:'
   questpoints:
-    query: '<YELLOW>Aktuálně máš <AQUA>%QUESTPOINTS%</AQUA> quest pointů.'
+    query: '<YELLOW>Aktuálně máš <highlight>%QUESTPOINTS%</AQUA> quest pointů.'
     none: '<RED>Vypadá to, že nemáš žádné questpointy!'
   no-quests-accepted: '<RED>Vypadá to, že nemáš žádné aktivní questy!'
-  quest-does-not-exist: '<RED>Quest <AQUA>%QUESTNAME%</AQUA> neexistuje!'
-  quest-not-found-or-does-not-exist: '<RED>Quest <AQUA>%QUESTNAME%</AQUA> nebyl nalezen, nebo není aktivní!'
+  quest-does-not-exist: '<RED>Quest <highlight>%QUESTNAME%</AQUA> neexistuje!'
+  quest-not-found-or-does-not-exist: '<RED>Quest <highlight>%QUESTNAME%</AQUA> nebyl nalezen, nebo není aktivní!'
   active-quests-label: '<YELLOW>Aktivní questy:'
-  take-disabled-preview: '<RED>Náhled pro quest <AQUA>%QUESTNAME%</AQUA> není povolený příkazem <YELLOW>/nquests preview</YELLOW>.'
-  take-disabled-accept: '<RED>Příjímaní questu <AQUA>%QUESTNAME%</AQUA> není povolený příkazem <YELLOW>/nquests take</YELLOW>.'
-  quest-not-active-error: '<RED>Chyba: <AQUA>%QUESTNAME%</AQUA> není aktivní Quest!'
+  take-disabled-preview: '<RED>Náhled pro quest <highlight>%QUESTNAME%</AQUA> není povolený příkazem <YELLOW>/nquests preview</YELLOW>.'
+  take-disabled-accept: '<RED>Příjímaní questu <highlight>%QUESTNAME%</AQUA> není povolený příkazem <YELLOW>/nquests take</YELLOW>.'
+  quest-not-active-error: '<RED>Chyba: <highlight>%QUESTNAME%</AQUA> není aktivní Quest!'
   objectives:
     counter: '<YELLOW>%OBJECTIVEID%. %OBJECTIVENAME%:'
     hidden: '<YELLOW>%OBJECTIVEID%. <GRAY><BOLD>[SKRYTÝ]'
     description: '   <BLUE>Popis: <GOLD>%OBJECTIVEDESCRIPTION%'
     progress: '   <GRAY>Postup: <WHITE>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
-    successfully-completed: '<GREEN>Úspěšně jsi dokončil/a úkol <YELLOW>%OBJECTIVENAME%</YELLOW> pro quest <AQUA>%QUESTNAME%</AQUA>!'
+    successfully-completed: '<GREEN>Úspěšně jsi dokončil/a úkol <YELLOW>%OBJECTIVENAME%</YELLOW> pro quest <highlight>%QUESTNAME%</AQUA>!'
     taskDescription:
       breakBlocks:
         base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Blok ke zničení : <WHITE>%EVENTUALCOLOR%%BLOCKTOBREAK%'
@@ -81,14 +81,14 @@ chat:
         base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Použít schopnost: <WHITE>%EVENTUALCOLOR%%ABILITY%'
 titles:
   quest-accepted:
-    title: '<WHITE>Quest přijat'
-    subtitle: <#b617ff>%QUESTNAME%
+    title: '<main>Quest přijat'
+    subtitle: <highlight>%QUESTNAME%
   quest-completed:
-    title: '<GREEN>Quest Dokončen'
-    subtitle: <#b617ff>%QUESTNAME%
+    title: '<positive>Quest Dokončen'
+    subtitle: <highlight>%QUESTNAME%
   quest-failed:
-    title: '<RED>Quest Nedokončen'
-    subtitle: <#b617ff>%QUESTNAME%
+    title: '<negative>Quest Nedokončen'
+    subtitle: <highlight>%QUESTNAME%
 gui:
   reward-hidden-text: '. <GRAY>[SKRYTÝ]'
   availableQuests:
@@ -96,7 +96,7 @@ gui:
     button:
       questPreview:
         acceptedSuffix: ' <GREEN>[PŘIJAT]'
-        questNamePrefix: '<AQUA>'
+        questNamePrefix: '<highlight>'
         questDescriptionPrefix: '<DARK_GRAY>'
         bottomText: '<GREEN>Klikni pro otevření questu'
   main:
@@ -105,7 +105,7 @@ gui:
       questpoints:
         text: |-
           <GOLD>Quest Pointy
-          <YELLOW>Aktuální počet questpointů: <AQUA>%QUESTPOINTS%
+          <YELLOW>Aktuální počet questpointů: <highlight>%QUESTPOINTS%
       takequest:
         text: |-
           <GREEN>Vzít si quest
@@ -133,7 +133,7 @@ gui:
     button:
       activeQuestButton:
         text: |-
-          <AQUA>%QUESTNAME% <GREEN>[AKTIVNÍ]
+          <highlight>%QUESTNAME% <GREEN>[AKTIVNÍ]
           <GRAY>Postup: <GREEN>%COMPLETEDOBJECTIVESCOUNT% <WHITE>/ %ALLOBJECTIVESCOUNT%</WHITE>
           <WHITE>Klikni pro zobrazení detailů
   takeQuestChoose:
@@ -141,7 +141,7 @@ gui:
     button:
       questPreview:
         acceptedSuffix: ' <GREEN>[PŘIJAT]'
-        questNamePrefix: '<AQUA>'
+        questNamePrefix: '<highlight>'
         questDescriptionPrefix: '<DARK_GRAY>'
         bottomText: '<GREEN>Klikni pro náhled questu!'
   abortQuestChoose:
@@ -149,7 +149,7 @@ gui:
     button:
       abortQuestPreview:
         text: |-
-          <AQUA>%QUESTNAME% <GREEN>[AKTIVNÍ]
+          <highlight>%QUESTNAME% <GREEN>[AKTIVNÍ]
           <GRAY>Postup: <GREEN>%COMPLETEDOBJECTIVESCOUNT% <WHITE>/ %ALLOBJECTIVESCOUNT%
           <RED>Klikni pro přerušení questu!
   previewQuestChoose:
@@ -157,7 +157,7 @@ gui:
     button:
       questPreview:
         acceptedSuffix: ' <GREEN>[PŘIJAT]'
-        questNamePrefix: '<AQUA>'
+        questNamePrefix: '<highlight>'
         questDescriptionPrefix: '<DARK_GRAY>'
         bottomText: '<GREEN>Klikni pro náhled questu!'
   abortQuest:
@@ -165,15 +165,15 @@ gui:
     button:
       confirmAbort:
         text: |-
-          <AQUA>%QUESTNAME% <GREEN>[AKTIVNÍ]
+          <highlight>%QUESTNAME% <GREEN>[AKTIVNÍ]
           <GRAY>Postup: <GREEN>%COMPLETEDOBJECTIVESCOUNT% <WHITE>/ %ALLOBJECTIVESCOUNT%
-          <RED>Klikni pro start questu <AQUA>%QUESTNAME%<RED>!
+          <RED>Klikni pro start questu <highlight>%QUESTNAME%<RED>!
       cancelAbort:
         text: |-
           <GREEN>Klikni, abys NEZRUŠIL tento quest</GREEN>
           <GREEN>a zrušil tím tuto akci
   previewQuest:
-    title: '<BLUE>Náhled pro quest <AQUA>%QUESTNAME%'
+    title: '<BLUE>Náhled pro quest <highlight>%QUESTNAME%'
     button:
       description:
         text: |-
@@ -192,18 +192,18 @@ gui:
         empty: '<DARK_GRAY>-'
       confirmTake:
         text: |-
-          <AQUA>%QUESTNAME%
-          <GREEN>Klikni, aby sis vzal quest <AQUA>%QUESTNAME%</AQUA>!
+          <highlight>%QUESTNAME%
+          <GREEN>Klikni, aby sis vzal quest <highlight>%QUESTNAME%</AQUA>!
       cancelTake:
         text: |-
           <RED>Klikni, aby sis NEVZAL tento quest</RED>
           <RED>a zrušil tím tuto akci
   progress:
-    title: '<BLUE>Detaily pro quest <AQUA>%QUESTNAME%'
+    title: '<BLUE>Detaily pro quest <highlight>%QUESTNAME%'
     button:
       unlockedObjective:
         text: |-
-          <YELLOW>%ACTIVEOBJECTIVEID%. <AQUA>%OBJECTIVENAME%
+          <YELLOW>%ACTIVEOBJECTIVEID%. <highlight>%OBJECTIVENAME%
           <GOLD><BOLD>AKTIVNÍ</BOLD>
           <DARK_GRAY>%OBJECTIVEDESCRIPTION%
           <GRAY>%ACTIVEOBJECTIVEDESCRIPTION%</GRAY>

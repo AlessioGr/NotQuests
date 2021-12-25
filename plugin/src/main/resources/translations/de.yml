@@ -1,216 +1,216 @@
 chat:
-  wrong-command-usage: '&cFalsche Command-Syntax!'
-  missing-permission: '&cDafür hast du keine Rechte! Fehlendes Recht: &e%PERMISSION%'
-  too-many-arguments: '&cZu viele Eingaben!'
-  quest-successfully-accepted: '&aDu hast die Quest &b%QUESTNAME% &aerfolgreich akzeptiert.'
-  quest-description: '&eQuest-Beschreibung: &7%QUESTDESCRIPTION%'
-  quest-already-accepted: '&cQuest wurde schon akzeptiert.'
-  quest-failed: '&eDie Quest &b%QUESTNAME% &eist &c&lGESCHEITERT&e.'
-  quest-aborted: '&aDie Quest &b%QUESTNAME% &awurde abgebrochen!'
+  wrong-command-usage: '<error>Falsche Command-Syntax!'
+  missing-permission: '<error>Dafür hast du keine Rechte! Fehlendes Recht: <highlight>%PERMISSION%'
+  too-many-arguments: '<error>Zu viele Eingaben!'
+  quest-successfully-accepted: '<success>Du hast die Quest <highlight>%QUESTNAME% <success>erfolgreich akzeptiert.'
+  quest-description: '<warn>Quest-Beschreibung: <unimportant>%QUESTDESCRIPTION%'
+  quest-already-accepted: '<error>Quest wurde schon akzeptiert.'
+  quest-failed: '<warn>Die Quest <highlight>%QUESTNAME% <warn>ist <error><bold>GESCHEITERT<warn>.'
+  quest-aborted: '<success>Die Quest <highlight>%QUESTNAME% <success>wurde abgebrochen!'
   quest-completed-and-rewards-given: |2+
 
-    <CENTER>&a[Quest Abgeschlossen]
-    <CENTER>&b&l%QUESTNAME%
+    <CENTER><success>[Quest Abgeschlossen]
+    <CENTER><highlight><bold>%QUESTNAME%
     <EMPTY>
-  missing-quest-description: '&eDiese Quest hat keine Beschreibung'
-  objectives-label-after-quest-accepting: '&9Aufgaben:'
+  missing-quest-description: '<warn>Diese Quest hat keine Beschreibung'
+  objectives-label-after-quest-accepting: '<main>Aufgaben:'
   questpoints:
-    query: '&eDu hast zurzeit &b%QUESTPOINTS% &eQuestpunkte.'
-    none: '&cDu hast wohl gerade keine Questpunkte!'
-  no-quests-accepted: '&cDu hast wohl gerade keine aktiven Quests!'
-  quest-does-not-exist: '&cQuest &b%QUESTNAME% &cexistiert nicht!'
-  quest-not-found-or-does-not-exist: '&cQuest &b%QUESTNAME% &cnicht gefunden oder nicht aktiv!'
-  active-quests-label: '&eAktive Quests:'
-  take-disabled-preview: '&cDas Ansehen der Vorschau von der Quest &b%QUESTNAME% &cmit dem &e/nquests preview &cCommand wurde deaktiviert.'
-  take-disabled-accept: '&cDas Akzeptieren der Quest &b%QUESTNAME% &cmit dem &e/nquests take &cCommand wurde deaktiviert.'
-  quest-not-active-error: '&cFehler: &b%QUESTNAME% &cist keine aktive Quest!'
+    query: '<warn>Du hast zurzeit <highlight>%QUESTPOINTS% <warn>Questpunkte.'
+    none: '<error>Du hast wohl gerade keine Questpunkte!'
+  no-quests-accepted: '<error>Du hast wohl gerade keine aktiven Quests!'
+  quest-does-not-exist: '<error>Quest <highlight>%QUESTNAME% <error>existiert nicht!'
+  quest-not-found-or-does-not-exist: '<error>Quest <highlight>%QUESTNAME% <error>nicht gefunden oder nicht aktiv!'
+  active-quests-label: '<warn>Aktive Quests:'
+  take-disabled-preview: '<error>Das Ansehen der Vorschau von der Quest <highlight>%QUESTNAME% <error>mit dem <warn>/nquests preview <error>Command wurde deaktiviert.'
+  take-disabled-accept: '<error>Das Akzeptieren der Quest <highlight>%QUESTNAME% <error>mit dem <warn>/nquests take <error>Command wurde deaktiviert.'
+  quest-not-active-error: '<error>Fehler: <highlight>%QUESTNAME% <error>ist keine aktive Quest!'
   objectives:
-    counter: '&e%OBJECTIVEID%. %OBJECTIVENAME%:'
-    hidden: '&e%OBJECTIVEID%. &7&l[VERBORGEN]'
-    description: '   &9Beschreibung: &6%OBJECTIVEDESCRIPTION%'
-    progress: '   &7Fortschritt: &f%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
-    successfully-completed: '&aDu hast die Aufgabe &e%OBJECTIVENAME% &afür die Quest &b%QUESTNAME% &aerfolgreich abgeschlossen!!'
+    counter: '<warn>%OBJECTIVEID%. %OBJECTIVENAME%:'
+    hidden: '<warn>%OBJECTIVEID%. <unimportant><bold>[VERBORGEN]'
+    description: '   <main>Beschreibung: <highlight>%OBJECTIVEDESCRIPTION%'
+    progress: '   <unimportant>Fortschritt: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
+    successfully-completed: '<success>Du hast die Aufgabe <warn>%OBJECTIVENAME% <success>für die Quest <highlight>%QUESTNAME% <success>erfolgreich abgeschlossen!!'
     taskDescription:
       breakBlocks:
-        base: '    &8└─ &7%EVENTUALCOLOR%Block abbauen: &f%EVENTUALCOLOR%%BLOCKTOBREAK%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Block abbauen: <main>%EVENTUALCOLOR%%BLOCKTOBREAK%'
       breed:
-        base: '    &8└─ &7%EVENTUALCOLOR%Mob züchten: &f%EVENTUALCOLOR%%ENTITYTOBREED%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Mob züchten: <main>%EVENTUALCOLOR%%ENTITYTOBREED%'
       collectItems:
-        base: '    &8└─ &7%EVENTUALCOLOR%Items sammeln: &f%EVENTUALCOLOR%%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Items sammeln: <main>%EVENTUALCOLOR%%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
       consumeItems:
-        base: '    &8└─ &7%EVENTUALCOLOR%Items konsumieren: &f%EVENTUALCOLOR%%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Items konsumieren: <main>%EVENTUALCOLOR%%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
-        base: '    &8└─ &7%EVENTUALCOLOR%Items craften: &f%EVENTUALCOLOR%%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Items craften: <main>%EVENTUALCOLOR%%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: '    &8└─ &7%EVENTUALCOLOR%Items liefern: &f%EVENTUALCOLOR%%ITEMTODELIVERTYPE% %(%%ITEMTODELIVERNAME%%)%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Items liefern: <main>%EVENTUALCOLOR%%ITEMTODELIVERTYPE% %(%%ITEMTODELIVERNAME%%)%'
       escortNPC:
-        base: '    &8└─ &7%EVENTUALCOLOR%Eskortiere &f%EVENTUALCOLOR%%NPCNAME% &7%EVENTUALCOLOR%zu &f%EVENTUALCOLOR%%DESTINATIONNPCNAME%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Eskortiere <main>%EVENTUALCOLOR%%NPCNAME% <unimportant>%EVENTUALCOLOR%zu <main>%EVENTUALCOLOR%%DESTINATIONNPCNAME%'
       killMobs:
-        base: '    &8└─ &7%EVENTUALCOLOR%Mobs töten: &f%EVENTUALCOLOR%%MOBTOKILL%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Mobs töten: <main>%EVENTUALCOLOR%%MOBTOKILL%'
       otherQuest:
-        base: '    &8└─ &7%EVENTUALCOLOR%Quest abschließen: &f%EVENTUALCOLOR%%OTHERQUESTNAME%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Quest abschließen: <main>%EVENTUALCOLOR%%OTHERQUESTNAME%'
       placeBlocks:
-        base: '    &8└─ &7%EVENTUALCOLOR%Block platzieren: &f%EVENTUALCOLOR%%BLOCKTOPLACE%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Block platzieren: <main>%EVENTUALCOLOR%%BLOCKTOPLACE%'
       reachLocation:
-        base: '    &8└─ &7%EVENTUALCOLOR%Ort erreichen: &f%EVENTUALCOLOR%%LOCATIONNAME%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Ort erreichen: <main>%EVENTUALCOLOR%%LOCATIONNAME%'
       talkToNPC:
-        base: '    &8└─ &7%EVENTUALCOLOR%Spreche mit &f%EVENTUALCOLOR%%NAME%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Spreche mit <main>%EVENTUALCOLOR%%NAME%'
       triggerCommand:
-        base: '    &8└─ &7%EVENTUALCOLOR%Ziel: &f%EVENTUALCOLOR%%TRIGGERNAME%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Ziel: <main>%EVENTUALCOLOR%%TRIGGERNAME%'
       killEliteMobs:
-        base: '    &8└─ &7%EVENTUALCOLOR%Töte Elite Mob: &f%EVENTUALCOLOR%%ELITEMOBNAME%'
-        any: '    &8└─ &7%EVENTUALCOLOR%Töte irgendein Elite Mob!'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Töte Elite Mob: <main>%EVENTUALCOLOR%%ELITEMOBNAME%'
+        any: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Töte irgendein Elite Mob!'
       runCommand:
-        base: '    &8└─ &7%EVENTUALCOLOR%Befehl ausführen: &f%EVENTUALCOLOR%%COMMANDTORUN%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Befehl ausführen: <main>%EVENTUALCOLOR%%COMMANDTORUN%'
       interact:
-        base: '    &8└─ &7%EVENTUALCOLOR%%INTERACTTYPE% Ort: &f%EVENTUALCOLOR%%COORDINATES% &f%EVENTUALCOLOR%in Welt%EVENTUALCOLOR% %WORLDNAME%'
-        taskDescriptionProvided: '    &8└─ &7%EVENTUALCOLOR%%TASKDESCRIPTION%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%%INTERACTTYPE% Ort: <main>%EVENTUALCOLOR%%COORDINATES% <main>%EVENTUALCOLOR%in Welt%EVENTUALCOLOR% %WORLDNAME%'
+        taskDescriptionProvided: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%%TASKDESCRIPTION%'
       jump:
-        base: '    &8└─ &7%EVENTUALCOLOR%Springe &f%EVENTUALCOLOR%%AMOUNTOFJUMPS% &7%EVENTUALCOLOR%mal'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Springe <main>%EVENTUALCOLOR%%AMOUNTOFJUMPS% <unimportant>%EVENTUALCOLOR%mal'
       smelt:
-        base: '    &8└─ &7%EVENTUALCOLOR%Items schmelzen: &f%EVENTUALCOLOR%%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Items schmelzen: <main>%EVENTUALCOLOR%%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       townyReachResidentCount:
-        base: '    &8└─ &7%EVENTUALCOLOR%Erreiche folgende Anzahl an Stadtbewohnern: &f%EVENTUALCOLOR%%AMOUNT%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Erreiche folgende Anzahl an Stadtbewohnern: <main>%EVENTUALCOLOR%%AMOUNT%'
       townyNationReachTownCount:
-        base: '    &8└─ &7%EVENTUALCOLOR%Erreiche folgende Anzahl an Städten in deiner Nation: &f%EVENTUALCOLOR%%AMOUNT%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Erreiche folgende Anzahl an Städten in deiner Nation: <main>%EVENTUALCOLOR%%AMOUNT%'
       jobsRebornReachJobLevel:
-        base: '    &8└─ &7%EVENTUALCOLOR%Erreiche Job Level &f%EVENTUALCOLOR%%AMOUNT% &7als &f%EVENTUALCOLOR%%JOB%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Erreiche Job Level <main>%EVENTUALCOLOR%%AMOUNT% <unimportant>als <main>%EVENTUALCOLOR%%JOB%'
 titles:
   quest-accepted:
-    title: '&fQuest akzeptiert'
-    subtitle: <#b617ff>%QUESTNAME%
+    title: '<main>Quest akzeptiert'
+    subtitle: <highlight>%QUESTNAME%
   quest-completed:
-    title: '&aQuest abgeschlossen'
-    subtitle: <#b617ff>%QUESTNAME%
+    title: '<positive>Quest abgeschlossen'
+    subtitle: <highlight>%QUESTNAME%
   quest-failed:
-    title: '&cQuest gescheitert'
-    subtitle: <#b617ff>%QUESTNAME%
+    title: '<negative>Quest gescheitert'
+    subtitle: <highlight>%QUESTNAME%
 gui:
   main:
-    title: '                &9Quests'
+    title: '                <main>Quests'
     button:
       questpoints:
         text: |-
-          &6Questpunkte
-          &eAnzahl: &b%QUESTPOINTS%
+          <highlight>Questpunkte
+          <warn>Anzahl: <highlight>%QUESTPOINTS%
       takequest:
         text: |-
-          &aQuest starten
-          &7Starte eine neue Quest!
+          <success>Quest starten
+          <unimportant>Starte eine neue Quest!
 
-          &8Manche Quests können so
-          &8nicht gestartet werden.
+          <veryUnimportant>Manche Quests können so
+          <veryUnimportant>nicht gestartet werden.
       abortquest:
         text: |-
-          &cQuest abbrechen
-          &7Dies kann zu
-          &7Konsequenzen führen.
+          <error>Quest abbrechen
+          <unimportant>Dies kann zu
+          <unimportant>Konsequenzen führen.
       previewquest:
         text: |-
-          &9Quest Vorschau (Quest Info)
-          &7Zeigt dir weitere Infos
-          &7über eine Quest an.
+          <main>Quest Vorschau (Quest Info)
+          <unimportant>Zeigt dir weitere Infos
+          <unimportant>über eine Quest an.
       activequests:
         text: |-
-          &3Aktive Quests
-          &7Zeigt dir alle Quests,
-          &7die bei dir gerade
-          &7aktiv sind.
+          <main>Aktive Quests
+          <unimportant>Zeigt dir alle Quests,
+          <unimportant>die bei dir gerade
+          <unimportant>aktiv sind.
   activeQuests:
-    title: '             &9Aktive Quests'
+    title: '             <main>Aktive Quests'
     button:
       activeQuestButton:
         text: |-
-          &b%QUESTNAME% &a[AKTIV]
-          &7Fortschritt: &a%COMPLETEDOBJECTIVESCOUNT% &f/ %ALLOBJECTIVESCOUNT%
-          &fKlicke für Details!
+          <highlight>%QUESTNAME% <success>[AKTIV]
+          <unimportant>Fortschritt: <success>%COMPLETEDOBJECTIVESCOUNT% <main>/ %ALLOBJECTIVESCOUNT%
+          <main>Klicke für Details!
   takeQuestChoose:
-    title: '          &9Wähle eine Quest'
+    title: '          <main>Wähle eine Quest'
     button:
       questPreview:
-        acceptedSuffix: ' &a[AKZEPTIERT]'
-        questNamePrefix: '&b'
-        questDescriptionPrefix: '&8'
-        bottomText: '&aKlicke für eine Vorschau!'
+        acceptedSuffix: ' <success>[AKZEPTIERT]'
+        questNamePrefix: '<highlight>'
+        questDescriptionPrefix: '<veryUnimportant>'
+        bottomText: '<success>Klicke für eine Vorschau!'
   abortQuestChoose:
-    title: '   &9Aktive, abbrechbare Quests'
+    title: '   <main>Aktive, abbrechbare Quests'
     button:
       abortQuestPreview:
         text: |-
-          &b%QUESTNAME% &a[AKTIV]
-          &7Fortschritt: &a%COMPLETEDOBJECTIVESCOUNT% &f/ %ALLOBJECTIVESCOUNT%
-          &cKlicke zum Abbrechen!
+          <highlight>%QUESTNAME% <success>[AKTIV]
+          <unimportant>Fortschritt: <success>%COMPLETEDOBJECTIVESCOUNT% <main>/ %ALLOBJECTIVESCOUNT%
+          <error>Klicke zum Abbrechen!
   previewQuestChoose:
-    title: '&9Wähle eine Quest zur Vorschau'
+    title: '<main>Wähle eine Quest zur Vorschau'
     button:
       questPreview:
-        acceptedSuffix: ' &a[AKZEPTIERT]'
-        questNamePrefix: '&b'
-        questDescriptionPrefix: '&8'
-        bottomText: '&aKlicke für eine Vorschau!'
+        acceptedSuffix: ' <success>[AKZEPTIERT]'
+        questNamePrefix: '<highlight>'
+        questDescriptionPrefix: '<veryUnimportant>'
+        bottomText: '<success>Klicke für eine Vorschau!'
   abortQuest:
-    title: '       &cAbbruch-Bestätigung'
+    title: '       <error>Abbruch-Bestätigung'
     button:
       confirmAbort:
         text: |-
-          &b%QUESTNAME% &a[AKTIV]
-          &7Fortschritt: &a%COMPLETEDOBJECTIVESCOUNT% &f/ %ALLOBJECTIVESCOUNT%
-          &cKlicke, um die Quest &b%QUESTNAME% &cabzubrechen!
+          <highlight>%QUESTNAME% <success>[AKTIV]
+          <unimportant>Fortschritt: <success>%COMPLETEDOBJECTIVESCOUNT% <main>/ %ALLOBJECTIVESCOUNT%
+          <error>Klicke, um die Quest <highlight>%QUESTNAME% <error>abzubrechen!
       cancelAbort:
         text: |-
-          &aKlicke, um die Quest NICHT abzubrechen
-          &aund diese Aktion zu beenden
+          <success>Klicke, um die Quest NICHT abzubrechen
+          <success>und diese Aktion zu beenden
   previewQuest:
-    title: '&9Vorschau der Quest &b%QUESTNAME%'
+    title: '<main>Vorschau der Quest <highlight>%QUESTNAME%'
     button:
       description:
         text: |-
-          &eBeschreibung
-          &8%QUESTDESCRIPTION%
+          <warn>Beschreibung
+          <veryUnimportant>%QUESTDESCRIPTION%
         empty: ???
       rewards:
         text: |-
-          &aBelohnungen
-          &f%QUESTREWARDS%
-        empty: '&8Keine oder versteckt'
+          <success>Belohnungen
+          <main>%QUESTREWARDS%
+        empty: '<veryUnimportant>Keine oder versteckt'
       requirements:
         text: |-
-          &cAnforderungen
-          &f%QUESTREQUIREMENTS%
-        empty: '&8-'
+          <error>Anforderungen
+          <main>%QUESTREQUIREMENTS%
+        empty: '<veryUnimportant>-'
       confirmTake:
         text: |-
-          &b%QUESTNAME%
-          &aKlicke, um die Quest &b%QUESTNAME% &aanzunehmen!
+          <highlight>%QUESTNAME%
+          <success>Klicke, um die Quest <highlight>%QUESTNAME% <success>anzunehmen!
       cancelTake:
         text: |-
-          &cKlicke, um die Quest NICHT anzunehmen
-          &cund diese Aktion zu beenden
+          <error>Klicke, um die Quest NICHT anzunehmen
+          <error>und diese Aktion zu beenden
   progress:
-    title: '&9Details für Quest &b%QUESTNAME%'
+    title: '<main>Details für Quest <highlight>%QUESTNAME%'
     button:
       unlockedObjective:
         text: |-
-          &e%ACTIVEOBJECTIVEID%. &b%OBJECTIVENAME%
-          &6&lAKTIV
-          &8%OBJECTIVEDESCRIPTION%
+          <warn>%ACTIVEOBJECTIVEID%. <highlight>%OBJECTIVENAME%
+          <highlight><bold>AKTIV
+          <veryUnimportant>%OBJECTIVEDESCRIPTION%
           %ACTIVEOBJECTIVEDESCRIPTION%
 
-          &7Fortschritt: &a%ACTIVEOBJECTIVEPROGRESS% &f/ %OBJECTIVEPROGRESSNEEDED%
+          <unimportant>Fortschritt: <success>%ACTIVEOBJECTIVEPROGRESS% <main>/ %OBJECTIVEPROGRESSNEEDED%
         description-empty: Keine Beschreibung
       lockedObjective:
         text: |-
-          &e%ACTIVEOBJECTIVEID%. &7&l[VERBORGEN]
-          &eDiese Aufgabe wurde noch nicht
-          &efreigeschaltet!
+          <warn>%ACTIVEOBJECTIVEID%. <unimportant><bold>[VERBORGEN]
+          <warn>Diese Aufgabe wurde noch nicht
+          <warn>freigeschaltet!
       completedObjective:
         text: |-
-          &a&m%ACTIVEOBJECTIVEID%. &2&m%OBJECTIVENAME%
-          &a&lABGESCHLOSSEN
-          &8&m%OBJECTIVEDESCRIPTION%
+          <success><strikethrough>%ACTIVEOBJECTIVEID%. <positive><strikethrough>%OBJECTIVENAME%
+          <success><bold>ABGESCHLOSSEN
+          <veryUnimportant><strikethrough>%OBJECTIVEDESCRIPTION%
           %COMPLETEDOBJECTIVEDESCRIPTION%
 
-          &7&mFortschritt: &a&m%ACTIVEOBJECTIVEPROGRESS% &f&m/ %OBJECTIVEPROGRESSNEEDED%
+          <unimportant><strikethrough>Fortschritt: <success><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <main><strikethrough>/ %OBJECTIVEPROGRESSNEEDED%
         description-empty: Keine Beschreibung
       previousPage:
         text: Gehe zur vorherigen Seite (%prevpage%)
