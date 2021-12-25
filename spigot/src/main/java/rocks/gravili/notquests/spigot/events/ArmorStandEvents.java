@@ -36,6 +36,7 @@ import org.bukkit.event.world.EntitiesUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import rocks.gravili.notquests.spigot.NotQuests;
 import rocks.gravili.notquests.spigot.commands.NotQuestColors;
 import rocks.gravili.notquests.spigot.conversation.Conversation;
 import rocks.gravili.notquests.spigot.objectives.DeliverItemsObjective;
@@ -45,7 +46,6 @@ import rocks.gravili.notquests.spigot.structs.ActiveObjective;
 import rocks.gravili.notquests.spigot.structs.ActiveQuest;
 import rocks.gravili.notquests.spigot.structs.Quest;
 import rocks.gravili.notquests.spigot.structs.QuestPlayer;
-import rocks.gravili.notquests.spigot.NotQuests;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -495,6 +495,7 @@ public class ArmorStandEvents implements Listener {
                                                     continue;
                                                 }
 
+                                                handledObjective = true;
                                                 if (progressLeft < itemStack.getAmount()) { //We can finish it with this itemStack
                                                     itemStack.setAmount((itemStack.getAmount() - (int) progressLeft));
                                                     activeObjective.addProgress(progressLeft, armorStand.getUniqueId());

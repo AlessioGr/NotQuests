@@ -18,7 +18,6 @@
 
 package rocks.gravili.notquests.paper.events;
 
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.ArmorStand;
@@ -36,7 +35,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.NotQuestColors;
 import rocks.gravili.notquests.paper.conversation.Conversation;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
@@ -488,6 +486,7 @@ public class ArmorStandEvents implements Listener {
                                                 if (progressLeft == 0) {
                                                     continue;
                                                 }
+                                                handledObjective = true;
 
                                                 if (progressLeft < itemStack.getAmount()) { //We can finish it with this itemStack
                                                     itemStack.setAmount((itemStack.getAmount() - (int) progressLeft));
