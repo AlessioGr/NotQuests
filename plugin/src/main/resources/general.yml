@@ -44,6 +44,37 @@ general:
 visual:
   #Sets which language to use. Default is languages/en.yml
   language: en
+  colors:
+    main:
+      - '#1985ff'
+      - '#2bc7ff'
+    highlight:
+      - '#00fffb'
+      - '#00ffc3'
+    highlight2:
+      - '#ff2465'
+      - '#ff24a0'
+    error:
+      - '#ff004c'
+      - '#a80000'
+    success:
+      - '#54b2ff'
+      - '#ff5ecc'
+    unimportant:
+      - '#9c9c9c'
+      - '#858383'
+    veryUnimportant:
+      - '#5c5c5c'
+      - '#454545'
+    warn:
+      - '#fff700'
+      - '#ffa629'
+    positive:
+      - '#73ff00'
+      - '#00ffd0'
+    negative:
+      - '#ff006f'
+      - '#ff002f'
   #Sets if it should show the fancy, helpful hints above your health bar, title or bossbar when typing some commands
   fancy-command-completion:
     actionbar-enabled: true

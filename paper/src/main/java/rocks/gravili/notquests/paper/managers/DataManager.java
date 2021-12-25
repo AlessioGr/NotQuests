@@ -21,7 +21,6 @@ package rocks.gravili.notquests.paper.managers;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
@@ -34,7 +33,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.NotQuestColors;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
@@ -393,6 +391,8 @@ public class DataManager {
         configuration.setLanguageCode(getGeneralConfig().getString(key));
 
 
+
+
         //Particles Citizens
         key = "visual.citizensnpc.quest-giver-indicator-particle.enabled";
         if (!getGeneralConfig().isBoolean(key)) {
@@ -481,6 +481,100 @@ public class DataManager {
             valueChanged = true;
         }
         configuration.setArmorStandQuestGiverIndicatorParticleDisableIfTPSBelow(getGeneralConfig().getDouble(key));
+
+
+        //Visual Colors
+        key = "visual.colors.main";
+        if (!getGeneralConfig().isList(key)) {
+            final List<String> mainColors = new ArrayList<>();
+            mainColors.add("#1985ff");
+            mainColors.add("#2bc7ff");
+            getGeneralConfig().set(key, mainColors);
+            valueChanged = true;
+        }
+        configuration.colorsMain = getGeneralConfig().getStringList(key);
+        key = "visual.colors.highlight";
+        if (!getGeneralConfig().isList(key)) {
+            final List<String> mainColors = new ArrayList<>();
+            mainColors.add("#00fffb");
+            mainColors.add("#00ffc3");
+            getGeneralConfig().set(key, mainColors);
+            valueChanged = true;
+        }
+        configuration.colorsHighlight = getGeneralConfig().getStringList(key);
+        key = "visual.colors.highlight2";
+        if (!getGeneralConfig().isList(key)) {
+            final List<String> mainColors = new ArrayList<>();
+            mainColors.add("#ff2465");
+            mainColors.add("#ff24a0");
+            getGeneralConfig().set(key, mainColors);
+            valueChanged = true;
+        }
+        configuration.colorsHighlight2 = getGeneralConfig().getStringList(key);
+        key = "visual.colors.error";
+        if (!getGeneralConfig().isList(key)) {
+            final List<String> mainColors = new ArrayList<>();
+            mainColors.add("#ff004c");
+            mainColors.add("#a80000");
+            getGeneralConfig().set(key, mainColors);
+            valueChanged = true;
+        }
+        configuration.colorsError = getGeneralConfig().getStringList(key);
+        key = "visual.colors.success";
+        if (!getGeneralConfig().isList(key)) {
+            final List<String> mainColors = new ArrayList<>();
+            mainColors.add("#54b2ff");
+            mainColors.add("#ff5ecc");
+            getGeneralConfig().set(key, mainColors);
+            valueChanged = true;
+        }
+        configuration.colorsSuccess = getGeneralConfig().getStringList(key);
+        key = "visual.colors.unimportant";
+        if (!getGeneralConfig().isList(key)) {
+            final List<String> mainColors = new ArrayList<>();
+            mainColors.add("#9c9c9c");
+            mainColors.add("#858383");
+            getGeneralConfig().set(key, mainColors);
+            valueChanged = true;
+        }
+        configuration.colorsUnimportant = getGeneralConfig().getStringList(key);
+        key = "visual.colors.veryUnimportant";
+        if (!getGeneralConfig().isList(key)) {
+            final List<String> mainColors = new ArrayList<>();
+            mainColors.add("#5c5c5c");
+            mainColors.add("#454545");
+            getGeneralConfig().set(key, mainColors);
+            valueChanged = true;
+        }
+        configuration.colorsVeryUnimportant = getGeneralConfig().getStringList(key);
+        key = "visual.colors.warn";
+        if (!getGeneralConfig().isList(key)) {
+            final List<String> mainColors = new ArrayList<>();
+            mainColors.add("#fff700");
+            mainColors.add("#ffa629");
+            getGeneralConfig().set(key, mainColors);
+            valueChanged = true;
+        }
+        configuration.colorsWarn = getGeneralConfig().getStringList(key);
+        key = "visual.colors.positive";
+        if (!getGeneralConfig().isList(key)) {
+            final List<String> mainColors = new ArrayList<>();
+            mainColors.add("#73ff00");
+            mainColors.add("#00ffd0");
+            getGeneralConfig().set(key, mainColors);
+            valueChanged = true;
+        }
+        configuration.colorsPositive = getGeneralConfig().getStringList(key);
+        key = "visual.colors.negative";
+        if (!getGeneralConfig().isList(key)) {
+            final List<String> mainColors = new ArrayList<>();
+            mainColors.add("#ff006f");
+            mainColors.add("#ff002f");
+            getGeneralConfig().set(key, mainColors);
+            valueChanged = true;
+        }
+        configuration.colorsNegative = getGeneralConfig().getStringList(key);
+
 
 
         //Visual More

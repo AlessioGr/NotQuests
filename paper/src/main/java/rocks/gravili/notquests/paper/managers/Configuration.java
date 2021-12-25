@@ -139,6 +139,17 @@ public class Configuration {
 
     public boolean hideRewardsWithoutName = true;
 
+    public List<String> colorsMain;
+    public List<String> colorsHighlight;
+    public List<String> colorsHighlight2;
+    public List<String> colorsError;
+    public List<String> colorsSuccess;
+    public List<String> colorsUnimportant;
+    public List<String> colorsVeryUnimportant;
+    public List<String> colorsWarn;
+    public List<String> colorsPositive;
+    public List<String> colorsNegative;
+
 
     public Configuration() {
 
