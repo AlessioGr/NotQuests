@@ -26,9 +26,7 @@ import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
-import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
@@ -39,7 +37,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.NotQuestColors;
 import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
@@ -305,9 +302,9 @@ public class DeliverItemsObjective extends Objective {
             } else { //Armor Stands
                 final UUID armorStandUUID = getRecipientArmorStandUUID();
                 if (armorStandUUID != null) {
-                    toReturn += "    <GRAY>" + eventualColor + "Deliver it to <WHITE>" + eventualColor + main.getArmorStandManager().getArmorStandName(armorStandUUID);
+                    toReturn += "\n    <GRAY>" + eventualColor + "Deliver it to <WHITE>" + eventualColor + main.getArmorStandManager().getArmorStandName(armorStandUUID);
                 } else {
-                    toReturn += "    <GRAY>" + eventualColor + "The target Armor Stand is currently not available!";
+                    toReturn += "\n    <GRAY>" + eventualColor + "The target Armor Stand is currently not available!";
                 }
             }
 
