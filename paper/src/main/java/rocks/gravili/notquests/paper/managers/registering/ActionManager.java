@@ -21,11 +21,8 @@ package rocks.gravili.notquests.paper.managers.registering;
 import cloud.commandframework.Command;
 import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.paper.PaperCommandManager;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.NotQuestColors;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.actions.*;
@@ -36,8 +33,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
-
-import static rocks.gravili.notquests.paper.commands.NotQuestColors.*;
 
 public class ActionManager {
     private final NotQuests main;
@@ -68,6 +63,7 @@ public class ActionManager {
         registerAction("GrantPermission", GrantPermissionAction.class);
         registerAction("SpawnMob", SpawnMobAction.class);
         registerAction("SendMessage", SendMessageAction.class);
+        registerAction("BroadcastMessage", BroadcastMessageAction.class);
 
 
     }
