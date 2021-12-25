@@ -12,6 +12,11 @@ repositories {
     maven {
         name = 'papermc-repo'
         url = 'https://papermc.io/repo/repository/maven-public/'
+        content {
+            includeGroup 'io.papermc.paper'
+            includeGroup 'net.kyori'
+            includeGroup 'io.papermc'
+        }
     }
     maven {
         name = 'spigot repo (bstats)'
@@ -19,10 +24,6 @@ repositories {
         content {
             includeGroup 'org.spigotmc'
         }
-    }
-    maven {
-        name = 'sonatype'
-        url = 'https://oss.sonatype.org/content/groups/public/'
     }
     maven {
         name = 'citizens'
@@ -64,12 +65,7 @@ repositories {
             includeGroup 'de.themoep'
         }
     }
-    maven {
-        url 'https://oss.sonatype.org/content/repositories/snapshots/'
-        content {
-            includeGroup 'net.kyori'
-        }
-    }
+
     maven {
         url 'https://mvn.lumine.io/repository/maven-public/'
         content {
@@ -98,11 +94,17 @@ repositories {
 
     maven {
         url "https://repo.incendo.org/content/repositories/snapshots"
+        content {
+            includeGroup 'org.incendo.interfaces'
+        }
     }
 
-    maven { url 'https://libraries.minecraft.net/' }
-
-    //mavenLocal()
+    maven {
+        url 'https://libraries.minecraft.net/'
+        content {
+            includeGroup 'com.mojang'
+        }
+    }
 
 }
 
@@ -111,7 +113,7 @@ dependencies {
     implementation project(':spigot')
     implementation project(':paper')
 
-    compileOnly 'io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT'
+    compileOnly 'io.papermc.paper:paper-api:1.18.1-R0.1-SNAPSHOT'
     implementation 'io.papermc:paperlib:1.0.7'
 }
 
@@ -135,17 +137,17 @@ shadowJar {
     //exclude('com.mojang:brigadier')
 
     //relocate('io.papermc.lib', path.concat('.paper'))
-    relocate('org.bstats', path.concat('.bstats'))
+    //relocate('org.bstats', path.concat('.bstats'))
 
     archiveClassifier.set(null)
 }
 
 
-def targetJavaVersion = 16
+def targetJavaVersion = 17
 java {
     def javaVersion = JavaVersion.toVersion(targetJavaVersion)
     sourceCompatibility = 17
-    targetCompatibility = 16
+    targetCompatibility = 17
     if (JavaVersion.current() < javaVersion) {
         toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
     }

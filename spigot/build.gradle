@@ -9,6 +9,10 @@ repositories {
     maven {
         name = 'papermc-repo'
         url = 'https://papermc.io/repo/repository/maven-public/'
+        content {
+            includeGroup 'io.papermc.paper'
+            includeGroup 'net.kyori'
+        }
     }
     maven {
         name = 'spigot repo (bstats)'
@@ -16,10 +20,6 @@ repositories {
         content {
             includeGroup 'org.spigotmc'
         }
-    }
-    maven {
-        name = 'sonatype'
-        url = 'https://oss.sonatype.org/content/groups/public/'
     }
     maven {
         name = 'citizens'
@@ -61,12 +61,7 @@ repositories {
             includeGroup 'de.themoep'
         }
     }
-    maven {
-        url 'https://oss.sonatype.org/content/repositories/snapshots/'
-        content {
-            includeGroup 'net.kyori'
-        }
-    }
+
     maven {
         url 'https://mvn.lumine.io/repository/maven-public/'
         content {
@@ -95,9 +90,17 @@ repositories {
 
     maven {
         url "https://repo.incendo.org/content/repositories/snapshots"
+        content {
+            includeGroup 'org.incendo.interfaces'
+        }
     }
 
-    maven { url 'https://libraries.minecraft.net/' }
+    maven {
+        url 'https://libraries.minecraft.net/'
+        content {
+            includeGroup 'com.mojang'
+        }
+    }
 }
 
 dependencies {
@@ -215,11 +218,11 @@ shadowJar {
 }
 
 
-def targetJavaVersion = 16
+def targetJavaVersion = 17
 java {
     def javaVersion = JavaVersion.toVersion(targetJavaVersion)
     sourceCompatibility = 17
-    targetCompatibility = 16
+    targetCompatibility = 17
     if (JavaVersion.current() < javaVersion) {
         toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
     }
