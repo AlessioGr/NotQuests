@@ -1,0 +1,60 @@
+npcID: -1
+start: Atlas.specialgreeting,Atlas.greeting1
+Lines:
+  Atlas:
+    color: "<BLUE>"
+    greeting1:
+      text: "Hello traveler! I am atlas, the keeper of time!"
+      next: Player.greeting1,Player.greeting2
+      shout: true
+    specialgreeting:
+      text: "I don't wanna talk to you while you fulfill this condition. Bye!"
+      conditions:
+        - condition hasAActive
+    answer1:
+      text: "That's a secret, but without me, you all wouldn't exist."
+      next: Atlas.answer3
+    notime:
+      text: "Time is a rare good. Au revoir!"
+    answer3:
+      text: "Anyways though, what are you doing here?"
+      next: Player.three,Player.four,Player.five
+    answer4:
+      text: "Oooh I see! I'm sure you are in need for some time, then. Should I lend you some?"
+      next: Player.lend,Player.nolend
+    answer5:
+      text: "Here it is!"
+      next: Atlas.answer6
+    answer6:
+      text: "[Hands time]"
+      next: Player.bye
+    nicebye:
+      text: "You're very welcome. Good luck on your ventures!"
+      actions:
+        - "action givetestquest"
+        - "action givetestquest"
+  Player:
+    greeting1:
+      text: "Nice to meet you! Why do you need to keep time?"
+      next: Atlas.answer1
+    greeting2:
+      text: "I have no time for you."
+      next: Atlas.notime
+    three:
+      text: "I'm just exploring the area!"
+      next: Atlas.answer4
+    four:
+      text: "I'm on a mission."
+      next: Atlas.answer4
+    five:
+      text: "I'm here to meet the king."
+      next: Atlas.answer4
+    lend:
+      text: "Yes, please! I could use some time"
+      next: Atlas.answer5
+    nolend:
+      text: "No, sorry, I have enough time. Thank you for the offer, though!"
+      next: Atlas.notime
+    bye:
+      text: "Thank you a lot, time keeper. See you around!"
+      next: Atlas.nicebye

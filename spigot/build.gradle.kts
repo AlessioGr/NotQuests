@@ -9,6 +9,7 @@ java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
 
+
 repositories {
     mavenCentral()
 
@@ -16,6 +17,12 @@ repositories {
         content {
             includeGroup("io.papermc.paper")
             includeGroup("net.kyori")
+        }
+    }
+
+    maven("https://hub.spigotmc.org/nexus/content/groups/public/"){
+        content {
+            includeGroup("org.spigotmc")
         }
     }
 
@@ -94,13 +101,16 @@ repositories {
 
 }
 
+
+
+
 dependencies {
     //implementation project(':common')
 
     implementation("org.bstats:bstats-bukkit:2.2.1")
     implementation("de.themoep:inventorygui:1.5-SNAPSHOT")
 
-    compileOnly("io.papermc.paper:paper-api:1.18.1-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.18.1-R0.1-SNAPSHOT")
     compileOnly("net.citizensnpcs:citizens-main:2.0.29-SNAPSHOT")
     compileOnly("me.clip:placeholderapi:2.11.0")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7")
@@ -129,20 +139,13 @@ dependencies {
 
     //Shaded
     implementation("net.kyori:adventure-text-minimessage:4.10.0-SNAPSHOT")
-    implementation("net.kyori:adventure-text-serializer-bungeecord:4.0.1")
+    implementation("net.kyori:adventure-platform-bukkit:4.0.1")
 
     //CloudCommands
     implementation("cloud.commandframework:cloud-paper:1.6.1")
     implementation("cloud.commandframework:cloud-minecraft-extras:1.6.1")
     //Else it errors:
     implementation("io.leangen.geantyref:geantyref:1.3.13")
-    //Interfaces
-    implementation("org.incendo.interfaces:interfaces-core:1.0.0-SNAPSHOT")
-
-    implementation("org.incendo.interfaces:interfaces-paper:1.0.0-SNAPSHOT"){
-        exclude(group= "com.destroystokyo.paper", module= "paper-api")
-    }
-
 
     //implementation 'com.github.retrooper.packetevents:bukkit:2.0-SNAPSHOT'
     implementation("com.github.AlessioGr.packetevents:bukkit:2.0-SNAPSHOT")
@@ -160,11 +163,12 @@ dependencies {
 /**
  * Configure NotQuests for shading
  */
-val shadowPath = "rocks.gravili.notquests.paper.shadow"
+val shadowPath = "rocks.gravili.notquests.spigot.shadow"
 tasks.withType<ShadowJar> {
     minimize()
 
     //exclude('com.mojang:brigadier')
+    relocate("net.kyori", "$shadowPath.kyori")
 
 
     //relocate('io.papermc.lib', path.concat('.paper'))
@@ -179,16 +183,6 @@ tasks.withType<ShadowJar> {
 
     relocate("io.github.retrooper.packetevents", "$shadowPath.packetevents.bukkit")
     relocate("com.github.retrooper.packetevents", "$shadowPath.packetevents.api")
-
-    //Packet Stuff
-    //relocate('net.kyori.adventure.text.serializer.bungeecord', path.concat('.kyori.bungeecord'))
-    //relocate('net.kyori.adventure.platform.bukkit', path.concat('.kyori.platform-bukkit'))
-    relocate("net.kyori.adventure.text.serializer.bungeecord", "$shadowPath.kyori.bungeecord")
-
-    //MiniMessage
-    relocate("net.kyori.adventure.text.minimessage", "$shadowPath.kyori.minimessage")
-
-    relocate("org.incendo.interfaces", "$shadowPath.interfaces")
 
 
     dependencies {
@@ -206,11 +200,11 @@ tasks.withType<ShadowJar> {
         //include(dependency('io.github.retrooper.packetevents:')
 
         include(dependency("com.github.AlessioGr.packetevents:"))
-        include(dependency("org.incendo.interfaces:"))
 
         //include(dependency('net.kyori:adventure-platform-bukkit:')
         include(dependency("net.kyori:adventure-text-minimessage:"))
-        include(dependency("net.kyori:adventure-text-serializer-bungeecord:"))
+        include(dependency("net.kyori:adventure-platform-bukkit:"))
+
 
     }
 
