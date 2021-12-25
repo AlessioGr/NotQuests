@@ -105,12 +105,12 @@ gui:
     button:
       questpoints:
         text: |-
-          <GOLD>Quest Points
-          <YELLOW>Current quest points: <AQUA>%QUESTPOINTS%
+          <highlight>Quest Points
+          <main>Current quest points: <highlight2>%QUESTPOINTS%
       takequest:
         text: |-
-          <GREEN>Take a Quest
-          <GRAY>Start a new Quest!
+          <positive>Take a Quest
+          <unimportant>Start a new Quest!
 
           <veryUnimportant>Some Quests cannot be
           <veryUnimportant>started like this.

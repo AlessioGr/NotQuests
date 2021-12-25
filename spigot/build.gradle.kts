@@ -142,12 +142,8 @@ dependencies {
     implementation("net.kyori:adventure-platform-bukkit:4.0.1")
 
     //CloudCommands
-    implementation("cloud.commandframework:cloud-paper:1.6.1"){
-        exclude(group= "net.kyori", module= "adventure-api")
-    }
-    implementation("cloud.commandframework:cloud-minecraft-extras:1.6.1"){
-        exclude(group= "net.kyori", module= "adventure-api")
-    }
+    implementation("cloud.commandframework:cloud-paper:1.6.1")
+    implementation("cloud.commandframework:cloud-minecraft-extras:1.6.1")
     //Else it errors:
     implementation("io.leangen.geantyref:geantyref:1.3.13")
 
@@ -206,8 +202,7 @@ tasks.withType<ShadowJar> {
         include(dependency("com.github.AlessioGr.packetevents:"))
 
         //include(dependency('net.kyori:adventure-platform-bukkit:')
-        include(dependency("net.kyori:adventure-text-minimessage:"))
-        include(dependency("net.kyori:adventure-platform-bukkit:"))
+        include(dependency("net.kyori:"))
 
 
     }
