@@ -800,6 +800,7 @@ public class DataManager {
             valueChanged = true;
         }
 
+
         configuration.journalItem = getGeneralConfig().getItemStack(key);
 
         key = "general.packet-magic.enabled";

@@ -49,6 +49,7 @@ public class NotQuests {
     private UpdateManager updateManager;
     private GUIManager guiManager;
     private BackupManager backupManager;
+    private MessageManager messageManager;
 
     //Registering Managers
     private ObjectiveManager objectiveManager;
@@ -70,7 +71,7 @@ public class NotQuests {
 
     public void onLoad() {
 
-
+        messageManager = new MessageManager(this);
         //Create a new instance of the Log Manager which will be re-used everywhere
         logManager = new LogManager(this);
 
@@ -110,9 +111,6 @@ public class NotQuests {
         logManager.lateInit(); //To initialize adventure
 
         getLogManager().info("NotQuests (Paper) is starting...");
-
-
-
 
         //Create a new instance of the Util Manager which will be re-used everywhere
         utilManager = new UtilManager(this);
@@ -452,5 +450,9 @@ public class NotQuests {
 
     public IntegrationsManager getIntegrationsManager() {
         return integrationsManager;
+    }
+
+    public final MessageManager getMessageManager(){
+        return messageManager;
     }
 }

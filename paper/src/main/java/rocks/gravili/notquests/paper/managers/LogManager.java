@@ -37,7 +37,7 @@ public class LogManager {
         consoleSender = Bukkit.getConsoleSender();
 
         prefixText = "<#393e46>[<gradient:#E0EAFC:#CFDEF3>NotQuests<#393e46>]<#636c73>: ";
-        prefix = MiniMessage.miniMessage().parse(prefixText);
+        prefix = main.getMessageManager().getMiniMessage().parse(prefixText);
     }
 
     public void lateInit() {
@@ -50,7 +50,7 @@ public class LogManager {
     }
 
     private void log(final Level level, final LogCategory logCategory, final String color, final String message) {
-        consoleSender.sendMessage(MiniMessage.miniMessage().parse(prefixText + color + message));
+        consoleSender.sendMessage(main.getMessageManager().getMiniMessage().parse(prefixText + color + message));
     }
 
 
