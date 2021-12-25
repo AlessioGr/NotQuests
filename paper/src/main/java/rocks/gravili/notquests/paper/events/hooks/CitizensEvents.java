@@ -26,14 +26,13 @@ import net.citizensnpcs.api.event.NPCRightClickEvent;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.trait.FollowTrait;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.conversation.Conversation;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -108,6 +107,7 @@ public class CitizensEvents implements Listener {
         final NPC npc = event.getNPC();
         final Player player = event.getClicker();
         final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+        boolean handledObjective = false;
         if (questPlayer != null) {
             if (questPlayer.getActiveQuests().size() > 0) {
                 for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
@@ -129,6 +129,7 @@ public class CitizensEvents implements Listener {
                                                     continue;
                                                 }
 
+                                                handledObjective = true;
                                                 if (progressLeft < itemStack.getAmount()) { //We can finish it with this itemStack
                                                     itemStack.setAmount((itemStack.getAmount() - (int) progressLeft));
                                                     activeObjective.addProgress(progressLeft, npc.getId());
@@ -155,6 +156,7 @@ public class CitizensEvents implements Listener {
                                     player.sendMessage(main.parse(
                                             "<GREEN>You talked to <highlight>" + npc.getName()
                                     ));
+                                    handledObjective = true;
                                 }
                             } else if (activeObjective.getObjective() instanceof final EscortNPCObjective escortNPCObjective) {
                                 if (escortNPCObjective.getNpcToEscortToID() == npc.getId()) {
@@ -165,7 +167,7 @@ public class CitizensEvents implements Listener {
                                             player.sendMessage(main.parse(
                                                     "<GREEN>You have successfully delivered the NPC <highlight>" + npcToEscort.getName()
                                             ));
-
+                                            handledObjective = true;
                                             FollowTrait followerTrait = null;
                                             for (final Trait trait : npcToEscort.getTraits()) {
                                                 if (trait.getName().toLowerCase(Locale.ROOT).contains("follow")) {
@@ -199,6 +201,21 @@ public class CitizensEvents implements Listener {
                 questPlayer.removeCompletedQuests();
             }
         }
+
+        //Return if another action already happened
+        if (handledObjective) {
+            return;
+        }
+
+        //Quest Preview
+        main.getQuestManager().sendQuestsPreviewOfQuestShownNPCs(npc, player);
+
+        //Conversations
+        final Conversation foundConversation = main.getConversationManager().getConversationForNPCID(npc.getId());
+        if (foundConversation != null) {
+            main.getConversationManager().playConversation(player, foundConversation);
+        }
+
 
     }
 

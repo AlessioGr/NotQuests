@@ -22,11 +22,8 @@ import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.util.DataKey;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.plugin.java.JavaPlugin;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.conversation.Conversation;
 import rocks.gravili.notquests.paper.structs.Quest;
 
 /**
@@ -76,7 +73,7 @@ public class QuestGiverNPCTrait extends Trait {
         //Handle a click on a NPC. The event has a getNPC() method.
         //Be sure to check event.getNPC() == this.getNPC() so you only handle clicks on this NPC!
         //npc.getTrait(FollowTrait.class) new FollowTrait();
-        if (event.getNPC() == this.getNPC()) {
+        /*if (event.getNPC() == this.getNPC()) {
             final Player player = event.getClicker();
             notQuests.getQuestManager().sendQuestsPreviewOfQuestShownNPCs(getNPC(), player);
 
@@ -85,7 +82,7 @@ public class QuestGiverNPCTrait extends Trait {
             if (foundConversation != null) {
                 notQuests.getConversationManager().playConversation(player, foundConversation);
             }
-        }
+        }*/
 
     }
 
