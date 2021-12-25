@@ -251,7 +251,7 @@ public class AdminConversationCommands {
                         foundConversation.setNPC(npcID);
 
                         context.getSender().sendMessage(main.parse(
-                                "<main>NPC of conversation <highlight>" + foundConversation.getIdentifier() + "</highlight> has been set to <highlight>"
+                                "<main>NPC of conversation <highlight>" + foundConversation.getIdentifier() + "</highlight> has been set to <highlight2>"
                                         + npcID + "</highlight2>!"
                         ));
                     }));
