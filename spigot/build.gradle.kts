@@ -150,7 +150,7 @@ dependencies {
     //implementation 'com.github.retrooper.packetevents:bukkit:2.0-SNAPSHOT'
     implementation("com.github.AlessioGr.packetevents:bukkit:2.0-SNAPSHOT")
 
-    //implementation 'commons-io:commons-io:2.11.0'
+    implementation("commons-io:commons-io:2.11.0")
     //implementation 'org.apache.commons:commons-text:1.9'
     //implementation 'org.apache.commons:commons-lang3:3.12.0'
     //implementation 'org.apache.commons:commons-lang:3.1'
@@ -177,7 +177,7 @@ tasks.withType<ShadowJar> {
     relocate("io.leangen.geantyref", "$shadowPath.geantyref")
     relocate("de.themoep", "$shadowPath.de.themoep")
 
-    //relocate("org.apache.commons.io", path.concat('.commons.io'))
+    relocate("org.apache.commons.io", "$shadowPath.commons.io")
     //relocate("org.apache.commons.text", path.concat('.commons.text'))
     //relocate("org.apache.commons.lang3", path.concat('.commons.lang'))
 
@@ -187,7 +187,7 @@ tasks.withType<ShadowJar> {
 
     dependencies {
         //include(dependency('org.apache.commons:')
-        //include(dependency('commons-io:commons-io:')
+        include(dependency("commons-io:commons-io:"))
 
         //include(dependency('io.papermc:paperlib')
         include(dependency("de.themoep:inventorygui:1.5-SNAPSHOT"))

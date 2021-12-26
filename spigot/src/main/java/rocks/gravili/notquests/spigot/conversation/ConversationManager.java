@@ -28,11 +28,11 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import rocks.gravili.notquests.spigot.conditions.Condition;
-import rocks.gravili.notquests.spigot.structs.actions.Action;
 import rocks.gravili.notquests.spigot.NotQuests;
 import rocks.gravili.notquests.spigot.commands.NotQuestColors;
+import rocks.gravili.notquests.spigot.conditions.Condition;
 import rocks.gravili.notquests.spigot.structs.QuestPlayer;
+import rocks.gravili.notquests.spigot.structs.actions.Action;
 
 import java.io.File;
 import java.io.IOException;
@@ -144,19 +144,20 @@ public class ConversationManager {
     public void playConversation(final Player player, final Conversation conversation) {
         final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
 
-
-        if (getOpenConversation(questPlayer.getUUID()) == null) {
-            ConversationPlayer conversationPlayer = new ConversationPlayer(main, questPlayer, player, conversation);
-            openConversations.put(questPlayer.getUUID(), conversationPlayer);
-
-            conversationPlayer.play();
-        } else {
+        final ConversationPlayer openConversation = getOpenConversation(questPlayer.getUUID());
+        if (openConversation != null) {
             main.adventure().player(player).sendMessage(
                     MiniMessage.miniMessage().parse(
                             NotQuestColors.errorGradient + "You are already in a conversation!"
                     )
             );
+            stopConversation(openConversation);
         }
+
+        ConversationPlayer conversationPlayer = new ConversationPlayer(main, questPlayer, player, conversation);
+        openConversations.put(questPlayer.getUUID(), conversationPlayer);
+
+        conversationPlayer.play();
 
     }
 

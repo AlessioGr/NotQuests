@@ -7,18 +7,11 @@ import de.themoep.inventorygui.StaticGuiElement;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.incendo.interfaces.core.arguments.ArgumentKey;
-import org.incendo.interfaces.core.click.ClickHandler;
-import org.incendo.interfaces.paper.PaperInterfaceListeners;
-import org.incendo.interfaces.paper.PlayerViewer;
-import org.incendo.interfaces.paper.element.ItemStackElement;
-import org.incendo.interfaces.paper.transform.PaperTransform;
 import org.incendo.interfaces.paper.type.ChestInterface;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
+
 
 public class GUIManager {
     private final NotQuests main;
@@ -34,7 +27,14 @@ public class GUIManager {
     }
 
     public void constructInterfaces(){
-        PaperInterfaceListeners.install(main.getMain());
+        /*PaperInterfaceListeners.install(main.getMain());
+
+        ArrayList<ItemStackElement<ChestPane>> list = new ArrayList<>() {
+            {
+
+            }
+        };
+        PaginatedTransform<ItemStackElement<ChestPane>, ChestPane, PlayerViewer> paginatedTransform = new PaginatedTransform<ItemStackElement<ChestPane>, ChestPane, PlayerViewer>(Vector2.at(2, 1), Vector2.at(6, 2), list);
 
         interfaceActiveQuests = ChestInterface.builder()
                 // This interface will have one row.
@@ -48,6 +48,8 @@ public class GUIManager {
                         ItemStackElement.of(new ItemStack(Material.BLACK_STAINED_GLASS_PANE))
                 ))
                 // Add some information to the pane
+
+
                 .addTransform((pane, view) -> {
                     // Get the view arguments
                     // (Keep in mind - these arguments may be coming from a Supplier, so their values can change!)
@@ -62,6 +64,8 @@ public class GUIManager {
 
                     itemStack.setItemMeta(itemMeta);
 
+                    return PaginatedTransform
+
 
                     // Return a pane with
                     return pane.element(ItemStackElement.of(itemStack,
@@ -75,13 +79,13 @@ public class GUIManager {
                 // Set the title
                 .title(main.getLanguageManager().getComponent("gui.activeQuests.title", null ))
                 // Build the interface
-                .build();
+                .build();*/
     }
 
 
-    public void showActiveQuests(QuestPlayer questPlayer, Player player) {
+    public void showActiveQuestsNew(QuestPlayer questPlayer, Player player) {
 // Open the interface to the player.
-        interfaceActiveQuests.open(PlayerViewer.of(player),
+        /*interfaceActiveQuests.open(PlayerViewer.of(player),
                 // Create a HashMapInterfaceArgument with a time argument set to a
                 // supplier that returns the current time printed all nice and pretty.
                 HashMapInterfaceArgument.with("time", () -> {
@@ -91,11 +95,11 @@ public class GUIManager {
                         })
                         .with("clicks", 0)
                         .build()
-        );
+        );*/
     }
 
 
-    public void showActiveQuestsOld(QuestPlayer questPlayer, Player player) {
+    public void showActiveQuests(QuestPlayer questPlayer, Player player) {
         if (questPlayer != null) {
             String[] guiSetup = {
                     "zxxxxxxxx",

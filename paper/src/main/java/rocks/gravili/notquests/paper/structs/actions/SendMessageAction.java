@@ -76,6 +76,12 @@ public class SendMessageAction extends Action {
 
     @Override
     public void execute(final Player player, Object... objects) {
+        String rewardConsoleCommand = getMessageToSend().replace("{PLAYER}", player.getName()).replace("{PLAYERUUID}", player.getUniqueId().toString())
+                .replace("{PLAYERX}", "" + player.getLocation().getX())
+                .replace("{PLAYERY}", "" + player.getLocation().getY())
+                .replace("{PLAYERZ}", "" + player.getLocation().getZ());
+        rewardConsoleCommand = rewardConsoleCommand.replace("{WORLD}", "" + player.getWorld().getName());
+
         player.sendMessage(main.parse(
                 getMessageToSend()
         ));
