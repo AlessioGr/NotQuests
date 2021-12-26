@@ -20,16 +20,15 @@ package rocks.gravili.notquests.paper.structs.actions;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
-import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.arguments.MiniMessageSelector;
+import rocks.gravili.notquests.paper.structs.Quest;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class SendMessageAction extends Action {
 
@@ -42,21 +41,10 @@ public class SendMessageAction extends Action {
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor actionFor) {
         manager.command(builder.literal("SendMessage")
-                .argument(StringArgument.<CommandSender>newBuilder("Message").withSuggestionsProvider(
-                        (context, lastString) -> {
-                            final List<String> allArgs = context.getRawInput();
-                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "<Message to send>", "");
-
-                            ArrayList<String> completions = new ArrayList<>();
-
-                            completions.add("<Message to send>");
-                            return completions;
-
-                        }
-                ).greedy().build(), ArgumentDescription.of("Message to send"))
+                .argument(MiniMessageSelector.<CommandSender>newBuilder("Sending Message", main).withPlaceholders().build(), ArgumentDescription.of("Message to broadcast"))
                 .meta(CommandMeta.DESCRIPTION, "Creates a new SendMessage Action")
                 .handler((context) -> {
-                    final String messageToSend = context.get("Message");
+                    final String messageToSend = String.join(" ", (String[]) context.get("Sending Message"));
 
                     SendMessageAction sendMessageAction = new SendMessageAction(main);
                     sendMessageAction.setMessageToSend(messageToSend);
@@ -76,14 +64,31 @@ public class SendMessageAction extends Action {
 
     @Override
     public void execute(final Player player, Object... objects) {
-        String rewardConsoleCommand = getMessageToSend().replace("{PLAYER}", player.getName()).replace("{PLAYERUUID}", player.getUniqueId().toString())
+        if (getMessageToSend().isBlank()) {
+            main.getLogManager().warn("Tried to execute SendMessage action with empty message.");
+            return;
+        }
+
+        Quest quest = getQuest();
+        if (quest == null && objects.length > 0) {
+            for (Object object : objects) {
+                if (object instanceof Quest quest1) {
+                    quest = quest1;
+                }
+            }
+        }
+
+        String message = getMessageToSend().replace("{PLAYER}", player.getName()).replace("{PLAYERUUID}", player.getUniqueId().toString())
                 .replace("{PLAYERX}", "" + player.getLocation().getX())
                 .replace("{PLAYERY}", "" + player.getLocation().getY())
-                .replace("{PLAYERZ}", "" + player.getLocation().getZ());
-        rewardConsoleCommand = rewardConsoleCommand.replace("{WORLD}", "" + player.getWorld().getName());
+                .replace("{PLAYERZ}", "" + player.getLocation().getZ())
+                .replace("{WORLD}", "" + player.getWorld().getName());
+        if(quest != null){
+            message = message.replace("{QUEST}", "" + quest.getQuestName());
+        }
 
         player.sendMessage(main.parse(
-                getMessageToSend()
+                message
         ));
     }
 

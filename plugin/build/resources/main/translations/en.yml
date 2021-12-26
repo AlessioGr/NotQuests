@@ -136,10 +136,10 @@ gui:
     title: '             <highlight2>Active Quests'
     button:
       activeQuestButton:
-        name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
-        lore:
-          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<main>Click to see details!"
+        text: |-
+          <highlight>%QUESTNAME% <positive>[ACTIVE]
+          <unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%
+          <main>Click to see details!
   takeQuestChoose:
     title: '<highlight2>Which Quest do you want to take?'
     button:

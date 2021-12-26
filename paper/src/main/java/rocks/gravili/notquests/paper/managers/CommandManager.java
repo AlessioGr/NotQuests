@@ -37,19 +37,14 @@ import cloud.commandframework.minecraft.extras.MinecraftHelp;
 import cloud.commandframework.paper.PaperCommandManager;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import io.leangen.geantyref.TypeToken;
-import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.*;
-import rocks.gravili.notquests.paper.commands.arguments.ActionSelector;
-import rocks.gravili.notquests.paper.commands.arguments.ApplyOnSelector;
-import rocks.gravili.notquests.paper.commands.arguments.CommandSelector;
-import rocks.gravili.notquests.paper.commands.arguments.QuestSelector;
+import rocks.gravili.notquests.paper.commands.arguments.*;
 import rocks.gravili.notquests.paper.conversation.ConversationManager;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
@@ -262,6 +257,9 @@ public class CommandManager {
 
 
                 cloudBrigadierManager.registerMapping(new TypeToken<CommandSelector.CommandParser<CommandSender>>() {
+                }, builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
+
+                cloudBrigadierManager.registerMapping(new TypeToken<MiniMessageSelector.MiniMessageParser<CommandSender>>() {
                 }, builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
 
             } else {

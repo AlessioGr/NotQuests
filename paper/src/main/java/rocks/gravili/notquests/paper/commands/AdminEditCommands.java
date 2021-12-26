@@ -30,6 +30,7 @@ import cloud.commandframework.paper.PaperCommandManager;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.kyori.adventure.text.Component;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -48,6 +49,7 @@ import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 import rocks.gravili.notquests.paper.structs.triggers.Trigger;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -99,11 +101,24 @@ public class AdminEditCommands {
                             final List<String> allArgs = context.getRawInput();
                             main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "<Enter new Quest description>", "");
                             ArrayList<String> completions = new ArrayList<>();
+                            String rawInput = context.getRawInputJoined();
                             if (lastString.startsWith("{")) {
                                 completions.addAll(main.getCommandManager().getAdminCommands().placeholders);
                             } else {
-                                completions.add("<Enter new Quest description>");
-                                completions.add("clear");
+                                if(lastString.startsWith("<")){
+                                    for(String color : main.getUtilManager().getMiniMessageTokens()){
+                                        completions.add("<"+ color +">");
+                                        //Now the closings. First we search IF it contains an opening and IF it doesnt contain more closings than the opening
+                                        if(rawInput.contains("<"+color+">")){
+                                            if(StringUtils.countMatches(rawInput, "<"+color+">") > StringUtils.countMatches(rawInput, "</"+color+">")){
+                                                completions.add("</"+ color +">");
+                                            }
+                                        }
+                                    }
+                                }else{
+                                    completions.add("<Enter new Quest description>");
+                                    completions.add("clear");
+                                }
                             }
                             return completions;
                         }
@@ -134,11 +149,25 @@ public class AdminEditCommands {
                             final List<String> allArgs = context.getRawInput();
                             main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "<Enter new Quest display name>", "");
                             ArrayList<String> completions = new ArrayList<>();
+
+                            String rawInput = context.getRawInputJoined();
                             if (lastString.startsWith("{")) {
                                 completions.addAll(main.getCommandManager().getAdminCommands().placeholders);
                             } else {
-                                completions.add("<Enter new Quest display name>");
-                                completions.add("clear");
+                                if(lastString.startsWith("<")){
+                                    for(String color : main.getUtilManager().getMiniMessageTokens()){
+                                        completions.add("<"+ color +">");
+                                        //Now the closings. First we search IF it contains an opening and IF it doesnt contain more closings than the opening
+                                        if(rawInput.contains("<"+color+">")){
+                                            if(StringUtils.countMatches(rawInput, "<"+color+">") > StringUtils.countMatches(rawInput, "</"+color+">")){
+                                                completions.add("</"+ color +">");
+                                            }
+                                        }
+                                    }
+                                }else{
+                                    completions.add("<Enter new Quest display name>");
+                                    completions.add("clear");
+                                }
                             }
                             return completions;
                         }
@@ -923,11 +952,26 @@ public class AdminEditCommands {
                             final List<String> allArgs = context.getRawInput();
                             main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "<Enter new Objective description>", "");
                             ArrayList<String> completions = new ArrayList<>();
+
+                            String rawInput = context.getRawInputJoined();
                             if (lastString.startsWith("{")) {
                                 completions.addAll(main.getCommandManager().getAdminCommands().placeholders);
                             } else {
-                                completions.add("<Enter new Objective description>");
+                                if(lastString.startsWith("<")){
+                                    for(String color : main.getUtilManager().getMiniMessageTokens()){
+                                        completions.add("<"+ color +">");
+                                        //Now the closings. First we search IF it contains an opening and IF it doesnt contain more closings than the opening
+                                        if(rawInput.contains("<"+color+">")){
+                                            if(StringUtils.countMatches(rawInput, "<"+color+">") > StringUtils.countMatches(rawInput, "</"+color+">")){
+                                                completions.add("</"+ color +">");
+                                            }
+                                        }
+                                    }
+                                }else{
+                                    completions.add("<Enter new Objective description>");
+                                }
                             }
+
                             return completions;
                         }
                 ), ArgumentDescription.of("Objective description"))
@@ -984,11 +1028,26 @@ public class AdminEditCommands {
                             final List<String> allArgs = context.getRawInput();
                             main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "<Enter new Objective displayname>", "");
                             ArrayList<String> completions = new ArrayList<>();
+
+                            String rawInput = context.getRawInputJoined();
                             if (lastString.startsWith("{")) {
                                 completions.addAll(main.getCommandManager().getAdminCommands().placeholders);
                             } else {
-                                completions.add("<Enter new Objective displayname>");
+                                if(lastString.startsWith("<")){
+                                    for(String color : main.getUtilManager().getMiniMessageTokens()){
+                                        completions.add("<"+ color +">");
+                                        //Now the closings. First we search IF it contains an opening and IF it doesnt contain more closings than the opening
+                                        if(rawInput.contains("<"+color+">")){
+                                            if(StringUtils.countMatches(rawInput, "<"+color+">") > StringUtils.countMatches(rawInput, "</"+color+">")){
+                                                completions.add("</"+ color +">");
+                                            }
+                                        }
+                                    }
+                                }else{
+                                    completions.add("<Enter new Objective display name>");
+                                }
                             }
+
                             return completions;
                         }
                 ), ArgumentDescription.of("Objective displayname"))
@@ -1251,11 +1310,26 @@ public class AdminEditCommands {
                             final List<String> allArgs = context.getRawInput();
                             main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "<Enter new Reward display name>", "");
                             ArrayList<String> completions = new ArrayList<>();
+
+                            String rawInput = context.getRawInputJoined();
                             if (lastString.startsWith("{")) {
                                 completions.addAll(main.getCommandManager().getAdminCommands().placeholders);
                             } else {
-                                completions.add("<Enter new Reward display name>");
+                                if(lastString.startsWith("<")){
+                                    for(String color : main.getUtilManager().getMiniMessageTokens()){
+                                        completions.add("<"+ color +">");
+                                        //Now the closings. First we search IF it contains an opening and IF it doesnt contain more closings than the opening
+                                        if(rawInput.contains("<"+color+">")){
+                                            if(StringUtils.countMatches(rawInput, "<"+color+">") > StringUtils.countMatches(rawInput, "</"+color+">")){
+                                                completions.add("</"+ color +">");
+                                            }
+                                        }
+                                    }
+                                }else{
+                                    completions.add("<Enter new Reward display name>");
+                                }
                             }
+
                             return completions;
                         }
                 ), ArgumentDescription.of("Reward display name"))

@@ -46,6 +46,7 @@ import cloud.commandframework.arguments.parser.ArgumentParseResult;
 import cloud.commandframework.arguments.parser.ArgumentParser;
 import cloud.commandframework.context.CommandContext;
 import io.leangen.geantyref.TypeToken;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.NotNull;
@@ -55,30 +56,34 @@ import java.util.List;
 import java.util.Queue;
 import java.util.function.BiFunction;
 
-public class CommandSelector<C> extends CommandArgument<C, String[]> {
+public class MiniMessageSelector<C> extends CommandArgument<C, String[]> {
 
-    protected CommandSelector(
+    private boolean withPlaceholders = false;
+
+    protected MiniMessageSelector(
             final boolean required,
             final @NonNull String name,
             final @NonNull String defaultValue,
             final @NonNull BiFunction<@NonNull CommandContext<C>, @NonNull String,
                     @NonNull List<@NonNull String>> suggestionsProvider,
             final @NonNull ArgumentDescription defaultDescription,
-            NotQuests main
+            NotQuests main,
+            boolean withPlaceholders
     ) {
-        super(required, name, new CommandParser<>(main), defaultValue, TypeToken.get(String[].class), suggestionsProvider);
+        super(required, name, new MiniMessageParser<>(main, withPlaceholders), defaultValue, TypeToken.get(String[].class), suggestionsProvider);
+        this.withPlaceholders = withPlaceholders;
     }
 
-    public static <C> CommandSelector.@NonNull Builder<C> newBuilder(final @NonNull String name, final NotQuests main) {
-        return new CommandSelector.Builder<>(name, main);
+    public static <C> MiniMessageSelector.@NonNull Builder<C> newBuilder(final @NonNull String name, final NotQuests main) {
+        return new MiniMessageSelector.Builder<>(name, main);
     }
 
     public static <C> @NonNull CommandArgument<C, String[]> of(final @NonNull String name, final NotQuests main) {
-        return CommandSelector.<C>newBuilder(name, main).asRequired().build();
+        return MiniMessageSelector.<C>newBuilder(name, main).asRequired().build();
     }
 
     public static <C> @NonNull CommandArgument<C, String[]> optional(final @NonNull String name, final NotQuests main) {
-        return CommandSelector.<C>newBuilder(name, main).asOptional().build();
+        return MiniMessageSelector.<C>newBuilder(name, main).asOptional().build();
     }
 
     public static <C> @NonNull CommandArgument<C, String[]> optional(
@@ -86,80 +91,87 @@ public class CommandSelector<C> extends CommandArgument<C, String[]> {
             final @NonNull String command,
             final NotQuests main
     ) {
-        return CommandSelector.<C>newBuilder(name, main).asOptionalWithDefault(command).build();
+        return MiniMessageSelector.<C>newBuilder(name, main).asOptionalWithDefault(command).build();
+    }
+
+    public @NonNull boolean isWithPlaceholders() {
+        return this.withPlaceholders;
     }
 
     public static final class Builder<C> extends CommandArgument.Builder<C, String[]> {
         private final NotQuests main;
+        private boolean withPlaceholders = false;
 
         private Builder(final @NonNull String name, NotQuests main) {
             super(TypeToken.get(String[].class), name);
             this.main = main;
         }
 
+        public CommandArgument.Builder<C, String[]> withPlaceholders() {
+            this.withPlaceholders = true;
+            return this;
+        }
+
         @Override
         public @NonNull CommandArgument<C, String[]> build() {
-            return new CommandSelector<>(
+            return new MiniMessageSelector<>(
                     this.isRequired(),
                     this.getName(),
                     this.getDefaultValue(),
                     this.getSuggestionsProvider(),
                     this.getDefaultDescription(),
-                    this.main
+                    this.main,
+                    this.withPlaceholders
             );
         }
     }
 
 
-    public static final class CommandParser<C> implements ArgumentParser<C, String[]> {
+    public static final class MiniMessageParser<C> implements ArgumentParser<C, String[]> {
 
         private final NotQuests main;
+        private final boolean withPlaceholders;
 
 
         /**
-         * Constructs a new CommandParser.
+         * Constructs a new MiniMessageParser.
          */
-        public CommandParser(
-                NotQuests main
+        public MiniMessageParser(
+                NotQuests main,
+                boolean withPlaceholders
         ) {
             this.main = main;
+            this.withPlaceholders = withPlaceholders;
         }
 
 
         @NotNull
         @Override
         public List<String> suggestions(@NotNull CommandContext<C> context, @NotNull String input) {
-            String cmd = context.getRawInputJoined().substring(
-                    context.getRawInputJoined().indexOf("ConsoleCommand ") + 15
-            );
-
             List<String> completions = new java.util.ArrayList<>();
 
-
-            //audience.sendMessage(main.parse(
-            //        "Input: " + cmd
-            //));
-
-            if (main.getCommandManager().getCommandMap() != null) {
-                List<String> compl = main.getCommandManager().getCommandMap().tabComplete(main.getMain().getServer().getConsoleSender(), cmd);
-                if (compl != null) {
-                    for (String cmd1 : compl) {
-                        completions.add(cmd1);
-                    }
-                }
-
-            }
-
+            String rawInput = context.getRawInputJoined();
             if (input.startsWith("{")) {
                 completions.addAll(main.getCommandManager().getAdminCommands().placeholders);
             } else {
-                //completions.add("<Enter Console Command>");
+                if(input.startsWith("<")){
+                    for(String color : main.getUtilManager().getMiniMessageTokens()){
+                        completions.add("<"+ color +">");
+                        //Now the closings. First we search IF it contains an opening and IF it doesnt contain more closings than the opening
+                        if(rawInput.contains("<"+color+">")){
+                            if(StringUtils.countMatches(rawInput, "<"+color+">") > StringUtils.countMatches(rawInput, "</"+color+">")){
+                                completions.add("</"+ color +">");
+                            }
+                        }
+                    }
+                }else{
+                    completions.add("<Enter Message>");
+                }
             }
 
             final List<String> allArgs = context.getRawInput();
 
-
-            main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.getSender(), allArgs.toArray(new String[0]), "<Enter Console Command>", "");
+            main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.getSender(), allArgs.toArray(new String[0]), "<Enter Message>", "");
 
 
             return completions;

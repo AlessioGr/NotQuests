@@ -42,12 +42,40 @@ import java.util.*;
 public class UtilManager {
     private final NotQuests main;
     private final HashMap<Player, BossBar> playersAndBossBars;
+    private final ArrayList<String> miniMessageTokens;
 
     private final static int CENTER_PX = 154;
     
     public UtilManager(NotQuests main) {
         this.main = main;
         playersAndBossBars = new HashMap<>();
+        miniMessageTokens = new ArrayList<>();
+        for(NamedTextColor namedTextColor : NamedTextColor.NAMES.values()){
+            miniMessageTokens.add(namedTextColor.toString().toLowerCase(Locale.ROOT));
+        }
+        miniMessageTokens.add("main");
+        miniMessageTokens.add("highlight");
+        miniMessageTokens.add("highlight2");
+        miniMessageTokens.add("error");
+        miniMessageTokens.add("success");
+        miniMessageTokens.add("unimportant");
+        miniMessageTokens.add("warn");
+        miniMessageTokens.add("veryUnimportant");
+        miniMessageTokens.add("negative");
+        miniMessageTokens.add("positive");
+
+        miniMessageTokens.add("bold");
+        miniMessageTokens.add("strikethrough");
+        miniMessageTokens.add("italic");
+        miniMessageTokens.add("underlined");
+        miniMessageTokens.add("obfuscated");
+
+        miniMessageTokens.add("gradient");
+        miniMessageTokens.add("rainbow");
+    }
+
+    public final ArrayList<String> getMiniMessageTokens(){
+        return miniMessageTokens;
     }
 
     /**

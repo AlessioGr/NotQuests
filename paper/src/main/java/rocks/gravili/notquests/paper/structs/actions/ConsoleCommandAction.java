@@ -62,11 +62,11 @@ public class ConsoleCommandAction extends Action {
     @Override
     public void execute(final Player player, Object... objects) {
         if (consoleCommand.isBlank()) {
-            main.getLogManager().warn("Tried to give ConsoleCommand action with invalid console command.");
+            main.getLogManager().warn("Tried to execute ConsoleCommand action with invalid console command.");
             return;
         }
         Quest quest = getQuest();
-        if (quest == null) {
+        if (quest == null && objects.length > 0) {
             for (Object object : objects) {
                 if (object instanceof Quest quest1) {
                     quest = quest1;
@@ -74,11 +74,11 @@ public class ConsoleCommandAction extends Action {
             }
         }
 
-        String rewardConsoleCommand = consoleCommand.replace("{PLAYER}", player.getName()).replace("{PLAYERUUID}", player.getUniqueId().toString());
-        rewardConsoleCommand = rewardConsoleCommand.replace("{PLAYERX}", "" + player.getLocation().getX());
-        rewardConsoleCommand = rewardConsoleCommand.replace("{PLAYERY}", "" + player.getLocation().getY());
-        rewardConsoleCommand = rewardConsoleCommand.replace("{PLAYERZ}", "" + player.getLocation().getZ());
-        rewardConsoleCommand = rewardConsoleCommand.replace("{WORLD}", "" + player.getWorld().getName());
+        String rewardConsoleCommand = consoleCommand.replace("{PLAYER}", player.getName()).replace("{PLAYERUUID}", player.getUniqueId().toString())
+                .replace("{PLAYERX}", "" + player.getLocation().getX())
+                .replace("{PLAYERY}", "" + player.getLocation().getY())
+                .replace("{PLAYERZ}", "" + player.getLocation().getZ())
+                .replace("{WORLD}", "" + player.getWorld().getName());
         if (quest != null) {
             rewardConsoleCommand = rewardConsoleCommand.replace("{QUEST}", "" + quest.getQuestName());
         }
