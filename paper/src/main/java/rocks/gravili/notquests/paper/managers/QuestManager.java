@@ -29,7 +29,6 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -53,8 +52,6 @@ import rocks.gravili.notquests.paper.structs.triggers.Trigger;
 
 import java.util.ArrayList;
 import java.util.UUID;
-
-import static rocks.gravili.notquests.paper.commands.NotQuestColors.*;
 
 
 public class QuestManager {
@@ -1223,34 +1220,7 @@ public class QuestManager {
 
     public void sendActiveObjectivesAndProgress(final Player player, final ActiveQuest activeQuest) {
         for (ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-
-            if (activeObjective.isUnlocked()) {
-                final String objectiveDescription = activeObjective.getObjective().getObjectiveDescription();
-                player.sendMessage(main.parse(
-                        main.getLanguageManager().getString("chat.objectives.counter", player, activeQuest, activeObjective)
-                ));
-
-                if (!objectiveDescription.isBlank()) {
-                    player.sendMessage(main.parse(
-                            main.getLanguageManager().getString("chat.objectives.description", player, activeQuest, activeObjective)
-                                    .replace("%OBJECTIVEDESCRIPTION%", activeObjective.getObjective().getObjectiveDescription())
-                    ));
-                }
-
-                player.sendMessage(main.parse(
-                        getObjectiveTaskDescription(activeObjective.getObjective(), false, player)
-                ));
-
-                player.sendMessage(main.parse(
-                        main.getLanguageManager().getString("chat.objectives.progress", player, activeQuest, activeObjective)
-                ));
-            } else {
-                player.sendMessage(main.parse(
-                        main.getLanguageManager().getString("chat.objectives.hidden", player, activeObjective, activeObjective)
-                ));
-
-            }
-
+            sendActiveObjective(player, activeObjective);
         }
     }
 
@@ -1318,15 +1288,14 @@ public class QuestManager {
     public void sendActiveObjective(final Player player, ActiveObjective activeObjective) {
         if (activeObjective.isUnlocked()) {
             final String objectiveDescription = activeObjective.getObjective().getObjectiveDescription();
-
             player.sendMessage(main.parse(
-                    "<YELLOW>" + activeObjective.getObjective().getObjectiveID() + ". " + activeObjective.getObjective().getObjectiveFinalName() + ":"
+                    main.getLanguageManager().getString("chat.objectives.counter", player, activeObjective.getActiveQuest(), activeObjective)
             ));
-
 
             if (!objectiveDescription.isBlank()) {
                 player.sendMessage(main.parse(
-                        "   <BLUE>Description: <GOLD>" + objectiveDescription
+                        main.getLanguageManager().getString("chat.objectives.description", player, activeObjective.getActiveQuest(), activeObjective)
+                                .replace("%OBJECTIVEDESCRIPTION%", activeObjective.getObjective().getObjectiveDescription())
                 ));
             }
 
@@ -1335,11 +1304,11 @@ public class QuestManager {
             ));
 
             player.sendMessage(main.parse(
-                    "   <GRAY>Progress: <WHITE>" + activeObjective.getCurrentProgress() + " / " + activeObjective.getProgressNeeded()
+                    main.getLanguageManager().getString("chat.objectives.progress", player, activeObjective.getActiveQuest(), activeObjective)
             ));
         } else {
             player.sendMessage(main.parse(
-                    "<YELLOW>" + activeObjective.getObjective().getObjectiveID() + ". <GRAY>**[HIDDEN]"
+                    main.getLanguageManager().getString("chat.objectives.hidden", player, activeObjective, activeObjective)
             ));
         }
 

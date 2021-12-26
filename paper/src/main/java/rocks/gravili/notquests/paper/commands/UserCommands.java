@@ -147,24 +147,17 @@ public class UserCommands {
 
                     final String result = main.getQuestPlayerManager().acceptQuest(player, quest, true, true);
                     if (!result.equals("accepted")) {
-                        context.getSender().sendMessage(main.parse(
-                                result
-                        ));
+                        main.sendMessage(context.getSender(), result);
                     } else {
 
                         if (!quest.getQuestDescription().isBlank()) {
-                            context.getSender().sendMessage(main.parse(
-                                    main.getLanguageManager().getString("chat.quest-description", player, quest)
-                            ));
+                            main.sendMessage(context.getSender(), main.getLanguageManager().getString("chat.quest-description", player, quest));
                         } else {
-                            context.getSender().sendMessage(main.parse(
-                                    main.getLanguageManager().getString("chat.missing-quest-description", player)
-                            ));
+                            main.sendMessage(context.getSender(), main.getLanguageManager().getString("chat.missing-quest-description", player));
                         }
 
-                        context.getSender().sendMessage(main.parse(
-                                main.getLanguageManager().getString("chat.quest-successfully-accepted", player, quest)
-                        ));
+                        main.sendMessage(context.getSender(), main.getLanguageManager().getString("chat.quest-successfully-accepted", player, quest));
+
                     }
                 }));
 

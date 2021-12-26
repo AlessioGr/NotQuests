@@ -984,7 +984,7 @@ public class AdminCommands {
                     if (main.getActionsYMLManager().getAction(actionIdentifier) != null) {
 
                         main.getActionsYMLManager().removeAction(actionIdentifier);
-                        context.getSender().sendMessage(main.parse("<successAction with the name <highlight2>" + actionIdentifier + "</highlight2> has been deleted."));
+                        context.getSender().sendMessage(main.parse("<success>Action with the name <highlight2>" + actionIdentifier + "</highlight2> has been deleted."));
 
                     } else {
                         context.getSender().sendMessage(main.parse("<error>Error! Action with the name <highlight2>" + actionIdentifier + "</highlight2> does not exist!"));

@@ -154,7 +154,6 @@ public class ActiveQuest {
             final Player player = Bukkit.getPlayer(questPlayer.getUUID());
             if (player != null) {
                 player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, SoundCategory.MASTER, 75, 1.4f);
-
             }
         }
     }
@@ -164,6 +163,7 @@ public class ActiveQuest {
         if (toRemove.size() == 0) {
             return;
         }
+        questPlayer.sendDebugMessage("Executing removeCompletedObjectives");
 
         activeObjectives.removeAll(toRemove);
         toRemove.clear();

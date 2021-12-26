@@ -61,6 +61,9 @@ public class ActiveObjective {
 
     public final void setUnlocked(final boolean unlocked, final boolean notifyPlayer, final boolean triggerAcceptQuestTrigger) {
         if (this.unlocked != unlocked) {
+            getQuestPlayer().sendDebugMessage("Changed objective unlock status to " + unlocked);
+
+
             this.unlocked = unlocked;
             if (unlocked) {
 
@@ -114,6 +117,7 @@ public class ActiveObjective {
     }
 
     public void updateUnlocked(final boolean notifyPlayer, final boolean triggerAcceptQuestTrigger) {
+        getQuestPlayer().sendDebugMessage("Updating if objective is unlocked...");
 
         boolean foundStillFalseConditions = false;
         for (final Condition condition : objective.getConditions()){

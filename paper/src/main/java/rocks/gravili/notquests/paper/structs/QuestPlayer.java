@@ -140,9 +140,8 @@ public class QuestPlayer {
                     final Player player = getPlayer();
                     if (player != null) {
 
-                        player.sendMessage(main.parse(
-                                main.getLanguageManager().getString("chat.objectives-label-after-quest-accepting", player)
-                        ));
+                        main.sendMessage(player, main.getLanguageManager().getString("chat.objectives-label-after-quest-accepting", player));
+
                         main.getQuestManager().sendActiveObjectivesAndProgress(player, quest);
 
                         if (main.getConfiguration().visualTitleQuestSuccessfullyAccepted_enabled) {
@@ -253,7 +252,7 @@ public class QuestPlayer {
     }*/
 
     public void giveReward(Quest quest) {
-        main.getLogManager().debug("QuestPlayer.giveReward(). Quest: " + quest.getQuestName());
+        sendDebugMessage("QuestPlayer.giveReward(). Quest: " + quest.getQuestName());
         for (Action action : quest.getRewards()) {
             main.getActionManager().executeActionWithConditions(action, this, null, true, quest);
         }
@@ -452,6 +451,10 @@ public class QuestPlayer {
         if (questsToComplete.size() == 0) {
             return;
         }
+
+        sendDebugMessage("Executing removeCompletedQuests");
+
+
         activeQuests.removeAll(questsToComplete);
         activeQuestsCopy.removeAll(questsToComplete);
 

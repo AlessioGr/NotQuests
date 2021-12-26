@@ -32,8 +32,7 @@ chat:
   active-quests-label: '<highlight>Active quests:'
   take-disabled: <error>Accepting or previewing the quest <highlight>%QUESTNAME%</highlight>
     is disabled.
-  quest-not-active-error: '<error>Error: <highlight>%QUESTNAME%</highlight> is not
-    an active Quest!'
+  quest-not-active-error: '<error>Error: <highlight>%QUESTNAME%</highlight> is not an active Quest!'
   objectives:
     counter: '<highlight>%OBJECTIVEID%.</highlight> <main>%OBJECTIVENAME%:'
     hidden: <highlight>%OBJECTIVEID%.</highlight> <unimportant><BOLD>[HIDDEN]
@@ -46,73 +45,55 @@ chat:
       <EMPTY>
     taskDescription:
       breakBlocks:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Block to break:
-          <highlight2>%EVENTUALCOLOR%%BLOCKTOBREAK%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Break Blocks: <main>%EVENTUALCOLOR%%BLOCKTOBREAK%'
       breed:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Mob to breed: <highlight2>%EVENTUALCOLOR%%ENTITYTOBREED%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Breed Mobs: <main>%EVENTUALCOLOR%%ENTITYTOBREED%'
       collectItems:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Items to collect:
-          <highlight2>%EVENTUALCOLOR%%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Collect Items: <main>%EVENTUALCOLOR%%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
       consumeItems:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Items to consume:
-          <highlight2>%EVENTUALCOLOR%%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Consume Items: <main>%EVENTUALCOLOR%%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Items to craft:
-          <highlight2>%EVENTUALCOLOR%%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Craft Items <main>%EVENTUALCOLOR%%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Items to deliver:
-          <highlight2>%EVENTUALCOLOR%%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Deliver Items: <main>%EVENTUALCOLOR%%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
       escortNPC:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Escort <highlight2>%EVENTUALCOLOR%%NPCNAME%</highlight2>
-          %EVENTUALCOLOR%to <highlight2>%EVENTUALCOLOR%%DESTINATIONNPCNAME%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Escort <main>%EVENTUALCOLOR%%NPCNAME%</main> %EVENTUALCOLOR%to <main>%EVENTUALCOLOR%%DESTINATIONNPCNAME%'
       killMobs:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Kill mobs: <highlight2>%EVENTUALCOLOR%%MOBTOKILL%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Kill mobs: <main>%EVENTUALCOLOR%%MOBTOKILL%'
       otherQuest:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Quest completion:
-          <highlight2>%EVENTUALCOLOR%%OTHERQUESTNAME%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Complete Quest: <main>%EVENTUALCOLOR%%OTHERQUESTNAME%'
       placeBlocks:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Block to place:
-          <highlight2>%EVENTUALCOLOR%%BLOCKTOPLACE%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Place Blocks: <main>%EVENTUALCOLOR%%BLOCKTOPLACE%'
       reachLocation:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Reach Location:
-          <highlight2>%EVENTUALCOLOR%%LOCATIONNAME%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Reach Location: <main>%EVENTUALCOLOR%%LOCATIONNAME%'
       talkToNPC:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Talk to <highlight2>%EVENTUALCOLOR%%NAME%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Talk to <main>%EVENTUALCOLOR%%NAME%'
       triggerCommand:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Goal: <highlight2>%EVENTUALCOLOR%%TRIGGERNAME%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Goal: <main>%EVENTUALCOLOR%%TRIGGERNAME%'
       killEliteMobs:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Kill Elite Mob:
-          <highlight2>%EVENTUALCOLOR%%ELITEMOBNAME%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Kill Elite Mob: <main>%EVENTUALCOLOR%%ELITEMOBNAME%'
         any: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Kill any Elite Mob!'
       runCommand:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Run command: <highlight2>%EVENTUALCOLOR%%COMMANDTORUN%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Run command: <main>%EVENTUALCOLOR%%COMMANDTORUN%'
       interact:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%%INTERACTTYPE%
-          Location: <highlight2>%EVENTUALCOLOR%%COORDINATES% <highlight2>%EVENTUALCOLOR%in
-          world %EVENTUALCOLOR%%WORLDNAME%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%%INTERACTTYPE% Location: <main>%EVENTUALCOLOR%%COORDINATES% <main>%EVENTUALCOLOR%in world %EVENTUALCOLOR%%WORLDNAME%'
         taskDescriptionProvided: '    <veryUnimportant>└─ <GRAY>%EVENTUALCOLOR%%TASKDESCRIPTION%'
       jump:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Jump <highlight2>%EVENTUALCOLOR%%AMOUNTOFJUMPS%</highlight2>
-          %EVENTUALCOLOR%times'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Jump <main>%EVENTUALCOLOR%%AMOUNTOFJUMPS%</main> %EVENTUALCOLOR%times'
       sneak:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Sneak <highlight2>%EVENTUALCOLOR%%AMOUNTOFSNEAKS%</highlight2>
-          %EVENTUALCOLOR%times'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Sneak <main>%EVENTUALCOLOR%%AMOUNTOFSNEAKS%</main> %EVENTUALCOLOR%times'
       smelt:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Items to smelt:
-          <highlight2>%EVENTUALCOLOR%%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Smelt Items: <main>%EVENTUALCOLOR%%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       townyReachResidentCount:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Reach resident
-          amount: <highlight2>%EVENTUALCOLOR%%AMOUNT%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Reach resident amount: <main>%EVENTUALCOLOR%%AMOUNT%'
       townyNationReachTownCount:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Reach town amount
-          with your nation: <highlight2>%EVENTUALCOLOR%%AMOUNT%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Reach town amount with your nation: <main>%EVENTUALCOLOR%%AMOUNT%'
       jobsRebornReachJobLevel:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Reach job level
-          <highlight2>%EVENTUALCOLOR%%AMOUNT%</highlight2> with job <highlight2>%EVENTUALCOLOR%%JOB%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Reach job level <main>%EVENTUALCOLOR%%AMOUNT%</main> with job <main>%EVENTUALCOLOR%%JOB%'
       SlimefunResearch:
         base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Spend on research'
       ProjectKorraUseAbility:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Use Ability: <highlight2>%EVENTUALCOLOR%%ABILITY%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Use Ability: <main>%EVENTUALCOLOR%%ABILITY%'
 titles:
   quest-accepted:
     title: <main>Quest accepted

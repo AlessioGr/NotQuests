@@ -1,113 +1,119 @@
 chat:
-  wrong-command-usage: '<error>Wrong command usage!'
+  wrong-command-usage: <error>Wrong command usage!
   missing-permission: '<error>No permission! Required permission node: <highlight>%PERMISSION%'
-  too-many-arguments: '<error>Too many arguments!'
-  quest-successfully-accepted: |2+
+  too-many-arguments: <error>Too many arguments!
+  quest-successfully-accepted: |2
 
     <CENTER><main>[Quest Accepted]
     <CENTER><highlight><BOLD>%QUESTNAME%
     <EMPTY>
   quest-description: '<main>Quest description: <highlight>%QUESTDESCRIPTION%'
-  quest-already-accepted: '<error>Quest already accepted.'
-  quest-failed: |2+
+  quest-already-accepted: <error>Quest already accepted.
+  quest-failed: |2
 
     <CENTER><negative>[Quest Failed]
     <CENTER><highlight><BOLD>%QUESTNAME%
     <EMPTY>
   quest-aborted: ''
-  quest-completed-and-rewards-given: |2+
+  quest-completed-and-rewards-given: |2
 
     <CENTER><positive>[Quest Completed]
     <CENTER><highlight><BOLD>%QUESTNAME%
     <EMPTY>
-  missing-quest-description: '<unimportant>This quest has no quest description.'
+  missing-quest-description: <unimportant>This quest has no quest description.
   objectives-label-after-quest-accepting: '<highlight>Objectives:'
   questpoints:
-    query: '<main>You currently have <highlight>%QUESTPOINTS%</highlight> quest points.'
-    none: '<error>Seems like you don''t have any quest points!'
-  no-quests-accepted: '<error>Seems like you don''t have any active quests!'
-  quest-does-not-exist: '<error>Quest <highlight>%QUESTNAME%</highlight> does not exist!'
-  quest-not-found-or-does-not-exist: '<error>Quest <highlight>%QUESTNAME%</highlight> not found or not active!'
+    query: <main>You currently have <highlight>%QUESTPOINTS%</highlight> quest points.
+    none: <error>Seems like you don't have any quest points!
+  no-quests-accepted: <error>Seems like you don't have any active quests!
+  quest-does-not-exist: <error>Quest <highlight>%QUESTNAME%</highlight> does not exist!
+  quest-not-found-or-does-not-exist: <error>Quest <highlight>%QUESTNAME%</highlight>
+    not found or not active!
   active-quests-label: '<highlight>Active quests:'
-  take-disabled: '<error>Accepting or previewing the quest <highlight>%QUESTNAME%</highlight> is disabled.'
+  take-disabled: <error>Accepting or previewing the quest <highlight>%QUESTNAME%</highlight>
+    is disabled.
   quest-not-active-error: '<error>Error: <highlight>%QUESTNAME%</highlight> is not an active Quest!'
   objectives:
     counter: '<highlight>%OBJECTIVEID%.</highlight> <main>%OBJECTIVENAME%:'
-    hidden: '<highlight>%OBJECTIVEID%.</highlight> <unimportant><BOLD>[HIDDEN]'
+    hidden: <highlight>%OBJECTIVEID%.</highlight> <unimportant><BOLD>[HIDDEN]
     description: '   <highlight>Description: <main>%OBJECTIVEDESCRIPTION%'
     progress: '   <highlight>Progress: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
-    successfully-completed: '<success>You have successfully completed the objective <highlight>%OBJECTIVENAME%</highlight> for quest <highlight2>%QUESTNAME%</highlight2>!'
+    successfully-completed: |2
+
+      <CENTER><success>[Objective Completed]
+      <CENTER><highlight><BOLD>%OBJECTIVENAME% <RESET><main>(%QUESTNAME%)
+      <EMPTY>
     taskDescription:
       breakBlocks:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Block to break: <highlight2>%EVENTUALCOLOR%%BLOCKTOBREAK%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Break Blocks: <main>%EVENTUALCOLOR%%BLOCKTOBREAK%'
       breed:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Mob to breed: <highlight2>%EVENTUALCOLOR%%ENTITYTOBREED%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Breed Mobs: <main>%EVENTUALCOLOR%%ENTITYTOBREED%'
       collectItems:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Items to collect: <highlight2>%EVENTUALCOLOR%%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Collect Items: <main>%EVENTUALCOLOR%%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
       consumeItems:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Items to consume: <highlight2>%EVENTUALCOLOR%%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Consume Items: <main>%EVENTUALCOLOR%%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Items to craft: <highlight2>%EVENTUALCOLOR%%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Craft Items <main>%EVENTUALCOLOR%%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Items to deliver: <highlight2>%EVENTUALCOLOR%%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Deliver Items: <main>%EVENTUALCOLOR%%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
       escortNPC:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Escort <highlight2>%EVENTUALCOLOR%%NPCNAME%</highlight2> %EVENTUALCOLOR%to <highlight2>%EVENTUALCOLOR%%DESTINATIONNPCNAME%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Escort <main>%EVENTUALCOLOR%%NPCNAME%</main> %EVENTUALCOLOR%to <main>%EVENTUALCOLOR%%DESTINATIONNPCNAME%'
       killMobs:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Kill mobs: <highlight2>%EVENTUALCOLOR%%MOBTOKILL%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Kill mobs: <main>%EVENTUALCOLOR%%MOBTOKILL%'
       otherQuest:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Quest completion: <highlight2>%EVENTUALCOLOR%%OTHERQUESTNAME%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Complete Quest: <main>%EVENTUALCOLOR%%OTHERQUESTNAME%'
       placeBlocks:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Block to place: <highlight2>%EVENTUALCOLOR%%BLOCKTOPLACE%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Place Blocks: <main>%EVENTUALCOLOR%%BLOCKTOPLACE%'
       reachLocation:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Reach Location: <highlight2>%EVENTUALCOLOR%%LOCATIONNAME%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Reach Location: <main>%EVENTUALCOLOR%%LOCATIONNAME%'
       talkToNPC:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Talk to <highlight2>%EVENTUALCOLOR%%NAME%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Talk to <main>%EVENTUALCOLOR%%NAME%'
       triggerCommand:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Goal: <highlight2>%EVENTUALCOLOR%%TRIGGERNAME%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Goal: <main>%EVENTUALCOLOR%%TRIGGERNAME%'
       killEliteMobs:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Kill Elite Mob: <highlight2>%EVENTUALCOLOR%%ELITEMOBNAME%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Kill Elite Mob: <main>%EVENTUALCOLOR%%ELITEMOBNAME%'
         any: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Kill any Elite Mob!'
       runCommand:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Run command: <highlight2>%EVENTUALCOLOR%%COMMANDTORUN%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Run command: <main>%EVENTUALCOLOR%%COMMANDTORUN%'
       interact:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%%INTERACTTYPE% Location: <highlight2>%EVENTUALCOLOR%%COORDINATES% <highlight2>%EVENTUALCOLOR%in world %EVENTUALCOLOR%%WORLDNAME%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%%INTERACTTYPE% Location: <main>%EVENTUALCOLOR%%COORDINATES% <main>%EVENTUALCOLOR%in world %EVENTUALCOLOR%%WORLDNAME%'
         taskDescriptionProvided: '    <veryUnimportant>└─ <GRAY>%EVENTUALCOLOR%%TASKDESCRIPTION%'
       jump:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Jump <highlight2>%EVENTUALCOLOR%%AMOUNTOFJUMPS%</highlight2> %EVENTUALCOLOR%times'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Jump <main>%EVENTUALCOLOR%%AMOUNTOFJUMPS%</main> %EVENTUALCOLOR%times'
       sneak:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Sneak <highlight2>%EVENTUALCOLOR%%AMOUNTOFSNEAKS%</highlight2> %EVENTUALCOLOR%times'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Sneak <main>%EVENTUALCOLOR%%AMOUNTOFSNEAKS%</main> %EVENTUALCOLOR%times'
       smelt:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Items to smelt: <highlight2>%EVENTUALCOLOR%%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Smelt Items: <main>%EVENTUALCOLOR%%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       townyReachResidentCount:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Reach resident amount: <highlight2>%EVENTUALCOLOR%%AMOUNT%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Reach resident amount: <main>%EVENTUALCOLOR%%AMOUNT%'
       townyNationReachTownCount:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Reach town amount with your nation: <highlight2>%EVENTUALCOLOR%%AMOUNT%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Reach town amount with your nation: <main>%EVENTUALCOLOR%%AMOUNT%'
       jobsRebornReachJobLevel:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Reach job level <highlight2>%EVENTUALCOLOR%%AMOUNT%</highlight2> with job <highlight2>%EVENTUALCOLOR%%JOB%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Reach job level <main>%EVENTUALCOLOR%%AMOUNT%</main> with job <main>%EVENTUALCOLOR%%JOB%'
       SlimefunResearch:
         base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Spend on research'
       ProjectKorraUseAbility:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Use Ability: <highlight2>%EVENTUALCOLOR%%ABILITY%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Use Ability: <main>%EVENTUALCOLOR%%ABILITY%'
 titles:
   quest-accepted:
-    title: '<main>Quest accepted'
+    title: <main>Quest accepted
     subtitle: <highlight>%QUESTNAME%
   quest-completed:
-    title: '<positive>Quest Completed'
+    title: <positive>Quest Completed
     subtitle: <highlight>%QUESTNAME%
   quest-failed:
-    title: '<negative>Quest Failed'
+    title: <negative>Quest Failed
     subtitle: <highlight>%QUESTNAME%
 gui:
-  reward-hidden-text: '. <unimportant>[HIDDEN]'
+  reward-hidden-text: . <unimportant>[HIDDEN]
   availableQuests:
     title: '         <highlight2>Available Quests'
     button:
       questPreview:
         acceptedSuffix: ' <reset><positive>[ACCEPTED]'
-        questNamePrefix: '<highlight>'
-        questDescriptionPrefix: '<veryUnimportant>'
-        bottomText: '<main>Click to open Quest'
+        questNamePrefix: <highlight>
+        questDescriptionPrefix: <veryUnimportant>
+        bottomText: <main>Click to open Quest
   main:
     title: '                <highlight2>Quests'
     button:
@@ -149,13 +155,13 @@ gui:
           <unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%
           <main>Click to see details!
   takeQuestChoose:
-    title: '<highlight2>Which Quest do you want to take?'
+    title: <highlight2>Which Quest do you want to take?
     button:
       questPreview:
         acceptedSuffix: ' <reset><positive>[ACCEPTED]'
-        questNamePrefix: '<highlight>'
-        questDescriptionPrefix: '<veryUnimportant>'
-        bottomText: '<main>Click to preview Quest!'
+        questNamePrefix: <highlight>
+        questDescriptionPrefix: <veryUnimportant>
+        bottomText: <main>Click to preview Quest!
   abortQuestChoose:
     title: '  <highlight2>Active Quests you can abort'
     button:
@@ -169,9 +175,9 @@ gui:
     button:
       questPreview:
         acceptedSuffix: ' <reset><positive>[ACCEPTED]'
-        questNamePrefix: '<highlight>'
-        questDescriptionPrefix: '<veryUnimportant>'
-        bottomText: '<main>Click to preview Quest!'
+        questNamePrefix: <highlight>
+        questDescriptionPrefix: <veryUnimportant>
+        bottomText: <main>Click to preview Quest!
   abortQuest:
     title: '         <negative>Abort Confirmation'
     button:
@@ -185,7 +191,7 @@ gui:
           <positive>Click to NOT abort this quest
           <positive>and cancel this action
   previewQuest:
-    title: '<highlight2>Preview for Quest <black>%QUESTNAME%'
+    title: <highlight2>Preview for Quest <black>%QUESTNAME%
     button:
       description:
         text: |-
@@ -196,12 +202,12 @@ gui:
         text: |-
           <positive>Rewards
           <WHITE>%QUESTREWARDS%
-        empty: '<veryUnimportant>None or hidden'
+        empty: <veryUnimportant>None or hidden
       requirements:
         text: |-
           <negative>Requirements
           <WHITE>%QUESTREQUIREMENTS%
-        empty: '<veryUnimportant>-'
+        empty: <veryUnimportant>-
       confirmTake:
         text: |-
           <highlight>%QUESTNAME%
@@ -211,7 +217,7 @@ gui:
           <negative>Click to NOT take this quest
           <negative>and cancel this action
   progress:
-    title: '<highlight2>Details for Quest <black>%QUESTNAME%'
+    title: <highlight2>Details for Quest <black>%QUESTNAME%
     button:
       unlockedObjective:
         text: |-
