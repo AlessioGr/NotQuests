@@ -13,7 +13,7 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -65,7 +65,11 @@ public class UserCommands {
     }
 
     public final String convert(final String old) { //Converts MiniMessage to legacy
-        return main.getUtilManager().miniMessageToLegacyWithSpigotRGB(old);
+        //main.getLogManager().info("Old: " + old);
+        //main.getLogManager().info("New: " + main.getUtilManager().miniMessageToLegacyWithSpigotRGB(old));
+
+        return ChatColor.translateAlternateColorCodes('&', main.getUtilManager().miniMessageToLegacyWithSpigotRGB(old));
+        //return main.getUtilManager().miniMessageToLegacyWithSpigotRGB(old);
     }
 
     public void constructCommands() {
@@ -229,7 +233,7 @@ public class UserCommands {
                                 count++;
                             }
 
-                            String displayName = convert(quest.getQuestFinalName());
+                            String displayName = quest.getQuestFinalName();
 
                             displayName = main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.questNamePrefix", player, quest) + displayName;
 
