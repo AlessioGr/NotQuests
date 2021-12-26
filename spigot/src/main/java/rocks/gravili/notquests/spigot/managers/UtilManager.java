@@ -34,8 +34,8 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import rocks.gravili.notquests.spigot.commands.NotQuestColors;
 import rocks.gravili.notquests.spigot.NotQuests;
+import rocks.gravili.notquests.spigot.commands.NotQuestColors;
 
 import java.io.File;
 import java.util.*;
@@ -370,6 +370,7 @@ public class UtilManager {
         Component fullComponent = Component.empty();
         TextColor lastColor = null;
         int counter = 0;
+
         for (String splitString : miniMessageString.split("\n")) {
             Component splitComponent = miniMessage.parse(splitString);
             //main.getLogManager().debug("Split Component old: " + miniMessage.serialize(splitComponent));

@@ -402,20 +402,31 @@ public class UtilManager {
         Component fullComponent = Component.empty();
         TextColor lastColor = null;
         int counter = 0;
+
+
+
+
         for (String splitString : miniMessageString.split("\n")) {
             Component splitComponent = main.parse(splitString);
 
+
+
             if (lastColor != null) {
+
                 splitComponent = Component.text("", lastColor).append(splitComponent);
             }
 
             if (splitComponent.children().size() >= 1) {
                 if (splitComponent.children().get(splitComponent.children().size() - 1).color() != null) {
                     lastColor = splitComponent.children().get(splitComponent.children().size() - 1).color();
+                }else{
+                    lastColor = TextColor.fromCSSHexString("#5c5c5c");
                 }
             } else {
                 if (splitComponent.color() != null) {
                     lastColor = splitComponent.color();
+                }else{
+                    lastColor = TextColor.fromCSSHexString("#5c5c5c");
                 }
             }
 

@@ -15,13 +15,14 @@ import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import rocks.gravili.notquests.spigot.NotQuests;
 import rocks.gravili.notquests.spigot.commands.arguments.ActiveQuestSelector;
 import rocks.gravili.notquests.spigot.commands.arguments.QuestSelector;
-import rocks.gravili.notquests.spigot.NotQuests;
 import rocks.gravili.notquests.spigot.structs.ActiveObjective;
 import rocks.gravili.notquests.spigot.structs.ActiveQuest;
 import rocks.gravili.notquests.spigot.structs.Quest;
@@ -67,7 +68,7 @@ public class UserCommands {
     }
 
     public final String convert(final String old) { //Converts MiniMessage to legacy
-        return main.getUtilManager().miniMessageToLegacyWithSpigotRGB(old);
+        return ChatColor.translateAlternateColorCodes('&', main.getUtilManager().miniMessageToLegacyWithSpigotRGB(old)) ;
     }
 
     public void constructCommands() {

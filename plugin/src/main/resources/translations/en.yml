@@ -96,7 +96,7 @@ gui:
     title: '         <highlight2>Available Quests'
     button:
       questPreview:
-        acceptedSuffix: ' <positive>[ACCEPTED]'
+        acceptedSuffix: ' <reset><positive>[ACCEPTED]'
         questNamePrefix: '<highlight>'
         questDescriptionPrefix: '<veryUnimportant>'
         bottomText: '<main>Click to open Quest'
@@ -144,7 +144,7 @@ gui:
     title: '<highlight2>Which Quest do you want to take?'
     button:
       questPreview:
-        acceptedSuffix: ' <positive>[ACCEPTED]'
+        acceptedSuffix: ' <reset><positive>[ACCEPTED]'
         questNamePrefix: '<highlight>'
         questDescriptionPrefix: '<veryUnimportant>'
         bottomText: '<main>Click to preview Quest!'
@@ -160,7 +160,7 @@ gui:
     title: '     <highlight2>Choose Quest to preview'
     button:
       questPreview:
-        acceptedSuffix: ' <positive>[ACCEPTED]'
+        acceptedSuffix: ' <reset><positive>[ACCEPTED]'
         questNamePrefix: '<highlight>'
         questDescriptionPrefix: '<veryUnimportant>'
         bottomText: '<main>Click to preview Quest!'
