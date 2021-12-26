@@ -138,6 +138,9 @@ public class Configuration {
     public boolean wrapLongWords = false;
 
     public boolean hideRewardsWithoutName = true;
+    public boolean showRewardsAfterQuestCompletion = true;
+    public boolean showRewardsAfterObjectiveCompletion = true;
+
 
     public List<String> colorsMain;
     public List<String> colorsHighlight;

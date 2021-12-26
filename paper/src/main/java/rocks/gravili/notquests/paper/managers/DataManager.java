@@ -437,6 +437,20 @@ public class DataManager {
         }
         configuration.hideRewardsWithoutName = getGeneralConfig().getBoolean(key);
 
+        key = "visual.show-rewards-after-quest-completion";
+        if (!getGeneralConfig().isBoolean(key)) {
+            getGeneralConfig().set(key, true);
+            valueChanged = true;
+        }
+        configuration.showRewardsAfterQuestCompletion = getGeneralConfig().getBoolean(key);
+
+        key = "visual.show-rewards-after-objective-completion";
+        if (!getGeneralConfig().isBoolean(key)) {
+            getGeneralConfig().set(key, true);
+            valueChanged = true;
+        }
+        configuration.showRewardsAfterObjectiveCompletion = getGeneralConfig().getBoolean(key);
+
 
         //Prevent armorstand editing
         key = "visual.armorstands.prevent-editing";

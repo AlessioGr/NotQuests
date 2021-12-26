@@ -253,15 +253,41 @@ public class QuestPlayer {
 
     public void giveReward(Quest quest) {
         sendDebugMessage("QuestPlayer.giveReward(). Quest: " + quest.getQuestName());
-        for (Action action : quest.getRewards()) {
-            main.getActionManager().executeActionWithConditions(action, this, null, true, quest);
-        }
+
 
         final Player player = getPlayer();
+
+
+        String fullRewardString = "";
+
+        int counterWithRewardNames = 0;
+        for (Action action : quest.getRewards()) {
+            main.getActionManager().executeActionWithConditions(action, this, player, true, quest);
+            if(main.getConfiguration().showRewardsAfterQuestCompletion){
+                if(!action.getActionName().isBlank()){
+                    counterWithRewardNames++;
+                    if(counterWithRewardNames == 1){
+                        fullRewardString += main.getLanguageManager().getString("chat.quest-completed-rewards-prefix", player, this, quest, action);
+                    }
+                    fullRewardString += "\n"+ main.getLanguageManager().getString("chat.quest-completed-rewards-rewardformat", player, this, quest, action)
+                            .replace("%reward%", action.getActionName());
+                }
+            }
+        }
+        if(counterWithRewardNames > 0){
+            fullRewardString += "\n" + main.getLanguageManager().getString("chat.quest-completed-rewards-suffix", player, this, quest);
+        }
+
         if (player != null) {
-            player.sendMessage(main.parse(
-                    main.getLanguageManager().getString("chat.quest-completed-and-rewards-given", getPlayer(), quest)
-            ));
+            if(fullRewardString.isBlank()){
+                main.sendMessage(player, main.getLanguageManager().getString("chat.quest-completed-and-rewards-given", getPlayer(), quest)
+                );
+            }else{
+                main.sendMessage(player, main.getLanguageManager().getString("chat.quest-completed-and-rewards-given", getPlayer(), quest)
+                        + "<RESET>" + fullRewardString
+                );
+            }
+
         }
 
     }

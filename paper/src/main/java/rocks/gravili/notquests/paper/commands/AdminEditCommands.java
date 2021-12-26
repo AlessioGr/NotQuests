@@ -359,7 +359,7 @@ public class AdminEditCommands {
                 .meta(CommandMeta.DESCRIPTION, "De-attaches this Quest from all Citizens NPCs.")
                 .handler((context) -> {
                     final Quest quest = context.get("quest");
-                    quest.removeAllNPCs();
+                    quest.clearNPCs();
                     context.getSender().sendMessage(main.parse("<success>All NPCs of Quest <highlight>" + quest.getQuestName() + "</highlight> have been removed!"));
 
                 }));
@@ -564,7 +564,7 @@ public class AdminEditCommands {
                 .meta(CommandMeta.DESCRIPTION, "Removes all objectives from a Quest.")
                 .handler((context) -> {
                     final Quest quest = context.get("quest");
-                    quest.removeAllObjectives();
+                    quest.clearObjectives();
                     context.getSender().sendMessage(Component.empty());
                     context.getSender().sendMessage(main.parse(
                             "<success>All objectives of Quest <highlight>" + quest.getQuestName()
@@ -1122,6 +1122,10 @@ public class AdminEditCommands {
                                     + quest.getQuestName() + "</highlight2>!"
                     ));
                 }));
+
+
+        final Command.Builder<CommandSender> rewardsBuilder = builder.literal("rewards");
+        handleObjectiveRewards(rewardsBuilder);
     }
 
 
@@ -1148,7 +1152,7 @@ public class AdminEditCommands {
                 .handler((context) -> {
                     final Quest quest = context.get("quest");
 
-                    quest.removeAllRequirements();
+                    quest.clearRequirements();
                     context.getSender().sendMessage(main.parse("<main>All requirements of Quest <highlight>" + quest.getQuestName() + "</highlight> have been removed!"));
                 }));
 
@@ -1177,7 +1181,7 @@ public class AdminEditCommands {
                 .handler((context) -> {
                     final Quest quest = context.get("quest");
 
-                    quest.removeAllRewards();
+                    quest.clearRewards();
                     context.getSender().sendMessage(main.parse("<success>All rewards of Quest <highlight>" + quest.getQuestName() + "</highlight> have been removed!"));
                 }));
 
@@ -1209,8 +1213,241 @@ public class AdminEditCommands {
                         })
                         , ArgumentDescription.of("Reward ID"));
         handleEditRewards(editRewardsBuilder);
+    }
+
+    public void handleObjectiveRewards(final Command.Builder<CommandSender> builder) {
+        //Add is handled individually by each reward
+
+        manager.command(builder.literal("list", "show")
+                .meta(CommandMeta.DESCRIPTION, "Lists all the rewards this Objective has.")
+                .handler((context) -> {
+                    final Quest quest = context.get("quest");
+                    final int objectiveID = context.get("Objective ID");
+                    final Objective objective = quest.getObjectiveFromID(objectiveID);
+                    assert objective != null; //Shouldn't be null
+
+                    context.getSender().sendMessage(main.parse("<highlight>Rewards for Objective with ID <highlight2>" + objectiveID + "</highlight2> of Quest <highlight2>" + quest.getQuestName() + "</highlight2>:"));
+                    int counter = 1;
+                    for (final Action action : objective.getRewards()) {
+                        context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>" + action.getActionType()));
+                        context.getSender().sendMessage(main.parse("<unimportant>--</unimportant> <main>" + action.getActionDescription()));
+                        counter++;
+                    }
+                }));
+
+        manager.command(builder.literal("clear")
+                .meta(CommandMeta.DESCRIPTION, "Clears all the rewards this Objective has.")
+                .handler((context) -> {
+                    final Quest quest = context.get("quest");
+                    final int objectiveID = context.get("Objective ID");
+                    final Objective objective = quest.getObjectiveFromID(objectiveID);
+                    assert objective != null; //Shouldn't be null
+
+                    objective.clearRewards();
+                    context.getSender().sendMessage(main.parse("<success>All rewards of Objective with ID <highlight>" + objectiveID + "</highlight> of Quest <highlight2>" + quest.getQuestName() + "</highlight2> have been removed!"));
+                }));
 
 
+        final Command.Builder<CommandSender> editRewardsBuilder = builder.literal("edit")
+                .argument(IntegerArgument.<CommandSender>newBuilder("Reward ID").withMin(1).withSuggestionsProvider(
+                                (context, lastString) -> {
+                                    final List<String> allArgs = context.getRawInput();
+                                    main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Reward ID]", "[...]");
+
+                                    ArrayList<String> completions = new ArrayList<>();
+
+                                    final Quest quest = context.get("quest");
+                                    final int objectiveID = context.get("Objective ID");
+                                    final Objective objective = quest.getObjectiveFromID(objectiveID);
+                                    assert objective != null; //Shouldn't be null
+
+                                    for (final Action action : objective.getRewards()) {
+                                        completions.add("" + (objective.getRewards().indexOf(action) + 1));
+                                    }
+
+                                    return completions;
+                                }
+                        ).withParser((context, lastString) -> { //TODO: Fix this parser. It isn't run at all.
+                            final int ID = context.get("Reward ID");
+                            final Quest quest = context.get("quest");
+                            final int objectiveID = context.get("Objective ID");
+                            final Objective objective = quest.getObjectiveFromID(objectiveID);
+                            assert objective != null; //Shouldn't be null
+
+                            final Action foundReward = objective.getRewards().get(ID - 1);
+                            if (foundReward == null) {
+                                return ArgumentParseResult.failure(new IllegalArgumentException("Reward with the ID '" + ID + "' does not belong to Objective with ID " + objectiveID + " of Quest '" + quest.getQuestName() + "'!"));
+                            } else {
+                                return ArgumentParseResult.success(ID);
+                            }
+                        })
+                        , ArgumentDescription.of("Reward ID"));
+        handleObjectiveEditRewards(editRewardsBuilder);
+    }
+
+    public void handleObjectiveEditRewards(final Command.Builder<CommandSender> builder) {
+        manager.command(builder.literal("info")
+                .meta(CommandMeta.DESCRIPTION, "Shows everything there is to know about this reward.")
+                .handler((context) -> {
+                    final int ID = (int) context.get("Reward ID") - 1;
+                    final Quest quest = context.get("quest");
+                    final int objectiveID = context.get("Objective ID");
+                    final Objective objective = quest.getObjectiveFromID(objectiveID);
+                    assert objective != null; //Shouldn't be null
+
+                    final Action foundReward = objective.getRewards().get(ID);
+                    context.getSender().sendMessage(Component.empty());
+                    if (foundReward == null) {
+                        context.getSender().sendMessage(main.parse(
+                                "<error>Invalid reward."
+                        ));
+                        return;
+                    }
+
+                    context.getSender().sendMessage(main.parse(
+                            "<main>Reward <highlight>" + ID + "</highlight> for Objective with ID <highlight2>" + objectiveID + "</highlight2> of Quest <highlight2>" + quest.getQuestName() + "</highlight2>:"
+                    ));
+                    context.getSender().sendMessage(main.parse(
+                            "<unimportant>--</unimportant> <main>" + foundReward.getActionDescription()
+                    ));
+
+                }));
+
+        manager.command(builder.literal("remove")
+                .meta(CommandMeta.DESCRIPTION, "Removes the reward from the Quest.")
+                .handler((context) -> {
+                    final int ID = (int) context.get("Reward ID") - 1;
+                    final Quest quest = context.get("quest");
+                    final int objectiveID = context.get("Objective ID");
+                    final Objective objective = quest.getObjectiveFromID(objectiveID);
+                    assert objective != null; //Shouldn't be null
+
+                    final Action foundReward = objective.getRewards().get(ID);
+                    context.getSender().sendMessage(Component.empty());
+                    if (foundReward == null) {
+                        context.getSender().sendMessage(main.parse(
+                                "<error>Invalid reward."
+                        ));
+                        return;
+                    }
+                    objective.removeReward(foundReward, true);
+                    context.getSender().sendMessage(main.parse(
+                            "<success>The reward with the ID <highlight>" + ID + "</highlight> has been removed from the Objective with ID <highlight2>" + objectiveID + "</highlight2> of Quest <highlight2>"
+                                    + quest.getQuestName() + "</highlight2>!"
+                    ));
+                }));
+
+        manager.command(builder.literal("displayname")
+                .literal("show")
+                .meta(CommandMeta.DESCRIPTION, "Shows current reward Display Name.")
+                .handler((context) -> {
+                    final int ID = (int) context.get("Reward ID") - 1;
+                    final Quest quest = context.get("quest");
+                    final int objectiveID = context.get("Objective ID");
+                    final Objective objective = quest.getObjectiveFromID(objectiveID);
+                    assert objective != null; //Shouldn't be null
+
+                    final Action foundReward = objective.getRewards().get(ID);
+                    context.getSender().sendMessage(Component.empty());
+                    if (foundReward == null) {
+                        context.getSender().sendMessage(main.parse(
+                                "<error>Invalid reward."
+                        ));
+                        return;
+                    }
+                    if (foundReward.getActionName().isBlank()) {
+                        context.getSender().sendMessage(main.parse(
+                                "<main>This reward has no display name set."
+                        ));
+                    } else {
+                        context.getSender().sendMessage(main.parse(
+                                "<main>Reward display name: <highlight>" + foundReward.getActionName() + "</highlight>"
+                        ));
+                    }
+                }));
+
+        manager.command(builder.literal("displayname")
+                .literal("remove", "delete")
+                .meta(CommandMeta.DESCRIPTION, "Removes current reward Display Name.")
+                .handler((context) -> {
+                    final int ID = (int) context.get("Reward ID") - 1;
+                    final Quest quest = context.get("quest");
+                    final int objectiveID = context.get("Objective ID");
+                    final Objective objective = quest.getObjectiveFromID(objectiveID);
+                    assert objective != null; //Shouldn't be null
+
+                    final Action foundReward = objective.getRewards().get(ID);
+                    context.getSender().sendMessage(Component.empty());
+                    if (foundReward == null) {
+                        context.getSender().sendMessage(main.parse(
+                                "<error>Invalid reward."
+                        ));
+                        return;
+                    }
+                    foundReward.removeActionName();
+                    main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + (ID + 1) + ".displayName", null);
+                    context.getSender().sendMessage(main.parse(
+                            "<success>Display Name of reward with the ID <highlight>" + ID + "</highlight> has been removed successfully."
+                    ));
+                }));
+
+        manager.command(builder.literal("displayname")
+                .literal("set")
+                .argument(StringArrayArgument.of("DisplayName",
+                        (context, lastString) -> {
+                            final List<String> allArgs = context.getRawInput();
+                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "<Enter new Reward display name>", "");
+                            ArrayList<String> completions = new ArrayList<>();
+
+                            String rawInput = context.getRawInputJoined();
+                            if (lastString.startsWith("{")) {
+                                completions.addAll(main.getCommandManager().getAdminCommands().placeholders);
+                            } else {
+                                if(lastString.startsWith("<")){
+                                    for(String color : main.getUtilManager().getMiniMessageTokens()){
+                                        completions.add("<"+ color +">");
+                                        //Now the closings. First we search IF it contains an opening and IF it doesnt contain more closings than the opening
+                                        if(rawInput.contains("<"+color+">")){
+                                            if(StringUtils.countMatches(rawInput, "<"+color+">") > StringUtils.countMatches(rawInput, "</"+color+">")){
+                                                completions.add("</"+ color +">");
+                                            }
+                                        }
+                                    }
+                                }else{
+                                    completions.add("<Enter new Reward display name>");
+                                }
+                            }
+
+                            return completions;
+                        }
+                ), ArgumentDescription.of("Reward display name"))
+                .meta(CommandMeta.DESCRIPTION, "Sets new reward Display Name. Only rewards with a Display Name will be displayed.")
+                .handler((context) -> {
+                    final int ID = (int) context.get("Reward ID") - 1;
+                    final Quest quest = context.get("quest");
+                    final int objectiveID = context.get("Objective ID");
+                    final Objective objective = quest.getObjectiveFromID(objectiveID);
+                    assert objective != null; //Shouldn't be null
+
+                    final Action foundReward = objective.getRewards().get(ID);
+                    context.getSender().sendMessage(Component.empty());
+                    if (foundReward == null) {
+                        context.getSender().sendMessage(main.parse(
+                                "<error>Invalid reward."
+                        ));
+                        return;
+                    }
+
+                    final String displayName = String.join(" ", (String[]) context.get("DisplayName"));
+
+
+                    foundReward.setActionName(displayName);
+                    main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + (ID + 1) + ".displayName", foundReward.getActionName());
+                    context.getSender().sendMessage(main.parse(
+                            "<success>Display Name successfully added to reward with ID <highlight>" + ID + "</highlight>! New display name: <highlight2>"
+                                    + foundReward.getActionName()
+                    ));
+                }));
     }
 
     public void handleEditRewards(final Command.Builder<CommandSender> builder) {
@@ -1365,7 +1602,7 @@ public class AdminEditCommands {
                 .handler((context) -> {
                     final Quest quest = context.get("quest");
 
-                    quest.removeAllTriggers();
+                    quest.clearTriggers();
                     context.getSender().sendMessage(main.parse(
                             "<success>All Triggers of Quest <highlight>" + quest.getQuestName() + "</highlight> have been removed!"
                     ));

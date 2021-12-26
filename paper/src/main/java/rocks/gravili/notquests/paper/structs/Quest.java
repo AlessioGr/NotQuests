@@ -77,7 +77,7 @@ public class Quest {
 
 
 
-    public void removeAllRewards() {
+    public void clearRewards() {
         rewards.clear();
         main.getDataManager().getQuestsConfig().set("quests." + questName + ".rewards", null);
     }
@@ -173,7 +173,7 @@ public class Quest {
 
     }
 
-    public void removeAllObjectives() {
+    public void clearObjectives() {
         objectives.clear();
         main.getDataManager().getQuestsConfig().set("quests." + questName + ".objectives", null);
     }
@@ -253,12 +253,12 @@ public class Quest {
         return conditions;
     }
 
-    public void removeAllRequirements() {
+    public void clearRequirements() {
         conditions.clear();
         main.getDataManager().getQuestsConfig().set("quests." + questName + ".requirements", null);
     }
 
-    public void removeAllNPCs() {
+    public void clearNPCs() {
         if (!main.getIntegrationsManager().isCitizensEnabled()) {
             main.getLogManager().severe("The removal of all NPCs from Quest <highlight>" + questName + "</highlight> has been cancelled, because the Citizens plugin is not installed on this server. You will need the Citizens plugin to do NPC stuff.");
             return;
@@ -364,7 +364,7 @@ public class Quest {
 
 
 
-    public void removeAllTriggers() {
+    public void clearTriggers() {
         triggers.clear();
         main.getDataManager().getQuestsConfig().set("quests." + questName + ".triggers", null);
     }

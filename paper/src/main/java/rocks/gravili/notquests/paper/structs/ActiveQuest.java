@@ -133,12 +133,44 @@ public class ActiveQuest {
             if (objectiveCompleteEvent.isCancelled()) {
                 return;
             }
-
+            final Player player = Bukkit.getPlayer(questPlayer.getUUID());
             //Now execute the objective reward actions:
+            String fullRewardString = "";
+            int counterWithRewardNames = 0;
             for (Action rewardAction : activeObjective.getObjective().getRewards()) {
                 questPlayer.sendDebugMessage("Executing a rewardAction for an objective");
-                main.getLogManager().debug("Executing a rewardAction for an objective");
                 main.getActionManager().executeActionWithConditions(rewardAction, questPlayer, null, true, getQuest());
+
+                if(main.getConfiguration().showRewardsAfterObjectiveCompletion){
+                    if(!rewardAction.getActionName().isBlank()){
+                        counterWithRewardNames++;
+                        if(counterWithRewardNames == 1){
+                            fullRewardString += main.getLanguageManager().getString("chat.objectives.successfully-completed-rewards-prefix", player, this, activeObjective, rewardAction);
+                        }
+                        fullRewardString += "\n"+ main.getLanguageManager().getString("chat.objectives.successfully-completed-rewards-rewardformat", player, this, activeObjective, rewardAction)
+                                .replace("%reward%", rewardAction.getActionName());
+                    }
+                }
+            }
+
+            if(counterWithRewardNames > 0){
+                fullRewardString += "\n" + main.getLanguageManager().getString("chat.objectives.successfully-completed-rewards-suffix", player, this, activeObjective);
+            }
+
+            if (!silent) {
+
+                if (player != null) {
+                    player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, SoundCategory.MASTER, 75, 1.4f);
+
+                    if(fullRewardString.isBlank()){
+                        questPlayer.sendMessage(main.getLanguageManager().getString("chat.objectives.successfully-completed", questPlayer.getPlayer(), this, activeObjective));
+                    }else{
+                        main.sendMessage(player, main.getLanguageManager().getString("chat.objectives.successfully-completed", questPlayer.getPlayer(), this, activeObjective)
+                                + "<RESET>" + fullRewardString
+                        );
+                    }
+
+                }
             }
 
         }
@@ -149,13 +181,7 @@ public class ActiveQuest {
         //Add to completed Objectives list. This list will then be used in removeCompletedObjectives() to remove all its contests also from the activeObjectives lists
         //(Without a concurrentmodificationexception)
         toRemove.add(activeObjective);
-        if (!silent && !main.getDataManager().isCurrentlyLoading()) {
-            questPlayer.sendMessage(main.getLanguageManager().getString("chat.objectives.successfully-completed", questPlayer.getPlayer(), this, activeObjective));
-            final Player player = Bukkit.getPlayer(questPlayer.getUUID());
-            if (player != null) {
-                player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, SoundCategory.MASTER, 75, 1.4f);
-            }
-        }
+
     }
 
 

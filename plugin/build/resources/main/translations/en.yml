@@ -20,6 +20,9 @@ chat:
     <CENTER><positive>[Quest Completed]
     <CENTER><highlight><BOLD>%QUESTNAME%
     <EMPTY>
+  quest-completed-rewards-prefix: '    <highlight>Rewards:'
+  quest-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
+  quest-completed-rewards-suffix: <EMPTY>
   missing-quest-description: <unimportant>This quest has no quest description.
   objectives-label-after-quest-accepting: '<highlight>Objectives:'
   questpoints:
@@ -43,6 +46,9 @@ chat:
       <CENTER><success>[Objective Completed]
       <CENTER><highlight><BOLD>%OBJECTIVENAME% <RESET><main>(%QUESTNAME%)
       <EMPTY>
+    successfully-completed-rewards-prefix: '    <highlight>Rewards:'
+    successfully-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
+    successfully-completed-rewards-suffix: <EMPTY>
     taskDescription:
       breakBlocks:
         base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Break Blocks: <main>%EVENTUALCOLOR%%BLOCKTOBREAK%'

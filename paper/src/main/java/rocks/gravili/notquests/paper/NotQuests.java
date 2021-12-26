@@ -469,13 +469,13 @@ public class NotQuests {
     }
 
     public void sendMessage(CommandSender sender, String message){
-        if(!message.isBlank()){
+        if(!message.isBlank() && sender != null){
             sender.sendMessage(parse(message));
         }
     }
 
     public void sendMessage(CommandSender sender, Component component){
-        if(!PlainTextComponentSerializer.plainText().serialize(component).isBlank()){
+        if(!PlainTextComponentSerializer.plainText().serialize(component).isBlank() && sender != null){
             sender.sendMessage(component);
         }
     }
