@@ -376,14 +376,10 @@ public class UtilManager {
         int counter = 0;
         for (String splitString : miniMessageString.split("\n")) {
             Component splitComponent = main.parse(splitString);
-            //main.getLogManager().debug("Split Component old: " + miniMessage.serialize(splitComponent));
-
 
             if (lastColor != null) {
-                //main.getLogManager().debug("Appending color: " + lastColor.toString());
                 splitComponent = Component.text("", lastColor).append(splitComponent);
             }
-            //main.getLogManager().debug("Split Component new: " + miniMessage.serialize(splitComponent));
 
             if (splitComponent.children().size() >= 1) {
                 if (splitComponent.children().get(splitComponent.children().size() - 1).color() != null) {

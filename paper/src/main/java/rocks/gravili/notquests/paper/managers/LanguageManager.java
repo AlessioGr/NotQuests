@@ -19,6 +19,7 @@
 package rocks.gravili.notquests.paper.managers;
 
 import me.clip.placeholderapi.PlaceholderAPI;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.io.IOUtils;
@@ -36,9 +37,7 @@ import rocks.gravili.notquests.paper.structs.objectives.Objective;
 import rocks.gravili.notquests.paper.structs.triggers.Trigger;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -284,6 +283,33 @@ public class LanguageManager {
         return languageConfig;
     }
 
+    public final Component getComponent(final String languageString, final Player targetPlayer, Object... internalPlaceholderObjects){
+        return main.parse(getString(languageString, targetPlayer, internalPlaceholderObjects));
+    }
+
+    public final List<Component> getComponentList(final String languageString, final Player targetPlayer, Object... internalPlaceholderObjects){
+        List<Component> components = new ArrayList<>();
+        if (!getLanguageConfig().isList(languageString)) {
+            return Collections.singletonList(Component.text("Language string not found: " + languageString));
+        } else {
+            final List<String> translatedString = getLanguageConfig().getStringList(languageString);
+            if (translatedString.isEmpty()) {
+                return Collections.singletonList(Component.text("Language string not found: " + languageString));
+            }
+
+            if (!main.getConfiguration().supportPlaceholderAPIInTranslationStrings || !main.getIntegrationsManager().isPlaceholderAPIEnabled() || targetPlayer == null) {
+                for(String componentPart : applySpecial(applyInternalPlaceholders(translatedString, internalPlaceholderObjects))){
+                    components.add(main.parse(componentPart));
+                }
+            } else {
+                for(String componentPart : applySpecial(PlaceholderAPI.setPlaceholders(targetPlayer, applyInternalPlaceholders(translatedString, internalPlaceholderObjects)))) {
+                    components.add(main.parse(componentPart));
+                }
+            }
+        }
+        return components;
+    }
+
     public final String getString(final String languageString, final Player targetPlayer, Object... internalPlaceholderObjects) {
         if (!getLanguageConfig().isString(languageString)) {
             return "Language string not found: " + languageString;
@@ -298,6 +324,30 @@ public class LanguageManager {
                 return applySpecial(PlaceholderAPI.setPlaceholders(targetPlayer, applyInternalPlaceholders(translatedString, internalPlaceholderObjects)));
             }
         }
+    }
+
+    public final List<String> getStringList(final String languageString, final Player targetPlayer, Object... internalPlaceholderObjects) {
+        if (!getLanguageConfig().isList(languageString)) {
+            return Collections.singletonList("Language string not found: " + languageString);
+        } else {
+            final List<String> translatedString = getLanguageConfig().getStringList(languageString);
+            if (translatedString.isEmpty()) {
+                return Collections.singletonList("Language string not found: " + languageString);
+            }
+            if (!main.getConfiguration().supportPlaceholderAPIInTranslationStrings || !main.getIntegrationsManager().isPlaceholderAPIEnabled() || targetPlayer == null) {
+                return applySpecial(applyInternalPlaceholders(translatedString, internalPlaceholderObjects)); //Removed applyColor( for minimessage support
+            } else {
+                return applySpecial(PlaceholderAPI.setPlaceholders(targetPlayer, applyInternalPlaceholders(translatedString, internalPlaceholderObjects)));
+            }
+        }
+    }
+
+    public List<String> applyInternalPlaceholders(List<String> initialMessage, Object... internalPlaceholderObjects) {
+        List<String> toReturn = new ArrayList<>();
+        for(String message : initialMessage){
+            toReturn.add(applyInternalPlaceholders(message, internalPlaceholderObjects));
+        }
+        return toReturn;
     }
 
     public String applyInternalPlaceholders(String initialMessage, Object... internalPlaceholderObjects) {
@@ -338,7 +388,17 @@ public class LanguageManager {
         return main.getUtilManager().replaceFromMap(initialMessage, internalPlaceholderReplacements);
     }
 
-    public String applySpecial(String initialMessage) { //TODO: Fix center if that message is later processed for placeholders => process the placeholders here instead
+    public List<String> applySpecial(List<String> initialMessage) {
+        List<String> toReturn = new ArrayList<>();
+        for(String message : initialMessage){
+            toReturn.add(applySpecial(message));
+        }
+        return toReturn;
+    }
+
+
+
+        public String applySpecial(String initialMessage) { //TODO: Fix center if that message is later processed for placeholders => process the placeholders here instead
         initialMessage = initialMessage.replace("<EMPTY>", " ");
 
 
