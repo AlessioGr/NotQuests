@@ -2,11 +2,19 @@ chat:
   wrong-command-usage: '<error>Wrong command usage!'
   missing-permission: '<error>No permission! Required permission node: <highlight>%PERMISSION%'
   too-many-arguments: '<error>Too many arguments!'
-  quest-successfully-accepted: '<success>You have successfully accepted the Quest <highlight>%QUESTNAME%</highlight>.'
+  quest-successfully-accepted: |2+
+
+    <CENTER><main>[Quest Accepted]
+    <CENTER><highlight><BOLD>%QUESTNAME%
+    <EMPTY>
   quest-description: '<main>Quest description: <highlight>%QUESTDESCRIPTION%'
   quest-already-accepted: '<error>Quest already accepted.'
-  quest-failed: '<main>You have <negative><BOLD>FAILED</BOLD></negative> the Quest <highlight>%QUESTNAME%</highlight>!'
-  quest-aborted: '<main>The active quest <highlight>%QUESTNAME%</highlight> has been aborted!'
+  quest-failed: |2+
+
+    <CENTER><negative>[Quest Failed]
+    <CENTER><highlight><BOLD>%QUESTNAME%
+    <EMPTY>
+  quest-aborted: ''
   quest-completed-and-rewards-given: |2+
 
     <CENTER><positive>[Quest Completed]
@@ -45,7 +53,7 @@ chat:
       escortNPC:
         base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Escort <highlight2>%EVENTUALCOLOR%%NPCNAME%</highlight2> %EVENTUALCOLOR%to <highlight2>%EVENTUALCOLOR%%DESTINATIONNPCNAME%'
       killMobs:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Mobs to kill: <highlight2>%EVENTUALCOLOR%%MOBTOKILL%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Kill mobs: <highlight2>%EVENTUALCOLOR%%MOBTOKILL%'
       otherQuest:
         base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Quest completion: <highlight2>%EVENTUALCOLOR%%OTHERQUESTNAME%'
       placeBlocks:

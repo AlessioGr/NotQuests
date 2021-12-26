@@ -2,10 +2,12 @@ package rocks.gravili.notquests.paper;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.AdvancedPie;
 import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import rocks.gravili.notquests.paper.conversation.ConversationEvents;
 import rocks.gravili.notquests.paper.conversation.ConversationManager;
@@ -464,6 +466,18 @@ public class NotQuests {
 
     public final Component parse(String miniMessage){
         return getMiniMessage().parse(miniMessage);
+    }
+
+    public void sendMessage(CommandSender sender, String message){
+        if(!message.isBlank()){
+            sender.sendMessage(parse(message));
+        }
+    }
+
+    public void sendMessage(CommandSender sender, Component component){
+        if(!PlainTextComponentSerializer.plainText().serialize(component).isBlank()){
+            sender.sendMessage(component);
+        }
     }
 
 }

@@ -4,6 +4,8 @@ import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
+import com.destroystokyo.paper.profile.PlayerProfile;
+import com.destroystokyo.paper.profile.ProfileProperty;
 import de.themoep.inventorygui.GuiElementGroup;
 import de.themoep.inventorygui.GuiPageElement;
 import de.themoep.inventorygui.InventoryGui;
@@ -13,10 +15,12 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.ActiveQuestSelector;
 import rocks.gravili.notquests.paper.commands.arguments.QuestSelector;
@@ -25,6 +29,8 @@ import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
+import java.util.UUID;
+
 
 public class UserCommands {
     private final NotQuests main;
@@ -32,11 +38,68 @@ public class UserCommands {
     private final Command.Builder<CommandSender> builder;
     private final Component firstLevelCommands;
 
+    private final ItemStack chest, abort, coins, books, info;
+
 
     public UserCommands(final NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder) {
         this.main = main;
         this.manager = manager;
         this.builder = builder;
+
+        chest = new ItemStack(Material.PLAYER_HEAD);
+        {
+            SkullMeta meta = (SkullMeta) chest.getItemMeta();
+            PlayerProfile prof = Bukkit.createProfile(UUID.randomUUID(), null);
+            prof.getProperties().add(new ProfileProperty("textures",
+                    "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTcxNDUxNmU2NTY1YjgxMmZmNWIzOWVhMzljZDI4N2FmZWM4ZmNjMDZkOGYzMDUyMWNjZDhmMWI0Y2JmZGM2YiJ9fX0="
+            ));
+            meta.setPlayerProfile(prof);
+            chest.setItemMeta(meta);
+        }
+
+        abort = new ItemStack(Material.PLAYER_HEAD);
+        {
+            SkullMeta meta = (SkullMeta) abort.getItemMeta();
+            PlayerProfile prof = Bukkit.createProfile(UUID.randomUUID(), null);
+            prof.getProperties().add(new ProfileProperty("textures",
+                    "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWQwYTE0MjA4NDRjZTIzN2E0NWQyZTdlNTQ0ZDEzNTg0MWU5ZjgyZDA5ZTIwMzI2N2NmODg5NmM4NTE1ZTM2MCJ9fX0="
+            ));
+            meta.setPlayerProfile(prof);
+            abort.setItemMeta(meta);
+        }
+
+        coins = new ItemStack(Material.PLAYER_HEAD);
+        {
+            SkullMeta meta = (SkullMeta) coins.getItemMeta();
+            PlayerProfile prof = Bukkit.createProfile(UUID.randomUUID(), null);
+            prof.getProperties().add(new ProfileProperty("textures",
+                    "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODM4MWM1MjlkNTJlMDNjZDc0YzNiZjM4YmI2YmEzZmRlMTMzN2FlOWJmNTAzMzJmYWE4ODllMGEyOGU4MDgxZiJ9fX0="
+            ));
+            meta.setPlayerProfile(prof);
+            coins.setItemMeta(meta);
+        }
+
+        books = new ItemStack(Material.PLAYER_HEAD);
+        {
+            SkullMeta meta = (SkullMeta) books.getItemMeta();
+            PlayerProfile prof = Bukkit.createProfile(UUID.randomUUID(), null);
+            prof.getProperties().add(new ProfileProperty("textures",
+                    "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWVlOGQ2ZjVjYjdhMzVhNGRkYmRhNDZmMDQ3ODkxNWRkOWViYmNlZjkyNGViOGNhMjg4ZTkxZDE5YzhjYiJ9fX0="
+            ));
+            meta.setPlayerProfile(prof);
+            books.setItemMeta(meta);
+        }
+
+        info = new ItemStack(Material.PLAYER_HEAD);
+        {
+            SkullMeta meta = (SkullMeta) info.getItemMeta();
+            PlayerProfile prof = Bukkit.createProfile(UUID.randomUUID(), null);
+            prof.getProperties().add(new ProfileProperty("textures",
+                    "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2Q5MWY1MTI2NmVkZGM2MjA3ZjEyYWU4ZDdhNDljNWRiMDQxNWFkYTA0ZGFiOTJiYjc2ODZhZmRiMTdmNGQ0ZSJ9fX0="
+            ));
+            meta.setPlayerProfile(prof);
+            info.setItemMeta(meta);
+        }
 
         firstLevelCommands = Component.text("NotQuests Player Commands:", NamedTextColor.BLUE, TextDecoration.BOLD)
                 .append(Component.newline())
@@ -88,9 +151,7 @@ public class UserCommands {
                                 result
                         ));
                     } else {
-                        context.getSender().sendMessage(main.parse(
-                                main.getLanguageManager().getString("chat.quest-successfully-accepted", player, quest)
-                        ));
+
                         if (!quest.getQuestDescription().isBlank()) {
                             context.getSender().sendMessage(main.parse(
                                     main.getLanguageManager().getString("chat.quest-description", player, quest)
@@ -100,6 +161,10 @@ public class UserCommands {
                                     main.getLanguageManager().getString("chat.missing-quest-description", player)
                             ));
                         }
+
+                        context.getSender().sendMessage(main.parse(
+                                main.getLanguageManager().getString("chat.quest-successfully-accepted", player, quest)
+                        ));
                     }
                 }));
 
@@ -142,8 +207,11 @@ public class UserCommands {
                     InventoryGui gui = new InventoryGui(main.getMain(), player, convert(main.getLanguageManager().getString("gui.main.title", player)), guiSetup);
                     gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
 
+
+
+
                     gui.addElement(new StaticGuiElement('8',
-                            new ItemStack(Material.CHEST),
+                            chest,
                             0,
                             click -> {
                                 player.chat("/notquests take");
@@ -152,8 +220,9 @@ public class UserCommands {
                             convert(main.getLanguageManager().getString("gui.main.button.takequest.text", player))
 
                     ));
+
                     gui.addElement(new StaticGuiElement('a',
-                            new ItemStack(Material.REDSTONE_BLOCK),
+                            abort,
                             0,
                             click -> {
                                 player.chat("/notquests abort");
@@ -162,7 +231,7 @@ public class UserCommands {
                             convert(main.getLanguageManager().getString("gui.main.button.abortquest.text", player))
                     ));
                     gui.addElement(new StaticGuiElement('c',
-                            new ItemStack(Material.SPYGLASS),
+                            info,
                             0,
                             click -> {
                                 player.chat("/notquests preview");
@@ -172,7 +241,7 @@ public class UserCommands {
                     ));
 
                     gui.addElement(new StaticGuiElement('o',
-                            new ItemStack(Material.LADDER),
+                            books,
                             0,
                             click -> {
                                 player.chat("/notquests activeQuests");
@@ -183,7 +252,7 @@ public class UserCommands {
                     QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
                     if (questPlayer != null) {
                         gui.addElement(new StaticGuiElement('z',
-                                new ItemStack(Material.SUNFLOWER),
+                                coins,
                                 0,
                                 click -> {
                                     return true;
@@ -192,7 +261,7 @@ public class UserCommands {
                         ));
                     } else {
                         gui.addElement(new StaticGuiElement('z',
-                                new ItemStack(Material.SUNFLOWER),
+                                coins,
                                 0,
                                 click -> {
                                     return true;
@@ -439,9 +508,8 @@ public class UserCommands {
                                 1,
                                 click -> {
                                     questPlayer.failQuest(activeQuest);
-                                    context.getSender().sendMessage(main.parse(
-                                            main.getLanguageManager().getString("chat.quest-aborted", player, activeQuest)
-                                    ));
+                                    main.sendMessage(context.getSender(), main.getLanguageManager().getString("chat.quest-aborted", player, activeQuest));
+
                                     gui.close();
                                     return true;
                                 },
@@ -759,9 +827,8 @@ public class UserCommands {
                         final ActiveQuest activeQuest = context.get("Active Quest");
 
                         questPlayer.failQuest(activeQuest);
-                        context.getSender().sendMessage(main.parse(
-                                main.getLanguageManager().getString("chat.quest-aborted", player, activeQuest)
-                        ));
+                        main.sendMessage(context.getSender(), main.getLanguageManager().getString("chat.quest-aborted", player, activeQuest));
+
 
                     } else {
                         context.getSender().sendMessage(main.parse(

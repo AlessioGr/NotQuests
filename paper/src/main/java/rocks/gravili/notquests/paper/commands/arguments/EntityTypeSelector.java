@@ -131,7 +131,7 @@ public class EntityTypeSelector<C> extends CommandArgument<C, String> {
         @Override
         public List<String> suggestions(@NotNull CommandContext<C> context, @NotNull String input) {
             List<String> completions = new java.util.ArrayList<>(main.getDataManager().standardEntityTypeCompletions);
-            completions.add("ANY");
+            completions.add("any");
 
             final List<String> allArgs = context.getRawInput();
 

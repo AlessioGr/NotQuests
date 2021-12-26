@@ -7,10 +7,23 @@ import de.themoep.inventorygui.StaticGuiElement;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.incendo.interfaces.core.arguments.ArgumentKey;
+import org.incendo.interfaces.core.click.ClickHandler;
+import org.incendo.interfaces.core.transform.types.PaginatedTransform;
+import org.incendo.interfaces.core.util.Vector2;
+import org.incendo.interfaces.paper.PaperInterfaceListeners;
+import org.incendo.interfaces.paper.PlayerViewer;
+import org.incendo.interfaces.paper.element.ItemStackElement;
+import org.incendo.interfaces.paper.pane.ChestPane;
+import org.incendo.interfaces.paper.transform.PaperTransform;
 import org.incendo.interfaces.paper.type.ChestInterface;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
+
+import java.util.ArrayList;
 
 
 public class GUIManager {
@@ -27,7 +40,7 @@ public class GUIManager {
     }
 
     public void constructInterfaces(){
-        /*PaperInterfaceListeners.install(main.getMain());
+        PaperInterfaceListeners.install(main.getMain());
 
         ArrayList<ItemStackElement<ChestPane>> list = new ArrayList<>() {
             {
@@ -64,7 +77,6 @@ public class GUIManager {
 
                     itemStack.setItemMeta(itemMeta);
 
-                    return PaginatedTransform
 
 
                     // Return a pane with
@@ -79,7 +91,7 @@ public class GUIManager {
                 // Set the title
                 .title(main.getLanguageManager().getComponent("gui.activeQuests.title", null ))
                 // Build the interface
-                .build();*/
+                .build();
     }
 
 

@@ -45,6 +45,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 
 /**
@@ -1442,7 +1443,7 @@ public class DataManager {
          * Entities which are in the game.
          */
         for (EntityType entityType : EntityType.values()) {
-            standardEntityTypeCompletions.add(entityType.toString());
+            standardEntityTypeCompletions.add(entityType.toString().toLowerCase(Locale.ROOT));
         }
         //Add extra Mythic Mobs completions, if enabled
         if (main.getIntegrationsManager().isMythicMobsEnabled()) {
