@@ -108,7 +108,7 @@ Admin Commands - Quest Editing:
 
 **Requirements to run this:**
 - Paper or Spigot 1.17.1 or 1.18 (Paper is recommended)
-- Java 16
+- Java 17
 
 
 **Optional:**
