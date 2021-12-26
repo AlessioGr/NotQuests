@@ -30,9 +30,9 @@ jobs:
         run: gradle shadowJar
 
       - name: Build artifacts
-        run: ./gradlew build shadowJar
+        run: ./gradlew clean build shadowJar
       - name: Upload build artifacts
         uses: actions/upload-artifact@v1
         with:
           name: NotQuests-dev-build.jar
-          path: build/libs
+          path: plugin/build/libs
