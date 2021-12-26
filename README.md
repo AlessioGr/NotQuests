@@ -15,6 +15,11 @@ I created NotQuests for my own server, mc.notnot.pro and planned to keep it priv
 
 You can find the releases here: https://github.com/AlessioGr/NotQuests/releases. A MySQL database connection is recommended and can be specified in the general.yml. Otherwise, SQLite will be used.
 
+## How to build
+Git clone this project and build it with these Gradle commands: clean build shadowJar
+
+The output file should be in the folder plugin/build/libs/plugin-version-all.jar
+
 
 
 ![Banner_Images](https://user-images.githubusercontent.com/70709113/133997397-fbe14d0b-22fe-4ede-98e2-4d7a2cbcb489.png)
