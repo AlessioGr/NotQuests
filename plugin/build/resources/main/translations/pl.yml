@@ -1,15 +1,23 @@
 chat:
   wrong-command-usage: '<error>Nieprawidłowe użycie polecenia!'
-  missing-permission: '<error>Brak permisji! Potrzebujesz permisji: <warn>%PERMISSION%'
+  missing-permission: '<error>Brak permisji! Potrzebujesz permisji: <highlight>%PERMISSION%'
   too-many-arguments: '<error>Zbyt wiele argumentów!'
-  quest-successfully-accepted: '<success>Pomyślnie zaakceptowałeś quest <highlight>%QUESTNAME%<success>.'
+  quest-successfully-accepted: |2
+
+    <CENTER><main>[Quest Zaakceptowany]
+    <CENTER><highlight><BOLD>%QUESTNAME%
+    <EMPTY>
   quest-description: '<warn>Opis zadania: <unimportant>%QUESTDESCRIPTION%'
   quest-already-accepted: '<error>Quest jest już przyjęty.'
-  quest-failed: '<warn>Nie udało ci się wykonać zadania: <highlight>%QUESTNAME%<warn>!'
-  quest-aborted: '<success>Aktywny quest <highlight>%QUESTNAME% <success>został przerwany!'
+  quest-failed: |2
+
+    <CENTER><negative>[Quest Zakończony Niepowodzeniem]
+    <CENTER><highlight><BOLD>%QUESTNAME%
+    <EMPTY>
+  quest-aborted: ''
   quest-completed-and-rewards-given: |2+
 
-    <CENTER><success>[Quest ukończony]
+    <CENTER><success>[Quest Ukończony]
     <CENTER><highlight><bold>%QUESTNAME%
     <EMPTY>
   missing-quest-description: '<warn>Ten quest nie ma opisu.'
