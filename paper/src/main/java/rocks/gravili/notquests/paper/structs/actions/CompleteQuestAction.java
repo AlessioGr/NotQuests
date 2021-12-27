@@ -79,7 +79,7 @@ public class CompleteQuestAction extends Action {
 
         ActiveQuest foundActiveQuest = questPlayer.getActiveQuest(foundQuest);
 
-        if (foundActiveQuest == null) {
+        if (foundActiveQuest == null || foundActiveQuest.isCompleted()) {
             return;
         }
 

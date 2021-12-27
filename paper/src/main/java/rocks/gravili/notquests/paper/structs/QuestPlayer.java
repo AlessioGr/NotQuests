@@ -328,11 +328,12 @@ public class QuestPlayer {
             return;
         }
 
+        activeQuest.getCompletedObjectives().addAll(activeQuest.getActiveObjectives());
+        activeQuest.getActiveObjectives().clear();
+
         questsToComplete.add(activeQuest);
 
         completedQuests.add(new CompletedQuest(activeQuest.getQuest(), this));
-
-        giveReward(activeQuest.getQuest());
 
         final Player player = getPlayer();
         if (player != null) {
@@ -361,6 +362,8 @@ public class QuestPlayer {
         }
         removeCompletedQuests();
         //activeQuests.removeAll(questsToComplete);
+
+        giveReward(activeQuest.getQuest());
 
     }
 
