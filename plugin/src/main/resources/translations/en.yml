@@ -7,7 +7,7 @@ chat:
     <CENTER><main>[Quest Accepted]
     <CENTER><highlight><BOLD>%QUESTNAME%
     <EMPTY>
-  quest-description: '<main>Quest description: <highlight>%QUESTDESCRIPTION%'
+  quest-description: '<main>Quest description: <unimportant>%QUESTDESCRIPTION%'
   quest-already-accepted: <error>Quest already accepted.
   quest-failed: |2
 
@@ -30,11 +30,9 @@ chat:
     none: <error>Seems like you don't have any quest points!
   no-quests-accepted: <error>Seems like you don't have any active quests!
   quest-does-not-exist: <error>Quest <highlight>%QUESTNAME%</highlight> does not exist!
-  quest-not-found-or-does-not-exist: <error>Quest <highlight>%QUESTNAME%</highlight>
-    not found or not active!
+  quest-not-found-or-does-not-exist: <error>Quest <highlight>%QUESTNAME%</highlight> not found or not active!
   active-quests-label: '<highlight>Active quests:'
-  take-disabled: <error>Accepting or previewing the quest <highlight>%QUESTNAME%</highlight>
-    is disabled.
+  take-disabled: <error>Accepting or previewing the quest <highlight>%QUESTNAME%</highlight> is disabled.
   quest-not-active-error: '<error>Error: <highlight>%QUESTNAME%</highlight> is not an active Quest!'
   objectives:
     counter: '<highlight>%OBJECTIVEID%.</highlight> <main>%OBJECTIVENAME%:'
@@ -83,7 +81,7 @@ chat:
         base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Run command: <main>%EVENTUALCOLOR%%COMMANDTORUN%'
       interact:
         base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%%INTERACTTYPE% Location: <main>%EVENTUALCOLOR%%COORDINATES% <main>%EVENTUALCOLOR%in world %EVENTUALCOLOR%%WORLDNAME%'
-        taskDescriptionProvided: '    <veryUnimportant>└─ <GRAY>%EVENTUALCOLOR%%TASKDESCRIPTION%'
+        taskDescriptionProvided: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%%TASKDESCRIPTION%'
       jump:
         base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Jump <main>%EVENTUALCOLOR%%AMOUNTOFJUMPS%</main> %EVENTUALCOLOR%times'
       sneak:

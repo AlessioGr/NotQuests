@@ -7,7 +7,7 @@ chat:
     <CENTER><main>[Quest Zaakceptowany]
     <CENTER><highlight><BOLD>%QUESTNAME%
     <EMPTY>
-  quest-description: '<warn>Opis zadania: <unimportant>%QUESTDESCRIPTION%'
+  quest-description: '<main>Opis zadania: <unimportant>%QUESTDESCRIPTION%'
   quest-already-accepted: '<error>Quest jest już przyjęty.'
   quest-failed: |2
 

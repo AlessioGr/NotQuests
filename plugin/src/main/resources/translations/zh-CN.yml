@@ -1,9 +1,9 @@
 chat:
   wrong-command-usage: '<error>指令错误!'
-  missing-permission: '<error>权限不足! 需要权限: <warn>%PERMISSION%'
+  missing-permission: '<error>权限不足! 需要权限: <highlight>%PERMISSION%'
   too-many-arguments: '<error>参数过多!'
   quest-successfully-accepted: '<success>成功接受任务 <highlight>%QUESTNAME%<success>.'
-  quest-description: '<warn>任务描述: <unimportant>%QUESTDESCRIPTION%'
+  quest-description: '<main>任务描述: <unimportant>%QUESTDESCRIPTION%'
   quest-already-accepted: '<error>已经接受该任务了.'
   quest-failed: '<warn>任务 <highlight>%QUESTNAME% <error><bold>失败<warn>!'
   quest-aborted: '<success>进行中的任务 <highlight>%QUESTNAME% <success>已终止!'
