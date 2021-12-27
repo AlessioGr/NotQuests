@@ -1,7 +1,7 @@
 chat:
-  wrong-command-usage: '<error>Falsche Command-Syntax!'
+  wrong-command-usage: <error>Falsche Command-Syntax!
   missing-permission: '<error>Dafür hast du keine Rechte! Fehlendes Recht: <highlight>%PERMISSION%'
-  too-many-arguments: '<error>Zu viele Eingaben!'
+  too-many-arguments: <error>Zu viele Eingaben!
   quest-successfully-accepted: |2
 
     <CENTER><main>[Quest Akzeptiert]
@@ -34,6 +34,12 @@ chat:
   active-quests-label: '<highlight>Aktive Quests:'
   take-disabled: '<error>Das Akzeptieren oder Ansehen der Vorschau der Quest <highlight>%QUESTNAME%</highlight> wurde deaktiviert.'
   quest-not-active-error: '<error>Fehler: <highlight>%QUESTNAME% <error>ist keine aktive Quest!'
+  conversations:
+    choose-answer-prefix: |-
+      <EMPTY>
+      <main>Wähle deine Antwort:</main>
+    choose-answer-answer-hover-text: '<highlight>Klicke zum antworten'
+    ended-previous-conversation: '<main>Deine letztes Gespräch wurde beendet.'
   objectives:
     counter: '<highlight>%OBJECTIVEID%.</highlight> <main>%OBJECTIVENAME%:'
     hidden: '<highlight>%OBJECTIVEID%. <unimportant><bold>[VERBORGEN]'

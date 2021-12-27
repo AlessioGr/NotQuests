@@ -142,11 +142,7 @@ public class ConversationManager {
 
         final ConversationPlayer openConversation = getOpenConversation(questPlayer.getUUID());
         if (openConversation != null) {
-            player.sendMessage(
-                    main.parse(
-                            "<main>You have ended your previous conversation!"
-                    )
-            );
+            main.sendMessage(player, main.getLanguageManager().getString("chat.conversations.ended-previous-conversation", player, conversation));
             stopConversation(openConversation);
         }
 

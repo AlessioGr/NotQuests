@@ -18,12 +18,9 @@
 
 package rocks.gravili.notquests.paper.conversation;
 
-import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -31,8 +28,6 @@ import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 
 import java.util.ArrayList;
-
-import static rocks.gravili.notquests.paper.commands.NotQuestColors.*;
 
 public class ConversationPlayer {
     private final NotQuests main;
@@ -117,20 +112,21 @@ public class ConversationPlayer {
         questPlayer.sendDebugMessage("Adding " + playerLines.size() + " currentPlayerLines");
         currentPlayerLines.addAll(playerLines);
 
-        Component component = main.parse(
-                "<main>Choose your answer:</main>"
 
-        );
-        player.sendMessage(Component.empty());
-        player.sendMessage(component);
+        String chooseAnswerPrefixMiniMessage = main.getLanguageManager().getString("chat.conversations.choose-answer-prefix", player, conversation);
+        main.sendMessage(player, chooseAnswerPrefixMiniMessage);
+
+
 
         if (main.getConfiguration().deletePreviousConversations) {
             ArrayList<Component> hist = main.getConversationManager().getConversationChatHistory().get(player.getUniqueId());
             if (hist == null) {
                 hist = new ArrayList<>();
             }
-            hist.add(Component.empty());
-            hist.add(component);
+            if(!chooseAnswerPrefixMiniMessage.isBlank()){
+                hist.add(main.parse(chooseAnswerPrefixMiniMessage));
+            }
+
             main.getConversationManager().getConversationChatHistory().put(player.getUniqueId(), hist);
         }
 
@@ -232,7 +228,7 @@ public class ConversationPlayer {
     public void sendOptionLine(final ConversationLine conversationLine) {
         Component toSend = main.parse(
                 conversationLine.getSpeaker().getColor() + " > <GRAY>" + conversationLine.getMessage()
-        ).clickEvent(ClickEvent.runCommand("/notquests continueConversation " + conversationLine.getMessage())).hoverEvent(HoverEvent.showText(Component.text("Click to answer", NamedTextColor.AQUA)));
+        ).clickEvent(ClickEvent.runCommand("/notquests continueConversation " + conversationLine.getMessage())).hoverEvent(HoverEvent.showText(main.parse(main.getLanguageManager().getString("chat.conversations.choose-answer-answer-hover-text", player, conversation, conversationLine))));
 
 
         if (main.getConfiguration().deletePreviousConversations) {

@@ -1,9 +1,9 @@
 chat:
   wrong-command-usage: '<error>Λανθασμένη χρήση εντολών!'
-  missing-permission: '<error>Ανεπαρκής άδεια! Απαιτούμενο node άδειας:  <warn>%PERMISSION%'
+  missing-permission: '<error>Ανεπαρκής άδεια! Απαιτούμενο node άδειας:  <highlight>%PERMISSION%'
   too-many-arguments: '<error>Υπερβολικές μεταβλητές!'
   quest-successfully-accepted: '<success>Αναλάβατε επιτυχώς την αποστολή <highlight>%QUESTNAME%<success>.'
-  quest-description: '<warn>Περιγραφή αποστολής: <unimportant>%QUESTDESCRIPTION%'
+  quest-description: '<main>Περιγραφή αποστολής: <unimportant>%QUESTDESCRIPTION%'
   quest-already-accepted: '<error>Έχετε ήδη αναλάβει αυτή την αποστολή.'
   quest-failed: '<error><bold>Aποτύχατε <warn>στην αποστολή <highlight>%QUESTNAME%<warn>!'
   quest-aborted: '<success>Η αποστολή <highlight>%QUESTNAME% <success>ματαιώθηκε!'

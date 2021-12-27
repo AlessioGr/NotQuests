@@ -1,9 +1,9 @@
 chat:
   wrong-command-usage: '<error>Lệnh sai!'
-  missing-permission: '<error>Bạn không có quyền: <warn>%PERMISSION%'
+  missing-permission: '<error>Bạn không có quyền: <highlight>%PERMISSION%'
   too-many-arguments: '<error>Quá nhiều cái thừa trong lệnh!'
   quest-successfully-accepted: '<success>Bạn đã chấp nhận nhiệm vụ <highlight>%QUESTNAME%<success>.'
-  quest-description: '<warn>Mô tả nhiệm vụ: <unimportant>%QUESTDESCRIPTION%'
+  quest-description: '<main>Mô tả nhiệm vụ: <unimportant>%QUESTDESCRIPTION%'
   quest-already-accepted: '<error>Nhiệm vụ đã được chấp nhận.'
   quest-failed: '<warn>Bạn đã <error><bold>THÂT BẠI <warn>nhiệm vụ <highlight>%QUESTNAME%<warn>!'
   quest-aborted: '<success>Nhiệm vụ <highlight>%QUESTNAME% <success>đã bị bỏ dở!'

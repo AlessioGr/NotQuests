@@ -1,6 +1,6 @@
 chat:
   wrong-command-usage: '<RED>Špatné užití příkazu!'
-  missing-permission: '<RED>Na toto nemáš oprávnění! Potřebuješ: <YELLOW>%PERMISSION%'
+  missing-permission: '<RED>Na toto nemáš oprávnění! Potřebuješ: <highlight>%PERMISSION%'
   too-many-arguments: '<RED>Příliš mnoho argumentů!'
   quest-successfully-accepted: '<GREEN>Úspěšně jsi přijal/a quest <highlight>%QUESTNAME%<GREEN>.'
   quest-description: '<YELLOW>Popis questu: <GRAY>%QUESTDESCRIPTION%'
