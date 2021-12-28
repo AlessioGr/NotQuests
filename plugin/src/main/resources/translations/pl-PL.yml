@@ -1,43 +1,56 @@
+---
 chat:
-  wrong-command-usage: '<error>Nieprawidłowe użycie polecenia!'
+  wrong-command-usage: <error>Nieprawidłowe użycie polecenia!
   missing-permission: '<error>Brak permisji! Potrzebujesz permisji: <highlight>%PERMISSION%'
-  too-many-arguments: '<error>Zbyt wiele argumentów!'
+  too-many-arguments: <error>Zbyt wiele argumentów!
   quest-successfully-accepted: |2
 
     <CENTER><main>[Quest Zaakceptowany]
     <CENTER><highlight><BOLD>%QUESTNAME%
     <EMPTY>
   quest-description: '<main>Opis zadania: <unimportant>%QUESTDESCRIPTION%'
-  quest-already-accepted: '<error>Quest jest już przyjęty.'
+  quest-already-accepted: <error>Quest jest już przyjęty.
   quest-failed: |2
 
     <CENTER><negative>[Quest Zakończony Niepowodzeniem]
     <CENTER><highlight><BOLD>%QUESTNAME%
     <EMPTY>
   quest-aborted: ''
-  quest-completed-and-rewards-given: |2+
+  quest-completed-and-rewards-given: |2
 
     <CENTER><success>[Quest Ukończony]
     <CENTER><highlight><bold>%QUESTNAME%
     <EMPTY>
-  missing-quest-description: '<warn>Ten quest nie ma opisu.'
+  quest-completed-rewards-prefix: '    <highlight>Rewards:'
+  quest-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
+  quest-completed-rewards-suffix: <EMPTY>
+  missing-quest-description: <warn>Ten quest nie ma opisu.
   objectives-label-after-quest-accepting: '<main>Zadania:'
   questpoints:
-    query: '<warn>Masz obecnie <highlight>%QUESTPOINTS% <warn>punktów questów.'
-    none: '<error>Wygląda na to, że nie masz żadnych punktów questów.!'
-  no-quests-accepted: '<error>Wygląda na to, że nie masz żadnych aktywnych zadań.!'
-  quest-does-not-exist: '<error>Quest <highlight>%QUESTNAME% <error>nie istnieje!'
-  quest-not-found-or-does-not-exist: '<error>Nie znaleziono quest <highlight>%QUESTNAME% <error>lub jest on nieaktywny!'
+    query: <warn>Masz obecnie <highlight>%QUESTPOINTS% <warn>punktów questów.
+    none: <error>Wygląda na to, że nie masz żadnych punktów questów.!
+  no-quests-accepted: <error>Wygląda na to, że nie masz żadnych aktywnych zadań.!
+  quest-does-not-exist: <error>Quest <highlight>%QUESTNAME% <error>nie istnieje!
+  quest-not-found-or-does-not-exist: <error>Nie znaleziono quest <highlight>%QUESTNAME% <error>lub jest on nieaktywny!
   active-quests-label: '<warn>Aktywne questy:'
-  take-disabled-preview: '<error>Podgląd questu <highlight>%QUESTNAME% <error>jest wyłączony.'
-  take-disabled-accept: '<error>Akceptowanie questów <highlight>%QUESTNAME% <error>jest wyłączone.'
+  take-disabled: <error>Accepting or previewing the quest <highlight>%QUESTNAME%</highlight> is disabled.
   quest-not-active-error: '<error>Błąd: <highlight>%QUESTNAME% <error>nie jest aktywnym questem!'
+  conversations:
+    choose-answer-prefix: |-
+      <EMPTY>
+      <main>Choose your answer:</main>
+    choose-answer-answer-hover-text: '<highlight>Click to answer'
+    ended-previous-conversation: '<main>You have ended your previous conversation!'
   objectives:
     counter: '<warn>%OBJECTIVEID%. %OBJECTIVENAME%:'
-    hidden: '<warn>%OBJECTIVEID%. <unimportant><bold>[UKRYTE]'
+    hidden: <warn>%OBJECTIVEID%. <unimportant><bold>[UKRYTE]
     description: '   <main>Opis: <highlight>%OBJECTIVEDESCRIPTION%'
     progress: '   <unimportant>Postęp: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
-    successfully-completed: '<success>Ukończyłeś zadanie <warn>%OBJECTIVENAME% <success>z questa <highlight>%QUESTNAME%<success>!'
+    successfully-completed: |2
+      <success>Ukończyłeś zadanie <warn>%OBJECTIVENAME% <success>z questa <highlight>%QUESTNAME%<success>!
+    successfully-completed-rewards-prefix: '    <highlight>Rewards:'
+    successfully-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
+    successfully-completed-rewards-suffix: <EMPTY>
     taskDescription:
       breakBlocks:
         base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Bloki do zniszczenia: <main>%EVENTUALCOLOR%%BLOCKTOBREAK%'
@@ -75,19 +88,40 @@ chat:
         taskDescriptionProvided: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%%TASKDESCRIPTION%'
       jump:
         base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Skoki <main>%EVENTUALCOLOR%%AMOUNTOFJUMPS% <unimportant>%EVENTUALCOLOR%times'
+      sneak:
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Sneak <main>%EVENTUALCOLOR%%AMOUNTOFSNEAKS%</main> %EVENTUALCOLOR%times'
       smelt:
         base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Przedmioty do wytopienia: <main>%EVENTUALCOLOR%%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+      townyReachResidentCount:
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Reach resident amount: <main>%EVENTUALCOLOR%%AMOUNT%'
+      townyNationReachTownCount:
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Reach town amount with your nation: <main>%EVENTUALCOLOR%%AMOUNT%'
+      jobsRebornReachJobLevel:
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Reach job level <main>%EVENTUALCOLOR%%AMOUNT%</main> with job <main>%EVENTUALCOLOR%%JOB%'
+      SlimefunResearch:
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Spend on research'
+      ProjectKorraUseAbility:
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Use Ability: <main>%EVENTUALCOLOR%%ABILITY%'
 titles:
   quest-accepted:
-    title: '<main>Quest zaakceptowany'
+    title: <main>Quest zaakceptowany
     subtitle: <highlight>%QUESTNAME%
   quest-completed:
-    title: '<positive>Quest ukończony'
+    title: <positive>Quest ukończony
     subtitle: <highlight>%QUESTNAME%
   quest-failed:
-    title: '<negative>Quest nieukończony'
+    title: <negative>Quest nieukończony
     subtitle: <highlight>%QUESTNAME%
 gui:
+  reward-hidden-text: . <unimportant>[HIDDEN]
+  availableQuests:
+    title: '         <highlight2>Available Quests'
+    button:
+      questPreview:
+        acceptedSuffix: ' <reset><positive>[ACCEPTED]'
+        questNamePrefix: <highlight>
+        questDescriptionPrefix: <veryUnimportant>
+        bottomText: <main>Click to open Quest
   main:
     title: '                <main>Zadania'
     button:
@@ -124,13 +158,13 @@ gui:
           <unimportant>Postęp: <success>%COMPLETEDOBJECTIVESCOUNT% <main>/ %ALLOBJECTIVESCOUNT%
           <main>Kliknij, aby zobaczyć szczegóły!
   takeQuestChoose:
-    title: '<main>Który quest chcesz wykonać?'
+    title: <main>Który quest chcesz wykonać?
     button:
       questPreview:
         acceptedSuffix: ' <success>[PRZYJĘTY]'
-        questNamePrefix: '<highlight>'
-        questDescriptionPrefix: '<veryUnimportant>'
-        bottomText: '<success>Kliknij, aby zobaczyć podgląd questa!'
+        questNamePrefix: <highlight>
+        questDescriptionPrefix: <veryUnimportant>
+        bottomText: <success>Kliknij, aby zobaczyć podgląd questa!
   abortQuestChoose:
     title: '  <main>Aktywne zadania, które możesz przerwać'
     button:
@@ -144,9 +178,9 @@ gui:
     button:
       questPreview:
         acceptedSuffix: ' <success>[PRZYJĘTY]'
-        questNamePrefix: '<highlight>'
-        questDescriptionPrefix: '<veryUnimportant>'
-        bottomText: '<success>Kliknij, aby zobaczyć podgląd questa!'
+        questNamePrefix: <highlight>
+        questDescriptionPrefix: <veryUnimportant>
+        bottomText: <success>Kliknij, aby zobaczyć podgląd questa!
   abortQuest:
     title: '         <error>Potwierdź przerwanie'
     button:
@@ -160,23 +194,24 @@ gui:
           <success>Kliknij, aby NIE przerwać tego zadania
           <success>i anulować to działanie
   previewQuest:
-    title: '<main>Podgląd questa <highlight>%QUESTNAME%'
+    title: <main>Podgląd questa <highlight>%QUESTNAME%
     button:
       description:
         text: |-
           <warn>Opis
           <veryUnimportant>%QUESTDESCRIPTION%
-        empty: ???
+        empty: '???'
       rewards:
         text: |-
           <success>Nagrody
           <main>%QUESTREWARDS%
-        empty: '<veryUnimportant>Brak lub ukryte'
+        empty: <veryUnimportant>Brak lub ukryte
       requirements:
         text: |-
           <error>Wymagania
           <main>%QUESTREQUIREMENTS%
-        empty: '<veryUnimportant>-'
+        empty: >-
+
       confirmTake:
         text: |-
           <highlight>%QUESTNAME%
@@ -186,7 +221,7 @@ gui:
           <error>Kliknij, aby NIE akceptować
           <error>tego questa
   progress:
-    title: '<main>Szczegóły dla questu <highlight>%QUESTNAME%'
+    title: <main>Szczegóły dla questu <highlight>%QUESTNAME%
     button:
       unlockedObjective:
         text: |-
