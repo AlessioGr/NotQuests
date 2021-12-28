@@ -1,3 +1,4 @@
+---
 chat:
   wrong-command-usage: <error>Falsche Command-Syntax!
   missing-permission: '<error>Dafür hast du keine Rechte! Fehlendes Recht: <highlight>%PERMISSION%'
@@ -8,14 +9,14 @@ chat:
     <CENTER><highlight><BOLD>%QUESTNAME%
     <EMPTY>
   quest-description: '<main>Quest-Beschreibung: <unimportant>%QUESTDESCRIPTION%'
-  quest-already-accepted: '<error>Quest wurde schon akzeptiert.'
+  quest-already-accepted: <error>Quest wurde schon akzeptiert.
   quest-failed: |2
 
     <CENTER><negative>[Quest gGscheitert]
     <CENTER><highlight><BOLD>%QUESTNAME%
     <EMPTY>
   quest-aborted: ''
-  quest-completed-and-rewards-given: |2+
+  quest-completed-and-rewards-given: |2
 
     <CENTER><positive>[Quest Abgeschlossen]
     <CENTER><highlight><bold>%QUESTNAME%
@@ -23,16 +24,16 @@ chat:
   quest-completed-rewards-prefix: '    <highlight>Belohnungen:'
   quest-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
   quest-completed-rewards-suffix: <EMPTY>
-  missing-quest-description: '<unimportant>Diese Quest hat keine Beschreibung'
+  missing-quest-description: <unimportant>Diese Quest hat keine Beschreibung
   objectives-label-after-quest-accepting: '<highlight>Aufgaben:'
   questpoints:
-    query: '<main>Du hast zurzeit <highlight>%QUESTPOINTS% <warn>Questpunkte.'
-    none: '<error>Du hast wohl gerade keine Questpunkte!'
-  no-quests-accepted: '<error>Du hast wohl gerade keine aktiven Quests!'
-  quest-does-not-exist: '<error>Quest <highlight>%QUESTNAME%</highlight> existiert nicht!'
-  quest-not-found-or-does-not-exist: '<error>Quest <highlight>%QUESTNAME%</highlight> nicht gefunden oder nicht aktiv!'
+    query: <main>Du hast zurzeit <highlight>%QUESTPOINTS% <warn>Questpunkte.
+    none: <error>Du hast wohl gerade keine Questpunkte!
+  no-quests-accepted: <error>Du hast wohl gerade keine aktiven Quests!
+  quest-does-not-exist: <error>Quest <highlight>%QUESTNAME%</highlight> existiert nicht!
+  quest-not-found-or-does-not-exist: <error>Quest <highlight>%QUESTNAME%</highlight> nicht gefunden oder nicht aktiv!
   active-quests-label: '<highlight>Aktive Quests:'
-  take-disabled: '<error>Das Akzeptieren oder Ansehen der Vorschau der Quest <highlight>%QUESTNAME%</highlight> wurde deaktiviert.'
+  take-disabled: <error>Das Akzeptieren oder Ansehen der Vorschau der Quest <highlight>%QUESTNAME%</highlight> wurde deaktiviert.
   quest-not-active-error: '<error>Fehler: <highlight>%QUESTNAME% <error>ist keine aktive Quest!'
   conversations:
     choose-answer-prefix: |-
@@ -42,7 +43,7 @@ chat:
     ended-previous-conversation: '<main>Deine letztes Gespräch wurde beendet.'
   objectives:
     counter: '<highlight>%OBJECTIVEID%.</highlight> <main>%OBJECTIVENAME%:'
-    hidden: '<highlight>%OBJECTIVEID%. <unimportant><bold>[VERBORGEN]'
+    hidden: <highlight>%OBJECTIVEID%. <unimportant><bold>[VERBORGEN]
     description: '   <highlight>Beschreibung: <main>%OBJECTIVEDESCRIPTION%'
     progress: '   <highlight>Fortschritt: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
     successfully-completed: |2
@@ -106,13 +107,13 @@ chat:
         base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Fähigkeit nutzen: <main>%EVENTUALCOLOR%%ABILITY%'
 titles:
   quest-accepted:
-    title: '<main>Quest Akzeptiert'
+    title: <main>Quest Akzeptiert
     subtitle: <highlight>%QUESTNAME%
   quest-completed:
-    title: '<positive>Quest Abgeschlossen'
+    title: <positive>Quest Abgeschlossen
     subtitle: <highlight>%QUESTNAME%
   quest-failed:
-    title: '<negative>Quest Gescheitert'
+    title: <negative>Quest Gescheitert
     subtitle: <highlight>%QUESTNAME%
 gui:
   reward-hidden-text: . <unimportant>[VERBORGEN]
@@ -170,9 +171,9 @@ gui:
     button:
       questPreview:
         acceptedSuffix: ' <reset><positive>[AKZEPTIERT]'
-        questNamePrefix: '<highlight>'
-        questDescriptionPrefix: '<veryUnimportant>'
-        bottomText: '<main>Klicke für eine Vorschau!'
+        questNamePrefix: <highlight>
+        questDescriptionPrefix: <veryUnimportant>
+        bottomText: <main>Klicke für eine Vorschau!
   abortQuestChoose:
     title: '   <highlight2>Aktive, abbrechbare Quests'
     button:
@@ -186,9 +187,9 @@ gui:
     button:
       questPreview:
         acceptedSuffix: ' <reset><positive>[AKZEPTIERT]'
-        questNamePrefix: '<highlight>'
-        questDescriptionPrefix: '<veryUnimportant>'
-        bottomText: '<main>Klicke für eine Vorschau!'
+        questNamePrefix: <highlight>
+        questDescriptionPrefix: <veryUnimportant>
+        bottomText: <main>Klicke für eine Vorschau!
   abortQuest:
     title: '       <negative>Abbruch-Bestätigung'
     button:
@@ -202,23 +203,24 @@ gui:
           <positive>Klicke, um die Quest NICHT abzubrechen
           <positive>und diese Aktion zu beenden
   previewQuest:
-    title: '<highlight2>Vorschau der Quest <black>%QUESTNAME%'
+    title: <highlight2>Vorschau der Quest <black>%QUESTNAME%
     button:
       description:
         text: |-
           <highlight>Beschreibung
           <veryUnimportant>%QUESTDESCRIPTION%
-        empty: ???
+        empty: '???'
       rewards:
         text: |-
           <positive>Belohnungen
           <WHITE>%QUESTREWARDS%
-        empty: '<veryUnimportant>Keine oder versteckt'
+        empty: <veryUnimportant>Keine oder versteckt
       requirements:
         text: |-
           <negative>Anforderungen
           <WHITE>%QUESTREQUIREMENTS%
-        empty: '<veryUnimportant>-'
+        empty: >-
+
       confirmTake:
         text: |-
           <highlight>%QUESTNAME%
@@ -228,7 +230,7 @@ gui:
           <negative>Klicke, um die Quest NICHT anzunehmen
           <negative>und diese Aktion zu beenden
   progress:
-    title: '<highlight2>Details für Quest <black>%QUESTNAME%'
+    title: <highlight2>Details für Quest <black>%QUESTNAME%
     button:
       unlockedObjective:
         text: |-

@@ -1,32 +1,47 @@
+---
 chat:
-  wrong-command-usage: '<error>指令错误!'
+  wrong-command-usage: <error>指令错误!
   missing-permission: '<error>权限不足! 需要权限: <highlight>%PERMISSION%'
-  too-many-arguments: '<error>参数过多!'
-  quest-successfully-accepted: '<success>成功接受任务 <highlight>%QUESTNAME%<success>.'
+  too-many-arguments: <error>参数过多!
+  quest-successfully-accepted: |2
+    <success>成功接受任务 <highlight>%QUESTNAME%<success>.
   quest-description: '<main>任务描述: <unimportant>%QUESTDESCRIPTION%'
-  quest-already-accepted: '<error>已经接受该任务了.'
-  quest-failed: '<warn>任务 <highlight>%QUESTNAME% <error><bold>失败<warn>!'
-  quest-aborted: '<success>进行中的任务 <highlight>%QUESTNAME% <success>已终止!'
-  quest-completed-and-rewards-given: '<success>您已完成任务 <highlight>%QUESTNAME%
-    <success>并得到了奖励!!!'
-  missing-quest-description: '<warn>此任务没有描述.'
+  quest-already-accepted: <error>已经接受该任务了.
+  quest-failed: |2
+    <warn>任务 <highlight>%QUESTNAME% <error><bold>失败<warn>!
+  quest-aborted: ''
+  quest-completed-and-rewards-given: |2
+    <success>您已完成任务 <highlight>%QUESTNAME% <success>并得到了奖励!!!
+  quest-completed-rewards-prefix: '    <highlight>Rewards:'
+  quest-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
+  quest-completed-rewards-suffix: <EMPTY>
+  missing-quest-description: <warn>此任务没有描述.
   objectives-label-after-quest-accepting: '<main>目标:'
   questpoints:
-    query: '<warn>您当前拥有 <highlight>%QUESTPOINTS% <warn>任务点数.'
-    none: '<error>貌似您还没有任务点数!'
-  no-quests-accepted: '<error>貌似您还没有进行中的任务!'
-  quest-does-not-exist: '<error>任务 <highlight>%QUESTNAME% <error>不存在!'
-  quest-not-found-or-does-not-exist: '<error>任务 <highlight>%QUESTNAME% <error>未找到或不在进行中!'
+    query: <warn>您当前拥有 <highlight>%QUESTPOINTS% <warn>任务点数.
+    none: <error>貌似您还没有任务点数!
+  no-quests-accepted: <error>貌似您还没有进行中的任务!
+  quest-does-not-exist: <error>任务 <highlight>%QUESTNAME% <error>不存在!
+  quest-not-found-or-does-not-exist: <error>任务 <highlight>%QUESTNAME% <error>未找到或不在进行中!
   active-quests-label: '<warn>进行中的任务:'
-  take-disabled-preview: '<error>任务预览 <highlight>%QUESTNAME% <error>已被通过指令 <warn>/nquests preview <error>禁止.'
-  take-disabled-accept: '<error>任务接受 <highlight>%QUESTNAME% <error>已被通过指令 <warn>/nquests take <error>禁止.'
+  take-disabled: <error>Accepting or previewing the quest <highlight>%QUESTNAME%</highlight> is disabled.
   quest-not-active-error: '<error>错误: <highlight>%QUESTNAME% <error>不是一个进行中的任务!'
+  conversations:
+    choose-answer-prefix: |-
+      <EMPTY>
+      <main>Choose your answer:</main>
+    choose-answer-answer-hover-text: '<highlight>Click to answer'
+    ended-previous-conversation: '<main>You have ended your previous conversation!'
   objectives:
     counter: '<warn>%OBJECTIVEID%. %OBJECTIVENAME%:'
-    hidden: '<warn>%OBJECTIVEID%. <unimportant><bold>[HIDDEN]'
+    hidden: <warn>%OBJECTIVEID%. <unimportant><bold>[HIDDEN]
     description: '   <main>描述: <highlight>%OBJECTIVEDESCRIPTION%'
     progress: '   <unimportant>进度: <main>%ACTIVEOBJECTIVEPROGRESS% <main>/ %OBJECTIVEPROGRESSNEEDED%'
-    successfully-completed: '<success>You have successfully completed the objective <warn>%OBJECTIVENAME% <success>for quest <highlight>%QUESTNAME%<success>!'
+    successfully-completed: |2
+      <success>You have successfully completed the objective <warn>%OBJECTIVENAME% <success>for quest <highlight>%QUESTNAME%<success>!
+    successfully-completed-rewards-prefix: '    <highlight>Rewards:'
+    successfully-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
+    successfully-completed-rewards-suffix: <EMPTY>
     taskDescription:
       breakBlocks:
         base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Block to break: <main>%EVENTUALCOLOR%%BLOCKTOBREAK%'
@@ -64,19 +79,40 @@ chat:
         taskDescriptionProvided: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%%TASKDESCRIPTION%'
       jump:
         base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Jump <main>%EVENTUALCOLOR%%AMOUNTOFJUMPS% <unimportant>%EVENTUALCOLOR%times'
+      sneak:
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Sneak <main>%EVENTUALCOLOR%%AMOUNTOFSNEAKS%</main> %EVENTUALCOLOR%times'
       smelt:
         base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Items to smelt: <main>%EVENTUALCOLOR%%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+      townyReachResidentCount:
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Reach resident amount: <main>%EVENTUALCOLOR%%AMOUNT%'
+      townyNationReachTownCount:
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Reach town amount with your nation: <main>%EVENTUALCOLOR%%AMOUNT%'
+      jobsRebornReachJobLevel:
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Reach job level <main>%EVENTUALCOLOR%%AMOUNT%</main> with job <main>%EVENTUALCOLOR%%JOB%'
+      SlimefunResearch:
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Spend on research'
+      ProjectKorraUseAbility:
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Use Ability: <main>%EVENTUALCOLOR%%ABILITY%'
 titles:
   quest-accepted:
-    title: '<main>任务已接受'
+    title: <main>任务已接受
     subtitle: <highlight>%QUESTNAME%
   quest-completed:
-    title: '<success>任务已完成'
+    title: <success>任务已完成
     subtitle: <highlight>%QUESTNAME%
   quest-failed:
-    title: '<error>任务失败'
+    title: <error>任务失败
     subtitle: <highlight>%QUESTNAME%
 gui:
+  reward-hidden-text: . <unimportant>[HIDDEN]
+  availableQuests:
+    title: '         <highlight2>Available Quests'
+    button:
+      questPreview:
+        acceptedSuffix: ' <reset><positive>[ACCEPTED]'
+        questNamePrefix: <highlight>
+        questDescriptionPrefix: <veryUnimportant>
+        bottomText: <main>Click to open Quest
   main:
     title: '                <main>任务'
     button:
@@ -115,13 +151,13 @@ gui:
           <unimportant>进度: <success>%COMPLETEDOBJECTIVESCOUNT% <main>/ %ALLOBJECTIVESCOUNT%
           <main>点击查看详细信息!
   takeQuestChoose:
-    title: '<main>您想要接受哪个任务?'
+    title: <main>您想要接受哪个任务?
     button:
       questPreview:
         acceptedSuffix: ' <success>[ACCEPTED]'
-        questNamePrefix: '<highlight>'
-        questDescriptionPrefix: '<veryUnimportant>'
-        bottomText: '<success>点击预览任务!'
+        questNamePrefix: <highlight>
+        questDescriptionPrefix: <veryUnimportant>
+        bottomText: <success>点击预览任务!
   abortQuestChoose:
     title: '  <main>可终止的进行中的任务'
     button:
@@ -135,9 +171,9 @@ gui:
     button:
       questPreview:
         acceptedSuffix: ' <success>[ACCEPTED]'
-        questNamePrefix: '<highlight>'
-        questDescriptionPrefix: '<veryUnimportant>'
-        bottomText: '<success>点击预览任务!'
+        questNamePrefix: <highlight>
+        questDescriptionPrefix: <veryUnimportant>
+        bottomText: <success>点击预览任务!
   abortQuest:
     title: '         <error>确认终止'
     button:
@@ -151,23 +187,24 @@ gui:
           <success>点击取消
           <success>终止任务的操作
   previewQuest:
-    title: '<main>任务预览 <highlight>%QUESTNAME%'
+    title: <main>任务预览 <highlight>%QUESTNAME%
     button:
       description:
         text: |-
           <warn>描述
           <veryUnimportant>%QUESTDESCRIPTION%
-        empty: ???
+        empty: '???'
       rewards:
         text: |-
           <success>奖励
           <main>%QUESTREWARDS%
-        empty: '<veryUnimportant>无或隐藏'
+        empty: <veryUnimportant>无或隐藏
       requirements:
         text: |-
           <error>要求
           <main>%QUESTREQUIREMENTS%
-        empty: '<veryUnimportant>-'
+        empty: >-
+
       confirmTake:
         text: |-
           <highlight>%QUESTNAME%
@@ -177,7 +214,7 @@ gui:
           <error>点击取消
           <error>接受任务的操作
   progress:
-    title: '<main>任务 <highlight>%QUESTNAME% <main>的详细信息'
+    title: <main>任务 <highlight>%QUESTNAME% <main>的详细信息
     button:
       unlockedObjective:
         text: |-

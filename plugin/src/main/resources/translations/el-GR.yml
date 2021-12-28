@@ -1,34 +1,49 @@
+---
 chat:
-  wrong-command-usage: '<error>Λανθασμένη χρήση εντολών!'
+  wrong-command-usage: <error>Λανθασμένη χρήση εντολών!
   missing-permission: '<error>Ανεπαρκής άδεια! Απαιτούμενο node άδειας:  <highlight>%PERMISSION%'
-  too-many-arguments: '<error>Υπερβολικές μεταβλητές!'
-  quest-successfully-accepted: '<success>Αναλάβατε επιτυχώς την αποστολή <highlight>%QUESTNAME%<success>.'
+  too-many-arguments: <error>Υπερβολικές μεταβλητές!
+  quest-successfully-accepted: |2
+    <success>Αναλάβατε επιτυχώς την αποστολή <highlight>%QUESTNAME%<success>.
   quest-description: '<main>Περιγραφή αποστολής: <unimportant>%QUESTDESCRIPTION%'
-  quest-already-accepted: '<error>Έχετε ήδη αναλάβει αυτή την αποστολή.'
-  quest-failed: '<error><bold>Aποτύχατε <warn>στην αποστολή <highlight>%QUESTNAME%<warn>!'
-  quest-aborted: '<success>Η αποστολή <highlight>%QUESTNAME% <success>ματαιώθηκε!'
-  quest-completed-and-rewards-given: |2+
+  quest-already-accepted: <error>Έχετε ήδη αναλάβει αυτή την αποστολή.
+  quest-failed: |2
+    <error><bold>Aποτύχατε <warn>στην αποστολή <highlight>%QUESTNAME%<warn>!
+  quest-aborted: ''
+  quest-completed-and-rewards-given: |2
     <CENTER><success>[Η αποστολή ολοκληρώθηκε]
     <CENTER><highlight><bold>%QUESTNAME%
     <EMPTY>
-  missing-quest-description: '<warn>Αυτή η αποστολή δεν έχει περιγραφή.'
+  quest-completed-rewards-prefix: '    <highlight>Rewards:'
+  quest-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
+  quest-completed-rewards-suffix: <EMPTY>
+  missing-quest-description: <warn>Αυτή η αποστολή δεν έχει περιγραφή.
   objectives-label-after-quest-accepting: '<main>Στόχοι:'
   questpoints:
-    query: '<warn>Αυτήν τη στιγμή έχετε <highlight>%QUESTPOINTS% <warn>πόντους αποστολής.'
-    none: '<error>Δεν έχετε πόντους αναζήτησης!'
-  no-quests-accepted: '<error>Δεν έχετε ενεργές αποστολές!'
-  quest-does-not-exist: '<error>Η αποστολή <highlight>%QUESTNAME% <error>δεν υπάρχει!'
-  quest-not-found-or-does-not-exist: '<error>Η αποστολή <highlight>%QUESTNAME% <error>δεν βρέθηκε ή δεν είναι ενεργή!'
+    query: <warn>Αυτήν τη στιγμή έχετε <highlight>%QUESTPOINTS% <warn>πόντους αποστολής.
+    none: <error>Δεν έχετε πόντους αναζήτησης!
+  no-quests-accepted: <error>Δεν έχετε ενεργές αποστολές!
+  quest-does-not-exist: <error>Η αποστολή <highlight>%QUESTNAME% <error>δεν υπάρχει!
+  quest-not-found-or-does-not-exist: <error>Η αποστολή <highlight>%QUESTNAME% <error>δεν βρέθηκε ή δεν είναι ενεργή!
   active-quests-label: '<warn>Ενεργές αποστολές:'
-  take-disabled-preview: '<error>Η προεπισκόπηση της αποστολής <highlight>%QUESTNAME% <error>με την εντολή <warn>/nquests preview <error>είναι απενεργοποιημένη.'
-  take-disabled-accept: '<error>Η αποδοχή της αποστολής <highlight>%QUESTNAME% <error>με την εντολή <warn>/nquests take <error>είναι απενεργοποιημένη.'
+  take-disabled: <error>Accepting or previewing the quest <highlight>%QUESTNAME%</highlight> is disabled.
   quest-not-active-error: '<error>Σφάλμα: Η <highlight>%QUESTNAME% <error>δεν είναι ενεργή αποστολή!'
+  conversations:
+    choose-answer-prefix: |-
+      <EMPTY>
+      <main>Choose your answer:</main>
+    choose-answer-answer-hover-text: '<highlight>Click to answer'
+    ended-previous-conversation: '<main>You have ended your previous conversation!'
   objectives:
     counter: '<warn>%OBJECTIVEID%. %OBJECTIVENAME%:'
-    hidden: '<warn>%OBJECTIVEID%. <unimportant><bold>[HIDDEN]'
+    hidden: <warn>%OBJECTIVEID%. <unimportant><bold>[HIDDEN]
     description: '   <main>Περιγραφή: <highlight>%OBJECTIVEDESCRIPTION%'
     progress: '   <unimportant>Πρόοδος: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
-    successfully-completed: '<success>Ολοκληρώσατε με επιτυχία τον στόχο <warn>%OBJECTIVENAME% <success>για την αποστολή <highlight>%QUESTNAME%<success>!'
+    successfully-completed: |2
+      <success>Ολοκληρώσατε με επιτυχία τον στόχο <warn>%OBJECTIVENAME% <success>για την αποστολή <highlight>%QUESTNAME%<success>!
+    successfully-completed-rewards-prefix: '    <highlight>Rewards:'
+    successfully-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
+    successfully-completed-rewards-suffix: <EMPTY>
     taskDescription:
       breakBlocks:
         base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Block to break: <main>%EVENTUALCOLOR%%BLOCKTOBREAK%'
@@ -66,19 +81,40 @@ chat:
         taskDescriptionProvided: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%%TASKDESCRIPTION%'
       jump:
         base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Jump <main>%EVENTUALCOLOR%%AMOUNTOFJUMPS% <unimportant>%EVENTUALCOLOR%times'
+      sneak:
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Sneak <main>%EVENTUALCOLOR%%AMOUNTOFSNEAKS%</main> %EVENTUALCOLOR%times'
       smelt:
         base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Items to smelt: <main>%EVENTUALCOLOR%%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+      townyReachResidentCount:
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Reach resident amount: <main>%EVENTUALCOLOR%%AMOUNT%'
+      townyNationReachTownCount:
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Reach town amount with your nation: <main>%EVENTUALCOLOR%%AMOUNT%'
+      jobsRebornReachJobLevel:
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Reach job level <main>%EVENTUALCOLOR%%AMOUNT%</main> with job <main>%EVENTUALCOLOR%%JOB%'
+      SlimefunResearch:
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Spend on research'
+      ProjectKorraUseAbility:
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Use Ability: <main>%EVENTUALCOLOR%%ABILITY%'
 titles:
   quest-accepted:
-    title: '<main>Αναλάβατε την αποστολή'
+    title: <main>Αναλάβατε την αποστολή
     subtitle: <highlight>%QUESTNAME%
   quest-completed:
-    title: '<positive>Η αποστολή ολοκληρώθηκε'
+    title: <positive>Η αποστολή ολοκληρώθηκε
     subtitle: <highlight>%QUESTNAME%
   quest-failed:
-    title: '<negative>Η αποστολή απέτυχε'
+    title: <negative>Η αποστολή απέτυχε
     subtitle: <highlight>%QUESTNAME%
 gui:
+  reward-hidden-text: . <unimportant>[HIDDEN]
+  availableQuests:
+    title: '         <highlight2>Available Quests'
+    button:
+      questPreview:
+        acceptedSuffix: ' <reset><positive>[ACCEPTED]'
+        questNamePrefix: <highlight>
+        questDescriptionPrefix: <veryUnimportant>
+        bottomText: <main>Click to open Quest
   main:
     title: '<main>Αποστολές'
     button:
@@ -116,13 +152,13 @@ gui:
           <unimportant>Πρόοδος: <success>%COMPLETEDOBJECTIVESCOUNT% <main>/ %ALLOBJECTIVESCOUNT%
           <main>Κάνε κλικ για πληροφορίες!
   takeQuestChoose:
-    title: '<main>Ποια αποστολή θες να αναλάβεις?'
+    title: <main>Ποια αποστολή θες να αναλάβεις?
     button:
       questPreview:
         acceptedSuffix: ' <success>[ΑΠΟΣΤΟΛΗ ΑΠΟΔΕΚΤΗ]'
-        questNamePrefix: '<highlight>'
-        questDescriptionPrefix: '<veryUnimportant>'
-        bottomText: '<success>Κάντε κλικ για προεπισκόπηση της αποστολής!'
+        questNamePrefix: <highlight>
+        questDescriptionPrefix: <veryUnimportant>
+        bottomText: <success>Κάντε κλικ για προεπισκόπηση της αποστολής!
   abortQuestChoose:
     title: '  <main>Ενεργές αποστολές που μπορείτε να ματαιώσετε'
     button:
@@ -136,9 +172,9 @@ gui:
     button:
       questPreview:
         acceptedSuffix: ' <success>[ΑΠΟΣΤΟΛΗ ΑΠΟΔΕΚΤΗ]'
-        questNamePrefix: '<highlight>'
-        questDescriptionPrefix: '<veryUnimportant>'
-        bottomText: '<success>Κάντε κλικ για προεπισκόπηση της αποστολής!'
+        questNamePrefix: <highlight>
+        questDescriptionPrefix: <veryUnimportant>
+        bottomText: <success>Κάντε κλικ για προεπισκόπηση της αποστολής!
   abortQuest:
     title: '<error>Επιβεβαίωση ματαίωσης'
     button:
@@ -152,33 +188,34 @@ gui:
           <success>Κάντε κλικ για να ΜΗΝ ματαιώσετε αυτήν την αποστολή
           <success>και ακυρώστε αυτήν την ενέργεια
   previewQuest:
-    title: '<main>Προεπισκόπηση για την αποστολή <highlight>%QUESTNAME%'
+    title: <main>Προεπισκόπηση για την αποστολή <highlight>%QUESTNAME%
     button:
       description:
         text: |-
           <warn>Περιγραφή
           <veryUnimportant>%QUESTDESCRIPTION%
-        empty: ???
+        empty: '???'
       rewards:
         text: |-
           <success>Ανταμοιβές
           <main>%QUESTREWARDS%
-        empty: '<veryUnimportant>Καμία ή κρυφές'
+        empty: <veryUnimportant>Καμία ή κρυφές
       requirements:
         text: |-
           <error>Απαιτήσεις
           <main>%QUESTREQUIREMENTS%
-        empty: '<veryUnimportant>-'
+        empty: >-
+
       confirmTake:
         text: |-
           <highlight>%QUESTNAME%
           <success>Κάντε κλικ για να αναλάβετε την αποστολή <highlight>%QUESTNAME%<success>!
       cancelTake:
         text: |-
-          <error>Κάντε κλικ για να ΜΗΝ αναλάβετε την αποστολή 
+          <error>Κάντε κλικ για να ΜΗΝ αναλάβετε την αποστολή
           <error>και να ματαιώσετε αυτή την ενέργεια
   progress:
-    title: '<main>Λεπτομέρειες για την αποστολή <highlight>%QUESTNAME%'
+    title: <main>Λεπτομέρειες για την αποστολή <highlight>%QUESTNAME%
     button:
       unlockedObjective:
         text: |-
@@ -191,7 +228,7 @@ gui:
       lockedObjective:
         text: |-
           <warn>%ACTIVEOBJECTIVEID%. <unimportant><bold>[ΚΡΥΦΟ]
-          <warn>Αυτός ο στόχος δεν έχει 
+          <warn>Αυτός ο στόχος δεν έχει
           <warn>ακόμη ξεκλειδωθεί!
       completedObjective:
         text: |-
