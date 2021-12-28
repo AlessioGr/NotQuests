@@ -1,4 +1,3 @@
----
 chat:
   wrong-command-usage: <error>Wrong command usage!
   missing-permission: '<error>No permission! Required permission node: <highlight>%PERMISSION%'
@@ -208,7 +207,7 @@ gui:
         text: |-
           <highlight>Description
           <veryUnimportant>%QUESTDESCRIPTION%
-        empty: '???'
+        empty: ???
       rewards:
         text: |-
           <positive>Rewards
@@ -218,8 +217,7 @@ gui:
         text: |-
           <negative>Requirements
           <WHITE>%QUESTREQUIREMENTS%
-        empty: >-
-
+        empty: <veryUnimportant>-
       confirmTake:
         text: |-
           <highlight>%QUESTNAME%
