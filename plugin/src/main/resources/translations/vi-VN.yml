@@ -181,7 +181,7 @@ gui:
         text: |-
           <error>Yêu Cầu
           <main>%QUESTREQUIREMENTS%
-        empty: '<veryUnimportant>-'
+        empty: <veryUnimportant>-
       confirmTake:
         text: |-
           <highlight>%QUESTNAME%

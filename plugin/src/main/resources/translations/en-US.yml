@@ -218,7 +218,7 @@ gui:
         text: |-
           <negative>Requirements
           <WHITE>%QUESTREQUIREMENTS%
-        empty: >-
+        empty: <veryUnimportant>-
 
       confirmTake:
         text: |-
