@@ -78,13 +78,13 @@ public class LanguageManager {
 
 
         final ArrayList<String> languageFiles = new ArrayList<>();
-        languageFiles.add("en.yml");
-        languageFiles.add("de.yml");
+        languageFiles.add("cs-CZ.yml");
+        languageFiles.add("de-DE.yml");
+        languageFiles.add("el-GR.yml");
+        languageFiles.add("en-US.yml");
+        languageFiles.add("pl-PL.yml");
+        languageFiles.add("vi-VN.yml");
         languageFiles.add("zh-CN.yml");
-        languageFiles.add("vi.yml");
-        languageFiles.add("gr.yml");
-        languageFiles.add("pl.yml");
-        languageFiles.add("cs.yml");
 
         if (!languageFolder.exists()) {
             main.getLogManager().info(LogCategory.LANGUAGE, "Languages Folder not found. Creating a new one...");

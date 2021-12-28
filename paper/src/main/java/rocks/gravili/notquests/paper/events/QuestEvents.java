@@ -45,7 +45,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.NotQuestColors;
 import rocks.gravili.notquests.paper.conversation.ConversationPlayer;
 import rocks.gravili.notquests.paper.events.notquests.other.PlayerJumpEvent;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
@@ -58,7 +57,7 @@ import rocks.gravili.notquests.paper.structs.triggers.types.WorldLeaveTrigger;
 
 import java.util.Locale;
 
-import static rocks.gravili.notquests.paper.commands.NotQuestColors.*;
+import static rocks.gravili.notquests.paper.commands.NotQuestColors.debugHighlightGradient;
 
 
 public class QuestEvents implements Listener {
@@ -68,12 +67,6 @@ public class QuestEvents implements Listener {
     public QuestEvents(NotQuests main) {
         this.main = main;
     }
-
-
-
-
-
-
 
 
 

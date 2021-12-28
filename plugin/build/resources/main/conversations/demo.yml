@@ -10,7 +10,7 @@ Lines:
     specialgreeting:
       text: "I don't wanna talk to you while you fulfill this condition. Bye!"
       conditions:
-        - condition hasAActive
+        - condition replaceThisWithTheNameOfYourCondition
     answer1:
       text: "That's a secret, but without me, you all wouldn't exist."
       next: Atlas.answer3
@@ -31,8 +31,8 @@ Lines:
     nicebye:
       text: "You're very welcome. Good luck on your ventures!"
       actions:
-        - "action givetestquest"
-        - "action givetestquest"
+        - "action replaceThisWithTheNameOfYourAction"
+        - "action anotherAction"
   Player:
     greeting1:
       text: "Nice to meet you! Why do you need to keep time?"
