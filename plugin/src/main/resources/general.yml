@@ -43,7 +43,7 @@ general:
       history-size: 20
 visual:
   #Sets which language to use. Default is languages/en-US.yml
-  language: en
+  language: en-US
   colors:
     main:
       - '#1985ff'

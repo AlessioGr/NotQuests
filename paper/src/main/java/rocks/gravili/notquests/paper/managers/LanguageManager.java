@@ -76,13 +76,35 @@ public class LanguageManager {
 
 
         final ArrayList<String> languageFiles = new ArrayList<>();
+        languageFiles.add("af-ZA.yml");
+        languageFiles.add("ar-SA.yml");
+        languageFiles.add("ca-ES.yml");
         languageFiles.add("cs-CZ.yml");
+        languageFiles.add("da-DK.yml");
         languageFiles.add("de-DE.yml");
         languageFiles.add("el-GR.yml");
         languageFiles.add("en-US.yml");
+        languageFiles.add("es-ES.yml");
+        languageFiles.add("fi-FI.yml");
+        languageFiles.add("fr-FR.yml");
+        languageFiles.add("he-IL.yml");
+        languageFiles.add("hu-HU.yml");
+        languageFiles.add("it-IT.yml");
+        languageFiles.add("ja-JP.yml");
+        languageFiles.add("ko-KR.yml");
+        languageFiles.add("nl-NL.yml");
+        languageFiles.add("no-NO.yml");
         languageFiles.add("pl-PL.yml");
+        languageFiles.add("pt-PT.yml");
+        languageFiles.add("ro-RO.yml");
+        languageFiles.add("ru-RU.yml");
+        languageFiles.add("sr-SP.yml");
+        languageFiles.add("sv-SE.yml");
+        languageFiles.add("tr-TR.yml");
+        languageFiles.add("uk-UA.yml");
         languageFiles.add("vi-VN.yml");
         languageFiles.add("zh-CN.yml");
+        languageFiles.add("zh-TW.yml");
 
 
         if (!languageFolder.exists()) {
@@ -120,13 +142,13 @@ public class LanguageManager {
                 }
 
 
-                //Doesn't matter if the en.yml exists in the plugin folder or not, because we're reading it from the internal resources folder
-                if (fileName.equals("en.yml")) {
+                //Doesn't matter if the en-US.yml exists in the plugin folder or not, because we're reading it from the internal resources folder
+                if (fileName.equals("en-US.yml")) {
                     //Copy to default.yml
                     main.getLogManager().info(LogCategory.LANGUAGE, "Creating default.yml...");
                     File defaultFile = new File(languageFolder, "default.yml");
 
-                    InputStream inputStream = main.getMain().getResource("translations/en.yml");
+                    InputStream inputStream = main.getMain().getResource("translations/en-US.yml");
                     //Instead of creating a new language file, we will copy the one from inside of the plugin jar into the plugin folder:
                     if (inputStream != null) {
                         try (OutputStream defaultOutputStream = new FileOutputStream(defaultFile)) {

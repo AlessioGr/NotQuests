@@ -42,8 +42,8 @@ general:
       delete-previous: true
       history-size: 20
 visual:
-  #Sets which language to use. Default is languages/en.yml
-  language: en
+  #Sets which language to use. Default is languages/en-US.yml
+  language: en-US
   colors:
     main:
       - '#1985ff'
