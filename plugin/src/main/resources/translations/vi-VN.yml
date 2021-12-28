@@ -1,34 +1,34 @@
 ---
 chat:
   wrong-command-usage: <error>Lệnh sai!
-  missing-permission: '<error>Bạn không có quyền: <highlight>%PERMISSION%'
-  too-many-arguments: <error>Quá nhiều cái thừa trong lệnh!
+  missing-permission: '<error>Bạn không có quyền sử dụng: <highlight>%PERMISSION%'
+  too-many-arguments: <error>Quá nhiều lỗi sai trong lệnh!
   quest-successfully-accepted: |2
     <success>Bạn đã chấp nhận nhiệm vụ <highlight>%QUESTNAME%<success>.
   quest-description: '<main>Mô tả nhiệm vụ: <unimportant>%QUESTDESCRIPTION%'
   quest-already-accepted: <error>Nhiệm vụ đã được chấp nhận.
   quest-failed: |2
-    <warn>Bạn đã <error><bold>THÂT BẠI <warn>nhiệm vụ <highlight>%QUESTNAME%<warn>!
+    <warn>Bạn đã <error><bold>THẤT BẠI <warn>nhiệm vụ <highlight>%QUESTNAME%<warn>!
   quest-aborted: ''
   quest-completed-and-rewards-given: |2
 
-    <CENTER><success>[Hoàn Thành Nhiệm Vụ]
+    <CENTER>[Hoàn Thành Nhiệm Vụ] <success>
     <CENTER><highlight><bold>%QUESTNAME%
     <EMPTY>
   quest-completed-rewards-prefix: '    <highlight>Rewards:'
   quest-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
   quest-completed-rewards-suffix: <EMPTY>
-  missing-quest-description: <warn>Nhiệm vụ không có mô tả.
-  objectives-label-after-quest-accepting: '<main>Mục Tiêu:'
+  missing-quest-description: <warn>Nhiệm vụ chưa có mô tả.
+  objectives-label-after-quest-accepting: 'Mục Tiêu <main>:'
   questpoints:
     query: <warn>Bạn đang có <highlight>%QUESTPOINTS% <warn>điểm nhiệm vụ.
     none: <error>Có vẻ như bạn không có bất kỳ điểm nhiệm vụ nào!
   no-quests-accepted: <error>Có vẻ như bạn không có bất kỳ nhiệm vụ nào đang hoạt động!
   quest-does-not-exist: <error>Nhiệm vụ <highlight>%QUESTNAME% <error>không tồn tại!
   quest-not-found-or-does-not-exist: <error>Nhiệm vụ <highlight>%QUESTNAME% <error>không tìm thấy hoặc không hoạt động!
-  active-quests-label: '<warn>Nhiệm vụ hoạt động:'
+  active-quests-label: '<warn>Nhiệm vụ đã được hoạt động:'
   take-disabled: <error>Accepting or previewing the quest <highlight>%QUESTNAME%</highlight> is disabled.
-  quest-not-active-error: '<error>Lỗi: <highlight>%QUESTNAME% <error>không phải nhiệm vụ hoạt động!'
+  quest-not-active-error: '<error>Lỗi: <highlight>%QUESTNAME% <error>nhiệm vụ chưa được hoạt động!'
   conversations:
     choose-answer-prefix: |-
       <EMPTY>
@@ -112,7 +112,7 @@ gui:
     title: '         <main>Nhiệm Vụ Hiện Có'
     button:
       questPreview:
-        acceptedSuffix: ' <success>[Đồng Ys]'
+        acceptedSuffix: ' <success>[Đồng Ý]'
         questNamePrefix: <highlight>
         questDescriptionPrefix: <veryUnimportant>
         bottomText: <success>Nhấn để xem nhiệm vụ
@@ -129,7 +129,7 @@ gui:
           <unimportant>Bắt đầu một nhiệm vụ!
 
           <veryUnimportant>Một vài nhiệm vụ không thể
-          <veryUnimportant>thực hiện giống cái này
+          <veryUnimportant>thực hiện giống như thế này
       abortquest:
         text: |-
           <error>Huỷ bỏ nhiệm vụ
@@ -142,11 +142,10 @@ gui:
           <unimportant>về nhiệm vụ.
       activequests:
         text: |-
-          <main>Nhiệm vụ hoạt động
-          <unimportant>Hiển thị tất cả nhiệm vụ
-          &đang hoạt động của bạn.
+          <main>Nhiệm vụ đang hoạt động
+          <unimportant>Hiển thị tất cả nhiệm vụ của bạn.
   activeQuests:
-    title: '             <main>Nhiệm Vụ Hoạt Động'
+    title: '             <main>Nhiệm Vụ Đang Hoạt Động'
     button:
       activeQuestButton:
         text: |-
@@ -162,7 +161,7 @@ gui:
         questDescriptionPrefix: <veryUnimportant>
         bottomText: <success>Nhấn để xem trước nhiệm vụ
   abortQuestChoose:
-    title: '  <main>Nhiệm vụ hoạt động bạn có thể hủy bỏ'
+    title: '  <main>Nhiệm vụ của bạn có thể được hủy bỏ'
     button:
       abortQuestPreview:
         text: |-
@@ -187,10 +186,10 @@ gui:
           <error>Nhấp để hủy nhiệm vụ <highlight>%QUESTNAME%<error>!
       cancelAbort:
         text: |-
-          <success>Nhấp để KHÔNG hủy bỏ nhiệm vụ này
+          <success>Nhấp để từ chối hủy bỏ nhiệm vụ này
           <success>và hủy hành động này
   previewQuest:
-    title: <main>Xem trước cho Nhiệm vụ <highlight>%QUESTNAME%
+    title: <main>Xem trước Nhiệm vụ <highlight>%QUESTNAME%
     button:
       description:
         text: |-
@@ -214,7 +213,7 @@ gui:
           <success>Nhấp để thực hiện nhiệm vụ <highlight>%QUESTNAME%<success>!
       cancelTake:
         text: |-
-          <success>Nhấp để KHÔNG hủy bỏ nhiệm vụ này
+          <success>Nhấp để từ chối hủy bỏ nhiệm vụ này
           <success>và hủy hành động này
   progress:
     title: <main>Thông tin chi tiết về Nhiệm vụ <highlight>%QUESTNAME%
@@ -227,7 +226,7 @@ gui:
           %ACTIVEOBJECTIVEDESCRIPTION%
 
           <unimportant>Tiến Trình: <success>%ACTIVEOBJECTIVEPROGRESS% <main>/ %OBJECTIVEPROGRESSNEEDED%
-        description-empty: Không có miêu tả
+        description-empty: Không có mô tả
       lockedObjective:
         text: |-
           <warn>%ACTIVEOBJECTIVEID%. <unimportant><bold>[KHÓA]
@@ -241,7 +240,7 @@ gui:
           %COMPLETEDOBJECTIVEDESCRIPTION%
 
           <unimportant><strikethrough>Progress: <success><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <main><strikethrough>/ %OBJECTIVEPROGRESSNEEDED%
-        description-empty: Không có miêu tả
+        description-empty: Không có mô tả
       previousPage:
         text: Về trang trước (%prevpage%)
       nextPage:
