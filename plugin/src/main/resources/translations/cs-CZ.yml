@@ -55,7 +55,7 @@ chat:
       consumeItems:
         base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Itemy ke snězení: <WHITE>%EVENTUALCOLOR%%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Itemy k vycraftění: <WHITE>%EVENTUALCOLOR%%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Craft Items: <main>%EVENTUALCOLOR%%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
         base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Itemy k doručení: <WHITE>%EVENTUALCOLOR%%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
       escortNPC:
