@@ -14,7 +14,7 @@ chat:
     <CENTER><success>[Η αποστολή ολοκληρώθηκε]
     <CENTER><highlight><bold>%QUESTNAME%
     <EMPTY>
-  quest-completed-rewards-prefix: '    <highlight>Rewards:'
+  quest-completed-rewards-prefix: '    <highlight>Ανταμοιβές:'
   quest-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
   quest-completed-rewards-suffix: <EMPTY>
   missing-quest-description: <warn>Αυτή η αποστολή δεν έχει περιγραφή.
@@ -26,14 +26,14 @@ chat:
   quest-does-not-exist: <error>Η αποστολή <highlight>%QUESTNAME% <error>δεν υπάρχει!
   quest-not-found-or-does-not-exist: <error>Η αποστολή <highlight>%QUESTNAME% <error>δεν βρέθηκε ή δεν είναι ενεργή!
   active-quests-label: '<warn>Ενεργές αποστολές:'
-  take-disabled: <error>Accepting or previewing the quest <highlight>%QUESTNAME%</highlight> is disabled.
+  take-disabled: <error>Η αποδοχή ή η προεπισκόπηση της αποστολής <highlight>%QUESTNAME%</highlight> είναι απενεργοποιημένη.
   quest-not-active-error: '<error>Σφάλμα: Η <highlight>%QUESTNAME% <error>δεν είναι ενεργή αποστολή!'
   conversations:
     choose-answer-prefix: |-
       <EMPTY>
-      <main>Choose your answer:</main>
-    choose-answer-answer-hover-text: '<highlight>Click to answer'
-    ended-previous-conversation: '<main>You have ended your previous conversation!'
+      <main>Επιλέξτε την απάντησή σας:</main>
+    choose-answer-answer-hover-text: '<highlight>Κάντε κλικ για να απαντήσετε'
+    ended-previous-conversation: '<main>Έχετε τερματίσει την προηγούμενη συνομιλία σας!'
   objectives:
     counter: '<warn>%OBJECTIVEID%. %OBJECTIVENAME%:'
     hidden: <warn>%OBJECTIVEID%. <unimportant><bold>[HIDDEN]
@@ -41,7 +41,7 @@ chat:
     progress: '   <unimportant>Πρόοδος: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
     successfully-completed: |2
       <success>Ολοκληρώσατε με επιτυχία τον στόχο <warn>%OBJECTIVENAME% <success>για την αποστολή <highlight>%QUESTNAME%<success>!
-    successfully-completed-rewards-prefix: '    <highlight>Rewards:'
+    successfully-completed-rewards-prefix: '    <highlight>Ανταμοιβές:'
     successfully-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
     successfully-completed-rewards-suffix: <EMPTY>
     taskDescription:
@@ -108,7 +108,7 @@ titles:
 gui:
   reward-hidden-text: . <unimportant>[HIDDEN]
   availableQuests:
-    title: '         <highlight2>Available Quests'
+    title: '         <highlight2>Διαθέσιμες αποστολές'
     button:
       questPreview:
         acceptedSuffix: ' <reset><positive>[ACCEPTED]'
