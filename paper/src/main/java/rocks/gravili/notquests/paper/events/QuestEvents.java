@@ -70,8 +70,6 @@ public class QuestEvents implements Listener {
 
 
 
-
-
     @EventHandler
     private void onSmeltEvent(InventoryClickEvent e) {
         final Entity entity = e.getWhoClicked();
