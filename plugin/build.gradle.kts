@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "rocks.gravili.notquests"
-version = "3.2.3"
+version = "3.2.4"
 
 repositories {
     mavenCentral()
@@ -156,7 +156,7 @@ publishing {
         create<MavenPublication>("maven") {
             groupId = "rocks.gravili.notquests"
             artifactId = "NotQuests"
-            version = "3.2.3"
+            version = "3.2.4"
 
             from(components["java"])
         }
