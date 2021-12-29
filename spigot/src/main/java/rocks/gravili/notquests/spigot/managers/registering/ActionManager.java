@@ -26,11 +26,11 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
 import rocks.gravili.notquests.spigot.NotQuests;
 import rocks.gravili.notquests.spigot.commands.NotQuestColors;
-import rocks.gravili.notquests.spigot.conditions.Condition;
-import rocks.gravili.notquests.spigot.objectives.Objective;
 import rocks.gravili.notquests.spigot.structs.Quest;
 import rocks.gravili.notquests.spigot.structs.QuestPlayer;
 import rocks.gravili.notquests.spigot.structs.actions.*;
+import rocks.gravili.notquests.spigot.structs.conditions.Condition;
+import rocks.gravili.notquests.spigot.structs.objectives.Objective;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

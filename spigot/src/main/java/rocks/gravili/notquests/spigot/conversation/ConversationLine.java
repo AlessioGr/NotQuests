@@ -18,8 +18,8 @@
 
 package rocks.gravili.notquests.spigot.conversation;
 
-import rocks.gravili.notquests.spigot.conditions.Condition;
 import rocks.gravili.notquests.spigot.structs.actions.Action;
+import rocks.gravili.notquests.spigot.structs.conditions.Condition;
 
 import java.util.ArrayList;
 

@@ -24,10 +24,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import rocks.gravili.notquests.spigot.NotQuests;
-import rocks.gravili.notquests.spigot.objectives.hooks.elitemobs.KillEliteMobsObjective;
 import rocks.gravili.notquests.spigot.structs.ActiveObjective;
 import rocks.gravili.notquests.spigot.structs.ActiveQuest;
 import rocks.gravili.notquests.spigot.structs.QuestPlayer;
+import rocks.gravili.notquests.spigot.structs.objectives.hooks.elitemobs.KillEliteMobsObjective;
 
 import java.util.Locale;
 

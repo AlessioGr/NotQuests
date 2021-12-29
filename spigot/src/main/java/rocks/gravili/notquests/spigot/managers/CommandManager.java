@@ -43,15 +43,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
+import rocks.gravili.notquests.spigot.NotQuests;
 import rocks.gravili.notquests.spigot.commands.*;
 import rocks.gravili.notquests.spigot.commands.arguments.ActionSelector;
 import rocks.gravili.notquests.spigot.commands.arguments.ApplyOnSelector;
 import rocks.gravili.notquests.spigot.commands.arguments.CommandSelector;
 import rocks.gravili.notquests.spigot.commands.arguments.QuestSelector;
 import rocks.gravili.notquests.spigot.conversation.ConversationManager;
-import rocks.gravili.notquests.spigot.objectives.Objective;
-import rocks.gravili.notquests.spigot.NotQuests;
 import rocks.gravili.notquests.spigot.structs.Quest;
+import rocks.gravili.notquests.spigot.structs.objectives.Objective;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

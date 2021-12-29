@@ -34,7 +34,7 @@ import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import rocks.gravili.notquests.spigot.NotQuests;
 import rocks.gravili.notquests.spigot.commands.NotQuestColors;
-import rocks.gravili.notquests.spigot.objectives.ReachLocationObjective;
+import rocks.gravili.notquests.spigot.structs.objectives.ReachLocationObjective;
 
 public class WorldEditManager {
     private final NotQuests main;

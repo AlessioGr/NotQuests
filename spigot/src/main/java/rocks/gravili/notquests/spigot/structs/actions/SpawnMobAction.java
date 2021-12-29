@@ -32,8 +32,10 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
-import rocks.gravili.notquests.spigot.commands.arguments.EntityTypeSelector;
 import rocks.gravili.notquests.spigot.NotQuests;
+import rocks.gravili.notquests.spigot.commands.arguments.EntityTypeSelector;
+
+import java.util.Locale;
 
 public class SpawnMobAction extends Action {
 
@@ -149,7 +151,7 @@ public class SpawnMobAction extends Action {
 
     public void execute2(final Player player, Object... objects) {
         try {
-            EntityType entityType = EntityType.valueOf(getMobToSpawnType());
+            EntityType entityType = EntityType.valueOf(getMobToSpawnType().toUpperCase(Locale.ROOT));
 
             if (isUsePlayerLocation()) {
                 for (int i = 0; i < getSpawnAmount(); i++) {

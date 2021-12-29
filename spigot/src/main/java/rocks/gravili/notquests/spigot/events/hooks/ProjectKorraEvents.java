@@ -4,10 +4,10 @@ import com.projectkorra.projectkorra.event.AbilityStartEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import rocks.gravili.notquests.spigot.NotQuests;
-import rocks.gravili.notquests.spigot.objectives.hooks.projectkorra.ProjectKorraUseAbilityObjective;
 import rocks.gravili.notquests.spigot.structs.ActiveObjective;
 import rocks.gravili.notquests.spigot.structs.ActiveQuest;
 import rocks.gravili.notquests.spigot.structs.QuestPlayer;
+import rocks.gravili.notquests.spigot.structs.objectives.hooks.projectkorra.ProjectKorraUseAbilityObjective;
 
 public class ProjectKorraEvents implements Listener {
     private final NotQuests main;

@@ -44,17 +44,17 @@ import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
+import rocks.gravili.notquests.spigot.NotQuests;
 import rocks.gravili.notquests.spigot.commands.NotQuestColors;
 import rocks.gravili.notquests.spigot.conversation.ConversationPlayer;
 import rocks.gravili.notquests.spigot.events.notquests.other.PlayerJumpEvent;
-import rocks.gravili.notquests.spigot.objectives.*;
 import rocks.gravili.notquests.spigot.structs.ActiveObjective;
 import rocks.gravili.notquests.spigot.structs.ActiveQuest;
 import rocks.gravili.notquests.spigot.structs.QuestPlayer;
+import rocks.gravili.notquests.spigot.structs.objectives.*;
 import rocks.gravili.notquests.spigot.structs.triggers.ActiveTrigger;
 import rocks.gravili.notquests.spigot.structs.triggers.types.WorldEnterTrigger;
 import rocks.gravili.notquests.spigot.structs.triggers.types.WorldLeaveTrigger;
-import rocks.gravili.notquests.spigot.NotQuests;
 
 import java.util.Locale;
 

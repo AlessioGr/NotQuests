@@ -28,12 +28,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.spigot.NotQuests;
-import rocks.gravili.notquests.spigot.objectives.Objective;
-import rocks.gravili.notquests.spigot.objectives.TriggerCommandObjective;
 import rocks.gravili.notquests.spigot.structs.ActiveObjective;
 import rocks.gravili.notquests.spigot.structs.ActiveQuest;
 import rocks.gravili.notquests.spigot.structs.Quest;
 import rocks.gravili.notquests.spigot.structs.QuestPlayer;
+import rocks.gravili.notquests.spigot.structs.objectives.Objective;
+import rocks.gravili.notquests.spigot.structs.objectives.TriggerCommandObjective;
 
 import java.util.ArrayList;
 import java.util.List;

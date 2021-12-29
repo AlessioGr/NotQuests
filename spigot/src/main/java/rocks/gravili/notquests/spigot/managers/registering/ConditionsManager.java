@@ -24,24 +24,25 @@ import cloud.commandframework.paper.PaperCommandManager;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
-import rocks.gravili.notquests.spigot.conditions.*;
-import rocks.gravili.notquests.spigot.conditions.hooks.towny.TownyNationNameCondition;
-import rocks.gravili.notquests.spigot.conditions.hooks.towny.TownyNationTownCountCondition;
-import rocks.gravili.notquests.spigot.conditions.hooks.towny.TownyTownPlotCountCondition;
-import rocks.gravili.notquests.spigot.conditions.hooks.towny.TownyTownResidentCountCondition;
-import rocks.gravili.notquests.spigot.conditions.hooks.ultimateclans.UltimateClansClanLevelCondition;
 import rocks.gravili.notquests.spigot.NotQuests;
 import rocks.gravili.notquests.spigot.commands.NotQuestColors;
-import rocks.gravili.notquests.spigot.objectives.Objective;
 import rocks.gravili.notquests.spigot.structs.Quest;
 import rocks.gravili.notquests.spigot.structs.actions.Action;
+import rocks.gravili.notquests.spigot.structs.conditions.*;
+import rocks.gravili.notquests.spigot.structs.conditions.hooks.towny.TownyNationNameCondition;
+import rocks.gravili.notquests.spigot.structs.conditions.hooks.towny.TownyNationTownCountCondition;
+import rocks.gravili.notquests.spigot.structs.conditions.hooks.towny.TownyTownPlotCountCondition;
+import rocks.gravili.notquests.spigot.structs.conditions.hooks.towny.TownyTownResidentCountCondition;
+import rocks.gravili.notquests.spigot.structs.conditions.hooks.ultimateclans.UltimateClansClanLevelCondition;
+import rocks.gravili.notquests.spigot.structs.objectives.Objective;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
 
-import static rocks.gravili.notquests.spigot.commands.NotQuestColors.*;
+import static rocks.gravili.notquests.spigot.commands.NotQuestColors.errorGradient;
+import static rocks.gravili.notquests.spigot.commands.NotQuestColors.highlightGradient;
 
 public class ConditionsManager {
     private final NotQuests main;

@@ -30,9 +30,9 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import rocks.gravili.notquests.spigot.NotQuests;
 import rocks.gravili.notquests.spigot.commands.NotQuestColors;
-import rocks.gravili.notquests.spigot.conditions.Condition;
 import rocks.gravili.notquests.spigot.structs.QuestPlayer;
 import rocks.gravili.notquests.spigot.structs.actions.Action;
+import rocks.gravili.notquests.spigot.structs.conditions.Condition;
 
 import java.io.File;
 import java.io.IOException;

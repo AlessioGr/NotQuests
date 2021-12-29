@@ -23,14 +23,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
+import rocks.gravili.notquests.spigot.NotQuests;
 import rocks.gravili.notquests.spigot.events.notquests.ObjectiveCompleteEvent;
 import rocks.gravili.notquests.spigot.events.notquests.QuestFailEvent;
-import rocks.gravili.notquests.spigot.objectives.EscortNPCObjective;
-import rocks.gravili.notquests.spigot.objectives.Objective;
 import rocks.gravili.notquests.spigot.structs.actions.Action;
+import rocks.gravili.notquests.spigot.structs.objectives.EscortNPCObjective;
+import rocks.gravili.notquests.spigot.structs.objectives.Objective;
 import rocks.gravili.notquests.spigot.structs.triggers.ActiveTrigger;
 import rocks.gravili.notquests.spigot.structs.triggers.Trigger;
-import rocks.gravili.notquests.spigot.NotQuests;
 
 import java.util.ArrayList;
 import java.util.UUID;

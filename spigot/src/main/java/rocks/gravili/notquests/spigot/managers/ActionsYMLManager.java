@@ -22,9 +22,9 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import rocks.gravili.notquests.spigot.conditions.Condition;
-import rocks.gravili.notquests.spigot.structs.actions.Action;
 import rocks.gravili.notquests.spigot.NotQuests;
+import rocks.gravili.notquests.spigot.structs.actions.Action;
+import rocks.gravili.notquests.spigot.structs.conditions.Condition;
 
 import java.io.File;
 import java.io.IOException;

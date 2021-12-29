@@ -6,12 +6,12 @@ import com.palmergames.bukkit.towny.event.TownRemoveResidentEvent;
 import com.palmergames.bukkit.towny.object.Resident;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import rocks.gravili.notquests.spigot.objectives.hooks.towny.TownyNationReachTownCountObjective;
-import rocks.gravili.notquests.spigot.objectives.hooks.towny.TownyReachResidentCountObjective;
 import rocks.gravili.notquests.spigot.NotQuests;
 import rocks.gravili.notquests.spigot.structs.ActiveObjective;
 import rocks.gravili.notquests.spigot.structs.ActiveQuest;
 import rocks.gravili.notquests.spigot.structs.QuestPlayer;
+import rocks.gravili.notquests.spigot.structs.objectives.hooks.towny.TownyNationReachTownCountObjective;
+import rocks.gravili.notquests.spigot.structs.objectives.hooks.towny.TownyReachResidentCountObjective;
 
 public class TownyEvents implements Listener {
     private final NotQuests main;

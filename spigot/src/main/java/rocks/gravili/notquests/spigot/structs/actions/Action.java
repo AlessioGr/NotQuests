@@ -22,9 +22,9 @@ package rocks.gravili.notquests.spigot.structs.actions;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.spigot.NotQuests;
-import rocks.gravili.notquests.spigot.conditions.Condition;
-import rocks.gravili.notquests.spigot.objectives.Objective;
 import rocks.gravili.notquests.spigot.structs.Quest;
+import rocks.gravili.notquests.spigot.structs.conditions.Condition;
+import rocks.gravili.notquests.spigot.structs.objectives.Objective;
 
 import java.util.ArrayList;
 

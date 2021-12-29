@@ -26,9 +26,9 @@ import org.betonquest.betonquest.utils.PlayerConverter;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.spigot.CompletedQuest;
 import rocks.gravili.notquests.spigot.NotQuests;
-import rocks.gravili.notquests.spigot.conditions.*;
 import rocks.gravili.notquests.spigot.structs.Quest;
 import rocks.gravili.notquests.spigot.structs.QuestPlayer;
+import rocks.gravili.notquests.spigot.structs.conditions.*;
 
 public class BQRequirementsCondition extends org.betonquest.betonquest.api.Condition { //TODO: Make it dynamic for future or API requirements
 

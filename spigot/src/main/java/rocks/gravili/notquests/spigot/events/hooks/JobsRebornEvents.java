@@ -4,10 +4,10 @@ import com.gamingmesh.jobs.api.JobsLevelUpEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import rocks.gravili.notquests.spigot.NotQuests;
-import rocks.gravili.notquests.spigot.objectives.hooks.jobsreborn.JobsRebornReachJobLevel;
 import rocks.gravili.notquests.spigot.structs.ActiveObjective;
 import rocks.gravili.notquests.spigot.structs.ActiveQuest;
 import rocks.gravili.notquests.spigot.structs.QuestPlayer;
+import rocks.gravili.notquests.spigot.structs.objectives.hooks.jobsreborn.JobsRebornReachJobLevel;
 
 public class JobsRebornEvents implements Listener {
     private final NotQuests main;

@@ -35,24 +35,25 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import rocks.gravili.notquests.spigot.commands.arguments.ActiveQuestSelector;
-import rocks.gravili.notquests.spigot.commands.arguments.QuestSelector;
-import rocks.gravili.notquests.spigot.conditions.Condition;
-import rocks.gravili.notquests.spigot.objectives.Objective;
-import rocks.gravili.notquests.spigot.objectives.TriggerCommandObjective;
-import rocks.gravili.notquests.spigot.structs.actions.Action;
 import rocks.gravili.notquests.spigot.CompletedQuest;
 import rocks.gravili.notquests.spigot.NotQuests;
+import rocks.gravili.notquests.spigot.commands.arguments.ActiveQuestSelector;
+import rocks.gravili.notquests.spigot.commands.arguments.QuestSelector;
 import rocks.gravili.notquests.spigot.structs.ActiveObjective;
 import rocks.gravili.notquests.spigot.structs.ActiveQuest;
 import rocks.gravili.notquests.spigot.structs.Quest;
 import rocks.gravili.notquests.spigot.structs.QuestPlayer;
+import rocks.gravili.notquests.spigot.structs.actions.Action;
+import rocks.gravili.notquests.spigot.structs.conditions.Condition;
+import rocks.gravili.notquests.spigot.structs.objectives.Objective;
+import rocks.gravili.notquests.spigot.structs.objectives.TriggerCommandObjective;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static rocks.gravili.notquests.spigot.commands.NotQuestColors.*;
+import static rocks.gravili.notquests.spigot.commands.NotQuestColors.highlight2Gradient;
+import static rocks.gravili.notquests.spigot.commands.NotQuestColors.highlightGradient;
 
 public class AdminCommands {
     private final NotQuests main;

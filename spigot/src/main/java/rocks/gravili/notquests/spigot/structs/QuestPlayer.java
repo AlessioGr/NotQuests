@@ -27,14 +27,14 @@ import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.spigot.CompletedQuest;
+import rocks.gravili.notquests.spigot.NotQuests;
 import rocks.gravili.notquests.spigot.commands.NotQuestColors;
-import rocks.gravili.notquests.spigot.conditions.Condition;
 import rocks.gravili.notquests.spigot.events.notquests.QuestCompletedEvent;
 import rocks.gravili.notquests.spigot.events.notquests.QuestFinishAcceptEvent;
 import rocks.gravili.notquests.spigot.events.notquests.QuestPointsChangeEvent;
-import rocks.gravili.notquests.spigot.objectives.OtherQuestObjective;
 import rocks.gravili.notquests.spigot.structs.actions.Action;
-import rocks.gravili.notquests.spigot.NotQuests;
+import rocks.gravili.notquests.spigot.structs.conditions.Condition;
+import rocks.gravili.notquests.spigot.structs.objectives.OtherQuestObjective;
 
 import java.time.Duration;
 import java.util.ArrayList;

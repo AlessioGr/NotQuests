@@ -30,9 +30,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.spigot.NotQuests;
 import rocks.gravili.notquests.spigot.conversation.Conversation;
-import rocks.gravili.notquests.spigot.objectives.EscortNPCObjective;
 import rocks.gravili.notquests.spigot.structs.ActiveObjective;
 import rocks.gravili.notquests.spigot.structs.ActiveQuest;
+import rocks.gravili.notquests.spigot.structs.objectives.EscortNPCObjective;
 
 import java.util.ArrayList;
 import java.util.Locale;

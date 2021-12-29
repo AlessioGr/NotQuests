@@ -22,12 +22,12 @@ import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import rocks.gravili.notquests.spigot.conditions.Condition;
-import rocks.gravili.notquests.spigot.managers.integrations.citizens.QuestGiverNPCTrait;
-import rocks.gravili.notquests.spigot.objectives.Objective;
-import rocks.gravili.notquests.spigot.structs.actions.Action;
-import rocks.gravili.notquests.spigot.structs.triggers.Trigger;
 import rocks.gravili.notquests.spigot.NotQuests;
+import rocks.gravili.notquests.spigot.managers.integrations.citizens.QuestGiverNPCTrait;
+import rocks.gravili.notquests.spigot.structs.actions.Action;
+import rocks.gravili.notquests.spigot.structs.conditions.Condition;
+import rocks.gravili.notquests.spigot.structs.objectives.Objective;
+import rocks.gravili.notquests.spigot.structs.triggers.Trigger;
 
 import java.util.ArrayList;
 

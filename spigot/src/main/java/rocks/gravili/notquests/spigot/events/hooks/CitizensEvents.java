@@ -33,15 +33,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
-import rocks.gravili.notquests.spigot.structs.triggers.ActiveTrigger;
-import rocks.gravili.notquests.spigot.structs.triggers.types.NPCDeathTrigger;
 import rocks.gravili.notquests.spigot.NotQuests;
-import rocks.gravili.notquests.spigot.objectives.DeliverItemsObjective;
-import rocks.gravili.notquests.spigot.objectives.EscortNPCObjective;
-import rocks.gravili.notquests.spigot.objectives.TalkToNPCObjective;
 import rocks.gravili.notquests.spigot.structs.ActiveObjective;
 import rocks.gravili.notquests.spigot.structs.ActiveQuest;
 import rocks.gravili.notquests.spigot.structs.QuestPlayer;
+import rocks.gravili.notquests.spigot.structs.objectives.DeliverItemsObjective;
+import rocks.gravili.notquests.spigot.structs.objectives.EscortNPCObjective;
+import rocks.gravili.notquests.spigot.structs.objectives.TalkToNPCObjective;
+import rocks.gravili.notquests.spigot.structs.triggers.ActiveTrigger;
+import rocks.gravili.notquests.spigot.structs.triggers.types.NPCDeathTrigger;
 
 import java.util.Locale;
 

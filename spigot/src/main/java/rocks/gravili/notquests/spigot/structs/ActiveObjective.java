@@ -22,13 +22,13 @@ package rocks.gravili.notquests.spigot.structs;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.spigot.CompletedQuest;
-import rocks.gravili.notquests.spigot.commands.NotQuestColors;
-import rocks.gravili.notquests.spigot.conditions.Condition;
-import rocks.gravili.notquests.spigot.events.notquests.ObjectiveUnlockEvent;
-import rocks.gravili.notquests.spigot.objectives.EscortNPCObjective;
-import rocks.gravili.notquests.spigot.objectives.Objective;
-import rocks.gravili.notquests.spigot.objectives.OtherQuestObjective;
 import rocks.gravili.notquests.spigot.NotQuests;
+import rocks.gravili.notquests.spigot.commands.NotQuestColors;
+import rocks.gravili.notquests.spigot.events.notquests.ObjectiveUnlockEvent;
+import rocks.gravili.notquests.spigot.structs.conditions.Condition;
+import rocks.gravili.notquests.spigot.structs.objectives.EscortNPCObjective;
+import rocks.gravili.notquests.spigot.structs.objectives.Objective;
+import rocks.gravili.notquests.spigot.structs.objectives.OtherQuestObjective;
 
 import java.util.UUID;
 

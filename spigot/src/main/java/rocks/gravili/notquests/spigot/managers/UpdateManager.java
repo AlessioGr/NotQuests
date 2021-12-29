@@ -3,11 +3,11 @@ package rocks.gravili.notquests.spigot.managers;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
-import rocks.gravili.notquests.spigot.conditions.CompletedObjectiveCondition;
-import rocks.gravili.notquests.spigot.objectives.Objective;
-import rocks.gravili.notquests.spigot.structs.actions.ConsoleCommandAction;
 import rocks.gravili.notquests.spigot.NotQuests;
 import rocks.gravili.notquests.spigot.structs.Quest;
+import rocks.gravili.notquests.spigot.structs.actions.ConsoleCommandAction;
+import rocks.gravili.notquests.spigot.structs.conditions.CompletedObjectiveCondition;
+import rocks.gravili.notquests.spigot.structs.objectives.Objective;
 
 public class UpdateManager {
     final UpdateChecker updateChecker;

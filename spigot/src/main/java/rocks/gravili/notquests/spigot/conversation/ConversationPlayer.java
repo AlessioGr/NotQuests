@@ -26,13 +26,13 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.spigot.NotQuests;
-import rocks.gravili.notquests.spigot.conditions.Condition;
 import rocks.gravili.notquests.spigot.structs.QuestPlayer;
 import rocks.gravili.notquests.spigot.structs.actions.Action;
+import rocks.gravili.notquests.spigot.structs.conditions.Condition;
 
 import java.util.ArrayList;
 
-import static rocks.gravili.notquests.spigot.commands.NotQuestColors.*;
+import static rocks.gravili.notquests.spigot.commands.NotQuestColors.mainGradient;
 
 public class ConversationPlayer {
     private final NotQuests main;
