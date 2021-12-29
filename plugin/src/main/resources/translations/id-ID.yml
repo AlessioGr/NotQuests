@@ -155,7 +155,7 @@ gui:
         text: |-
           <highlight>Quest Aktif
 
-          <veryUnimportant>Menunjukkan semua 
+          <veryUnimportant>Menunjukkan semua
           <veryUnimportant>Quest yang aktif.
   activeQuests:
     title: '             <highlight2>Quest aktif'
