@@ -204,7 +204,6 @@ gui:
           <error>要求
           <main>%QUESTREQUIREMENTS%
         empty: '<veryUnimportant>-'
-
       confirmTake:
         text: |-
           <highlight>%QUESTNAME%
