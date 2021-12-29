@@ -1,15 +1,14 @@
 ---
 chat:
-  wrong-command-usage: <error>Wrong command usage!
-  missing-permission: '<error>No permission! Required permission node: <highlight>%PERMISSION%'
-  too-many-arguments: <error>Too many arguments!
+  wrong-command-usage: <error>Погрешна употреба команде!
+  missing-permission: "<error>Нема дозволе! Потребан чвор за дозвол:\n<highlight>%PERMISSION%"
+  too-many-arguments: <error>Превише аргумената!
   quest-successfully-accepted: |2
 
-    <CENTER><main>[Quest Accepted]
-    <CENTER><highlight><BOLD>%QUESTNAME%
-    <EMPTY>
-  quest-description: '<main>Quest description: <unimportant>%QUESTDESCRIPTION%'
-  quest-already-accepted: <error>Quest already accepted.
+    <CENTER><main>[Задатак Прихваћен]
+    <CENTER><highlight><BOLD>%QUESTNAME%<EMPTY>
+  quest-description: "<main>Опис задатка:\n<unimportant>%QUESTDESCRIPTION%"
+  quest-already-accepted: <error>Задатак је већ прихваћен.
   quest-failed: |2
 
     <CENTER><negative>[Quest Failed]
