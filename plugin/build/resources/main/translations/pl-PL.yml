@@ -228,7 +228,7 @@ gui:
           <negative>Kliknij aby zrezygnować z wzięcia Questa
           <negative>oraz aby anulować tą akcję
   progress:
-    title: <highlight2>Details for Quest <black>%QUESTNAME%
+    title: <highlight2>Szczegóły Questa <black>%QUESTNAME%
     button:
       unlockedObjective:
         text: |-
