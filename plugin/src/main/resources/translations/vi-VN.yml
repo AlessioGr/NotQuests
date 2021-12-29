@@ -32,9 +32,9 @@ chat:
   conversations:
     choose-answer-prefix: |-
       <EMPTY>
-      <main>Choose your answer:</main>
-    choose-answer-answer-hover-text: '<highlight>Click to answer'
-    ended-previous-conversation: '<main>You have ended your previous conversation!'
+      <main>Chọn câu trả lời của bạn:</main>
+    choose-answer-answer-hover-text: '<highlight>Nhấn để trả lời'
+    ended-previous-conversation: '<main>Bạn đã kết thúc cuộc trò chuyện trước đó của mình!'
   objectives:
     counter: '<warn>%OBJECTIVEID%. %OBJECTIVENAME%:'
     hidden: <warn>%OBJECTIVEID%. <unimportant><bold>[KHÓA]
@@ -42,7 +42,7 @@ chat:
     progress: '   <unimportant>Tiến Trình: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
     successfully-completed: |2
       <success>Bạn đã hoàn thành mục tiêu <warn>%OBJECTIVENAME% <success>cho nhiệm vụ <highlight>%QUESTNAME%<success>!
-    successfully-completed-rewards-prefix: '    <highlight>Rewards:'
+    successfully-completed-rewards-prefix: '    <highlight>Phần thưởng:'
     successfully-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
     successfully-completed-rewards-suffix: <EMPTY>
     taskDescription:
@@ -83,19 +83,19 @@ chat:
       jump:
         base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Nhảy <main>%EVENTUALCOLOR%%AMOUNTOFJUMPS% <unimportant>%EVENTUALCOLOR%times'
       sneak:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Sneak <main>%EVENTUALCOLOR%%AMOUNTOFSNEAKS%</main> %EVENTUALCOLOR%times'
+        base: '    <veryUnimportant>└─<unimportant>%EVENTUALCOLOR%Rón rén<main>%EVENTUALCOLOR%%AMOUNTOFSNEAKS%</main>%EVENTUALCOLOR%lần'
       smelt:
         base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Nung Vật Phẩm: <main>%EVENTUALCOLOR%%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       townyReachResidentCount:
         base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Số Lượng Thành Viên Thị Trấn Đạt Đến: <main>%EVENTUALCOLOR%%AMOUNT%'
       townyNationReachTownCount:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Reach town amount with your nation: <main>%EVENTUALCOLOR%%AMOUNT%'
+        base: '    <veryUnimportant>└─<unimportant>%EVENTUALCOLOR%Đạt số tiền thị trấn với quốc gia của bạn: <main>%EVENTUALCOLOR%%AMOUNT%'
       jobsRebornReachJobLevel:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Reach job level <main>%EVENTUALCOLOR%%AMOUNT%</main> with job <main>%EVENTUALCOLOR%%JOB%'
+        base: '    <veryUnimportant>└─<unimportant>%EVENTUALCOLOR%Cấp độ nghề đạt đến<main>%EVENTUALCOLOR%%AMOUNT%</main>với nghề<main>%EVENTUALCOLOR%%JOB%'
       SlimefunResearch:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Spend on research'
+        base: '    <veryUnimportant>└─<unimportant>%EVENTUALCOLOR%Tốc độ tìm lại'
       ProjectKorraUseAbility:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Use Ability: <main>%EVENTUALCOLOR%%ABILITY%'
+        base: '    <veryUnimportant>└─<unimportant>%EVENTUALCOLOR%Dùng Ability:<main>%EVENTUALCOLOR%%ABILITY%'
 titles:
   quest-accepted:
     title: <main>Chấp Nhận Nhiệm Vụ
