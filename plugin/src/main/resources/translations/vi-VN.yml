@@ -15,7 +15,7 @@ chat:
     <CENTER>[Hoàn Thành Nhiệm Vụ] <success>
     <CENTER><highlight><bold>%QUESTNAME%
     <EMPTY>
-  quest-completed-rewards-prefix: '    <highlight>Rewards:'
+  quest-completed-rewards-prefix: '    <highlight>Phần thưởng:'
   quest-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
   quest-completed-rewards-suffix: <EMPTY>
   missing-quest-description: <warn>Nhiệm vụ chưa có mô tả.
@@ -27,7 +27,7 @@ chat:
   quest-does-not-exist: <error>Nhiệm vụ <highlight>%QUESTNAME% <error>không tồn tại!
   quest-not-found-or-does-not-exist: <error>Nhiệm vụ <highlight>%QUESTNAME% <error>không tìm thấy hoặc không hoạt động!
   active-quests-label: '<warn>Nhiệm vụ đã được hoạt động:'
-  take-disabled: <error>Accepting or previewing the quest <highlight>%QUESTNAME%</highlight> is disabled.
+  take-disabled: <error>Đồng ý hoặc xem trước nhiệm vụ <highlight>%QUESTNAME%</highlight> đã bị tắt.
   quest-not-active-error: '<error>Lỗi: <highlight>%QUESTNAME% <error>nhiệm vụ chưa được hoạt động!'
   conversations:
     choose-answer-prefix: |-
