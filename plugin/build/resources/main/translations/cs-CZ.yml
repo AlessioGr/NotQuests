@@ -206,7 +206,7 @@ gui:
         text: |-
           <RED>Požadavky
           <WHITE>%QUESTREQUIREMENTS%
-        empty: >-
+        empty: '<veryUnimportant>-'
 
       confirmTake:
         text: |-

@@ -203,7 +203,7 @@ gui:
         text: |-
           <error>要求
           <main>%QUESTREQUIREMENTS%
-        empty: >-
+        empty: '<veryUnimportant>-'
 
       confirmTake:
         text: |-

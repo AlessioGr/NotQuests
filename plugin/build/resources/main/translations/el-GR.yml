@@ -204,7 +204,7 @@ gui:
         text: |-
           <error>Απαιτήσεις
           <main>%QUESTREQUIREMENTS%
-        empty: >-
+        empty: '<veryUnimportant>-'
 
       confirmTake:
         text: |-
