@@ -12,7 +12,7 @@ chat:
   quest-already-accepted: <error>Quest wurde schon akzeptiert.
   quest-failed: |2
 
-    <CENTER><negative>[Quest gGscheitert]
+    <CENTER><negative>[Quest Gescheitert]
     <CENTER><highlight><BOLD>%QUESTNAME%
     <EMPTY>
   quest-aborted: ''
