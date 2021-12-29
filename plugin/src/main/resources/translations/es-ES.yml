@@ -242,7 +242,7 @@ gui:
       lockedObjective:
         text: |-
           <highlight2>%ACTIVEOBJECTIVEID%. <unimportant><BOLD>[OCULTO]
-          <warn>¡Este objetivo aún no ha 
+          <warn>¡Este objetivo aún no ha
           <warn>sido desbloqueado!
       completedObjective:
         text: |-
