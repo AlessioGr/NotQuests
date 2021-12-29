@@ -11,65 +11,61 @@ chat:
   quest-already-accepted: <error>Задатак је већ прихваћен.
   quest-failed: |2
 
-    <CENTER><negative>[Quest Failed]
-    <CENTER><highlight><BOLD>%QUESTNAME%
-    <EMPTY>
+    <CENTER><negative>[Задатак Није Успјешан]
+    <CENTER><highlight><BOLD>%QUESTNAME%<EMPTY>
   quest-aborted: ''
   quest-completed-and-rewards-given: |2
 
-    <CENTER><positive>[Quest Completed]
-    <CENTER><highlight><BOLD>%QUESTNAME%
-    <EMPTY>
-  quest-completed-rewards-prefix: '    <highlight>Rewards:'
+    <CENTER><positive>[Задатак је Завршен]<CENTER><highlight><BOLD>%QUESTNAME%<EMPTY>
+  quest-completed-rewards-prefix: '    <highlight>Награде:'
   quest-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
   quest-completed-rewards-suffix: <EMPTY>
-  missing-quest-description: <unimportant>This quest has no quest description.
-  objectives-label-after-quest-accepting: '<highlight>Objectives:'
+  missing-quest-description: <unimportant>Овај задатак нема опис.
+  objectives-label-after-quest-accepting: '<highlight>Циљеви:'
   questpoints:
-    query: <main>You currently have <highlight>%QUESTPOINTS%</highlight> quest points.
-    none: <error>Seems like you don't have any quest points!
-  no-quests-accepted: <error>Seems like you don't have any active quests!
-  quest-does-not-exist: <error>Quest <highlight>%QUESTNAME%</highlight> does not exist!
-  quest-not-found-or-does-not-exist: <error>Quest <highlight>%QUESTNAME%</highlight> not found or not active!
-  active-quests-label: '<highlight>Active quests:'
-  take-disabled: <error>Accepting or previewing the quest <highlight>%QUESTNAME%</highlight> is disabled.
-  quest-not-active-error: '<error>Error: <highlight>%QUESTNAME%</highlight> is not an active Quest!'
+    query: "<main>Тренутно имате\n<highlight>%QUESTPOINTS%</highlight> бодова."
+    none: <error>Изгледа да уопште немате бодова!
+  no-quests-accepted: <error>Изгледа да немате активних задатака!
+  quest-does-not-exist: "<error>Задатак\n<highlight>%QUESTNAME%</highlight> не постоји!"
+  quest-not-found-or-does-not-exist: "<error>Задатак\n<highlight>%QUESTNAME%</highlight> није пронађен или није активан!"
+  active-quests-label: '<highlight>Активни задаци:'
+  take-disabled: "<error>Примање или преглед задатка\n<highlight>%QUESTNAME%</highlight> је онемогућен."
+  quest-not-active-error: "<error>Грешка:\n<highlight>%QUESTNAME%</highlight> није активан задатак!"
   conversations:
     choose-answer-prefix: |-
-      <EMPTY>
-      <main>Choose your answer:</main>
-    choose-answer-answer-hover-text: '<highlight>Click to answer'
-    ended-previous-conversation: '<main>You have ended your previous conversation!'
+      <EMPTY><main>Изабери свој одговор:</main>
+    choose-answer-answer-hover-text: '<highlight>Кликни да одговориш'
+    ended-previous-conversation: '<main>Завршили сте претходни разговор!'
   objectives:
-    counter: '<highlight>%OBJECTIVEID%.</highlight> <main>%OBJECTIVENAME%:'
-    hidden: <highlight>%OBJECTIVEID%.</highlight> <unimportant><BOLD>[HIDDEN]
-    description: '   <highlight>Description: <main>%OBJECTIVEDESCRIPTION%'
-    progress: '   <highlight>Progress: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
+    counter: "<highlight>%OBJECTIVEID%.</highlight>\n<main>%OBJECTIVENAME%:"
+    hidden: "<highlight>%OBJECTIVEID%.</highlight>\n<unimportant><BOLD>[HIDDEN]"
+    description: "   <highlight>Опис:\n<main>%OBJECTIVEDESCRIPTION%"
+    progress: "   <highlight>Напредак:\n<main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%"
     successfully-completed: |2
 
-      <CENTER><success>[Objective Completed]
-      <CENTER><highlight><BOLD>%OBJECTIVENAME% <RESET><main>(%QUESTNAME%)
+      <CENTER><success>[Циљ јe Завршен]
+      <CENTER><highlight><BOLD>%OBJECTIVENAME%<RESET><main>(%QUESTNAME%)
       <EMPTY>
-    successfully-completed-rewards-prefix: '    <highlight>Rewards:'
+    successfully-completed-rewards-prefix: '    <highlight>Награде:'
     successfully-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
     successfully-completed-rewards-suffix: <EMPTY>
     taskDescription:
       breakBlocks:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Break Blocks: <main>%EVENTUALCOLOR%%BLOCKTOBREAK%'
+        base: "    <veryUnimportant> └─\n<unimportant>%EVENTUALCOLOR%Уништи Блокове:<main>%EVENTUALCOLOR%%BLOCKTOBREAK%"
       breed:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Breed Mobs: <main>%EVENTUALCOLOR%%ENTITYTOBREED%'
+        base: "    <veryUnimportant> └─\n<unimportant>%EVENTUALCOLOR%Пари Створења:\n<main>%EVENTUALCOLOR%%ENTITYTOBREED%"
       collectItems:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Collect Items: <main>%EVENTUALCOLOR%%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
+        base: "    <veryUnimportant> └─\n<unimportant>%EVENTUALCOLOR%Скупи Ствари:\n<main>%EVENTUALCOLOR%%ITEMTOCOLLECTTYPE% % (%%ITEMTOCOLLECTNAME%%) %"
       consumeItems:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Consume Items: <main>%EVENTUALCOLOR%%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
+        base: "    <veryUnimportant> └─\n<unimportant>%EVENTUALCOLOR%Конзумирај Predmete:\n<main>%EVENTUALCOLOR%%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%"
       craftItems:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Craft Items <main>%EVENTUALCOLOR%%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
+        base: "    <veryUnimportant> └─\n<unimportant>%EVENTUALCOLOR%Направи Предмете\n<main>%EVENTUALCOLOR%%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%"
       deliverItems:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Deliver Items: <main>%EVENTUALCOLOR%%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
+        base: "    <veryUnimportant> └─\n<unimportant>%EVENTUALCOLOR%Испоручи Предмете:<main>%EVENTUALCOLOR%%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)"
       escortNPC:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Escort <main>%EVENTUALCOLOR%%NPCNAME%</main> %EVENTUALCOLOR%to <main>%EVENTUALCOLOR%%DESTINATIONNPCNAME%'
+        base: "    <veryUnimportant> └─\n<unimportant>%EVENTUALCOLOR%Испрати<main>%EVENTUALCOLOR%%NPCNAME%</main>%EVENTUALCOLOR%до\n<main>%EVENTUALCOLOR%%DESTINATIONNPCNAME%"
       killMobs:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Kill mobs: <main>%EVENTUALCOLOR%%MOBTOKILL%'
+        base: "    <veryUnimportant> └─\n<unimportant>%EVENTUALCOLOR%Убиј Створења:\n<main>%EVENTUALCOLOR%%MOBTOKILL%"
       otherQuest:
         base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Complete Quest: <main>%EVENTUALCOLOR%%OTHERQUESTNAME%'
       placeBlocks:
