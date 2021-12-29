@@ -56,7 +56,7 @@ chat:
     successfully-completed-rewards-suffix: <EMPTY>
     taskDescription:
       breakBlocks:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Break Blocks: <main>%EVENTUALCOLOR%%BLOCKTOBREAK%'
+        base: '    <veryUnimportant>vaiven <unimportant>%EVENTUALCOLOR%Bloques de Salto: <main>%EVENTUALCOLOR%%BLOCKTOBREAK%'
       breed:
         base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Aparear Mobs: <main>%EVENTUALCOLOR%%ENTITYTOBREED%'
       collectItems:
@@ -134,126 +134,126 @@ gui:
           <main>Puntos de Misión actuales: <highlight2>%QUESTPOINTS%
       takequest:
         text: |-
-          <positive>Take a Quest
-          <unimportant>Start a new Quest!
+          <positive>Tomar una Misión
+          <unimportant>¡Comienza una Misión nueva!
 
-          <veryUnimportant>Some Quests cannot be
-          <veryUnimportant>started like this.
+          <veryUnimportant>Algunas Misiones no pueden ser
+          <veryUnimportant>empezadas de esta forma.
       abortquest:
         text: |-
-          <negative>Abort a Quest
+          <negative>Abortar una Misión
 
-          <veryUnimportant>Aborting a Quest may
-          <veryUnimportant>lead to punishments.
+          <veryUnimportant>Abortar una Misión puede
+          <veryUnimportant>conllevar a penalizaciones.
       previewquest:
         text: |-
-          <main>Preview Quest (Quest Info)
+          <main>Previsualizar una Misión (Información)
 
-          <veryUnimportant>Show more information
-          <veryUnimportant>about a Quest.
+          <veryUnimportant>Muestra más información
+          <veryUnimportant>sobre una misión.
       activequests:
         text: |-
-          <highlight>Active Quests
+          <highlight>Misiones Activas
 
-          <veryUnimportant>Shows all of your
-          <veryUnimportant>active Quests.
+          <veryUnimportant>Muestra todas tus
+          <veryUnimportant>Misiones activas.
   activeQuests:
-    title: '             <highlight2>Active Quests'
+    title: '             <highlight2>Misiones activas'
     button:
       activeQuestButton:
         text: |-
           <highlight>%QUESTNAME% <positive>[ACTIVE]
-          <unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%
-          <main>Click to see details!
+          <unimportant>Progreso: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%
+          <main>¡Haz click para ver los detalles!
   takeQuestChoose:
-    title: <highlight2>Which Quest do you want to take?
+    title: <highlight2>¿Qué misión quieres coger?
     button:
       questPreview:
-        acceptedSuffix: ' <reset><positive>[ACCEPTED]'
+        acceptedSuffix: ' <reset><positive>[ACEPTADA]'
         questNamePrefix: <highlight>
         questDescriptionPrefix: <veryUnimportant>
-        bottomText: <main>Click to preview Quest!
+        bottomText: <main>¡Click para previsualizar la Misión!
   abortQuestChoose:
-    title: '  <highlight2>Active Quests you can abort'
+    title: '  <highlight2>Misiones activas que puedes abortar'
     button:
       abortQuestPreview:
         text: |-
           <highlight>%QUESTNAME% <positive>[ACTIVE]
-          <unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%
-          <negative>Click to abort Quest!
+          <unimportant>Progreso: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%
+          <negative>¡Click para abortar la misión!
   previewQuestChoose:
-    title: '     <highlight2>Choose Quest to preview'
+    title: '     <highlight2>Elija la misión para previsualizar'
     button:
       questPreview:
-        acceptedSuffix: ' <reset><positive>[ACCEPTED]'
+        acceptedSuffix: ' <reset><positive>[ACEPTADA]'
         questNamePrefix: <highlight>
         questDescriptionPrefix: <veryUnimportant>
-        bottomText: <main>Click to preview Quest!
+        bottomText: <main>¡Click para previsualizar la Misión!
   abortQuest:
-    title: '         <negative>Abort Confirmation'
+    title: '         <negative>Confirmar Abortar'
     button:
       confirmAbort:
         text: |-
           <highlight>%QUESTNAME% <positive>[ACTIVE]
-          <unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%
-          <negative>Click to abort the quest <highlight>%QUESTNAME%</highlight>!
+          <unimportant>Progreso: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%
+          <negative>¡Click para abortar la misión <highlight>%QUESTNAME%</highlight>!
       cancelAbort:
         text: |-
-          <positive>Click to NOT abort this quest
-          <positive>and cancel this action
+          <positive>Click para NO abortar esta misión
+          <positive>y cancelar esta acción
   previewQuest:
-    title: <highlight2>Preview for Quest <black>%QUESTNAME%
+    title: <highlight2>Vista previa de la Misión <black>%QUESTNAME%
     button:
       description:
         text: |-
-          <highlight>Description
+          <highlight>Descripción
           <veryUnimportant>%QUESTDESCRIPTION%
         empty: '???'
       rewards:
         text: |-
-          <positive>Rewards
+          <positive>Recompensas
           <WHITE>%QUESTREWARDS%
-        empty: <veryUnimportant>None or hidden
+        empty: <veryUnimportant>Ninguna u oculta
       requirements:
         text: |-
-          <negative>Requirements
+          <negative>Requisitos
           <WHITE>%QUESTREQUIREMENTS%
         empty: '<veryUnimportant>-'
       confirmTake:
         text: |-
           <highlight>%QUESTNAME%
-          <positive>Click to take the quest <highlight>%QUESTNAME%
+          <positive>Clic para coger la misión <highlight>%QUESTNAME%
       cancelTake:
         text: |-
-          <negative>Click to NOT take this quest
-          <negative>and cancel this action
+          <negative>Click para NO coger esta misión
+          <negative>y cancelar esta acción
   progress:
-    title: <highlight2>Details for Quest <black>%QUESTNAME%
+    title: <highlight2>Detalles de la Misión <black>%QUESTNAME%
     button:
       unlockedObjective:
         text: |-
           <highlight2>%ACTIVEOBJECTIVEID%. <highlight>%OBJECTIVENAME%
-          <main><BOLD>ACTIVE</BOLD>
+          <main><BOLD>ACTIVO</BOLD>
           <veryUnimportant>%OBJECTIVEDESCRIPTION%
           <unimportant>%ACTIVEOBJECTIVEDESCRIPTION%
 
-          <unimportant>Progress: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%
-        description-empty: No Description
+          <unimportant>Progreso: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%
+        description-empty: Sin descripción
       lockedObjective:
         text: |-
-          <highlight2>%ACTIVEOBJECTIVEID%. <unimportant><BOLD>[HIDDEN]
-          <warn>This objective has not yet
-          <warn>been unlocked!
+          <highlight2>%ACTIVEOBJECTIVEID%. <unimportant><BOLD>[OCULTO]
+          <warn>¡Este objetivo aún no ha 
+          <warn>sido desbloqueado!
       completedObjective:
         text: |-
           <highlight2><strikethrough>%ACTIVEOBJECTIVEID%. <positive><strikethrough>%OBJECTIVENAME%
-          <positive><BOLD>COMPLETED</BOLD>
+          <positive><BOLD>COMPLETADO</BOLD>
           <veryUnimportant><strikethrough>%OBJECTIVEDESCRIPTION%
           <veryUnimportant>%COMPLETEDOBJECTIVEDESCRIPTION%
 
-          <unimportant><strikethrough>Progress: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%
-        description-empty: No Description
+          <unimportant><strikethrough>Progreso: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%
+        description-empty: Sin descripción
       previousPage:
-        text: Go to previous page (%prevpage%)
+        text: Ir a la página anterior (%prevpage%)
       nextPage:
-        text: Go to next page (%nextpage%)
+        text: Ir a la página siguiente (%nextpage%)
