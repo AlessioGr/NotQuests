@@ -89,6 +89,7 @@ public class LanguageManager {
         languageFiles.add("fr-FR.yml");
         languageFiles.add("he-IL.yml");
         languageFiles.add("hu-HU.yml");
+        languageFiles.add("id-ID.yml");
         languageFiles.add("it-IT.yml");
         languageFiles.add("ja-JP.yml");
         languageFiles.add("ko-KR.yml");
@@ -99,6 +100,7 @@ public class LanguageManager {
         languageFiles.add("ro-RO.yml");
         languageFiles.add("ru-RU.yml");
         languageFiles.add("sr-Cyrl.yml");
+        languageFiles.add("sr-Latn.yml");
         languageFiles.add("sv-SE.yml");
         languageFiles.add("tr-TR.yml");
         languageFiles.add("uk-UA.yml");
