@@ -239,7 +239,7 @@ public class QuestEvents implements Listener {
                                     final ItemStack cursor = e.getCursor();
 
                                     //Check if the Material of the crafted item is equal to the Material needed in the CraftItemsObjective
-                                    if (!craftItemsObjective.isCraftAnyItem() && !craftItemsObjective.getItemToCraft().getType().equals(result.getType())) {
+                                    if (!craftItemsObjective.isCraftAnyItem() && !(craftItemsObjective.getItemToCraft().getType() == result.getType())) {
                                         continue;
                                     }
 
@@ -650,7 +650,7 @@ public class QuestEvents implements Listener {
 
 
                                     //Check if the Material of the collected item is equal to the Material needed in the CollectItemsObjective
-                                    if (!collectItemsObjective.isCollectAnyItem() && !collectItemsObjective.getItemToCollect().getType().equals(e.getItem().getItemStack().getType())) {
+                                    if (!collectItemsObjective.isCollectAnyItem() && !(collectItemsObjective.getItemToCollect().getType() == e.getItem().getItemStack().getType())) {
                                         continue;
                                     }
 
@@ -694,7 +694,7 @@ public class QuestEvents implements Listener {
                                 }
 
                                 //Check if the Material of the collected item is equal to the Material needed in the CollectItemsObjective
-                                if (!collectItemsObjective.isCollectAnyItem() && !collectItemsObjective.getItemToCollect().getType().equals(e.getItemDrop().getItemStack().getType())) {
+                                if (!collectItemsObjective.isCollectAnyItem() && !(collectItemsObjective.getItemToCollect().getType() == e.getItemDrop().getItemStack().getType())) {
                                     continue;
                                 }
 
@@ -814,7 +814,7 @@ public class QuestEvents implements Listener {
                             if (activeObjective.isUnlocked()) {
 
                                 //Check if the Material of the consumed item is equal to the Material needed in the ConsumeItemsObjective
-                                if (!consumeItemsObjective.isConsumeAnyItem() && !consumeItemsObjective.getItemToConsume().getType().equals(e.getItem().getType())) {
+                                if (!consumeItemsObjective.isConsumeAnyItem() && !(consumeItemsObjective.getItemToConsume().getType() == e.getItem().getType())) {
                                     continue;
                                 }
 

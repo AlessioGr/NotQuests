@@ -35,6 +35,8 @@ import org.bukkit.util.Vector;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.EntityTypeSelector;
 
+import java.util.Locale;
+
 public class SpawnMobAction extends Action {
 
     private String mobToSpawnType = "";
@@ -149,7 +151,7 @@ public class SpawnMobAction extends Action {
 
     public void execute2(final Player player, Object... objects) {
         try {
-            EntityType entityType = EntityType.valueOf(getMobToSpawnType());
+            EntityType entityType = EntityType.valueOf(getMobToSpawnType().toUpperCase(Locale.ROOT));
 
             if (isUsePlayerLocation()) {
                 for (int i = 0; i < getSpawnAmount(); i++) {
@@ -175,6 +177,8 @@ public class SpawnMobAction extends Action {
                 } else {
                     main.getIntegrationsManager().getMythicMobsManager().spawnMob(getMobToSpawnType(), getSpawnLocation(), getSpawnAmount());
                 }
+            }else{
+                main.getLogManager().warn("Tried to execute SpawnMob with an either invalid mob, or a mythic mob while the mythic mobs plugin is not installed.");
             }
         }
     }
