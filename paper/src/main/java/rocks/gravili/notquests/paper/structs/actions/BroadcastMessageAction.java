@@ -28,7 +28,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.MiniMessageSelector;
-import rocks.gravili.notquests.paper.structs.Quest;
 
 public class BroadcastMessageAction extends Action {
 
@@ -69,26 +68,8 @@ public class BroadcastMessageAction extends Action {
             return;
         }
 
-        Quest quest = getQuest();
-        if (quest == null && objects.length > 0) {
-            for (Object object : objects) {
-                if (object instanceof Quest quest1) {
-                    quest = quest1;
-                }
-            }
-        }
-
-        String message = getMessageToBroadcast().replace("{PLAYER}", player.getName()).replace("{PLAYERUUID}", player.getUniqueId().toString())
-                .replace("{PLAYERX}", "" + player.getLocation().getX())
-                .replace("{PLAYERY}", "" + player.getLocation().getY())
-                .replace("{PLAYERZ}", "" + player.getLocation().getZ())
-                .replace("{WORLD}", "" + player.getWorld().getName());
-        if(quest != null){
-            message = message.replace("{QUEST}", "" + quest.getQuestName());
-        }
-
         Bukkit.broadcast(main.parse(
-                message
+                main.getUtilManager().applyPlaceholders(getMessageToBroadcast(), player, getQuest(), objects)
         ));
     }
 

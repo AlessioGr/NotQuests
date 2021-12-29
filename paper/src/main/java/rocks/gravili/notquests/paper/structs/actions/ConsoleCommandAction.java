@@ -29,7 +29,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.CommandSelector;
-import rocks.gravili.notquests.paper.structs.Quest;
 
 public class ConsoleCommandAction extends Action {
 
@@ -65,30 +64,15 @@ public class ConsoleCommandAction extends Action {
             main.getLogManager().warn("Tried to execute ConsoleCommand action with invalid console command.");
             return;
         }
-        Quest quest = getQuest();
-        if (quest == null && objects.length > 0) {
-            for (Object object : objects) {
-                if (object instanceof Quest quest1) {
-                    quest = quest1;
-                }
-            }
-        }
 
-        String rewardConsoleCommand = consoleCommand.replace("{PLAYER}", player.getName()).replace("{PLAYERUUID}", player.getUniqueId().toString())
-                .replace("{PLAYERX}", "" + player.getLocation().getX())
-                .replace("{PLAYERY}", "" + player.getLocation().getY())
-                .replace("{PLAYERZ}", "" + player.getLocation().getZ())
-                .replace("{WORLD}", "" + player.getWorld().getName());
-        if (quest != null) {
-            rewardConsoleCommand = rewardConsoleCommand.replace("{QUEST}", "" + quest.getQuestName());
-        }
-        ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
+        final String rewardConsoleCommand = main.getUtilManager().applyPlaceholders(consoleCommand, player, getQuest(), objects);
+
+        final ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
 
         if (Bukkit.isPrimaryThread()) {
             Bukkit.dispatchCommand(console, rewardConsoleCommand);
         } else {
-            final String finalRewardConsoleCommand = rewardConsoleCommand;
-            Bukkit.getScheduler().runTask(main.getMain(), () -> Bukkit.dispatchCommand(console, finalRewardConsoleCommand));
+            Bukkit.getScheduler().runTask(main.getMain(), () -> Bukkit.dispatchCommand(console, rewardConsoleCommand));
         }
 
 

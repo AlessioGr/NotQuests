@@ -184,13 +184,7 @@ public class ConversationPlayer {
 
     }
 
-    public final String applyPlaceholders(String message){
-        return message.replace("{PLAYER}", player.getName()).replace("{PLAYERUUID}", player.getUniqueId().toString())
-                .replace("{PLAYERX}", "" + player.getLocation().getX())
-                .replace("{PLAYERY}", "" + player.getLocation().getY())
-                .replace("{PLAYERZ}", "" + player.getLocation().getZ())
-                .replace("{WORLD}", "" + player.getWorld().getName());
-    }
+
 
     /**
      * Sends the player a normal text line. This is NOT a clickable/option line.
@@ -199,7 +193,7 @@ public class ConversationPlayer {
      */
     public void sendLine(final ConversationLine conversationLine, boolean deletePrevious) {
         Component line = main.parse(
-                conversationLine.getSpeaker().getColor() + "[" + conversationLine.getSpeaker().getSpeakerName() + "] <GRAY>" + applyPlaceholders(conversationLine.getMessage())
+                conversationLine.getSpeaker().getColor() + "[" + conversationLine.getSpeaker().getSpeakerName() + "] <GRAY>" + main.getUtilManager().applyPlaceholders(conversationLine.getMessage(), player)
         );
         if (deletePrevious) {
             removeOldMessages();
@@ -235,7 +229,7 @@ public class ConversationPlayer {
      */
     public void sendOptionLine(final ConversationLine conversationLine) {
         Component toSend = main.parse(
-                conversationLine.getSpeaker().getColor() + " > <GRAY>" + applyPlaceholders(conversationLine.getMessage())
+                conversationLine.getSpeaker().getColor() + " > <GRAY>" + main.getUtilManager().applyPlaceholders(conversationLine.getMessage(), player)
         ).clickEvent(ClickEvent.runCommand("/notquests continueConversation " + conversationLine.getMessage())).hoverEvent(HoverEvent.showText(main.parse(main.getLanguageManager().getString("chat.conversations.choose-answer-answer-hover-text", player, conversation, conversationLine))));
 
 

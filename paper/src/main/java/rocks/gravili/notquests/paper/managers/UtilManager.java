@@ -18,6 +18,7 @@
 
 package rocks.gravili.notquests.paper.managers;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -35,6 +36,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.NotQuestColors;
+import rocks.gravili.notquests.paper.structs.Quest;
 
 import java.io.File;
 import java.util.*;
@@ -446,5 +448,38 @@ public class UtilManager {
         //main.getLogManager().debug("mm => legacy: Converted <RESET>" + miniMessageString + "</RESET> to <RESET>" + legacy + "</RESET>");
 
         return LegacyComponentSerializer.builder().hexColors().useUnusualXRepeatedCharacterHexFormat().build().serialize(fullComponent);
+    }
+
+
+    public final String applyPlaceholders(String message, Object... objects){
+        String toReturn = message;
+
+        Quest quest = null;
+        Player player = null;
+        for (Object object : objects) {
+            if(player == null && object instanceof Player foundPlayer){
+                player = foundPlayer;
+            }else if (quest == null && object instanceof Quest foundQuest) {
+                quest = foundQuest;
+            }
+        }
+
+        if(player != null){
+            toReturn = toReturn.replace("{PLAYER}", player.getName()).replace("{PLAYERUUID}", player.getUniqueId().toString())
+                    .replace("{PLAYERX}", "" + player.getLocation().getX())
+                    .replace("{PLAYERY}", "" + player.getLocation().getY())
+                    .replace("{PLAYERZ}", "" + player.getLocation().getZ())
+                    .replace("{WORLD}", "" + player.getWorld().getName());
+        }
+
+        if(quest != null){
+            toReturn = toReturn.replace("{QUEST}", "" + quest.getQuestName());
+        }
+
+        if(main.getIntegrationsManager().isPlaceholderAPIEnabled()){
+            toReturn = PlaceholderAPI.setPlaceholders(player, toReturn);
+        }
+
+        return toReturn;
     }
 }
