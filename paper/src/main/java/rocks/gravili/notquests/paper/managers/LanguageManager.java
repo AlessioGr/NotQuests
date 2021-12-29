@@ -98,7 +98,7 @@ public class LanguageManager {
         languageFiles.add("pt-PT.yml");
         languageFiles.add("ro-RO.yml");
         languageFiles.add("ru-RU.yml");
-        languageFiles.add("sr-SP.yml");
+        languageFiles.add("sr-Cyrl.yml");
         languageFiles.add("sv-SE.yml");
         languageFiles.add("tr-TR.yml");
         languageFiles.add("uk-UA.yml");
