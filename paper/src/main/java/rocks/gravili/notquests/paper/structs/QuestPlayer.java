@@ -140,7 +140,9 @@ public class QuestPlayer {
                     final Player player = getPlayer();
                     if (player != null) {
 
-                        main.sendMessage(player, main.getLanguageManager().getString("chat.objectives-label-after-quest-accepting", player));
+                        if(!quest.getQuest().getObjectives().isEmpty()){
+                            main.sendMessage(player, main.getLanguageManager().getString("chat.objectives-label-after-quest-accepting", player));
+                        }
 
                         main.getQuestManager().sendActiveObjectivesAndProgress(player, quest);
 
@@ -155,6 +157,16 @@ public class QuestPlayer {
 
 
                         player.playSound(player.getLocation(), Sound.ENTITY_EVOKER_PREPARE_SUMMON, SoundCategory.MASTER, 100, 2);
+
+
+                        if (!quest.getQuest().getQuestDescription().isBlank()) {
+                            main.sendMessage(player, main.getLanguageManager().getString("chat.quest-description", player, quest));
+                        } else {
+                            main.sendMessage(player, main.getLanguageManager().getString("chat.missing-quest-description", player));
+                        }
+
+                        main.sendMessage(player, main.getLanguageManager().getString("chat.quest-successfully-accepted", player, quest));
+
 
                     }
 

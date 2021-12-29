@@ -148,16 +148,6 @@ public class UserCommands {
                     final String result = main.getQuestPlayerManager().acceptQuest(player, quest, true, true);
                     if (!result.equals("accepted")) {
                         main.sendMessage(context.getSender(), result);
-                    } else {
-
-                        if (!quest.getQuestDescription().isBlank()) {
-                            main.sendMessage(context.getSender(), main.getLanguageManager().getString("chat.quest-description", player, quest));
-                        } else {
-                            main.sendMessage(context.getSender(), main.getLanguageManager().getString("chat.missing-quest-description", player));
-                        }
-
-                        main.sendMessage(context.getSender(), main.getLanguageManager().getString("chat.quest-successfully-accepted", player, quest));
-
                     }
                 }));
 

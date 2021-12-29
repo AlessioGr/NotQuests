@@ -219,7 +219,6 @@ gui:
           <negative>Requirements
           <WHITE>%QUESTREQUIREMENTS%
         empty: '<veryUnimportant>-'
-
       confirmTake:
         text: |-
           <highlight>%QUESTNAME%
