@@ -187,8 +187,6 @@ public class QuestSelector<C> extends CommandArgument<C, Quest> {
                 } else {
                     return ArgumentParseResult.failure(new IllegalArgumentException(main.getLanguageManager().getString("chat.take-disabled", null, foundQuest)));
                 }
-
-
             }
 
 
