@@ -617,7 +617,7 @@ public class AdminCommands {
                     final Audience audience = main.adventure().sender(context.getSender());
 
 
-                    audience.sendMessage(miniMessage.parse(NotQuestColors.mainGradient + "Current NotQuests version: " + highlightGradient + main.getMain().getDescription().getVersion() + highlight2Gradient + " (Spigot)"));
+                    audience.sendMessage(miniMessage.parse(NotQuestColors.mainGradient + "Current NotQuests version: " + highlightGradient + main.getMain().getDescription().getVersion() + highlight2Gradient + " (Spigot " + Bukkit.getVersion()  + ")"));
                 }));
 
 

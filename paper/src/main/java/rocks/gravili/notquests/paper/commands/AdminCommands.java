@@ -574,7 +574,7 @@ public class AdminCommands {
         manager.command(builder.literal("version")
                 .meta(CommandMeta.DESCRIPTION, "Displays the version of the NotQuests plugin you're using.")
                 .handler((context) -> {
-                    context.getSender().sendMessage(main.parse("<main>Current NotQuests version: <highlight>"+ main.getMain().getDescription().getVersion() + "</highlight> <highlight2>(Paper)"));
+                    context.getSender().sendMessage(main.parse("<main>Current NotQuests version: <highlight>"+ main.getMain().getDescription().getVersion() + "</highlight> <highlight2>(Paper " + Bukkit.getVersion() + ")"));
 
                 }));
 

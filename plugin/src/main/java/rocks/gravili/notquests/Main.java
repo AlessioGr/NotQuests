@@ -47,10 +47,10 @@ public final class Main extends JavaPlugin {
         }
     }
 
-    public rocks.gravili.notquests.paper.NotQuests getNotQuests(){
+    public final rocks.gravili.notquests.paper.NotQuests getNotQuests(){
         return notQuests;
     }
-    public rocks.gravili.notquests.spigot.NotQuests getNotQuestsSpigot(){
+    public final rocks.gravili.notquests.spigot.NotQuests getNotQuestsSpigot(){
         return notQuestsSpigot;
     }
 
