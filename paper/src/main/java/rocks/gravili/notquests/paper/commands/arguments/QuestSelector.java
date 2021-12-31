@@ -179,9 +179,11 @@ public class QuestSelector<C> extends CommandArgument<C, Quest> {
                     return ArgumentParseResult.failure(new IllegalArgumentException(main.getLanguageManager().getString("chat.quest-does-not-exist", null).replace("%QUESTNAME%", input)));
                 }
             }
-            if (this.takeEnabledOnly && !foundQuest.isTakeEnabled()) {
+            if (this.takeEnabledOnly && !foundQuest.isTakeEnabled() ) {
                 if (context.getSender() instanceof Player player) {
-                    return ArgumentParseResult.failure(new IllegalArgumentException(main.getLanguageManager().getString("chat.take-disabled", player, foundQuest)));
+                    if(!main.getQuestManager().isPlayerCloseToCitizenOrArmorstandWithQuest(player, foundQuest)){
+                        return ArgumentParseResult.failure(new IllegalArgumentException(main.getLanguageManager().getString("chat.take-disabled", player, foundQuest)));
+                    }
                 } else {
                     return ArgumentParseResult.failure(new IllegalArgumentException(main.getLanguageManager().getString("chat.take-disabled", null, foundQuest)));
                 }

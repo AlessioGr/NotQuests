@@ -235,6 +235,10 @@ public class IntegrationsManager {
             if (!main.getDataManager().isAlreadyLoadedNPCs()) { //Just making sure
                 main.getDataManager().loadNPCData();
             }
+
+            //Aand the commands
+            //final Command.Builder<CommandSender> citizensNPCsBuilder = editBuilder.literal("npcs");
+            //main.getCommandManager().getAdminEditCommands().handleCitizensNPCs();
         }
     }
 

@@ -64,7 +64,7 @@ chat:
       consumeItems:
         base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Sporzyj Przedmioty: <main>%EVENTUALCOLOR%%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Stwórz Przedmioty: <main>%EVENTUALCOLOR%%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Craft Items: <main>%EVENTUALCOLOR%%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
         base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Dostarcz Przedmioty: <main>%EVENTUALCOLOR%%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
       escortNPC:
