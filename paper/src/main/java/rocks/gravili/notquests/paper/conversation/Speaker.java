@@ -20,16 +20,23 @@ package rocks.gravili.notquests.paper.conversation;
 
 public class Speaker {
     private final String speakerName;
+    private final String speakerDisplayName;
+
     private String color = "<WHITE>";
     private int talkSpeed = 10;
     private boolean player = false;
 
     public Speaker(final String speakerName) {
         this.speakerName = speakerName;
+        this.speakerDisplayName = speakerName.replace("__", "{UNDERSCORE}").replace("_", " ").replace("{UNDERSCORE}", "_");
     }
 
     public final String getSpeakerName() {
         return speakerName;
+    }
+
+    public final String getSpeakerDisplayName() {
+        return speakerDisplayName;
     }
 
     public final String getColor() {

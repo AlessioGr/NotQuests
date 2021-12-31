@@ -50,10 +50,14 @@ public class ConversationPlayer {
     }
 
     public void play() {
-        final ConversationLine startingLine = findConversationLinesWhichFulfillsCondition(conversation.getStartingLines()).get(0);
+        final ArrayList<ConversationLine> conversationLinesWhichFulfillsCondition = findConversationLinesWhichFulfillsCondition(conversation.getStartingLines());
+        if(conversationLinesWhichFulfillsCondition == null || conversationLinesWhichFulfillsCondition.isEmpty()){
+            main.getConversationManager().stopConversation(this);
+            return;
+        }
+
+        final ConversationLine startingLine = conversationLinesWhichFulfillsCondition.get(0);
         if (startingLine != null) {
-
-
             next(startingLine, true);
         }
 
@@ -106,14 +110,14 @@ public class ConversationPlayer {
      * @param playerLines
      * @return
      */
-    public boolean nextPlayer(final ArrayList<ConversationLine> playerLines) {
+    public void nextPlayer(final ArrayList<ConversationLine> playerLines) {
         questPlayer.sendDebugMessage("Clearing currentPlayerLines (3)");
         currentPlayerLines.clear();
         questPlayer.sendDebugMessage("Adding " + playerLines.size() + " currentPlayerLines");
         currentPlayerLines.addAll(playerLines);
 
 
-        String chooseAnswerPrefixMiniMessage = main.getLanguageManager().getString("chat.conversations.choose-answer-prefix", player, conversation);
+        final String chooseAnswerPrefixMiniMessage = main.getLanguageManager().getString("chat.conversations.choose-answer-prefix", player, conversation);
         main.sendMessage(player, chooseAnswerPrefixMiniMessage);
 
 
@@ -147,7 +151,7 @@ public class ConversationPlayer {
         player.sendMessage(Component.empty());
 
 
-        return true;
+        return;
     }
 
 
@@ -193,7 +197,7 @@ public class ConversationPlayer {
      */
     public void sendLine(final ConversationLine conversationLine, boolean deletePrevious) {
         Component line = main.parse(
-                conversationLine.getSpeaker().getColor() + "[" + conversationLine.getSpeaker().getSpeakerName() + "] <GRAY>" + main.getUtilManager().applyPlaceholders(conversationLine.getMessage(), player)
+                conversationLine.getSpeaker().getColor() + "[" + conversationLine.getSpeaker().getSpeakerDisplayName() + "] <GRAY>" + main.getUtilManager().applyPlaceholders(conversationLine.getMessage(), player)
         );
         if (deletePrevious) {
             removeOldMessages();
