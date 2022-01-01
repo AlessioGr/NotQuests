@@ -42,13 +42,31 @@ tasks {
     }
 }
 
-publishing {
+/*publishing {
     publications {
         create<MavenPublication>("maven") {
             groupId = "rocks.gravili.notquests"
             artifactId = "NotQuests"
             version = "3.2.5"
 
+            from(components["java"])
+        }
+    }
+}*/
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/AlessioGr/NotQuests")
+            credentials {
+                username = project.findProperty("gpr.user") as String? ?: System.getenv("USERNAME")
+                password = project.findProperty("gpr.key") as String? ?: System.getenv("PASSWORD")
+            }
+        }
+    }
+    publications {
+        register<MavenPublication>("gpr") {
             from(components["java"])
         }
     }
