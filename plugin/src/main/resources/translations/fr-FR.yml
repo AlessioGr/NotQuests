@@ -58,7 +58,7 @@ chat:
       breakBlocks:
         base: '    <veryUnimportant>└─<unimportant>%EVENTUALCOLOR%Blocs à cassée : <main>%EVENTUALCOLOR%%BLOCKTOBREAK%'
       breed:
-        base: '    <veryUnimportant>└─<unimportant>%EVENTUALCOLOR%reproduire des animaux : <main>%EVENTUALCOLOR%%ENTITYTOBREED%'
+        base: '    <veryUnimportant>└─<unimportant>%EVENTUALCOLOR%Reproduire des animaux : <main>%EVENTUALCOLOR%%ENTITYTOBREED%'
       collectItems:
         base: '    <veryUnimportant>└─<unimportant>%EVENTUALCOLOR%Collecter des Objets : <main>%EVENTUALCOLOR%%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
       consumeItems:
@@ -138,7 +138,7 @@ gui:
           <unimportant>Commencer une nouvelle quête !
 
           <veryUnimportant>Certaines quêtes ne peuvent pas
-          <veryUnimportant> débuté de la sorte.
+          <veryUnimportant> être lancée ici (PNJ ou Porte armure).
       abortquest:
         text: |-
           <negative>Abandonner une quête
@@ -155,7 +155,7 @@ gui:
         text: |-
           <highlight>Quêtes actives
 
-          <veryUnimportant>affiche toutes vos
+          <veryUnimportant>Affichez toutes vos
           <veryUnimportant>quêtes actives.
   activeQuests:
     title: '             <highlight2>Quêtes Actives'
@@ -190,7 +190,7 @@ gui:
         questDescriptionPrefix: <veryUnimportant>
         bottomText: <main>Cliquez pour prévisualiser la quête !
   abortQuest:
-    title: '         <negative>Confirmation d''abandon'
+    title: '         <negative>Valider l''abandon de la quête'
     button:
       confirmAbort:
         text: |-
@@ -202,7 +202,7 @@ gui:
           <positive>Cliquez pour NE PAS abandonner cette quête
           <positive>et annuler cette action
   previewQuest:
-    title: <highlight2>Aperçu pour la quête <black>%QUESTNAME%
+    title: <highlight2>Aperçu de la quête <black>%QUESTNAME%
     button:
       description:
         text: |-
@@ -226,7 +226,7 @@ gui:
       cancelTake:
         text: |-
           <negative>Cliquez pour NE PAS prendre cette quête
-          <negative>et annuler cette action
+          <negative>et revenir en arrière.
   progress:
     title: <highlight2>Détails de la quête <black>%QUESTNAME%
     button:
@@ -243,7 +243,7 @@ gui:
         text: |-
           <highlight2>%ACTIVEOBJECTIVEID%. <unimportant><BOLD>[CACHÉ]
           <warn>Cet objectif n'a pas encore
-          <warn>été débloqué!
+          <warn>été débloqué !
       completedObjective:
         text: |-
           <highlight2><strikethrough>%ACTIVEOBJECTIVEID%. <positive><strikethrough>%OBJECTIVENAME%
