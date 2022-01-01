@@ -28,7 +28,10 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.CompletedQuest;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
-import rocks.gravili.notquests.paper.structs.conditions.*;
+import rocks.gravili.notquests.paper.structs.conditions.CompletedQuestCondition;
+import rocks.gravili.notquests.paper.structs.conditions.Condition;
+import rocks.gravili.notquests.paper.structs.conditions.MoneyCondition;
+import rocks.gravili.notquests.paper.structs.conditions.PermissionCondition;
 
 public class BQRequirementsCondition extends org.betonquest.betonquest.api.Condition { //TODO: Make it dynamic for future or API requirements
 
@@ -82,14 +85,6 @@ public class BQRequirementsCondition extends org.betonquest.betonquest.api.Condi
                 throw new RuntimeException("Invalid number for second argument (amount of requirements needed).");
             }
 
-        } else if (requirementType == QuestPointsCondition.class) {
-            try {
-                condition = new QuestPointsCondition(main);
-                condition.setProgressNeeded(Long.parseLong(instruction.getPart(2)));
-
-            } catch (NumberFormatException e) {
-                throw new RuntimeException("Invalid number for second argument (amount of requirements needed).");
-            }
         } else if (requirementType == PermissionCondition.class) {
             String requirementString = instruction.getPart(2);
 
@@ -122,14 +117,6 @@ public class BQRequirementsCondition extends org.betonquest.betonquest.api.Condi
                     return otherQuestCompletedAmount >= otherQuestRequirement.getAmountOfCompletionsNeeded();
                 }
 
-
-            } else if (condition instanceof final QuestPointsCondition questPointsRequirement) {
-                final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
-                if (questPlayer != null) {
-                    final long questPointRequirementAmount = questPointsRequirement.getQuestPointRequirement();
-
-                    return questPlayer.getQuestPoints() >= questPointRequirementAmount;
-                }
 
             } else if (condition instanceof final MoneyCondition moneyRequirement) {
                 final long moneyRequirementAmount = moneyRequirement.getMoneyRequirement();

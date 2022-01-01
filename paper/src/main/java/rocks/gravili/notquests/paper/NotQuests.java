@@ -18,10 +18,7 @@ import rocks.gravili.notquests.paper.events.TriggerEvents;
 import rocks.gravili.notquests.paper.events.notquests.other.PlayerJumpEvent;
 import rocks.gravili.notquests.paper.managers.*;
 import rocks.gravili.notquests.paper.managers.packets.PacketManager;
-import rocks.gravili.notquests.paper.managers.registering.ActionManager;
-import rocks.gravili.notquests.paper.managers.registering.ConditionsManager;
-import rocks.gravili.notquests.paper.managers.registering.ObjectiveManager;
-import rocks.gravili.notquests.paper.managers.registering.TriggerManager;
+import rocks.gravili.notquests.paper.managers.registering.*;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
@@ -61,6 +58,7 @@ public class NotQuests {
     private ActionManager actionManager;
     private TriggerManager triggerManager;
     private IntegrationsManager integrationsManager;
+    private VariablesManager variablesManager;
 
     //Metrics
     private Metrics metrics;
@@ -170,8 +168,11 @@ public class NotQuests {
         commandManager.preSetupCommands();
 
         //Registering Managers
+        variablesManager = new VariablesManager(this);
+
         objectiveManager = new ObjectiveManager(this);
         conditionsManager = new ConditionsManager(this);
+
         actionManager = new ActionManager(this);
         triggerManager = new TriggerManager(this);
 
@@ -416,6 +417,10 @@ public class NotQuests {
 
     public ConditionsManager getConditionsManager() {
         return conditionsManager;
+    }
+
+    public VariablesManager getVariablesManager(){
+        return variablesManager;
     }
 
     public ActionManager getActionManager() {
