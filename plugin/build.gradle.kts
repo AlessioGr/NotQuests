@@ -122,6 +122,8 @@ tasks.withType<ShadowJar> {
         include(dependency(":paper"))
         include(dependency("io.papermc:paperlib:"))
     }
+
+    archiveClassifier.set("")
     //archiveClassifier.set(null)
 }
 /*processResources {

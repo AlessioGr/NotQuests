@@ -208,7 +208,7 @@ tasks.withType<ShadowJar> {
     }
 
 
-    //archiveClassifier.set(null)
+    archiveClassifier.set("")
 
 
 }

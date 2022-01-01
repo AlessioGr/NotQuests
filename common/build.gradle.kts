@@ -115,7 +115,7 @@ tasks.withType<ShadowJar> {
     dependencies {
 
     }
-    //archiveClassifier.set(null)
+    archiveClassifier.set("")
 }
 /*processResources {
     def props = [version: version]

@@ -23,7 +23,7 @@ dependencies {
 val path = "rocks.gravili.notquests.shadow"
 tasks.withType<ShadowJar> {
 
-
+    archiveClassifier.set("")
 }
 
 tasks {
