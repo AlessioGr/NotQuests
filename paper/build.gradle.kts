@@ -6,6 +6,9 @@ plugins {
     id ("com.github.johnrengelman.shadow")
 }
 
+group = "rocks.gravili.notquests"
+version = "3.2.5"
+
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
