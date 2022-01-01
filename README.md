@@ -3,7 +3,7 @@
 [![GitHub issues](https://img.shields.io/github/issues/AlessioGr/NotQuests)](https://github.com/AlessioGr/NotQuests/issues)
 [![GitHub stars](https://img.shields.io/github/stars/AlessioGr/NotQuests)](https://github.com/AlessioGr/NotQuests/stargazers)
 [![GitHub license](https://img.shields.io/github/license/AlessioGr/NotQuests)](https://github.com/AlessioGr/NotQuests/blob/main/LICENSE)
-<a href="https://quests.notnot.pro/"><img src="https://img.shields.io/badge/JavaDocs-Read%20now-yellow" alt="javadocs"></a>
+<a href="https://alessiogr.github.io/NotQuests/"><img src="https://img.shields.io/badge/JavaDocs-Read%20now-yellow" alt="javadocs"></a>
 [![CodeFactor](https://www.codefactor.io/repository/github/alessiogr/notquests/badge)](https://www.codefactor.io/repository/github/alessiogr/notquests)
 [![Crowdin](https://badges.crowdin.net/e/c753a7d24d44ac550e857d2b521d9ecb/localized.svg)](https://notquests.crowdin.com/notquests)
 
@@ -151,4 +151,4 @@ Player Placeholders:
 
 These future plans might me inaccurate. You can find my full to-do list on my discord.
 
-I'm not a professional programmer and made this just for fun. You won't find many comments or javadocs either - I will add them gradually.
+I'm not a professional programmer and made this just for fun. You won't find many comments either - I will add them gradually.
