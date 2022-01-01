@@ -5,6 +5,7 @@ plugins {
     id ("com.github.johnrengelman.shadow")
 }
 
+
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
@@ -208,7 +209,6 @@ tasks.withType<ShadowJar> {
     }
 
 
-    archiveClassifier.set("")
 
 
 }

@@ -109,12 +109,12 @@ dependencies {
 /**
  * Configure NotQuests for shading
  */
-val shadowPath = "rocks.gravili.notquests.shadow"
+val shadowPath = "rocks.gravili.notquests"
 tasks.withType<ShadowJar> {
     minimize()
 
-    relocate("rocks.gravili.notquests.spigot", "$shadowPath.spigot")
-    relocate("rocks.gravili.notquests.paper", "$shadowPath.paper")
+    //relocate("rocks.gravili.notquests.spigot", "$shadowPath.spigot")
+    //relocate("rocks.gravili.notquests.paper", "$shadowPath.paper")
     relocate("io.papermc.lib", "$shadowPath.paperlib")
 
     dependencies {

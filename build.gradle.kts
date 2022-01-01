@@ -20,7 +20,7 @@ dependencies {
 /**
  * Configure NotQuests for shading
  */
-val path = "rocks.gravili.notquests.shadow"
+val path = "rocks.gravili.notquests"
 tasks.withType<ShadowJar> {
 
     archiveClassifier.set("")

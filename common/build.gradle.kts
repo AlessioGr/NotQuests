@@ -108,7 +108,7 @@ dependencies {
 /**
  * Configure NotQuests for shading
  */
-val shadowPath = "rocks.gravili.notquests.shadow"
+val shadowPath = "rocks.gravili.notquests"
 tasks.withType<ShadowJar> {
     minimize()
 
