@@ -23,8 +23,6 @@ import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -32,7 +30,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.NotQuestColors;
 import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
 
@@ -123,5 +120,9 @@ public class GiveItemAction extends Action {
     @Override
     public void load(final FileConfiguration configuration, String initialPath) {
         this.item = configuration.getItemStack(initialPath + ".specifics.item");
+
+        if(this.item == null){
+            this.item = configuration.getItemStack(initialPath + ".specifics.rewardItem");
+        }
     }
 }

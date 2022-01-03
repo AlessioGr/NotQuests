@@ -23,8 +23,6 @@ import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -94,6 +92,10 @@ public class GiveQuestPointsAction extends Action {
 
     @Override
     public void load(final FileConfiguration configuration, String initialPath) {
-        this.rewardedQuestPoints = configuration.getLong(initialPath + ".specifics.questPoints");
+        if(configuration.isLong(initialPath + ".specifics.questPoints")){
+            this.rewardedQuestPoints = configuration.getLong(initialPath + ".specifics.questPoints");
+        }else {
+            this.rewardedQuestPoints = configuration.getLong(initialPath + ".specifics.rewardedQuestPoints");
+        }
     }
 }

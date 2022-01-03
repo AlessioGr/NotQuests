@@ -269,7 +269,7 @@ public class QuestManager {
                                 }
 
                             } else {
-                                main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading quests requirement data. Valid Requirement ID: " + validRequirementID + ". requirementID > 0: " + (requirementID > 0) + ". conditionType != null: " + (conditionType != null) + " ConditionTypeString: " + conditionTypeString + " Quest Name: " + questName + " Requirement ID: " + requirementNumber, quest);
+                                main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading quests requirement data. Valid Requirement ID: " + validRequirementID + ". requirementID > 0: " + (requirementID > 0) + ". conditionType != null: " + (conditionType != null) + " ConditionTypeString: " + conditionTypeString + " Quest Name: " + questName + " Requirement ID: " + requirementNumber + " ConditionType String: " + conditionTypeString, quest);
                                 return;
                             }
 
