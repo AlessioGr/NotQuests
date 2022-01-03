@@ -198,39 +198,26 @@ public class ConversationManager {
 
 
             //First add all speakers
-            final ArrayList<Speaker> allSpeakers = new ArrayList<>();
             final ConfigurationSection speakersAndLinesConfigurationSection = config.getConfigurationSection("Lines");
-            if (speakersAndLinesConfigurationSection != null) {
-                for (final String speakerName : speakersAndLinesConfigurationSection.getKeys(false)) {
-                    final Speaker speaker = new Speaker(speakerName);
-                    final String color = speakersAndLinesConfigurationSection.getString(speakerName + ".color", "<WHITE>");
-                    if (!color.isBlank()) {
-                        speaker.setColor(color);
-                    }
+            if (speakersAndLinesConfigurationSection == null) {
+                main.getLogManager().warn("Conversation file <highlight>" + conversationFile.getName() + "</highlight>. Has no lines. It's being skipped.");
+                continue;
+            }
 
+            final ArrayList<Speaker> allSpeakers = new ArrayList<>();
+            for (final String speakerName : speakersAndLinesConfigurationSection.getKeys(false)) {
+                final Speaker speaker = new Speaker(speakerName);
+                final String color = speakersAndLinesConfigurationSection.getString(speakerName + ".color", "<WHITE>");
+                if (!color.isBlank()) {
+                    speaker.setColor(color);
+                }
 
-                    if (speakerName.equalsIgnoreCase("player")) {
-                        speaker.setPlayer(true);
-                    }
-                    allSpeakers.add(speaker);
-                    if (!conversation.hasSpeaker(speaker) && !conversation.addSpeaker(speaker, false)) {
-                        main.getLogManager().warn("Speaker <highlight>" + speaker.getSpeakerName() + "</highlight> could not be added to conversation <highlight2>" + conversation.getIdentifier() + "</highlight2>. Does the speaker already exist?");
-                    }
-
-
-                    /*final ConfigurationSection speakerLines = speakersAndLinesConfigurationSection.getConfigurationSection(speakerName);
-
-                    if (speakerLines == null) {
-                        main.getLogManager().warn("No lines found for conversation <highlight>" + conversationFile.getName() + "</highlight>.");
-                        continue;
-                    }
-
-                    for (final String line : speakerLines.getKeys(false)) {
-                        if (line.equals("color")) {
-                            continue;
-                        }
-                    }*/
-
+                if (speakerName.equalsIgnoreCase("player")) {
+                    speaker.setPlayer(true);
+                }
+                allSpeakers.add(speaker);
+                if (!conversation.hasSpeaker(speaker) && !conversation.addSpeaker(speaker, false)) {
+                    main.getLogManager().warn("Speaker <highlight>" + speaker.getSpeakerName() + "</highlight> could not be added to conversation <highlight2>" + conversation.getIdentifier() + "</highlight2>. Does the speaker already exist?");
                 }
 
             }
@@ -243,12 +230,12 @@ public class ConversationManager {
             final String starterLines = config.getString("start", "").replace(" ", "");
             for (final String starterLine : starterLines.split(",")) {
                 final String initialLine = "Lines." + starterLine;
-                final String message = config.getString(initialLine + ".text", "-");
+                final String message = config.getString(initialLine + ".text", "Missing Message");
                 final ArrayList<Action> actions = parseActionString(config.getStringList(initialLine + ".actions"));
                 final boolean shouting = config.getBoolean(initialLine + ".shout", false);
 
                 //Message
-                if (message.equals("-")) {
+                if (message.equals("Missing Message")) {
                     main.getLogManager().warn("Warning: couldn't find message for starter line <highlight>" + starterLine + "</highlight> of conversation <highlight>" + conversationFile.getName() + "</highlight>");
                 }
 
