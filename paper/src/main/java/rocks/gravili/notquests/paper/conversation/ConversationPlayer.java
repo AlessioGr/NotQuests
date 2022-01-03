@@ -74,7 +74,7 @@ public class ConversationPlayer {
 
         ArrayList<ConversationLine> next = findConversationLinesWhichFulfillsCondition(currentLine.getNext());
 
-        if (next == null) {
+        if (next == null || next.isEmpty()) {
             questPlayer.sendDebugMessage("Next of <highlight>" + currentLine.getFullIdentifier() + "</highlight> is empty. Ending conversation...");
             main.getConversationManager().stopConversation(this);
             return false;
@@ -156,17 +156,18 @@ public class ConversationPlayer {
 
 
     public ArrayList<ConversationLine> findConversationLinesWhichFulfillsCondition(final ArrayList<ConversationLine> conversationLines) {
-        final ArrayList<ConversationLine> nextLines = new ArrayList<>();
-        if (conversationLines.size() == 0) {
+        if (conversationLines == null || conversationLines.size() == 0) {
             return null;
         } else {
+            final ArrayList<ConversationLine> nextLines = new ArrayList<>();
+
             conversationLineLoop:
             for (final ConversationLine conversationLineToCheck : conversationLines) {
                 if (conversationLineToCheck.getSpeaker().isPlayer()) {
                     nextLines.add(conversationLineToCheck);
                 } else {
                     if (nextLines.isEmpty()) { //So we don't mingle it with player lines if there already is one.
-                        if (conversationLineToCheck.getConditions().isEmpty()) {
+                        if (conversationLineToCheck.getConditions().isEmpty()) { //No unfulfilled conditions`=> Return it. We only need to return the first fulfilled condition if its not player lines.
                             nextLines.add(conversationLineToCheck);
                             return nextLines;
                         } else { //Check conditions
@@ -234,8 +235,9 @@ public class ConversationPlayer {
     public void sendOptionLine(final ConversationLine conversationLine) {
         Component toSend = main.parse(
                 conversationLine.getSpeaker().getColor() + " > <GRAY>" + main.getUtilManager().applyPlaceholders(conversationLine.getMessage(), player)
-        ).clickEvent(ClickEvent.runCommand("/notquests continueConversation " + conversationLine.getMessage())).hoverEvent(HoverEvent.showText(main.parse(main.getLanguageManager().getString("chat.conversations.choose-answer-answer-hover-text", player, conversation, conversationLine))));
-
+        )
+                .clickEvent(ClickEvent.runCommand("/notquests continueConversation " + conversationLine.getMessage()))
+                .hoverEvent(HoverEvent.showText(main.parse(main.getLanguageManager().getString("chat.conversations.choose-answer-answer-hover-text", player, conversation, conversationLine))));
 
         if (main.getConfiguration().deletePreviousConversations) {
             ArrayList<Component> hist = main.getConversationManager().getConversationChatHistory().get(player.getUniqueId());
@@ -247,8 +249,6 @@ public class ConversationPlayer {
         }
 
         player.sendMessage(toSend);
-
-
     }
 
     /**
@@ -275,7 +275,7 @@ public class ConversationPlayer {
 
                 ArrayList<ConversationLine> next = findConversationLinesWhichFulfillsCondition(playerOptionLine.getNext());
 
-                if (next == null) {
+                if (next == null || next.isEmpty()) {
                     questPlayer.sendDebugMessage("Clearing currentPlayerLines (1)");
                     currentPlayerLines.clear();
                     main.getConversationManager().stopConversation(this);
@@ -314,13 +314,14 @@ public class ConversationPlayer {
         }
         //Send back old messages
         ArrayList<Component> allChatHistory = main.getConversationManager().getChatHistory().get(getQuestPlayer().getUUID());
-        ArrayList<Component> allConversationHistory = main.getConversationManager().getConversationChatHistory().get(getQuestPlayer().getUUID());
 
         main.getLogManager().debug("Conversation stop stage 1");
 
         if (allChatHistory == null) {
             return;
         }
+
+        ArrayList<Component> allConversationHistory = main.getConversationManager().getConversationChatHistory().get(getQuestPlayer().getUUID());
         main.getLogManager().debug("Conversation stop stage 1.5");
         if (allConversationHistory == null) {
             return;
