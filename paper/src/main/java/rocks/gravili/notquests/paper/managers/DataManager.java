@@ -507,7 +507,7 @@ public class DataManager {
             getGeneralConfig().set(key, mainColors);
             valueChanged = true;
         }
-        configuration.colorsMain = getGeneralConfig().getStringList(key);
+        configuration.setColorsMain(getGeneralConfig().getStringList(key));
         key = "visual.colors.highlight";
         if (!getGeneralConfig().isList(key)) {
             final List<String> mainColors = new ArrayList<>();
@@ -516,7 +516,7 @@ public class DataManager {
             getGeneralConfig().set(key, mainColors);
             valueChanged = true;
         }
-        configuration.colorsHighlight = getGeneralConfig().getStringList(key);
+        configuration.setColorsHighlight(getGeneralConfig().getStringList(key));
         key = "visual.colors.highlight2";
         if (!getGeneralConfig().isList(key)) {
             final List<String> mainColors = new ArrayList<>();
@@ -525,7 +525,7 @@ public class DataManager {
             getGeneralConfig().set(key, mainColors);
             valueChanged = true;
         }
-        configuration.colorsHighlight2 = getGeneralConfig().getStringList(key);
+        configuration.setColorsHighlight2(getGeneralConfig().getStringList(key));
         key = "visual.colors.error";
         if (!getGeneralConfig().isList(key)) {
             final List<String> mainColors = new ArrayList<>();
@@ -534,7 +534,7 @@ public class DataManager {
             getGeneralConfig().set(key, mainColors);
             valueChanged = true;
         }
-        configuration.colorsError = getGeneralConfig().getStringList(key);
+        configuration.setColorsError(getGeneralConfig().getStringList(key));
         key = "visual.colors.success";
         if (!getGeneralConfig().isList(key)) {
             final List<String> mainColors = new ArrayList<>();
@@ -543,7 +543,7 @@ public class DataManager {
             getGeneralConfig().set(key, mainColors);
             valueChanged = true;
         }
-        configuration.colorsSuccess = getGeneralConfig().getStringList(key);
+        configuration.setColorsSuccess(getGeneralConfig().getStringList(key));
         key = "visual.colors.unimportant";
         if (!getGeneralConfig().isList(key)) {
             final List<String> mainColors = new ArrayList<>();
@@ -552,7 +552,7 @@ public class DataManager {
             getGeneralConfig().set(key, mainColors);
             valueChanged = true;
         }
-        configuration.colorsUnimportant = getGeneralConfig().getStringList(key);
+        configuration.setColorsUnimportant(getGeneralConfig().getStringList(key));
         key = "visual.colors.veryUnimportant";
         if (!getGeneralConfig().isList(key)) {
             final List<String> mainColors = new ArrayList<>();
@@ -561,7 +561,7 @@ public class DataManager {
             getGeneralConfig().set(key, mainColors);
             valueChanged = true;
         }
-        configuration.colorsVeryUnimportant = getGeneralConfig().getStringList(key);
+        configuration.setColorsVeryUnimportant(getGeneralConfig().getStringList(key));
         key = "visual.colors.warn";
         if (!getGeneralConfig().isList(key)) {
             final List<String> mainColors = new ArrayList<>();
@@ -570,7 +570,7 @@ public class DataManager {
             getGeneralConfig().set(key, mainColors);
             valueChanged = true;
         }
-        configuration.colorsWarn = getGeneralConfig().getStringList(key);
+        configuration.setColorsWarn(getGeneralConfig().getStringList(key));
         key = "visual.colors.positive";
         if (!getGeneralConfig().isList(key)) {
             final List<String> mainColors = new ArrayList<>();
@@ -579,7 +579,7 @@ public class DataManager {
             getGeneralConfig().set(key, mainColors);
             valueChanged = true;
         }
-        configuration.colorsPositive = getGeneralConfig().getStringList(key);
+        configuration.setColorsPositive(getGeneralConfig().getStringList(key));
         key = "visual.colors.negative";
         if (!getGeneralConfig().isList(key)) {
             final List<String> mainColors = new ArrayList<>();
@@ -588,7 +588,7 @@ public class DataManager {
             getGeneralConfig().set(key, mainColors);
             valueChanged = true;
         }
-        configuration.colorsNegative = getGeneralConfig().getStringList(key);
+        configuration.setColorsNegative(getGeneralConfig().getStringList(key));
 
 
 

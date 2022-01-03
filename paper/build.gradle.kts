@@ -4,6 +4,7 @@ plugins {
     `java-library`
     `maven-publish`
     id ("com.github.johnrengelman.shadow")
+    id("io.freefair.lombok") version "6.3.0"
 }
 
 group = "rocks.gravili.notquests"
