@@ -73,39 +73,39 @@ public final class SimpleGradientTransformation extends Transformation implement
      */
 
     public static SimpleGradientTransformation main(final String name, final List<TagPart> args2) {
-        return create(NotQuests.getInstance() != null && NotQuests.getInstance().getConfiguration().colorsMain != null ? NotQuests.getInstance().getConfiguration().colorsMain : fallbackColors);
+        return create(NotQuests.getInstance() != null && NotQuests.getInstance().getConfiguration().getColorsMain() != null ? NotQuests.getInstance().getConfiguration().getColorsMain() : fallbackColors);
     }
     public static SimpleGradientTransformation highlight(final String name, final List<TagPart> args2) {
-        return create(NotQuests.getInstance() != null && NotQuests.getInstance().getConfiguration().colorsHighlight != null ? NotQuests.getInstance().getConfiguration().colorsHighlight : fallbackColors);
+        return create(NotQuests.getInstance() != null && NotQuests.getInstance().getConfiguration().getColorsHighlight() != null ? NotQuests.getInstance().getConfiguration().getColorsHighlight() : fallbackColors);
     }
     public static SimpleGradientTransformation highlight2(final String name, final List<TagPart> args2) {
-        return create(NotQuests.getInstance() != null && NotQuests.getInstance().getConfiguration().colorsHighlight2 != null ? NotQuests.getInstance().getConfiguration().colorsHighlight2 : fallbackColors);
+        return create(NotQuests.getInstance() != null && NotQuests.getInstance().getConfiguration().getColorsHighlight2() != null ? NotQuests.getInstance().getConfiguration().getColorsHighlight2() : fallbackColors);
     }
     public static SimpleGradientTransformation error(final String name, final List<TagPart> args2) {
-        return create(NotQuests.getInstance() != null && NotQuests.getInstance().getConfiguration().colorsError != null ? NotQuests.getInstance().getConfiguration().colorsError : fallbackColors);
+        return create(NotQuests.getInstance() != null && NotQuests.getInstance().getConfiguration().getColorsError() != null ? NotQuests.getInstance().getConfiguration().getColorsError() : fallbackColors);
     }
     public static SimpleGradientTransformation success(final String name, final List<TagPart> args2) {
-        return create(NotQuests.getInstance() != null && NotQuests.getInstance().getConfiguration().colorsSuccess != null ? NotQuests.getInstance().getConfiguration().colorsSuccess : fallbackColors);
+        return create(NotQuests.getInstance() != null && NotQuests.getInstance().getConfiguration().getColorsSuccess() != null ? NotQuests.getInstance().getConfiguration().getColorsSuccess() : fallbackColors);
     }
 
     public static SimpleGradientTransformation unimportant(final String name, final List<TagPart> args2) {
-        return create(NotQuests.getInstance() != null && NotQuests.getInstance().getConfiguration().colorsUnimportant != null ? NotQuests.getInstance().getConfiguration().colorsUnimportant : fallbackColors);
+        return create(NotQuests.getInstance() != null && NotQuests.getInstance().getConfiguration().getColorsUnimportant() != null ? NotQuests.getInstance().getConfiguration().getColorsUnimportant() : fallbackColors);
     }
 
     public static SimpleGradientTransformation veryUnimportant(final String name, final List<TagPart> args2) {
-        return create(NotQuests.getInstance() != null && NotQuests.getInstance().getConfiguration().colorsVeryUnimportant != null ? NotQuests.getInstance().getConfiguration().colorsVeryUnimportant : fallbackColors);
+        return create(NotQuests.getInstance() != null && NotQuests.getInstance().getConfiguration().getColorsVeryUnimportant() != null ? NotQuests.getInstance().getConfiguration().getColorsVeryUnimportant() : fallbackColors);
     }
 
     public static SimpleGradientTransformation warn(final String name, final List<TagPart> args2) {
-        return create(NotQuests.getInstance() != null &&NotQuests.getInstance().getConfiguration().colorsWarn != null ? NotQuests.getInstance().getConfiguration().colorsWarn : fallbackColors);
+        return create(NotQuests.getInstance() != null &&NotQuests.getInstance().getConfiguration().getColorsWarn() != null ? NotQuests.getInstance().getConfiguration().getColorsWarn() : fallbackColors);
     }
 
     public static SimpleGradientTransformation positive(final String name, final List<TagPart> args2) {
-        return create(NotQuests.getInstance() != null &&NotQuests.getInstance().getConfiguration().colorsPositive != null ? NotQuests.getInstance().getConfiguration().colorsPositive : fallbackColors);
+        return create(NotQuests.getInstance() != null &&NotQuests.getInstance().getConfiguration().getColorsPositive() != null ? NotQuests.getInstance().getConfiguration().getColorsPositive() : fallbackColors);
     }
 
     public static SimpleGradientTransformation negative(final String name, final List<TagPart> args2) {
-        return create(NotQuests.getInstance() != null &&NotQuests.getInstance().getConfiguration().colorsNegative != null ? NotQuests.getInstance().getConfiguration().colorsNegative : fallbackColors);
+        return create(NotQuests.getInstance() != null &&NotQuests.getInstance().getConfiguration().getColorsNegative() != null ? NotQuests.getInstance().getConfiguration().getColorsNegative() : fallbackColors);
 
     }
 
