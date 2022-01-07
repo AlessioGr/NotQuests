@@ -70,6 +70,12 @@ public class QuestEvents implements Listener {
 
     public QuestEvents(NotQuests main) {
         this.main = main;
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(main.getMain(), new Runnable() {
+            @Override
+            public void run() {
+                //Bukkit.broadcastMessage("This message is shown immediately and then repeated every second");
+            }
+        }, 0L, 80L); //0 Tick initial delay, 20 Tick (1 Second) between repeats
     }
 
 
@@ -105,19 +111,18 @@ public class QuestEvents implements Listener {
                 ironBlockState.setType(Material.IRON_BLOCK);
 
                 player.sendBlockChange(newBeaconLocation, beaconBlockState.getBlockData());
+                player.sendBlockChange(newBeaconLocation.add(-1,-1,-1), ironBlockState.getBlockData());
+                player.sendBlockChange(newBeaconLocation.add(1,0,0), ironBlockState.getBlockData());
+                player.sendBlockChange(newBeaconLocation.add(1,0,0), ironBlockState.getBlockData());
+                player.sendBlockChange(newBeaconLocation.add(0,0,1), ironBlockState.getBlockData());
+                player.sendBlockChange(newBeaconLocation.add(-1,0,0), ironBlockState.getBlockData());
+                player.sendBlockChange(newBeaconLocation.add(-1,0,0), ironBlockState.getBlockData());
+                player.sendBlockChange(newBeaconLocation.add(0,0,1), ironBlockState.getBlockData());
+                player.sendBlockChange(newBeaconLocation.add(1,0,0), ironBlockState.getBlockData());
+                player.sendBlockChange(newBeaconLocation.add(1,0,0), ironBlockState.getBlockData());
 
-                player.sendBlockChange(newBeaconLocation.clone().add(0,-1,0), ironBlockState.getBlockData());
-                player.sendBlockChange(newBeaconLocation.clone().add(-1,-1,0), ironBlockState.getBlockData());
-                player.sendBlockChange(newBeaconLocation.clone().add(-1,-1,-1), ironBlockState.getBlockData());
-                player.sendBlockChange(newBeaconLocation.clone().add(-1,-1,1), ironBlockState.getBlockData());
-                player.sendBlockChange(newBeaconLocation.clone().add(1,-1,0), ironBlockState.getBlockData());
-                player.sendBlockChange(newBeaconLocation.clone().add(1,-1,1), ironBlockState.getBlockData());
-                player.sendBlockChange(newBeaconLocation.clone().add(1,-1,-1), ironBlockState.getBlockData());
-                player.sendBlockChange(newBeaconLocation.clone().add(0,-1,1), ironBlockState.getBlockData());
-                player.sendBlockChange(newBeaconLocation.clone().add(0,-1,-1), ironBlockState.getBlockData());
-
-                questPlayer.getActiveLocationsAndBeacons().put(locationName, newBeaconLocation);
-                //main.sendMessage(player, "<main> Initial Add 2: <highlight>" + newBeaconLocation.toString());
+                questPlayer.getActiveLocationsAndBeacons().put(locationName, newBeaconLocation.add(-1, 1, -1));
+                main.sendMessage(player, "<main> Initial Add 2: <highlight>" + newBeaconLocation.toVector().toString());
 
             }else{
                // (questPlayer.getActiveLocationsAndBeacons().get(locationName).distance(playerLocation) > maxDistance)
@@ -140,20 +145,20 @@ public class QuestEvents implements Listener {
                     ironBlockState.setType(Material.IRON_BLOCK);
 
                     player.sendBlockChange(newBeaconLocation, beaconBlockState.getBlockData());
+                    player.sendBlockChange(newBeaconLocation.add(-1,-1,-1), ironBlockState.getBlockData());
+                    player.sendBlockChange(newBeaconLocation.add(1,0,0), ironBlockState.getBlockData());
+                    player.sendBlockChange(newBeaconLocation.add(1,0,0), ironBlockState.getBlockData());
+                    player.sendBlockChange(newBeaconLocation.add(0,0,1), ironBlockState.getBlockData());
+                    player.sendBlockChange(newBeaconLocation.add(-1,0,0), ironBlockState.getBlockData());
+                    player.sendBlockChange(newBeaconLocation.add(-1,0,0), ironBlockState.getBlockData());
+                    player.sendBlockChange(newBeaconLocation.add(0,0,1), ironBlockState.getBlockData());
+                    player.sendBlockChange(newBeaconLocation.add(1,0,0), ironBlockState.getBlockData());
+                    player.sendBlockChange(newBeaconLocation.add(1,0,0), ironBlockState.getBlockData());
 
-                    player.sendBlockChange(newBeaconLocation.clone().add(0,-1,0), ironBlockState.getBlockData());
-                    player.sendBlockChange(newBeaconLocation.clone().add(-1,-1,0), ironBlockState.getBlockData());
-                    player.sendBlockChange(newBeaconLocation.clone().add(-1,-1,-1), ironBlockState.getBlockData());
-                    player.sendBlockChange(newBeaconLocation.clone().add(-1,-1,1), ironBlockState.getBlockData());
-                    player.sendBlockChange(newBeaconLocation.clone().add(1,-1,0), ironBlockState.getBlockData());
-                    player.sendBlockChange(newBeaconLocation.clone().add(1,-1,1), ironBlockState.getBlockData());
-                    player.sendBlockChange(newBeaconLocation.clone().add(1,-1,-1), ironBlockState.getBlockData());
-                    player.sendBlockChange(newBeaconLocation.clone().add(0,-1,1), ironBlockState.getBlockData());
-                    player.sendBlockChange(newBeaconLocation.clone().add(0,-1,-1), ironBlockState.getBlockData());
 
-                    questPlayer.getActiveLocationsAndBeacons().put(locationName, newBeaconLocation);
+                    questPlayer.getActiveLocationsAndBeacons().put(locationName, newBeaconLocation.add(-1, 1, -1));
 
-                    //main.sendMessage(player, "<highlight>Removed from old chunk & added to new chunk: <main>" + newBeaconLocation.toString());
+                    main.sendMessage(player, "<highlight>Removed from old chunk & added to new chunk: <main>" + newBeaconLocation.toVector().toString());
 
                 }else{
                     //main.sendMessage(player, "Ignored. Distance worse");
@@ -168,18 +173,26 @@ public class QuestEvents implements Listener {
         Bukkit.getScheduler().runTaskLater(main.getMain(), new Runnable() {
             @Override
             public void run() {
-                BlockState airBlockData = location.getBlock().getState();
-                airBlockData.setType(Material.AIR);
-                player.sendBlockChange(location, airBlockData.getBlockData());
-                player.sendBlockChange(location.clone().add(0,-1,0), airBlockData.getBlockData());
-                player.sendBlockChange(location.clone().add(-1,-1,0), airBlockData.getBlockData());
-                player.sendBlockChange(location.clone().add(-1,-1,-1), airBlockData.getBlockData());
-                player.sendBlockChange(location.clone().add(-1,-1,1), airBlockData.getBlockData());
-                player.sendBlockChange(location.clone().add(1,-1,0), airBlockData.getBlockData());
-                player.sendBlockChange(location.clone().add(1,-1,1), airBlockData.getBlockData());
-                player.sendBlockChange(location.clone().add(1,-1,-1), airBlockData.getBlockData());
-                player.sendBlockChange(location.clone().add(0,-1,1), airBlockData.getBlockData());
-                player.sendBlockChange(location.clone().add(0,-1,-1), airBlockData.getBlockData());
+                player.sendBlockChange(location, location.getBlock().getBlockData());
+                location.add(-1,-1,-1);
+                player.sendBlockChange(location, location.getBlock().getBlockData());
+                location.add(1,0,0);
+                player.sendBlockChange(location, location.getBlock().getBlockData());
+                location.add(1,0,0);
+                player.sendBlockChange(location, location.getBlock().getBlockData());
+                location.add(0,0,1);
+                player.sendBlockChange(location, location.getBlock().getBlockData());
+                location.add(-1,0,0);
+                player.sendBlockChange(location, location.getBlock().getBlockData());
+                location.add(-1,0,0);
+                player.sendBlockChange(location, location.getBlock().getBlockData());
+                location.add(0,0,1);
+                player.sendBlockChange(location, location.getBlock().getBlockData());
+                location.add(1,0,0);
+                player.sendBlockChange(location, location.getBlock().getBlockData());
+                location.add(1,0,0);
+                player.sendBlockChange(location, location.getBlock().getBlockData());
+
             }
         }, 20L);
     }

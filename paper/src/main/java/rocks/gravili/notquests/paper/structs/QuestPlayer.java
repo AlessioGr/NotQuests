@@ -116,20 +116,21 @@ public class QuestPlayer {
             BlockState ironBlockState = lowestDistance.getBlock().getState();
             ironBlockState.setType(Material.IRON_BLOCK);
 
+
             player.sendBlockChange(lowestDistance, beaconBlockState.getBlockData());
+            player.sendBlockChange(lowestDistance.add(-1,-1,-1), ironBlockState.getBlockData());
+            player.sendBlockChange(lowestDistance.add(1,0,0), ironBlockState.getBlockData());
+            player.sendBlockChange(lowestDistance.add(1,0,0), ironBlockState.getBlockData());
+            player.sendBlockChange(lowestDistance.add(0,0,1), ironBlockState.getBlockData());
+            player.sendBlockChange(lowestDistance.add(-1,0,0), ironBlockState.getBlockData());
+            player.sendBlockChange(lowestDistance.add(-1,0,0), ironBlockState.getBlockData());
+            player.sendBlockChange(lowestDistance.add(0,0,1), ironBlockState.getBlockData());
+            player.sendBlockChange(lowestDistance.add(1,0,0), ironBlockState.getBlockData());
+            player.sendBlockChange(lowestDistance.add(1,0,0), ironBlockState.getBlockData());
 
-            player.sendBlockChange(lowestDistance.clone().add(0,-1,0), ironBlockState.getBlockData());
-            player.sendBlockChange(lowestDistance.clone().add(-1,-1,0), ironBlockState.getBlockData());
-            player.sendBlockChange(lowestDistance.clone().add(-1,-1,-1), ironBlockState.getBlockData());
-            player.sendBlockChange(lowestDistance.clone().add(-1,-1,1), ironBlockState.getBlockData());
-            player.sendBlockChange(lowestDistance.clone().add(1,-1,0), ironBlockState.getBlockData());
-            player.sendBlockChange(lowestDistance.clone().add(1,-1,1), ironBlockState.getBlockData());
-            player.sendBlockChange(lowestDistance.clone().add(1,-1,-1), ironBlockState.getBlockData());
-            player.sendBlockChange(lowestDistance.clone().add(0,-1,1), ironBlockState.getBlockData());
-            player.sendBlockChange(lowestDistance.clone().add(0,-1,-1), ironBlockState.getBlockData());
 
-            activeLocationAndBeams.put(locationName, lowestDistance);
-            //main.sendMessage(player, "<main> Initial Add: <highlight>" + lowestDistance.toString());
+            activeLocationAndBeams.put(locationName, lowestDistance.add(-1, 1, -1));
+            main.sendMessage(player, "<main> Initial Add: <highlight>" + lowestDistance.toVector().toString());
 
         }
 
