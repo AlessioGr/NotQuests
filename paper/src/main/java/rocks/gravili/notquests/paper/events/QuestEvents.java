@@ -82,7 +82,7 @@ public class QuestEvents implements Listener {
         }
 
         final Location playerLocation = player.getLocation();
-        int maxDistance = 120;
+        int maxDistance = 110;
 
         for(String locationName : questPlayer.getLocationsAndBeacons().keySet()) {
             final Location shouldLocation = questPlayer.getLocationsAndBeacons().get(locationName);
@@ -117,7 +117,7 @@ public class QuestEvents implements Listener {
                 player.sendBlockChange(newBeaconLocation.clone().add(0,-1,-1), ironBlockState.getBlockData());
 
                 questPlayer.getActiveLocationsAndBeacons().put(locationName, newBeaconLocation);
-                main.sendMessage(player, "<main> Initial Add: <highlight>" + newBeaconLocation.toString());
+                //main.sendMessage(player, "<main> Initial Add 2: <highlight>" + newBeaconLocation.toString());
 
             }else{
                // (questPlayer.getActiveLocationsAndBeacons().get(locationName).distance(playerLocation) > maxDistance)
@@ -153,7 +153,7 @@ public class QuestEvents implements Listener {
 
                     questPlayer.getActiveLocationsAndBeacons().put(locationName, newBeaconLocation);
 
-                    main.sendMessage(player, "<highlight>Removed from old chunk & added to new chunk: <main>" + newBeaconLocation.toString());
+                    //main.sendMessage(player, "<highlight>Removed from old chunk & added to new chunk: <main>" + newBeaconLocation.toString());
 
                 }else{
                     //main.sendMessage(player, "Ignored. Distance worse");

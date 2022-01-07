@@ -680,7 +680,7 @@ public class AdminCommands {
                     final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
 
                     questPlayer.getLocationsAndBeacons().put(locationName, location);
-                    //questPlayer.updateBeaconLocations(player);
+                    questPlayer.updateBeaconLocations(player);
 
                     main.sendMessage(context.getSender(), "<success>Beacon beam spawned successfully!");
 

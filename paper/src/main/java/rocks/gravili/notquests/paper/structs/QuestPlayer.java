@@ -33,9 +33,7 @@ import rocks.gravili.notquests.paper.structs.conditions.Condition;
 import rocks.gravili.notquests.paper.structs.objectives.OtherQuestObjective;
 
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -86,28 +84,53 @@ public class QuestPlayer {
     public void updateBeaconLocations(final Player player){
 
         for(String locationName : locationsAndBeacons.keySet()){
+            if(activeLocationAndBeams.containsKey(locationName)){
+                continue;
+            }
 
             final Location location = locationsAndBeacons.get(locationName);
 
-            BlockState beaconBlockState = location.getBlock().getState();
+
+            Location lowestDistance = player.getLocation();
+
+            World world = player.getWorld();
+            int baseX = player.getLocation().getChunk().getX();
+            int baseZ = player.getLocation().getChunk().getZ();
+            for(int x = -3; x<=3; x++) {
+                for(int z = -3; z<=3; z++) {
+                    Chunk chunk = world.getChunkAt(baseX + x, baseZ + z);
+                    Location newChunkLocation = chunk.getBlock(8, location.getBlockY(), 8).getLocation();
+                    if(newChunkLocation.distance(location) < lowestDistance.distance(location)){
+                        lowestDistance = newChunkLocation;
+                    }
+                }
+            }
+
+            lowestDistance.setY(lowestDistance.getWorld().getHighestBlockYAt(lowestDistance.getBlockX(), lowestDistance.getBlockZ()));
+
+
+
+            BlockState beaconBlockState = lowestDistance.getBlock().getState();
             beaconBlockState.setType(Material.BEACON);
 
-            BlockState ironBlockState = location.getBlock().getState();
+            BlockState ironBlockState = lowestDistance.getBlock().getState();
             ironBlockState.setType(Material.IRON_BLOCK);
 
-            player.sendBlockChange(location, beaconBlockState.getBlockData());
+            player.sendBlockChange(lowestDistance, beaconBlockState.getBlockData());
 
-            player.sendBlockChange(location.clone().add(0,-1,0), ironBlockState.getBlockData());
-            player.sendBlockChange(location.clone().add(-1,-1,0), ironBlockState.getBlockData());
-            player.sendBlockChange(location.clone().add(-1,-1,-1), ironBlockState.getBlockData());
-            player.sendBlockChange(location.clone().add(-1,-1,1), ironBlockState.getBlockData());
-            player.sendBlockChange(location.clone().add(1,-1,0), ironBlockState.getBlockData());
-            player.sendBlockChange(location.clone().add(1,-1,1), ironBlockState.getBlockData());
-            player.sendBlockChange(location.clone().add(1,-1,-1), ironBlockState.getBlockData());
-            player.sendBlockChange(location.clone().add(0,-1,1), ironBlockState.getBlockData());
-            player.sendBlockChange(location.clone().add(0,-1,-1), ironBlockState.getBlockData());
+            player.sendBlockChange(lowestDistance.clone().add(0,-1,0), ironBlockState.getBlockData());
+            player.sendBlockChange(lowestDistance.clone().add(-1,-1,0), ironBlockState.getBlockData());
+            player.sendBlockChange(lowestDistance.clone().add(-1,-1,-1), ironBlockState.getBlockData());
+            player.sendBlockChange(lowestDistance.clone().add(-1,-1,1), ironBlockState.getBlockData());
+            player.sendBlockChange(lowestDistance.clone().add(1,-1,0), ironBlockState.getBlockData());
+            player.sendBlockChange(lowestDistance.clone().add(1,-1,1), ironBlockState.getBlockData());
+            player.sendBlockChange(lowestDistance.clone().add(1,-1,-1), ironBlockState.getBlockData());
+            player.sendBlockChange(lowestDistance.clone().add(0,-1,1), ironBlockState.getBlockData());
+            player.sendBlockChange(lowestDistance.clone().add(0,-1,-1), ironBlockState.getBlockData());
 
-            activeLocationAndBeams.put(locationName, location);
+            activeLocationAndBeams.put(locationName, lowestDistance);
+            //main.sendMessage(player, "<main> Initial Add: <highlight>" + lowestDistance.toString());
+
         }
 
 
