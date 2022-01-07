@@ -42,6 +42,15 @@ public class IntegrationsManager {
     }
 
     public void enableIntegrations() {
+
+        //PlaceholderAPI
+        if (main.getConfiguration().isIntegrationPlaceholderAPIEnabled()) {
+            if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+                placeholderAPIEnabled = true;
+                main.getLogManager().info("PlaceholderAPI found! Enabling PlaceholderAPI support...");
+            }
+        }
+
         //Vault Hook
         if (main.getConfiguration().isIntegrationVaultEnabled()) {
             if (main.getMain().getServer().getPluginManager().getPlugin("Vault") != null) {
@@ -172,12 +181,14 @@ public class IntegrationsManager {
     }
 
     public void enableIntegrationsAfterDataLoad() {
-        if (main.getConfiguration().isIntegrationPlaceholderAPIEnabled()) {
+        if (main.getConfiguration().isIntegrationPlaceholderAPIEnabled() && !isPlaceholderAPIEnabled()) {
             if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
                 placeholderAPIEnabled = true;
                 main.getLogManager().info("PlaceholderAPI found! Enabling PlaceholderAPI support...");
                 new QuestPlaceholders(main).register();
             }
+        }else if(main.getConfiguration().isIntegrationPlaceholderAPIEnabled()){
+            new QuestPlaceholders(main).register();
         }
     }
 

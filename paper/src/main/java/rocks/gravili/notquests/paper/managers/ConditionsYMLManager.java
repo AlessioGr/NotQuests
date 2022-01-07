@@ -110,9 +110,12 @@ public class ConditionsYMLManager {
                 if (!conditionIdentifier.isBlank() && conditionType != null) {
                     Condition condition = null;
 
+                    int progressNeeded = getConditionsConfig().getInt("conditions." + conditionIdentifier + ".progressNeeded");
+
                     try {
                         condition = conditionType.getDeclaredConstructor(NotQuests.class).newInstance(main);
                         condition.setConditionName(conditionIdentifier);
+                        condition.setProgressNeeded(progressNeeded);
                         condition.load(getConditionsConfig(), "conditions." + conditionIdentifier);
 
                     } catch (Exception ex) {
@@ -167,6 +170,8 @@ public class ConditionsYMLManager {
             conditionsAndIdentifiers.put(conditionIdentifier, condition);
 
             getConditionsConfig().set("conditions." + conditionIdentifier + ".conditionType", condition.getConditionType());
+            getConditionsConfig().set("conditions." + conditionIdentifier + ".progressNeeded", condition.getProgressNeeded());
+
 
             condition.save(getConditionsConfig(), "conditions." + conditionIdentifier);
 

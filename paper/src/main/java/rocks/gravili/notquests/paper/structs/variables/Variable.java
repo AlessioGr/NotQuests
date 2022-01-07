@@ -1,16 +1,37 @@
 package rocks.gravili.notquests.paper.structs.variables;
 
+import cloud.commandframework.arguments.standard.StringArgument;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public abstract class Variable<T> {
     protected final NotQuests main;
+    private final ArrayList<StringArgument<CommandSender>> requiredStrings;
+    private HashMap<String, String> additionalStringArguments;
 
     public Variable(final NotQuests main){
         this.main = main;
+        requiredStrings = new ArrayList<>();
+        additionalStringArguments = new HashMap<>();
     }
+
+    protected void addRequiredString(final StringArgument<CommandSender> stringArument){
+        requiredStrings.add(stringArument);
+    }
+
+    public final ArrayList<StringArgument<CommandSender>> getRequiredStrings(){
+        return requiredStrings;
+    }
+
+    protected final String getRequiredStringValue(String key){
+        return additionalStringArguments.get(key);
+    }
+
 
     public abstract T getValue(final Player player, final Object... objects);
 
@@ -23,4 +44,7 @@ public abstract class Variable<T> {
     public abstract String getPlural();
     public abstract String getSingular();
 
+    public void setAdditionalStringArguments(HashMap<String, String> additionalStringArguments) {
+        this.additionalStringArguments = additionalStringArguments;
+    }
 }

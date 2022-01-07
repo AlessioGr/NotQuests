@@ -18,10 +18,14 @@
 
 package rocks.gravili.notquests.paper.managers.registering;
 
+import cloud.commandframework.ArgumentDescription;
+import cloud.commandframework.Command;
+import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.context.CommandContext;
 import org.bukkit.command.CommandSender;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.variables.MoneyVariable;
+import rocks.gravili.notquests.paper.structs.variables.PlaceholderAPINumberVariable;
 import rocks.gravili.notquests.paper.structs.variables.QuestPointsVariable;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
 import rocks.gravili.notquests.paper.structs.variables.hooks.UltimateClansClanLevelVariable;
@@ -49,6 +53,22 @@ public class VariablesManager {
         registerVariable("QuestPoints", QuestPointsVariable.class);
         registerVariable("Money", MoneyVariable.class);
         registerVariable("UltimateClansClanLevel", UltimateClansClanLevelVariable.class);
+        if(main.getIntegrationsManager().isPlaceholderAPIEnabled()){
+            registerVariable("PlaceholderAPINumber", PlaceholderAPINumberVariable.class);
+        }
+
+    }
+
+    public Command.Builder<CommandSender> registerVariableCommands(String variableString, Command.Builder<CommandSender> builder){
+        Command.Builder<CommandSender> newBuilder = builder.literal(variableString, ArgumentDescription.of("Variable Name"));
+
+        Variable<?> variable = getVariableFromString(variableString);
+        if(variable != null && variable.getRequiredStrings() != null){
+            for(StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()){
+                newBuilder = newBuilder.argument(stringArgument, ArgumentDescription.of("Optional Argument"));
+            }
+        }
+        return newBuilder;
 
     }
 

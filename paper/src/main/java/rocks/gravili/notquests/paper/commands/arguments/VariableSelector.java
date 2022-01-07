@@ -71,6 +71,7 @@ import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.exceptions.parsing.NoInputProvidedException;
 import io.leangen.geantyref.TypeToken;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jetbrains.annotations.NotNull;
@@ -173,6 +174,8 @@ public class VariableSelector<C> extends CommandArgument<C, Variable<?>> { //0 =
             }
             final String input = inputQueue.peek();
             inputQueue.remove();
+
+            //((Player)context.getSender()).sendMessage("Q: " +  inputQueue.peek());
 
             for (final String variableString : main.getVariablesManager().getVariableIdentifiers()) {
                 if (input.equalsIgnoreCase(variableString)) {
