@@ -122,7 +122,7 @@ public class QuestEvents implements Listener {
                 player.sendBlockChange(newBeaconLocation.add(1,0,0), ironBlockState.getBlockData());
 
                 questPlayer.getActiveLocationsAndBeacons().put(locationName, newBeaconLocation.add(-1, 1, -1));
-                main.sendMessage(player, "<main> Initial Add 2: <highlight>" + newBeaconLocation.toVector().toString());
+                //main.sendMessage(player, "<main> Initial Add 2: <highlight>" + newBeaconLocation.toVector().toString());
 
             }else{
                // (questPlayer.getActiveLocationsAndBeacons().get(locationName).distance(playerLocation) > maxDistance)
@@ -158,7 +158,7 @@ public class QuestEvents implements Listener {
 
                     questPlayer.getActiveLocationsAndBeacons().put(locationName, newBeaconLocation.add(-1, 1, -1));
 
-                    main.sendMessage(player, "<highlight>Removed from old chunk & added to new chunk: <main>" + newBeaconLocation.toVector().toString());
+                    // main.sendMessage(player, "<highlight>Removed from old chunk & added to new chunk: <main>" + newBeaconLocation.toVector().toString());
 
                 }else{
                     //main.sendMessage(player, "Ignored. Distance worse");

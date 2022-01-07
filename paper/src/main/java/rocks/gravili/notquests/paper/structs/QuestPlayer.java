@@ -130,7 +130,7 @@ public class QuestPlayer {
 
 
             activeLocationAndBeams.put(locationName, lowestDistance.add(-1, 1, -1));
-            main.sendMessage(player, "<main> Initial Add: <highlight>" + lowestDistance.toVector().toString());
+            //main.sendMessage(player, "<main> Initial Add: <highlight>" + lowestDistance.toVector().toString());
 
         }
 
