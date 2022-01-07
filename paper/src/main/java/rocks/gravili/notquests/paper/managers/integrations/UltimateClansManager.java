@@ -28,4 +28,11 @@ public class UltimateClansManager {
         }
         return api.getPlayerAPI().getPlayerClan(player.getUniqueId()).getLevel();
     }
+
+    public final void setClanLevel(final Player player, final int newLevel){
+        if(api.getPlayerAPI().getPlayerClan(player.getUniqueId()) == null){
+            return;
+        }
+        api.getPlayerAPI().getPlayerClan(player.getUniqueId()).setLevel(newLevel);
+    }
 }

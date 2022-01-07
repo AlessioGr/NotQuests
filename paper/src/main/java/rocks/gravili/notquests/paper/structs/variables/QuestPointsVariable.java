@@ -9,6 +9,7 @@ import java.util.List;
 public class QuestPointsVariable extends Variable<Long>{
     public QuestPointsVariable(NotQuests main) {
         super(main);
+        setCanSetValue(true);
     }
 
     @Override
@@ -18,6 +19,16 @@ public class QuestPointsVariable extends Variable<Long>{
             return 0L;
         }
         return questPlayer.getQuestPoints();
+    }
+
+    @Override
+    public boolean setValue(Long newValue, Player player, Object... objects) {
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
+        if(questPlayer == null){
+            return false;
+        }
+        questPlayer.setQuestPoints(newValue, false);
+        return true;
     }
 
     @Override

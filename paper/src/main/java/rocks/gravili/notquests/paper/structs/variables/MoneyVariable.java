@@ -8,6 +8,7 @@ import java.util.List;
 public class MoneyVariable extends Variable<Double>{
     public MoneyVariable(NotQuests main) {
         super(main);
+        setCanSetValue(true);
     }
 
     @Override
@@ -22,6 +23,25 @@ public class MoneyVariable extends Variable<Double>{
             return 0D;
         }
     }
+
+    @Override
+    public boolean setValue(Double newValue, Player player, Object... objects) {
+        if (player != null) {
+            if (!main.getIntegrationsManager().isVaultEnabled() || main.getIntegrationsManager().getVaultManager().getEconomy() == null) {
+                return false;
+            }else {
+                if(newValue > 0){
+                    main.getIntegrationsManager().getVaultManager().getEconomy().depositPlayer(player, newValue);
+                }else {
+                    main.getIntegrationsManager().getVaultManager().getEconomy().withdrawPlayer(player, Math.abs(newValue));
+                }
+                return true;
+            }
+        } else {
+            return false;
+        }
+    }
+
 
     @Override
     public List<String> getPossibleValues(Player player, Object... objects) {

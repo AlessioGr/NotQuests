@@ -9,6 +9,7 @@ import java.util.List;
 public class UltimateClansClanLevelVariable extends Variable<Integer> {
     public UltimateClansClanLevelVariable(NotQuests main) {
         super(main);
+        setCanSetValue(true);
     }
 
     @Override
@@ -20,6 +21,19 @@ public class UltimateClansClanLevelVariable extends Variable<Integer> {
             return main.getIntegrationsManager().getUltimateClansManager().getClanLevel(player);
         } else {
             return 0;
+        }
+    }
+
+    @Override
+    public boolean setValue(Integer newValue, Player player, Object... objects) {
+        if (!main.getIntegrationsManager().isUltimateClansEnabled()) {
+            return false;
+        }
+        if (player != null) {
+            main.getIntegrationsManager().getUltimateClansManager().setClanLevel(player, newValue);
+            return true;
+        } else {
+            return false;
         }
     }
 

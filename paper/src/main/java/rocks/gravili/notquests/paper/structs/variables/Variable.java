@@ -13,11 +13,20 @@ public abstract class Variable<T> {
     protected final NotQuests main;
     private final ArrayList<StringArgument<CommandSender>> requiredStrings;
     private HashMap<String, String> additionalStringArguments;
+    private boolean canSetValue;
 
     public Variable(final NotQuests main){
         this.main = main;
         requiredStrings = new ArrayList<>();
         additionalStringArguments = new HashMap<>();
+    }
+
+    protected void setCanSetValue(final boolean canSetValue){
+        this.canSetValue = canSetValue;
+    }
+
+    public final boolean isCanSetValue(){
+        return canSetValue;
     }
 
     protected void addRequiredString(final StringArgument<CommandSender> stringArument){
@@ -34,6 +43,8 @@ public abstract class Variable<T> {
 
 
     public abstract T getValue(final Player player, final Object... objects);
+
+    public abstract boolean setValue(final T newValue, final Player player, final Object... objects);
 
     public abstract List<String> getPossibleValues(final Player player, final Object... objects);
 

@@ -51,6 +51,11 @@ public class PlaceholderAPINumberVariable extends Variable<Double>{
     }
 
     @Override
+    public boolean setValue(Double newValue, Player player, Object... objects) {
+        return false;
+    }
+
+    @Override
     public List<String> getPossibleValues(Player player, Object... objects) {
         return null;
     }
