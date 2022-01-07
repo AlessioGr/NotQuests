@@ -59,6 +59,8 @@ import rocks.gravili.notquests.paper.structs.triggers.ActiveTrigger;
 import rocks.gravili.notquests.paper.structs.triggers.types.WorldEnterTrigger;
 import rocks.gravili.notquests.paper.structs.triggers.types.WorldLeaveTrigger;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
 
 import static rocks.gravili.notquests.paper.commands.NotQuestColors.debugHighlightGradient;
@@ -67,13 +69,56 @@ import static rocks.gravili.notquests.paper.commands.NotQuestColors.debugHighlig
 public class QuestEvents implements Listener {
     private final NotQuests main;
 
+    private final HashMap<QuestPlayer, LocationNameAndLocation> beaconsToUpdate;
+
+    public record LocationNameAndLocation(
+            String locationName,
+            Location newLocation
+    ) {}
+
 
     public QuestEvents(NotQuests main) {
         this.main = main;
+        beaconsToUpdate = new HashMap<>();
         Bukkit.getScheduler().scheduleSyncRepeatingTask(main.getMain(), new Runnable() {
             @Override
             public void run() {
-                //Bukkit.broadcastMessage("This message is shown immediately and then repeated every second");
+                for(QuestPlayer questPlayer : beaconsToUpdate.keySet()) {
+                    String locationName = beaconsToUpdate.get(questPlayer).locationName();
+                    final Player player = questPlayer.getPlayer();
+
+                    if( questPlayer.getActiveLocationsAndBeacons().get(locationName) != null){
+                        player.sendMessage("Scheduled Beacon Removal");
+                        scheduleBeaconRemovalAt(questPlayer.getActiveLocationsAndBeacons().get(locationName), player);
+                    }
+
+                    final Location newBeaconLocation = beaconsToUpdate.get(questPlayer).newLocation();
+                    //Add Beacon to new chunk
+                    BlockState beaconBlockState = newBeaconLocation.getBlock().getState();
+                    beaconBlockState.setType(Material.BEACON);
+
+                    BlockState ironBlockState = newBeaconLocation.getBlock().getState();
+                    ironBlockState.setType(Material.IRON_BLOCK);
+
+                    player.sendBlockChange(newBeaconLocation, beaconBlockState.getBlockData());
+                    player.sendBlockChange(newBeaconLocation.add(-1,-1,-1), ironBlockState.getBlockData());
+                    player.sendBlockChange(newBeaconLocation.add(1,0,0), ironBlockState.getBlockData());
+                    player.sendBlockChange(newBeaconLocation.add(1,0,0), ironBlockState.getBlockData());
+                    player.sendBlockChange(newBeaconLocation.add(0,0,1), ironBlockState.getBlockData());
+                    player.sendBlockChange(newBeaconLocation.add(-1,0,0), ironBlockState.getBlockData());
+                    player.sendBlockChange(newBeaconLocation.add(-1,0,0), ironBlockState.getBlockData());
+                    player.sendBlockChange(newBeaconLocation.add(0,0,1), ironBlockState.getBlockData());
+                    player.sendBlockChange(newBeaconLocation.add(1,0,0), ironBlockState.getBlockData());
+                    player.sendBlockChange(newBeaconLocation.add(1,0,0), ironBlockState.getBlockData());
+
+
+                    questPlayer.getActiveLocationsAndBeacons().put(locationName, newBeaconLocation.add(-1, 1, -1));
+
+                    main.sendMessage(player, "<positive>Added new Beacon");
+
+                }
+                beaconsToUpdate.clear();
+
             }
         }, 0L, 80L); //0 Tick initial delay, 20 Tick (1 Second) between repeats
     }
@@ -104,26 +149,8 @@ public class QuestEvents implements Listener {
 
 
             if(!questPlayer.getActiveLocationsAndBeacons().containsKey(locationName) || !questPlayer.getActiveLocationsAndBeacons().get(locationName).isChunkLoaded()){
-                BlockState beaconBlockState = newBeaconLocation.getBlock().getState();
-                beaconBlockState.setType(Material.BEACON);
-
-                BlockState ironBlockState = newBeaconLocation.getBlock().getState();
-                ironBlockState.setType(Material.IRON_BLOCK);
-
-                player.sendBlockChange(newBeaconLocation, beaconBlockState.getBlockData());
-                player.sendBlockChange(newBeaconLocation.add(-1,-1,-1), ironBlockState.getBlockData());
-                player.sendBlockChange(newBeaconLocation.add(1,0,0), ironBlockState.getBlockData());
-                player.sendBlockChange(newBeaconLocation.add(1,0,0), ironBlockState.getBlockData());
-                player.sendBlockChange(newBeaconLocation.add(0,0,1), ironBlockState.getBlockData());
-                player.sendBlockChange(newBeaconLocation.add(-1,0,0), ironBlockState.getBlockData());
-                player.sendBlockChange(newBeaconLocation.add(-1,0,0), ironBlockState.getBlockData());
-                player.sendBlockChange(newBeaconLocation.add(0,0,1), ironBlockState.getBlockData());
-                player.sendBlockChange(newBeaconLocation.add(1,0,0), ironBlockState.getBlockData());
-                player.sendBlockChange(newBeaconLocation.add(1,0,0), ironBlockState.getBlockData());
-
-                questPlayer.getActiveLocationsAndBeacons().put(locationName, newBeaconLocation.add(-1, 1, -1));
-                //main.sendMessage(player, "<main> Initial Add 2: <highlight>" + newBeaconLocation.toVector().toString());
-
+                beaconsToUpdate.remove(questPlayer);
+                beaconsToUpdate.put(questPlayer, new LocationNameAndLocation(locationName, newBeaconLocation));
             }else{
                // (questPlayer.getActiveLocationsAndBeacons().get(locationName).distance(playerLocation) > maxDistance)
 
@@ -134,31 +161,8 @@ public class QuestEvents implements Listener {
                 double oldDistance = shouldLocation.distance(currentActiveLocation);
                 double newDistance = shouldLocation.distance(newBeaconLocation);
                 if(newDistance < oldDistance){
-                    //Remove beacon from old chunk
-                    scheduleBeaconRemovalAt(currentActiveLocation, player);
-
-                    //Add Beacon to new chunk
-                    BlockState beaconBlockState = newBeaconLocation.getBlock().getState();
-                    beaconBlockState.setType(Material.BEACON);
-
-                    BlockState ironBlockState = newBeaconLocation.getBlock().getState();
-                    ironBlockState.setType(Material.IRON_BLOCK);
-
-                    player.sendBlockChange(newBeaconLocation, beaconBlockState.getBlockData());
-                    player.sendBlockChange(newBeaconLocation.add(-1,-1,-1), ironBlockState.getBlockData());
-                    player.sendBlockChange(newBeaconLocation.add(1,0,0), ironBlockState.getBlockData());
-                    player.sendBlockChange(newBeaconLocation.add(1,0,0), ironBlockState.getBlockData());
-                    player.sendBlockChange(newBeaconLocation.add(0,0,1), ironBlockState.getBlockData());
-                    player.sendBlockChange(newBeaconLocation.add(-1,0,0), ironBlockState.getBlockData());
-                    player.sendBlockChange(newBeaconLocation.add(-1,0,0), ironBlockState.getBlockData());
-                    player.sendBlockChange(newBeaconLocation.add(0,0,1), ironBlockState.getBlockData());
-                    player.sendBlockChange(newBeaconLocation.add(1,0,0), ironBlockState.getBlockData());
-                    player.sendBlockChange(newBeaconLocation.add(1,0,0), ironBlockState.getBlockData());
-
-
-                    questPlayer.getActiveLocationsAndBeacons().put(locationName, newBeaconLocation.add(-1, 1, -1));
-
-                    // main.sendMessage(player, "<highlight>Removed from old chunk & added to new chunk: <main>" + newBeaconLocation.toVector().toString());
+                    beaconsToUpdate.remove(questPlayer);
+                    beaconsToUpdate.put(questPlayer, new LocationNameAndLocation(locationName, newBeaconLocation));
 
                 }else{
                     //main.sendMessage(player, "Ignored. Distance worse");
@@ -193,8 +197,10 @@ public class QuestEvents implements Listener {
                 location.add(1,0,0);
                 player.sendBlockChange(location, location.getBlock().getBlockData());
 
+                main.sendMessage(player, "<negative>Removed old Beacon");
+
             }
-        }, 20L);
+        }, 70L);
     }
 
 
