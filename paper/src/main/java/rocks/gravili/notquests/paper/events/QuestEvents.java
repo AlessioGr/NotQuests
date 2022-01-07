@@ -200,7 +200,7 @@ public class QuestEvents implements Listener {
                 main.sendMessage(player, "<negative>Removed old Beacon");
 
             }
-        }, 70L);
+        }, 75L);
     }
 
 
