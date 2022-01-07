@@ -24,15 +24,24 @@ import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.bukkit.arguments.selector.SinglePlayerSelector;
+import cloud.commandframework.bukkit.parsers.WorldArgument;
 import cloud.commandframework.bukkit.parsers.selector.SinglePlayerSelectorArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.Connection;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.chunk.LevelChunk;
+import org.bukkit.*;
+import org.bukkit.block.BlockState;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.v1_18_R1.CraftChunk;
+import org.bukkit.craftbukkit.v1_18_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_18_R1.block.CraftBlockState;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.ActiveQuestSelector;
 import rocks.gravili.notquests.paper.commands.arguments.QuestSelector;
@@ -579,6 +588,12 @@ public class AdminCommands {
                 }));
 
 
+        handleDebugCommands();
+
+
+    }
+
+    public void handleDebugCommands() {
         manager.command(builder.literal("debug")
                 .literal("testcommand")
                 .meta(CommandMeta.DESCRIPTION, "You can probably ignore this.")
@@ -631,8 +646,207 @@ public class AdminCommands {
 
                 }));
 
-    }
+        manager.command(builder.literal("debug")
+                .literal("beaconBeam")
+                .argument(SinglePlayerSelectorArgument.of("player"), ArgumentDescription.of("Player name"))
+                .argument(StringArgument.of("locationName"), ArgumentDescription.of("Location name"))
+                .argument(WorldArgument.of("world"), ArgumentDescription.of("World name"))
+                .argument(IntegerArgument.newBuilder("x"), ArgumentDescription.of("X coordinate"))
+                .argument(IntegerArgument.newBuilder("y"), ArgumentDescription.of("Y coordinate"))
+                .argument(IntegerArgument.newBuilder("z"), ArgumentDescription.of("Z coordinate"))
+                .meta(CommandMeta.DESCRIPTION, "Spawns a beacon beam")
+                .senderType(Player.class)
+                .handler((context) -> {
 
+                    final SinglePlayerSelector singlePlayerSelector = context.get("player");
+                    final Player player = singlePlayerSelector.getPlayer();
+
+                    final String locationName = context.get("locationName");
+
+                    final World world = context.get("world");
+                    final Vector coordinates = new Vector(context.get("x"), context.get("y"), context.get("z"));
+                    final Location location = coordinates.toLocation(world);
+
+                    if(player == null){
+                        return;
+                    }
+
+                    /*if(main.getPacketManager().isModern()){
+                        main.getPacketManager().getModernPacketInjector().spawnBeaconBeam(player, location);
+                        main.sendMessage(player, "<success>Beacon beam spawned successfully!");
+                    }*/
+
+
+                    final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
+
+                    questPlayer.getLocationsAndBeacons().put(locationName, location);
+                    //questPlayer.updateBeaconLocations(player);
+
+                    main.sendMessage(context.getSender(), "<success>Beacon beam spawned successfully!");
+
+
+                }));
+
+        manager.command(builder.literal("debug")
+                .literal("beaconBeamAdvanced")
+                .argument(WorldArgument.of("world"), ArgumentDescription.of("World name"))
+                .argument(IntegerArgument.newBuilder("x"), ArgumentDescription.of("X coordinate"))
+                .argument(IntegerArgument.newBuilder("y"), ArgumentDescription.of("Y coordinate"))
+                .argument(IntegerArgument.newBuilder("z"), ArgumentDescription.of("Z coordinate"))
+
+                .meta(CommandMeta.DESCRIPTION, "Spawns a beacon beam")
+                .senderType(Player.class)
+                .handler((context) -> {
+
+                    World world = context.get("world");
+                    final Vector coordinates = new Vector(context.get("x"), context.get("y"), context.get("z"));
+                    Location location = coordinates.toLocation(world);
+
+
+
+
+
+                    Player player = (Player) context.getSender();
+
+
+
+                    //Prepare Data
+                    Connection connection = main.getPacketManager().getModernPacketInjector().getConnection(main.getPacketManager().getModernPacketInjector().getServerPlayer(player).connection);
+                    location = location.clone();
+                    BlockPos blockPos = new BlockPos(location.getX(), location.getY(), location.getZ());
+
+                    Chunk chunk = location.getChunk();
+                    CraftChunk craftChunk = (CraftChunk)chunk;
+                    LevelChunk levelChunk = craftChunk.getHandle();
+
+                    CraftWorld craftWorld = (CraftWorld)world;
+                    ServerLevel serverLevel = craftWorld.getHandle();
+                    //
+
+                    BlockState beaconBlockState = location.getBlock().getState();
+                    beaconBlockState.setType(Material.BEACON);
+
+                    CraftBlockState craftBlockState = (CraftBlockState)beaconBlockState ;
+                    net.minecraft.world.level.block.state.BlockState minecraftBlockState = craftBlockState.getHandle();
+
+
+                    BlockState ironBlockState = location.getBlock().getState();
+                    ironBlockState.setType(Material.IRON_BLOCK);
+
+
+                    /*BlockPos blockPos3 = new BlockPos(location.getBlockX(), location.getBlockY(), location.getBlockZ());
+                    SectionPos sectionPos = SectionPos.of(blockPos3);
+
+                    //SectionPos.sectionRelativePos()
+
+
+                    main.sendMessage(player, "<highlight>Section Pos: <main>" + sectionPos.asLong()
+                    );
+                    main.sendMessage(player, "<highlight>Section Pos Chunk x: <main>" + sectionPos.chunk().x
+                    );
+                    main.sendMessage(player, "<highlight>Section Pos blocks inside size: <main>" + sectionPos.blocksInside().toArray().length);
+
+                    for(Object blockPos1 : sectionPos.blocksInside().toArray()){
+                        BlockPos blockPos2 = (BlockPos) blockPos1;
+                        BlockEntity blockEntity =  serverLevel.getBlockEntity(blockPos2);
+                        if(blockEntity != null){
+                            main.sendMessage(player, "<highlight>Section Pos blocks inside: <main>" + blockEntity.getBlockState().getClass().toString()
+                            );
+                        }
+
+                    }
+                    main.sendMessage(player, "<highlight>Section Pos short: <main>" + sectionPos.toShortString()
+                    );
+
+
+                    //PalettedContainer<BlockState> pcB = new PalettedContainer<>();
+
+
+                    //net.minecraft.world.level.block.state.BlockState[] presetBlockStates = serverLevel.chunkPacketBlockController.getPresetBlockStates(world, chunkPos, b0 << 4);
+
+                    //PalettedContainer<BlockState> datapaletteblock = new PalettedContainer<>(net.minecraft.world.level.block.Block.BLOCK_STATE_REGISTRY, Blocks.AIR.defaultBlockState(), PalettedContainer.Strategy.SECTION_STATES, presetBlockStates);
+
+
+
+                   int sectionID = (int) (64/16)+ ( (383/16) / ((location.getBlockY())/16) );
+
+                    main.sendMessage(player, "<highlight>LevelChunkSection Section ID: <main>" + sectionID);
+
+
+                    LevelChunkSection section = levelChunk.getSection(sectionID);
+
+
+
+
+
+                    main.sendMessage(player, "<highlight>LevelChunkSection Section Count: <main>" + levelChunk.getSectionsCount()
+                    );
+                    main.sendMessage(player, "<highlight>LevelChunkSection Sections length: <main>" + levelChunk.getSections().length
+                    );
+
+                    /*Iterator<net.minecraft.world.level.block.state.BlockState> it = section.getStates().registry.iterator();
+
+                    ArrayList<String> names = new ArrayList<>();
+
+                    while(it.hasNext()){
+                        net.minecraft.world.level.block.state.BlockState blockState1 = it.next();
+                        names.add(blockState1.getBlock().getClass().toString());
+
+                    }
+                    main.sendMessage(player, "<main>" + names.toString());*/
+                    /*
+
+                    ShortSet positions = ShortSet.of()
+
+
+                    short count = 0;
+                    for (int x = 0; x < 16; x++) {
+                        for (int z = 0; z < 16; z++) {
+                            for (int y = 0; y < 16; y++) {
+                                section.setBlockState(x, y, z, minecraftBlockState);
+                                count++;
+                            }
+                        }
+                    }
+
+                    main.sendMessage(player, "<highlight>Index 0 state: <main>" + section.states.get(0).getBlock().getClass().getName()
+                    );
+
+
+
+
+                    main.sendMessage(player, "<highlight>Positions: <main>" + positions.toString()
+                    );
+
+
+
+
+                    ClientboundSectionBlocksUpdatePacket clientboundSectionBlocksUpdatePacket = new ClientboundSectionBlocksUpdatePacket(
+                            sectionPos,
+                            positions,
+                            section,
+                            false);
+
+                    main.sendMessage(player, "<main>Sending packet...");
+
+                    connection.send(clientboundSectionBlocksUpdatePacket);
+
+                    main.sendMessage(player, "<success>Packet sent!");*/
+
+                    player.sendBlockChange(location, beaconBlockState.getBlockData());
+
+                    player.sendBlockChange(location.clone().add(0,-1,0), ironBlockState.getBlockData());
+                    player.sendBlockChange(location.clone().add(-1,-1,0), ironBlockState.getBlockData());
+                    player.sendBlockChange(location.clone().add(-1,-1,-1), ironBlockState.getBlockData());
+                    player.sendBlockChange(location.clone().add(-1,-1,1), ironBlockState.getBlockData());
+                    player.sendBlockChange(location.clone().add(1,-1,0), ironBlockState.getBlockData());
+                    player.sendBlockChange(location.clone().add(1,-1,1), ironBlockState.getBlockData());
+                    player.sendBlockChange(location.clone().add(1,-1,-1), ironBlockState.getBlockData());
+                    player.sendBlockChange(location.clone().add(0,-1,1), ironBlockState.getBlockData());
+                    player.sendBlockChange(location.clone().add(0,-1,-1), ironBlockState.getBlockData());
+
+                }));
+    }
 
     public void handleQuestPoints() {
         manager.command(builder.literal("questpoints")

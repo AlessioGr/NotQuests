@@ -219,6 +219,10 @@ tasks {
     //build {
     //    dependsOn(shadowJar)
     //}
+    build {
+        dependsOn(shadowJar)
+    }
+
     compileJava {
         options.encoding = Charsets.UTF_8.name()
         options.release.set(17)

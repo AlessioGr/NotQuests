@@ -5,10 +5,12 @@ plugins {
     `maven-publish`
     id ("com.github.johnrengelman.shadow")
     id("io.freefair.lombok") version "6.3.0"
+    id("io.papermc.paperweight.userdev")
+    id("xyz.jpenilla.run-paper")
 }
 
 group = "rocks.gravili.notquests"
-version = "3.2.5"
+version = "4.0.0-dev"
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
@@ -101,11 +103,12 @@ repositories {
 
 dependencies {
     //implementation project(':common')
+    paperDevBundle("1.18.1-R0.1-SNAPSHOT")
+    //compileOnly("io.papermc.paper:paper-api:1.18.1-R0.1-SNAPSHOT!!")
 
     implementation("org.bstats:bstats-bukkit:2.2.1")
     implementation("de.themoep:inventorygui:1.5-SNAPSHOT")
 
-    compileOnly("io.papermc.paper:paper-api:1.18.1-R0.1-SNAPSHOT!!")
     compileOnly("net.citizensnpcs:citizens-main:2.0.29-SNAPSHOT")
     compileOnly("me.clip:placeholderapi:2.11.0")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7")
@@ -179,6 +182,10 @@ dependencies {
  */
 val shadowPath = "rocks.gravili.notquests.paper.shadow"
 tasks.withType<ShadowJar> {
+
+
+
+
     minimize()
 
     //exclude('com.mojang:brigadier')
@@ -235,6 +242,13 @@ tasks.withType<ShadowJar> {
     archiveClassifier.set("")
 
 
+  //  configurations.forEach { println("E: " + it.toString()) }
+
+    // println("Size: " + configurations.size)
+
+
+
+
 }
 
 
@@ -243,6 +257,18 @@ tasks {
     //build {
     //    dependsOn(shadowJar)
     //}
+    assemble {
+        dependsOn(reobfJar)
+    }
+
+    build {
+        dependsOn(reobfJar)
+    }
+
+    /*shadowJar {
+        dependsOn(reobfJar)
+    }*/
+
     compileJava {
         options.encoding = Charsets.UTF_8.name()
         options.release.set(17)

@@ -20,9 +20,8 @@ package rocks.gravili.notquests.paper.structs;
 
 
 import net.kyori.adventure.title.Title;
-import org.bukkit.Bukkit;
-import org.bukkit.Sound;
-import org.bukkit.SoundCategory;
+import org.bukkit.*;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.NotQuestColors;
@@ -35,6 +34,7 @@ import rocks.gravili.notquests.paper.structs.objectives.OtherQuestObjective;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -58,6 +58,8 @@ public class QuestPlayer {
     private final ArrayList<CompletedQuest> completedQuests; //has to accept multiple entries of the same value
     private long questPoints;
 
+    private final HashMap<String, Location> locationsAndBeacons, activeLocationAndBeams;
+
     public QuestPlayer(NotQuests main, UUID uuid) {
         this.main = main;
         this.uuid = uuid;
@@ -66,6 +68,49 @@ public class QuestPlayer {
         questsToComplete = new ArrayList<>();
         questsToRemove = new ArrayList<>();
         completedQuests = new ArrayList<>();
+
+        locationsAndBeacons = new HashMap<>();
+        activeLocationAndBeams = new HashMap<>();
+
+    }
+
+    public HashMap<String, Location> getLocationsAndBeacons(){
+        return locationsAndBeacons;
+    }
+
+    public HashMap<String, Location> getActiveLocationsAndBeacons(){
+        return activeLocationAndBeams;
+    }
+
+
+    public void updateBeaconLocations(final Player player){
+
+        for(String locationName : locationsAndBeacons.keySet()){
+
+            final Location location = locationsAndBeacons.get(locationName);
+
+            BlockState beaconBlockState = location.getBlock().getState();
+            beaconBlockState.setType(Material.BEACON);
+
+            BlockState ironBlockState = location.getBlock().getState();
+            ironBlockState.setType(Material.IRON_BLOCK);
+
+            player.sendBlockChange(location, beaconBlockState.getBlockData());
+
+            player.sendBlockChange(location.clone().add(0,-1,0), ironBlockState.getBlockData());
+            player.sendBlockChange(location.clone().add(-1,-1,0), ironBlockState.getBlockData());
+            player.sendBlockChange(location.clone().add(-1,-1,-1), ironBlockState.getBlockData());
+            player.sendBlockChange(location.clone().add(-1,-1,1), ironBlockState.getBlockData());
+            player.sendBlockChange(location.clone().add(1,-1,0), ironBlockState.getBlockData());
+            player.sendBlockChange(location.clone().add(1,-1,1), ironBlockState.getBlockData());
+            player.sendBlockChange(location.clone().add(1,-1,-1), ironBlockState.getBlockData());
+            player.sendBlockChange(location.clone().add(0,-1,1), ironBlockState.getBlockData());
+            player.sendBlockChange(location.clone().add(0,-1,-1), ironBlockState.getBlockData());
+
+            activeLocationAndBeams.put(locationName, location);
+        }
+
+
     }
 
     public String addActiveQuest(final ActiveQuest quest, final boolean triggerAcceptQuestTrigger, final boolean sendQuestInfo) {

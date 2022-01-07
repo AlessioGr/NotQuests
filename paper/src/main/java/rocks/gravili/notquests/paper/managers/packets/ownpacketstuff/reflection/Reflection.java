@@ -1,4 +1,4 @@
-package rocks.gravili.notquests.paper.managers.packets.ownpacketstuff;
+package rocks.gravili.notquests.paper.managers.packets.ownpacketstuff.reflection;
 
 import io.lumine.xikage.mythicmobs.utils.scoreboard.Scoreboard;
 import org.bukkit.Bukkit;

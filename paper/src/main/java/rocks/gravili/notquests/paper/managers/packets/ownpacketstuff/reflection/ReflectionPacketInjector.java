@@ -1,14 +1,13 @@
-package rocks.gravili.notquests.paper.managers.packets.ownpacketstuff;
+package rocks.gravili.notquests.paper.managers.packets.ownpacketstuff.reflection;
 
 import io.netty.channel.Channel;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 
 
-public class PacketInjector {
+public class ReflectionPacketInjector {
     private final NotQuests main;
     //NMS Mappings
     private final String entityPlayerClass = "level.EntityPlayer";
@@ -32,7 +31,7 @@ public class PacketInjector {
     }
 
 
-    public PacketInjector(final NotQuests main) {
+    public ReflectionPacketInjector(final NotQuests main) {
         this.main = main;
         initializeNMSStuff();
     }
@@ -86,7 +85,7 @@ public class PacketInjector {
         try {
             Channel ch = getChannel(getNetworkManager(Reflection.getNmsPlayer(player)));
             if (ch != null && ch.pipeline().get("PacketInjector") == null) {
-                NQPacketListener h = new NQPacketListener(main, player);
+                ReflectionNQPacketListener h = new ReflectionNQPacketListener(main, player);
                 ch.pipeline().addBefore("packet_handler", "PacketInjector", h);
             }
         } catch (Throwable t) {

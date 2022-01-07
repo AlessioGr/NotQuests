@@ -1,22 +1,20 @@
-package rocks.gravili.notquests.paper.managers.packets.ownpacketstuff;
+package rocks.gravili.notquests.paper.managers.packets.ownpacketstuff.modern;
 
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
+import io.papermc.paper.adventure.PaperAdventure;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.minecraft.network.chat.ChatType;
+import net.minecraft.network.protocol.game.ClientboundChatPacket;
+import net.minecraft.network.protocol.game.ClientboundSectionBlocksUpdatePacket;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.managers.packets.ownpacketstuff.wrappers.WrappedChatPacket;
-import rocks.gravili.notquests.paper.managers.packets.ownpacketstuff.wrappers.WrappedChatType;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Locale;
 
 public class NQPacketListener extends ChannelDuplexHandler {
     private final NotQuests main;
@@ -30,22 +28,20 @@ public class NQPacketListener extends ChannelDuplexHandler {
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
         super.write(ctx, msg, promise);
-        if (!main.getPacketManager().getPacketInjector().isPacketStuffEnabled()) {
+        if (!main.getPacketManager().getModernPacketInjector().isPacketStuffEnabled()) {
             return;
         }
-        if (msg.getClass().getSimpleName().toLowerCase(Locale.ROOT).contains("playoutchat")) {
+        if (msg instanceof ClientboundChatPacket clientboundChatPacket) {
             //main.getLogManager().debug("Sending " + msg.getClass().getSimpleName());
 
             try {
-                final WrappedChatPacket wrappedChatPacket = new WrappedChatPacket(msg, ctx);
 
-
-                if (wrappedChatPacket.getType() == WrappedChatType.GAME_INFO) { //Skip actionbar messages
+                if (clientboundChatPacket.getType() == ChatType.GAME_INFO) { //Skip actionbar messages
                     return;
                 }
-                main.getLogManager().debug("Valid chat packet! Type: " + wrappedChatPacket.getType().toString());
+                main.getLogManager().debug("Valid chat packet! Type: " + clientboundChatPacket.getType().toString());
 
-                handleMainChatHistorySavingLogic(wrappedChatPacket, player);
+                handleMainChatHistorySavingLogic(clientboundChatPacket, player);
             } catch (Exception e) {
                 if (main.getConfiguration().debug) {
                     e.printStackTrace();
@@ -54,52 +50,37 @@ public class NQPacketListener extends ChannelDuplexHandler {
                 //main.getPacketManager().getPacketInjector().setPacketStuffEnabled(false);
             }
 
+        }else if (msg instanceof ClientboundSectionBlocksUpdatePacket clientboundSectionBlocksUpdatePacket) {
+            //player.sendMessage("ClientboundSectionBlocksUpdatePacket");
+
+            msg = null;
         }
     }
 
 
-    public void handleMainChatHistorySavingLogic(final WrappedChatPacket wrappedChatPacket, final Player player) {
+    public void handleMainChatHistorySavingLogic(final ClientboundChatPacket clientboundChatPacket, final Player player) {
         try {
-            Component component = null;
-            Object vanillaMessage = wrappedChatPacket.getMessage();
-            BaseComponent[] spigotComponent = wrappedChatPacket.getSpigotComponent();
-            Object adventureComponent = wrappedChatPacket.getAdventureComponent();
+            net.minecraft.network.chat.Component vanillaMessage = clientboundChatPacket.getMessage();
+            BaseComponent[] spigotComponent = clientboundChatPacket.components;
+            Component adventureComponent = clientboundChatPacket.adventure$message;
+
+
             if (vanillaMessage == null && spigotComponent == null && adventureComponent == null) {
                 main.getLogManager().debug("All null :o");
                 return;
             }
 
-            if (adventureComponent != null) {
-                component = GsonComponentSerializer.gson().deserialize(wrappedChatPacket.getPaperJson());
-            }
 
-
-            if (component == null) { //Spigot shit
+            if (adventureComponent == null) { //Spigot shit
 
                 if (spigotComponent != null) {
-                    component = BungeeComponentSerializer.get().deserialize(spigotComponent);
+                    adventureComponent = BungeeComponentSerializer.get().deserialize(spigotComponent);
 
                 } else {//vanilla shit
                     try {//paper only
-                        if (NotQuests.getInstance().getPacketManager().getPacketInjector().getPaperAdventureClass() != null) {
-                            Class<?> adventureClass = NotQuests.getInstance().getPacketManager().getPacketInjector().getPaperAdventureClass();
+                        adventureComponent = PaperAdventure.asAdventure(vanillaMessage);
 
-
-
-                            Method asAdventure = adventureClass.getMethod("asAdventure", Class.forName("net.minecraft.network.chat.IChatBaseComponent"));
-                            asAdventure.setAccessible(true);
-
-                            component = (Component)asAdventure.invoke(null, vanillaMessage);
-
-                            main.getLogManager().debug("vanilla serializer: " + component.getClass().toString());
-
-
-                            //adventureComponent = Reflection.getFieldValueOfObject(null, "adventure$message");
-
-
-                        } else {
-                            NotQuests.getInstance().getLogManager().debug("Null mc component serializer :(");
-                        }
+                        main.getLogManager().debug("vanilla serializer: " + adventureComponent.getClass().toString());
                     } catch (Exception e) {
                         if (main.getConfiguration().debug) {
                             e.printStackTrace();
@@ -111,19 +92,19 @@ public class NQPacketListener extends ChannelDuplexHandler {
 
 
             final ArrayList<Component> convHist = main.getConversationManager().getConversationChatHistory().get(player.getUniqueId());
-            if (convHist != null && convHist.contains(component)) {
+            if (convHist != null && convHist.contains(adventureComponent)) {
                 return;
             }
 
             ArrayList<Component> hist = main.getConversationManager().getChatHistory().get(player.getUniqueId());
             if (hist != null) {
-                hist.add(component);
+                hist.add(adventureComponent);
             } else {
                 hist = new ArrayList<>();
-                hist.add(component);
+                hist.add(adventureComponent);
             }
 
-            main.getLogManager().debug("Registering chat message with Message: " + MiniMessage.builder().build().serialize(component));
+            main.getLogManager().debug("Registering chat message with Message: " + MiniMessage.builder().build().serialize(adventureComponent));
             int toRemove = hist.size() - main.getConversationManager().getMaxChatHistory();
             if (toRemove > 0) {
                 //main.getLogManager().log(Level.WARNING, "ToRemove: " + i);

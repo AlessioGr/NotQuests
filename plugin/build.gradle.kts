@@ -4,10 +4,12 @@ plugins {
     `java-library`
     `maven-publish`
     id ("com.github.johnrengelman.shadow")
+    id("io.papermc.paperweight.userdev")
+    id("xyz.jpenilla.run-paper")
 }
 
 group = "rocks.gravili.notquests"
-version = "3.2.5"
+version = "4.0.0-dev"
 
 repositories {
     mavenCentral()
@@ -96,13 +98,16 @@ repositories {
 }
 
 dependencies {
+    paperDevBundle("1.18.1-R0.1-SNAPSHOT")
+
     implementation(project(path= ":spigot", configuration= "shadow"))
     implementation(project(path= ":paper", configuration= "shadow"))
 
     //implementation(project(":spigot"))
     //implementation(project(":paper"))
 
-    compileOnly("io.papermc.paper:paper-api:1.18.1-R0.1-SNAPSHOT")
+    //compileOnly("io.papermc.paper:paper-api:1.18.1-R0.1-SNAPSHOT")
+
     implementation("io.papermc:paperlib:1.0.7")
 }
 
@@ -141,6 +146,11 @@ tasks {
     //build {
     //    dependsOn(shadowJar)
     //}
+
+    build {
+        dependsOn(reobfJar)
+    }
+
     compileJava {
         options.encoding = Charsets.UTF_8.name()
         options.release.set(17)
@@ -158,7 +168,7 @@ tasks {
         create<MavenPublication>("maven") {
             groupId = "rocks.gravili.notquests"
             artifactId = "NotQuests"
-            version = "3.2.5"
+            version = "4.0.0-dev"
 
             from(components["java"])
         }
