@@ -81,58 +81,79 @@ public class QuestPlayer {
     }
 
 
-    public void updateBeaconLocations(final Player player){
-
+    public final boolean updateBeaconLocations(final Player player){
+        boolean toReturn = false;
         for(String locationName : locationsAndBeacons.keySet()){
             if(activeLocationAndBeams.containsKey(locationName)){
                 continue;
             }
 
-            final Location location = locationsAndBeacons.get(locationName);
+            final Location finalLocation = locationsAndBeacons.get(locationName);
 
 
-            Location lowestDistance = player.getLocation();
+            Location lowestDistanceLocation = player.getLocation();
 
-            World world = player.getWorld();
-            int baseX = player.getLocation().getChunk().getX();
-            int baseZ = player.getLocation().getChunk().getZ();
-            for(int x = -3; x<=3; x++) {
-                for(int z = -3; z<=3; z++) {
-                    Chunk chunk = world.getChunkAt(baseX + x, baseZ + z);
-                    Location newChunkLocation = chunk.getBlock(8, location.getBlockY(), 8).getLocation();
-                    if(newChunkLocation.distance(location) < lowestDistance.distance(location)){
-                        lowestDistance = newChunkLocation;
+            if(finalLocation.distance(player.getLocation()) > 96){
+
+
+                //New Beacon Location should be cur player location + maxDistance blocks in direction of newChunkLocation - playerLocation
+                org.bukkit.util.Vector normalizedDistanceBetweenPlayerAndNewChunk = finalLocation.toVector().subtract(player.getLocation().toVector()).normalize();
+                lowestDistanceLocation = player.getLocation().add(normalizedDistanceBetweenPlayerAndNewChunk.multiply(96));
+                lowestDistanceLocation.setY(lowestDistanceLocation.getWorld().getHighestBlockYAt(lowestDistanceLocation.getBlockX(), lowestDistanceLocation.getBlockZ()));
+
+
+                /* World world = player.getWorld();
+                int baseX = player.getLocation().getChunk().getX();
+                int baseZ = player.getLocation().getChunk().getZ();
+                int[] toCheck = {-6,-5,-4,-3,3,4,5,6};
+
+                for(int x : toCheck) {
+                    for(int z : toCheck) {
+                        Chunk chunk = world.getChunkAt(baseX + x, baseZ + z);
+                        Location newChunkLocation = chunk.getBlock(8, location.getBlockY(), 8).getLocation();
+                        if(newChunkLocation.distance(location) < lowestDistanceLocation.distance(location)){
+                            lowestDistanceLocation = newChunkLocation;
+                        }
                     }
                 }
+
+                lowestDistanceLocation.setY(lowestDistanceLocation.getWorld().getHighestBlockYAt(lowestDistanceLocation.getBlockX(), lowestDistanceLocation.getBlockZ()));
+                */
+
+            }else{
+                lowestDistanceLocation = finalLocation;
+                toReturn = true;
             }
 
-            lowestDistance.setY(lowestDistance.getWorld().getHighestBlockYAt(lowestDistance.getBlockX(), lowestDistance.getBlockZ()));
 
 
 
-            BlockState beaconBlockState = lowestDistance.getBlock().getState();
+
+            BlockState beaconBlockState = lowestDistanceLocation.getBlock().getState();
             beaconBlockState.setType(Material.BEACON);
 
-            BlockState ironBlockState = lowestDistance.getBlock().getState();
+            BlockState ironBlockState = lowestDistanceLocation.getBlock().getState();
             ironBlockState.setType(Material.IRON_BLOCK);
 
 
-            player.sendBlockChange(lowestDistance, beaconBlockState.getBlockData());
-            player.sendBlockChange(lowestDistance.add(-1,-1,-1), ironBlockState.getBlockData());
-            player.sendBlockChange(lowestDistance.add(1,0,0), ironBlockState.getBlockData());
-            player.sendBlockChange(lowestDistance.add(1,0,0), ironBlockState.getBlockData());
-            player.sendBlockChange(lowestDistance.add(0,0,1), ironBlockState.getBlockData());
-            player.sendBlockChange(lowestDistance.add(-1,0,0), ironBlockState.getBlockData());
-            player.sendBlockChange(lowestDistance.add(-1,0,0), ironBlockState.getBlockData());
-            player.sendBlockChange(lowestDistance.add(0,0,1), ironBlockState.getBlockData());
-            player.sendBlockChange(lowestDistance.add(1,0,0), ironBlockState.getBlockData());
-            player.sendBlockChange(lowestDistance.add(1,0,0), ironBlockState.getBlockData());
+            player.sendBlockChange(lowestDistanceLocation, beaconBlockState.getBlockData());
+            player.sendBlockChange(lowestDistanceLocation.add(-1,-1,-1), ironBlockState.getBlockData());
+            player.sendBlockChange(lowestDistanceLocation.add(1,0,0), ironBlockState.getBlockData());
+            player.sendBlockChange(lowestDistanceLocation.add(1,0,0), ironBlockState.getBlockData());
+            player.sendBlockChange(lowestDistanceLocation.add(0,0,1), ironBlockState.getBlockData());
+            player.sendBlockChange(lowestDistanceLocation.add(-1,0,0), ironBlockState.getBlockData());
+            player.sendBlockChange(lowestDistanceLocation.add(-1,0,0), ironBlockState.getBlockData());
+            player.sendBlockChange(lowestDistanceLocation.add(0,0,1), ironBlockState.getBlockData());
+            player.sendBlockChange(lowestDistanceLocation.add(1,0,0), ironBlockState.getBlockData());
+            player.sendBlockChange(lowestDistanceLocation.add(1,0,0), ironBlockState.getBlockData());
 
 
-            activeLocationAndBeams.put(locationName, lowestDistance.add(-1, 1, -1));
-            //main.sendMessage(player, "<main> Initial Add: <highlight>" + lowestDistance.toVector().toString());
+            activeLocationAndBeams.put(locationName, lowestDistanceLocation.add(-1, 1, -1));
+            //main.sendMessage(player, "<main> Initial Add: <highlight>" + lowestDistanceLocation.toVector().toString());
 
         }
+
+        return toReturn;
 
 
     }

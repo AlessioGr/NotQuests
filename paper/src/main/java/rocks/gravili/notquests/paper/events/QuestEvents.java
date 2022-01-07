@@ -69,12 +69,7 @@ import static rocks.gravili.notquests.paper.commands.NotQuestColors.debugHighlig
 public class QuestEvents implements Listener {
     private final NotQuests main;
 
-    private final HashMap<QuestPlayer, LocationNameAndLocation> beaconsToUpdate;
-
-    public record LocationNameAndLocation(
-            String locationName,
-            Location newLocation
-    ) {}
+    private final HashMap<QuestPlayer, String> beaconsToUpdate;
 
 
     public QuestEvents(NotQuests main) {
@@ -84,15 +79,12 @@ public class QuestEvents implements Listener {
             @Override
             public void run() {
                 for(QuestPlayer questPlayer : beaconsToUpdate.keySet()) {
-                    String locationName = beaconsToUpdate.get(questPlayer).locationName();
+                    String locationName = beaconsToUpdate.get(questPlayer);
                     final Player player = questPlayer.getPlayer();
 
-                    if( questPlayer.getActiveLocationsAndBeacons().get(locationName) != null){
-                        player.sendMessage("Scheduled Beacon Removal");
-                        scheduleBeaconRemovalAt(questPlayer.getActiveLocationsAndBeacons().get(locationName), player);
-                    }
 
-                    final Location newBeaconLocation = beaconsToUpdate.get(questPlayer).newLocation();
+
+                    /*final Location newBeaconLocation = beaconsToUpdate.get(questPlayer).newLocation();
                     //Add Beacon to new chunk
                     BlockState beaconBlockState = newBeaconLocation.getBlock().getState();
                     beaconBlockState.setType(Material.BEACON);
@@ -112,15 +104,26 @@ public class QuestEvents implements Listener {
                     player.sendBlockChange(newBeaconLocation.add(1,0,0), ironBlockState.getBlockData());
 
 
-                    questPlayer.getActiveLocationsAndBeacons().put(locationName, newBeaconLocation.add(-1, 1, -1));
+                    questPlayer.getActiveLocationsAndBeacons().put(locationName, newBeaconLocation.add(-1, 1, -1));*/
 
-                    main.sendMessage(player, "<positive>Added new Beacon");
+                    Location locationToRemove = questPlayer.getActiveLocationsAndBeacons().get(locationName);
+
+                    //player.sendMessage("Scheduled Beacon Removal");
+
+                    questPlayer.getActiveLocationsAndBeacons().remove(locationName);
+                    questPlayer.updateBeaconLocations(player);
+                    if(locationToRemove != null){
+                        scheduleBeaconRemovalAt(locationToRemove, player);
+                    }
+
+
+                    //main.sendMessage(player, "<positive>Added new Beacon");
 
                 }
                 beaconsToUpdate.clear();
 
             }
-        }, 0L, 80L); //0 Tick initial delay, 20 Tick (1 Second) between repeats
+        }, 0L, 60L); //0 Tick initial delay, 20 Tick (1 Second) between repeats
     }
 
 
@@ -132,11 +135,14 @@ public class QuestEvents implements Listener {
             return;
         }
 
-        final Location playerLocation = player.getLocation();
-        int maxDistance = 110;
+        //final Location playerLocation = player.getLocation();
+        //int maxDistance = 110;
 
         for(String locationName : questPlayer.getLocationsAndBeacons().keySet()) {
-            final Location shouldLocation = questPlayer.getLocationsAndBeacons().get(locationName);
+            beaconsToUpdate.remove(questPlayer);
+            beaconsToUpdate.put(questPlayer, locationName);
+
+            /*final Location shouldLocation = questPlayer.getLocationsAndBeacons().get(locationName);
 
             Location newChunkLocation = e.getChunk().getBlock(8, shouldLocation.getBlockY(), 8).getLocation();
 
@@ -150,7 +156,7 @@ public class QuestEvents implements Listener {
 
             if(!questPlayer.getActiveLocationsAndBeacons().containsKey(locationName) || !questPlayer.getActiveLocationsAndBeacons().get(locationName).isChunkLoaded()){
                 beaconsToUpdate.remove(questPlayer);
-                beaconsToUpdate.put(questPlayer, new LocationNameAndLocation(locationName, newBeaconLocation));
+                beaconsToUpdate.put(questPlayer, locationName);
             }else{
                // (questPlayer.getActiveLocationsAndBeacons().get(locationName).distance(playerLocation) > maxDistance)
 
@@ -162,13 +168,13 @@ public class QuestEvents implements Listener {
                 double newDistance = shouldLocation.distance(newBeaconLocation);
                 if(newDistance < oldDistance){
                     beaconsToUpdate.remove(questPlayer);
-                    beaconsToUpdate.put(questPlayer, new LocationNameAndLocation(locationName, newBeaconLocation));
+                    beaconsToUpdate.put(questPlayer, locationName);
 
                 }else{
                     //main.sendMessage(player, "Ignored. Distance worse");
                 }
 
-            }
+            }*/
 
         }
     }
@@ -197,10 +203,10 @@ public class QuestEvents implements Listener {
                 location.add(1,0,0);
                 player.sendBlockChange(location, location.getBlock().getBlockData());
 
-                main.sendMessage(player, "<negative>Removed old Beacon");
+                //main.sendMessage(player, "<negative>Removed old Beacon");
 
             }
-        }, 75L);
+        }, 55L);
     }
 
 
