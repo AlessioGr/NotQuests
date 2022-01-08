@@ -156,24 +156,31 @@ public class NumberAction extends Action {
 
         QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
 
-        Object currentValue = variable.getValue(player, questPlayer, objects);
+        Object currentValueObject = variable.getValue(player, questPlayer, objects);
+
+        double currentValue = 0d;
+        if (currentValueObject instanceof Number) {
+            currentValue = ((Number) currentValueObject).doubleValue();
+        }else{
+            currentValue = (double) currentValueObject;
+        }
 
         double nextNewValue = newValue;
 
         if(getMathOperator().equalsIgnoreCase("set")){
             nextNewValue = (double)newValue;
         }else if(getMathOperator().equalsIgnoreCase("add")){
-            nextNewValue = (double)currentValue + newValue;
+            nextNewValue = currentValue + newValue;
         }else if(getMathOperator().equalsIgnoreCase("deduct")){
-            nextNewValue = (double)currentValue - newValue;
+            nextNewValue = currentValue - newValue;
         }else if(getMathOperator().equalsIgnoreCase("multiply")){
-            nextNewValue = (double)currentValue * newValue;
+            nextNewValue = currentValue * newValue;
         }else if(getMathOperator().equalsIgnoreCase("divide")){
             if(newValue == 0){
                 main.sendMessage(player, "<ERROR>Error: variable operator <highlight>" + getMathOperator() + "</highlight> cannot be used, because you cannot divide by 0. Report this to the Server owner.");
                 return;
             }
-            nextNewValue = (double)currentValue / newValue;
+            nextNewValue = currentValue / newValue;
         }else{
             main.sendMessage(player, "<ERROR>Error: variable operator <highlight>" + getMathOperator() + "</highlight> is invalid. Report this to the Server owner.");
             return;
@@ -182,16 +189,17 @@ public class NumberAction extends Action {
         questPlayer.sendDebugMessage("New Value: " + nextNewValue);
 
 
-        if(currentValue instanceof Long){
+
+        if(currentValueObject instanceof Long){
             ((Variable<Long>)variable).setValue(Double.valueOf(nextNewValue).longValue(), player, objects);
-        } else if(currentValue instanceof Float){
+        } else if(currentValueObject instanceof Float){
             ((Variable<Float>)variable).setValue(Double.valueOf(nextNewValue).floatValue(), player, objects);
-        } else if(currentValue instanceof Double){
+        } else if(currentValueObject instanceof Double){
             ((Variable<Double>)variable).setValue(nextNewValue, player, objects);
-        } else if(currentValue instanceof Integer){
+        } else if(currentValueObject instanceof Integer){
             ((Variable<Integer>)variable).setValue(Double.valueOf(nextNewValue).intValue(), player, objects);
         }else{
-            main.getLogManager().warn("Cannot execute number action, because the number type " + currentValue.getClass().getName() + " is invalid.");
+            main.getLogManager().warn("Cannot execute number action, because the number type " + currentValueObject.getClass().getName() + " is invalid.");
         }
 
     }
