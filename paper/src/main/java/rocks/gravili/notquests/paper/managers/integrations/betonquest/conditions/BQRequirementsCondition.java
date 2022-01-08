@@ -30,7 +30,6 @@ import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.conditions.CompletedQuestCondition;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
-import rocks.gravili.notquests.paper.structs.conditions.MoneyCondition;
 import rocks.gravili.notquests.paper.structs.conditions.PermissionCondition;
 
 public class BQRequirementsCondition extends org.betonquest.betonquest.api.Condition { //TODO: Make it dynamic for future or API requirements
@@ -75,16 +74,6 @@ public class BQRequirementsCondition extends org.betonquest.betonquest.api.Condi
             condition.setProgressNeeded(requirementInt);
             ((CompletedQuestCondition) condition).setOtherQuestName(requirementString);
 
-        } else if (requirementType == MoneyCondition.class) {
-            try {
-                condition = new MoneyCondition(main);
-                condition.setProgressNeeded(Long.parseLong(instruction.getPart(2)));
-                ((MoneyCondition)condition).setDeductMoney(false);
-
-            } catch (NumberFormatException e) {
-                throw new RuntimeException("Invalid number for second argument (amount of requirements needed).");
-            }
-
         } else if (requirementType == PermissionCondition.class) {
             String requirementString = instruction.getPart(2);
 
@@ -118,16 +107,7 @@ public class BQRequirementsCondition extends org.betonquest.betonquest.api.Condi
                 }
 
 
-            } else if (condition instanceof final MoneyCondition moneyRequirement) {
-                final long moneyRequirementAmount = moneyRequirement.getMoneyRequirement();
-
-                if (!main.getIntegrationsManager().isVaultEnabled() || main.getIntegrationsManager().getVaultManager().getEconomy() == null) {
-                    throw new QuestRuntimeException("The server does not have vault enabled. Please install Vault for money requirements to work.");
-                } else
-                    return !(main.getIntegrationsManager().getVaultManager().getEconomy().getBalance(player, player.getWorld().getName()) < moneyRequirementAmount);
-
-
-            } else if (condition instanceof final PermissionCondition permissionRequirement) {
+            } else  if (condition instanceof final PermissionCondition permissionRequirement) {
                 final String requiredPermission = permissionRequirement.getRequiredPermission();
 
                 return player.hasPermission(requiredPermission);
