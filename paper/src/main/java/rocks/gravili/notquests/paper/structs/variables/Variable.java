@@ -13,7 +13,7 @@ public abstract class Variable<T> {
     protected final NotQuests main;
     private final ArrayList<StringArgument<CommandSender>> requiredStrings;
     private HashMap<String, String> additionalStringArguments;
-    private boolean canSetValue;
+    private boolean canSetValue = false;
 
     public Variable(final NotQuests main){
         this.main = main;

@@ -28,9 +28,6 @@ import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.*;
 import rocks.gravili.notquests.paper.structs.conditions.hooks.towny.TownyNationNameCondition;
-import rocks.gravili.notquests.paper.structs.conditions.hooks.towny.TownyNationTownCountCondition;
-import rocks.gravili.notquests.paper.structs.conditions.hooks.towny.TownyTownPlotCountCondition;
-import rocks.gravili.notquests.paper.structs.conditions.hooks.towny.TownyTownResidentCountCondition;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
 import java.lang.reflect.InvocationTargetException;
@@ -68,9 +65,6 @@ public class ConditionsManager {
 
         //Towny
         registerCondition("TownyNationName", TownyNationNameCondition.class);
-        registerCondition("TownyNationTownCount", TownyNationTownCountCondition.class);
-        registerCondition("TownyTownResidentCount", TownyTownResidentCountCondition.class);
-        registerCondition("TownyTownPlotCount", TownyTownPlotCountCondition.class);
 
         registerCondition("Number", NumberCondition.class);
 

@@ -28,6 +28,9 @@ import rocks.gravili.notquests.paper.structs.variables.MoneyVariable;
 import rocks.gravili.notquests.paper.structs.variables.PlaceholderAPINumberVariable;
 import rocks.gravili.notquests.paper.structs.variables.QuestPointsVariable;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
+import rocks.gravili.notquests.paper.structs.variables.hooks.TownyNationTownCountVariable;
+import rocks.gravili.notquests.paper.structs.variables.hooks.TownyTownPlotCountVariable;
+import rocks.gravili.notquests.paper.structs.variables.hooks.TownyTownResidentCountVariable;
 import rocks.gravili.notquests.paper.structs.variables.hooks.UltimateClansClanLevelVariable;
 
 import java.util.Collection;
@@ -55,6 +58,11 @@ public class VariablesManager {
         registerVariable("UltimateClansClanLevel", UltimateClansClanLevelVariable.class);
         if(main.getIntegrationsManager().isPlaceholderAPIEnabled()){
             registerVariable("PlaceholderAPINumber", PlaceholderAPINumberVariable.class);
+        }
+        if(main.getIntegrationsManager().isTownyEnabled()){
+            registerVariable("TownyNationTownCount", TownyNationTownCountVariable.class);
+            registerVariable("TownyTownResidentCount", TownyTownResidentCountVariable.class);
+            registerVariable("TownyTownPlotCount", TownyTownPlotCountVariable.class);
         }
 
     }
