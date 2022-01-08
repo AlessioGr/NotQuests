@@ -39,7 +39,7 @@ public class ActiveQuestCondition extends Condition {
         super(main);
     }
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor, boolean negated) {
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
         manager.command(builder
                 .argument(QuestSelector.of("otherQuest", main), ArgumentDescription.of("Name of the other Quest which needs to be active for the player."))
                 .meta(CommandMeta.DESCRIPTION, "Adds a new ActiveQuest Requirement to a quest")
@@ -49,7 +49,7 @@ public class ActiveQuestCondition extends Condition {
                     ActiveQuestCondition activeQuestCondition = new ActiveQuestCondition(main);
                     activeQuestCondition.setOtherQuestName(otherQuest.getQuestName());
 
-                    main.getConditionsManager().addCondition(activeQuestCondition, context, negated);
+                    main.getConditionsManager().addCondition(activeQuestCondition, context);
                 }));
     }
 

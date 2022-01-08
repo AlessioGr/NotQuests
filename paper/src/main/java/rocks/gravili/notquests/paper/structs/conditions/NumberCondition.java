@@ -227,104 +227,70 @@ public class NumberCondition extends Condition {
     public String getConditionDescription() {
         //description += "\n<GRAY>--- Will quest points be deducted?: No";
 
+        if(getMathOperator().equalsIgnoreCase("moreThan")){
+            return "<GRAY>-- " + variableName + " needed: More than " + getProgressNeeded() + "</GRAY>";
+        }else if(getMathOperator().equalsIgnoreCase("moreOrEqualThan")){
+            return "<GRAY>-- " + variableName + " needed: More or equal than " + getProgressNeeded() + "</GRAY>";
+        }else if(getMathOperator().equalsIgnoreCase("lessThan")){
+            return "<GRAY>-- " + variableName + " needed: Less than " + getProgressNeeded() + "</GRAY>";
+        }else if(getMathOperator().equalsIgnoreCase("lessOrEqualThan")){
+            return "<GRAY>-- " + variableName + " needed: Less or equal than" + getProgressNeeded() + "</GRAY>";
+        }else if(getMathOperator().equalsIgnoreCase("equals")){
+            return "<GRAY>-- " + variableName + " needed: Exactly " + getProgressNeeded() + "</GRAY>";
+        }
+
         return "<GRAY>-- " + variableName + " needed: " + getProgressNeeded() + "</GRAY>";
     }
 
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor, boolean negated) {
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
         for(String variableString : main.getVariablesManager().getVariableIdentifiers()){
 
             Variable<?> variable = main.getVariablesManager().getVariableFromString(variableString);
 
-            if(!negated){
-                manager.command(main.getVariablesManager().registerVariableCommands(variableString, builder)
-                        .argument(StringArgument.<CommandSender>newBuilder("operator").withSuggestionsProvider((context, lastString) -> {
-                            ArrayList<String> completions = new ArrayList<>();
-                            completions.add("equals");
-                            completions.add("lessThan");
-                            completions.add("moreThan");
-                            completions.add("moreOrEqualThan");
-                            completions.add("lessOrEqualThan");
+            manager.command(main.getVariablesManager().registerVariableCommands(variableString, builder)
+                    .argument(StringArgument.<CommandSender>newBuilder("operator").withSuggestionsProvider((context, lastString) -> {
+                        ArrayList<String> completions = new ArrayList<>();
+                        completions.add("equals");
+                        completions.add("lessThan");
+                        completions.add("moreThan");
+                        completions.add("moreOrEqualThan");
+                        completions.add("lessOrEqualThan");
 
-                            final List<String> allArgs = context.getRawInput();
-                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Math Comparison Operator]", "[...]");
+                        final List<String> allArgs = context.getRawInput();
+                        main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Math Comparison Operator]", "[...]");
 
-                            return completions;
-                        }).build(), ArgumentDescription.of("Math operator."))
-                        .argument(NumberVariableValueArgument.newBuilder("amount", main), ArgumentDescription.of("Amount"))
-                        .meta(CommandMeta.DESCRIPTION, "Creates a new Number condition")
-                        .handler((context) -> {
+                        return completions;
+                    }).build(), ArgumentDescription.of("Math operator."))
+                    .argument(NumberVariableValueArgument.newBuilder("amount", main), ArgumentDescription.of("Amount"))
+                    .meta(CommandMeta.DESCRIPTION, "Creates a new Number condition")
+                    .handler((context) -> {
 
-                            final int amount = context.get("amount");
+                        final int amount = context.get("amount");
 
-                            final String mathOperator = context.get("operator");
+                        final String mathOperator = context.get("operator");
 
-                            NumberCondition numberCondition = new NumberCondition(main);
-                            numberCondition.setVariableName(variableString);
+                        NumberCondition numberCondition = new NumberCondition(main);
+                        numberCondition.setVariableName(variableString);
 
-                            numberCondition.setMathOperator(mathOperator);
-                            //numberCondition.setProgressNeeded(variable.getValue());
+                        numberCondition.setMathOperator(mathOperator);
+                        //numberCondition.setProgressNeeded(variable.getValue());
 
-                            numberCondition.setProgressNeeded(amount);
-                            //questPointsCondition.setDeductQuestPoints(deductQuestPoints);
+                        numberCondition.setProgressNeeded(amount);
+                        //questPointsCondition.setDeductQuestPoints(deductQuestPoints);
 
 
-                            if(variable != null){
-                                HashMap<String, String> additionalStringArguments = new HashMap<>();
-                                for(StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()){
-                                    additionalStringArguments.put(stringArgument.getName(), context.get(stringArgument.getName()));
-                                }
-                                numberCondition.setAdditionalStringArguments(additionalStringArguments);
+                        if(variable != null){
+                            HashMap<String, String> additionalStringArguments = new HashMap<>();
+                            for(StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()){
+                                additionalStringArguments.put(stringArgument.getName(), context.get(stringArgument.getName()));
                             }
+                            numberCondition.setAdditionalStringArguments(additionalStringArguments);
+                        }
 
-                            main.getConditionsManager().addCondition(numberCondition, context, false);
-                        })
-                );
-            }else {
-                manager.command(main.getVariablesManager().registerNegatedVariableCommands(variableString, builder)
-                        .argument(StringArgument.<CommandSender>newBuilder("operator").withSuggestionsProvider((context, lastString) -> {
-                            ArrayList<String> completions = new ArrayList<>();
-                            completions.add("equals");
-                            completions.add("lessThan");
-                            completions.add("moreThan");
-                            completions.add("moreOrEqualThan");
-                            completions.add("lessOrEqualThan");
-
-                            final List<String> allArgs = context.getRawInput();
-                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Math Comparison Operator]", "[...]");
-
-                            return completions;
-                        }).build(), ArgumentDescription.of("Math operator."))
-                        .argument(NumberVariableValueArgument.newBuilder("amount", main), ArgumentDescription.of("Amount"))
-                        .meta(CommandMeta.DESCRIPTION, "Creates a new Number condition")
-                        .handler((context) -> {
-
-                            final int amount = context.get("amount");
-
-                            final String mathOperator = context.get("operator");
-
-                            NumberCondition numberCondition = new NumberCondition(main);
-                            numberCondition.setVariableName(variableString);
-
-                            numberCondition.setMathOperator(mathOperator);
-                            //numberCondition.setProgressNeeded(variable.getValue());
-
-                            numberCondition.setProgressNeeded(amount);
-                            //questPointsCondition.setDeductQuestPoints(deductQuestPoints);
-
-
-                            if(variable != null){
-                                HashMap<String, String> additionalStringArguments = new HashMap<>();
-                                for(StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()){
-                                    additionalStringArguments.put(stringArgument.getName(), context.get(stringArgument.getName()));
-                                }
-                                numberCondition.setAdditionalStringArguments(additionalStringArguments);
-                            }
-
-                            main.getConditionsManager().addCondition(numberCondition, context, true);
-                        })
-                );
-            }
+                        main.getConditionsManager().addCondition(numberCondition, context);
+                    })
+            );
 
 
         }

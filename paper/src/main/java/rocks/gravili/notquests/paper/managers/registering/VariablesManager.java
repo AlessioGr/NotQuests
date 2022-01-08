@@ -71,18 +71,6 @@ public class VariablesManager {
         return newBuilder;
     }
 
-    public Command.Builder<CommandSender> registerNegatedVariableCommands(String variableString, Command.Builder<CommandSender> builder){
-        Command.Builder<CommandSender> newBuilder = builder.literal("!"+variableString, ArgumentDescription.of("Variable Name"));
-
-        Variable<?> variable = getVariableFromString(variableString);
-        if(variable != null && variable.getRequiredStrings() != null){
-            for(StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()){
-                newBuilder = newBuilder.argument(stringArgument, ArgumentDescription.of("Optional Argument"));
-            }
-        }
-        return newBuilder;
-    }
-
 
     public void registerVariable(final String identifier, final Class<? extends Variable<?>> Variable) {
         main.getLogManager().info("Registering Variable <highlight>" + identifier);

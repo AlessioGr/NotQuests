@@ -24,7 +24,7 @@ public class TownyTownResidentCountCondition extends Condition {
         super(main);
     }
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor, boolean negated) {
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
         if (!main.getIntegrationsManager().isTownyEnabled()) {
             return;
         }
@@ -39,7 +39,7 @@ public class TownyTownResidentCountCondition extends Condition {
                     townyTownResidentCountCondition.setMinTownResidentCount(minResidentCount);
 
 
-                    main.getConditionsManager().addCondition(townyTownResidentCountCondition, context, negated);
+                    main.getConditionsManager().addCondition(townyTownResidentCountCondition, context);
                 }));
     }
 

@@ -18,6 +18,7 @@
 
 package rocks.gravili.notquests.paper.managers.registering;
 
+import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.paper.PaperCommandManager;
@@ -82,28 +83,43 @@ public class ConditionsManager {
         conditions.put(identifier, condition);
 
         try {
-            Method commandHandler = condition.getMethod("handleCommands", main.getClass(), PaperCommandManager.class, Command.Builder.class, ConditionFor.class, boolean.class);
+            Method commandHandler = condition.getMethod("handleCommands", main.getClass(), PaperCommandManager.class, Command.Builder.class, ConditionFor.class);
 
             if(condition == NumberCondition.class){
-                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddRequirementCommandBuilder(), ConditionFor.QUEST, false);
-                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddConditionCommandBuilder(), ConditionFor.OBJECTIVE, false);
-                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminAddConditionCommandBuilder(), ConditionFor.ConditionsYML, false); //For Actions.yml
-                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditActionsAddConditionCommandBuilder(), ConditionFor.Action, false); //For Actions.yml
+                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddRequirementCommandBuilder().flag(
+                                main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
+                                        .withDescription(ArgumentDescription.of("Negates this condition"))
+                        ), ConditionFor.QUEST);
+                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddConditionCommandBuilder().flag(
+                        main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
+                                .withDescription(ArgumentDescription.of("Negates this condition"))
+                ), ConditionFor.OBJECTIVE);
+                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminAddConditionCommandBuilder().flag(
+                        main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
+                                .withDescription(ArgumentDescription.of("Negates this condition"))
+                ), ConditionFor.ConditionsYML); //For Actions.yml
+                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditActionsAddConditionCommandBuilder().flag(
+                        main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
+                                .withDescription(ArgumentDescription.of("Negates this condition"))
+                ), ConditionFor.Action); //For Actions.yml
 
-                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddRequirementCommandBuilder(), ConditionFor.QUEST, true);
-                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddConditionCommandBuilder(), ConditionFor.OBJECTIVE, true);
-                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminAddConditionCommandBuilder(), ConditionFor.ConditionsYML, true); //For Actions.yml
-                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditActionsAddConditionCommandBuilder(), ConditionFor.Action, true); //For Actions.y
             }else{
-                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddRequirementCommandBuilder().literal(identifier), ConditionFor.QUEST, false);
-                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddConditionCommandBuilder().literal(identifier), ConditionFor.OBJECTIVE, false);
-                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminAddConditionCommandBuilder().literal(identifier), ConditionFor.ConditionsYML, false); //For Actions.yml
-                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditActionsAddConditionCommandBuilder().literal(identifier), ConditionFor.Action, false); //For Actions.yml
-
-                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddRequirementCommandBuilder().literal("!"+identifier), ConditionFor.QUEST, true);
-                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddConditionCommandBuilder().literal("!"+identifier), ConditionFor.OBJECTIVE, true);
-                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminAddConditionCommandBuilder().literal("!"+identifier), ConditionFor.ConditionsYML, true); //For Actions.yml
-                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditActionsAddConditionCommandBuilder().literal("!"+identifier), ConditionFor.Action, true); //For Actions.yml
+                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddRequirementCommandBuilder().literal(identifier).flag(
+                        main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
+                                .withDescription(ArgumentDescription.of("Negates this condition"))
+                ), ConditionFor.QUEST);
+                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddConditionCommandBuilder().literal(identifier).flag(
+                        main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
+                                .withDescription(ArgumentDescription.of("Negates this condition"))
+                ), ConditionFor.OBJECTIVE);
+                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminAddConditionCommandBuilder().literal(identifier).flag(
+                        main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
+                                .withDescription(ArgumentDescription.of("Negates this condition"))
+                ), ConditionFor.ConditionsYML); //For Actions.yml
+                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditActionsAddConditionCommandBuilder().literal(identifier).flag(
+                        main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
+                                .withDescription(ArgumentDescription.of("Negates this condition"))
+                ), ConditionFor.Action); //For Actions.yml
             }
 
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
@@ -137,8 +153,8 @@ public class ConditionsManager {
         return conditions.keySet();
     }
 
-    public void addCondition(Condition condition, CommandContext<CommandSender> context, boolean negated) {
-        condition.setNegated(negated);
+    public void addCondition(Condition condition, CommandContext<CommandSender> context) {
+        condition.setNegated(context.flags().isPresent("negate"));
 
         Quest quest = context.getOrDefault("quest", null);
         Objective objectiveOfQuest = null;

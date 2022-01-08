@@ -82,7 +82,7 @@ public abstract class Condition {
             return result;
         }else{
             if(result.isBlank()){
-                return "<YELLOW>You cannot fulfill this condition";
+                return "<YELLOW>You cannot fulfill this condition: <unimportant>" + getConditionDescription();
             }else{
                 return "";
             }

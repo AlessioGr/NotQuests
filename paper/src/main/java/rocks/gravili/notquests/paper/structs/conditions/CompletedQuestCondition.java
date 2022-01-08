@@ -43,7 +43,7 @@ public class CompletedQuestCondition extends Condition {
         super(main);
     }
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor, boolean negated) {
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
         manager.command(builder
                 .argument(QuestSelector.of("otherQuest", main), ArgumentDescription.of("Name of the other Quest the player has to complete."))
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of completions needed"))
@@ -64,7 +64,7 @@ public class CompletedQuestCondition extends Condition {
                     completedQuestCondition.setOtherQuestName(otherQuest.getQuestName());
                     completedQuestCondition.setMinimumTimeAfterCompletion(minimumWaitTimeAfterQuestCompletion);
 
-                    main.getConditionsManager().addCondition(completedQuestCondition, context, negated);
+                    main.getConditionsManager().addCondition(completedQuestCondition, context);
 
 
                 }));

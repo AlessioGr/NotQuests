@@ -49,7 +49,7 @@ public class TownyNationNameCondition extends Condition {
         this.townyNationName = newTownyNationName;
     }
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor, boolean negated) {
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
         if (!main.getIntegrationsManager().isTownyEnabled()) {
             return;
         }
@@ -72,7 +72,7 @@ public class TownyNationNameCondition extends Condition {
                     TownyNationNameCondition townyNationNameCondition = new TownyNationNameCondition(main);
                     townyNationNameCondition.setTownyNationName(townyNationName);
 
-                    main.getConditionsManager().addCondition(townyNationNameCondition, context, negated);
+                    main.getConditionsManager().addCondition(townyNationNameCondition, context);
                 }));
     }
 

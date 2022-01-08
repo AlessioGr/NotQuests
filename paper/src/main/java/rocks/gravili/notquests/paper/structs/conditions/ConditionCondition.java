@@ -41,7 +41,7 @@ public class ConditionCondition extends Condition {
         super(main);
     }
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor, boolean negated) {
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
         manager.command(builder
                 .argument(StringArgument.<CommandSender>newBuilder("Condition Identifier").withSuggestionsProvider(
                         (context, lastString) -> {
@@ -64,7 +64,7 @@ public class ConditionCondition extends Condition {
                         ConditionCondition conditionCondition = new ConditionCondition(main);
                         conditionCondition.setCondition(foundCondition);
 
-                        main.getConditionsManager().addCondition(conditionCondition, context, negated);
+                        main.getConditionsManager().addCondition(conditionCondition, context);
                     } else {
                         context.getSender().sendMessage(main.parse("<error>Error! Condition with the name <highlight>" + conditionIdentifier + "</highlight> does not exist!"));
                     }

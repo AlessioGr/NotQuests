@@ -95,7 +95,7 @@ public class CompletedObjectiveCondition extends Condition {
 
     }
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor, boolean negated) {
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
         if (conditionFor == ConditionFor.OBJECTIVE) {
             manager.command(builder
                     .argument(IntegerArgument.<CommandSender>newBuilder("Depending Objective ID").withMin(1).withSuggestionsProvider(
@@ -144,7 +144,7 @@ public class CompletedObjectiveCondition extends Condition {
                             CompletedObjectiveCondition completedObjectiveCondition = new CompletedObjectiveCondition(main);
                             completedObjectiveCondition.setObjectiveID(dependingObjectiveID);
 
-                            main.getConditionsManager().addCondition(completedObjectiveCondition, context, negated);
+                            main.getConditionsManager().addCondition(completedObjectiveCondition, context);
                         } else {
                             context.getSender().sendMessage(main.parse("<error>Error: You cannot set an objective to depend on itself!"));
                         }
