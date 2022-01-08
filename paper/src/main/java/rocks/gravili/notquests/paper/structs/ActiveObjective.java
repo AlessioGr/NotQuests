@@ -121,7 +121,7 @@ public class ActiveObjective {
 
         boolean foundStillFalseConditions = false;
         for (final Condition condition : objective.getConditions()){
-            String check = condition.check(getQuestPlayer(), false);
+            String check = condition.check(getQuestPlayer());
             getQuestPlayer().sendDebugMessage("Condition status for " + objective.getObjectiveFinalName() + ": " + check);
 
             if(!check.isBlank()) {

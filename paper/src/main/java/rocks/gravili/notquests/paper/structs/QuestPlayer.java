@@ -33,7 +33,9 @@ import rocks.gravili.notquests.paper.structs.conditions.Condition;
 import rocks.gravili.notquests.paper.structs.objectives.OtherQuestObjective;
 
 import java.time.Duration;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -204,7 +206,7 @@ public class QuestPlayer {
                 }
 
                 for (final Condition condition : quest.getQuest().getRequirements()) {
-                    final String check = condition.check(this, false);
+                    final String check = condition.check(this);
                     if (!check.isBlank()) {
                         requirementsStillNeeded.append("\n").append(check);
 
@@ -214,11 +216,6 @@ public class QuestPlayer {
 
                 if (!requirementsStillNeeded.toString().isBlank()) {
                     return "<RED>You do not fulfill all the requirements this quest needs! Requirement still needed:" + requirementsStillNeeded;
-                }else{
-                    //Now loop through all the requirements again in order to enforce them
-                    for (final Condition condition : quest.getQuest().getRequirements()) {
-                        condition.check(this, true);
-                    }
                 }
 
 

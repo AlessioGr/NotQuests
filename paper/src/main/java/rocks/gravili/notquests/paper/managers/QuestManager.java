@@ -251,6 +251,7 @@ public class QuestManager {
 
                             //RequirementType requirementType = RequirementType.valueOf(main.getDataManager().getQuestsData().getString("quests." + questName + ".requirements." + requirementNumber + ".requirementType"));
                             int progressNeeded = main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".requirements." + requirementNumber + ".progressNeeded");
+                            boolean negated = main.getDataManager().getQuestsConfig().getBoolean("quests." + questName + ".requirements." + requirementNumber + ".negated", false);
 
                             if (validRequirementID && requirementID > 0 && conditionType != null) {
                                 Condition condition = null;
@@ -259,6 +260,7 @@ public class QuestManager {
                                     condition = conditionType.getDeclaredConstructor(NotQuests.class).newInstance(main);
                                     condition.setProgressNeeded(progressNeeded);
                                     condition.setQuest(quest);
+                                    condition.setNegated(negated);
                                     condition.load(main.getDataManager().getQuestsConfig(), "quests." + questName + ".requirements." + requirementID);
                                 } catch (Exception ex) {
                                     main.getDataManager().disablePluginAndSaving("Error parsing requirement Type of requirement with ID <highlight>" + requirementNumber + "</highlight>.", quest, ex);
@@ -439,6 +441,7 @@ public class QuestManager {
                                 }
 
                                 int progressNeeded = main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditions." + objectiveConditionNumber + ".progressNeeded");
+                                boolean negated = main.getDataManager().getQuestsConfig().getBoolean("quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditions." + objectiveConditionNumber + ".negated", false);
 
                                 if (validConditionID && conditionID > 0 && conditionType != null) {
                                     Condition condition = null;
@@ -448,6 +451,8 @@ public class QuestManager {
                                         condition.setProgressNeeded(progressNeeded);
                                         condition.setQuest(quest);
                                         condition.setObjective(objective);
+                                        condition.setNegated(negated);
+
                                         condition.load(main.getDataManager().getQuestsConfig(), "quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditions." + objectiveConditionNumber);
                                     } catch (Exception ex) {
                                         main.getDataManager().disablePluginAndSaving("Error parsing condition Type of requirement with ID <highlight>" + objectiveConditionNumber + "</highlight>.", quest, objective, ex);

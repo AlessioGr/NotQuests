@@ -140,6 +140,7 @@ public class Quest {
         if (save) {
             main.getDataManager().getQuestsConfig().set("quests." + questName + ".requirements." + conditions.size() + ".conditionType", condition.getConditionType());
             main.getDataManager().getQuestsConfig().set("quests." + questName + ".requirements." + conditions.size() + ".progressNeeded", condition.getProgressNeeded());
+            main.getDataManager().getQuestsConfig().set("quests." + questName + ".requirements." + conditions.size() + ".negated", condition.isNegated());
 
             condition.save(main.getDataManager().getQuestsConfig(), "quests." + questName + ".requirements." + conditions.size());
         }

@@ -41,7 +41,7 @@ public class ConditionCondition extends Condition {
         super(main);
     }
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor, boolean negated) {
         manager.command(builder
                 .argument(StringArgument.<CommandSender>newBuilder("Condition Identifier").withSuggestionsProvider(
                         (context, lastString) -> {
@@ -64,7 +64,7 @@ public class ConditionCondition extends Condition {
                         ConditionCondition conditionCondition = new ConditionCondition(main);
                         conditionCondition.setCondition(foundCondition);
 
-                        main.getConditionsManager().addCondition(conditionCondition, context);
+                        main.getConditionsManager().addCondition(conditionCondition, context, negated);
                     } else {
                         context.getSender().sendMessage(main.parse("<error>Error! Condition with the name <highlight>" + conditionIdentifier + "</highlight> does not exist!"));
                     }
@@ -82,12 +82,12 @@ public class ConditionCondition extends Condition {
     }
 
     @Override
-    public String check(final QuestPlayer questPlayer, final boolean enforce) {
+    public String checkInternally(final QuestPlayer questPlayer) {
         if (condition == null) {
             return "<warn>Error: ConditionCondition cannot be checked because the condition was not found. Report this to the server owner.";
         }
 
-        return condition.check(questPlayer, enforce);
+        return condition.check(questPlayer);
     }
 
     @Override

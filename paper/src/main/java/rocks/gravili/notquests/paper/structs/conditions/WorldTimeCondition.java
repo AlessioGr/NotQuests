@@ -46,7 +46,7 @@ public class WorldTimeCondition extends Condition {
         this.maxTime = maxTime;
     }
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor, boolean negated) {
         manager.command(builder
                 .argument(IntegerArgument.<CommandSender>newBuilder("minTime").withMin(0).withMax(24), ArgumentDescription.of("Minimum world time (24-hour clock)"))
                 .argument(IntegerArgument.<CommandSender>newBuilder("maxTime").withMin(0).withMax(24), ArgumentDescription.of("Maximum world time (24-hour clock)"))
@@ -60,7 +60,7 @@ public class WorldTimeCondition extends Condition {
                     worldTimeCondition.setMinTime(minTime);
                     worldTimeCondition.setMaxTime(maxTime);
 
-                    main.getConditionsManager().addCondition(worldTimeCondition, context);
+                    main.getConditionsManager().addCondition(worldTimeCondition, context, negated);
                 }));
     }
 
@@ -73,7 +73,7 @@ public class WorldTimeCondition extends Condition {
     }
 
     @Override
-    public String check(final QuestPlayer questPlayer, final boolean enforce) {
+    public String checkInternally(final QuestPlayer questPlayer) {
         long currentTime = questPlayer.getPlayer().getWorld().getTime();
 
         if (currentTime >= 18000) {

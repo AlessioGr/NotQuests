@@ -51,7 +51,7 @@ public class PermissionCondition extends Condition {
 
 
     @Override
-    public String check(QuestPlayer questPlayer, boolean enforce) {
+    public String checkInternally(QuestPlayer questPlayer) {
         final String requiredPermission = getRequiredPermission();
 
         final Player player = questPlayer.getPlayer();
@@ -83,7 +83,7 @@ public class PermissionCondition extends Condition {
     }
 
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor, boolean negated) {
         manager.command(builder
                 .argument(StringArgument.<CommandSender>newBuilder("Permission").withSuggestionsProvider(
                         (context, lastString) -> {
@@ -103,7 +103,7 @@ public class PermissionCondition extends Condition {
                     PermissionCondition permissionCondition = new PermissionCondition(main);
                     permissionCondition.setRequiredPermission(permissionNode);
 
-                    main.getConditionsManager().addCondition(permissionCondition, context);
+                    main.getConditionsManager().addCondition(permissionCondition, context, negated);
                 }));
     }
 }

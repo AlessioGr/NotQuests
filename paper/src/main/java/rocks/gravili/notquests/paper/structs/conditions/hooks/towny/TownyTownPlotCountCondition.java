@@ -24,7 +24,7 @@ public class TownyTownPlotCountCondition extends Condition {
         super(main);
     }
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor, boolean negated) {
         if (!main.getIntegrationsManager().isTownyEnabled()) {
             return;
         }
@@ -39,7 +39,7 @@ public class TownyTownPlotCountCondition extends Condition {
                     townyTownPlotCountCondition.setMinTownPlotCount(minPlotCount);
 
 
-                    main.getConditionsManager().addCondition(townyTownPlotCountCondition, context);
+                    main.getConditionsManager().addCondition(townyTownPlotCountCondition, context, negated);
                 }));
     }
 
@@ -52,7 +52,7 @@ public class TownyTownPlotCountCondition extends Condition {
     }
 
     @Override
-    public String check(QuestPlayer questPlayer, boolean enforce) {
+    public String checkInternally(QuestPlayer questPlayer) {
         if (!main.getIntegrationsManager().isTownyEnabled()) {
             return "<YELLOW>Error: The server does not have Towny enabled. Please ask the Owner to install Towny for Towny stuff to work.";
         }

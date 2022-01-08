@@ -60,7 +60,7 @@ public class CompletedObjectiveCondition extends Condition {
 
 
     @Override
-    public String check(final QuestPlayer questPlayer, final boolean enforce) {
+    public String checkInternally(final QuestPlayer questPlayer) {
         final Objective objectiveToComplete = getObjectiveToComplete();
         if(objectiveToComplete == null){
             return "<RED>Error: Cannot find objective you have to complete first.";
@@ -95,7 +95,7 @@ public class CompletedObjectiveCondition extends Condition {
 
     }
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor, boolean negated) {
         if (conditionFor == ConditionFor.OBJECTIVE) {
             manager.command(builder
                     .argument(IntegerArgument.<CommandSender>newBuilder("Depending Objective ID").withMin(1).withSuggestionsProvider(
@@ -144,7 +144,7 @@ public class CompletedObjectiveCondition extends Condition {
                             CompletedObjectiveCondition completedObjectiveCondition = new CompletedObjectiveCondition(main);
                             completedObjectiveCondition.setObjectiveID(dependingObjectiveID);
 
-                            main.getConditionsManager().addCondition(completedObjectiveCondition, context);
+                            main.getConditionsManager().addCondition(completedObjectiveCondition, context, negated);
                         } else {
                             context.getSender().sendMessage(main.parse("<error>Error: You cannot set an objective to depend on itself!"));
                         }

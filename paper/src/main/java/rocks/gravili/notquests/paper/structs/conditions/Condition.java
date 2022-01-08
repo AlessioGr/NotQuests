@@ -30,6 +30,7 @@ public abstract class Condition {
     private long progressNeeded = 1;
     private Quest quest;
     private Objective objective;
+    private boolean negated = false;
 
     public Condition(NotQuests main) {
         this.main = main;
@@ -73,7 +74,20 @@ public abstract class Condition {
     /**
      * @return String if the condition is not fulfilled. Empty string if the condition is fulfilled. The String should say the still-required condition.
      */
-    public abstract String check(final QuestPlayer questPlayer, final boolean enforce);
+    protected abstract String checkInternally(final QuestPlayer questPlayer);
+
+    public String check(final QuestPlayer questPlayer){
+        String result = checkInternally(questPlayer);
+        if(!isNegated()){
+            return result;
+        }else{
+            if(result.isBlank()){
+                return "<YELLOW>You cannot fulfill this condition";
+            }else{
+                return "";
+            }
+        }
+    }
 
 
     public abstract String getConditionDescription();
@@ -81,4 +95,12 @@ public abstract class Condition {
     public abstract void save(final FileConfiguration configuration, final String initialPath);
 
     public abstract void load(final FileConfiguration configuration, final String initialPath);
+
+    public void setNegated(boolean negated) {
+        this.negated = negated;
+    }
+
+    public final boolean isNegated(){
+        return negated;
+    }
 }

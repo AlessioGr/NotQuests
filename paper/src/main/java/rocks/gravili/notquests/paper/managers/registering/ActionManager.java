@@ -178,7 +178,7 @@ public class ActionManager {
 
         StringBuilder unfulfilledConditions = new StringBuilder();
         for (final Condition condition : action.getConditions()) {
-            final String check = condition.check(questPlayer, false);
+            final String check = condition.check(questPlayer);
             main.getLogManager().debug("   Condition Check Result: " + check);
             if (!check.isBlank()) {
                 unfulfilledConditions.append("\n").append(check);
@@ -191,10 +191,7 @@ public class ActionManager {
             }
         } else {
             main.getLogManager().debug("   All Conditions fulfilled!");
-            //Now loop through all the requirements again in order to enforce them
-            for (final Condition condition : action.getConditions()) {
-                condition.check(questPlayer, true);
-            }
+
             action.execute(questPlayer.getPlayer(), objects);
             if (!silent) {
                 sender.sendMessage(main.parse("<success>Action with the name <highlight>" + action.getActionName() + "</highlight> has been executed!"));

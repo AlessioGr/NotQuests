@@ -29,8 +29,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
-import static rocks.gravili.notquests.paper.commands.NotQuestColors.*;
-
 public class ConditionsYMLManager {
     private final NotQuests main;
     private final HashMap<String, Condition> conditionsAndIdentifiers;
@@ -111,11 +109,13 @@ public class ConditionsYMLManager {
                     Condition condition = null;
 
                     int progressNeeded = getConditionsConfig().getInt("conditions." + conditionIdentifier + ".progressNeeded");
+                    boolean negated = getConditionsConfig().getBoolean("conditions." + conditionIdentifier + ".negated", false);
 
                     try {
                         condition = conditionType.getDeclaredConstructor(NotQuests.class).newInstance(main);
                         condition.setConditionName(conditionIdentifier);
                         condition.setProgressNeeded(progressNeeded);
+                        condition.setNegated(negated);
                         condition.load(getConditionsConfig(), "conditions." + conditionIdentifier);
 
                     } catch (Exception ex) {
@@ -171,6 +171,7 @@ public class ConditionsYMLManager {
 
             getConditionsConfig().set("conditions." + conditionIdentifier + ".conditionType", condition.getConditionType());
             getConditionsConfig().set("conditions." + conditionIdentifier + ".progressNeeded", condition.getProgressNeeded());
+            getConditionsConfig().set("conditions." + conditionIdentifier + ".negated", condition.isNegated());
 
 
             condition.save(getConditionsConfig(), "conditions." + conditionIdentifier);

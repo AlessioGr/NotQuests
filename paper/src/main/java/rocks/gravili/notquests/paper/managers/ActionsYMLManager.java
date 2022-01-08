@@ -30,8 +30,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
-import static rocks.gravili.notquests.paper.commands.NotQuestColors.*;
-
 public class ActionsYMLManager {
     private final NotQuests main;
     private final HashMap<String, Action> actionsAndIdentifiers;
@@ -166,6 +164,8 @@ public class ActionsYMLManager {
                 }
 
                 int progressNeeded = getActionsConfig().getInt("actions." + action.getActionName() + ".conditions." + actionConditionNumber + ".progressNeeded");
+                boolean negated = getActionsConfig().getBoolean("actions." + action.getActionName() + ".conditions." + actionConditionNumber + ".negated", false);
+
 
                 if (validConditionID && conditionID > 0 && conditionType != null) {
                     Condition condition = null;
@@ -173,6 +173,7 @@ public class ActionsYMLManager {
                     try {
                         condition = conditionType.getDeclaredConstructor(NotQuests.class).newInstance(main);
                         condition.setProgressNeeded(progressNeeded);
+                        condition.setNegated(negated);
                         condition.load(getActionsConfig(), "actions." + action.getActionName() + ".conditions." + actionConditionNumber);
                     } catch (Exception ex) {
                         main.getDataManager().disablePluginAndSaving("Error parsing condition Type of condition with ID <highlight>" + actionConditionNumber + "</highlight>.", action, ex);

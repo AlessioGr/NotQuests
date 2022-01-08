@@ -1119,10 +1119,6 @@ public class AdminCommands {
                 ).single().build(), ArgumentDescription.of("Condition Identifier"))
                 .literal("check")
                 .argument(SinglePlayerSelectorArgument.optional("player selector"), ArgumentDescription.of("Player for which the condition will be checked"))
-                .flag(
-                        manager.flagBuilder("enforce")
-                                .withDescription(ArgumentDescription.of("Should the condition be able to change/enforce stuff (for example the money condition would deduct your money if it's set to deduct your money)"))
-                )
                 .meta(CommandMeta.DESCRIPTION, "Checks a condition")
                 .handler((context) -> {
 
@@ -1143,19 +1139,15 @@ public class AdminCommands {
                             context.getSender().sendMessage(main.parse("<error>Error! Player object not found!"));
                             return;
                         }
-                        final boolean enforce = context.flags().isPresent("enforce");
 
 
                         QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
-                        String result = foundCondition.check(questPlayer, enforce);
+                        String result = foundCondition.check(questPlayer);
                         if (result.isBlank()) {
                             result = "<success>Condition fulfilled!";
                         }
-                        if (!enforce) {
-                            context.getSender().sendMessage(main.parse("<success>Condition with the name <highlight>" + conditionIdentifier + "</highlight> has been checked! Result:</success>\n" + result));
-                        } else {
-                            context.getSender().sendMessage(main.parse("<success>Condition with the name <highlight>" + conditionIdentifier + "</highlight> has been checked and enforced! Result:</success>\n" + result));
-                        }
+                        context.getSender().sendMessage(main.parse("<success>Condition with the name <highlight>" + conditionIdentifier + "</highlight> has been checked! Result:</success>\n" + result));
+
 
                     } else {
                         context.getSender().sendMessage(main.parse("<error>Error! Condition with the name <highlight>" + conditionIdentifier + "</highlight> does not exist!"));

@@ -172,7 +172,7 @@ public class ConversationPlayer {
                             return nextLines;
                         } else { //Check conditions
                             for (final Condition condition : conversationLineToCheck.getConditions()) {
-                                if (!condition.check(getQuestPlayer(), false).isBlank()) {
+                                if (!condition.check(getQuestPlayer()).isBlank()) {
                                     continue conversationLineLoop;
                                 }
                             }

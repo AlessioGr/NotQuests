@@ -92,6 +92,7 @@ public abstract class Action {
         if (save) {
             configuration.set(initialPath + ".conditions." + conditions.size() + ".conditionType", condition.getConditionType());
             configuration.set(initialPath + ".conditions." + conditions.size() + ".progressNeeded", condition.getProgressNeeded());
+            configuration.set(initialPath + ".conditions." + conditions.size() + ".negated", condition.isNegated());
 
             condition.save(configuration, initialPath + ".conditions." + conditions.size());
         }
