@@ -40,7 +40,7 @@ public class GiveQuestAction extends Action {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor rewardFor) {
-        manager.command(builder.literal("GiveQuest")
+        manager.command(builder
                 .argument(QuestSelector.of("quest to give", main), ArgumentDescription.of("Name of the Quest which should be given to the player."))
                 .flag(
                         manager.flagBuilder("forceGive")

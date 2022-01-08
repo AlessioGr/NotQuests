@@ -40,7 +40,7 @@ public class ConsoleCommandAction extends Action {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor rewardFor) {
-        manager.command(builder.literal("ConsoleCommand")
+        manager.command(builder
                 .argument(CommandSelector.<CommandSender>newBuilder("Console Command", main).build(), ArgumentDescription.of("Command which will be executed from the console as a reward. A '/' at the beginning is not required."))
                 .meta(CommandMeta.DESCRIPTION, "Adds a new ConsoleCommand Reward to a quest")
                 .handler((context) -> {

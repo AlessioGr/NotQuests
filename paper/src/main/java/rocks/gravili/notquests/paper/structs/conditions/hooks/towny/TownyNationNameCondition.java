@@ -26,7 +26,6 @@ import cloud.commandframework.paper.PaperCommandManager;
 import com.palmergames.bukkit.towny.TownyUniverse;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
-import net.kyori.adventure.audience.Audience;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -55,7 +54,7 @@ public class TownyNationNameCondition extends Condition {
             return;
         }
 
-        manager.command(builder.literal("TownyNationName")
+        manager.command(builder
                 .argument(StringArgument.<CommandSender>newBuilder("Nation Name").withSuggestionsProvider(
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();

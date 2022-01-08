@@ -24,8 +24,6 @@ import cloud.commandframework.arguments.parser.ArgumentParseResult;
 import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -36,8 +34,6 @@ import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static rocks.gravili.notquests.paper.commands.NotQuestColors.*;
 
 
 public class CompletedObjectiveCondition extends Condition {
@@ -101,7 +97,7 @@ public class CompletedObjectiveCondition extends Condition {
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
         if (conditionFor == ConditionFor.OBJECTIVE) {
-            manager.command(builder.literal("CompletedObjective")
+            manager.command(builder
                     .argument(IntegerArgument.<CommandSender>newBuilder("Depending Objective ID").withMin(1).withSuggestionsProvider(
                                     (context, lastString) -> {
                                         final List<String> allArgs = context.getRawInput();

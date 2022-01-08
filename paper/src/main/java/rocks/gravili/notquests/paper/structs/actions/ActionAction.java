@@ -41,7 +41,7 @@ public class ActionAction extends Action {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor rewardFor) {
-        manager.command(builder.literal("Action")
+        manager.command(builder
                 .argument(ActionSelector.of("Action", main), ArgumentDescription.of("Name of the action which will be executed"))
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").asOptionalWithDefault(1).withMin(1), ArgumentDescription.of("Amount of times the action will be executed."))
                 .flag(

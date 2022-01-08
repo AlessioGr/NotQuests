@@ -29,7 +29,7 @@ public class TownyTownPlotCountCondition extends Condition {
             return;
         }
 
-        manager.command(builder.literal("TownyTownPlotCount")
+        manager.command(builder
                 .argument(IntegerArgument.<CommandSender>newBuilder("min Plot Count").withMin(1), ArgumentDescription.of("Minimum Town plot count"))
                 .meta(CommandMeta.DESCRIPTION, "Creates a new TownyTownPlotCount Condition")
                 .handler((context) -> {

@@ -47,7 +47,7 @@ public class WorldTimeCondition extends Condition {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
-        manager.command(builder.literal("WorldTime")
+        manager.command(builder
                 .argument(IntegerArgument.<CommandSender>newBuilder("minTime").withMin(0).withMax(24), ArgumentDescription.of("Minimum world time (24-hour clock)"))
                 .argument(IntegerArgument.<CommandSender>newBuilder("maxTime").withMin(0).withMax(24), ArgumentDescription.of("Maximum world time (24-hour clock)"))
 

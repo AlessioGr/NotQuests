@@ -41,7 +41,7 @@ public class StartConversationAction extends Action {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor rewardFor) {
-        manager.command(builder.literal("StartConversation")
+        manager.command(builder
                 .argument(ConversationSelector.of("conversation to start", main), ArgumentDescription.of("Name of the Conversation which should be started."))
                 .flag(
                         manager.flagBuilder("endPrevious")

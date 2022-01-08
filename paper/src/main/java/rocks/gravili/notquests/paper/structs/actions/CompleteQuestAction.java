@@ -41,7 +41,7 @@ public class CompleteQuestAction extends Action {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor rewardFor) {
-        manager.command(builder.literal("CompleteQuest")
+        manager.command(builder
                 .argument(QuestSelector.of("quest to complete", main), ArgumentDescription.of("Name of the Quest which should be completed for the player."))
                 .meta(CommandMeta.DESCRIPTION, "Creates a new CompleteQuest Action")
                 .handler((context) -> {

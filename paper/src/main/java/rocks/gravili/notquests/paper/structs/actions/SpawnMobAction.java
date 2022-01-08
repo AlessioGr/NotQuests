@@ -49,7 +49,7 @@ public class SpawnMobAction extends Action {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor rewardFor) {
-        manager.command(builder.literal("SpawnMob")
+        manager.command(builder
                 .argument(EntityTypeSelector.of("entityType", main), ArgumentDescription.of("Type of Entity which should be spawned."))
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of mobs which should be spawned"))
                 .literal("PlayerLocation", ArgumentDescription.of("Takes the location the player currently is in (when executing the action). So, this is a dynamic location."))

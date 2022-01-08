@@ -25,7 +25,6 @@ import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
-import net.kyori.adventure.audience.Audience;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -45,7 +44,7 @@ public class TriggerCommandObjective extends Objective {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
-        manager.command(addObjectiveBuilder.literal("TriggerCommand")
+        manager.command(addObjectiveBuilder
                 .senderType(Player.class)
                 .argument(StringArgument.<CommandSender>newBuilder("Trigger name").withSuggestionsProvider(
                         (context, lastString) -> {

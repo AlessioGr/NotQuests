@@ -41,7 +41,7 @@ public class OtherQuestObjective extends Objective {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
-        manager.command(addObjectiveBuilder.literal("OtherQuest")
+        manager.command(addObjectiveBuilder
                 .argument(QuestSelector.of("other quest name", main), ArgumentDescription.of("Name of the other Quest the player has to complete."))
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of times the Quest needs to be completed."))
                 .flag(

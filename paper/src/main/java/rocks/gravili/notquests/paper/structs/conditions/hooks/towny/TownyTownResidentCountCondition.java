@@ -29,7 +29,7 @@ public class TownyTownResidentCountCondition extends Condition {
             return;
         }
 
-        manager.command(builder.literal("TownyTownResidentCount")
+        manager.command(builder
                 .argument(IntegerArgument.<CommandSender>newBuilder("min Resident Count").withMin(1), ArgumentDescription.of("Minimum Town resident count"))
                 .meta(CommandMeta.DESCRIPTION, "Creates a new TownyTownResidentCount Condition")
                 .handler((context) -> {

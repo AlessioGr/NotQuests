@@ -39,7 +39,7 @@ public class SendMessageAction extends Action {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor actionFor) {
-        manager.command(builder.literal("SendMessage")
+        manager.command(builder
                 .argument(MiniMessageSelector.<CommandSender>newBuilder("Sending Message", main).withPlaceholders().build(), ArgumentDescription.of("Message to broadcast"))
                 .meta(CommandMeta.DESCRIPTION, "Creates a new SendMessage Action")
                 .handler((context) -> {

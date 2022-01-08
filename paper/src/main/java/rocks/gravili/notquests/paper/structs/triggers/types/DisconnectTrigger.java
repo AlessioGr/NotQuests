@@ -36,7 +36,7 @@ public class DisconnectTrigger extends Trigger {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addTriggerBuilder) {
-        manager.command(addTriggerBuilder.literal("DISCONNECT")
+        manager.command(addTriggerBuilder
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of disconnects needed for the Trigger to trigger."))
                 .flag(main.getCommandManager().applyOn)
                 .flag(main.getCommandManager().triggerWorldString)

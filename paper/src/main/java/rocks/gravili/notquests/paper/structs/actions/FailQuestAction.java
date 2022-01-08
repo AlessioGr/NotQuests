@@ -41,7 +41,7 @@ public class FailQuestAction extends Action {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor rewardFor) {
-        manager.command(builder.literal("FailQuest")
+        manager.command(builder
                 .argument(QuestSelector.of("quest to fail", main), ArgumentDescription.of("Name of the Quest which should be failed for the player."))
                 .meta(CommandMeta.DESCRIPTION, "Creates a new FailQuest Action")
                 .handler((context) -> {
