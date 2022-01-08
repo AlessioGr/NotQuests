@@ -236,6 +236,7 @@ public class NumberCondition extends Condition {
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
         for(String variableString : main.getVariablesManager().getVariableIdentifiers()){
 
+            Variable<?> variable = main.getVariablesManager().getVariableFromString(variableString);
 
             manager.command(main.getVariablesManager().registerVariableCommands(variableString, builder)
                     .argument(StringArgument.<CommandSender>newBuilder("operator").withSuggestionsProvider((context, lastString) -> {
@@ -249,7 +250,7 @@ public class NumberCondition extends Condition {
 
 
                         final List<String> allArgs = context.getRawInput();
-                        main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Math Comparison Operator]", "");
+                        main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Math Comparison Operator]", "[...]");
 
                         return completions;
                     }).build(), ArgumentDescription.of("Math operator."))
@@ -271,8 +272,6 @@ public class NumberCondition extends Condition {
                         numberCondition.setProgressNeeded(amount);
                         //questPointsCondition.setDeductQuestPoints(deductQuestPoints);
 
-
-                        Variable<?> variable = main.getVariablesManager().getVariableFromString(variableString);
 
                         if(variable != null){
                             HashMap<String, String> additionalStringArguments = new HashMap<>();

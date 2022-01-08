@@ -30,10 +30,14 @@ public class MoneyVariable extends Variable<Double>{
             if (!main.getIntegrationsManager().isVaultEnabled() || main.getIntegrationsManager().getVaultManager().getEconomy() == null) {
                 return false;
             }else {
-                if(newValue > 0){
-                    main.getIntegrationsManager().getVaultManager().getEconomy().depositPlayer(player, newValue);
+                final double currentBalance = main.getIntegrationsManager().getVaultManager().getEconomy().getBalance(player);
+                if(newValue > currentBalance){
+                    //player.sendMessage("Deposited " + (newValue-currentBalance));
+                    main.getIntegrationsManager().getVaultManager().getEconomy().depositPlayer(player, newValue-currentBalance);
                 }else {
-                    main.getIntegrationsManager().getVaultManager().getEconomy().withdrawPlayer(player, Math.abs(newValue));
+                    //player.sendMessage("Withdraw " + (currentBalance - newValue));
+
+                    main.getIntegrationsManager().getVaultManager().getEconomy().withdrawPlayer(player, currentBalance - newValue);
                 }
                 return true;
             }

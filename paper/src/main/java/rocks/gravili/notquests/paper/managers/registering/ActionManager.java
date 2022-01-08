@@ -27,6 +27,7 @@ import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.actions.*;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
+import rocks.gravili.notquests.paper.structs.conditions.NumberCondition;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
 import java.lang.reflect.InvocationTargetException;
@@ -57,14 +58,15 @@ public class ActionManager {
         registerAction("StartConversation", StartConversationAction.class);
 
         registerAction("ConsoleCommand", ConsoleCommandAction.class);
-        registerAction("GiveQuestPoints", GiveQuestPointsAction.class);
+        //registerAction("GiveQuestPoints", GiveQuestPointsAction.class);
         registerAction("GiveItem", GiveItemAction.class);
-        registerAction("GiveMoney", GiveMoneyAction.class);
+        //registerAction("GiveMoney", GiveMoneyAction.class);
         registerAction("GrantPermission", GrantPermissionAction.class);
         registerAction("SpawnMob", SpawnMobAction.class);
         registerAction("SendMessage", SendMessageAction.class);
         registerAction("BroadcastMessage", BroadcastMessageAction.class);
 
+        registerAction("Number", NumberAction.class);
 
     }
 
