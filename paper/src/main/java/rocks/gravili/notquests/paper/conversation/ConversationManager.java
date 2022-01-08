@@ -436,13 +436,24 @@ public class ConversationManager {
             ArrayList<Condition> conditions = new ArrayList<>();
             for (String conditionString : allConditionsString) {
                 main.getLogManager().debug("<GREEN>Trying to find condition in: " + conditionString);
-                if (conditionString.startsWith("condition ")) {
+                if (conditionString.startsWith("!condition ")) {
                     final String strippedCondition = conditionString.replace("condition ", "").replace(" ", "");
 
-                    final Condition foundCondition = main.getConditionsYMLManager().getCondition(strippedCondition.replace("!", ""));
+                    final Condition foundCondition = main.getConditionsYMLManager().getCondition(strippedCondition);
                     if (foundCondition != null) {
                         main.getLogManager().debug("Found conversation line condition: " + foundCondition.getConditionName());
-                        foundCondition.setNegated(strippedCondition.startsWith("!"));
+                        foundCondition.setNegated(true);
+                        conditions.add(foundCondition);
+                    } else {
+                        main.getLogManager().warn("Unable to find conversation line condition: " + conditionString);
+                    }
+
+                } else if (conditionString.startsWith("condition ")) {
+                    final String strippedCondition = conditionString.replace("condition ", "").replace(" ", "");
+
+                    final Condition foundCondition = main.getConditionsYMLManager().getCondition(strippedCondition);
+                    if (foundCondition != null) {
+                        main.getLogManager().debug("Found conversation line condition: " + foundCondition.getConditionName());
                         conditions.add(foundCondition);
                     } else {
                         main.getLogManager().warn("Unable to find conversation line condition: " + conditionString);
