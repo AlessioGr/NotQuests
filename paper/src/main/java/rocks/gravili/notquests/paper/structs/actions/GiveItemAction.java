@@ -33,6 +33,8 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
 
+import java.util.ArrayList;
+
 public class GiveItemAction extends Action {
 
     private ItemStack item = null;
@@ -120,5 +122,16 @@ public class GiveItemAction extends Action {
     @Override
     public void load(final FileConfiguration configuration, String initialPath) {
         this.item = configuration.getItemStack(initialPath + ".specifics.item");
+    }
+
+    @Override
+    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+        final ItemStack itemStack = new ItemStack(Material.valueOf(arguments.get(0)));
+
+        if(arguments.size() >= 2){
+            itemStack.setAmount(Integer.parseInt(arguments.get(1)));
+        }
+
+        this.item = itemStack;
     }
 }

@@ -162,4 +162,10 @@ public class CompletedObjectiveCondition extends Condition {
     public void load(FileConfiguration configuration, String initialPath) {
         objectiveID = configuration.getInt(initialPath + ".specifics.objectiveID");
     }
+
+    @Override
+    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+        objectiveID = Integer.parseInt(arguments.get(0));
+
+    }
 }

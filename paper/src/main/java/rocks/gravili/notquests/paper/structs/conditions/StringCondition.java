@@ -134,12 +134,36 @@ public class StringCondition extends Condition {
     public void load(FileConfiguration configuration, String initialPath) {
         this.variableName = configuration.getString(initialPath + ".specifics.variableName");
         this.stringOperator = configuration.getString(initialPath + ".specifics.operator", "");
-        this.string = configuration.getString(initialPath + ".specifics.string", "");
+        this.string = configuration.getString(initialPath + ".specifics.string", "").replace("__", " ");
 
         final ConfigurationSection additionalStringsConfigurationSection = configuration.getConfigurationSection(initialPath + ".specifics.additionalStrings");
         if (additionalStringsConfigurationSection != null) {
             for (String key : additionalStringsConfigurationSection.getKeys(false)) {
                 additionalStringArguments.put(key, configuration.getString(initialPath + ".specifics.additionalStrings." + key, ""));
+            }
+        }
+    }
+
+    @Override
+    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+        this.variableName = arguments.get(0);
+
+        this.stringOperator = arguments.get(1);
+        this.string = arguments.get(2).replace("__", " ");
+
+        if(arguments.size() >= 4){
+
+            Variable<?> variable = main.getVariablesManager().getVariableFromString(variableName);
+            if(variable == null || !variable.isCanSetValue() || variable.getVariableDataType() != VariableDataType.NUMBER){
+                return;
+            }
+
+            int counter = 0;
+            for (String argument : arguments){
+                counter++;
+                if(counter >= 4){
+                    additionalStringArguments.put(variable.getRequiredStrings().get(counter-4).getName(), argument);
+                }
             }
         }
     }
@@ -194,7 +218,8 @@ public class StringCondition extends Condition {
                     .meta(CommandMeta.DESCRIPTION, "Creates a new String condition")
                     .handler((context) -> {
 
-                        final String string = context.get("string");
+                        String string = context.get("string");
+                        string = string.replace("__", " ");
 
                         final String stringOperator = context.get("operator");
 

@@ -28,6 +28,8 @@ import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.MiniMessageSelector;
 
+import java.util.ArrayList;
+
 
 public class SendMessageAction extends Action {
 
@@ -81,6 +83,11 @@ public class SendMessageAction extends Action {
     @Override
     public void load(final FileConfiguration configuration, String initialPath) {
         this.messageToSend = configuration.getString(initialPath + ".specifics.message", "");
+    }
+
+    @Override
+    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+        this.messageToSend = String.join(" ", arguments);
     }
 
 

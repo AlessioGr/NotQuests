@@ -30,6 +30,9 @@ import rocks.gravili.notquests.paper.commands.arguments.ConversationSelector;
 import rocks.gravili.notquests.paper.conversation.Conversation;
 import rocks.gravili.notquests.paper.conversation.ConversationPlayer;
 
+import java.util.ArrayList;
+import java.util.Locale;
+
 public class StartConversationAction extends Action {
 
     private String conversationToStart = "";
@@ -101,6 +104,16 @@ public class StartConversationAction extends Action {
     public void load(final FileConfiguration configuration, String initialPath) {
         this.conversationToStart = configuration.getString(initialPath + ".specifics.conversation");
         this.endPrevious = configuration.getBoolean(initialPath + ".specifics.endPrevious");
+    }
+
+    @Override
+    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+        this.conversationToStart = arguments.get(0);
+        if(arguments.size() >= 2){
+            this.endPrevious = String.join(" ", arguments).toLowerCase(Locale.ROOT).contains("--endprevious");
+        }else {
+            this.endPrevious = false;
+        }
     }
 
 

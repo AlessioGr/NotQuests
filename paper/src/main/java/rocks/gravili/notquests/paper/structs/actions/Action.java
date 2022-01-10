@@ -111,5 +111,7 @@ public abstract class Action {
         configuration.set(initialPath + ".conditions", null);
     }
 
+    public abstract void deserializeFromSingleLineString(final ArrayList<String> arguments);
+
 
 }

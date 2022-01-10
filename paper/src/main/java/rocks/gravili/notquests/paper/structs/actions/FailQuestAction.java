@@ -31,6 +31,8 @@ import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
+import java.util.ArrayList;
+
 public class FailQuestAction extends Action {
 
     private String questToFailName = "";
@@ -94,6 +96,11 @@ public class FailQuestAction extends Action {
     @Override
     public void load(final FileConfiguration configuration, String initialPath) {
         this.questToFailName = configuration.getString(initialPath + ".specifics.quest");
+    }
+
+    @Override
+    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+        this.questToFailName = arguments.get(0);
     }
 
 

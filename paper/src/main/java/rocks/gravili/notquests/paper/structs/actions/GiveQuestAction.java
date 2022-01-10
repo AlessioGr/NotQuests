@@ -29,6 +29,9 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.QuestSelector;
 import rocks.gravili.notquests.paper.structs.Quest;
 
+import java.util.ArrayList;
+import java.util.Locale;
+
 public class GiveQuestAction extends Action {
 
     private String questToGiveName = "";
@@ -100,6 +103,13 @@ public class GiveQuestAction extends Action {
     public void load(final FileConfiguration configuration, String initialPath) {
         this.questToGiveName = configuration.getString(initialPath + ".specifics.quest");
         this.forceGive = configuration.getBoolean(initialPath + ".specifics.forceGive");
+    }
+
+    @Override
+    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+        this.questToGiveName = arguments.get(0);
+
+        this.forceGive = String.join(" ", arguments).toLowerCase(Locale.ROOT).contains("--forcegive");
     }
 
 

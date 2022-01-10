@@ -82,6 +82,11 @@ public class PermissionCondition extends Condition {
 
     }
 
+    @Override
+    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+        this.requiredPermission = arguments.get(0);
+    }
+
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
         manager.command(builder

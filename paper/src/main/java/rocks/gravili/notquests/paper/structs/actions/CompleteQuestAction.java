@@ -31,6 +31,8 @@ import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
+import java.util.ArrayList;
+
 public class CompleteQuestAction extends Action {
 
     private String questToCompleteName = "";
@@ -94,6 +96,11 @@ public class CompleteQuestAction extends Action {
     @Override
     public void load(final FileConfiguration configuration, String initialPath) {
         this.questToCompleteName = configuration.getString(initialPath + ".specifics.quest");
+    }
+
+    @Override
+    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+        this.questToCompleteName = arguments.get(0);
     }
 
 

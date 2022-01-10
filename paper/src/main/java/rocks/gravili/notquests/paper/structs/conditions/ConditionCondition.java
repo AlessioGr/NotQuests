@@ -117,4 +117,13 @@ public class ConditionCondition extends Condition {
             main.getLogManager().warn("Error: ConditionCondition cannot find the condition with name " + conditionName + ". Condition Path: " + initialPath);
         }
     }
+
+    @Override
+    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+        String conditionName = arguments.get(0);
+        this.condition = main.getConditionsYMLManager().getCondition(conditionName);
+        if (condition == null) {
+            main.getLogManager().warn("Error: ConditionCondition cannot find the condition with name " + conditionName + ". Provided condition: " + arguments.get(0));
+        }
+    }
 }

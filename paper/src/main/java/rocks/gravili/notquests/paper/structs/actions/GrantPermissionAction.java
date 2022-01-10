@@ -107,6 +107,11 @@ public class GrantPermissionAction extends Action {
         this.rewardedPermission = configuration.getString(initialPath + ".specifics.permission");
     }
 
+    @Override
+    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+        this.rewardedPermission = arguments.get(0);
+    }
+
     public final String getRewardedPermission() {
         return rewardedPermission;
     }

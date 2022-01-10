@@ -35,6 +35,7 @@ import org.bukkit.util.Vector;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.EntityTypeSelector;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 public class SpawnMobAction extends Action {
@@ -198,6 +199,24 @@ public class SpawnMobAction extends Action {
         this.spawnLocation = configuration.getLocation(initialPath + ".specifics.spawnLocation");
         this.usePlayerLocation = configuration.getBoolean(initialPath + ".specifics.usePlayerLocation");
         this.spawnAmount = configuration.getInt(initialPath + ".specifics.amount", 1);
+    }
+
+    @Override
+    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+        this.mobToSpawnType = arguments.get(0);
+        this.spawnAmount = Integer.parseInt(arguments.get(1));
+
+        this.usePlayerLocation = (arguments.size() < 3);
+
+        if(!isUsePlayerLocation()){
+            final World world = Bukkit.getWorld(arguments.get(2));
+            final Vector coordinates = new Vector(Integer.parseInt(arguments.get(3)), Integer.parseInt(arguments.get(4)), Integer.parseInt(arguments.get(5)));
+            final Location location = coordinates.toLocation(world);
+
+            this.spawnLocation = location;
+        }
+
+
     }
 
 

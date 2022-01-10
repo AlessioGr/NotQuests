@@ -28,6 +28,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
+import java.util.ArrayList;
+
 
 public class WorldTimeCondition extends Condition {
 
@@ -129,5 +131,11 @@ public class WorldTimeCondition extends Condition {
         minTime = configuration.getInt(initialPath + ".specifics.minTime");
         maxTime = configuration.getInt(initialPath + ".specifics.maxTime");
 
+    }
+
+    @Override
+    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+        minTime = Integer.parseInt(arguments.get(0));
+        maxTime = Integer.parseInt(arguments.get(1));
     }
 }

@@ -24,6 +24,8 @@ import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
+import java.util.ArrayList;
+
 public abstract class Condition {
     protected final NotQuests main;
     private String conditionName = "";
@@ -103,4 +105,7 @@ public abstract class Condition {
     public final boolean isNegated(){
         return negated;
     }
+
+    public abstract void deserializeFromSingleLineString(final ArrayList<String> arguments);
+
 }

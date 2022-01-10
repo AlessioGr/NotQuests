@@ -124,6 +124,11 @@ public class TriggerCommandAction extends Action {
         this.triggerCommandName = configuration.getString(initialPath + ".specifics.triggerName");
     }
 
+    @Override
+    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+        this.triggerCommandName = arguments.get(0);
+    }
+
 
     @Override
     public String getActionDescription() {

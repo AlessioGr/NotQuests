@@ -31,6 +31,7 @@ import rocks.gravili.notquests.paper.structs.CompletedQuest;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 
@@ -210,5 +211,18 @@ public class CompletedQuestCondition extends Condition {
         }
 
         minimumTimeAfterCompletion = configuration.getLong(initialPath + ".specifics.waitTimeAfterCompletion", -1L);
+    }
+
+    @Override
+    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+        otherQuestName = arguments.get(0);
+
+        setProgressNeeded(Long.parseLong(arguments.get(1)));
+
+        if(arguments.size() >= 3){
+            minimumTimeAfterCompletion = Long.parseLong(arguments.get(2));
+        }else{
+            minimumTimeAfterCompletion = -1L;
+        }
     }
 }

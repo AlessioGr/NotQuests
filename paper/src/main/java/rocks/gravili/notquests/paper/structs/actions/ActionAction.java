@@ -29,6 +29,9 @@ import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.ActionSelector;
 
+import java.util.ArrayList;
+import java.util.Locale;
+
 public class ActionAction extends Action {
 
     private Action action = null;
@@ -135,6 +138,24 @@ public class ActionAction extends Action {
 
         this.amount = configuration.getInt(initialPath + ".specifics.amount", 1);
         this.ignoreConditions = configuration.getBoolean(initialPath + ".specifics.ignoreConditions", false);
+
+    }
+
+    @Override
+    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+        String actionName = arguments.get(0);
+        this.action = main.getActionsYMLManager().getAction(actionName);
+        if (action == null) {
+            main.getLogManager().warn("Error: ActionAction cannot find the action with name " + actionName + ". Action Name: " + arguments.get(0));
+        }
+
+        if(arguments.size() >= 2){
+            this.amount = Integer.parseInt(arguments.get(1));
+        }else{
+            this.amount = 1;
+        }
+
+        this.ignoreConditions = String.join(" ", arguments).toLowerCase(Locale.ROOT).contains("--ignoreconditions");
 
     }
 

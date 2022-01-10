@@ -129,4 +129,9 @@ public class TownyNationNameCondition extends Condition {
         this.townyNationName = configuration.getString(initialPath + ".specifics.townyNationName");
 
     }
+
+    @Override
+    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+        this.townyNationName = arguments.get(0);
+    }
 }

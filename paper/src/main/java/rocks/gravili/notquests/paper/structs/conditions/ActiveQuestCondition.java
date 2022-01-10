@@ -30,6 +30,8 @@ import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
+import java.util.ArrayList;
+
 
 public class ActiveQuestCondition extends Condition {
 
@@ -103,5 +105,10 @@ public class ActiveQuestCondition extends Condition {
     @Override
     public void load(FileConfiguration configuration, String initialPath) {
         otherQuestName = configuration.getString(initialPath + ".specifics.otherQuest");
+    }
+
+    @Override
+    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+        otherQuestName = arguments.get(0);
     }
 }

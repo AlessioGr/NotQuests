@@ -29,6 +29,8 @@ import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.MiniMessageSelector;
 
+import java.util.ArrayList;
+
 public class BroadcastMessageAction extends Action {
 
     private String messageToBroadcast = "";
@@ -81,6 +83,11 @@ public class BroadcastMessageAction extends Action {
     @Override
     public void load(final FileConfiguration configuration, String initialPath) {
         this.messageToBroadcast = configuration.getString(initialPath + ".specifics.message", "");
+    }
+
+    @Override
+    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+        this.messageToBroadcast = String.join(" ", arguments);
     }
 
 

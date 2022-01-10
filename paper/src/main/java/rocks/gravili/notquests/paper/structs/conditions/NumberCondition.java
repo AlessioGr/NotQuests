@@ -225,6 +225,30 @@ public class NumberCondition extends Condition {
     }
 
     @Override
+    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+        this.variableName = arguments.get(0);
+
+        this.mathOperator = arguments.get(1);
+        setProgressNeeded(Long.parseLong(arguments.get(2)));
+
+        if(arguments.size() >= 4){
+
+            Variable<?> variable = main.getVariablesManager().getVariableFromString(variableName);
+            if(variable == null || !variable.isCanSetValue() || variable.getVariableDataType() != VariableDataType.NUMBER){
+                return;
+            }
+
+            int counter = 0;
+            for (String argument : arguments){
+                counter++;
+                if(counter >= 4){
+                    additionalStringArguments.put(variable.getRequiredStrings().get(counter-4).getName(), argument);
+                }
+            }
+        }
+    }
+
+    @Override
     public String getConditionDescription() {
         //description += "\n<GRAY>--- Will quest points be deducted?: No";
 

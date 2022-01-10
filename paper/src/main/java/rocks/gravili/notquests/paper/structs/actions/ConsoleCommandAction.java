@@ -30,6 +30,8 @@ import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.CommandSelector;
 
+import java.util.ArrayList;
+
 public class ConsoleCommandAction extends Action {
 
     private String consoleCommand = "";
@@ -87,6 +89,11 @@ public class ConsoleCommandAction extends Action {
     public void load(final FileConfiguration configuration, String initialPath) {
         this.consoleCommand = configuration.getString(initialPath + ".specifics.consoleCommand");
 
+    }
+
+    @Override
+    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+        this.consoleCommand = String.join(" ", arguments);
     }
 
 

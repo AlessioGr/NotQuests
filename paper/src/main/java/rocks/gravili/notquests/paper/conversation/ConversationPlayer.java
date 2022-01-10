@@ -164,7 +164,17 @@ public class ConversationPlayer {
             conversationLineLoop:
             for (final ConversationLine conversationLineToCheck : conversationLines) {
                 if (conversationLineToCheck.getSpeaker().isPlayer()) {
-                    nextLines.add(conversationLineToCheck);
+                    if (conversationLineToCheck.getConditions().isEmpty()) {
+                        nextLines.add(conversationLineToCheck);
+                    } else { //Check conditions
+                        for (final Condition condition : conversationLineToCheck.getConditions()) {
+                            if (!condition.check(getQuestPlayer()).isBlank()) {
+                                continue conversationLineLoop;
+                            }
+                        }
+                        //If this is reached, all conditions passed
+                        nextLines.add(conversationLineToCheck);
+                    }
                 } else {
                     if (nextLines.isEmpty()) { //So we don't mingle it with player lines if there already is one.
                         if (conversationLineToCheck.getConditions().isEmpty()) { //No unfulfilled conditions`=> Return it. We only need to return the first fulfilled condition if its not player lines.
