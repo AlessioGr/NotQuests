@@ -271,7 +271,7 @@ public class NumberCondition extends Condition {
                     .meta(CommandMeta.DESCRIPTION, "Creates a new Number condition")
                     .handler((context) -> {
 
-                        final int amount = context.get("amount");
+                        final long amount = context.get("amount");
 
                         final String mathOperator = context.get("operator");
 

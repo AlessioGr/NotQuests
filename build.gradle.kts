@@ -9,8 +9,11 @@ plugins {
 }
 
 
+//extra["version"] = "4.0.0-dev1"
+
 group = "rocks.gravili.notquests"
-version = "4.0.0-dev"
+version = "4.0.0-dev2"
+
 
 repositories {
 }
@@ -25,7 +28,7 @@ dependencies {
  */
 val path = "rocks.gravili.notquests"
 tasks.withType<ShadowJar> {
-
+    //archiveBaseName.set("notquests")
     archiveClassifier.set("")
 }
 
@@ -44,6 +47,8 @@ tasks {
         filteringCharset = Charsets.UTF_8.name()
     }
 }
+
+
 
 /*publishing {
     publications {
@@ -74,3 +79,4 @@ publishing {
         }
     }
 }
+

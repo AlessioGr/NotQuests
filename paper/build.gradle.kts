@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "rocks.gravili.notquests"
-version = "4.0.0-dev"
+version = rootProject.version
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
@@ -239,6 +239,7 @@ tasks.withType<ShadowJar> {
     }
 
 
+    //archiveBaseName.set("notquests")
     archiveClassifier.set("")
 
 

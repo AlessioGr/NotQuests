@@ -207,7 +207,8 @@ tasks.withType<ShadowJar> {
 
 
     }
-
+    //archiveBaseName.set("notquests")
+    archiveClassifier.set("")
 
 
 

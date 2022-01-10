@@ -39,19 +39,19 @@ import rocks.gravili.notquests.paper.structs.variables.Variable;
 import java.util.*;
 import java.util.function.BiFunction;
 
-public final class NumberVariableValueArgument<C> extends CommandArgument<C, Integer> {
+public final class NumberVariableValueArgument<C> extends CommandArgument<C, Long> {
 
-    private static final int MAX_SUGGESTIONS_INCREMENT = 10;
-    private static final int NUMBER_SHIFT_MULTIPLIER = 10;
+    private static final long MAX_SUGGESTIONS_INCREMENT = 10;
+    private static final long NUMBER_SHIFT_MULTIPLIER = 10;
 
-    private final int min;
-    private final int max;
+    private final long min;
+    private final long max;
 
     private NumberVariableValueArgument(
             final boolean required,
             final @NonNull String name,
-            final int min,
-            final int max,
+            final long min,
+            final long max,
             final @NonNull String defaultValue,
             final @Nullable BiFunction<@NonNull CommandContext<C>, @NonNull String,
                     @NonNull List<@NonNull String>> suggestionsProvider,
@@ -61,9 +61,9 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Int
         super(
                 required,
                 name,
-                new NumberVariableValueArgument.IntegerParser<>(min, max, main),
+                new NumberVariableValueArgument.LongParser<>(min, max, main),
                 defaultValue,
-                Integer.class,
+                Long.class,
                 suggestionsProvider,
                 defaultDescription
         );
@@ -89,7 +89,7 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Int
      * @param <C>  Command sender type
      * @return Created argument
      */
-    public static <C> @NonNull CommandArgument<C, Integer> of(final @NonNull String name, final NotQuests main) {
+    public static <C> @NonNull CommandArgument<C, Long> of(final @NonNull String name, final NotQuests main) {
         return NumberVariableValueArgument.<C>newBuilder(name, main).asRequired().build();
     }
 
@@ -100,7 +100,7 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Int
      * @param <C>  Command sender type
      * @return Created argument
      */
-    public static <C> @NonNull CommandArgument<C, Integer> optional(final @NonNull String name, final NotQuests main) {
+    public static <C> @NonNull CommandArgument<C, Long> optional(final @NonNull String name, final NotQuests main) {
         return NumberVariableValueArgument.<C>newBuilder(name, main).asOptional().build();
     }
 
@@ -112,37 +112,37 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Int
      * @param <C>        Command sender type
      * @return Created argument
      */
-    public static <C> @NonNull CommandArgument<C, Integer> optional(final @NonNull String name, final int defaultNum , final NotQuests main) {
+    public static <C> @NonNull CommandArgument<C, Long> optional(final @NonNull String name, final long defaultNum , final NotQuests main) {
         return NumberVariableValueArgument.<C>newBuilder(name, main).asOptionalWithDefault(defaultNum).build();
     }
 
     /**
-     * Get the minimum accepted integer that could have been parsed
+     * Get the minimum accepted Long that could have been parsed
      *
-     * @return Minimum integer
+     * @return Minimum Long
      */
-    public int getMin() {
+    public long getMin() {
         return this.min;
     }
 
     /**
-     * Get the maximum accepted integer that could have been parsed
+     * Get the maximum accepted Long that could have been parsed
      *
-     * @return Maximum integer
+     * @return Maximum Long
      */
-    public int getMax() {
+    public long getMax() {
         return this.max;
     }
 
-    public static final class Builder<C> extends CommandArgument.Builder<C, Integer> {
+    public static final class Builder<C> extends CommandArgument.Builder<C, Long> {
 
-        private int min = NumberVariableValueArgument.IntegerParser.DEFAULT_MINIMUM;
-        private int max = NumberVariableValueArgument.IntegerParser.DEFAULT_MAXIMUM;
+        private long min = NumberVariableValueArgument.LongParser.DEFAULT_MINIMUM;
+        private long max = NumberVariableValueArgument.LongParser.DEFAULT_MAXIMUM;
 
         private final NotQuests main;
 
         private Builder(final @NonNull String name, final NotQuests main) {
-            super(Integer.class, name);
+            super(Long.class, name);
             this.main = main;
         }
 
@@ -152,7 +152,7 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Int
          * @param min Minimum value
          * @return Builder instance
          */
-        public NumberVariableValueArgument.Builder<C> withMin(final int min) {
+        public NumberVariableValueArgument.Builder<C> withMin(final long min) {
             this.min = min;
             return this;
         }
@@ -163,7 +163,7 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Int
          * @param max Maximum value
          * @return Builder instance
          */
-        public NumberVariableValueArgument.Builder<C> withMax(final int max) {
+        public NumberVariableValueArgument.Builder<C> withMax(final long max) {
             this.max = max;
             return this;
         }
@@ -176,8 +176,8 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Int
          * @see CommandArgument.Builder#asOptionalWithDefault(String)
          * @since 1.5.0
          */
-        public NumberVariableValueArgument.Builder<C> asOptionalWithDefault(final int defaultValue) {
-            return (NumberVariableValueArgument.Builder<C>) this.asOptionalWithDefault(Integer.toString(defaultValue));
+        public NumberVariableValueArgument.Builder<C> asOptionalWithDefault(final long defaultValue) {
+            return (NumberVariableValueArgument.Builder<C>) this.asOptionalWithDefault(Long.toString(defaultValue));
         }
 
         @Override
@@ -189,39 +189,39 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Int
 
     }
 
-    public static final class IntegerParser<C> implements ArgumentParser<C, Integer> {
+    public static final class LongParser<C> implements ArgumentParser<C, Long> {
         private final NotQuests main;
         /**
          * Constant for the default/unset minimum value.
          *
          * @since 1.5.0
          */
-        public static final int DEFAULT_MINIMUM = Integer.MIN_VALUE;
+        public static final long DEFAULT_MINIMUM = Long.MIN_VALUE;
 
         /**
          * Constant for the default/unset maximum value.
          *
          * @since 1.5.0
          */
-        public static final int DEFAULT_MAXIMUM = Integer.MAX_VALUE;
+        public static final long DEFAULT_MAXIMUM = Long.MAX_VALUE;
 
-        private final int min;
-        private final int max;
+        private final long min;
+        private final long max;
 
         /**
-         * Construct a new integer parser
+         * Construct a new Long parser
          *
          * @param min Minimum acceptable value
          * @param max Maximum acceptable value
          */
-        public IntegerParser(final int min, final int max, final NotQuests main) {
+        public LongParser(final long min, final long max, final NotQuests main) {
             this.min = min;
             this.max = max;
             this.main = main;
         }
 
         /**
-         * Get integer suggestions. This supports both positive and negative numbers
+         * Get Long suggestions. This supports both positive and negative numbers
          *
          * @param min   Minimum value
          * @param max   Maximum value
@@ -241,7 +241,7 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Int
                 final long inputNumAbsolute = Math.abs(inputNum);
 
                 numbers.add(inputNumAbsolute); /* It's a valid number, so we suggest it */
-                for (int i = 0; i < MAX_SUGGESTIONS_INCREMENT
+                for (long i = 0; i < MAX_SUGGESTIONS_INCREMENT
                         && (inputNum * NUMBER_SHIFT_MULTIPLIER) + i <= max; i++) {
                     numbers.add((inputNumAbsolute * NUMBER_SHIFT_MULTIPLIER) + i);
                 }
@@ -264,23 +264,23 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Int
         }
 
         @Override
-        public @NonNull ArgumentParseResult<Integer> parse(
+        public @NonNull ArgumentParseResult<Long> parse(
                 final @NonNull CommandContext<C> commandContext,
                 final @NonNull Queue<@NonNull String> inputQueue
         ) {
             final String input = inputQueue.peek();
             if (input == null) {
-                return ArgumentParseResult.failure(new NoInputProvidedException(NumberVariableValueArgument.IntegerParser.class, commandContext));
+                return ArgumentParseResult.failure(new NoInputProvidedException(NumberVariableValueArgument.LongParser.class, commandContext));
             }
             try {
-                final int value = Integer.parseInt(input);
+                final long value = Long.parseLong(input);
                 if (value < this.min || value > this.max) {
-                    return ArgumentParseResult.failure(new NumberVariableValueArgument.IntegerParseException(input, this, commandContext));
+                    return ArgumentParseResult.failure(new NumberVariableValueArgument.LongParseException(input, this, commandContext));
                 }
                 inputQueue.remove();
                 return ArgumentParseResult.success(value);
             } catch (final Exception e) {
-                return ArgumentParseResult.failure(new NumberVariableValueArgument.IntegerParseException(input, this, commandContext));
+                return ArgumentParseResult.failure(new NumberVariableValueArgument.LongParseException(input, this, commandContext));
             }
         }
 
@@ -289,7 +289,7 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Int
          *
          * @return Min value
          */
-        public int getMin() {
+        public long getMin() {
             return this.min;
         }
 
@@ -298,7 +298,7 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Int
          *
          * @return Max value
          */
-        public int getMax() {
+        public long getMax() {
             return this.max;
         }
 
@@ -367,46 +367,46 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Int
     }
 
 
-    public static final class IntegerParseException extends NumberParseException {
+    public static final class LongParseException extends NumberParseException {
 
         private static final long serialVersionUID = -6933923056628373853L;
 
-        private final NumberVariableValueArgument.IntegerParser<?> parser;
+        private final NumberVariableValueArgument.LongParser<?> parser;
 
         /**
-         * Construct a new integer parse exception
+         * Construct a new Long parse exception
          *
          * @param input          String input
          * @param min            Minimum value
          * @param max            Maximum value
          * @param commandContext Command context
-         * @deprecated use {@link #IntegerParseException(String, NumberVariableValueArgument.IntegerParser, CommandContext)} instead
+         * @deprecated use {@link #LongParseException(String, NumberVariableValueArgument.LongParser, CommandContext)} instead
          */
         @Deprecated
-        public IntegerParseException(
+        public LongParseException(
                 final @NonNull String input,
-                final int min,
-                final int max,
+                final long min,
+                final long max,
                 final @NonNull CommandContext<?> commandContext,
                 final NotQuests main
         ) {
-            this(input, new NumberVariableValueArgument.IntegerParser<>(min, max, main), commandContext);
+            this(input, new NumberVariableValueArgument.LongParser<>(min, max, main), commandContext);
         }
 
         /**
-         * Create a new {@link NumberVariableValueArgument.IntegerParseException}.
+         * Create a new {@link NumberVariableValueArgument.LongParseException}.
          *
          * @param input          input string
-         * @param parser         integer parser
+         * @param parser         Long parser
          * @param commandContext command context
          * @since 1.5.0
          */
-        public IntegerParseException(
+        public LongParseException(
                 final @NonNull String input,
-                final NumberVariableValueArgument.IntegerParser<?> parser,
+                final NumberVariableValueArgument.LongParser<?> parser,
                 final @NonNull CommandContext<?> commandContext
         ) {
-            super(input, parser.min, parser.max, NumberVariableValueArgument.IntegerParser.class, commandContext);
+            super(input, parser.min, parser.max, NumberVariableValueArgument.LongParser.class, commandContext);
             this.parser = parser;
         }
 
@@ -422,7 +422,7 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Int
 
         @Override
         public @NonNull String getNumberType() {
-            return "integer";
+            return "Long";
         }
 
     }

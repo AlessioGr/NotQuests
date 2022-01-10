@@ -113,7 +113,7 @@ public class NumberAction extends Action {
                     .meta(CommandMeta.DESCRIPTION, "Creates a new Number action")
                     .handler((context) -> {
 
-                        final int amount = context.get("amount");
+                        final long amount = context.get("amount");
 
                         final String mathOperator = context.get("operator");
 
