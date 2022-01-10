@@ -29,7 +29,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.NumberVariableValueArgument;
+import rocks.gravili.notquests.paper.commands.arguments.StringVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
 import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
@@ -39,20 +39,20 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class NumberAction extends Action {
+public class StringAction extends Action {
 
     private String variableName;
-    private String mathOperator;
+    private String stringOperator;
 
     private HashMap<String, String> additionalStringArguments;
 
-    private long newValue;
+    private String newValue;
 
-    public final String getMathOperator(){
-        return mathOperator;
+    public final String getStringOperator(){
+        return stringOperator;
     }
-    public void setMathOperator(final String mathOperator){
-        this.mathOperator = mathOperator;
+    public void setStringOperator(final String stringOperator){
+        this.stringOperator = stringOperator;
     }
 
     public final String getVariableName(){
@@ -63,11 +63,11 @@ public class NumberAction extends Action {
         this.variableName = variableName;
     }
 
-    public void setNewValue(final long newValue){
+    public void setNewValue(final String newValue){
         this.newValue = newValue;
     }
 
-    public final long getNewValue(){
+    public final String getNewValue(){
         return newValue;
     }
 
@@ -77,19 +77,18 @@ public class NumberAction extends Action {
 
 
 
-    public NumberAction(final NotQuests main) {
+    public StringAction(final NotQuests main) {
         super(main);
         additionalStringArguments = new HashMap<>();
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor rewardFor) {
 
-
         for(String variableString : main.getVariablesManager().getVariableIdentifiers()){
 
             Variable<?> variable = main.getVariablesManager().getVariableFromString(variableString);
 
-            if(variable == null || !variable.isCanSetValue() || variable.getVariableDataType() != VariableDataType.NUMBER){
+            if(variable == null || !variable.isCanSetValue() || variable.getVariableDataType() != VariableDataType.STRING){
                 continue;
             }
 
@@ -98,29 +97,27 @@ public class NumberAction extends Action {
                         ArrayList<String> completions = new ArrayList<>();
 
                         completions.add("set");
-                        completions.add("add");
-                        completions.add("deduct");
-                        completions.add("multiply");
-                        completions.add("divide");
+                        completions.add("append");
 
 
                         final List<String> allArgs = context.getRawInput();
-                        main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Math Operator]", "[...]");
+                        main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[String Comparison Operator]", "[...]");
 
                         return completions;
-                    }).build(), ArgumentDescription.of("Math operator."))
-                    .argument(NumberVariableValueArgument.newBuilder("amount", main), ArgumentDescription.of("Amount"))
-                    .meta(CommandMeta.DESCRIPTION, "Creates a new Number action")
+                    }).build(), ArgumentDescription.of("Ytring operator."))
+                    .argument(StringVariableValueArgument.newBuilder("string", main), ArgumentDescription.of("String"))
+                    .meta(CommandMeta.DESCRIPTION, "Creates a new String action")
                     .handler((context) -> {
 
-                        final int amount = context.get("amount");
+                        final String string = context.get("string");
 
-                        final String mathOperator = context.get("operator");
+                        final String stringOperator = context.get("operator");
 
-                        NumberAction numberAction = new NumberAction(main);
-                        numberAction.setVariableName(variableString);
-                        numberAction.setMathOperator(mathOperator);
-                        numberAction.setNewValue(amount);
+                        StringAction stringAction = new StringAction(main);
+
+                        stringAction.setVariableName(variableString);
+                        stringAction.setStringOperator(stringOperator);
+                        stringAction.setNewValue(string);
 
 
                         if(variable != null){
@@ -128,10 +125,10 @@ public class NumberAction extends Action {
                             for(StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()){
                                 additionalStringArguments.put(stringArgument.getName(), context.get(stringArgument.getName()));
                             }
-                            numberAction.setAdditionalStringArguments(additionalStringArguments);
+                            stringAction.setAdditionalStringArguments(additionalStringArguments);
                         }
 
-                        main.getActionManager().addAction(numberAction, context);
+                        main.getActionManager().addAction(stringAction, context);
 
                     })
             );
@@ -155,31 +152,21 @@ public class NumberAction extends Action {
 
         Object currentValueObject = variable.getValue(player, questPlayer, objects);
 
-        double currentValue = 0d;
-        if (currentValueObject instanceof Number) {
-            currentValue = ((Number) currentValueObject).doubleValue();
+        String currentValue = "";
+        if (currentValueObject instanceof String string) {
+            currentValue = string;
         }else{
-            currentValue = (double) currentValueObject;
+            currentValue = (String) currentValueObject;
         }
 
-        double nextNewValue = newValue;
+        String nextNewValue = newValue;
 
-        if(getMathOperator().equalsIgnoreCase("set")){
-            nextNewValue = (double)newValue;
-        }else if(getMathOperator().equalsIgnoreCase("add")){
+        if(getStringOperator().equalsIgnoreCase("set")){
+            nextNewValue = newValue;
+        }else if(getStringOperator().equalsIgnoreCase("append")){
             nextNewValue = currentValue + newValue;
-        }else if(getMathOperator().equalsIgnoreCase("deduct")){
-            nextNewValue = currentValue - newValue;
-        }else if(getMathOperator().equalsIgnoreCase("multiply")){
-            nextNewValue = currentValue * newValue;
-        }else if(getMathOperator().equalsIgnoreCase("divide")){
-            if(newValue == 0){
-                main.sendMessage(player, "<ERROR>Error: variable operator <highlight>" + getMathOperator() + "</highlight> cannot be used, because you cannot divide by 0. Report this to the Server owner.");
-                return;
-            }
-            nextNewValue = currentValue / newValue;
         }else{
-            main.sendMessage(player, "<ERROR>Error: variable operator <highlight>" + getMathOperator() + "</highlight> is invalid. Report this to the Server owner.");
+            main.sendMessage(player, "<ERROR>Error: variable operator <highlight>" + getStringOperator() + "</highlight> is invalid. Report this to the Server owner.");
             return;
         }
 
@@ -187,16 +174,12 @@ public class NumberAction extends Action {
 
 
 
-        if(currentValueObject instanceof Long){
-            ((Variable<Long>)variable).setValue(Double.valueOf(nextNewValue).longValue(), player, objects);
-        } else if(currentValueObject instanceof Float){
-            ((Variable<Float>)variable).setValue(Double.valueOf(nextNewValue).floatValue(), player, objects);
-        } else if(currentValueObject instanceof Double){
-            ((Variable<Double>)variable).setValue(nextNewValue, player, objects);
-        } else if(currentValueObject instanceof Integer){
-            ((Variable<Integer>)variable).setValue(Double.valueOf(nextNewValue).intValue(), player, objects);
+        if(currentValueObject instanceof String){
+            ((Variable<String>)variable).setValue(nextNewValue, player, objects);
+        } else if(currentValueObject instanceof Character){
+            ((Variable<Character>)variable).setValue(nextNewValue.toCharArray()[0], player, objects);
         }else{
-            main.getLogManager().warn("Cannot execute number action, because the number type " + currentValueObject.getClass().getName() + " is invalid.");
+            main.getLogManager().warn("Cannot execute string action, string the number type " + currentValueObject.getClass().getName() + " is invalid.");
         }
 
     }
@@ -211,7 +194,7 @@ public class NumberAction extends Action {
         configuration.set(initialPath + ".specifics.newValue", getNewValue());
 
         configuration.set(initialPath + ".specifics.variableName", getVariableName());
-        configuration.set(initialPath + ".specifics.operator", getMathOperator());
+        configuration.set(initialPath + ".specifics.operator", getStringOperator());
 
         for(final String key : additionalStringArguments.keySet()){
             configuration.set(initialPath + ".specifics.additionalStrings." + key, additionalStringArguments.get(key));
@@ -221,10 +204,10 @@ public class NumberAction extends Action {
 
     @Override
     public void load(final FileConfiguration configuration, String initialPath) {
-        this.newValue = configuration.getLong(initialPath + ".specifics.newValue");
+        this.newValue = configuration.getString(initialPath + ".specifics.newValue");
 
         this.variableName = configuration.getString(initialPath + ".specifics.variableName");
-        this.mathOperator = configuration.getString(initialPath + ".specifics.operator", "");
+        this.stringOperator = configuration.getString(initialPath + ".specifics.operator", "");
 
         final ConfigurationSection additionalStringsConfigurationSection = configuration.getConfigurationSection(initialPath + ".specifics.additionalStrings");
         if (additionalStringsConfigurationSection != null) {

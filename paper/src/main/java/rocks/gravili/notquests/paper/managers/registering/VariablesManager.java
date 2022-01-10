@@ -24,10 +24,7 @@ import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.context.CommandContext;
 import org.bukkit.command.CommandSender;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.structs.variables.MoneyVariable;
-import rocks.gravili.notquests.paper.structs.variables.PlaceholderAPINumberVariable;
-import rocks.gravili.notquests.paper.structs.variables.QuestPointsVariable;
-import rocks.gravili.notquests.paper.structs.variables.Variable;
+import rocks.gravili.notquests.paper.structs.variables.*;
 import rocks.gravili.notquests.paper.structs.variables.hooks.TownyNationTownCountVariable;
 import rocks.gravili.notquests.paper.structs.variables.hooks.TownyTownPlotCountVariable;
 import rocks.gravili.notquests.paper.structs.variables.hooks.TownyTownResidentCountVariable;
@@ -58,6 +55,7 @@ public class VariablesManager {
         registerVariable("UltimateClansClanLevel", UltimateClansClanLevelVariable.class);
         if(main.getIntegrationsManager().isPlaceholderAPIEnabled()){
             registerVariable("PlaceholderAPINumber", PlaceholderAPINumberVariable.class);
+            registerVariable("PlaceholderAPIString", PlaceholderAPIStringVariable.class);
         }
         if(main.getIntegrationsManager().isTownyEnabled()){
             registerVariable("TownyNationTownCount", TownyNationTownCountVariable.class);

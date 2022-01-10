@@ -67,6 +67,7 @@ public class ConditionsManager {
         registerCondition("TownyNationName", TownyNationNameCondition.class);
 
         registerCondition("Number", NumberCondition.class);
+        registerCondition("String", StringCondition.class);
 
 
     }
@@ -79,7 +80,7 @@ public class ConditionsManager {
         try {
             Method commandHandler = condition.getMethod("handleCommands", main.getClass(), PaperCommandManager.class, Command.Builder.class, ConditionFor.class);
 
-            if(condition == NumberCondition.class){
+            if(condition == NumberCondition.class || condition == StringCondition.class){
                 commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddRequirementCommandBuilder().flag(
                                 main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
                                         .withDescription(ArgumentDescription.of("Negates this condition"))

@@ -66,6 +66,7 @@ public class ActionManager {
         registerAction("BroadcastMessage", BroadcastMessageAction.class);
 
         registerAction("Number", NumberAction.class);
+        registerAction("String", StringAction.class);
 
     }
 
@@ -76,7 +77,7 @@ public class ActionManager {
 
         try {
             Method commandHandler = action.getMethod("handleCommands", main.getClass(), PaperCommandManager.class, Command.Builder.class, ActionFor.class);
-            if(action == NumberAction.class){
+            if(action == NumberAction.class || action == StringAction.class){
                 commandHandler.invoke(action, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddRewardCommandBuilder(), ActionFor.QUEST);
                 commandHandler.invoke(action, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddRewardCommandBuilder(), ActionFor.OBJECTIVE);
                 commandHandler.invoke(action, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminAddActionCommandBuilder(), ActionFor.ActionsYML); //For Actions.yml

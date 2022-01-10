@@ -9,8 +9,9 @@ import rocks.gravili.notquests.paper.NotQuests;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlaceholderAPINumberVariable extends Variable<Double>{
-    public PlaceholderAPINumberVariable(NotQuests main) {
+public class PlaceholderAPIStringVariable extends Variable<String>{
+
+    public PlaceholderAPIStringVariable(NotQuests main) {
         super(main);
         addRequiredString(
                 StringArgument.<CommandSender>newBuilder("Placeholder").withSuggestionsProvider(
@@ -32,31 +33,16 @@ public class PlaceholderAPINumberVariable extends Variable<Double>{
     }
 
     @Override
-    public Double getValue(Player player, Object... objects) {
+    public String getValue(Player player, Object... objects) {
         if (player != null) {
-            final String placeholder = PlaceholderAPI.setPlaceholders(player, getRequiredStringValue("Placeholder"));
-
-            double parsedPlaceholder;
-            try{
-                if(placeholder.contains(".")){
-                    parsedPlaceholder = Double.parseDouble(placeholder);
-                }else{
-                    parsedPlaceholder = (double) Integer.parseInt(placeholder);
-
-                }
-            }catch (NumberFormatException e){
-                main.getLogManager().warn("Error: Placeholder Variable can not be parsed. Placeholder: <highlight>" + placeholder);
-                return 0d;
-            }
-
-            return parsedPlaceholder;
+            return PlaceholderAPI.setPlaceholders(player, getRequiredStringValue("Placeholder"));
         } else {
-            return 0D;
+            return "";
         }
     }
 
     @Override
-    public boolean setValue(Double newValue, Player player, Object... objects) {
+    public boolean setValue(String newValue, Player player, Object... objects) {
         return false;
     }
 

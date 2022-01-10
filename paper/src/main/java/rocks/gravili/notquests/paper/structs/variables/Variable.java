@@ -5,6 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,10 +16,28 @@ public abstract class Variable<T> {
     private HashMap<String, String> additionalStringArguments;
     private boolean canSetValue = false;
 
+    private final VariableDataType variableDataType;
+
     public Variable(final NotQuests main){
         this.main = main;
         requiredStrings = new ArrayList<>();
         additionalStringArguments = new HashMap<>();
+
+
+        Class<T> typeOf = (Class<T>)
+                ((ParameterizedType)getClass()
+                        .getGenericSuperclass())
+                        .getActualTypeArguments()[0];;
+
+        if(typeOf == String.class || typeOf == Character.class){
+            variableDataType = VariableDataType.STRING;
+        }else{
+            variableDataType = VariableDataType.NUMBER;
+        }
+    }
+
+    public final VariableDataType getVariableDataType(){
+        return variableDataType;
     }
 
     protected void setCanSetValue(final boolean canSetValue){

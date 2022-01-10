@@ -262,11 +262,14 @@ public class CommandManager {
                 cloudBrigadierManager.registerMapping(new TypeToken<MiniMessageSelector.MiniMessageParser<CommandSender>>() {
                 }, builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
 
+                cloudBrigadierManager.registerMapping(new TypeToken<StringVariableValueArgument.StringParser<CommandSender>>() {
+                }, builder -> builder.cloudSuggestions().toConstant(StringArgumentType.string()));
+
             } else {
                 main.getMain().getLogger().warning("Failed to initialize Brigadier support. Brigadier manager is null.");
             }
         } catch (final Exception e) {
-            main.getMain().getLogger().warning("Failed to initialize Brigadier support: " + e.getMessage());
+            main.getMain().getLogger().warning("Failed to initialize Brigadier support: <highlight>" + e.getMessage());
         }
     }
 

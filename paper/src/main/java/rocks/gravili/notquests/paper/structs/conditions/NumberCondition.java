@@ -30,6 +30,7 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
+import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -247,6 +248,10 @@ public class NumberCondition extends Condition {
         for(String variableString : main.getVariablesManager().getVariableIdentifiers()){
 
             Variable<?> variable = main.getVariablesManager().getVariableFromString(variableString);
+
+            if(variable == null || variable.getVariableDataType() != VariableDataType.NUMBER){
+                continue;
+            }
 
             manager.command(main.getVariablesManager().registerVariableCommands(variableString, builder)
                     .argument(StringArgument.<CommandSender>newBuilder("operator").withSuggestionsProvider((context, lastString) -> {
