@@ -62,7 +62,26 @@ public final class Main extends JavaPlugin {
     @Override
     public void onEnable() {
 
-        getLogger().log(Level.INFO, "NotQuests has started. It will start loading in 5 seconds. Why the delay? Because spigot's load order system is broken. It does not work correctly. Without the delay, some integrations will stop working.");
+        if(PaperLib.isPaper()){
+            getLogger().log(Level.INFO, "Loading NotQuests Paper...");
+            notQuests = new rocks.gravili.notquests.paper.NotQuests(instance);
+            notQuests.onLoad();
+        }else{
+            getLogger().log(Level.INFO, "Loading NotQuests Spigot...");
+
+            notQuestsSpigot = new rocks.gravili.notquests.spigot.NotQuests(instance);
+            notQuestsSpigot.onLoad();
+        }
+
+        if(notQuests != null){
+            getLogger().log(Level.INFO, "Enabling NotQuests Paper...");
+            notQuests.onEnable();
+        }else{
+            getLogger().log(Level.INFO, "Enabling NotQuests Spigot...");
+            notQuestsSpigot.onEnable();
+        }
+
+        /*getLogger().log(Level.INFO, "NotQuests has started. It will start loading in 5 seconds. Why the delay? Because spigot's load order system is broken. It does not work correctly. Without the delay, some integrations will stop working.");
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
             @Override
@@ -78,7 +97,7 @@ public final class Main extends JavaPlugin {
                     notQuestsSpigot.onLoad();
                 }
             }
-        }, 200L);
+        }, 0L);
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
             @Override
@@ -91,8 +110,8 @@ public final class Main extends JavaPlugin {
                     notQuestsSpigot.onEnable();
                 }
             }
-        }, 260L);
-
+        }, 0L);
+*/
 
     }
 

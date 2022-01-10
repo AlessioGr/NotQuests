@@ -50,9 +50,11 @@ public class SpawnMobAction extends Action {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor rewardFor) {
-        manager.command(builder
+        Command.Builder<CommandSender> commonBuilder = builder
                 .argument(EntityTypeSelector.of("entityType", main), ArgumentDescription.of("Type of Entity which should be spawned."))
-                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of mobs which should be spawned"))
+                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of mobs which should be spawned"));
+
+        manager.command(commonBuilder
                 .literal("PlayerLocation", ArgumentDescription.of("Takes the location the player currently is in (when executing the action). So, this is a dynamic location."))
                 .meta(CommandMeta.DESCRIPTION, "Creates a new SpawnMob Action")
                 .handler((context) -> {
@@ -67,9 +69,7 @@ public class SpawnMobAction extends Action {
                     main.getActionManager().addAction(spawnMobAction, context);
                 }));
 
-        manager.command(builder.literal("SpawnMob")
-                .argument(EntityTypeSelector.of("entityType", main), ArgumentDescription.of("Type of Entity which should be spawned."))
-                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of mobs which should be spawned"))
+        manager.command(commonBuilder
                 .literal("Location", ArgumentDescription.of("Takes the location you enter"))
                 .argument(WorldArgument.of("world"), ArgumentDescription.of("World name"))
                 /* .argumentTriplet(

@@ -64,6 +64,17 @@ public class EcoBossesManager {
             return;
         }
 
-        foundEcoBoss.spawn(location);
+        try{
+            foundEcoBoss.spawn(location);
+        }catch (NoSuchMethodError e){
+            try{
+                foundEcoBoss.getClass().getMethod("spawn", Location.class).invoke(foundEcoBoss, location);
+            }catch (Exception ignored) {
+                main.getLogManager().warn("Failed to add EcoBosses mobs. Are you on the latest version?");
+            }
+
+        }
+
+
     }
 }

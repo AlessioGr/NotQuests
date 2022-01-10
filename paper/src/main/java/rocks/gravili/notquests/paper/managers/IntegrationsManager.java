@@ -10,6 +10,7 @@ import rocks.gravili.notquests.paper.managers.integrations.citizens.CitizensMana
 import rocks.gravili.notquests.paper.placeholders.QuestPlaceholders;
 
 import java.util.Objects;
+import java.util.logging.Level;
 
 public class IntegrationsManager {
     private final NotQuests main;
@@ -52,8 +53,14 @@ public class IntegrationsManager {
         if (main.getConfiguration().isIntegrationEcoBossesEnabled()) {
             if (Bukkit.getPluginManager().getPlugin("EcoBosses") != null) {
                 ecoBossesEnabled = true;
-                main.getLogManager().info("EcoBosses found! Enabling EcoBosses support...");
-                ecoBossesManager = new EcoBossesManager(main);
+                main.getLogManager().info("EcoBosses found! Enabling EcoBosses support... Bosses will be loaded in 10 seconds, because they are not loaded when the plugin starts. Don't blame me");
+                Bukkit.getScheduler().scheduleSyncDelayedTask(main.getMain(), new Runnable() {
+                    @Override
+                    public void run() {
+                        ecoBossesManager = new EcoBossesManager(main);
+                        main.getDataManager().loadStandardCompletions();
+                    }
+                }, 200L);
             }
         }
 

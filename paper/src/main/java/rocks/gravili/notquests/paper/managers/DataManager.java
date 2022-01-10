@@ -1467,12 +1467,12 @@ public class DataManager {
             standardEntityTypeCompletions.add(entityType.toString().toLowerCase(Locale.ROOT));
         }
         //Add extra Mythic Mobs completions, if enabled
-        if (main.getIntegrationsManager().isMythicMobsEnabled()) {
+        if (main.getIntegrationsManager().isMythicMobsEnabled() && main.getIntegrationsManager().getMythicMobsManager() != null) {
             standardEntityTypeCompletions.addAll(main.getIntegrationsManager().getMythicMobsManager().getMobNames());
         }
 
         //Add extra EcoBosses completions, if enabled
-        if (main.getIntegrationsManager().isEcoBossesEnabled()) {
+        if (main.getIntegrationsManager().isEcoBossesEnabled() && main.getIntegrationsManager().getEcoBossesManager() != null) {
             standardEntityTypeCompletions.addAll(main.getIntegrationsManager().getEcoBossesManager().getBossNames());
         }
 
