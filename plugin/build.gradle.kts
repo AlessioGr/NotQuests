@@ -221,7 +221,9 @@ bukkit {
         "UltimateClans",
         "Towny",
         "Jobs",
-        "ProjectKorra"
+        "ProjectKorra",
+        "EcoBosses",
+        "eco"
     )
 
     load = net.minecrell.pluginyml.bukkit.BukkitPluginDescription.PluginLoadOrder.POSTWORLD

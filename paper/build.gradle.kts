@@ -49,6 +49,7 @@ repositories {
             includeGroup("com.github.AlessioGr.packetevents")
             includeGroup("com.github.TownyAdvanced")
             includeGroup("com.github.Zrips")
+            includeGroup("com.willfp")
         }
         metadataSources {
             artifact()
@@ -120,6 +121,7 @@ dependencies {
     compileOnly(files("libs/ProjectKorra-1.9.2.jar"))
 
 
+
     compileOnly("org.betonquest:betonquest:2.0.0-SNAPSHOT")
 
     compileOnly("com.sk89q.worldedit:worldedit-core:7.3.0-SNAPSHOT")
@@ -175,6 +177,11 @@ dependencies {
     compileOnly("com.mojang:brigadier:1.0.18")
 
     implementation("commons-io:commons-io:2.11.0")
+
+    compileOnly("com.willfp:EcoBosses:6.8.0")
+    //compileOnly(files("libs/EcoBosses-v7.0.0.jar"))
+    compileOnly("com.willfp:eco:6.18.3")
+
 }
 
 /**
@@ -183,13 +190,9 @@ dependencies {
 val shadowPath = "rocks.gravili.notquests.paper.shadow"
 tasks.withType<ShadowJar> {
 
-
-
-
     minimize()
 
     //exclude('com.mojang:brigadier')
-
 
     //relocate('io.papermc.lib', path.concat('.paper'))
     relocate("org.bstats", "$shadowPath.bstats")

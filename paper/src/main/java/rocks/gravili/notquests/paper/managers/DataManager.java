@@ -843,6 +843,13 @@ public class DataManager {
         }
         configuration.setIntegrationProjectKorraEnabled(getGeneralConfig().getBoolean(key));
 
+        key = "integrations.ecoBosses.enabled";
+        if (!getGeneralConfig().isBoolean(key)) {
+            getGeneralConfig().set(key, true);
+            valueChanged = true;
+        }
+        configuration.setIntegrationEcoBossesEnabled(getGeneralConfig().getBoolean(key));
+
         key = "visual.fancy-command-completion.actionbar-enabled";
         if (!getGeneralConfig().isBoolean(key)) {
             getGeneralConfig().set(key, true);
@@ -1461,7 +1468,12 @@ public class DataManager {
         }
         //Add extra Mythic Mobs completions, if enabled
         if (main.getIntegrationsManager().isMythicMobsEnabled()) {
-            standardEntityTypeCompletions.addAll(main.getIntegrationsManager().getMythicMobsManager().getMythicMobs().getMobManager().getMobNames());
+            standardEntityTypeCompletions.addAll(main.getIntegrationsManager().getMythicMobsManager().getMobNames());
+        }
+
+        //Add extra EcoBosses completions, if enabled
+        if (main.getIntegrationsManager().isEcoBossesEnabled()) {
+            standardEntityTypeCompletions.addAll(main.getIntegrationsManager().getEcoBossesManager().getBossNames());
         }
 
         //Fill up standardEliteMobNamesCompletions if the EliteMobs integration is enabled

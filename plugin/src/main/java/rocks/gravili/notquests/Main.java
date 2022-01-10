@@ -20,7 +20,10 @@
 package rocks.gravili.notquests;
 
 import io.papermc.lib.PaperLib;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.logging.Level;
 
 
 /**
@@ -38,13 +41,7 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onLoad() {
-        if(PaperLib.isPaper()){
-            notQuests = new rocks.gravili.notquests.paper.NotQuests(this);
-            notQuests.onLoad();
-        }else{
-            notQuestsSpigot = new rocks.gravili.notquests.spigot.NotQuests(this);
-            notQuestsSpigot.onLoad();
-        }
+        instance = this;
     }
 
     public final rocks.gravili.notquests.paper.NotQuests getNotQuests(){
@@ -64,12 +61,39 @@ public final class Main extends JavaPlugin {
      */
     @Override
     public void onEnable() {
-        instance = this;
-        if(notQuests != null){
-            notQuests.onEnable();
-        }else{
-            notQuestsSpigot.onEnable();
-        }
+
+        getLogger().log(Level.INFO, "NotQuests has started. It will start loading in 5 seconds. Why the delay? Because spigot's load order system is broken. It does not work correctly. Without the delay, some integrations will stop working.");
+
+        Bukkit.getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+            @Override
+            public void run() {
+                if(PaperLib.isPaper()){
+                    getLogger().log(Level.INFO, "Loading NotQuests Paper...");
+                    notQuests = new rocks.gravili.notquests.paper.NotQuests(instance);
+                    notQuests.onLoad();
+                }else{
+                    getLogger().log(Level.INFO, "Loading NotQuests Spigot...");
+
+                    notQuestsSpigot = new rocks.gravili.notquests.spigot.NotQuests(instance);
+                    notQuestsSpigot.onLoad();
+                }
+            }
+        }, 200L);
+
+        Bukkit.getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+            @Override
+            public void run() {
+                if(notQuests != null){
+                    getLogger().log(Level.INFO, "Enabling NotQuests Paper...");
+                    notQuests.onEnable();
+                }else{
+                    getLogger().log(Level.INFO, "Enabling NotQuests Spigot...");
+                    notQuestsSpigot.onEnable();
+                }
+            }
+        }, 260L);
+
+
     }
 
     /**

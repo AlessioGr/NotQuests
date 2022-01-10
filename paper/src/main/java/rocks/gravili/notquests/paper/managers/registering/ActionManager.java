@@ -68,6 +68,7 @@ public class ActionManager {
         registerAction("Number", NumberAction.class);
         registerAction("String", StringAction.class);
 
+
     }
 
 

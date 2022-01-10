@@ -22,8 +22,6 @@ package rocks.gravili.notquests.paper.events;
 import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.BlockState;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.HumanEntity;
@@ -47,7 +45,6 @@ import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.Vector;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.conversation.ConversationPlayer;
 import rocks.gravili.notquests.paper.events.notquests.other.PlayerJumpEvent;
@@ -59,7 +56,6 @@ import rocks.gravili.notquests.paper.structs.triggers.ActiveTrigger;
 import rocks.gravili.notquests.paper.structs.triggers.types.WorldEnterTrigger;
 import rocks.gravili.notquests.paper.structs.triggers.types.WorldLeaveTrigger;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -1090,14 +1086,7 @@ public class QuestEvents implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     protected void onPluginEnable(final PluginEnableEvent event) {
-        if (event.getPlugin().getName().equals("MythicMobs") && !main.getIntegrationsManager().isMythicMobsEnabled()) {
-            // Turn on support for the plugin
-            main.getIntegrationsManager().enableMythicMobs();
-        } else if (event.getPlugin().getName().equals("Citizens") && !main.getIntegrationsManager().isCitizensEnabled()) {
-            // Turn on support for the plugin
-            main.getIntegrationsManager().enableCitizens();
-        }
-
+        main.getIntegrationsManager().onPluginEnable(event);
     }
 
 

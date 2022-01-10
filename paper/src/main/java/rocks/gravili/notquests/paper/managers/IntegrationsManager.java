@@ -1,6 +1,7 @@
 package rocks.gravili.notquests.paper.managers;
 
 import org.bukkit.Bukkit;
+import org.bukkit.event.server.PluginEnableEvent;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.events.hooks.*;
 import rocks.gravili.notquests.paper.managers.integrations.*;
@@ -26,6 +27,8 @@ public class IntegrationsManager {
     private boolean placeholderAPIEnabled = false;
     private boolean betonQuestEnabled = false;
     private boolean mythicMobsEnabled = false;
+    private boolean ecoBossesEnabled = false;
+
     //Managers
     private VaultManager vaultManager;
     private MythicMobsManager mythicMobsManager;
@@ -36,12 +39,23 @@ public class IntegrationsManager {
     private LuckpermsManager luckpermsManager;
     private ProjectKorraManager projectKorraManager;
     private UltimateClansManager ultimateClansManager;
+    private EcoBossesManager ecoBossesManager;
+
 
     public IntegrationsManager(final NotQuests main) {
         this.main = main;
     }
 
     public void enableIntegrations() {
+
+        //EcoBosses
+        if (main.getConfiguration().isIntegrationEcoBossesEnabled()) {
+            if (Bukkit.getPluginManager().getPlugin("EcoBosses") != null) {
+                ecoBossesEnabled = true;
+                main.getLogManager().info("EcoBosses found! Enabling EcoBosses support...");
+                ecoBossesManager = new EcoBossesManager(main);
+            }
+        }
 
         //PlaceholderAPI
         if (main.getConfiguration().isIntegrationPlaceholderAPIEnabled()) {
@@ -316,9 +330,17 @@ public class IntegrationsManager {
         return projectKorraEnabled;
     }
 
+    public boolean isEcoBossesEnabled() {
+        return ecoBossesEnabled;
+    }
+
 
     public final MythicMobsManager getMythicMobsManager() {
         return mythicMobsManager;
+    }
+
+    public final EcoBossesManager getEcoBossesManager() {
+        return ecoBossesManager;
     }
 
     public final BetonQuestManager getBetonQuestManager() {
@@ -347,5 +369,15 @@ public class IntegrationsManager {
 
     public final VaultManager getVaultManager() {
         return vaultManager;
+    }
+
+    public void onPluginEnable(final PluginEnableEvent event) {
+        if (event.getPlugin().getName().equals("MythicMobs") && !main.getIntegrationsManager().isMythicMobsEnabled()) {
+            // Turn on support for the plugin
+            main.getIntegrationsManager().enableMythicMobs();
+        } else if (event.getPlugin().getName().equals("Citizens") && !main.getIntegrationsManager().isCitizensEnabled()) {
+            // Turn on support for the plugin
+            main.getIntegrationsManager().enableCitizens();
+        }
     }
 }

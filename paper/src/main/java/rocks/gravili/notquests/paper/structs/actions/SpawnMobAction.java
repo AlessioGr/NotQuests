@@ -156,7 +156,7 @@ public class SpawnMobAction extends Action {
 
             if (isUsePlayerLocation()) {
                 for (int i = 0; i < getSpawnAmount(); i++) {
-                    player.getWorld().spawnEntity(player.getLocation().add(new Vector(0, 1, 0)), entityType);
+                    player.getWorld().spawnEntity(player.getLocation().clone().add(new Vector(0, 1, 0)), entityType);
                 }
             } else {
                 if (getSpawnLocation() == null) {
@@ -168,15 +168,21 @@ public class SpawnMobAction extends Action {
                     return;
                 }
                 for (int i = 0; i < getSpawnAmount(); i++) {
-                    getSpawnLocation().getWorld().spawnEntity(getSpawnLocation().add(new Vector(0, 1, 0)), entityType);
+                    getSpawnLocation().getWorld().spawnEntity(getSpawnLocation().clone().add(new Vector(0, 1, 0)), entityType);
                 }
             }
         } catch (IllegalArgumentException e) {
-            if (main.getIntegrationsManager().isMythicMobsEnabled()) {
+            if (main.getIntegrationsManager().isMythicMobsEnabled() && main.getIntegrationsManager().getMythicMobsManager().isMythicMob(getMobToSpawnType())) {
                 if (isUsePlayerLocation()) {
                     main.getIntegrationsManager().getMythicMobsManager().spawnMob(getMobToSpawnType(), player.getLocation(), getSpawnAmount());
                 } else {
                     main.getIntegrationsManager().getMythicMobsManager().spawnMob(getMobToSpawnType(), getSpawnLocation(), getSpawnAmount());
+                }
+            } else if (main.getIntegrationsManager().isEcoBossesEnabled() && main.getIntegrationsManager().getEcoBossesManager().isEcoBoss(getMobToSpawnType())) {
+                if (isUsePlayerLocation()) {
+                    main.getIntegrationsManager().getEcoBossesManager().spawnMob(getMobToSpawnType(), player.getLocation(), getSpawnAmount());
+                } else {
+                    main.getIntegrationsManager().getEcoBossesManager().spawnMob(getMobToSpawnType(), getSpawnLocation(), getSpawnAmount());
                 }
             }else{
                 main.getLogManager().warn("Tried to execute SpawnMob with an either invalid mob, or a mythic mob while the mythic mobs plugin is not installed.");

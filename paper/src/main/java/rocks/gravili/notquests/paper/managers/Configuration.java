@@ -104,6 +104,7 @@ public class Configuration {
     private boolean integrationTownyEnabled = true;
     private boolean integrationJobsRebornEnabled = true;
     private boolean integrationProjectKorraEnabled = true;
+    private boolean integrationEcoBossesEnabled = true;
 
 
     //Other

@@ -15,6 +15,7 @@ import rocks.gravili.notquests.paper.events.ArmorStandEvents;
 import rocks.gravili.notquests.paper.events.InventoryEvents;
 import rocks.gravili.notquests.paper.events.QuestEvents;
 import rocks.gravili.notquests.paper.events.TriggerEvents;
+import rocks.gravili.notquests.paper.events.notquests.NotQuestsFullyLoadedEvent;
 import rocks.gravili.notquests.paper.events.notquests.other.PlayerJumpEvent;
 import rocks.gravili.notquests.paper.managers.*;
 import rocks.gravili.notquests.paper.managers.packets.PacketManager;
@@ -222,6 +223,16 @@ public class NotQuests {
         main.getServer().getPluginManager().registerEvents(new ConversationEvents(this, conversationManager), main);
 
         commandManager.setupAdminConversationCommands(conversationManager);
+
+        NotQuestsFullyLoadedEvent notQuestsFullyLoadedEvent = new NotQuestsFullyLoadedEvent(this);
+        if (Bukkit.isPrimaryThread()) {
+            Bukkit.getScheduler().runTaskAsynchronously(getMain(), () -> {
+                Bukkit.getPluginManager().callEvent(notQuestsFullyLoadedEvent);
+            });
+        } else {
+            Bukkit.getPluginManager().callEvent(notQuestsFullyLoadedEvent);
+        }
+        getLogManager().info("NotQuests initial Loading has completed!");
 
     }
 
