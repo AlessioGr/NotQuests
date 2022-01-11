@@ -21,7 +21,6 @@ package rocks.gravili.notquests.paper.structs.conditions;
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.StringArgument;
-import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
@@ -289,6 +288,9 @@ public class NumberCondition extends Condition {
             if(variable == null || variable.getVariableDataType() != VariableDataType.NUMBER){
                 continue;
             }
+
+            main.getLogManager().info("Registering number condition: <highlight>" + variableString);
+
 
             manager.command(main.getVariablesManager().registerVariableCommands(variableString, builder)
                     .argument(StringArgument.<CommandSender>newBuilder("operator").withSuggestionsProvider((context, lastString) -> {

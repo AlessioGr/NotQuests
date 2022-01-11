@@ -200,6 +200,9 @@ public class StringCondition extends Condition {
                 continue;
             }
 
+            main.getLogManager().info("Registering string condition: <highlight>" + variableString);
+
+
             manager.command(main.getVariablesManager().registerVariableCommands(variableString, builder)
                     .argument(StringArgument.<CommandSender>newBuilder("operator").withSuggestionsProvider((context, lastString) -> {
                         ArrayList<String> completions = new ArrayList<>();

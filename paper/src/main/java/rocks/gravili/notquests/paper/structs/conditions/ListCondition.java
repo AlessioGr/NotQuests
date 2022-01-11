@@ -248,9 +248,11 @@ public class ListCondition extends Condition {
 
             Variable<?> variable = main.getVariablesManager().getVariableFromString(variableString);
 
-            if(variable == null || variable.getVariableDataType() != VariableDataType.BOOLEAN){
+            if(variable == null || variable.getVariableDataType() != VariableDataType.LIST){
                 continue;
             }
+
+            main.getLogManager().info("Registering list condition: <highlight>" + variableString);
 
             manager.command(main.getVariablesManager().registerVariableCommands(variableString, builder)
                     .argument(StringArgument.<CommandSender>newBuilder("operator").withSuggestionsProvider((context, lastString) -> {

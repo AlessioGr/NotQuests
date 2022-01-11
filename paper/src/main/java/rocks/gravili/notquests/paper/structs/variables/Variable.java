@@ -34,7 +34,7 @@ public abstract class Variable<T> {
         }else if(typeOf == Boolean.class){
             variableDataType = VariableDataType.BOOLEAN;
         }else if(typeOf == String[].class || typeOf == ArrayList.class){
-            variableDataType = VariableDataType.BOOLEAN;
+            variableDataType = VariableDataType.LIST;
         }else{
             variableDataType = VariableDataType.NUMBER;
         }
