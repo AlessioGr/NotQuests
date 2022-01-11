@@ -27,7 +27,6 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.*;
-import rocks.gravili.notquests.paper.structs.conditions.hooks.towny.TownyNationNameCondition;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
 import java.lang.reflect.InvocationTargetException;
@@ -64,7 +63,7 @@ public class ConditionsManager {
         //registerCondition("UltimateClansClanLevel", UltimateClansClanLevelCondition.class);
 
         //Towny
-        registerCondition("TownyNationName", TownyNationNameCondition.class);
+        //registerCondition("TownyNationName", TownyNationNameCondition.class);
 
         registerCondition("Number", NumberCondition.class);
         registerCondition("String", StringCondition.class);

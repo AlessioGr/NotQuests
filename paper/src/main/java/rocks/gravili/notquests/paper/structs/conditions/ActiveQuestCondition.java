@@ -45,7 +45,7 @@ public class ActiveQuestCondition extends Condition {
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
         manager.command(builder
                 .argument(QuestSelector.of("otherQuest", main), ArgumentDescription.of("Name of the other Quest which needs to be active for the player."))
-                .meta(CommandMeta.DESCRIPTION, "Adds a new ActiveQuest Requirement to a quest")
+                .meta(CommandMeta.DESCRIPTION, "Adds a new ActiveQuest condition to a quest")
                 .handler((context) -> {
                     final Quest otherQuest = context.get("otherQuest");
 

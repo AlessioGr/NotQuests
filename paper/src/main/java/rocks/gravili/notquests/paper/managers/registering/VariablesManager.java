@@ -29,10 +29,7 @@ import redempt.crunch.Crunch;
 import redempt.crunch.functional.EvaluationEnvironment;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.variables.*;
-import rocks.gravili.notquests.paper.structs.variables.hooks.TownyNationTownCountVariable;
-import rocks.gravili.notquests.paper.structs.variables.hooks.TownyTownPlotCountVariable;
-import rocks.gravili.notquests.paper.structs.variables.hooks.TownyTownResidentCountVariable;
-import rocks.gravili.notquests.paper.structs.variables.hooks.UltimateClansClanLevelVariable;
+import rocks.gravili.notquests.paper.structs.variables.hooks.*;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -43,8 +40,6 @@ public class VariablesManager {
 
     private final HashMap<String, Class<? extends Variable<?>>> variables;
 
-    private final EvaluationEnvironment env = new EvaluationEnvironment();
-
 
     public VariablesManager(final NotQuests main) {
         this.main = main;
@@ -54,9 +49,6 @@ public class VariablesManager {
 
     }
 
-    public final EvaluationEnvironment getEvaluationEnvironment(){
-        return env;
-    }
 
     public void registerDefaultVariables() {
         variables.clear();
@@ -71,9 +63,9 @@ public class VariablesManager {
             registerVariable("TownyNationTownCount", TownyNationTownCountVariable.class);
             registerVariable("TownyTownResidentCount", TownyTownResidentCountVariable.class);
             registerVariable("TownyTownPlotCount", TownyTownPlotCountVariable.class);
+            registerVariable("TownyNationName", TownyNationNameVariable.class);
         }
 
-        env.setVariableNames(getVariableIdentifiers().toArray(new String[0]));
 
     }
 
