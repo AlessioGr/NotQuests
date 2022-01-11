@@ -218,7 +218,7 @@ public class StringCondition extends Condition {
 
                         return completions;
                     }).build(), ArgumentDescription.of("String operator."))
-                    .argument(StringVariableValueArgument.newBuilder("string", main), ArgumentDescription.of("String"))
+                    .argument(StringVariableValueArgument.newBuilder("string", main, variable), ArgumentDescription.of("String"))
                     .handler((context) -> {
 
                         String string = context.get("string");

@@ -52,12 +52,13 @@ public final class BooleanVariableValueArgument<C> extends CommandArgument<C, St
             final @Nullable BiFunction<@NonNull CommandContext<C>, @NonNull String,
                     @NonNull List<@NonNull String>> suggestionsProvider,
             final @NonNull ArgumentDescription defaultDescription,
-            NotQuests main
+            NotQuests main,
+            Variable<?> variable
     ) {
         super(
                 required,
                 name,
-                new BooleanVariableValueArgument.StringParser<>(main),
+                new BooleanVariableValueArgument.StringParser<>(main, variable),
                 defaultValue,
                 String.class,
                 suggestionsProvider,
@@ -72,8 +73,8 @@ public final class BooleanVariableValueArgument<C> extends CommandArgument<C, St
      * @param <C>  Command sender type
      * @return Created builder
      */
-    public static <C> BooleanVariableValueArgument.@NonNull Builder<C> newBuilder(final @NonNull String name, final NotQuests main) {
-        return new BooleanVariableValueArgument.Builder<>(name, main);
+    public static <C> BooleanVariableValueArgument.@NonNull Builder<C> newBuilder(final @NonNull String name, final NotQuests main, final Variable<?> variable) {
+        return new BooleanVariableValueArgument.Builder<>(name, main, variable);
     }
 
     /**
@@ -83,8 +84,8 @@ public final class BooleanVariableValueArgument<C> extends CommandArgument<C, St
      * @param <C>  Command sender type
      * @return Created argument
      */
-    public static <C> @NonNull CommandArgument<C, String> of(final @NonNull String name, final NotQuests main) {
-        return BooleanVariableValueArgument.<C>newBuilder(name, main).asRequired().build();
+    public static <C> @NonNull CommandArgument<C, String> of(final @NonNull String name, final NotQuests main, final Variable<?> variable) {
+        return BooleanVariableValueArgument.<C>newBuilder(name, main, variable).asRequired().build();
     }
 
     /**
@@ -94,8 +95,8 @@ public final class BooleanVariableValueArgument<C> extends CommandArgument<C, St
      * @param <C>  Command sender type
      * @return Created argument
      */
-    public static <C> @NonNull CommandArgument<C, String> optional(final @NonNull String name, final NotQuests main) {
-        return BooleanVariableValueArgument.<C>newBuilder(name, main).asOptional().build();
+    public static <C> @NonNull CommandArgument<C, String> optional(final @NonNull String name, final NotQuests main, final Variable<?> variable) {
+        return BooleanVariableValueArgument.<C>newBuilder(name, main, variable).asOptional().build();
     }
 
     /**
@@ -106,8 +107,8 @@ public final class BooleanVariableValueArgument<C> extends CommandArgument<C, St
      * @param <C>        Command sender type
      * @return Created argument
      */
-    public static <C> @NonNull CommandArgument<C, String> optional(final @NonNull String name, final int defaultNum , final NotQuests main) {
-        return BooleanVariableValueArgument.<C>newBuilder(name, main).asOptionalWithDefault(defaultNum).build();
+    public static <C> @NonNull CommandArgument<C, String> optional(final @NonNull String name, final int defaultNum, final NotQuests main, final Variable<?> variable) {
+        return BooleanVariableValueArgument.<C>newBuilder(name, main, variable).asOptionalWithDefault(defaultNum).build();
     }
 
 
@@ -115,10 +116,12 @@ public final class BooleanVariableValueArgument<C> extends CommandArgument<C, St
     public static final class Builder<C> extends CommandArgument.Builder<C, String> {
 
         private final NotQuests main;
+        private final Variable<?> variable;
 
-        private Builder(final @NonNull String name, final NotQuests main) {
+        private Builder(final @NonNull String name, final NotQuests main, final Variable<?> variable) {
             super(String.class, name);
             this.main = main;
+            this.variable = variable;
         }
 
 
@@ -138,7 +141,7 @@ public final class BooleanVariableValueArgument<C> extends CommandArgument<C, St
         @Override
         public BooleanVariableValueArgument<C> build() {
             return new BooleanVariableValueArgument<>(this.isRequired(), this.getName(),
-                    this.getDefaultValue(), this.getSuggestionsProvider(), this.getDefaultDescription(), main
+                    this.getDefaultValue(), this.getSuggestionsProvider(), this.getDefaultDescription(), main, variable
             );
         }
 
@@ -146,13 +149,15 @@ public final class BooleanVariableValueArgument<C> extends CommandArgument<C, St
 
     public static final class StringParser<C> implements ArgumentParser<C, String> {
         private final NotQuests main;
+        private final Variable<?> variable;
 
 
         /**
          * Construct a new String parser
          */
-        public StringParser(final NotQuests main) {
+        public StringParser(final NotQuests main, final Variable<?> variable) {
             this.main = main;
+            this.variable = variable;
         }
 
 
@@ -206,7 +211,17 @@ public final class BooleanVariableValueArgument<C> extends CommandArgument<C, St
 
             main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.getSender(), allArgs.toArray(new String[0]), "[Enter Variable]", "[...]");
 
-
+            if(context.getSender() instanceof Player player){
+                if(variable.getPossibleValues(player) == null){
+                    return completions;
+                }
+                completions.addAll(variable.getPossibleValues(player));
+            }else{
+                if(variable.getPossibleValues(null) == null){
+                    return completions;
+                }
+                completions.addAll(variable.getPossibleValues(null));
+            }
             return completions;
         }
 

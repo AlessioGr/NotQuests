@@ -58,6 +58,10 @@ public class VariablesManager {
         registerVariable("ActiveQuests", ActiveQuestsVariable.class);
         registerVariable("CompletedQuests", CompletedQuestsVariable.class);
         registerVariable("Permission", PermissionVariable.class);
+        registerVariable("PlayerName", PlayerNameVariable.class);
+        registerVariable("PlayerExperience", PlayerExperienceVariable.class);
+        registerVariable("PlayerExperienceLevel", PlayerExperienceLevelVariable.class);
+        registerVariable("PlayerCurrentWorld", PlayerCurrentWorldVariable.class);
 
         if(main.getIntegrationsManager().isPlaceholderAPIEnabled()){
             registerVariable("PlaceholderAPINumber", PlaceholderAPINumberVariable.class);

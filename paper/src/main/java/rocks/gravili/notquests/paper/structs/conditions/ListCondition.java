@@ -268,7 +268,7 @@ public class ListCondition extends Condition {
 
                         return completions;
                     }).build(), ArgumentDescription.of("List operator."))
-                    .argument(ListVariableValueArgument.newBuilder("expression", main), ArgumentDescription.of("Expression"))
+                    .argument(ListVariableValueArgument.newBuilder("expression", main, variable), ArgumentDescription.of("Expression"))
                     .handler((context) -> {
 
                         final String expression = context.get("expression");

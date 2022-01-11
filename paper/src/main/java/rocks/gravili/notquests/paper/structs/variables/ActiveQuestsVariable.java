@@ -1,5 +1,6 @@
 package rocks.gravili.notquests.paper.structs.variables;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
@@ -64,7 +65,7 @@ public class ActiveQuestsVariable extends Variable<String[]>{
 
     @Override
     public List<String> getPossibleValues(Player player, Object... objects) {
-        return null;
+        return main.getQuestManager().getAllQuests().stream().map(quest -> quest.getQuestName()).toList();
     }
 
     @Override

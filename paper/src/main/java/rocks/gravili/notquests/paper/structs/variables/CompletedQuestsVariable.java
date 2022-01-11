@@ -65,7 +65,7 @@ public class CompletedQuestsVariable extends Variable<String[]>{
 
     @Override
     public List<String> getPossibleValues(Player player, Object... objects) {
-        return null;
+        return main.getQuestManager().getAllQuests().stream().map(quest -> quest.getQuestName()).toList();
     }
 
     @Override

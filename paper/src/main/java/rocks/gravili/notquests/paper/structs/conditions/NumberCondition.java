@@ -306,7 +306,7 @@ public class NumberCondition extends Condition {
 
                         return completions;
                     }).build(), ArgumentDescription.of("Math operator."))
-                    .argument(NumberVariableValueArgument.newBuilder("amount", main), ArgumentDescription.of("Amount"))
+                    .argument(NumberVariableValueArgument.newBuilder("amount", main, variable), ArgumentDescription.of("Amount"))
                     .handler((context) -> {
 
                         final String amountExpression = context.get("amount");

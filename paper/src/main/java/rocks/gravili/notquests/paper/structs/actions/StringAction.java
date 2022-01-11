@@ -104,8 +104,8 @@ public class StringAction extends Action {
                         main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[String Comparison Operator]", "[...]");
 
                         return completions;
-                    }).build(), ArgumentDescription.of("Ytring operator."))
-                    .argument(StringVariableValueArgument.newBuilder("string", main), ArgumentDescription.of("String"))
+                    }).build(), ArgumentDescription.of("String operator."))
+                    .argument(StringVariableValueArgument.newBuilder("string", main, variable), ArgumentDescription.of("String"))
                     .handler((context) -> {
 
                         final String string = context.get("string");

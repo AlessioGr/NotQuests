@@ -218,7 +218,7 @@ public class BooleanCondition extends Condition {
 
                         return completions;
                     }).build(), ArgumentDescription.of("Comparison operator."))
-                    .argument(BooleanVariableValueArgument.newBuilder("expression", main), ArgumentDescription.of("Expression"))
+                    .argument(BooleanVariableValueArgument.newBuilder("expression", main, variable), ArgumentDescription.of("Expression"))
                     .handler((context) -> {
 
                         final String expression = context.get("expression");

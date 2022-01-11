@@ -30,10 +30,12 @@ import cloud.commandframework.arguments.parser.ArgumentParser;
 import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.exceptions.parsing.NoInputProvidedException;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.structs.variables.Variable;
 
 import java.util.List;
 import java.util.Queue;
@@ -49,12 +51,13 @@ public final class StringVariableValueArgument<C> extends CommandArgument<C, Str
             final @Nullable BiFunction<@NonNull CommandContext<C>, @NonNull String,
                     @NonNull List<@NonNull String>> suggestionsProvider,
             final @NonNull ArgumentDescription defaultDescription,
-            NotQuests main
+            NotQuests main,
+            Variable<?> variable
     ) {
         super(
                 required,
                 name,
-                new StringVariableValueArgument.StringParser<>(main),
+                new StringVariableValueArgument.StringParser<>(main, variable),
                 defaultValue,
                 String.class,
                 suggestionsProvider,
@@ -69,8 +72,8 @@ public final class StringVariableValueArgument<C> extends CommandArgument<C, Str
      * @param <C>  Command sender type
      * @return Created builder
      */
-    public static <C> StringVariableValueArgument.@NonNull Builder<C> newBuilder(final @NonNull String name, final NotQuests main) {
-        return new StringVariableValueArgument.Builder<>(name, main);
+    public static <C> StringVariableValueArgument.@NonNull Builder<C> newBuilder(final @NonNull String name, final NotQuests main, final Variable<?> variable) {
+        return new StringVariableValueArgument.Builder<>(name, main, variable);
     }
 
     /**
@@ -80,8 +83,8 @@ public final class StringVariableValueArgument<C> extends CommandArgument<C, Str
      * @param <C>  Command sender type
      * @return Created argument
      */
-    public static <C> @NonNull CommandArgument<C, String> of(final @NonNull String name, final NotQuests main) {
-        return StringVariableValueArgument.<C>newBuilder(name, main).asRequired().build();
+    public static <C> @NonNull CommandArgument<C, String> of(final @NonNull String name, final NotQuests main, final Variable<?> variable) {
+        return StringVariableValueArgument.<C>newBuilder(name, main, variable).asRequired().build();
     }
 
     /**
@@ -91,8 +94,8 @@ public final class StringVariableValueArgument<C> extends CommandArgument<C, Str
      * @param <C>  Command sender type
      * @return Created argument
      */
-    public static <C> @NonNull CommandArgument<C, String> optional(final @NonNull String name, final NotQuests main) {
-        return StringVariableValueArgument.<C>newBuilder(name, main).asOptional().build();
+    public static <C> @NonNull CommandArgument<C, String> optional(final @NonNull String name, final NotQuests main, final Variable<?> variable) {
+        return StringVariableValueArgument.<C>newBuilder(name, main, variable).asOptional().build();
     }
 
     /**
@@ -103,8 +106,8 @@ public final class StringVariableValueArgument<C> extends CommandArgument<C, Str
      * @param <C>        Command sender type
      * @return Created argument
      */
-    public static <C> @NonNull CommandArgument<C, String> optional(final @NonNull String name, final int defaultNum , final NotQuests main) {
-        return StringVariableValueArgument.<C>newBuilder(name, main).asOptionalWithDefault(defaultNum).build();
+    public static <C> @NonNull CommandArgument<C, String> optional(final @NonNull String name, final int defaultNum , final NotQuests main, final Variable<?> variable) {
+        return StringVariableValueArgument.<C>newBuilder(name, main, variable).asOptionalWithDefault(defaultNum).build();
     }
 
 
@@ -112,10 +115,12 @@ public final class StringVariableValueArgument<C> extends CommandArgument<C, Str
     public static final class Builder<C> extends CommandArgument.Builder<C, String> {
 
         private final NotQuests main;
+        private final Variable<?> variable;
 
-        private Builder(final @NonNull String name, final NotQuests main) {
+        private Builder(final @NonNull String name, final NotQuests main, final Variable<?> variable) {
             super(String.class, name);
             this.main = main;
+            this.variable = variable;
         }
 
 
@@ -135,7 +140,7 @@ public final class StringVariableValueArgument<C> extends CommandArgument<C, Str
         @Override
         public StringVariableValueArgument<C> build() {
             return new StringVariableValueArgument<>(this.isRequired(), this.getName(),
-                    this.getDefaultValue(), this.getSuggestionsProvider(), this.getDefaultDescription(), main
+                    this.getDefaultValue(), this.getSuggestionsProvider(), this.getDefaultDescription(), main, variable
             );
         }
 
@@ -143,13 +148,15 @@ public final class StringVariableValueArgument<C> extends CommandArgument<C, Str
 
     public static final class StringParser<C> implements ArgumentParser<C, String> {
         private final NotQuests main;
+        private final Variable<?> variable;
 
 
         /**
          * Construct a new String parser
          */
-        public StringParser(final NotQuests main) {
+        public StringParser(final NotQuests main, final Variable<?> variable) {
             this.main = main;
+            this.variable = variable;
         }
 
 
@@ -188,6 +195,17 @@ public final class StringVariableValueArgument<C> extends CommandArgument<C, Str
             main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.getSender(), allArgs.toArray(new String[0]), "[Enter String]", "[...]");
 
 
+            if(context.getSender() instanceof Player player){
+                if(variable.getPossibleValues(player) == null){
+                    return completions;
+                }
+                completions.addAll(variable.getPossibleValues(player));
+            }else{
+                if(variable.getPossibleValues(null) == null){
+                    return completions;
+                }
+                completions.addAll(variable.getPossibleValues(null));
+            }
             return completions;
         }
 

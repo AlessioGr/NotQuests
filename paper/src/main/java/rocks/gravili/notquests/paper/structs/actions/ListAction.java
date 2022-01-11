@@ -107,7 +107,7 @@ public class ListAction extends Action {
 
                         return completions;
                     }).build(), ArgumentDescription.of("Operator."))
-                    .argument(BooleanVariableValueArgument.newBuilder("expression", main), ArgumentDescription.of("Expression"))
+                    .argument(BooleanVariableValueArgument.newBuilder("expression", main, variable), ArgumentDescription.of("Expression"))
                     .handler((context) -> {
 
                         final String expression = context.get("expression");
