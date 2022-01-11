@@ -92,6 +92,10 @@ public class QuestPlayer {
 
             final Location finalLocation = locationsAndBeacons.get(locationName);
 
+            if(!finalLocation.getWorld().getUID().equals(player.getWorld().getUID())){
+                continue;
+            }
+
 
             Location lowestDistanceLocation = player.getLocation();
 
