@@ -128,7 +128,6 @@ public class CompletedObjectiveCondition extends Condition {
                                 }
                             })
                             .build(), ArgumentDescription.of("Depending Objective ID"))
-                    .meta(CommandMeta.DESCRIPTION, "Adds a new OtherQuest Requirement to a quest")
                     .handler((context) -> {
                         final Quest quest = context.get("quest");
 

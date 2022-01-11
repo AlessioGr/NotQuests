@@ -46,7 +46,6 @@ public class CraftItemsObjective extends Objective {
         manager.command(addObjectiveBuilder
                 .argument(MaterialOrHandArgument.of("material", main), ArgumentDescription.of("Material of the item which needs to be crafted."))
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of items which need to be crafted."))
-                .meta(CommandMeta.DESCRIPTION, "Adds a new CraftItems Objective to a quest.")
                 .handler((context) -> {
                     final int amount = context.get("amount");
 

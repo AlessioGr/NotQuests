@@ -46,7 +46,6 @@ public class SmeltObjective extends Objective {
         manager.command(addObjectiveBuilder
                 .argument(MaterialOrHandArgument.of("material", main), ArgumentDescription.of("Output item of the smelting."))
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of items which need to be smelted."))
-                .meta(CommandMeta.DESCRIPTION, "Adds a new Smelt Objective to a quest.")
                 .handler((context) -> {
                     final int amount = context.get("amount");
 

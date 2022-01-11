@@ -58,7 +58,6 @@ public class ReachLocationObjective extends Objective {
                             return completions;
                         }
                 ), ArgumentDescription.of("Location name"))
-                .meta(CommandMeta.DESCRIPTION, "Adds a new ReachLocation Objective to a quest")
                 .handler((context) -> {
                     final String locationName = String.join(" ", (String[]) context.get("Location Name"));
 

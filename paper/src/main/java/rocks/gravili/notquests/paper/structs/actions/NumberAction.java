@@ -28,10 +28,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import redempt.crunch.CompiledExpression;
-import redempt.crunch.Crunch;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.NumberVariableValueArgument;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
 import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
@@ -112,7 +110,6 @@ public class NumberAction extends Action {
                         return completions;
                     }).build(), ArgumentDescription.of("Math operator."))
                     .argument(NumberVariableValueArgument.newBuilder("amount", main), ArgumentDescription.of("Amount"))
-                    .meta(CommandMeta.DESCRIPTION, "Creates a new Number action")
                     .handler((context) -> {
 
                         final String amountExpression = context.get("amount");

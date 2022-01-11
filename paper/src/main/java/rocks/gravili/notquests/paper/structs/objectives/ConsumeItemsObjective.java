@@ -46,7 +46,6 @@ public class ConsumeItemsObjective extends Objective {
         manager.command(addObjectiveBuilder
                 .argument(MaterialOrHandArgument.of("material", main), ArgumentDescription.of("Material of the item which needs to be consumed."))
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of items which need to be consumed."))
-                .meta(CommandMeta.DESCRIPTION, "Adds a new ConsumeItems Objective to a quest.")
                 .handler((context) -> {
                     final int amount = context.get("amount");
 

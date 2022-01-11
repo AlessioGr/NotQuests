@@ -28,7 +28,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.StringVariableValueArgument;
+import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
 import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
@@ -216,7 +216,6 @@ public class StringCondition extends Condition {
                         return completions;
                     }).build(), ArgumentDescription.of("String operator."))
                     .argument(StringVariableValueArgument.newBuilder("string", main), ArgumentDescription.of("String"))
-                    .meta(CommandMeta.DESCRIPTION, "Creates a new String condition")
                     .handler((context) -> {
 
                         String string = context.get("string");

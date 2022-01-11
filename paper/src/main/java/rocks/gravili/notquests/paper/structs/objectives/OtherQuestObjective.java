@@ -48,7 +48,6 @@ public class OtherQuestObjective extends Objective {
                         manager.flagBuilder("countPreviouslyCompletedQuests")
                                 .withDescription(ArgumentDescription.of("Makes it so quests completed before this OtherQuest objective becomes active will be counted towards the progress too."))
                 )
-                .meta(CommandMeta.DESCRIPTION, "Adds a new OtherQuest Objective to a quest")
                 .handler((context) -> {
                     final Quest otherQuest = context.get("other quest name");
                     final int amount = context.get("amount");

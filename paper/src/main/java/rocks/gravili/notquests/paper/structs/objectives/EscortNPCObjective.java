@@ -77,7 +77,6 @@ public class EscortNPCObjective extends Objective {
 
                     return completions;
                 }).build(), ArgumentDescription.of("ID of the destination Citizens NPC where the player has to escort the NPC to escort to."))
-                .meta(CommandMeta.DESCRIPTION, "Adds a new EscortNPC Objective to a quest.")
                 .handler((context) -> {
                     final int toEscortNPCID = context.get("NPC to escort");
                     final int destinationNPCID = context.get("Destination NPC");

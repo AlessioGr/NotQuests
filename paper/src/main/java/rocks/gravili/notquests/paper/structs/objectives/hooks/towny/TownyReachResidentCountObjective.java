@@ -53,7 +53,6 @@ public class TownyReachResidentCountObjective extends Objective {
                         manager.flagBuilder("doNotCountPreviousResidents")
                                 .withDescription(ArgumentDescription.of("Makes it so only additional residents from the time of unlocking this Objective will count (and previous/existing counts will not count, so it starts from zero)"))
                 )
-                .meta(CommandMeta.DESCRIPTION, "Adds a new TownyReachResidentCount Objective to a quest")
                 .handler((context) -> {
                     int amount = context.get("amount");
                     final boolean countPreviousResidents = !context.flags().isPresent("doNotCountPreviousResidents");

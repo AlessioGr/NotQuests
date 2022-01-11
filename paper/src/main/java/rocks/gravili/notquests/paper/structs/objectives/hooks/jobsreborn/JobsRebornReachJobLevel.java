@@ -72,7 +72,6 @@ public class JobsRebornReachJobLevel extends Objective {
                         manager.flagBuilder("doNotCountPreviousLevels")
                                 .withDescription(ArgumentDescription.of("Makes it so only additional levels gained from the time of unlocking this Objective will count (and previous/existing counts will not count, so it starts from zero)"))
                 )
-                .meta(CommandMeta.DESCRIPTION, "Adds a new JobsRebornReachJobLevel Objective to a quest")
                 .handler((context) -> {
                     int amount = context.get("level");
                     final boolean countPreviousLevels = !context.flags().isPresent("doNotCountPreviousLevels");

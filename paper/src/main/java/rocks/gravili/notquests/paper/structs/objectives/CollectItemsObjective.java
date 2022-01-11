@@ -51,7 +51,6 @@ public class CollectItemsObjective extends Objective {
                         manager.flagBuilder("doNotDeductIfItemIsDropped")
                                 .withDescription(ArgumentDescription.of("Makes it so Quest progress is not removed if the item is dropped."))
                 )
-                .meta(CommandMeta.DESCRIPTION, "Adds a new CollectItems Objective to a quest")
                 .handler((context) -> {
                     final int amount = context.get("amount");
                     final boolean deductIfItemIsDropped = !context.flags().isPresent("doNotDeductIfItemIsDropped");

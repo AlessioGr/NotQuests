@@ -43,7 +43,6 @@ public class BroadcastMessageAction extends Action {
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor actionFor) {
         manager.command(builder
                 .argument(MiniMessageSelector.<CommandSender>newBuilder("Broadcast Message", main).withPlaceholders().build(), ArgumentDescription.of("Message to broadcast"))
-                .meta(CommandMeta.DESCRIPTION, "Creates a new BroadcastMessage Action")
                 .handler((context) -> {
                     final String messageToBroadcast = String.join(" ", (String[]) context.get("Broadcast Message"));
 

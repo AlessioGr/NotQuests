@@ -20,6 +20,7 @@ package rocks.gravili.notquests.paper.managers.registering;
 
 import cloud.commandframework.Command;
 import cloud.commandframework.context.CommandContext;
+import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -102,7 +103,8 @@ public class ObjectiveManager {
 
         try {
             Method commandHandler = objective.getMethod("handleCommands", main.getClass(), PaperCommandManager.class, Command.Builder.class);
-            commandHandler.invoke(objective, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddObjectiveCommandBuilder().literal(identifier));
+            commandHandler.invoke(objective, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddObjectiveCommandBuilder().literal(identifier)
+                    .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " objective"));
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
         }

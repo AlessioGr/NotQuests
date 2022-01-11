@@ -20,6 +20,7 @@ package rocks.gravili.notquests.paper.managers.registering;
 
 import cloud.commandframework.Command;
 import cloud.commandframework.context.CommandContext;
+import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -68,7 +69,8 @@ public class TriggerManager {
 
         try {
             Method commandHandler = trigger.getMethod("handleCommands", main.getClass(), PaperCommandManager.class, Command.Builder.class);
-            commandHandler.invoke(trigger, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddTriggerCommandBuilder().literal(identifier));
+            commandHandler.invoke(trigger, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddTriggerCommandBuilder().literal(identifier)
+                    .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " trigger"));
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
         }

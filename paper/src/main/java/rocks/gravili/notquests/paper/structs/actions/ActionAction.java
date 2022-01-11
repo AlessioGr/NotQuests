@@ -51,7 +51,6 @@ public class ActionAction extends Action {
                         manager.flagBuilder("ignoreConditions")
                                 .withDescription(ArgumentDescription.of("Ignores action conditions"))
                 )
-                .meta(CommandMeta.DESCRIPTION, "Creates a new (actions.yml) Action")
                 .handler((context) -> {
                     Action foundAction = context.get("Action");
                     int amount = context.get("amount");

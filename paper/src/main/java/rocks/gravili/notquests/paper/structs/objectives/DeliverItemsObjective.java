@@ -77,7 +77,6 @@ public class DeliverItemsObjective extends Objective {
 
                     return completions;
                 }).build(), ArgumentDescription.of("ID of the Citizens NPC or 'armorstand' to whom the items should be delivered."))
-                .meta(CommandMeta.DESCRIPTION, "Adds a new DeliverItems Objective to a quest.")
                 .handler((context) -> {
                     final Quest quest = context.get("quest");
                     final int amountToDeliver = context.get("amount");

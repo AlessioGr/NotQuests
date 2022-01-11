@@ -20,6 +20,7 @@ package rocks.gravili.notquests.paper.managers.registering;
 
 import cloud.commandframework.Command;
 import cloud.commandframework.context.CommandContext;
+import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -79,13 +80,19 @@ public class ActionManager {
         try {
             Method commandHandler = action.getMethod("handleCommands", main.getClass(), PaperCommandManager.class, Command.Builder.class, ActionFor.class);
             if(action == NumberAction.class || action == StringAction.class){
-                commandHandler.invoke(action, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddRewardCommandBuilder(), ActionFor.QUEST);
-                commandHandler.invoke(action, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddRewardCommandBuilder(), ActionFor.OBJECTIVE);
-                commandHandler.invoke(action, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminAddActionCommandBuilder(), ActionFor.ActionsYML); //For Actions.yml
+                commandHandler.invoke(action, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddRewardCommandBuilder()
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action"), ActionFor.QUEST);
+                commandHandler.invoke(action, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddRewardCommandBuilder()
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action"), ActionFor.OBJECTIVE);
+                commandHandler.invoke(action, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminAddActionCommandBuilder()
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action"), ActionFor.ActionsYML); //For Actions.yml
             }else {
-                commandHandler.invoke(action, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddRewardCommandBuilder().literal(identifier), ActionFor.QUEST);
-                commandHandler.invoke(action, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddRewardCommandBuilder().literal(identifier), ActionFor.OBJECTIVE);
-                commandHandler.invoke(action, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminAddActionCommandBuilder().literal(identifier), ActionFor.ActionsYML); //For Actions.yml
+                commandHandler.invoke(action, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddRewardCommandBuilder().literal(identifier)
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action"), ActionFor.QUEST);
+                commandHandler.invoke(action, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddRewardCommandBuilder().literal(identifier)
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action"), ActionFor.OBJECTIVE);
+                commandHandler.invoke(action, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminAddActionCommandBuilder().literal(identifier)
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action"), ActionFor.ActionsYML); //For Actions.yml
             }
 
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {

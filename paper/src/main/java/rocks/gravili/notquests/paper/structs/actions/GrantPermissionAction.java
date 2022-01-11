@@ -58,7 +58,6 @@ public class GrantPermissionAction extends Action {
                             return completions;
                         }
                 ).single().build(), ArgumentDescription.of("Permission node which the player will receive as a reward"))
-                .meta(CommandMeta.DESCRIPTION, "Adds a new GrantPermission Reward to a quest")
                 .handler((context) -> {
                     final String permissionNode = context.get("Permission");
 

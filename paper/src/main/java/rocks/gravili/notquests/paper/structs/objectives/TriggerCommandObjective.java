@@ -58,7 +58,6 @@ public class TriggerCommandObjective extends Objective {
                         }
                 ).single().build(), ArgumentDescription.of("Triggercommand name"))
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of times the trigger needs to be triggered to complete this objective."))
-                .meta(CommandMeta.DESCRIPTION, "Adds a new TriggerCommand Objective to a quest")
                 .handler((context) -> {
                     final String triggerName = context.get("Trigger name");
                     final int amount = context.get("amount");

@@ -66,7 +66,6 @@ public class TalkToNPCObjective extends Objective {
 
                     return completions;
                 }).build(), ArgumentDescription.of("ID of the Citizens NPC or 'armorstand' to whom you should talk."))
-                .meta(CommandMeta.DESCRIPTION, "Adds a new TalkToNPC Objective to a quest.")
                 .handler((context) -> {
                     final Quest quest = context.get("quest");
 

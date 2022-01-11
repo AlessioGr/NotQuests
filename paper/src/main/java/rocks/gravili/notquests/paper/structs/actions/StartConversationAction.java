@@ -50,7 +50,6 @@ public class StartConversationAction extends Action {
                         manager.flagBuilder("endPrevious")
                                 .withDescription(ArgumentDescription.of("Ends the previous conversation furst if the player is already in another conversation"))
                 )
-                .meta(CommandMeta.DESCRIPTION, "Creates a new StartConversation Action")
                 .handler((context) -> {
                     final Conversation foundConversation = context.get("conversation to start");
                     final boolean endPrevious = context.flags().isPresent("endPrevious");

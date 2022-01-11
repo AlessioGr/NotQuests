@@ -53,7 +53,6 @@ public class TownyNationReachTownCountObjective extends Objective {
                         manager.flagBuilder("doNotCountPreviousTowns")
                                 .withDescription(ArgumentDescription.of("Makes it so only additional towns from the time of unlocking this Objective will count (and previous/existing counts will not count, so it starts from zero)"))
                 )
-                .meta(CommandMeta.DESCRIPTION, "Adds a new TownyNationReachTownCount Objective to a quest")
                 .handler((context) -> {
                     int amount = context.get("amount");
                     final boolean countPreviousTowns = !context.flags().isPresent("doNotCountPreviousTowns");

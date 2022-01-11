@@ -48,7 +48,6 @@ public class PlaceBlocksObjective extends Objective {
                         manager.flagBuilder("doNotDeductIfBlockIsBroken")
                                 .withDescription(ArgumentDescription.of("Makes it so Quest progress is not removed if the block is broken"))
                 )
-                .meta(CommandMeta.DESCRIPTION, "Adds a new PlaceBlocks Objective to a quest")
                 .handler((context) -> {
                     final int amount = context.get("amount");
                     final boolean deductIfBlockIsBroken = !context.flags().isPresent("doNotDeductIfBlockIsBroken");

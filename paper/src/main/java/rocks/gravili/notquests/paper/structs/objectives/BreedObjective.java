@@ -42,7 +42,6 @@ public class BreedObjective extends Objective {
         manager.command(addObjectiveBuilder
                 .argument(EntityTypeSelector.of("entityType", main), ArgumentDescription.of("Type of Entity the player has to breed."))
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of times the player needs to breed this entity."))
-                .meta(CommandMeta.DESCRIPTION, "Adds a new BreedMobs Objective to a quest")
                 .handler((context) -> {
                     final String entityType = context.get("entityType");
                     final int amount = context.get("amount");

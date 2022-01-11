@@ -50,7 +50,6 @@ public class CompletedQuestCondition extends Condition {
                 .argument(QuestSelector.of("otherQuest", main), ArgumentDescription.of("Name of the other Quest the player has to complete."))
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of completions needed"))
                 .flag(main.getCommandManager().minimumTimeAfterCompletion)
-                .meta(CommandMeta.DESCRIPTION, "Adds a new CompletedQuest Requirement to a quest")
                 .handler((context) -> {
 
                     final Quest otherQuest = context.get("otherQuest");

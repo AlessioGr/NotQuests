@@ -45,6 +45,7 @@ import org.bukkit.command.CommandSender;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.*;
 import rocks.gravili.notquests.paper.commands.arguments.*;
+import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueArgument;
 import rocks.gravili.notquests.paper.conversation.ConversationManager;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;

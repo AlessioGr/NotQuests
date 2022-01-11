@@ -65,7 +65,6 @@ public class TriggerCommandAction extends Action {
                             return completions;
                         }
                 ).single().build(), ArgumentDescription.of("Name of the trigger which should be triggered."))
-                .meta(CommandMeta.DESCRIPTION, "Creates a new TriggerCommand Action")
                 .handler((context) -> {
                     final String triggerName = context.get("Trigger Name");
 

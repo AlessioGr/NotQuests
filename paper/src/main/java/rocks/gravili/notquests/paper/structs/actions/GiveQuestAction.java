@@ -49,7 +49,6 @@ public class GiveQuestAction extends Action {
                         manager.flagBuilder("forceGive")
                                 .withDescription(ArgumentDescription.of("Force-gives the Quest to the player, disregarding most Quest requirements/cooldowns/..."))
                 )
-                .meta(CommandMeta.DESCRIPTION, "Creates a new GiveQuest Action")
                 .handler((context) -> {
                     final Quest foundQuest = context.get("quest to give");
                     final boolean forceGive = context.flags().isPresent("forceGive");

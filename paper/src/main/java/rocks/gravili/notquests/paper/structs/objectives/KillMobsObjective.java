@@ -46,7 +46,6 @@ public class KillMobsObjective extends Objective {
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of kills needed"))
                 .flag(main.getCommandManager().nametag_equals)
                 .flag(main.getCommandManager().nametag_containsany)
-                .meta(CommandMeta.DESCRIPTION, "Adds a new KillMobs Objective to a quest")
                 .handler((context) -> {
 
                     final String entityType = context.get("entityType");

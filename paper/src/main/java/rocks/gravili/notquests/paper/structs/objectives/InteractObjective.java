@@ -78,7 +78,6 @@ public class InteractObjective extends Objective {
                 )
                 .flag(main.getCommandManager().taskDescription)
                 .flag(main.getCommandManager().maxDistance)
-                .meta(CommandMeta.DESCRIPTION, "Adds a new Interact Objective to a quest")
                 .handler((context) -> {
                     final int amount = context.get("amount");
 

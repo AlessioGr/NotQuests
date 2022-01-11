@@ -56,7 +56,6 @@ public class SpawnMobAction extends Action {
 
         manager.command(commonBuilder
                 .literal("PlayerLocation", ArgumentDescription.of("Takes the location the player currently is in (when executing the action). So, this is a dynamic location."))
-                .meta(CommandMeta.DESCRIPTION, "Creates a new SpawnMob Action")
                 .handler((context) -> {
                     final String entityType = context.get("entityType");
                     final int amountToSpawn = context.get("amount");
@@ -85,7 +84,6 @@ public class SpawnMobAction extends Action {
                 .argument(IntegerArgument.newBuilder("x"), ArgumentDescription.of("X coordinate"))
                 .argument(IntegerArgument.newBuilder("y"), ArgumentDescription.of("Y coordinate"))
                 .argument(IntegerArgument.newBuilder("z"), ArgumentDescription.of("Z coordinate"))
-                .meta(CommandMeta.DESCRIPTION, "Creates a new SpawnMob Action")
                 .handler((context) -> {
                     final String entityType = context.get("entityType");
                     final int amountToSpawn = context.get("amount");

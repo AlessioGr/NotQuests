@@ -39,7 +39,6 @@ public class SneakObjective extends Objective {
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
         manager.command(addObjectiveBuilder
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of times the player needs to sneak."))
-                .meta(CommandMeta.DESCRIPTION, "Adds a new Sneak Objective to a quest.")
                 .handler((context) -> {
                     final int amount = context.get("amount");
 

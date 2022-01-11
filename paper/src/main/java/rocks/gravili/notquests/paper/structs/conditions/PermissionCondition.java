@@ -100,7 +100,6 @@ public class PermissionCondition extends Condition {
                             return completions;
                         }
                 ).single().build(), ArgumentDescription.of("Permission node which the player needs in order to accept this Quest."))
-                .meta(CommandMeta.DESCRIPTION, "Adds a new Permission Requirement to a quest")
                 .handler((context) -> {
 
                     final String permissionNode = context.get("Permission");

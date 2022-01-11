@@ -53,7 +53,6 @@ public class ConditionCondition extends Condition {
 
                         }
                 ).single().build(), ArgumentDescription.of("Condition Identifier"))
-                .meta(CommandMeta.DESCRIPTION, "Adds a new Condition Condition to a quest (checks for another condition from conditions.yml)")
                 .handler((context) -> {
 
                     final String conditionIdentifier = context.get("Condition Identifier");

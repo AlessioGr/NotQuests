@@ -53,8 +53,6 @@ public class WorldTimeCondition extends Condition {
         manager.command(builder
                 .argument(IntegerArgument.<CommandSender>newBuilder("minTime").withMin(0).withMax(24), ArgumentDescription.of("Minimum world time (24-hour clock)"))
                 .argument(IntegerArgument.<CommandSender>newBuilder("maxTime").withMin(0).withMax(24), ArgumentDescription.of("Maximum world time (24-hour clock)"))
-
-                .meta(CommandMeta.DESCRIPTION, "Adds a new Time Requirement (24-hour-clock) to a quest")
                 .handler((context) -> {
                     final int minTime = context.get("minTime");
                     final int maxTime = context.get("maxTime");

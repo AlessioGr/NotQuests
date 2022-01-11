@@ -65,7 +65,6 @@ public class RunCommandObjective extends Objective {
                         manager.flagBuilder("cancelCommand")
                                 .withDescription(ArgumentDescription.of("Makes it so the command will be cancelled (not actually run) when entered while this objective is active"))
                 )
-                .meta(CommandMeta.DESCRIPTION, "Adds a new RunCommand Objective to a quest")
                 .handler((context) -> {
                     String command = context.get("Command");
                     final int amount = context.get("amount");

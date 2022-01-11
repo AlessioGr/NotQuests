@@ -48,7 +48,6 @@ public class BreakBlocksObjective extends Objective {
                         manager.flagBuilder("doNotDeductIfBlockIsPlaced")
                                 .withDescription(ArgumentDescription.of("Makes it so Quest progress is not removed if the block is placed"))
                 )
-                .meta(CommandMeta.DESCRIPTION, "Adds a new BreakBlocks Objective to a quest")
                 .handler((context) -> {
 
                     final int amount = context.get("amount");

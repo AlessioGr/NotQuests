@@ -21,7 +21,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-package rocks.gravili.notquests.paper.commands.arguments;
+package rocks.gravili.notquests.paper.commands.arguments.variables;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.arguments.CommandArgument;
@@ -30,24 +30,19 @@ import cloud.commandframework.arguments.parser.ArgumentParser;
 import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.exceptions.parsing.NoInputProvidedException;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jetbrains.annotations.NotNull;
-import redempt.crunch.CompiledExpression;
-import redempt.crunch.Crunch;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.structs.variables.Variable;
-import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
 
 import java.util.List;
 import java.util.Queue;
 import java.util.function.BiFunction;
 
-public final class NumberVariableValueArgument<C> extends CommandArgument<C, String> {
+public final class StringVariableValueArgument<C> extends CommandArgument<C, String> {
 
 
-    private NumberVariableValueArgument(
+    private StringVariableValueArgument(
             final boolean required,
             final @NonNull String name,
             final @NonNull String defaultValue,
@@ -59,7 +54,7 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Str
         super(
                 required,
                 name,
-                new NumberVariableValueArgument.StringParser<>(main),
+                new StringVariableValueArgument.StringParser<>(main),
                 defaultValue,
                 String.class,
                 suggestionsProvider,
@@ -68,40 +63,40 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Str
     }
 
     /**
-     * Create a new {@link NumberVariableValueArgument.Builder}.
+     * Create a new {@link StringVariableValueArgument.Builder}.
      *
      * @param name Name of the argument
      * @param <C>  Command sender type
      * @return Created builder
      */
-    public static <C> NumberVariableValueArgument.@NonNull Builder<C> newBuilder(final @NonNull String name, final NotQuests main) {
-        return new NumberVariableValueArgument.Builder<>(name, main);
+    public static <C> StringVariableValueArgument.@NonNull Builder<C> newBuilder(final @NonNull String name, final NotQuests main) {
+        return new StringVariableValueArgument.Builder<>(name, main);
     }
 
     /**
-     * Create a new required {@link NumberVariableValueArgument}.
+     * Create a new required {@link StringVariableValueArgument}.
      *
      * @param name Argument name
      * @param <C>  Command sender type
      * @return Created argument
      */
     public static <C> @NonNull CommandArgument<C, String> of(final @NonNull String name, final NotQuests main) {
-        return NumberVariableValueArgument.<C>newBuilder(name, main).asRequired().build();
+        return StringVariableValueArgument.<C>newBuilder(name, main).asRequired().build();
     }
 
     /**
-     * Create a new optional {@link NumberVariableValueArgument}.
+     * Create a new optional {@link StringVariableValueArgument}.
      *
      * @param name Argument name
      * @param <C>  Command sender type
      * @return Created argument
      */
     public static <C> @NonNull CommandArgument<C, String> optional(final @NonNull String name, final NotQuests main) {
-        return NumberVariableValueArgument.<C>newBuilder(name, main).asOptional().build();
+        return StringVariableValueArgument.<C>newBuilder(name, main).asOptional().build();
     }
 
     /**
-     * Create a new required {@link NumberVariableValueArgument} with the specified default value.
+     * Create a new required {@link StringVariableValueArgument} with the specified default value.
      *
      * @param name       Argument name
      * @param defaultNum Default value
@@ -109,7 +104,7 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Str
      * @return Created argument
      */
     public static <C> @NonNull CommandArgument<C, String> optional(final @NonNull String name, final int defaultNum , final NotQuests main) {
-        return NumberVariableValueArgument.<C>newBuilder(name, main).asOptionalWithDefault(defaultNum).build();
+        return StringVariableValueArgument.<C>newBuilder(name, main).asOptionalWithDefault(defaultNum).build();
     }
 
 
@@ -132,14 +127,14 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Str
          * @see CommandArgument.Builder#asOptionalWithDefault(String)
          * @since 1.5.0
          */
-        public NumberVariableValueArgument.Builder<C> asOptionalWithDefault(final int defaultValue) {
-            return (NumberVariableValueArgument.Builder<C>) this.asOptionalWithDefault(defaultValue);
+        public StringVariableValueArgument.Builder<C> asOptionalWithDefault(final int defaultValue) {
+            return (StringVariableValueArgument.Builder<C>) this.asOptionalWithDefault(defaultValue);
         }
 
         @NotNull
         @Override
-        public NumberVariableValueArgument<C> build() {
-            return new NumberVariableValueArgument<>(this.isRequired(), this.getName(),
+        public StringVariableValueArgument<C> build() {
+            return new StringVariableValueArgument<>(this.isRequired(), this.getName(),
                     this.getDefaultValue(), this.getSuggestionsProvider(), this.getDefaultDescription(), main
             );
         }
@@ -164,27 +159,14 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Str
                 final @NonNull Queue<@NonNull String> inputQueue
         ) {
             if (inputQueue.isEmpty()) {
-                return ArgumentParseResult.failure(new NoInputProvidedException(NumberVariableValueArgument.StringParser.class, context));
+                return ArgumentParseResult.failure(new NoInputProvidedException(StringVariableValueArgument.StringParser.class, context));
             }
             final String input = inputQueue.peek();
             inputQueue.remove();
 
-            if(context.getSender() instanceof Player player){
-                try{
-                    main.getVariablesManager().evaluateExpression(input, player);
-                }catch (Exception e){
-                    if(main.getConfiguration().isDebug()){
-                        e.printStackTrace();
-                    }
-                    return ArgumentParseResult.failure(new IllegalArgumentException("Invalid Expression: " + input + ". Error: " + e.toString()));
-                }
-            }
-
-
             return ArgumentParseResult.success(input);
 
         }
-
 
 
         @Override
@@ -199,24 +181,11 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Str
         ) {
 
             List<String> completions = new java.util.ArrayList<>();
-            completions.add("<Enter Variable>");
-
-            for(String variableString : main.getVariablesManager().getVariableIdentifiers()) {
-                Variable<?> variable = main.getVariablesManager().getVariableFromString(variableString);
-                if (variable == null || variable.getVariableDataType() != VariableDataType.NUMBER) {
-                    continue;
-                }
-                if(variable.getRequiredStrings().isEmpty()){
-                    completions.add(variableString);
-                }else{
-                    completions.add(variableString+"(");
-                }
-            }
-
+            completions.add("<Enter String>");
 
             final List<String> allArgs = context.getRawInput();
 
-            main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.getSender(), allArgs.toArray(new String[0]), "[Enter Variable / Mathematical Expression]", "[...]");
+            main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.getSender(), allArgs.toArray(new String[0]), "[Enter String]", "[...]");
 
 
             return completions;
