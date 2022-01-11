@@ -155,7 +155,7 @@ public class StringCondition extends Condition {
         if(arguments.size() >= 4){
 
             Variable<?> variable = main.getVariablesManager().getVariableFromString(variableName);
-            if(variable == null || !variable.isCanSetValue() || variable.getVariableDataType() != VariableDataType.NUMBER){
+            if(variable == null || !variable.isCanSetValue() || variable.getVariableDataType() != VariableDataType.STRING){
                 return;
             }
 
@@ -230,13 +230,11 @@ public class StringCondition extends Condition {
                         stringCondition.setString(string);
 
 
-                        if(variable != null){
-                            HashMap<String, String> additionalStringArguments = new HashMap<>();
-                            for(StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()){
-                                additionalStringArguments.put(stringArgument.getName(), context.get(stringArgument.getName()));
-                            }
-                            stringCondition.setAdditionalStringArguments(additionalStringArguments);
+                        HashMap<String, String> additionalStringArguments = new HashMap<>();
+                        for(StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()){
+                            additionalStringArguments.put(stringArgument.getName(), context.get(stringArgument.getName()));
                         }
+                        stringCondition.setAdditionalStringArguments(additionalStringArguments);
 
                         main.getConditionsManager().addCondition(stringCondition, context);
                     })

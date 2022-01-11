@@ -55,6 +55,10 @@ public class VariablesManager {
         registerVariable("QuestPoints", QuestPointsVariable.class);
         registerVariable("Money", MoneyVariable.class);
         registerVariable("UltimateClansClanLevel", UltimateClansClanLevelVariable.class);
+        registerVariable("ActiveQuests", ActiveQuestsVariable.class);
+        registerVariable("CompletedQuests", CompletedQuestsVariable.class);
+        registerVariable("Permission", PermissionVariable.class);
+
         if(main.getIntegrationsManager().isPlaceholderAPIEnabled()){
             registerVariable("PlaceholderAPINumber", PlaceholderAPINumberVariable.class);
             registerVariable("PlaceholderAPIString", PlaceholderAPIStringVariable.class);

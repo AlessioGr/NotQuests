@@ -29,7 +29,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueArgument;
+import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueArgument;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
 import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
@@ -39,20 +40,20 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class StringAction extends Action {
+public class BooleanAction extends Action {
 
     private String variableName;
-    private String stringOperator;
+    private String operator;
 
     private HashMap<String, String> additionalStringArguments;
 
-    private String newValue;
+    private String newValueExpression;
 
-    public final String getStringOperator(){
-        return stringOperator;
+    public final String getOperator(){
+        return operator;
     }
-    public void setStringOperator(final String stringOperator){
-        this.stringOperator = stringOperator;
+    public void setOperator(final String mathOperator){
+        this.operator = mathOperator;
     }
 
     public final String getVariableName(){
@@ -63,12 +64,12 @@ public class StringAction extends Action {
         this.variableName = variableName;
     }
 
-    public void setNewValue(final String newValue){
-        this.newValue = newValue;
+    public void setNewValueExpression(final String newValueExpression){
+        this.newValueExpression = newValueExpression;
     }
 
-    public final String getNewValue(){
-        return newValue;
+    public final String getNewValueExpression(){
+        return newValueExpression;
     }
 
     private void setAdditionalStringArguments(HashMap<String, String> additionalStringArguments) {
@@ -77,18 +78,19 @@ public class StringAction extends Action {
 
 
 
-    public StringAction(final NotQuests main) {
+    public BooleanAction(final NotQuests main) {
         super(main);
         additionalStringArguments = new HashMap<>();
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor rewardFor) {
 
+
         for(String variableString : main.getVariablesManager().getVariableIdentifiers()){
 
             Variable<?> variable = main.getVariablesManager().getVariableFromString(variableString);
 
-            if(variable == null || !variable.isCanSetValue() || variable.getVariableDataType() != VariableDataType.STRING){
+            if(variable == null || !variable.isCanSetValue() || variable.getVariableDataType() != VariableDataType.BOOLEAN){
                 continue;
             }
 
@@ -97,39 +99,62 @@ public class StringAction extends Action {
                         ArrayList<String> completions = new ArrayList<>();
 
                         completions.add("set");
-                        completions.add("append");
-
+                        completions.add("setNot");
 
                         final List<String> allArgs = context.getRawInput();
-                        main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[String Comparison Operator]", "[...]");
+                        main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Operator]", "[...]");
 
                         return completions;
-                    }).build(), ArgumentDescription.of("Ytring operator."))
-                    .argument(StringVariableValueArgument.newBuilder("string", main), ArgumentDescription.of("String"))
+                    }).build(), ArgumentDescription.of("Operator."))
+                    .argument(BooleanVariableValueArgument.newBuilder("expression", main), ArgumentDescription.of("Expression"))
                     .handler((context) -> {
 
-                        final String string = context.get("string");
+                        final String expression = context.get("expression");
 
-                        final String stringOperator = context.get("operator");
+                        final String operator = context.get("operator");
 
-                        StringAction stringAction = new StringAction(main);
-
-                        stringAction.setVariableName(variableString);
-                        stringAction.setStringOperator(stringOperator);
-                        stringAction.setNewValue(string);
+                        BooleanAction booleanAction = new BooleanAction(main);
+                        booleanAction.setVariableName(variableString);
+                        booleanAction.setOperator(operator);
+                        booleanAction.setNewValueExpression(expression);
 
 
                         HashMap<String, String> additionalStringArguments = new HashMap<>();
                         for(StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()){
                             additionalStringArguments.put(stringArgument.getName(), context.get(stringArgument.getName()));
                         }
-                        stringAction.setAdditionalStringArguments(additionalStringArguments);
+                        booleanAction.setAdditionalStringArguments(additionalStringArguments);
 
-                        main.getActionManager().addAction(stringAction, context);
+                        main.getActionManager().addAction(booleanAction, context);
 
                     })
             );
         }
+    }
+
+    public final boolean evaluateExpression(final QuestPlayer questPlayer){
+        boolean booleanRequirement = false;
+
+        try{
+            booleanRequirement = Boolean.parseBoolean(getNewValueExpression());
+        }catch (Exception e){
+            //Might be another variable
+            for(final String otherVariableName : main.getVariablesManager().getVariableIdentifiers()){
+                if(!getNewValueExpression().equalsIgnoreCase(otherVariableName)){
+                    continue;
+                }
+                final Variable<?> otherVariable = main.getVariablesManager().getVariableFromString(otherVariableName);
+                if(otherVariable == null || otherVariable.getVariableDataType() != VariableDataType.BOOLEAN){
+                    main.getLogManager().debug("Null variable: <highlight>" + otherVariableName);
+                    continue;
+                }
+                if(otherVariable.getValue(questPlayer.getPlayer(), questPlayer) instanceof Boolean bool){
+                    booleanRequirement = bool;
+                    break;
+                }
+            }
+        }
+        return booleanRequirement;
     }
 
     @Override
@@ -149,21 +174,21 @@ public class StringAction extends Action {
 
         Object currentValueObject = variable.getValue(player, questPlayer, objects);
 
-        String currentValue = "";
-        if (currentValueObject instanceof String string) {
-            currentValue = string;
+        /*boolean currentValue = false;
+        if (currentValueObject instanceof Boolean bool) {
+            currentValue = bool;
         }else{
-            currentValue = (String) currentValueObject;
-        }
+            currentValue = (boolean) currentValueObject;
+        }*/
 
-        String nextNewValue = newValue;
+        boolean nextNewValue = evaluateExpression(questPlayer);
 
-        if(getStringOperator().equalsIgnoreCase("set")){
-            nextNewValue = newValue;
-        }else if(getStringOperator().equalsIgnoreCase("append")){
-            nextNewValue = currentValue + newValue;
+        if(getOperator().equalsIgnoreCase("set")){
+            nextNewValue = nextNewValue;
+        }else if(getOperator().equalsIgnoreCase("setNot")){
+            nextNewValue = !nextNewValue;
         }else{
-            main.sendMessage(player, "<ERROR>Error: variable operator <highlight>" + getStringOperator() + "</highlight> is invalid. Report this to the Server owner.");
+            main.sendMessage(player, "<ERROR>Error: variable operator <highlight>" + getOperator() + "</highlight> is invalid. Report this to the Server owner.");
             return;
         }
 
@@ -171,27 +196,27 @@ public class StringAction extends Action {
 
 
 
-        if(currentValueObject instanceof String){
-            ((Variable<String>)variable).setValue(nextNewValue, player, objects);
-        } else if(currentValueObject instanceof Character){
-            ((Variable<Character>)variable).setValue(nextNewValue.toCharArray()[0], player, objects);
+        if(currentValueObject instanceof Boolean){
+            ((Variable<Boolean>)variable).setValue(nextNewValue, player, objects);
         }else{
-            main.getLogManager().warn("Cannot execute string action, string the number type " + currentValueObject.getClass().getName() + " is invalid.");
+            main.getLogManager().warn("Cannot execute boolean action, because the number type " + currentValueObject.getClass().getName() + " is invalid.");
         }
 
     }
 
     @Override
     public String getActionDescription(final Player player, final Object... objects) {
-        return variableName + ": " + getNewValue();
+        return variableName + ": " + evaluateExpression(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()));
     }
+
+
 
     @Override
     public void save(final FileConfiguration configuration, String initialPath) {
-        configuration.set(initialPath + ".specifics.newValue", getNewValue());
+        configuration.set(initialPath + ".specifics.expression", getNewValueExpression());
 
         configuration.set(initialPath + ".specifics.variableName", getVariableName());
-        configuration.set(initialPath + ".specifics.operator", getStringOperator());
+        configuration.set(initialPath + ".specifics.operator", getOperator());
 
         for(final String key : additionalStringArguments.keySet()){
             configuration.set(initialPath + ".specifics.additionalStrings." + key, additionalStringArguments.get(key));
@@ -201,10 +226,10 @@ public class StringAction extends Action {
 
     @Override
     public void load(final FileConfiguration configuration, String initialPath) {
-        this.newValue = configuration.getString(initialPath + ".specifics.newValue");
+        this.newValueExpression = configuration.getString(initialPath + ".specifics.expression", "");
 
         this.variableName = configuration.getString(initialPath + ".specifics.variableName");
-        this.stringOperator = configuration.getString(initialPath + ".specifics.operator", "");
+        this.operator = configuration.getString(initialPath + ".specifics.operator", "");
 
         final ConfigurationSection additionalStringsConfigurationSection = configuration.getConfigurationSection(initialPath + ".specifics.additionalStrings");
         if (additionalStringsConfigurationSection != null) {
@@ -216,15 +241,16 @@ public class StringAction extends Action {
 
     @Override
     public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+
         this.variableName = arguments.get(0);
 
-        this.stringOperator = arguments.get(1);
-        this.newValue = arguments.get(2);
+        this.operator = arguments.get(1);
+        this.newValueExpression = arguments.get(2);
 
         if(arguments.size() >= 4){
 
             Variable<?> variable = main.getVariablesManager().getVariableFromString(variableName);
-            if(variable == null || !variable.isCanSetValue() || variable.getVariableDataType() != VariableDataType.NUMBER){
+            if(variable == null || !variable.isCanSetValue() || variable.getVariableDataType() != VariableDataType.BOOLEAN){
                 return;
             }
 
@@ -236,6 +262,8 @@ public class StringAction extends Action {
                 }
             }
         }
+
+
     }
 
 }

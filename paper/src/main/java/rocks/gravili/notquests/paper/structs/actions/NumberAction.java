@@ -123,13 +123,11 @@ public class NumberAction extends Action {
                         numberAction.setNewValueExpression(amountExpression);
 
 
-                        if(variable != null){
-                            HashMap<String, String> additionalStringArguments = new HashMap<>();
-                            for(StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()){
-                                additionalStringArguments.put(stringArgument.getName(), context.get(stringArgument.getName()));
-                            }
-                            numberAction.setAdditionalStringArguments(additionalStringArguments);
+                        HashMap<String, String> additionalStringArguments = new HashMap<>();
+                        for(StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()){
+                            additionalStringArguments.put(stringArgument.getName(), context.get(stringArgument.getName()));
                         }
+                        numberAction.setAdditionalStringArguments(additionalStringArguments);
 
                         main.getActionManager().addAction(numberAction, context);
 
@@ -156,8 +154,8 @@ public class NumberAction extends Action {
         Object currentValueObject = variable.getValue(player, questPlayer, objects);
 
         double currentValue = 0d;
-        if (currentValueObject instanceof Number) {
-            currentValue = ((Number) currentValueObject).doubleValue();
+        if (currentValueObject instanceof Number number) {
+            currentValue = number.doubleValue();
         }else{
             currentValue = (double) currentValueObject;
         }

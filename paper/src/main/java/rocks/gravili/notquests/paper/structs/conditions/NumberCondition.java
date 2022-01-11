@@ -322,13 +322,11 @@ public class NumberCondition extends Condition {
                         //questPointsCondition.setDeductQuestPoints(deductQuestPoints);
 
 
-                        if(variable != null){
-                            HashMap<String, String> additionalStringArguments = new HashMap<>();
-                            for(StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()){
-                                additionalStringArguments.put(stringArgument.getName(), context.get(stringArgument.getName()));
-                            }
-                            numberCondition.setAdditionalStringArguments(additionalStringArguments);
+                        HashMap<String, String> additionalStringArguments = new HashMap<>();
+                        for(StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()){
+                            additionalStringArguments.put(stringArgument.getName(), context.get(stringArgument.getName()));
                         }
+                        numberCondition.setAdditionalStringArguments(additionalStringArguments);
 
                         main.getConditionsManager().addCondition(numberCondition, context);
                     })

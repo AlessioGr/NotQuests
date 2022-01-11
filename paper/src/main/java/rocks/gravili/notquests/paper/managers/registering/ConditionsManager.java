@@ -53,12 +53,12 @@ public class ConditionsManager {
         conditions.clear();
         registerCondition("Condition", ConditionCondition.class);
 
-        registerCondition("CompletedQuest", CompletedQuestCondition.class);
+        //registerCondition("CompletedQuest", CompletedQuestCondition.class);
         registerCondition("CompletedObjective", CompletedObjectiveCondition.class);
-        registerCondition("ActiveQuest", ActiveQuestCondition.class);
+        //registerCondition("ActiveQuest", ActiveQuestCondition.class);
 
         //registerCondition("QuestPoints", QuestPointsCondition.class);
-        registerCondition("Permission", PermissionCondition.class);
+        //registerCondition("Permission", PermissionCondition.class);
         //registerCondition("Money", MoneyCondition.class);
         registerCondition("WorldTime", WorldTimeCondition.class);
         //registerCondition("UltimateClansClanLevel", UltimateClansClanLevelCondition.class);

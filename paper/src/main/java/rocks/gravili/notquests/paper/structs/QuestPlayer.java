@@ -630,7 +630,16 @@ public class QuestPlayer {
 
     public final boolean hasAcceptedQuest(final Quest quest) {
         for (final ActiveQuest activeQuest : activeQuests) {
-            if (activeQuest.getQuest().equals(quest)) {
+            if (activeQuest.getQuestName().equalsIgnoreCase(quest.getQuestName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public final boolean hasCompletedQuest(final Quest quest) {
+        for (final CompletedQuest completedQuest : completedQuests) {
+            if (completedQuest.getQuestName().equalsIgnoreCase(quest.getQuestName())) {
                 return true;
             }
         }

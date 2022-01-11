@@ -28,6 +28,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
@@ -76,9 +77,35 @@ public class BooleanCondition extends Condition {
     }
 
 
+    public final boolean evaluateExpression(final QuestPlayer questPlayer){
+        boolean booleanRequirement = false;
+
+        try{
+            booleanRequirement = Boolean.parseBoolean(getExpression());
+        }catch (Exception e){
+            //Might be another variable
+            for(final String otherVariableName : main.getVariablesManager().getVariableIdentifiers()){
+                if(!getExpression().equalsIgnoreCase(otherVariableName)){
+                    continue;
+                }
+                final Variable<?> otherVariable = main.getVariablesManager().getVariableFromString(otherVariableName);
+                if(otherVariable == null || otherVariable.getVariableDataType() != VariableDataType.BOOLEAN){
+                    main.getLogManager().debug("Null variable: <highlight>" + otherVariableName);
+                    continue;
+                }
+                if(otherVariable.getValue(questPlayer.getPlayer(), questPlayer) instanceof Boolean bool){
+                    booleanRequirement = bool;
+                    break;
+                }
+            }
+        }
+        return booleanRequirement;
+    }
+
     @Override
     public String checkInternally(final QuestPlayer questPlayer) {
-        final double numberRequirement = main.getVariablesManager().evaluateExpression(getExpression(), questPlayer.getPlayer(), questPlayer);
+        boolean booleanRequirement = evaluateExpression(questPlayer);
+
 
         Variable<?> variable = main.getVariablesManager().getVariableFromString(variableName);
 
@@ -92,121 +119,19 @@ public class BooleanCondition extends Condition {
 
         Object value = variable.getValue(questPlayer.getPlayer(), questPlayer);
 
-        if(getMathOperator().equalsIgnoreCase("moreThan")){
-            if(value instanceof Long l){
-                if (l <= numberRequirement) {
-                    return "<YELLOW>You need <highlight>" + (numberRequirement+1 - l) + "</highlight> more " + variable.getPlural() + ".";
-                }
-            }else if(value instanceof Float f){
-                if (f <= numberRequirement) {
-                    return "<YELLOW>You need <highlight>" + (numberRequirement+1 - f) + "</highlight> more " + variable.getPlural() + ".";
-                }
-            }else if(value instanceof Double d){
-                if (d <= numberRequirement) {
-                    return "<YELLOW>You need <highlight>" + (numberRequirement+1 - d) + "</highlight> more " + variable.getPlural() + ".";
-                }
-            }else if(value instanceof Integer i){
-                if (i <= numberRequirement) {
-                    return "<YELLOW>You need <highlight>" + (numberRequirement+1 - i) + "</highlight> more " + variable.getPlural() + ".";
+        if(getOperator().equalsIgnoreCase("equals")){
+            if(value instanceof Boolean bool){
+                if (booleanRequirement != bool) {
+                    return "<YELLOW>Following needs to be " + booleanRequirement + ": <highlight>" + variable.getSingular()+ "</highlight>.";
                 }
             }else{
-                if ((long)value <= numberRequirement) {
-                    return "<YELLOW>You need <highlight>" + (numberRequirement+1 - (long)value) + "</highlight> more " + variable.getPlural() + ".";
-                }
-            }
-        }else if(getMathOperator().equalsIgnoreCase("moreOrEqualThan")){
-            if(value instanceof Long l){
-                if (l < numberRequirement) {
-                    return "<YELLOW>You need <highlight>" + (numberRequirement - l) + "</highlight> more " + variable.getPlural() + ".";
-                }
-            }else if(value instanceof Float f){
-                if (f < numberRequirement) {
-                    return "<YELLOW>You need <highlight>" + (numberRequirement - f) + "</highlight> more " + variable.getPlural() + ".";
-                }
-            }else if(value instanceof Double d){
-                if (d < numberRequirement) {
-                    return "<YELLOW>You need <highlight>" + (numberRequirement - d) + "</highlight> more " + variable.getPlural() + ".";
-                }
-            }else if(value instanceof Integer i){
-                if (i < numberRequirement) {
-                    return "<YELLOW>You need <highlight>" + (numberRequirement - i) + "</highlight> more " + variable.getPlural() + ".";
-                }
-            }else{
-                if ((long)value < numberRequirement) {
-                    return "<YELLOW>You need <highlight>" + (numberRequirement - (long)value) + "</highlight> more " + variable.getPlural() + ".";
-                }
-            }
-        }else if(getMathOperator().equalsIgnoreCase("lessThan")){
-            if(value instanceof Long l){
-                if (l >= numberRequirement) {
-                    return "<YELLOW>You have <highlight>" + (l+1 - numberRequirement) + "</highlight> too many " + variable.getPlural() + ".";
-                }
-            }else if(value instanceof Float f){
-                if (f >= numberRequirement) {
-                    return "<YELLOW>You have <highlight>" + (f+1 - numberRequirement) + "</highlight> too many " + variable.getPlural() + ".";
-                }
-            }else if(value instanceof Double d){
-                if (d >= numberRequirement) {
-                    return "<YELLOW>You have <highlight>" + (d+1 - numberRequirement) + "</highlight> too many " + variable.getPlural() + ".";
-                }
-            }else if(value instanceof Integer i){
-                if (i >= numberRequirement) {
-                    return "<YELLOW>You have <highlight>" + (i+1 - numberRequirement) + "</highlight> too many " + variable.getPlural() + ".";
-                }
-            }else{
-                if ((long)value >= numberRequirement) {
-                    return "<YELLOW>You have <highlight>" + ((long)value+1 - numberRequirement) + "</highlight> too many " + variable.getPlural() + ".";
-                }
-            }
-        }else if(getMathOperator().equalsIgnoreCase("lessOrEqualThan")){
-            if(value instanceof Long l){
-                if (l > numberRequirement) {
-                    return "<YELLOW>You have <highlight>" + (l - numberRequirement) + "</highlight> too many " + variable.getPlural() + ".";
-                }
-            }else if(value instanceof Float f){
-                if (f > numberRequirement) {
-                    return "<YELLOW>You have <highlight>" + (f - numberRequirement) + "</highlight> too many " + variable.getPlural() + ".";
-                }
-            }else if(value instanceof Double d){
-                if (d > numberRequirement) {
-                    return "<YELLOW>You have <highlight>" + (d - numberRequirement) + "</highlight> too many " + variable.getPlural() + ".";
-                }
-            }else if(value instanceof Integer i){
-                if (i > numberRequirement) {
-                    return "<YELLOW>You have <highlight>" + (i - numberRequirement) + "</highlight> too many " + variable.getPlural() + ".";
-                }
-            }else{
-                if ((long)value >= numberRequirement) {
-                    return "<YELLOW>You have <highlight>" + ((long)value - numberRequirement) + "</highlight> too many " + variable.getPlural() + ".";
-                }
-            }
-        }else if(getMathOperator().equalsIgnoreCase("equals")){
-            if(value instanceof Long l){
-                if (l != numberRequirement) {
-                    return "<YELLOW>You need EXACTLY <highlight>" + numberRequirement+ "</highlight> " + variable.getPlural() + " - no more or less.";
-                }
-            }else if(value instanceof Float f){
-                if (f != numberRequirement) {
-                    return "<YELLOW>You need EXACTLY <highlight>" + numberRequirement+ "</highlight> " + variable.getPlural() + " - no more or less.";
-                }
-            }else if(value instanceof Double d){
-                if (d != numberRequirement) {
-                    return "<YELLOW>You need EXACTLY <highlight>" + numberRequirement+ "</highlight> " + variable.getPlural() + " - no more or less.";
-                }
-            }else if(value instanceof Integer i){
-                if (i != numberRequirement) {
-                    return "<YELLOW>You need EXACTLY <highlight>" + numberRequirement+ "</highlight> " + variable.getPlural() + " - no more or less.";
-                }
-            }else{
-                if ((long)value != numberRequirement) {
-                    return "<YELLOW>You need EXACTLY <highlight>" + numberRequirement+ "</highlight> " + variable.getPlural() + " - no more or less.";
+                if (booleanRequirement != (boolean)value) {
+                    return "<YELLOW>Following needs to be " + booleanRequirement + ": <highlight>" + variable.getSingular()+ "</highlight>.";
                 }
             }
         }else{
-            return "<ERROR>Error: variable operator <highlight>" + getMathOperator() + "</highlight> is invalid. Report this to the Server owner.";
-
+            return "<ERROR>Error: variable operator <highlight>" + getOperator() + "</highlight> is invalid. Report this to the Server owner.";
         }
-
 
         return "";
     }
@@ -246,7 +171,7 @@ public class BooleanCondition extends Condition {
         if(arguments.size() >= 4){
 
             Variable<?> variable = main.getVariablesManager().getVariableFromString(variableName);
-            if(variable == null || !variable.isCanSetValue() || variable.getVariableDataType() != VariableDataType.NUMBER){
+            if(variable == null || !variable.isCanSetValue() || variable.getVariableDataType() != VariableDataType.BOOLEAN){
                 return;
             }
 
@@ -264,19 +189,10 @@ public class BooleanCondition extends Condition {
     public String getConditionDescription(Player player, Object... objects) {
         //description += "\n<GRAY>--- Will quest points be deducted?: No";
 
-        if(getMathOperator().equalsIgnoreCase("moreThan")){
-            return "<GRAY>-- " + variableName + " needed: More than " + main.getVariablesManager().evaluateExpression(getExpression(), player, objects) + "</GRAY>";
-        }else if(getMathOperator().equalsIgnoreCase("moreOrEqualThan")){
-            return "<GRAY>-- " + variableName + " needed: More or equal than " + main.getVariablesManager().evaluateExpression(getExpression(), player, objects)  + "</GRAY>";
-        }else if(getMathOperator().equalsIgnoreCase("lessThan")){
-            return "<GRAY>-- " + variableName + " needed: Less than " + main.getVariablesManager().evaluateExpression(getExpression(), player, objects) + "</GRAY>";
-        }else if(getMathOperator().equalsIgnoreCase("lessOrEqualThan")){
-            return "<GRAY>-- " + variableName + " needed: Less or equal than" + main.getVariablesManager().evaluateExpression(getExpression(), player, objects)  + "</GRAY>";
-        }else if(getMathOperator().equalsIgnoreCase("equals")){
-            return "<GRAY>-- " + variableName + " needed: Exactly " + main.getVariablesManager().evaluateExpression(getExpression(), player, objects)+ "</GRAY>";
+        if(getOperator().equalsIgnoreCase("equals")){
+            return "<GRAY>-- " + variableName + " needs to be " + evaluateExpression(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId())) + "</GRAY>";
         }
-
-        return "<GRAY>-- " + variableName + " needed: " + main.getVariablesManager().evaluateExpression(getExpression(), player, objects)  + "</GRAY>";
+        return "<GRAY>-- " + variableName + " needed: " + evaluateExpression(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId())) + "</GRAY>";
     }
 
 
@@ -301,33 +217,25 @@ public class BooleanCondition extends Condition {
 
                         return completions;
                     }).build(), ArgumentDescription.of("Comparison operator."))
-                    .argument(NumberVariableValueArgument.newBuilder("amount", main), ArgumentDescription.of("Amount"))
+                    .argument(BooleanVariableValueArgument.newBuilder("expression", main), ArgumentDescription.of("Expression"))
                     .handler((context) -> {
 
-                        final String amountExpression = context.get("amount");
+                        final String expression = context.get("expression");
+                        final String operator = context.get("operator");
+
+                        BooleanCondition booleanCondition = new BooleanCondition(main);
+                        booleanCondition.setExpression(expression);
+                        booleanCondition.setOperator(operator);
+                        booleanCondition.setVariableName(variableString);
 
 
-                        final String mathOperator = context.get("operator");
-
-                        NumberCondition numberCondition = new NumberCondition(main);
-                        numberCondition.setVariableName(variableString);
-
-                        numberCondition.setMathOperator(mathOperator);
-                        //numberCondition.setProgressNeeded(variable.getValue());
-
-                        numberCondition.setExpression(amountExpression);
-                        //questPointsCondition.setDeductQuestPoints(deductQuestPoints);
-
-
-                        if(variable != null){
-                            HashMap<String, String> additionalStringArguments = new HashMap<>();
-                            for(StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()){
-                                additionalStringArguments.put(stringArgument.getName(), context.get(stringArgument.getName()));
-                            }
-                            numberCondition.setAdditionalStringArguments(additionalStringArguments);
+                        HashMap<String, String> additionalStringArguments = new HashMap<>();
+                        for(StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()){
+                            additionalStringArguments.put(stringArgument.getName(), context.get(stringArgument.getName()));
                         }
+                        booleanCondition.setAdditionalStringArguments(additionalStringArguments);
 
-                        main.getConditionsManager().addCondition(numberCondition, context);
+                        main.getConditionsManager().addCondition(booleanCondition, context);
                     })
             );
 

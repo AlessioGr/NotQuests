@@ -29,12 +29,8 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
-import rocks.gravili.notquests.paper.structs.actions.Action;
-import rocks.gravili.notquests.paper.structs.actions.NumberAction;
-import rocks.gravili.notquests.paper.structs.actions.StringAction;
-import rocks.gravili.notquests.paper.structs.conditions.Condition;
-import rocks.gravili.notquests.paper.structs.conditions.NumberCondition;
-import rocks.gravili.notquests.paper.structs.conditions.StringCondition;
+import rocks.gravili.notquests.paper.structs.actions.*;
+import rocks.gravili.notquests.paper.structs.conditions.*;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
 import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
 
@@ -472,7 +468,7 @@ public class ConversationManager {
                                 continue;
                             }
                             if(variable.getVariableDataType() == VariableDataType.NUMBER){
-                                final Condition condition = new NumberCondition(main);
+                                final NumberCondition condition = new NumberCondition(main);
                                 try{
                                     condition.deserializeFromSingleLineString(singleLineConditionStringArguments);
                                 }catch (Exception e){
@@ -484,7 +480,31 @@ public class ConversationManager {
                                 conditions.add(condition);
                                 continue conditionLineLoop;
                             }else if(variable.getVariableDataType() == VariableDataType.STRING){
-                                final Condition condition = new StringCondition(main);
+                                final StringCondition condition = new StringCondition(main);
+                                try{
+                                    condition.deserializeFromSingleLineString(singleLineConditionStringArguments);
+                                }catch (Exception e){
+                                    main.getLogManager().warn("Unable to find create condition: " + singleLineConditionStringArguments.get(0) + ". The condition string seems to be incorrect. Condition String: " + String.join(" ", singleLineConditionStringArguments));
+                                    e.printStackTrace();
+                                    continue conditionLineLoop;
+                                }
+                                main.getLogManager().debug("Found conversation line condition: " + condition.getConditionName());
+                                conditions.add(condition);
+                                continue conditionLineLoop;
+                            }else if(variable.getVariableDataType() == VariableDataType.BOOLEAN){
+                                final BooleanCondition condition = new BooleanCondition(main);
+                                try{
+                                    condition.deserializeFromSingleLineString(singleLineConditionStringArguments);
+                                }catch (Exception e){
+                                    main.getLogManager().warn("Unable to find create condition: " + singleLineConditionStringArguments.get(0) + ". The condition string seems to be incorrect. Condition String: " + String.join(" ", singleLineConditionStringArguments));
+                                    e.printStackTrace();
+                                    continue conditionLineLoop;
+                                }
+                                main.getLogManager().debug("Found conversation line condition: " + condition.getConditionName());
+                                conditions.add(condition);
+                                continue conditionLineLoop;
+                            }else if(variable.getVariableDataType() == VariableDataType.LIST){
+                                final ListCondition condition = new ListCondition(main);
                                 try{
                                     condition.deserializeFromSingleLineString(singleLineConditionStringArguments);
                                 }catch (Exception e){
@@ -558,7 +578,7 @@ public class ConversationManager {
                                 continue;
                             }
                             if(variable.getVariableDataType() == VariableDataType.NUMBER){
-                                final Action action = new NumberAction(main);
+                                final NumberAction action = new NumberAction(main);
                                 try{
                                     action.deserializeFromSingleLineString(singleLineActionStringArguments);
                                 }catch (Exception e){
@@ -570,7 +590,31 @@ public class ConversationManager {
                                 actions.add(action);
                                 continue actionLineLoop;
                             }else if(variable.getVariableDataType() == VariableDataType.STRING){
-                                final Action action = new StringAction(main);
+                                final StringAction action = new StringAction(main);
+                                try{
+                                    action.deserializeFromSingleLineString(singleLineActionStringArguments);
+                                }catch (Exception e){
+                                    main.getLogManager().warn("Unable to find create action: " + singleLineActionStringArguments.get(0) + ". The action string seems to be incorrect.");
+                                    e.printStackTrace();
+                                    continue actionLineLoop;
+                                }
+                                main.getLogManager().debug("Found conversation line action: " + action.getActionName());
+                                actions.add(action);
+                                continue actionLineLoop;
+                            }else if(variable.getVariableDataType() == VariableDataType.BOOLEAN){
+                                final BooleanAction action = new BooleanAction(main);
+                                try{
+                                    action.deserializeFromSingleLineString(singleLineActionStringArguments);
+                                }catch (Exception e){
+                                    main.getLogManager().warn("Unable to find create action: " + singleLineActionStringArguments.get(0) + ". The action string seems to be incorrect.");
+                                    e.printStackTrace();
+                                    continue actionLineLoop;
+                                }
+                                main.getLogManager().debug("Found conversation line action: " + action.getActionName());
+                                actions.add(action);
+                                continue actionLineLoop;
+                            }else if(variable.getVariableDataType() == VariableDataType.LIST){
+                                final ListAction action = new ListAction(main);
                                 try{
                                     action.deserializeFromSingleLineString(singleLineActionStringArguments);
                                 }catch (Exception e){

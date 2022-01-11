@@ -21,19 +21,19 @@ package rocks.gravili.notquests.paper.structs.conditions;
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.StringArgument;
-import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
+import rocks.gravili.notquests.paper.commands.arguments.variables.ListVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
 import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -76,9 +76,14 @@ public class ListCondition extends Condition {
     }
 
 
+    public final String[] evaluateExpression(final QuestPlayer questPlayer){
+        return getExpression().split(",");
+    }
+
     @Override
     public String checkInternally(final QuestPlayer questPlayer) {
-        final double numberRequirement = main.getVariablesManager().evaluateExpression(getExpression(), questPlayer.getPlayer(), questPlayer);
+        String[] listRequirement = evaluateExpression(questPlayer);
+
 
         Variable<?> variable = main.getVariablesManager().getVariableFromString(variableName);
 
@@ -92,121 +97,81 @@ public class ListCondition extends Condition {
 
         Object value = variable.getValue(questPlayer.getPlayer(), questPlayer);
 
-        if(getMathOperator().equalsIgnoreCase("moreThan")){
-            if(value instanceof Long l){
-                if (l <= numberRequirement) {
-                    return "<YELLOW>You need <highlight>" + (numberRequirement+1 - l) + "</highlight> more " + variable.getPlural() + ".";
-                }
-            }else if(value instanceof Float f){
-                if (f <= numberRequirement) {
-                    return "<YELLOW>You need <highlight>" + (numberRequirement+1 - f) + "</highlight> more " + variable.getPlural() + ".";
-                }
-            }else if(value instanceof Double d){
-                if (d <= numberRequirement) {
-                    return "<YELLOW>You need <highlight>" + (numberRequirement+1 - d) + "</highlight> more " + variable.getPlural() + ".";
-                }
-            }else if(value instanceof Integer i){
-                if (i <= numberRequirement) {
-                    return "<YELLOW>You need <highlight>" + (numberRequirement+1 - i) + "</highlight> more " + variable.getPlural() + ".";
-                }
+        if(value == null){
+            return "<YELLOW>You don't have any " + variable.getPlural() + "!";
+        }
+
+        if(getOperator().equalsIgnoreCase("equals")){
+            String[] stringArray;
+            if(value instanceof String[] stringArray1){
+                stringArray = stringArray1;
+            }else if(value instanceof ArrayList<?> arrayList){
+                stringArray = arrayList.toArray(new String[0]);
             }else{
-                if ((long)value <= numberRequirement) {
-                    return "<YELLOW>You need <highlight>" + (numberRequirement+1 - (long)value) + "</highlight> more " + variable.getPlural() + ".";
+                stringArray = (String[])value;
+            }
+            if(listRequirement.length != stringArray.length){
+                return "<YELLOW>The " + variable.getPlural() + " need to be :<highlight>" + Arrays.toString(listRequirement) + "</highlight>.";
+            }else{
+                for (int i = 0; i < listRequirement.length; i++)
+                {
+                    if (!listRequirement[i].equals(stringArray[i])) {
+                        return "<YELLOW>The " + variable.getPlural() + " need to be :<highlight>" + Arrays.toString(listRequirement) + "</highlight>.";
+                    }
                 }
             }
-        }else if(getMathOperator().equalsIgnoreCase("moreOrEqualThan")){
-            if(value instanceof Long l){
-                if (l < numberRequirement) {
-                    return "<YELLOW>You need <highlight>" + (numberRequirement - l) + "</highlight> more " + variable.getPlural() + ".";
-                }
-            }else if(value instanceof Float f){
-                if (f < numberRequirement) {
-                    return "<YELLOW>You need <highlight>" + (numberRequirement - f) + "</highlight> more " + variable.getPlural() + ".";
-                }
-            }else if(value instanceof Double d){
-                if (d < numberRequirement) {
-                    return "<YELLOW>You need <highlight>" + (numberRequirement - d) + "</highlight> more " + variable.getPlural() + ".";
-                }
-            }else if(value instanceof Integer i){
-                if (i < numberRequirement) {
-                    return "<YELLOW>You need <highlight>" + (numberRequirement - i) + "</highlight> more " + variable.getPlural() + ".";
-                }
+        }else if(getOperator().equalsIgnoreCase("equalsIgnoreCase")){
+            String[] stringArray;
+            if(value instanceof String[] stringArray1){
+                stringArray = stringArray1;
+            }else if(value instanceof ArrayList<?> arrayList){
+                stringArray = arrayList.toArray(new String[0]);
             }else{
-                if ((long)value < numberRequirement) {
-                    return "<YELLOW>You need <highlight>" + (numberRequirement - (long)value) + "</highlight> more " + variable.getPlural() + ".";
+                stringArray = (String[])value;
+            }
+            if(listRequirement.length != stringArray.length){
+                return "<YELLOW>The " + variable.getPlural() + " need to be :<highlight>" + Arrays.toString(listRequirement) + "</highlight>.";
+            }else{
+                for (int i = 0; i < listRequirement.length; i++)
+                {
+                    if (!listRequirement[i].equalsIgnoreCase(stringArray[i])) {
+                        return "<YELLOW>The " + variable.getPlural() + " need to be :<highlight>" + Arrays.toString(listRequirement) + "</highlight>.";
+                    }
                 }
             }
-        }else if(getMathOperator().equalsIgnoreCase("lessThan")){
-            if(value instanceof Long l){
-                if (l >= numberRequirement) {
-                    return "<YELLOW>You have <highlight>" + (l+1 - numberRequirement) + "</highlight> too many " + variable.getPlural() + ".";
-                }
-            }else if(value instanceof Float f){
-                if (f >= numberRequirement) {
-                    return "<YELLOW>You have <highlight>" + (f+1 - numberRequirement) + "</highlight> too many " + variable.getPlural() + ".";
-                }
-            }else if(value instanceof Double d){
-                if (d >= numberRequirement) {
-                    return "<YELLOW>You have <highlight>" + (d+1 - numberRequirement) + "</highlight> too many " + variable.getPlural() + ".";
-                }
-            }else if(value instanceof Integer i){
-                if (i >= numberRequirement) {
-                    return "<YELLOW>You have <highlight>" + (i+1 - numberRequirement) + "</highlight> too many " + variable.getPlural() + ".";
-                }
+        }else if(getOperator().equalsIgnoreCase("contains")){
+            String[] stringArray;
+            if(value instanceof String[] stringArray1){
+                stringArray = stringArray1;
+            }else if(value instanceof ArrayList<?> arrayList){
+                stringArray = arrayList.toArray(new String[0]);
             }else{
-                if ((long)value >= numberRequirement) {
-                    return "<YELLOW>You have <highlight>" + ((long)value+1 - numberRequirement) + "</highlight> too many " + variable.getPlural() + ".";
+                stringArray = (String[])value;
+            }
+
+            for (String s : listRequirement) {
+                if (Arrays.stream(stringArray).noneMatch(s::equals)) {
+                    return "<YELLOW>The " + variable.getPlural() + " need to contain :<highlight>" + Arrays.toString(listRequirement) + "</highlight>.";
                 }
             }
-        }else if(getMathOperator().equalsIgnoreCase("lessOrEqualThan")){
-            if(value instanceof Long l){
-                if (l > numberRequirement) {
-                    return "<YELLOW>You have <highlight>" + (l - numberRequirement) + "</highlight> too many " + variable.getPlural() + ".";
-                }
-            }else if(value instanceof Float f){
-                if (f > numberRequirement) {
-                    return "<YELLOW>You have <highlight>" + (f - numberRequirement) + "</highlight> too many " + variable.getPlural() + ".";
-                }
-            }else if(value instanceof Double d){
-                if (d > numberRequirement) {
-                    return "<YELLOW>You have <highlight>" + (d - numberRequirement) + "</highlight> too many " + variable.getPlural() + ".";
-                }
-            }else if(value instanceof Integer i){
-                if (i > numberRequirement) {
-                    return "<YELLOW>You have <highlight>" + (i - numberRequirement) + "</highlight> too many " + variable.getPlural() + ".";
-                }
+        }else if(getOperator().equalsIgnoreCase("containsIgnoreCase")){
+            String[] stringArray;
+            if(value instanceof String[] stringArray1){
+                stringArray = stringArray1;
+            }else if(value instanceof ArrayList<?> arrayList){
+                stringArray = arrayList.toArray(new String[0]);
             }else{
-                if ((long)value >= numberRequirement) {
-                    return "<YELLOW>You have <highlight>" + ((long)value - numberRequirement) + "</highlight> too many " + variable.getPlural() + ".";
-                }
+                stringArray = (String[])value;
             }
-        }else if(getMathOperator().equalsIgnoreCase("equals")){
-            if(value instanceof Long l){
-                if (l != numberRequirement) {
-                    return "<YELLOW>You need EXACTLY <highlight>" + numberRequirement+ "</highlight> " + variable.getPlural() + " - no more or less.";
-                }
-            }else if(value instanceof Float f){
-                if (f != numberRequirement) {
-                    return "<YELLOW>You need EXACTLY <highlight>" + numberRequirement+ "</highlight> " + variable.getPlural() + " - no more or less.";
-                }
-            }else if(value instanceof Double d){
-                if (d != numberRequirement) {
-                    return "<YELLOW>You need EXACTLY <highlight>" + numberRequirement+ "</highlight> " + variable.getPlural() + " - no more or less.";
-                }
-            }else if(value instanceof Integer i){
-                if (i != numberRequirement) {
-                    return "<YELLOW>You need EXACTLY <highlight>" + numberRequirement+ "</highlight> " + variable.getPlural() + " - no more or less.";
-                }
-            }else{
-                if ((long)value != numberRequirement) {
-                    return "<YELLOW>You need EXACTLY <highlight>" + numberRequirement+ "</highlight> " + variable.getPlural() + " - no more or less.";
+
+            for (String s : listRequirement) {
+                if (Arrays.stream(stringArray).noneMatch(s::equalsIgnoreCase)) {
+                    return "<YELLOW>The " + variable.getPlural() + " need to contain :<highlight>" + Arrays.toString(listRequirement) + "</highlight>.";
                 }
             }
         }else{
-            return "<ERROR>Error: variable operator <highlight>" + getMathOperator() + "</highlight> is invalid. Report this to the Server owner.";
-
+            return "<ERROR>Error: variable operator <highlight>" + getOperator() + "</highlight> is invalid. Report this to the Server owner.";
         }
-
 
         return "";
     }
@@ -246,7 +211,7 @@ public class ListCondition extends Condition {
         if(arguments.size() >= 4){
 
             Variable<?> variable = main.getVariablesManager().getVariableFromString(variableName);
-            if(variable == null || !variable.isCanSetValue() || variable.getVariableDataType() != VariableDataType.NUMBER){
+            if(variable == null || !variable.isCanSetValue() || variable.getVariableDataType() != VariableDataType.LIST){
                 return;
             }
 
@@ -264,19 +229,16 @@ public class ListCondition extends Condition {
     public String getConditionDescription(Player player, Object... objects) {
         //description += "\n<GRAY>--- Will quest points be deducted?: No";
 
-        if(getMathOperator().equalsIgnoreCase("moreThan")){
-            return "<GRAY>-- " + variableName + " needed: More than " + main.getVariablesManager().evaluateExpression(getExpression(), player, objects) + "</GRAY>";
-        }else if(getMathOperator().equalsIgnoreCase("moreOrEqualThan")){
-            return "<GRAY>-- " + variableName + " needed: More or equal than " + main.getVariablesManager().evaluateExpression(getExpression(), player, objects)  + "</GRAY>";
-        }else if(getMathOperator().equalsIgnoreCase("lessThan")){
-            return "<GRAY>-- " + variableName + " needed: Less than " + main.getVariablesManager().evaluateExpression(getExpression(), player, objects) + "</GRAY>";
-        }else if(getMathOperator().equalsIgnoreCase("lessOrEqualThan")){
-            return "<GRAY>-- " + variableName + " needed: Less or equal than" + main.getVariablesManager().evaluateExpression(getExpression(), player, objects)  + "</GRAY>";
-        }else if(getMathOperator().equalsIgnoreCase("equals")){
-            return "<GRAY>-- " + variableName + " needed: Exactly " + main.getVariablesManager().evaluateExpression(getExpression(), player, objects)+ "</GRAY>";
+        if(getOperator().equalsIgnoreCase("equals")){
+            return "<GRAY>-- " + variableName + " needs to be equal " + Arrays.toString(evaluateExpression(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()))) + "</GRAY>";
+        }else if(getOperator().equalsIgnoreCase("equalsIgnoreCase")){
+            return "<GRAY>-- " + variableName + " needs to be equal " + Arrays.toString(evaluateExpression(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()))) + " (case-insensitive)</GRAY>";
+        }else if(getOperator().equalsIgnoreCase("contains")){
+            return "<GRAY>-- " + variableName + " needs to be contain " + Arrays.toString(evaluateExpression(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()))) + "</GRAY>";
+        }else if(getOperator().equalsIgnoreCase("containsIgnoreCase")){
+            return "<GRAY>-- " + variableName + " needs to be contain " + Arrays.toString(evaluateExpression(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()))) + " (case-insensitive)</GRAY>";
         }
-
-        return "<GRAY>-- " + variableName + " needed: " + main.getVariablesManager().evaluateExpression(getExpression(), player, objects)  + "</GRAY>";
+        return "<GRAY>Error: invalid expression.</GRAY>";
     }
 
 
@@ -294,40 +256,36 @@ public class ListCondition extends Condition {
                     .argument(StringArgument.<CommandSender>newBuilder("operator").withSuggestionsProvider((context, lastString) -> {
                         ArrayList<String> completions = new ArrayList<>();
                         completions.add("equals");
+                        completions.add("equalsIgnoreCase");
+                        completions.add("contains");
+                        completions.add("containsIgnoreCase");
 
 
                         final List<String> allArgs = context.getRawInput();
-                        main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Comparison Operator]", "[...]");
+                        main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[List Operator]", "[...]");
 
                         return completions;
-                    }).build(), ArgumentDescription.of("Comparison operator."))
-                    .argument(NumberVariableValueArgument.newBuilder("amount", main), ArgumentDescription.of("Amount"))
+                    }).build(), ArgumentDescription.of("List operator."))
+                    .argument(ListVariableValueArgument.newBuilder("expression", main), ArgumentDescription.of("Expression"))
                     .handler((context) -> {
 
-                        final String amountExpression = context.get("amount");
+                        final String expression = context.get("expression");
+                        final String operator = context.get("operator");
+
+                        ListCondition listCondition = new ListCondition(main);
+
+                        listCondition.setExpression(expression);
+                        listCondition.setOperator(operator);
+                        listCondition.setVariableName(variableString);
 
 
-                        final String mathOperator = context.get("operator");
-
-                        NumberCondition numberCondition = new NumberCondition(main);
-                        numberCondition.setVariableName(variableString);
-
-                        numberCondition.setMathOperator(mathOperator);
-                        //numberCondition.setProgressNeeded(variable.getValue());
-
-                        numberCondition.setExpression(amountExpression);
-                        //questPointsCondition.setDeductQuestPoints(deductQuestPoints);
-
-
-                        if(variable != null){
-                            HashMap<String, String> additionalStringArguments = new HashMap<>();
-                            for(StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()){
-                                additionalStringArguments.put(stringArgument.getName(), context.get(stringArgument.getName()));
-                            }
-                            numberCondition.setAdditionalStringArguments(additionalStringArguments);
+                        HashMap<String, String> additionalStringArguments = new HashMap<>();
+                        for(StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()){
+                            additionalStringArguments.put(stringArgument.getName(), context.get(stringArgument.getName()));
                         }
+                        listCondition.setAdditionalStringArguments(additionalStringArguments);
 
-                        main.getConditionsManager().addCondition(numberCondition, context);
+                        main.getConditionsManager().addCondition(listCondition, context);
                     })
             );
 

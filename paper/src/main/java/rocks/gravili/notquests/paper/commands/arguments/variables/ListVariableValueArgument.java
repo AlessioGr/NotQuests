@@ -185,14 +185,12 @@ public final class ListVariableValueArgument<C> extends CommandArgument<C, Strin
         ) {
 
             List<String> completions = new java.util.ArrayList<>();
-            completions.add("<Enter Variable>");
-
-
+            completions.add("<Enter Variables>");
 
 
             final List<String> allArgs = context.getRawInput();
 
-            main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.getSender(), allArgs.toArray(new String[0]), "[Enter Variable]", "[...]");
+            main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.getSender(), allArgs.toArray(new String[0]), "[Enter Variables (separated wit a comma)]", "[...]");
 
 
             return completions;
