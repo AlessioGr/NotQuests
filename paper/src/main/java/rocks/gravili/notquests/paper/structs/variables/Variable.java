@@ -31,6 +31,10 @@ public abstract class Variable<T> {
 
         if(typeOf == String.class || typeOf == Character.class){
             variableDataType = VariableDataType.STRING;
+        }else if(typeOf == Boolean.class){
+            variableDataType = VariableDataType.BOOLEAN;
+        }else if(typeOf == String[].class || typeOf == ArrayList.class){
+            variableDataType = VariableDataType.BOOLEAN;
         }else{
             variableDataType = VariableDataType.NUMBER;
         }
