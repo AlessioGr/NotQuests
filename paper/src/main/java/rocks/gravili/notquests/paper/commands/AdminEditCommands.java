@@ -21,16 +21,14 @@ package rocks.gravili.notquests.paper.commands;
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.parser.ArgumentParseResult;
-import cloud.commandframework.arguments.standard.BooleanArgument;
-import cloud.commandframework.arguments.standard.IntegerArgument;
-import cloud.commandframework.arguments.standard.StringArgument;
-import cloud.commandframework.arguments.standard.StringArrayArgument;
+import cloud.commandframework.arguments.standard.*;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.kyori.adventure.text.Component;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -50,6 +48,7 @@ import rocks.gravili.notquests.paper.structs.conditions.Condition;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 import rocks.gravili.notquests.paper.structs.triggers.Trigger;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,27 +66,30 @@ public class AdminEditCommands {
 
 
         manager.command(editBuilder.literal("acceptCooldown", "cooldown")
-                .argument(IntegerArgument.<CommandSender>newBuilder("minutes").withMin(-1).withSuggestionsProvider((context, lastString) -> {
-                    ArrayList<String> completions = new ArrayList<>();
-                    completions.add("<cooldown in minutes>");
-                    return completions;
-                }).build(), ArgumentDescription.of("New accept cooldown in minutes. Set it to -1, to disable the quest accept cooldown."))
+                .literal("set")
+                .argument(DurationArgument.of("duration"), ArgumentDescription.of("New accept cooldown."))
                 .meta(CommandMeta.DESCRIPTION, "Sets the time players have to wait between accepting quests.")
                 .handler((context) -> {
                     final Quest quest = context.get("quest");
-                    int cooldownInMinutes = context.get("minutes");
-                    if (cooldownInMinutes > 0) {
-                        quest.setAcceptCooldown(cooldownInMinutes);
-                        context.getSender().sendMessage(main.parse(
-                                "<success>Cooldown for Quest <highlight>" + quest.getQuestName() + "</highlight> has been set to <highlight2>"
-                                        + cooldownInMinutes + "</highlight2> minutes!"
-                        ));
-                    } else {
-                        quest.setAcceptCooldown(-1);
-                        context.getSender().sendMessage(main.parse(
-                                "<success>Cooldown for Quest <highlight>" + quest.getQuestName() + "</highlight> has been <highlight2>disabled</highlight2>!"
-                        ));
-                    }
+                    final Duration durationCooldown = context.get("duration");
+                    final long cooldownInMinutes = durationCooldown.toMinutes();
+
+                    quest.setAcceptCooldown(cooldownInMinutes);
+                    context.getSender().sendMessage(main.parse(
+                            "<success>Cooldown for Quest <highlight>" + quest.getQuestName() + "</highlight> has been set to <highlight2>"
+                                    + durationCooldown.toDaysPart() + " days, " + durationCooldown.toHoursPart() + " hours, " + durationCooldown.toMinutesPart() + " minutes" + "</highlight2>!"
+                    ));
+                }));
+
+        manager.command(editBuilder.literal("acceptCooldown", "cooldown")
+                .literal("disable")
+                .meta(CommandMeta.DESCRIPTION, "Disables the wait time for players between accepting quests.")
+                .handler((context) -> {
+                    final Quest quest = context.get("quest");
+                    quest.setAcceptCooldown(-1);
+                    context.getSender().sendMessage(main.parse(
+                            "<success>Cooldown for Quest <highlight>" + quest.getQuestName() + "</highlight> has been set to <highlight2>disabled</highlight2>!"
+                    ));
                 }));
 
 
