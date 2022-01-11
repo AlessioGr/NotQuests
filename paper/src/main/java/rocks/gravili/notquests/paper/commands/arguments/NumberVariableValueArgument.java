@@ -173,6 +173,9 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Str
                 try{
                     main.getVariablesManager().evaluateExpression(input, player);
                 }catch (Exception e){
+                    if(main.getConfiguration().isDebug()){
+                        e.printStackTrace();
+                    }
                     return ArgumentParseResult.failure(new IllegalArgumentException("Invalid Expression: " + input + ". Error: " + e.toString()));
                 }
             }
@@ -203,7 +206,11 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Str
                 if (variable == null || variable.getVariableDataType() != VariableDataType.NUMBER) {
                     continue;
                 }
-                completions.add(variableString);
+                if(variable.getRequiredStrings().isEmpty()){
+                    completions.add(variableString);
+                }else{
+                    completions.add(variableString+"(");
+                }
             }
 
 

@@ -34,6 +34,10 @@ public class PlaceholderAPINumberVariable extends Variable<Double>{
     @Override
     public Double getValue(Player player, Object... objects) {
         if (player != null) {
+            if(getRequiredStringValue("Placeholder") == null){
+                return 0D;
+            }
+
             final String placeholder = PlaceholderAPI.setPlaceholders(player, getRequiredStringValue("Placeholder"));
 
             double parsedPlaceholder;

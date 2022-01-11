@@ -146,11 +146,15 @@ public class VariablesManager {
             }
             Variable<?> variable = main.getVariablesManager().getVariableFromString(variableString);
             if(variable == null || variable.getVariableDataType() != VariableDataType.NUMBER){
+                main.getLogManager().debug("Null variable: <highlight>" + variableString);
                 continue;
             }
             Object valueObject = variable.getValue(player, objects);
             if(valueObject instanceof Number n){
                 expression = expression.replace(variableString, ""+n.doubleValue());
+            }else{
+                main.getLogManager().debug("Wrong valueObject for " + variableString +". Null?: " + (valueObject == null) );
+
             }
         }
 
