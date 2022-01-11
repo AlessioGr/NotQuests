@@ -1321,7 +1321,11 @@ public class AdminCommands {
                         int counter = 1;
                         for (Condition condition : foundAction.getConditions()) {
                             context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>" + condition.getConditionType()));
-                            context.getSender().sendMessage(main.parse("<main>" + condition.getConditionDescription()));
+                            if(context.getSender() instanceof Player player){
+                                context.getSender().sendMessage(main.parse("<main>" + condition.getConditionDescription(player)));
+                            }else{
+                                context.getSender().sendMessage(main.parse("<main>" + condition.getConditionDescription(null)));
+                            }
                             counter += 1;
                         }
 

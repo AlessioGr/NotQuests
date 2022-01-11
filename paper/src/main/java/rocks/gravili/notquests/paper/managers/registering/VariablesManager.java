@@ -23,6 +23,10 @@ import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.context.CommandContext;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import redempt.crunch.CompiledExpression;
+import redempt.crunch.Crunch;
+import redempt.crunch.functional.EvaluationEnvironment;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.variables.*;
 import rocks.gravili.notquests.paper.structs.variables.hooks.TownyNationTownCountVariable;
@@ -39,6 +43,8 @@ public class VariablesManager {
 
     private final HashMap<String, Class<? extends Variable<?>>> variables;
 
+    private final EvaluationEnvironment env = new EvaluationEnvironment();
+
 
     public VariablesManager(final NotQuests main) {
         this.main = main;
@@ -46,6 +52,10 @@ public class VariablesManager {
 
         registerDefaultVariables();
 
+    }
+
+    public final EvaluationEnvironment getEvaluationEnvironment(){
+        return env;
     }
 
     public void registerDefaultVariables() {
@@ -62,6 +72,8 @@ public class VariablesManager {
             registerVariable("TownyTownResidentCount", TownyTownResidentCountVariable.class);
             registerVariable("TownyTownPlotCount", TownyTownPlotCountVariable.class);
         }
+
+        env.setVariableNames(getVariableIdentifiers().toArray(new String[0]));
 
     }
 
@@ -81,6 +93,7 @@ public class VariablesManager {
     public void registerVariable(final String identifier, final Class<? extends Variable<?>> Variable) {
         main.getLogManager().info("Registering Variable <highlight>" + identifier);
         variables.put(identifier, Variable);
+
 
         /*try {
             Method commandHandler = Variable.getMethod("handleCommands", main.getClass(), PaperCommandManager.class, Command.Builder.class, VariableFor.class);
@@ -130,5 +143,30 @@ public class VariablesManager {
         }catch (Exception e){
             return null;
         }
+    }
+
+
+    public double evaluateExpression(String expression, final Player player, final Object... objects){
+
+        for(String variableString : main.getVariablesManager().getVariableIdentifiers()){
+            if(!expression.contains(variableString)){
+                continue;
+            }
+            Variable<?> variable = main.getVariablesManager().getVariableFromString(variableString);
+            if(variable == null || variable.getVariableDataType() != VariableDataType.NUMBER){
+                continue;
+            }
+            Object valueObject = variable.getValue(player, objects);
+            if(valueObject instanceof Number n){
+                expression = expression.replace(variableString, ""+n.doubleValue());
+            }
+        }
+
+        main.getLogManager().debug("To evaluate: <highlight>" + expression);
+
+        CompiledExpression exp = Crunch.compileExpression(expression);
+
+
+        return exp.evaluate();
     }
 }

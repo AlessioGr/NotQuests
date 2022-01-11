@@ -105,7 +105,7 @@ public class FailQuestAction extends Action {
 
 
     @Override
-    public String getActionDescription() {
+    public String getActionDescription(final Player player, final Object... objects) {
         return "Fails Quest: " + getQuestToFailName();
     }
 }

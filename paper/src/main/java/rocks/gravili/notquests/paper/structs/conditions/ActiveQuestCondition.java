@@ -24,6 +24,7 @@ import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.QuestSelector;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
@@ -86,7 +87,7 @@ public class ActiveQuestCondition extends Condition {
     }
 
     @Override
-    public String getConditionDescription() {
+    public String getConditionDescription(Player player, Object... objects) {
 
         final Quest otherQuest = getOtherQuest();
         if (otherQuest != null) {

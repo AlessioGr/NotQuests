@@ -26,6 +26,7 @@ import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.Quest;
@@ -85,7 +86,7 @@ public class CompletedObjectiveCondition extends Condition {
 
 
     @Override
-    public String getConditionDescription() {
+    public String getConditionDescription(Player player, Object... objects) {
         final Objective otherObjective = getObjectiveToComplete();
         if (otherObjective != null) {
             return "<GRAY>-- Finish Objective first: " + otherObjective.getObjectiveFinalName();

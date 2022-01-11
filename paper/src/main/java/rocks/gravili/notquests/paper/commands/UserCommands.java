@@ -556,7 +556,7 @@ public class UserCommands {
                     }
 
                     if (main.getConfiguration().isGuiQuestPreviewRewards_enabled()) {
-                        String rewards = main.getQuestManager().getQuestRewards(quest);
+                        String rewards = main.getQuestManager().getQuestRewards(quest, player);
                         if (rewards.isBlank()) {
                             rewards = main.getLanguageManager().getString("gui.previewQuest.button.rewards.empty", player);
                         }
@@ -572,7 +572,7 @@ public class UserCommands {
                     }
 
                     if (main.getConfiguration().isGuiQuestPreviewRequirements_enabled()) {
-                        String requirements = main.getQuestManager().getQuestRequirements(quest);
+                        String requirements = main.getQuestManager().getQuestRequirements(quest, player);
                         if (requirements.isBlank()) {
                             requirements = main.getLanguageManager().getString("gui.previewQuest.button.requirements.empty", player, questPlayer);
                         }

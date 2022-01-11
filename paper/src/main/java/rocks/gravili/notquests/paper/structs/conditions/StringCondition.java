@@ -26,6 +26,7 @@ import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.StringVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -169,7 +170,7 @@ public class StringCondition extends Condition {
     }
 
     @Override
-    public String getConditionDescription() {
+    public String getConditionDescription(Player player, Object... objects) {
         //description += "\n<GRAY>--- Will quest points be deducted?: No";
 
         if(getStringOperator().equalsIgnoreCase("equals")){

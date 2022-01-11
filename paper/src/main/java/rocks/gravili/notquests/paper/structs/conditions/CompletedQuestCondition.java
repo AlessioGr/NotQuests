@@ -25,6 +25,7 @@ import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.QuestSelector;
 import rocks.gravili.notquests.paper.structs.CompletedQuest;
@@ -159,7 +160,7 @@ public class CompletedQuestCondition extends Condition {
     }
 
     @Override
-    public String getConditionDescription() {
+    public String getConditionDescription(Player player, Object... objects) {
         String waitItemAddition = "";
         if (getMinimumTimeAfterCompletion() > 0) {
             final double timeToWaitInHours = Math.round((getMinimumTimeAfterCompletion() / 60f) * 10) / 10.0;

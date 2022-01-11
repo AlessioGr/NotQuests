@@ -75,7 +75,7 @@ public abstract class Action {
         this.objective = objective;
     }
 
-    public abstract String getActionDescription();
+    public abstract String getActionDescription(final Player player, final Object... objects);
 
     public abstract void execute(final Player player, Object... objects);
 

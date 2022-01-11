@@ -113,7 +113,7 @@ public class TownyNationNameCondition extends Condition {
     }
 
     @Override
-    public String getConditionDescription() {
+    public String getConditionDescription(Player player, Object... objects) {
         return "<GRAY>-- Member of nation: " + getTownyNationName();
     }
 

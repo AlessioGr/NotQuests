@@ -26,6 +26,9 @@ import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import redempt.crunch.CompiledExpression;
+import redempt.crunch.Crunch;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -40,6 +43,7 @@ public class NumberCondition extends Condition {
 
     private String variableName;
     private String mathOperator;
+    private String expression;
 
     private HashMap<String, String> additionalStringArguments;
 
@@ -59,6 +63,14 @@ public class NumberCondition extends Condition {
         this.variableName = variableName;
     }
 
+    public void setExpression(final String expression){
+        this.expression = expression;
+    }
+
+    public final String getExpression(){
+        return expression;
+    }
+
 
     public NumberCondition(NotQuests main) {
         super(main);
@@ -68,7 +80,7 @@ public class NumberCondition extends Condition {
 
     @Override
     public String checkInternally(final QuestPlayer questPlayer) {
-        final long numberRequirement = getProgressNeeded();
+        final double numberRequirement = main.getVariablesManager().evaluateExpression(getExpression(), questPlayer.getPlayer(), questPlayer);
 
         Variable<?> variable = main.getVariablesManager().getVariableFromString(variableName);
 
@@ -205,6 +217,7 @@ public class NumberCondition extends Condition {
     public void save(FileConfiguration configuration, final String initialPath) {
         configuration.set(initialPath + ".specifics.variableName", getVariableName());
         configuration.set(initialPath + ".specifics.operator", getMathOperator());
+        configuration.set(initialPath + ".specifics.expression", getExpression());
 
         for(final String key : additionalStringArguments.keySet()){
             configuration.set(initialPath + ".specifics.additionalStrings." + key, additionalStringArguments.get(key));
@@ -215,6 +228,7 @@ public class NumberCondition extends Condition {
     public void load(FileConfiguration configuration, String initialPath) {
         this.variableName = configuration.getString(initialPath + ".specifics.variableName");
         this.mathOperator = configuration.getString(initialPath + ".specifics.operator", "");
+        this.expression = configuration.getString(initialPath + ".specifics.expression", "");
 
         final ConfigurationSection additionalStringsConfigurationSection = configuration.getConfigurationSection(initialPath + ".specifics.additionalStrings");
         if (additionalStringsConfigurationSection != null) {
@@ -229,7 +243,7 @@ public class NumberCondition extends Condition {
         this.variableName = arguments.get(0);
 
         this.mathOperator = arguments.get(1);
-        setProgressNeeded(Long.parseLong(arguments.get(2)));
+        setExpression(arguments.get(2));
 
         if(arguments.size() >= 4){
 
@@ -249,23 +263,24 @@ public class NumberCondition extends Condition {
     }
 
     @Override
-    public String getConditionDescription() {
+    public String getConditionDescription(Player player, Object... objects) {
         //description += "\n<GRAY>--- Will quest points be deducted?: No";
 
         if(getMathOperator().equalsIgnoreCase("moreThan")){
-            return "<GRAY>-- " + variableName + " needed: More than " + getProgressNeeded() + "</GRAY>";
+            return "<GRAY>-- " + variableName + " needed: More than " + main.getVariablesManager().evaluateExpression(getExpression(), player, objects) + "</GRAY>";
         }else if(getMathOperator().equalsIgnoreCase("moreOrEqualThan")){
-            return "<GRAY>-- " + variableName + " needed: More or equal than " + getProgressNeeded() + "</GRAY>";
+            return "<GRAY>-- " + variableName + " needed: More or equal than " + main.getVariablesManager().evaluateExpression(getExpression(), player, objects)  + "</GRAY>";
         }else if(getMathOperator().equalsIgnoreCase("lessThan")){
-            return "<GRAY>-- " + variableName + " needed: Less than " + getProgressNeeded() + "</GRAY>";
+            return "<GRAY>-- " + variableName + " needed: Less than " + main.getVariablesManager().evaluateExpression(getExpression(), player, objects) + "</GRAY>";
         }else if(getMathOperator().equalsIgnoreCase("lessOrEqualThan")){
-            return "<GRAY>-- " + variableName + " needed: Less or equal than" + getProgressNeeded() + "</GRAY>";
+            return "<GRAY>-- " + variableName + " needed: Less or equal than" + main.getVariablesManager().evaluateExpression(getExpression(), player, objects)  + "</GRAY>";
         }else if(getMathOperator().equalsIgnoreCase("equals")){
-            return "<GRAY>-- " + variableName + " needed: Exactly " + getProgressNeeded() + "</GRAY>";
+            return "<GRAY>-- " + variableName + " needed: Exactly " + main.getVariablesManager().evaluateExpression(getExpression(), player, objects)+ "</GRAY>";
         }
 
-        return "<GRAY>-- " + variableName + " needed: " + getProgressNeeded() + "</GRAY>";
+        return "<GRAY>-- " + variableName + " needed: " + main.getVariablesManager().evaluateExpression(getExpression(), player, objects)  + "</GRAY>";
     }
+
 
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
@@ -295,7 +310,8 @@ public class NumberCondition extends Condition {
                     .meta(CommandMeta.DESCRIPTION, "Creates a new Number condition")
                     .handler((context) -> {
 
-                        final long amount = context.get("amount");
+                        final String amountExpression = context.get("amount");
+
 
                         final String mathOperator = context.get("operator");
 
@@ -305,7 +321,7 @@ public class NumberCondition extends Condition {
                         numberCondition.setMathOperator(mathOperator);
                         //numberCondition.setProgressNeeded(variable.getValue());
 
-                        numberCondition.setProgressNeeded(amount);
+                        numberCondition.setExpression(amountExpression);
                         //questPointsCondition.setDeductQuestPoints(deductQuestPoints);
 
 

@@ -736,7 +736,11 @@ public class AdminEditCommands {
                     int counter = 1;
                     for (Condition condition : objective.getConditions()) {
                         context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>" + condition.getConditionType() + "</main>"));
-                        context.getSender().sendMessage(main.parse("<main>>" + condition.getConditionDescription()));
+                        if(context.getSender() instanceof Player player){
+                            context.getSender().sendMessage(main.parse("<main>" + condition.getConditionDescription(player)));
+                        }else{
+                            context.getSender().sendMessage(main.parse("<main>" + condition.getConditionDescription(null)));
+                        }
                         counter += 1;
                     }
 
@@ -1101,9 +1105,16 @@ public class AdminEditCommands {
                     ));
                     int counter = 1;
                     for (final Condition condition : objective.getConditions()) {
-                        context.getSender().sendMessage(main.parse(
-                                "    <highlight>" + counter + ". Description: " + condition.getConditionDescription()
-                        ));
+                        if(context.getSender() instanceof Player player){
+                            context.getSender().sendMessage(main.parse(
+                                    "    <highlight>" + counter + ". Description: " + condition.getConditionDescription(player)
+                            ));
+                        }else {
+                            context.getSender().sendMessage(main.parse(
+                                    "    <highlight>" + counter + ". Description: " + condition.getConditionDescription(null)
+                            ));
+                        }
+
                         counter++;
                     }
                 }));
@@ -1142,7 +1153,11 @@ public class AdminEditCommands {
                     int counter = 1;
                     for (Condition condition : quest.getRequirements()) {
                         context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>" + condition.getConditionType()));
-                        context.getSender().sendMessage(main.parse("<main>" + condition.getConditionDescription()));
+                        if(context.getSender() instanceof Player player){
+                            context.getSender().sendMessage(main.parse("<main>" + condition.getConditionDescription(player)));
+                        }else {
+                            context.getSender().sendMessage(main.parse("<main>" + condition.getConditionDescription(null)));
+                        }
                         counter += 1;
                     }
                 }));
@@ -1170,7 +1185,11 @@ public class AdminEditCommands {
                     int counter = 1;
                     for (final Action action : quest.getRewards()) {
                         context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>" + action.getActionType()));
-                        context.getSender().sendMessage(main.parse("<unimportant>--</unimportant> <main>" + action.getActionDescription()));
+                        if(context.getSender() instanceof Player player){
+                            context.getSender().sendMessage(main.parse("<unimportant>--</unimportant> <main>" + action.getActionDescription(player)));
+                        }else {
+                            context.getSender().sendMessage(main.parse("<unimportant>--</unimportant> <main>" + action.getActionDescription(null)));
+                        }
                         counter++;
                     }
 
@@ -1230,7 +1249,11 @@ public class AdminEditCommands {
                     int counter = 1;
                     for (final Action action : objective.getRewards()) {
                         context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>" + action.getActionType()));
-                        context.getSender().sendMessage(main.parse("<unimportant>--</unimportant> <main>" + action.getActionDescription()));
+                        if(context.getSender() instanceof Player player){
+                            context.getSender().sendMessage(main.parse("<unimportant>--</unimportant> <main>" + action.getActionDescription(player)));
+                        }else{
+                            context.getSender().sendMessage(main.parse("<unimportant>--</unimportant> <main>" + action.getActionDescription(null)));
+                        }
                         counter++;
                     }
                 }));
@@ -1307,9 +1330,17 @@ public class AdminEditCommands {
                     context.getSender().sendMessage(main.parse(
                             "<main>Reward <highlight>" + (ID+1) + "</highlight> for Objective with ID <highlight2>" + objectiveID + "</highlight2> of Quest <highlight2>" + quest.getQuestName() + "</highlight2>:"
                     ));
-                    context.getSender().sendMessage(main.parse(
-                            "<unimportant>--</unimportant> <main>" + foundReward.getActionDescription()
-                    ));
+
+                    if(context.getSender() instanceof Player player){
+                        context.getSender().sendMessage(main.parse(
+                                "<unimportant>--</unimportant> <main>" + foundReward.getActionDescription(player)
+                        ));
+                    }else{
+                        context.getSender().sendMessage(main.parse(
+                                "<unimportant>--</unimportant> <main>" + foundReward.getActionDescription(null)
+                        ));
+                    }
+
 
                 }));
 
@@ -1468,9 +1499,17 @@ public class AdminEditCommands {
                     context.getSender().sendMessage(main.parse(
                             "<main>Reward <highlight>" + (ID+1) + "</highlight> for Quest <highlight2>" + quest.getQuestName() + "</highlight2>:"
                     ));
-                    context.getSender().sendMessage(main.parse(
-                            "<unimportant>--</unimportant> <main>" + foundReward.getActionDescription()
-                    ));
+
+                    if(context.getSender() instanceof Player player){
+                        context.getSender().sendMessage(main.parse(
+                                "<unimportant>--</unimportant> <main>" + foundReward.getActionDescription(player)
+                        ));
+                    }else{
+                        context.getSender().sendMessage(main.parse(
+                                "<unimportant>--</unimportant> <main>" + foundReward.getActionDescription(null)
+                        ));
+                    }
+
 
                 }));
 
@@ -1628,7 +1667,13 @@ public class AdminEditCommands {
                         }
 
                         context.getSender().sendMessage(main.parse("<unimportant>--- Action Name:</unimportant> <main>" + trigger.getTriggerAction().getActionName()));
-                        context.getSender().sendMessage(main.parse("<unimportant>------ Description:</unimportant> <main>" + trigger.getTriggerAction().getActionDescription()));
+                        if(context.getSender() instanceof Player player){
+                            context.getSender().sendMessage(main.parse("<unimportant>------ Description:</unimportant> <main>" + trigger.getTriggerAction().getActionDescription(player)));
+
+                        }else{
+                            context.getSender().sendMessage(main.parse("<unimportant>------ Description:</unimportant> <main>" + trigger.getTriggerAction().getActionDescription(null)));
+
+                        }
                         context.getSender().sendMessage(main.parse("<unimportant>--- Amount of triggers needed for first execution:</unimportant> <main>" + trigger.getAmountNeeded()));
 
                         if (trigger.getApplyOn() == 0) {

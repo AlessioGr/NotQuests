@@ -66,7 +66,7 @@ public class PermissionCondition extends Condition {
     }
 
     @Override
-    public String getConditionDescription() {
+    public String getConditionDescription(Player player, Object... objects) {
         return "<GRAY>-- Permission needed: " + getRequiredPermission();
     }
 

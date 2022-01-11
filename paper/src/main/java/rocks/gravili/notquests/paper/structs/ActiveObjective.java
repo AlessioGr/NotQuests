@@ -126,7 +126,7 @@ public class ActiveObjective {
 
             if(!check.isBlank()) {
                 foundStillFalseConditions = true;
-                getQuestPlayer().sendDebugMessage("Following objective condition is still unfinished: " + condition.getConditionDescription());
+                getQuestPlayer().sendDebugMessage("Following objective condition is still unfinished: " + condition.getConditionDescription(getQuestPlayer().getPlayer()));
                 setUnlocked(false, notifyPlayer, triggerAcceptQuestTrigger);
             }
 

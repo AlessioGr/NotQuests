@@ -241,6 +241,10 @@ public class IntegrationsManager {
         if (isSlimefunEnabled()) {
             main.getMain().getServer().getPluginManager().registerEvents(new SlimefunEvents(main), main.getMain());
         }
+
+        if (isEcoBossesEnabled()) {
+            main.getMain().getServer().getPluginManager().registerEvents(new EcoBossesEvents(main), main.getMain());
+        }
     }
 
 

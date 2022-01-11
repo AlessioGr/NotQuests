@@ -33,6 +33,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
@@ -881,7 +882,7 @@ public class QuestManager {
 
     }
 
-    public final String getQuestRequirements(final Quest quest) {
+    public final String getQuestRequirements(final Quest quest, final Player player) {
         StringBuilder requirements = new StringBuilder();
         int counter = 1;
         for (final Condition condition : quest.getRequirements()) {
@@ -890,7 +891,7 @@ public class QuestManager {
             }
             requirements.append("<GREEN>").append(counter).append(". <YELLOW>").append(condition.getConditionType()).append("\n");
 
-            requirements.append(condition.getConditionDescription()).append("\n");
+            requirements.append(condition.getConditionDescription(player)).append("\n");
 
 
             counter += 1;
@@ -898,7 +899,7 @@ public class QuestManager {
         return requirements.toString();
     }
 
-    public final String getQuestRewards(final Quest quest) {
+    public final String getQuestRewards(final Quest quest, final Player player) {
         StringBuilder rewards = new StringBuilder();
         int counter = 1;
         for (final Action reward : quest.getRewards()) {
@@ -909,9 +910,9 @@ public class QuestManager {
                 rewards.append("<GREEN>").append(counter).append(". <BLUE>").append(reward.getActionName()).append("</GREEN>");
             } else {
                 if (main.getConfiguration().hideRewardsWithoutName) {
-                    rewards.append("<GREEN>").append(counter).append(main.getLanguageManager().getString("gui.reward-hidden-text", null, quest, reward)).append("</GREEN>");
+                    rewards.append("<GREEN>").append(counter).append(main.getLanguageManager().getString("gui.reward-hidden-text", player, quest, reward)).append("</GREEN>");
                 } else {
-                    rewards.append("<GREEN>").append(counter).append(". <BLUE>").append(reward.getActionDescription()).append("</GREEN>");
+                    rewards.append("<GREEN>").append(counter).append(". <BLUE>").append(reward.getActionDescription(player)).append("</GREEN>");
                 }
 
             }
@@ -944,14 +945,14 @@ public class QuestManager {
         ));
 
         player.sendMessage(main.parse(
-                getQuestRequirements(quest)
+                getQuestRequirements(quest, player)
         ));
 
         player.sendMessage(main.parse(
                 "<BLUE>Quest Rewards:"
         ));
         player.sendMessage(main.parse(
-                getQuestRewards(quest)
+                getQuestRewards(quest, player)
         ));
 
         Component acceptComponent = main.parse("<GREEN>**[ACCEPT THIS QUEST]")
@@ -1251,40 +1252,47 @@ public class QuestManager {
     }
 
 
-    public void sendObjectivesAdmin(final Audience audience, final Quest quest) {
+    public void sendObjectivesAdmin(final CommandSender sender, final Quest quest) {
 
         for (final Objective objective : quest.getObjectives()) {
 
             final String objectiveDescription = objective.getObjectiveDescription();
-            audience.sendMessage(main.parse(
+            sender.sendMessage(main.parse(
                     "<highlight>" + objective.getObjectiveID() + ".</highlight> <main>" + objective.getObjectiveFinalName()
             ));
 
 
             if (!objectiveDescription.isBlank()) {
-                audience.sendMessage(main.parse(
+                sender.sendMessage(main.parse(
                         "   <highlight>Description:</highlight> <main>" + objectiveDescription
                 ));
             }
 
 
-            audience.sendMessage(main.parse(
+            sender.sendMessage(main.parse(
                     "   <highlight>Conditions:"
             ));
             int counter2 = 1;
             for (final Condition condition : objective.getConditions()) {
-                audience.sendMessage(main.parse(
-                        "         <highlight>" + counter2 + ".</highlight> <main>Condition:</main> <highlight2>" + condition.getConditionDescription()
-                ));
+                if(sender instanceof Player player){
+                    sender.sendMessage(main.parse(
+                            "         <highlight>" + counter2 + ".</highlight> <main>Condition:</main> <highlight2>" + condition.getConditionDescription(player)
+                    ));
+                }else{
+                    sender.sendMessage(main.parse(
+                            "         <highlight>" + counter2 + ".</highlight> <main>Condition:</main> <highlight2>" + condition.getConditionDescription(null)
+                    ));
+                }
+
                 counter2++;
             }
             if (counter2 == 1) {
-                audience.sendMessage(main.parse(
+                sender.sendMessage(main.parse(
                         "      <unimportant>No conditions found!"
                 ));
             }
 
-            audience.sendMessage(main.parse(getObjectiveTaskDescription(objective, false, null)));
+            sender.sendMessage(main.parse(getObjectiveTaskDescription(objective, false, null)));
 
         }
     }

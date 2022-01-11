@@ -28,6 +28,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import redempt.crunch.CompiledExpression;
+import redempt.crunch.Crunch;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -46,7 +48,7 @@ public class NumberAction extends Action {
 
     private HashMap<String, String> additionalStringArguments;
 
-    private long newValue;
+    private String newValueExpression;
 
     public final String getMathOperator(){
         return mathOperator;
@@ -63,12 +65,12 @@ public class NumberAction extends Action {
         this.variableName = variableName;
     }
 
-    public void setNewValue(final long newValue){
-        this.newValue = newValue;
+    public void setNewValueExpression(final String newValueExpression){
+        this.newValueExpression = newValueExpression;
     }
 
-    public final long getNewValue(){
-        return newValue;
+    public final String getNewValueExpression(){
+        return newValueExpression;
     }
 
     private void setAdditionalStringArguments(HashMap<String, String> additionalStringArguments) {
@@ -113,14 +115,15 @@ public class NumberAction extends Action {
                     .meta(CommandMeta.DESCRIPTION, "Creates a new Number action")
                     .handler((context) -> {
 
-                        final long amount = context.get("amount");
+                        final String amountExpression = context.get("amount");
 
                         final String mathOperator = context.get("operator");
+
 
                         NumberAction numberAction = new NumberAction(main);
                         numberAction.setVariableName(variableString);
                         numberAction.setMathOperator(mathOperator);
-                        numberAction.setNewValue(amount);
+                        numberAction.setNewValueExpression(amountExpression);
 
 
                         if(variable != null){
@@ -162,22 +165,22 @@ public class NumberAction extends Action {
             currentValue = (double) currentValueObject;
         }
 
-        double nextNewValue = newValue;
+        double nextNewValue = main.getVariablesManager().evaluateExpression(getNewValueExpression(), player, objects);
 
         if(getMathOperator().equalsIgnoreCase("set")){
-            nextNewValue = (double)newValue;
+            nextNewValue = nextNewValue;
         }else if(getMathOperator().equalsIgnoreCase("add")){
-            nextNewValue = currentValue + newValue;
+            nextNewValue = currentValue + nextNewValue;
         }else if(getMathOperator().equalsIgnoreCase("deduct")){
-            nextNewValue = currentValue - newValue;
+            nextNewValue = currentValue - nextNewValue;
         }else if(getMathOperator().equalsIgnoreCase("multiply")){
-            nextNewValue = currentValue * newValue;
+            nextNewValue = currentValue * nextNewValue;
         }else if(getMathOperator().equalsIgnoreCase("divide")){
-            if(newValue == 0){
+            if(nextNewValue == 0){
                 main.sendMessage(player, "<ERROR>Error: variable operator <highlight>" + getMathOperator() + "</highlight> cannot be used, because you cannot divide by 0. Report this to the Server owner.");
                 return;
             }
-            nextNewValue = currentValue / newValue;
+            nextNewValue = currentValue / nextNewValue;
         }else{
             main.sendMessage(player, "<ERROR>Error: variable operator <highlight>" + getMathOperator() + "</highlight> is invalid. Report this to the Server owner.");
             return;
@@ -202,13 +205,15 @@ public class NumberAction extends Action {
     }
 
     @Override
-    public String getActionDescription() {
-        return variableName + ": " + getNewValue();
+    public String getActionDescription(final Player player, final Object... objects) {
+        return variableName + ": " + main.getVariablesManager().evaluateExpression(getNewValueExpression(), player, objects);
     }
+
+
 
     @Override
     public void save(final FileConfiguration configuration, String initialPath) {
-        configuration.set(initialPath + ".specifics.newValue", getNewValue());
+        configuration.set(initialPath + ".specifics.expression", getNewValueExpression());
 
         configuration.set(initialPath + ".specifics.variableName", getVariableName());
         configuration.set(initialPath + ".specifics.operator", getMathOperator());
@@ -221,7 +226,7 @@ public class NumberAction extends Action {
 
     @Override
     public void load(final FileConfiguration configuration, String initialPath) {
-        this.newValue = configuration.getLong(initialPath + ".specifics.newValue");
+        this.newValueExpression = configuration.getString(initialPath + ".specifics.expression", "");
 
         this.variableName = configuration.getString(initialPath + ".specifics.variableName");
         this.mathOperator = configuration.getString(initialPath + ".specifics.operator", "");
@@ -240,7 +245,7 @@ public class NumberAction extends Action {
         this.variableName = arguments.get(0);
 
         this.mathOperator = arguments.get(1);
-        this.newValue = Long.parseLong(arguments.get(2));
+        this.newValueExpression = arguments.get(2);
 
         if(arguments.size() >= 4){
 

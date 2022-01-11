@@ -185,7 +185,7 @@ public class StringAction extends Action {
     }
 
     @Override
-    public String getActionDescription() {
+    public String getActionDescription(final Player player, final Object... objects) {
         return variableName + ": " + getNewValue();
     }
 

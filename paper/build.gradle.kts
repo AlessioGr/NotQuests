@@ -98,6 +98,12 @@ repositories {
         }
     }
 
+    maven("https://redempt.dev"){
+        content {
+            includeGroup("com.github.Redempt")
+        }
+    }
+
     //mavenLocal()
 
 }
@@ -178,9 +184,11 @@ dependencies {
 
     implementation("commons-io:commons-io:2.11.0")
 
-    compileOnly("com.willfp:EcoBosses:6.8.0")
-    //compileOnly(files("libs/EcoBosses-v7.0.0.jar"))
+    //compileOnly("com.willfp:EcoBosses:6.8.0")
+    compileOnly(files("libs/EcoBosses-v7.0.0.jar"))
     compileOnly("com.willfp:eco:6.18.3")
+
+    implementation("com.github.Redempt:Crunch:1.0")
 
 }
 
@@ -217,6 +225,8 @@ tasks.withType<ShadowJar> {
 
     relocate("org.incendo.interfaces", "$shadowPath.interfaces")
 
+    relocate("redempt.crunch", "$shadowPath.crunch")
+
 
     dependencies {
         //include(dependency('org.apache.commons:')
@@ -238,6 +248,8 @@ tasks.withType<ShadowJar> {
         //include(dependency('net.kyori:adventure-platform-bukkit:')
         include(dependency("net.kyori:adventure-text-minimessage:"))
         include(dependency("net.kyori:adventure-text-serializer-bungeecord:"))
+
+        include(dependency("com.github.Redempt:Crunch:"))
 
     }
 
