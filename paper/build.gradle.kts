@@ -89,6 +89,7 @@ repositories {
     maven("https://repo.incendo.org/content/repositories/snapshots"){
         content {
             includeGroup("org.incendo.interfaces")
+            includeGroup("cloud.commandframework")
         }
     }
 
@@ -117,7 +118,7 @@ dependencies {
     implementation("de.themoep:inventorygui:1.5-SNAPSHOT")
 
     compileOnly("net.citizensnpcs:citizens-main:2.0.29-SNAPSHOT")
-    compileOnly("me.clip:placeholderapi:2.11.0")
+    compileOnly("me.clip:placeholderapi:2.11.1")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7")
 
 
@@ -154,10 +155,10 @@ dependencies {
     }
 
     //CloudCommands
-    implementation("cloud.commandframework:cloud-paper:1.6.1"){
+    implementation("cloud.commandframework:cloud-paper:1.7.0-SNAPSHOT"){
         exclude(group= "net.kyori", module= "adventure-api")
     }
-    implementation("cloud.commandframework:cloud-minecraft-extras:1.6.1"){
+    implementation("cloud.commandframework:cloud-minecraft-extras:1.7.0-SNAPSHOT"){
         exclude(group= "net.kyori", module= "adventure-api")
     }
     //Else it errors:
@@ -184,8 +185,8 @@ dependencies {
 
     implementation("commons-io:commons-io:2.11.0")
 
-    //compileOnly("com.willfp:EcoBosses:6.8.0")
-    compileOnly(files("libs/EcoBosses-v7.0.0.jar"))
+    compileOnly("com.willfp:EcoBosses:6.8.0")
+    //compileOnly(files("libs/EcoBosses-v7.0.0.jar"))
     compileOnly("com.willfp:eco:6.18.3")
 
     implementation("com.github.Redempt:Crunch:1.0")
