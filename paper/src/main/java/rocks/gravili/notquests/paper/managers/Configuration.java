@@ -74,6 +74,9 @@ public class Configuration {
     public boolean deletePreviousConversations = false;
     public int previousConversationsHistorySize = 20;
 
+    public boolean updateCheckerNotifyOpsInChat = true;
+
+
     //Particles
     private int citizensNPCQuestGiverIndicatorParticleSpawnInterval = 10;
     private int citizensNPCQuestGiverIndicatorParticleCount = 1;

@@ -965,6 +965,17 @@ public class DataManager {
         }
         configuration.previousConversationsHistorySize = getGeneralConfig().getInt(key);
 
+
+        key = "general.update-checker.notify-ops-in-chat";
+        if (!getGeneralConfig().isBoolean(key)) {
+            getGeneralConfig().set(key, true);
+            valueChanged = true;
+        }
+        configuration.setUpdateCheckerNotifyOpsInChat(getGeneralConfig().getBoolean(key));
+
+
+
+
         if (valueChanged) {
             main.getLogManager().info("<highlight>General.yml</highlight> Configuration was updated with new values! Saving it...");
             saveGeneralConfig();

@@ -41,6 +41,8 @@ general:
     conversations:
       delete-previous: true
       history-size: 20
+  update-checker:
+    notify-ops-in-chat: true
 visual:
   #Sets which language to use. Default is languages/en-US.yml
   language: en-US

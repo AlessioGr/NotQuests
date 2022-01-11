@@ -12,23 +12,54 @@ import rocks.gravili.notquests.paper.structs.objectives.Objective;
 public class UpdateManager {
     final UpdateChecker updateChecker;
     private final NotQuests main;
+    private boolean updateAvailable = false;
+    private String latestVersion = "";
 
     public UpdateManager(final NotQuests main) {
         this.main = main;
-        this.updateChecker = new UpdateChecker(main, 95872);
+        latestVersion = main.getMain().getDescription().getVersion();
+        this.updateChecker =  UpdateChecker.init(main, 95872);
     }
+
+    public final boolean isUpdateAvailable(){
+        return updateAvailable;
+    }
+
+    public final String getLatestVersion(){
+        return latestVersion;
+    }
+
 
     public void checkForPluginUpdates() {
         try {
-            if (updateChecker.checkForUpdates()) {
-                main.getLogManager().info("<warn>The version <highlight>" + main.getMain().getDescription().getVersion()
-                        + "</highlight> is not the latest version (<Green>" + updateChecker.getLatestVersion() + "</green>)! Please update the plugin here: <highlight2>https://www.spigotmc.org/resources/95872/</highlight2> <veryUnimportant>(If your version is newer, the spigot API might not be updated yet).");
-            } else {
-                main.getLogManager().info("NotQuests seems to be up to date! :)");
-            }
+
+            updateChecker.requestUpdateCheck().whenComplete((result, e) -> {
+                latestVersion = result.getNewestVersion();
+
+                if (result.requiresUpdate()) {
+                    main.getLogManager().info("<unimportant>---------------------------------------------------------------------------------</unimportant>");
+                    main.getLogManager().info("<warn>The version <highlight>" + main.getMain().getDescription().getVersion()
+                            + "</highlight> is not the latest version (<Green>" + result.getNewestVersion() + "</green>)!");
+                    main.getLogManager().info("Please update the plugin here: <highlight2>https://www.spigotmc.org/resources/95872/</highlight2>");
+                    main.getLogManager().info("<unimportant>---------------------------------------------------------------------------------</unimportant>");
+                    updateAvailable = true;
+                    return;
+                }
+
+                updateAvailable = false;
+                UpdateChecker.UpdateReason reason = result.getReason();
+                if (reason == UpdateChecker.UpdateReason.UP_TO_DATE) {
+                    main.getLogManager().info("<success>Your version of NotQuests (<green>" + result.getNewestVersion() + ")</green> is up to date!");
+                } else if (reason == UpdateChecker.UpdateReason.UNRELEASED_VERSION) {
+                    main.getLogManager().info("Your version of NotQuests (<highlight>" + result.getNewestVersion() + ")</highlight> is more recent than the one publicly available. Are you on a development build?");
+                } else {
+                    main.getLogManager().warn("Could not check for a new version of NotQuests. Reason: <highlight>" + reason);
+                }
+            });
+
         } catch (Exception e) {
             e.printStackTrace();
-            main.getLogManager().info("Unable to check for updates ('" + e.getMessage() + "').");
+            main.getLogManager().warn("Unable to check for updates ('" + e.getMessage() + "').");
         }
     }
 
