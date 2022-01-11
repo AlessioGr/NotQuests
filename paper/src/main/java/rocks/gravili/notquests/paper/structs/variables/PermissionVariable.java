@@ -41,7 +41,13 @@ public class PermissionVariable extends Variable<Boolean>{
             return false;
         }
 
-        main.getIntegrationsManager().getLuckPermsManager().givePermission(player.getUniqueId(), getRequiredStringValue("Permission"));
+        if(newValue){
+            main.getIntegrationsManager().getLuckPermsManager().givePermission(player.getUniqueId(), getRequiredStringValue("Permission"));
+        }else {
+            main.getIntegrationsManager().getLuckPermsManager().denyPermission(player.getUniqueId(), getRequiredStringValue("Permission"));
+
+        }
+
 
         return true;
     }
