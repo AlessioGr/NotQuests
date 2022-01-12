@@ -1418,6 +1418,7 @@ public class AdminEditCommands {
                     }
                     foundReward.removeActionName();
                     foundReward.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + (ID + 1) + ".displayName", null);
+                    foundReward.getCategory().saveQuestsConfig();
                     context.getSender().sendMessage(main.parse(
                             "<success>Display Name of reward with the ID <highlight>" + (ID + 1) + "</highlight> has been removed successfully."
                     ));
@@ -1475,6 +1476,7 @@ public class AdminEditCommands {
 
                     foundReward.setActionName(displayName);
                     foundReward.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + (ID + 1) + ".displayName", foundReward.getActionName());
+                    foundReward.getCategory().saveQuestsConfig();
                     context.getSender().sendMessage(main.parse(
                             "<success>Display Name successfully added to reward with ID <highlight>" + (ID + 1) + "</highlight>! New display name: <highlight2>"
                                     + foundReward.getActionName()
@@ -1575,6 +1577,7 @@ public class AdminEditCommands {
                     }
                     foundReward.removeActionName();
                     foundReward.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + (ID + 1) + ".displayName", null);
+                    foundReward.getCategory().saveQuestsConfig();
                     context.getSender().sendMessage(main.parse(
                             "<success>Display Name of reward with the ID <highlight>" + (ID + 1) + "</highlight> has been removed successfully."
                     ));
@@ -1628,6 +1631,7 @@ public class AdminEditCommands {
 
                     foundReward.setActionName(displayName);
                     foundReward.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + (ID + 1) + ".displayName", foundReward.getActionName());
+                    foundReward.getCategory().saveQuestsConfig();
                     context.getSender().sendMessage(main.parse(
                             "<success>Display Name successfully added to reward with ID <highlight>" + (ID + 1) + "</highlight>! New display name: <highlight2>"
                                     + foundReward.getActionName()

@@ -4,6 +4,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import rocks.gravili.notquests.paper.NotQuests;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Category {
@@ -139,5 +140,27 @@ public class Category {
 
     public final ArrayList<FileConfiguration> getConversationsConfigs() {
         return conversationsConfigs;
+    }
+
+    public void saveQuestsConfig(){
+        try {
+            questsConfig.save(questsFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void saveActionsConfig() {
+        try {
+            actionsConfig.save(actionsFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void saveConditionsConfig(){
+        try {
+            categoryConfig.save(categoryFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -190,6 +190,7 @@ public class ConditionsYMLManager {
 
     public String removeCondition(String conditionToDeleteIdentifier) {
         conditionsAndIdentifiers.get(conditionToDeleteIdentifier).getCategory().getConditionsConfig().set("conditions." + conditionToDeleteIdentifier, null);
+        saveConditions(conditionsAndIdentifiers.get(conditionToDeleteIdentifier).getCategory());
         conditionsAndIdentifiers.remove(conditionToDeleteIdentifier);
 
         return "<success>Condition <highlight>" + conditionToDeleteIdentifier + "</highlight> successfully deleted!";

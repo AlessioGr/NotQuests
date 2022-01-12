@@ -236,6 +236,7 @@ public class ActionsYMLManager {
 
     public String removeAction(String actionToDeleteIdentifier) {
         actionsAndIdentifiers.get(actionToDeleteIdentifier).getCategory().getActionsConfig().set("actions." + actionToDeleteIdentifier, null);
+        saveActions(actionsAndIdentifiers.get(actionToDeleteIdentifier).getCategory());
         actionsAndIdentifiers.remove(actionToDeleteIdentifier);
 
         return "<success>Action <highlight>" + actionToDeleteIdentifier + "</highlight> successfully deleted!";

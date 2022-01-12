@@ -103,6 +103,7 @@ public class Quest {
     public void clearRewards() {
         rewards.clear();
         category.getQuestsConfig().set("quests." + questName + ".rewards", null);
+        category.saveQuestsConfig();
     }
 
     public final ArrayList<Objective> getObjectives() {
@@ -151,6 +152,7 @@ public class Quest {
                 category.getQuestsConfig().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".progressNeeded", objective.getProgressNeeded());
 
                 objective.save(category.getQuestsConfig(), "quests." + questName + ".objectives." + objective.getObjectiveID());
+                category.saveQuestsConfig();
             }
         } else {
             main.getLogManager().warn("ERROR: Tried to add objective to quest <highlight>" + getQuestName() + "</highlight> with the ID <highlight>" + objective.getObjectiveID() + "</highlight> but the ID was a DUPLICATE!");
@@ -166,6 +168,7 @@ public class Quest {
             category.getQuestsConfig().set("quests." + questName + ".requirements." + conditions.size() + ".negated", condition.isNegated());
 
             condition.save(category.getQuestsConfig(), "quests." + questName + ".requirements." + conditions.size());
+            category.saveQuestsConfig();
         }
 
     }
@@ -179,6 +182,7 @@ public class Quest {
             }
 
             action.save(category.getQuestsConfig(), "quests." + questName + ".rewards." + rewards.size());
+            category.saveQuestsConfig();
         }
     }
 
@@ -193,6 +197,7 @@ public class Quest {
             category.getQuestsConfig().set("quests." + questName + ".triggers." + triggers.size() + ".worldName", trigger.getWorldName());
 
             trigger.save(category.getQuestsConfig(), "quests." + questName + ".triggers." + triggers.size());
+            category.saveQuestsConfig();
         }
 
     }
@@ -200,6 +205,7 @@ public class Quest {
     public void clearObjectives() {
         objectives.clear();
         category.getQuestsConfig().set("quests." + questName + ".objectives", null);
+        category.saveQuestsConfig();
     }
 
 
@@ -210,6 +216,7 @@ public class Quest {
     public void setMaxAccepts(int maxAccepts) {
         this.maxAccepts = maxAccepts;
         category.getQuestsConfig().set("quests." + questName + ".maxAccepts", maxAccepts);
+        category.saveQuestsConfig();
     }
 
     public final boolean isTakeEnabled() {
@@ -219,6 +226,7 @@ public class Quest {
     public void setTakeEnabled(boolean takeEnabled) {
         this.takeEnabled = takeEnabled;
         category.getQuestsConfig().set("quests." + questName + ".takeEnabled", takeEnabled);
+        category.saveQuestsConfig();
     }
 
     public final long getAcceptCooldown() {
@@ -228,6 +236,7 @@ public class Quest {
     public void setAcceptCooldown(long cooldownInMinutes) {
         this.acceptCooldown = cooldownInMinutes;
         category.getQuestsConfig().set("quests." + questName + ".acceptCooldown", cooldownInMinutes);
+        category.saveQuestsConfig();
     }
 
     public final String getQuestDescription() {
@@ -239,7 +248,7 @@ public class Quest {
 
         this.description = newQuestDescription;
         category.getQuestsConfig().set("quests." + questName + ".description", newQuestDescription);
-
+        category.saveQuestsConfig();
     }
 
     public final String getQuestDescription(final int maxLengthPerLine) {
@@ -269,7 +278,7 @@ public class Quest {
 
         this.displayName = newQuestDisplayName;
         category.getQuestsConfig().set("quests." + questName + ".displayName", newQuestDisplayName);
-
+        category.saveQuestsConfig();
     }
 
 
@@ -280,6 +289,7 @@ public class Quest {
     public void clearRequirements() {
         conditions.clear();
         category.getQuestsConfig().set("quests." + questName + ".requirements", null);
+        category.saveQuestsConfig();
     }
 
     public void clearNPCs() {
@@ -298,6 +308,7 @@ public class Quest {
         attachedNPCsWithQuestShowing.clear();
         attachedNPCsWithoutQuestShowing.clear();
         category.getQuestsConfig().set("quests." + questName + ".npcs", null);
+        category.saveQuestsConfig();
     }
 
     public void bindToNPC(NPC npc, boolean showQuest) {
@@ -330,7 +341,7 @@ public class Quest {
 
         category.getQuestsConfig().set("quests." + questName + ".npcs." + npc.getId() + ".npcID", npc.getId());
         category.getQuestsConfig().set("quests." + questName + ".npcs." + npc.getId() + ".questShowing", showQuest);
-
+        category.saveQuestsConfig();
     }
 
     public final ArrayList<NPC> getAttachedNPCsWithQuestShowing() {
@@ -374,9 +385,9 @@ public class Quest {
             }
 
             category.getQuestsConfig().set("quests." + questName + ".npcs." + npc.getId(), null);
+            category.saveQuestsConfig();
             attachedNPCsWithQuestShowing.remove(npc);
             attachedNPCsWithoutQuestShowing.remove(npc);
-
         }
 
     }
@@ -391,17 +402,20 @@ public class Quest {
     public void clearTriggers() {
         triggers.clear();
         category.getQuestsConfig().set("quests." + questName + ".triggers", null);
+        category.saveQuestsConfig();
     }
 
     public void removeObjective(final Objective objective) {
         objectives.remove(objective);
         category.getQuestsConfig().set("quests." + questName + ".objectives." + objective.getObjectiveID(), null);
+        category.saveQuestsConfig();
     }
 
 
     public void removeReward(final Action action) {
         rewards.remove(action);
         category.getQuestsConfig().set("quests." + questName + ".rewards." + rewards.indexOf(action), null);
+        category.saveQuestsConfig();
     }
 
     public String removeTrigger(int triggerID) {
@@ -410,6 +424,7 @@ public class Quest {
 
             triggers.remove(triggers.get((triggerID - 1)));
             category.getQuestsConfig().set("quests." + questName + ".triggers." + triggerID, null);
+            category.saveQuestsConfig();
             return "<highlight>Trigger successfully removed!";
 
         } else {
@@ -425,6 +440,7 @@ public class Quest {
         if (takeItem != null) {
             this.takeItem = takeItem;
             category.getQuestsConfig().set("quests." + questName + ".takeItem", takeItem);
+            category.saveQuestsConfig();
         }
 
     }

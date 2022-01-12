@@ -79,6 +79,7 @@ public class QuestManager {
             Quest newQuest = new Quest(main, questName, category);
             quests.add(newQuest);
             category.getQuestsConfig().set("quests." + questName, "");
+            category.saveQuestsConfig();
             return ("<success>Quest <highlight>" + questName + "</highlight> successfully created!");
         } else {
             return ("<error>Quest <highlight>" + questName + "</highlight> already exists!");
@@ -93,6 +94,7 @@ public class QuestManager {
             Quest newQuest = new Quest(main, questName);
             quests.add(newQuest);
             newQuest.getCategory().getQuestsConfig().set("quests." + questName, "");
+            newQuest.getCategory().saveQuestsConfig();
             return ("<success>Quest <highlight>" + questName + "</highlight> successfully created!");
         } else {
             return ("<error>Quest <highlight>" + questName + "</highlight> already exists!");
@@ -100,10 +102,11 @@ public class QuestManager {
     }
 
     public final String deleteQuest(String questName) {
-        if (getQuest(questName) != null) {
-            Quest questToDelete = getQuest(questName);
-            quests.remove(questToDelete);
+        Quest questToDelete = getQuest(questName);
+
+        if (questToDelete != null) {
             questToDelete.getCategory().getQuestsConfig().set("quests." + questName, null);
+            questToDelete.getCategory().saveQuestsConfig();
             return ("<success>Quest <highlight>" + questName + "</highlight> successfully deleted!");
         } else {
             return ("<error>Quest <highlight>" + questName + "</highlight> doesn't exists!");

@@ -72,6 +72,7 @@ public abstract class Objective {
         this.completionNPCID = completionNPCID;
         if (save) {
             quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".completionNPCID", completionNPCID);
+            quest.getCategory().saveQuestsConfig();
         }
     }
 
@@ -83,6 +84,7 @@ public abstract class Objective {
             } else {
                 quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".completionArmorStandUUID", null);
             }
+            quest.getCategory().saveQuestsConfig();
         }
     }
 
@@ -111,6 +113,7 @@ public abstract class Objective {
             quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions." + conditions.size() + ".negated", condition.isNegated());
 
             condition.save(quest.getCategory().getQuestsConfig(), "quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions." + conditions.size());
+            quest.getCategory().saveQuestsConfig();
         }
     }
 
@@ -122,6 +125,7 @@ public abstract class Objective {
                 quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".rewards." + rewards.size() + ".displayName", action.getActionName());
             }
             action.save(quest.getCategory().getQuestsConfig(), "quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".rewards." + rewards.size());
+            quest.getCategory().saveQuestsConfig();
         }
     }
 
@@ -130,6 +134,7 @@ public abstract class Objective {
         conditions.remove(condition);
         if (save) {
             quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions." + conditionID, null);
+            quest.getCategory().saveQuestsConfig();
         }
     }
 
@@ -138,17 +143,20 @@ public abstract class Objective {
         rewards.remove(action);
         if (save) {
             quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".rewards." + rewardID, null);
+            quest.getCategory().saveQuestsConfig();
         }
     }
 
     public void clearRewards() {
         rewards.clear();
         quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".rewards", null);
+        quest.getCategory().saveQuestsConfig();
     }
 
     public void clearConditions() {
         conditions.clear();
         quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions", null);
+        quest.getCategory().saveQuestsConfig();
     }
 
     public final String getObjectiveDisplayName() {
@@ -168,6 +176,7 @@ public abstract class Objective {
         this.objectiveDisplayName = newObjectiveDisplayName;
         if (save) {
             quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".displayName", newObjectiveDisplayName);
+            quest.getCategory().saveQuestsConfig();
         }
     }
 
@@ -175,6 +184,7 @@ public abstract class Objective {
         this.objectiveDisplayName = "";
         if (save) {
             quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".displayName", null);
+            quest.getCategory().saveQuestsConfig();
         }
     }
 
@@ -201,6 +211,7 @@ public abstract class Objective {
         this.objectiveDescription = newObjectiveDescription;
         if (save) {
             quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".description", newObjectiveDescription);
+            quest.getCategory().saveQuestsConfig();
         }
     }
 
@@ -208,6 +219,7 @@ public abstract class Objective {
         this.objectiveDescription = "";
         if (save) {
             quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".description", null);
+            quest.getCategory().saveQuestsConfig();
         }
     }
 
