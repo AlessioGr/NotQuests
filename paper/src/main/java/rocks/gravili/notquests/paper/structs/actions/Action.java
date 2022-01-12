@@ -19,6 +19,7 @@
 package rocks.gravili.notquests.paper.structs.actions;
 
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -124,5 +125,17 @@ public abstract class Action {
 
     public abstract void deserializeFromSingleLineString(final ArrayList<String> arguments);
 
+    public void switchCategory(final Category category) {
 
+        final ConfigurationSection actionsConfigurationSection = getCategory().getActionsConfig().getConfigurationSection("actions." + getActionName());
+
+        getCategory().getActionsConfig().set("actions." + getActionName(), null);
+        getCategory().saveActionsConfig();
+
+        setCategory(category);
+
+        category.getActionsConfig().set("actions." + getActionName(), actionsConfigurationSection);
+        category.saveActionsConfig();
+
+    }
 }

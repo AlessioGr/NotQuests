@@ -195,6 +195,8 @@ public class NotQuests {
 
         integrationsManager.registerEvents();
 
+        dataManager.loadCategories(); //Categories need to be loaded before the condition & actions stuff, as they depend on them
+
         conditionsYMLManager.loadConditions();
 
 

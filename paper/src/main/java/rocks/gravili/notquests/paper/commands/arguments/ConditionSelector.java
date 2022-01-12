@@ -34,7 +34,7 @@
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// LIABILITY, WHETHER IN AN Condition OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
@@ -51,15 +51,15 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.structs.actions.Action;
+import rocks.gravili.notquests.paper.structs.conditions.Condition;
 
 import java.util.List;
 import java.util.Queue;
 import java.util.function.BiFunction;
 
-public class ActionSelector<C> extends CommandArgument<C, Action> {
+public class ConditionSelector<C> extends CommandArgument<C, Condition> {
 
-    protected ActionSelector(
+    protected ConditionSelector(
             final boolean required,
             final @NonNull String name,
             final @NonNull String defaultValue,
@@ -68,41 +68,41 @@ public class ActionSelector<C> extends CommandArgument<C, Action> {
             final @NonNull ArgumentDescription defaultDescription,
             NotQuests main
     ) {
-        super(required, name, new ActionsParser<>(main), defaultValue, Action.class, suggestionsProvider);
+        super(required, name, new ConditionsParser<>(main), defaultValue, Condition.class, suggestionsProvider);
     }
 
-    public static <C> ActionSelector.@NonNull Builder<C> newBuilder(final @NonNull String name, final NotQuests main) {
-        return new ActionSelector.Builder<>(name, main);
+    public static <C> ConditionSelector.@NonNull Builder<C> newBuilder(final @NonNull String name, final NotQuests main) {
+        return new ConditionSelector.Builder<>(name, main);
     }
 
-    public static <C> @NonNull CommandArgument<C, Action> of(final @NonNull String name, final NotQuests main) {
-        return ActionSelector.<C>newBuilder(name, main).asRequired().build();
+    public static <C> @NonNull CommandArgument<C, Condition> of(final @NonNull String name, final NotQuests main) {
+        return ConditionSelector.<C>newBuilder(name, main).asRequired().build();
     }
 
-    public static <C> @NonNull CommandArgument<C, Action> optional(final @NonNull String name, final NotQuests main) {
-        return ActionSelector.<C>newBuilder(name, main).asOptional().build();
+    public static <C> @NonNull CommandArgument<C, Condition> optional(final @NonNull String name, final NotQuests main) {
+        return ConditionSelector.<C>newBuilder(name, main).asOptional().build();
     }
 
-    public static <C> @NonNull CommandArgument<C, Action> optional(
+    public static <C> @NonNull CommandArgument<C, Condition> optional(
             final @NonNull String name,
-            final @NonNull Action action,
+            final @NonNull Condition Condition,
             final NotQuests main
     ) {
-        return ActionSelector.<C>newBuilder(name, main).asOptionalWithDefault(action.getActionName()).build();
+        return ConditionSelector.<C>newBuilder(name, main).asOptionalWithDefault(Condition.getConditionName()).build();
     }
 
 
-    public static final class Builder<C> extends CommandArgument.Builder<C, Action> {
+    public static final class Builder<C> extends CommandArgument.Builder<C, Condition> {
         private final NotQuests main;
 
         private Builder(final @NonNull String name, NotQuests main) {
-            super(Action.class, name);
+            super(Condition.class, name);
             this.main = main;
         }
 
         @Override
-        public @NonNull CommandArgument<C, Action> build() {
-            return new ActionSelector<>(
+        public @NonNull CommandArgument<C, Condition> build() {
+            return new ConditionSelector<>(
                     this.isRequired(),
                     this.getName(),
                     this.getDefaultValue(),
@@ -114,7 +114,7 @@ public class ActionSelector<C> extends CommandArgument<C, Action> {
     }
 
 
-    public static final class ActionsParser<C> implements ArgumentParser<C, Action> {
+    public static final class ConditionsParser<C> implements ArgumentParser<C, Condition> {
 
         private final NotQuests main;
 
@@ -122,7 +122,7 @@ public class ActionSelector<C> extends CommandArgument<C, Action> {
         /**
          * Constructs a new PluginsParser.
          */
-        public ActionsParser(
+        public ConditionsParser(
                 NotQuests main
         ) {
             this.main = main;
@@ -132,29 +132,29 @@ public class ActionSelector<C> extends CommandArgument<C, Action> {
         @NotNull
         @Override
         public List<String> suggestions(@NotNull CommandContext<C> context, @NotNull String input) {
-            List<String> actionNames = new java.util.ArrayList<>(main.getActionsYMLManager().getActionsAndIdentifiers().keySet());
+            List<String> conditionNames = new java.util.ArrayList<>(main.getConditionsYMLManager().getConditionsAndIdentifiers().keySet());
             final List<String> allArgs = context.getRawInput();
 
-            main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.getSender(), allArgs.toArray(new String[0]), "[Action Name]", "[...]");
+            main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.getSender(), allArgs.toArray(new String[0]), "[Condition Name]", "[...]");
 
-            return actionNames;
+            return conditionNames;
         }
 
         @Override
-        public @NonNull ArgumentParseResult<Action> parse(@NonNull CommandContext<@NonNull C> context, @NonNull Queue<@NonNull String> inputQueue) {
+        public @NonNull ArgumentParseResult<Condition> parse(@NonNull CommandContext<@NonNull C> context, @NonNull Queue<@NonNull String> inputQueue) {
             if (inputQueue.isEmpty()) {
-                return ArgumentParseResult.failure(new NoInputProvidedException(ActionsParser.class, context));
+                return ArgumentParseResult.failure(new NoInputProvidedException(ConditionsParser.class, context));
             }
             final String input = inputQueue.peek();
-            final Action foundAction = main.getActionsYMLManager().getAction(input);
+            final Condition foundCondition = main.getConditionsYMLManager().getCondition(input);
             inputQueue.remove();
 
-            if (foundAction == null) {
-                return ArgumentParseResult.failure(new IllegalArgumentException("Action '" + input + "' does not exist!"
+            if (foundCondition == null) {
+                return ArgumentParseResult.failure(new IllegalArgumentException("Condition '" + input + "' does not exist!"
                 ));
             }
 
-            return ArgumentParseResult.success(foundAction);
+            return ArgumentParseResult.success(foundCondition);
 
         }
 

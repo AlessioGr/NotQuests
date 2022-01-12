@@ -28,6 +28,7 @@ import cloud.commandframework.bukkit.parsers.WorldArgument;
 import cloud.commandframework.bukkit.parsers.selector.SinglePlayerSelectorArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
+import net.citizensnpcs.api.npc.NPC;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minecraft.core.BlockPos;
@@ -40,11 +41,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_18_R1.CraftChunk;
 import org.bukkit.craftbukkit.v1_18_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_18_R1.block.CraftBlockState;
+import org.bukkit.entity.Cat;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.ActiveQuestSelector;
-import rocks.gravili.notquests.paper.commands.arguments.QuestSelector;
+import rocks.gravili.notquests.paper.commands.arguments.*;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.*;
 import rocks.gravili.notquests.paper.structs.actions.Action;
@@ -81,6 +82,8 @@ public class AdminCommands {
         placeholders.add("{QUEST}");
 
         resultDate = new Date();
+
+
 
         manager.command(builder.literal("create")
                 .argument(StringArgument.<CommandSender>newBuilder("Quest Name").withSuggestionsProvider(
@@ -597,7 +600,77 @@ public class AdminCommands {
 
         handleDebugCommands();
 
+        final Command.Builder<CommandSender> categoryCommandsBuilder = builder.literal("categories");
+        handleCategoryCommands(categoryCommandsBuilder);
+    }
 
+    public void handleCategoryCommands(final Command.Builder<CommandSender> builder){
+        manager.command(builder.literal("list")
+                .meta(CommandMeta.DESCRIPTION, "Lists all categories.")
+                .handler((context) -> {
+                    context.getSender().sendMessage(Component.empty());
+                    context.getSender().sendMessage(main.parse( "<highlight>All categories:"));
+                    int counter = 1;
+                    for (final Category category : main.getDataManager().getCategories()) {
+                        context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>" + category.getCategoryFullName()));
+                        counter++;
+                    }
+                }));
+
+        manager.command(builder.literal("create")
+                .argument(StringArgument.<CommandSender>newBuilder("Category Name").withSuggestionsProvider(
+                        (context, lastString) -> {
+                            final List<String> allArgs = context.getRawInput();
+                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Name of your new category]", "");
+
+                            final ArrayList<String> suggestions = new ArrayList<>();
+                            suggestions.add("<Enter new category name>");
+                            for(final Category category : main.getDataManager().getCategories()){
+                                suggestions.add(category.getCategoryFullName() + ".");
+                            }
+
+                            return suggestions;
+
+                        }
+                ).single().build(), ArgumentDescription.of("Name of your new category"))
+                .meta(CommandMeta.DESCRIPTION, "Creates a new category.")
+                .handler((context) -> {
+                    final String fullNewCategoryIdentifier = context.get("Category Name");
+
+                    if(main.getDataManager().getCategory(fullNewCategoryIdentifier) != null){
+                        context.getSender().sendMessage(main.parse(
+                                "<error>Error: The category <highlight>" + fullNewCategoryIdentifier + "</highlight> already exists!"
+                        ));
+                        return;
+                    }
+                    if(fullNewCategoryIdentifier.endsWith(".") || fullNewCategoryIdentifier.startsWith(".")){
+                        context.getSender().sendMessage(main.parse(
+                                "<error>Error: The category <highlight>" + fullNewCategoryIdentifier + "</highlight> is invalid. It cannot contain a dot at the beginning or the end of the category. Dots are used to create a sub-category of an already existing category."
+                        ));
+                        return;
+                    }
+
+                    if(!fullNewCategoryIdentifier.contains(".")){
+                        main.getDataManager().addCategory(
+                                main.getDataManager().createCategory(fullNewCategoryIdentifier, null)
+                        );
+                        context.getSender().sendMessage(main.parse( "<success>Category <highlight>" + fullNewCategoryIdentifier + "</highlight> has successfully been created!"));
+                    }else{
+                        final String parentCategoryFullIdentifier = fullNewCategoryIdentifier.substring(0, fullNewCategoryIdentifier.lastIndexOf("."));
+                        final Category foundParentCategory = main.getDataManager().getCategory(parentCategoryFullIdentifier);
+                        if(foundParentCategory == null){
+                            context.getSender().sendMessage(main.parse(
+                                    "<error>Error: The parent company <highlight>" + parentCategoryFullIdentifier + "</highlight> does not exist."
+                            ));
+                            return;
+                        }
+                        main.getDataManager().addCategory(
+                                main.getDataManager().createCategory(fullNewCategoryIdentifier.substring(fullNewCategoryIdentifier.lastIndexOf(".")+1), foundParentCategory)
+                        );
+                        context.getSender().sendMessage(main.parse( "<success>Category <highlight>" + fullNewCategoryIdentifier + "</highlight> has successfully been created!"));
+                    }
+
+                }));
     }
 
     public void handleDebugCommands() {
@@ -1086,82 +1159,54 @@ public class AdminCommands {
 
     public void handleConditions() {
 
-        manager.command(builder.literal("conditions")
+        final Command.Builder<CommandSender> conditionsBuilder = builder.literal("conditions");
+
+        final Command.Builder<CommandSender> conditionsEditBuilder = conditionsBuilder
                 .literal("edit")
-                .argument(StringArgument.<CommandSender>newBuilder("Condition Identifier").withSuggestionsProvider(
-                        (context, lastString) -> {
-                            final List<String> allArgs = context.getRawInput();
-                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Condition Identifier (name)]", "[...]");
+                .argument(ConditionSelector.of("condition", main), ArgumentDescription.of("Condition Name"));
 
-                            return new ArrayList<>(main.getConditionsYMLManager().getConditionsAndIdentifiers().keySet());
 
-                        }
-                ).single().build(), ArgumentDescription.of("Condition Identifier"))
+        manager.command(conditionsEditBuilder
                 .literal("delete", "remove")
                 .meta(CommandMeta.DESCRIPTION, "Removes a condition")
                 .handler((context) -> {
 
-                    final String conditionIdentifier = context.get("Condition Identifier");
+                    final Condition condition = context.get("condition");
 
-                    if (main.getConditionsYMLManager().getCondition(conditionIdentifier) != null) {
-
-                        main.getConditionsYMLManager().removeCondition(conditionIdentifier);
-                        context.getSender().sendMessage(main.parse( "<success>Condition with the name <highlight>" + conditionIdentifier + "</highlight> has been deleted."));
-
-                    } else {
-                        context.getSender().sendMessage(main.parse("<error>Error! Condition with the name <highlight>" + conditionIdentifier + "</highlight> does not exist!"));
-                    }
+                    main.getConditionsYMLManager().removeCondition(condition);
+                    context.getSender().sendMessage(main.parse( "<success>Condition with the name <highlight>" + condition.getConditionName() + "</highlight> has been deleted."));
                 }));
 
-        manager.command(builder.literal("conditions")
-                .literal("edit")
-                .argument(StringArgument.<CommandSender>newBuilder("Condition Identifier").withSuggestionsProvider(
-                        (context, lastString) -> {
-                            final List<String> allArgs = context.getRawInput();
-                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Condition Identifier (name)]", "[...]");
-
-                            return new ArrayList<>(main.getConditionsYMLManager().getConditionsAndIdentifiers().keySet());
-
-                        }
-                ).single().build(), ArgumentDescription.of("Condition Identifier"))
+        manager.command(conditionsEditBuilder
                 .literal("check")
                 .argument(SinglePlayerSelectorArgument.optional("player selector"), ArgumentDescription.of("Player for which the condition will be checked"))
                 .meta(CommandMeta.DESCRIPTION, "Checks a condition")
                 .handler((context) -> {
+                    final Condition condition = context.get("condition");
 
-                    final String conditionIdentifier = context.get("Condition Identifier");
-                    final Condition foundCondition = main.getConditionsYMLManager().getCondition(conditionIdentifier);
-
-                    if (foundCondition != null) {
-
-                        Player player = null;
-                        if (context.contains("player selector")) {
-                            final SinglePlayerSelector singlePlayerSelector = context.get("player selector");
-                            player = singlePlayerSelector.getPlayer();
-                        } else if (context.getSender() instanceof Player senderPlayer) {
-                            player = senderPlayer;
-                        }
-
-                        if (player == null) {
-                            context.getSender().sendMessage(main.parse("<error>Error! Player object not found!"));
-                            return;
-                        }
-
-
-                        QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
-                        String result = foundCondition.check(questPlayer);
-                        if (result.isBlank()) {
-                            result = "<success>Condition fulfilled!";
-                        }
-                        context.getSender().sendMessage(main.parse("<success>Condition with the name <highlight>" + conditionIdentifier + "</highlight> has been checked! Result:</success>\n" + result));
-
-
-                    } else {
-                        context.getSender().sendMessage(main.parse("<error>Error! Condition with the name <highlight>" + conditionIdentifier + "</highlight> does not exist!"));
+                    Player player = null;
+                    if (context.contains("player selector")) {
+                        final SinglePlayerSelector singlePlayerSelector = context.get("player selector");
+                        player = singlePlayerSelector.getPlayer();
+                    } else if (context.getSender() instanceof Player senderPlayer) {
+                        player = senderPlayer;
                     }
+
+                    if (player == null) {
+                        context.getSender().sendMessage(main.parse("<error>Error! Player object not found!"));
+                        return;
+                    }
+
+
+                    QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
+                    String result = condition.check(questPlayer);
+                    if (result.isBlank()) {
+                        result = "<success>Condition fulfilled!";
+                    }
+                    context.getSender().sendMessage(main.parse("<success>Condition with the name <highlight>" + condition.getConditionName() + "</highlight> has been checked! Result:</success>\n" + result));
                 }));
 
-        manager.command(builder.literal("conditions")
+        manager.command(conditionsBuilder
                 .literal("list")
                 .meta(CommandMeta.DESCRIPTION, "Shows all existing conditions.")
                 .handler((context) -> {
@@ -1174,48 +1219,63 @@ public class AdminCommands {
                         counter += 1;
                     }
                 }));
+
+        manager.command(conditionsEditBuilder
+                .literal("category")
+                .literal("show")
+                .meta(CommandMeta.DESCRIPTION, "Shows the current category of this Condition.")
+                .handler((context) -> {
+                    final Condition condition = context.get("condition");
+
+                    context.getSender().sendMessage(main.parse(
+                            "<main>Category for condition <highlight>" + condition.getConditionName() + "</highlight>: <highlight2>"
+                                    + condition.getCategory().getCategoryFullName() + "</highlight2>."
+                    ));
+                }));
+
+        manager.command(conditionsEditBuilder
+                .literal("category")
+                .literal("set")
+                .argument(CategorySelector.of("category", main), ArgumentDescription.of("New category for this Condition."))
+                .meta(CommandMeta.DESCRIPTION, "Changes the current category of this Condition.")
+                .handler((context) -> {
+                    final Condition condition = context.get("condition");
+
+                    final Category category = context.get("category");
+                    if(condition.getCategory().getCategoryFullName().equalsIgnoreCase(category.getCategoryFullName())){
+                        context.getSender().sendMessage(main.parse(
+                                "<error> Error: The condition <highlight>" + condition.getConditionName() + "</highlight> already has the category <highlight2>" + condition.getCategory().getCategoryFullName() + "</highlight2>."
+                        ));
+                        return;
+                    }
+
+                    condition.switchCategory(category);
+
+                    context.getSender().sendMessage(main.parse(
+                            "<success>Category for condition <highlight>" + condition.getConditionName() + "</highlight> has successfully been changed from <highlight2>"
+                                    + condition.getCategory().getCategoryFullName() + "</highlight2> to <highlight2>" + category.getCategoryFullName() + "</highlight2>!"
+                    ));
+                }));
     }
 
     public void handleActions() {
 
-        manager.command(builder.literal("actions")
-                .literal("edit")
-                .argument(StringArgument.<CommandSender>newBuilder("Action Identifier").withSuggestionsProvider(
-                        (context, lastString) -> {
-                            final List<String> allArgs = context.getRawInput();
-                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Action Identifier (name)]", "[...]");
+        final Command.Builder<CommandSender> actionsBuilder = main.getCommandManager().getAdminActionsCommandBuilder();
 
-                            return new ArrayList<>(main.getActionsYMLManager().getActionsAndIdentifiers().keySet());
+        final Command.Builder<CommandSender> actionsEditBuilder = main.getCommandManager().getAdminActionsEdituilder();
 
-                        }
-                ).single().build(), ArgumentDescription.of("Action Identifier"))
+
+        manager.command(actionsEditBuilder
                 .literal("delete", "remove")
                 .meta(CommandMeta.DESCRIPTION, "Removes an action")
                 .handler((context) -> {
-                    final String actionIdentifier = context.get("Action Identifier");
+                    final Action action = context.get("action");
 
-                    if (main.getActionsYMLManager().getAction(actionIdentifier) != null) {
-
-                        main.getActionsYMLManager().removeAction(actionIdentifier);
-                        context.getSender().sendMessage(main.parse("<success>Action with the name <highlight2>" + actionIdentifier + "</highlight2> has been deleted."));
-
-                    } else {
-                        context.getSender().sendMessage(main.parse("<error>Error! Action with the name <highlight2>" + actionIdentifier + "</highlight2> does not exist!"));
-                    }
-
+                    main.getActionsYMLManager().removeAction(action);
+                    context.getSender().sendMessage(main.parse("<success>Action with the name <highlight2>" + action.getActionName() + "</highlight2> has been deleted."));
                 }));
 
-        manager.command(builder.literal("actions")
-                .literal("edit")
-                .argument(StringArgument.<CommandSender>newBuilder("Action Identifier").withSuggestionsProvider(
-                        (context, lastString) -> {
-                            final List<String> allArgs = context.getRawInput();
-                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Action Identifier (name)]", "[...]");
-
-                            return new ArrayList<>(main.getActionsYMLManager().getActionsAndIdentifiers().keySet());
-
-                        }
-                ).single().build(), ArgumentDescription.of("Action Identifier"))
+        manager.command(actionsEditBuilder
                 .literal("execute", "run")
                 .argument(SinglePlayerSelectorArgument.optional("player selector"), ArgumentDescription.of("Player for which the action will be executed"))
                 .flag(
@@ -1224,39 +1284,31 @@ public class AdminCommands {
                 )
                 .meta(CommandMeta.DESCRIPTION, "Executes an action")
                 .handler((context) -> {
-                    final String actionIdentifier = context.get("Action Identifier");
-                    final Action foundAction = main.getActionsYMLManager().getAction(actionIdentifier);
+                    final Action action = context.get("action");
 
-                    if (foundAction != null) {
+                    Player player = null;
+                    if (context.contains("player selector")) {
+                        final SinglePlayerSelector singlePlayerSelector = context.get("player selector");
+                        player = singlePlayerSelector.getPlayer();
+                    } else if (context.getSender() instanceof Player senderPlayer) {
+                        player = senderPlayer;
+                    }
 
-                        Player player = null;
-                        if (context.contains("player selector")) {
-                            final SinglePlayerSelector singlePlayerSelector = context.get("player selector");
-                            player = singlePlayerSelector.getPlayer();
-                        } else if (context.getSender() instanceof Player senderPlayer) {
-                            player = senderPlayer;
-                        }
+                    if (player == null) {
+                        context.getSender().sendMessage(main.parse("<error>Error! Player object not found!"));
+                        return;
+                    }
 
-                        if (player == null) {
-                            context.getSender().sendMessage(main.parse("<error>Error! Player object not found!"));
-                            return;
-                        }
-
-                        if (context.flags().contains("ignoreConditions")) {
-                            foundAction.execute(player);
-                            context.getSender().sendMessage(main.parse("<success>Action with the name <highlight>" + actionIdentifier + "</highlight> has been executed!"));
-                        } else {
-                            main.getActionManager().executeActionWithConditions(foundAction, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), player, false);
-                        }
-
-
+                    if (context.flags().contains("ignoreConditions")) {
+                        action.execute(player);
+                        context.getSender().sendMessage(main.parse("<success>Action with the name <highlight>" + action.getActionName() + "</highlight> has been executed!"));
                     } else {
-                        context.getSender().sendMessage(main.parse("<error>Error! Action with the name <highlight>" + actionIdentifier + "</highlight> does not exist!"));
+                        main.getActionManager().executeActionWithConditions(action, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), player, false);
                     }
 
                 }));
 
-        manager.command(builder.literal("actions")
+        manager.command(actionsBuilder
                 .literal("list")
                 .meta(CommandMeta.DESCRIPTION, "Shows all existing actions.")
                 .handler((context) -> {
@@ -1270,80 +1322,87 @@ public class AdminCommands {
                     }
                 }));
 
-        manager.command(builder.literal("actions")
-                .literal("edit")
-                .argument(StringArgument.<CommandSender>newBuilder("Action Identifier").withSuggestionsProvider(
-                        (context, lastString) -> {
-                            final List<String> allArgs = context.getRawInput();
-                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Action Identifier (name)]", "[...]");
-
-                            return new ArrayList<>(main.getActionsYMLManager().getActionsAndIdentifiers().keySet());
-
-                        }
-                ).single().build(), ArgumentDescription.of("Action Identifier"))
+        manager.command(actionsEditBuilder
                 .literal("conditions")
                 .literal("clear")
                 .meta(CommandMeta.DESCRIPTION, "Removes all conditions from this objective.")
                 .handler((context) -> {
+                    final Action action = context.get("action");
 
-                    final String actionIdentifier = context.get("Action Identifier");
-                    final Action foundAction = main.getActionsYMLManager().getAction(actionIdentifier);
+                    action.clearConditions(action.getCategory().getActionsConfig(), "actions." + action);
+                    context.getSender().sendMessage(main.parse(
+                            "<success>All conditions of action with identifier <highlight>" + action
+                                    + "</highlight> have been removed!"
+                    ));
 
-                    if (foundAction != null) {
-                        foundAction.clearConditions(foundAction.getCategory().getActionsConfig(), "actions." + actionIdentifier);
-                        context.getSender().sendMessage(main.parse(
-                                "<success>All conditions of action with identifier <highlight>" + actionIdentifier
-                                        + "</highlight> have been removed!"
-                        ));
-                    } else {
-                        context.getSender().sendMessage(main.parse("<error>Error! Action with the name <highlight>" + actionIdentifier + "</highlight> does not exist!"));
+
+                }));
+
+        manager.command(actionsEditBuilder
+                .literal("conditions")
+                .literal("list", "show")
+                .meta(CommandMeta.DESCRIPTION, "Lists all conditions of this objective.")
+                .handler((context) -> {
+                    final Action action = context.get("action");
+
+                    context.getSender().sendMessage(main.parse(
+                            "<highlight>Conditions of action with identifier <highlight2>" + action.getActionName()
+                                    + "</highlight2>:"
+                    ));
+                    int counter = 1;
+                    for (Condition condition : action.getConditions()) {
+                        context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>" + condition.getConditionType()));
+                        if(context.getSender() instanceof Player player){
+                            context.getSender().sendMessage(main.parse("<main>" + condition.getConditionDescription(player)));
+                        }else{
+                            context.getSender().sendMessage(main.parse("<main>" + condition.getConditionDescription(null)));
+                        }
+                        counter += 1;
+                    }
+
+                    if (counter == 1) {
+                        context.getSender().sendMessage(main.parse("<warn>This action has no conditions!"));
                     }
 
 
                 }));
 
-        manager.command(builder.literal("actions")
-                .literal("edit")
-                .argument(StringArgument.<CommandSender>newBuilder("Action Identifier").withSuggestionsProvider(
-                        (context, lastString) -> {
-                            final List<String> allArgs = context.getRawInput();
-                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Action Identifier (name)]", "[...]");
 
-                            return new ArrayList<>(main.getActionsYMLManager().getActionsAndIdentifiers().keySet());
 
-                        }
-                ).single().build(), ArgumentDescription.of("Action Identifier"))
-                .literal("conditions")
-                .literal("list", "show")
-                .meta(CommandMeta.DESCRIPTION, "Lists all conditions of this objective.")
+        manager.command(actionsEditBuilder
+                .literal("category")
+                .literal("show")
+                .meta(CommandMeta.DESCRIPTION, "Shows the current category of this Action.")
                 .handler((context) -> {
-                    final String actionIdentifier = context.get("Action Identifier");
-                    final Action foundAction = main.getActionsYMLManager().getAction(actionIdentifier);
+                    final Action action = context.get("action");
 
-                    if (foundAction != null) {
+                    context.getSender().sendMessage(main.parse(
+                            "<main>Category for action <highlight>" + action.getActionName() + "</highlight>: <highlight2>"
+                                    + action.getCategory().getCategoryFullName() + "</highlight2>."
+                    ));
+                }));
+
+        manager.command(actionsEditBuilder
+                .literal("category")
+                .literal("set")
+                .argument(CategorySelector.of("category", main), ArgumentDescription.of("New category for this Action."))
+                .meta(CommandMeta.DESCRIPTION, "Changes the current category of this Action.")
+                .handler((context) -> {
+                    final Action action = context.get("action");
+                    final Category category = context.get("category");
+                    if(action.getCategory().getCategoryFullName().equalsIgnoreCase(category.getCategoryFullName())){
                         context.getSender().sendMessage(main.parse(
-                                "<highlight>Conditions of action with identifier <highlight2>" + actionIdentifier
-                                        + "</highlight2>:>"
+                                "<error> Error: The action <highlight>" + action.getActionName() + "</highlight> already has the category <highlight2>" + action.getCategory().getCategoryFullName() + "</highlight2>."
                         ));
-                        int counter = 1;
-                        for (Condition condition : foundAction.getConditions()) {
-                            context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>" + condition.getConditionType()));
-                            if(context.getSender() instanceof Player player){
-                                context.getSender().sendMessage(main.parse("<main>" + condition.getConditionDescription(player)));
-                            }else{
-                                context.getSender().sendMessage(main.parse("<main>" + condition.getConditionDescription(null)));
-                            }
-                            counter += 1;
-                        }
-
-                        if (counter == 1) {
-                            context.getSender().sendMessage(main.parse("<warn>This action has no conditions!"));
-                        }
-                    } else {
-                        context.getSender().sendMessage(main.parse("<error>Error! Action with the name <highlight>" + actionIdentifier + "</highlight> does not exist!"));
+                        return;
                     }
 
+                    action.switchCategory(category);
 
+                    context.getSender().sendMessage(main.parse(
+                            "<success>Category for action <highlight>" + action.getActionName() + "</highlight> has successfully been changed from <highlight2>"
+                                    + action.getCategory().getCategoryFullName() + "</highlight2> to <highlight2>" + category.getCategoryFullName() + "</highlight2>!"
+                    ));
                 }));
     }
 

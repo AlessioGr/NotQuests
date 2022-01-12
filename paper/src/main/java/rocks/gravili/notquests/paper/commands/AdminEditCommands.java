@@ -39,8 +39,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.arguments.CategorySelector;
 import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
+import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
@@ -63,17 +65,7 @@ public class AdminEditCommands {
         this.manager = manager;
         this.editBuilder = editBuilder;
 
-        manager.command(editBuilder.literal("category")
-                .literal("show")
-                .meta(CommandMeta.DESCRIPTION, "Shows the current category of this Quest.")
-                .handler((context) -> {
-                    final Quest quest = context.get("quest");
 
-                    context.getSender().sendMessage(main.parse(
-                            "<main>Category for Quest <highlight>" + quest.getQuestName() + "</highlight>: <highlight2>"
-                                    + quest.getCategory().getCategoryFullName() + "</highlight2>."
-                    ));
-                }));
 
         manager.command(editBuilder.literal("acceptCooldown", "cooldown")
                 .literal("set")
@@ -318,6 +310,43 @@ public class AdminEditCommands {
         handleRewards(rewardsBuilder);
         final Command.Builder<CommandSender> triggersBuilder = editBuilder.literal("triggers");
         handleTriggers(triggersBuilder);
+
+        final Command.Builder<CommandSender> categoryBuilder = editBuilder.literal("category");
+        handleCategories(categoryBuilder);
+    }
+
+    public void handleCategories(final Command.Builder<CommandSender> builder){
+        manager.command(builder.literal("show")
+                .meta(CommandMeta.DESCRIPTION, "Shows the current category of this Quest.")
+                .handler((context) -> {
+                    final Quest quest = context.get("quest");
+
+                    context.getSender().sendMessage(main.parse(
+                            "<main>Category for Quest <highlight>" + quest.getQuestName() + "</highlight>: <highlight2>"
+                                    + quest.getCategory().getCategoryFullName() + "</highlight2>."
+                    ));
+                }));
+
+        manager.command(builder.literal("set")
+                .argument(CategorySelector.of("category", main), ArgumentDescription.of("New category for this Quest."))
+                .meta(CommandMeta.DESCRIPTION, "Changes the current category of this Quest.")
+                .handler((context) -> {
+                    final Quest quest = context.get("quest");
+                    final Category category = context.get("category");
+                    if(quest.getCategory().getCategoryFullName().equalsIgnoreCase(category.getCategoryFullName())){
+                        context.getSender().sendMessage(main.parse(
+                                "<error> Error: The quest <highlight>" + quest.getQuestName() + "</highlight> already has the category <highlight2>" + quest.getCategory().getCategoryFullName() + "</highlight2>."
+                        ));
+                        return;
+                    }
+
+                    quest.switchCategory(category);
+
+                    context.getSender().sendMessage(main.parse(
+                            "<success>Category for Quest <highlight>" + quest.getQuestName() + "</highlight> has successfully been changed from <highlight2>"
+                                    + quest.getCategory().getCategoryFullName() + "</highlight2> to <highlight2>" + category.getCategoryFullName() + "</highlight2>!"
+                    ));
+                }));
     }
 
 

@@ -18,6 +18,7 @@
 
 package rocks.gravili.notquests.paper.structs.conditions;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -122,5 +123,19 @@ public abstract class Condition {
     }
 
     public abstract void deserializeFromSingleLineString(final ArrayList<String> arguments);
+
+    public void switchCategory(final Category category) {
+
+        final ConfigurationSection conditionsConfigurationSection = getCategory().getConditionsConfig().getConfigurationSection("conditions." + getConditionName());
+
+        getCategory().getConditionsConfig().set("conditions." + getConditionName(), null);
+        getCategory().saveConditionsConfig();
+
+        setCategory(category);
+
+        category.getConditionsConfig().set("conditions." + getConditionName(), conditionsConfigurationSection);
+        category.saveConditionsConfig();
+
+    }
 
 }

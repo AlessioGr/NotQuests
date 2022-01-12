@@ -14,7 +14,7 @@ public class Category {
 
     private File categoryFile, questsFile, actionsFile, conditionsFile, conversationsFolder;
     private FileConfiguration categoryConfig, questsConfig, actionsConfig, conditionsConfig;
-    private ArrayList<FileConfiguration> conversationsConfigs;
+    private final ArrayList<FileConfiguration> conversationsConfigs;
 
     private Category parentCategory = null;
 
@@ -142,6 +142,16 @@ public class Category {
         return conversationsConfigs;
     }
 
+    public void saveCategoryConfig(){
+        if(main.getDataManager().isSavingEnabled()){
+            try {
+                categoryConfig.save(categoryFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void saveQuestsConfig(){
         if(main.getDataManager().isSavingEnabled()){
             try {
@@ -160,13 +170,15 @@ public class Category {
             }
         }
     }
+
     public void saveConditionsConfig(){
         if(main.getDataManager().isSavingEnabled()){
             try {
-                categoryConfig.save(categoryFile);
+                conditionsConfig.save(conditionsFile);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
+
 }

@@ -77,9 +77,15 @@ public class CommandManager {
     private Command.Builder<CommandSender> adminEditAddTriggerCommandBuilder;
     private Command.Builder<CommandSender> adminEditObjectiveAddConditionCommandBuilder;
     private Command.Builder<CommandSender> adminEditObjectiveAddRewardCommandBuilder;
+
     private Command.Builder<CommandSender> adminAddActionCommandBuilder;
+    private Command.Builder<CommandSender> adminActionsCommandBuilder;
+    private Command.Builder<CommandSender> adminActionsEditCommandBuilder;
+    private Command.Builder<CommandSender> adminActionsAddConditionCommandBuilder;
+
     private Command.Builder<CommandSender> adminAddConditionCommandBuilder;
-    private Command.Builder<CommandSender> adminEditActionsAddConditionCommandBuilder;
+
+
     public CommandFlag<String> speakerColor;
     private AdminCommands adminCommands;
     private AdminEditCommands adminEditCommands;
@@ -382,17 +388,14 @@ public class CommandManager {
                 .literal("conditions")
                 .literal("add");
 
-        adminEditActionsAddConditionCommandBuilder = adminCommandBuilder.literal("actions")
+
+        adminActionsCommandBuilder = adminCommandBuilder.literal("actions");
+
+        adminActionsEditCommandBuilder = adminActionsCommandBuilder
                 .literal("edit")
-                .argument(StringArgument.<CommandSender>newBuilder("Action Identifier").withSuggestionsProvider(
-                        (context, lastString) -> {
-                            final List<String> allArgs = context.getRawInput();
-                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Action Identifier (name)]", "[...]");
+                .argument(ActionSelector.of("action", main), ArgumentDescription.of("Action Name"));
 
-                            return new ArrayList<>(main.getActionsYMLManager().getActionsAndIdentifiers().keySet());
-
-                        }
-                ).single().build(), ArgumentDescription.of("Action Identifier"))
+        adminActionsAddConditionCommandBuilder = adminActionsEditCommandBuilder
                 .literal("conditions")
                 .literal("add");
 
@@ -544,8 +547,14 @@ public class CommandManager {
         return adminEditObjectiveAddConditionCommandBuilder;
     }
 
-    public final Command.Builder<CommandSender> getAdminEditActionsAddConditionCommandBuilder() {
-        return adminEditActionsAddConditionCommandBuilder;
+    public final Command.Builder<CommandSender> getAdminActionsAddConditionCommandBuilder() {
+        return adminActionsAddConditionCommandBuilder;
+    }
+
+    public final Command.Builder<CommandSender> getAdminActionsCommandBuilder() {
+        return adminActionsCommandBuilder;
+    } public final Command.Builder<CommandSender> getAdminActionsEdituilder() {
+        return adminActionsEditCommandBuilder;
     }
 
     public final Command.Builder<CommandSender> getAdminEditObjectiveAddRewardCommandBuilder() {

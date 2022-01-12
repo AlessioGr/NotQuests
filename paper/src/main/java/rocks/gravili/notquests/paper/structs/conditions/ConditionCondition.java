@@ -20,17 +20,15 @@ package rocks.gravili.notquests.paper.structs.conditions;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
-import cloud.commandframework.arguments.standard.StringArgument;
-import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.arguments.ConditionSelector;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class ConditionCondition extends Condition {
@@ -44,32 +42,14 @@ public class ConditionCondition extends Condition {
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
         manager.command(builder
-                .argument(StringArgument.<CommandSender>newBuilder("Condition Identifier").withSuggestionsProvider(
-                        (context, lastString) -> {
-                            final List<String> allArgs = context.getRawInput();
-                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Condition Identifier (name)]", "");
-
-                            return new ArrayList<>(main.getConditionsYMLManager().getConditionsAndIdentifiers().keySet());
-
-                        }
-                ).single().build(), ArgumentDescription.of("Condition Identifier"))
+                .argument(ConditionSelector.of("Condition", main), ArgumentDescription.of("Name of the condition which will be checked"))
                 .handler((context) -> {
+                    final Condition condition = context.get("Condition");
 
-                    final String conditionIdentifier = context.get("Condition Identifier");
+                    ConditionCondition conditionCondition = new ConditionCondition(main);
+                    conditionCondition.setCondition(condition);
 
-                    final Condition foundCondition = main.getConditionsYMLManager().getCondition(conditionIdentifier);
-
-                    if (foundCondition != null) {
-
-                        ConditionCondition conditionCondition = new ConditionCondition(main);
-                        conditionCondition.setCondition(foundCondition);
-
-                        main.getConditionsManager().addCondition(conditionCondition, context);
-                    } else {
-                        context.getSender().sendMessage(main.parse("<error>Error! Condition with the name <highlight>" + conditionIdentifier + "</highlight> does not exist!"));
-                    }
-
-
+                    main.getConditionsManager().addCondition(conditionCondition, context);
                 }));
     }
 

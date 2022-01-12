@@ -102,7 +102,7 @@ public class ConditionsManager {
                         )
                         .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition")
                         .flag(main.getCommandManager().categoryFlag), ConditionFor.ConditionsYML); //For Actions.yml
-                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditActionsAddConditionCommandBuilder().flag(
+                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminActionsAddConditionCommandBuilder().flag(
                         main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
                                 .withDescription(ArgumentDescription.of("Negates this condition"))
                         )
@@ -125,7 +125,7 @@ public class ConditionsManager {
                 )
                         .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition")
                         .flag(main.getCommandManager().categoryFlag), ConditionFor.ConditionsYML); //For Actions.yml
-                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditActionsAddConditionCommandBuilder().literal(identifier).flag(
+                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminActionsAddConditionCommandBuilder().literal(identifier).flag(
                         main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
                                 .withDescription(ArgumentDescription.of("Negates this condition"))
                 )

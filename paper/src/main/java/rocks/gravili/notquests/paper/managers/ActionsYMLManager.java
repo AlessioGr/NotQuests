@@ -25,6 +25,7 @@ import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ActionsYMLManager {
@@ -78,8 +79,15 @@ public class ActionsYMLManager {
     }*/
 
     public void loadActions() {
+        ArrayList<String> categoriesStringList = new ArrayList<>();
+        for (final Category category : main.getDataManager().getCategories()) {
+            categoriesStringList.add(category.getCategoryFullName());
+        }
+        main.getLogManager().info("Scheduled Actions Data load for following categories: <highlight>" + categoriesStringList.toString() );
+
         for (final Category category : main.getDataManager().getCategories()) {
             loadActions(category);
+            main.getLogManager().info("Loading actions for category <highlight>" + category.getCategoryFullName());
         }
     }
 
@@ -93,6 +101,8 @@ public class ActionsYMLManager {
                     main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading actions.yml actions data: The action " + actionIdentifier + " already exists.");
                     return;
                 }
+                main.getLogManager().info("Loading action <highlight>" + actionIdentifier);
+
                 Class<? extends Action> actionType = null;
                 String actionTypeString = actionsConfigurationSection.getString(actionIdentifier + ".actionType", "");
                 /*if (actionTypeString.isBlank()) {
@@ -240,5 +250,13 @@ public class ActionsYMLManager {
         actionsAndIdentifiers.remove(actionToDeleteIdentifier);
 
         return "<success>Action <highlight>" + actionToDeleteIdentifier + "</highlight> successfully deleted!";
+    }
+
+    public String removeAction(Action actionToDelete) {
+        actionToDelete.getCategory().getActionsConfig().set("actions." + actionToDelete.getActionName(), null);
+        saveActions(actionToDelete.getCategory());
+        actionsAndIdentifiers.remove(actionToDelete.getActionName());
+
+        return "<success>Action <highlight>" + actionToDelete.getActionName() + "</highlight> successfully deleted!";
     }
 }

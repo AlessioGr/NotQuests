@@ -21,6 +21,7 @@ package rocks.gravili.notquests.paper.structs;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
@@ -445,4 +446,17 @@ public class Quest {
 
     }
 
+    public void switchCategory(final Category category) {
+
+        final ConfigurationSection questsConfigurationSection = getCategory().getQuestsConfig().getConfigurationSection("quests." + questName);
+
+        getCategory().getQuestsConfig().set("quests." + questName, null);
+        getCategory().saveQuestsConfig();
+
+        setCategory(category);
+
+        category.getQuestsConfig().set("quests." + questName, questsConfigurationSection);
+        category.saveQuestsConfig();
+
+    }
 }

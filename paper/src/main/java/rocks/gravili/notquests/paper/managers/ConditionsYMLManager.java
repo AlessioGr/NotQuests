@@ -195,4 +195,12 @@ public class ConditionsYMLManager {
 
         return "<success>Condition <highlight>" + conditionToDeleteIdentifier + "</highlight> successfully deleted!";
     }
+
+    public String removeCondition(Condition condition) {
+        condition.getCategory().getConditionsConfig().set("conditions." + condition.getConditionName(), null);
+        saveConditions(condition.getCategory());
+        conditionsAndIdentifiers.remove(condition.getConditionName());
+
+        return "<success>Condition <highlight>" + condition.getConditionName() + "</highlight> successfully deleted!";
+    }
 }

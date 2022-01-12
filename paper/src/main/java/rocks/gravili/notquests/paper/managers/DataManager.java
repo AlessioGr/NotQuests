@@ -277,7 +277,7 @@ public class DataManager {
     }
 
 
-    public final void loadQuestsConfig() {
+    public final void loadCategories() {
         if(!categories.isEmpty()){
             return;
         }
@@ -310,6 +310,13 @@ public class DataManager {
         return null;
     }
 
+    public void addCategory(final Category category){
+        categories.add(category);
+        if(category.getParentCategory() != null){
+            topLevelOnlyCategories.add(category);
+        }
+    }
+
     public final Category createCategory(final String categoryName, final Category parentCategory) {
         main.getLogManager().info("Creating <highlight>" + categoryName + "</highlight> category...");
         //Create new default category with default folder, conversations folder inside and following files inside: category.yml, quests.yml, actions.yml, conditions.yml
@@ -317,7 +324,7 @@ public class DataManager {
         if (parentCategory == null) {
             categoryFolder = new File(main.getMain().getDataFolder(), categoryName);
         } else {
-            categoryFolder = new File(main.getMain().getDataFolder(), parentCategory.getCategoryFolder().getPath() + "/" + categoryName);
+            categoryFolder = new File(parentCategory.getCategoryFolder(), categoryName);
         }
 
         if (!categoryFolder.exists()) {
@@ -1400,7 +1407,7 @@ public class DataManager {
             main.getLogManager().info("Loaded player data");
 
             if (!isAlreadyLoadedQuests()) {
-                loadQuestsConfig();
+                loadCategories();
                 main.getQuestManager().loadQuestsFromConfig();
 
             } else {
@@ -1569,13 +1576,13 @@ public class DataManager {
         if (Bukkit.isPrimaryThread()) {
             Bukkit.getScheduler().runTaskAsynchronously(main.getMain(), () -> {
                 if (!isAlreadyLoadedQuests()) {
-                    loadQuestsConfig();
+                    loadCategories();
                 }
                 main.getQuestManager().loadNPCData();
             });
         } else {
             if (!isAlreadyLoadedQuests()) {
-                loadQuestsConfig();
+                loadCategories();
             }
             main.getQuestManager().loadNPCData();
         }
