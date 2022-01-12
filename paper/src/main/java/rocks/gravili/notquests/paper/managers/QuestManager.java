@@ -131,8 +131,15 @@ public class QuestManager {
             main.getIntegrationsManager().getCitizensManager().registerQuestGiverTrait();
         }
 
+        ArrayList<String> categoriesStringList = new ArrayList<>();
         for (final Category category : main.getDataManager().getCategories()) {
-            main.getLogManager().info("Schedule Quest Data load for category <highlight>" + category.getCategoryName() + "</highlight>...");
+            categoriesStringList.add(category.getCategoryFullName());
+        }
+        main.getLogManager().info("Schedule Quest Data load for following categories: <highlight>" + categoriesStringList.toString() );
+
+
+
+        for (final Category category : main.getDataManager().getCategories()) {
             loadQuestsFromConfig(category);
         }
     }
@@ -443,7 +450,7 @@ public class QuestManager {
 
 
                     //Objective Conditions and Rewards
-                    main.getLogManager().info("Loading objective conditions and rewards...");
+                    main.getLogManager().debug("Loading objective conditions and rewards...");
                     for (final Objective objective : quest.getObjectives()) { //TODO: Add objective name to error or debug messages to discern from normal requirement loading
                         final ConfigurationSection objectiveConditionsConfigurationSection = category.getQuestsConfig().getConfigurationSection("quests." + quest.getQuestName() + ".objectives." + objective.getObjectiveID() + ".conditions.");
                         if (objectiveConditionsConfigurationSection != null) {
