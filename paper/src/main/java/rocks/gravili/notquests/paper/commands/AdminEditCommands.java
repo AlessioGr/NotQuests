@@ -63,6 +63,17 @@ public class AdminEditCommands {
         this.manager = manager;
         this.editBuilder = editBuilder;
 
+        manager.command(editBuilder.literal("category")
+                .literal("show")
+                .meta(CommandMeta.DESCRIPTION, "Shows the current category of this Quest.")
+                .handler((context) -> {
+                    final Quest quest = context.get("quest");
+
+                    context.getSender().sendMessage(main.parse(
+                            "<main>Category for Quest <highlight>" + quest.getQuestName() + "</highlight>: <highlight2>"
+                                    + quest.getCategory().getCategoryFullName() + "</highlight2>."
+                    ));
+                }));
 
         manager.command(editBuilder.literal("acceptCooldown", "cooldown")
                 .literal("set")
