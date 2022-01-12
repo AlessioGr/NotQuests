@@ -451,7 +451,7 @@ public class DataManager {
 
         String key;
 
-        key = "config-version";
+        key = "config-version-do-not-edit";
         if (!getGeneralConfig().isString(key)) {
             getGeneralConfig().set(key, main.getMain().getDescription().getVersion());
             valueChanged = true;
