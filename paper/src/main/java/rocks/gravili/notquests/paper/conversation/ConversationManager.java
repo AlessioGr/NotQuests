@@ -28,6 +28,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.actions.*;
 import rocks.gravili.notquests.paper.structs.conditions.*;
@@ -47,7 +48,6 @@ public class ConversationManager {
 
     final ArrayList<ConversationLine> linesForOneFile = new ArrayList<>();
 
-    private File conversationsFolder;
 
     HashMap<UUID, ArrayList<Component>> chatHistory;
     HashMap<UUID, ArrayList<Component>> conversationChatHistory;
@@ -74,8 +74,8 @@ public class ConversationManager {
         return main.getConfiguration().previousConversationsHistorySize;
     }
 
-    public File getConversationsFolder() {
-        return conversationsFolder;
+    public File getConversationsFolder(final Category category) {
+        return category.getConversationsFolder();
     }
 
     public Conversation getConversationForNPCID(final int npcID) {
@@ -152,7 +152,7 @@ public class ConversationManager {
 
     }
 
-    public boolean prepareConversationsFolder() {
+    /*public boolean prepareConversationsFolder() {
         //Create the Conversations Folder if it does not exist yet (the NotQuests/conversations folder)
         if (conversationsFolder == null) {
             conversationsFolder = new File(main.getMain().getDataFolder().getPath() + "/conversations/");
@@ -167,18 +167,23 @@ public class ConversationManager {
             }
         }
         return true;
-    }
-
+    }*/
 
     public void loadConversationsFromConfig() {
+        for (final Category category : main.getDataManager().getCategories()) {
+            loadConversationsFromConfig(category);
+        }
+    }
+
+    public void loadConversationsFromConfig(final Category category) {
         conversations.clear();
         openConversations.clear();
 
-        if (!prepareConversationsFolder()) {
+        /*if (!prepareConversationsFolder()) {
             return;
-        }
+        }*/
 
-        for (File conversationFile : main.getUtilManager().listFilesRecursively(conversationsFolder)) {
+        for (File conversationFile : main.getUtilManager().listFilesRecursively(category.getConversationsFolder())) {
             linesForOneFile.clear();
             main.getLogManager().info("Reading conversation file <highlight>" + conversationFile.getName() + "</highlight>...");
 

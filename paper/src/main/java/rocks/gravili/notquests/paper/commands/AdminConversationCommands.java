@@ -92,7 +92,7 @@ public class AdminConversationCommands {
                     final Conversation existingConversation = main.getConversationManager().getConversation(conversationName);
 
                     if (existingConversation == null) {
-                        File newConversationFile = new File(main.getConversationManager().getConversationsFolder().getPath() + "/" + conversationName + ".yml");
+                        File newConversationFile = new File(main.getConversationManager().getConversationsFolder(main.getDataManager().getDefaultCategory()).getPath() + "/" + conversationName + ".yml");
 
                         try {
                             if (!newConversationFile.exists()) {

@@ -1,6 +1,7 @@
 package rocks.gravili.notquests.paper.managers;
 
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.managers.data.Category;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -35,11 +36,11 @@ public class BackupManager {
         return true;
     }
 
-    public void backupQuests() {
+    public void backupQuests(final Category category) {
         if (!prepareBackupFolder()) {
             return;
         }
-        File newQuestsBackupFile = new File(main.getMain().getDataFolder().getPath() + "/backups/" + "quests-backup-" + backupFileDateFormat.format(new Date(System.currentTimeMillis())) + ".yml");
+        File newQuestsBackupFile = new File(main.getMain().getDataFolder().getPath() + "/backups/" + "quests-backup-" + category.getCategoryName() + "-" + backupFileDateFormat.format(new Date(System.currentTimeMillis())) + ".yml");
 
         if (!newQuestsBackupFile.exists()) {
             try {
@@ -57,8 +58,8 @@ public class BackupManager {
 
             //Now save
             try {
-                main.getDataManager().getQuestsConfig().save(newQuestsBackupFile);
-                main.getLogManager().info("Your quests.yml has been successfully backed up to <highlight>" + newQuestsBackupFile.getPath());
+                category.getQuestsConfig().save(newQuestsBackupFile);
+                main.getLogManager().info("Your quests.yml of category <highlight>" + category.getCategoryName() + "</highlight> has been successfully backed up to <highlight2>" + newQuestsBackupFile.getPath());
             } catch (Exception e) {
                 main.getLogManager().warn("There was an error saving the backup file for your quests.yml. Error:");
                 e.printStackTrace();

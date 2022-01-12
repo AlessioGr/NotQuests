@@ -33,6 +33,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
@@ -102,14 +103,14 @@ public class DataManager {
      */
     private Statement statement;
 
-    /**
+    /*
      * Quests.yml Configuration File
-     */
-    private File questsConfigFile = null;
-    /**
+     *
+    private File questsConfigFile = null;*/
+    /*
      * Quests.yml Configuration
-     */
-    private FileConfiguration questsConfig;
+
+    private FileConfiguration questsConfig;*/
 
     /**
      * savingEnabled is true by default. It will be set to false if any error happens when data is loaded from the Database.
@@ -154,6 +155,10 @@ public class DataManager {
     private final HashMap<Integer, ItemStack> itemStackCache;
 
 
+    private final ArrayList<Category> categories, topLevelOnlyCategories;
+    private Category defaultCategory;
+
+
     /**
      * The Data Manager is initialized here. This mainly creates some
      * Array List for generic Tab Completions for various commands.
@@ -168,9 +173,12 @@ public class DataManager {
         itemStackCache = new HashMap<>();
         // create an instance of the Configuration object
         configuration = new Configuration();
+
+        categories = new ArrayList<>();
+        topLevelOnlyCategories = new ArrayList<>();
     }
 
-    public void prepareDataFolder(){
+    public void prepareDataFolder() {
         //Create the Data Folder if it does not exist yet (the NotQuests folder)
         if (!main.getMain().getDataFolder().exists()) {
             main.getLogManager().info("Data Folder not found. Creating a new one...");
@@ -180,40 +188,176 @@ public class DataManager {
         }
     }
 
+    public final ArrayList<Category> getCategories() {
+        return categories;
+    }
 
-    public final void loadQuestsConfig(){
-        main.getLogManager().info("Loading quests.yml config");
-        /*
-         * If the generalConfigFile Object doesn't exist yet, this will load the file
-         * or create a new general.yml file if it does not exist yet and load it into the
-         * generalConfig FileConfiguration object.
-         */
-        if (questsConfigFile == null) {
-            //Create the Data Folder if it does not exist yet (the NotQuests folder)
-            prepareDataFolder();
+    public final ArrayList<Category> getTopLevelOnlyCategories() {
+        return topLevelOnlyCategories;
+    }
 
-            questsConfigFile = new File(main.getMain().getDataFolder(), "quests.yml");
-            if (!questsConfigFile.exists()) {
-                main.getLogManager().info("Quests Configuration (quests.yml) does not exist. Creating a new one...");
-                try {
-                    //Try to create the quests.yml config file, and throw an error if it fails.
-                    if (!questsConfigFile.createNewFile()) {
-                        disablePluginAndSaving("There was an error creating the quests.yml config file.");
-                        return;
+    public final Category getDefaultCategory() {
+        return defaultCategory;
+    }
+
+    public void loadCategories(final Category parent) {
+
+        File parentCategoryFolder = parent != null ? parent.getCategoryFolder() : main.getMain().getDataFolder();
+
+        for (final File categoryFolder : main.getUtilManager().listFoldersWithoutLanguagesOrBackups(parentCategoryFolder)) {
+            if (categoryFolder == null) {
+                continue;
+            }
+
+            //1. Check if there is a category.yml
+
+            File[] fileList = categoryFolder.listFiles();
+            if (fileList == null) {
+                continue;
+            }
+
+            File categoryYMLFile = null;
+            File questsFile = null;
+            File actionsFile = null;
+            File conditionsFile = null;
+
+            File conversationsFolder = null;
+
+            for (File file : fileList) {
+                if (file.isFile()) {
+                    if (file.getName().equalsIgnoreCase("category.yml")) {
+                        categoryYMLFile = file;
+                    } else if (file.getName().equalsIgnoreCase("quests.yml")) {
+                        questsFile = file;
+                    } else if (file.getName().equalsIgnoreCase("actions.yml")) {
+                        actionsFile = file;
+                    } else if (file.getName().equalsIgnoreCase("conditions.yml")) {
+                        conditionsFile = file;
                     }
-                } catch (IOException ioException) {
-                    disablePluginAndSaving("There was an error creating the quests.yml config file. (2)", ioException);
-                    return;
+                } else {
+                    if (file.getName().equalsIgnoreCase("conversations")) {
+                        conversationsFolder = file;
+                    }
+                }
+
+            }
+            if (categoryYMLFile == null) {
+                continue; //No real category, just a random folder. skip.
+            }
+
+            final Category category = new Category(main, categoryFolder.getName(), categoryFolder);
+            category.setQuestsFile(questsFile);
+            category.setActionsFile(actionsFile);
+            category.setConditionsFile(conditionsFile);
+            category.setConversationsFolder(conversationsFolder);
+
+            main.getLogManager().info("Folder Path: " + categoryFolder.getPath());
+            main.getLogManager().info("Folder Name: " + categoryFolder.getName());
+            main.getLogManager().info("Folder Parent: " + categoryFolder.getParent());
+
+            category.initializeConfigurations();
+
+            if (parent != null) {
+                category.setParentCategory(parent);
+            } else {
+                topLevelOnlyCategories.add(category);
+                if (category.getCategoryName().equalsIgnoreCase("default")) {
+                    defaultCategory = category;
                 }
             }
+
+            categories.add(category);
+
+
+            loadCategories(category);
+        }
+    }
+
+
+    public final void loadQuestsConfig() {
+        prepareDataFolder();
+
+        main.getLogManager().info("Loading categories and configurations...");
+        loadCategories(null);
+
+        if (defaultCategory == null) {
+            defaultCategory = createCategory("default", null);
+        }
+    }
+
+    @Deprecated
+    public final Category getCategory(final String categoryName) {
+        for (final Category category : getCategories()) {
+            if (category.getCategoryName().equalsIgnoreCase(categoryName)) {
+                return category;
+            }
+        }
+        return null;
+    }
+
+    public final Category createCategory(final String categoryName, final Category parentCategory) {
+        main.getLogManager().info("Creating <highlight>" + categoryName + "</highlight> category...");
+        //Create new default category with default folder, conversations folder inside and following files inside: category.yml, quests.yml, actions.yml, conditions.yml
+        File categoryFolder;
+        if (parentCategory == null) {
+            categoryFolder = new File(main.getMain().getDataFolder(), categoryName);
+        } else {
+            categoryFolder = new File(main.getMain().getDataFolder(), parentCategory.getCategoryFolder().getPath() + "/" + categoryName);
         }
 
-        //Now load the either new (or existing) quests config file...
-        try {
-            questsConfig = loadYAMLConfiguration(questsConfigFile);
-        } catch (Exception e) {
-            disablePluginAndSaving("There was an error loading the quests configuration file. It either doesn't exist, is invalid or has an error.", e);
+        if (!categoryFolder.exists()) {
+            main.getLogManager().info(categoryName + " category does not exist. Creating a new one...");
+
+            try {
+                if (!categoryFolder.exists()) {
+                    if (!categoryFolder.mkdirs()) {
+                        disablePluginAndSaving("There was an error creating the category folder.");
+                    }
+                }
+
+                File categoryFile = new File(categoryFolder, "category.yml");
+                if (!categoryFile.exists() && !categoryFile.createNewFile()) {
+                    disablePluginAndSaving("There was an error creating the " + categoryName + " category category.yml...");
+                    return null;
+                }
+                File questsFile = new File(categoryFolder, "quests.yml");
+                if (!questsFile.exists() && !questsFile.createNewFile()) {
+                    disablePluginAndSaving("There was an error creating the " + categoryName + " category quests.yml...");
+                    return null;
+                }
+                File actionsFile = new File(categoryFolder, "actions.yml");
+                if (!actionsFile.exists() && !actionsFile.createNewFile()) {
+                    disablePluginAndSaving("There was an error creating the " + categoryName + " category actions.yml...");
+                    return null;
+                }
+                File conditionsFile = new File(categoryFolder, "conditions.yml");
+                if (!conditionsFile.exists() && !conditionsFile.createNewFile()) {
+                    disablePluginAndSaving("There was an error creating the " + categoryName + " category conditions.yml...");
+                    return null;
+                }
+
+                File conversationsFolder = new File(categoryFolder, "conversations");
+                if (!conversationsFolder.exists() && !conversationsFolder.mkdir()) {
+                    disablePluginAndSaving("There was an error creating the " + categoryName + " category conversations folder..");
+                    return null;
+                }
+
+                Category category = new Category(main, categoryName, categoryFolder);
+                category.setParentCategory(parentCategory);
+                category.setCategoryFile(categoryFile);
+                category.setQuestsFile(questsFile);
+                category.setActionsFile(actionsFile);
+                category.setConditionsFile(conditionsFile);
+                category.setConversationsFolder(conversationsFolder);
+
+                return category;
+
+            } catch (IOException ioException) {
+                disablePluginAndSaving("There was an error creating the " + categoryName + " category.", ioException);
+                return null;
+            }
         }
+        return null;
     }
 
     /**
@@ -1000,7 +1144,7 @@ public class DataManager {
             main.getLogManager().severe("General Config file could not be saved.");
         }
     }
-    public void saveQuestsConfig() {
+    /*public void saveQuestsConfig() {
         if (isCurrentlyLoading()) {
             main.getLogManager().warn("Quest data saving has been skipped, because the plugin is currently loading.");
             return;
@@ -1018,6 +1162,31 @@ public class DataManager {
                 main.getLogManager().info("Saved Data to quests.yml");
             } catch (IOException e) {
                 main.getLogManager().severe("Could not save quests config to <highlight>" + questsConfigFile + "</highlight>. Stacktrace:");
+                e.printStackTrace();
+            }
+        } else {
+            main.getLogManager().info("Quest data saving has been skipped, because saving has been disabled. This usually happens when something goes wrong during Quest data loading, to prevent data loss.");
+        }
+    }*/
+
+    public void saveQuestsConfig(final Category category) {
+        if (isCurrentlyLoading()) {
+            main.getLogManager().warn("Quest data saving has been skipped, because the plugin is currently loading.");
+            return;
+        }
+        if (isSavingEnabled()) {
+            if (category.getQuestsConfig() == null || category.getQuestsFile() == null) {
+                main.getLogManager().severe("Could not save data to quests.yml");
+                return;
+            }
+            try {
+                if (getConfiguration().storageCreateBackupsWhenSavingQuests) {
+                    main.getBackupManager().backupQuests(category);
+                }
+                category.getQuestsConfig().save(category.getQuestsFile());
+                main.getLogManager().info("Saved Data to quests.yml");
+            } catch (IOException e) {
+                main.getLogManager().severe("Could not save quests config to <highlight>" + category.getQuestsFile().getName() + "</highlight>. Stacktrace:");
                 e.printStackTrace();
             }
         } else {
@@ -1070,7 +1239,7 @@ public class DataManager {
         if (isSavingEnabled()) {
             main.getQuestPlayerManager().savePlayerData();
 
-            saveQuestsConfig();
+            //saveQuestsConfig();
         } else {
             main.getLogManager().warn("NotQuests > Saving is disabled => no data has been saved.");
         }
@@ -1200,14 +1369,14 @@ public class DataManager {
                 main.getQuestManager().loadQuestsFromConfig();
 
             } else {
-                main.getLogManager().info("Loading Data from existing quests.yml... - reloadData");
+               /* main.getLogManager().info("Loading Data from existing quests.yml... - reloadData");
                 try {
                     questsConfig = loadYAMLConfiguration(questsConfigFile);
                 } catch (Exception e) {
                     disablePluginAndSaving("Plugin disabled, because there was an error loading data from quests.yml.", e);
                     return;
                 }
-                main.getQuestManager().loadQuestsFromConfig();
+                main.getQuestManager().loadQuestsFromConfig();*///TODO: Check up on that. Can I just commet it out?
 
             }
 
@@ -1234,19 +1403,19 @@ public class DataManager {
         return currentlyLoading;
     }
 
-    /**
+    /*
      * This will return the quests.yml Configuration FileConfiguration object.
      * If it does not exist, it will try to load ALL the data again in reloadData()
      * which should also create the quests.yml file
      *
      * @return the quests.yml Configuration FileConfiguration object
-     */
+
     public final FileConfiguration getQuestsConfig() {
         if (!isAlreadyLoadedQuests() && !isCurrentlyLoading()) {
             reloadData();
         }
         return questsConfig;
-    }
+    }*/
 
     /**
      * This will return the general.yml Configuration FileConfiguration object.
@@ -1391,7 +1560,15 @@ public class DataManager {
     }
 
     public boolean isAlreadyLoadedQuests() {
-        return alreadyLoadedQuests && questsConfig != null && questsConfigFile != null;
+        if (!alreadyLoadedQuests) {
+            return false;
+        }
+        for (Category category : categories) {
+            if (category.getQuestsConfig() == null || category.getQuestsConfig() == null) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

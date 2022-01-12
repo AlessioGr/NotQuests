@@ -209,8 +209,8 @@ public class ConditionsManager {
                 if (actionIdentifier != null && !actionIdentifier.isBlank()) {
                     Action foundAction = main.getActionsYMLManager().getAction(actionIdentifier);
                     if (foundAction != null) {
-                        foundAction.addCondition(condition, true, main.getActionsYMLManager().getActionsConfig(), "actions." + actionIdentifier);
-                        main.getActionsYMLManager().saveActions();
+                        foundAction.addCondition(condition, true, foundAction.getCategory().getActionsConfig(), "actions." + actionIdentifier);
+                        main.getActionsYMLManager().saveActions(foundAction.getCategory());
                         context.getSender().sendMessage(main.parse(
                                 "<success>" + getConditionType(condition.getClass()) + " Condition successfully added to Action <highlight>"
                                         + foundAction.getActionName() + "</highlight>!"));

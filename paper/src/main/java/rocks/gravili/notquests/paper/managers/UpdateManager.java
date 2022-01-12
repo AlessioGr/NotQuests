@@ -1,13 +1,6 @@
 package rocks.gravili.notquests.paper.managers;
 
-import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.structs.Quest;
-import rocks.gravili.notquests.paper.structs.actions.ConsoleCommandAction;
-import rocks.gravili.notquests.paper.structs.conditions.CompletedObjectiveCondition;
-import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
 public class UpdateManager {
     final UpdateChecker updateChecker;
@@ -63,7 +56,7 @@ public class UpdateManager {
         }
     }
 
-    public String convertQuestRequirementTypeToConditionType(final String questName, final String requirementID) {
+    /*public String convertQuestRequirementTypeToConditionType(final String questName, final String requirementID) {
         main.getLogManager().info("Converting old requirementType to conditionType...");
         String oldRequirementType = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".requirements." + requirementID + ".requirementType", "");
         if(oldRequirementType.isBlank()){
@@ -231,5 +224,5 @@ public class UpdateManager {
             return "CompletedObjective";
         }
         return oldConditionType;
-    }
+    }*/
 }

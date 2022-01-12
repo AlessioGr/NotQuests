@@ -119,12 +119,11 @@ public class LanguageManager {
 
         for (final String fileName : languageFiles) {
             try {
-                main.getLogManager().info(LogCategory.LANGUAGE, "Creating the <highlight>" + fileName + "</highlight> language file...");
-
                 File file = new File(languageFolder, fileName);
 
 
                 if (!file.exists()) {
+                    main.getLogManager().info(LogCategory.LANGUAGE, "Creating the <highlight>" + fileName + "</highlight> language file...");
                     if (!file.createNewFile()) {
                         main.getDataManager().disablePluginAndSaving("There was an error creating the " + fileName + " language file. (3)");
                         return;
@@ -147,7 +146,7 @@ public class LanguageManager {
                 //Doesn't matter if the en-US.yml exists in the plugin folder or not, because we're reading it from the internal resources folder
                 if (fileName.equals("en-US.yml")) {
                     //Copy to default.yml
-                    main.getLogManager().info(LogCategory.LANGUAGE, "Creating default.yml...");
+                    main.getLogManager().info(LogCategory.LANGUAGE, "Creating or updating default.yml...");
                     File defaultFile = new File(languageFolder, "default.yml");
 
                     InputStream inputStream = main.getMain().getResource("translations/en-US.yml");

@@ -22,6 +22,7 @@ package rocks.gravili.notquests.paper.structs.actions;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
@@ -36,11 +37,21 @@ public abstract class Action {
     private Quest quest;
     private Objective objective;
     private final ArrayList<Condition> conditions;
+    private Category category;
 
 
     public Action(NotQuests main) {
         this.main = main;
         conditions = new ArrayList<>();
+        category = main.getDataManager().getDefaultCategory();
+    }
+
+    public final Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(final Category category) {
+        this.category = category;
     }
 
     public final String getActionType() {

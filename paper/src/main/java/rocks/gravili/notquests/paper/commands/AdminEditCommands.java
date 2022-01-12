@@ -28,7 +28,6 @@ import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.kyori.adventure.text.Component;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -1418,9 +1417,9 @@ public class AdminEditCommands {
                         return;
                     }
                     foundReward.removeActionName();
-                    main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + (ID + 1) + ".displayName", null);
+                    foundReward.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + (ID + 1) + ".displayName", null);
                     context.getSender().sendMessage(main.parse(
-                            "<success>Display Name of reward with the ID <highlight>" + (ID+1) + "</highlight> has been removed successfully."
+                            "<success>Display Name of reward with the ID <highlight>" + (ID + 1) + "</highlight> has been removed successfully."
                     ));
                 }));
 
@@ -1475,9 +1474,9 @@ public class AdminEditCommands {
 
 
                     foundReward.setActionName(displayName);
-                    main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + (ID + 1) + ".displayName", foundReward.getActionName());
+                    foundReward.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + (ID + 1) + ".displayName", foundReward.getActionName());
                     context.getSender().sendMessage(main.parse(
-                            "<success>Display Name successfully added to reward with ID <highlight>" +(ID+1) + "</highlight>! New display name: <highlight2>"
+                            "<success>Display Name successfully added to reward with ID <highlight>" + (ID + 1) + "</highlight>! New display name: <highlight2>"
                                     + foundReward.getActionName()
                     ));
                 }));
@@ -1575,9 +1574,9 @@ public class AdminEditCommands {
                         return;
                     }
                     foundReward.removeActionName();
-                    main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + (ID + 1) + ".displayName", null);
+                    foundReward.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + (ID + 1) + ".displayName", null);
                     context.getSender().sendMessage(main.parse(
-                            "<success>Display Name of reward with the ID <highlight>" + (ID+1) + "</highlight> has been removed successfully."
+                            "<success>Display Name of reward with the ID <highlight>" + (ID + 1) + "</highlight> has been removed successfully."
                     ));
                 }));
 
@@ -1628,9 +1627,9 @@ public class AdminEditCommands {
 
 
                     foundReward.setActionName(displayName);
-                    main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + (ID + 1) + ".displayName", foundReward.getActionName());
+                    foundReward.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + (ID + 1) + ".displayName", foundReward.getActionName());
                     context.getSender().sendMessage(main.parse(
-                            "<success>Display Name successfully added to reward with ID <highlight>" + (ID+1) + "</highlight>! New display name: <highlight2>"
+                            "<success>Display Name successfully added to reward with ID <highlight>" + (ID + 1) + "</highlight>! New display name: <highlight2>"
                                     + foundReward.getActionName()
                     ));
                 }));

@@ -21,6 +21,7 @@ package rocks.gravili.notquests.paper.structs.conditions;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
@@ -34,18 +35,31 @@ public abstract class Condition {
     private Quest quest;
     private Objective objective;
     private boolean negated = false;
+    private Category category;
+
 
     public Condition(NotQuests main) {
         this.main = main;
+        category = main.getDataManager().getDefaultCategory();
     }
 
-    public void setProgressNeeded(final long progressNeeded){
+    public final Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(final Category category) {
+        this.category = category;
+    }
+
+    public void setProgressNeeded(final long progressNeeded) {
         this.progressNeeded = progressNeeded;
     }
-    public void setQuest(final Quest quest){
+
+    public void setQuest(final Quest quest) {
         this.quest = quest;
     }
-    public void setObjective(final Objective objective){
+
+    public void setObjective(final Objective objective) {
         this.objective = objective;
     }
 

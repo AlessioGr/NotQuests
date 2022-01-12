@@ -71,7 +71,7 @@ public abstract class Objective {
     public final void setCompletionNPCID(final int completionNPCID, final boolean save) {
         this.completionNPCID = completionNPCID;
         if (save) {
-            main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".completionNPCID", completionNPCID);
+            quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".completionNPCID", completionNPCID);
         }
     }
 
@@ -79,9 +79,9 @@ public abstract class Objective {
         this.completionArmorStandUUID = completionArmorStandUUID;
         if (save) {
             if (completionArmorStandUUID != null) {
-                main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".completionArmorStandUUID", completionArmorStandUUID.toString());
+                quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".completionArmorStandUUID", completionArmorStandUUID.toString());
             } else {
-                main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".completionArmorStandUUID", null);
+                quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".completionArmorStandUUID", null);
             }
         }
     }
@@ -106,22 +106,22 @@ public abstract class Objective {
     public void addCondition(final Condition condition, final boolean save) {
         conditions.add(condition);
         if (save) {
-            main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions." + conditions.size() + ".conditionType", condition.getConditionType());
-            main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions." + conditions.size() + ".progressNeeded", condition.getProgressNeeded());
-            main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions." + conditions.size() + ".negated", condition.isNegated());
+            quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions." + conditions.size() + ".conditionType", condition.getConditionType());
+            quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions." + conditions.size() + ".progressNeeded", condition.getProgressNeeded());
+            quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions." + conditions.size() + ".negated", condition.isNegated());
 
-            condition.save(main.getDataManager().getQuestsConfig(), "quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions." + conditions.size());
+            condition.save(quest.getCategory().getQuestsConfig(), "quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions." + conditions.size());
         }
     }
 
     public void addReward(final Action action, final boolean save) {
         rewards.add(action);
         if (save) {
-            main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".rewards." + rewards.size() + ".actionType", action.getActionType());
+            quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".rewards." + rewards.size() + ".actionType", action.getActionType());
             if (!action.getActionName().isBlank()) {
-                main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".rewards." + rewards.size() + ".displayName", action.getActionName());
+                quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".rewards." + rewards.size() + ".displayName", action.getActionName());
             }
-            action.save(main.getDataManager().getQuestsConfig(), "quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".rewards." + rewards.size());
+            action.save(quest.getCategory().getQuestsConfig(), "quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".rewards." + rewards.size());
         }
     }
 
@@ -129,7 +129,7 @@ public abstract class Objective {
         int conditionID = conditions.indexOf(condition);
         conditions.remove(condition);
         if (save) {
-            main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions." + conditionID, null);
+            quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions." + conditionID, null);
         }
     }
 
@@ -137,18 +137,18 @@ public abstract class Objective {
         int rewardID = rewards.indexOf(action);
         rewards.remove(action);
         if (save) {
-            main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".rewards." + rewardID, null);
+            quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".rewards." + rewardID, null);
         }
     }
 
     public void clearRewards() {
         rewards.clear();
-        main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".rewards", null);
+        quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".rewards", null);
     }
 
     public void clearConditions() {
         conditions.clear();
-        main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions", null);
+        quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions", null);
     }
 
     public final String getObjectiveDisplayName() {
@@ -167,14 +167,14 @@ public abstract class Objective {
         newObjectiveDisplayName = main.getUtilManager().replaceLegacyWithMiniMessage(newObjectiveDisplayName);
         this.objectiveDisplayName = newObjectiveDisplayName;
         if (save) {
-            main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".displayName", newObjectiveDisplayName);
+            quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".displayName", newObjectiveDisplayName);
         }
     }
 
     public void removeObjectiveDisplayName(boolean save) {
         this.objectiveDisplayName = "";
         if (save) {
-            main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".displayName", null);
+            quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".displayName", null);
         }
     }
 
@@ -200,14 +200,14 @@ public abstract class Objective {
         newObjectiveDescription = main.getUtilManager().replaceLegacyWithMiniMessage(newObjectiveDescription);
         this.objectiveDescription = newObjectiveDescription;
         if (save) {
-            main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".description", newObjectiveDescription);
+            quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".description", newObjectiveDescription);
         }
     }
 
     public void removeObjectiveDescription(boolean save) {
         this.objectiveDescription = "";
         if (save) {
-            main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".description", null);
+            quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".description", null);
         }
     }
 

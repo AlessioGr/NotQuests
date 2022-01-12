@@ -19,38 +19,29 @@
 package rocks.gravili.notquests.paper.managers;
 
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
 public class ActionsYMLManager {
     private final NotQuests main;
     private final HashMap<String, Action> actionsAndIdentifiers;
-    /**
-     * actions.yml Configuration File
-     */
-    private File actionsConfigFile = null;
-    /**
-     * actions.yml Configuration
-     */
-    private FileConfiguration actionsConfig;
 
 
     public ActionsYMLManager(final NotQuests main) {
         this.main = main;
         actionsAndIdentifiers = new HashMap<>();
 
-        setupFiles();
+        //setupFiles();
     }
 
-    public void setupFiles() {
+
+
+    /*public void setupFiles(final Category category) {
         main.getLogManager().info("Loading actions.yml config");
         if (actionsConfigFile == null) {
 
@@ -84,12 +75,18 @@ public class ActionsYMLManager {
         } else {
             actionsConfig = YamlConfiguration.loadConfiguration(actionsConfigFile);
         }
-    }
+    }*/
 
     public void loadActions() {
+        for (final Category category : main.getDataManager().getCategories()) {
+            loadActions(category);
+        }
+    }
+
+    public void loadActions(final Category category) {
         //First load from actions.yml:
 
-        final ConfigurationSection actionsConfigurationSection = getActionsConfig().getConfigurationSection("actions");
+        final ConfigurationSection actionsConfigurationSection = category.getActionsConfig().getConfigurationSection("actions");
         if (actionsConfigurationSection != null) {
             for (final String actionIdentifier : actionsConfigurationSection.getKeys(false)) {
                 if (actionsAndIdentifiers.get(actionIdentifier) != null) {
@@ -98,9 +95,9 @@ public class ActionsYMLManager {
                 }
                 Class<? extends Action> actionType = null;
                 String actionTypeString = actionsConfigurationSection.getString(actionIdentifier + ".actionType", "");
-                if (actionTypeString.isBlank()) {
+                /*if (actionTypeString.isBlank()) {
                     actionTypeString = main.getUpdateManager().convertActionsYMLTypeToActionType(actionsConfigurationSection, actionIdentifier);
-                }
+                }*/
 
                 try {
                     actionType = main.getActionManager().getActionClass(actionTypeString);
@@ -113,8 +110,9 @@ public class ActionsYMLManager {
 
                     try {
                         action = actionType.getDeclaredConstructor(NotQuests.class).newInstance(main);
+                        action.setCategory(category);
                         action.setActionName(actionIdentifier);
-                        action.load(getActionsConfig(), "actions." + actionIdentifier);
+                        action.load(category.getActionsConfig(), "actions." + actionIdentifier);
 
                         loadActionConditions(action);
 
@@ -140,7 +138,7 @@ public class ActionsYMLManager {
     }
 
     private void loadActionConditions(Action action) {
-        final ConfigurationSection actionsConditionsConfigurationSection = getActionsConfig().getConfigurationSection("actions." + action.getActionName() + ".conditions.");
+        final ConfigurationSection actionsConditionsConfigurationSection = action.getCategory().getActionsConfig().getConfigurationSection("actions." + action.getActionName() + ".conditions.");
 
         if (actionsConditionsConfigurationSection != null) {
             for (String actionConditionNumber : actionsConditionsConfigurationSection.getKeys(false)) {
@@ -155,7 +153,7 @@ public class ActionsYMLManager {
                 }
 
                 Class<? extends Condition> conditionType = null;
-                String conditionTypeString = getActionsConfig().getString("actions." + action.getActionName() + ".conditions." + actionConditionNumber + ".conditionType", "");
+                String conditionTypeString = action.getCategory().getActionsConfig().getString("actions." + action.getActionName() + ".conditions." + actionConditionNumber + ".conditionType", "");
                 try {
                     conditionType = main.getConditionsManager().getConditionClass(conditionTypeString);
                 } catch (java.lang.NullPointerException ex) {
@@ -163,8 +161,8 @@ public class ActionsYMLManager {
                     return;
                 }
 
-                int progressNeeded = getActionsConfig().getInt("actions." + action.getActionName() + ".conditions." + actionConditionNumber + ".progressNeeded");
-                boolean negated = getActionsConfig().getBoolean("actions." + action.getActionName() + ".conditions." + actionConditionNumber + ".negated", false);
+                int progressNeeded = action.getCategory().getActionsConfig().getInt("actions." + action.getActionName() + ".conditions." + actionConditionNumber + ".progressNeeded");
+                boolean negated = action.getCategory().getActionsConfig().getBoolean("actions." + action.getActionName() + ".conditions." + actionConditionNumber + ".negated", false);
 
 
                 if (validConditionID && conditionID > 0 && conditionType != null) {
@@ -174,13 +172,14 @@ public class ActionsYMLManager {
                         condition = conditionType.getDeclaredConstructor(NotQuests.class).newInstance(main);
                         condition.setProgressNeeded(progressNeeded);
                         condition.setNegated(negated);
-                        condition.load(getActionsConfig(), "actions." + action.getActionName() + ".conditions." + actionConditionNumber);
+                        condition.setCategory(action.getCategory());
+                        condition.load(action.getCategory().getActionsConfig(), "actions." + action.getActionName() + ".conditions." + actionConditionNumber);
                     } catch (Exception ex) {
                         main.getDataManager().disablePluginAndSaving("Error parsing condition Type of condition with ID <highlight>" + actionConditionNumber + "</highlight>.", action, ex);
                         return;
                     }
                     if (condition != null) {
-                        action.addCondition(condition, false, getActionsConfig(), "actions." + action.getActionName());
+                        action.addCondition(condition, false, action.getCategory().getActionsConfig(), "actions." + action.getActionName());
                     }
 
                 } else {
@@ -191,20 +190,18 @@ public class ActionsYMLManager {
         }
     }
 
-    public void saveActions() {
+    public void saveActions(final Category category) {
         try {
-            actionsConfig.save(actionsConfigFile);
+            category.getActionsConfig().save(category.getActionsFile());
             main.getLogManager().info("Saved Data to actions.yml");
         } catch (IOException e) {
             main.getLogManager().severe("Error saving actions. Actions were not saved...");
-
         }
-
     }
 
-    public final FileConfiguration getActionsConfig() {
+    /*public final FileConfiguration getActionsConfig() {
         return actionsConfig;
-    }
+    }*/
 
     public final HashMap<String, Action> getActionsAndIdentifiers() {
         return actionsAndIdentifiers;
@@ -222,14 +219,14 @@ public class ActionsYMLManager {
         if (!nameAlreadyExists) {
             actionsAndIdentifiers.put(actionIdentifier, action);
 
-            getActionsConfig().set("actions." + actionIdentifier + ".actionType", action.getActionType());
+            action.getCategory().getActionsConfig().set("actions." + actionIdentifier + ".actionType", action.getActionType());
             if (!action.getActionName().isBlank()) {
-                getActionsConfig().set("actions." + actionIdentifier + ".displayName", action.getActionName());
+                action.getCategory().getActionsConfig().set("actions." + actionIdentifier + ".displayName", action.getActionName());
             }
 
-            action.save(getActionsConfig(), "actions." + actionIdentifier);
+            action.save(action.getCategory().getActionsConfig(), "actions." + actionIdentifier);
 
-            saveActions();
+            saveActions(action.getCategory());
             return ("<success>Action <highlight>" + actionIdentifier + "</highlight> successfully created!");
         } else {
             return ("<error>Action <highlight>" + actionIdentifier + "</highlight> already exists!");
@@ -238,8 +235,9 @@ public class ActionsYMLManager {
 
 
     public String removeAction(String actionToDeleteIdentifier) {
+        actionsAndIdentifiers.get(actionToDeleteIdentifier).getCategory().getActionsConfig().set("actions." + actionToDeleteIdentifier, null);
         actionsAndIdentifiers.remove(actionToDeleteIdentifier);
-        getActionsConfig().set("actions." + actionToDeleteIdentifier, null);
+
         return "<success>Action <highlight>" + actionToDeleteIdentifier + "</highlight> successfully deleted!";
     }
 }

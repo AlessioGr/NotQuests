@@ -1283,7 +1283,7 @@ public class AdminCommands {
                     final Action foundAction = main.getActionsYMLManager().getAction(actionIdentifier);
 
                     if (foundAction != null) {
-                        foundAction.clearConditions(main.getActionsYMLManager().getActionsConfig(), "actions." + actionIdentifier);
+                        foundAction.clearConditions(foundAction.getCategory().getActionsConfig(), "actions." + actionIdentifier);
                         context.getSender().sendMessage(main.parse(
                                 "<success>All conditions of action with identifier <highlight>" + actionIdentifier
                                         + "</highlight> have been removed!"

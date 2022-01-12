@@ -19,37 +19,34 @@
 package rocks.gravili.notquests.paper.managers;
 
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
 public class ConditionsYMLManager {
     private final NotQuests main;
     private final HashMap<String, Condition> conditionsAndIdentifiers;
-    /**
+    /*
      * conditions.yml Configuration File
-     */
+     *
     private File conditionsConfigFile = null;
-    /**
+    /*
      * conditions.yml Configuration
-     */
-    private FileConfiguration conditionsConfig;
+     *
+    private FileConfiguration conditionsConfig;*/
 
 
     public ConditionsYMLManager(final NotQuests main) {
         this.main = main;
         conditionsAndIdentifiers = new HashMap<>();
 
-        setupFiles();
+        //setupFiles();
     }
 
-    public void setupFiles() {
+    /*public void setupFiles() {
         main.getLogManager().info("Loading conditions.yml config");
         if (conditionsConfigFile == null) {
 
@@ -83,12 +80,18 @@ public class ConditionsYMLManager {
         } else {
             conditionsConfig = YamlConfiguration.loadConfiguration(conditionsConfigFile);
         }
-    }
+    }*/
 
     public void loadConditions() {
+        for (final Category category : main.getDataManager().getCategories()) {
+            loadConditions(category);
+        }
+    }
+
+    public void loadConditions(final Category category) {
         //First load from conditions.yml:
 
-        final ConfigurationSection conditionsConfigurationSection = getConditionsConfig().getConfigurationSection("conditions");
+        final ConfigurationSection conditionsConfigurationSection = category.getConditionsConfig().getConfigurationSection("conditions");
         if (conditionsConfigurationSection != null) {
             for (final String conditionIdentifier : conditionsConfigurationSection.getKeys(false)) {
                 if (conditionsAndIdentifiers.get(conditionIdentifier) != null) {
@@ -108,15 +111,16 @@ public class ConditionsYMLManager {
                 if (!conditionIdentifier.isBlank() && conditionType != null) {
                     Condition condition = null;
 
-                    int progressNeeded = getConditionsConfig().getInt("conditions." + conditionIdentifier + ".progressNeeded");
-                    boolean negated = getConditionsConfig().getBoolean("conditions." + conditionIdentifier + ".negated", false);
+                    int progressNeeded = category.getConditionsConfig().getInt("conditions." + conditionIdentifier + ".progressNeeded");
+                    boolean negated = category.getConditionsConfig().getBoolean("conditions." + conditionIdentifier + ".negated", false);
 
                     try {
                         condition = conditionType.getDeclaredConstructor(NotQuests.class).newInstance(main);
                         condition.setConditionName(conditionIdentifier);
                         condition.setProgressNeeded(progressNeeded);
                         condition.setNegated(negated);
-                        condition.load(getConditionsConfig(), "conditions." + conditionIdentifier);
+                        condition.load(category.getConditionsConfig(), "conditions." + conditionIdentifier);
+                        condition.setCategory(category);
 
                     } catch (Exception ex) {
                         main.getDataManager().disablePluginAndSaving("Error parsing condition Type of conditions.yml condition with name <highlight>" + conditionIdentifier + "</highlight>.", ex);
@@ -138,9 +142,9 @@ public class ConditionsYMLManager {
 
     }
 
-    public void saveConditions() {
+    public void saveConditions(final Category category) {
         try {
-            conditionsConfig.save(conditionsConfigFile);
+            category.getConditionsConfig().save(category.getConditionsFile());
             main.getLogManager().info("Saved Data to conditions.yml");
         } catch (IOException e) {
             main.getLogManager().severe("Error saving condition. Condition were not saved...");
@@ -149,9 +153,9 @@ public class ConditionsYMLManager {
 
     }
 
-    public final FileConfiguration getConditionsConfig() {
+    /*public final FileConfiguration category.getConditionsConfig() {
         return conditionsConfig;
-    }
+    }*/
 
     public final HashMap<String, Condition> getConditionsAndIdentifiers() {
         return conditionsAndIdentifiers;
@@ -169,14 +173,14 @@ public class ConditionsYMLManager {
         if (!nameAlreadyExists) {
             conditionsAndIdentifiers.put(conditionIdentifier, condition);
 
-            getConditionsConfig().set("conditions." + conditionIdentifier + ".conditionType", condition.getConditionType());
-            getConditionsConfig().set("conditions." + conditionIdentifier + ".progressNeeded", condition.getProgressNeeded());
-            getConditionsConfig().set("conditions." + conditionIdentifier + ".negated", condition.isNegated());
+            condition.getCategory().getConditionsConfig().set("conditions." + conditionIdentifier + ".conditionType", condition.getConditionType());
+            condition.getCategory().getConditionsConfig().set("conditions." + conditionIdentifier + ".progressNeeded", condition.getProgressNeeded());
+            condition.getCategory().getConditionsConfig().set("conditions." + conditionIdentifier + ".negated", condition.isNegated());
 
 
-            condition.save(getConditionsConfig(), "conditions." + conditionIdentifier);
+            condition.save(condition.getCategory().getConditionsConfig(), "conditions." + conditionIdentifier);
 
-            saveConditions();
+            saveConditions(condition.getCategory());
             return ("<success>Condition <highlight>" + conditionIdentifier + "</highlight> successfully created!");
         } else {
             return ("<error>Condition <highlight>" + conditionIdentifier + "</highlight> already exists!");
@@ -185,8 +189,9 @@ public class ConditionsYMLManager {
 
 
     public String removeCondition(String conditionToDeleteIdentifier) {
+        conditionsAndIdentifiers.get(conditionToDeleteIdentifier).getCategory().getConditionsConfig().set("conditions." + conditionToDeleteIdentifier, null);
         conditionsAndIdentifiers.remove(conditionToDeleteIdentifier);
-        getConditionsConfig().set("conditions." + conditionToDeleteIdentifier, null);
+
         return "<success>Condition <highlight>" + conditionToDeleteIdentifier + "</highlight> successfully deleted!";
     }
 }
