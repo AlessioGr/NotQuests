@@ -204,6 +204,9 @@ public class DataManager {
 
         File parentCategoryFolder = parent != null ? parent.getCategoryFolder() : main.getMain().getDataFolder();
 
+        main.getLogManager().info("Checking folder for categories: <highlight>" + parentCategoryFolder.getName());
+
+
         for (final File categoryFolder : main.getUtilManager().listFoldersWithoutLanguagesOrBackups(parentCategoryFolder)) {
             if (categoryFolder == null) {
                 continue;
@@ -245,11 +248,14 @@ public class DataManager {
                 continue; //No real category, just a random folder. skip.
             }
 
+
             final Category category = new Category(main, categoryFolder.getName(), categoryFolder);
             category.setQuestsFile(questsFile);
             category.setActionsFile(actionsFile);
             category.setConditionsFile(conditionsFile);
             category.setConversationsFolder(conversationsFolder);
+
+            main.getLogManager().info("  Loading real category: <highlight>" + category.getCategoryFullName());
 
 
             category.initializeConfigurations();
@@ -272,6 +278,9 @@ public class DataManager {
 
 
     public final void loadQuestsConfig() {
+        if(!categories.isEmpty()){
+            return;
+        }
         prepareDataFolder();
 
         main.getLogManager().info("Loading categories and configurations...");
@@ -1561,12 +1570,14 @@ public class DataManager {
             Bukkit.getScheduler().runTaskAsynchronously(main.getMain(), () -> {
                 if (!isAlreadyLoadedQuests()) {
                     loadQuestsConfig();
+                    main.getQuestManager().loadQuestsFromConfig();
                 }
                 main.getQuestManager().loadNPCData();
             });
         } else {
             if (!isAlreadyLoadedQuests()) {
                 loadQuestsConfig();
+                main.getQuestManager().loadQuestsFromConfig();
             }
             main.getQuestManager().loadNPCData();
         }
