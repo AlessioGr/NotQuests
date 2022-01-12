@@ -1570,14 +1570,12 @@ public class DataManager {
             Bukkit.getScheduler().runTaskAsynchronously(main.getMain(), () -> {
                 if (!isAlreadyLoadedQuests()) {
                     loadQuestsConfig();
-                    main.getQuestManager().loadQuestsFromConfig();
                 }
                 main.getQuestManager().loadNPCData();
             });
         } else {
             if (!isAlreadyLoadedQuests()) {
                 loadQuestsConfig();
-                main.getQuestManager().loadQuestsFromConfig();
             }
             main.getQuestManager().loadNPCData();
         }
