@@ -96,7 +96,7 @@ public class ConversationManager {
     }
 
     public Conversation createTestConversation() {
-        final Conversation testConversation = new Conversation(main, null, null, "test", 0);
+        final Conversation testConversation = new Conversation(main, null, null, "test", 0, main.getDataManager().getDefaultCategory());
 
         final Speaker gustav = new Speaker("Gustav");
 
@@ -170,14 +170,15 @@ public class ConversationManager {
     }*/
 
     public void loadConversationsFromConfig() {
+        conversations.clear();
+        openConversations.clear();
         for (final Category category : main.getDataManager().getCategories()) {
             loadConversationsFromConfig(category);
         }
     }
 
     public void loadConversationsFromConfig(final Category category) {
-        conversations.clear();
-        openConversations.clear();
+
 
         /*if (!prepareConversationsFolder()) {
             return;
@@ -198,7 +199,7 @@ public class ConversationManager {
 
             final int npcID = config.getInt("npcID", -1);
 
-            final Conversation conversation = new Conversation(main, conversationFile, config, conversationFile.getName().replace(".yml", ""), npcID);
+            final Conversation conversation = new Conversation(main, conversationFile, config, conversationFile.getName().replace(".yml", ""), npcID, category);
 
 
             //First add all speakers

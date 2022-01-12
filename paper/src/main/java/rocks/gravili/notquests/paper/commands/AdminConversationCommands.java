@@ -37,12 +37,15 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.arguments.CategorySelector;
 import rocks.gravili.notquests.paper.commands.arguments.ConversationSelector;
 import rocks.gravili.notquests.paper.commands.arguments.SpeakerSelector;
 import rocks.gravili.notquests.paper.conversation.Conversation;
 import rocks.gravili.notquests.paper.conversation.ConversationLine;
 import rocks.gravili.notquests.paper.conversation.ConversationManager;
 import rocks.gravili.notquests.paper.conversation.Speaker;
+import rocks.gravili.notquests.paper.managers.data.Category;
+import rocks.gravili.notquests.paper.structs.actions.Action;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -83,6 +86,7 @@ public class AdminConversationCommands {
                         manager.flagBuilder("demo")
                                 .withDescription(ArgumentDescription.of("Fills the new conversation file with demo data"))
                 )
+                .flag(main.getCommandManager().categoryFlag)
                 .meta(CommandMeta.DESCRIPTION, "Creates a new conversation file.")
                 .handler((context) -> {
                     final String conversationName = context.get("Conversation Name");
@@ -91,8 +95,20 @@ public class AdminConversationCommands {
 
                     final Conversation existingConversation = main.getConversationManager().getConversation(conversationName);
 
+                    Category category = main.getDataManager().getDefaultCategory();
+                    if (context.flags().contains(main.getCommandManager().categoryFlag)) {
+                        category = context.flags().getValue(main.getCommandManager().categoryFlag, main.getDataManager().getDefaultCategory());
+                    }
+
+                    if(category == null){
+                        context.getSender().sendMessage(main.parse(
+                                "<error>Error: Category for conversation is null."
+                        ));
+                        return;
+                    }
+
                     if (existingConversation == null) {
-                        File newConversationFile = new File(main.getConversationManager().getConversationsFolder(main.getDataManager().getDefaultCategory()).getPath() + "/" + conversationName + ".yml");
+                        File newConversationFile = new File(main.getConversationManager().getConversationsFolder(category).getPath() + "/" + conversationName + ".yml");
 
                         try {
                             if (!newConversationFile.exists()) {
@@ -115,7 +131,7 @@ public class AdminConversationCommands {
                                         IOUtils.copy(inputStream, outputStream);
                                         main.getConversationManager().loadConversationsFromConfig();
                                         context.getSender().sendMessage(main.parse(
-                                                "<success>The conversation has been created successfully! There are currently no commands to edit them - you have to edit the conversation file. You can find it at <highlight>plugins/NotQuests/conversations/" + conversationName + ".yml"
+                                                "<success>The conversation has been created successfully! There are currently no commands to edit them - you have to edit the conversation file. You can find it at <highlight>" + category.getConversationsFolder().getPath().replace("\\", "/") + "/" + conversationName + ".yml"
                                         ));
                                     } catch (Exception e) {
                                         context.getSender().sendMessage(main.parse(
@@ -228,9 +244,14 @@ public class AdminConversationCommands {
                 }));
 
 
+
+        final Command.Builder<CommandSender> conversationEditBuilder = conversationBuilder.literal("edit")
+                .argument(ConversationSelector.of("conversation", main), ArgumentDescription.of("Name of the Conversation."));
+
+
+
         if (main.getIntegrationsManager().isCitizensEnabled()) {
-            manager.command(conversationBuilder.literal("edit")
-                    .argument(ConversationSelector.of("conversation", main), ArgumentDescription.of("Name of the Conversation."))
+            manager.command(conversationEditBuilder
                     .literal("npc")
                     .argument(IntegerArgument.<CommandSender>newBuilder("NPC").withSuggestionsProvider((context, lastString) -> {
                         ArrayList<String> completions = new ArrayList<>();
@@ -258,8 +279,7 @@ public class AdminConversationCommands {
         }
 
 
-        manager.command(conversationBuilder.literal("edit")
-                .argument(ConversationSelector.of("conversation", main), ArgumentDescription.of("Name of the Conversation."))
+        manager.command(conversationEditBuilder
                 .literal("armorstand")
                 .literal("add", "set")
                 .senderType(Player.class)
@@ -305,8 +325,7 @@ public class AdminConversationCommands {
                     ));
                 }));
 
-        manager.command(conversationBuilder.literal("edit")
-                .argument(ConversationSelector.of("conversation", main), ArgumentDescription.of("Name of the Conversation."))
+        manager.command(conversationEditBuilder
                 .literal("armorstand")
                 .literal("remove", "delete")
                 .senderType(Player.class)
@@ -349,8 +368,7 @@ public class AdminConversationCommands {
                 }));
 
 
-        manager.command(conversationBuilder.literal("edit")
-                .argument(ConversationSelector.of("conversation", main), ArgumentDescription.of("Name of the Conversation."))
+        manager.command(conversationEditBuilder
                 .literal("speakers")
                 .literal("add", "create")
                 .argument(StringArgument.<CommandSender>newBuilder("Speaker Name").withSuggestionsProvider(
@@ -393,8 +411,7 @@ public class AdminConversationCommands {
 
                 }));
 
-        manager.command(conversationBuilder.literal("edit")
-                .argument(ConversationSelector.of("conversation", main), ArgumentDescription.of("Name of the Conversation."))
+        manager.command(conversationEditBuilder
                 .literal("speakers")
                 .literal("list", "show")
                 .meta(CommandMeta.DESCRIPTION, "Adds / creates a new speaker for the conversation.")
@@ -417,8 +434,7 @@ public class AdminConversationCommands {
 
                 }));
 
-        manager.command(conversationBuilder.literal("edit")
-                .argument(ConversationSelector.of("conversation", main), ArgumentDescription.of("Name of the Conversation."))
+        manager.command(conversationEditBuilder
                 .literal("speakers")
                 .literal("remove", "delete")
                 .argument(SpeakerSelector.of("Speaker", main, "conversation"))
@@ -445,6 +461,44 @@ public class AdminConversationCommands {
                     }
 
 
+                }));
+
+
+
+        manager.command(conversationEditBuilder
+                .literal("category")
+                .literal("show")
+                .meta(CommandMeta.DESCRIPTION, "Shows the current category of this Conversation..")
+                .handler((context) -> {
+                    final Conversation conversation = context.get("conversation");
+
+                    context.getSender().sendMessage(main.parse(
+                            "<main>Category for coversation <highlight>" + conversation.getIdentifier() + "</highlight>: <highlight2>"
+                                    + conversation.getCategory().getCategoryFullName() + "</highlight2>."
+                    ));
+                }));
+
+        manager.command(conversationEditBuilder
+                .literal("category")
+                .literal("set")
+                .argument(CategorySelector.of("category", main), ArgumentDescription.of("New category for this Conversation."))
+                .meta(CommandMeta.DESCRIPTION, "Changes the current category of this Conversation.")
+                .handler((context) -> {
+                    final Conversation conversation = context.get("conversation");
+                    final Category category = context.get("category");
+                    if(conversation.getCategory().getCategoryFullName().equalsIgnoreCase(category.getCategoryFullName())){
+                        context.getSender().sendMessage(main.parse(
+                                "<error> Error: The conversation <highlight>" + conversation.getIdentifier() + "</highlight> already has the category <highlight2>" + conversation.getCategory().getCategoryFullName() + "</highlight2>."
+                        ));
+                        return;
+                    }
+
+                    context.getSender().sendMessage(main.parse(
+                            "<success>Category for conversation <highlight>" + conversation.getIdentifier() + "</highlight> has successfully been changed from <highlight2>"
+                                    + conversation.getCategory().getCategoryFullName() + "</highlight2> to <highlight2>" + category.getCategoryFullName() + "</highlight2>!"
+                    ));
+
+                    conversation.switchCategory(category);
                 }));
 
         handleLinesCommands();

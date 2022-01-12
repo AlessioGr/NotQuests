@@ -1250,12 +1250,14 @@ public class AdminCommands {
                         return;
                     }
 
-                    condition.switchCategory(category);
 
                     context.getSender().sendMessage(main.parse(
                             "<success>Category for condition <highlight>" + condition.getConditionName() + "</highlight> has successfully been changed from <highlight2>"
                                     + condition.getCategory().getCategoryFullName() + "</highlight2> to <highlight2>" + category.getCategoryFullName() + "</highlight2>!"
                     ));
+
+                    condition.switchCategory(category);
+
                 }));
     }
 
@@ -1398,12 +1400,13 @@ public class AdminCommands {
                         return;
                     }
 
-                    action.switchCategory(category);
 
                     context.getSender().sendMessage(main.parse(
                             "<success>Category for action <highlight>" + action.getActionName() + "</highlight> has successfully been changed from <highlight2>"
                                     + action.getCategory().getCategoryFullName() + "</highlight2> to <highlight2>" + category.getCategoryFullName() + "</highlight2>!"
                     ));
+                    action.switchCategory(category);
+
                 }));
     }
 

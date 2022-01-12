@@ -340,12 +340,14 @@ public class AdminEditCommands {
                         return;
                     }
 
-                    quest.switchCategory(category);
 
                     context.getSender().sendMessage(main.parse(
                             "<success>Category for Quest <highlight>" + quest.getQuestName() + "</highlight> has successfully been changed from <highlight2>"
                                     + quest.getCategory().getCategoryFullName() + "</highlight2> to <highlight2>" + category.getCategoryFullName() + "</highlight2>!"
                     ));
+
+                    quest.switchCategory(category);
+
                 }));
     }
 
