@@ -286,9 +286,18 @@ public class DataManager {
     }
 
     @Deprecated
-    public final Category getCategory(final String categoryName) {
+    public final Category getCategoryBySimpleName(final String categoryName) {
         for (final Category category : getCategories()) {
             if (category.getCategoryName().equalsIgnoreCase(categoryName)) {
+                return category;
+            }
+        }
+        return null;
+    }
+
+    public final Category getCategory(final String fullCategoryName) {
+        for (final Category category : getCategories()) {
+            if (category.getCategoryFullName().equalsIgnoreCase(fullCategoryName)) {
                 return category;
             }
         }

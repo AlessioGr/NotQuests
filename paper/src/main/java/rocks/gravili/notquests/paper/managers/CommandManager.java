@@ -47,6 +47,7 @@ import rocks.gravili.notquests.paper.commands.*;
 import rocks.gravili.notquests.paper.commands.arguments.*;
 import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueArgument;
 import rocks.gravili.notquests.paper.conversation.ConversationManager;
+import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
@@ -64,6 +65,9 @@ public class CommandManager {
     public CommandFlag<String[]> nametag_equals;
     public CommandFlag<String> taskDescription;
     public CommandFlag<Integer> maxDistance;
+    public CommandFlag<Category> categoryFlag;
+
+    //Builders
     private Command.Builder<CommandSender> adminCommandBuilder;
     private Command.Builder<CommandSender> adminEditCommandBuilder;
     private Command.Builder<CommandSender> adminConversationCommandBuilder;
@@ -217,6 +221,14 @@ public class CommandManager {
                 .withArgument(LongArgument.of("waitTimeAfterCompletion"))
                 .withDescription(ArgumentDescription.of("Enter minimum time you have to wait after completion."))
                 .build(); //0 = Quest
+
+
+        categoryFlag = CommandFlag
+                .newBuilder("category")
+                .withArgument(CategorySelector.of("category", main))
+                .withDescription(ArgumentDescription.of("Category name"))
+                .build();
+
     }
 
     public final CommandMap getCommandMap() {

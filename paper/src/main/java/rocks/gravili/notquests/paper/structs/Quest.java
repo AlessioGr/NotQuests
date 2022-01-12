@@ -70,6 +70,18 @@ public class Quest {
         category = main.getDataManager().getDefaultCategory();
     }
 
+    public Quest(NotQuests main, String questName, final Category category) {
+        this.main = main;
+        this.questName = questName;
+        rewards = new ArrayList<>();
+        objectives = new ArrayList<>();
+        conditions = new ArrayList<>();
+        attachedNPCsWithQuestShowing = new ArrayList<>();
+        attachedNPCsWithoutQuestShowing = new ArrayList<>();
+        triggers = new ArrayList<>();
+        this.category = category;
+    }
+
     public final Category getCategory() {
         return category;
     }

@@ -45,6 +45,7 @@ import org.bukkit.util.Vector;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.ActiveQuestSelector;
 import rocks.gravili.notquests.paper.commands.arguments.QuestSelector;
+import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.*;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
@@ -93,9 +94,15 @@ public class AdminCommands {
                             return completions;
                         }
                 ).single().build(), ArgumentDescription.of("Quest Name"))
+                .flag(main.getCommandManager().categoryFlag)
                 .meta(CommandMeta.DESCRIPTION, "Create a new quest.")
                 .handler((context) -> {
-                    context.getSender().sendMessage(main.parse(main.getQuestManager().createQuest(context.get("Quest Name"))));
+                    if (context.flags().contains(main.getCommandManager().categoryFlag)) {
+                        final Category category = context.flags().getValue(main.getCommandManager().categoryFlag, null);
+                        context.getSender().sendMessage(main.parse(main.getQuestManager().createQuest(context.get("Quest Name"), category)));
+                    }else{
+                        context.getSender().sendMessage(main.parse(main.getQuestManager().createQuest(context.get("Quest Name"))));
+                    }
                 }));
 
         manager.command(builder.literal("delete")

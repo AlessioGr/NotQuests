@@ -71,6 +71,19 @@ public class QuestManager {
         debugEnabledPlayers = new ArrayList<>();
     }
 
+    public final String createQuest(String questName, final Category category) {
+        if (getQuest(questName) == null) {
+            if(questName.contains("°")){
+                return ("<error>The symbol <highlight>°</highlight> cannot be used, because it's used for some important, plugin-internal stuff.");
+            }
+            Quest newQuest = new Quest(main, questName, category);
+            quests.add(newQuest);
+            category.getQuestsConfig().set("quests." + questName, "");
+            return ("<success>Quest <highlight>" + questName + "</highlight> successfully created!");
+        } else {
+            return ("<error>Quest <highlight>" + questName + "</highlight> already exists!");
+        }
+    }
 
     public final String createQuest(String questName) {
         if (getQuest(questName) == null) {

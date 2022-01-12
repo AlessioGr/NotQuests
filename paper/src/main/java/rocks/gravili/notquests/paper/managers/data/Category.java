@@ -34,6 +34,18 @@ public class Category {
         return categoryName;
     }
 
+    public final String getCategoryFullName() {
+        String fullCategoryName = null;
+        if(getParentCategory() != null){
+            fullCategoryName = getParentCategory().getCategoryFullName() + ".";
+        }
+        if(fullCategoryName != null){
+            return fullCategoryName + categoryName;
+        }else {
+            return categoryName;
+        }
+    }
+
     public final Category getParentCategory() {
         return parentCategory;
     }
