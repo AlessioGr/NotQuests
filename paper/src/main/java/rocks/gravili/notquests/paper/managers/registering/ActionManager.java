@@ -84,21 +84,17 @@ public class ActionManager {
             Method commandHandler = action.getMethod("handleCommands", main.getClass(), PaperCommandManager.class, Command.Builder.class, ActionFor.class);
             if(action == NumberAction.class || action == StringAction.class || action == BooleanAction.class || action == ListAction.class){
                 commandHandler.invoke(action, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddRewardCommandBuilder()
-                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action")
-                        .flag(main.getCommandManager().categoryFlag), ActionFor.QUEST);
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action"), ActionFor.QUEST);
                 commandHandler.invoke(action, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddRewardCommandBuilder()
-                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action")
-                        .flag(main.getCommandManager().categoryFlag), ActionFor.OBJECTIVE);
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action"), ActionFor.OBJECTIVE);
                 commandHandler.invoke(action, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminAddActionCommandBuilder()
                         .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action")
                         .flag(main.getCommandManager().categoryFlag), ActionFor.ActionsYML); //For Actions.yml
             }else {
                 commandHandler.invoke(action, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddRewardCommandBuilder().literal(identifier)
-                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action")
-                        .flag(main.getCommandManager().categoryFlag), ActionFor.QUEST);
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action"), ActionFor.QUEST);
                 commandHandler.invoke(action, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddRewardCommandBuilder().literal(identifier)
-                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action")
-                        .flag(main.getCommandManager().categoryFlag), ActionFor.OBJECTIVE);
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action"), ActionFor.OBJECTIVE);
                 commandHandler.invoke(action, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminAddActionCommandBuilder().literal(identifier)
                         .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action")
                         .flag(main.getCommandManager().categoryFlag), ActionFor.ActionsYML); //For Actions.yml
@@ -144,13 +140,10 @@ public class ActionManager {
         }
         String actionIdentifier = context.getOrDefault("Action Identifier", "");
 
-        if (context.flags().contains(main.getCommandManager().categoryFlag)) {
-            final Category category = context.flags().getValue(main.getCommandManager().categoryFlag, main.getDataManager().getDefaultCategory());
-            action.setCategory(category);
-        }
 
         if (quest != null) {
             action.setQuest(quest);
+            action.setCategory(quest.getCategory());
             if (objectiveOfQuest != null) {//Objective Reward
                 action.setObjective(objectiveOfQuest);
 
@@ -169,6 +162,10 @@ public class ActionManager {
             }
         } else {
             if (actionIdentifier != null && !actionIdentifier.isBlank()) { //actions.yml
+                if (context.flags().contains(main.getCommandManager().categoryFlag)) {
+                    final Category category = context.flags().getValue(main.getCommandManager().categoryFlag, main.getDataManager().getDefaultCategory());
+                    action.setCategory(category);
+                }
 
                 if (main.getActionsYMLManager().getAction(actionIdentifier) == null) {
                     main.getActionsYMLManager().addAction(actionIdentifier, action);
