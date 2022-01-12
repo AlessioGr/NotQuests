@@ -24,6 +24,7 @@ import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.actions.*;
@@ -83,18 +84,24 @@ public class ActionManager {
             Method commandHandler = action.getMethod("handleCommands", main.getClass(), PaperCommandManager.class, Command.Builder.class, ActionFor.class);
             if(action == NumberAction.class || action == StringAction.class || action == BooleanAction.class || action == ListAction.class){
                 commandHandler.invoke(action, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddRewardCommandBuilder()
-                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action"), ActionFor.QUEST);
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action")
+                        .flag(main.getCommandManager().categoryFlag), ActionFor.QUEST);
                 commandHandler.invoke(action, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddRewardCommandBuilder()
-                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action"), ActionFor.OBJECTIVE);
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action")
+                        .flag(main.getCommandManager().categoryFlag), ActionFor.OBJECTIVE);
                 commandHandler.invoke(action, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminAddActionCommandBuilder()
-                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action"), ActionFor.ActionsYML); //For Actions.yml
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action")
+                        .flag(main.getCommandManager().categoryFlag), ActionFor.ActionsYML); //For Actions.yml
             }else {
                 commandHandler.invoke(action, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddRewardCommandBuilder().literal(identifier)
-                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action"), ActionFor.QUEST);
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action")
+                        .flag(main.getCommandManager().categoryFlag), ActionFor.QUEST);
                 commandHandler.invoke(action, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddRewardCommandBuilder().literal(identifier)
-                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action"), ActionFor.OBJECTIVE);
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action")
+                        .flag(main.getCommandManager().categoryFlag), ActionFor.OBJECTIVE);
                 commandHandler.invoke(action, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminAddActionCommandBuilder().literal(identifier)
-                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action"), ActionFor.ActionsYML); //For Actions.yml
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action")
+                        .flag(main.getCommandManager().categoryFlag), ActionFor.ActionsYML); //For Actions.yml
             }
 
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
@@ -136,6 +143,11 @@ public class ActionManager {
             objectiveOfQuest = quest.getObjectiveFromID(objectiveID);
         }
         String actionIdentifier = context.getOrDefault("Action Identifier", "");
+
+        if (context.flags().contains(main.getCommandManager().categoryFlag)) {
+            final Category category = context.flags().getValue(main.getCommandManager().categoryFlag, main.getDataManager().getDefaultCategory());
+            action.setCategory(category);
+        }
 
         if (quest != null) {
             action.setQuest(quest);

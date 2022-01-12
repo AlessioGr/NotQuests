@@ -25,6 +25,7 @@ import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.*;
@@ -89,44 +90,52 @@ public class ConditionsManager {
                                 main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
                                         .withDescription(ArgumentDescription.of("Negates this condition"))
                         )
-                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition"), ConditionFor.QUEST);
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition")
+                        .flag(main.getCommandManager().categoryFlag), ConditionFor.QUEST);
                 commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddConditionCommandBuilder().flag(
                         main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
                                 .withDescription(ArgumentDescription.of("Negates this condition"))
                         )
-                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition"), ConditionFor.OBJECTIVE);
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition")
+                        .flag(main.getCommandManager().categoryFlag), ConditionFor.OBJECTIVE);
                 commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminAddConditionCommandBuilder().flag(
                         main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
                                 .withDescription(ArgumentDescription.of("Negates this condition"))
                         )
-                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition"), ConditionFor.ConditionsYML); //For Actions.yml
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition")
+                        .flag(main.getCommandManager().categoryFlag), ConditionFor.ConditionsYML); //For Actions.yml
                 commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditActionsAddConditionCommandBuilder().flag(
                         main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
                                 .withDescription(ArgumentDescription.of("Negates this condition"))
                         )
-                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition"), ConditionFor.Action); //For Actions.yml
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition")
+                        .flag(main.getCommandManager().categoryFlag), ConditionFor.Action); //For Actions.yml
 
             }else{
                 commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddRequirementCommandBuilder().literal(identifier).flag(
                         main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
                                 .withDescription(ArgumentDescription.of("Negates this condition"))
                 )
-                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition"), ConditionFor.QUEST);
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition")
+                        .flag(main.getCommandManager().categoryFlag), ConditionFor.QUEST);
                 commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddConditionCommandBuilder().literal(identifier).flag(
                         main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
                                 .withDescription(ArgumentDescription.of("Negates this condition"))
                 )
-                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition"), ConditionFor.OBJECTIVE);
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition")
+                        .flag(main.getCommandManager().categoryFlag), ConditionFor.OBJECTIVE);
                 commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminAddConditionCommandBuilder().literal(identifier).flag(
                         main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
                                 .withDescription(ArgumentDescription.of("Negates this condition"))
                 )
-                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition"), ConditionFor.ConditionsYML); //For Actions.yml
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition")
+                        .flag(main.getCommandManager().categoryFlag), ConditionFor.ConditionsYML); //For Actions.yml
                 commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditActionsAddConditionCommandBuilder().literal(identifier).flag(
                         main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
                                 .withDescription(ArgumentDescription.of("Negates this condition"))
                 )
-                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition"), ConditionFor.Action); //For Actions.yml
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition")
+                        .flag(main.getCommandManager().categoryFlag), ConditionFor.Action); //For Actions.yml
             }
 
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
@@ -173,6 +182,11 @@ public class ConditionsManager {
         String conditionIdentifier = context.getOrDefault("Condition Identifier", "");
 
         String actionIdentifier = context.getOrDefault("Action Identifier", "");
+
+        if (context.flags().contains(main.getCommandManager().categoryFlag)) {
+            final Category category = context.flags().getValue(main.getCommandManager().categoryFlag, main.getDataManager().getDefaultCategory());
+            condition.setCategory(category);
+        }
 
         if (quest != null) {
             condition.setQuest(quest);

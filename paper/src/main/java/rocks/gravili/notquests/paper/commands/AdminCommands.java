@@ -98,7 +98,7 @@ public class AdminCommands {
                 .meta(CommandMeta.DESCRIPTION, "Create a new quest.")
                 .handler((context) -> {
                     if (context.flags().contains(main.getCommandManager().categoryFlag)) {
-                        final Category category = context.flags().getValue(main.getCommandManager().categoryFlag, null);
+                        final Category category = context.flags().getValue(main.getCommandManager().categoryFlag, main.getDataManager().getDefaultCategory());
                         context.getSender().sendMessage(main.parse(main.getQuestManager().createQuest(context.get("Quest Name"), category)));
                     }else{
                         context.getSender().sendMessage(main.parse(main.getQuestManager().createQuest(context.get("Quest Name"))));
