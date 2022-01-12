@@ -1140,7 +1140,7 @@ public class DataManager {
         //Do potential data updating here
         /////
         //Now update config version value, assuming everything is updated
-        key = "config-version";
+        key = "config-version-do-not-edit";
         if (getGeneralConfig().isString(key)) {
             getGeneralConfig().set(key, main.getMain().getDescription().getVersion());
             valueChanged = true;
