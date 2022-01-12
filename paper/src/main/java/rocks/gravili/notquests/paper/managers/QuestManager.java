@@ -132,6 +132,7 @@ public class QuestManager {
         }
 
         for (final Category category : main.getDataManager().getCategories()) {
+            main.getLogManager().info("Schedule Quest Data load for category <highlight>" + category.getCategoryName() + "</highlight>...");
             loadQuestsFromConfig(category);
         }
     }
@@ -139,7 +140,7 @@ public class QuestManager {
     public void loadQuestsFromConfig(final Category category) {
 
         try {
-            main.getLogManager().info("Loading Quests data from <highlight>" + category.getCategoryName() + " category...");
+            main.getLogManager().info("Loading Quests data from <highlight>" + category.getCategoryName() + "</highlight> category...");
 
             quests.clear();
 
@@ -153,7 +154,7 @@ public class QuestManager {
 
             if (questsConfigurationSection != null) {
                 for (String questName : questsConfigurationSection.getKeys(false)) {
-                    main.getLogManager().info("   Loading Quest <highlight>" + questName + "...");
+                    main.getLogManager().info("   Loading Quest <highlight>" + questName + "</highlight>...");
 
                     Quest quest = new Quest(main, questName);
                     quest.setMaxAccepts(category.getQuestsConfig().getInt("quests." + questName + ".maxAccepts", -1));
