@@ -153,6 +153,8 @@ public class QuestManager {
 
             if (questsConfigurationSection != null) {
                 for (String questName : questsConfigurationSection.getKeys(false)) {
+                    main.getLogManager().info("   Loading Quest <highlight>" + questName + "...");
+
                     Quest quest = new Quest(main, questName);
                     quest.setMaxAccepts(category.getQuestsConfig().getInt("quests." + questName + ".maxAccepts", -1));
                     quest.setTakeEnabled(category.getQuestsConfig().getBoolean("quests." + questName + ".takeEnabled", true));

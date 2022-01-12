@@ -251,9 +251,6 @@ public class DataManager {
             category.setConditionsFile(conditionsFile);
             category.setConversationsFolder(conversationsFolder);
 
-            main.getLogManager().info("Folder Path: " + categoryFolder.getPath());
-            main.getLogManager().info("Folder Name: " + categoryFolder.getName());
-            main.getLogManager().info("Folder Parent: " + categoryFolder.getParent());
 
             category.initializeConfigurations();
 
