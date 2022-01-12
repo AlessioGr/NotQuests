@@ -32,6 +32,8 @@ import java.util.List;
 @Data
 public class Configuration {
 
+    public String configurationVersion = "";
+
     public boolean debug = false;
 
     /**

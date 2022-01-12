@@ -451,6 +451,20 @@ public class DataManager {
 
         String key;
 
+        key = "config-version";
+        if (!getGeneralConfig().isString(key)) {
+            getGeneralConfig().set(key, main.getMain().getDescription().getVersion());
+            valueChanged = true;
+        }
+        configuration.setConfigurationVersion(getGeneralConfig().getString(key));
+
+        key = "debug";
+        if (!getGeneralConfig().isBoolean(key)) {
+            getGeneralConfig().set(key, false);
+            valueChanged = true;
+        }
+        configuration.debug = getGeneralConfig().getBoolean(key);
+
         key = "storage.database.enabled";
         if (!getGeneralConfig().isBoolean(key)) {
             getGeneralConfig().set(key, false);
@@ -521,12 +535,7 @@ public class DataManager {
             errored = false;
         }
 
-        key = "debug";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, false);
-            valueChanged = true;
-        }
-        configuration.debug = getGeneralConfig().getBoolean(key);
+
 
 
         //Other values from general.yml
@@ -1126,6 +1135,17 @@ public class DataManager {
         }
         configuration.setUpdateCheckerNotifyOpsInChat(getGeneralConfig().getBoolean(key));
 
+
+
+        //Do potential data updating here
+        /////
+        //Now update config version value, assuming everything is updated
+        key = "config-version";
+        if (getGeneralConfig().isString(key)) {
+            getGeneralConfig().set(key, main.getMain().getDescription().getVersion());
+            valueChanged = true;
+        }
+        configuration.setConfigurationVersion(getGeneralConfig().getString(key));
 
 
 
