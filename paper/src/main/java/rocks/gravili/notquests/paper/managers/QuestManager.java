@@ -135,23 +135,19 @@ public class QuestManager {
         for (final Category category : main.getDataManager().getCategories()) {
             categoriesStringList.add(category.getCategoryFullName());
         }
-        main.getLogManager().info("Schedule Quest Data load for following categories: <highlight>" + categoriesStringList.toString() );
+        main.getLogManager().info("Scheduled Quest Data load for following categories: <highlight>" + categoriesStringList.toString() );
 
-
-
+        quests.clear();
         for (final Category category : main.getDataManager().getCategories()) {
             loadQuestsFromConfig(category);
         }
+
     }
 
     public void loadQuestsFromConfig(final Category category) {
 
         try {
             main.getLogManager().info("Loading Quests data from <highlight>" + category.getCategoryName() + "</highlight> category...");
-
-            quests.clear();
-
-
             //main.getUpdateManager().convertQuestsYMLActions();
             //main.getUpdateManager().convertActionsYMLBeforeVersion3();
 
@@ -163,7 +159,7 @@ public class QuestManager {
                 for (String questName : questsConfigurationSection.getKeys(false)) {
                     main.getLogManager().info("   Loading Quest <highlight>" + questName + "</highlight>...");
 
-                    Quest quest = new Quest(main, questName);
+                    Quest quest = new Quest(main, questName, category);
                     quest.setMaxAccepts(category.getQuestsConfig().getInt("quests." + questName + ".maxAccepts", -1));
                     quest.setTakeEnabled(category.getQuestsConfig().getBoolean("quests." + questName + ".takeEnabled", true));
                     quest.setAcceptCooldown(category.getQuestsConfig().getLong("quests." + questName + ".acceptCooldown", -1));

@@ -143,24 +143,30 @@ public class Category {
     }
 
     public void saveQuestsConfig(){
-        try {
-            questsConfig.save(questsFile);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(main.getDataManager().isSavingEnabled()){
+            try {
+                questsConfig.save(questsFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
     public void saveActionsConfig() {
-        try {
-            actionsConfig.save(actionsFile);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(main.getDataManager().isSavingEnabled()){
+            try {
+                actionsConfig.save(actionsFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
     public void saveConditionsConfig(){
-        try {
-            categoryConfig.save(categoryFile);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(main.getDataManager().isSavingEnabled()){
+            try {
+                categoryConfig.save(categoryFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
