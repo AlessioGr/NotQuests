@@ -9,7 +9,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.incendo.interfaces.paper.type.ChestInterface;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
+import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 
@@ -98,7 +100,7 @@ public class GUIManager {
     }
 
 
-    public void showActiveQuests(QuestPlayer questPlayer, Player player) {
+    public void showActiveQuestsGUI(QuestPlayer questPlayer, Player player) {
         if (questPlayer != null) {
             String[] guiSetup = {
                     "zxxxxxxxx",
@@ -151,5 +153,116 @@ public class GUIManager {
                     main.getLanguageManager().getString("chat.no-quests-accepted", player)
             ));
         }
+    }
+
+
+
+    public void showTakeQuestsGUI(QuestPlayer questPlayer, Player player) {
+        if(main.getDataManager().getCategories().size() == 1) {
+            showTakeQuestsGUIOfCategory(questPlayer, player, main.getDataManager().getDefaultCategory());
+            return;
+        }
+
+        String[] guiSetup = {
+                "zxxxxxxxx",
+                "xgggggggx",
+                "xgggggggx",
+                "xgggggggx",
+                "xgggggggx",
+                "pxxxxxxxn"
+        };
+        InventoryGui gui = new InventoryGui(main.getMain(), player, convert(main.getLanguageManager().getString("gui.takeQuestChoose.title", player)), guiSetup);
+        gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
+
+        int count = 0;
+        GuiElementGroup group = new GuiElementGroup('g');
+
+        for (final Category category : main.getDataManager().getCategories()) {
+            final ItemStack materialToUse = new ItemStack(Material.CHEST);
+
+            String displayName = "<RESET><WHITE>" + category.getCategoryName();
+
+            group.addElement(new StaticGuiElement('e',
+                    materialToUse,
+                    count,
+                    click -> {
+                        showTakeQuestsGUIOfCategory(questPlayer, player, category);
+                        return true;
+                    },
+                    convert(displayName)
+            ));
+
+        }
+
+
+        gui.addElement(group);
+        // Previous page
+        gui.addElement(new GuiPageElement('p', new ItemStack(Material.SPECTRAL_ARROW), GuiPageElement.PageAction.PREVIOUS, "Go to previous page (%prevpage%)"));
+        // Next page
+        gui.addElement(new GuiPageElement('n', new ItemStack(Material.ARROW), GuiPageElement.PageAction.NEXT, "Go to next page (%nextpage%)"));
+
+        gui.show(player);
+    }
+
+    public void showTakeQuestsGUIOfCategory(QuestPlayer questPlayer, Player player, final Category category) {
+        String[] guiSetup = {
+                "zxxxxxxxx",
+                "xgggggggx",
+                "xgggggggx",
+                "xgggggggx",
+                "xgggggggx",
+                "pxxxxxxxn"
+        };
+        InventoryGui gui = new InventoryGui(main.getMain(), player, convert(main.getLanguageManager().getString("gui.takeQuestChoose.title", player)), guiSetup);
+        gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
+
+        int count = 0;
+        GuiElementGroup group = new GuiElementGroup('g');
+
+        for (final Quest quest : main.getQuestManager().getAllQuests()) {
+            if (quest.isTakeEnabled() && quest.getCategory().getCategoryFullName().equalsIgnoreCase(category.getCategoryFullName())) {
+                final ItemStack materialToUse = quest.getTakeItem();
+
+                if (main.getConfiguration().showQuestItemAmount) {
+                    count++;
+                }
+
+                String displayName = quest.getQuestFinalName();
+
+                displayName = main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.questNamePrefix", player, quest) + displayName;
+
+                if (questPlayer != null && questPlayer.hasAcceptedQuest(quest)) {
+                    displayName += main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.acceptedSuffix", player, quest);
+                }
+                String description = "";
+                if (!quest.getQuestDescription().isBlank()) {
+
+                    description = main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.questDescriptionPrefix", player, quest)
+                            + quest.getQuestDescription(main.getConfiguration().guiQuestDescriptionMaxLineLength
+                    );
+                }
+
+                group.addElement(new StaticGuiElement('e',
+                        materialToUse,
+                        count,
+                        click -> {
+                            player.chat("/notquests preview " + quest.getQuestName());
+                            return true;
+                        },
+                        convert(displayName),
+                        convert(description),
+                        convert(main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.bottomText", player))
+                ));
+
+            }
+        }
+
+        gui.addElement(group);
+        // Previous page
+        gui.addElement(new GuiPageElement('p', new ItemStack(Material.SPECTRAL_ARROW), GuiPageElement.PageAction.PREVIOUS, "Go to previous page (%prevpage%)"));
+        // Next page
+        gui.addElement(new GuiPageElement('n', new ItemStack(Material.ARROW), GuiPageElement.PageAction.NEXT, "Go to next page (%nextpage%)"));
+
+        gui.show(player);
     }
 }

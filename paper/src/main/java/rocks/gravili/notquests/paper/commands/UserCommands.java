@@ -261,68 +261,9 @@ public class UserCommands {
                 .meta(CommandMeta.DESCRIPTION, "Starts a Quest.")
                 .handler((context) -> {
                     final Player player = (Player) context.getSender();
+                    QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
 
-                    String[] guiSetup = {
-                            "zxxxxxxxx",
-                            "xgggggggx",
-                            "xgggggggx",
-                            "xgggggggx",
-                            "xgggggggx",
-                            "pxxxxxxxn"
-                    };
-                    InventoryGui gui = new InventoryGui(main.getMain(), player, convert(main.getLanguageManager().getString("gui.takeQuestChoose.title", player)), guiSetup);
-                    gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
-
-                    int count = 0;
-                    GuiElementGroup group = new GuiElementGroup('g');
-
-                    for (final Quest quest : main.getQuestManager().getAllQuests()) {
-                        if (quest.isTakeEnabled()) {
-                            final ItemStack materialToUse = quest.getTakeItem();
-
-                            if (main.getConfiguration().showQuestItemAmount) {
-                                count++;
-                            }
-
-                            String displayName = quest.getQuestFinalName();
-
-                            displayName = main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.questNamePrefix", player, quest) + displayName;
-
-                            QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
-
-                            if (questPlayer != null && questPlayer.hasAcceptedQuest(quest)) {
-                                displayName += main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.acceptedSuffix", player, quest);
-                            }
-                            String description = "";
-                            if (!quest.getQuestDescription().isBlank()) {
-
-                                description = main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.questDescriptionPrefix", player, quest)
-                                        + quest.getQuestDescription(main.getConfiguration().guiQuestDescriptionMaxLineLength
-                                );
-                            }
-
-                            group.addElement(new StaticGuiElement('e',
-                                    materialToUse,
-                                    count,
-                                    click -> {
-                                        player.chat("/notquests preview " + quest.getQuestName());
-                                        return true;
-                                    },
-                                    convert(displayName),
-                                    convert(description),
-                                    convert(main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.bottomText", player))
-                            ));
-
-                        }
-                    }
-
-                    gui.addElement(group);
-                    // Previous page
-                    gui.addElement(new GuiPageElement('p', new ItemStack(Material.SPECTRAL_ARROW), GuiPageElement.PageAction.PREVIOUS, "Go to previous page (%prevpage%)"));
-                    // Next page
-                    gui.addElement(new GuiPageElement('n', new ItemStack(Material.ARROW), GuiPageElement.PageAction.NEXT, "Go to next page (%nextpage%)"));
-
-                    gui.show(player);
+                    main.getGuiManager().showTakeQuestsGUI(questPlayer, player);
                 }));
 
         manager.command(builder.literal("activeQuests")
@@ -332,7 +273,7 @@ public class UserCommands {
                     final Player player = (Player) context.getSender();
                     final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
 
-                    main.getGuiManager().showActiveQuests(questPlayer, player);
+                    main.getGuiManager().showActiveQuestsGUI(questPlayer, player);
                 }));
 
 
