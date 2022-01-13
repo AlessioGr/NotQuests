@@ -222,12 +222,12 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Str
 
 
             if(context.getSender() instanceof Player player){
-                if(variable.getPossibleValues(player) == null){
+                if(variable == null || variable.getPossibleValues(player) == null){
                     return completions;
                 }
                 completions.addAll(variable.getPossibleValues(player));
             }else{
-                if(variable.getPossibleValues(null) == null){
+                if(variable == null || variable.getPossibleValues(null) == null){
                     return completions;
                 }
                 completions.addAll(variable.getPossibleValues(null));
