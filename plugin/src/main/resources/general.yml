@@ -24,15 +24,14 @@ general:
     inventory-slot: 8
     item:
       ==: org.bukkit.inventory.ItemStack
-      v: 2865
+      v: 2730
       type: ENCHANTED_BOOK
       meta:
         ==: ItemMeta
         meta-type: ENCHANTED
-        display-name: '{"extra":[{"bold":false,"italic":true,"underlined":false,"strikethrough":false,"obfuscated":false,"color":"blue","text":"Journal"}],"text":""}'
+        display-name: '{"italic":true,"color":"blue","text":"Journal"}'
         lore:
-          - '{"extra":[{"bold":false,"italic":false,"underlined":false,"strikethrough":false,"obfuscated":false,"color":"gray","text":"A
-                book containing all your quest information"}],"text":""}'
+          - '{"color":"gray","text":"A book containing all your quest information"}'
   packet-magic:
     enabled: true
     #Possible modes: "internal" and "packetevents"
