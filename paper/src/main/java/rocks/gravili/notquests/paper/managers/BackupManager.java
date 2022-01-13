@@ -37,7 +37,7 @@ public class BackupManager {
     }
 
     public void backupQuests(final Category category) {
-        if (!prepareBackupFolder()) {
+        if (!prepareBackupFolder() || category.getQuestsConfig() == null) {
             return;
         }
         File newQuestsBackupFile = new File(main.getMain().getDataFolder().getPath() + "/backups/" + "quests-backup-" + category.getCategoryName() + "-" + backupFileDateFormat.format(new Date(System.currentTimeMillis())) + ".yml");

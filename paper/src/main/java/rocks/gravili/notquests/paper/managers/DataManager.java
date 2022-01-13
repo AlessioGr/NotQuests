@@ -365,12 +365,19 @@ public class DataManager {
                 }
 
                 Category category = new Category(main, categoryName, categoryFolder);
-                category.setParentCategory(parentCategory);
                 category.setCategoryFile(categoryFile);
                 category.setQuestsFile(questsFile);
                 category.setActionsFile(actionsFile);
                 category.setConditionsFile(conditionsFile);
                 category.setConversationsFolder(conversationsFolder);
+
+
+                if (parentCategory != null) {
+                    category.setParentCategory(parentCategory);
+                }
+
+                category.initializeConfigurations();
+
 
                 return category;
 
