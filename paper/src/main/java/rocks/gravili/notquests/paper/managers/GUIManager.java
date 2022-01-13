@@ -782,6 +782,9 @@ public class GUIManager {
 
         if(view.arguments().contains(ArgumentKey.of("questPlayer", QuestPlayer.class))){
             final QuestPlayer questPlayer = view.arguments().get(ArgumentKey.of("questPlayer", QuestPlayer.class));
+            if(questPlayer == null){
+                return pane;
+            }
             ArrayList<ItemStackElement<ChestPane>> list = new ArrayList<>() {
                 {
                     for(ActiveQuest activeQuest : questPlayer.getActiveQuests()){
@@ -942,6 +945,9 @@ public class GUIManager {
 
         if(view.arguments().contains(ArgumentKey.of("questPlayer", QuestPlayer.class))){
             final QuestPlayer questPlayer = view.arguments().get(ArgumentKey.of("questPlayer", QuestPlayer.class));
+            if(questPlayer == null){
+                return pane;
+            }
             ArrayList<ItemStackElement<ChestPane>> list = new ArrayList<>() {
                 {
                     int count = 0;
