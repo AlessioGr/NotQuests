@@ -20,6 +20,9 @@ package rocks.gravili.notquests.paper.managers.registering;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
+import cloud.commandframework.arguments.flags.CommandFlag;
+import cloud.commandframework.arguments.standard.BooleanArgument;
+import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.context.CommandContext;
 import org.bukkit.command.CommandSender;
@@ -81,9 +84,26 @@ public class VariablesManager {
         Command.Builder<CommandSender> newBuilder = builder.literal(variableString, ArgumentDescription.of("Variable Name"));
 
         Variable<?> variable = getVariableFromString(variableString);
-        if(variable != null && variable.getRequiredStrings() != null){
-            for(StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()){
-                newBuilder = newBuilder.argument(stringArgument, ArgumentDescription.of("Optional Argument"));
+        if(variable != null){
+            if(variable.getRequiredStrings() != null){
+                for(StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()){
+                    newBuilder = newBuilder.argument(stringArgument, ArgumentDescription.of("Optional String Argument"));
+                }
+            }
+            if(variable.getRequiredIntegers() != null){
+                for(IntegerArgument<CommandSender> integerArgument : variable.getRequiredIntegers()){
+                    newBuilder = newBuilder.argument(integerArgument, ArgumentDescription.of("Optional Integer Argument"));
+                }
+            }
+            if(variable.getRequiredBooleans() != null){
+                for(BooleanArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
+                    newBuilder = newBuilder.argument(booleanArgument, ArgumentDescription.of("Optional Boolean Argument"));
+                }
+            }
+            if(variable.getRequiredBooleanFlags() != null){
+                for(CommandFlag<CommandSender> commandFlag : variable.getRequiredBooleanFlags()){
+                    newBuilder = newBuilder.flag(commandFlag);
+                }
             }
         }
         return newBuilder;

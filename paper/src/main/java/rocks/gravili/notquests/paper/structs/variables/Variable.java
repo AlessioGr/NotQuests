@@ -1,5 +1,8 @@
 package rocks.gravili.notquests.paper.structs.variables;
 
+import cloud.commandframework.arguments.flags.CommandFlag;
+import cloud.commandframework.arguments.standard.BooleanArgument;
+import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -13,7 +16,15 @@ import java.util.List;
 public abstract class Variable<T> {
     protected final NotQuests main;
     private final ArrayList<StringArgument<CommandSender>> requiredStrings;
+    private final ArrayList<IntegerArgument<CommandSender>> requiredIntegers;
+    private final ArrayList<BooleanArgument<CommandSender>> requiredBooleans;
+    private final ArrayList<CommandFlag<CommandSender>> requiredBooleanFlags;
+
+
     private HashMap<String, String> additionalStringArguments;
+    private HashMap<String, Integer> additionalIntegerArguments;
+    private HashMap<String, Boolean> additionalBooleanArguments; //TODO:
+
     private boolean canSetValue = false;
 
     private final VariableDataType variableDataType;
@@ -21,8 +32,12 @@ public abstract class Variable<T> {
     public Variable(final NotQuests main){
         this.main = main;
         requiredStrings = new ArrayList<>();
+        requiredIntegers = new ArrayList<>();
+        requiredBooleans = new ArrayList<>();
+        requiredBooleanFlags = new ArrayList<>();
         additionalStringArguments = new HashMap<>();
-
+        additionalIntegerArguments = new HashMap<>();
+        additionalBooleanArguments = new HashMap<>();
 
         Class<T> typeOf = (Class<T>)
                 ((ParameterizedType)getClass()
@@ -52,18 +67,43 @@ public abstract class Variable<T> {
         return canSetValue;
     }
 
-    protected void addRequiredString(final StringArgument<CommandSender> stringArument){
-        requiredStrings.add(stringArument);
+    protected void addRequiredString(final StringArgument<CommandSender> stringArgument){
+        requiredStrings.add(stringArgument);
+    }
+    protected void addRequiredInteger(final IntegerArgument<CommandSender> integerArgument){
+        requiredIntegers.add(integerArgument);
+    }
+    protected void addRequiredBoolean(final BooleanArgument<CommandSender> booleanArgument){
+        requiredBooleans.add(booleanArgument);
+    }
+    protected void addRequiredBooleanFlag(final CommandFlag<CommandSender> commandFlag){
+        requiredBooleanFlags.add(commandFlag);
     }
 
     public final ArrayList<StringArgument<CommandSender>> getRequiredStrings(){
         return requiredStrings;
     }
+    public final ArrayList<IntegerArgument<CommandSender>> getRequiredIntegers(){
+        return requiredIntegers;
+    }
+    public final ArrayList<BooleanArgument<CommandSender>> getRequiredBooleans(){
+        return requiredBooleans;
+    }
+    public final ArrayList<CommandFlag<CommandSender>> getRequiredBooleanFlags(){
+        return requiredBooleanFlags;
+    }
+
 
     protected final String getRequiredStringValue(String key){
         return additionalStringArguments.get(key);
     }
 
+    protected final int getRequiredIntegerValue(String key){
+        return additionalIntegerArguments.get(key);
+    }
+    protected final boolean getRequiredBooleanValue(String key){
+        return additionalBooleanArguments.get(key);
+    }
 
     public abstract T getValue(final Player player, final Object... objects);
 
@@ -80,5 +120,12 @@ public abstract class Variable<T> {
 
     public void setAdditionalStringArguments(HashMap<String, String> additionalStringArguments) {
         this.additionalStringArguments = additionalStringArguments;
+    }
+
+    public void setAdditionalIntegerArguments(HashMap<String, Integer> additionalIntegerArguments) {
+        this.additionalIntegerArguments = additionalIntegerArguments;
+    }
+    public void setAdditionalBooleanArguments(HashMap<String, Boolean> additionalBooleanArguments) {
+        this.additionalBooleanArguments = additionalBooleanArguments;
     }
 }
