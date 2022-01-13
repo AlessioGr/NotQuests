@@ -384,10 +384,12 @@ public class LanguageManager {
     }
 
     public String applyInternalPlaceholders(String initialMessage, final Player player, Object... internalPlaceholderObjects) {
+
         if (internalPlaceholderObjects.length == 0) {
             return initialMessage;
         }
         internalPlaceholderReplacements.clear();
+        internalPlaceholderReplacements.put("%QUESTPOINTS%", "0");
         for (Object internalPlaceholderObject : internalPlaceholderObjects) {
             if (internalPlaceholderObject instanceof ActiveQuest activeQuest) {
                 //main.getLogManager().log(Level.INFO, "Applying ActiveQuest placeholders...");
@@ -418,7 +420,6 @@ public class LanguageManager {
                 //main.getLogManager().log(Level.INFO, "Applying QuestPlayer placeholders...");
                 internalPlaceholderReplacements.put("%QUESTPOINTS%", "" + questPlayer.getQuestPoints());
             }
-
         }
         return main.getUtilManager().replaceFromMap(initialMessage, internalPlaceholderReplacements);
     }
