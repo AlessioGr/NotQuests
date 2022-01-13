@@ -151,7 +151,7 @@ public class UserCommands {
                                 player.chat("/notquests take");
                                 return true;
                             },
-                            convert(main.getLanguageManager().getString("gui.main.button.takequest.text", player))
+                            convert(main.getLanguageManager().getString("gui.main.button.takequest.name", player))
 
                     ));
                     gui.addElement(new StaticGuiElement('a',
@@ -161,7 +161,7 @@ public class UserCommands {
                                 player.chat("/notquests abort");
                                 return true;
                             },
-                            convert(main.getLanguageManager().getString("gui.main.button.abortquest.text", player))
+                            convert(main.getLanguageManager().getString("gui.main.button.abortquest.name", player))
                     ));
                     gui.addElement(new StaticGuiElement('c',
                             new ItemStack(Material.SPYGLASS),
@@ -170,7 +170,7 @@ public class UserCommands {
                                 player.chat("/notquests preview");
                                 return true;
                             },
-                            convert(main.getLanguageManager().getString("gui.main.button.previewquest.text", player))
+                            convert(main.getLanguageManager().getString("gui.main.button.previewquest.name", player))
                     ));
 
                     gui.addElement(new StaticGuiElement('o',
@@ -180,7 +180,7 @@ public class UserCommands {
                                 player.chat("/notquests activeQuests");
                                 return true;
                             },
-                            convert(main.getLanguageManager().getString("gui.main.button.activequests.text", player))
+                            convert(main.getLanguageManager().getString("gui.main.button.activequests.name", player))
                     ));
                     QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
                     if (questPlayer != null) {
@@ -190,7 +190,7 @@ public class UserCommands {
                                 click -> {
                                     return true;
                                 },
-                                convert(main.getLanguageManager().getString("gui.main.button.questpoints.text", player, questPlayer))
+                                convert(main.getLanguageManager().getString("gui.main.button.questpoints.name", player, questPlayer))
                         ));
                     } else {
                         gui.addElement(new StaticGuiElement('z',
@@ -199,7 +199,7 @@ public class UserCommands {
                                 click -> {
                                     return true;
                                 },
-                                convert(main.getLanguageManager().getString("gui.main.button.questpoints.text", player).replace("%QUESTPOINTS%", "??"))
+                                convert(main.getLanguageManager().getString("gui.main.button.questpoints.name", player).replace("%QUESTPOINTS%", "??"))
                         ));
                     }
 
@@ -330,7 +330,7 @@ public class UserCommands {
                                         player.chat("/notquests abort " + activeQuest.getQuest().getQuestName());
                                         return true;
                                     },
-                                    convert(main.getLanguageManager().getString("gui.abortQuestChoose.button.abortQuestPreview.text", player, activeQuest))
+                                    convert(main.getLanguageManager().getString("gui.abortQuestChoose.button.abortQuestPreview.name", player, activeQuest))
                             ));
 
                         }
@@ -449,7 +449,7 @@ public class UserCommands {
                                     gui.close();
                                     return true;
                                 },
-                                convert(main.getLanguageManager().getString("gui.abortQuest.button.confirmAbort.text", player, activeQuest))
+                                convert(main.getLanguageManager().getString("gui.abortQuest.button.confirmAbort.name", player, activeQuest))
                         ));
                         gui.addElement(new StaticGuiElement('b',
                                 new ItemStack(Material.RED_WOOL),
@@ -458,7 +458,7 @@ public class UserCommands {
                                     gui.close();
                                     return true;
                                 },
-                                convert(main.getLanguageManager().getString("gui.abortQuest.button.cancelAbort.text", player))
+                                convert(main.getLanguageManager().getString("gui.abortQuest.button.cancelAbort.name", player))
                         ));
 
                         gui.show(player);
@@ -503,7 +503,7 @@ public class UserCommands {
                                 click -> {
                                     return true;
                                 },
-                                convert(main.getLanguageManager().getString("gui.previewQuest.button.description.text", player, questPlayer)
+                                convert(main.getLanguageManager().getString("gui.previewQuest.button.description.name", player, questPlayer)
                                         .replace("%QUESTDESCRIPTION%", description))
                         ));
                     }
@@ -519,7 +519,7 @@ public class UserCommands {
                                 click -> {
                                     return true;
                                 },
-                                convert(main.getLanguageManager().getString("gui.previewQuest.button.rewards.text", player, quest, questPlayer)
+                                convert(main.getLanguageManager().getString("gui.previewQuest.button.rewards.name", player, quest, questPlayer)
                                         .replace("%QUESTREWARDS%", rewards))
                         ));
                     }
@@ -536,7 +536,7 @@ public class UserCommands {
                                 click -> {
                                     return true;
                                 },
-                                convert(main.getLanguageManager().getString("gui.previewQuest.button.requirements.text", player, quest, questPlayer)
+                                convert(main.getLanguageManager().getString("gui.previewQuest.button.requirements.name", player, quest, questPlayer)
                                         .replace("%QUESTREQUIREMENTS%", requirements))
 
 
@@ -553,7 +553,7 @@ public class UserCommands {
                                 return true;
 
                             },
-                            convert(main.getLanguageManager().getString("gui.previewQuest.button.confirmTake.text", player, quest, questPlayer))
+                            convert(main.getLanguageManager().getString("gui.previewQuest.button.confirmTake.name", player, quest, questPlayer))
 
                     ));
                     gui.addElement(new StaticGuiElement('i',
@@ -564,7 +564,7 @@ public class UserCommands {
                                 return true;
 
                             },
-                            convert(main.getLanguageManager().getString("gui.previewQuest.button.cancelTake.text", player, quest, questPlayer))
+                            convert(main.getLanguageManager().getString("gui.previewQuest.button.cancelTake.name", player, quest, questPlayer))
 
                     ));
 
@@ -618,7 +618,7 @@ public class UserCommands {
                                             return true;
                                         },
                                         convert(
-                                                main.getLanguageManager().getString("gui.progress.button.unlockedObjective.text", player, activeObjective, questPlayer)
+                                                main.getLanguageManager().getString("gui.progress.button.unlockedObjective.name", player, activeObjective, questPlayer)
                                                         .replace("%OBJECTIVEDESCRIPTION%", descriptionToDisplay)
                                                         .replace("%ACTIVEOBJECTIVEDESCRIPTION%", main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), false, player))
                                         )
@@ -630,7 +630,7 @@ public class UserCommands {
                                         click -> {
                                             return true;
                                         },
-                                        convert(main.getLanguageManager().getString("gui.progress.button.lockedObjective.text", player, activeObjective))
+                                        convert(main.getLanguageManager().getString("gui.progress.button.lockedObjective.name", player, activeObjective))
                                 ));
                             }
                         }
@@ -656,7 +656,7 @@ public class UserCommands {
                                         return true;
                                     },
                                     convert(
-                                            main.getLanguageManager().getString("gui.progress.button.completedObjective.text", player, activeObjective, questPlayer)
+                                            main.getLanguageManager().getString("gui.progress.button.completedObjective.name", player, activeObjective, questPlayer)
                                                     .replace("%OBJECTIVEDESCRIPTION%", descriptionToDisplay)
                                                     .replace("%COMPLETEDOBJECTIVEDESCRIPTION%", main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), true, player))
                                     )
@@ -665,9 +665,9 @@ public class UserCommands {
 
                         gui.addElement(group);
                         // Previous page
-                        gui.addElement(new GuiPageElement('p', new ItemStack(Material.SPECTRAL_ARROW), GuiPageElement.PageAction.PREVIOUS, convert(main.getLanguageManager().getString("gui.progress.button.previousPage.text", player))));
+                        gui.addElement(new GuiPageElement('p', new ItemStack(Material.SPECTRAL_ARROW), GuiPageElement.PageAction.PREVIOUS, convert(main.getLanguageManager().getString("gui.progress.button.previousPage.name", player))));
                         // Next page
-                        gui.addElement(new GuiPageElement('n', new ItemStack(Material.ARROW), GuiPageElement.PageAction.NEXT, convert(main.getLanguageManager().getString("gui.progress.button.nextPage.text", player))));
+                        gui.addElement(new GuiPageElement('n', new ItemStack(Material.ARROW), GuiPageElement.PageAction.NEXT, convert(main.getLanguageManager().getString("gui.progress.button.nextPage.name", player))));
                         gui.show(player);
 
                     } else {

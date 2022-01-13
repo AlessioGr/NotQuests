@@ -18,10 +18,6 @@
 
 package rocks.gravili.notquests.paper.managers;
 
-import de.themoep.inventorygui.GuiElementGroup;
-import de.themoep.inventorygui.GuiPageElement;
-import de.themoep.inventorygui.InventoryGui;
-import de.themoep.inventorygui.StaticGuiElement;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
@@ -145,7 +141,6 @@ public class QuestManager {
     }
 
     public void loadQuestsFromConfig(final Category category) {
-
         try {
             main.getLogManager().info("Loading Quests data from <highlight>" + category.getCategoryName() + "</highlight> category...");
             //main.getUpdateManager().convertQuestsYMLActions();
@@ -565,7 +560,6 @@ public class QuestManager {
                     quests.add(quest);
                 }
             }
-
             main.getDataManager().setAlreadyLoadedQuests(true);
         } catch (Exception ex) {
             main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an exception while loading quests data.", ex);
@@ -710,7 +704,9 @@ public class QuestManager {
         }
 
         if (main.getConfiguration().isQuestPreviewUseGUI()) {
-            String[] guiSetup = {
+
+            main.getGuiManager().showTakeQuestsGUI(main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId()), player, questsAttachedToNPC);
+            /*String[] guiSetup = {
                     "xxxxxxxxx",
                     "xgggggggx",
                     "xgggggggx",
@@ -778,7 +774,7 @@ public class QuestManager {
             ));
 
 
-            gui.show(player);
+            gui.show(player);*/
         } else {
             main.getLogManager().info("NotQuests > All quest count: <highlight>" + quests.size() + "</highlight>");
 
@@ -818,7 +814,8 @@ public class QuestManager {
             return;
         }
         if (main.getConfiguration().isQuestPreviewUseGUI()) {
-            String[] guiSetup = {
+            main.getGuiManager().showTakeQuestsGUI(main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId()), player, questsAttachedToNPC );
+            /*String[] guiSetup = {
                     "xxxxxxxxx",
                     "xgggggggx",
                     "xgggggggx",
@@ -887,7 +884,7 @@ public class QuestManager {
             ));
 
 
-            gui.show(player);
+            gui.show(player);*/
         } else {
             main.getLogManager().info("NotQuests > All quest count: <highlight>" + quests.size() + "</highlight>");
 
@@ -932,6 +929,18 @@ public class QuestManager {
         return requirements.toString();
     }
 
+    public final ArrayList<String> getQuestRequirementsList(final Quest quest, final Player player) {
+        final ArrayList<String> requirements = new ArrayList<>();
+        int counter = 1;
+        for (final Condition condition : quest.getRequirements()) {
+            requirements.add("<GREEN>" + counter + ". <YELLOW>" + condition.getConditionType());
+            requirements.add(condition.getConditionDescription(player, quest));
+
+            counter += 1;
+        }
+        return requirements;
+    }
+
     public final String getQuestRewards(final Quest quest, final Player player) {
         StringBuilder rewards = new StringBuilder();
         int counter = 1;
@@ -953,6 +962,24 @@ public class QuestManager {
 
         }
         return rewards.toString();
+    }
+    public final ArrayList<String> getQuestRewardsList(final Quest quest, final Player player) {
+        ArrayList<String> rewards = new ArrayList<>();
+        int counter = 1;
+        for (final Action reward : quest.getRewards()) {
+            if (!reward.getActionName().isBlank()) {
+                rewards.add("<GREEN>" + counter + ". <BLUE>" + reward.getActionName() + "</GREEN>");
+            } else {
+                if (main.getConfiguration().hideRewardsWithoutName) {
+                    rewards.add("<GREEN>" + counter + main.getLanguageManager().getString("gui.reward-hidden-text", player, quest, reward) + "</GREEN>");
+                } else {
+                    rewards.add("<GREEN>" + counter + ". <BLUE>" + reward.getActionDescription(player) + "</GREEN>");
+                }
+            }
+            counter += 1;
+
+        }
+        return rewards;
     }
 
     public void sendSingleQuestPreview(Player player, Quest quest) {
@@ -1027,6 +1054,9 @@ public class QuestManager {
             return;
         }
 
+
+
+
         try {
             final ConfigurationSection questsConfigurationSetting = category.getQuestsConfig().getConfigurationSection("quests");
             if (questsConfigurationSetting != null) {
@@ -1039,6 +1069,7 @@ public class QuestManager {
                                 final ConfigurationSection npcsConfigurationSection = category.getQuestsConfig().getConfigurationSection("quests." + questName + ".npcs");
                                 if (npcsConfigurationSection != null) {
                                     for (String npcNumber : npcsConfigurationSection.getKeys(false)) {
+
                                         if (category.getQuestsConfig() != null) {
                                             final NPC npc = CitizensAPI.getNPCRegistry().getById(category.getQuestsConfig().getInt("quests." + questName + ".npcs." + npcNumber + ".npcID"));
                                             if (npc != null) {
@@ -1071,6 +1102,7 @@ public class QuestManager {
                             final ConfigurationSection npcsConfigurationSection = category.getQuestsConfig().getConfigurationSection("quests." + questName + ".npcs");
                             if (npcsConfigurationSection != null) {
                                 for (String npcNumber : npcsConfigurationSection.getKeys(false)) {
+
                                     final NPC npc = CitizensAPI.getNPCRegistry().getById(category.getQuestsConfig().getInt("quests." + questName + ".npcs." + npcNumber + ".npcID"));
                                     final boolean questShowing = category.getQuestsConfig().getBoolean("quests." + questName + ".npcs." + npc.getId() + ".questShowing", true);
                                     if (npc != null) {

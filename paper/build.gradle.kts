@@ -56,11 +56,11 @@ repositories {
         }
     }
 
-    maven("https://repo.minebench.de/"){
+    /*maven("https://repo.minebench.de/"){
         content {
             includeGroup("de.themoep")
         }
-    }
+    }*/
 
     maven("https://mvn.lumine.io/repository/maven-public/"){
         content {
@@ -115,7 +115,7 @@ dependencies {
     //compileOnly("io.papermc.paper:paper-api:1.18.1-R0.1-SNAPSHOT!!")
 
     implementation("org.bstats:bstats-bukkit:2.2.1")
-    implementation("de.themoep:inventorygui:1.5-SNAPSHOT")
+    //implementation("de.themoep:inventorygui:1.5-SNAPSHOT")
 
     compileOnly("net.citizensnpcs:citizens-main:2.0.29-SNAPSHOT")
     compileOnly("me.clip:placeholderapi:2.11.1")
@@ -234,7 +234,7 @@ tasks.withType<ShadowJar> {
         include(dependency("commons-io:commons-io:"))
 
         //include(dependency('io.papermc:paperlib')
-        include(dependency("de.themoep:inventorygui:1.5-SNAPSHOT"))
+        //include(dependency("de.themoep:inventorygui:1.5-SNAPSHOT"))
         include(dependency("org.bstats:"))
         include(dependency("cloud.commandframework:"))
         include(dependency("io.leangen.geantyref:"))

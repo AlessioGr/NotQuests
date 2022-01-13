@@ -357,20 +357,23 @@ public class NotQuests {
     public void onDisable() {
         getLogManager().info("NotQuests is shutting down...");
 
+
         //Save all kinds of data
         dataManager.saveData();
 
 
+
+        integrationsManager.onDisable();
+
+
+
+        packetManager.terminate();
 
         /* This is kind of useful for compatibility with ServerUtils or Plugman.
          * If this is false, the plugin will try to load NPCs again if the Citizens plugin is reloaded or enabled.
          * Might not be necessary.
          */
         getDataManager().setAlreadyLoadedNPCs(false);
-
-        integrationsManager.onDisable();
-
-        packetManager.terminate();
 
     }
 

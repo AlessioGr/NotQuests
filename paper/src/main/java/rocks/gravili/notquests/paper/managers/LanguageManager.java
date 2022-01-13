@@ -20,6 +20,7 @@ package rocks.gravili.notquests.paper.managers;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.io.IOUtils;
@@ -308,7 +309,7 @@ public class LanguageManager {
     }
 
     public final Component getComponent(final String languageString, final Player targetPlayer, Object... internalPlaceholderObjects){
-        return main.parse(getString(languageString, targetPlayer, internalPlaceholderObjects));
+        return main.parse(getString(languageString, targetPlayer, internalPlaceholderObjects)).decoration(TextDecoration.ITALIC, false);
     }
 
     public final List<Component> getComponentList(final String languageString, final Player targetPlayer, Object... internalPlaceholderObjects){
@@ -322,16 +323,24 @@ public class LanguageManager {
             }
 
             if (!main.getConfiguration().supportPlaceholderAPIInTranslationStrings || !main.getIntegrationsManager().isPlaceholderAPIEnabled() || targetPlayer == null) {
-                for(String componentPart : applySpecial(applyInternalPlaceholders(translatedString, internalPlaceholderObjects))){
-                    components.add(main.parse(componentPart));
+                for(String componentPart : applySpecial(applyInternalPlaceholders(translatedString, targetPlayer, internalPlaceholderObjects))){
+                    components.add(main.parse(componentPart).decoration(TextDecoration.ITALIC, false));
                 }
             } else {
-                for(String componentPart : applySpecial(PlaceholderAPI.setPlaceholders(targetPlayer, applyInternalPlaceholders(translatedString, internalPlaceholderObjects)))) {
-                    components.add(main.parse(componentPart));
+                for(String componentPart : applySpecial(PlaceholderAPI.setPlaceholders(targetPlayer, applyInternalPlaceholders(translatedString, targetPlayer, internalPlaceholderObjects)))) {
+                    components.add(main.parse(componentPart).decoration(TextDecoration.ITALIC, false));
                 }
             }
         }
         return components;
+    }
+
+    public final int getInt(final String languageString) {
+        if (!getLanguageConfig().isInt(languageString)) {
+            return 0;
+        } else {
+            return getLanguageConfig().getInt(languageString);
+        }
     }
 
     public final String getString(final String languageString, final Player targetPlayer, Object... internalPlaceholderObjects) {
@@ -343,38 +352,38 @@ public class LanguageManager {
                 return "Language string not found: " + languageString;
             }
             if (!main.getConfiguration().supportPlaceholderAPIInTranslationStrings || !main.getIntegrationsManager().isPlaceholderAPIEnabled() || targetPlayer == null) {
-                return applySpecial(applyInternalPlaceholders(translatedString, internalPlaceholderObjects)); //Removed applyColor( for minimessage support
+                return applySpecial(applyInternalPlaceholders(translatedString, targetPlayer, internalPlaceholderObjects)); //Removed applyColor( for minimessage support
             } else {
-                return applySpecial(PlaceholderAPI.setPlaceholders(targetPlayer, applyInternalPlaceholders(translatedString, internalPlaceholderObjects)));
+                return applySpecial(PlaceholderAPI.setPlaceholders(targetPlayer, applyInternalPlaceholders(translatedString, targetPlayer, internalPlaceholderObjects)));
             }
         }
     }
 
     public final List<String> getStringList(final String languageString, final Player targetPlayer, Object... internalPlaceholderObjects) {
         if (!getLanguageConfig().isList(languageString)) {
-            return Collections.singletonList("Language string not found: " + languageString);
+            return Collections.singletonList("Language string list not found: " + languageString);
         } else {
             final List<String> translatedString = getLanguageConfig().getStringList(languageString);
             if (translatedString.isEmpty()) {
-                return Collections.singletonList("Language string not found: " + languageString);
+                return Collections.singletonList("Language string list not found: " + languageString);
             }
             if (!main.getConfiguration().supportPlaceholderAPIInTranslationStrings || !main.getIntegrationsManager().isPlaceholderAPIEnabled() || targetPlayer == null) {
-                return applySpecial(applyInternalPlaceholders(translatedString, internalPlaceholderObjects)); //Removed applyColor( for minimessage support
+                return applySpecial(applyInternalPlaceholders(translatedString, targetPlayer, internalPlaceholderObjects)); //Removed applyColor( for minimessage support
             } else {
-                return applySpecial(PlaceholderAPI.setPlaceholders(targetPlayer, applyInternalPlaceholders(translatedString, internalPlaceholderObjects)));
+                return applySpecial(PlaceholderAPI.setPlaceholders(targetPlayer, applyInternalPlaceholders(translatedString, targetPlayer, internalPlaceholderObjects)));
             }
         }
     }
 
-    public List<String> applyInternalPlaceholders(List<String> initialMessage, Object... internalPlaceholderObjects) {
+    public List<String> applyInternalPlaceholders(List<String> initialMessage,final Player player, Object... internalPlaceholderObjects) {
         List<String> toReturn = new ArrayList<>();
         for(String message : initialMessage){
-            toReturn.add(applyInternalPlaceholders(message, internalPlaceholderObjects));
+            toReturn.add(applyInternalPlaceholders(message, player, internalPlaceholderObjects));
         }
         return toReturn;
     }
 
-    public String applyInternalPlaceholders(String initialMessage, Object... internalPlaceholderObjects) {
+    public String applyInternalPlaceholders(String initialMessage, final Player player, Object... internalPlaceholderObjects) {
         if (internalPlaceholderObjects.length == 0) {
             return initialMessage;
         }
@@ -397,6 +406,8 @@ public class LanguageManager {
                 internalPlaceholderReplacements.put("%OBJECTIVENAME%", "" + activeObjective.getObjective().getObjectiveFinalName());
                 internalPlaceholderReplacements.put("%ACTIVEOBJECTIVEPROGRESS%", "" + activeObjective.getCurrentProgress());
                 internalPlaceholderReplacements.put("%OBJECTIVEPROGRESSNEEDED%", "" + activeObjective.getProgressNeeded());
+                internalPlaceholderReplacements.put("%ACTIVEOBJECTIVEDESCRIPTION%", main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), false, player));
+                internalPlaceholderReplacements.put("%COMPLETEDOBJECTIVEDESCRIPTION%", main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), true, player));
             } else if (internalPlaceholderObject instanceof Objective objective) {
                 //main.getLogManager().log(Level.INFO, "Applying Objective placeholders...");
                 internalPlaceholderReplacements.put("%OBJECTIVEID%", "" + objective.getObjectiveID());

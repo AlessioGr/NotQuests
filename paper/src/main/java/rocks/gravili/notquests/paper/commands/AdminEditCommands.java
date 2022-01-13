@@ -283,7 +283,6 @@ public class AdminEditCommands {
                         ItemMeta meta = takeItem.getItemMeta();
                         if (meta == null) {
                             meta = Bukkit.getItemFactory().getItemMeta(takeItem.getType());
-                            ;
                         }
                         if (meta != null) {
                             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -414,7 +413,7 @@ public class AdminEditCommands {
                     context.getSender().sendMessage(main.parse("<highlight>NPCs bound to quest <highlight2>" + quest.getQuestName() + "</highlight2> with Quest showing:"));
                     int counter = 1;
                     for (final NPC npc : quest.getAttachedNPCsWithQuestShowing()) {
-                        context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>ID:</man> <highlight2>" + npc.getId()));
+                        context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>ID:</main> <highlight2>" + npc.getId()));
                         counter++;
                     }
                     counter = 1;

@@ -27,6 +27,7 @@ import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public abstract class Objective {
@@ -205,6 +206,10 @@ public abstract class Objective {
         return main.getUtilManager().wrapText(getObjectiveDescription(), maxLengthPerLine);
     }
 
+    public final List<String> getObjectiveDescriptionLines(final int maxLengthPerLine) {
+        return main.getUtilManager().wrapTextToList(getObjectiveDescription(), maxLengthPerLine);
+    }
+
 
     public void setObjectiveDescription(String newObjectiveDescription, boolean save) {
         newObjectiveDescription = main.getUtilManager().replaceLegacyWithMiniMessage(newObjectiveDescription);
@@ -234,5 +239,6 @@ public abstract class Objective {
     public abstract void load(final FileConfiguration configuration, final String initialPath);
 
     public abstract void onObjectiveUnlock(final ActiveObjective activeObjective);
+
 
 }

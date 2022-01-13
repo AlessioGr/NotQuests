@@ -435,6 +435,10 @@ public class UtilManager {
 
     }
 
+    public final List<String> wrapTextToList(final String unwrappedText, final int maxLineLength) {
+        return List.of(WordUtils.wrap(unwrappedText.replace("\\n", "\n"), maxLineLength, "\n", main.getConfiguration().wrapLongWords).split("\n"));
+    }
+
 
     public final String replaceLegacyWithMiniMessage(String toReplace) {
         if (!toReplace.replace("& ", "").contains("&")) {

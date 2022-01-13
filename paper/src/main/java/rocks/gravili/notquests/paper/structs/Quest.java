@@ -32,6 +32,7 @@ import rocks.gravili.notquests.paper.structs.objectives.Objective;
 import rocks.gravili.notquests.paper.structs.triggers.Trigger;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The Quest object is loaded at the start from whatever is defined in the quests.yml. It contains all data which defines
@@ -256,6 +257,10 @@ public class Quest {
         return main.getUtilManager().wrapText(description, maxLengthPerLine);
     }
 
+    public final List<String> getQuestDescriptionList(final int maxLengthPerLine) {
+        return main.getUtilManager().wrapTextToList(description, maxLengthPerLine);
+    }
+
     public final String getQuestDisplayName() {
         return displayName;
     }
@@ -387,6 +392,7 @@ public class Quest {
 
             category.getQuestsConfig().set("quests." + questName + ".npcs." + npc.getId(), null);
             category.saveQuestsConfig();
+
             attachedNPCsWithQuestShowing.remove(npc);
             attachedNPCsWithoutQuestShowing.remove(npc);
         }
