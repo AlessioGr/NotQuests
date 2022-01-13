@@ -63,7 +63,7 @@ public class GUIManager {
                             player.chat("/notquests progress " + activeQuest.getQuest().getQuestName());
                             return true;
                         },
-                        convert(main.getLanguageManager().getString("gui.activeQuests.button.activeQuestButton.text", player, activeQuest))
+                        convert(main.getLanguageManager().getString("gui.activeQuests.button.activeQuestButton.name", player, activeQuest))
                 ));
             }
 

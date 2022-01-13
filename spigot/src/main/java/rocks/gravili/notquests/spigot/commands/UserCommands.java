@@ -144,7 +144,7 @@ public class UserCommands {
                     InventoryGui gui = new InventoryGui(main.getMain(), player, convert(main.getLanguageManager().getString("gui.main.title", player)), guiSetup);
                     gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
 
-                    gui.addElement(new StaticGuiElement('8',
+                    gui.addElement(new StaticGuiElement('9',
                             new ItemStack(Material.CHEST),
                             0,
                             click -> {
@@ -154,7 +154,7 @@ public class UserCommands {
                             convert(main.getLanguageManager().getString("gui.main.button.takequest.name", player))
 
                     ));
-                    gui.addElement(new StaticGuiElement('a',
+                    gui.addElement(new StaticGuiElement('b',
                             new ItemStack(Material.REDSTONE_BLOCK),
                             0,
                             click -> {
@@ -163,7 +163,7 @@ public class UserCommands {
                             },
                             convert(main.getLanguageManager().getString("gui.main.button.abortquest.name", player))
                     ));
-                    gui.addElement(new StaticGuiElement('c',
+                    /*gui.addElement(new StaticGuiElement('c',
                             new ItemStack(Material.SPYGLASS),
                             0,
                             click -> {
@@ -171,7 +171,7 @@ public class UserCommands {
                                 return true;
                             },
                             convert(main.getLanguageManager().getString("gui.main.button.previewquest.name", player))
-                    ));
+                    ));*/
 
                     gui.addElement(new StaticGuiElement('o',
                             new ItemStack(Material.LADDER),
@@ -234,21 +234,21 @@ public class UserCommands {
                                 count++;
                             }
 
-                            String displayName = convert(quest.getQuestFinalName());
 
-                            displayName = main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.questNamePrefix", player, quest) + displayName;
+                            String displayName = main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.name-if-not-accepted", player, quest);
 
                             QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
 
                             if (questPlayer != null && questPlayer.hasAcceptedQuest(quest)) {
-                                displayName += main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.acceptedSuffix", player, quest);
+                                displayName = main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.name-if-accepted", player, questPlayer, quest);
                             }
                             String description = "";
                             if (!quest.getQuestDescription().isBlank()) {
+                                description = quest.getQuestDescription(main.getConfiguration().guiQuestDescriptionMaxLineLength);
 
-                                description = main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.questDescriptionPrefix", player, quest)
+                                /*description = main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.questDescriptionPrefix", player, quest)
                                         + quest.getQuestDescription(main.getConfiguration().guiQuestDescriptionMaxLineLength
-                                );
+                                );*/
                             }
 
                             group.addElement(new StaticGuiElement('e',
@@ -259,8 +259,8 @@ public class UserCommands {
                                         return true;
                                     },
                                     convert(displayName),
-                                    convert(description),
-                                    convert(main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.bottomText", player))
+                                    convert(description)//,
+                                    //convert(main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.bottomText", player))
                             ));
 
                         }

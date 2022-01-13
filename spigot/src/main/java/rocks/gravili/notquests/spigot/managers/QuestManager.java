@@ -694,17 +694,17 @@ public class QuestManager {
             for (final Quest quest : questsAttachedToNPC) {
                 final ItemStack materialToUse = quest.getTakeItem();
 
-                String displayName = quest.getQuestFinalName();
 
-                displayName = main.getLanguageManager().getString("gui.availableQuests.button.questPreview.questNamePrefix", player, quest) + displayName;
+                String displayName = main.getLanguageManager().getString("gui.availableQuests.button.questPreview.name-if-accepted", player, quest);
                 QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer((player.getUniqueId()));
 
                 if (questPlayer != null && questPlayer.hasAcceptedQuest(quest)) {
-                    displayName += main.getLanguageManager().getString("gui.availableQuests.button.questPreview.acceptedSuffix", player, quest);
+                    displayName = main.getLanguageManager().getString("gui.availableQuests.button.questPreview.name-if-not-accepted", player, questPlayer, quest);
                 }
                 String description = "";
                 if (!quest.getQuestDescription().isBlank()) {
-                    description = main.getLanguageManager().getString("gui.availableQuests.button.questPreview.questDescriptionPrefix", player, quest) + quest.getQuestDescription(main.getConfiguration().guiQuestDescriptionMaxLineLength);
+                    //description = main.getLanguageManager().getString("gui.availableQuests.button.questPreview.questDescriptionPrefix", player, quest) + quest.getQuestDescription(main.getConfiguration().guiQuestDescriptionMaxLineLength);
+                    description = quest.getQuestDescription(main.getConfiguration().guiQuestDescriptionMaxLineLength);
                 }
                 count++;
 
@@ -718,8 +718,8 @@ public class QuestManager {
 
                         },
                         main.getUtilManager().miniMessageToLegacyWithSpigotRGB(displayName),
-                        main.getUtilManager().miniMessageToLegacyWithSpigotRGB(description),
-                        main.getUtilManager().miniMessageToLegacyWithSpigotRGB(main.getLanguageManager().getString("gui.availableQuests.button.questPreview.bottomText", player, questPlayer, quest))
+                        main.getUtilManager().miniMessageToLegacyWithSpigotRGB(description)//,
+                        //main.getUtilManager().miniMessageToLegacyWithSpigotRGB(main.getLanguageManager().getString("gui.availableQuests.button.questPreview.bottomText", player, questPlayer, quest))
                 ));
 
             }
@@ -805,17 +805,16 @@ public class QuestManager {
                 final ItemStack materialToUse = quest.getTakeItem();
 
 
-                String displayName = quest.getQuestFinalName();
-
-                displayName = main.getLanguageManager().getString("gui.availableQuests.button.questPreview.questNamePrefix", player, quest) + displayName;
+                String displayName = main.getLanguageManager().getString("gui.availableQuests.button.questPreview.name-if-accepted", player, quest);
                 QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer((player.getUniqueId()));
 
                 if (questPlayer != null && questPlayer.hasAcceptedQuest(quest)) {
-                    displayName += main.getLanguageManager().getString("gui.availableQuests.button.questPreview.acceptedSuffix", player, quest);
+                    displayName = main.getLanguageManager().getString("gui.availableQuests.button.questPreview.name-if-not-accepted", player, questPlayer, quest);
                 }
                 String description = "";
                 if (!quest.getQuestDescription().isBlank()) {
-                    description = main.getLanguageManager().getString("gui.availableQuests.button.questPreview.questDescriptionPrefix", player, quest) + quest.getQuestDescription(main.getConfiguration().guiQuestDescriptionMaxLineLength);
+                    //description = main.getLanguageManager().getString("gui.availableQuests.button.questPreview.questDescriptionPrefix", player, quest) + quest.getQuestDescription(main.getConfiguration().guiQuestDescriptionMaxLineLength);
+                    description = quest.getQuestDescription(main.getConfiguration().guiQuestDescriptionMaxLineLength);
                 }
                 count++;
 
@@ -829,8 +828,8 @@ public class QuestManager {
 
                         },
                         main.getUtilManager().miniMessageToLegacyWithSpigotRGB(displayName),
-                        main.getUtilManager().miniMessageToLegacyWithSpigotRGB(description),
-                        main.getUtilManager().miniMessageToLegacyWithSpigotRGB(main.getLanguageManager().getString("gui.availableQuests.button.questPreview.bottomText", player, questPlayer, quest))
+                        main.getUtilManager().miniMessageToLegacyWithSpigotRGB(description)//,
+                        //main.getUtilManager().miniMessageToLegacyWithSpigotRGB(main.getLanguageManager().getString("gui.availableQuests.button.questPreview.bottomText", player, questPlayer, quest))
                 ));
 
             }
