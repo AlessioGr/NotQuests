@@ -114,7 +114,7 @@ public class StringAction extends Action {
 
                         StringAction stringAction = new StringAction(main);
 
-                        stringAction.setVariableName(variableString);
+                        stringAction.setVariableName(variable.getVariableType());
                         stringAction.setStringOperator(stringOperator);
                         stringAction.setNewValue(string);
 

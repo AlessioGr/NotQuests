@@ -227,7 +227,7 @@ public class StringCondition extends Condition {
                         final String stringOperator = context.get("operator");
 
                         StringCondition stringCondition = new StringCondition(main);
-                        stringCondition.setVariableName(variableString);
+                        stringCondition.setVariableName(variable.getVariableType());
 
                         stringCondition.setStringOperator(stringOperator);
                         stringCondition.setString(string);

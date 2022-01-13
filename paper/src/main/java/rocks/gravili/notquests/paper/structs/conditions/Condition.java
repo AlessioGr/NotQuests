@@ -42,6 +42,7 @@ public abstract class Condition {
     public Condition(NotQuests main) {
         this.main = main;
         category = main.getDataManager().getDefaultCategory();
+        main.allConditions.add(this); //For bStats
     }
 
     public final Category getCategory() {

@@ -278,7 +278,7 @@ public class ListCondition extends Condition {
 
                         listCondition.setExpression(expression);
                         listCondition.setOperator(operator);
-                        listCondition.setVariableName(variableString);
+                        listCondition.setVariableName(variable.getVariableType());
 
 
                         HashMap<String, String> additionalStringArguments = new HashMap<>();

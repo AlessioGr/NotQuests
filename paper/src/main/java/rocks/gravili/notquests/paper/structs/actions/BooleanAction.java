@@ -114,7 +114,7 @@ public class BooleanAction extends Action {
                         final String operator = context.get("operator");
 
                         BooleanAction booleanAction = new BooleanAction(main);
-                        booleanAction.setVariableName(variableString);
+                        booleanAction.setVariableName(variable.getVariableType());
                         booleanAction.setOperator(operator);
                         booleanAction.setNewValueExpression(expression);
 

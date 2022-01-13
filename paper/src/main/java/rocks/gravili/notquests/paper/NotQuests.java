@@ -1,5 +1,6 @@
 package rocks.gravili.notquests.paper;
 
+import io.lumine.xikage.mythicmobs.skills.conditions.ConditionAction;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
@@ -21,11 +22,12 @@ import rocks.gravili.notquests.paper.managers.*;
 import rocks.gravili.notquests.paper.managers.packets.PacketManager;
 import rocks.gravili.notquests.paper.managers.registering.*;
 import rocks.gravili.notquests.paper.structs.Quest;
-import rocks.gravili.notquests.paper.structs.actions.Action;
-import rocks.gravili.notquests.paper.structs.conditions.Condition;
+import rocks.gravili.notquests.paper.structs.actions.*;
+import rocks.gravili.notquests.paper.structs.conditions.*;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 import rocks.gravili.notquests.paper.structs.triggers.Trigger;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -60,6 +62,9 @@ public class NotQuests {
     private TriggerManager triggerManager;
     private IntegrationsManager integrationsManager;
     private VariablesManager variablesManager;
+
+    public ArrayList<Action> allActions = new ArrayList<>(); //For bStats
+    public ArrayList<Condition> allConditions = new ArrayList<>(); //For bStats
 
     //Metrics
     private Metrics metrics;
@@ -245,21 +250,21 @@ public class NotQuests {
 
         metrics.addCustomChart(new SingleLineChart("quests", new Callable<Integer>() {
             @Override
-            public Integer call() throws Exception {
+            public Integer call() {
                 return getQuestManager().getAllQuests().size();
             }
         }));
 
         metrics.addCustomChart(new SingleLineChart("conversations", new Callable<Integer>() {
             @Override
-            public Integer call() throws Exception {
+            public Integer call() {
                 return getConversationManager().getAllConversations().size();
             }
         }));
 
         metrics.addCustomChart(new AdvancedPie("ObjectiveTypes", new Callable<Map<String, Integer>>() {
             @Override
-            public Map<String, Integer> call() throws Exception {
+            public Map<String, Integer> call() {
                 Map<String, Integer> valueMap = new HashMap<>();
                 for (Quest quest : getQuestManager().getAllQuests()) {
                     for (Objective objective : quest.getObjectives()) {
@@ -272,38 +277,49 @@ public class NotQuests {
         }));
 
 
-        metrics.addCustomChart(new AdvancedPie("RequirementTypes", new Callable<Map<String, Integer>>() {
+        metrics.addCustomChart(new AdvancedPie("ConditionTypes", new Callable<Map<String, Integer>>() {
             @Override
-            public Map<String, Integer> call() throws Exception {
+            public Map<String, Integer> call() {
                 Map<String, Integer> map = new HashMap<>();
-                for (Quest quest : getQuestManager().getAllQuests()) {
-                    for (Condition condition : quest.getRequirements()) {
-                        String requirementType = getConditionsManager().getConditionType(condition.getClass());
-                        map.put(requirementType, map.getOrDefault(requirementType, 0) + 1);
+                for (Condition condition : allConditions) {
+                    String conditionType = condition.getConditionType();
+
+
+                    if(condition instanceof NumberCondition numberCondition){
+                        conditionType = numberCondition.getVariableName();
+                    }else if(condition instanceof StringCondition stringCondition){
+                        conditionType = stringCondition.getVariableName();
+                    }else if(condition instanceof BooleanCondition booleanCondition){
+                        conditionType = booleanCondition.getVariableName();
+                    }else if(condition instanceof ListCondition listCondition){
+                        conditionType = listCondition.getVariableName();
                     }
+
+                    map.put(conditionType, map.getOrDefault(conditionType, 0) + 1);
                 }
+
                 return map;
             }
         }));
 
         metrics.addCustomChart(new AdvancedPie("ActionTypes", new Callable<Map<String, Integer>>() {
             @Override
-            public Map<String, Integer> call() throws Exception {
+            public Map<String, Integer> call() {
                 Map<String, Integer> map = new HashMap<>();
-                for (Quest quest : getQuestManager().getAllQuests()) {
-                    for (Action action : quest.getRewards()) {
-                        String actionType = action.getActionType();
-                        map.put(actionType, map.getOrDefault(actionType, 0) + 1);
-                    }
-                    for (Objective objective : quest.getObjectives()) {
-                        for (Action action : objective.getRewards()) {
-                            String actionType = action.getActionType();
-                            map.put(actionType, map.getOrDefault(actionType, 0) + 1);
-                        }
-                    }
-                }
-                for (Action action : getActionsYMLManager().getActionsAndIdentifiers().values()) {
+                for (Action action : allActions) {
                     String actionType = action.getActionType();
+
+                    if(action instanceof NumberAction numberAction){
+                        actionType = numberAction.getVariableName();
+                    }else if(action instanceof StringAction stringAction){
+                        actionType = stringAction.getVariableName();
+                    }else if(action instanceof BooleanAction booleanAction){
+                        actionType = booleanAction.getVariableName();
+                    }else if(action instanceof ListAction listAction){
+                        actionType = listAction.getVariableName();
+                    }
+
+
                     map.put(actionType, map.getOrDefault(actionType, 0) + 1);
                 }
                 return map;
@@ -312,7 +328,7 @@ public class NotQuests {
 
         metrics.addCustomChart(new AdvancedPie("TriggerTypes", new Callable<Map<String, Integer>>() {
             @Override
-            public Map<String, Integer> call() throws Exception {
+            public Map<String, Integer> call() {
                 Map<String, Integer> map = new HashMap<>();
                 for (Quest quest : getQuestManager().getAllQuests()) {
                     for (Trigger trigger : quest.getTriggers()) {

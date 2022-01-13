@@ -45,6 +45,7 @@ public abstract class Action {
         this.main = main;
         conditions = new ArrayList<>();
         category = main.getDataManager().getDefaultCategory();
+        main.allActions.add(this); //For bStats
     }
 
     public final Category getCategory() {

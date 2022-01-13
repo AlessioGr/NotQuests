@@ -118,7 +118,7 @@ public class NumberAction extends Action {
 
 
                         NumberAction numberAction = new NumberAction(main);
-                        numberAction.setVariableName(variableString);
+                        numberAction.setVariableName(variable.getVariableType());
                         numberAction.setMathOperator(mathOperator);
                         numberAction.setNewValueExpression(amountExpression);
 

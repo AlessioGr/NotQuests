@@ -227,7 +227,7 @@ public class BooleanCondition extends Condition {
                         BooleanCondition booleanCondition = new BooleanCondition(main);
                         booleanCondition.setExpression(expression);
                         booleanCondition.setOperator(operator);
-                        booleanCondition.setVariableName(variableString);
+                        booleanCondition.setVariableName(variable.getVariableType());
 
 
                         HashMap<String, String> additionalStringArguments = new HashMap<>();

@@ -115,7 +115,7 @@ public class ListAction extends Action {
                         final String operator = context.get("operator");
 
                         ListAction listAction = new ListAction(main);
-                        listAction.setVariableName(variableString);
+                        listAction.setVariableName(variable.getVariableType());
                         listAction.setOperator(operator);
                         listAction.setNewValueExpression(expression);
 
