@@ -1249,7 +1249,10 @@ public class DataManager {
         main.getLogManager().severe("Plugin, saving and loading has been disabled. Reason: " + reason);
 
         for (Object object : objects) {
-            if (object instanceof Throwable throwable) {
+            if (object instanceof Exception e) {
+                main.getLogManager().severe("Error message:");
+                e.printStackTrace();
+            }else if (object instanceof Throwable throwable) {
                 main.getLogManager().severe("Error message:");
                 throwable.printStackTrace();
             } else if (object instanceof Quest quest) {
