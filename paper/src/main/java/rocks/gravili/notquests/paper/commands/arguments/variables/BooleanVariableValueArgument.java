@@ -199,7 +199,7 @@ public final class BooleanVariableValueArgument<C> extends CommandArgument<C, St
                 if (variable == null || variable.getVariableDataType() != VariableDataType.BOOLEAN) {
                     continue;
                 }
-                if(variable.getRequiredStrings().isEmpty()){
+                if(variable.getRequiredStrings().isEmpty() && variable.getRequiredNumbers().isEmpty() && variable.getRequiredBooleans().isEmpty() && variable.getRequiredBooleanFlags().isEmpty()){
                     completions.add(variableString);
                 }else{
                     completions.add(variableString+"(");
