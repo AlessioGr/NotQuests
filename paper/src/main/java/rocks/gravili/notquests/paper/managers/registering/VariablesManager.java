@@ -31,6 +31,7 @@ import redempt.crunch.CompiledExpression;
 import redempt.crunch.Crunch;
 import redempt.crunch.functional.EvaluationEnvironment;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.variables.*;
 import rocks.gravili.notquests.paper.structs.variables.hooks.*;
 
@@ -90,9 +91,9 @@ public class VariablesManager {
                     newBuilder = newBuilder.argument(stringArgument, ArgumentDescription.of("Optional String Argument"));
                 }
             }
-            if(variable.getRequiredIntegers() != null){
-                for(IntegerArgument<CommandSender> integerArgument : variable.getRequiredIntegers()){
-                    newBuilder = newBuilder.argument(integerArgument, ArgumentDescription.of("Optional Integer Argument"));
+            if(variable.getRequiredNumbers() != null){
+                for(NumberVariableValueArgument<CommandSender> numberVariableValueArgument : variable.getRequiredNumbers()){
+                    newBuilder = newBuilder.argument(numberVariableValueArgument, ArgumentDescription.of("Optional Number Argument"));
                 }
             }
             if(variable.getRequiredBooleans() != null){

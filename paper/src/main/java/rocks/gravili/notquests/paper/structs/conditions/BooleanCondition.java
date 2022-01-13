@@ -31,6 +31,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueArgument;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
 import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
@@ -46,7 +47,7 @@ public class BooleanCondition extends Condition {
     private String expression;
 
     private HashMap<String, String> additionalStringArguments;
-    private HashMap<String, Integer> additionalIntegerArguments;
+    private HashMap<String, String> additionalNumberArguments;
     private HashMap<String, Boolean> additionalBooleanArguments;
 
 
@@ -77,7 +78,7 @@ public class BooleanCondition extends Condition {
     public BooleanCondition(NotQuests main) {
         super(main);
         additionalStringArguments = new HashMap<>();
-        additionalIntegerArguments = new HashMap<>();
+        additionalNumberArguments = new HashMap<>();
         additionalBooleanArguments = new HashMap<>();
     }
 
@@ -121,8 +122,8 @@ public class BooleanCondition extends Condition {
         if(additionalStringArguments != null && !additionalStringArguments.isEmpty()){
             variable.setAdditionalStringArguments(additionalStringArguments);
         }
-        if(additionalIntegerArguments != null && !additionalIntegerArguments.isEmpty()){
-            variable.setAdditionalIntegerArguments(additionalIntegerArguments);
+        if(additionalNumberArguments != null && !additionalNumberArguments.isEmpty()){
+            variable.setAdditionalNumberArguments(additionalNumberArguments);
         }
         if(additionalBooleanArguments != null && !additionalBooleanArguments.isEmpty()){
             variable.setAdditionalBooleanArguments(additionalBooleanArguments);
@@ -156,8 +157,8 @@ public class BooleanCondition extends Condition {
         for(final String key : additionalStringArguments.keySet()){
             configuration.set(initialPath + ".specifics.additionalStrings." + key, additionalStringArguments.get(key));
         }
-        for(final String key : additionalIntegerArguments.keySet()){
-            configuration.set(initialPath + ".specifics.additionalIntegers." + key, additionalIntegerArguments.get(key));
+        for(final String key : additionalNumberArguments.keySet()){
+            configuration.set(initialPath + ".specifics.additionalNumbers." + key, additionalNumberArguments.get(key));
         }
         for(final String key : additionalBooleanArguments.keySet()){
             configuration.set(initialPath + ".specifics.additionalBooleans." + key, additionalBooleanArguments.get(key));
@@ -177,10 +178,10 @@ public class BooleanCondition extends Condition {
             }
         }
 
-        final ConfigurationSection additionalIntegersConfigurationSection = configuration.getConfigurationSection(initialPath + ".specifics.additionalIntegers");
+        final ConfigurationSection additionalIntegersConfigurationSection = configuration.getConfigurationSection(initialPath + ".specifics.additionalNumbers");
         if (additionalIntegersConfigurationSection != null) {
             for (String key : additionalIntegersConfigurationSection.getKeys(false)) {
-                additionalIntegerArguments.put(key, configuration.getInt(initialPath + ".specifics.additionalIntegers." + key, 0));
+                additionalNumberArguments.put(key, configuration.getString(initialPath + ".specifics.additionalNumbers." + key, "0"));
             }
         }
 
@@ -208,7 +209,7 @@ public class BooleanCondition extends Condition {
 
             int counter = 0;
             int counterStrings = 0;
-            int counterIntegers = 0;
+            int counterNumbers = 0;
             int counterBooleans = 0;
             int counterBooleanFlags = 0;
 
@@ -218,9 +219,9 @@ public class BooleanCondition extends Condition {
                     if(variable.getRequiredStrings().size() > counterStrings){
                         additionalStringArguments.put(variable.getRequiredStrings().get(counter-4).getName(), argument);
                         counterStrings++;
-                    } else if(variable.getRequiredIntegers().size() > counterIntegers){
-                        additionalIntegerArguments.put(variable.getRequiredStrings().get(counter-4).getName(), Integer.parseInt(argument));
-                        counterIntegers++;
+                    } else if(variable.getRequiredNumbers().size() > counterNumbers){
+                        additionalNumberArguments.put(variable.getRequiredNumbers().get(counter-4).getName(), argument);
+                        counterNumbers++;
                     } else if(variable.getRequiredBooleans().size()  > counterBooleans){
                         additionalBooleanArguments.put(variable.getRequiredBooleans().get(counter-4).getName(), Boolean.parseBoolean(argument));
                         counterBooleans++;
@@ -286,11 +287,11 @@ public class BooleanCondition extends Condition {
                         }
                         booleanCondition.setAdditionalStringArguments(additionalStringArguments);
 
-                        HashMap<String, Integer> additionalIntegerArguments = new HashMap<>();
-                        for(IntegerArgument<CommandSender> integerArgument : variable.getRequiredIntegers()){
-                            additionalIntegerArguments.put(integerArgument.getName(), context.get(integerArgument.getName()));
+                        HashMap<String, String> additionalNumberArguments = new HashMap<>();
+                        for(NumberVariableValueArgument<CommandSender> numberVariableValueArgument : variable.getRequiredNumbers()){
+                            additionalNumberArguments.put(numberVariableValueArgument.getName(), context.get(numberVariableValueArgument.getName()));
                         }
-                        booleanCondition.setAdditionalIntegerArguments(additionalIntegerArguments);
+                        booleanCondition.setAdditionalNumberArguments(additionalNumberArguments);
 
                         HashMap<String, Boolean> additionalBooleanArguments = new HashMap<>();
                         for(BooleanArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
@@ -315,8 +316,8 @@ public class BooleanCondition extends Condition {
     private void setAdditionalStringArguments(HashMap<String, String> additionalStringArguments) {
         this.additionalStringArguments = additionalStringArguments;
     }
-    private void setAdditionalIntegerArguments(HashMap<String, Integer> additionalIntegerArguments) {
-        this.additionalIntegerArguments = additionalIntegerArguments;
+    private void setAdditionalNumberArguments(HashMap<String, String> additionalNumberArguments) {
+        this.additionalNumberArguments = additionalNumberArguments;
     }
     private void setAdditionalBooleanArguments(HashMap<String, Boolean> additionalBooleanArguments) {
         this.additionalBooleanArguments = additionalBooleanArguments;

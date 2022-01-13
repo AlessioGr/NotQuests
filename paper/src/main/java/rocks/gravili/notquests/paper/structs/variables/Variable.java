@@ -7,6 +7,7 @@ import cloud.commandframework.arguments.standard.StringArgument;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
@@ -16,14 +17,14 @@ import java.util.List;
 public abstract class Variable<T> {
     protected final NotQuests main;
     private final ArrayList<StringArgument<CommandSender>> requiredStrings;
-    private final ArrayList<IntegerArgument<CommandSender>> requiredIntegers;
+    private final ArrayList<NumberVariableValueArgument<CommandSender>> requiredNumbers;
     private final ArrayList<BooleanArgument<CommandSender>> requiredBooleans;
     private final ArrayList<CommandFlag<CommandSender>> requiredBooleanFlags;
 
 
     private HashMap<String, String> additionalStringArguments;
-    private HashMap<String, Integer> additionalIntegerArguments;
-    private HashMap<String, Boolean> additionalBooleanArguments; //TODO:
+    private HashMap<String, String> additionalNumberArguments; //Second string is an expression
+    private HashMap<String, Boolean> additionalBooleanArguments;
 
     private boolean canSetValue = false;
 
@@ -32,12 +33,13 @@ public abstract class Variable<T> {
     public Variable(final NotQuests main){
         this.main = main;
         requiredStrings = new ArrayList<>();
-        requiredIntegers = new ArrayList<>();
+        requiredNumbers = new ArrayList<>();
         requiredBooleans = new ArrayList<>();
         requiredBooleanFlags = new ArrayList<>();
         additionalStringArguments = new HashMap<>();
-        additionalIntegerArguments = new HashMap<>();
+        additionalNumberArguments = new HashMap<>();
         additionalBooleanArguments = new HashMap<>();
+
 
         Class<T> typeOf = (Class<T>)
                 ((ParameterizedType)getClass()
@@ -70,8 +72,8 @@ public abstract class Variable<T> {
     protected void addRequiredString(final StringArgument<CommandSender> stringArgument){
         requiredStrings.add(stringArgument);
     }
-    protected void addRequiredInteger(final IntegerArgument<CommandSender> integerArgument){
-        requiredIntegers.add(integerArgument);
+    protected void addRequiredNumber(final NumberVariableValueArgument<CommandSender> numberVariableValueArgument){
+        requiredNumbers.add(numberVariableValueArgument);
     }
     protected void addRequiredBoolean(final BooleanArgument<CommandSender> booleanArgument){
         requiredBooleans.add(booleanArgument);
@@ -83,8 +85,8 @@ public abstract class Variable<T> {
     public final ArrayList<StringArgument<CommandSender>> getRequiredStrings(){
         return requiredStrings;
     }
-    public final ArrayList<IntegerArgument<CommandSender>> getRequiredIntegers(){
-        return requiredIntegers;
+    public final ArrayList<NumberVariableValueArgument<CommandSender>> getRequiredNumbers(){
+        return requiredNumbers;
     }
     public final ArrayList<BooleanArgument<CommandSender>> getRequiredBooleans(){
         return requiredBooleans;
@@ -98,8 +100,8 @@ public abstract class Variable<T> {
         return additionalStringArguments.get(key);
     }
 
-    protected final int getRequiredIntegerValue(String key){
-        return additionalIntegerArguments.get(key);
+    protected final double getRequiredNumberValue(String key, Player player){
+        return main.getVariablesManager().evaluateExpression(additionalNumberArguments.get(key), player);
     }
     protected final boolean getRequiredBooleanValue(String key){
         return additionalBooleanArguments.get(key);
@@ -122,8 +124,8 @@ public abstract class Variable<T> {
         this.additionalStringArguments = additionalStringArguments;
     }
 
-    public void setAdditionalIntegerArguments(HashMap<String, Integer> additionalIntegerArguments) {
-        this.additionalIntegerArguments = additionalIntegerArguments;
+    public void setAdditionalNumberArguments(HashMap<String, String> additionalNumberArguments) {
+        this.additionalNumberArguments = additionalNumberArguments;
     }
     public void setAdditionalBooleanArguments(HashMap<String, Boolean> additionalBooleanArguments) {
         this.additionalBooleanArguments = additionalBooleanArguments;
