@@ -37,12 +37,21 @@ public abstract class Condition {
     private Objective objective;
     private boolean negated = false;
     private Category category;
+    private String description = "";
 
 
     public Condition(NotQuests main) {
         this.main = main;
         category = main.getDataManager().getDefaultCategory();
         main.allConditions.add(this); //For bStats
+    }
+
+    public final String getDescription(){
+        return description;
+    }
+
+    public void setDescription(final String description){
+        this.description = description;
     }
 
     public final Category getCategory() {
@@ -108,8 +117,15 @@ public abstract class Condition {
         }
     }
 
+    public String getConditionDescription(Player player, Object... objects){
+        if(description.isBlank()){
+            return getConditionDescriptionInternally(player, objects);
+        }else {
+            return description;
+        }
+    }
 
-    public abstract String getConditionDescription(Player player, Object... objects);
+    protected abstract String getConditionDescriptionInternally(Player player, Object... objects);
 
     public abstract void save(final FileConfiguration configuration, final String initialPath);
 

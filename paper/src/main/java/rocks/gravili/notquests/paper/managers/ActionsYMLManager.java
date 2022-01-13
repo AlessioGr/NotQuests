@@ -173,6 +173,7 @@ public class ActionsYMLManager {
 
                 int progressNeeded = action.getCategory().getActionsConfig().getInt("actions." + action.getActionName() + ".conditions." + actionConditionNumber + ".progressNeeded");
                 boolean negated = action.getCategory().getActionsConfig().getBoolean("actions." + action.getActionName() + ".conditions." + actionConditionNumber + ".negated", false);
+                String description = action.getCategory().getActionsConfig().getString("actions." + action.getActionName() + ".conditions." + actionConditionNumber + ".description", "");
 
 
                 if (validConditionID && conditionID > 0 && conditionType != null) {
@@ -182,6 +183,7 @@ public class ActionsYMLManager {
                         condition = conditionType.getDeclaredConstructor(NotQuests.class).newInstance(main);
                         condition.setProgressNeeded(progressNeeded);
                         condition.setNegated(negated);
+                        condition.setDescription(description);
                         condition.setCategory(action.getCategory());
                         condition.load(action.getCategory().getActionsConfig(), "actions." + action.getActionName() + ".conditions." + actionConditionNumber);
                     } catch (Exception ex) {

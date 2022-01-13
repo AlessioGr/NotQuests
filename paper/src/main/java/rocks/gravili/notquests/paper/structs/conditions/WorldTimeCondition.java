@@ -114,7 +114,7 @@ public class WorldTimeCondition extends Condition {
 
 
     @Override
-    public String getConditionDescription(Player player, Object... objects) {
+    public String getConditionDescriptionInternally(Player player, Object... objects) {
         return "<GRAY>-- World time: " + getMinTime() + " - " + getMaxTime();
     }
 

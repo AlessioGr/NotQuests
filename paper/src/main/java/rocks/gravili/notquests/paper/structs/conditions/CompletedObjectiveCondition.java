@@ -86,7 +86,7 @@ public class CompletedObjectiveCondition extends Condition {
 
 
     @Override
-    public String getConditionDescription(Player player, Object... objects) {
+    public String getConditionDescriptionInternally(Player player, Object... objects) {
         final Objective otherObjective = getObjectiveToComplete();
         if (otherObjective != null) {
             return "<GRAY>-- Finish Objective first: " + otherObjective.getObjectiveFinalName();

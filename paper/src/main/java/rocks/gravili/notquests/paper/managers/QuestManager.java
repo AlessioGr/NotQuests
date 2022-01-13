@@ -276,6 +276,7 @@ public class QuestManager {
                             //RequirementType requirementType = RequirementType.valueOf(main.getDataManager().getQuestsData().getString("quests." + questName + ".requirements." + requirementNumber + ".requirementType"));
                             int progressNeeded = category.getQuestsConfig().getInt("quests." + questName + ".requirements." + requirementNumber + ".progressNeeded");
                             boolean negated = category.getQuestsConfig().getBoolean("quests." + questName + ".requirements." + requirementNumber + ".negated", false);
+                            String description = category.getQuestsConfig().getString("quests." + questName + ".requirements." + requirementNumber + ".description", "");
 
                             if (validRequirementID && requirementID > 0 && conditionType != null) {
                                 Condition condition = null;
@@ -285,6 +286,7 @@ public class QuestManager {
                                     condition.setProgressNeeded(progressNeeded);
                                     condition.setQuest(quest);
                                     condition.setNegated(negated);
+                                    condition.setDescription(description);
                                     condition.setCategory(category);
                                     condition.load(category.getQuestsConfig(), "quests." + questName + ".requirements." + requirementID);
                                 } catch (Exception ex) {
@@ -469,6 +471,7 @@ public class QuestManager {
 
                                 int progressNeeded = category.getQuestsConfig().getInt("quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditions." + objectiveConditionNumber + ".progressNeeded");
                                 boolean negated = category.getQuestsConfig().getBoolean("quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditions." + objectiveConditionNumber + ".negated", false);
+                                String description = category.getQuestsConfig().getString("quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditions." + objectiveConditionNumber + ".description", "");
 
                                 if (validConditionID && conditionID > 0 && conditionType != null) {
                                     Condition condition = null;
@@ -479,6 +482,7 @@ public class QuestManager {
                                         condition.setQuest(quest);
                                         condition.setObjective(objective);
                                         condition.setNegated(negated);
+                                        condition.setDescription(description);
                                         condition.setCategory(category);
 
                                         condition.load(category.getQuestsConfig(), "quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditions." + objectiveConditionNumber);

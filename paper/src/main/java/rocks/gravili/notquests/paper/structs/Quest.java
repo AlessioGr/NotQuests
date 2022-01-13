@@ -168,6 +168,7 @@ public class Quest {
             category.getQuestsConfig().set("quests." + questName + ".requirements." + conditions.size() + ".conditionType", condition.getConditionType());
             category.getQuestsConfig().set("quests." + questName + ".requirements." + conditions.size() + ".progressNeeded", condition.getProgressNeeded());
             category.getQuestsConfig().set("quests." + questName + ".requirements." + conditions.size() + ".negated", condition.isNegated());
+            category.getQuestsConfig().set("quests." + questName + ".requirements." + conditions.size() + ".description", condition.getDescription());
 
             condition.save(category.getQuestsConfig(), "quests." + questName + ".requirements." + conditions.size());
             category.saveQuestsConfig();

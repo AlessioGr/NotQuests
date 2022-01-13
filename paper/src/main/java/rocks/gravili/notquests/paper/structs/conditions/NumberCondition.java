@@ -260,7 +260,7 @@ public class NumberCondition extends Condition {
     }
 
     @Override
-    public String getConditionDescription(Player player, Object... objects) {
+    public String getConditionDescriptionInternally(Player player, Object... objects) {
         //description += "\n<GRAY>--- Will quest points be deducted?: No";
 
         if(getMathOperator().equalsIgnoreCase("moreThan")){

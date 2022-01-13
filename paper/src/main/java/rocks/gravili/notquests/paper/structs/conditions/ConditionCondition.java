@@ -71,7 +71,7 @@ public class ConditionCondition extends Condition {
     }
 
     @Override
-    public String getConditionDescription(Player player, Object... objects) {
+    public String getConditionDescriptionInternally(Player player, Object... objects) {
         if (condition != null) {
             return "<unimportant>-- Complete Condition: <highlight>" + condition.getConditionName();
         } else {

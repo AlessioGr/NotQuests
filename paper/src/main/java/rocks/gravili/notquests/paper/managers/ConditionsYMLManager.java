@@ -113,12 +113,14 @@ public class ConditionsYMLManager {
 
                     int progressNeeded = category.getConditionsConfig().getInt("conditions." + conditionIdentifier + ".progressNeeded");
                     boolean negated = category.getConditionsConfig().getBoolean("conditions." + conditionIdentifier + ".negated", false);
+                    String description = category.getConditionsConfig().getString("conditions." + conditionIdentifier + ".description", "");
 
                     try {
                         condition = conditionType.getDeclaredConstructor(NotQuests.class).newInstance(main);
                         condition.setConditionName(conditionIdentifier);
                         condition.setProgressNeeded(progressNeeded);
                         condition.setNegated(negated);
+                        condition.setDescription(description);
                         condition.load(category.getConditionsConfig(), "conditions." + conditionIdentifier);
                         condition.setCategory(category);
 
@@ -176,6 +178,7 @@ public class ConditionsYMLManager {
             condition.getCategory().getConditionsConfig().set("conditions." + conditionIdentifier + ".conditionType", condition.getConditionType());
             condition.getCategory().getConditionsConfig().set("conditions." + conditionIdentifier + ".progressNeeded", condition.getProgressNeeded());
             condition.getCategory().getConditionsConfig().set("conditions." + conditionIdentifier + ".negated", condition.isNegated());
+            condition.getCategory().getConditionsConfig().set("conditions." + conditionIdentifier + ".description", condition.getDescription());
 
 
             condition.save(condition.getCategory().getConditionsConfig(), "conditions." + conditionIdentifier);

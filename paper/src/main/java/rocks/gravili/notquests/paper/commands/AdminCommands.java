@@ -1337,8 +1337,6 @@ public class AdminCommands {
                             "<success>All conditions of action with identifier <highlight>" + action
                                     + "</highlight> have been removed!"
                     ));
-
-
                 }));
 
         manager.command(actionsEditBuilder

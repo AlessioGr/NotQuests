@@ -170,7 +170,7 @@ public class StringCondition extends Condition {
     }
 
     @Override
-    public String getConditionDescription(Player player, Object... objects) {
+    public String getConditionDescriptionInternally(Player player, Object... objects) {
         //description += "\n<GRAY>--- Will quest points be deducted?: No";
 
         if(getStringOperator().equalsIgnoreCase("equals")){

@@ -166,6 +166,7 @@ public class ConditionsManager {
     public void addCondition(Condition condition, CommandContext<CommandSender> context) {
         condition.setNegated(context.flags().isPresent("negate"));
 
+
         Quest quest = context.getOrDefault("quest", null);
         Objective objectiveOfQuest = null;
         if (quest != null && context.contains("Objective ID")) {
@@ -175,8 +176,9 @@ public class ConditionsManager {
 
         String conditionIdentifier = context.getOrDefault("Condition Identifier", "");
 
-        String actionIdentifier = context.getOrDefault("Action Identifier", "");
 
+        String actionIdentifier = context.getOrDefault("Action Identifier", "");
+        Action foundAction = context.getOrDefault("action", null);
 
 
         if (quest != null) {
@@ -217,9 +219,12 @@ public class ConditionsManager {
                     context.getSender().sendMessage(main.parse("<error>Error! A condition with the name <highlight>" + conditionIdentifier + "</highlight> already exists!"));
                 }
             } else { //Condition for Actions.yml action
-                if (actionIdentifier != null && !actionIdentifier.isBlank()) {
-                    Action foundAction = main.getActionsYMLManager().getAction(actionIdentifier);
+
+                if ( foundAction != null || (actionIdentifier != null && !actionIdentifier.isBlank()) ) {
+
+                    foundAction = foundAction != null ? foundAction : main.getActionsYMLManager().getAction(actionIdentifier);
                     if (foundAction != null) {
+
                         condition.setCategory(foundAction.getCategory());
 
                         foundAction.addCondition(condition, true, foundAction.getCategory().getActionsConfig(), "actions." + actionIdentifier);

@@ -138,7 +138,8 @@ public class ActionManager {
             int objectiveID = context.get("Objective ID");
             objectiveOfQuest = quest.getObjectiveFromID(objectiveID);
         }
-        String actionIdentifier = context.getOrDefault("Action Identifier", "");
+        String actionIdentifier = context.getOrDefault("Action Identifier", context.getOrDefault("action", ""));
+
 
 
         if (quest != null) {
