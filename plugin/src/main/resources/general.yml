@@ -3,7 +3,7 @@ storage:
   load-playerdata: true
   save-playerdata: true
   backups:
-    create-before-saving-quests: true
+    create-when-server-shuts-down: true
   database:
     # If this is set to false, SQLite will be used instead (no configuration needed)
     enabled: false

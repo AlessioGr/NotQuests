@@ -530,12 +530,12 @@ public class DataManager {
         }
         configuration.savePlayerData = generalConfig.getBoolean(key);
 
-        key = "storage.backups.create-before-saving-quests";
+        key = "storage.backups.create-when-server-shuts-down";
         if (!getGeneralConfig().isBoolean(key)) {
             getGeneralConfig().set(key, true);
             valueChanged = true;
         }
-        configuration.storageCreateBackupsWhenSavingQuests = generalConfig.getBoolean(key);
+        configuration.storageCreateBackupsWhenServerShutsDown = generalConfig.getBoolean(key);
 
         //For upgrades from older versions who didn't have the enable flag but still used MySQL
         if (mysqlstorageenabledbooleannotloadedyet && !errored) {
@@ -1211,28 +1211,16 @@ public class DataManager {
         }
     }*/
 
-    public void saveQuestsConfig(final Category category) {
-        if (isCurrentlyLoading()) {
-            main.getLogManager().warn("Quest data saving has been skipped, because the plugin is currently loading.");
+    public void backupQuests() {
+        if (!getConfiguration().isStorageCreateBackupsWhenServerShutsDown()) {
             return;
         }
-        if (isSavingEnabled()) {
-            if (category.getQuestsConfig() == null || category.getQuestsFile() == null) {
-                main.getLogManager().severe("Could not save data to quests.yml");
-                return;
-            }
-            try {
-                if (getConfiguration().storageCreateBackupsWhenSavingQuests) {
-                    main.getBackupManager().backupQuests(category);
-                }
-                category.getQuestsConfig().save(category.getQuestsFile());
-                main.getLogManager().info("Saved Data to quests.yml");
-            } catch (IOException e) {
-                main.getLogManager().severe("Could not save quests config to <highlight>" + category.getQuestsFile().getName() + "</highlight>. Stacktrace:");
-                e.printStackTrace();
-            }
-        } else {
-            main.getLogManager().info("Quest data saving has been skipped, because saving has been disabled. This usually happens when something goes wrong during Quest data loading, to prevent data loss.");
+        if (isCurrentlyLoading()) {
+            main.getLogManager().warn("Quest data backup has been skipped, because the plugin is currently loading.");
+            return;
+        }
+        for(Category category : getCategories()){
+            main.getBackupManager().backupQuests(category);
         }
     }
 
@@ -1280,7 +1268,7 @@ public class DataManager {
     public void saveData() {
         if (isSavingEnabled()) {
             main.getQuestPlayerManager().savePlayerData();
-
+            backupQuests();
             //saveQuestsConfig();
         } else {
             main.getLogManager().warn("NotQuests > Saving is disabled => no data has been saved.");
