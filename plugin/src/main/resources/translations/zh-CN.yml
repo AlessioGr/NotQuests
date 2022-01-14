@@ -264,7 +264,3 @@ gui:
           - "<veryUnimportant>%COMPLETEDOBJECTIVEDESCRIPTION%"
           - ""
           - "<unimportant><strikethrough>Progress: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
-      previousPage:
-        text: 上一页 (%prevpage%)
-      nextPage:
-        text: 下一页 (%nextpage%)
