@@ -71,6 +71,7 @@ public class VariablesManager {
         registerVariable("PlayerGameMode", PlayerGameModeVariable.class);
         registerVariable("PlayerFlying", PlayerFlyingVariable.class);
         registerVariable("DayOfWeek", DayOfWeekVariable.class);
+        registerVariable("PlayerCurrentBiome", PlayerCurrentBiomeVariable.class);
 
         registerVariable("Chance", ChanceVariable.class);
         registerVariable("Advancement", AdvancementVariable.class);

@@ -45,11 +45,11 @@ public class PlayerCurrentWorldVariable extends Variable<String>{
 
     @Override
     public String getPlural() {
-        return "Money";
+        return "Worlds";
     }
 
     @Override
     public String getSingular() {
-        return "Money";
+        return "World";
     }
 }
