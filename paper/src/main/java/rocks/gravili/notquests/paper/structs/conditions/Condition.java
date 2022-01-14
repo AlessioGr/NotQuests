@@ -110,8 +110,13 @@ public abstract class Condition {
 
     public String check(final QuestPlayer questPlayer){
         String result = checkInternally(questPlayer);
+
         if(!isNegated()){
-            return result;
+            if(description.isBlank()){
+                return result;
+            }else {
+                return "<YELLOW>" + description;
+            }
         }else{
             if(result.isBlank()){
                 return "<YELLOW>You cannot fulfill this condition: <unimportant>" + getConditionDescription(questPlayer.getPlayer());
@@ -119,13 +124,14 @@ public abstract class Condition {
                 return "";
             }
         }
+
     }
 
     public String getConditionDescription(Player player, Object... objects){
         if(description.isBlank()){
             return getConditionDescriptionInternally(player, objects);
         }else {
-            return description;
+            return "<GRAY>" + description;
         }
     }
 

@@ -1332,7 +1332,7 @@ public class AdminCommands {
                 .handler((context) -> {
                     final Action action = context.get("action");
 
-                    action.clearConditions(action.getCategory().getActionsConfig(), "actions." + action);
+                    action.clearConditions(action.getCategory().getActionsConfig(), "actions." + action.getActionName());
                     context.getSender().sendMessage(main.parse(
                             "<success>All conditions of action with identifier <highlight>" + action
                                     + "</highlight> have been removed!"
@@ -1367,6 +1367,147 @@ public class AdminCommands {
 
 
                 }));
+
+
+
+
+        final Command.Builder<CommandSender> editActionConditionsBuilder = actionsEditBuilder
+                .literal("conditions")
+                .literal("edit")
+                .argument(IntegerArgument.<CommandSender>newBuilder("Condition ID").withMin(1).withSuggestionsProvider(
+                        (context, lastString) -> {
+                            final List<String> allArgs = context.getRawInput();
+                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Condition ID]", "[...]");
+
+                            ArrayList<String> completions = new ArrayList<>();
+
+                            final Action action = context.get("action");
+
+                            for (final Condition condition : action.getConditions()) {
+                                completions.add("" + (action.getConditions().indexOf(condition) + 1));
+                            }
+
+                            return completions;
+                        }
+                ));
+
+        manager.command(editActionConditionsBuilder.literal("delete", "remove")
+                .meta(CommandMeta.DESCRIPTION, "Removes a condition from this Action.")
+                .handler((context) -> {
+                    final Action action = context.get("action");
+
+                    int conditionID = context.get("Condition ID");
+                    Condition condition = action.getConditions().get(conditionID-1);
+
+                    if(condition == null){
+                        context.getSender().sendMessage(main.parse(
+                                "<error>Condition with the ID <highlight>" + conditionID + "</highlight> was not found!"
+                        ));
+                        return;
+                    }
+
+                    action.removeCondition(condition, true, action.getCategory().getActionsConfig(), "actions." + action.getActionName());
+
+                    context.getSender().sendMessage(main.parse("<main>The condition with the ID <highlight>" + conditionID + "</highlight> of Action <highlight2>" + action.getActionName() + "</highlight2> has been removed!"));
+                }));
+
+
+        manager.command(editActionConditionsBuilder.literal("description")
+                .literal("set")
+                .argument(MiniMessageSelector.<CommandSender>newBuilder("description", main).withPlaceholders().build(), ArgumentDescription.of("Objective condition description"))
+                .meta(CommandMeta.DESCRIPTION, "Sets the new description of the Action condition.")
+                .handler((context) -> {
+                    final Action action = context.get("action");
+
+                    int conditionID = context.get("Condition ID");
+                    Condition condition = action.getConditions().get(conditionID-1);
+
+                    if(condition == null){
+                        context.getSender().sendMessage(main.parse(
+                                "<error>Condition with the ID <highlight>" + conditionID + "</highlight> was not found!"
+                        ));
+                        return;
+                    }
+
+                    final String description = String.join(" ", (String[]) context.get("description"));
+
+                    condition.setDescription(description);
+
+                    action.getCategory().getActionsConfig().set("actions." + action.getActionName() + ".conditions." + (action.getConditions().indexOf(condition)+1) + ".description", condition.getDescription());
+                    action.getCategory().saveActionsConfig();
+
+                    context.getSender().sendMessage(main.parse("<success>Description successfully added to condition with ID <highlight>" + conditionID + "</highlight> of action <highlight2>"
+                            + action.getActionName() + "</highlight2>! New description: <highlight2>"
+                            + condition.getDescription()
+                    ));
+                }));
+
+        manager.command(editActionConditionsBuilder.literal("description")
+                .literal("remove", "delete")
+                .meta(CommandMeta.DESCRIPTION, "Removes the description of the Action condition.")
+                .handler((context) -> {
+                    final Action action = context.get("action");
+
+                    int conditionID = context.get("Condition ID");
+                    Condition condition = action.getConditions().get(conditionID-1);
+
+                    if(condition == null){
+                        context.getSender().sendMessage(main.parse(
+                                "<error>Condition with the ID <highlight>" + conditionID + "</highlight> was not found!"
+                        ));
+                        return;
+                    }
+
+
+                    condition.removeDescription();
+
+                    action.getCategory().getActionsConfig().set("actions." + action.getActionName() + ".conditions." + (action.getConditions().indexOf(condition)+1) + ".description", "");
+                    action.getCategory().saveActionsConfig();
+
+
+                    context.getSender().sendMessage(main.parse("<success>Description successfully removed from condition with ID <highlight>" + conditionID + "</highlight> of action <highlight2>"
+                            + action.getActionName() + "</highlight2>! New description: <highlight2>"
+                            + condition.getDescription()
+                    ));
+                }));
+
+        manager.command(editActionConditionsBuilder.literal("description")
+                .literal("show", "check")
+                .meta(CommandMeta.DESCRIPTION, "Shows the description of the Action condition.")
+                .handler((context) -> {
+                    final Action action = context.get("action");
+
+                    int conditionID = context.get("Condition ID");
+                    Condition condition = action.getConditions().get(conditionID-1);
+
+                    if(condition == null){
+                        context.getSender().sendMessage(main.parse(
+                                "<error>Condition with the ID <highlight>" + conditionID + "</highlight> was not found!"
+                        ));
+                        return;
+                    }
+
+
+                    context.getSender().sendMessage(main.parse("<main>Description of condition with ID <highlight>" + conditionID + "</highlight> of action <highlight2>"
+                            + action.getActionName() + "</highlight2>:\n"
+                            + condition.getDescription()
+                    ));
+                }));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

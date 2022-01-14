@@ -791,175 +791,154 @@ public class AdminEditCommands {
                         context.getSender().sendMessage(main.parse("<warn>This objective has no conditions!"));
                     }
                 }));
-       /* manager.command(builder.literal("dependencies")
-                .literal("add")
-                .meta(CommandMeta.DESCRIPTION, "Adds an objective as a dependency (needs to be completed before this one)")
-                .argument(IntegerArgument.<CommandSender>newBuilder("Depending Objective ID").withMin(1).withSuggestionsProvider(
-                                (context, lastString) -> {
-                                    final List<String> allArgs = context.getRawInput();
-                                    final context.getSender() context.getSender() = main.adventure().sender(context.getSender());
-                                    main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Depending Objective ID]", "");
 
-                                    ArrayList<String> completions = new ArrayList<>();
 
-                                    final Quest quest = context.get("quest");
-                                    for (final Objective objective : quest.getObjectives()) {
-                                        if (objective.getObjectiveID() != (int) context.get("Objective ID")) {
-                                            completions.add("" + objective.getObjectiveID());
-                                        }
-                                    }
+        final Command.Builder<CommandSender> editObjectiveConditionsBuilder = builder
+                .literal("conditions")
+                .literal("edit")
+                .argument(IntegerArgument.<CommandSender>newBuilder("Condition ID").withMin(1).withSuggestionsProvider(
+                        (context, lastString) -> {
+                            final List<String> allArgs = context.getRawInput();
+                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Condition ID]", "[...]");
 
-                                    return completions;
-                                }
-                        ).withParser((context, lastString) -> {
-                            final int ID = context.get("Depending Objective ID");
-                            if (ID == (int) context.get("Depending Objective ID")) {
-                                return ArgumentParseResult.failure(new IllegalArgumentException("An objective cannot depend on itself!"));
-                            }
-                            final Quest quest = context.get("quest");
-                            final Objective foundObjective = quest.getObjectiveFromID(ID);
-                            if (foundObjective == null) {
-                                return ArgumentParseResult.failure(new IllegalArgumentException("Objective with the ID '" + ID + "' does not belong to Quest '" + quest.getQuestName() + "'!"));
-                            } else {
-                                return ArgumentParseResult.success(ID);
-                            }
-                        })
-                        .build(), ArgumentDescription.of("Depending Objective ID"))
-                .handler((context) -> {
-                    final context.getSender() context.getSender() = main.adventure().sender(context.getSender());
-                    final Quest quest = context.get("quest");
-                    final int objectiveID = context.get("Objective ID");
-                    final Objective objective = quest.getObjectiveFromID(objectiveID);
-                    assert objective != null; //Shouldn't be null
+                            ArrayList<String> completions = new ArrayList<>();
 
-                    final int dependingObjectiveID = context.get("Depending Objective ID");
-                    final Objective dependingObjective = quest.getObjectiveFromID(dependingObjectiveID);
-                    assert dependingObjective != null; //Shouldn't be null
-
-                    if (dependingObjective != objective) {
-                        objective.addDependantObjective(dependingObjective, true);
-                        context.getSender().sendMessage(main.parse(
-                                successGradient + "The objective with the ID " + highlightGradient + dependingObjectiveID
-                                        + "</gradient> has been added as a dependency to the objective with the ID " + highlight2Gradient + objectiveID
-                                        + "</gradient>!</gradient>"
-                        ));
-                    } else {
-                        context.getSender().sendMessage(main.parse(errorGradient + "Error: You cannot set an objective to depend on itself!"));
-                    }
-                }));
-        manager.command(builder.literal("dependencies")
-                .literal("remove", "delete")
-                .meta(CommandMeta.DESCRIPTION, "Removes an objective as a dependency (needs to be completed before this one)")
-                .argument(IntegerArgument.<CommandSender>newBuilder("Depending Objective ID").withMin(1).withSuggestionsProvider(
-                                (context, lastString) -> {
-                                    final List<String> allArgs = context.getRawInput();
-                                    final context.getSender() context.getSender() = main.adventure().sender(context.getSender());
-                                    main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Depending Objective ID]", "");
-
-                                    ArrayList<String> completions = new ArrayList<>();
-
-                                    final Quest quest = context.get("quest");
-                                    final int objectiveID = context.get("Objective ID");
-                                    final Objective objective = quest.getObjectiveFromID(objectiveID);
-                                    assert objective != null;
-
-                                    for (final Objective dependingObjective : objective.getDependantObjectives()) {
-                                        completions.add(dependingObjective.getObjectiveID() + "");
-                                    }
-
-                                    return completions;
-                                }
-                        ).withParser((context, lastString) -> {
                             final Quest quest = context.get("quest");
                             final int objectiveID = context.get("Objective ID");
                             final Objective objective = quest.getObjectiveFromID(objectiveID);
-                            assert objective != null;
+                            assert objective != null; //Shouldn't be null
 
-                            final int ID = context.get("Depending Objective ID");
-                            if (ID == (int) context.get("Depending Objective ID")) {
-                                return ArgumentParseResult.failure(new IllegalArgumentException("An objective cannot depend on itself!"));
+                             for (final Condition condition : objective.getConditions()) {
+                                completions.add("" + (objective.getConditions().indexOf(condition) + 1));
                             }
-                            final Objective foundObjective = quest.getObjectiveFromID(ID);
-                            if (foundObjective == null) {
-                                return ArgumentParseResult.failure(new IllegalArgumentException("Objective with the ID '" + ID + "' does not belong to Quest '" + quest.getQuestName() + "'!"));
-                            } else {
-                                if (objective.getDependantObjectives().contains(foundObjective)) {
-                                    return ArgumentParseResult.success(ID);
-                                } else {
-                                    return ArgumentParseResult.failure(new IllegalArgumentException("Objective with the ID '" + ID + "' is not a dependant of objective with the ID  '" + objectiveID + "'!"));
-                                }
 
-                            }
-                        })
-                        .build(), ArgumentDescription.of("Depending Objective ID"))
+                            return completions;
+                        }
+                ));
+
+        manager.command(editObjectiveConditionsBuilder.literal("delete", "remove")
+                .meta(CommandMeta.DESCRIPTION, "Removes a condition from this Objective.")
                 .handler((context) -> {
-                    final context.getSender() context.getSender() = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
                     final int objectiveID = context.get("Objective ID");
                     final Objective objective = quest.getObjectiveFromID(objectiveID);
                     assert objective != null; //Shouldn't be null
 
-                    final int dependingObjectiveID = context.get("Depending Objective ID");
-                    final Objective dependingObjective = quest.getObjectiveFromID(dependingObjectiveID);
-                    assert dependingObjective != null; //Shouldn't be null
+                    int conditionID = context.get("Condition ID");
+                    Condition condition = objective.getConditions().get(conditionID-1);
 
-                    objective.removeDependantObjective(dependingObjective, true);
-                    context.getSender().sendMessage(main.parse(
-                            successGradient + "The objective with the ID " + highlightGradient + dependingObjectiveID
-                                    + "</gradient> has been removed as a dependency from the objective with the ID " + highlight2Gradient + objectiveID
-                                    + "</gradient>!</gradient>"
-                    ));
+                    if(condition == null){
+                        context.getSender().sendMessage(main.parse(
+                                "<error>Condition with the ID <highlight>" + conditionID + "</highlight> was not found!"
+                        ));
+                        return;
+                    }
 
+                    objective.removeCondition(condition, true);
+                    context.getSender().sendMessage(main.parse("<main>The condition with the ID <highlight>" + conditionID + "</highlight> of Objective with ID <highlight2>" + objectiveID + "</highlight2> has been removed!"));
                 }));
 
 
-        manager.command(builder.literal("dependencies")
-                .literal("list")
-                .meta(CommandMeta.DESCRIPTION, "Lists all dependencies of this objective.")
+        manager.command(editObjectiveConditionsBuilder.literal("description")
+                .literal("set")
+                .argument(MiniMessageSelector.<CommandSender>newBuilder("description", main).withPlaceholders().build(), ArgumentDescription.of("Objective condition description"))
+                .meta(CommandMeta.DESCRIPTION, "Sets the new description of the Objective condition.")
                 .handler((context) -> {
-                    final context.getSender() context.getSender() = main.adventure().sender(context.getSender());
                     final Quest quest = context.get("quest");
                     final int objectiveID = context.get("Objective ID");
                     final Objective objective = quest.getObjectiveFromID(objectiveID);
                     assert objective != null; //Shouldn't be null
 
+                    int conditionID = context.get("Condition ID");
+                    Condition condition = objective.getConditions().get(conditionID-1);
 
-                    context.getSender().sendMessage(main.parse(
-                            highlightGradient + "Depending objectives of objective with ID " + highlight2Gradient + objectiveID
-                                    + "</gradient> " + unimportant + "(What needs to be completed BEFORE this objective can be started)" + unimportantClose + ":</gradient>"
-                    ));
-                    int counter = 1;
-                    for (final Objective dependantObjective : objective.getDependantObjectives()) {
+                    if(condition == null){
                         context.getSender().sendMessage(main.parse(
-                                highlightGradient + counter + ".</gradient> " + mainGradient + " Objective ID: </gradient>"
-                                        + highlight2Gradient + dependantObjective.getObjectiveID() + "</gradient>"
+                                "<error>Condition with the ID <highlight>" + conditionID + "</highlight> was not found!"
                         ));
-                        counter++;
+                        return;
                     }
-                    if (counter == 1) {
-                        context.getSender().sendMessage(main.parse(warningGradient + "No depending objectives found!"));
-                    }
-                    context.getSender().sendMessage(main.parse(unimportant + "------" + unimportantClose));
 
-                    context.getSender().sendMessage(main.parse(
-                            highlightGradient + "Objectives where this objective with ID " + highlight2Gradient + objectiveID
-                                    + "</gradient> is a dependant on  " + unimportant + "(What can only be started AFTER this objective is completed)" + unimportantClose + ":</gradient>"
+                    final String description = String.join(" ", (String[]) context.get("description"));
+
+                    condition.setDescription(description);
+
+                    quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + objectiveID + ".conditions." + conditionID + ".description", description);
+                    quest.getCategory().saveQuestsConfig();
+
+                    context.getSender().sendMessage(main.parse("<success>Description successfully added to condition with ID <highlight>" + conditionID + "</highlight> of objective with ID <highlight2>"
+                            + objectiveID + "</highlight2>! New description: <highlight2>"
+                            + condition.getDescription()
                     ));
-                    int counter2 = 1;
-                    for (final Objective otherObjective : quest.getObjectives()) {
-                        if (otherObjective.getDependantObjectives().contains(objective)) {
-                            context.getSender().sendMessage(main.parse(
-                                    highlightGradient + counter2 + ".</gradient> " + mainGradient + " Objective ID: </gradient>"
-                                            + highlight2Gradient + otherObjective.getObjectiveID() + "</gradient>"
-                            ));
-                            counter2++;
-                        }
-                    }
-                    if (counter2 == 1) {
-                        context.getSender().sendMessage(main.parse(warningGradient + "No objectives where this objective is a dependant of found!"));
+                }));
+
+        manager.command(editObjectiveConditionsBuilder.literal("description")
+                .literal("remove", "delete")
+                .meta(CommandMeta.DESCRIPTION, "Removes the description of the Quest requirement.")
+                .handler((context) -> {
+                    final Quest quest = context.get("quest");
+                    final int objectiveID = context.get("Objective ID");
+                    final Objective objective = quest.getObjectiveFromID(objectiveID);
+                    assert objective != null; //Shouldn't be null
+
+                    int conditionID = context.get("Condition ID");
+                    Condition condition = objective.getConditions().get(conditionID-1);
+
+                    if(condition == null){
+                        context.getSender().sendMessage(main.parse(
+                                "<error>Condition with the ID <highlight>" + conditionID + "</highlight> was not found!"
+                        ));
+                        return;
                     }
 
-                }));*/
+
+                    condition.removeDescription();
+
+                    quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + objectiveID + ".conditions." + conditionID + ".description", "");
+                    quest.getCategory().saveQuestsConfig();
+
+                    context.getSender().sendMessage(main.parse("<success>Description successfully removed from condition with ID <highlight>" + conditionID + "</highlight> of objective with ID <highlight2>"
+                            + objectiveID + "</highlight2>! New description: <highlight2>"
+                            + condition.getDescription()
+                    ));
+                }));
+
+        manager.command(editObjectiveConditionsBuilder.literal("description")
+                .literal("show", "check")
+                .meta(CommandMeta.DESCRIPTION, "Shows the description of the Quest requirement.")
+                .handler((context) -> {
+                    final Quest quest = context.get("quest");
+                    final int objectiveID = context.get("Objective ID");
+                    final Objective objective = quest.getObjectiveFromID(objectiveID);
+                    assert objective != null; //Shouldn't be null
+
+                    int conditionID = context.get("Condition ID");
+                    Condition condition = objective.getConditions().get(conditionID-1);
+
+                    if(condition == null){
+                        context.getSender().sendMessage(main.parse(
+                                "<error>Condition with the ID <highlight>" + conditionID + "</highlight> was not found!"
+                        ));
+                        return;
+                    }
+
+
+                    context.getSender().sendMessage(main.parse("<main>Description of condition with ID <highlight>" + conditionID + "</highlight> of objective with ID <highlight2>"
+                            + objectiveID + "</highlight2>:\n"
+                            + condition.getDescription()
+                    ));
+                }));
+
+
+
+
+
+
+
+
+
+
+
 
 
         manager.command(builder.literal("description")

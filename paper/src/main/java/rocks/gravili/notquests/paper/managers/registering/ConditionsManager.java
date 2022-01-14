@@ -224,8 +224,10 @@ public class ConditionsManager {
 
                     foundAction = foundAction != null ? foundAction : main.getActionsYMLManager().getAction(actionIdentifier);
                     if (foundAction != null) {
+                        actionIdentifier = foundAction.getActionName();
 
                         condition.setCategory(foundAction.getCategory());
+
 
                         foundAction.addCondition(condition, true, foundAction.getCategory().getActionsConfig(), "actions." + actionIdentifier);
                         main.getActionsYMLManager().saveActions(foundAction.getCategory());
