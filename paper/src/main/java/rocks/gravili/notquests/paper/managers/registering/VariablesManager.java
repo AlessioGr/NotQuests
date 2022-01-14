@@ -69,6 +69,7 @@ public class VariablesManager {
         registerVariable("PlayerSneaking", PlayerSneakingVariable.class);
         registerVariable("PlayerHealth", PlayerHealthVariable.class);
         registerVariable("PlayerGameMode", PlayerGameModeVariable.class);
+        registerVariable("PlayerFlying", PlayerFlyingVariable.class);
 
         registerVariable("Chance", ChanceVariable.class);
         registerVariable("Advancement", AdvancementVariable.class);
