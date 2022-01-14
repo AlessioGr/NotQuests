@@ -114,3 +114,9 @@ run/
 /.gradle/
 .gradle
 /build/tmp/
+/plugin/build/
+/plugin/build/
+/spigot/build/
+/paper/build/
+/common/build/
+/build/
