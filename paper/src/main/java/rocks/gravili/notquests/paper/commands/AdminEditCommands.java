@@ -1270,7 +1270,7 @@ public class AdminEditCommands {
 
                     condition.setDescription(description);
 
-                    quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".requirements." + quest.getRequirements().indexOf(condition) + ".description", description);
+                    quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".requirements." + (quest.getRequirements().indexOf(condition)+1) + ".description", description);
                     quest.getCategory().saveQuestsConfig();
 
                    // foundReward.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + (ID + 1) + ".displayName", foundReward.getActionName());
@@ -1298,7 +1298,7 @@ public class AdminEditCommands {
 
                     condition.removeDescription();
 
-                    quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".requirements." + quest.getRequirements().indexOf(condition) + ".description", "");
+                    quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".requirements." + (quest.getRequirements().indexOf(condition)+1) + ".description", "");
                     quest.getCategory().saveQuestsConfig();
 
 
