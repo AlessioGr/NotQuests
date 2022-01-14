@@ -17,7 +17,6 @@ import rocks.gravili.notquests.paper.events.InventoryEvents;
 import rocks.gravili.notquests.paper.events.QuestEvents;
 import rocks.gravili.notquests.paper.events.TriggerEvents;
 import rocks.gravili.notquests.paper.events.notquests.NotQuestsFullyLoadedEvent;
-import rocks.gravili.notquests.paper.events.notquests.other.PlayerJumpEvent;
 import rocks.gravili.notquests.paper.managers.*;
 import rocks.gravili.notquests.paper.managers.packets.PacketManager;
 import rocks.gravili.notquests.paper.managers.registering.*;
@@ -136,8 +135,6 @@ public class NotQuests {
 
 
         dataManager.loadStandardCompletions();
-
-        Bukkit.getServer().getPluginManager().registerEvents(PlayerJumpEvent.listener, main);
 
 
         //Create a new instance of the Quest Manager which will be re-used everywhere
