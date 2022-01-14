@@ -68,6 +68,7 @@ public class VariablesManager {
         registerVariable("PlayerCurrentWorld", PlayerCurrentWorldVariable.class);
         registerVariable("Chance", ChanceVariable.class);
         registerVariable("Advancement", AdvancementVariable.class);
+        registerVariable("Sneaking", PlayerSneakingVariable.class);
 
         if(main.getIntegrationsManager().isPlaceholderAPIEnabled()){
             registerVariable("PlaceholderAPINumber", PlaceholderAPINumberVariable.class);

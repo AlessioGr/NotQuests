@@ -1,30 +1,29 @@
 package rocks.gravili.notquests.paper.structs.variables;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 
 import java.util.List;
 
-public class PlayerSneakingVariable extends Variable<String>{
+public class PlayerSneakingVariable extends Variable<Boolean>{
     public PlayerSneakingVariable(NotQuests main) {
         super(main);
         setCanSetValue(true);
     }
 
     @Override
-    public String getValue(Player player, Object... objects) {
+    public Boolean getValue(Player player, Object... objects) {
         if (player != null) {
-            return player.getName();
+            return player.isSneaking();
         } else {
-            return null;
+            return false;
         }
     }
 
     @Override
-    public boolean setValue(String newValue, Player player, Object... objects) {
+    public boolean setValue(Boolean newValue, Player player, Object... objects) {
         if (player != null) {
-            player.setCustomName(newValue);
+            player.setSneaking(newValue);
             return true;
         } else {
             return false;
@@ -34,16 +33,16 @@ public class PlayerSneakingVariable extends Variable<String>{
 
     @Override
     public List<String> getPossibleValues(Player player, Object... objects) {
-        return Bukkit.getOnlinePlayers().stream().map(playerObject -> playerObject.getName()).toList();
+        return null;
     }
 
     @Override
     public String getPlural() {
-        return "Money";
+        return "Sneaking";
     }
 
     @Override
     public String getSingular() {
-        return "Money";
+        return "Sneaking";
     }
 }
