@@ -299,7 +299,3 @@ gui:
             "",
             "<unimportant><strikethrough>Progress: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
         ]
-      previousPage:
-        text: Go to previous page (%prevpage%)
-      nextPage:
-        text: Go to next page (%nextpage%)
