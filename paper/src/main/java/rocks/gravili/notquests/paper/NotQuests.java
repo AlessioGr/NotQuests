@@ -299,7 +299,7 @@ public class NotQuests {
             }
         }));
 
-        metrics.addCustomChart(new AdvancedPie("ActionTypes", new Callable<Map<String, Integer>>() {
+        metrics.addCustomChart(new AdvancedPie("AllActionTypes", new Callable<Map<String, Integer>>() {
             @Override
             public Map<String, Integer> call() {
                 Map<String, Integer> map = new HashMap<>();
