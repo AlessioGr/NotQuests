@@ -107,139 +107,166 @@ titles:
     title: <negative>Nhiệm Vụ Thất Bại
     subtitle: <highlight>%QUESTNAME%
 gui:
+  main:
+    title: '                <main>Nhiệm Vụ'
+    button:
+      questpoints:
+        name: "<highlight>Quest Points"
+        lore:
+          - "<main>Current quest points: <highlight2>%QUESTPOINTS%"
+        x: 8
+        y: 0
+      takequest:
+        name: "<positive>Take a Quest"
+        lore:
+          - "<unimportant>Start a new Quest!"
+          - ""
+          - "<veryUnimportant>Some Quests cannot be"
+          - "<veryUnimportant>started like this."
+        x: 0
+        y: 1
+      abortquest:
+        name: "<negative>Abort a Quest"
+        lore:
+          - ""
+          - "<veryUnimportant>Aborting a Quest may"
+          - "<veryUnimportant>lead to punishments."
+        x: 0
+        y: 2
+      activequests:
+        name: "<highlight>Active Quests"
+        lore:
+          - ""
+          - "<veryUnimportant>Shows all of your"
+          - "<veryUnimportant>active Quests."
+        x: 0
+        y: 3
+  activeQuests:
+    title: '             <main>Nhiệm Vụ Đang Hoạt Động'
+    button:
+      activeQuestButton:
+        name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
+        lore:
+          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
+          - "<main>Click to see details!"
   reward-hidden-text: . <unimportant>[KHÓA]
   availableQuests:
     title: '         <main>Nhiệm Vụ Hiện Có'
     button:
       questPreview:
-        acceptedSuffix: ' <success>[Đồng Ý]'
-        questNamePrefix: <highlight>
-        questDescriptionPrefix: <veryUnimportant>
-        bottomText: <success>Nhấn để xem nhiệm vụ
-  main:
-    title: '                <main>Nhiệm Vụ'
-    button:
-      questpoints:
-        text: |-
-          <highlight>Điểm nhiệm vụ
-          <warn>Điểm nhiệm vụ hiện tại: <highlight>%QUESTPOINTS%
-      takequest:
-        text: |-
-          <success>Thực hiện một nhiệm vụ
-          <unimportant>Bắt đầu một nhiệm vụ!
-
-          <veryUnimportant>Một vài nhiệm vụ không thể
-          <veryUnimportant>thực hiện giống như thế này
-      abortquest:
-        text: |-
-          <error>Huỷ bỏ nhiệm vụ
-          <unimportant>Hủy bỏ Nhiệm vụ có thể
-          <unimportant>dẫn đến những hình phạt.
-      previewquest:
-        text: |-
-          <main>Xem trước nhiệm vụ (Thông tin nhiệm vụ)
-          <unimportant>Hiển thị thêm thông tin
-          <unimportant>về nhiệm vụ.
-      activequests:
-        text: |-
-          <main>Nhiệm vụ đang hoạt động
-          <unimportant>Hiển thị tất cả nhiệm vụ của bạn.
-  activeQuests:
-    title: '             <main>Nhiệm Vụ Đang Hoạt Động'
-    button:
-      activeQuestButton:
-        text: |-
-          <highlight>%QUESTNAME% <success>[Hoạt Động]
-          <unimportant>Tiến Trình: <success>%COMPLETEDOBJECTIVESCOUNT% <main>/ %ALLOBJECTIVESCOUNT%
-          <main>Nhấn vào đây để xem chi tiết!!
+        name-if-not-accepted: "<highlight>%QUESTNAME%"
+        name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTED]"
+        lore:
+          - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
+          - "<main>Click to open Quest!"
   takeQuestChoose:
     title: <main>Bạn muốn nhận nhiệm vụ nào?
     button:
       questPreview:
-        acceptedSuffix: ' <success>[ĐỒNG Ý]'
-        questNamePrefix: <highlight>
-        questDescriptionPrefix: <veryUnimportant>
-        bottomText: <success>Nhấn để xem trước nhiệm vụ
+        name-if-not-accepted: "<highlight>%QUESTNAME%"
+        name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTED]"
+        lore:
+          - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
+          - "<success>Nhấn để xem trước nhiệm vụ"
   abortQuestChoose:
     title: '  <main>Nhiệm vụ của bạn có thể được hủy bỏ'
     button:
       abortQuestPreview:
-        text: |-
-          <highlight>%QUESTNAME% <success>[Hoạt Động]
-          <unimportant>Tiến Trình: <success>%COMPLETEDOBJECTIVESCOUNT% <main>/ %ALLOBJECTIVESCOUNT%
-          <error>Nhấn để hủy nhiệm vụ!
-  previewQuestChoose:
-    title: '     <main>Chọn Nhiệm Vụ Xem Trước'
-    button:
-      questPreview:
-        acceptedSuffix: ' <success>[ĐỒNG Ý]'
-        questNamePrefix: <highlight>
-        questDescriptionPrefix: <veryUnimportant>
-        bottomText: <success>Nhấn để xem trước nhiệm vụ
+        name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
+        lore:
+          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
+          - "<negative>Click to abort Quest!"
   abortQuest:
     title: '         <error>Hủy bỏ xác nhận'
     button:
       confirmAbort:
-        text: |-
-          <highlight>%QUESTNAME% <success>[Hoạt Động]
-          <unimportant>Tiến Trình: <success>%COMPLETEDOBJECTIVESCOUNT% <main>/ %ALLOBJECTIVESCOUNT%
-          <error>Nhấp để hủy nhiệm vụ <highlight>%QUESTNAME%<error>!
+        name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
+        lore:
+          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
+          - "<negative>Click to abort the quest <highlight>%QUESTNAME%</highlight>!"
+        x: 3
+        y: 1
       cancelAbort:
-        text: |-
-          <success>Nhấp để từ chối hủy bỏ nhiệm vụ này
-          <success>và hủy hành động này
+        name: "<positive>Click to NOT abort this quest"
+        lore:
+          - "<positive>and cancel this action"
+        x: 5
+        y: 1
   previewQuest:
-    title: <main>Xem trước Nhiệm vụ <highlight>%QUESTNAME%
+    title: <highlight2>Quest Preview
     button:
       description:
-        text: |-
-          <warn>Mô Tả
-          <veryUnimportant>%QUESTDESCRIPTION%
-        empty: '???'
+        name: "<highlight>Description"
+        lore:
+          - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
+        lore-if-empty:
+          - "<veryUnimportant>???"
+        x: 2
+        y: 0
       rewards:
-        text: |-
-          <success>Phần Thưởng
-          <main>%QUESTREWARDS%
-        empty: <veryUnimportant>Không có hoặc bị khóa
+        name: "<positive>Rewards"
+        lore:
+          - "<WHITE>%QUESTREWARDS%"
+        lore-if-empty:
+          - "<veryUnimportant>Không có hoặc bị khóa"
+        x: 4
+        y: 0
       requirements:
-        text: |-
-          <error>Yêu Cầu
-          <main>%QUESTREQUIREMENTS%
-        empty: '<veryUnimportant>-'
+        name: "<negative>Requirements"
+        lore:
+          - "<WHITE>%QUESTREQUIREMENTS%"
+        lore-if-empty:
+          - "<veryUnimportant>-"
+        x: 6
+        y: 0
       confirmTake:
-        text: |-
-          <highlight>%QUESTNAME%
-          <success>Nhấp để thực hiện nhiệm vụ <highlight>%QUESTNAME%<success>!
+        name: "<highlight>%QUESTNAME%"
+        lore:
+          - "<positive>Click to take the quest <highlight>%QUESTNAME%"
+        x: 3
+        y: 2
       cancelTake:
-        text: |-
-          <success>Nhấp để từ chối hủy bỏ nhiệm vụ này
-          <success>và hủy hành động này
+        name: "<negative>Click to NOT take this quest"
+        lore:
+          - "<negative>and cancel this action"
+        x: 5
+        y: 2
   progress:
-    title: <main>Thông tin chi tiết về Nhiệm vụ <highlight>%QUESTNAME%
+    title: <highlight2>Details for Quest
     button:
       unlockedObjective:
-        text: |-
-          <warn>%ACTIVEOBJECTIVEID%. <highlight>%OBJECTIVENAME%
-          <highlight><bold>HOẠT ĐỘNG
-          <veryUnimportant>%OBJECTIVEDESCRIPTION%
-          %ACTIVEOBJECTIVEDESCRIPTION%
-
-          <unimportant>Tiến Trình: <success>%ACTIVEOBJECTIVEPROGRESS% <main>/ %OBJECTIVEPROGRESSNEEDED%
-        description-empty: Không có mô tả
+        name: "<highlight2>%ACTIVEOBJECTIVEID%. <highlight>%OBJECTIVENAME%"
+        lore:
+          - "<main><BOLD>ACTIVE</BOLD>"
+          - "<veryUnimportant>%WRAPPEDOBJECTIVEDESCRIPTION%"
+          - "<unimportant>%ACTIVEOBJECTIVEDESCRIPTION%"
+          - ""
+          - "<unimportant>Progress: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
+        lore-if-description-empty:
+          - "<main><BOLD>ACTIVE</BOLD>"
+          - "<veryUnimportant>No Description"
+          - "<unimportant>%ACTIVEOBJECTIVEDESCRIPTION%"
+          - ""
+          - "<unimportant>Progress: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
       lockedObjective:
-        text: |-
-          <warn>%ACTIVEOBJECTIVEID%. <unimportant><bold>[KHÓA]
-          <warn>Mục tiêu này chưa
-          <warn>được mở khóa
+        name: "<highlight2>%ACTIVEOBJECTIVEID%. <unimportant><BOLD>[HIDDEN]"
+        lore:
+          - "<warn>This objective has not yet"
+          - "<warn>been unlocked!"
       completedObjective:
-        text: |-
-          <success><strikethrough>%ACTIVEOBJECTIVEID%. <positive><strikethrough>%OBJECTIVENAME%
-          <success><bold>ĐÃ HOÀN THÀNH
-          <veryUnimportant><strikethrough>%OBJECTIVEDESCRIPTION%
-          %COMPLETEDOBJECTIVEDESCRIPTION%
-
-          <unimportant><strikethrough>Progress: <success><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <main><strikethrough>/ %OBJECTIVEPROGRESSNEEDED%
-        description-empty: Không có mô tả
+        name: "<highlight2><strikethrough>%ACTIVEOBJECTIVEID%. <positive><strikethrough>%OBJECTIVENAME%"
+        lore:
+          - "<positive><BOLD>COMPLETED</BOLD>"
+          - "<veryUnimportant><strikethrough>%WRAPPEDOBJECTIVEDESCRIPTION%"
+          - "<veryUnimportant>%COMPLETEDOBJECTIVEDESCRIPTION%"
+          - ""
+          - "<unimportant><strikethrough>Progress: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
+        lore-if-description-empty:
+          - "<positive><BOLD>COMPLETED</BOLD>"
+          - "<veryUnimportant><strikethrough>No Description"
+          - "<veryUnimportant>%COMPLETEDOBJECTIVEDESCRIPTION%"
+          - ""
+          - "<unimportant><strikethrough>Progress: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
       previousPage:
         text: Về trang trước (%prevpage%)
       nextPage:
