@@ -267,7 +267,3 @@ gui:
           - "<veryUnimportant>%COMPLETEDOBJECTIVEDESCRIPTION%"
           - ""
           - "<unimportant><strikethrough>Progress: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
-      previousPage:
-        text: Về trang trước (%prevpage%)
-      nextPage:
-        text: Trang tiếp theo (%nextpage%)
