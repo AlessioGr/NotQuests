@@ -54,6 +54,10 @@ public abstract class Condition {
         this.description = description;
     }
 
+    public void removeDescription(){
+        this.description = "";
+    }
+
     public final Category getCategory() {
         return category;
     }

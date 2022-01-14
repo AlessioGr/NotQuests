@@ -422,7 +422,13 @@ public class Quest {
 
     public void removeReward(final Action action) {
         rewards.remove(action);
-        category.getQuestsConfig().set("quests." + questName + ".rewards." + rewards.indexOf(action), null);
+        category.getQuestsConfig().set("quests." + questName + ".rewards." + rewards.indexOf(action)+1, null);
+        category.saveQuestsConfig();
+    }
+
+    public void removeRequirement(final Condition requirement) {
+        conditions.remove(requirement);
+        category.getQuestsConfig().set("quests." + questName + ".requirements." + conditions.indexOf(requirement)+1, null);
         category.saveQuestsConfig();
     }
 

@@ -132,7 +132,7 @@ public abstract class Objective {
     }
 
     public void removeCondition(final Condition condition, final boolean save) {
-        int conditionID = conditions.indexOf(condition);
+        int conditionID = conditions.indexOf(condition)+1;
         conditions.remove(condition);
         if (save) {
             quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions." + conditionID, null);
@@ -141,7 +141,7 @@ public abstract class Objective {
     }
 
     public void removeReward(final Action action, final boolean save) {
-        int rewardID = rewards.indexOf(action);
+        int rewardID = rewards.indexOf(action)+1;
         rewards.remove(action);
         if (save) {
             quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".rewards." + rewardID, null);

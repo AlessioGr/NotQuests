@@ -41,6 +41,7 @@ import org.bukkit.persistence.PersistentDataType;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.CategorySelector;
 import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
+import rocks.gravili.notquests.paper.commands.arguments.MiniMessageSelector;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.Quest;
@@ -1213,6 +1214,121 @@ public class AdminEditCommands {
                     context.getSender().sendMessage(main.parse("<main>All requirements of Quest <highlight>" + quest.getQuestName() + "</highlight> have been removed!"));
                 }));
 
+        final Command.Builder<CommandSender> editQuestRequirementsBuilder = builder.literal("edit")
+                .argument(IntegerArgument.<CommandSender>newBuilder("Requirement ID").withMin(1).withSuggestionsProvider(
+                                (context, lastString) -> {
+                                    final List<String> allArgs = context.getRawInput();
+                                    main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Requirement ID]", "[...]");
+
+                                    ArrayList<String> completions = new ArrayList<>();
+
+                                    final Quest quest = context.get("quest");
+                                    for (final Condition condition : quest.getRequirements()) {
+                                        completions.add("" + (quest.getRequirements().indexOf(condition) + 1));
+                                    }
+
+                                    return completions;
+                                }
+                        ));
+
+        manager.command(editQuestRequirementsBuilder.literal("delete", "remove")
+                .meta(CommandMeta.DESCRIPTION, "Removes a requirement from this Quest.")
+                .handler((context) -> {
+                    final Quest quest = context.get("quest");
+                    int conditionID = context.get("Requirement ID");
+                    Condition condition = quest.getRequirements().get(conditionID-1);
+
+                    if(condition == null){
+                        context.getSender().sendMessage(main.parse(
+                                "<error>Requirement with the ID <highlight>" + conditionID + "</highlight> was not found!"
+                        ));
+                        return;
+                    }
+                    quest.removeRequirement(condition);
+
+
+                    context.getSender().sendMessage(main.parse("<main>The requirement with the ID <highlight>" + conditionID + "</highlight> of Quest <highlight2>" + quest.getQuestName() + "</highlight2> has been removed!"));
+                }));
+
+
+        manager.command(editQuestRequirementsBuilder.literal("description")
+                .literal("set")
+                        .argument(MiniMessageSelector.<CommandSender>newBuilder("description", main).withPlaceholders().build(), ArgumentDescription.of("Quest requirementdescription"))
+                .meta(CommandMeta.DESCRIPTION, "Sets the new description of the Quest requirement.")
+                .handler((context) -> {
+                    final Quest quest = context.get("quest");
+                    int conditionID = context.get("Requirement ID");
+                    Condition condition = quest.getRequirements().get(conditionID-1);
+                    if(condition == null){
+                        context.getSender().sendMessage(main.parse(
+                                "<error>Requirement with the ID <highlight>" + conditionID + "</highlight> was not found!"
+                        ));
+                        return;
+                    }
+
+                    final String description = String.join(" ", (String[]) context.get("description"));
+
+                    condition.setDescription(description);
+
+                    quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".requirements." + quest.getRequirements().indexOf(condition) + ".description", description);
+                    quest.getCategory().saveQuestsConfig();
+
+                   // foundReward.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + (ID + 1) + ".displayName", foundReward.getActionName());
+                    //foundReward.getCategory().saveQuestsConfig();
+
+                    context.getSender().sendMessage(main.parse("<success>Description successfully added to condition with ID <highlight>" + conditionID + "</highlight> of quest <highlight2>"
+                            + quest.getQuestName() + "</highlight2>! New description: <highlight2>"
+                            + condition.getDescription()
+                    ));
+                }));
+
+        manager.command(editQuestRequirementsBuilder.literal("description")
+                .literal("remove", "delete")
+                .meta(CommandMeta.DESCRIPTION, "Removes the description of the Quest requirement.")
+                .handler((context) -> {
+                    final Quest quest = context.get("quest");
+                    int conditionID = context.get("Requirement ID");
+                    Condition condition = quest.getRequirements().get(conditionID-1);
+                    if(condition == null){
+                        context.getSender().sendMessage(main.parse(
+                                "<error>Requirement with the ID <highlight>" + conditionID + "</highlight> was not found!"
+                        ));
+                        return;
+                    }
+
+                    condition.removeDescription();
+
+                    quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".requirements." + quest.getRequirements().indexOf(condition) + ".description", "");
+                    quest.getCategory().saveQuestsConfig();
+
+
+                    context.getSender().sendMessage(main.parse("<success>Description successfully removed from condition with ID <highlight>" + conditionID + "</highlight> of quest <highlight2>"
+                            + quest.getQuestName() + "</highlight2>! New description: <highlight2>"
+                            + condition.getDescription()
+                    ));
+                }));
+
+        manager.command(editQuestRequirementsBuilder.literal("description")
+                .literal("show", "check")
+                .meta(CommandMeta.DESCRIPTION, "Shows the description of the Quest requirement.")
+                .handler((context) -> {
+                    final Quest quest = context.get("quest");
+                    int conditionID = context.get("Requirement ID");
+                    Condition condition = quest.getRequirements().get(conditionID-1);
+                    if(condition == null){
+                        context.getSender().sendMessage(main.parse(
+                                "<error>Requirement with the ID <highlight>" + conditionID + "</highlight> was not found!"
+                        ));
+                        return;
+                    }
+
+                    context.getSender().sendMessage(main.parse("<main>Description of condition with ID <highlight>" + conditionID + "</highlight> of quest <highlight2>"
+                            + quest.getQuestName() + "</highlight2>:\n"
+                            + condition.getDescription()
+                    ));
+                }));
+
+
     }
 
     public void handleRewards(final Command.Builder<CommandSender> builder) {
@@ -1467,34 +1583,7 @@ public class AdminEditCommands {
 
         manager.command(builder.literal("displayname")
                 .literal("set")
-                .argument(StringArrayArgument.of("DisplayName",
-                        (context, lastString) -> {
-                            final List<String> allArgs = context.getRawInput();
-                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "<Enter new Reward display name>", "");
-                            ArrayList<String> completions = new ArrayList<>();
-
-                            String rawInput = context.getRawInputJoined();
-                            if (lastString.startsWith("{")) {
-                                completions.addAll(main.getCommandManager().getAdminCommands().placeholders);
-                            } else {
-                                if(lastString.startsWith("<")){
-                                    for(String color : main.getUtilManager().getMiniMessageTokens()){
-                                        completions.add("<"+ color +">");
-                                        //Now the closings. First we search IF it contains an opening and IF it doesnt contain more closings than the opening
-                                        if(rawInput.contains("<"+color+">")){
-                                            if(StringUtils.countMatches(rawInput, "<"+color+">") > StringUtils.countMatches(rawInput, "</"+color+">")){
-                                                completions.add("</"+ color +">");
-                                            }
-                                        }
-                                    }
-                                }else{
-                                    completions.add("<Enter new Reward display name>");
-                                }
-                            }
-
-                            return completions;
-                        }
-                ), ArgumentDescription.of("Reward display name"))
+                .argument(MiniMessageSelector.<CommandSender>newBuilder("DisplayName", main).withPlaceholders().build(), ArgumentDescription.of("Reward display name"))
                 .meta(CommandMeta.DESCRIPTION, "Sets new reward Display Name. Only rewards with a Display Name will be displayed.")
                 .handler((context) -> {
                     final int ID = (int) context.get("Reward ID") - 1;
@@ -1626,34 +1715,7 @@ public class AdminEditCommands {
 
         manager.command(builder.literal("displayname")
                 .literal("set")
-                .argument(StringArrayArgument.of("DisplayName",
-                        (context, lastString) -> {
-                            final List<String> allArgs = context.getRawInput();
-                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "<Enter new Reward display name>", "");
-                            ArrayList<String> completions = new ArrayList<>();
-
-                            String rawInput = context.getRawInputJoined();
-                            if (lastString.startsWith("{")) {
-                                completions.addAll(main.getCommandManager().getAdminCommands().placeholders);
-                            } else {
-                                if(lastString.startsWith("<")){
-                                    for(String color : main.getUtilManager().getMiniMessageTokens()){
-                                        completions.add("<"+ color +">");
-                                        //Now the closings. First we search IF it contains an opening and IF it doesnt contain more closings than the opening
-                                        if(rawInput.contains("<"+color+">")){
-                                            if(StringUtils.countMatches(rawInput, "<"+color+">") > StringUtils.countMatches(rawInput, "</"+color+">")){
-                                                completions.add("</"+ color +">");
-                                            }
-                                        }
-                                    }
-                                }else{
-                                    completions.add("<Enter new Reward display name>");
-                                }
-                            }
-
-                            return completions;
-                        }
-                ), ArgumentDescription.of("Reward display name"))
+                .argument(MiniMessageSelector.<CommandSender>newBuilder("DisplayName", main).withPlaceholders().build(), ArgumentDescription.of("Reward display name"))
                 .meta(CommandMeta.DESCRIPTION, "Sets new reward Display Name. Only rewards with a Display Name will be displayed.")
                 .handler((context) -> {
                     final int ID = (int) context.get("Reward ID") - 1;

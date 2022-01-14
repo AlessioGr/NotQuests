@@ -113,7 +113,7 @@ public abstract class Action {
     }
 
     public void removeCondition(final Condition condition, final boolean save, final FileConfiguration configuration, final String initialPath) {
-        int conditionID = conditions.indexOf(condition);
+        int conditionID = conditions.indexOf(condition)+1;
         conditions.remove(condition);
         if (save) {
             configuration.set(initialPath + ".conditions." + conditionID, null);
