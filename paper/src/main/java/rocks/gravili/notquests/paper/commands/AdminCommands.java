@@ -1259,6 +1259,56 @@ public class AdminCommands {
                     condition.switchCategory(category);
 
                 }));
+
+
+
+
+        manager.command(conditionsEditBuilder.literal("description")
+                .literal("set")
+                .argument(MiniMessageSelector.<CommandSender>newBuilder("description", main).withPlaceholders().build(), ArgumentDescription.of("Condition description"))
+                .meta(CommandMeta.DESCRIPTION, "Sets the new description of the condition.")
+                .handler((context) -> {
+                    final Condition condition = context.get("condition");
+
+                    final String description = String.join(" ", (String[]) context.get("description"));
+
+                    condition.setDescription(description);
+
+                    condition.getCategory().getConditionsConfig().set("conditions." + condition.getConditionName() + ".description", description);
+                    condition.getCategory().saveConditionsConfig();
+
+
+                    context.getSender().sendMessage(main.parse("<success>Description successfully added to condition  <highlight>" + condition.getConditionName() + "</highlight>! New description: <highlight2>"
+                            + condition.getDescription()
+                    ));
+                }));
+
+        manager.command(conditionsEditBuilder.literal("description")
+                .literal("remove", "delete")
+                .meta(CommandMeta.DESCRIPTION, "Removes the description of the condition.")
+                .handler((context) -> {
+                    final Condition condition = context.get("condition");
+
+                    condition.removeDescription();
+
+                    condition.getCategory().getConditionsConfig().set("conditions." + condition.getConditionName() + ".description", "");
+                    condition.getCategory().saveConditionsConfig();
+
+                    context.getSender().sendMessage(main.parse("<success>Description successfully removed from condition <highlight>" + condition.getConditionName() + "</highlight>! New description: <highlight2>"
+                            + condition.getDescription()
+                    ));
+                }));
+
+        manager.command(conditionsEditBuilder.literal("description")
+                .literal("show", "check")
+                .meta(CommandMeta.DESCRIPTION, "Shows the description of the condition.")
+                .handler((context) -> {
+                    final Condition condition = context.get("condition");
+
+                    context.getSender().sendMessage(main.parse("<main>Description of condition <highlight>" + condition.getConditionName() + "</highlight>:\n"
+                            + condition.getDescription()
+                    ));
+                }));
     }
 
     public void handleActions() {
@@ -1414,7 +1464,7 @@ public class AdminCommands {
 
         manager.command(editActionConditionsBuilder.literal("description")
                 .literal("set")
-                .argument(MiniMessageSelector.<CommandSender>newBuilder("description", main).withPlaceholders().build(), ArgumentDescription.of("Objective condition description"))
+                .argument(MiniMessageSelector.<CommandSender>newBuilder("description", main).withPlaceholders().build(), ArgumentDescription.of("Action condition description"))
                 .meta(CommandMeta.DESCRIPTION, "Sets the new description of the Action condition.")
                 .handler((context) -> {
                     final Action action = context.get("action");
