@@ -79,7 +79,7 @@ public class TalkToNPCObjective extends Objective {
 
                     if (!npcIDOrArmorstand.equalsIgnoreCase("armorstand")) {
                         if (!main.getIntegrationsManager().isCitizensEnabled()) {
-                            audience.sendMessage(MiniMessage.miniMessage().parse(
+                            audience.sendMessage(MiniMessage.miniMessage().deserialize(
                                     NotQuestColors.errorGradient + "Error: Any kind of NPC stuff has been disabled, because you don't have the Citizens plugin installed on your server. You need to install the Citizens plugin in order to use Citizen NPCs. You can, however, use armor stands as an alternative. To do that, just enter 'armorstand' instead of the NPC ID."
                             ));
                             return;
@@ -89,7 +89,7 @@ public class TalkToNPCObjective extends Objective {
                             npcID = Integer.parseInt(npcIDOrArmorstand);
                         } catch (NumberFormatException e) {
                             audience.sendMessage(
-                                    MiniMessage.miniMessage().parse(
+                                    MiniMessage.miniMessage().deserialize(
                                             NotQuestColors.errorGradient + "Invalid NPC ID."
                                     )
                             );
@@ -133,7 +133,7 @@ public class TalkToNPCObjective extends Objective {
                             player.getInventory().addItem(itemStack);
 
                             audience.sendMessage(
-                                    MiniMessage.miniMessage().parse(
+                                    MiniMessage.miniMessage().deserialize(
                                             NotQuestColors.successGradient + "You have been given an item with which you can add the TalkToNPC Objective to an armor stand. Check your inventory!"
                                     )
                             );
@@ -141,7 +141,7 @@ public class TalkToNPCObjective extends Objective {
 
                         } else {
                             audience.sendMessage(
-                                    MiniMessage.miniMessage().parse(
+                                    MiniMessage.miniMessage().deserialize(
                                             NotQuestColors.errorGradient + "Must be a player!"
                                     )
                             );

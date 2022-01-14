@@ -58,7 +58,6 @@ public class ProjectKorraUseAbilityObjective extends Objective {
                         }
                 ).single().build(), ArgumentDescription.of("Name of the ability"))
                 .argument(LongArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of times to use the ability"))
-                .meta(CommandMeta.DESCRIPTION, "Adds a new ProjectKorraUseAbility Objective to a quest")
                 .handler((context) -> {
                     String abilityName = context.get("Ability");
 

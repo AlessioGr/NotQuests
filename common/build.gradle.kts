@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "rocks.gravili.notquests"
-version = "3.2.5"
+version = rootProject.version
 
 repositories {
     mavenCentral()
@@ -115,6 +115,7 @@ tasks.withType<ShadowJar> {
     dependencies {
 
     }
+    //archiveBaseName.set("notquests")
     archiveClassifier.set("")
 }
 /*processResources {
@@ -149,7 +150,7 @@ tasks {
         create<MavenPublication>("maven") {
             groupId = "rocks.gravili.notquests"
             artifactId = "NotQuests"
-            version = "3.2.5"
+            version = "4.0.0-dev"
 
             from(components["java"])
         }

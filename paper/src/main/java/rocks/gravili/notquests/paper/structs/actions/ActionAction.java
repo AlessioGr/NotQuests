@@ -21,13 +21,15 @@ package rocks.gravili.notquests.paper.structs.actions;
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.IntegerArgument;
-import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.ActionSelector;
+
+import java.util.ArrayList;
+import java.util.Locale;
 
 public class ActionAction extends Action {
 
@@ -41,14 +43,13 @@ public class ActionAction extends Action {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor rewardFor) {
-        manager.command(builder.literal("Action")
+        manager.command(builder
                 .argument(ActionSelector.of("Action", main), ArgumentDescription.of("Name of the action which will be executed"))
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").asOptionalWithDefault(1).withMin(1), ArgumentDescription.of("Amount of times the action will be executed."))
                 .flag(
                         manager.flagBuilder("ignoreConditions")
                                 .withDescription(ArgumentDescription.of("Ignores action conditions"))
                 )
-                .meta(CommandMeta.DESCRIPTION, "Creates a new (actions.yml) Action")
                 .handler((context) -> {
                     Action foundAction = context.get("Action");
                     int amount = context.get("amount");
@@ -138,9 +139,27 @@ public class ActionAction extends Action {
 
     }
 
+    @Override
+    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+        String actionName = arguments.get(0);
+        this.action = main.getActionsYMLManager().getAction(actionName);
+        if (action == null) {
+            main.getLogManager().warn("Error: ActionAction cannot find the action with name " + actionName + ". Action Name: " + arguments.get(0));
+        }
+
+        if(arguments.size() >= 2){
+            this.amount = Integer.parseInt(arguments.get(1));
+        }else{
+            this.amount = 1;
+        }
+
+        this.ignoreConditions = String.join(" ", arguments).toLowerCase(Locale.ROOT).contains("--ignoreconditions");
+
+    }
+
 
     @Override
-    public String getActionDescription() {
+    public String getActionDescription(final Player player, final Object... objects) {
         return "Executes Action: " + getAction().getActionName();
     }
 }

@@ -35,6 +35,7 @@ import org.bukkit.util.Vector;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.EntityTypeSelector;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 public class SpawnMobAction extends Action {
@@ -49,11 +50,12 @@ public class SpawnMobAction extends Action {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor rewardFor) {
-        manager.command(builder.literal("SpawnMob")
+        Command.Builder<CommandSender> commonBuilder = builder
                 .argument(EntityTypeSelector.of("entityType", main), ArgumentDescription.of("Type of Entity which should be spawned."))
-                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of mobs which should be spawned"))
+                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of mobs which should be spawned"));
+
+        manager.command(commonBuilder
                 .literal("PlayerLocation", ArgumentDescription.of("Takes the location the player currently is in (when executing the action). So, this is a dynamic location."))
-                .meta(CommandMeta.DESCRIPTION, "Creates a new SpawnMob Action")
                 .handler((context) -> {
                     final String entityType = context.get("entityType");
                     final int amountToSpawn = context.get("amount");
@@ -66,9 +68,7 @@ public class SpawnMobAction extends Action {
                     main.getActionManager().addAction(spawnMobAction, context);
                 }));
 
-        manager.command(builder.literal("SpawnMob")
-                .argument(EntityTypeSelector.of("entityType", main), ArgumentDescription.of("Type of Entity which should be spawned."))
-                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of mobs which should be spawned"))
+        manager.command(commonBuilder
                 .literal("Location", ArgumentDescription.of("Takes the location you enter"))
                 .argument(WorldArgument.of("world"), ArgumentDescription.of("World name"))
                 /* .argumentTriplet(
@@ -84,7 +84,6 @@ public class SpawnMobAction extends Action {
                 .argument(IntegerArgument.newBuilder("x"), ArgumentDescription.of("X coordinate"))
                 .argument(IntegerArgument.newBuilder("y"), ArgumentDescription.of("Y coordinate"))
                 .argument(IntegerArgument.newBuilder("z"), ArgumentDescription.of("Z coordinate"))
-                .meta(CommandMeta.DESCRIPTION, "Creates a new SpawnMob Action")
                 .handler((context) -> {
                     final String entityType = context.get("entityType");
                     final int amountToSpawn = context.get("amount");
@@ -155,7 +154,7 @@ public class SpawnMobAction extends Action {
 
             if (isUsePlayerLocation()) {
                 for (int i = 0; i < getSpawnAmount(); i++) {
-                    player.getWorld().spawnEntity(player.getLocation().add(new Vector(0, 1, 0)), entityType);
+                    player.getWorld().spawnEntity(player.getLocation().clone().add(new Vector(0, 1, 0)), entityType);
                 }
             } else {
                 if (getSpawnLocation() == null) {
@@ -167,15 +166,21 @@ public class SpawnMobAction extends Action {
                     return;
                 }
                 for (int i = 0; i < getSpawnAmount(); i++) {
-                    getSpawnLocation().getWorld().spawnEntity(getSpawnLocation().add(new Vector(0, 1, 0)), entityType);
+                    getSpawnLocation().getWorld().spawnEntity(getSpawnLocation().clone().add(new Vector(0, 1, 0)), entityType);
                 }
             }
         } catch (IllegalArgumentException e) {
-            if (main.getIntegrationsManager().isMythicMobsEnabled()) {
+            if (main.getIntegrationsManager().isMythicMobsEnabled() && main.getIntegrationsManager().getMythicMobsManager().isMythicMob(getMobToSpawnType())) {
                 if (isUsePlayerLocation()) {
                     main.getIntegrationsManager().getMythicMobsManager().spawnMob(getMobToSpawnType(), player.getLocation(), getSpawnAmount());
                 } else {
                     main.getIntegrationsManager().getMythicMobsManager().spawnMob(getMobToSpawnType(), getSpawnLocation(), getSpawnAmount());
+                }
+            } else if (main.getIntegrationsManager().isEcoBossesEnabled() && main.getIntegrationsManager().getEcoBossesManager().isEcoBoss(getMobToSpawnType())) {
+                if (isUsePlayerLocation()) {
+                    main.getIntegrationsManager().getEcoBossesManager().spawnMob(getMobToSpawnType(), player.getLocation(), getSpawnAmount());
+                } else {
+                    main.getIntegrationsManager().getEcoBossesManager().spawnMob(getMobToSpawnType(), getSpawnLocation(), getSpawnAmount());
                 }
             }else{
                 main.getLogManager().warn("Tried to execute SpawnMob with an either invalid mob, or a mythic mob while the mythic mobs plugin is not installed.");
@@ -200,9 +205,27 @@ public class SpawnMobAction extends Action {
         this.spawnAmount = configuration.getInt(initialPath + ".specifics.amount", 1);
     }
 
+    @Override
+    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+        this.mobToSpawnType = arguments.get(0);
+        this.spawnAmount = Integer.parseInt(arguments.get(1));
+
+        this.usePlayerLocation = (arguments.size() < 3);
+
+        if(!isUsePlayerLocation()){
+            final World world = Bukkit.getWorld(arguments.get(2));
+            final Vector coordinates = new Vector(Integer.parseInt(arguments.get(3)), Integer.parseInt(arguments.get(4)), Integer.parseInt(arguments.get(5)));
+            final Location location = coordinates.toLocation(world);
+
+            this.spawnLocation = location;
+        }
+
+
+    }
+
 
     @Override
-    public String getActionDescription() {
+    public String getActionDescription(final Player player, final Object... objects) {
         return "Spawns Mob: " + getMobToSpawnType();
     }
 }

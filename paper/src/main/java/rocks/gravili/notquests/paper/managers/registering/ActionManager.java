@@ -20,9 +20,11 @@ package rocks.gravili.notquests.paper.managers.registering;
 
 import cloud.commandframework.Command;
 import cloud.commandframework.context.CommandContext;
+import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.actions.*;
@@ -57,13 +59,18 @@ public class ActionManager {
         registerAction("StartConversation", StartConversationAction.class);
 
         registerAction("ConsoleCommand", ConsoleCommandAction.class);
-        registerAction("GiveQuestPoints", GiveQuestPointsAction.class);
+        //registerAction("GiveQuestPoints", GiveQuestPointsAction.class);
         registerAction("GiveItem", GiveItemAction.class);
-        registerAction("GiveMoney", GiveMoneyAction.class);
-        registerAction("GrantPermission", GrantPermissionAction.class);
+        //registerAction("GiveMoney", GiveMoneyAction.class);
+        //registerAction("GrantPermission", GrantPermissionAction.class);
         registerAction("SpawnMob", SpawnMobAction.class);
         registerAction("SendMessage", SendMessageAction.class);
         registerAction("BroadcastMessage", BroadcastMessageAction.class);
+
+        registerAction("Number", NumberAction.class);
+        registerAction("String", StringAction.class);
+        registerAction("Boolean", BooleanAction.class);
+        registerAction("List", ListAction.class);
 
 
     }
@@ -75,9 +82,24 @@ public class ActionManager {
 
         try {
             Method commandHandler = action.getMethod("handleCommands", main.getClass(), PaperCommandManager.class, Command.Builder.class, ActionFor.class);
-            commandHandler.invoke(action, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddRewardCommandBuilder(), ActionFor.QUEST);
-            commandHandler.invoke(action, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddRewardCommandBuilder(), ActionFor.OBJECTIVE);
-            commandHandler.invoke(action, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminAddActionCommandBuilder(), ActionFor.ActionsYML); //For Actions.yml
+            if(action == NumberAction.class || action == StringAction.class || action == BooleanAction.class || action == ListAction.class){
+                commandHandler.invoke(action, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddRewardCommandBuilder()
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action"), ActionFor.QUEST);
+                commandHandler.invoke(action, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddRewardCommandBuilder()
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action"), ActionFor.OBJECTIVE);
+                commandHandler.invoke(action, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminAddActionCommandBuilder()
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action")
+                        .flag(main.getCommandManager().categoryFlag), ActionFor.ActionsYML); //For Actions.yml
+            }else {
+                commandHandler.invoke(action, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddRewardCommandBuilder().literal(identifier)
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action"), ActionFor.QUEST);
+                commandHandler.invoke(action, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddRewardCommandBuilder().literal(identifier)
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action"), ActionFor.OBJECTIVE);
+                commandHandler.invoke(action, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminAddActionCommandBuilder().literal(identifier)
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action")
+                        .flag(main.getCommandManager().categoryFlag), ActionFor.ActionsYML); //For Actions.yml
+            }
+
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -116,10 +138,13 @@ public class ActionManager {
             int objectiveID = context.get("Objective ID");
             objectiveOfQuest = quest.getObjectiveFromID(objectiveID);
         }
-        String actionIdentifier = context.getOrDefault("Action Identifier", "");
+        String actionIdentifier = context.getOrDefault("Action Identifier", context.getOrDefault("action", ""));
+
+
 
         if (quest != null) {
             action.setQuest(quest);
+            action.setCategory(quest.getCategory());
             if (objectiveOfQuest != null) {//Objective Reward
                 action.setObjective(objectiveOfQuest);
 
@@ -138,6 +163,10 @@ public class ActionManager {
             }
         } else {
             if (actionIdentifier != null && !actionIdentifier.isBlank()) { //actions.yml
+                if (context.flags().contains(main.getCommandManager().categoryFlag)) {
+                    final Category category = context.flags().getValue(main.getCommandManager().categoryFlag, main.getDataManager().getDefaultCategory());
+                    action.setCategory(category);
+                }
 
                 if (main.getActionsYMLManager().getAction(actionIdentifier) == null) {
                     main.getActionsYMLManager().addAction(actionIdentifier, action);
@@ -170,7 +199,7 @@ public class ActionManager {
 
         StringBuilder unfulfilledConditions = new StringBuilder();
         for (final Condition condition : action.getConditions()) {
-            final String check = condition.check(questPlayer, false);
+            final String check = condition.check(questPlayer);
             main.getLogManager().debug("   Condition Check Result: " + check);
             if (!check.isBlank()) {
                 unfulfilledConditions.append("\n").append(check);
@@ -183,10 +212,7 @@ public class ActionManager {
             }
         } else {
             main.getLogManager().debug("   All Conditions fulfilled!");
-            //Now loop through all the requirements again in order to enforce them
-            for (final Condition condition : action.getConditions()) {
-                condition.check(questPlayer, true);
-            }
+
             action.execute(questPlayer.getPlayer(), objects);
             if (!silent) {
                 sender.sendMessage(main.parse("<success>Action with the name <highlight>" + action.getActionName() + "</highlight> has been executed!"));

@@ -70,7 +70,7 @@ public class WorldEditManager {
 
 
         } catch (IncompleteRegionException ex) {
-            main.adventure().player(player).sendMessage(MiniMessage.miniMessage().parse(
+            main.adventure().player(player).sendMessage(MiniMessage.miniMessage().deserialize(
                     NotQuestColors.errorGradient + "Please make a region selection using WorldEdit first.</gradient>"
             ));
         }

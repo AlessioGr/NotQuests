@@ -23,7 +23,6 @@ import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
-import net.kyori.adventure.audience.Audience;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -48,7 +47,7 @@ public class TriggerCommandAction extends Action {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor rewardFor) {
-        manager.command(builder.literal("TriggerCommand")
+        manager.command(builder
                 .argument(StringArgument.<CommandSender>newBuilder("Trigger Name").withSuggestionsProvider(
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
@@ -66,7 +65,6 @@ public class TriggerCommandAction extends Action {
                             return completions;
                         }
                 ).single().build(), ArgumentDescription.of("Name of the trigger which should be triggered."))
-                .meta(CommandMeta.DESCRIPTION, "Creates a new TriggerCommand Action")
                 .handler((context) -> {
                     final String triggerName = context.get("Trigger Name");
 
@@ -125,9 +123,14 @@ public class TriggerCommandAction extends Action {
         this.triggerCommandName = configuration.getString(initialPath + ".specifics.triggerName");
     }
 
+    @Override
+    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+        this.triggerCommandName = arguments.get(0);
+    }
+
 
     @Override
-    public String getActionDescription() {
+    public String getActionDescription(final Player player, final Object... objects) {
         return "Triggers TriggerCommand: " + getTriggerCommand();
     }
 }

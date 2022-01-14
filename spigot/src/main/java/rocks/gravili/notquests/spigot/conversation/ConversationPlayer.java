@@ -119,7 +119,7 @@ public class ConversationPlayer {
         questPlayer.sendDebugMessage("Adding " + playerLines.size() + " currentPlayerLines");
         currentPlayerLines.addAll(playerLines);
 
-        Component component = MiniMessage.miniMessage().parse(
+        Component component = MiniMessage.miniMessage().deserialize(
                 mainGradient + "Choose your answer:</gradient>"
 
         );
@@ -196,7 +196,7 @@ public class ConversationPlayer {
      * @param conversationLine
      */
     public void sendLine(final ConversationLine conversationLine, boolean deletePrevious) {
-        Component line = MiniMessage.miniMessage().parse(
+        Component line = MiniMessage.miniMessage().deserialize(
                 conversationLine.getSpeaker().getColor() + "[" + conversationLine.getSpeaker().getSpeakerName() + "] <GRAY>" + conversationLine.getMessage()
         );
         if (deletePrevious) {
@@ -232,7 +232,7 @@ public class ConversationPlayer {
      * @param conversationLine
      */
     public void sendOptionLine(final ConversationLine conversationLine) {
-        Component toSend = MiniMessage.miniMessage().parse(
+        Component toSend = MiniMessage.miniMessage().deserialize(
                 conversationLine.getSpeaker().getColor() + " > <GRAY>" + conversationLine.getMessage()
         ).clickEvent(ClickEvent.runCommand("/notquests continueConversation " + conversationLine.getMessage())).hoverEvent(HoverEvent.showText(Component.text("Click to answer", NamedTextColor.AQUA)));
 

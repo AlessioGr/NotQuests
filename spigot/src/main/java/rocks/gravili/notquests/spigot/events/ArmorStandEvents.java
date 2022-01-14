@@ -89,7 +89,7 @@ public class ArmorStandEvents implements Listener {
                     }
 
                     if (questName == null && ((id >= 0 && id <= 3) || id == 5 || id == 6 || id == 7)) {
-                        audience.sendMessage(miniMessage.parse(
+                        audience.sendMessage(miniMessage.deserialize(
                                 "<RED>Error: Your item has no valid quest attached to it."
                         ));
                         return;
@@ -116,7 +116,7 @@ public class ArmorStandEvents implements Listener {
 
 
                                 if( existingAttachedQuests.equals(questName) || existingAttachedQuests.contains("°" + questName+"°") ) {
-                                    audience.sendMessage(miniMessage.parse(
+                                    audience.sendMessage(miniMessage.deserialize(
                                             "<RED>Error: That armor stand already has the Quest <AQUA>" + questName + "</AQUA> attached to it!\n"
                                                     + "<RED>Attached Quests: <AQUA>" + existingAttachedQuests
                                     ));
@@ -138,14 +138,14 @@ public class ArmorStandEvents implements Listener {
 
                             armorStandPDB.set(attachedQuestsKey, PersistentDataType.STRING, existingAttachedQuests);
 
-                            audience.sendMessage(miniMessage.parse(
+                            audience.sendMessage(miniMessage.deserialize(
                                     "<GREEN>Quest with the name <AQUA>" + questName + "</AQUA> was added to this poor little armorstand!"
                                             + " <DARK_GREEN>Attached Quests: <AQUA>" + existingAttachedQuests
                             ));
 
                         }else {
                             armorStandPDB.set(attachedQuestsKey, PersistentDataType.STRING, "°" + questName + "°");
-                            audience.sendMessage(miniMessage.parse(
+                            audience.sendMessage(miniMessage.deserialize(
                                     "<GREEN>Quest with the name <AQUA>" + questName + "</AQUA> was added to this poor little armorstand!"
                                             + " <DARK_GREEN>Attached Quests: <AQUA>" + "°" + questName + "°"
                             ));
@@ -193,26 +193,26 @@ public class ArmorStandEvents implements Listener {
                                     armorstandPDB.set(attachedQuestsKey, PersistentDataType.STRING, existingAttachedQuests);
                                 }
 
-                                audience.sendMessage(miniMessage.parse(
+                                audience.sendMessage(miniMessage.deserialize(
                                         "<DARK_GREEN>Quest with the name <AQUA>" + questName + "</AQUA> was removed from this armor stand!\n" +
                                                 "<DARK_GREEN>Attached Quests: <AQUA>" + existingAttachedQuests
                                 ));
 
                             } else {
-                                audience.sendMessage(miniMessage.parse(
+                                audience.sendMessage(miniMessage.deserialize(
                                         "<RED>Error: That armor stand does not have the Quest <AQUA>" + questName + "</AQUA> attached to it!\n" +
                                                 "<DARK_GREEN>Attached Quests: <AQUA>" + existingAttachedQuests
                                 ));
                             }
                         } else {
-                            audience.sendMessage(miniMessage.parse(
+                            audience.sendMessage(miniMessage.deserialize(
                                     "<RED>This armor stand has no quests attached to it!"
                             ));
                         }
 
 
                     } else if (id == 4) { //Check
-                        audience.sendMessage(miniMessage.parse(
+                        audience.sendMessage(miniMessage.deserialize(
                                 "<GRAY>Armor Stand Entity ID: <WHITE>" + armorStand.getUniqueId()
                         ));
 
@@ -244,23 +244,23 @@ public class ArmorStandEvents implements Listener {
 
                         if(showingQuests.size() == 0){
                             if(hasShowingQuestsPDBKey) {
-                                audience.sendMessage(miniMessage.parse(
+                                audience.sendMessage(miniMessage.deserialize(
                                         "<BLUE>All attached showing Quests: <GRAY>Empty"
                                 ));
                             }else {
-                                audience.sendMessage(miniMessage.parse(
+                                audience.sendMessage(miniMessage.deserialize(
                                         "<BLUE>All attached showing Quests: <GRAY>None"
                                 ));
                             }
                         }else {
-                            audience.sendMessage(miniMessage.parse(
+                            audience.sendMessage(miniMessage.deserialize(
                                     "<BLUE>All " + showingQuests.size() + " attached showing Quests:"
                             ));
                             int counter = 0;
                             for (final String questNameInList : showingQuests) {
                                 if (!questNameInList.isBlank()) { //empty or null or only whitespaces
                                     counter++;
-                                    audience.sendMessage(miniMessage.parse(
+                                    audience.sendMessage(miniMessage.deserialize(
                                             "<GRAY>" + counter + ". <YELLOW>" + questNameInList
                                     ));
                                 }
@@ -270,24 +270,24 @@ public class ArmorStandEvents implements Listener {
 
                         if(nonShowingQuests.size() == 0){
                             if(hasNonShowingQuestsPDBKey) {
-                                audience.sendMessage(miniMessage.parse(
+                                audience.sendMessage(miniMessage.deserialize(
                                         "<BLUE>All attached non-showing Quests: <GRAY>Empty"
                                 ));
                             }else {
-                                audience.sendMessage(miniMessage.parse(
+                                audience.sendMessage(miniMessage.deserialize(
                                         "<BLUE>All attached non-showing Quests: <GRAY>None"
                                 ));
                             }
 
                         }else {
-                            audience.sendMessage(miniMessage.parse(
+                            audience.sendMessage(miniMessage.deserialize(
                                     "<BLUE>All " + nonShowingQuests.size() + " attached non-showing Quests:"
                             ));
                             int counter = 0;
                             for (final String questNameInList : nonShowingQuests) {
                                 if (!questNameInList.isBlank()) { //empty or null or only whitespaces
                                     counter++;
-                                    audience.sendMessage(miniMessage.parse(
+                                    audience.sendMessage(miniMessage.deserialize(
                                             "<GRAY>" + counter + ". <YELLOW>" + questNameInList
                                     ));
                                 }
@@ -304,12 +304,12 @@ public class ArmorStandEvents implements Listener {
                             talkToNPCObjective.setObjectiveID(quest.getObjectives().size() + 1);
                             talkToNPCObjective.setArmorStandUUID(armorStand.getUniqueId());
                             quest.addObjective(talkToNPCObjective, true);
-                            audience.sendMessage(miniMessage.parse(
+                            audience.sendMessage(miniMessage.deserialize(
                                     "<GREEN>Objective successfully added to quest <AQUA>" + quest.getQuestName() + "</AQUA>!"
                             ));
 
                         } else {
-                            audience.sendMessage(miniMessage.parse(
+                            audience.sendMessage(miniMessage.deserialize(
                                     NotQuestColors.errorGradient + "Error: Quest " + NotQuestColors.highlightGradient + questName + "</gradient> does not exist."
                             ));
                         }
@@ -320,16 +320,16 @@ public class ArmorStandEvents implements Listener {
                             final Objective objective = quest.getObjectiveFromID(objectiveID);
                             if (objective != null) {
                                 objective.setCompletionArmorStandUUID(armorStand.getUniqueId(), true);
-                                audience.sendMessage(miniMessage.parse(
+                                audience.sendMessage(miniMessage.deserialize(
                                         "<GREEN>The completionArmorStandUUID of the objective with the ID <AQUA>" + objectiveID + "</AQUA has been set to the Armor Stand with the UUID <AQUA>" + armorStand.getUniqueId() + "</AQUA> and name <AQUA>" + main.getArmorStandManager().getArmorStandName(armorStand) + "</AQUA>!"
                                 ));
                             } else {
-                                audience.sendMessage(miniMessage.parse(
+                                audience.sendMessage(miniMessage.deserialize(
                                         NotQuestColors.errorGradient + "Error: Objective with the ID " + NotQuestColors.highlightGradient + objectiveID + "</gradient> was not found for quest " + NotQuestColors.highlight2Gradient + quest.getQuestName() + "</gradient>!"
                                 ));
                             }
                         } else {
-                            audience.sendMessage(miniMessage.parse(
+                            audience.sendMessage(miniMessage.deserialize(
                                     NotQuestColors.errorGradient + "Error: Quest " + NotQuestColors.highlightGradient + questName + "</gradient> does not exist."
                             ));
                         }
@@ -365,20 +365,20 @@ public class ArmorStandEvents implements Listener {
 
                                 quest.addObjective(deliverItemsObjective, true);
 
-                                audience.sendMessage(miniMessage.parse(
+                                audience.sendMessage(miniMessage.deserialize(
                                         NotQuestColors.successGradient + "DeliverItems Objective successfully added to Quest " + NotQuestColors.highlightGradient
                                                 + quest.getQuestName() + "</gradient>!</gradient>"
                                 ));
 
                             } else {
-                                audience.sendMessage(miniMessage.parse(
+                                audience.sendMessage(miniMessage.deserialize(
                                         NotQuestColors.errorGradient + "ItemStack is not cached anymore! This item won't work after a server restart."
                                 ));
                             }
 
 
                         } else {
-                            audience.sendMessage(miniMessage.parse(
+                            audience.sendMessage(miniMessage.deserialize(
                                     NotQuestColors.errorGradient + "Error: Quest " + NotQuestColors.highlightGradient + questName + "</gradient> does not exist."
                             ));
                         }
@@ -404,14 +404,14 @@ public class ArmorStandEvents implements Listener {
 
 
                                     if (existingAttachedConversation != null) {
-                                        audience.sendMessage(miniMessage.parse(
+                                        audience.sendMessage(miniMessage.deserialize(
                                                 "<RED>Error: That armor stand already has the Conversation <AQUA>" + existingAttachedConversation + "</AQUA> attached to it!"
                                         ));
                                     }
 
                                 } else {
                                     armorStandPDB.set(attachedConversationKey, PersistentDataType.STRING, conversation.getIdentifier());
-                                    audience.sendMessage(miniMessage.parse(
+                                    audience.sendMessage(miniMessage.deserialize(
                                             "<GREEN>Conversation with the name <AQUA>" + conversation.getIdentifier() + "</AQUA> was added to this poor little armorstand!"
                                     ));
 
@@ -422,14 +422,14 @@ public class ArmorStandEvents implements Listener {
 
 
                             } else {
-                                main.adventure().player(player).sendMessage(MiniMessage.miniMessage().parse(
+                                main.adventure().player(player).sendMessage(MiniMessage.miniMessage().deserialize(
                                         NotQuestColors.errorGradient + "Error: Conversation " + NotQuestColors.highlightGradient + conversationIdentifier + "</gradient> does not exist."
                                 ));
                             }
 
 
                         } else {
-                            main.adventure().player(player).sendMessage(MiniMessage.miniMessage().parse(
+                            main.adventure().player(player).sendMessage(MiniMessage.miniMessage().deserialize(
                                     NotQuestColors.errorGradient + "Error: this item has no valid conversation."
                             ));
                         }
@@ -443,12 +443,12 @@ public class ArmorStandEvents implements Listener {
                         if (armorStandPDB.has(attachedConversationKey, PersistentDataType.STRING)) {
                             armorStandPDB.remove(attachedConversationKey);
                             main.getArmorStandManager().removeArmorStandWithQuestsOrConversationAttachedToThem(armorStand);
-                            audience.sendMessage(miniMessage.parse(
+                            audience.sendMessage(miniMessage.deserialize(
                                     "<GREEN>All conversations were removed from this armorStand!"
                             ));
 
                         } else {
-                            audience.sendMessage(miniMessage.parse(
+                            audience.sendMessage(miniMessage.deserialize(
                                     "<RED>This armorstand doesn't have the conversation attached to it."
                             ));
                         }
@@ -499,14 +499,14 @@ public class ArmorStandEvents implements Listener {
                                                 if (progressLeft < itemStack.getAmount()) { //We can finish it with this itemStack
                                                     itemStack.setAmount((itemStack.getAmount() - (int) progressLeft));
                                                     activeObjective.addProgress(progressLeft, armorStand.getUniqueId());
-                                                    audience.sendMessage(miniMessage.parse(
+                                                    audience.sendMessage(miniMessage.deserialize(
                                                             "<GREEN>You have delivered <AQUA>" + progressLeft + "</AQUA> items to <AQUA>" + main.getArmorStandManager().getArmorStandName(armorStand)
                                                     ));
                                                     break;
                                                 } else {
                                                     player.getInventory().removeItem(itemStack);
                                                     activeObjective.addProgress(itemStack.getAmount(), armorStand.getUniqueId());
-                                                    audience.sendMessage(miniMessage.parse(
+                                                    audience.sendMessage(miniMessage.deserialize(
                                                             "<GREEN>You have delivered <AQUA>" + itemStack.getAmount() + "</AQUA> items to <AQUA>" + main.getArmorStandManager().getArmorStandName(armorStand)
                                                     ));
                                                 }
@@ -519,7 +519,7 @@ public class ArmorStandEvents implements Listener {
                             } else if (activeObjective.getObjective() instanceof final TalkToNPCObjective talkToNPCObjective) {
                                 if (talkToNPCObjective.getNPCtoTalkID() == -1 && (talkToNPCObjective.getArmorStandUUID().equals(armorStand.getUniqueId()))) {
                                     activeObjective.addProgress(1, armorStand.getUniqueId());
-                                    audience.sendMessage(miniMessage.parse(
+                                    audience.sendMessage(miniMessage.deserialize(
                                             "<GREEN>You talked to <AQUA>" + main.getArmorStandManager().getArmorStandName(armorStand)
                                     ));
                                     handledObjective = true;

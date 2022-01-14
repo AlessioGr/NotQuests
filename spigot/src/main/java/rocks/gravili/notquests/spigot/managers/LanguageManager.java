@@ -120,12 +120,11 @@ public class LanguageManager {
 
         for (final String fileName : languageFiles) {
             try {
-                main.getLogManager().info(LogCategory.LANGUAGE, "Creating the <AQUA>" + fileName + "</AQUA> language file...");
-
                 File file = new File(languageFolder, fileName);
 
-
                 if (!file.exists()) {
+                    main.getLogManager().info(LogCategory.LANGUAGE, "Creating the <AQUA>" + fileName + "</AQUA> language file...");
+
                     if (!file.createNewFile()) {
                         main.getDataManager().disablePluginAndSaving("There was an error creating the " + fileName + " language file. (3)");
                         return;
@@ -434,7 +433,7 @@ public class LanguageManager {
             message = before + hexColor + after;
             matcher = hexPattern.matcher(message);
         }
-        return org.bukkit.ChatColor.translateAlternateColorCodes('&', LegacyComponentSerializer.builder().hexColors().build().serialize(MiniMessage.miniMessage().parse(message)));
+        return org.bukkit.ChatColor.translateAlternateColorCodes('&', LegacyComponentSerializer.builder().hexColors().build().serialize(MiniMessage.miniMessage().deserialize(message)));
     }
 
 

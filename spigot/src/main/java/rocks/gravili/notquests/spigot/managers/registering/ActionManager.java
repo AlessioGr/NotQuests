@@ -131,13 +131,13 @@ public class ActionManager {
 
                 objectiveOfQuest.addReward(action, true); //TODO: Also do addAction which are executed when the objective is unlocked (and not just when completed)
 
-                audience.sendMessage(MiniMessage.miniMessage().parse(
+                audience.sendMessage(MiniMessage.miniMessage().deserialize(
                         NotQuestColors.successGradient + getActionType(action.getClass()) + " Reward successfully added to Objective " + NotQuestColors.highlightGradient
                                 + objectiveOfQuest.getObjectiveFinalName() + "</gradient>!</gradient>"));
             } else { //Quest Reward
                 quest.addReward(action, true);
 
-                audience.sendMessage(MiniMessage.miniMessage().parse(
+                audience.sendMessage(MiniMessage.miniMessage().deserialize(
                         NotQuestColors.successGradient + getActionType(action.getClass()) + " Reward successfully added to Quest " + NotQuestColors.highlightGradient
                                 + quest.getQuestName() + "</gradient>!</gradient>"
                 ));
@@ -147,12 +147,12 @@ public class ActionManager {
 
                 if (main.getActionsYMLManager().getAction(actionIdentifier) == null) {
                     main.getActionsYMLManager().addAction(actionIdentifier, action);
-                    audience.sendMessage(MiniMessage.miniMessage().parse(
+                    audience.sendMessage(MiniMessage.miniMessage().deserialize(
                             NotQuestColors.successGradient + getActionType(action.getClass()) + " Action with the name " + NotQuestColors.highlightGradient
                                     + actionIdentifier + "</gradient> has been created successfully!</gradient>"
                     ));
                 } else {
-                    audience.sendMessage(MiniMessage.miniMessage().parse(errorGradient + "Error! An action with the name " + highlightGradient + actionIdentifier + "</gradient> already exists!</gradient>"));
+                    audience.sendMessage(MiniMessage.miniMessage().deserialize(errorGradient + "Error! An action with the name " + highlightGradient + actionIdentifier + "</gradient> already exists!</gradient>"));
 
                 }
             }
@@ -169,7 +169,7 @@ public class ActionManager {
             main.getLogManager().debug("   Skipping Conditions");
             action.execute(questPlayer.getPlayer(), objects);
             if (!silent) {
-                audience.sendMessage(MiniMessage.miniMessage().parse(successGradient + "Action with the name " + highlightGradient + action.getActionName() + "</gradient> has been executed!</gradient>"));
+                audience.sendMessage(MiniMessage.miniMessage().deserialize(successGradient + "Action with the name " + highlightGradient + action.getActionName() + "</gradient> has been executed!</gradient>"));
             }
             return;
         }
@@ -185,7 +185,7 @@ public class ActionManager {
 
         if (!unfulfilledConditions.toString().isBlank()) {
             if (!silent) {
-                audience.sendMessage(MiniMessage.miniMessage().parse(errorGradient + "You do not fulfill all the conditions this action needs! Conditions still needed:" + unfulfilledConditions));
+                audience.sendMessage(MiniMessage.miniMessage().deserialize(errorGradient + "You do not fulfill all the conditions this action needs! Conditions still needed:" + unfulfilledConditions));
             }
         } else {
             main.getLogManager().debug("   All Conditions fulfilled!");
@@ -195,7 +195,7 @@ public class ActionManager {
             }
             action.execute(questPlayer.getPlayer(), objects);
             if (!silent) {
-                audience.sendMessage(MiniMessage.miniMessage().parse(successGradient + "Action with the name " + highlightGradient + action.getActionName() + "</gradient> has been executed!</gradient>"));
+                audience.sendMessage(MiniMessage.miniMessage().deserialize(successGradient + "Action with the name " + highlightGradient + action.getActionName() + "</gradient> has been executed!</gradient>"));
             }
         }
     }

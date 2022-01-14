@@ -30,6 +30,8 @@ import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.CommandSelector;
 
+import java.util.ArrayList;
+
 public class ConsoleCommandAction extends Action {
 
     private String consoleCommand = "";
@@ -40,9 +42,8 @@ public class ConsoleCommandAction extends Action {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor rewardFor) {
-        manager.command(builder.literal("ConsoleCommand")
+        manager.command(builder
                 .argument(CommandSelector.<CommandSender>newBuilder("Console Command", main).build(), ArgumentDescription.of("Command which will be executed from the console as a reward. A '/' at the beginning is not required."))
-                .meta(CommandMeta.DESCRIPTION, "Adds a new ConsoleCommand Reward to a quest")
                 .handler((context) -> {
                     final String consoleCommand = String.join(" ", (String[]) context.get("Console Command"));
 
@@ -89,13 +90,18 @@ public class ConsoleCommandAction extends Action {
 
     }
 
+    @Override
+    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+        this.consoleCommand = String.join(" ", arguments);
+    }
+
 
     public final String getConsoleCommand() {
         return consoleCommand;
     }
 
     @Override
-    public String getActionDescription() {
+    public String getActionDescription(final Player player, final Object... objects) {
         return "Reward Command: " + getConsoleCommand();
     }
 }

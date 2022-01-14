@@ -29,6 +29,9 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.QuestSelector;
 import rocks.gravili.notquests.paper.structs.Quest;
 
+import java.util.ArrayList;
+import java.util.Locale;
+
 public class GiveQuestAction extends Action {
 
     private String questToGiveName = "";
@@ -40,13 +43,12 @@ public class GiveQuestAction extends Action {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor rewardFor) {
-        manager.command(builder.literal("GiveQuest")
+        manager.command(builder
                 .argument(QuestSelector.of("quest to give", main), ArgumentDescription.of("Name of the Quest which should be given to the player."))
                 .flag(
                         manager.flagBuilder("forceGive")
                                 .withDescription(ArgumentDescription.of("Force-gives the Quest to the player, disregarding most Quest requirements/cooldowns/..."))
                 )
-                .meta(CommandMeta.DESCRIPTION, "Creates a new GiveQuest Action")
                 .handler((context) -> {
                     final Quest foundQuest = context.get("quest to give");
                     final boolean forceGive = context.flags().isPresent("forceGive");
@@ -102,9 +104,16 @@ public class GiveQuestAction extends Action {
         this.forceGive = configuration.getBoolean(initialPath + ".specifics.forceGive");
     }
 
+    @Override
+    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+        this.questToGiveName = arguments.get(0);
+
+        this.forceGive = String.join(" ", arguments).toLowerCase(Locale.ROOT).contains("--forcegive");
+    }
+
 
     @Override
-    public String getActionDescription() {
+    public String getActionDescription(final Player player, final Object... objects) {
         return "Gives Quest: " + getQuestToGiveName();
     }
 }

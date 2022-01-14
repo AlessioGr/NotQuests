@@ -24,10 +24,9 @@ import cloud.commandframework.arguments.parser.ArgumentParseResult;
 import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.Quest;
@@ -36,8 +35,6 @@ import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static rocks.gravili.notquests.paper.commands.NotQuestColors.*;
 
 
 public class CompletedObjectiveCondition extends Condition {
@@ -64,7 +61,7 @@ public class CompletedObjectiveCondition extends Condition {
 
 
     @Override
-    public String check(final QuestPlayer questPlayer, final boolean enforce) {
+    public String checkInternally(final QuestPlayer questPlayer) {
         final Objective objectiveToComplete = getObjectiveToComplete();
         if(objectiveToComplete == null){
             return "<RED>Error: Cannot find objective you have to complete first.";
@@ -89,7 +86,7 @@ public class CompletedObjectiveCondition extends Condition {
 
 
     @Override
-    public String getConditionDescription() {
+    public String getConditionDescriptionInternally(Player player, Object... objects) {
         final Objective otherObjective = getObjectiveToComplete();
         if (otherObjective != null) {
             return "<GRAY>-- Finish Objective first: " + otherObjective.getObjectiveFinalName();
@@ -101,7 +98,7 @@ public class CompletedObjectiveCondition extends Condition {
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
         if (conditionFor == ConditionFor.OBJECTIVE) {
-            manager.command(builder.literal("CompletedObjective")
+            manager.command(builder
                     .argument(IntegerArgument.<CommandSender>newBuilder("Depending Objective ID").withMin(1).withSuggestionsProvider(
                                     (context, lastString) -> {
                                         final List<String> allArgs = context.getRawInput();
@@ -131,7 +128,6 @@ public class CompletedObjectiveCondition extends Condition {
                                 }
                             })
                             .build(), ArgumentDescription.of("Depending Objective ID"))
-                    .meta(CommandMeta.DESCRIPTION, "Adds a new OtherQuest Requirement to a quest")
                     .handler((context) -> {
                         final Quest quest = context.get("quest");
 
@@ -165,5 +161,11 @@ public class CompletedObjectiveCondition extends Condition {
     @Override
     public void load(FileConfiguration configuration, String initialPath) {
         objectiveID = configuration.getInt(initialPath + ".specifics.objectiveID");
+    }
+
+    @Override
+    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+        objectiveID = Integer.parseInt(arguments.get(0));
+
     }
 }

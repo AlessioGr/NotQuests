@@ -19,9 +19,11 @@
 package rocks.gravili.notquests.paper.structs.actions;
 
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
@@ -36,11 +38,22 @@ public abstract class Action {
     private Quest quest;
     private Objective objective;
     private final ArrayList<Condition> conditions;
+    private Category category;
 
 
     public Action(NotQuests main) {
         this.main = main;
         conditions = new ArrayList<>();
+        category = main.getDataManager().getDefaultCategory();
+        main.allActions.add(this); //For bStats
+    }
+
+    public final Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(final Category category) {
+        this.category = category;
     }
 
     public final String getActionType() {
@@ -75,7 +88,7 @@ public abstract class Action {
         this.objective = objective;
     }
 
-    public abstract String getActionDescription();
+    public abstract String getActionDescription(final Player player, final Object... objects);
 
     public abstract void execute(final Player player, Object... objects);
 
@@ -92,6 +105,8 @@ public abstract class Action {
         if (save) {
             configuration.set(initialPath + ".conditions." + conditions.size() + ".conditionType", condition.getConditionType());
             configuration.set(initialPath + ".conditions." + conditions.size() + ".progressNeeded", condition.getProgressNeeded());
+            configuration.set(initialPath + ".conditions." + conditions.size() + ".negated", condition.isNegated());
+            configuration.set(initialPath + ".conditions." + conditions.size() + ".description", condition.getDescription());
 
             condition.save(configuration, initialPath + ".conditions." + conditions.size());
         }
@@ -110,5 +125,19 @@ public abstract class Action {
         configuration.set(initialPath + ".conditions", null);
     }
 
+    public abstract void deserializeFromSingleLineString(final ArrayList<String> arguments);
 
+    public void switchCategory(final Category category) {
+
+        final ConfigurationSection actionsConfigurationSection = getCategory().getActionsConfig().getConfigurationSection("actions." + getActionName());
+
+        getCategory().getActionsConfig().set("actions." + getActionName(), null);
+        getCategory().saveActionsConfig();
+
+        setCategory(category);
+
+        category.getActionsConfig().set("actions." + getActionName(), actionsConfigurationSection);
+        category.saveActionsConfig();
+
+    }
 }

@@ -28,6 +28,8 @@ import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.MiniMessageSelector;
 
+import java.util.ArrayList;
+
 
 public class SendMessageAction extends Action {
 
@@ -39,9 +41,8 @@ public class SendMessageAction extends Action {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor actionFor) {
-        manager.command(builder.literal("SendMessage")
+        manager.command(builder
                 .argument(MiniMessageSelector.<CommandSender>newBuilder("Sending Message", main).withPlaceholders().build(), ArgumentDescription.of("Message to broadcast"))
-                .meta(CommandMeta.DESCRIPTION, "Creates a new SendMessage Action")
                 .handler((context) -> {
                     final String messageToSend = String.join(" ", (String[]) context.get("Sending Message"));
 
@@ -83,9 +84,14 @@ public class SendMessageAction extends Action {
         this.messageToSend = configuration.getString(initialPath + ".specifics.message", "");
     }
 
+    @Override
+    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+        this.messageToSend = String.join(" ", arguments);
+    }
+
 
     @Override
-    public String getActionDescription() {
+    public String getActionDescription(final Player player, final Object... objects) {
         return "Sends Message: " + getMessageToSend();
     }
 }

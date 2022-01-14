@@ -155,9 +155,9 @@ public class UtilManager {
 
         Component currentCompletion;
         if (args[args.length - 1].isBlank()) {
-            currentCompletion = miniMessage.parse("<RESET>" + NotQuestColors.highlightMM + "<BOLD>" + hintCurrentArg);
+            currentCompletion = miniMessage.deserialize("<RESET>" + NotQuestColors.highlightMM + "<BOLD>" + hintCurrentArg);
         } else {
-            currentCompletion = miniMessage.parse("<RESET><YELLOW><BOLD>" + args[args.length - 1]);
+            currentCompletion = miniMessage.deserialize("<RESET><YELLOW><BOLD>" + args[args.length - 1]);
 
         }
 
@@ -166,16 +166,16 @@ public class UtilManager {
             if (hintNextArgs.length() > 15) {
                 hintNextArgs = hintNextArgs.substring(0, 14) + "...";
             }
-            return miniMessage.parse(NotQuestColors.lightHighlightMM + "<ITALIC>" + argsTogether)
+            return miniMessage.deserialize(NotQuestColors.lightHighlightMM + "<ITALIC>" + argsTogether)
                     .append(currentCompletion)
-                    .append(miniMessage.parse("<GRAY> " + hintNextArgs));
+                    .append(miniMessage.deserialize("<GRAY> " + hintNextArgs));
         } else {
             if (!args[args.length - 1].isBlank()) { //Command finished
-                return miniMessage.parse(NotQuestColors.lightHighlightMM + "<ITALIC>" + argsTogether)
+                return miniMessage.deserialize(NotQuestColors.lightHighlightMM + "<ITALIC>" + argsTogether)
                         .append(currentCompletion)
                         .append(Component.text(" ✓", NamedTextColor.GREEN, TextDecoration.BOLD));
             } else {
-                return miniMessage.parse(NotQuestColors.lightHighlightMM + "<ITALIC>" + argsTogether)
+                return miniMessage.deserialize(NotQuestColors.lightHighlightMM + "<ITALIC>" + argsTogether)
                         .append(currentCompletion);
             }
 
@@ -360,7 +360,7 @@ public class UtilManager {
     }
 
     public final String miniMessageToLegacy(String miniMessageString) {
-        String legacy = LegacyComponentSerializer.builder().hexColors().build().serialize(miniMessage.parse(miniMessageString));
+        String legacy = LegacyComponentSerializer.builder().hexColors().build().serialize(miniMessage.deserialize(miniMessageString));
         //main.getLogManager().debug("mm => legacy: Converted <RESET>" + miniMessageString + "</RESET> to <RESET>" + legacy + "</RESET>");
 
         return legacy;
@@ -372,7 +372,7 @@ public class UtilManager {
         int counter = 0;
 
         for (String splitString : miniMessageString.split("\n")) {
-            Component splitComponent = miniMessage.parse(splitString);
+            Component splitComponent = miniMessage.deserialize(splitString);
             //main.getLogManager().debug("Split Component old: " + miniMessage.serialize(splitComponent));
 
 

@@ -3,7 +3,7 @@ storage:
   load-playerdata: true
   save-playerdata: true
   backups:
-    create-before-saving-quests: true
+    create-when-server-shuts-down: true
   database:
     # If this is set to false, SQLite will be used instead (no configuration needed)
     enabled: false
@@ -24,15 +24,14 @@ general:
     inventory-slot: 8
     item:
       ==: org.bukkit.inventory.ItemStack
-      v: 2865
+      v: 2730
       type: ENCHANTED_BOOK
       meta:
         ==: ItemMeta
         meta-type: ENCHANTED
-        display-name: '{"extra":[{"bold":false,"italic":true,"underlined":false,"strikethrough":false,"obfuscated":false,"color":"blue","text":"Journal"}],"text":""}'
+        display-name: '{"italic":true,"color":"blue","text":"Journal"}'
         lore:
-          - '{"extra":[{"bold":false,"italic":false,"underlined":false,"strikethrough":false,"obfuscated":false,"color":"gray","text":"A
-                book containing all your quest information"}],"text":""}'
+          - '{"color":"gray","text":"A book containing all your quest information"}'
   packet-magic:
     enabled: true
     #Possible modes: "internal" and "packetevents"
@@ -41,6 +40,8 @@ general:
     conversations:
       delete-previous: true
       history-size: 20
+  update-checker:
+    notify-ops-in-chat: true
 visual:
   #Sets which language to use. Default is languages/en-US.yml
   language: en-US
@@ -165,4 +166,6 @@ integrations: #These should usually be left to true. These integrations will onl
   jobs-reborn:
     enabled: true
   projectkorra:
+    enabled: true
+  ecoBosses:
     enabled: true

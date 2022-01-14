@@ -4,17 +4,22 @@ plugins {
     `java-library`
     `maven-publish`
     id ("com.github.johnrengelman.shadow") version "7.1.1"
+    id("io.papermc.paperweight.userdev") version "1.3.3"
+    id("xyz.jpenilla.run-paper") version "1.0.6" // Adds runServer and runMojangMappedServer tasks for testing
 }
 
 
+//extra["version"] = "4.0.0-dev1"
+
 group = "rocks.gravili.notquests"
-version = "3.2.5"
+version = "4.0.0"
+
 
 repositories {
 }
 
 dependencies {
-
+    paperDevBundle("1.18.1-R0.1-SNAPSHOT")
 }
 
 /**
@@ -22,7 +27,7 @@ dependencies {
  */
 val path = "rocks.gravili.notquests"
 tasks.withType<ShadowJar> {
-
+    //archiveBaseName.set("notquests")
     archiveClassifier.set("")
 }
 
@@ -42,12 +47,14 @@ tasks {
     }
 }
 
+
+
 /*publishing {
     publications {
         create<MavenPublication>("maven") {
             groupId = "rocks.gravili.notquests"
             artifactId = "NotQuests"
-            version = "3.2.5"
+            version = "4.0.0-dev"
 
             from(components["java"])
         }
@@ -71,3 +78,4 @@ publishing {
         }
     }
 }
+

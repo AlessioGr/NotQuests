@@ -22,8 +22,10 @@ package rocks.gravili.notquests.paper.conversation;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.managers.integrations.citizens.QuestGiverNPCTrait;
 
 import java.io.File;
@@ -41,8 +43,11 @@ public class Conversation {
 
     final ArrayList<Speaker> speakers;
 
+    private Category category;
 
-    public Conversation(final NotQuests main, File configFile, YamlConfiguration config, final String identifier, final int npcID) {
+
+
+    public Conversation(final NotQuests main, File configFile, YamlConfiguration config, final String identifier, final int npcID, final Category category) {
         this.main = main;
         this.configFile = configFile;
         this.config = config;
@@ -50,6 +55,15 @@ public class Conversation {
         setNPC(npcID);
         start = new ArrayList<>();
         speakers = new ArrayList<>();
+        this.category = category;
+    }
+
+    public final Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(final Category category) {
+        this.category = category;
     }
 
     public final ArrayList<Speaker> getSpeakers() {
@@ -193,6 +207,21 @@ public class Conversation {
             e.printStackTrace();
             main.getLogManager().severe("There was an error saving the configuration of Conversation <highlight>" + identifier + "</highlight>.");
         }
+
+    }
+
+
+    public void switchCategory(final Category category) {
+
+
+        getCategory().getConversationsConfigs().remove(config);
+        setCategory(category);
+        category.getConversationsConfigs().add(config);
+
+        if(!configFile.renameTo(new File(category.getConversationsFolder(), configFile.getName()))){
+            main.getLogManager().severe("There was an error changing the category of conversation <highlight>" + getIdentifier() + "</highlight>. The conversation file could not be moved.");
+        }
+
 
     }
 

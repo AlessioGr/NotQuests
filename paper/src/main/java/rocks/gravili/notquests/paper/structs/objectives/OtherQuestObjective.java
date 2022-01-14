@@ -41,14 +41,13 @@ public class OtherQuestObjective extends Objective {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
-        manager.command(addObjectiveBuilder.literal("OtherQuest")
+        manager.command(addObjectiveBuilder
                 .argument(QuestSelector.of("other quest name", main), ArgumentDescription.of("Name of the other Quest the player has to complete."))
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of times the Quest needs to be completed."))
                 .flag(
                         manager.flagBuilder("countPreviouslyCompletedQuests")
                                 .withDescription(ArgumentDescription.of("Makes it so quests completed before this OtherQuest objective becomes active will be counted towards the progress too."))
                 )
-                .meta(CommandMeta.DESCRIPTION, "Adds a new OtherQuest Objective to a quest")
                 .handler((context) -> {
                     final Quest otherQuest = context.get("other quest name");
                     final int amount = context.get("amount");

@@ -30,6 +30,9 @@ import rocks.gravili.notquests.paper.commands.arguments.ConversationSelector;
 import rocks.gravili.notquests.paper.conversation.Conversation;
 import rocks.gravili.notquests.paper.conversation.ConversationPlayer;
 
+import java.util.ArrayList;
+import java.util.Locale;
+
 public class StartConversationAction extends Action {
 
     private String conversationToStart = "";
@@ -41,13 +44,12 @@ public class StartConversationAction extends Action {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor rewardFor) {
-        manager.command(builder.literal("StartConversation")
+        manager.command(builder
                 .argument(ConversationSelector.of("conversation to start", main), ArgumentDescription.of("Name of the Conversation which should be started."))
                 .flag(
                         manager.flagBuilder("endPrevious")
                                 .withDescription(ArgumentDescription.of("Ends the previous conversation furst if the player is already in another conversation"))
                 )
-                .meta(CommandMeta.DESCRIPTION, "Creates a new StartConversation Action")
                 .handler((context) -> {
                     final Conversation foundConversation = context.get("conversation to start");
                     final boolean endPrevious = context.flags().isPresent("endPrevious");
@@ -103,9 +105,19 @@ public class StartConversationAction extends Action {
         this.endPrevious = configuration.getBoolean(initialPath + ".specifics.endPrevious");
     }
 
+    @Override
+    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+        this.conversationToStart = arguments.get(0);
+        if(arguments.size() >= 2){
+            this.endPrevious = String.join(" ", arguments).toLowerCase(Locale.ROOT).contains("--endprevious");
+        }else {
+            this.endPrevious = false;
+        }
+    }
+
 
     @Override
-    public String getActionDescription() {
+    public String getActionDescription(final Player player, final Object... objects) {
         return "Starts Conversation: " + getConversationToStart();
     }
 }

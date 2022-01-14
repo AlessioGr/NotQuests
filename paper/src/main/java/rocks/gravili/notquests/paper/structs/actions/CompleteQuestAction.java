@@ -31,6 +31,8 @@ import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
+import java.util.ArrayList;
+
 public class CompleteQuestAction extends Action {
 
     private String questToCompleteName = "";
@@ -41,9 +43,8 @@ public class CompleteQuestAction extends Action {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor rewardFor) {
-        manager.command(builder.literal("CompleteQuest")
+        manager.command(builder
                 .argument(QuestSelector.of("quest to complete", main), ArgumentDescription.of("Name of the Quest which should be completed for the player."))
-                .meta(CommandMeta.DESCRIPTION, "Creates a new CompleteQuest Action")
                 .handler((context) -> {
                     final Quest foundQuest = context.get("quest to complete");
 
@@ -96,9 +97,14 @@ public class CompleteQuestAction extends Action {
         this.questToCompleteName = configuration.getString(initialPath + ".specifics.quest");
     }
 
+    @Override
+    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+        this.questToCompleteName = arguments.get(0);
+    }
+
 
     @Override
-    public String getActionDescription() {
+    public String getActionDescription(final Player player, final Object... objects) {
         return "Completes Quest: " + getQuestToCompleteName();
     }
 }

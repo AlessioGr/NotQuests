@@ -133,7 +133,7 @@ public class TriggerManager {
 
             quest.addTrigger(trigger, true);
 
-            audience.sendMessage(MiniMessage.miniMessage().parse(
+            audience.sendMessage(MiniMessage.miniMessage().deserialize(
                     NotQuestColors.successGradient + getTriggerType(trigger.getClass()) + " Trigger successfully added to Quest " + NotQuestColors.highlightGradient
                             + quest.getQuestName() + "</gradient>!</gradient>"
             ));

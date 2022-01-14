@@ -1,6 +1,7 @@
 package rocks.gravili.notquests.paper.managers;
 
 import org.bukkit.Bukkit;
+import org.bukkit.event.server.PluginEnableEvent;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.events.hooks.*;
 import rocks.gravili.notquests.paper.managers.integrations.*;
@@ -9,6 +10,7 @@ import rocks.gravili.notquests.paper.managers.integrations.citizens.CitizensMana
 import rocks.gravili.notquests.paper.placeholders.QuestPlaceholders;
 
 import java.util.Objects;
+import java.util.logging.Level;
 
 public class IntegrationsManager {
     private final NotQuests main;
@@ -26,6 +28,8 @@ public class IntegrationsManager {
     private boolean placeholderAPIEnabled = false;
     private boolean betonQuestEnabled = false;
     private boolean mythicMobsEnabled = false;
+    private boolean ecoBossesEnabled = false;
+
     //Managers
     private VaultManager vaultManager;
     private MythicMobsManager mythicMobsManager;
@@ -36,12 +40,38 @@ public class IntegrationsManager {
     private LuckpermsManager luckpermsManager;
     private ProjectKorraManager projectKorraManager;
     private UltimateClansManager ultimateClansManager;
+    private EcoBossesManager ecoBossesManager;
+
 
     public IntegrationsManager(final NotQuests main) {
         this.main = main;
     }
 
     public void enableIntegrations() {
+
+        //EcoBosses
+        if (main.getConfiguration().isIntegrationEcoBossesEnabled()) {
+            if (Bukkit.getPluginManager().getPlugin("EcoBosses") != null) {
+                ecoBossesEnabled = true;
+                main.getLogManager().info("EcoBosses found! Enabling EcoBosses support... Bosses will be loaded in 10 seconds, because they are not loaded when the plugin starts. Don't blame me");
+                Bukkit.getScheduler().scheduleSyncDelayedTask(main.getMain(), new Runnable() {
+                    @Override
+                    public void run() {
+                        ecoBossesManager = new EcoBossesManager(main);
+                        main.getDataManager().loadStandardCompletions();
+                    }
+                }, 200L);
+            }
+        }
+
+        //PlaceholderAPI
+        if (main.getConfiguration().isIntegrationPlaceholderAPIEnabled()) {
+            if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+                placeholderAPIEnabled = true;
+                main.getLogManager().info("PlaceholderAPI found! Enabling PlaceholderAPI support...");
+            }
+        }
+
         //Vault Hook
         if (main.getConfiguration().isIntegrationVaultEnabled()) {
             if (main.getMain().getServer().getPluginManager().getPlugin("Vault") != null) {
@@ -172,12 +202,14 @@ public class IntegrationsManager {
     }
 
     public void enableIntegrationsAfterDataLoad() {
-        if (main.getConfiguration().isIntegrationPlaceholderAPIEnabled()) {
+        if (main.getConfiguration().isIntegrationPlaceholderAPIEnabled() && !isPlaceholderAPIEnabled()) {
             if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
                 placeholderAPIEnabled = true;
                 main.getLogManager().info("PlaceholderAPI found! Enabling PlaceholderAPI support...");
                 new QuestPlaceholders(main).register();
             }
+        }else if(main.getConfiguration().isIntegrationPlaceholderAPIEnabled()){
+            new QuestPlaceholders(main).register();
         }
     }
 
@@ -208,6 +240,10 @@ public class IntegrationsManager {
 
         if (isSlimefunEnabled()) {
             main.getMain().getServer().getPluginManager().registerEvents(new SlimefunEvents(main), main.getMain());
+        }
+
+        if (isEcoBossesEnabled()) {
+            main.getMain().getServer().getPluginManager().registerEvents(new EcoBossesEvents(main), main.getMain());
         }
     }
 
@@ -305,9 +341,17 @@ public class IntegrationsManager {
         return projectKorraEnabled;
     }
 
+    public boolean isEcoBossesEnabled() {
+        return ecoBossesEnabled;
+    }
+
 
     public final MythicMobsManager getMythicMobsManager() {
         return mythicMobsManager;
+    }
+
+    public final EcoBossesManager getEcoBossesManager() {
+        return ecoBossesManager;
     }
 
     public final BetonQuestManager getBetonQuestManager() {
@@ -336,5 +380,15 @@ public class IntegrationsManager {
 
     public final VaultManager getVaultManager() {
         return vaultManager;
+    }
+
+    public void onPluginEnable(final PluginEnableEvent event) {
+        if (event.getPlugin().getName().equals("MythicMobs") && !main.getIntegrationsManager().isMythicMobsEnabled()) {
+            // Turn on support for the plugin
+            main.getIntegrationsManager().enableMythicMobs();
+        } else if (event.getPlugin().getName().equals("Citizens") && !main.getIntegrationsManager().isCitizensEnabled()) {
+            // Turn on support for the plugin
+            main.getIntegrationsManager().enableCitizens();
+        }
     }
 }

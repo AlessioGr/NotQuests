@@ -81,7 +81,7 @@ public class SendMessageAction extends Action {
     public void execute(final Player player, Object... objects) {
         Audience audience = main.adventure().player(player);
 
-        audience.sendMessage(MiniMessage.miniMessage().parse(
+        audience.sendMessage(MiniMessage.miniMessage().deserialize(
                 getMessageToSend()
         ));
     }

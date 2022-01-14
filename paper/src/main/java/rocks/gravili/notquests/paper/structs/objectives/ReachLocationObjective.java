@@ -23,7 +23,6 @@ import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.StringArrayArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
-import net.kyori.adventure.audience.Audience;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -47,7 +46,7 @@ public class ReachLocationObjective extends Objective {
             return;
         }
 
-        manager.command(addObjectiveBuilder.literal("ReachLocation")
+        manager.command(addObjectiveBuilder
                 .senderType(Player.class)
                 .literal("worldeditselection")
                 .argument(StringArrayArgument.of("Location Name",
@@ -59,7 +58,6 @@ public class ReachLocationObjective extends Objective {
                             return completions;
                         }
                 ), ArgumentDescription.of("Location name"))
-                .meta(CommandMeta.DESCRIPTION, "Adds a new ReachLocation Objective to a quest")
                 .handler((context) -> {
                     final String locationName = String.join(" ", (String[]) context.get("Location Name"));
 

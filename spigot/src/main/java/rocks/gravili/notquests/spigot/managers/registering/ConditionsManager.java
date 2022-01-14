@@ -143,13 +143,13 @@ public class ConditionsManager {
 
                 objectiveOfQuest.addCondition(condition, true);
 
-                audience.sendMessage(MiniMessage.miniMessage().parse(
+                audience.sendMessage(MiniMessage.miniMessage().deserialize(
                         NotQuestColors.successGradient + getConditionType(condition.getClass()) + " Condition successfully added to Objective " + NotQuestColors.highlightGradient
                                 + objectiveOfQuest.getObjectiveFinalName() + "</gradient>!</gradient>"));
             } else { //Quest Requirement
                 quest.addRequirement(condition, true);
 
-                audience.sendMessage(MiniMessage.miniMessage().parse(
+                audience.sendMessage(MiniMessage.miniMessage().deserialize(
                         NotQuestColors.successGradient + getConditionType(condition.getClass()) + " Requirement successfully added to Quest " + NotQuestColors.highlightGradient
                                 + quest.getQuestName() + "</gradient>!</gradient>"
                 ));
@@ -159,12 +159,12 @@ public class ConditionsManager {
 
                 if (main.getConditionsYMLManager().getCondition(conditionIdentifier) == null) {
                     main.getConditionsYMLManager().addCondition(conditionIdentifier, condition);
-                    audience.sendMessage(MiniMessage.miniMessage().parse(
+                    audience.sendMessage(MiniMessage.miniMessage().deserialize(
                             NotQuestColors.successGradient + getConditionType(condition.getClass()) + " Condition with the name " + NotQuestColors.highlightGradient
                                     + conditionIdentifier + "</gradient> has been created successfully!</gradient>"
                     ));
                 } else {
-                    audience.sendMessage(MiniMessage.miniMessage().parse(errorGradient + "Error! A condition with the name " + highlightGradient + conditionIdentifier + "</gradient> already exists!</gradient>"));
+                    audience.sendMessage(MiniMessage.miniMessage().deserialize(errorGradient + "Error! A condition with the name " + highlightGradient + conditionIdentifier + "</gradient> already exists!</gradient>"));
                 }
             } else { //Condition for Actions.yml action
                 if (actionIdentifier != null && !actionIdentifier.isBlank()) {
@@ -172,7 +172,7 @@ public class ConditionsManager {
                     if (foundAction != null) {
                         foundAction.addCondition(condition, true, main.getActionsYMLManager().getActionsConfig(), "actions." + actionIdentifier);
                         main.getActionsYMLManager().saveActions();
-                        audience.sendMessage(MiniMessage.miniMessage().parse(
+                        audience.sendMessage(MiniMessage.miniMessage().deserialize(
                                 NotQuestColors.successGradient + getConditionType(condition.getClass()) + " Condition successfully added to Action " + NotQuestColors.highlightGradient
                                         + foundAction.getActionName() + "</gradient>!</gradient>"));
                     }

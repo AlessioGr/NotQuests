@@ -144,7 +144,7 @@ public class QuestPlayer {
                     if (player != null) {
                         Audience audience = main.adventure().player(player);
 
-                        audience.sendMessage(MiniMessage.miniMessage().parse(
+                        audience.sendMessage(MiniMessage.miniMessage().deserialize(
                                 main.getLanguageManager().getString("chat.objectives-label-after-quest-accepting", player)
                         ));
                         main.getQuestManager().sendActiveObjectivesAndProgress(player, quest);
@@ -152,8 +152,8 @@ public class QuestPlayer {
                         if (main.getConfiguration().visualTitleQuestSuccessfullyAccepted_enabled) {
 
                             audience.showTitle(
-                                    Title.title(MiniMessage.miniMessage().parse(main.getLanguageManager().getString("titles.quest-accepted.title", player)),
-                                            MiniMessage.miniMessage().parse(main.getLanguageManager().getString("titles.quest-accepted.subtitle", player, this, quest)),
+                                    Title.title(MiniMessage.miniMessage().deserialize(main.getLanguageManager().getString("titles.quest-accepted.title", player)),
+                                            MiniMessage.miniMessage().deserialize(main.getLanguageManager().getString("titles.quest-accepted.subtitle", player, this, quest)),
                                             Title.Times.times(Duration.ofMillis(2), Duration.ofSeconds(3), Duration.ofMillis(8))
                                     ));
                         }
@@ -265,7 +265,7 @@ public class QuestPlayer {
         final Player player = getPlayer();
         if (player != null) {
             Audience audience = main.adventure().player(player);
-            audience.sendMessage(MiniMessage.miniMessage().parse(
+            audience.sendMessage(MiniMessage.miniMessage().deserialize(
                     main.getLanguageManager().getString("chat.quest-completed-and-rewards-given", getPlayer(), quest)
             ));
         }
@@ -276,7 +276,7 @@ public class QuestPlayer {
         final Player player = getPlayer();
         if (player != null) {
             Audience audience = main.adventure().player(player);
-            audience.sendMessage(MiniMessage.miniMessage().parse(message));
+            audience.sendMessage(MiniMessage.miniMessage().deserialize(message));
         }
     }
 
@@ -284,7 +284,7 @@ public class QuestPlayer {
         final Player player = getPlayer();
         if (player != null) {
             if (main.getQuestManager().isDebugEnabledPlayer(player)) {
-                main.adventure().player(player).sendMessage(MiniMessage.miniMessage().parse(NotQuestColors.debugTitleGradient + "[NotQuests Debug]</gradient> " + NotQuestColors.debugGradient + message + "</gradient>"));
+                main.adventure().player(player).sendMessage(MiniMessage.miniMessage().deserialize(NotQuestColors.debugTitleGradient + "[NotQuests Debug]</gradient> " + NotQuestColors.debugGradient + message + "</gradient>"));
             }
 
         }
@@ -320,8 +320,8 @@ public class QuestPlayer {
             if (main.getConfiguration().visualTitleQuestCompleted_enabled) {
                 Audience audience = main.adventure().player(player);
                 audience.showTitle(
-                        Title.title(MiniMessage.miniMessage().parse(main.getLanguageManager().getString("titles.quest-completed.title", player)),
-                                MiniMessage.miniMessage().parse(main.getLanguageManager().getString("titles.quest-completed.subtitle", player, this, activeQuest)),
+                        Title.title(MiniMessage.miniMessage().deserialize(main.getLanguageManager().getString("titles.quest-completed.title", player)),
+                                MiniMessage.miniMessage().deserialize(main.getLanguageManager().getString("titles.quest-completed.subtitle", player, this, activeQuest)),
                                 Title.Times.times(Duration.ofMillis(2), Duration.ofSeconds(3), Duration.ofMillis(8))
                         ));
 
@@ -374,8 +374,8 @@ public class QuestPlayer {
                 if (main.getConfiguration().visualTitleQuestCompleted_enabled) {
                     Audience audience = main.adventure().player(player);
                     audience.showTitle(
-                            Title.title(MiniMessage.miniMessage().parse(main.getLanguageManager().getString("titles.quest-completed.title", player)),
-                                    MiniMessage.miniMessage().parse(main.getLanguageManager().getString("titles.quest-completed.subtitle", player, this, activeQuest)),
+                            Title.title(MiniMessage.miniMessage().deserialize(main.getLanguageManager().getString("titles.quest-completed.title", player)),
+                                    MiniMessage.miniMessage().deserialize(main.getLanguageManager().getString("titles.quest-completed.subtitle", player, this, activeQuest)),
                                     Title.Times.times(Duration.ofMillis(2), Duration.ofSeconds(3), Duration.ofMillis(8))
                             ));
                 }
@@ -418,7 +418,7 @@ public class QuestPlayer {
                 final Player player = getPlayer();
                 if (player != null) {
                     Audience audience = main.adventure().player(player);
-                    audience.sendMessage(MiniMessage.miniMessage().parse(
+                    audience.sendMessage(MiniMessage.miniMessage().deserialize(
                             "<YELLOW>Your quest points have been set to <AQUA>" + newQuestPoints + "</AQUA>."
                     ));
                 }
@@ -432,7 +432,7 @@ public class QuestPlayer {
             final Player player = getPlayer();
             if (player != null) {
                 Audience audience = main.adventure().player(player);
-                audience.sendMessage(MiniMessage.miniMessage().parse(
+                audience.sendMessage(MiniMessage.miniMessage().deserialize(
                         "<AQUA>+" + questPointsToAdd + " <GREEN>quest points!"
                 ));
             }
@@ -445,7 +445,7 @@ public class QuestPlayer {
             final Player player = getPlayer();
             if (player != null) {
                 Audience audience = main.adventure().player(player);
-                audience.sendMessage(MiniMessage.miniMessage().parse(
+                audience.sendMessage(MiniMessage.miniMessage().deserialize(
                         "<AQUA>>-" + questPointsToRemove + " <RED>>quest points!"
                 ));
             }
@@ -488,8 +488,8 @@ public class QuestPlayer {
                     Audience audience = main.adventure().player(player);
                     if (main.getConfiguration().visualTitleQuestFailed_enabled) {
                         audience.showTitle(
-                                Title.title(MiniMessage.miniMessage().parse(main.getLanguageManager().getString("titles.quest-failed.title", player)),
-                                        MiniMessage.miniMessage().parse(main.getLanguageManager().getString("titles.quest-failed.subtitle", player, this, activeQuestToFail)),
+                                Title.title(MiniMessage.miniMessage().deserialize(main.getLanguageManager().getString("titles.quest-failed.title", player)),
+                                        MiniMessage.miniMessage().deserialize(main.getLanguageManager().getString("titles.quest-failed.subtitle", player, this, activeQuestToFail)),
                                         Title.Times.times(Duration.ofMillis(2), Duration.ofSeconds(3), Duration.ofMillis(8))
                                 ));
                     }

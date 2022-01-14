@@ -21,10 +21,7 @@ package rocks.gravili.notquests.paper.commands;
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.parser.ArgumentParseResult;
-import cloud.commandframework.arguments.standard.BooleanArgument;
-import cloud.commandframework.arguments.standard.IntegerArgument;
-import cloud.commandframework.arguments.standard.StringArgument;
-import cloud.commandframework.arguments.standard.StringArrayArgument;
+import cloud.commandframework.arguments.standard.*;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import net.citizensnpcs.api.CitizensAPI;
@@ -42,14 +39,17 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.arguments.CategorySelector;
 import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
+import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 import rocks.gravili.notquests.paper.structs.triggers.Trigger;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,28 +66,32 @@ public class AdminEditCommands {
         this.editBuilder = editBuilder;
 
 
+
         manager.command(editBuilder.literal("acceptCooldown", "cooldown")
-                .argument(IntegerArgument.<CommandSender>newBuilder("minutes").withMin(-1).withSuggestionsProvider((context, lastString) -> {
-                    ArrayList<String> completions = new ArrayList<>();
-                    completions.add("<cooldown in minutes>");
-                    return completions;
-                }).build(), ArgumentDescription.of("New accept cooldown in minutes. Set it to -1, to disable the quest accept cooldown."))
+                .literal("set")
+                .argument(DurationArgument.of("duration"), ArgumentDescription.of("New accept cooldown."))
                 .meta(CommandMeta.DESCRIPTION, "Sets the time players have to wait between accepting quests.")
                 .handler((context) -> {
                     final Quest quest = context.get("quest");
-                    int cooldownInMinutes = context.get("minutes");
-                    if (cooldownInMinutes > 0) {
-                        quest.setAcceptCooldown(cooldownInMinutes);
-                        context.getSender().sendMessage(main.parse(
-                                "<success>Cooldown for Quest <highlight>" + quest.getQuestName() + "</highlight> has been set to <highlight2>"
-                                        + cooldownInMinutes + "</highlight2> minutes!"
-                        ));
-                    } else {
-                        quest.setAcceptCooldown(-1);
-                        context.getSender().sendMessage(main.parse(
-                                "<success>Cooldown for Quest <highlight>" + quest.getQuestName() + "</highlight> has been <highlight2>disabled</highlight2>!"
-                        ));
-                    }
+                    final Duration durationCooldown = context.get("duration");
+                    final long cooldownInMinutes = durationCooldown.toMinutes();
+
+                    quest.setAcceptCooldown(cooldownInMinutes);
+                    context.getSender().sendMessage(main.parse(
+                            "<success>Cooldown for Quest <highlight>" + quest.getQuestName() + "</highlight> has been set to <highlight2>"
+                                    + durationCooldown.toDaysPart() + " days, " + durationCooldown.toHoursPart() + " hours, " + durationCooldown.toMinutesPart() + " minutes" + "</highlight2>!"
+                    ));
+                }));
+
+        manager.command(editBuilder.literal("acceptCooldown", "cooldown")
+                .literal("disable")
+                .meta(CommandMeta.DESCRIPTION, "Disables the wait time for players between accepting quests.")
+                .handler((context) -> {
+                    final Quest quest = context.get("quest");
+                    quest.setAcceptCooldown(-1);
+                    context.getSender().sendMessage(main.parse(
+                            "<success>Cooldown for Quest <highlight>" + quest.getQuestName() + "</highlight> has been set to <highlight2>disabled</highlight2>!"
+                    ));
                 }));
 
 
@@ -279,7 +283,6 @@ public class AdminEditCommands {
                         ItemMeta meta = takeItem.getItemMeta();
                         if (meta == null) {
                             meta = Bukkit.getItemFactory().getItemMeta(takeItem.getType());
-                            ;
                         }
                         if (meta != null) {
                             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -306,6 +309,45 @@ public class AdminEditCommands {
         handleRewards(rewardsBuilder);
         final Command.Builder<CommandSender> triggersBuilder = editBuilder.literal("triggers");
         handleTriggers(triggersBuilder);
+
+        final Command.Builder<CommandSender> categoryBuilder = editBuilder.literal("category");
+        handleCategories(categoryBuilder);
+    }
+
+    public void handleCategories(final Command.Builder<CommandSender> builder){
+        manager.command(builder.literal("show")
+                .meta(CommandMeta.DESCRIPTION, "Shows the current category of this Quest.")
+                .handler((context) -> {
+                    final Quest quest = context.get("quest");
+
+                    context.getSender().sendMessage(main.parse(
+                            "<main>Category for Quest <highlight>" + quest.getQuestName() + "</highlight>: <highlight2>"
+                                    + quest.getCategory().getCategoryFullName() + "</highlight2>."
+                    ));
+                }));
+
+        manager.command(builder.literal("set")
+                .argument(CategorySelector.of("category", main), ArgumentDescription.of("New category for this Quest."))
+                .meta(CommandMeta.DESCRIPTION, "Changes the current category of this Quest.")
+                .handler((context) -> {
+                    final Quest quest = context.get("quest");
+                    final Category category = context.get("category");
+                    if(quest.getCategory().getCategoryFullName().equalsIgnoreCase(category.getCategoryFullName())){
+                        context.getSender().sendMessage(main.parse(
+                                "<error> Error: The quest <highlight>" + quest.getQuestName() + "</highlight> already has the category <highlight2>" + quest.getCategory().getCategoryFullName() + "</highlight2>."
+                        ));
+                        return;
+                    }
+
+
+                    context.getSender().sendMessage(main.parse(
+                            "<success>Category for Quest <highlight>" + quest.getQuestName() + "</highlight> has successfully been changed from <highlight2>"
+                                    + quest.getCategory().getCategoryFullName() + "</highlight2> to <highlight2>" + category.getCategoryFullName() + "</highlight2>!"
+                    ));
+
+                    quest.switchCategory(category);
+
+                }));
     }
 
 
@@ -371,7 +413,7 @@ public class AdminEditCommands {
                     context.getSender().sendMessage(main.parse("<highlight>NPCs bound to quest <highlight2>" + quest.getQuestName() + "</highlight2> with Quest showing:"));
                     int counter = 1;
                     for (final NPC npc : quest.getAttachedNPCsWithQuestShowing()) {
-                        context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>ID:</man> <highlight2>" + npc.getId()));
+                        context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>ID:</main> <highlight2>" + npc.getId()));
                         counter++;
                     }
                     counter = 1;
@@ -736,7 +778,11 @@ public class AdminEditCommands {
                     int counter = 1;
                     for (Condition condition : objective.getConditions()) {
                         context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>" + condition.getConditionType() + "</main>"));
-                        context.getSender().sendMessage(main.parse("<main>>" + condition.getConditionDescription()));
+                        if(context.getSender() instanceof Player player){
+                            context.getSender().sendMessage(main.parse("<main>" + condition.getConditionDescription(player)));
+                        }else{
+                            context.getSender().sendMessage(main.parse("<main>" + condition.getConditionDescription(null)));
+                        }
                         counter += 1;
                     }
 
@@ -1101,9 +1147,16 @@ public class AdminEditCommands {
                     ));
                     int counter = 1;
                     for (final Condition condition : objective.getConditions()) {
-                        context.getSender().sendMessage(main.parse(
-                                "    <highlight>" + counter + ". Description: " + condition.getConditionDescription()
-                        ));
+                        if(context.getSender() instanceof Player player){
+                            context.getSender().sendMessage(main.parse(
+                                    "    <highlight>" + counter + ". Description: " + condition.getConditionDescription(player)
+                            ));
+                        }else {
+                            context.getSender().sendMessage(main.parse(
+                                    "    <highlight>" + counter + ". Description: " + condition.getConditionDescription(null)
+                            ));
+                        }
+
                         counter++;
                     }
                 }));
@@ -1142,7 +1195,11 @@ public class AdminEditCommands {
                     int counter = 1;
                     for (Condition condition : quest.getRequirements()) {
                         context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>" + condition.getConditionType()));
-                        context.getSender().sendMessage(main.parse("<main>" + condition.getConditionDescription()));
+                        if(context.getSender() instanceof Player player){
+                            context.getSender().sendMessage(main.parse("<main>" + condition.getConditionDescription(player)));
+                        }else {
+                            context.getSender().sendMessage(main.parse("<main>" + condition.getConditionDescription(null)));
+                        }
                         counter += 1;
                     }
                 }));
@@ -1170,7 +1227,11 @@ public class AdminEditCommands {
                     int counter = 1;
                     for (final Action action : quest.getRewards()) {
                         context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>" + action.getActionType()));
-                        context.getSender().sendMessage(main.parse("<unimportant>--</unimportant> <main>" + action.getActionDescription()));
+                        if(context.getSender() instanceof Player player){
+                            context.getSender().sendMessage(main.parse("<unimportant>--</unimportant> <main>" + action.getActionDescription(player)));
+                        }else {
+                            context.getSender().sendMessage(main.parse("<unimportant>--</unimportant> <main>" + action.getActionDescription(null)));
+                        }
                         counter++;
                     }
 
@@ -1230,7 +1291,11 @@ public class AdminEditCommands {
                     int counter = 1;
                     for (final Action action : objective.getRewards()) {
                         context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>" + action.getActionType()));
-                        context.getSender().sendMessage(main.parse("<unimportant>--</unimportant> <main>" + action.getActionDescription()));
+                        if(context.getSender() instanceof Player player){
+                            context.getSender().sendMessage(main.parse("<unimportant>--</unimportant> <main>" + action.getActionDescription(player)));
+                        }else{
+                            context.getSender().sendMessage(main.parse("<unimportant>--</unimportant> <main>" + action.getActionDescription(null)));
+                        }
                         counter++;
                     }
                 }));
@@ -1307,9 +1372,17 @@ public class AdminEditCommands {
                     context.getSender().sendMessage(main.parse(
                             "<main>Reward <highlight>" + (ID+1) + "</highlight> for Objective with ID <highlight2>" + objectiveID + "</highlight2> of Quest <highlight2>" + quest.getQuestName() + "</highlight2>:"
                     ));
-                    context.getSender().sendMessage(main.parse(
-                            "<unimportant>--</unimportant> <main>" + foundReward.getActionDescription()
-                    ));
+
+                    if(context.getSender() instanceof Player player){
+                        context.getSender().sendMessage(main.parse(
+                                "<unimportant>--</unimportant> <main>" + foundReward.getActionDescription(player)
+                        ));
+                    }else{
+                        context.getSender().sendMessage(main.parse(
+                                "<unimportant>--</unimportant> <main>" + foundReward.getActionDescription(null)
+                        ));
+                    }
+
 
                 }));
 
@@ -1385,9 +1458,10 @@ public class AdminEditCommands {
                         return;
                     }
                     foundReward.removeActionName();
-                    main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + (ID + 1) + ".displayName", null);
+                    foundReward.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + (ID + 1) + ".displayName", null);
+                    foundReward.getCategory().saveQuestsConfig();
                     context.getSender().sendMessage(main.parse(
-                            "<success>Display Name of reward with the ID <highlight>" + (ID+1) + "</highlight> has been removed successfully."
+                            "<success>Display Name of reward with the ID <highlight>" + (ID + 1) + "</highlight> has been removed successfully."
                     ));
                 }));
 
@@ -1442,9 +1516,10 @@ public class AdminEditCommands {
 
 
                     foundReward.setActionName(displayName);
-                    main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + (ID + 1) + ".displayName", foundReward.getActionName());
+                    foundReward.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + (ID + 1) + ".displayName", foundReward.getActionName());
+                    foundReward.getCategory().saveQuestsConfig();
                     context.getSender().sendMessage(main.parse(
-                            "<success>Display Name successfully added to reward with ID <highlight>" +(ID+1) + "</highlight>! New display name: <highlight2>"
+                            "<success>Display Name successfully added to reward with ID <highlight>" + (ID + 1) + "</highlight>! New display name: <highlight2>"
                                     + foundReward.getActionName()
                     ));
                 }));
@@ -1468,9 +1543,17 @@ public class AdminEditCommands {
                     context.getSender().sendMessage(main.parse(
                             "<main>Reward <highlight>" + (ID+1) + "</highlight> for Quest <highlight2>" + quest.getQuestName() + "</highlight2>:"
                     ));
-                    context.getSender().sendMessage(main.parse(
-                            "<unimportant>--</unimportant> <main>" + foundReward.getActionDescription()
-                    ));
+
+                    if(context.getSender() instanceof Player player){
+                        context.getSender().sendMessage(main.parse(
+                                "<unimportant>--</unimportant> <main>" + foundReward.getActionDescription(player)
+                        ));
+                    }else{
+                        context.getSender().sendMessage(main.parse(
+                                "<unimportant>--</unimportant> <main>" + foundReward.getActionDescription(null)
+                        ));
+                    }
+
 
                 }));
 
@@ -1534,9 +1617,10 @@ public class AdminEditCommands {
                         return;
                     }
                     foundReward.removeActionName();
-                    main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + (ID + 1) + ".displayName", null);
+                    foundReward.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + (ID + 1) + ".displayName", null);
+                    foundReward.getCategory().saveQuestsConfig();
                     context.getSender().sendMessage(main.parse(
-                            "<success>Display Name of reward with the ID <highlight>" + (ID+1) + "</highlight> has been removed successfully."
+                            "<success>Display Name of reward with the ID <highlight>" + (ID + 1) + "</highlight> has been removed successfully."
                     ));
                 }));
 
@@ -1587,9 +1671,10 @@ public class AdminEditCommands {
 
 
                     foundReward.setActionName(displayName);
-                    main.getDataManager().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + (ID + 1) + ".displayName", foundReward.getActionName());
+                    foundReward.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + (ID + 1) + ".displayName", foundReward.getActionName());
+                    foundReward.getCategory().saveQuestsConfig();
                     context.getSender().sendMessage(main.parse(
-                            "<success>Display Name successfully added to reward with ID <highlight>" + (ID+1) + "</highlight>! New display name: <highlight2>"
+                            "<success>Display Name successfully added to reward with ID <highlight>" + (ID + 1) + "</highlight>! New display name: <highlight2>"
                                     + foundReward.getActionName()
                     ));
                 }));
@@ -1628,7 +1713,13 @@ public class AdminEditCommands {
                         }
 
                         context.getSender().sendMessage(main.parse("<unimportant>--- Action Name:</unimportant> <main>" + trigger.getTriggerAction().getActionName()));
-                        context.getSender().sendMessage(main.parse("<unimportant>------ Description:</unimportant> <main>" + trigger.getTriggerAction().getActionDescription()));
+                        if(context.getSender() instanceof Player player){
+                            context.getSender().sendMessage(main.parse("<unimportant>------ Description:</unimportant> <main>" + trigger.getTriggerAction().getActionDescription(player)));
+
+                        }else{
+                            context.getSender().sendMessage(main.parse("<unimportant>------ Description:</unimportant> <main>" + trigger.getTriggerAction().getActionDescription(null)));
+
+                        }
                         context.getSender().sendMessage(main.parse("<unimportant>--- Amount of triggers needed for first execution:</unimportant> <main>" + trigger.getAmountNeeded()));
 
                         if (trigger.getApplyOn() == 0) {

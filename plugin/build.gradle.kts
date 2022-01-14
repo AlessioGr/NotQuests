@@ -4,10 +4,13 @@ plugins {
     `java-library`
     `maven-publish`
     id ("com.github.johnrengelman.shadow")
+    id("io.papermc.paperweight.userdev")
+    id("xyz.jpenilla.run-paper")
+    id("net.minecrell.plugin-yml.bukkit") version "0.5.1"
 }
 
 group = "rocks.gravili.notquests"
-version = "3.2.5"
+version = rootProject.version
 
 repositories {
     mavenCentral()
@@ -96,13 +99,16 @@ repositories {
 }
 
 dependencies {
+    paperDevBundle("1.18.1-R0.1-SNAPSHOT")
+
     implementation(project(path= ":spigot", configuration= "shadow"))
     implementation(project(path= ":paper", configuration= "shadow"))
 
     //implementation(project(":spigot"))
     //implementation(project(":paper"))
 
-    compileOnly("io.papermc.paper:paper-api:1.18.1-R0.1-SNAPSHOT")
+    //compileOnly("io.papermc.paper:paper-api:1.18.1-R0.1-SNAPSHOT")
+
     implementation("io.papermc:paperlib:1.0.7")
 }
 
@@ -122,7 +128,7 @@ tasks.withType<ShadowJar> {
         include(dependency(":paper"))
         include(dependency("io.papermc:paperlib:"))
     }
-
+    //archiveBaseName.set("notquests")
     archiveClassifier.set("")
     //archiveClassifier.set(null)
 }
@@ -141,6 +147,11 @@ tasks {
     //build {
     //    dependsOn(shadowJar)
     //}
+
+    build {
+        dependsOn(reobfJar)
+    }
+
     compileJava {
         options.encoding = Charsets.UTF_8.name()
         options.release.set(17)
@@ -158,7 +169,7 @@ tasks {
         create<MavenPublication>("maven") {
             groupId = "rocks.gravili.notquests"
             artifactId = "NotQuests"
-            version = "3.2.5"
+            version = "4.0.0-dev"
 
             from(components["java"])
         }
@@ -180,6 +191,58 @@ publishing {
     publications {
         register<MavenPublication>("gpr") {
             from(components["java"])
+        }
+    }
+}
+
+
+bukkit {
+    name = "NotQuests"
+    version = rootProject.version.toString()
+    main = "rocks.gravili.notquests.Main"
+    apiVersion = "1.17"
+    authors = listOf("NoeX")
+    description = "Flexible, open, GUI Quest Plugin for Minecraft 1.17 and 1.18"
+    website = "quests.notnot.pro"
+    softDepend = listOf(
+        "ProtocolLib",
+        "ProtocolSupport",
+        "ViaVersion",
+        "Geyser-Spigot",
+        "Citizens",
+        "Vault",
+        "PlaceholderAPI",
+        "MythicMobs",
+        "EliteMobs",
+        "BetonQuest",
+        "WorldEdit",
+        "Slimefun",
+        "LuckPerms",
+        "UltimateClans",
+        "Towny",
+        "Jobs",
+        "ProjectKorra",
+        "EcoBosses",
+        "eco"
+    )
+
+    load = net.minecrell.pluginyml.bukkit.BukkitPluginDescription.PluginLoadOrder.POSTWORLD
+    permissions {
+        register("notquests.admin"){
+            default = net.minecrell.pluginyml.bukkit.BukkitPluginDescription.Permission.Default.OP
+            description = "Gives the player permission to everything in the plugin."
+            childrenMap = mapOf(
+                "notquests.admin.armorstandeditingitems" to true,
+                "notquests.use" to true
+            )
+        }
+        register("notquests.admin.armorstandeditingitems"){
+            default = net.minecrell.pluginyml.bukkit.BukkitPluginDescription.Permission.Default.OP
+            description = "Gives the player permission to use quest editing items for armor stands."
+        }
+        register("notquests.use"){
+            default = net.minecrell.pluginyml.bukkit.BukkitPluginDescription.Permission.Default.TRUE
+            description = "Gives the player permission to use the /notquests user command. They can not create new quests or other administrative tasks with just this permission."
         }
     }
 }
