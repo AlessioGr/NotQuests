@@ -276,7 +276,3 @@ gui:
           - "<veryUnimportant>%COMPLETEDOBJECTIVEDESCRIPTION%"
           - ""
           - "<unimportant><strikethrough>Progress: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
-      previousPage:
-        text: Wróć do poprzedniej strony (%prevpage%)
-      nextPage:
-        text: Przejdź do kolejnej strony (%nextpage%)
