@@ -116,143 +116,166 @@ titles:
     title: <negative>Quest Gagal
     subtitle: <highlight>%QUESTNAME%
 gui:
+  main:
+    title: '                <highlight2>Quests'
+    button:
+      questpoints:
+        name: "<highlight>Quest Points"
+        lore:
+          - "<main>Current quest points: <highlight2>%QUESTPOINTS%"
+        x: 8
+        y: 0
+      takequest:
+        name: "<positive>Take a Quest"
+        lore:
+          - "<unimportant>Start a new Quest!"
+          - ""
+          - "<veryUnimportant>Some Quests cannot be"
+          - "<veryUnimportant>started like this."
+        x: 0
+        y: 1
+      abortquest:
+        name: "<negative>Abort a Quest"
+        lore:
+          - ""
+          - "<veryUnimportant>Aborting a Quest may"
+          - "<veryUnimportant>lead to punishments."
+        x: 0
+        y: 2
+      activequests:
+        name: "<highlight>Active Quests"
+        lore:
+          - ""
+          - "<veryUnimportant>Shows all of your"
+          - "<veryUnimportant>active Quests."
+        x: 0
+        y: 3
+  activeQuests:
+    title: '             <highlight2>Quest aktif'
+    button:
+      activeQuestButton:
+        name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
+        lore:
+          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
+          - "<main>Click to see details!"
   reward-hidden-text: . <unimportant>[HIDDEN]
   availableQuests:
     title: '         <highlight2>Quest Tersedia'
     button:
       questPreview:
-        acceptedSuffix: ' <reset><positive>[ACCEPTED]'
-        questNamePrefix: <highlight>
-        questDescriptionPrefix: <veryUnimportant>
-        bottomText: <main>Klik untuk membuka Quest
-  main:
-    title: '                <highlight2>Quests'
-    button:
-      questpoints:
-        text: |-
-          <highlight>Quest Points
-          <main>Quest point yang dimiliki: <highlight2>%QUESTPOINTS%
-      takequest:
-        text: |-
-          <positive>Mengambil Quest
-          <unimportant>Memulai Quest yang baru!
-
-          <veryUnimportant>Beberapa Quest tidak bisa
-          <veryUnimportant>dimulai seperti ini.
-      abortquest:
-        text: |-
-          <negative>Tinggalkan Quest
-
-          <veryUnimportant>Meninggalkan Quest berkemungkinan
-          <veryUnimportant>Terkena hukuman.
-      previewquest:
-        text: |-
-          <main>Preview Quest (Info Quest)
-
-          <veryUnimportant>Tunjukkan lebih banyak
-          <veryUnimportant>Informasi tentang Quest.
-      activequests:
-        text: |-
-          <highlight>Quest Aktif
-
-          <veryUnimportant>Menunjukkan semua
-          <veryUnimportant>Quest yang aktif.
-  activeQuests:
-    title: '             <highlight2>Quest aktif'
-    button:
-      activeQuestButton:
-        text: |-
-          <highlight>%QUESTNAME% <positive>[ACTIVE]
-          <unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%
-          <main>Klik untuk melihat detail!
+        name-if-not-accepted: "<highlight>%QUESTNAME%"
+        name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTED]"
+        lore:
+          - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
+          - "<main>Click to open Quest!"
   takeQuestChoose:
     title: <highlight2>Quest mana yang kamu ingin ambil?
     button:
       questPreview:
-        acceptedSuffix: ' <reset><positive>[ACCEPTED]'
-        questNamePrefix: <highlight>
-        questDescriptionPrefix: <veryUnimportant>
-        bottomText: <main>Klik untuk preview Quest!
+        name-if-not-accepted: "<highlight>%QUESTNAME%"
+        name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTED]"
+        lore:
+          - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
+          - "<main>Klik untuk preview Quest!"
   abortQuestChoose:
     title: '  <highlight2>Quest aktif tidak bisa di tinggalkan'
     button:
       abortQuestPreview:
-        text: |-
-          <highlight>%QUESTNAME% <positive>[ACTIVE]
-          <unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%
-          <negative>Klik untuk meninggalkan Quest!
-  previewQuestChoose:
-    title: '     <highlight2>Pilih quest untuk di preview'
-    button:
-      questPreview:
-        acceptedSuffix: ' <reset><positive>[ACCEPTED]'
-        questNamePrefix: <highlight>
-        questDescriptionPrefix: <veryUnimportant>
-        bottomText: <main>Klik untuk preview Quest!
+        name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
+        lore:
+          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
+          - "<negative>Click to abort Quest!"
   abortQuest:
     title: '         <negative>Gagalkan konfirmasi'
     button:
       confirmAbort:
-        text: |-
-          <highlight>%QUESTNAME% <positive>[ACTIVE]
-          <unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%
-          <negative>Klik untuk menggagalkan Quest <highlight>%QUESTNAME%</highlight>!
+        name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
+        lore:
+          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
+          - "<negative>Click to abort the quest <highlight>%QUESTNAME%</highlight>!"
+        x: 3
+        y: 1
       cancelAbort:
-        text: |-
-          <positive>Klik untuk TIDAK meninggalkan quest ini
-          <positive>dan cancel aksi ini
+        name: "<positive>Click to NOT abort this quest"
+        lore:
+          - "<positive>and cancel this action"
+        x: 5
+        y: 1
   previewQuest:
-    title: <highlight2>Preview untuk Quest <black>%QUESTNAME%
+    title: <highlight2>Quest Preview
     button:
       description:
-        text: |-
-          <highlight>Deskripsi
-          <veryUnimportant>%QUESTDESCRIPTION%
-        empty: '???'
+        name: "<highlight>Description"
+        lore:
+          - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
+        lore-if-empty:
+          - "<veryUnimportant>???"
+        x: 2
+        y: 0
       rewards:
-        text: |-
-          <positive>Hadiah
-          <WHITE>%QUESTREWARDS%
-        empty: <veryUnimportant>None atau hidden
+        name: "<positive>Rewards"
+        lore:
+          - "<WHITE>%QUESTREWARDS%"
+        lore-if-empty:
+          - "<veryUnimportant>None atau hidden"
+        x: 4
+        y: 0
       requirements:
-        text: |-
-          <negative>Yang diperlukan
-          <WHITE>%QUESTREQUIREMENTS%
-        empty: '<veryUnimportant>-'
+        name: "<negative>Requirements"
+        lore:
+          - "<WHITE>%QUESTREQUIREMENTS%"
+        lore-if-empty:
+          - "<veryUnimportant>-"
+        x: 6
+        y: 0
       confirmTake:
-        text: |-
-          <highlight>%QUESTNAME%
-          <positive>Klik untuk menerima quest <highlight>%QUESTNAME%
+        name: "<highlight>%QUESTNAME%"
+        lore:
+          - "<positive>Click to take the quest <highlight>%QUESTNAME%"
+        x: 3
+        y: 2
       cancelTake:
-        text: |-
-          <negative>Klik untuk tidak mengambil quest ini
-          <negative>dan membatalkan
+        name: "<negative>Click to NOT take this quest"
+        lore:
+          - "<negative>and cancel this action"
+        x: 5
+        y: 2
   progress:
-    title: <highlight2>Detail Quest <black>%QUESTNAME%
+    title: <highlight2>Details for Quest
     button:
       unlockedObjective:
-        text: |-
-          <highlight2>%ACTIVEOBJECTIVEID%. <highlight>%OBJECTIVENAME%
-          <main><BOLD>Aktif</BOLD>
-          <veryUnimportant>%OBJECTIVEDESCRIPTION%
-          <unimportant>%ACTIVEOBJECTIVEDESCRIPTION%
-
-          <unimportant>Progress: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%
-        description-empty: Tidak Ada Deskripsi
+        name: "<highlight2>%ACTIVEOBJECTIVEID%. <highlight>%OBJECTIVENAME%"
+        lore:
+          - "<main><BOLD>ACTIVE</BOLD>"
+          - "<veryUnimportant>%WRAPPEDOBJECTIVEDESCRIPTION%"
+          - "<unimportant>%ACTIVEOBJECTIVEDESCRIPTION%"
+          - ""
+          - "<unimportant>Progress: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
+        lore-if-description-empty:
+          - "<main><BOLD>ACTIVE</BOLD>"
+          - "<veryUnimportant>No Description"
+          - "<unimportant>%ACTIVEOBJECTIVEDESCRIPTION%"
+          - ""
+          - "<unimportant>Progress: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
       lockedObjective:
-        text: |-
-          <highlight2>%ACTIVEOBJECTIVEID%. <unimportant><BOLD>[HIDDEN]
-          <warn>Objective ini belum
-          <warn>di unlocked!
+        name: "<highlight2>%ACTIVEOBJECTIVEID%. <unimportant><BOLD>[HIDDEN]"
+        lore:
+          - "<warn>This objective has not yet"
+          - "<warn>been unlocked!"
       completedObjective:
-        text: |-
-          <highlight2><strikethrough>%ACTIVEOBJECTIVEID%. <positive><strikethrough>%OBJECTIVENAME%
-          <positive><BOLD>COMPLETED</BOLD>
-          <veryUnimportant><strikethrough>%OBJECTIVEDESCRIPTION%
-          <veryUnimportant>%COMPLETEDOBJECTIVEDESCRIPTION%
-
-          <unimportant><strikethrough>Progress: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%
-        description-empty: Tidak Ada Deskripsi
+        name: "<highlight2><strikethrough>%ACTIVEOBJECTIVEID%. <positive><strikethrough>%OBJECTIVENAME%"
+        lore:
+          - "<positive><BOLD>COMPLETED</BOLD>"
+          - "<veryUnimportant><strikethrough>%WRAPPEDOBJECTIVEDESCRIPTION%"
+          - "<veryUnimportant>%COMPLETEDOBJECTIVEDESCRIPTION%"
+          - ""
+          - "<unimportant><strikethrough>Progress: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
+        lore-if-description-empty:
+          - "<positive><BOLD>COMPLETED</BOLD>"
+          - "<veryUnimportant><strikethrough>No Description"
+          - "<veryUnimportant>%COMPLETEDOBJECTIVEDESCRIPTION%"
+          - ""
+          - "<unimportant><strikethrough>Progress: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
       previousPage:
         text: Ke halaman sebelumnya (%prevpage%)
       nextPage:
