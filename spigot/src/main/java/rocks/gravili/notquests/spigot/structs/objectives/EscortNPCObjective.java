@@ -90,7 +90,7 @@ public class EscortNPCObjective extends Objective {
                     if (toEscortNPCID == destinationNPCID) {
                         final Audience audience = main.adventure().sender(context.getSender());
                         audience.sendMessage(
-                                MiniMessage.miniMessage().parse(
+                                MiniMessage.miniMessage().deserialize(
                                         NotQuestColors.errorGradient + "Error: Um... an NPC cannot themselves himself, to.. themselves?"
                                 )
                         );

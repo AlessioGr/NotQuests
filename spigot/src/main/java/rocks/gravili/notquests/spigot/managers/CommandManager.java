@@ -457,12 +457,12 @@ public class CommandManager {
                 .withNoPermissionHandler()
                 .withCommandExecutionHandler()
                 .withDecorator(message -> {
-                            return MiniMessage.miniMessage().parse(NotQuestColors.mainGradient + "NotQuests > ").append(MiniMessage.miniMessage().parse(MiniMessage.miniMessage().serialize(message)));
+                            return MiniMessage.miniMessage().deserialize(NotQuestColors.mainGradient + "NotQuests > ").append(MiniMessage.miniMessage().deserialize(MiniMessage.miniMessage().serialize(message)));
                         }
                 )
                 .withHandler(MinecraftExceptionHandler.ExceptionType.INVALID_SYNTAX, (sender, e) -> {
                     minecraftAdminHelp.queryCommands(e.getMessage().split("syntax is: ")[1], sender);
-                    return MiniMessage.miniMessage().parse(NotQuestColors.errorGradient + e.getMessage());
+                    return MiniMessage.miniMessage().deserialize(NotQuestColors.errorGradient + e.getMessage());
                 });
 
         exceptionHandler.apply(commandManager, main.adventure()::sender);

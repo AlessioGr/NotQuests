@@ -71,7 +71,7 @@ public class GiveMoneyAction extends Action {
 
         if (!main.getIntegrationsManager().isVaultEnabled() || main.getIntegrationsManager().getVaultManager().getEconomy() == null) {
             Audience audience = main.adventure().player(player);
-            audience.sendMessage(MiniMessage.miniMessage().parse(
+            audience.sendMessage(MiniMessage.miniMessage().deserialize(
                     "<RED>Error: cannot give you the money reward because Vault (needed for money stuff to work) is not installed on the server."
             ));
             return;

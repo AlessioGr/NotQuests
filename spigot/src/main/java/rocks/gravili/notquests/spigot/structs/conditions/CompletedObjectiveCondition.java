@@ -153,7 +153,7 @@ public class CompletedObjectiveCondition extends Condition {
 
                             main.getConditionsManager().addCondition(completedObjectiveCondition, context);
                         } else {
-                            audience.sendMessage(MiniMessage.miniMessage().parse(errorGradient + "Error: You cannot set an objective to depend on itself!"));
+                            audience.sendMessage(MiniMessage.miniMessage().deserialize(errorGradient + "Error: You cannot set an objective to depend on itself!"));
                         }
 
                     }));

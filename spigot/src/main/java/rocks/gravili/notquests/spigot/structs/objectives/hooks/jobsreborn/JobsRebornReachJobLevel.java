@@ -82,7 +82,7 @@ public class JobsRebornReachJobLevel extends Objective {
                     final String jobName = context.get("Job Name");
 
                     if (Jobs.getJob(jobName) == null) {
-                        audience.sendMessage(MiniMessage.miniMessage().parse(
+                        audience.sendMessage(MiniMessage.miniMessage().deserialize(
                                 NotQuestColors.errorGradient + "Error: The Job with the name " + NotQuestColors.highlightGradient + jobName + "</GRADIENT> was not found!"
                         ));
                         return;

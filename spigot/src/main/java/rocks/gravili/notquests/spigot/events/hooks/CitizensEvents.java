@@ -133,14 +133,14 @@ public class CitizensEvents implements Listener {
                                                 if (progressLeft < itemStack.getAmount()) { //We can finish it with this itemStack
                                                     itemStack.setAmount((itemStack.getAmount() - (int) progressLeft));
                                                     activeObjective.addProgress(progressLeft, npc.getId());
-                                                    audience.sendMessage(MiniMessage.miniMessage().parse(
+                                                    audience.sendMessage(MiniMessage.miniMessage().deserialize(
                                                             "<GREEN>You have delivered <AQUA>" + progressLeft + "</AQUA> items to <AQUA>" + npc.getName()
                                                     ));
                                                     break;
                                                 } else {
                                                     player.getInventory().removeItem(itemStack);
                                                     activeObjective.addProgress(itemStack.getAmount(), npc.getId());
-                                                    audience.sendMessage(MiniMessage.miniMessage().parse(
+                                                    audience.sendMessage(MiniMessage.miniMessage().deserialize(
                                                             "<GREEN>You have delivered <AQUA>" + itemStack.getAmount() + "</AQUA> items to <AQUA>" + npc.getName()
                                                     ));
                                                 }
@@ -153,7 +153,7 @@ public class CitizensEvents implements Listener {
                             } else if (activeObjective.getObjective() instanceof final TalkToNPCObjective talkToNPCObjective) {
                                 if (talkToNPCObjective.getNPCtoTalkID() != -1 && talkToNPCObjective.getNPCtoTalkID() == npc.getId()) {
                                     activeObjective.addProgress(1, npc.getId());
-                                    audience.sendMessage(MiniMessage.miniMessage().parse(
+                                    audience.sendMessage(MiniMessage.miniMessage().deserialize(
                                             "<GREEN>You talked to <AQUA>" + npc.getName()
                                     ));
                                 }
@@ -163,7 +163,7 @@ public class CitizensEvents implements Listener {
                                     if (npcToEscort != null) {
                                         if (npcToEscort.isSpawned() && (npcToEscort.getEntity().getLocation().distance(player.getLocation()) < 6)) {
                                             activeObjective.addProgress(1, npc.getId());
-                                            audience.sendMessage(MiniMessage.miniMessage().parse(
+                                            audience.sendMessage(MiniMessage.miniMessage().deserialize(
                                                     "<GREEN>You have successfully delivered the NPC <AQUA>" + npcToEscort.getName()
                                             ));
 
@@ -179,7 +179,7 @@ public class CitizensEvents implements Listener {
 
                                             npcToEscort.despawn();
                                         } else {
-                                            audience.sendMessage(MiniMessage.miniMessage().parse(
+                                            audience.sendMessage(MiniMessage.miniMessage().deserialize(
                                                     "<RED>The NPC you have to escort is not close enough to you!"
                                             ));
                                         }

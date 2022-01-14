@@ -502,7 +502,7 @@ public class NotQuests {
     }
 
     public final Component parse(String miniMessage){
-        return getMiniMessage().parse(miniMessage);
+        return getMiniMessage().deserialize(miniMessage);
     }
 
     public void sendMessage(CommandSender sender, String message){

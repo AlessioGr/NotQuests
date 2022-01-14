@@ -76,7 +76,7 @@ public class GUIManager {
 
             gui.show(player);
         } else {
-            audience.sendMessage(miniMessage.parse(
+            audience.sendMessage(miniMessage.deserialize(
                     main.getLanguageManager().getString("chat.no-quests-accepted", player)
             ));
         }

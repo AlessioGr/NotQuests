@@ -75,13 +75,13 @@ public class KillMobsObjective extends Objective {
 
 
                     if (!nametag_equals.isBlank()) {
-                        audience.sendMessage(MiniMessage.miniMessage().parse(
+                        audience.sendMessage(MiniMessage.miniMessage().deserialize(
                                 NotQuestColors.mainGradient + "With nametag_equals flag:  " + NotQuestColors.highlightGradient
                                         + nametag_equals + "</gradient>!</gradient>"
                         ));
                     }
                     if (!nametag_containsany.isBlank()) {
-                        audience.sendMessage(MiniMessage.miniMessage().parse(
+                        audience.sendMessage(MiniMessage.miniMessage().deserialize(
                                 NotQuestColors.mainGradient + "With nametag_containsany flag:  " + NotQuestColors.highlightGradient
                                         + nametag_containsany + "</gradient>!</gradient>"
                         ));

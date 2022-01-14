@@ -49,9 +49,9 @@ public class LogManager {
 
     private void log(final Level level, final LogCategory logCategory, final String color, final String message) {
         if (main.isAdventureEnabled() && consoleSender != null) {
-            consoleSender.sendMessage(MiniMessage.miniMessage().parse(prefixText + color + message));
+            consoleSender.sendMessage(MiniMessage.miniMessage().deserialize(prefixText + color + message));
         } else {
-            main.getMain().getLogger().log(level, ChatColor.translateAlternateColorCodes('&', LegacyComponentSerializer.builder().build().serialize(MiniMessage.miniMessage().parse(color + message))));
+            main.getMain().getLogger().log(level, ChatColor.translateAlternateColorCodes('&', LegacyComponentSerializer.builder().build().serialize(MiniMessage.miniMessage().deserialize(color + message))));
         }
 
 

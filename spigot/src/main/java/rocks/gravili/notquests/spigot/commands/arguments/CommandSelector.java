@@ -117,7 +117,7 @@ public class CommandSelector<C> extends CommandArgument<C, String[]> {
             List<String> completions = new java.util.ArrayList<>();
 
 
-            //audience.sendMessage(MiniMessage.miniMessage().parse(
+            //audience.sendMessage(MiniMessage.miniMessage().deserialize(
             //        "Input: " + cmd
             //));
 

@@ -433,7 +433,7 @@ public class LanguageManager {
             message = before + hexColor + after;
             matcher = hexPattern.matcher(message);
         }
-        return org.bukkit.ChatColor.translateAlternateColorCodes('&', LegacyComponentSerializer.builder().hexColors().build().serialize(MiniMessage.miniMessage().parse(message)));
+        return org.bukkit.ChatColor.translateAlternateColorCodes('&', LegacyComponentSerializer.builder().hexColors().build().serialize(MiniMessage.miniMessage().deserialize(message)));
     }
 
 

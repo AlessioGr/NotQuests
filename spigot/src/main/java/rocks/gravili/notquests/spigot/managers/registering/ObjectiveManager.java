@@ -147,7 +147,7 @@ public class ObjectiveManager {
         if (quest != null) {
             objective.setQuest(quest);
             objective.setObjectiveID(quest.getObjectives().size() + 1);
-            audience.sendMessage(MiniMessage.miniMessage().parse(
+            audience.sendMessage(MiniMessage.miniMessage().deserialize(
                     NotQuestColors.successGradient + getObjectiveType(objective.getClass()) + " Objective successfully added to Quest " + NotQuestColors.highlightGradient
                             + quest.getQuestName() + "</gradient>!</gradient>"
             ));
