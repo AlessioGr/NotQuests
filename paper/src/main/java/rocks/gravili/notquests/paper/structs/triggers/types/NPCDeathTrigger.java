@@ -25,7 +25,6 @@ import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
-import net.kyori.adventure.audience.Audience;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -44,7 +43,7 @@ public class NPCDeathTrigger extends Trigger {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addTriggerBuilder) {
-        manager.command(addTriggerBuilder.literal("NPCDEATH")
+        manager.command(addTriggerBuilder
                 .argument(IntegerArgument.<CommandSender>newBuilder("NPC").withSuggestionsProvider((context, lastString) -> {
                     ArrayList<String> completions = new ArrayList<>();
                     for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {

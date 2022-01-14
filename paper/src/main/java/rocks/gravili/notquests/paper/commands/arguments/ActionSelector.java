@@ -132,12 +132,12 @@ public class ActionSelector<C> extends CommandArgument<C, Action> {
         @NotNull
         @Override
         public List<String> suggestions(@NotNull CommandContext<C> context, @NotNull String input) {
-            List<String> questNames = new java.util.ArrayList<>(main.getActionsYMLManager().getActionsAndIdentifiers().keySet());
+            List<String> actionNames = new java.util.ArrayList<>(main.getActionsYMLManager().getActionsAndIdentifiers().keySet());
             final List<String> allArgs = context.getRawInput();
 
             main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.getSender(), allArgs.toArray(new String[0]), "[Action Name]", "[...]");
 
-            return questNames;
+            return actionNames;
         }
 
         @Override

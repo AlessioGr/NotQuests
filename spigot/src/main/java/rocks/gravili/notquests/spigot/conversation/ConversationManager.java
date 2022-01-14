@@ -147,7 +147,7 @@ public class ConversationManager {
         final ConversationPlayer openConversation = getOpenConversation(questPlayer.getUUID());
         if (openConversation != null) {
             main.adventure().player(player).sendMessage(
-                    MiniMessage.miniMessage().parse(
+                    MiniMessage.miniMessage().deserialize(
                             NotQuestColors.errorGradient + "You are already in a conversation!"
                     )
             );

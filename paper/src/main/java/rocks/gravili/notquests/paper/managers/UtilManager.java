@@ -348,6 +348,20 @@ public class UtilManager {
     }
 
 
+    public List<File> listFiles(File directory) {
+        List<File> files = new ArrayList<>();
+        // Get all files from a directory.
+        File[] fList = directory.listFiles();
+        if (fList != null)
+            for (File file : fList) {
+                if (file.isFile()) {
+                    files.add(file);
+                }
+            }
+        return files;
+    }
+
+
     public List<File> listFilesRecursively(File directory) {
         List<File> files = new ArrayList<>();
         // Get all files from a directory.
@@ -360,11 +374,51 @@ public class UtilManager {
                     files.addAll(listFilesRecursively(file));
                 }
             }
-
         return files;
     }
 
-    public final String wrapText(final String unwrappedText, final int maxLineLength){
+    public List<File> listFoldersWithoutLanguagesOrBackups(File directory) {
+        List<File> files = new ArrayList<>();
+        // Get all files from a directory.
+        File[] fList = directory.listFiles();
+        if (fList != null)
+            for (File file : fList) {
+                if (file.isDirectory() && !file.getName().equalsIgnoreCase("backups") && !file.getName().equalsIgnoreCase("languages")) {
+                    files.add(file);
+                }
+            }
+        return files;
+    }
+
+    public List<File> listFoldersRecursivelyWithoutLanguagesOrBackups(File directory) {
+        List<File> files = new ArrayList<>();
+        // Get all files from a directory.
+        File[] fList = directory.listFiles();
+        if (fList != null)
+            for (File file : fList) {
+                if (file.isDirectory() && !file.getName().equalsIgnoreCase("backups") && !file.getName().equalsIgnoreCase("languages")) {
+                    files.add(file);
+                    files.addAll(listFoldersRecursivelyWithoutLanguagesOrBackups(file));
+                }
+            }
+        return files;
+    }
+
+    public List<File> listFoldersRecursively(File directory) {
+        List<File> files = new ArrayList<>();
+        // Get all files from a directory.
+        File[] fList = directory.listFiles();
+        if (fList != null)
+            for (File file : fList) {
+                if (file.isDirectory()) {
+                    files.add(file);
+                    files.addAll(listFoldersRecursively(file));
+                }
+            }
+        return files;
+    }
+
+    public final String wrapText(final String unwrappedText, final int maxLineLength) {
         /*final StringBuilder descriptionWithLineBreaks = new StringBuilder();
         int count = 0;
         for (char character : unwrappedText.toCharArray()) {
@@ -379,6 +433,10 @@ public class UtilManager {
         //return descriptionWithLineBreaks.toString();
         return WordUtils.wrap(unwrappedText.replace("\\n", "\n"), maxLineLength, "\n", main.getConfiguration().wrapLongWords);
 
+    }
+
+    public final List<String> wrapTextToList(final String unwrappedText, final int maxLineLength) {
+        return List.of(WordUtils.wrap(unwrappedText.replace("\\n", "\n"), maxLineLength, "\n", main.getConfiguration().wrapLongWords).split("\n"));
     }
 
 

@@ -18,14 +18,9 @@
 
 package rocks.gravili.notquests.paper.managers;
 
-import de.themoep.inventorygui.GuiElementGroup;
-import de.themoep.inventorygui.GuiPageElement;
-import de.themoep.inventorygui.InventoryGui;
-import de.themoep.inventorygui.StaticGuiElement;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
-import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -33,6 +28,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
@@ -41,6 +37,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.Quest;
@@ -70,6 +67,20 @@ public class QuestManager {
         debugEnabledPlayers = new ArrayList<>();
     }
 
+    public final String createQuest(String questName, final Category category) {
+        if (getQuest(questName) == null) {
+            if(questName.contains("°")){
+                return ("<error>The symbol <highlight>°</highlight> cannot be used, because it's used for some important, plugin-internal stuff.");
+            }
+            Quest newQuest = new Quest(main, questName, category);
+            quests.add(newQuest);
+            category.getQuestsConfig().set("quests." + questName, "");
+            category.saveQuestsConfig();
+            return ("<success>Quest <highlight>" + questName + "</highlight> successfully created!");
+        } else {
+            return ("<error>Quest <highlight>" + questName + "</highlight> already exists!");
+        }
+    }
 
     public final String createQuest(String questName) {
         if (getQuest(questName) == null) {
@@ -78,7 +89,8 @@ public class QuestManager {
             }
             Quest newQuest = new Quest(main, questName);
             quests.add(newQuest);
-            main.getDataManager().getQuestsConfig().set("quests." + questName, "");
+            newQuest.getCategory().getQuestsConfig().set("quests." + questName, "");
+            newQuest.getCategory().saveQuestsConfig();
             return ("<success>Quest <highlight>" + questName + "</highlight> successfully created!");
         } else {
             return ("<error>Quest <highlight>" + questName + "</highlight> already exists!");
@@ -86,10 +98,11 @@ public class QuestManager {
     }
 
     public final String deleteQuest(String questName) {
-        if (getQuest(questName) != null) {
-            Quest questToDelete = getQuest(questName);
-            quests.remove(questToDelete);
-            main.getDataManager().getQuestsConfig().set("quests." + questName, null);
+        Quest questToDelete = getQuest(questName);
+
+        if (questToDelete != null) {
+            questToDelete.getCategory().getQuestsConfig().set("quests." + questName, null);
+            questToDelete.getCategory().saveQuestsConfig();
             return ("<success>Quest <highlight>" + questName + "</highlight> successfully deleted!");
         } else {
             return ("<error>Quest <highlight>" + questName + "</highlight> doesn't exists!");
@@ -109,54 +122,65 @@ public class QuestManager {
         return quests;
     }
 
-
     public void loadQuestsFromConfig() {
-
         if (main.getIntegrationsManager().isCitizensEnabled()) {
             main.getIntegrationsManager().getCitizensManager().registerQuestGiverTrait();
         }
 
+        ArrayList<String> categoriesStringList = new ArrayList<>();
+        for (final Category category : main.getDataManager().getCategories()) {
+            categoriesStringList.add(category.getCategoryFullName());
+        }
+        main.getLogManager().info("Scheduled Quest Data load for following categories: <highlight>" + categoriesStringList.toString() );
 
+        quests.clear();
+        for (final Category category : main.getDataManager().getCategories()) {
+            loadQuestsFromConfig(category);
+        }
+
+    }
+
+    public void loadQuestsFromConfig(final Category category) {
         try {
-            main.getLogManager().info("Loading Quests data...");
-
-            quests.clear();
-
-
-            main.getUpdateManager().convertQuestsYMLActions();
-            main.getUpdateManager().convertActionsYMLBeforeVersion3();
+            main.getLogManager().info("Loading Quests data from <highlight>" + category.getCategoryName() + "</highlight> category...");
+            //main.getUpdateManager().convertQuestsYMLActions();
+            //main.getUpdateManager().convertActionsYMLBeforeVersion3();
 
             //Quests
-            final ConfigurationSection questsConfigurationSection = main.getDataManager().getQuestsConfig().getConfigurationSection("quests");
+            final ConfigurationSection questsConfigurationSection = category.getQuestsConfig().getConfigurationSection("quests");
+
+
             if (questsConfigurationSection != null) {
                 for (String questName : questsConfigurationSection.getKeys(false)) {
-                    Quest quest = new Quest(main, questName);
-                    quest.setMaxAccepts(main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".maxAccepts", -1));
-                    quest.setTakeEnabled(main.getDataManager().getQuestsConfig().getBoolean("quests." + questName + ".takeEnabled", true));
-                    quest.setAcceptCooldown(main.getDataManager().getQuestsConfig().getLong("quests." + questName + ".acceptCooldown", -1));
+                    main.getLogManager().info("   Loading Quest <highlight>" + questName + "</highlight>...");
+
+                    Quest quest = new Quest(main, questName, category);
+                    quest.setMaxAccepts(category.getQuestsConfig().getInt("quests." + questName + ".maxAccepts", -1));
+                    quest.setTakeEnabled(category.getQuestsConfig().getBoolean("quests." + questName + ".takeEnabled", true));
+                    quest.setAcceptCooldown(category.getQuestsConfig().getLong("quests." + questName + ".acceptCooldown", -1));
 
                     quest.setQuestDescription(
-                            main.getDataManager().getQuestsConfig().getString("quests." + questName + ".description", "")
+                            category.getQuestsConfig().getString("quests." + questName + ".description", "")
                                     .replace("\\n", "\n")
                     );
                     quest.setQuestDisplayName(
-                            main.getDataManager().getQuestsConfig().getString("quests." + questName + ".displayName", "")
+                            category.getQuestsConfig().getString("quests." + questName + ".displayName", "")
                                     .replace("\\n", "\n")
                     );
 
                     //Objectives:
-                    final ConfigurationSection objectivesConfigurationSection = main.getDataManager().getQuestsConfig().getConfigurationSection("quests." + questName + ".objectives");
+                    final ConfigurationSection objectivesConfigurationSection = category.getQuestsConfig().getConfigurationSection("quests." + questName + ".objectives");
                     if (objectivesConfigurationSection != null) {
                         for (final String objectiveNumber : objectivesConfigurationSection.getKeys(false)) {
                             Class<? extends Objective> objectiveType = null;
 
                             try {
-                                objectiveType = main.getObjectiveManager().getObjectiveClass(main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".objectiveType"));
+                                objectiveType = main.getObjectiveManager().getObjectiveClass(category.getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".objectiveType"));
                             } catch (java.lang.NullPointerException ex) {
                                 main.getDataManager().disablePluginAndSaving("Error parsing objective Type of objective with ID <highlight>" + objectiveNumber + "</highlight>.", quest, ex);
                                 return;
                             }
-                            final int progressNeeded = main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".objectives." + objectiveNumber + ".progressNeeded", 1);
+                            final int progressNeeded = category.getQuestsConfig().getInt("quests." + questName + ".objectives." + objectiveNumber + ".progressNeeded", 1);
 
                             int objectiveID = -1;
                             boolean validObjectiveID = true;
@@ -179,7 +203,7 @@ public class QuestManager {
                                     objective.setObjectiveID(objectiveID);
                                     objective.setProgressNeeded(progressNeeded);
 
-                                    objective.load(main.getDataManager().getQuestsConfig(), "quests." + questName + ".objectives." + objectiveNumber);
+                                    objective.load(category.getQuestsConfig(), "quests." + questName + ".objectives." + objectiveNumber);
 
                                 } catch (Exception ex) {
                                     main.getDataManager().disablePluginAndSaving("Error parsing objective Type of objective with ID <highlight>" + objectiveNumber + "</highlight>.", quest, ex);
@@ -189,10 +213,10 @@ public class QuestManager {
 
                                 if (objective != null) {
 
-                                    final String objectiveDisplayName = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".displayName", "");
-                                    String objectiveDescription = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".description", "");
-                                    final int completionNPCID = main.getDataManager().getQuestsConfig().getInt("quests." + quest.getQuestName() + ".objectives." + objectiveNumber + ".completionNPCID", -1);
-                                    final String completionArmorStandUUIDString = main.getDataManager().getQuestsConfig().getString("quests." + quest.getQuestName() + ".objectives." + objectiveNumber + ".completionArmorStandUUID", null);
+                                    final String objectiveDisplayName = category.getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".displayName", "");
+                                    String objectiveDescription = category.getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".description", "");
+                                    final int completionNPCID = category.getQuestsConfig().getInt("quests." + quest.getQuestName() + ".objectives." + objectiveNumber + ".completionNPCID", -1);
+                                    final String completionArmorStandUUIDString = category.getQuestsConfig().getString("quests." + quest.getQuestName() + ".objectives." + objectiveNumber + ".completionArmorStandUUID", null);
                                     if (completionArmorStandUUIDString != null) {
                                         final UUID completionArmorStandUUID = UUID.fromString(completionArmorStandUUIDString);
                                         objective.setCompletionArmorStandUUID(completionArmorStandUUID, false);
@@ -218,7 +242,7 @@ public class QuestManager {
                     }
 
                     //Requirements:
-                    final ConfigurationSection requirementsConfigurationSection = main.getDataManager().getQuestsConfig().getConfigurationSection("quests." + questName + ".requirements");
+                    final ConfigurationSection requirementsConfigurationSection = category.getQuestsConfig().getConfigurationSection("quests." + questName + ".requirements");
                     if (requirementsConfigurationSection != null) {
                         for (String requirementNumber : requirementsConfigurationSection.getKeys(false)) {
 
@@ -233,15 +257,15 @@ public class QuestManager {
                             }
 
                             Class<? extends Condition> conditionType = null;
-                            String conditionTypeString = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".requirements." + requirementNumber + ".conditionType", "");
+                            String conditionTypeString = category.getQuestsConfig().getString("quests." + questName + ".requirements." + requirementNumber + ".conditionType", "");
 
 
                             try {
 
-                                if(conditionTypeString.isBlank()){//User might be using old system with requirementType instead of conditionType. Let's convert it!
+                                /*if(conditionTypeString.isBlank()){//User might be using old system with requirementType instead of conditionType. Let's convert it!
                                     conditionTypeString = main.getUpdateManager().convertQuestRequirementTypeToConditionType(questName, requirementNumber);
                                 }
-                                conditionTypeString = main.getUpdateManager().convertOldConditionTypesToNewConditionTypes(conditionTypeString);
+                                conditionTypeString = main.getUpdateManager().convertOldConditionTypesToNewConditionTypes(conditionTypeString);*/
 
                                 conditionType = main.getConditionsManager().getConditionClass(conditionTypeString);
                             } catch (java.lang.NullPointerException ex) {
@@ -250,7 +274,9 @@ public class QuestManager {
                             }
 
                             //RequirementType requirementType = RequirementType.valueOf(main.getDataManager().getQuestsData().getString("quests." + questName + ".requirements." + requirementNumber + ".requirementType"));
-                            int progressNeeded = main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".requirements." + requirementNumber + ".progressNeeded");
+                            int progressNeeded = category.getQuestsConfig().getInt("quests." + questName + ".requirements." + requirementNumber + ".progressNeeded");
+                            boolean negated = category.getQuestsConfig().getBoolean("quests." + questName + ".requirements." + requirementNumber + ".negated", false);
+                            String description = category.getQuestsConfig().getString("quests." + questName + ".requirements." + requirementNumber + ".description", "");
 
                             if (validRequirementID && requirementID > 0 && conditionType != null) {
                                 Condition condition = null;
@@ -259,7 +285,10 @@ public class QuestManager {
                                     condition = conditionType.getDeclaredConstructor(NotQuests.class).newInstance(main);
                                     condition.setProgressNeeded(progressNeeded);
                                     condition.setQuest(quest);
-                                    condition.load(main.getDataManager().getQuestsConfig(), "quests." + questName + ".requirements." + requirementID);
+                                    condition.setNegated(negated);
+                                    condition.setDescription(description);
+                                    condition.setCategory(category);
+                                    condition.load(category.getQuestsConfig(), "quests." + questName + ".requirements." + requirementID);
                                 } catch (Exception ex) {
                                     main.getDataManager().disablePluginAndSaving("Error parsing requirement Type of requirement with ID <highlight>" + requirementNumber + "</highlight>.", quest, ex);
                                     return;
@@ -278,7 +307,7 @@ public class QuestManager {
 
 
                     //Rewards for Quests:
-                    final ConfigurationSection rewardsConfigurationSection = main.getDataManager().getQuestsConfig().getConfigurationSection("quests." + questName + ".rewards");
+                    final ConfigurationSection rewardsConfigurationSection = category.getQuestsConfig().getConfigurationSection("quests." + questName + ".rewards");
                     if (rewardsConfigurationSection != null) {
                         for (String rewardNumber : rewardsConfigurationSection.getKeys(false)) {
 
@@ -293,10 +322,10 @@ public class QuestManager {
                             }
 
                             Class<? extends Action> actionType = null;
-                            String actionTypeString = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".rewards." + rewardNumber + ".actionType", "");
-                            if (actionTypeString.isBlank()) {
+                            String actionTypeString = category.getQuestsConfig().getString("quests." + questName + ".rewards." + rewardNumber + ".actionType", "");
+                            /*if (actionTypeString.isBlank()) {
                                 actionTypeString = main.getUpdateManager().convertQuestRewardTypeToActionType(questName, rewardNumber);
-                            }
+                            }*/
 
                             try {
                                 actionType = main.getActionManager().getActionClass(actionTypeString);
@@ -311,7 +340,8 @@ public class QuestManager {
                                 try {
                                     reward = actionType.getDeclaredConstructor(NotQuests.class).newInstance(main);
                                     reward.setQuest(quest);
-                                    reward.load(main.getDataManager().getQuestsConfig(), "quests." + questName + ".rewards." + rewardID);
+                                    reward.setCategory(category);
+                                    reward.load(category.getQuestsConfig(), "quests." + questName + ".rewards." + rewardID);
 
                                 } catch (Exception ex) {
                                     main.getDataManager().disablePluginAndSaving("Error parsing reward Type of reward with ID <highlight>" + rewardNumber + "</highlight>.", quest, ex);
@@ -319,7 +349,7 @@ public class QuestManager {
                                 }
 
                                 if (reward != null) {
-                                    final String rewardDisplayName = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".rewards." + rewardNumber + ".displayName", "");
+                                    final String rewardDisplayName = category.getQuestsConfig().getString("quests." + questName + ".rewards." + rewardNumber + ".displayName", "");
                                     reward.setActionName(rewardDisplayName);
                                     quest.addReward(reward, false);
                                 } else {
@@ -337,7 +367,7 @@ public class QuestManager {
 
 
                     //Triggers:
-                    final ConfigurationSection triggersConfigurationSection = main.getDataManager().getQuestsConfig().getConfigurationSection("quests." + questName + ".triggers");
+                    final ConfigurationSection triggersConfigurationSection = category.getQuestsConfig().getConfigurationSection("quests." + questName + ".triggers");
                     if (triggersConfigurationSection != null) {
                         for (final String triggerNumber : triggersConfigurationSection.getKeys(false)) {
 
@@ -353,7 +383,7 @@ public class QuestManager {
                             }
 
                             Class<? extends Trigger> triggerType = null;
-                            final String triggerTypeString = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".triggers." + triggerNumber + ".triggerType");
+                            final String triggerTypeString = category.getQuestsConfig().getString("quests." + questName + ".triggers." + triggerNumber + ".triggerType");
 
                             try {
                                 triggerType = main.getTriggerManager().getTriggerClass(triggerTypeString);
@@ -363,11 +393,11 @@ public class QuestManager {
                             }
 
 
-                            final String triggerActionName = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".triggers." + triggerNumber + ".triggerActionName");
-                            final long amountNeeded = main.getDataManager().getQuestsConfig().getLong("quests." + questName + ".triggers." + triggerNumber + ".amountNeeded", 1);
+                            final String triggerActionName = category.getQuestsConfig().getString("quests." + questName + ".triggers." + triggerNumber + ".triggerActionName");
+                            final long amountNeeded = category.getQuestsConfig().getLong("quests." + questName + ".triggers." + triggerNumber + ".amountNeeded", 1);
 
-                            final int applyOn = main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".triggers." + triggerNumber + ".applyOn");
-                            final String worldName = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".triggers." + triggerNumber + ".worldName", "ALL");
+                            final int applyOn = category.getQuestsConfig().getInt("quests." + questName + ".triggers." + triggerNumber + ".applyOn");
+                            final String worldName = category.getQuestsConfig().getString("quests." + questName + ".triggers." + triggerNumber + ".worldName", "ALL");
 
                             if (Bukkit.getWorld(worldName) == null) {
                                 main.getLogManager().warn("The world of the trigger <highlight>" + triggerNumber + "</highlight> of Quest <highlight>" + questName + "</highlight> was not found.");
@@ -387,8 +417,9 @@ public class QuestManager {
                                     trigger.setApplyOn(applyOn);
                                     trigger.setWorldName(worldName);
                                     trigger.setAmountNeeded(amountNeeded);
+                                    trigger.setCategory(category);
 
-                                    trigger.load(main.getDataManager().getQuestsConfig(), "quests." + questName + ".triggers." + triggerNumber);
+                                    trigger.load(category.getQuestsConfig(), "quests." + questName + ".triggers." + triggerNumber);
                                 } catch (Exception ex) {
                                     main.getDataManager().disablePluginAndSaving("Error parsing requirement Type of trigger with ID <highlight>" + triggerNumber + "</highlight>.", quest, ex);
                                     return;
@@ -408,13 +439,13 @@ public class QuestManager {
 
 
                     //Convert old dependencies
-                    main.getUpdateManager().convertObjectiveDependenciesToNewObjectiveConditions(quest);
+                    //main.getUpdateManager().convertObjectiveDependenciesToNewObjectiveConditions(quest);
 
 
                     //Objective Conditions and Rewards
-                    main.getLogManager().info("Loading objective conditions and rewards...");
+                    main.getLogManager().debug("Loading objective conditions and rewards...");
                     for (final Objective objective : quest.getObjectives()) { //TODO: Add objective name to error or debug messages to discern from normal requirement loading
-                        final ConfigurationSection objectiveConditionsConfigurationSection = main.getDataManager().getQuestsConfig().getConfigurationSection("quests." + quest.getQuestName() + ".objectives." + objective.getObjectiveID() + ".conditions.");
+                        final ConfigurationSection objectiveConditionsConfigurationSection = category.getQuestsConfig().getConfigurationSection("quests." + quest.getQuestName() + ".objectives." + objective.getObjectiveID() + ".conditions.");
                         if (objectiveConditionsConfigurationSection != null) {
                             for (String objectiveConditionNumber : objectiveConditionsConfigurationSection.getKeys(false)) {
                                 int conditionID = -1;
@@ -428,8 +459,8 @@ public class QuestManager {
                                 }
 
                                 Class<? extends Condition> conditionType = null;
-                                String conditionTypeString = main.getDataManager().getQuestsConfig().getString("quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditions." + objectiveConditionNumber + ".conditionType", "");
-                                conditionTypeString = main.getUpdateManager().convertOldConditionTypesToNewConditionTypes(conditionTypeString);
+                                String conditionTypeString = category.getQuestsConfig().getString("quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditions." + objectiveConditionNumber + ".conditionType", "");
+                                //conditionTypeString = main.getUpdateManager().convertOldConditionTypesToNewConditionTypes(conditionTypeString);
 
                                 try {
                                     conditionType = main.getConditionsManager().getConditionClass(conditionTypeString);
@@ -438,7 +469,9 @@ public class QuestManager {
                                     return;
                                 }
 
-                                int progressNeeded = main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditions." + objectiveConditionNumber + ".progressNeeded");
+                                int progressNeeded = category.getQuestsConfig().getInt("quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditions." + objectiveConditionNumber + ".progressNeeded");
+                                boolean negated = category.getQuestsConfig().getBoolean("quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditions." + objectiveConditionNumber + ".negated", false);
+                                String description = category.getQuestsConfig().getString("quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditions." + objectiveConditionNumber + ".description", "");
 
                                 if (validConditionID && conditionID > 0 && conditionType != null) {
                                     Condition condition = null;
@@ -448,7 +481,11 @@ public class QuestManager {
                                         condition.setProgressNeeded(progressNeeded);
                                         condition.setQuest(quest);
                                         condition.setObjective(objective);
-                                        condition.load(main.getDataManager().getQuestsConfig(), "quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditions." + objectiveConditionNumber);
+                                        condition.setNegated(negated);
+                                        condition.setDescription(description);
+                                        condition.setCategory(category);
+
+                                        condition.load(category.getQuestsConfig(), "quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditions." + objectiveConditionNumber);
                                     } catch (Exception ex) {
                                         main.getDataManager().disablePluginAndSaving("Error parsing condition Type of requirement with ID <highlight>" + objectiveConditionNumber + "</highlight>.", quest, objective, ex);
                                         return;
@@ -466,7 +503,7 @@ public class QuestManager {
 
 
                         final String initialObjectiveRewardsPath = "quests." + quest.getQuestName() + ".objectives." + objective.getObjectiveID() + ".rewards.";
-                        final ConfigurationSection objectiveRewardsConfigurationSection = main.getDataManager().getQuestsConfig().getConfigurationSection(initialObjectiveRewardsPath);
+                        final ConfigurationSection objectiveRewardsConfigurationSection = category.getQuestsConfig().getConfigurationSection(initialObjectiveRewardsPath);
                         if (objectiveRewardsConfigurationSection != null) {
                             for (String objectiveRewardNumber : objectiveRewardsConfigurationSection.getKeys(false)) {
                                 int rewardID = -1;
@@ -480,7 +517,7 @@ public class QuestManager {
                                 }
 
                                 Class<? extends Action> actionType = null;
-                                final String actionTypeString = main.getDataManager().getQuestsConfig().getString(initialObjectiveRewardsPath + objectiveRewardNumber + ".actionType", "");
+                                final String actionTypeString = category.getQuestsConfig().getString(initialObjectiveRewardsPath + objectiveRewardNumber + ".actionType", "");
 
                                 try {
                                     actionType = main.getActionManager().getActionClass(actionTypeString);
@@ -495,7 +532,8 @@ public class QuestManager {
                                     try {
                                         reward = actionType.getDeclaredConstructor(NotQuests.class).newInstance(main);
                                         reward.setQuest(quest);
-                                        reward.load(main.getDataManager().getQuestsConfig(), initialObjectiveRewardsPath + rewardID);
+                                        reward.load(category.getQuestsConfig(), initialObjectiveRewardsPath + rewardID);
+                                        reward.setCategory(category);
 
                                     } catch (Exception ex) {
                                         main.getDataManager().disablePluginAndSaving("Error parsing reward Type of reward with ID <highlight>" + objectiveRewardNumber + "</highlight>.", quest, objective, ex);
@@ -503,7 +541,7 @@ public class QuestManager {
                                     }
 
                                     if (reward != null) {
-                                        final String rewardDisplayName = main.getDataManager().getQuestsConfig().getString(initialObjectiveRewardsPath + rewardID + ".displayName", "");
+                                        final String rewardDisplayName = category.getQuestsConfig().getString(initialObjectiveRewardsPath + rewardID + ".displayName", "");
                                         reward.setActionName(rewardDisplayName);
                                         objective.addReward(reward, false);
                                     } else {
@@ -521,12 +559,11 @@ public class QuestManager {
 
 
                     //TakeItem:
-                    quest.setTakeItem(main.getUpdateManager().convertTakeItemMaterialToItemStack(questName));
+                    quest.setTakeItem(category.getQuestsConfig().getItemStack("quests." + questName + ".takeItem"));
 
                     quests.add(quest);
                 }
             }
-
             main.getDataManager().setAlreadyLoadedQuests(true);
         } catch (Exception ex) {
             main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an exception while loading quests data.", ex);
@@ -671,7 +708,9 @@ public class QuestManager {
         }
 
         if (main.getConfiguration().isQuestPreviewUseGUI()) {
-            String[] guiSetup = {
+
+            main.getGuiManager().showTakeQuestsGUI(main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId()), player, questsAttachedToNPC);
+            /*String[] guiSetup = {
                     "xxxxxxxxx",
                     "xgggggggx",
                     "xgggggggx",
@@ -739,7 +778,7 @@ public class QuestManager {
             ));
 
 
-            gui.show(player);
+            gui.show(player);*/
         } else {
             main.getLogManager().info("NotQuests > All quest count: <highlight>" + quests.size() + "</highlight>");
 
@@ -779,7 +818,8 @@ public class QuestManager {
             return;
         }
         if (main.getConfiguration().isQuestPreviewUseGUI()) {
-            String[] guiSetup = {
+            main.getGuiManager().showTakeQuestsGUI(main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId()), player, questsAttachedToNPC );
+            /*String[] guiSetup = {
                     "xxxxxxxxx",
                     "xgggggggx",
                     "xgggggggx",
@@ -848,7 +888,7 @@ public class QuestManager {
             ));
 
 
-            gui.show(player);
+            gui.show(player);*/
         } else {
             main.getLogManager().info("NotQuests > All quest count: <highlight>" + quests.size() + "</highlight>");
 
@@ -876,7 +916,7 @@ public class QuestManager {
 
     }
 
-    public final String getQuestRequirements(final Quest quest) {
+    public final String getQuestRequirements(final Quest quest, final Player player) {
         StringBuilder requirements = new StringBuilder();
         int counter = 1;
         for (final Condition condition : quest.getRequirements()) {
@@ -885,7 +925,7 @@ public class QuestManager {
             }
             requirements.append("<GREEN>").append(counter).append(". <YELLOW>").append(condition.getConditionType()).append("\n");
 
-            requirements.append(condition.getConditionDescription()).append("\n");
+            requirements.append(condition.getConditionDescription(player)).append("\n");
 
 
             counter += 1;
@@ -893,7 +933,19 @@ public class QuestManager {
         return requirements.toString();
     }
 
-    public final String getQuestRewards(final Quest quest) {
+    public final ArrayList<String> getQuestRequirementsList(final Quest quest, final Player player) {
+        final ArrayList<String> requirements = new ArrayList<>();
+        int counter = 1;
+        for (final Condition condition : quest.getRequirements()) {
+            requirements.add("<GREEN>" + counter + ". <YELLOW>" + condition.getConditionType());
+            requirements.add(condition.getConditionDescription(player, quest));
+
+            counter += 1;
+        }
+        return requirements;
+    }
+
+    public final String getQuestRewards(final Quest quest, final Player player) {
         StringBuilder rewards = new StringBuilder();
         int counter = 1;
         for (final Action reward : quest.getRewards()) {
@@ -904,9 +956,9 @@ public class QuestManager {
                 rewards.append("<GREEN>").append(counter).append(". <BLUE>").append(reward.getActionName()).append("</GREEN>");
             } else {
                 if (main.getConfiguration().hideRewardsWithoutName) {
-                    rewards.append("<GREEN>").append(counter).append(main.getLanguageManager().getString("gui.reward-hidden-text", null, quest, reward)).append("</GREEN>");
+                    rewards.append("<GREEN>").append(counter).append(main.getLanguageManager().getString("gui.reward-hidden-text", player, quest, reward)).append("</GREEN>");
                 } else {
-                    rewards.append("<GREEN>").append(counter).append(". <BLUE>").append(reward.getActionDescription()).append("</GREEN>");
+                    rewards.append("<GREEN>").append(counter).append(". <BLUE>").append(reward.getActionDescription(player)).append("</GREEN>");
                 }
 
             }
@@ -914,6 +966,24 @@ public class QuestManager {
 
         }
         return rewards.toString();
+    }
+    public final ArrayList<String> getQuestRewardsList(final Quest quest, final Player player) {
+        ArrayList<String> rewards = new ArrayList<>();
+        int counter = 1;
+        for (final Action reward : quest.getRewards()) {
+            if (!reward.getActionName().isBlank()) {
+                rewards.add("<GREEN>" + counter + ". <BLUE>" + reward.getActionName() + "</GREEN>");
+            } else {
+                if (main.getConfiguration().hideRewardsWithoutName) {
+                    rewards.add("<GREEN>" + counter + main.getLanguageManager().getString("gui.reward-hidden-text", player, quest, reward) + "</GREEN>");
+                } else {
+                    rewards.add("<GREEN>" + counter + ". <BLUE>" + reward.getActionDescription(player) + "</GREEN>");
+                }
+            }
+            counter += 1;
+
+        }
+        return rewards;
     }
 
     public void sendSingleQuestPreview(Player player, Quest quest) {
@@ -939,14 +1009,14 @@ public class QuestManager {
         ));
 
         player.sendMessage(main.parse(
-                getQuestRequirements(quest)
+                getQuestRequirements(quest, player)
         ));
 
         player.sendMessage(main.parse(
                 "<BLUE>Quest Rewards:"
         ));
         player.sendMessage(main.parse(
-                getQuestRewards(quest)
+                getQuestRewards(quest, player)
         ));
 
         Component acceptComponent = main.parse("<GREEN>**[ACCEPT THIS QUEST]")
@@ -963,130 +1033,10 @@ public class QuestManager {
     }
 
     public void loadNPCData() {
-        main.getLogManager().info("Loading NPC data...");
-
-        if (!main.getIntegrationsManager().isCitizensEnabled()) {
-            main.getLogManager().warn("NPC data loading has been cancelled, because Citizens is not installed. Install the Citizens plugin if you want NPC stuff to work.");
-            return;
-        }
-
         if (main.getDataManager().isAlreadyLoadedQuests()) {
-            try {
-
-                final ConfigurationSection questsConfigurationSetting = main.getDataManager().getQuestsConfig().getConfigurationSection("quests");
-                if (questsConfigurationSetting != null) {
-                    if (!Bukkit.isPrimaryThread()) {
-                        Bukkit.getScheduler().runTask(main.getMain(), () -> {
-                            for (String questName : questsConfigurationSetting.getKeys(false)) {
-                                Quest quest = getQuest(questName);
-
-                                if (quest != null) {
-                                    //NPC
-                                    final ConfigurationSection npcsConfigurationSection = main.getDataManager().getQuestsConfig().getConfigurationSection("quests." + questName + ".npcs");
-                                    if (npcsConfigurationSection != null) {
-
-
-                                        for (String npcNumber : npcsConfigurationSection.getKeys(false)) {
-                                            if (main.getDataManager().getQuestsConfig() != null) {
-
-
-                                                final NPC npc = CitizensAPI.getNPCRegistry().getById(main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".npcs." + npcNumber + ".npcID"));
-
-
-                                                if (npc != null) {
-                                                    final boolean questShowing = main.getDataManager().getQuestsConfig().getBoolean("quests." + questName + ".npcs." + npc.getId() + ".questShowing", true);
-
-
-                                                    // call the callback with the result
-                                                    main.getLogManager().info("Attaching Quest with the name <highlight>" + quest.getQuestName() + "</highlight> to NPC with the ID <highlight>" + npc.getId() + " </highlight>and name <highlight>" + npc.getName());
-
-                                                    quest.removeNPC(npc);
-                                                    quest.bindToNPC(npc, questShowing);
-
-
-                                                } else {
-                                                    main.getLogManager().warn("Error attaching npc with ID <highlight>" + main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".npcs." + npcNumber + ".npcID")
-                                                            + "</highlight> to quest <highlight>" + quest.getQuestName() + "</highlight> - NPC not found.");
-
-                                                }
-                                            } else {
-                                                main.getLogManager().warn("Error: quests data is null");
-
-
-                                            }
-
-
-                                        }
-
-
-                                    }
-                                } else {
-                                    main.getLogManager().warn("Error: Quest not found while trying to load NPC");
-
-                                }
-                            }
-                            main.getLogManager().info("Requesting cleaning of bugged NPCs in loadNPCData()...");
-
-                            cleanupBuggedNPCs();
-                        });
-
-                    } else {
-                        for (String questName : questsConfigurationSetting.getKeys(false)) {
-                            Quest quest = getQuest(questName);
-
-                            if (quest != null) {
-                                //NPC
-                                final ConfigurationSection npcsConfigurationSection = main.getDataManager().getQuestsConfig().getConfigurationSection("quests." + questName + ".npcs");
-                                if (npcsConfigurationSection != null) {
-                                    for (String npcNumber : npcsConfigurationSection.getKeys(false)) {
-                                        final NPC npc = CitizensAPI.getNPCRegistry().getById(main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".npcs." + npcNumber + ".npcID"));
-                                        final boolean questShowing = main.getDataManager().getQuestsConfig().getBoolean("quests." + questName + ".npcs." + npc.getId() + ".questShowing", true);
-
-                                        if (npc != null) {
-
-                                            // call the callback with the result
-                                            main.getLogManager().info("Attaching Quest with the name <highlight>" + quest.getQuestName() + " </highlight>to NPC with the ID <highlight>" + npc.getId() + " </highlight>and name <highlight>" + npc.getName());
-
-                                            quest.removeNPC(npc);
-                                            quest.bindToNPC(npc, questShowing);
-
-
-                                        } else {
-                                            main.getLogManager().warn("Error attaching npc with ID <highlight>" + main.getDataManager().getQuestsConfig().getInt("quests." + questName + ".npcs." + npcNumber + ".npcID")
-                                                    + "</highlight> to quest <highlight>" + quest.getQuestName() + "</highlight> - NPC not found.");
-                                        }
-
-                                    }
-                                    main.getLogManager().info("Requesting cleaning of bugged NPCs in loadNPCData()...");
-
-                                    cleanupBuggedNPCs();
-
-
-                                }
-                            } else {
-                                main.getLogManager().warn("Error: Quest not found while trying to load NPC");
-
-                            }
-
-
-                        }
-                    }
-
-
-                } else {
-                    main.getLogManager().info("Skipped loading NPC data because questsConfigurationSetting was null.");
-                }
-                main.getLogManager().info("NPC data loaded!");
-
-
-                main.getDataManager().setAlreadyLoadedNPCs(true);
-
-
-            } catch (Exception ex) {
-                main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an exception while loading quests NPC data.", ex);
-                return;
+            for (final Category category : main.getDataManager().getCategories()) {
+                loadNPCData(category);
             }
-
         } else {
             main.getLogManager().warn("NotQuests > Tried to load NPC data before quest data was loaded. NotQuests is scheduling another load...");
 
@@ -1096,6 +1046,95 @@ public class QuestManager {
                     main.getDataManager().loadNPCData();
                 }
             }, 60);
+        }
+
+    }
+
+    public void loadNPCData(final Category category) {
+        main.getLogManager().info("Loading NPC data...");
+
+        if (!main.getIntegrationsManager().isCitizensEnabled()) {
+            main.getLogManager().warn("NPC data loading has been cancelled, because Citizens is not installed. Install the Citizens plugin if you want NPC stuff to work.");
+            return;
+        }
+
+
+
+
+        try {
+            final ConfigurationSection questsConfigurationSetting = category.getQuestsConfig().getConfigurationSection("quests");
+            if (questsConfigurationSetting != null) {
+                if (!Bukkit.isPrimaryThread()) {
+                    Bukkit.getScheduler().runTask(main.getMain(), () -> {
+                        for (String questName : questsConfigurationSetting.getKeys(false)) {
+                            Quest quest = getQuest(questName);
+                            if (quest != null) {
+                                //NPC
+                                final ConfigurationSection npcsConfigurationSection = category.getQuestsConfig().getConfigurationSection("quests." + questName + ".npcs");
+                                if (npcsConfigurationSection != null) {
+                                    for (String npcNumber : npcsConfigurationSection.getKeys(false)) {
+
+                                        if (category.getQuestsConfig() != null) {
+                                            final NPC npc = CitizensAPI.getNPCRegistry().getById(category.getQuestsConfig().getInt("quests." + questName + ".npcs." + npcNumber + ".npcID"));
+                                            if (npc != null) {
+                                                final boolean questShowing = category.getQuestsConfig().getBoolean("quests." + questName + ".npcs." + npc.getId() + ".questShowing", true);
+                                                // call the callback with the result
+                                                main.getLogManager().info("Attaching Quest with the name <highlight>" + quest.getQuestName() + "</highlight> to NPC with the ID <highlight>" + npc.getId() + " </highlight>and name <highlight>" + npc.getName());
+                                                quest.removeNPC(npc);
+                                                quest.bindToNPC(npc, questShowing);
+                                            } else {
+                                                main.getLogManager().warn("Error attaching npc with ID <highlight>" + category.getQuestsConfig().getInt("quests." + questName + ".npcs." + npcNumber + ".npcID")
+                                                        + "</highlight> to quest <highlight>" + quest.getQuestName() + "</highlight> - NPC not found.");
+                                            }
+                                        } else {
+                                            main.getLogManager().warn("Error: quests data is null");
+                                        }
+                                    }
+                                }
+                            } else {
+                                main.getLogManager().warn("Error: Quest not found while trying to load NPC");
+                            }
+                        }
+                        main.getLogManager().info("Requesting cleaning of bugged NPCs in loadNPCData()...");
+                        cleanupBuggedNPCs();
+                    });
+                } else {
+                    for (String questName : questsConfigurationSetting.getKeys(false)) {
+                        Quest quest = getQuest(questName);
+                        if (quest != null) {
+                            //NPC
+                            final ConfigurationSection npcsConfigurationSection = category.getQuestsConfig().getConfigurationSection("quests." + questName + ".npcs");
+                            if (npcsConfigurationSection != null) {
+                                for (String npcNumber : npcsConfigurationSection.getKeys(false)) {
+
+                                    final NPC npc = CitizensAPI.getNPCRegistry().getById(category.getQuestsConfig().getInt("quests." + questName + ".npcs." + npcNumber + ".npcID"));
+                                    final boolean questShowing = category.getQuestsConfig().getBoolean("quests." + questName + ".npcs." + npc.getId() + ".questShowing", true);
+                                    if (npc != null) {
+                                        // call the callback with the result
+                                        main.getLogManager().info("Attaching Quest with the name <highlight>" + quest.getQuestName() + " </highlight>to NPC with the ID <highlight>" + npc.getId() + " </highlight>and name <highlight>" + npc.getName());
+                                        quest.removeNPC(npc);
+                                        quest.bindToNPC(npc, questShowing);
+                                    } else {
+                                        main.getLogManager().warn("Error attaching npc with ID <highlight>" + category.getQuestsConfig().getInt("quests." + questName + ".npcs." + npcNumber + ".npcID")
+                                                + "</highlight> to quest <highlight>" + quest.getQuestName() + "</highlight> - NPC not found.");
+                                    }
+                                }
+                                main.getLogManager().info("Requesting cleaning of bugged NPCs in loadNPCData()...");
+                                cleanupBuggedNPCs();
+                            }
+                        } else {
+                            main.getLogManager().warn("Error: Quest not found while trying to load NPC");
+                        }
+                    }
+                }
+            } else {
+                main.getLogManager().info("Skipped loading NPC data because questsConfigurationSetting was null.");
+            }
+            main.getLogManager().info("NPC data loaded!");
+            main.getDataManager().setAlreadyLoadedNPCs(true);
+        } catch (Exception ex) {
+            main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an exception while loading quests NPC data.", ex);
+            return;
         }
 
 
@@ -1246,40 +1285,47 @@ public class QuestManager {
     }
 
 
-    public void sendObjectivesAdmin(final Audience audience, final Quest quest) {
+    public void sendObjectivesAdmin(final CommandSender sender, final Quest quest) {
 
         for (final Objective objective : quest.getObjectives()) {
 
             final String objectiveDescription = objective.getObjectiveDescription();
-            audience.sendMessage(main.parse(
+            sender.sendMessage(main.parse(
                     "<highlight>" + objective.getObjectiveID() + ".</highlight> <main>" + objective.getObjectiveFinalName()
             ));
 
 
             if (!objectiveDescription.isBlank()) {
-                audience.sendMessage(main.parse(
+                sender.sendMessage(main.parse(
                         "   <highlight>Description:</highlight> <main>" + objectiveDescription
                 ));
             }
 
 
-            audience.sendMessage(main.parse(
+            sender.sendMessage(main.parse(
                     "   <highlight>Conditions:"
             ));
             int counter2 = 1;
             for (final Condition condition : objective.getConditions()) {
-                audience.sendMessage(main.parse(
-                        "         <highlight>" + counter2 + ".</highlight> <main>Condition:</main> <highlight2>" + condition.getConditionDescription()
-                ));
+                if(sender instanceof Player player){
+                    sender.sendMessage(main.parse(
+                            "         <highlight>" + counter2 + ".</highlight> <main>Condition:</main> <highlight2>" + condition.getConditionDescription(player)
+                    ));
+                }else{
+                    sender.sendMessage(main.parse(
+                            "         <highlight>" + counter2 + ".</highlight> <main>Condition:</main> <highlight2>" + condition.getConditionDescription(null)
+                    ));
+                }
+
                 counter2++;
             }
             if (counter2 == 1) {
-                audience.sendMessage(main.parse(
+                sender.sendMessage(main.parse(
                         "      <unimportant>No conditions found!"
                 ));
             }
 
-            audience.sendMessage(main.parse(getObjectiveTaskDescription(objective, false, null)));
+            sender.sendMessage(main.parse(getObjectiveTaskDescription(objective, false, null)));
 
         }
     }

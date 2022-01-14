@@ -33,6 +33,8 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
 
+import java.util.ArrayList;
+
 public class GiveItemAction extends Action {
 
     private ItemStack item = null;
@@ -42,10 +44,9 @@ public class GiveItemAction extends Action {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor rewardFor) {
-        manager.command(builder.literal("GiveItem")
+        manager.command(builder
                 .argument(MaterialOrHandArgument.of("material", main), ArgumentDescription.of("Material of the item which the player should receive. If you use 'hand', the item you are holding in your main hand will be used."))
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of items which the player will receive."))
-                .meta(CommandMeta.DESCRIPTION, "Adds a new GiveItem Reward to a quest")
                 .handler((context) -> {
                     final MaterialOrHand materialOrHand = context.get("material");
                     final int itemRewardAmount = context.get("amount");
@@ -103,7 +104,7 @@ public class GiveItemAction extends Action {
     }
 
     @Override
-    public String getActionDescription() {
+    public String getActionDescription(final Player player, final Object... objects) {
         return "Item: " + getItemReward();
     }
 
@@ -124,5 +125,16 @@ public class GiveItemAction extends Action {
         if(this.item == null){
             this.item = configuration.getItemStack(initialPath + ".specifics.rewardItem");
         }
+    }
+
+    @Override
+    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+        final ItemStack itemStack = new ItemStack(Material.valueOf(arguments.get(0)));
+
+        if(arguments.size() >= 2){
+            itemStack.setAmount(Integer.parseInt(arguments.get(1)));
+        }
+
+        this.item = itemStack;
     }
 }

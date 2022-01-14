@@ -74,7 +74,7 @@ public class ConditionCondition extends Condition {
 
                         main.getConditionsManager().addCondition(conditionCondition, context);
                     } else {
-                        audience.sendMessage(MiniMessage.miniMessage().parse(errorGradient + "Error! Condition with the name " + highlightGradient + conditionIdentifier + "</gradient> does not exist!</gradient>"));
+                        audience.sendMessage(MiniMessage.miniMessage().deserialize(errorGradient + "Error! Condition with the name " + highlightGradient + conditionIdentifier + "</gradient> does not exist!</gradient>"));
                     }
 
 

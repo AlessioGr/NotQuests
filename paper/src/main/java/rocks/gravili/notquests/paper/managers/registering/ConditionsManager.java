@@ -18,30 +18,23 @@
 
 package rocks.gravili.notquests.paper.managers.registering;
 
+import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.context.CommandContext;
+import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.NotQuestColors;
+import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.*;
-import rocks.gravili.notquests.paper.structs.conditions.hooks.towny.TownyNationNameCondition;
-import rocks.gravili.notquests.paper.structs.conditions.hooks.towny.TownyNationTownCountCondition;
-import rocks.gravili.notquests.paper.structs.conditions.hooks.towny.TownyTownPlotCountCondition;
-import rocks.gravili.notquests.paper.structs.conditions.hooks.towny.TownyTownResidentCountCondition;
-import rocks.gravili.notquests.paper.structs.conditions.hooks.ultimateclans.UltimateClansClanLevelCondition;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
-
-import static rocks.gravili.notquests.paper.commands.NotQuestColors.*;
 
 public class ConditionsManager {
     private final NotQuests main;
@@ -61,21 +54,24 @@ public class ConditionsManager {
         conditions.clear();
         registerCondition("Condition", ConditionCondition.class);
 
-        registerCondition("CompletedQuest", CompletedQuestCondition.class);
+        //registerCondition("CompletedQuest", CompletedQuestCondition.class);
         registerCondition("CompletedObjective", CompletedObjectiveCondition.class);
-        registerCondition("ActiveQuest", ActiveQuestCondition.class);
+        //registerCondition("ActiveQuest", ActiveQuestCondition.class);
 
-        registerCondition("QuestPoints", QuestPointsCondition.class);
-        registerCondition("Permission", PermissionCondition.class);
-        registerCondition("Money", MoneyCondition.class);
+        //registerCondition("QuestPoints", QuestPointsCondition.class);
+        //registerCondition("Permission", PermissionCondition.class);
+        //registerCondition("Money", MoneyCondition.class);
         registerCondition("WorldTime", WorldTimeCondition.class);
-        registerCondition("UltimateClansClanLevel", UltimateClansClanLevelCondition.class);
+        //registerCondition("UltimateClansClanLevel", UltimateClansClanLevelCondition.class);
 
         //Towny
-        registerCondition("TownyNationName", TownyNationNameCondition.class);
-        registerCondition("TownyNationTownCount", TownyNationTownCountCondition.class);
-        registerCondition("TownyTownResidentCount", TownyTownResidentCountCondition.class);
-        registerCondition("TownyTownPlotCount", TownyTownPlotCountCondition.class);
+        //registerCondition("TownyNationName", TownyNationNameCondition.class);
+
+        registerCondition("Number", NumberCondition.class);
+        registerCondition("String", StringCondition.class);
+        registerCondition("Boolean", BooleanCondition.class);
+        registerCondition("List", ListCondition.class);
+
 
     }
 
@@ -86,10 +82,56 @@ public class ConditionsManager {
 
         try {
             Method commandHandler = condition.getMethod("handleCommands", main.getClass(), PaperCommandManager.class, Command.Builder.class, ConditionFor.class);
-            commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddRequirementCommandBuilder(), ConditionFor.QUEST);
-            commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddConditionCommandBuilder(), ConditionFor.OBJECTIVE);
-            commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminAddConditionCommandBuilder(), ConditionFor.ConditionsYML); //For Actions.yml
-            commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditActionsAddConditionCommandBuilder(), ConditionFor.Action); //For Actions.yml
+
+            commandHandler.setAccessible(true);
+
+            if(condition == NumberCondition.class || condition == StringCondition.class || condition == BooleanCondition.class || condition == ListCondition.class){
+                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddRequirementCommandBuilder().flag(
+                                main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
+                                        .withDescription(ArgumentDescription.of("Negates this condition"))
+                        )
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition"), ConditionFor.QUEST);
+                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddConditionCommandBuilder().flag(
+                        main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
+                                .withDescription(ArgumentDescription.of("Negates this condition"))
+                        )
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition"), ConditionFor.OBJECTIVE);
+                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminAddConditionCommandBuilder().flag(
+                        main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
+                                .withDescription(ArgumentDescription.of("Negates this condition"))
+                        )
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition")
+                        .flag(main.getCommandManager().categoryFlag), ConditionFor.ConditionsYML); //For Actions.yml
+                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminActionsAddConditionCommandBuilder().flag(
+                        main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
+                                .withDescription(ArgumentDescription.of("Negates this condition"))
+                        )
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition"), ConditionFor.Action); //For Actions.yml
+
+            }else{
+                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddRequirementCommandBuilder().literal(identifier).flag(
+                        main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
+                                .withDescription(ArgumentDescription.of("Negates this condition"))
+                )
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition"), ConditionFor.QUEST);
+                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddConditionCommandBuilder().literal(identifier).flag(
+                        main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
+                                .withDescription(ArgumentDescription.of("Negates this condition"))
+                )
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition"), ConditionFor.OBJECTIVE);
+                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminAddConditionCommandBuilder().literal(identifier).flag(
+                        main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
+                                .withDescription(ArgumentDescription.of("Negates this condition"))
+                )
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition")
+                        .flag(main.getCommandManager().categoryFlag), ConditionFor.ConditionsYML); //For Actions.yml
+                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminActionsAddConditionCommandBuilder().literal(identifier).flag(
+                        main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
+                                .withDescription(ArgumentDescription.of("Negates this condition"))
+                )
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition"), ConditionFor.Action); //For Actions.yml
+            }
+
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -122,6 +164,8 @@ public class ConditionsManager {
     }
 
     public void addCondition(Condition condition, CommandContext<CommandSender> context) {
+        condition.setNegated(context.flags().isPresent("negate"));
+
 
         Quest quest = context.getOrDefault("quest", null);
         Objective objectiveOfQuest = null;
@@ -132,14 +176,19 @@ public class ConditionsManager {
 
         String conditionIdentifier = context.getOrDefault("Condition Identifier", "");
 
+
         String actionIdentifier = context.getOrDefault("Action Identifier", "");
+        Action foundAction = context.getOrDefault("action", null);
+
 
         if (quest != null) {
             condition.setQuest(quest);
+            condition.setCategory(quest.getCategory());
             if (objectiveOfQuest != null) {//Objective Condition
                 condition.setObjective(objectiveOfQuest);
 
                 objectiveOfQuest.addCondition(condition, true);
+
 
                 context.getSender().sendMessage(main.parse(
                         "<success>" + getConditionType(condition.getClass()) + " Condition successfully added to Objective <highlight>"
@@ -155,6 +204,11 @@ public class ConditionsManager {
         } else {
             if (conditionIdentifier != null && !conditionIdentifier.isBlank()) { //conditions.yml
 
+                if (context.flags().contains(main.getCommandManager().categoryFlag)) {
+                    final Category category = context.flags().getValue(main.getCommandManager().categoryFlag, main.getDataManager().getDefaultCategory());
+                    condition.setCategory(category);
+                }
+
                 if (main.getConditionsYMLManager().getCondition(conditionIdentifier) == null) {
                     main.getConditionsYMLManager().addCondition(conditionIdentifier, condition);
                     context.getSender().sendMessage(main.parse(
@@ -165,11 +219,16 @@ public class ConditionsManager {
                     context.getSender().sendMessage(main.parse("<error>Error! A condition with the name <highlight>" + conditionIdentifier + "</highlight> already exists!"));
                 }
             } else { //Condition for Actions.yml action
-                if (actionIdentifier != null && !actionIdentifier.isBlank()) {
-                    Action foundAction = main.getActionsYMLManager().getAction(actionIdentifier);
+
+                if ( foundAction != null || (actionIdentifier != null && !actionIdentifier.isBlank()) ) {
+
+                    foundAction = foundAction != null ? foundAction : main.getActionsYMLManager().getAction(actionIdentifier);
                     if (foundAction != null) {
-                        foundAction.addCondition(condition, true, main.getActionsYMLManager().getActionsConfig(), "actions." + actionIdentifier);
-                        main.getActionsYMLManager().saveActions();
+
+                        condition.setCategory(foundAction.getCategory());
+
+                        foundAction.addCondition(condition, true, foundAction.getCategory().getActionsConfig(), "actions." + actionIdentifier);
+                        main.getActionsYMLManager().saveActions(foundAction.getCategory());
                         context.getSender().sendMessage(main.parse(
                                 "<success>" + getConditionType(condition.getClass()) + " Condition successfully added to Action <highlight>"
                                         + foundAction.getActionName() + "</highlight>!"));

@@ -65,7 +65,7 @@ public class ProjectKorraUseAbilityObjective extends Objective {
 
                     if (!main.getIntegrationsManager().getProjectKorraManager().isAbility(abilityName)) {
                         Audience audience = main.adventure().sender(context.getSender());
-                        audience.sendMessage(MiniMessage.miniMessage().parse(
+                        audience.sendMessage(MiniMessage.miniMessage().deserialize(
                                 NotQuestColors.errorGradient + "Error: The ability " + NotQuestColors.highlightGradient + abilityName + "</gradient> was not found."
                         ));
                         return;

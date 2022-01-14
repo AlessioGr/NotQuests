@@ -25,8 +25,11 @@ import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
+
+import java.util.ArrayList;
 
 
 public class WorldTimeCondition extends Condition {
@@ -47,11 +50,9 @@ public class WorldTimeCondition extends Condition {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
-        manager.command(builder.literal("WorldTime")
+        manager.command(builder
                 .argument(IntegerArgument.<CommandSender>newBuilder("minTime").withMin(0).withMax(24), ArgumentDescription.of("Minimum world time (24-hour clock)"))
                 .argument(IntegerArgument.<CommandSender>newBuilder("maxTime").withMin(0).withMax(24), ArgumentDescription.of("Maximum world time (24-hour clock)"))
-
-                .meta(CommandMeta.DESCRIPTION, "Adds a new Time Requirement (24-hour-clock) to a quest")
                 .handler((context) -> {
                     final int minTime = context.get("minTime");
                     final int maxTime = context.get("maxTime");
@@ -73,7 +74,7 @@ public class WorldTimeCondition extends Condition {
     }
 
     @Override
-    public String check(final QuestPlayer questPlayer, final boolean enforce) {
+    public String checkInternally(final QuestPlayer questPlayer) {
         long currentTime = questPlayer.getPlayer().getWorld().getTime();
 
         if (currentTime >= 18000) {
@@ -113,7 +114,7 @@ public class WorldTimeCondition extends Condition {
 
 
     @Override
-    public String getConditionDescription() {
+    public String getConditionDescriptionInternally(Player player, Object... objects) {
         return "<GRAY>-- World time: " + getMinTime() + " - " + getMaxTime();
     }
 
@@ -129,5 +130,11 @@ public class WorldTimeCondition extends Condition {
         minTime = configuration.getInt(initialPath + ".specifics.minTime");
         maxTime = configuration.getInt(initialPath + ".specifics.maxTime");
 
+    }
+
+    @Override
+    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+        minTime = Integer.parseInt(arguments.get(0));
+        maxTime = Integer.parseInt(arguments.get(1));
     }
 }

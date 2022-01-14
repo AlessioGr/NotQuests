@@ -25,10 +25,7 @@ import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
-import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
@@ -39,7 +36,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.NotQuestColors;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.Quest;
 
@@ -58,7 +54,7 @@ public class TalkToNPCObjective extends Objective {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
-        manager.command(addObjectiveBuilder.literal("TalkToNPC")
+        manager.command(addObjectiveBuilder
                 .argument(StringArgument.<CommandSender>newBuilder("NPC or Armorstand").withSuggestionsProvider((context, lastString) -> {
                     ArrayList<String> completions = new ArrayList<>();
                     for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
@@ -70,7 +66,6 @@ public class TalkToNPCObjective extends Objective {
 
                     return completions;
                 }).build(), ArgumentDescription.of("ID of the Citizens NPC or 'armorstand' to whom you should talk."))
-                .meta(CommandMeta.DESCRIPTION, "Adds a new TalkToNPC Objective to a quest.")
                 .handler((context) -> {
                     final Quest quest = context.get("quest");
 

@@ -20,9 +20,8 @@ package rocks.gravili.notquests.paper.structs;
 
 
 import net.kyori.adventure.title.Title;
-import org.bukkit.Bukkit;
-import org.bukkit.Sound;
-import org.bukkit.SoundCategory;
+import org.bukkit.*;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.NotQuestColors;
@@ -35,6 +34,7 @@ import rocks.gravili.notquests.paper.structs.objectives.OtherQuestObjective;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -58,6 +58,8 @@ public class QuestPlayer {
     private final ArrayList<CompletedQuest> completedQuests; //has to accept multiple entries of the same value
     private long questPoints;
 
+    private final HashMap<String, Location> locationsAndBeacons, activeLocationAndBeams;
+
     public QuestPlayer(NotQuests main, UUID uuid) {
         this.main = main;
         this.uuid = uuid;
@@ -66,6 +68,100 @@ public class QuestPlayer {
         questsToComplete = new ArrayList<>();
         questsToRemove = new ArrayList<>();
         completedQuests = new ArrayList<>();
+
+        locationsAndBeacons = new HashMap<>();
+        activeLocationAndBeams = new HashMap<>();
+
+    }
+
+    public HashMap<String, Location> getLocationsAndBeacons(){
+        return locationsAndBeacons;
+    }
+
+    public HashMap<String, Location> getActiveLocationsAndBeacons(){
+        return activeLocationAndBeams;
+    }
+
+
+    public final boolean updateBeaconLocations(final Player player){
+        boolean toReturn = false;
+        for(String locationName : locationsAndBeacons.keySet()){
+            if(activeLocationAndBeams.containsKey(locationName)){
+                continue;
+            }
+
+            final Location finalLocation = locationsAndBeacons.get(locationName);
+
+            if(!finalLocation.getWorld().getUID().equals(player.getWorld().getUID())){
+                continue;
+            }
+
+
+            Location lowestDistanceLocation = player.getLocation();
+
+            if(finalLocation.distance(player.getLocation()) > 96){
+
+
+                //New Beacon Location should be cur player location + maxDistance blocks in direction of newChunkLocation - playerLocation
+                org.bukkit.util.Vector normalizedDistanceBetweenPlayerAndNewChunk = finalLocation.toVector().subtract(player.getLocation().toVector()).normalize();
+                lowestDistanceLocation = player.getLocation().add(normalizedDistanceBetweenPlayerAndNewChunk.multiply(96));
+                lowestDistanceLocation.setY(lowestDistanceLocation.getWorld().getHighestBlockYAt(lowestDistanceLocation.getBlockX(), lowestDistanceLocation.getBlockZ()));
+
+
+                /* World world = player.getWorld();
+                int baseX = player.getLocation().getChunk().getX();
+                int baseZ = player.getLocation().getChunk().getZ();
+                int[] toCheck = {-6,-5,-4,-3,3,4,5,6};
+
+                for(int x : toCheck) {
+                    for(int z : toCheck) {
+                        Chunk chunk = world.getChunkAt(baseX + x, baseZ + z);
+                        Location newChunkLocation = chunk.getBlock(8, location.getBlockY(), 8).getLocation();
+                        if(newChunkLocation.distance(location) < lowestDistanceLocation.distance(location)){
+                            lowestDistanceLocation = newChunkLocation;
+                        }
+                    }
+                }
+
+                lowestDistanceLocation.setY(lowestDistanceLocation.getWorld().getHighestBlockYAt(lowestDistanceLocation.getBlockX(), lowestDistanceLocation.getBlockZ()));
+                */
+
+            }else{
+                lowestDistanceLocation = finalLocation;
+                toReturn = true;
+            }
+
+
+
+
+
+            BlockState beaconBlockState = lowestDistanceLocation.getBlock().getState();
+            beaconBlockState.setType(Material.BEACON);
+
+            BlockState ironBlockState = lowestDistanceLocation.getBlock().getState();
+            ironBlockState.setType(Material.IRON_BLOCK);
+
+
+            player.sendBlockChange(lowestDistanceLocation, beaconBlockState.getBlockData());
+            player.sendBlockChange(lowestDistanceLocation.add(-1,-1,-1), ironBlockState.getBlockData());
+            player.sendBlockChange(lowestDistanceLocation.add(1,0,0), ironBlockState.getBlockData());
+            player.sendBlockChange(lowestDistanceLocation.add(1,0,0), ironBlockState.getBlockData());
+            player.sendBlockChange(lowestDistanceLocation.add(0,0,1), ironBlockState.getBlockData());
+            player.sendBlockChange(lowestDistanceLocation.add(-1,0,0), ironBlockState.getBlockData());
+            player.sendBlockChange(lowestDistanceLocation.add(-1,0,0), ironBlockState.getBlockData());
+            player.sendBlockChange(lowestDistanceLocation.add(0,0,1), ironBlockState.getBlockData());
+            player.sendBlockChange(lowestDistanceLocation.add(1,0,0), ironBlockState.getBlockData());
+            player.sendBlockChange(lowestDistanceLocation.add(1,0,0), ironBlockState.getBlockData());
+
+
+            activeLocationAndBeams.put(locationName, lowestDistanceLocation.add(-1, 1, -1));
+            //main.sendMessage(player, "<main> Initial Add: <highlight>" + lowestDistanceLocation.toVector().toString());
+
+        }
+
+        return toReturn;
+
+
     }
 
     public String addActiveQuest(final ActiveQuest quest, final boolean triggerAcceptQuestTrigger, final boolean sendQuestInfo) {
@@ -114,7 +210,7 @@ public class QuestPlayer {
                 }
 
                 for (final Condition condition : quest.getQuest().getRequirements()) {
-                    final String check = condition.check(this, false);
+                    final String check = condition.check(this);
                     if (!check.isBlank()) {
                         requirementsStillNeeded.append("\n").append(check);
 
@@ -124,11 +220,6 @@ public class QuestPlayer {
 
                 if (!requirementsStillNeeded.toString().isBlank()) {
                     return "<RED>You do not fulfill all the requirements this quest needs! Requirement still needed:" + requirementsStillNeeded;
-                }else{
-                    //Now loop through all the requirements again in order to enforce them
-                    for (final Condition condition : quest.getQuest().getRequirements()) {
-                        condition.check(this, true);
-                    }
                 }
 
 
@@ -543,7 +634,16 @@ public class QuestPlayer {
 
     public final boolean hasAcceptedQuest(final Quest quest) {
         for (final ActiveQuest activeQuest : activeQuests) {
-            if (activeQuest.getQuest().equals(quest)) {
+            if (activeQuest.getQuestName().equalsIgnoreCase(quest.getQuestName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public final boolean hasCompletedQuest(final Quest quest) {
+        for (final CompletedQuest completedQuest : completedQuests) {
+            if (completedQuest.getQuestName().equalsIgnoreCase(quest.getQuestName())) {
                 return true;
             }
         }

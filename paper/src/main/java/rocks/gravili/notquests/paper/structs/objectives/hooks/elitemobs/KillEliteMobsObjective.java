@@ -138,7 +138,6 @@ public class KillEliteMobsObjective extends Objective {
                 .flag(spawnReason)
                 .flag(minimumDamagePercentage)
 
-                .meta(CommandMeta.DESCRIPTION, "Adds a new KillEliteMobs Objective to a quest")
                 .handler((context) -> {
                     final int amount = context.get("amount");
 

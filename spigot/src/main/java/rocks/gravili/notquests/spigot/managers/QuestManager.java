@@ -694,17 +694,17 @@ public class QuestManager {
             for (final Quest quest : questsAttachedToNPC) {
                 final ItemStack materialToUse = quest.getTakeItem();
 
-                String displayName = quest.getQuestFinalName();
 
-                displayName = main.getLanguageManager().getString("gui.availableQuests.button.questPreview.questNamePrefix", player, quest) + displayName;
+                String displayName = main.getLanguageManager().getString("gui.availableQuests.button.questPreview.name-if-accepted", player, quest);
                 QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer((player.getUniqueId()));
 
                 if (questPlayer != null && questPlayer.hasAcceptedQuest(quest)) {
-                    displayName += main.getLanguageManager().getString("gui.availableQuests.button.questPreview.acceptedSuffix", player, quest);
+                    displayName = main.getLanguageManager().getString("gui.availableQuests.button.questPreview.name-if-not-accepted", player, questPlayer, quest);
                 }
                 String description = "";
                 if (!quest.getQuestDescription().isBlank()) {
-                    description = main.getLanguageManager().getString("gui.availableQuests.button.questPreview.questDescriptionPrefix", player, quest) + quest.getQuestDescription(main.getConfiguration().guiQuestDescriptionMaxLineLength);
+                    //description = main.getLanguageManager().getString("gui.availableQuests.button.questPreview.questDescriptionPrefix", player, quest) + quest.getQuestDescription(main.getConfiguration().guiQuestDescriptionMaxLineLength);
+                    description = quest.getQuestDescription(main.getConfiguration().guiQuestDescriptionMaxLineLength);
                 }
                 count++;
 
@@ -718,8 +718,8 @@ public class QuestManager {
 
                         },
                         main.getUtilManager().miniMessageToLegacyWithSpigotRGB(displayName),
-                        main.getUtilManager().miniMessageToLegacyWithSpigotRGB(description),
-                        main.getUtilManager().miniMessageToLegacyWithSpigotRGB(main.getLanguageManager().getString("gui.availableQuests.button.questPreview.bottomText", player, questPlayer, quest))
+                        main.getUtilManager().miniMessageToLegacyWithSpigotRGB(description)//,
+                        //main.getUtilManager().miniMessageToLegacyWithSpigotRGB(main.getLanguageManager().getString("gui.availableQuests.button.questPreview.bottomText", player, questPlayer, quest))
                 ));
 
             }
@@ -750,18 +750,18 @@ public class QuestManager {
             main.getLogManager().info("NotQuests > All quest count: <AQUA>" + quests.size() + "</AQUA>");
 
             audience.sendMessage(Component.empty());
-            audience.sendMessage(miniMessage.parse(
+            audience.sendMessage(miniMessage.deserialize(
                     "<BLUE>" + questsAttachedToNPC.size() + " Available Quests:"
             ));
             int counter = 1;
 
             for (Quest quest : questsAttachedToNPC) {
 
-                Component acceptComponent = miniMessage.parse("<GREEN><BOLD>[CHOOSE]")
+                Component acceptComponent = miniMessage.deserialize("<GREEN><BOLD>[CHOOSE]")
                         .clickEvent(ClickEvent.runCommand("/nquests preview " + quest.getQuestName()))
-                        .hoverEvent(HoverEvent.showText(MiniMessage.miniMessage().parse("<GREEN>Click to preview/choose the quest <AQUA>" + quest.getQuestFinalName())));
+                        .hoverEvent(HoverEvent.showText(MiniMessage.miniMessage().deserialize("<GREEN>Click to preview/choose the quest <AQUA>" + quest.getQuestFinalName())));
 
-                Component component = miniMessage.parse("<YELLOW>" + counter + ". <AQUA>" + quest.getQuestFinalName() + " ")
+                Component component = miniMessage.deserialize("<YELLOW>" + counter + ". <AQUA>" + quest.getQuestFinalName() + " ")
                         .append(acceptComponent);
 
                 audience.sendMessage(component);
@@ -805,17 +805,16 @@ public class QuestManager {
                 final ItemStack materialToUse = quest.getTakeItem();
 
 
-                String displayName = quest.getQuestFinalName();
-
-                displayName = main.getLanguageManager().getString("gui.availableQuests.button.questPreview.questNamePrefix", player, quest) + displayName;
+                String displayName = main.getLanguageManager().getString("gui.availableQuests.button.questPreview.name-if-accepted", player, quest);
                 QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer((player.getUniqueId()));
 
                 if (questPlayer != null && questPlayer.hasAcceptedQuest(quest)) {
-                    displayName += main.getLanguageManager().getString("gui.availableQuests.button.questPreview.acceptedSuffix", player, quest);
+                    displayName = main.getLanguageManager().getString("gui.availableQuests.button.questPreview.name-if-not-accepted", player, questPlayer, quest);
                 }
                 String description = "";
                 if (!quest.getQuestDescription().isBlank()) {
-                    description = main.getLanguageManager().getString("gui.availableQuests.button.questPreview.questDescriptionPrefix", player, quest) + quest.getQuestDescription(main.getConfiguration().guiQuestDescriptionMaxLineLength);
+                    //description = main.getLanguageManager().getString("gui.availableQuests.button.questPreview.questDescriptionPrefix", player, quest) + quest.getQuestDescription(main.getConfiguration().guiQuestDescriptionMaxLineLength);
+                    description = quest.getQuestDescription(main.getConfiguration().guiQuestDescriptionMaxLineLength);
                 }
                 count++;
 
@@ -829,8 +828,8 @@ public class QuestManager {
 
                         },
                         main.getUtilManager().miniMessageToLegacyWithSpigotRGB(displayName),
-                        main.getUtilManager().miniMessageToLegacyWithSpigotRGB(description),
-                        main.getUtilManager().miniMessageToLegacyWithSpigotRGB(main.getLanguageManager().getString("gui.availableQuests.button.questPreview.bottomText", player, questPlayer, quest))
+                        main.getUtilManager().miniMessageToLegacyWithSpigotRGB(description)//,
+                        //main.getUtilManager().miniMessageToLegacyWithSpigotRGB(main.getLanguageManager().getString("gui.availableQuests.button.questPreview.bottomText", player, questPlayer, quest))
                 ));
 
             }
@@ -861,18 +860,18 @@ public class QuestManager {
             main.getLogManager().info("NotQuests > All quest count: <AQUA>" + quests.size() + "</AQUA>");
 
             audience.sendMessage(Component.empty());
-            audience.sendMessage(miniMessage.parse(
+            audience.sendMessage(miniMessage.deserialize(
                     "<BLUE>" + questsAttachedToNPC.size() + " Availahle Quests:"
             ));
             int counter = 1;
 
             for (Quest quest : questsAttachedToNPC) {
 
-                Component acceptComponent = miniMessage.parse("<GREEN><BOLD>[CHOOSE]")
+                Component acceptComponent = miniMessage.deserialize("<GREEN><BOLD>[CHOOSE]")
                         .clickEvent(ClickEvent.runCommand("/nquests preview " + quest.getQuestName()))
-                        .hoverEvent(HoverEvent.showText(MiniMessage.miniMessage().parse("<GREEN>Click to preview/choose the quest <AQUA>" + quest.getQuestFinalName())));
+                        .hoverEvent(HoverEvent.showText(MiniMessage.miniMessage().deserialize("<GREEN>Click to preview/choose the quest <AQUA>" + quest.getQuestFinalName())));
 
-                Component component = miniMessage.parse("<YELLOW>" + counter + ". <AQUA>" + quest.getQuestFinalName() + " ")
+                Component component = miniMessage.deserialize("<YELLOW>" + counter + ". <AQUA>" + quest.getQuestFinalName() + " ")
                         .append(acceptComponent);
 
                 audience.sendMessage(component);
@@ -927,44 +926,44 @@ public class QuestManager {
     public void sendSingleQuestPreview(Player player, Quest quest) {
         Audience audience = main.adventure().player(player);
         audience.sendMessage(Component.empty());
-        audience.sendMessage(miniMessage.parse("<GRAY>-----------------------------------"));
-        audience.sendMessage(miniMessage.parse(
+        audience.sendMessage(miniMessage.deserialize("<GRAY>-----------------------------------"));
+        audience.sendMessage(miniMessage.deserialize(
                 "<BLUE>Quest Preview for Quest <AQUA>" + quest.getQuestFinalName() + "</AQUA>:"
         ));
 
 
         if (quest.getQuestDescription().length() >= 1) {
-            audience.sendMessage(miniMessage.parse(
+            audience.sendMessage(miniMessage.deserialize(
                     "<YELLOW>Quest description: <GRAY>" + quest.getQuestDescription()
             ));
         } else {
-            audience.sendMessage(miniMessage.parse(
+            audience.sendMessage(miniMessage.deserialize(
                     main.getLanguageManager().getString("chat.missing-quest-description", player)
             ));
         }
 
-        audience.sendMessage(miniMessage.parse(
+        audience.sendMessage(miniMessage.deserialize(
                 "<BLUE>Quest Requirements:"
         ));
 
-        audience.sendMessage(miniMessage.parse(
+        audience.sendMessage(miniMessage.deserialize(
                 getQuestRequirements(quest)
         ));
 
-        audience.sendMessage(miniMessage.parse(
+        audience.sendMessage(miniMessage.deserialize(
                 "<BLUE>Quest Rewards:"
         ));
-        audience.sendMessage(miniMessage.parse(
+        audience.sendMessage(miniMessage.deserialize(
                 getQuestRewards(quest)
         ));
 
-        Component acceptComponent = miniMessage.parse("<GREEN><BOLD>[ACCEPT THIS QUEST]")
+        Component acceptComponent = miniMessage.deserialize("<GREEN><BOLD>[ACCEPT THIS QUEST]")
                 .clickEvent(ClickEvent.runCommand("/nquests take " + quest.getQuestName()))
-                .hoverEvent(HoverEvent.showText(MiniMessage.miniMessage().parse("<GREEN>Click to accept the Quest <AQUA>" + quest.getQuestFinalName())));
+                .hoverEvent(HoverEvent.showText(MiniMessage.miniMessage().deserialize("<GREEN>Click to accept the Quest <AQUA>" + quest.getQuestFinalName())));
 
         audience.sendMessage(Component.empty());
         audience.sendMessage(acceptComponent);
-        audience.sendMessage(miniMessage.parse(
+        audience.sendMessage(miniMessage.deserialize(
                 "<GRAY>-----------------------------------"
         ));
 
@@ -1184,18 +1183,18 @@ public class QuestManager {
             final String objectiveDescription = activeObjective.getObjective().getObjectiveDescription();
 
 
-            audience.sendMessage(MiniMessage.miniMessage().parse(
+            audience.sendMessage(MiniMessage.miniMessage().deserialize(
                     "<strikethrough><GRAY>" + activeObjective.getObjective().getObjectiveID() + ". " + activeObjective.getObjective().getObjectiveFinalName() + ":" + "</strikethrough>"
             ));
 
-            audience.sendMessage(MiniMessage.miniMessage().parse(
+            audience.sendMessage(MiniMessage.miniMessage().deserialize(
                     "    <strikethrough><GRAY>Description: <WHITE>" + objectiveDescription + "</strikethrough>"
             ));
 
-            audience.sendMessage(miniMessage.parse(
+            audience.sendMessage(miniMessage.deserialize(
                     getObjectiveTaskDescription(activeObjective.getObjective(), true, player)
             ));
-            audience.sendMessage(miniMessage.parse(
+            audience.sendMessage(miniMessage.deserialize(
                     "   <strikethrough><GRAY>Progress: <WHITE>" + activeObjective.getCurrentProgress() + " / " + activeObjective.getProgressNeeded() + "</strikethrough>"
             ));
         }
@@ -1234,26 +1233,26 @@ public class QuestManager {
 
             if (activeObjective.isUnlocked()) {
                 final String objectiveDescription = activeObjective.getObjective().getObjectiveDescription();
-                audience.sendMessage(miniMessage.parse(
+                audience.sendMessage(miniMessage.deserialize(
                         main.getLanguageManager().getString("chat.objectives.counter", player, activeQuest, activeObjective)
                 ));
 
                 if (!objectiveDescription.isBlank()) {
-                    audience.sendMessage(MiniMessage.miniMessage().parse(
+                    audience.sendMessage(MiniMessage.miniMessage().deserialize(
                             main.getLanguageManager().getString("chat.objectives.description", player, activeQuest, activeObjective)
                                     .replace("%OBJECTIVEDESCRIPTION%", activeObjective.getObjective().getObjectiveDescription())
                     ));
                 }
 
-                audience.sendMessage(miniMessage.parse(
+                audience.sendMessage(miniMessage.deserialize(
                         getObjectiveTaskDescription(activeObjective.getObjective(), false, player)
                 ));
 
-                audience.sendMessage(miniMessage.parse(
+                audience.sendMessage(miniMessage.deserialize(
                         main.getLanguageManager().getString("chat.objectives.progress", player, activeQuest, activeObjective)
                 ));
             } else {
-                audience.sendMessage(miniMessage.parse(
+                audience.sendMessage(miniMessage.deserialize(
                         main.getLanguageManager().getString("chat.objectives.hidden", player, activeObjective, activeObjective)
                 ));
 
@@ -1266,17 +1265,17 @@ public class QuestManager {
         Audience audience = main.adventure().player(player);
         for (final Objective objective : quest.getObjectives()) {
             final String objectiveDescription = objective.getObjectiveDescription();
-            audience.sendMessage(miniMessage.parse(
+            audience.sendMessage(miniMessage.deserialize(
                     "<GREEN>" + objective.getObjectiveID() + ". <YELLOW>" + objective.getObjectiveFinalName()
             ));
 
 
             if (!objectiveDescription.isBlank()) {
-                audience.sendMessage(miniMessage.parse(
+                audience.sendMessage(miniMessage.deserialize(
                         "   <BLUE>Description: <GOLD>" + objectiveDescription
                 ));
             }
-            audience.sendMessage(miniMessage.parse(
+            audience.sendMessage(miniMessage.deserialize(
                     getObjectiveTaskDescription(objective, false, player)
             ));
 
@@ -1290,35 +1289,35 @@ public class QuestManager {
         for (final Objective objective : quest.getObjectives()) {
 
             final String objectiveDescription = objective.getObjectiveDescription();
-            audience.sendMessage(miniMessage.parse(
+            audience.sendMessage(miniMessage.deserialize(
                     highlightGradient + objective.getObjectiveID() + ".</gradient> " + mainGradient + objective.getObjectiveFinalName()
             ));
 
 
             if (!objectiveDescription.isBlank()) {
-                audience.sendMessage(miniMessage.parse(
+                audience.sendMessage(miniMessage.deserialize(
                         highlightGradient + "   Description:</gradient> " + mainGradient + objectiveDescription
                 ));
             }
 
 
-            audience.sendMessage(miniMessage.parse(
+            audience.sendMessage(miniMessage.deserialize(
                     highlightGradient + "   Conditions:</gradient>"
             ));
             int counter2 = 1;
             for (final Condition condition : objective.getConditions()) {
-                audience.sendMessage(miniMessage.parse(
+                audience.sendMessage(miniMessage.deserialize(
                         highlightGradient + "         " + counter2 + ".</gradient>" + mainGradient + " Condition: </gradient>" + highlight2Gradient + condition.getConditionDescription()
                 ));
                 counter2++;
             }
             if (counter2 == 1) {
-                audience.sendMessage(miniMessage.parse(
+                audience.sendMessage(miniMessage.deserialize(
                         unimportant + "      No conditions found!"
                 ));
             }
 
-            audience.sendMessage(miniMessage.parse(getObjectiveTaskDescription(objective, false, null)));
+            audience.sendMessage(miniMessage.deserialize(getObjectiveTaskDescription(objective, false, null)));
 
         }
     }
@@ -1329,26 +1328,26 @@ public class QuestManager {
         if (activeObjective.isUnlocked()) {
             final String objectiveDescription = activeObjective.getObjective().getObjectiveDescription();
 
-            audience.sendMessage(miniMessage.parse(
+            audience.sendMessage(miniMessage.deserialize(
                     "<YELLOW>" + activeObjective.getObjective().getObjectiveID() + ". " + activeObjective.getObjective().getObjectiveFinalName() + ":"
             ));
 
 
             if (!objectiveDescription.isBlank()) {
-                audience.sendMessage(miniMessage.parse(
+                audience.sendMessage(miniMessage.deserialize(
                         "   <BLUE>Description: <GOLD>" + objectiveDescription
                 ));
             }
 
-            audience.sendMessage(miniMessage.parse(
+            audience.sendMessage(miniMessage.deserialize(
                     getObjectiveTaskDescription(activeObjective.getObjective(), false, player)
             ));
 
-            audience.sendMessage(miniMessage.parse(
+            audience.sendMessage(miniMessage.deserialize(
                     "   <GRAY>Progress: <WHITE>" + activeObjective.getCurrentProgress() + " / " + activeObjective.getProgressNeeded()
             ));
         } else {
-            audience.sendMessage(miniMessage.parse(
+            audience.sendMessage(miniMessage.deserialize(
                     "<YELLOW>" + activeObjective.getObjective().getObjectiveID() + ". <GRAY><BOLD>[HIDDEN]"
             ));
         }

@@ -34,7 +34,7 @@ public class BeginTrigger extends Trigger {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addTriggerBuilder) {
-        manager.command(addTriggerBuilder.literal("BEGIN")
+        manager.command(addTriggerBuilder
                 .flag(main.getCommandManager().applyOn)
                 .flag(main.getCommandManager().triggerWorldString)
                 .meta(CommandMeta.DESCRIPTION, "Triggers when a Quest begins or an Objective gets unlocked ('begins')")

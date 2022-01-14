@@ -23,12 +23,15 @@ import org.betonquest.betonquest.exceptions.InstructionParseException;
 import org.betonquest.betonquest.exceptions.QuestRuntimeException;
 import org.betonquest.betonquest.id.ID;
 import org.betonquest.betonquest.utils.PlayerConverter;
+import org.betonquest.betonquest.utils.Utils;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.CompletedQuest;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
-import rocks.gravili.notquests.paper.structs.conditions.*;
+import rocks.gravili.notquests.paper.structs.conditions.Condition;
+
+import java.util.List;
 
 public class BQRequirementsCondition extends org.betonquest.betonquest.api.Condition { //TODO: Make it dynamic for future or API requirements
 
@@ -50,56 +53,13 @@ public class BQRequirementsCondition extends org.betonquest.betonquest.api.Condi
         super(instruction, false);
         this.main = NotQuests.getInstance();
 
-        final String requirementTypeName = instruction.getPart(1);
+        final String[] conditionLine = Utils.split(instruction.toString());
 
-        Class<? extends Condition> requirementType = null;
         try {
-            requirementType = main.getConditionsManager().getConditionClass(requirementTypeName);
+            condition = main.getConversationManager().parseConditionsString(List.of(conditionLine)).get(0);
         } catch (Exception e) {
-            throw new InstructionParseException("Requirement type '" + requirementTypeName + "' does not exist.");
+            throw new RuntimeException("Invalid Condition line: " + e.getLocalizedMessage());
         }
-
-        int requirementInt = 0;
-        if (requirementType == CompletedQuestCondition.class) {
-            String requirementString = instruction.getPart(2);
-            try {
-                requirementInt = Integer.parseInt(instruction.getPart(3));
-            } catch (NumberFormatException e) {
-                throw new RuntimeException("Invalid number for second argument (amount of requirements needed).");
-            }
-
-            condition = new CompletedQuestCondition(main);
-            condition.setProgressNeeded(requirementInt);
-            ((CompletedQuestCondition) condition).setOtherQuestName(requirementString);
-
-        } else if (requirementType == MoneyCondition.class) {
-            try {
-                condition = new MoneyCondition(main);
-                condition.setProgressNeeded(Long.parseLong(instruction.getPart(2)));
-                ((MoneyCondition)condition).setDeductMoney(false);
-
-            } catch (NumberFormatException e) {
-                throw new RuntimeException("Invalid number for second argument (amount of requirements needed).");
-            }
-
-        } else if (requirementType == QuestPointsCondition.class) {
-            try {
-                condition = new QuestPointsCondition(main);
-                condition.setProgressNeeded(Long.parseLong(instruction.getPart(2)));
-
-            } catch (NumberFormatException e) {
-                throw new RuntimeException("Invalid number for second argument (amount of requirements needed).");
-            }
-        } else if (requirementType == PermissionCondition.class) {
-            String requirementString = instruction.getPart(2);
-
-
-            condition = new PermissionCondition(main);
-            ((PermissionCondition)condition).setRequiredPermission(requirementString);
-        } else {
-            throw new InstructionParseException("Requirement type '" + requirementTypeName + "' could not be created. Please contact the NotQuests author about it.");
-        }
-
     }
 
     @Override
@@ -107,50 +67,9 @@ public class BQRequirementsCondition extends org.betonquest.betonquest.api.Condi
         if (condition != null) {
             final Player player = PlayerConverter.getPlayer(playerID);
 
-            if (condition instanceof final CompletedQuestCondition otherQuestRequirement) {
-                final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
-                if (questPlayer != null) {
-                    final Quest otherQuest = otherQuestRequirement.getOtherQuest();
-
-                    int otherQuestCompletedAmount = 0;
-
-                    for (CompletedQuest completedQuest : questPlayer.getCompletedQuests()) {
-                        if (completedQuest.getQuest().equals(otherQuest)) {
-                            otherQuestCompletedAmount += 1;
-                        }
-                    }
-                    return otherQuestCompletedAmount >= otherQuestRequirement.getAmountOfCompletionsNeeded();
-                }
-
-
-            } else if (condition instanceof final QuestPointsCondition questPointsRequirement) {
-                final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
-                if (questPlayer != null) {
-                    final long questPointRequirementAmount = questPointsRequirement.getQuestPointRequirement();
-
-                    return questPlayer.getQuestPoints() >= questPointRequirementAmount;
-                }
-
-            } else if (condition instanceof final MoneyCondition moneyRequirement) {
-                final long moneyRequirementAmount = moneyRequirement.getMoneyRequirement();
-
-                if (!main.getIntegrationsManager().isVaultEnabled() || main.getIntegrationsManager().getVaultManager().getEconomy() == null) {
-                    throw new QuestRuntimeException("The server does not have vault enabled. Please install Vault for money requirements to work.");
-                } else
-                    return !(main.getIntegrationsManager().getVaultManager().getEconomy().getBalance(player, player.getWorld().getName()) < moneyRequirementAmount);
-
-
-            } else if (condition instanceof final PermissionCondition permissionRequirement) {
-                final String requiredPermission = permissionRequirement.getRequiredPermission();
-
-                return player.hasPermission(requiredPermission);
-
-            } else {
-                throw new QuestRuntimeException("Requirement you entered is invalid.");
-            }
+            return condition.check(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId())).isBlank();
         } else {
-            throw new QuestRuntimeException("Requirement was not found.");
+            throw new QuestRuntimeException("Condition was not found.");
         }
-        return null;
     }
 }

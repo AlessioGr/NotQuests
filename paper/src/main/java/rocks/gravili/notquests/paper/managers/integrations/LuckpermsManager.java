@@ -44,7 +44,25 @@ public class LuckpermsManager {
         if (!permissionNode.isBlank()) {
             luckPerms.getUserManager().modifyUser(uuid, user -> {
                 // Add the permission
-                user.data().add(Node.builder(permissionNode).build());
+                user.data().add(Node.builder(permissionNode).value(true).build());
+            });
+        }
+    }
+
+    public void denyPermission(final UUID uuid, final String permissionNode) {
+        if (!permissionNode.isBlank()) {
+            luckPerms.getUserManager().modifyUser(uuid, user -> {
+                // Add the permission
+                user.data().add(Node.builder(permissionNode).value(false).build());
+            });
+        }
+    }
+
+    public void unsetPermission(final UUID uuid, final String permissionNode) {
+        if (!permissionNode.isBlank()) {
+            luckPerms.getUserManager().modifyUser(uuid, user -> {
+                // Add the permission
+                user.data().remove(Node.builder(permissionNode).build());
             });
         }
     }

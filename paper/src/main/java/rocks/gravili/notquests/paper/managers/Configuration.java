@@ -32,6 +32,8 @@ import java.util.List;
 @Data
 public class Configuration {
 
+    public String configurationVersion = "";
+
     public boolean debug = false;
 
     /**
@@ -48,7 +50,7 @@ public class Configuration {
     private boolean userCommandsUseGUI = true;
     private boolean mySQLEnabled = false;
 
-    public boolean storageCreateBackupsWhenSavingQuests = true;
+    public boolean storageCreateBackupsWhenServerShutsDown = true;
 
     public String placeholder_player_active_quests_list_horizontal_separator = " | ";
 
@@ -73,6 +75,9 @@ public class Configuration {
     public boolean packetMagicUnsafeDisregardVersion = false;
     public boolean deletePreviousConversations = false;
     public int previousConversationsHistorySize = 20;
+
+    public boolean updateCheckerNotifyOpsInChat = true;
+
 
     //Particles
     private int citizensNPCQuestGiverIndicatorParticleSpawnInterval = 10;
@@ -104,6 +109,7 @@ public class Configuration {
     private boolean integrationTownyEnabled = true;
     private boolean integrationJobsRebornEnabled = true;
     private boolean integrationProjectKorraEnabled = true;
+    private boolean integrationEcoBossesEnabled = true;
 
 
     //Other

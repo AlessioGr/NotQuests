@@ -249,4 +249,8 @@ public class ActiveQuest {
         return null;
     }
 
+    public final String getQuestName(){
+        return quest.getQuestName();
+    }
+
 }

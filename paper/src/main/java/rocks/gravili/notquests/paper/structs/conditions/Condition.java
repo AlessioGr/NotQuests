@@ -18,11 +18,16 @@
 
 package rocks.gravili.notquests.paper.structs.conditions;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
+
+import java.util.ArrayList;
 
 public abstract class Condition {
     protected final NotQuests main;
@@ -30,18 +35,42 @@ public abstract class Condition {
     private long progressNeeded = 1;
     private Quest quest;
     private Objective objective;
+    private boolean negated = false;
+    private Category category;
+    private String description = "";
+
 
     public Condition(NotQuests main) {
         this.main = main;
+        category = main.getDataManager().getDefaultCategory();
+        main.allConditions.add(this); //For bStats
     }
 
-    public void setProgressNeeded(final long progressNeeded){
+    public final String getDescription(){
+        return description;
+    }
+
+    public void setDescription(final String description){
+        this.description = description;
+    }
+
+    public final Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(final Category category) {
+        this.category = category;
+    }
+
+    public void setProgressNeeded(final long progressNeeded) {
         this.progressNeeded = progressNeeded;
     }
-    public void setQuest(final Quest quest){
+
+    public void setQuest(final Quest quest) {
         this.quest = quest;
     }
-    public void setObjective(final Objective objective){
+
+    public void setObjective(final Objective objective) {
         this.objective = objective;
     }
 
@@ -49,7 +78,7 @@ public abstract class Condition {
         return main.getConditionsManager().getConditionType(this.getClass());
     }
 
-    public final long getProgressNeeded() {
+    public long getProgressNeeded() {
         return progressNeeded;
     }
 
@@ -73,12 +102,57 @@ public abstract class Condition {
     /**
      * @return String if the condition is not fulfilled. Empty string if the condition is fulfilled. The String should say the still-required condition.
      */
-    public abstract String check(final QuestPlayer questPlayer, final boolean enforce);
+    protected abstract String checkInternally(final QuestPlayer questPlayer);
 
+    public String check(final QuestPlayer questPlayer){
+        String result = checkInternally(questPlayer);
+        if(!isNegated()){
+            return result;
+        }else{
+            if(result.isBlank()){
+                return "<YELLOW>You cannot fulfill this condition: <unimportant>" + getConditionDescription(questPlayer.getPlayer());
+            }else{
+                return "";
+            }
+        }
+    }
 
-    public abstract String getConditionDescription();
+    public String getConditionDescription(Player player, Object... objects){
+        if(description.isBlank()){
+            return getConditionDescriptionInternally(player, objects);
+        }else {
+            return description;
+        }
+    }
+
+    protected abstract String getConditionDescriptionInternally(Player player, Object... objects);
 
     public abstract void save(final FileConfiguration configuration, final String initialPath);
 
     public abstract void load(final FileConfiguration configuration, final String initialPath);
+
+    public void setNegated(boolean negated) {
+        this.negated = negated;
+    }
+
+    public final boolean isNegated(){
+        return negated;
+    }
+
+    public abstract void deserializeFromSingleLineString(final ArrayList<String> arguments);
+
+    public void switchCategory(final Category category) {
+
+        final ConfigurationSection conditionsConfigurationSection = getCategory().getConditionsConfig().getConfigurationSection("conditions." + getConditionName());
+
+        getCategory().getConditionsConfig().set("conditions." + getConditionName(), null);
+        getCategory().saveConditionsConfig();
+
+        setCategory(category);
+
+        category.getConditionsConfig().set("conditions." + getConditionName(), conditionsConfigurationSection);
+        category.saveConditionsConfig();
+
+    }
+
 }

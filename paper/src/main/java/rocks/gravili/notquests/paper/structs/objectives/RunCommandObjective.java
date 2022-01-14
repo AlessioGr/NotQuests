@@ -24,7 +24,6 @@ import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
-import net.kyori.adventure.audience.Audience;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -45,7 +44,7 @@ public class RunCommandObjective extends Objective {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
-        manager.command(addObjectiveBuilder.literal("RunCommand")
+        manager.command(addObjectiveBuilder
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of times the command needs to be run."))
                 .argument(StringArgument.<CommandSender>newBuilder("Command").withSuggestionsProvider(
                         (context, lastString) -> {
@@ -66,7 +65,6 @@ public class RunCommandObjective extends Objective {
                         manager.flagBuilder("cancelCommand")
                                 .withDescription(ArgumentDescription.of("Makes it so the command will be cancelled (not actually run) when entered while this objective is active"))
                 )
-                .meta(CommandMeta.DESCRIPTION, "Adds a new RunCommand Objective to a quest")
                 .handler((context) -> {
                     String command = context.get("Command");
                     final int amount = context.get("amount");

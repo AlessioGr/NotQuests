@@ -23,13 +23,10 @@ import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.NotQuestColors;
 import rocks.gravili.notquests.paper.commands.arguments.EntityTypeSelector;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 
@@ -44,12 +41,11 @@ public class KillMobsObjective extends Objective {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
-        manager.command(addObjectiveBuilder.literal("KillMobs")
+        manager.command(addObjectiveBuilder
                 .argument(EntityTypeSelector.of("entityType", main), ArgumentDescription.of("Type of Entity the player has to kill."))
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of kills needed"))
                 .flag(main.getCommandManager().nametag_equals)
                 .flag(main.getCommandManager().nametag_containsany)
-                .meta(CommandMeta.DESCRIPTION, "Adds a new KillMobs Objective to a quest")
                 .handler((context) -> {
 
                     final String entityType = context.get("entityType");

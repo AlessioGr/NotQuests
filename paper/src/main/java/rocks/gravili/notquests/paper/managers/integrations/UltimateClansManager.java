@@ -19,9 +19,20 @@ public class UltimateClansManager {
     }
 
     public final boolean isInClanWithMinLevel(final Player player, final long minLevel) {
-        if (api.getPlayerAPI().getPlayerClan(player.getUniqueId()) != null && api.getPlayerAPI().getPlayerClan(player.getUniqueId()).getLevel() >= minLevel) {
-            return true;
+        return api.getPlayerAPI().getPlayerClan(player.getUniqueId()) != null && getClanLevel(player) >= minLevel;
+    }
+
+    public final int getClanLevel(final Player player){
+        if(api.getPlayerAPI().getPlayerClan(player.getUniqueId()) == null){
+            return 0;
         }
-        return false;
+        return api.getPlayerAPI().getPlayerClan(player.getUniqueId()).getLevel();
+    }
+
+    public final void setClanLevel(final Player player, final int newLevel){
+        if(api.getPlayerAPI().getPlayerClan(player.getUniqueId()) == null){
+            return;
+        }
+        api.getPlayerAPI().getPlayerClan(player.getUniqueId()).setLevel(newLevel);
     }
 }

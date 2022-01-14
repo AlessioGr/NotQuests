@@ -45,7 +45,9 @@ import org.bukkit.command.CommandSender;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.*;
 import rocks.gravili.notquests.paper.commands.arguments.*;
+import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueArgument;
 import rocks.gravili.notquests.paper.conversation.ConversationManager;
+import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
@@ -63,6 +65,9 @@ public class CommandManager {
     public CommandFlag<String[]> nametag_equals;
     public CommandFlag<String> taskDescription;
     public CommandFlag<Integer> maxDistance;
+    public CommandFlag<Category> categoryFlag;
+
+    //Builders
     private Command.Builder<CommandSender> adminCommandBuilder;
     private Command.Builder<CommandSender> adminEditCommandBuilder;
     private Command.Builder<CommandSender> adminConversationCommandBuilder;
@@ -72,9 +77,15 @@ public class CommandManager {
     private Command.Builder<CommandSender> adminEditAddTriggerCommandBuilder;
     private Command.Builder<CommandSender> adminEditObjectiveAddConditionCommandBuilder;
     private Command.Builder<CommandSender> adminEditObjectiveAddRewardCommandBuilder;
+
     private Command.Builder<CommandSender> adminAddActionCommandBuilder;
+    private Command.Builder<CommandSender> adminActionsCommandBuilder;
+    private Command.Builder<CommandSender> adminActionsEditCommandBuilder;
+    private Command.Builder<CommandSender> adminActionsAddConditionCommandBuilder;
+
     private Command.Builder<CommandSender> adminAddConditionCommandBuilder;
-    private Command.Builder<CommandSender> adminEditActionsAddConditionCommandBuilder;
+
+
     public CommandFlag<String> speakerColor;
     private AdminCommands adminCommands;
     private AdminEditCommands adminEditCommands;
@@ -216,6 +227,14 @@ public class CommandManager {
                 .withArgument(LongArgument.of("waitTimeAfterCompletion"))
                 .withDescription(ArgumentDescription.of("Enter minimum time you have to wait after completion."))
                 .build(); //0 = Quest
+
+
+        categoryFlag = CommandFlag
+                .newBuilder("category")
+                .withArgument(CategorySelector.of("category", main))
+                .withDescription(ArgumentDescription.of("Category name"))
+                .build();
+
     }
 
     public final CommandMap getCommandMap() {
@@ -262,11 +281,14 @@ public class CommandManager {
                 cloudBrigadierManager.registerMapping(new TypeToken<MiniMessageSelector.MiniMessageParser<CommandSender>>() {
                 }, builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
 
+                cloudBrigadierManager.registerMapping(new TypeToken<StringVariableValueArgument.StringParser<CommandSender>>() {
+                }, builder -> builder.cloudSuggestions().toConstant(StringArgumentType.string()));
+
             } else {
                 main.getMain().getLogger().warning("Failed to initialize Brigadier support. Brigadier manager is null.");
             }
         } catch (final Exception e) {
-            main.getMain().getLogger().warning("Failed to initialize Brigadier support: " + e.getMessage());
+            main.getMain().getLogger().warning("Failed to initialize Brigadier support: <highlight>" + e.getMessage());
         }
     }
 
@@ -366,17 +388,14 @@ public class CommandManager {
                 .literal("conditions")
                 .literal("add");
 
-        adminEditActionsAddConditionCommandBuilder = adminCommandBuilder.literal("actions")
+
+        adminActionsCommandBuilder = adminCommandBuilder.literal("actions");
+
+        adminActionsEditCommandBuilder = adminActionsCommandBuilder
                 .literal("edit")
-                .argument(StringArgument.<CommandSender>newBuilder("Action Identifier").withSuggestionsProvider(
-                        (context, lastString) -> {
-                            final List<String> allArgs = context.getRawInput();
-                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Action Identifier (name)]", "[...]");
+                .argument(ActionSelector.of("action", main), ArgumentDescription.of("Action Name"));
 
-                            return new ArrayList<>(main.getActionsYMLManager().getActionsAndIdentifiers().keySet());
-
-                        }
-                ).single().build(), ArgumentDescription.of("Action Identifier"))
+        adminActionsAddConditionCommandBuilder = adminActionsEditCommandBuilder
                 .literal("conditions")
                 .literal("add");
 
@@ -528,8 +547,14 @@ public class CommandManager {
         return adminEditObjectiveAddConditionCommandBuilder;
     }
 
-    public final Command.Builder<CommandSender> getAdminEditActionsAddConditionCommandBuilder() {
-        return adminEditActionsAddConditionCommandBuilder;
+    public final Command.Builder<CommandSender> getAdminActionsAddConditionCommandBuilder() {
+        return adminActionsAddConditionCommandBuilder;
+    }
+
+    public final Command.Builder<CommandSender> getAdminActionsCommandBuilder() {
+        return adminActionsCommandBuilder;
+    } public final Command.Builder<CommandSender> getAdminActionsEdituilder() {
+        return adminActionsEditCommandBuilder;
     }
 
     public final Command.Builder<CommandSender> getAdminEditObjectiveAddRewardCommandBuilder() {

@@ -20,20 +20,15 @@ package rocks.gravili.notquests.paper.structs.conditions;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
-import cloud.commandframework.arguments.standard.StringArgument;
-import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.arguments.ConditionSelector;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import static rocks.gravili.notquests.paper.commands.NotQuestColors.*;
 
 
 public class ConditionCondition extends Condition {
@@ -46,34 +41,15 @@ public class ConditionCondition extends Condition {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
-        manager.command(builder.literal("Condition")
-                .argument(StringArgument.<CommandSender>newBuilder("Condition Identifier").withSuggestionsProvider(
-                        (context, lastString) -> {
-                            final List<String> allArgs = context.getRawInput();
-                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Condition Identifier (name)]", "");
-
-                            return new ArrayList<>(main.getConditionsYMLManager().getConditionsAndIdentifiers().keySet());
-
-                        }
-                ).single().build(), ArgumentDescription.of("Condition Identifier"))
-                .meta(CommandMeta.DESCRIPTION, "Adds a new Condition Condition to a quest (checks for another condition from conditions.yml)")
+        manager.command(builder
+                .argument(ConditionSelector.of("Condition", main), ArgumentDescription.of("Name of the condition which will be checked"))
                 .handler((context) -> {
+                    final Condition condition = context.get("Condition");
 
-                    final String conditionIdentifier = context.get("Condition Identifier");
+                    ConditionCondition conditionCondition = new ConditionCondition(main);
+                    conditionCondition.setCondition(condition);
 
-                    final Condition foundCondition = main.getConditionsYMLManager().getCondition(conditionIdentifier);
-
-                    if (foundCondition != null) {
-
-                        ConditionCondition conditionCondition = new ConditionCondition(main);
-                        conditionCondition.setCondition(foundCondition);
-
-                        main.getConditionsManager().addCondition(conditionCondition, context);
-                    } else {
-                        context.getSender().sendMessage(main.parse("<error>Error! Condition with the name <highlight>" + conditionIdentifier + "</highlight> does not exist!"));
-                    }
-
-
+                    main.getConditionsManager().addCondition(conditionCondition, context);
                 }));
     }
 
@@ -86,16 +62,16 @@ public class ConditionCondition extends Condition {
     }
 
     @Override
-    public String check(final QuestPlayer questPlayer, final boolean enforce) {
+    public String checkInternally(final QuestPlayer questPlayer) {
         if (condition == null) {
             return "<warn>Error: ConditionCondition cannot be checked because the condition was not found. Report this to the server owner.";
         }
 
-        return condition.check(questPlayer, enforce);
+        return condition.check(questPlayer);
     }
 
     @Override
-    public String getConditionDescription() {
+    public String getConditionDescriptionInternally(Player player, Object... objects) {
         if (condition != null) {
             return "<unimportant>-- Complete Condition: <highlight>" + condition.getConditionName();
         } else {
@@ -119,6 +95,15 @@ public class ConditionCondition extends Condition {
         this.condition = main.getConditionsYMLManager().getCondition(conditionName);
         if (condition == null) {
             main.getLogManager().warn("Error: ConditionCondition cannot find the condition with name " + conditionName + ". Condition Path: " + initialPath);
+        }
+    }
+
+    @Override
+    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+        String conditionName = arguments.get(0);
+        this.condition = main.getConditionsYMLManager().getCondition(conditionName);
+        if (condition == null) {
+            main.getLogManager().warn("Error: ConditionCondition cannot find the condition with name " + conditionName + ". Provided condition: " + arguments.get(0));
         }
     }
 }

@@ -60,4 +60,8 @@ public class CompletedQuest {
         return timeCompleted;
     }
 
+    public final String getQuestName(){
+        return quest.getQuestName();
+    }
+
 }

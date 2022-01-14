@@ -63,7 +63,7 @@ public class PlaceBlocksObjective extends Objective {
                             materialToPlace = player.getInventory().getItemInMainHand().getType().name();
                         } else {
                             final Audience audience = main.adventure().sender(context.getSender());
-                            audience.sendMessage(MiniMessage.miniMessage().parse(
+                            audience.sendMessage(MiniMessage.miniMessage().deserialize(
                                     NotQuestColors.errorGradient + "This must be run by a player."
                             ));
                             return;

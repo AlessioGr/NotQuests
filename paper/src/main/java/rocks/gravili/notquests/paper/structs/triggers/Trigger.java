@@ -23,6 +23,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.actions.Action;
@@ -35,10 +36,20 @@ public abstract class Trigger {
     private int applyOn = 0; // 0 is for the whole quest. Positive numbers = objectives (JUST INTERNALLY HERE, NOT IN THE ADMIN COMMAND)
     private String worldName = "ALL";
     private long amountNeeded = 0; // 0 or 1 means every trigger() triggers it
+    private Category category;
 
 
     public Trigger(final NotQuests main) {
         this.main = main;
+        category = main.getDataManager().getDefaultCategory();
+    }
+
+    public final Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(final Category category) {
+        this.category = category;
     }
 
     public void setQuest(final Quest quest) {

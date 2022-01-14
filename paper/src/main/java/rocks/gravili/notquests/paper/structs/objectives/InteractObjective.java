@@ -48,7 +48,7 @@ public class InteractObjective extends Objective {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
-        manager.command(addObjectiveBuilder.literal("Interact")
+        manager.command(addObjectiveBuilder
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of interactions needed."))
                 .argument(WorldArgument.of("world"), ArgumentDescription.of("World name"))
                 /* .argumentTriplet(
@@ -78,7 +78,6 @@ public class InteractObjective extends Objective {
                 )
                 .flag(main.getCommandManager().taskDescription)
                 .flag(main.getCommandManager().maxDistance)
-                .meta(CommandMeta.DESCRIPTION, "Adds a new Interact Objective to a quest")
                 .handler((context) -> {
                     final int amount = context.get("amount");
 

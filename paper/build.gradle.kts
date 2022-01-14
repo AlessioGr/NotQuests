@@ -5,10 +5,12 @@ plugins {
     `maven-publish`
     id ("com.github.johnrengelman.shadow")
     id("io.freefair.lombok") version "6.3.0"
+    id("io.papermc.paperweight.userdev")
+    id("xyz.jpenilla.run-paper")
 }
 
 group = "rocks.gravili.notquests"
-version = "3.2.5"
+version = rootProject.version
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
@@ -47,17 +49,18 @@ repositories {
             includeGroup("com.github.AlessioGr.packetevents")
             includeGroup("com.github.TownyAdvanced")
             includeGroup("com.github.Zrips")
+            includeGroup("com.willfp")
         }
         metadataSources {
             artifact()
         }
     }
 
-    maven("https://repo.minebench.de/"){
+    /*maven("https://repo.minebench.de/"){
         content {
             includeGroup("de.themoep")
         }
-    }
+    }*/
 
     maven("https://mvn.lumine.io/repository/maven-public/"){
         content {
@@ -86,6 +89,7 @@ repositories {
     maven("https://repo.incendo.org/content/repositories/snapshots"){
         content {
             includeGroup("org.incendo.interfaces")
+            includeGroup("cloud.commandframework")
         }
     }
 
@@ -95,19 +99,26 @@ repositories {
         }
     }
 
+    maven("https://redempt.dev"){
+        content {
+            includeGroup("com.github.Redempt")
+        }
+    }
+
     //mavenLocal()
 
 }
 
 dependencies {
     //implementation project(':common')
+    paperDevBundle("1.18.1-R0.1-SNAPSHOT")
+    //compileOnly("io.papermc.paper:paper-api:1.18.1-R0.1-SNAPSHOT!!")
 
     implementation("org.bstats:bstats-bukkit:2.2.1")
-    implementation("de.themoep:inventorygui:1.5-SNAPSHOT")
+    //implementation("de.themoep:inventorygui:1.5-SNAPSHOT")
 
-    compileOnly("io.papermc.paper:paper-api:1.18.1-R0.1-SNAPSHOT!!")
     compileOnly("net.citizensnpcs:citizens-main:2.0.29-SNAPSHOT")
-    compileOnly("me.clip:placeholderapi:2.11.0")
+    compileOnly("me.clip:placeholderapi:2.11.1")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7")
 
 
@@ -115,6 +126,7 @@ dependencies {
     compileOnly(files("libs/EliteMobs.jar"))
     compileOnly(files("libs/UClans-API.jar"))
     compileOnly(files("libs/ProjectKorra-1.9.2.jar"))
+
 
 
     compileOnly("org.betonquest:betonquest:2.0.0-SNAPSHOT")
@@ -143,10 +155,10 @@ dependencies {
     }
 
     //CloudCommands
-    implementation("cloud.commandframework:cloud-paper:1.6.1"){
+    implementation("cloud.commandframework:cloud-paper:1.7.0-SNAPSHOT"){
         exclude(group= "net.kyori", module= "adventure-api")
     }
-    implementation("cloud.commandframework:cloud-minecraft-extras:1.6.1"){
+    implementation("cloud.commandframework:cloud-minecraft-extras:1.7.0-SNAPSHOT"){
         exclude(group= "net.kyori", module= "adventure-api")
     }
     //Else it errors:
@@ -172,6 +184,13 @@ dependencies {
     compileOnly("com.mojang:brigadier:1.0.18")
 
     implementation("commons-io:commons-io:2.11.0")
+
+    compileOnly("com.willfp:EcoBosses:6.8.0")
+    //compileOnly(files("libs/EcoBosses-v7.0.0.jar"))
+    compileOnly("com.willfp:eco:6.18.3")
+
+    implementation("com.github.Redempt:Crunch:1.0")
+
 }
 
 /**
@@ -179,10 +198,10 @@ dependencies {
  */
 val shadowPath = "rocks.gravili.notquests.paper.shadow"
 tasks.withType<ShadowJar> {
+
     minimize()
 
     //exclude('com.mojang:brigadier')
-
 
     //relocate('io.papermc.lib', path.concat('.paper'))
     relocate("org.bstats", "$shadowPath.bstats")
@@ -207,13 +226,15 @@ tasks.withType<ShadowJar> {
 
     relocate("org.incendo.interfaces", "$shadowPath.interfaces")
 
+    relocate("redempt.crunch", "$shadowPath.crunch")
+
 
     dependencies {
         //include(dependency('org.apache.commons:')
         include(dependency("commons-io:commons-io:"))
 
         //include(dependency('io.papermc:paperlib')
-        include(dependency("de.themoep:inventorygui:1.5-SNAPSHOT"))
+        //include(dependency("de.themoep:inventorygui:1.5-SNAPSHOT"))
         include(dependency("org.bstats:"))
         include(dependency("cloud.commandframework:"))
         include(dependency("io.leangen.geantyref:"))
@@ -229,10 +250,20 @@ tasks.withType<ShadowJar> {
         include(dependency("net.kyori:adventure-text-minimessage:"))
         include(dependency("net.kyori:adventure-text-serializer-bungeecord:"))
 
+        include(dependency("com.github.Redempt:Crunch:"))
+
     }
 
 
+    //archiveBaseName.set("notquests")
     archiveClassifier.set("")
+
+
+  //  configurations.forEach { println("E: " + it.toString()) }
+
+    // println("Size: " + configurations.size)
+
+
 
 
 }
@@ -243,6 +274,18 @@ tasks {
     //build {
     //    dependsOn(shadowJar)
     //}
+    assemble {
+        dependsOn(reobfJar)
+    }
+
+    build {
+        dependsOn(reobfJar)
+    }
+
+    /*shadowJar {
+        dependsOn(reobfJar)
+    }*/
+
     compileJava {
         options.encoding = Charsets.UTF_8.name()
         options.release.set(17)

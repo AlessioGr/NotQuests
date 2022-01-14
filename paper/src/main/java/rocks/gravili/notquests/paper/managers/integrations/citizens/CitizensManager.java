@@ -97,12 +97,13 @@ public class CitizensManager {
                 }
             }
             for (final Trait traitToRemove : traitsToRemove) {
-                npc.removeTrait(traitToRemove.getClass());
+                //npc.removeTrait(traitToRemove.getClass()); //TODO: Fucks up loading for some reason
                 main.getLogManager().info("Removed nquestgiver trait from NPC with the ID <highlight>" + npc.getId());
             }
             traitsToRemove.clear();
 
         }
+
 
         /*
          * Next, the nquestgiver trait itself which is registered via the Citizens API on startup is being

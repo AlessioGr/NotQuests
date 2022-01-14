@@ -44,17 +44,17 @@ public class UserCommands {
 
         firstLevelCommands = Component.text("NotQuests Player Commands:", NamedTextColor.BLUE, TextDecoration.BOLD)
                 .append(Component.newline())
-                .append(miniMessage.parse("<YELLOW>/nquests <GOLD>take <DARK_AQUA>[Quest Name]").clickEvent(ClickEvent.suggestCommand("/nquests take ")).hoverEvent(HoverEvent.showText(Component.text("Takes/Starts a Quest", NamedTextColor.GREEN))))
+                .append(miniMessage.deserialize("<YELLOW>/nquests <GOLD>take <DARK_AQUA>[Quest Name]").clickEvent(ClickEvent.suggestCommand("/nquests take ")).hoverEvent(HoverEvent.showText(Component.text("Takes/Starts a Quest", NamedTextColor.GREEN))))
                 .append(Component.newline())
-                .append(miniMessage.parse("<YELLOW>/nquests <GOLD>abort <DARK_AQUA>[Quest Name]").clickEvent(ClickEvent.suggestCommand("/nquests abort ")).hoverEvent(HoverEvent.showText(Component.text("Fails a Quest", NamedTextColor.GREEN))))
+                .append(miniMessage.deserialize("<YELLOW>/nquests <GOLD>abort <DARK_AQUA>[Quest Name]").clickEvent(ClickEvent.suggestCommand("/nquests abort ")).hoverEvent(HoverEvent.showText(Component.text("Fails a Quest", NamedTextColor.GREEN))))
                 .append(Component.newline())
-                .append(miniMessage.parse("<YELLOW>/nquests <GOLD>preview <DARK_AQUA>[Quest Name]").clickEvent(ClickEvent.suggestCommand("/nquests preview ")).hoverEvent(HoverEvent.showText(Component.text("Shows more information about a Quest", NamedTextColor.GREEN))))
+                .append(miniMessage.deserialize("<YELLOW>/nquests <GOLD>preview <DARK_AQUA>[Quest Name]").clickEvent(ClickEvent.suggestCommand("/nquests preview ")).hoverEvent(HoverEvent.showText(Component.text("Shows more information about a Quest", NamedTextColor.GREEN))))
                 .append(Component.newline())
-                .append(miniMessage.parse("<YELLOW>/nquests <GOLD>activeQuests").clickEvent(ClickEvent.runCommand("/nquests activeQuests")).hoverEvent(HoverEvent.showText(Component.text("Shows all your active Quests", NamedTextColor.GREEN))))
+                .append(miniMessage.deserialize("<YELLOW>/nquests <GOLD>activeQuests").clickEvent(ClickEvent.runCommand("/nquests activeQuests")).hoverEvent(HoverEvent.showText(Component.text("Shows all your active Quests", NamedTextColor.GREEN))))
                 .append(Component.newline())
-                .append(miniMessage.parse("<YELLOW>/nquests <GOLD>progress <DARK_AQUA>[Quest Name]").clickEvent(ClickEvent.suggestCommand("/nquests progress ")).hoverEvent(HoverEvent.showText(Component.text("Shows the progress of an active Quest", NamedTextColor.GREEN))))
+                .append(miniMessage.deserialize("<YELLOW>/nquests <GOLD>progress <DARK_AQUA>[Quest Name]").clickEvent(ClickEvent.suggestCommand("/nquests progress ")).hoverEvent(HoverEvent.showText(Component.text("Shows the progress of an active Quest", NamedTextColor.GREEN))))
                 .append(Component.newline())
-                .append(miniMessage.parse("<YELLOW>/nquests <GOLD>questPoints").clickEvent(ClickEvent.runCommand("/nquests questPoints")).hoverEvent(HoverEvent.showText(Component.text("Shows how many Quest Points you have", NamedTextColor.GREEN))))
+                .append(miniMessage.deserialize("<YELLOW>/nquests <GOLD>questPoints").clickEvent(ClickEvent.runCommand("/nquests questPoints")).hoverEvent(HoverEvent.showText(Component.text("Shows how many Quest Points you have", NamedTextColor.GREEN))))
                 .append(Component.newline()
 
                 );
@@ -85,19 +85,19 @@ public class UserCommands {
 
                     final String result = main.getQuestPlayerManager().acceptQuest(player, quest, true, true);
                     if (!result.equals("accepted")) {
-                        audience.sendMessage(miniMessage.parse(
+                        audience.sendMessage(miniMessage.deserialize(
                                 result
                         ));
                     } else {
-                        audience.sendMessage(miniMessage.parse(
+                        audience.sendMessage(miniMessage.deserialize(
                                 main.getLanguageManager().getString("chat.quest-successfully-accepted", player, quest)
                         ));
                         if (!quest.getQuestDescription().isBlank()) {
-                            audience.sendMessage(miniMessage.parse(
+                            audience.sendMessage(miniMessage.deserialize(
                                     main.getLanguageManager().getString("chat.quest-description", player, quest)
                             ));
                         } else {
-                            audience.sendMessage(miniMessage.parse(
+                            audience.sendMessage(miniMessage.deserialize(
                                     main.getLanguageManager().getString("chat.missing-quest-description", player)
                             ));
                         }
@@ -114,11 +114,11 @@ public class UserCommands {
                     QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
 
                     if (questPlayer != null) {
-                        audience.sendMessage(miniMessage.parse(
+                        audience.sendMessage(miniMessage.deserialize(
                                 main.getLanguageManager().getString("chat.questpoints.query", player, questPlayer)
                         ));
                     } else {
-                        audience.sendMessage(miniMessage.parse(
+                        audience.sendMessage(miniMessage.deserialize(
                                 main.getLanguageManager().getString("chat.questpoints.none", player)
                         ));
                     }
@@ -144,34 +144,34 @@ public class UserCommands {
                     InventoryGui gui = new InventoryGui(main.getMain(), player, convert(main.getLanguageManager().getString("gui.main.title", player)), guiSetup);
                     gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
 
-                    gui.addElement(new StaticGuiElement('8',
+                    gui.addElement(new StaticGuiElement('9',
                             new ItemStack(Material.CHEST),
                             0,
                             click -> {
                                 player.chat("/notquests take");
                                 return true;
                             },
-                            convert(main.getLanguageManager().getString("gui.main.button.takequest.text", player))
+                            convert(main.getLanguageManager().getString("gui.main.button.takequest.name", player))
 
                     ));
-                    gui.addElement(new StaticGuiElement('a',
+                    gui.addElement(new StaticGuiElement('b',
                             new ItemStack(Material.REDSTONE_BLOCK),
                             0,
                             click -> {
                                 player.chat("/notquests abort");
                                 return true;
                             },
-                            convert(main.getLanguageManager().getString("gui.main.button.abortquest.text", player))
+                            convert(main.getLanguageManager().getString("gui.main.button.abortquest.name", player))
                     ));
-                    gui.addElement(new StaticGuiElement('c',
+                    /*gui.addElement(new StaticGuiElement('c',
                             new ItemStack(Material.SPYGLASS),
                             0,
                             click -> {
                                 player.chat("/notquests preview");
                                 return true;
                             },
-                            convert(main.getLanguageManager().getString("gui.main.button.previewquest.text", player))
-                    ));
+                            convert(main.getLanguageManager().getString("gui.main.button.previewquest.name", player))
+                    ));*/
 
                     gui.addElement(new StaticGuiElement('o',
                             new ItemStack(Material.LADDER),
@@ -180,7 +180,7 @@ public class UserCommands {
                                 player.chat("/notquests activeQuests");
                                 return true;
                             },
-                            convert(main.getLanguageManager().getString("gui.main.button.activequests.text", player))
+                            convert(main.getLanguageManager().getString("gui.main.button.activequests.name", player))
                     ));
                     QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
                     if (questPlayer != null) {
@@ -190,7 +190,7 @@ public class UserCommands {
                                 click -> {
                                     return true;
                                 },
-                                convert(main.getLanguageManager().getString("gui.main.button.questpoints.text", player, questPlayer))
+                                convert(main.getLanguageManager().getString("gui.main.button.questpoints.name", player, questPlayer))
                         ));
                     } else {
                         gui.addElement(new StaticGuiElement('z',
@@ -199,7 +199,7 @@ public class UserCommands {
                                 click -> {
                                     return true;
                                 },
-                                convert(main.getLanguageManager().getString("gui.main.button.questpoints.text", player).replace("%QUESTPOINTS%", "??"))
+                                convert(main.getLanguageManager().getString("gui.main.button.questpoints.name", player).replace("%QUESTPOINTS%", "??"))
                         ));
                     }
 
@@ -234,21 +234,21 @@ public class UserCommands {
                                 count++;
                             }
 
-                            String displayName = convert(quest.getQuestFinalName());
 
-                            displayName = main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.questNamePrefix", player, quest) + displayName;
+                            String displayName = main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.name-if-not-accepted", player, quest);
 
                             QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
 
                             if (questPlayer != null && questPlayer.hasAcceptedQuest(quest)) {
-                                displayName += main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.acceptedSuffix", player, quest);
+                                displayName = main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.name-if-accepted", player, questPlayer, quest);
                             }
                             String description = "";
                             if (!quest.getQuestDescription().isBlank()) {
+                                description = quest.getQuestDescription(main.getConfiguration().guiQuestDescriptionMaxLineLength);
 
-                                description = main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.questDescriptionPrefix", player, quest)
+                                /*description = main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.questDescriptionPrefix", player, quest)
                                         + quest.getQuestDescription(main.getConfiguration().guiQuestDescriptionMaxLineLength
-                                );
+                                );*/
                             }
 
                             group.addElement(new StaticGuiElement('e',
@@ -259,8 +259,8 @@ public class UserCommands {
                                         return true;
                                     },
                                     convert(displayName),
-                                    convert(description),
-                                    convert(main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.bottomText", player))
+                                    convert(description)//,
+                                    //convert(main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.bottomText", player))
                             ));
 
                         }
@@ -330,7 +330,7 @@ public class UserCommands {
                                         player.chat("/notquests abort " + activeQuest.getQuest().getQuestName());
                                         return true;
                                     },
-                                    convert(main.getLanguageManager().getString("gui.abortQuestChoose.button.abortQuestPreview.text", player, activeQuest))
+                                    convert(main.getLanguageManager().getString("gui.abortQuestChoose.button.abortQuestPreview.name", player, activeQuest))
                             ));
 
                         }
@@ -343,7 +343,7 @@ public class UserCommands {
 
                         gui.show(player);
                     } else {
-                        audience.sendMessage(miniMessage.parse(
+                        audience.sendMessage(miniMessage.deserialize(
                                 main.getLanguageManager().getString("chat.no-quests-accepted", player)
                         ));
                     }
@@ -443,13 +443,13 @@ public class UserCommands {
                                 1,
                                 click -> {
                                     questPlayer.failQuest(activeQuest);
-                                    audience.sendMessage(miniMessage.parse(
+                                    audience.sendMessage(miniMessage.deserialize(
                                             main.getLanguageManager().getString("chat.quest-aborted", player, activeQuest)
                                     ));
                                     gui.close();
                                     return true;
                                 },
-                                convert(main.getLanguageManager().getString("gui.abortQuest.button.confirmAbort.text", player, activeQuest))
+                                convert(main.getLanguageManager().getString("gui.abortQuest.button.confirmAbort.name", player, activeQuest))
                         ));
                         gui.addElement(new StaticGuiElement('b',
                                 new ItemStack(Material.RED_WOOL),
@@ -458,13 +458,13 @@ public class UserCommands {
                                     gui.close();
                                     return true;
                                 },
-                                convert(main.getLanguageManager().getString("gui.abortQuest.button.cancelAbort.text", player))
+                                convert(main.getLanguageManager().getString("gui.abortQuest.button.cancelAbort.name", player))
                         ));
 
                         gui.show(player);
 
                     } else {
-                        audience.sendMessage(miniMessage.parse(
+                        audience.sendMessage(miniMessage.deserialize(
                                 main.getLanguageManager().getString("chat.no-quests-accepted", player)
                         ));
                     }
@@ -503,7 +503,7 @@ public class UserCommands {
                                 click -> {
                                     return true;
                                 },
-                                convert(main.getLanguageManager().getString("gui.previewQuest.button.description.text", player, questPlayer)
+                                convert(main.getLanguageManager().getString("gui.previewQuest.button.description.name", player, questPlayer)
                                         .replace("%QUESTDESCRIPTION%", description))
                         ));
                     }
@@ -519,7 +519,7 @@ public class UserCommands {
                                 click -> {
                                     return true;
                                 },
-                                convert(main.getLanguageManager().getString("gui.previewQuest.button.rewards.text", player, quest, questPlayer)
+                                convert(main.getLanguageManager().getString("gui.previewQuest.button.rewards.name", player, quest, questPlayer)
                                         .replace("%QUESTREWARDS%", rewards))
                         ));
                     }
@@ -536,7 +536,7 @@ public class UserCommands {
                                 click -> {
                                     return true;
                                 },
-                                convert(main.getLanguageManager().getString("gui.previewQuest.button.requirements.text", player, quest, questPlayer)
+                                convert(main.getLanguageManager().getString("gui.previewQuest.button.requirements.name", player, quest, questPlayer)
                                         .replace("%QUESTREQUIREMENTS%", requirements))
 
 
@@ -553,7 +553,7 @@ public class UserCommands {
                                 return true;
 
                             },
-                            convert(main.getLanguageManager().getString("gui.previewQuest.button.confirmTake.text", player, quest, questPlayer))
+                            convert(main.getLanguageManager().getString("gui.previewQuest.button.confirmTake.name", player, quest, questPlayer))
 
                     ));
                     gui.addElement(new StaticGuiElement('i',
@@ -564,7 +564,7 @@ public class UserCommands {
                                 return true;
 
                             },
-                            convert(main.getLanguageManager().getString("gui.previewQuest.button.cancelTake.text", player, quest, questPlayer))
+                            convert(main.getLanguageManager().getString("gui.previewQuest.button.cancelTake.name", player, quest, questPlayer))
 
                     ));
 
@@ -618,7 +618,7 @@ public class UserCommands {
                                             return true;
                                         },
                                         convert(
-                                                main.getLanguageManager().getString("gui.progress.button.unlockedObjective.text", player, activeObjective, questPlayer)
+                                                main.getLanguageManager().getString("gui.progress.button.unlockedObjective.name", player, activeObjective, questPlayer)
                                                         .replace("%OBJECTIVEDESCRIPTION%", descriptionToDisplay)
                                                         .replace("%ACTIVEOBJECTIVEDESCRIPTION%", main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), false, player))
                                         )
@@ -630,7 +630,7 @@ public class UserCommands {
                                         click -> {
                                             return true;
                                         },
-                                        convert(main.getLanguageManager().getString("gui.progress.button.lockedObjective.text", player, activeObjective))
+                                        convert(main.getLanguageManager().getString("gui.progress.button.lockedObjective.name", player, activeObjective))
                                 ));
                             }
                         }
@@ -656,7 +656,7 @@ public class UserCommands {
                                         return true;
                                     },
                                     convert(
-                                            main.getLanguageManager().getString("gui.progress.button.completedObjective.text", player, activeObjective, questPlayer)
+                                            main.getLanguageManager().getString("gui.progress.button.completedObjective.name", player, activeObjective, questPlayer)
                                                     .replace("%OBJECTIVEDESCRIPTION%", descriptionToDisplay)
                                                     .replace("%COMPLETEDOBJECTIVEDESCRIPTION%", main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), true, player))
                                     )
@@ -665,13 +665,13 @@ public class UserCommands {
 
                         gui.addElement(group);
                         // Previous page
-                        gui.addElement(new GuiPageElement('p', new ItemStack(Material.SPECTRAL_ARROW), GuiPageElement.PageAction.PREVIOUS, convert(main.getLanguageManager().getString("gui.progress.button.previousPage.text", player))));
+                        gui.addElement(new GuiPageElement('p', new ItemStack(Material.SPECTRAL_ARROW), GuiPageElement.PageAction.PREVIOUS, convert(main.getLanguageManager().getString("gui.progress.button.previousPage.name", player))));
                         // Next page
-                        gui.addElement(new GuiPageElement('n', new ItemStack(Material.ARROW), GuiPageElement.PageAction.NEXT, convert(main.getLanguageManager().getString("gui.progress.button.nextPage.text", player))));
+                        gui.addElement(new GuiPageElement('n', new ItemStack(Material.ARROW), GuiPageElement.PageAction.NEXT, convert(main.getLanguageManager().getString("gui.progress.button.nextPage.name", player))));
                         gui.show(player);
 
                     } else {
-                        audience.sendMessage(miniMessage.parse(
+                        audience.sendMessage(miniMessage.deserialize(
                                 main.getLanguageManager().getString("chat.no-quests-accepted", player)
                         ));
                     }
@@ -696,7 +696,7 @@ public class UserCommands {
                 .handler((context) -> {
                     final Audience audience = main.adventure().sender(context.getSender());
 
-                    audience.sendMessage(miniMessage.parse(
+                    audience.sendMessage(miniMessage.deserialize(
                             "<RED>Please specify the <AQUA>name of the quest</AQUA> you wish to take.\n"
                                     + "<YELLOW>/nquests <GOLD>take <DARK_AQUA>[Quest Name]"
                     ));
@@ -711,19 +711,19 @@ public class UserCommands {
                     final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
                     final Audience audience = main.adventure().player(player);
                     if (questPlayer != null) {
-                        audience.sendMessage(miniMessage.parse(
+                        audience.sendMessage(miniMessage.deserialize(
                                 main.getLanguageManager().getString("chat.active-quests-label", player)
                         ));
                         int counter = 1;
                         for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-                            audience.sendMessage(miniMessage.parse(
+                            audience.sendMessage(miniMessage.deserialize(
                                     "<GREEN>" + counter + ". <YELLOW>" + activeQuest.getQuest().getQuestFinalName()
                             ));
                             counter += 1;
                         }
 
                     } else {
-                        audience.sendMessage(miniMessage.parse(
+                        audience.sendMessage(miniMessage.deserialize(
                                 main.getLanguageManager().getString("chat.no-quests-accepted", player)
                         ));
                     }
@@ -738,12 +738,12 @@ public class UserCommands {
                     final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
                     final Audience audience = main.adventure().player(player);
                     if (questPlayer != null) {
-                        audience.sendMessage(miniMessage.parse(
+                        audience.sendMessage(miniMessage.deserialize(
                                 "<RED>Please specify the <AQUA>name of the quest</AQUA> you wish to abort (fail).\n"
                                         + "<YELLOW>/nquests <GOLD>abort <DARK_AQUA>[Quest Name]"
                         ));
                     } else {
-                        audience.sendMessage(miniMessage.parse(
+                        audience.sendMessage(miniMessage.deserialize(
                                 main.getLanguageManager().getString("chat.no-quests-accepted", player)
                         ));
                     }
@@ -756,7 +756,7 @@ public class UserCommands {
                     final Player player = (Player) context.getSender();
                     final Audience audience = main.adventure().player(player);
 
-                    audience.sendMessage(miniMessage.parse(
+                    audience.sendMessage(miniMessage.deserialize(
                             "<RED>Please specify the <AQUA>name of the quest</AQUA> you wish to preview.\n"
                                     + "<YELLOW>/nquests <GOLD>preview <DARK_AQUA>[Quest Name]"
                     ));
@@ -775,12 +775,12 @@ public class UserCommands {
                         final ActiveQuest activeQuest = context.get("Active Quest");
 
                         questPlayer.failQuest(activeQuest);
-                        audience.sendMessage(miniMessage.parse(
+                        audience.sendMessage(miniMessage.deserialize(
                                 main.getLanguageManager().getString("chat.quest-aborted", player, activeQuest)
                         ));
 
                     } else {
-                        audience.sendMessage(miniMessage.parse(
+                        audience.sendMessage(miniMessage.deserialize(
                                 main.getLanguageManager().getString("chat.no-quests-accepted", player)
                         ));
                     }
@@ -810,17 +810,17 @@ public class UserCommands {
                     if (questPlayer != null && questPlayer.getActiveQuests().size() > 0) {
                         final ActiveQuest activeQuest = context.get("Active Quest");
 
-                        audience.sendMessage(miniMessage.parse(
+                        audience.sendMessage(miniMessage.deserialize(
                                 "<GREEN>Completed Objectives for Quest <AQUA>" + activeQuest.getQuest().getQuestFinalName() + "<YELLOW>:"
                         ));
                         main.getQuestManager().sendCompletedObjectivesAndProgress(player, activeQuest);
-                        audience.sendMessage(miniMessage.parse(
+                        audience.sendMessage(miniMessage.deserialize(
                                 "<GREEN>Active Objectives for Quest <AQUA>" + activeQuest.getQuest().getQuestFinalName() + "<YELLOW>:"
                         ));
                         main.getQuestManager().sendActiveObjectivesAndProgress(player, activeQuest);
 
                     } else {
-                        audience.sendMessage(miniMessage.parse(
+                        audience.sendMessage(miniMessage.deserialize(
                                 main.getLanguageManager().getString("chat.no-quests-accepted", player)
                         ));
                     }

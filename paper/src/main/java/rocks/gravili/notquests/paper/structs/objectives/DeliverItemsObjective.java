@@ -61,7 +61,7 @@ public class DeliverItemsObjective extends Objective {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
-        manager.command(addObjectiveBuilder.literal("DeliverItems")
+        manager.command(addObjectiveBuilder
                 .argument(MaterialOrHandArgument.of("material", main), ArgumentDescription.of("Material of the item which needs to be delivered."))
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of items which need to be delivered."))
                 .argument(StringArgument.<CommandSender>newBuilder("NPC or Armorstand").withSuggestionsProvider((context, lastString) -> {
@@ -77,7 +77,6 @@ public class DeliverItemsObjective extends Objective {
 
                     return completions;
                 }).build(), ArgumentDescription.of("ID of the Citizens NPC or 'armorstand' to whom the items should be delivered."))
-                .meta(CommandMeta.DESCRIPTION, "Adds a new DeliverItems Objective to a quest.")
                 .handler((context) -> {
                     final Quest quest = context.get("quest");
                     final int amountToDeliver = context.get("amount");

@@ -19,6 +19,7 @@
 package rocks.gravili.notquests.paper.events;
 
 
+import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -55,6 +56,7 @@ import rocks.gravili.notquests.paper.structs.triggers.ActiveTrigger;
 import rocks.gravili.notquests.paper.structs.triggers.types.WorldEnterTrigger;
 import rocks.gravili.notquests.paper.structs.triggers.types.WorldLeaveTrigger;
 
+import java.util.HashMap;
 import java.util.Locale;
 
 import static rocks.gravili.notquests.paper.commands.NotQuestColors.debugHighlightGradient;
@@ -63,11 +65,145 @@ import static rocks.gravili.notquests.paper.commands.NotQuestColors.debugHighlig
 public class QuestEvents implements Listener {
     private final NotQuests main;
 
+    private final HashMap<QuestPlayer, String> beaconsToUpdate;
+
 
     public QuestEvents(NotQuests main) {
         this.main = main;
+        beaconsToUpdate = new HashMap<>();
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(main.getMain(), new Runnable() {
+            @Override
+            public void run() {
+                for(QuestPlayer questPlayer : beaconsToUpdate.keySet()) {
+                    String locationName = beaconsToUpdate.get(questPlayer);
+                    final Player player = questPlayer.getPlayer();
+
+
+
+                    /*final Location newBeaconLocation = beaconsToUpdate.get(questPlayer).newLocation();
+                    //Add Beacon to new chunk
+                    BlockState beaconBlockState = newBeaconLocation.getBlock().getState();
+                    beaconBlockState.setType(Material.BEACON);
+
+                    BlockState ironBlockState = newBeaconLocation.getBlock().getState();
+                    ironBlockState.setType(Material.IRON_BLOCK);
+
+                    player.sendBlockChange(newBeaconLocation, beaconBlockState.getBlockData());
+                    player.sendBlockChange(newBeaconLocation.add(-1,-1,-1), ironBlockState.getBlockData());
+                    player.sendBlockChange(newBeaconLocation.add(1,0,0), ironBlockState.getBlockData());
+                    player.sendBlockChange(newBeaconLocation.add(1,0,0), ironBlockState.getBlockData());
+                    player.sendBlockChange(newBeaconLocation.add(0,0,1), ironBlockState.getBlockData());
+                    player.sendBlockChange(newBeaconLocation.add(-1,0,0), ironBlockState.getBlockData());
+                    player.sendBlockChange(newBeaconLocation.add(-1,0,0), ironBlockState.getBlockData());
+                    player.sendBlockChange(newBeaconLocation.add(0,0,1), ironBlockState.getBlockData());
+                    player.sendBlockChange(newBeaconLocation.add(1,0,0), ironBlockState.getBlockData());
+                    player.sendBlockChange(newBeaconLocation.add(1,0,0), ironBlockState.getBlockData());
+
+
+                    questPlayer.getActiveLocationsAndBeacons().put(locationName, newBeaconLocation.add(-1, 1, -1));*/
+
+                    Location locationToRemove = questPlayer.getActiveLocationsAndBeacons().get(locationName);
+
+                    //player.sendMessage("Scheduled Beacon Removal");
+
+                    questPlayer.getActiveLocationsAndBeacons().remove(locationName);
+                    questPlayer.updateBeaconLocations(player);
+                    if(locationToRemove != null){
+                        scheduleBeaconRemovalAt(locationToRemove, player);
+                    }
+
+
+                    //main.sendMessage(player, "<positive>Added new Beacon");
+
+                }
+                beaconsToUpdate.clear();
+
+            }
+        }, 0L, 60L); //0 Tick initial delay, 20 Tick (1 Second) between repeats
     }
 
+
+    @EventHandler
+    private void onChunkLoad(PlayerChunkLoadEvent e){
+        final Player player = e.getPlayer();
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+        if(questPlayer == null){
+            return;
+        }
+
+        //final Location playerLocation = player.getLocation();
+        //int maxDistance = 110;
+
+        for(String locationName : questPlayer.getLocationsAndBeacons().keySet()) {
+            beaconsToUpdate.remove(questPlayer);
+            beaconsToUpdate.put(questPlayer, locationName);
+
+            /*final Location shouldLocation = questPlayer.getLocationsAndBeacons().get(locationName);
+
+            Location newChunkLocation = e.getChunk().getBlock(8, shouldLocation.getBlockY(), 8).getLocation();
+
+
+            //New Beacon Location should be cur player location + maxDistance blocks in direction of newChunkLocation - playerLocation
+            Vector normalizedDistanceBetweenPlayerAndNewChunk = newChunkLocation.toVector().subtract(playerLocation.toVector()).normalize();
+            Location newBeaconLocation = playerLocation.add(normalizedDistanceBetweenPlayerAndNewChunk.multiply(maxDistance));
+
+            newBeaconLocation.setY(newBeaconLocation.getWorld().getHighestBlockYAt(newBeaconLocation.getBlockX(), newBeaconLocation.getBlockZ()));
+
+
+            if(!questPlayer.getActiveLocationsAndBeacons().containsKey(locationName) || !questPlayer.getActiveLocationsAndBeacons().get(locationName).isChunkLoaded()){
+                beaconsToUpdate.remove(questPlayer);
+                beaconsToUpdate.put(questPlayer, locationName);
+            }else{
+               // (questPlayer.getActiveLocationsAndBeacons().get(locationName).distance(playerLocation) > maxDistance)
+
+
+                final Location currentActiveLocation = questPlayer.getActiveLocationsAndBeacons().get(locationName);
+
+                //Check if the new chunk is closer
+                double oldDistance = shouldLocation.distance(currentActiveLocation);
+                double newDistance = shouldLocation.distance(newBeaconLocation);
+                if(newDistance < oldDistance){
+                    beaconsToUpdate.remove(questPlayer);
+                    beaconsToUpdate.put(questPlayer, locationName);
+
+                }else{
+                    //main.sendMessage(player, "Ignored. Distance worse");
+                }
+
+            }*/
+
+        }
+    }
+
+    public void scheduleBeaconRemovalAt(final Location location, final Player player){
+        Bukkit.getScheduler().runTaskLater(main.getMain(), new Runnable() {
+            @Override
+            public void run() {
+                player.sendBlockChange(location, location.getBlock().getBlockData());
+                location.add(-1,-1,-1);
+                player.sendBlockChange(location, location.getBlock().getBlockData());
+                location.add(1,0,0);
+                player.sendBlockChange(location, location.getBlock().getBlockData());
+                location.add(1,0,0);
+                player.sendBlockChange(location, location.getBlock().getBlockData());
+                location.add(0,0,1);
+                player.sendBlockChange(location, location.getBlock().getBlockData());
+                location.add(-1,0,0);
+                player.sendBlockChange(location, location.getBlock().getBlockData());
+                location.add(-1,0,0);
+                player.sendBlockChange(location, location.getBlock().getBlockData());
+                location.add(0,0,1);
+                player.sendBlockChange(location, location.getBlock().getBlockData());
+                location.add(1,0,0);
+                player.sendBlockChange(location, location.getBlock().getBlockData());
+                location.add(1,0,0);
+                player.sendBlockChange(location, location.getBlock().getBlockData());
+
+                //main.sendMessage(player, "<negative>Removed old Beacon");
+
+            }
+        }, 55L);
+    }
 
 
     @EventHandler
@@ -950,14 +1086,7 @@ public class QuestEvents implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     protected void onPluginEnable(final PluginEnableEvent event) {
-        if (event.getPlugin().getName().equals("MythicMobs") && !main.getIntegrationsManager().isMythicMobsEnabled()) {
-            // Turn on support for the plugin
-            main.getIntegrationsManager().enableMythicMobs();
-        } else if (event.getPlugin().getName().equals("Citizens") && !main.getIntegrationsManager().isCitizensEnabled()) {
-            // Turn on support for the plugin
-            main.getIntegrationsManager().enableCitizens();
-        }
-
+        main.getIntegrationsManager().onPluginEnable(event);
     }
 
 
@@ -1016,6 +1145,26 @@ public class QuestEvents implements Listener {
             activeQuest.removeCompletedObjectives(true);
         }
         questPlayer.removeCompletedQuests();
+    }
+
+
+
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent e) {
+        if (e.getPlayer().isOp() && main.getConfiguration().isUpdateCheckerNotifyOpsInChat()) {
+            //Component message = new C("Click me");
+            //message.setClickEvent( new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.spigotmc.org/resources/%E2%9A%A1-fancybags-%E2%9A%A1-new-way-to-store-items-1-8-1-16-2.79997/" ) );
+            //message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(Utils.color("&7Click here to download the latest version of the plugin!")).create()));
+            //message.setColor(net.md_5.bungee.api.ChatColor.GOLD);
+
+            if(main.getUpdateManager().isUpdateAvailable()){
+                e.getPlayer().sendMessage(main.parse("<click:open_url:https://www.spigotmc.org/resources/95872/><hover:show_text:\"<highlight>Click to update!\"><main>[NotQuests]</main> <warn>The version <highlight>" + main.getMain().getDescription().getVersion()
+                        + "</highlight> is not the latest version (<Green>" + main.getUpdateManager().getLatestVersion() + "</green>). Click this message to update!</hover></click>"));
+            }
+
+        }
+
     }
 
 }

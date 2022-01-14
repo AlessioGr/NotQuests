@@ -176,7 +176,7 @@ public class CitizensManager {
                         }
                     }
 
-                    audience.sendMessage(MiniMessage.miniMessage().parse(
+                    audience.sendMessage(MiniMessage.miniMessage().deserialize(
                             "<GREEN>Escort quest started! Please escort <AQUA>" + npcToEscort.getName() + "</AQUA> to <AQUA>" + destinationNPC.getName() + "</AQUA>."
                     ));
                 } else {

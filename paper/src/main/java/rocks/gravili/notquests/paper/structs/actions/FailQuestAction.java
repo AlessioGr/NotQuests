@@ -31,6 +31,8 @@ import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
+import java.util.ArrayList;
+
 public class FailQuestAction extends Action {
 
     private String questToFailName = "";
@@ -41,9 +43,8 @@ public class FailQuestAction extends Action {
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor rewardFor) {
-        manager.command(builder.literal("FailQuest")
+        manager.command(builder
                 .argument(QuestSelector.of("quest to fail", main), ArgumentDescription.of("Name of the Quest which should be failed for the player."))
-                .meta(CommandMeta.DESCRIPTION, "Creates a new FailQuest Action")
                 .handler((context) -> {
                     final Quest foundQuest = context.get("quest to fail");
 
@@ -96,9 +97,14 @@ public class FailQuestAction extends Action {
         this.questToFailName = configuration.getString(initialPath + ".specifics.quest");
     }
 
+    @Override
+    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+        this.questToFailName = arguments.get(0);
+    }
+
 
     @Override
-    public String getActionDescription() {
+    public String getActionDescription(final Player player, final Object... objects) {
         return "Fails Quest: " + getQuestToFailName();
     }
 }

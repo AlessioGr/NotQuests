@@ -6,10 +6,6 @@ import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
-import de.themoep.inventorygui.GuiElementGroup;
-import de.themoep.inventorygui.GuiPageElement;
-import de.themoep.inventorygui.InventoryGui;
-import de.themoep.inventorygui.StaticGuiElement;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -24,7 +20,6 @@ import org.bukkit.inventory.meta.SkullMeta;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.ActiveQuestSelector;
 import rocks.gravili.notquests.paper.commands.arguments.QuestSelector;
-import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -178,82 +173,9 @@ public class UserCommands {
                 .meta(CommandMeta.DESCRIPTION, "Opens NotQuests GUI.")
                 .handler((context) -> {
                     final Player player = (Player) context.getSender();
+                    final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
 
-                    String[] guiSetup = {
-                            "zxxxxxxxx",
-                            "x0123456x",
-                            "x789abcdx",
-                            "xefghijkx",
-                            "xlmnopqrx",
-                            "xxxxxxxxx"
-                    };
-                    InventoryGui gui = new InventoryGui(main.getMain(), player, convert(main.getLanguageManager().getString("gui.main.title", player)), guiSetup);
-                    gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
-
-
-
-
-                    gui.addElement(new StaticGuiElement('8',
-                            chest,
-                            0,
-                            click -> {
-                                player.chat("/notquests take");
-                                return true;
-                            },
-                            convert(main.getLanguageManager().getString("gui.main.button.takequest.text", player))
-
-                    ));
-
-                    gui.addElement(new StaticGuiElement('a',
-                            abort,
-                            0,
-                            click -> {
-                                player.chat("/notquests abort");
-                                return true;
-                            },
-                            convert(main.getLanguageManager().getString("gui.main.button.abortquest.text", player))
-                    ));
-                    gui.addElement(new StaticGuiElement('c',
-                            info,
-                            0,
-                            click -> {
-                                player.chat("/notquests preview");
-                                return true;
-                            },
-                            convert(main.getLanguageManager().getString("gui.main.button.previewquest.text", player))
-                    ));
-
-                    gui.addElement(new StaticGuiElement('o',
-                            books,
-                            0,
-                            click -> {
-                                player.chat("/notquests activeQuests");
-                                return true;
-                            },
-                            convert(main.getLanguageManager().getString("gui.main.button.activequests.text", player))
-                    ));
-                    QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
-                    if (questPlayer != null) {
-                        gui.addElement(new StaticGuiElement('z',
-                                coins,
-                                0,
-                                click -> {
-                                    return true;
-                                },
-                                convert(main.getLanguageManager().getString("gui.main.button.questpoints.text", player, questPlayer))
-                        ));
-                    } else {
-                        gui.addElement(new StaticGuiElement('z',
-                                coins,
-                                0,
-                                click -> {
-                                    return true;
-                                },
-                                convert(main.getLanguageManager().getString("gui.main.button.questpoints.text", player).replace("%QUESTPOINTS%", "??"))
-                        ));
-                    }
-
-                    gui.show(player);
+                    main.getGuiManager().showMainQuestsGUI(questPlayer, player);
                 }));
 
         manager.command(builder.literal("take")
@@ -261,68 +183,9 @@ public class UserCommands {
                 .meta(CommandMeta.DESCRIPTION, "Starts a Quest.")
                 .handler((context) -> {
                     final Player player = (Player) context.getSender();
+                    QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
 
-                    String[] guiSetup = {
-                            "zxxxxxxxx",
-                            "xgggggggx",
-                            "xgggggggx",
-                            "xgggggggx",
-                            "xgggggggx",
-                            "pxxxxxxxn"
-                    };
-                    InventoryGui gui = new InventoryGui(main.getMain(), player, convert(main.getLanguageManager().getString("gui.takeQuestChoose.title", player)), guiSetup);
-                    gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
-
-                    int count = 0;
-                    GuiElementGroup group = new GuiElementGroup('g');
-
-                    for (final Quest quest : main.getQuestManager().getAllQuests()) {
-                        if (quest.isTakeEnabled()) {
-                            final ItemStack materialToUse = quest.getTakeItem();
-
-                            if (main.getConfiguration().showQuestItemAmount) {
-                                count++;
-                            }
-
-                            String displayName = quest.getQuestFinalName();
-
-                            displayName = main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.questNamePrefix", player, quest) + displayName;
-
-                            QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
-
-                            if (questPlayer != null && questPlayer.hasAcceptedQuest(quest)) {
-                                displayName += main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.acceptedSuffix", player, quest);
-                            }
-                            String description = "";
-                            if (!quest.getQuestDescription().isBlank()) {
-
-                                description = main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.questDescriptionPrefix", player, quest)
-                                        + quest.getQuestDescription(main.getConfiguration().guiQuestDescriptionMaxLineLength
-                                );
-                            }
-
-                            group.addElement(new StaticGuiElement('e',
-                                    materialToUse,
-                                    count,
-                                    click -> {
-                                        player.chat("/notquests preview " + quest.getQuestName());
-                                        return true;
-                                    },
-                                    convert(displayName),
-                                    convert(description),
-                                    convert(main.getLanguageManager().getString("gui.takeQuestChoose.button.questPreview.bottomText", player))
-                            ));
-
-                        }
-                    }
-
-                    gui.addElement(group);
-                    // Previous page
-                    gui.addElement(new GuiPageElement('p', new ItemStack(Material.SPECTRAL_ARROW), GuiPageElement.PageAction.PREVIOUS, "Go to previous page (%prevpage%)"));
-                    // Next page
-                    gui.addElement(new GuiPageElement('n', new ItemStack(Material.ARROW), GuiPageElement.PageAction.NEXT, "Go to next page (%nextpage%)"));
-
-                    gui.show(player);
+                    main.getGuiManager().showTakeQuestsGUI(questPlayer, player);
                 }));
 
         manager.command(builder.literal("activeQuests")
@@ -332,7 +195,7 @@ public class UserCommands {
                     final Player player = (Player) context.getSender();
                     final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
 
-                    main.getGuiManager().showActiveQuests(questPlayer, player);
+                    main.getGuiManager().showActiveQuestsGUI(questPlayer, player);
                 }));
 
 
@@ -343,54 +206,8 @@ public class UserCommands {
                     final Player player = (Player) context.getSender();
                     final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
                     if (questPlayer != null) {
-                        String[] guiSetup = {
-                                "zxxxxxxxx",
-                                "xgggggggx",
-                                "xgggggggx",
-                                "xgggggggx",
-                                "xgggggggx",
-                                "pxxxxxxxn"
-                        };
-                        InventoryGui gui = new InventoryGui(main.getMain(), player, convert(main.getLanguageManager().getString("gui.abortQuestChoose.title", player)), guiSetup);
-                        gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
 
-                        GuiElementGroup group = new GuiElementGroup('g');
-
-                        int count = 0;
-
-                        for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-
-                            final ItemStack materialToUse;
-                            if (!activeQuest.isCompleted()) {
-                                materialToUse = activeQuest.getQuest().getTakeItem();
-                            } else {
-                                materialToUse = new ItemStack(Material.EMERALD_BLOCK);
-                            }
-
-
-                            if (main.getConfiguration().showQuestItemAmount) {
-                                count++;
-                            }
-
-                            group.addElement(new StaticGuiElement('e',
-                                    materialToUse,
-                                    count,
-                                    click -> {
-                                        player.chat("/notquests abort " + activeQuest.getQuest().getQuestName());
-                                        return true;
-                                    },
-                                    convert(main.getLanguageManager().getString("gui.abortQuestChoose.button.abortQuestPreview.text", player, activeQuest))
-                            ));
-
-                        }
-
-                        gui.addElement(group);
-                        // Previous page
-                        gui.addElement(new GuiPageElement('p', new ItemStack(Material.SPECTRAL_ARROW), GuiPageElement.PageAction.PREVIOUS, "Go to previous page (%prevpage%)"));
-                        // Next page
-                        gui.addElement(new GuiPageElement('n', new ItemStack(Material.ARROW), GuiPageElement.PageAction.NEXT, "Go to next page (%nextpage%)"));
-
-                        gui.show(player);
+                        main.getGuiManager().showAbortQuestsGUI(questPlayer, player);
                     } else {
                         context.getSender().sendMessage(main.parse(
                                 main.getLanguageManager().getString("chat.no-quests-accepted", player)
@@ -405,62 +222,8 @@ public class UserCommands {
                 .handler((context) -> {
                     final Player player = (Player) context.getSender();
                     final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
-                    String[] guiSetup = {
-                            "zxxxxxxxx",
-                            "xgggggggx",
-                            "xgggggggx",
-                            "xgggggggx",
-                            "xgggggggx",
-                            "pxxxxxxxn"
-                    };
-                    InventoryGui gui = new InventoryGui(main.getMain(), player, convert(main.getLanguageManager().getString("gui.previewQuestChoose.title", player)), guiSetup);
-                    gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
 
-                    int count = 0;
-                    GuiElementGroup group = new GuiElementGroup('g');
-
-                    for (final Quest quest : main.getQuestManager().getAllQuests()) {
-                        if (quest.isTakeEnabled()) {
-                            final ItemStack materialToUse = quest.getTakeItem();
-
-                            if (main.getConfiguration().showQuestItemAmount) {
-                                count++;
-                            }
-                            String displayName = quest.getQuestFinalName();
-
-                            displayName = main.getLanguageManager().getString("gui.previewQuestChoose.button.questPreview.questNamePrefix", player) + displayName;
-
-                            if (questPlayer != null && questPlayer.hasAcceptedQuest(quest)) {
-                                displayName += main.getLanguageManager().getString("gui.previewQuestChoose.button.questPreview.acceptedSuffix", player);
-                            }
-                            String description = "";
-                            if (!quest.getQuestDescription().isBlank()) {
-                                description = main.getLanguageManager().getString("gui.previewQuestChoose.button.questPreview.questDescriptionPrefix", player)
-                                        + quest.getQuestDescription(main.getConfiguration().guiQuestDescriptionMaxLineLength);
-                            }
-
-                            group.addElement(new StaticGuiElement('e',
-                                    materialToUse,
-                                    count,
-                                    click -> {
-                                        player.chat("/notquests preview " + quest.getQuestName());
-                                        return true;
-                                    },
-                                    convert(displayName),
-                                    convert(description),
-                                    convert(main.getLanguageManager().getString("gui.previewQuestChoose.button.questPreview.bottomText", player))
-                            ));
-
-                        }
-                    }
-
-                    gui.addElement(group);
-                    // Previous page
-                    gui.addElement(new GuiPageElement('p', new ItemStack(Material.SPECTRAL_ARROW), GuiPageElement.PageAction.PREVIOUS, "Go to previous page (%prevpage%)"));
-                    // Next page
-                    gui.addElement(new GuiPageElement('n', new ItemStack(Material.ARROW), GuiPageElement.PageAction.NEXT, "Go to next page (%nextpage%)"));
-
-                    gui.show(player);
+                    main.getGuiManager().showTakeQuestsGUI(questPlayer, player);
                 }));
 
 
@@ -471,45 +234,10 @@ public class UserCommands {
                 .handler((context) -> {
                     final Player player = (Player) context.getSender();
                     QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                    final ActiveQuest activeQuest = context.get("Active Quest");
+
                     if (questPlayer != null && questPlayer.getActiveQuests().size() > 0) {
-                        final ActiveQuest activeQuest = context.get("Active Quest");
-
-                        String[] guiSetup = {
-                                "zxxxxxxxx",
-                                "x0123456x",
-                                "x789abcdx",
-                                "xefghijkx",
-                                "xlmnopqrx",
-                                "xxxxxxxxx"
-                        };
-                        InventoryGui gui = new InventoryGui(main.getMain(), player, convert(main.getLanguageManager().getString("gui.abortQuest.title", player)), guiSetup);
-                        gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
-
-
-                        gui.addElement(new StaticGuiElement('9',
-                                new ItemStack(Material.GREEN_WOOL),
-                                1,
-                                click -> {
-                                    questPlayer.failQuest(activeQuest);
-                                    main.sendMessage(context.getSender(), main.getLanguageManager().getString("chat.quest-aborted", player, activeQuest));
-
-                                    gui.close();
-                                    return true;
-                                },
-                                convert(main.getLanguageManager().getString("gui.abortQuest.button.confirmAbort.text", player, activeQuest))
-                        ));
-                        gui.addElement(new StaticGuiElement('b',
-                                new ItemStack(Material.RED_WOOL),
-                                1,
-                                click -> {
-                                    gui.close();
-                                    return true;
-                                },
-                                convert(main.getLanguageManager().getString("gui.abortQuest.button.cancelAbort.text", player))
-                        ));
-
-                        gui.show(player);
-
+                        main.getGuiManager().showAbortQuestGUI(questPlayer, player, activeQuest);
                     } else {
                         context.getSender().sendMessage(main.parse(
                                 main.getLanguageManager().getString("chat.no-quests-accepted", player)
@@ -527,95 +255,8 @@ public class UserCommands {
                     final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer((player.getUniqueId()));
                     final Quest quest = context.get("Quest Name");
 
-                    String[] guiSetup = {
-                            "zxxxxxxxx",
-                            "x0123456x",
-                            "x789abcdx",
-                            "xefghijkx",
-                            "xlmnopqrx",
-                            "xxxxxxxxx"
-                    };
+                    main.getGuiManager().showPreviewQuestGUI(questPlayer, player, quest);
 
-                    InventoryGui gui = new InventoryGui(main.getMain(), player, convert(main.getLanguageManager().getString("gui.previewQuest.title", player, quest, questPlayer)), guiSetup);
-                    gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
-
-                    if (main.getConfiguration().isGuiQuestPreviewDescription_enabled()) {
-                        String description = main.getLanguageManager().getString("gui.previewQuest.button.description.empty", player, questPlayer);
-                        if (!quest.getQuestDescription().isBlank()) {
-                            description = quest.getQuestDescription(main.getConfiguration().guiQuestDescriptionMaxLineLength);
-                        }
-                        gui.addElement(new StaticGuiElement(main.getConfiguration().getGuiQuestPreviewDescription_slot(),
-                                new ItemStack(Material.BOOKSHELF),
-                                1,
-                                click -> {
-                                    return true;
-                                },
-                                convert(main.getLanguageManager().getString("gui.previewQuest.button.description.text", player, questPlayer)
-                                        .replace("%QUESTDESCRIPTION%", description))
-                        ));
-                    }
-
-                    if (main.getConfiguration().isGuiQuestPreviewRewards_enabled()) {
-                        String rewards = main.getQuestManager().getQuestRewards(quest);
-                        if (rewards.isBlank()) {
-                            rewards = main.getLanguageManager().getString("gui.previewQuest.button.rewards.empty", player);
-                        }
-                        gui.addElement(new StaticGuiElement(main.getConfiguration().getGuiQuestPreviewRewards_slot(),
-                                new ItemStack(Material.EMERALD),
-                                1,
-                                click -> {
-                                    return true;
-                                },
-                                convert(main.getLanguageManager().getString("gui.previewQuest.button.rewards.text", player, quest, questPlayer)
-                                        .replace("%QUESTREWARDS%", rewards))
-                        ));
-                    }
-
-                    if (main.getConfiguration().isGuiQuestPreviewRequirements_enabled()) {
-                        String requirements = main.getQuestManager().getQuestRequirements(quest);
-                        if (requirements.isBlank()) {
-                            requirements = main.getLanguageManager().getString("gui.previewQuest.button.requirements.empty", player, questPlayer);
-                        }
-
-                        gui.addElement(new StaticGuiElement(main.getConfiguration().getGuiQuestPreviewRequirements_slot(),
-                                new ItemStack(Material.IRON_BARS),
-                                1,
-                                click -> {
-                                    return true;
-                                },
-                                convert(main.getLanguageManager().getString("gui.previewQuest.button.requirements.text", player, quest, questPlayer)
-                                        .replace("%QUESTREQUIREMENTS%", requirements))
-
-
-                        ));
-                    }
-
-
-                    gui.addElement(new StaticGuiElement('g',
-                            new ItemStack(Material.GREEN_WOOL),
-                            1,
-                            click -> {
-                                player.chat("/notquests take " + quest.getQuestName());
-                                gui.close();
-                                return true;
-
-                            },
-                            convert(main.getLanguageManager().getString("gui.previewQuest.button.confirmTake.text", player, quest, questPlayer))
-
-                    ));
-                    gui.addElement(new StaticGuiElement('i',
-                            new ItemStack(Material.RED_WOOL),
-                            1,
-                            click -> {
-                                gui.close();
-                                return true;
-
-                            },
-                            convert(main.getLanguageManager().getString("gui.previewQuest.button.cancelTake.text", player, quest, questPlayer))
-
-                    ));
-
-                    gui.show(player);
                 }));
 
 
@@ -629,59 +270,9 @@ public class UserCommands {
                     if (questPlayer != null && questPlayer.getActiveQuests().size() > 0) {
                         final ActiveQuest activeQuest = context.get("Active Quest");
 
-                        String[] guiSetup = {
-                                "zxxxxxxxx",
-                                "xgggggggx",
-                                "xgggggggx",
-                                "xgggggggx",
-                                "xgggggggx",
-                                "pxxxxxxxn"
-                        };
+                        main.getGuiManager().showQuestProgressGUI(questPlayer, player, activeQuest);
 
-                        InventoryGui gui = new InventoryGui(main.getMain(), player, convert(main.getLanguageManager().getString("gui.progress.title", player, activeQuest, questPlayer)), guiSetup);
-                        gui.setFiller(new ItemStack(Material.AIR, 1)); // fill the empty slots with this
-
-                        GuiElementGroup group = new GuiElementGroup('g');
-
-                        for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-
-                            final Material materialToUse = Material.PAPER;
-
-                            int count = activeObjective.getObjectiveID();
-                            if (!main.getConfiguration().showObjectiveItemAmount) {
-                                count = 0;
-                            }
-                            if (activeObjective.isUnlocked()) {
-                                String descriptionToDisplay = main.getLanguageManager().getString("gui.progress.button.unlockedObjective.description-empty", player);
-                                if (!activeObjective.getObjective().getObjectiveDescription().isBlank()) {
-                                    descriptionToDisplay = activeObjective.getObjective().getObjectiveDescription(main.getConfiguration().guiObjectiveDescriptionMaxLineLength);
-                                }
-
-                                group.addElement(new StaticGuiElement('e',
-                                        new ItemStack(materialToUse),
-                                        count,
-                                        click -> {
-                                            return true;
-                                        },
-                                        convert(
-                                                main.getLanguageManager().getString("gui.progress.button.unlockedObjective.text", player, activeObjective, questPlayer)
-                                                        .replace("%OBJECTIVEDESCRIPTION%", descriptionToDisplay)
-                                                        .replace("%ACTIVEOBJECTIVEDESCRIPTION%", main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), false, player))
-                                        )
-                                ));
-                            } else {
-                                group.addElement(new StaticGuiElement('e',
-                                        new ItemStack(materialToUse),
-                                        activeObjective.getObjectiveID(),
-                                        click -> {
-                                            return true;
-                                        },
-                                        convert(main.getLanguageManager().getString("gui.progress.button.lockedObjective.text", player, activeObjective))
-                                ));
-                            }
-                        }
-
-                        for (final ActiveObjective activeObjective : activeQuest.getCompletedObjectives()) {
+                        /*for (final ActiveObjective activeObjective : activeQuest.getCompletedObjectives()) {
 
                             final Material materialToUse = Material.FILLED_MAP;
 
@@ -707,14 +298,9 @@ public class UserCommands {
                                                     .replace("%COMPLETEDOBJECTIVEDESCRIPTION%", main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), true, player))
                                     )
                             ));
-                        }
+                        }*/
 
-                        gui.addElement(group);
-                        // Previous page
-                        gui.addElement(new GuiPageElement('p', new ItemStack(Material.SPECTRAL_ARROW), GuiPageElement.PageAction.PREVIOUS, convert(main.getLanguageManager().getString("gui.progress.button.previousPage.text", player))));
-                        // Next page
-                        gui.addElement(new GuiPageElement('n', new ItemStack(Material.ARROW), GuiPageElement.PageAction.NEXT, convert(main.getLanguageManager().getString("gui.progress.button.nextPage.text", player))));
-                        gui.show(player);
+
 
                     } else {
                         context.getSender().sendMessage(main.parse(

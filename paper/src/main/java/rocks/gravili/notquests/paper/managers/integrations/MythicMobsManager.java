@@ -6,6 +6,8 @@ import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import org.bukkit.Location;
 import rocks.gravili.notquests.paper.NotQuests;
 
+import java.util.Collection;
+
 public class MythicMobsManager {
     private final NotQuests main;
     private MythicMobs mythicMobs;
@@ -17,6 +19,10 @@ public class MythicMobsManager {
 
     public MythicMobs getMythicMobs() {
         return mythicMobs;
+    }
+
+    public final Collection<String> getMobNames() {
+        return mythicMobs.getMobManager().getMobNames();
     }
 
     public void spawnMob(String mobToSpawnType, Location location, int amount) {
@@ -44,5 +50,9 @@ public class MythicMobsManager {
         }
 
 
+    }
+
+    public final boolean isMythicMob(final String mobToSpawnType) {
+        return mythicMobs.getMobManager().getMythicMob(mobToSpawnType) != null;
     }
 }
