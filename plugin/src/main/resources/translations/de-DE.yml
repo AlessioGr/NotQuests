@@ -64,7 +64,7 @@ chat:
       consumeItems:
         base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Items konsumieren: <main>%EVENTUALCOLOR%%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Craft Items: <main>%EVENTUALCOLOR%%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Items craften: <main>%EVENTUALCOLOR%%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
         base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Items liefern: <main>%EVENTUALCOLOR%%ITEMTODELIVERTYPE% %(%%ITEMTODELIVERNAME%%)%'
       escortNPC:
@@ -120,60 +120,60 @@ gui:
     title: '                <highlight2>Quests'
     button:
       questpoints:
-        name: "<highlight>Quest Points"
+        name: "<highlight>Questpunkte"
         lore:
-          - "<main>Current quest points: <highlight2>%QUESTPOINTS%"
+          - "<main>Questpunkte: <highlight2>%QUESTPOINTS%"
         x: 8
         y: 0
       takequest:
-        name: "<positive>Take a Quest"
+        name: "<positive>Quest annehmen"
         lore:
-          - "<unimportant>Start a new Quest!"
+          - "<unimportant>Starte eine neue Quest!"
           - ""
-          - "<veryUnimportant>Some Quests cannot be"
-          - "<veryUnimportant>started like this."
+          - "<veryUnimportant>Einige Quests können so nicht"
+          - "<veryUnimportant>gestartet werden."
         x: 0
         y: 1
       abortquest:
-        name: "<negative>Abort a Quest"
+        name: "<negative>Quest abbrechen"
         lore:
           - ""
-          - "<veryUnimportant>Aborting a Quest may"
-          - "<veryUnimportant>lead to punishments."
+          - "<veryUnimportant>Wenn du eine Quest abbrichst,"
+          - "<veryUnimportant>kann es Konsequenzen haben."
         x: 0
         y: 2
       activequests:
-        name: "<highlight>Active Quests"
+        name: "<highlight>Aktive Quests"
         lore:
           - ""
-          - "<veryUnimportant>Shows all of your"
-          - "<veryUnimportant>active Quests."
+          - "<veryUnimportant>Zeigt dir all deine"
+          - "<veryUnimportant>aktiven Quests."
         x: 0
         y: 3
   activeQuests:
     title: '             <highlight2>Aktive Quests'
     button:
       activeQuestButton:
-        name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
+        name: "<highlight>%QUESTNAME% <positive>[AKTIV]"
         lore:
-          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<main>Click to see details!"
+          - "<unimportant>Fortschritt: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
+          - "<main>Klicke, um Details anzusehen!"
   reward-hidden-text: . <unimportant>[VERBORGEN]
   availableQuests:
     title: '         <highlight2>Verfügbare Quests'
     button:
       questPreview:
         name-if-not-accepted: "<highlight>%QUESTNAME%"
-        name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTED]"
+        name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[AKZEPTIERT]"
         lore:
           - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
-          - "<main>Click to open Quest!"
+          - "<main>Klicke, um Quest zu öffnen!"
   takeQuestChoose:
     title: '          <highlight2>Wähle eine Quest'
     button:
       questPreview:
         name-if-not-accepted: "<highlight>%QUESTNAME%"
-        name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTED]"
+        name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[AKZEPTIERT]"
         lore:
           - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
           - "<main>Klicke für eine Vorschau!"
@@ -181,31 +181,31 @@ gui:
     title: '   <highlight2>Aktive, abbrechbare Quests'
     button:
       abortQuestPreview:
-        name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
+        name: "<highlight>%QUESTNAME% <positive>[AKTIV]"
         lore:
-          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<negative>Click to abort Quest!"
+          - "<unimportant>Fortschritt: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
+          - "<negative>Klicke, um Quest abzubrechen!"
   abortQuest:
     title: '       <negative>Abbruch-Bestätigung'
     button:
       confirmAbort:
-        name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
+        name: "<highlight>%QUESTNAME% <positive>[AKTIV]"
         lore:
-          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<negative>Click to abort the quest <highlight>%QUESTNAME%</highlight>!"
+          - "<unimportant>Fortschritt: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
+          - "<negative>Klicke, um die Quest <highlight>%QUESTNAME%</highlight> abzubrechen!"
         x: 3
         y: 1
       cancelAbort:
-        name: "<positive>Click to NOT abort this quest"
+        name: "<positive>Klicke, um die Quest NICHT abzubrechen"
         lore:
-          - "<positive>and cancel this action"
+          - "<positive>und den Abbrechvorgang zu beenden"
         x: 5
         y: 1
   previewQuest:
-    title: <highlight2>Quest Preview
+    title: <highlight2>Questvorschau
     button:
       description:
-        name: "<highlight>Description"
+        name: "<highlight>Beschreibung"
         lore:
           - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
         lore-if-empty:
@@ -213,7 +213,7 @@ gui:
         x: 2
         y: 0
       rewards:
-        name: "<positive>Rewards"
+        name: "<positive>Belohnungen"
         lore:
           - "<WHITE>%QUESTREWARDS%"
         lore-if-empty:
@@ -221,7 +221,7 @@ gui:
         x: 4
         y: 0
       requirements:
-        name: "<negative>Requirements"
+        name: "<negative>Voraussetzungen"
         lore:
           - "<WHITE>%QUESTREQUIREMENTS%"
         lore-if-empty:
@@ -231,48 +231,48 @@ gui:
       confirmTake:
         name: "<highlight>%QUESTNAME%"
         lore:
-          - "<positive>Click to take the quest <highlight>%QUESTNAME%"
+          - "<positive>Klicke, um die Quest <highlight>%QUESTNAME%</highlight> anzunehmen"
         x: 3
         y: 2
       cancelTake:
-        name: "<negative>Click to NOT take this quest"
+        name: "<negative>Klicke, um die Quest NICHT anzunehmen"
         lore:
-          - "<negative>and cancel this action"
+          - "<negative>und den Annehmvorgang abzubrechen"
         x: 5
         y: 2
   progress:
-    title: <highlight2>Details for Quest
+    title: <highlight2>Questdetails
     button:
       unlockedObjective:
         name: "<highlight2>%ACTIVEOBJECTIVEID%. <highlight>%OBJECTIVENAME%"
         lore:
-          - "<main><BOLD>ACTIVE</BOLD>"
+          - "<main><BOLD>AKTIV</BOLD>"
           - "<veryUnimportant>%WRAPPEDOBJECTIVEDESCRIPTION%"
           - "<unimportant>%ACTIVEOBJECTIVEDESCRIPTION%"
           - ""
-          - "<unimportant>Progress: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
+          - "<unimportant>Fortschritt: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
         lore-if-description-empty:
-          - "<main><BOLD>ACTIVE</BOLD>"
-          - "<veryUnimportant>No Description"
+          - "<main><BOLD>AKTIV</BOLD>"
+          - "<veryUnimportant>Keine Bescheibung"
           - "<unimportant>%ACTIVEOBJECTIVEDESCRIPTION%"
           - ""
-          - "<unimportant>Progress: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
+          - "<unimportant>Fortschritt: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
       lockedObjective:
-        name: "<highlight2>%ACTIVEOBJECTIVEID%. <unimportant><BOLD>[HIDDEN]"
+        name: "<highlight2>%ACTIVEOBJECTIVEID%. <unimportant><BOLD>[VERBORGEN]"
         lore:
-          - "<warn>This objective has not yet"
-          - "<warn>been unlocked!"
+          - "<warn>Diese Aufgabe wurde noch nicht"
+          - "<warn>freigeschaltet!"
       completedObjective:
         name: "<highlight2><strikethrough>%ACTIVEOBJECTIVEID%. <positive><strikethrough>%OBJECTIVENAME%"
         lore:
-          - "<positive><BOLD>COMPLETED</BOLD>"
+          - "<positive><BOLD>ABGESCHLOSSEN</BOLD>"
           - "<veryUnimportant><strikethrough>%WRAPPEDOBJECTIVEDESCRIPTION%"
           - "<veryUnimportant>%COMPLETEDOBJECTIVEDESCRIPTION%"
           - ""
-          - "<unimportant><strikethrough>Progress: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
+          - "<unimportant><strikethrough>Fortschritt: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
         lore-if-description-empty:
-          - "<positive><BOLD>COMPLETED</BOLD>"
-          - "<veryUnimportant><strikethrough>No Description"
+          - "<positive><BOLD>ABGESCHLOSSEN</BOLD>"
+          - "<veryUnimportant><strikethrough>Keine Beschreibung"
           - "<veryUnimportant>%COMPLETEDOBJECTIVEDESCRIPTION%"
           - ""
-          - "<unimportant><strikethrough>Progress: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
+          - "<unimportant><strikethrough>Fortschritt: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
