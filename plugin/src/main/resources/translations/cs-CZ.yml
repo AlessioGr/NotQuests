@@ -107,140 +107,166 @@ titles:
     title: <negative>Quest Nedokončen
     subtitle: <highlight>%QUESTNAME%
 gui:
+  main:
+    title: '                <BLUE>Quests'
+    button:
+      questpoints:
+        name: "<highlight>Quest Points"
+        lore:
+          - "<main>Current quest points: <highlight2>%QUESTPOINTS%"
+        x: 8
+        y: 0
+      takequest:
+        name: "<positive>Take a Quest"
+        lore:
+          - "<unimportant>Start a new Quest!"
+          - ""
+          - "<veryUnimportant>Some Quests cannot be"
+          - "<veryUnimportant>started like this."
+        x: 0
+        y: 1
+      abortquest:
+        name: "<negative>Abort a Quest"
+        lore:
+          - ""
+          - "<veryUnimportant>Aborting a Quest may"
+          - "<veryUnimportant>lead to punishments."
+        x: 0
+        y: 2
+      activequests:
+        name: "<highlight>Active Quests"
+        lore:
+          - ""
+          - "<veryUnimportant>Shows all of your"
+          - "<veryUnimportant>active Quests."
+        x: 0
+        y: 3
+  activeQuests:
+    title: '             <BLUE>Aktivní questy'
+    button:
+      activeQuestButton:
+        name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
+        lore:
+          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
+          - "<main>Click to see details!"
   reward-hidden-text: . <GRAY>[SKRYTÝ]
   availableQuests:
     title: '         <BLUE>Dostupné Questy'
     button:
       questPreview:
-        acceptedSuffix: ' <GREEN>[PŘIJAT]'
-        questNamePrefix: <highlight>
-        questDescriptionPrefix: <DARK_GRAY>
-        bottomText: <GREEN>Klikni pro otevření questu
-  main:
-    title: '                <BLUE>Quests'
-    button:
-      questpoints:
-        text: |-
-          <GOLD>Quest Pointy
-          <YELLOW>Aktuální počet questpointů: <highlight>%QUESTPOINTS%
-      takequest:
-        text: |-
-          <GREEN>Vzít si quest
-          <GRAY>Začít nový quest
-
-          <DARK_GRAY>Některé questy takto</DARK_GRAY>
-          <DARK_GRAY>nemohou být přijaty.
-      abortquest:
-        text: |-
-          <RED>Zrušit quest
-          <GRAY>Za zrušení questu můžeš</GRAY>
-          <GRAY>dostat postih.
-      previewquest:
-        text: |-
-          <BLUE>Zobrazit quest (Info o questu)
-          <GRAY>Zobrazit více informací</GRAY>
-          <GRAY>o questu.
-      activequests:
-        text: |-
-          <DARK_AQUA>Aktivní questy
-          <GRAY>Ukáže všechny tvé</GRAY>
-          <GRAY>aktivní questy.
-  activeQuests:
-    title: '             <BLUE>Aktivní questy'
-    button:
-      activeQuestButton:
-        text: |-
-          <highlight>%QUESTNAME% <GREEN>[AKTIVNÍ]
-          <GRAY>Postup: <GREEN>%COMPLETEDOBJECTIVESCOUNT% <WHITE>/ %ALLOBJECTIVESCOUNT%</WHITE>
-          <WHITE>Klikni pro zobrazení detailů
+        name-if-not-accepted: "<highlight>%QUESTNAME%"
+        name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTED]"
+        lore:
+          - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
+          - "<main>Click to open Quest!"
   takeQuestChoose:
     title: <BLUE>Který quest si chceš vzít?
     button:
       questPreview:
-        acceptedSuffix: ' <GREEN>[PŘIJAT]'
-        questNamePrefix: <highlight>
-        questDescriptionPrefix: <DARK_GRAY>
-        bottomText: <GREEN>Klikni pro náhled questu!
+        name-if-not-accepted: "<highlight>%QUESTNAME%"
+        name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTED]"
+        lore:
+          - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
+          - "<GREEN>Klikni pro náhled questu!"
   abortQuestChoose:
     title: '  <BLUE>Aktivní questy můžeš zrušit'
     button:
       abortQuestPreview:
-        text: |-
-          <highlight>%QUESTNAME% <GREEN>[AKTIVNÍ]
-          <GRAY>Postup: <GREEN>%COMPLETEDOBJECTIVESCOUNT% <WHITE>/ %ALLOBJECTIVESCOUNT%
-          <RED>Klikni pro přerušení questu!
-  previewQuestChoose:
-    title: '     <BLUE>Vybrat quest pro náhled'
-    button:
-      questPreview:
-        acceptedSuffix: ' <GREEN>[PŘIJAT]'
-        questNamePrefix: <highlight>
-        questDescriptionPrefix: <DARK_GRAY>
-        bottomText: <GREEN>Klikni pro náhled questu!
+        name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
+        lore:
+          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
+          - "<negative>Click to abort Quest!"
   abortQuest:
     title: '         <RED>Potvrzení zrušení'
     button:
       confirmAbort:
-        text: |-
-          <highlight>%QUESTNAME% <GREEN>[AKTIVNÍ]
-          <GRAY>Postup: <GREEN>%COMPLETEDOBJECTIVESCOUNT% <WHITE>/ %ALLOBJECTIVESCOUNT%
-          <RED>Klikni pro start questu <highlight>%QUESTNAME%<RED>!
+        name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
+        lore:
+          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
+          - "<negative>Click to abort the quest <highlight>%QUESTNAME%</highlight>!"
+        x: 3
+        y: 1
       cancelAbort:
-        text: |-
-          <GREEN>Klikni, abys NEZRUŠIL tento quest</GREEN>
-          <GREEN>a zrušil tím tuto akci
+        name: "<positive>Click to NOT abort this quest"
+        lore:
+          - "<positive>and cancel this action"
+        x: 5
+        y: 1
   previewQuest:
-    title: <BLUE>Náhled pro quest <highlight>%QUESTNAME%
+    title: <highlight2>Quest Preview
     button:
       description:
-        text: |-
-          <YELLOW>Popis
-          <DARK_GRAY>%QUESTDESCRIPTION%
-        empty: '???'
+        name: "<highlight>Description"
+        lore:
+          - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
+        lore-if-empty:
+          - "<veryUnimportant>???"
+        x: 2
+        y: 0
       rewards:
-        text: |-
-          <GREEN>Odměny
-          <WHITE>%QUESTREWARDS%
-        empty: <DARK_GRAY>Žádné nebo skryté
+        name: "<positive>Rewards"
+        lore:
+          - "<WHITE>%QUESTREWARDS%"
+        lore-if-empty:
+          - "<DARK_GRAY>Žádné nebo skryté"
+        x: 4
+        y: 0
       requirements:
-        text: |-
-          <RED>Požadavky
-          <WHITE>%QUESTREQUIREMENTS%
-        empty: '<veryUnimportant>-'
+        name: "<negative>Requirements"
+        lore:
+          - "<WHITE>%QUESTREQUIREMENTS%"
+        lore-if-empty:
+          - "<veryUnimportant>-"
+        x: 6
+        y: 0
       confirmTake:
-        text: |-
-          <highlight>%QUESTNAME%
-          <GREEN>Klikni, aby sis vzal quest <highlight>%QUESTNAME%</AQUA>!
+        name: "<highlight>%QUESTNAME%"
+        lore:
+          - "<positive>Click to take the quest <highlight>%QUESTNAME%"
+        x: 3
+        y: 2
       cancelTake:
-        text: |-
-          <RED>Klikni, aby sis NEVZAL tento quest</RED>
-          <RED>a zrušil tím tuto akci
+        name: "<negative>Click to NOT take this quest"
+        lore:
+          - "<negative>and cancel this action"
+        x: 5
+        y: 2
   progress:
-    title: <BLUE>Detaily pro quest <highlight>%QUESTNAME%
+    title: <highlight2>Details for Quest
     button:
       unlockedObjective:
-        text: |-
-          <YELLOW>%ACTIVEOBJECTIVEID%. <highlight>%OBJECTIVENAME%
-          <GOLD><BOLD>AKTIVNÍ</BOLD>
-          <DARK_GRAY>%OBJECTIVEDESCRIPTION%
-          <GRAY>%ACTIVEOBJECTIVEDESCRIPTION%</GRAY>
-
-          <GRAY>Postup: <GREEN>%ACTIVEOBJECTIVEPROGRESS% <WHITE>/ %OBJECTIVEPROGRESSNEEDED%
-        description-empty: Žádný popisek
+        name: "<highlight2>%ACTIVEOBJECTIVEID%. <highlight>%OBJECTIVENAME%"
+        lore:
+          - "<main><BOLD>ACTIVE</BOLD>"
+          - "<veryUnimportant>%WRAPPEDOBJECTIVEDESCRIPTION%"
+          - "<unimportant>%ACTIVEOBJECTIVEDESCRIPTION%"
+          - ""
+          - "<unimportant>Progress: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
+        lore-if-description-empty:
+          - "<main><BOLD>ACTIVE</BOLD>"
+          - "<veryUnimportant>No Description"
+          - "<unimportant>%ACTIVEOBJECTIVEDESCRIPTION%"
+          - ""
+          - "<unimportant>Progress: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
       lockedObjective:
-        text: |-
-          <YELLOW>%ACTIVEOBJECTIVEID%. <GRAY><BOLD>[SKRYTÝ]
-          <YELLOW>Tento úkol ještě
-          <YELLOW>nebyl odemknut!
+        name: "<highlight2>%ACTIVEOBJECTIVEID%. <unimportant><BOLD>[HIDDEN]"
+        lore:
+          - "<warn>This objective has not yet"
+          - "<warn>been unlocked!"
       completedObjective:
-        text: |-
-          <GREEN><strikethrough>%ACTIVEOBJECTIVEID%. <DARK_GREEN><strikethrough>%OBJECTIVENAME%
-          <GREEN><BOLD>DOKONČEN</BOLD>
-          <DARK_GRAY><strikethrough>%OBJECTIVEDESCRIPTION%
-          <GRAY>%COMPLETEDOBJECTIVEDESCRIPTION%</GRAY>
-
-          <GRAY><strikethrough>Progress: <GREEN><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <WHITE><strikethrough>/ %OBJECTIVEPROGRESSNEEDED%
-        description-empty: Žádný popisek
+        name: "<highlight2><strikethrough>%ACTIVEOBJECTIVEID%. <positive><strikethrough>%OBJECTIVENAME%"
+        lore:
+          - "<positive><BOLD>COMPLETED</BOLD>"
+          - "<veryUnimportant><strikethrough>%WRAPPEDOBJECTIVEDESCRIPTION%"
+          - "<veryUnimportant>%COMPLETEDOBJECTIVEDESCRIPTION%"
+          - ""
+          - "<unimportant><strikethrough>Progress: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
+        lore-if-description-empty:
+          - "<positive><BOLD>COMPLETED</BOLD>"
+          - "<veryUnimportant><strikethrough>No Description"
+          - "<veryUnimportant>%COMPLETEDOBJECTIVEDESCRIPTION%"
+          - ""
+          - "<unimportant><strikethrough>Progress: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
       previousPage:
         text: Jít na předchozí stránku (%prevpage%)
       nextPage:
