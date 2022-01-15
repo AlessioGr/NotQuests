@@ -182,6 +182,10 @@ public class QuestManager {
                             }
                             final int progressNeeded = category.getQuestsConfig().getInt("quests." + questName + ".objectives." + objectiveNumber + ".progressNeeded", 1);
 
+                            final Location location = category.getQuestsConfig().getLocation("quests." + questName + ".objectives." + objectiveNumber + ".location", null);
+                            final boolean showLocation = category.getQuestsConfig().getBoolean("quests." + questName + ".objectives." + objectiveNumber + ".showLocation", false);
+
+
                             int objectiveID = -1;
                             boolean validObjectiveID = true;
                             try {
@@ -202,6 +206,8 @@ public class QuestManager {
                                     objective.setQuest(quest);
                                     objective.setObjectiveID(objectiveID);
                                     objective.setProgressNeeded(progressNeeded);
+                                    objective.setLocation(location, false);
+                                    objective.setShowLocation(showLocation, false);
 
                                     objective.load(category.getQuestsConfig(), "quests." + questName + ".objectives." + objectiveNumber);
 

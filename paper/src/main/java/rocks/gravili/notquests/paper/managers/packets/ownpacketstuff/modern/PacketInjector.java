@@ -5,19 +5,26 @@ import it.unimi.dsi.fastutil.shorts.ShortSet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientboundBlockEventPacket;
 import net.minecraft.network.protocol.game.ClientboundSectionBlocksUpdatePacket;
+import net.minecraft.network.protocol.game.ServerboundSetBeaconPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.craftbukkit.v1_18_R1.CraftChunk;
 import org.bukkit.craftbukkit.v1_18_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_18_R1.block.CraftBlock;
+import org.bukkit.craftbukkit.v1_18_R1.block.CraftBlockState;
 import org.bukkit.craftbukkit.v1_18_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -204,6 +211,36 @@ public class PacketInjector {
 
         p.sendMessage("Packet sent");
     }*/
+
+
+    public void sendBeaconUpdatePacket(Player player, Location location, BlockState blockState){
+        Connection connection = getConnection(getServerPlayer(player).connection);
+
+        CraftBlockState craftBlockState = (CraftBlockState)blockState;
+        net.minecraft.world.level.block.Block nmsBlock = craftBlockState.getHandle().getBlock();
+
+
+
+
+
+
+        BlockPos blockPos = new BlockPos(location.getBlockX(), location.getBlockY(), location.getBlockZ());
+
+        player.teleport(location.clone().add(0,1,0));
+
+        //player.sendMessage("nmsBlock: " + nmsBlock.getName().getString());
+
+
+        ClientboundBlockEventPacket clientboundBlockEventPacket = new ClientboundBlockEventPacket(blockPos, nmsBlock, 1, 1); //BlockPost, Block, Action ID (1=recalculate), Action Type (ignored for beacons)
+
+        //player.sendMessage("sent!");
+        //connection.send(clientboundBlockEventPacket);
+        connection.send(clientboundBlockEventPacket, (future) -> {
+          //  player.sendMessage("Arrived!");
+        });
+
+
+    }
 
 
 }

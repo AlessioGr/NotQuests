@@ -18,6 +18,7 @@
 
 package rocks.gravili.notquests.paper.structs.objectives;
 
+import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -28,6 +29,7 @@ import rocks.gravili.notquests.paper.structs.conditions.Condition;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 public abstract class Objective {
@@ -42,10 +44,38 @@ public abstract class Objective {
     private int completionNPCID = -1;
     private UUID completionArmorStandUUID = null;
 
+    private boolean showLocation = false;
+    private Location location = null;
+
     public Objective(NotQuests main) {
         this.main = main;
         conditions = new ArrayList<>();
         rewards = new ArrayList<>();
+    }
+
+    public boolean isShowLocation() {
+        return showLocation;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location, boolean save) {
+        this.location = location;
+        if (save) {
+            quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".location", location);
+            quest.getCategory().saveQuestsConfig();
+        }
+
+    }
+
+    public void setShowLocation(boolean showLocation, boolean save) {
+        this.showLocation = showLocation;
+        if (save) {
+            quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".showLocation", showLocation);
+            quest.getCategory().saveQuestsConfig();
+        }
     }
 
     public void setQuest(final Quest quest) {

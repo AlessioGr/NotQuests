@@ -66,6 +66,7 @@ public class QuestEvents implements Listener {
     private final NotQuests main;
 
     private final HashMap<QuestPlayer, String> beaconsToUpdate;
+    final String beamMode = "end_gateway";
 
 
     public QuestEvents(NotQuests main) {
@@ -109,17 +110,19 @@ public class QuestEvents implements Listener {
                     questPlayer.getActiveLocationsAndBeacons().remove(locationName);
                     questPlayer.updateBeaconLocations(player);
                     if(locationToRemove != null){
-                        scheduleBeaconRemovalAt(locationToRemove, player);
+                        scheduleBeaconRemovalAt(locationToRemove, player, questPlayer);
                     }
 
 
                     //main.sendMessage(player, "<positive>Added new Beacon");
 
                 }
-                beaconsToUpdate.clear();
+                if(!beamMode.equals("end_gateway")){
+                    beaconsToUpdate.clear();
+                }
 
             }
-        }, 0L, 60L); //0 Tick initial delay, 20 Tick (1 Second) between repeats
+        }, 0L, 100L); //0 Tick initial delay, 20 Tick (1 Second) between repeats
     }
 
 
@@ -175,8 +178,8 @@ public class QuestEvents implements Listener {
         }
     }
 
-    public void scheduleBeaconRemovalAt(final Location location, final Player player){
-        Bukkit.getScheduler().runTaskLater(main.getMain(), new Runnable() {
+    public void scheduleBeaconRemovalAt(final Location location, final Player player, final QuestPlayer questPlayer){
+        /*Bukkit.getScheduler().runTaskLater(main.getMain(), new Runnable() {
             @Override
             public void run() {
                 player.sendBlockChange(location, location.getBlock().getBlockData());
@@ -202,7 +205,34 @@ public class QuestEvents implements Listener {
                 //main.sendMessage(player, "<negative>Removed old Beacon");
 
             }
-        }, 55L);
+        }, 55L);*/
+
+        if(questPlayer.beamMode.equals("beacon")){
+            player.sendBlockChange(location, location.getBlock().getBlockData());
+            location.add(-1,-1,-1);
+            player.sendBlockChange(location, location.getBlock().getBlockData());
+            location.add(1,0,0);
+            player.sendBlockChange(location, location.getBlock().getBlockData());
+            location.add(1,0,0);
+            player.sendBlockChange(location, location.getBlock().getBlockData());
+            location.add(0,0,1);
+            player.sendBlockChange(location, location.getBlock().getBlockData());
+            location.add(-1,0,0);
+            player.sendBlockChange(location, location.getBlock().getBlockData());
+            location.add(-1,0,0);
+            player.sendBlockChange(location, location.getBlock().getBlockData());
+            location.add(0,0,1);
+            player.sendBlockChange(location, location.getBlock().getBlockData());
+            location.add(1,0,0);
+            player.sendBlockChange(location, location.getBlock().getBlockData());
+            location.add(1,0,0);
+            player.sendBlockChange(location, location.getBlock().getBlockData());
+        }else if(questPlayer.beamMode.equals("end_gateway")){
+            player.sendBlockChange(location, location.getBlock().getBlockData());
+        }else if(questPlayer.beamMode.equals("end_crystal")){
+            player.sendBlockChange(location, location.getBlock().getBlockData());
+        }
+
     }
 
 

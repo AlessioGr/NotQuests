@@ -22,15 +22,14 @@ import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.parser.ArgumentParseResult;
 import cloud.commandframework.arguments.standard.*;
+import cloud.commandframework.bukkit.parsers.WorldArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.kyori.adventure.text.Component;
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
+import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -38,6 +37,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.util.Vector;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.CategorySelector;
 import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
@@ -630,6 +630,73 @@ public class AdminEditCommands {
     }
 
     public void handleEditObjectives(final Command.Builder<CommandSender> builder) {
+        manager.command(builder.literal("location")
+                .literal("enable")
+                .meta(CommandMeta.DESCRIPTION, "Shows the location to the player.")
+                .handler((context) -> {
+                    final Quest quest = context.get("quest");
+                    final int objectiveID = context.get("Objective ID");
+                    final Objective objective = quest.getObjectiveFromID(objectiveID);
+                    assert objective != null; //Shouldn't be null
+
+                    objective.setShowLocation(true, true);
+
+                    context.getSender().sendMessage(main.parse(
+                            "<main>The objective with ID <highlight>" + objectiveID + "</highlight> is now showing the location to the player!"
+                    ));
+                }));
+
+        manager.command(builder.literal("location")
+                .literal("disables")
+                .meta(CommandMeta.DESCRIPTION, "Disables showing the location to the player.")
+                .handler((context) -> {
+                    final Quest quest = context.get("quest");
+                    final int objectiveID = context.get("Objective ID");
+                    final Objective objective = quest.getObjectiveFromID(objectiveID);
+                    assert objective != null; //Shouldn't be null
+
+                    objective.setShowLocation(false, true);
+
+                    context.getSender().sendMessage(main.parse(
+                            "<main>The objective with ID <highlight>" + objectiveID + "</highlight> is now no longer showing the location to the player!"
+                    ));
+                }));
+
+        manager.command(builder.literal("location")
+                .literal("set")
+                .argument(WorldArgument.of("world"), ArgumentDescription.of("World name"))
+                /* .argumentTriplet(
+                         "coords",
+                         TypeToken.get(Vector.class),
+                         Triplet.of("x", "y", "z"),
+                         Triplet.of(Integer.class, Integer.class, Integer.class),
+                         (sender, triplet) -> new Vector(triplet.getFirst(), triplet.getSecond(),
+                                 triplet.getThird()
+                         ),
+                         ArgumentDescription.of("Coordinates")
+                 )*/ //Commented out, because this somehow breaks flags
+                .argument(IntegerArgument.newBuilder("x"), ArgumentDescription.of("X coordinate"))
+                .argument(IntegerArgument.newBuilder("y"), ArgumentDescription.of("Y coordinate"))
+                .argument(IntegerArgument.newBuilder("z"), ArgumentDescription.of("Z coordinate"))
+                .meta(CommandMeta.DESCRIPTION, "Disables showing the location to the player.")
+                .handler((context) -> {
+                    final Quest quest = context.get("quest");
+                    final int objectiveID = context.get("Objective ID");
+                    final Objective objective = quest.getObjectiveFromID(objectiveID);
+                    assert objective != null; //Shouldn't be null
+
+                    final World world = context.get("world");
+                    final Vector coordinates = new Vector(context.get("x"), context.get("y"), context.get("z"));
+                    final Location location = coordinates.toLocation(world);
+
+                    objective.setLocation(location, true);
+                    objective.setShowLocation(true, true);
+
+                    context.getSender().sendMessage(main.parse(
+                            "<main>The objective with ID <highlight>" + objectiveID + "</highlight> is now has a location!"
+                    ));
+                }));
+
         manager.command(builder.literal("completionNPC")
                 .literal("show", "view")
                 .meta(CommandMeta.DESCRIPTION, "Shows the completionNPC of an objective.")

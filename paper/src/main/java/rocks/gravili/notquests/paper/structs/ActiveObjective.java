@@ -82,6 +82,15 @@ public class ActiveObjective {
 
                 objective.onObjectiveUnlock(this);
 
+                if(objective.isShowLocation() && objective.getLocation() != null){
+                    getQuestPlayer().getLocationsAndBeacons().clear();
+                    getQuestPlayer().getLocationsAndBeacons().put(objective.getObjectiveID()+"", objective.getLocation());
+                    getQuestPlayer().updateBeaconLocations(getQuestPlayer().getPlayer());
+                }
+
+
+
+
                 if (objective instanceof EscortNPCObjective escortNPCObjective) {
                     if (main.getIntegrationsManager().isCitizensEnabled()) {
                         main.getIntegrationsManager().getCitizensManager().handleEscortNPCObjectiveForActiveObjective(escortNPCObjective, activeQuest);
@@ -107,6 +116,8 @@ public class ActiveObjective {
                     }
                 }
 
+            }else{
+                getQuestPlayer().getLocationsAndBeacons().clear();
             }
         }
 
@@ -250,5 +261,8 @@ public class ActiveObjective {
     public void setHasBeenCompleted(final boolean hasBeenCompleted) {
         // System.out.println("§4§lSet has been completed to: §b" + hasBeenCompleted + " §cfor objective with ID §b" + getObjectiveID());
         this.hasBeenCompleted = hasBeenCompleted;
+        if(hasBeenCompleted){
+            getQuestPlayer().getLocationsAndBeacons().clear();
+        }
     }
 }

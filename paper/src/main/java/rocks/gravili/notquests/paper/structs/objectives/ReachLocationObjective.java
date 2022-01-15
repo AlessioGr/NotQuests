@@ -68,6 +68,9 @@ public class ReachLocationObjective extends Objective {
 
     public void setMinLocation(final Location minLocation) {
         this.min = minLocation;
+        if(getLocation() == null){
+            setLocation(minLocation, false);
+        }
     }
 
     public void setMaxLocation(final Location maxLocation) {
@@ -111,8 +114,9 @@ public class ReachLocationObjective extends Objective {
 
     @Override
     public void load(FileConfiguration configuration, String initialPath) {
-        min = configuration.getLocation(initialPath + ".specifics.minLocation");
-        max = configuration.getLocation(initialPath + ".specifics.maxLocation");
+        setMinLocation(configuration.getLocation(initialPath + ".specifics.minLocation"));
+        setMaxLocation(configuration.getLocation(initialPath + ".specifics.maxLocation"));
         locationName = configuration.getString(initialPath + ".specifics.locationName");
+
     }
 }

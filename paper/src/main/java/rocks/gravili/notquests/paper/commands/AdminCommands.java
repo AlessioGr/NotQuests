@@ -768,7 +768,7 @@ public class AdminCommands {
 
                 }));
 
-        manager.command(builder.literal("debug")
+       /* manager.command(builder.literal("debug")
                 .literal("beaconBeamAdvanced")
                 .argument(WorldArgument.of("world"), ArgumentDescription.of("World name"))
                 .argument(IntegerArgument.newBuilder("x"), ArgumentDescription.of("X coordinate"))
@@ -912,7 +912,7 @@ public class AdminCommands {
 
                     connection.send(clientboundSectionBlocksUpdatePacket);
 
-                    main.sendMessage(player, "<success>Packet sent!");*/
+                    main.sendMessage(player, "<success>Packet sent!");*//*
 
                     player.sendBlockChange(location, beaconBlockState.getBlockData());
 
@@ -926,7 +926,7 @@ public class AdminCommands {
                     player.sendBlockChange(location.clone().add(0,-1,1), ironBlockState.getBlockData());
                     player.sendBlockChange(location.clone().add(0,-1,-1), ironBlockState.getBlockData());
 
-                }));
+                }));*/
     }
 
     public void handleQuestPoints() {

@@ -24,6 +24,8 @@ import com.github.retrooper.packetevents.factory.bukkit.BukkitPacketEventsBuilde
 import com.github.retrooper.packetevents.settings.PacketEventsSettings;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerChatMessage;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -150,6 +152,11 @@ public class PacketManager implements Listener {
         if (usePacketEvents && main.getConfiguration().packetMagic) {
             PacketEvents.getAPI().terminate();
         }
-
     }
+
+
+    public void sendBeaconUpdatePacket(Player player, Location location, BlockState blockState){
+        getModernPacketInjector().sendBeaconUpdatePacket(player, location, blockState);
+    }
+
 }
