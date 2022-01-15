@@ -62,16 +62,16 @@ public class VariablesManager {
         registerVariable("ActiveQuests", ActiveQuestsVariable.class);
         registerVariable("CompletedQuests", CompletedQuestsVariable.class);
         registerVariable("Permission", PermissionVariable.class);
-        registerVariable("PlayerName", PlayerNameVariable.class);
-        registerVariable("PlayerExperience", PlayerExperienceVariable.class);
-        registerVariable("PlayerExperienceLevel", PlayerExperienceLevelVariable.class);
-        registerVariable("PlayerCurrentWorld", PlayerCurrentWorldVariable.class);
-        registerVariable("PlayerSneaking", PlayerSneakingVariable.class);
-        registerVariable("PlayerHealth", PlayerHealthVariable.class);
-        registerVariable("PlayerGameMode", PlayerGameModeVariable.class);
-        registerVariable("PlayerFlying", PlayerFlyingVariable.class);
+        registerVariable("Name", PlayerNameVariable.class);
+        registerVariable("Experience", PlayerExperienceVariable.class);
+        registerVariable("ExperienceLevel", PlayerExperienceLevelVariable.class);
+        registerVariable("CurrentWorld", PlayerCurrentWorldVariable.class);
+        registerVariable("Sneaking", PlayerSneakingVariable.class);
+        registerVariable("Health", PlayerHealthVariable.class);
+        registerVariable("GameMode", PlayerGameModeVariable.class);
+        registerVariable("Flying", PlayerFlyingVariable.class);
         registerVariable("DayOfWeek", DayOfWeekVariable.class);
-        registerVariable("PlayerCurrentBiome", PlayerCurrentBiomeVariable.class);
+        registerVariable("CurrentBiome", PlayerCurrentBiomeVariable.class);
 
         registerVariable("Chance", ChanceVariable.class);
         registerVariable("Advancement", AdvancementVariable.class);
