@@ -42,10 +42,7 @@ import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.Quest;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 public class DeliverItemsObjective extends Objective {
 
@@ -266,7 +263,7 @@ public class DeliverItemsObjective extends Objective {
             displayName = "Any";
         }
 
-        String itemType = isDeliverAnyItem() ? "Any" : getItemToDeliver().getType().name();
+        String itemType = isDeliverAnyItem() ? "Any" : getItemToDeliver().getType().name().toLowerCase(Locale.ROOT);
 
 
         String toReturn;

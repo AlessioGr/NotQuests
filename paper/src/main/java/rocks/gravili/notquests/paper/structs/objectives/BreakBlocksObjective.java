@@ -31,6 +31,8 @@ import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 
+import java.util.Locale;
+
 public class BreakBlocksObjective extends Objective {
     private String blockToBreak;
     private boolean deductIfBlockIsPlaced = true;
@@ -69,7 +71,7 @@ public class BreakBlocksObjective extends Objective {
                     }
 
                     BreakBlocksObjective breakBlocksObjective = new BreakBlocksObjective(main);
-                    breakBlocksObjective.setBlockToBreak(materialToBreak);
+                    breakBlocksObjective.setBlockToBreak(materialToBreak.toLowerCase(Locale.ROOT));
                     breakBlocksObjective.setProgressNeeded(amount);
                     breakBlocksObjective.setDeductIfBlockIsPlaced(deductIfBlockIsPlaced);
 
