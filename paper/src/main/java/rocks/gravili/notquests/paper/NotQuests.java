@@ -358,6 +358,8 @@ public class NotQuests {
         //Save all kinds of data
         dataManager.saveData();
 
+        dataManager.closeDatabaseConnection();
+
 
 
         integrationsManager.onDisable();

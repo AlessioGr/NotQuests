@@ -23,6 +23,8 @@ import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
+import net.kyori.adventure.text.TranslatableComponent;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -71,7 +73,7 @@ public class BreakBlocksObjective extends Objective {
                     }
 
                     BreakBlocksObjective breakBlocksObjective = new BreakBlocksObjective(main);
-                    breakBlocksObjective.setBlockToBreak(materialToBreak.toLowerCase(Locale.ROOT));
+                    breakBlocksObjective.setBlockToBreak(materialToBreak);
                     breakBlocksObjective.setProgressNeeded(amount);
                     breakBlocksObjective.setDeductIfBlockIsPlaced(deductIfBlockIsPlaced);
 
@@ -82,6 +84,11 @@ public class BreakBlocksObjective extends Objective {
 
     @Override
     public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
+        String translatedMaterialName = "<lang:" + Material.valueOf(getBlockToBreak()).translationKey() + ">";
+
+        //TODO: translatedMaterialName doesnt work in gradients yet. Wait until minimessage fixed that bug
+
+
         return main.getLanguageManager().getString("chat.objectives.taskDescription.breakBlocks.base", player)
                 .replace("%EVENTUALCOLOR%", eventualColor)
                 .replace("%BLOCKTOBREAK%", getBlockToBreak());
@@ -100,6 +107,7 @@ public class BreakBlocksObjective extends Objective {
     public final String getBlockToBreak() {
         return blockToBreak;
     }
+
 
 
     @Override

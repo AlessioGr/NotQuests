@@ -1749,4 +1749,16 @@ public class DataManager {
             standardEliteMobNamesCompletions.add("Elite_Zombified_Piglin");
         }
     }
+
+    public void closeDatabaseConnection() {
+        main.getLogManager().info("Closing database connection...");
+        try{
+            statement.close();
+            connection.close();
+        }catch (Exception e){
+            main.getLogManager().severe("Error closing database connection:");
+            e.printStackTrace();
+        }
+
+    }
 }

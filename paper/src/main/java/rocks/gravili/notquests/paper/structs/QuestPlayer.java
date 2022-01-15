@@ -159,8 +159,9 @@ public class QuestPlayer {
     public final boolean updateBeaconLocations(final Player player){
         boolean toReturn = false;
         clearActiveBeacons();
-        if(locationsAndBeacons.isEmpty()){
+        if(locationsAndBeacons.isEmpty() || player == null){
             //player.sendMessage("Nothing to process!");
+            return false;
         }
         for(String locationName : locationsAndBeacons.keySet()){
             sendDebugMessage("Processing " + locationName);
@@ -761,6 +762,10 @@ public class QuestPlayer {
 
 
     public void sendObjectiveProgress(ActiveObjective activeObjective) {
+        Player player = getPlayer();
+        if(player == null){
+            return;
+        }
         getPlayer().sendActionBar(main.parse(
                 main.getLanguageManager().getString("objective-tracking.actionbar-progress-update", getPlayer(), this, activeObjective, activeObjective.getActiveQuest())
         ));
