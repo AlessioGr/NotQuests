@@ -222,6 +222,7 @@ public class ActiveQuest {
 
 
         for (final ActiveObjective activeObjective : getActiveObjectives()) {
+            getQuestPlayer().disableTrackingObjective(activeObjective);
             if (activeObjective.getObjective() instanceof EscortNPCObjective) {
                 if (main.getIntegrationsManager().isCitizensEnabled() && main.getIntegrationsManager().getCitizensManager() != null) {
                     main.getIntegrationsManager().getCitizensManager().handleEscortObjective(activeObjective);

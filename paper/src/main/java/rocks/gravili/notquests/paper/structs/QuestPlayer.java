@@ -81,13 +81,23 @@ public class QuestPlayer {
     public ActiveObjective getTrackingObjective() {
         return trackingObjective;
     }
+    public void trackBeacon(String name, Location location) {
+        clearBeacons();
+        getLocationsAndBeacons().put(name, location);
+        updateBeaconLocations(getPlayer());
+    }
 
     public void setTrackingObjective(ActiveObjective trackingObjective) {
         this.trackingObjective = trackingObjective;
         if(trackingObjective.getObjective().isShowLocation() && trackingObjective.getObjective().getLocation() != null){
-            getLocationsAndBeacons().clear();
-            getLocationsAndBeacons().put(trackingObjective.getObjectiveID()+"", trackingObjective.getObjective().getLocation());
-            updateBeaconLocations(getPlayer());
+            trackBeacon(trackingObjective.getObjectiveID()+"", trackingObjective.getObjective().getLocation());;
+        }
+    }
+
+    public void disableTrackingObjective(ActiveObjective activeObjective) {
+        if(getTrackingObjective().equals(activeObjective)){
+            //getPlayer().sendMessage("Removing 1!");
+            clearBeacons();
         }
     }
 
@@ -99,24 +109,70 @@ public class QuestPlayer {
         return activeLocationAndBeams;
     }
 
+    public void clearBeacons(){
+        for(Location location : getActiveLocationsAndBeacons().values()){
+            scheduleBeaconRemovalAt(location, getPlayer());
+        }
+
+        getLocationsAndBeacons().clear();
+        getActiveLocationsAndBeacons().clear();
+    }
+
+    public void clearActiveBeacons(){
+        for(Location location : getActiveLocationsAndBeacons().values()){
+            scheduleBeaconRemovalAt(location, getPlayer());
+        }
+
+        getActiveLocationsAndBeacons().clear();
+    }
+
+    public void scheduleBeaconRemovalAt(final Location location, final Player player){
+
+        if(main.getConfiguration().getBeamMode().equals("beacon")){
+            player.sendBlockChange(location, location.getBlock().getBlockData());
+            location.add(-1,-1,-1);
+            player.sendBlockChange(location, location.getBlock().getBlockData());
+            location.add(1,0,0);
+            player.sendBlockChange(location, location.getBlock().getBlockData());
+            location.add(1,0,0);
+            player.sendBlockChange(location, location.getBlock().getBlockData());
+            location.add(0,0,1);
+            player.sendBlockChange(location, location.getBlock().getBlockData());
+            location.add(-1,0,0);
+            player.sendBlockChange(location, location.getBlock().getBlockData());
+            location.add(-1,0,0);
+            player.sendBlockChange(location, location.getBlock().getBlockData());
+            location.add(0,0,1);
+            player.sendBlockChange(location, location.getBlock().getBlockData());
+            location.add(1,0,0);
+            player.sendBlockChange(location, location.getBlock().getBlockData());
+            location.add(1,0,0);
+            player.sendBlockChange(location, location.getBlock().getBlockData());
+        }else if(main.getConfiguration().getBeamMode().equals("end_gateway")){
+            player.sendBlockChange(location, location.getBlock().getBlockData());
+        }else if(main.getConfiguration().getBeamMode().equals("end_crystal")){
+            player.sendBlockChange(location, location.getBlock().getBlockData());
+        }
+
+    }
 
     public final boolean updateBeaconLocations(final Player player){
         boolean toReturn = false;
+        clearActiveBeacons();
+        if(locationsAndBeacons.isEmpty()){
+            //player.sendMessage("Nothing to process!");
+        }
         for(String locationName : locationsAndBeacons.keySet()){
-            if(activeLocationAndBeams.containsKey(locationName)){
-                continue;
-            }
+            sendDebugMessage("Processing " + locationName);
 
             final Location finalLocation = locationsAndBeacons.get(locationName);
 
             if(!finalLocation.getWorld().getUID().equals(player.getWorld().getUID())){
                 continue;
             }
-
-
             Location lowestDistanceLocation = player.getLocation();
 
-            final int distance = 96; //Default: 96
+            final int distance = 88; //Default: 96
 
             if(finalLocation.distance(player.getLocation()) > distance){
 
@@ -137,6 +193,7 @@ public class QuestPlayer {
 
             }else{
                 lowestDistanceLocation = finalLocation;
+
                 toReturn = true;
             }
 
@@ -644,6 +701,8 @@ public class QuestPlayer {
                 questsToRemove.add(foundActiveQuest);
                 final Player player = getPlayer();
 
+
+
                 if (player != null) {
                     if (main.getConfiguration().visualTitleQuestFailed_enabled) {
                         player.showTitle(
@@ -699,4 +758,7 @@ public class QuestPlayer {
         }
         return null;
     }
+
+
+
 }

@@ -82,11 +82,7 @@ public class ActiveObjective {
 
                 objective.onObjectiveUnlock(this);
 
-                if(objective.isShowLocation() && objective.getLocation() != null){
-                    getQuestPlayer().getLocationsAndBeacons().clear();
-                    getQuestPlayer().getLocationsAndBeacons().put(objective.getObjectiveID()+"", objective.getLocation());
-                    getQuestPlayer().updateBeaconLocations(getQuestPlayer().getPlayer());
-                }
+                getQuestPlayer().setTrackingObjective(this);
 
 
 
@@ -261,7 +257,7 @@ public class ActiveObjective {
         // System.out.println("§4§lSet has been completed to: §b" + hasBeenCompleted + " §cfor objective with ID §b" + getObjectiveID());
         this.hasBeenCompleted = hasBeenCompleted;
         if(hasBeenCompleted){
-            getQuestPlayer().setTrackingObjective(this);
+            getQuestPlayer().disableTrackingObjective(this);
         }
     }
 }

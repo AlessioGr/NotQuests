@@ -71,12 +71,30 @@ public class QuestEvents implements Listener {
     public QuestEvents(NotQuests main) {
         this.main = main;
         beaconsToUpdate = new HashMap<>();
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(main.getMain(), new Runnable() {
-            @Override
-            public void run() {
-                for(QuestPlayer questPlayer : beaconsToUpdate.keySet()) {
-                    String locationName = beaconsToUpdate.get(questPlayer);
-                    final Player player = questPlayer.getPlayer();
+        if(main.getConfiguration().getBeamMode().equals("end_gateway")){
+            Bukkit.getScheduler().scheduleSyncRepeatingTask(main.getMain(), new Runnable() {
+                @Override
+                public void run() {
+                    for(Player player : Bukkit.getOnlinePlayers()) {
+                        QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                        if(questPlayer == null){
+                            return;
+                        }
+                        questPlayer.updateBeaconLocations(player);
+
+                    }
+
+
+
+                }
+            }, 0L, 80L); //0 Tick initial delay, 20 Tick (1 Second) between repeats
+        }else{
+            Bukkit.getScheduler().scheduleSyncRepeatingTask(main.getMain(), new Runnable() {
+                @Override
+                public void run() {
+                    for(QuestPlayer questPlayer : beaconsToUpdate.keySet()) {
+                        String locationName = beaconsToUpdate.get(questPlayer);
+                        final Player player = questPlayer.getPlayer();
 
 
 
@@ -102,26 +120,28 @@ public class QuestEvents implements Listener {
 
                     questPlayer.getActiveLocationsAndBeacons().put(locationName, newBeaconLocation.add(-1, 1, -1));*/
 
-                    Location locationToRemove = questPlayer.getActiveLocationsAndBeacons().get(locationName);
+                        /*Location locationToRemove = questPlayer.getActiveLocationsAndBeacons().get(locationName);
 
-                    //player.sendMessage("Scheduled Beacon Removal");
+                        //player.sendMessage("Scheduled Beacon Removal");
 
-                    questPlayer.getActiveLocationsAndBeacons().remove(locationName);
-                    questPlayer.updateBeaconLocations(player);
-                    if(locationToRemove != null){
-                        scheduleBeaconRemovalAt(locationToRemove, player, questPlayer);
+                        questPlayer.getActiveLocationsAndBeacons().remove(locationName);
+                        questPlayer.updateBeaconLocations(player);
+                        if(locationToRemove != null){
+                            questPlayer.scheduleBeaconRemovalAt(locationToRemove, player);
+                        }*/
+
+
+                        //main.sendMessage(player, "<positive>Added new Beacon");
+
+                    }
+                    if(!main.getConfiguration().getBeamMode().equals("end_gateway")){
+                        beaconsToUpdate.clear();
                     }
 
-
-                    //main.sendMessage(player, "<positive>Added new Beacon");
-
                 }
-                if(!main.getConfiguration().getBeamMode().equals("end_gateway")){
-                    beaconsToUpdate.clear();
-                }
+            }, 0L, 80L); //0 Tick initial delay, 20 Tick (1 Second) between repeats
+        }
 
-            }
-        }, 0L, 80L); //0 Tick initial delay, 20 Tick (1 Second) between repeats
     }
 
 
@@ -177,62 +197,7 @@ public class QuestEvents implements Listener {
         }
     }
 
-    public void scheduleBeaconRemovalAt(final Location location, final Player player, final QuestPlayer questPlayer){
-        /*Bukkit.getScheduler().runTaskLater(main.getMain(), new Runnable() {
-            @Override
-            public void run() {
-                player.sendBlockChange(location, location.getBlock().getBlockData());
-                location.add(-1,-1,-1);
-                player.sendBlockChange(location, location.getBlock().getBlockData());
-                location.add(1,0,0);
-                player.sendBlockChange(location, location.getBlock().getBlockData());
-                location.add(1,0,0);
-                player.sendBlockChange(location, location.getBlock().getBlockData());
-                location.add(0,0,1);
-                player.sendBlockChange(location, location.getBlock().getBlockData());
-                location.add(-1,0,0);
-                player.sendBlockChange(location, location.getBlock().getBlockData());
-                location.add(-1,0,0);
-                player.sendBlockChange(location, location.getBlock().getBlockData());
-                location.add(0,0,1);
-                player.sendBlockChange(location, location.getBlock().getBlockData());
-                location.add(1,0,0);
-                player.sendBlockChange(location, location.getBlock().getBlockData());
-                location.add(1,0,0);
-                player.sendBlockChange(location, location.getBlock().getBlockData());
 
-                //main.sendMessage(player, "<negative>Removed old Beacon");
-
-            }
-        }, 55L);*/
-
-        if(main.getConfiguration().getBeamMode().equals("beacon")){
-            player.sendBlockChange(location, location.getBlock().getBlockData());
-            location.add(-1,-1,-1);
-            player.sendBlockChange(location, location.getBlock().getBlockData());
-            location.add(1,0,0);
-            player.sendBlockChange(location, location.getBlock().getBlockData());
-            location.add(1,0,0);
-            player.sendBlockChange(location, location.getBlock().getBlockData());
-            location.add(0,0,1);
-            player.sendBlockChange(location, location.getBlock().getBlockData());
-            location.add(-1,0,0);
-            player.sendBlockChange(location, location.getBlock().getBlockData());
-            location.add(-1,0,0);
-            player.sendBlockChange(location, location.getBlock().getBlockData());
-            location.add(0,0,1);
-            player.sendBlockChange(location, location.getBlock().getBlockData());
-            location.add(1,0,0);
-            player.sendBlockChange(location, location.getBlock().getBlockData());
-            location.add(1,0,0);
-            player.sendBlockChange(location, location.getBlock().getBlockData());
-        }else if(main.getConfiguration().getBeamMode().equals("end_gateway")){
-            player.sendBlockChange(location, location.getBlock().getBlockData());
-        }else if(main.getConfiguration().getBeamMode().equals("end_crystal")){
-            player.sendBlockChange(location, location.getBlock().getBlockData());
-        }
-
-    }
 
 
     @EventHandler
