@@ -32,6 +32,9 @@ import java.util.List;
 @Data
 public class Configuration {
 
+    private final String beamMode = "end_gateway"; //end_gateway, beacon, end_crystal
+
+
     public String configurationVersion = "";
 
     public boolean debug = false;

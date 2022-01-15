@@ -61,7 +61,8 @@ public class QuestPlayer {
 
     private final HashMap<String, Location> locationsAndBeacons, activeLocationAndBeams;
 
-    public final String beamMode = "end_gateway"; //end_gateway, beacon, end_crystal
+    private ActiveObjective trackingObjective;
+
 
     public QuestPlayer(NotQuests main, UUID uuid) {
         this.main = main;
@@ -75,6 +76,19 @@ public class QuestPlayer {
         locationsAndBeacons = new HashMap<>();
         activeLocationAndBeams = new HashMap<>();
 
+    }
+
+    public ActiveObjective getTrackingObjective() {
+        return trackingObjective;
+    }
+
+    public void setTrackingObjective(ActiveObjective trackingObjective) {
+        this.trackingObjective = trackingObjective;
+        if(trackingObjective.getObjective().isShowLocation() && trackingObjective.getObjective().getLocation() != null){
+            getLocationsAndBeacons().clear();
+            getLocationsAndBeacons().put(trackingObjective.getObjectiveID()+"", trackingObjective.getObjective().getLocation());
+            updateBeaconLocations(getPlayer());
+        }
     }
 
     public HashMap<String, Location> getLocationsAndBeacons(){
@@ -110,7 +124,7 @@ public class QuestPlayer {
                 //New Beacon Location should be cur player location + maxDistance blocks in direction of newChunkLocation - playerLocation
                 org.bukkit.util.Vector normalizedDistanceBetweenPlayerAndNewChunk = finalLocation.toVector().subtract(player.getLocation().toVector()).normalize();
                 lowestDistanceLocation = player.getLocation().add(normalizedDistanceBetweenPlayerAndNewChunk.multiply(distance));
-                if(beamMode.equals("beacon")){
+                if(main.getConfiguration().getBeamMode().equals("beacon")){
                     lowestDistanceLocation.setY(lowestDistanceLocation.getWorld().getHighestBlockYAt(lowestDistanceLocation.getBlockX(), lowestDistanceLocation.getBlockZ()));
                 }else{
                     if(player.getLocation().getY() > 192){
@@ -129,7 +143,7 @@ public class QuestPlayer {
 
 
 
-            if(beamMode.equals("beacon")){
+            if(main.getConfiguration().getBeamMode().equals("beacon")){
                 BlockState beaconBlockState = lowestDistanceLocation.getBlock().getState();
                 beaconBlockState.setType(Material.BEACON);
 
@@ -154,7 +168,7 @@ public class QuestPlayer {
 
                 //Now send instant packet
                 main.getPacketManager().sendBeaconUpdatePacket(player, lowestDistanceLocation, beaconBlockState);
-            }else if(beamMode.equals("end_gateway")){
+            }else if(main.getConfiguration().getBeamMode().equals("end_gateway")){
                 BlockState beaconBlockState = lowestDistanceLocation.getBlock().getState();
                 beaconBlockState.setType(Material.END_GATEWAY);
 
@@ -163,7 +177,7 @@ public class QuestPlayer {
                 activeLocationAndBeams.put(locationName, lowestDistanceLocation);
 
 
-            }else if(beamMode.equals("end_crystal")){
+            }else if(main.getConfiguration().getBeamMode().equals("end_crystal")){
                 BlockState beaconBlockState = lowestDistanceLocation.getBlock().getState();
                 beaconBlockState.setType(Material.END_CRYSTAL);
 

@@ -116,8 +116,6 @@ public class ActiveObjective {
                     }
                 }
 
-            }else{
-                getQuestPlayer().getLocationsAndBeacons().clear();
             }
         }
 
@@ -192,6 +190,7 @@ public class ActiveObjective {
 
     public void addProgress(long progressToAdd, final int NPCID, final UUID armorStandUUID, boolean silent) {
         currentProgress += progressToAdd;
+        getQuestPlayer().setTrackingObjective(this);
         if (isCompleted(armorStandUUID)) {
             setHasBeenCompleted(true);
             if(armorStandUUID != null){
@@ -262,7 +261,7 @@ public class ActiveObjective {
         // System.out.println("§4§lSet has been completed to: §b" + hasBeenCompleted + " §cfor objective with ID §b" + getObjectiveID());
         this.hasBeenCompleted = hasBeenCompleted;
         if(hasBeenCompleted){
-            getQuestPlayer().getLocationsAndBeacons().clear();
+            getQuestPlayer().setTrackingObjective(this);
         }
     }
 }
