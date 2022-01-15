@@ -794,6 +794,13 @@ public class DataManager {
         }
         configuration.visualTitleQuestCompleted_enabled = getGeneralConfig().getBoolean(key);
 
+        key = "visual.objective-tracking.show-progress-in-actionbar";
+        if (!getGeneralConfig().isBoolean(key)) {
+            getGeneralConfig().set(key, true);
+            valueChanged = true;
+        }
+        configuration.setVisualObjectiveTrackingShowProgressInActionBar(getGeneralConfig().getBoolean(key));
+
 
         //GUI
         key = "gui.questpreview.enabled";

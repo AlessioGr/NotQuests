@@ -187,6 +187,11 @@ public class ActiveObjective {
     public void addProgress(long progressToAdd, final int NPCID, final UUID armorStandUUID, boolean silent) {
         currentProgress += progressToAdd;
         getQuestPlayer().setTrackingObjective(this);
+
+        if(main.getConfiguration().isVisualObjectiveTrackingShowProgressInActionBar()){
+            getQuestPlayer().sendObjectiveProgress(this);
+        }
+
         if (isCompleted(armorStandUUID)) {
             setHasBeenCompleted(true);
             if(armorStandUUID != null){

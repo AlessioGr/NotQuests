@@ -105,6 +105,8 @@ chat:
         base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Spend on research'
       ProjectKorraUseAbility:
         base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Use Ability: <main>%EVENTUALCOLOR%%ABILITY%'
+objective-tracking:
+  actionbar-progress-update:  "%OBJECTIVENAME% <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
 titles:
   quest-accepted:
     title: <main>Quest accepted

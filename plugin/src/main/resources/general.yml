@@ -110,6 +110,8 @@ visual:
   hide-rewards-without-name: true
   show-rewards-after-quest-completion: true
   show-rewards-after-objective-completion: true
+  objective-tracking:
+    show-progress-in-actionbar: true
 gui:
   show-quest-item-amount: false
   show-objective-item-amount: true

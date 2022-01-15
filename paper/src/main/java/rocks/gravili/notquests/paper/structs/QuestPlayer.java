@@ -760,5 +760,9 @@ public class QuestPlayer {
     }
 
 
-
+    public void sendObjectiveProgress(ActiveObjective activeObjective) {
+        getPlayer().sendActionBar(main.parse(
+                main.getLanguageManager().getString("objective-tracking.actionbar-progress-update", getPlayer(), this, activeObjective, activeObjective.getActiveQuest())
+        ));
+    }
 }
