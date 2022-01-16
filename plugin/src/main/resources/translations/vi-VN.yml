@@ -96,6 +96,8 @@ chat:
         base: '    <veryUnimportant>└─<unimportant>%EVENTUALCOLOR%Tốc độ tìm lại'
       ProjectKorraUseAbility:
         base: '    <veryUnimportant>└─<unimportant>%EVENTUALCOLOR%Dùng Ability:<main>%EVENTUALCOLOR%%ABILITY%'
+objective-tracking:
+  actionbar-progress-update: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
 titles:
   quest-accepted:
     title: <main>Chấp Nhận Nhiệm Vụ
