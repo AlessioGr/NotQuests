@@ -96,6 +96,8 @@ chat:
         base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Strávit na výzkumu'
       ProjectKorraUseAbility:
         base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Použít schopnost: <WHITE>%EVENTUALCOLOR%%ABILITY%'
+objective-tracking:
+  actionbar-progress-update: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
 titles:
   quest-accepted:
     title: <main>Quest přijat
