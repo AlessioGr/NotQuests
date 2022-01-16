@@ -19,6 +19,7 @@
 package rocks.gravili.notquests.paper.structs;
 
 
+import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.title.Title;
 import org.bukkit.*;
 import org.bukkit.block.BlockState;
@@ -62,6 +63,8 @@ public class QuestPlayer {
     private final HashMap<String, Location> locationsAndBeacons, activeLocationAndBeams;
 
     private ActiveObjective trackingObjective;
+
+    private BossBar bossBar;
 
 
     public QuestPlayer(NotQuests main, UUID uuid) {
@@ -761,13 +764,33 @@ public class QuestPlayer {
     }
 
 
+    public void onQuit(){
+        bossBar = null;
+    }
+
     public void sendObjectiveProgress(ActiveObjective activeObjective) {
         Player player = getPlayer();
         if(player == null){
             return;
         }
-        getPlayer().sendActionBar(main.parse(
-                main.getLanguageManager().getString("objective-tracking.actionbar-progress-update", getPlayer(), this, activeObjective, activeObjective.getActiveQuest())
-        ));
+        if(main.getConfiguration().isVisualObjectiveTrackingShowProgressInActionBar()){
+            getPlayer().sendActionBar(main.parse(
+                    main.getLanguageManager().getString("objective-tracking.actionbar-progress-update", getPlayer(), this, activeObjective, activeObjective.getActiveQuest())
+            ));
+        }
+        if(main.getConfiguration().isVisualObjectiveTrackingShowProgressInBossBar()){
+            float progress = (float)activeObjective.getCurrentProgress() / (float)activeObjective.getProgressNeeded();
+
+            if (bossBar != null) {
+                bossBar.name(main.getLanguageManager().getComponent("objective-tracking.actionbar-progress-update", getPlayer(), this, activeObjective, activeObjective.getActiveQuest()));
+                bossBar.progress(progress);
+            } else {
+                bossBar = BossBar.bossBar(main.getLanguageManager().getComponent("objective-tracking.actionbar-progress-update", getPlayer(), this, activeObjective, activeObjective.getActiveQuest()),
+                        progress, BossBar.Color.BLUE, BossBar.Overlay.PROGRESS);
+                player.showBossBar(bossBar);
+            }
+
+        }
+
     }
 }

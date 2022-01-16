@@ -408,7 +408,7 @@ public class LanguageManager {
                 internalPlaceholderReplacements.put("%OBJECTIVENAME%", "" + activeObjective.getObjective().getObjectiveFinalName());
                 internalPlaceholderReplacements.put("%ACTIVEOBJECTIVEPROGRESS%", "" + activeObjective.getCurrentProgress());
                 internalPlaceholderReplacements.put("%OBJECTIVEPROGRESSNEEDED%", "" + activeObjective.getProgressNeeded());
-                internalPlaceholderReplacements.put("%OBJECTIVEPROGRESSPERCENTAGE%", "" + (activeObjective.getCurrentProgress() / activeObjective.getProgressNeeded() ) );
+                internalPlaceholderReplacements.put("%OBJECTIVEPROGRESSPERCENTAGE%", "" + (int)((float)((float)activeObjective.getCurrentProgress() / (float)activeObjective.getProgressNeeded() )*100) );
                 internalPlaceholderReplacements.put("%ACTIVEOBJECTIVEDESCRIPTION%", main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), false, player));
                 internalPlaceholderReplacements.put("%COMPLETEDOBJECTIVEDESCRIPTION%", main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), true, player));
             } else if (internalPlaceholderObject instanceof Objective objective) {

@@ -973,6 +973,7 @@ public class QuestEvents implements Listener {
     private void onDisconnectEvent(PlayerQuitEvent e) { //Disconnect objectives
         final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(e.getPlayer().getUniqueId());
         if (questPlayer != null) {
+            questPlayer.onQuit();
             if (questPlayer.getActiveQuests().size() > 0) {
                 for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
 
@@ -981,8 +982,6 @@ public class QuestEvents implements Listener {
                             handleGeneralTrigger(questPlayer, activeTrigger);
                         }
                     }
-
-
                 }
             }
         }

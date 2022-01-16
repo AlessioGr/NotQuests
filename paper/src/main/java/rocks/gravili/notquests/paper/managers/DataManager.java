@@ -800,7 +800,12 @@ public class DataManager {
             valueChanged = true;
         }
         configuration.setVisualObjectiveTrackingShowProgressInActionBar(getGeneralConfig().getBoolean(key));
-
+        key = "visual.objective-tracking.show-progress-in-bossbar";
+        if (!getGeneralConfig().isBoolean(key)) {
+            getGeneralConfig().set(key, false);
+            valueChanged = true;
+        }
+        configuration.setVisualObjectiveTrackingShowProgressInBossBar(getGeneralConfig().getBoolean(key));
 
         //GUI
         key = "gui.questpreview.enabled";

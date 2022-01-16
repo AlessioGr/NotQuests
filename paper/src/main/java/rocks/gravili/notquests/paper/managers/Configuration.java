@@ -35,6 +35,7 @@ public class Configuration {
     private final String beamMode = "end_gateway"; //end_gateway, beacon, end_crystal
 
     public boolean visualObjectiveTrackingShowProgressInActionBar = true;
+    public boolean visualObjectiveTrackingShowProgressInBossBar = false;
 
 
     public String configurationVersion = "";
