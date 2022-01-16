@@ -53,6 +53,7 @@ public class NotQuests {
     private GUIManager guiManager;
     private BackupManager backupManager;
     private MessageManager messageManager;
+    private WebManager webManager;
 
     //Registering Managers
     private ObjectiveManager objectiveManager;
@@ -227,6 +228,8 @@ public class NotQuests {
         main.getServer().getPluginManager().registerEvents(new ConversationEvents(this, conversationManager), main);
 
         commandManager.setupAdminConversationCommands(conversationManager);
+
+        webManager = new WebManager(this);
 
         NotQuestsFullyLoadedEvent notQuestsFullyLoadedEvent = new NotQuestsFullyLoadedEvent(this);
         if (Bukkit.isPrimaryThread()) {
@@ -494,6 +497,10 @@ public class NotQuests {
 
     public final MessageManager getMessageManager(){
         return messageManager;
+    }
+
+    public final WebManager getWebManager(){
+        return webManager;
     }
 
     public final MiniMessage getMiniMessage(){

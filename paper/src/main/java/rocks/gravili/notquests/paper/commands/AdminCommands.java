@@ -44,6 +44,9 @@ import org.bukkit.craftbukkit.v1_18_R1.block.CraftBlockState;
 import org.bukkit.entity.Cat;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.*;
 import rocks.gravili.notquests.paper.managers.data.Category;
@@ -595,6 +598,48 @@ public class AdminCommands {
                 .handler((context) -> {
                     context.getSender().sendMessage(main.parse("<main>Current NotQuests version: <highlight>"+ main.getMain().getDescription().getVersion() + "</highlight> <highlight2>(Paper " + Bukkit.getVersion() + ")"));
 
+                }));
+
+
+        manager.command(builder.literal("editor")
+
+                .meta(CommandMeta.DESCRIPTION, "Opens the web editor.")
+                .handler((context) -> {
+                    context.getSender().sendMessage(main.parse(
+                            "<main>Opening the web editor..."
+                    ));
+
+                    String jsonResult = main.getWebManager().openEditor();
+
+                   /*context.getSender().sendMessage(main.parse(
+                            "<main>Result: " + jsonResult
+                    ));*/
+
+                    String editorURL = "";
+
+                    try {
+                        JSONParser parser = new JSONParser();
+                        Object resultObject = parser.parse(jsonResult);
+
+                        if (resultObject instanceof JSONArray array) {
+                            editorURL = "error";
+                        }else if (resultObject instanceof JSONObject obj) {
+                            editorURL = ""+(long)(obj.get("editor_id"));
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        context.getSender().sendMessage(main.parse(
+                                "<error>Failed to parse json!"
+                        ));
+                        editorURL = "error";
+                    }
+
+                    editorURL = "https://notquestsprisma.vercel.app/editor/" + editorURL;
+
+                    context.getSender().sendMessage(main.parse(
+                            "<success>Click following link to open the editor: \n<highlight><click:open_url:" + editorURL + "><hover:show_text:\"<highlight>Click to open the web editor\">" + editorURL
+                    ));
                 }));
 
 

@@ -191,6 +191,14 @@ dependencies {
 
     implementation("com.github.Redempt:Crunch:1.0")
 
+    //compileOnly("com.fasterxml.jackson.core:jackson-core:2.13.1")
+    //compileOnly("com.fasterxml.jackson.core:jackson-databind:2.13.1")
+    implementation("com.fasterxml.jackson.core:jackson-core:2.13.1")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.13.1")
+    implementation("org.apache.httpcomponents:httpclient:4.5.13")
+
+
+
 }
 
 /**
@@ -228,6 +236,11 @@ tasks.withType<ShadowJar> {
 
     relocate("redempt.crunch", "$shadowPath.crunch")
 
+    relocate("com.fasterxml.jackson", "$shadowPath.jackson")
+
+    relocate("org.apache.http", "$shadowPath.apache.http")
+
+
 
     dependencies {
         //include(dependency('org.apache.commons:')
@@ -252,6 +265,10 @@ tasks.withType<ShadowJar> {
 
         include(dependency("com.github.Redempt:Crunch:"))
 
+        include(dependency("com.fasterxml.jackson.dataformat:"))
+        include(dependency("com.fasterxml.jackson.core:"))
+
+        include(dependency("org.apache.httpcomponents:"))
     }
 
 
