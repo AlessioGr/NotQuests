@@ -93,6 +93,10 @@ public class ActionsYMLManager {
 
     public void loadActions(final Category category) {
         //First load from actions.yml:
+        if(category.getActionsConfig() == null){
+            main.getLogManager().severe("Error: Cannot load actions of category <highlight>" + category.getCategoryFullName() + "</highlight>, because it doesn't have an actions config. This category has been skipped.");
+            return;
+        }
 
         final ConfigurationSection actionsConfigurationSection = category.getActionsConfig().getConfigurationSection("actions");
         if (actionsConfigurationSection != null) {

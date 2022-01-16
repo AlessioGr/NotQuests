@@ -90,6 +90,10 @@ public class ConditionsYMLManager {
 
     public void loadConditions(final Category category) {
         //First load from conditions.yml:
+        if(category.getConditionsConfig() == null){
+            main.getLogManager().severe("Error: Cannot load conditions of category <highlight>" + category.getCategoryFullName() + "</highlight>, because it doesn't have a conditions config. This category has been skipped.");
+            return;
+        }
 
         final ConfigurationSection conditionsConfigurationSection = category.getConditionsConfig().getConfigurationSection("conditions");
         if (conditionsConfigurationSection != null) {

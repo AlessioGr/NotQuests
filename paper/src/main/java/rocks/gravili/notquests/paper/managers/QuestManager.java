@@ -146,6 +146,11 @@ public class QuestManager {
             //main.getUpdateManager().convertQuestsYMLActions();
             //main.getUpdateManager().convertActionsYMLBeforeVersion3();
 
+            if(category.getQuestsConfig() == null){
+                main.getLogManager().severe("Error: Cannot load quests of category <highlight>" + category.getCategoryFullName() + "</highlight>, because it doesn't have a quests config. This category has been skipped.");
+                return;
+            }
+
             //Quests
             final ConfigurationSection questsConfigurationSection = category.getQuestsConfig().getConfigurationSection("quests");
 
