@@ -101,6 +101,7 @@ public class QuestManager {
         Quest questToDelete = getQuest(questName);
 
         if (questToDelete != null) {
+            quests.remove(questToDelete);
             questToDelete.getCategory().getQuestsConfig().set("quests." + questName, null);
             questToDelete.getCategory().saveQuestsConfig();
             return ("<success>Quest <highlight>" + questName + "</highlight> successfully deleted!");
