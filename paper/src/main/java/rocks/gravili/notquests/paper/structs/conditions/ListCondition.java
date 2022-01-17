@@ -20,6 +20,8 @@ package rocks.gravili.notquests.paper.structs.conditions;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
+import cloud.commandframework.arguments.flags.CommandFlag;
+import cloud.commandframework.arguments.standard.BooleanArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
@@ -28,6 +30,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.ListVariableValueArgument;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
 import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
@@ -44,7 +47,8 @@ public class ListCondition extends Condition {
     private String expression;
 
     private HashMap<String, String> additionalStringArguments;
-
+    private HashMap<String, String> additionalNumberArguments;
+    private HashMap<String, Boolean> additionalBooleanArguments;
 
     public final String getOperator(){
         return operator;
@@ -73,6 +77,8 @@ public class ListCondition extends Condition {
     public ListCondition(NotQuests main) {
         super(main);
         additionalStringArguments = new HashMap<>();
+        additionalNumberArguments = new HashMap<>();
+        additionalBooleanArguments = new HashMap<>();
     }
 
 
@@ -93,6 +99,12 @@ public class ListCondition extends Condition {
 
         if(additionalStringArguments != null && !additionalStringArguments.isEmpty()){
             variable.setAdditionalStringArguments(additionalStringArguments);
+        }
+        if(additionalNumberArguments != null && !additionalNumberArguments.isEmpty()){
+            variable.setAdditionalNumberArguments(additionalNumberArguments);
+        }
+        if(additionalBooleanArguments != null && !additionalBooleanArguments.isEmpty()){
+            variable.setAdditionalBooleanArguments(additionalBooleanArguments);
         }
 
         Object value = variable.getValue(questPlayer.getPlayer(), questPlayer);
@@ -185,6 +197,12 @@ public class ListCondition extends Condition {
         for(final String key : additionalStringArguments.keySet()){
             configuration.set(initialPath + ".specifics.additionalStrings." + key, additionalStringArguments.get(key));
         }
+        for(final String key : additionalNumberArguments.keySet()){
+            configuration.set(initialPath + ".specifics.additionalNumbers." + key, additionalNumberArguments.get(key));
+        }
+        for(final String key : additionalBooleanArguments.keySet()){
+            configuration.set(initialPath + ".specifics.additionalBooleans." + key, additionalBooleanArguments.get(key));
+        }
     }
 
     @Override
@@ -197,6 +215,20 @@ public class ListCondition extends Condition {
         if (additionalStringsConfigurationSection != null) {
             for (String key : additionalStringsConfigurationSection.getKeys(false)) {
                 additionalStringArguments.put(key, configuration.getString(initialPath + ".specifics.additionalStrings." + key, ""));
+            }
+        }
+
+        final ConfigurationSection additionalIntegersConfigurationSection = configuration.getConfigurationSection(initialPath + ".specifics.additionalNumbers");
+        if (additionalIntegersConfigurationSection != null) {
+            for (String key : additionalIntegersConfigurationSection.getKeys(false)) {
+                additionalNumberArguments.put(key, configuration.getString(initialPath + ".specifics.additionalNumbers." + key, "0"));
+            }
+        }
+
+        final ConfigurationSection additionalBooleansConfigurationSection = configuration.getConfigurationSection(initialPath + ".specifics.additionalBooleans");
+        if (additionalBooleansConfigurationSection != null) {
+            for (String key : additionalBooleansConfigurationSection.getKeys(false)) {
+                additionalBooleanArguments.put(key, configuration.getBoolean(initialPath + ".specifics.additionalBooleans." + key, false));
             }
         }
     }
@@ -216,10 +248,27 @@ public class ListCondition extends Condition {
             }
 
             int counter = 0;
+            int counterStrings = 0;
+            int counterNumbers = 0;
+            int counterBooleans = 0;
+            int counterBooleanFlags = 0;
+
             for (String argument : arguments){
                 counter++;
                 if(counter >= 4){
-                    additionalStringArguments.put(variable.getRequiredStrings().get(counter-4).getName(), argument);
+                    if(variable.getRequiredStrings().size() > counterStrings){
+                        additionalStringArguments.put(variable.getRequiredStrings().get(counter-4).getName(), argument);
+                        counterStrings++;
+                    } else if(variable.getRequiredNumbers().size() > counterNumbers){
+                        additionalNumberArguments.put(variable.getRequiredNumbers().get(counter-4).getName(), argument);
+                        counterNumbers++;
+                    } else if(variable.getRequiredBooleans().size()  > counterBooleans){
+                        additionalBooleanArguments.put(variable.getRequiredBooleans().get(counter-4).getName(), Boolean.parseBoolean(argument));
+                        counterBooleans++;
+                    } else if(variable.getRequiredBooleanFlags().size()  > counterBooleanFlags){
+                        additionalBooleanArguments.put(variable.getRequiredBooleanFlags().get(counter-4).getName(), Boolean.parseBoolean(argument));
+                        counterBooleanFlags++;
+                    }
                 }
             }
         }
@@ -287,6 +336,21 @@ public class ListCondition extends Condition {
                         }
                         listCondition.setAdditionalStringArguments(additionalStringArguments);
 
+                        HashMap<String, String> additionalNumberArguments = new HashMap<>();
+                        for(NumberVariableValueArgument<CommandSender> numberVariableValueArgument : variable.getRequiredNumbers()){
+                            additionalNumberArguments.put(numberVariableValueArgument.getName(), context.get(numberVariableValueArgument.getName()));
+                        }
+                        listCondition.setAdditionalNumberArguments(additionalNumberArguments);
+
+                        HashMap<String, Boolean> additionalBooleanArguments = new HashMap<>();
+                        for(BooleanArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
+                            additionalBooleanArguments.put(booleanArgument.getName(), context.get(booleanArgument.getName()));
+                        }
+                        for(CommandFlag<CommandSender> commandFlag : variable.getRequiredBooleanFlags()){
+                            additionalBooleanArguments.put(commandFlag.getName(), context.flags().isPresent(commandFlag.getName()));
+                        }
+                        listCondition.setAdditionalBooleanArguments(additionalBooleanArguments);
+
                         main.getConditionsManager().addCondition(listCondition, context);
                     })
             );
@@ -299,6 +363,12 @@ public class ListCondition extends Condition {
 
     private void setAdditionalStringArguments(HashMap<String, String> additionalStringArguments) {
         this.additionalStringArguments = additionalStringArguments;
+    }
+    private void setAdditionalNumberArguments(HashMap<String, String> additionalNumberArguments) {
+        this.additionalNumberArguments = additionalNumberArguments;
+    }
+    private void setAdditionalBooleanArguments(HashMap<String, Boolean> additionalBooleanArguments) {
+        this.additionalBooleanArguments = additionalBooleanArguments;
     }
 
 

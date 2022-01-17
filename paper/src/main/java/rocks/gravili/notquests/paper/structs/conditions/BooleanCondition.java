@@ -20,6 +20,7 @@ package rocks.gravili.notquests.paper.structs.conditions;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
+import cloud.commandframework.arguments.CommandArgument;
 import cloud.commandframework.arguments.flags.CommandFlag;
 import cloud.commandframework.arguments.standard.BooleanArgument;
 import cloud.commandframework.arguments.standard.IntegerArgument;
@@ -301,6 +302,7 @@ public class BooleanCondition extends Condition {
                             additionalBooleanArguments.put(commandFlag.getName(), context.flags().isPresent(commandFlag.getName()));
                         }
                         booleanCondition.setAdditionalBooleanArguments(additionalBooleanArguments);
+
 
 
                         main.getConditionsManager().addCondition(booleanCondition, context);
