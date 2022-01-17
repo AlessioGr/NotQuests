@@ -112,7 +112,7 @@ visual:
   show-rewards-after-objective-completion: true
   objective-tracking:
     show-progress-in-actionbar: true
-    show-progress-in-bossbar: true
+    show-progress-in-bossbar: false
 gui:
   show-quest-item-amount: false
   show-objective-item-amount: true
