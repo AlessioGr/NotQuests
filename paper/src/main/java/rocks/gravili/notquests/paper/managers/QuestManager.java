@@ -42,8 +42,8 @@ import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
-import rocks.gravili.notquests.paper.structs.actions.Action;
-import rocks.gravili.notquests.paper.structs.conditions.Condition;
+import rocks.gravili.notquests.paper.structs.actions.*;
+import rocks.gravili.notquests.paper.structs.conditions.*;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 import rocks.gravili.notquests.paper.structs.triggers.Trigger;
 
@@ -944,11 +944,43 @@ public class QuestManager {
         return requirements.toString();
     }
 
+    public final String getDisplayActionType(final Action action){
+        String actionType = action.getActionType();
+
+        if(action instanceof NumberAction numberAction){
+            actionType = numberAction.getVariableName();
+        }else if(action instanceof StringAction stringAction){
+            actionType = stringAction.getVariableName();
+        }else if(action instanceof BooleanAction booleanAction){
+            actionType = booleanAction.getVariableName();
+        }else if(action instanceof ListAction listAction){
+            actionType = listAction.getVariableName();
+        }
+
+        return actionType;
+    }
+
+    public final String getDisplayConditionType(final Condition condition){
+        String conditionType = condition.getConditionType();
+
+
+        if(condition instanceof NumberCondition numberCondition){
+            conditionType = numberCondition.getVariableName();
+        }else if(condition instanceof StringCondition stringCondition){
+            conditionType = stringCondition.getVariableName();
+        }else if(condition instanceof BooleanCondition booleanCondition){
+            conditionType = booleanCondition.getVariableName();
+        }else if(condition instanceof ListCondition listCondition){
+            conditionType = listCondition.getVariableName();
+        }
+        return conditionType;
+    }
+
     public final ArrayList<String> getQuestRequirementsList(final Quest quest, final Player player) {
         final ArrayList<String> requirements = new ArrayList<>();
         int counter = 1;
         for (final Condition condition : quest.getRequirements()) {
-            requirements.add("<GREEN>" + counter + ". <YELLOW>" + condition.getConditionType());
+            requirements.add("<GREEN>" + counter + ". <YELLOW>" + getDisplayConditionType(condition));
             requirements.add(condition.getConditionDescription(player, quest));
 
             counter += 1;

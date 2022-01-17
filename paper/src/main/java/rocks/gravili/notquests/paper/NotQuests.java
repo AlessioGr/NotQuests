@@ -282,18 +282,7 @@ public class NotQuests {
             public Map<String, Integer> call() {
                 Map<String, Integer> map = new HashMap<>();
                 for (Condition condition : allConditions) {
-                    String conditionType = condition.getConditionType();
-
-
-                    if(condition instanceof NumberCondition numberCondition){
-                        conditionType = numberCondition.getVariableName();
-                    }else if(condition instanceof StringCondition stringCondition){
-                        conditionType = stringCondition.getVariableName();
-                    }else if(condition instanceof BooleanCondition booleanCondition){
-                        conditionType = booleanCondition.getVariableName();
-                    }else if(condition instanceof ListCondition listCondition){
-                        conditionType = listCondition.getVariableName();
-                    }
+                    String conditionType = getQuestManager().getDisplayConditionType(condition);
 
                     map.put(conditionType, map.getOrDefault(conditionType, 0) + 1);
                 }
@@ -307,17 +296,7 @@ public class NotQuests {
             public Map<String, Integer> call() {
                 Map<String, Integer> map = new HashMap<>();
                 for (Action action : allActions) {
-                    String actionType = action.getActionType();
-
-                    if(action instanceof NumberAction numberAction){
-                        actionType = numberAction.getVariableName();
-                    }else if(action instanceof StringAction stringAction){
-                        actionType = stringAction.getVariableName();
-                    }else if(action instanceof BooleanAction booleanAction){
-                        actionType = booleanAction.getVariableName();
-                    }else if(action instanceof ListAction listAction){
-                        actionType = listAction.getVariableName();
-                    }
+                    String actionType = getQuestManager().getDisplayActionType(action);
 
 
                     map.put(actionType, map.getOrDefault(actionType, 0) + 1);
