@@ -22,7 +22,7 @@ Do not commit your translations on GitHub. Instead, use translate.notquests.com.
 ## How to build
 Git clone this project and build it with these Gradle commands: `clean build reobfJar`
 
-The output file should be in the folder plugin/build/libs/plugin-version-all.jar
+The output file should be in the folder `plugin/build/libs/plugin-version.jar`
 
 
 
