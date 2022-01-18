@@ -12,7 +12,7 @@ plugins {
 //extra["version"] = "4.0.0-dev1"
 
 group = "rocks.gravili.notquests"
-version = "4.4.2"
+version = "4.4.3"
 
 
 repositories {
@@ -44,6 +44,12 @@ tasks {
     }
     processResources {
         filteringCharset = Charsets.UTF_8.name()
+    }
+    runServer {
+        // Configure the Minecraft version for our task.
+        // This is the only required configuration besides applying the plugin.
+        // Your plugin's jar (or shadowJar if present) will be used automatically.
+        minecraftVersion("1.18.1")
     }
 }
 
