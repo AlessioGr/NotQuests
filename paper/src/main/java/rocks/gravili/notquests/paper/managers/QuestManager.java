@@ -975,6 +975,8 @@ public class QuestManager {
             conditionType = booleanCondition.getVariableName();
         }else if(condition instanceof ListCondition listCondition){
             conditionType = listCondition.getVariableName();
+        }else if(condition instanceof ItemStackListCondition itemStackListCondition){
+            conditionType = itemStackListCondition.getVariableName();
         }
         return conditionType;
     }

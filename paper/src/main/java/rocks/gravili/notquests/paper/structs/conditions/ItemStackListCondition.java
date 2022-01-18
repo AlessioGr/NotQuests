@@ -22,13 +22,17 @@ import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.flags.CommandFlag;
 import cloud.commandframework.arguments.standard.BooleanArgument;
+import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.paper.PaperCommandManager;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.arguments.variables.ItemStackListVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.ListVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -40,11 +44,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-public class ListCondition extends Condition {
+public class ItemStackListCondition extends Condition {
 
     private String variableName;
     private String operator;
-    private String expression;
+    private ItemStack itemStack;
 
     private HashMap<String, String> additionalStringArguments;
     private HashMap<String, String> additionalNumberArguments;
@@ -65,16 +69,16 @@ public class ListCondition extends Condition {
         this.variableName = variableName;
     }
 
-    public void setExpression(final String expression){
-        this.expression = expression;
+    public void setItemStack(final ItemStack itemStack){
+        this.itemStack = itemStack;
     }
 
-    public final String getExpression(){
-        return expression;
+    public final ItemStack getItemStack(){
+        return itemStack;
     }
 
 
-    public ListCondition(NotQuests main) {
+    public ItemStackListCondition(NotQuests main) {
         super(main);
         additionalStringArguments = new HashMap<>();
         additionalNumberArguments = new HashMap<>();
@@ -82,14 +86,14 @@ public class ListCondition extends Condition {
     }
 
 
-    public final String[] evaluateExpression(final QuestPlayer questPlayer){
+    /*public final String[] evaluateExpression(final QuestPlayer questPlayer){
         return getExpression().split(",");
-    }
+    }*/
 
     @Override
     public String checkInternally(final QuestPlayer questPlayer) {
-        String[] listRequirement = evaluateExpression(questPlayer);
-
+        ItemStack[] listRequirement = new ItemStack[1];
+        listRequirement[0] = getItemStack();
 
         Variable<?> variable = main.getVariablesManager().getVariableFromString(variableName);
 
@@ -113,73 +117,56 @@ public class ListCondition extends Condition {
             return "<YELLOW>You don't have any " + variable.getPlural() + "!";
         }
 
+        ItemStack[] itemStackArray;
+        if(value instanceof ItemStack[] itemStackArray1){
+            itemStackArray = itemStackArray1;
+        }else if(value instanceof ArrayList<?> arrayList){
+            itemStackArray = arrayList.toArray(new ItemStack[0]);
+        }else{
+            itemStackArray = (ItemStack[])value;
+        }
+
+        ArrayList<ItemStack> currentValueArrayList = new ArrayList<>();
+
+        for (ItemStack o : itemStackArray){
+            if (o != null) {
+                currentValueArrayList.add(o);
+            }
+        }
+
         if(getOperator().equalsIgnoreCase("equals")){
-            String[] stringArray;
-            if(value instanceof String[] stringArray1){
-                stringArray = stringArray1;
-            }else if(value instanceof ArrayList<?> arrayList){
-                stringArray = arrayList.toArray(new String[0]);
-            }else{
-                stringArray = (String[])value;
-            }
-            if(listRequirement.length != stringArray.length){
-                return "<YELLOW>The " + variable.getPlural() + " need to be: <highlight>" + Arrays.toString(listRequirement) + "</highlight>.";
-            }else{
-                for (int i = 0; i < listRequirement.length; i++)
-                {
-                    if (!listRequirement[i].equals(stringArray[i])) {
-                        return "<YELLOW>The " + variable.getPlural() + " need to be: <highlight>" + Arrays.toString(listRequirement) + "</highlight>.";
-                    }
+
+            boolean fulfilled = true;
+            int amountNeeded = getItemStack().getAmount();
+            for(ItemStack itemStack : currentValueArrayList){
+                if(!itemStack.isSimilar(getItemStack())){
+                    fulfilled = false;
+                    break;
+                }else{
+                    amountNeeded -= itemStack.getAmount();
                 }
             }
-        }else if(getOperator().equalsIgnoreCase("equalsIgnoreCase")){
-            String[] stringArray;
-            if(value instanceof String[] stringArray1){
-                stringArray = stringArray1;
-            }else if(value instanceof ArrayList<?> arrayList){
-                stringArray = arrayList.toArray(new String[0]);
-            }else{
-                stringArray = (String[])value;
-            }
-            if(listRequirement.length != stringArray.length){
-                return "<YELLOW>The " + variable.getPlural() + " need to be: <highlight>" + Arrays.toString(listRequirement) + "</highlight>.";
-            }else{
-                for (int i = 0; i < listRequirement.length; i++)
-                {
-                    if (!listRequirement[i].equalsIgnoreCase(stringArray[i])) {
-                        return "<YELLOW>The " + variable.getPlural() + " need to be: <highlight>" + Arrays.toString(listRequirement) + "</highlight>.";
-                    }
-                }
-            }
-        }else if(getOperator().equalsIgnoreCase("contains")){
-            String[] stringArray;
-            if(value instanceof String[] stringArray1){
-                stringArray = stringArray1;
-            }else if(value instanceof ArrayList<?> arrayList){
-                stringArray = arrayList.toArray(new String[0]);
-            }else{
-                stringArray = (String[])value;
+            if(amountNeeded != 0){
+                fulfilled = false;
             }
 
-            for (String s : listRequirement) {
-                if (Arrays.stream(stringArray).noneMatch(s::equals)) {
-                    return "<YELLOW>The " + variable.getPlural() + " need to contain :<highlight>" + Arrays.toString(listRequirement) + "</highlight>.";
-                }
-            }
-        }else if(getOperator().equalsIgnoreCase("containsIgnoreCase")){
-            String[] stringArray;
-            if(value instanceof String[] stringArray1){
-                stringArray = stringArray1;
-            }else if(value instanceof ArrayList<?> arrayList){
-                stringArray = arrayList.toArray(new String[0]);
-            }else{
-                stringArray = (String[])value;
-            }
 
-            for (String s : listRequirement) {
-                if (Arrays.stream(stringArray).noneMatch(s::equalsIgnoreCase)) {
-                    return "<YELLOW>The " + variable.getPlural() + " need to contain: <highlight>" + Arrays.toString(listRequirement) + "</highlight>.";
+            if(!fulfilled){
+                return "<YELLOW>The " + variable.getPlural() + " need to contain ONLY: <highlight>" + main.getMiniMessage().serialize(getItemStack().displayName()) + " x " + getItemStack().getAmount() + "</highlight>.";
+            }
+        }else if(getOperator().equalsIgnoreCase("contains")) {
+            boolean fulfilled = false;
+            int amountNeeded = getItemStack().getAmount();
+            for(ItemStack itemStack : currentValueArrayList){
+                if(itemStack.isSimilar(getItemStack())){
+                    amountNeeded -= itemStack.getAmount();
                 }
+            }
+            if(amountNeeded <= 0){
+                fulfilled = true;
+            }
+            if(!fulfilled){
+                return "<YELLOW>The " + variable.getPlural() + " need to contain: <highlight>" + main.getMiniMessage().serialize(getItemStack().displayName()) + " x " + getItemStack().getAmount() + "</highlight>.";
             }
         }else{
             return "<ERROR>Error: variable operator <highlight>" + getOperator() + "</highlight> is invalid. Report this to the Server owner.";
@@ -192,7 +179,7 @@ public class ListCondition extends Condition {
     public void save(FileConfiguration configuration, final String initialPath) {
         configuration.set(initialPath + ".specifics.variableName", getVariableName());
         configuration.set(initialPath + ".specifics.operator", getOperator());
-        configuration.set(initialPath + ".specifics.expression", getExpression());
+        configuration.set(initialPath + ".specifics.itemStack", getItemStack());
 
         for(final String key : additionalStringArguments.keySet()){
             configuration.set(initialPath + ".specifics.additionalStrings." + key, additionalStringArguments.get(key));
@@ -209,7 +196,7 @@ public class ListCondition extends Condition {
     public void load(FileConfiguration configuration, String initialPath) {
         this.variableName = configuration.getString(initialPath + ".specifics.variableName");
         this.operator = configuration.getString(initialPath + ".specifics.operator", "");
-        this.expression = configuration.getString(initialPath + ".specifics.expression", "");
+        this.itemStack = configuration.getItemStack(initialPath + ".specifics.itemStack", null);
 
         final ConfigurationSection additionalStringsConfigurationSection = configuration.getConfigurationSection(initialPath + ".specifics.additionalStrings");
         if (additionalStringsConfigurationSection != null) {
@@ -238,12 +225,12 @@ public class ListCondition extends Condition {
         this.variableName = arguments.get(0);
 
         this.operator = arguments.get(1);
-        setExpression(arguments.get(2));
+        setItemStack(new ItemStack(Material.valueOf(arguments.get(2)), Integer.parseInt(arguments.get(3))));
 
-        if(arguments.size() >= 4){
+        if(arguments.size() >= 5){
 
             Variable<?> variable = main.getVariablesManager().getVariableFromString(variableName);
-            if(variable == null || !variable.isCanSetValue() || variable.getVariableDataType() != VariableDataType.LIST){
+            if(variable == null || !variable.isCanSetValue() || variable.getVariableDataType() != VariableDataType.ITEMSTACKLIST){
                 return;
             }
 
@@ -255,18 +242,18 @@ public class ListCondition extends Condition {
 
             for (String argument : arguments){
                 counter++;
-                if(counter >= 4){
+                if(counter >= 5){
                     if(variable.getRequiredStrings().size() > counterStrings){
-                        additionalStringArguments.put(variable.getRequiredStrings().get(counter-4).getName(), argument);
+                        additionalStringArguments.put(variable.getRequiredStrings().get(counter-5).getName(), argument);
                         counterStrings++;
                     } else if(variable.getRequiredNumbers().size() > counterNumbers){
-                        additionalNumberArguments.put(variable.getRequiredNumbers().get(counter-4).getName(), argument);
+                        additionalNumberArguments.put(variable.getRequiredNumbers().get(counter-5).getName(), argument);
                         counterNumbers++;
                     } else if(variable.getRequiredBooleans().size()  > counterBooleans){
-                        additionalBooleanArguments.put(variable.getRequiredBooleans().get(counter-4).getName(), Boolean.parseBoolean(argument));
+                        additionalBooleanArguments.put(variable.getRequiredBooleans().get(counter-5).getName(), Boolean.parseBoolean(argument));
                         counterBooleans++;
                     } else if(variable.getRequiredBooleanFlags().size()  > counterBooleanFlags){
-                        additionalBooleanArguments.put(variable.getRequiredBooleanFlags().get(counter-4).getName(), Boolean.parseBoolean(argument));
+                        additionalBooleanArguments.put(variable.getRequiredBooleanFlags().get(counter-5).getName(), Boolean.parseBoolean(argument));
                         counterBooleanFlags++;
                     }
                 }
@@ -279,13 +266,9 @@ public class ListCondition extends Condition {
         //description += "\n<GRAY>--- Will quest points be deducted?: No";
 
         if(getOperator().equalsIgnoreCase("equals")){
-            return "<GRAY>-- " + variableName + " needs to be equal " + Arrays.toString(evaluateExpression(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()))) + "</GRAY>";
-        }else if(getOperator().equalsIgnoreCase("equalsIgnoreCase")){
-            return "<GRAY>-- " + variableName + " needs to be equal " + Arrays.toString(evaluateExpression(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()))) + " (case-insensitive)</GRAY>";
+            return "<GRAY>-- " + variableName + " needs to be equal " + main.getMiniMessage().serialize(getItemStack().displayName()) + "</GRAY>";
         }else if(getOperator().equalsIgnoreCase("contains")){
-            return "<GRAY>-- " + variableName + " needs to be contain " + Arrays.toString(evaluateExpression(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()))) + "</GRAY>";
-        }else if(getOperator().equalsIgnoreCase("containsIgnoreCase")){
-            return "<GRAY>-- " + variableName + " needs to be contain " + Arrays.toString(evaluateExpression(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()))) + " (case-insensitive)</GRAY>";
+            return "<GRAY>-- " + variableName + " needs to be contain " + main.getMiniMessage().serialize(getItemStack().displayName()) + "</GRAY>";
         }
         return "<GRAY>Error: invalid expression.</GRAY>";
     }
@@ -297,19 +280,17 @@ public class ListCondition extends Condition {
 
             Variable<?> variable = main.getVariablesManager().getVariableFromString(variableString);
 
-            if(variable == null || variable.getVariableDataType() != VariableDataType.LIST){
+            if(variable == null || variable.getVariableDataType() != VariableDataType.ITEMSTACKLIST){
                 continue;
             }
 
-            main.getLogManager().info("Registering list condition: <highlight>" + variableString);
+            main.getLogManager().info("Registering ItemStackList condition: <highlight>" + variableString);
 
             manager.command(main.getVariablesManager().registerVariableCommands(variableString, builder)
                     .argument(StringArgument.<CommandSender>newBuilder("operator").withSuggestionsProvider((context, lastString) -> {
                         ArrayList<String> completions = new ArrayList<>();
                         completions.add("equals");
-                        completions.add("equalsIgnoreCase");
                         completions.add("contains");
-                        completions.add("containsIgnoreCase");
 
 
                         final List<String> allArgs = context.getRawInput();
@@ -317,15 +298,38 @@ public class ListCondition extends Condition {
 
                         return completions;
                     }).build(), ArgumentDescription.of("List operator."))
-                    .argument(ListVariableValueArgument.newBuilder("expression", main, variable), ArgumentDescription.of("Expression"))
+                    .argument(ItemStackListVariableValueArgument.newBuilder("expression", main, variable), ArgumentDescription.of("Expression"))
+                    .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of items"))
                     .handler((context) -> {
 
                         final String expression = context.get("expression");
+                        int amount = context.get("amount");
+
+                        ItemStack itemStack;
+                        if (expression.equalsIgnoreCase("hand")) {
+                            if (context.getSender() instanceof Player player) {
+                                itemStack = player.getInventory().getItemInMainHand().clone();
+                                itemStack.setAmount(amount);
+                            } else {
+                                context.getSender().sendMessage(main.parse(
+                                        "<error>This must be run by a player."
+                                ));
+                                return;
+                            }
+                        } else {
+                            if (expression.equalsIgnoreCase("any")) {
+                                context.getSender().sendMessage(main.parse(
+                                        "<error>You cannot use <highlight>'any'</highlight> here!"
+                                ));
+                                return;
+                            }
+                            itemStack = new ItemStack(Material.valueOf(expression), amount);
+                        }
                         final String operator = context.get("operator");
 
-                        ListCondition listCondition = new ListCondition(main);
+                        ItemStackListCondition listCondition = new ItemStackListCondition(main);
 
-                        listCondition.setExpression(expression);
+                        listCondition.setItemStack(itemStack);
                         listCondition.setOperator(operator);
                         listCondition.setVariableName(variable.getVariableType());
 

@@ -25,7 +25,6 @@ import cloud.commandframework.arguments.flags.CommandFlag;
 import cloud.commandframework.arguments.standard.BooleanArgument;
 import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
-import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -34,9 +33,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.ItemStackListVariableValueArgument;
-import rocks.gravili.notquests.paper.commands.arguments.variables.ListVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
@@ -441,16 +438,16 @@ public class ItemStackListAction extends Action {
                 counter++;
                 if(counter >= 5){
                     if(variable.getRequiredStrings().size() > counterStrings){
-                        additionalStringArguments.put(variable.getRequiredStrings().get(counter-4).getName(), argument);
+                        additionalStringArguments.put(variable.getRequiredStrings().get(counter-5).getName(), argument);
                         counterStrings++;
                     } else if(variable.getRequiredNumbers().size() > counterNumbers){
-                        additionalNumberArguments.put(variable.getRequiredNumbers().get(counter-4).getName(), argument);
+                        additionalNumberArguments.put(variable.getRequiredNumbers().get(counter-5).getName(), argument);
                         counterNumbers++;
                     } else if(variable.getRequiredBooleans().size()  > counterBooleans){
-                        additionalBooleanArguments.put(variable.getRequiredBooleans().get(counter-4).getName(), Boolean.parseBoolean(argument));
+                        additionalBooleanArguments.put(variable.getRequiredBooleans().get(counter-5).getName(), Boolean.parseBoolean(argument));
                         counterBooleans++;
                     } else if(variable.getRequiredBooleanFlags().size()  > counterBooleanFlags){
-                        additionalBooleanArguments.put(variable.getRequiredBooleanFlags().get(counter-4).getName(), Boolean.parseBoolean(argument));
+                        additionalBooleanArguments.put(variable.getRequiredBooleanFlags().get(counter-5).getName(), Boolean.parseBoolean(argument));
                         counterBooleanFlags++;
                     }
                 }

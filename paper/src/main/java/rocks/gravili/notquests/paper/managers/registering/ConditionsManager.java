@@ -71,6 +71,7 @@ public class ConditionsManager {
         registerCondition("String", StringCondition.class);
         registerCondition("Boolean", BooleanCondition.class);
         registerCondition("List", ListCondition.class);
+        registerCondition("ItemStackList", ItemStackListCondition.class);
 
 
     }
@@ -85,7 +86,7 @@ public class ConditionsManager {
 
             commandHandler.setAccessible(true);
 
-            if(condition == NumberCondition.class || condition == StringCondition.class || condition == BooleanCondition.class || condition == ListCondition.class){
+            if(condition == NumberCondition.class || condition == StringCondition.class || condition == BooleanCondition.class || condition == ListCondition.class || condition == ItemStackListCondition.class){
                 commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddRequirementCommandBuilder().flag(
                                 main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
                                         .withDescription(ArgumentDescription.of("Negates this condition"))
