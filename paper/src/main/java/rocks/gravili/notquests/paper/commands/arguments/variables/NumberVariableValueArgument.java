@@ -38,12 +38,12 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
 import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
 
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 import java.util.function.BiFunction;
 
 public final class NumberVariableValueArgument<C> extends CommandArgument<C, String> {
-
+    private static final int MAX_SUGGESTIONS_INCREMENT = 10;
+    private static final int NUMBER_SHIFT_MULTIPLIER = 10;
 
     private NumberVariableValueArgument(
             final boolean required,
@@ -214,6 +214,46 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Str
                     completions.add(variableString+"(");
                 }
             }
+
+
+            //Now the number completions
+            final Set<Double> numbers = new TreeSet<>();
+            double min = -Double.MAX_VALUE;
+            double max = Double.MAX_VALUE;
+
+            try {
+                final double inputNum = Long.parseLong(input.equals("-") ? "-0" : input.isEmpty() ? "0" : input);
+                final double inputNumAbsolute = Math.abs(inputNum);
+
+                numbers.add(inputNumAbsolute); /* It's a valid number, so we suggest it */
+                for (double i = 0; i < 1
+                        && (inputNum * NUMBER_SHIFT_MULTIPLIER) + i <= max; i++) {
+                    numbers.add((inputNumAbsolute * NUMBER_SHIFT_MULTIPLIER) + i);
+                }
+
+                for (double number : numbers) {
+                    if (input.startsWith("-")) {
+                        number = -number; /* Preserve sign */
+                    }
+                    if (number < min || number > max) {
+                        continue;
+                    }
+                    completions.add(String.valueOf(number));
+                }
+
+                //return suggestions;
+            } catch (final Exception ignored) {
+                //return Collections.emptyList();
+            }
+
+
+
+
+
+
+
+
+
 
 
             final List<String> allArgs = context.getRawInput();
