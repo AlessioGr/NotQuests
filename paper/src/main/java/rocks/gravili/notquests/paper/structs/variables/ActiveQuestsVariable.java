@@ -32,7 +32,7 @@ public class ActiveQuestsVariable extends Variable<String[]>{
 
     @Override
     public boolean setValue(String[] newValue, Player player, Object... objects) {
-        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
         if(questPlayer == null){
             return false;
         }

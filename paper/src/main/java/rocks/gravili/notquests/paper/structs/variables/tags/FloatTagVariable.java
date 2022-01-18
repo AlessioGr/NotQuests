@@ -69,7 +69,7 @@ public class FloatTagVariable extends Variable<Float> {
 
     @Override
     public boolean setValue(Float newValue, Player player, Object... objects) {
-        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
         if(questPlayer == null){
             return false;
         }

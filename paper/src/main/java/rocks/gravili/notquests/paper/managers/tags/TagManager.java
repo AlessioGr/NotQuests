@@ -1,5 +1,6 @@
 package rocks.gravili.notquests.paper.managers.tags;
 
+import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -30,6 +31,14 @@ public class TagManager {
         stringTagsNestedPDC = new NamespacedKey(main.getMain(), "notquests_tags_string");
 
         loadTags();
+    }
+
+    public void loadAllOnlinePlayerTags(){
+        main.getLogManager().info("Loading tags of all online players...");
+        for(Player player : Bukkit.getOnlinePlayers()){
+            QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+            onJoin(questPlayer, player);
+        }
     }
 
     //TODO: test if hashmap => bytestream serialization is faster

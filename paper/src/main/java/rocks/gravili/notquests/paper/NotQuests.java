@@ -232,6 +232,8 @@ public class NotQuests {
 
         tagManager = new TagManager(this);
 
+        tagManager.loadAllOnlinePlayerTags();
+
         webManager = new WebManager(this);
 
         NotQuestsFullyLoadedEvent notQuestsFullyLoadedEvent = new NotQuestsFullyLoadedEvent(this);
