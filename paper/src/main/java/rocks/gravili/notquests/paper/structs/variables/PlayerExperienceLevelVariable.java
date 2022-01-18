@@ -38,11 +38,11 @@ public class PlayerExperienceLevelVariable extends Variable<Integer>{
 
     @Override
     public String getPlural() {
-        return "Money";
+        return "Experience Levels";
     }
 
     @Override
     public String getSingular() {
-        return "Money";
+        return "Experience Level";
     }
 }

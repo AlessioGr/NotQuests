@@ -5,25 +5,27 @@ import rocks.gravili.notquests.paper.NotQuests;
 
 import java.util.List;
 
-public class PlayerExperienceVariable extends Variable<Float>{
+public class PlayerExperienceVariable extends Variable<Integer>{
     public PlayerExperienceVariable(NotQuests main) {
         super(main);
         setCanSetValue(true);
     }
 
     @Override
-    public Float getValue(Player player, Object... objects) {
+    public Integer getValue(Player player, Object... objects) {
         if (player != null) {
-            return player.getExp();
+            return getPlayerExp(player);
         } else {
             return null;
         }
     }
 
     @Override
-    public boolean setValue(Float newValue, Player player, Object... objects) {
+    public boolean setValue(Integer newValue, Player player, Object... objects) {
         if (player != null) {
-            player.setExp(newValue);
+            player.setExp(0);
+            player.setLevel(0);
+            player.giveExp(newValue);
             return true;
         } else {
             return false;
@@ -38,11 +40,51 @@ public class PlayerExperienceVariable extends Variable<Float>{
 
     @Override
     public String getPlural() {
-        return "Money";
+        return "Experience";
     }
 
     @Override
     public String getSingular() {
-        return "Money";
+        return "Experience";
     }
+
+
+
+    /*
+     * Code taken from https://www.spigotmc.org/threads/how-to-get-players-exp-points.239171/
+     * by DOGC_Kyle
+     */
+    public int getExpToLevelUp(int level){
+        if(level <= 15){
+            return 2*level+7;
+        } else if(level <= 30){
+            return 5*level-38;
+        } else {
+            return 9*level-158;
+        }
+    }
+    // Calculate total experience up to a level
+    public int getExpAtLevel(int level){
+        if(level <= 16){
+            return (int) (Math.pow(level,2) + 6*level);
+        } else if(level <= 31){
+            return (int) (2.5*Math.pow(level,2) - 40.5*level + 360.0);
+        } else {
+            return (int) (4.5*Math.pow(level,2) - 162.5*level + 2220.0);
+        }
+    }
+    // Calculate player's current EXP amount
+    public int getPlayerExp(Player player){
+        int exp = 0;
+        int level = player.getLevel();
+
+        // Get the amount of XP in past levels
+        exp += getExpAtLevel(level);
+
+        // Get amount of XP towards next level
+        exp += Math.round(getExpToLevelUp(level) * player.getExp());
+
+        return exp;
+    }
+
 }
