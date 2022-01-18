@@ -201,7 +201,7 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Str
         ) {
 
             List<String> completions = new java.util.ArrayList<>();
-            completions.add("<Enter Variable>");
+            completions.add("<Enter Variable or Number>");
 
             for(String variableString : main.getVariablesManager().getVariableIdentifiers()) {
                 Variable<?> variable = main.getVariablesManager().getVariableFromString(variableString);

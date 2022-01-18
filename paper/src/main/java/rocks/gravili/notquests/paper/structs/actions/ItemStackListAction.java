@@ -32,7 +32,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueArgument;
-import rocks.gravili.notquests.paper.commands.arguments.variables.ListVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
@@ -44,7 +43,7 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class ListAction extends Action {
+public class ItemStackListAction extends Action {
 
     private String variableName;
     private String operator;
@@ -90,7 +89,7 @@ public class ListAction extends Action {
 
 
 
-    public ListAction(final NotQuests main) {
+    public ItemStackListAction(final NotQuests main) {
         super(main);
         additionalStringArguments = new HashMap<>();
         additionalNumberArguments = new HashMap<>();
@@ -102,7 +101,7 @@ public class ListAction extends Action {
 
             Variable<?> variable = main.getVariablesManager().getVariableFromString(variableString);
 
-            if(variable == null || !variable.isCanSetValue() || variable.getVariableDataType() != VariableDataType.LIST){
+            if(variable == null || !variable.isCanSetValue() || variable.getVariableDataType() != VariableDataType.ITEMSTACKLIST){
                 continue;
             }
 
@@ -120,14 +119,14 @@ public class ListAction extends Action {
 
                         return completions;
                     }).build(), ArgumentDescription.of("Operator."))
-                    .argument(ListVariableValueArgument.newBuilder("expression", main, variable), ArgumentDescription.of("Expression"))
+                    .argument(BooleanVariableValueArgument.newBuilder("expression", main, variable), ArgumentDescription.of("Expression"))
                     .handler((context) -> {
 
                         final String expression = context.get("expression");
 
                         final String operator = context.get("operator");
 
-                        ListAction listAction = new ListAction(main);
+                        ItemStackListAction listAction = new ItemStackListAction(main);
                         listAction.setVariableName(variable.getVariableType());
                         listAction.setOperator(operator);
                         listAction.setNewValueExpression(expression);
