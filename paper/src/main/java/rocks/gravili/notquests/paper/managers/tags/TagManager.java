@@ -37,7 +37,9 @@ public class TagManager {
         main.getLogManager().info("Loading tags of all online players...");
         for(Player player : Bukkit.getOnlinePlayers()){
             QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
-            onJoin(questPlayer, player);
+            if(questPlayer != null){
+                onJoin(questPlayer, player);
+            }
         }
     }
 
