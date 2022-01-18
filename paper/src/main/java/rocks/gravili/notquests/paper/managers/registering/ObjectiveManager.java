@@ -144,7 +144,7 @@ public class ObjectiveManager {
 
         if (quest != null) {
             objective.setQuest(quest);
-            objective.setObjectiveID(quest.getObjectives().size() + 1); //TODO: Create non-dupe ID finder which is safer
+            objective.setObjectiveID(quest.getFreeObjectiveID());
             context.getSender().sendMessage(main.parse(
                     "<success>" + getObjectiveType(objective.getClass()) + " Objective successfully added to Quest <highlight>"
                             + quest.getQuestName() + "</highlight>!"

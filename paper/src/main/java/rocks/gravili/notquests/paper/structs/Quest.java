@@ -515,4 +515,37 @@ public class Quest {
         category.saveQuestsConfig();
 
     }
+
+    public final int getFreeObjectiveID(){
+        for(int i = 1; i< Integer.MAX_VALUE; i++){
+            if(getObjectiveFromID(i) == null){
+                return i;
+            }
+        }
+        return getObjectives().size()+1;
+    }
+    public final int getFreeRewardID(){
+        for(int i = 1; i< Integer.MAX_VALUE; i++){
+            if(getRewardFromID(i) == null){
+                return i;
+            }
+        }
+        return getRewards().size()+1;
+    }
+    public final int getFreeRequirementID(){
+        for(int i = 1; i< Integer.MAX_VALUE; i++){
+            if(getRequirementFromID(i) == null){
+                return i;
+            }
+        }
+        return getRequirements().size()+1;
+    }
+    public final int getFreeTriggerID(){
+        for(int i = 1; i< Integer.MAX_VALUE; i++){
+            if(getTriggerFromID(i) == null){
+                return i;
+            }
+        }
+        return getTriggers().size()+1;
+    }
 }

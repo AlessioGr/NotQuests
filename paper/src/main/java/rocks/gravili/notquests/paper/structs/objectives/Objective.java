@@ -314,4 +314,21 @@ public abstract class Objective {
     public abstract void onObjectiveUnlock(final ActiveObjective activeObjective);
 
 
+    public final int getFreeRewardID(){
+        for(int i = 1; i< Integer.MAX_VALUE; i++){
+            if(getRewardFromID(i) == null){
+                return i;
+            }
+        }
+        return getRewards().size()+1;
+    }
+    public final int getFreeConditionID(){
+        for(int i = 1; i< Integer.MAX_VALUE; i++){
+            if(getConditionFromID(i) == null){
+                return i;
+            }
+        }
+        return getConditions().size()+1;
+    }
+
 }
