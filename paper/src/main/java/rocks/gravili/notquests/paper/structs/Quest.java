@@ -414,31 +414,31 @@ public class Quest {
     }
 
     public void removeObjective(final Objective objective) {
-        objectives.remove(objective);
         category.getQuestsConfig().set("quests." + questName + ".objectives." + objective.getObjectiveID(), null);
         category.saveQuestsConfig();
+        objectives.remove(objective);
     }
 
 
     public void removeReward(final Action action) {
-        rewards.remove(action);
         category.getQuestsConfig().set("quests." + questName + ".rewards." + (rewards.indexOf(action)+1), null);
         category.saveQuestsConfig();
+        rewards.remove(action);
     }
 
     public void removeRequirement(final Condition requirement) {
-        conditions.remove(requirement);
         category.getQuestsConfig().set("quests." + questName + ".requirements." + (conditions.indexOf(requirement)+1), null);
         category.saveQuestsConfig();
+        conditions.remove(requirement);
     }
 
     public String removeTrigger(int triggerID) {
         if (triggers.get((triggerID - 1)) != null) {
 
 
-            triggers.remove(triggers.get((triggerID - 1)));
             category.getQuestsConfig().set("quests." + questName + ".triggers." + triggerID, null);
             category.saveQuestsConfig();
+            triggers.remove(triggers.get((triggerID - 1)));
             return "<highlight>Trigger successfully removed!";
 
         } else {
