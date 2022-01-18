@@ -77,7 +77,7 @@ public class IntegerTagVariable extends Variable<Integer> {
         final String tagName = getRequiredStringValue("Tag Name");
         final Tag tag = main.getTagManager().getTag(tagName);
         if(tag == null){
-            main.getLogManager().warn("Error reading tag " + tagName + ". Tag does not exist.");
+            main.getLogManager().warn("Error reading tag " + tagName + ". Tag does not exist. All possible tags: " + main.getTagManager().getTagIdentifiers().toString());
             return false;
         }
         if(tag.getTagType() != TagType.INTEGER){

@@ -144,6 +144,9 @@ public class TagManager {
     public final Collection<Tag> getTags(){
         return identifiersAndTags.values();
     }
+    public final Collection<String> getTagIdentifiers(){
+        return identifiersAndTags.keySet();
+    }
 
 
     public void loadTags() {
@@ -182,7 +185,7 @@ public class TagManager {
 
 
                 if (tag != null) {
-                    identifiersAndTags.put(tagTypeString, tag);
+                    identifiersAndTags.put(tagIdentifier, tag);
                 } else {
                     main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading tags.yml tag data.");
                 }
