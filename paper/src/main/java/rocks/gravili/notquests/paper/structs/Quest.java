@@ -121,6 +121,24 @@ public class Quest {
         return null;
     }
 
+    public final Condition getRequirementFromID(final int id) {
+        for (final Condition condition : getRequirements()) {
+            if (condition.getConditionID() == id) {
+                return condition;
+            }
+        }
+        return null;
+    }
+    public final Action getRewardFromID(final int id) {
+        for (final Action action : getRewards()) {
+            if (action.getActionID() == id) {
+                return action;
+            }
+        }
+        return null;
+    }
+
+
     /*public final Reward getRewardFromID(final int rewardID) {
         for (final Reward reward : rewards) {
             if (reward.getRewardID() == rewardID) {

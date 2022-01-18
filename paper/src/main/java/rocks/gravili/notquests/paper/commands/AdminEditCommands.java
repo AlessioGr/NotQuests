@@ -874,7 +874,7 @@ public class AdminEditCommands {
                             assert objective != null; //Shouldn't be null
 
                              for (final Condition condition : objective.getConditions()) {
-                                completions.add("" + (objective.getConditions().indexOf(condition) + 1));
+                                completions.add("" + condition.getConditionID());
                             }
 
                             return completions;
@@ -890,7 +890,7 @@ public class AdminEditCommands {
                     assert objective != null; //Shouldn't be null
 
                     int conditionID = context.get("Condition ID");
-                    Condition condition = objective.getConditions().get(conditionID-1);
+                    Condition condition = objective.getConditionFromID(conditionID);
 
                     if(condition == null){
                         context.getSender().sendMessage(main.parse(
@@ -915,7 +915,7 @@ public class AdminEditCommands {
                     assert objective != null; //Shouldn't be null
 
                     int conditionID = context.get("Condition ID");
-                    Condition condition = objective.getConditions().get(conditionID-1);
+                    Condition condition = objective.getConditionFromID(conditionID);
 
                     if(condition == null){
                         context.getSender().sendMessage(main.parse(
@@ -947,7 +947,7 @@ public class AdminEditCommands {
                     assert objective != null; //Shouldn't be null
 
                     int conditionID = context.get("Condition ID");
-                    Condition condition = objective.getConditions().get(conditionID-1);
+                    Condition condition = objective.getConditionFromID(conditionID);
 
                     if(condition == null){
                         context.getSender().sendMessage(main.parse(
@@ -978,7 +978,7 @@ public class AdminEditCommands {
                     assert objective != null; //Shouldn't be null
 
                     int conditionID = context.get("Condition ID");
-                    Condition condition = objective.getConditions().get(conditionID-1);
+                    Condition condition = objective.getConditionFromID(conditionID);
 
                     if(condition == null){
                         context.getSender().sendMessage(main.parse(
@@ -1266,7 +1266,7 @@ public class AdminEditCommands {
 
                                     final Quest quest = context.get("quest");
                                     for (final Condition condition : quest.getRequirements()) {
-                                        completions.add("" + (quest.getRequirements().indexOf(condition) + 1));
+                                        completions.add("" + condition.getConditionID());
                                     }
 
                                     return completions;
@@ -1278,7 +1278,7 @@ public class AdminEditCommands {
                 .handler((context) -> {
                     final Quest quest = context.get("quest");
                     int conditionID = context.get("Requirement ID");
-                    Condition condition = quest.getRequirements().get(conditionID-1);
+                    Condition condition = quest.getRequirementFromID(conditionID);
 
                     if(condition == null){
                         context.getSender().sendMessage(main.parse(
@@ -1300,7 +1300,7 @@ public class AdminEditCommands {
                 .handler((context) -> {
                     final Quest quest = context.get("quest");
                     int conditionID = context.get("Requirement ID");
-                    Condition condition = quest.getRequirements().get(conditionID-1);
+                    Condition condition = quest.getRequirementFromID(conditionID);
                     if(condition == null){
                         context.getSender().sendMessage(main.parse(
                                 "<error>Requirement with the ID <highlight>" + conditionID + "</highlight> was not found!"
@@ -1312,7 +1312,7 @@ public class AdminEditCommands {
 
                     condition.setDescription(description);
 
-                    quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".requirements." + (quest.getRequirements().indexOf(condition)+1) + ".description", description);
+                    quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".requirements." + conditionID + ".description", description);
                     quest.getCategory().saveQuestsConfig();
 
                    // foundReward.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + (ID + 1) + ".displayName", foundReward.getActionName());
@@ -1330,7 +1330,7 @@ public class AdminEditCommands {
                 .handler((context) -> {
                     final Quest quest = context.get("quest");
                     int conditionID = context.get("Requirement ID");
-                    Condition condition = quest.getRequirements().get(conditionID-1);
+                    Condition condition = quest.getRequirementFromID(conditionID);
                     if(condition == null){
                         context.getSender().sendMessage(main.parse(
                                 "<error>Requirement with the ID <highlight>" + conditionID + "</highlight> was not found!"
@@ -1340,7 +1340,7 @@ public class AdminEditCommands {
 
                     condition.removeDescription();
 
-                    quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".requirements." + (quest.getRequirements().indexOf(condition)+1) + ".description", "");
+                    quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".requirements." + conditionID + ".description", "");
                     quest.getCategory().saveQuestsConfig();
 
 
@@ -1356,7 +1356,7 @@ public class AdminEditCommands {
                 .handler((context) -> {
                     final Quest quest = context.get("quest");
                     int conditionID = context.get("Requirement ID");
-                    Condition condition = quest.getRequirements().get(conditionID-1);
+                    Condition condition = quest.getRequirementFromID(conditionID);
                     if(condition == null){
                         context.getSender().sendMessage(main.parse(
                                 "<error>Requirement with the ID <highlight>" + conditionID + "</highlight> was not found!"
@@ -1413,12 +1413,12 @@ public class AdminEditCommands {
 
                                     final Quest quest = context.get("quest");
                                     for (final Action action : quest.getRewards()) {
-                                        completions.add("" + (quest.getRewards().indexOf(action) + 1));
+                                        completions.add("" + action.getActionID());
                                     }
 
                                     return completions;
                                 }
-                        ).withParser((context, lastString) -> { //TODO: Fix this parser. It isn't run at all.
+                        )/*.withParser((context, lastString) -> { //TODO: Fix this parser. It isn't run at all.
                             final int ID = context.get("Reward ID");
                             final Quest quest = context.get("quest");
                             final Action foundReward = quest.getRewards().get(ID - 1);
@@ -1428,7 +1428,7 @@ public class AdminEditCommands {
                                 return ArgumentParseResult.success(ID);
                             }
                         })
-                        , ArgumentDescription.of("Reward ID"));
+                        , ArgumentDescription.of("Reward ID")*/);
         handleEditRewards(editRewardsBuilder);
     }
 
@@ -1481,7 +1481,7 @@ public class AdminEditCommands {
                                     assert objective != null; //Shouldn't be null
 
                                     for (final Action action : objective.getRewards()) {
-                                        completions.add("" + (objective.getRewards().indexOf(action) + 1));
+                                        completions.add("" + action.getActionID());
                                     }
 
                                     return completions;
@@ -1493,7 +1493,7 @@ public class AdminEditCommands {
                             final Objective objective = quest.getObjectiveFromID(objectiveID);
                             assert objective != null; //Shouldn't be null
 
-                            final Action foundReward = objective.getRewards().get(ID - 1);
+                            final Action foundReward = objective.getRewardFromID(ID);
                             if (foundReward == null) {
                                 return ArgumentParseResult.failure(new IllegalArgumentException("Reward with the ID '" + ID + "' does not belong to Objective with ID " + objectiveID + " of Quest '" + quest.getQuestName() + "'!"));
                             } else {
@@ -1508,13 +1508,13 @@ public class AdminEditCommands {
         manager.command(builder.literal("info")
                 .meta(CommandMeta.DESCRIPTION, "Shows everything there is to know about this reward.")
                 .handler((context) -> {
-                    final int ID = (int) context.get("Reward ID") - 1;
+                    final int ID = context.get("Reward ID");
                     final Quest quest = context.get("quest");
                     final int objectiveID = context.get("Objective ID");
                     final Objective objective = quest.getObjectiveFromID(objectiveID);
                     assert objective != null; //Shouldn't be null
 
-                    final Action foundReward = objective.getRewards().get(ID);
+                    final Action foundReward = objective.getRewardFromID(ID);
                     context.getSender().sendMessage(Component.empty());
                     if (foundReward == null) {
                         context.getSender().sendMessage(main.parse(
@@ -1524,7 +1524,7 @@ public class AdminEditCommands {
                     }
 
                     context.getSender().sendMessage(main.parse(
-                            "<main>Reward <highlight>" + (ID+1) + "</highlight> for Objective with ID <highlight2>" + objectiveID + "</highlight2> of Quest <highlight2>" + quest.getQuestName() + "</highlight2>:"
+                            "<main>Reward <highlight>" + ID + "</highlight> for Objective with ID <highlight2>" + objectiveID + "</highlight2> of Quest <highlight2>" + quest.getQuestName() + "</highlight2>:"
                     ));
 
                     if(context.getSender() instanceof Player player){
@@ -1543,13 +1543,13 @@ public class AdminEditCommands {
         manager.command(builder.literal("remove")
                 .meta(CommandMeta.DESCRIPTION, "Removes the reward from the Quest.")
                 .handler((context) -> {
-                    final int ID = (int) context.get("Reward ID") - 1;
+                    final int ID = context.get("Reward ID");
                     final Quest quest = context.get("quest");
                     final int objectiveID = context.get("Objective ID");
                     final Objective objective = quest.getObjectiveFromID(objectiveID);
                     assert objective != null; //Shouldn't be null
 
-                    final Action foundReward = objective.getRewards().get(ID);
+                    final Action foundReward = objective.getRewardFromID(ID);
                     context.getSender().sendMessage(Component.empty());
                     if (foundReward == null) {
                         context.getSender().sendMessage(main.parse(
@@ -1559,7 +1559,7 @@ public class AdminEditCommands {
                     }
                     objective.removeReward(foundReward, true);
                     context.getSender().sendMessage(main.parse(
-                            "<success>The reward with the ID <highlight>" + (ID+1) + "</highlight> has been removed from the Objective with ID <highlight2>" + objectiveID + "</highlight2> of Quest <highlight2>"
+                            "<success>The reward with the ID <highlight>" + ID + "</highlight> has been removed from the Objective with ID <highlight2>" + objectiveID + "</highlight2> of Quest <highlight2>"
                                     + quest.getQuestName() + "</highlight2>!"
                     ));
                 }));
@@ -1568,13 +1568,13 @@ public class AdminEditCommands {
                 .literal("show")
                 .meta(CommandMeta.DESCRIPTION, "Shows current reward Display Name.")
                 .handler((context) -> {
-                    final int ID = (int) context.get("Reward ID") - 1;
+                    final int ID = context.get("Reward ID");
                     final Quest quest = context.get("quest");
                     final int objectiveID = context.get("Objective ID");
                     final Objective objective = quest.getObjectiveFromID(objectiveID);
                     assert objective != null; //Shouldn't be null
 
-                    final Action foundReward = objective.getRewards().get(ID);
+                    final Action foundReward = objective.getRewardFromID(ID);
                     context.getSender().sendMessage(Component.empty());
                     if (foundReward == null) {
                         context.getSender().sendMessage(main.parse(
@@ -1597,13 +1597,13 @@ public class AdminEditCommands {
                 .literal("remove", "delete")
                 .meta(CommandMeta.DESCRIPTION, "Removes current reward Display Name.")
                 .handler((context) -> {
-                    final int ID = (int) context.get("Reward ID") - 1;
+                    final int ID = context.get("Reward ID");
                     final Quest quest = context.get("quest");
                     final int objectiveID = context.get("Objective ID");
                     final Objective objective = quest.getObjectiveFromID(objectiveID);
                     assert objective != null; //Shouldn't be null
 
-                    final Action foundReward = objective.getRewards().get(ID);
+                    final Action foundReward = objective.getRewardFromID(ID);
                     context.getSender().sendMessage(Component.empty());
                     if (foundReward == null) {
                         context.getSender().sendMessage(main.parse(
@@ -1612,10 +1612,10 @@ public class AdminEditCommands {
                         return;
                     }
                     foundReward.removeActionName();
-                    foundReward.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + (ID + 1) + ".displayName", null);
+                    foundReward.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + ID + ".displayName", null);
                     foundReward.getCategory().saveQuestsConfig();
                     context.getSender().sendMessage(main.parse(
-                            "<success>Display Name of reward with the ID <highlight>" + (ID + 1) + "</highlight> has been removed successfully."
+                            "<success>Display Name of reward with the ID <highlight>" + ID + "</highlight> has been removed successfully."
                     ));
                 }));
 
@@ -1624,13 +1624,13 @@ public class AdminEditCommands {
                 .argument(MiniMessageSelector.<CommandSender>newBuilder("DisplayName", main).withPlaceholders().build(), ArgumentDescription.of("Reward display name"))
                 .meta(CommandMeta.DESCRIPTION, "Sets new reward Display Name. Only rewards with a Display Name will be displayed.")
                 .handler((context) -> {
-                    final int ID = (int) context.get("Reward ID") - 1;
+                    final int ID = context.get("Reward ID");
                     final Quest quest = context.get("quest");
                     final int objectiveID = context.get("Objective ID");
                     final Objective objective = quest.getObjectiveFromID(objectiveID);
                     assert objective != null; //Shouldn't be null
 
-                    final Action foundReward = objective.getRewards().get(ID);
+                    final Action foundReward = objective.getRewardFromID(ID);
                     context.getSender().sendMessage(Component.empty());
                     if (foundReward == null) {
                         context.getSender().sendMessage(main.parse(
@@ -1643,10 +1643,10 @@ public class AdminEditCommands {
 
 
                     foundReward.setActionName(displayName);
-                    foundReward.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + (ID + 1) + ".displayName", foundReward.getActionName());
+                    foundReward.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + ID + ".displayName", foundReward.getActionName());
                     foundReward.getCategory().saveQuestsConfig();
                     context.getSender().sendMessage(main.parse(
-                            "<success>Display Name successfully added to reward with ID <highlight>" + (ID + 1) + "</highlight>! New display name: <highlight2>"
+                            "<success>Display Name successfully added to reward with ID <highlight>" + ID + "</highlight>! New display name: <highlight2>"
                                     + foundReward.getActionName()
                     ));
                 }));
@@ -1656,9 +1656,9 @@ public class AdminEditCommands {
         manager.command(builder.literal("info")
                 .meta(CommandMeta.DESCRIPTION, "Shows everything there is to know about this reward.")
                 .handler((context) -> {
-                    final int ID = (int) context.get("Reward ID") - 1;
                     final Quest quest = context.get("quest");
-                    final Action foundReward = quest.getRewards().get(ID);
+                    final int ID = context.get("Reward ID");
+                    final Action foundReward = quest.getRewardFromID(ID);
                     context.getSender().sendMessage(Component.empty());
                     if (foundReward == null) {
                         context.getSender().sendMessage(main.parse(
@@ -1668,7 +1668,7 @@ public class AdminEditCommands {
                     }
 
                     context.getSender().sendMessage(main.parse(
-                            "<main>Reward <highlight>" + (ID+1) + "</highlight> for Quest <highlight2>" + quest.getQuestName() + "</highlight2>:"
+                            "<main>Reward <highlight>" + ID + "</highlight> for Quest <highlight2>" + quest.getQuestName() + "</highlight2>:"
                     ));
 
                     if(context.getSender() instanceof Player player){
@@ -1687,9 +1687,9 @@ public class AdminEditCommands {
         manager.command(builder.literal("remove")
                 .meta(CommandMeta.DESCRIPTION, "Removes the reward from the Quest.")
                 .handler((context) -> {
-                    final int ID = (int) context.get("Reward ID") - 1;
                     final Quest quest = context.get("quest");
-                    final Action foundReward = quest.getRewards().get(ID);
+                    final int ID = context.get("Reward ID");
+                    final Action foundReward = quest.getRewardFromID(ID);
                     context.getSender().sendMessage(Component.empty());
                     if (foundReward == null) {
                         context.getSender().sendMessage(main.parse(
@@ -1699,7 +1699,7 @@ public class AdminEditCommands {
                     }
                     quest.removeReward(foundReward);
                     context.getSender().sendMessage(main.parse(
-                            "<success>The reward with the ID <highlight>" + (ID+1) + "</highlight> has been removed from the Quest <highlight2>"
+                            "<success>The reward with the ID <highlight>" + ID + "</highlight> has been removed from the Quest <highlight2>"
                                     + quest.getQuestName() + "</highlight2>!"
                     ));
                 }));
@@ -1708,9 +1708,9 @@ public class AdminEditCommands {
                 .literal("show")
                 .meta(CommandMeta.DESCRIPTION, "Shows current reward Display Name.")
                 .handler((context) -> {
-                    final int ID = (int) context.get("Reward ID") - 1;
                     final Quest quest = context.get("quest");
-                    final Action foundReward = quest.getRewards().get(ID);
+                    final int ID = context.get("Reward ID");
+                    final Action foundReward = quest.getRewardFromID(ID);
                     context.getSender().sendMessage(Component.empty());
                     if (foundReward == null) {
                         context.getSender().sendMessage(main.parse(
@@ -1733,9 +1733,9 @@ public class AdminEditCommands {
                 .literal("remove", "delete")
                 .meta(CommandMeta.DESCRIPTION, "Removes current reward Display Name.")
                 .handler((context) -> {
-                    final int ID = (int) context.get("Reward ID") - 1;
                     final Quest quest = context.get("quest");
-                    final Action foundReward = quest.getRewards().get(ID);
+                    final int ID = context.get("Reward ID");
+                    final Action foundReward = quest.getRewardFromID(ID);
                     context.getSender().sendMessage(Component.empty());
                     if (foundReward == null) {
                         context.getSender().sendMessage(main.parse(
@@ -1744,10 +1744,10 @@ public class AdminEditCommands {
                         return;
                     }
                     foundReward.removeActionName();
-                    foundReward.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + (ID + 1) + ".displayName", null);
+                    foundReward.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + ID + ".displayName", null);
                     foundReward.getCategory().saveQuestsConfig();
                     context.getSender().sendMessage(main.parse(
-                            "<success>Display Name of reward with the ID <highlight>" + (ID + 1) + "</highlight> has been removed successfully."
+                            "<success>Display Name of reward with the ID <highlight>" + ID + "</highlight> has been removed successfully."
                     ));
                 }));
 
@@ -1756,9 +1756,9 @@ public class AdminEditCommands {
                 .argument(MiniMessageSelector.<CommandSender>newBuilder("DisplayName", main).withPlaceholders().build(), ArgumentDescription.of("Reward display name"))
                 .meta(CommandMeta.DESCRIPTION, "Sets new reward Display Name. Only rewards with a Display Name will be displayed.")
                 .handler((context) -> {
-                    final int ID = (int) context.get("Reward ID") - 1;
                     final Quest quest = context.get("quest");
-                    final Action foundReward = quest.getRewards().get(ID);
+                    final int ID = context.get("Reward ID");
+                    final Action foundReward = quest.getRewardFromID(ID);
                     context.getSender().sendMessage(Component.empty());
                     if (foundReward == null) {
                         context.getSender().sendMessage(main.parse(
@@ -1771,10 +1771,10 @@ public class AdminEditCommands {
 
 
                     foundReward.setActionName(displayName);
-                    foundReward.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + (ID + 1) + ".displayName", foundReward.getActionName());
+                    foundReward.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + ID + ".displayName", foundReward.getActionName());
                     foundReward.getCategory().saveQuestsConfig();
                     context.getSender().sendMessage(main.parse(
-                            "<success>Display Name successfully added to reward with ID <highlight>" + (ID + 1) + "</highlight>! New display name: <highlight2>"
+                            "<success>Display Name successfully added to reward with ID <highlight>" + ID + "</highlight>! New display name: <highlight2>"
                                     + foundReward.getActionName()
                     ));
                 }));
@@ -1871,11 +1871,11 @@ public class AdminEditCommands {
 
                     final int triggerID = context.get("Trigger ID");
 
-                    Trigger trigger = quest.getTriggers().get(triggerID-1);
+                    final Trigger trigger = quest.getTriggerFromID(triggerID);
 
                     if(trigger == null){
                         context.getSender().sendMessage(main.parse(
-                                "<error> Error: Trigger with the ID <highlight>" + triggerID+1 + "</highlight> was not found!"
+                                "<error> Error: Trigger with the ID <highlight>" + triggerID + "</highlight> was not found!"
                         ));
                         return;
                     }

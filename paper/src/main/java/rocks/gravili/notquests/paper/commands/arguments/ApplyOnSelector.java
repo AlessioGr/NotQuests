@@ -52,6 +52,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.Quest;
+import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
 import java.util.List;
 import java.util.Locale;
@@ -145,9 +146,8 @@ public class ApplyOnSelector<C> extends CommandArgument<C, Integer> { //0 = Ques
             final Quest quest = context.get(questContext);
 
             completions.add("Quest");
-            final int objectiveCount = quest.getObjectives().size();
-            for (int i = 1; i <= objectiveCount; i++) {
-                completions.add("O" + i);
+            for(Objective objective : quest.getObjectives()){
+                completions.add("O" + objective.getObjectiveID());
             }
 
 

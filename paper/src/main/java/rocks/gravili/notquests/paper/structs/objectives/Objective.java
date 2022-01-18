@@ -131,9 +131,29 @@ public abstract class Objective {
         return conditions;
     }
 
+    public final Condition getConditionFromID(int id){
+        for(Condition condition : getConditions()){
+            if(condition.getConditionID() == id){
+                return condition;
+            }
+        }
+        return null;
+    }
+
+    public final Action getRewardFromID(int id){
+        for(Action action : getRewards()){
+            if(action.getActionID() == id){
+                return action;
+            }
+        }
+        return null;
+    }
+
     public final ArrayList<Action> getRewards() {
         return rewards;
     }
+
+
 
 
     public void addCondition(final Condition condition, final boolean save) {
