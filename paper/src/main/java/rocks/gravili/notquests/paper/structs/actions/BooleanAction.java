@@ -21,6 +21,7 @@ package rocks.gravili.notquests.paper.structs.actions;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
+import cloud.commandframework.arguments.CommandArgument;
 import cloud.commandframework.arguments.flags.CommandFlag;
 import cloud.commandframework.arguments.standard.BooleanArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
@@ -135,6 +136,7 @@ public class BooleanAction extends Action {
                         for(StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()){
                             additionalStringArguments.put(stringArgument.getName(), context.get(stringArgument.getName()));
                         }
+                       
                         booleanAction.setAdditionalStringArguments(additionalStringArguments);
 
                         HashMap<String, String> additionalNumberArguments = new HashMap<>();

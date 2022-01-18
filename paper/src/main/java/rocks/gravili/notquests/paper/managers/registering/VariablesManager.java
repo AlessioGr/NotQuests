@@ -22,14 +22,12 @@ import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.flags.CommandFlag;
 import cloud.commandframework.arguments.standard.BooleanArgument;
-import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.context.CommandContext;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import redempt.crunch.CompiledExpression;
 import redempt.crunch.Crunch;
-import redempt.crunch.functional.EvaluationEnvironment;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.variables.*;
@@ -76,6 +74,7 @@ public class VariablesManager {
         registerVariable("Chance", ChanceVariable.class);
         registerVariable("Advancement", AdvancementVariable.class);
         registerVariable("Inventory", InventoryVariable.class);
+        registerVariable("ContainerInventory", ContainerInventoryVariable.class);
 
         if(main.getIntegrationsManager().isPlaceholderAPIEnabled()){
             registerVariable("PlaceholderAPINumber", PlaceholderAPINumberVariable.class);
