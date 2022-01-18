@@ -40,8 +40,8 @@ public class TagManager {
         PersistentDataContainer persistentDataContainer = player.getPersistentDataContainer();
         PersistentDataContainer booleanTagsContainer = persistentDataContainer.get(booleanTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER);
         PersistentDataContainer integerTagsContainer = persistentDataContainer.get(integerTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER);
-        PersistentDataContainer floatTagsContainer = persistentDataContainer.get(integerTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER);
-        PersistentDataContainer doubleTagsContainer = persistentDataContainer.get(integerTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER);
+        PersistentDataContainer floatTagsContainer = persistentDataContainer.get(floatTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER);
+        PersistentDataContainer doubleTagsContainer = persistentDataContainer.get(doubleTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER);
         PersistentDataContainer stringTagsContainer = persistentDataContainer.get(stringTagsNestedPDC, PersistentDataType.TAG_CONTAINER);
 
         if(booleanTagsContainer != null){
