@@ -168,17 +168,7 @@ public class TagManager {
         return identifiersAndTags.get(tagIdentifier.toLowerCase(Locale.ROOT));
     }
 
-    public void addTag(final Tag newTag){
-        if (identifiersAndTags.get(newTag.getTagName()) != null) {
-            return;
-        }
 
-        identifiersAndTags.put(newTag.getTagName(), newTag);
-
-        newTag.getCategory().getTagsConfig().set("tags." + newTag.getTagName() + ".tagType", newTag.getTagType().name());
-
-        newTag.getCategory().saveTagsConfig();
-    }
 
     public final Collection<Tag> getTags(){
         return identifiersAndTags.values();
@@ -231,5 +221,27 @@ public class TagManager {
             }
         }
 
+    }
+
+    public void addTag(final Tag newTag){
+        if (identifiersAndTags.get(newTag.getTagName()) != null) {
+            return;
+        }
+
+        identifiersAndTags.put(newTag.getTagName(), newTag);
+
+        newTag.getCategory().getTagsConfig().set("tags." + newTag.getTagName() + ".tagType", newTag.getTagType().name());
+
+        newTag.getCategory().saveTagsConfig();
+    }
+
+    public void deleteTag(Tag foundTag) {
+        if (identifiersAndTags.get(foundTag.getTagName()) == null) {
+            return;
+        }
+
+        identifiersAndTags.remove(foundTag.getTagName());
+        foundTag.getCategory().getTagsConfig().set("tags." + foundTag.getTagName(), null);
+        foundTag.getCategory().saveTagsConfig();
     }
 }

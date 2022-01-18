@@ -5,12 +5,16 @@ import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
+import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.command.CommandSender;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.managers.tags.Tag;
 import rocks.gravili.notquests.paper.managers.tags.TagType;
 import rocks.gravili.notquests.paper.structs.actions.ActionFor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class AdminTagCommands {
@@ -157,6 +161,54 @@ public class AdminTagCommands {
 
                     context.getSender().sendMessage(main.parse(
                             "<success>The tag <highlight>" + tagName + "</highlight> has been added successfully!"
+                    ));
+                }));
+
+
+
+        manager.command(editBuilder.literal("list")
+                .meta(CommandMeta.DESCRIPTION, "Lists all tags")
+                .handler((context) -> {
+                    context.getSender().sendMessage(main.parse("<highlight>All tags:"));
+                    int counter = 1;
+
+                    for(Tag tag : main.getTagManager().getTags()){
+                        context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>" + tag.getTagName() + "</main> <highlight2>Type: <main>" + tag.getTagType().name()));
+                        counter++;
+                    }
+                }));
+
+        manager.command(editBuilder.literal("delete", "remove")
+                .argument(StringArgument.<CommandSender>newBuilder("Tag Name").withSuggestionsProvider(
+                        (context, lastString) -> {
+                            final List<String> allArgs = context.getRawInput();
+                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Tag Name]", "");
+
+                            ArrayList<String> suggestions = new ArrayList<>();
+                            for(Tag tag : main.getTagManager().getTags()){
+                                suggestions.add("" + tag.getTagName());
+
+                            }
+                            return suggestions;
+
+                        }
+                ).single().build())
+                .meta(CommandMeta.DESCRIPTION, "Deletes an existing tag.")
+                .handler((context) -> {
+                    final String tagName = context.get("Tag Name");
+
+                    Tag foundTag = main.getTagManager().getTag(tagName);
+                    if(foundTag == null){
+                        context.getSender().sendMessage(main.parse(
+                                "<error>Error: The tag <highlight>" + tagName + "</highlight> doesn't exists!"
+                        ));
+                        return;
+                    }
+
+                    main.getTagManager().deleteTag(foundTag);
+
+                    context.getSender().sendMessage(main.parse(
+                            "<success>The tag <highlight>" + tagName + "</highlight> has been deleted successfully!"
                     ));
                 }));
     }
