@@ -1,57 +1,57 @@
 ---
 chat:
-  wrong-command-usage: <error>Wrong command usage!
-  missing-permission: '<error>No permission! Required permission node: <highlight>%PERMISSION%'
-  too-many-arguments: <error>Too many arguments!
+  wrong-command-usage: <error>неправильное использование команды!
+  missing-permission: '<error>Нет разрешения! Требуется узел разрешения: <highlight>%PERMISSION%'
+  too-many-arguments: <error>Слишком много аргументов!
   quest-successfully-accepted: |2
 
-    <CENTER><main>[Quest Accepted]
+    <CENTER><main>[Квест принят]
     <CENTER><highlight><BOLD>%QUESTNAME%
     <EMPTY>
-  quest-description: '<main>Quest description: <unimportant>%QUESTDESCRIPTION%'
-  quest-already-accepted: <error>Quest already accepted.
+  quest-description: 'Описание квеста <main>: <unimportant>%QUESTDESCRIPTION%'
+  quest-already-accepted: <error>квест уже принят.
   quest-failed: |2
 
-    <CENTER><negative>[Quest Failed]
+    <CENTER><negative>[Не удалось выполнить квест]
     <CENTER><highlight><BOLD>%QUESTNAME%
     <EMPTY>
   quest-aborted: ''
   quest-completed-and-rewards-given: |2
 
-    <CENTER><positive>[Quest Completed]
+    <CENTER><positive>[Квест выполнен]
     <CENTER><highlight><BOLD>%QUESTNAME%
     <EMPTY>
-  quest-completed-rewards-prefix: '    <highlight>Rewards:'
+  quest-completed-rewards-prefix: '    <highlight>награда:'
   quest-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
   quest-completed-rewards-suffix: <EMPTY>
-  missing-quest-description: <unimportant>This quest has no quest description.
-  objectives-label-after-quest-accepting: '<highlight>Objectives:'
+  missing-quest-description: <unimportant>Этот квест не имеет описания задания.
+  objectives-label-after-quest-accepting: '<highlight>Цели:'
   questpoints:
-    query: <main>You currently have <highlight>%QUESTPOINTS%</highlight> quest points.
-    none: <error>Seems like you don't have any quest points!
-  no-quests-accepted: <error>Seems like you don't have any active quests!
-  quest-does-not-exist: <error>Quest <highlight>%QUESTNAME%</highlight> does not exist!
-  quest-not-found-or-does-not-exist: <error>Quest <highlight>%QUESTNAME%</highlight> not found or not active!
-  active-quests-label: '<highlight>Active quests:'
-  take-disabled: <error>Accepting or previewing the quest <highlight>%QUESTNAME%</highlight> is disabled.
-  quest-not-active-error: '<error>Error: <highlight>%QUESTNAME%</highlight> is not an active Quest!'
+    query: <main>в настоящее время у вас <highlight>%QUESTPOINTS%</highlight> очков квеста.
+    none: <error>кажется, у вас нет очков задания!
+  no-quests-accepted: <error>У вас нет активных квестов!
+  quest-does-not-exist: <error>Квест <highlight>%QUESTNAME%</highlight> не существует!
+  quest-not-found-or-does-not-exist: <error>квест <highlight>%QUESTNAME%</highlight> не найден или не активен!
+  active-quests-label: '<highlight>активных заданий:'
+  take-disabled: <error>Принятие или предпросмотр задания <highlight>%QUESTNAME%</highlight> отключены.
+  quest-not-active-error: '<error>Ошибка: <highlight>%QUESTNAME%</highlight> не является активным квестом!'
   conversations:
     choose-answer-prefix: |-
       <EMPTY>
-      <main>Choose your answer:</main>
-    choose-answer-answer-hover-text: '<highlight>Click to answer'
-    ended-previous-conversation: '<main>You have ended your previous conversation!'
+      <main>Выберите свой ответ:</main>
+    choose-answer-answer-hover-text: '<highlight>Нажмите, чтобы ответить'
+    ended-previous-conversation: '<main>Вы завершили предыдущий диалог!'
   objectives:
     counter: '<highlight>%OBJECTIVEID%.</highlight> <main>%OBJECTIVENAME%:'
     hidden: <highlight>%OBJECTIVEID%.</highlight> <unimportant><BOLD>[HIDDEN]
-    description: '   <highlight>Description: <main>%OBJECTIVEDESCRIPTION%'
-    progress: '   <highlight>Progress: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
+    description: '   <highlight>Описание: <main>%OBJECTIVEDESCRIPTION%'
+    progress: '   Прогресс   <highlight>: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
     successfully-completed: |2
 
-      <CENTER><success>[Objective Completed]
+      <CENTER><success>[Цель выполнена]
       <CENTER><highlight><BOLD>%OBJECTIVENAME% <RESET><main>(%QUESTNAME%)
       <EMPTY>
-    successfully-completed-rewards-prefix: '    <highlight>Rewards:'
+    successfully-completed-rewards-prefix: '    <highlight>награда:'
     successfully-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
     successfully-completed-rewards-suffix: <EMPTY>
     taskDescription:
@@ -60,13 +60,13 @@ chat:
       breed:
         base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Breed Mobs: <main>%EVENTUALCOLOR%%ENTITYTOBREED%'
       collectItems:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Collect Items: <main>%EVENTUALCOLOR%%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
+        base: '    <veryUnimportant>- <unimportant>%EVENTUALCOLOR%Собрать предметы: <main>%EVENTUALCOLOR%%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
       consumeItems:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Consume Items: <main>%EVENTUALCOLOR%%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
+        base: '    <veryUnimportant>: <unimportant>%EVENTUALCOLOR%Предметы расходуют <main>%EVENTUALCOLOR%%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Craft Items: <main>%EVENTUALCOLOR%%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
+        base: '    <veryUnimportant>- <unimportant>%EVENTUALCOLOR%Собрать предметы: <main>%EVENTUALCOLOR%%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Deliver Items: <main>%EVENTUALCOLOR%%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
+        base: '    <veryUnimportant>- <unimportant>%EVENTUALCOLOR%Доставить предметы: <main>%EVENTUALCOLOR%%ITEMTODELIVERTYPE% %(%ITEMTODELIVERNAME%)'
       escortNPC:
         base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Escort <main>%EVENTUALCOLOR%%NPCNAME%</main> %EVENTUALCOLOR%to <main>%EVENTUALCOLOR%%DESTINATIONNPCNAME%'
       killMobs:
