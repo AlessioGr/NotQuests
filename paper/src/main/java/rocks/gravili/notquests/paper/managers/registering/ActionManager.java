@@ -71,6 +71,7 @@ public class ActionManager {
         registerAction("String", StringAction.class);
         registerAction("Boolean", BooleanAction.class);
         registerAction("List", ListAction.class);
+        registerAction("ItemStackList", ItemStackListAction.class);
 
 
     }
@@ -82,7 +83,7 @@ public class ActionManager {
 
         try {
             Method commandHandler = action.getMethod("handleCommands", main.getClass(), PaperCommandManager.class, Command.Builder.class, ActionFor.class);
-            if(action == NumberAction.class || action == StringAction.class || action == BooleanAction.class || action == ListAction.class){
+            if(action == NumberAction.class || action == StringAction.class || action == BooleanAction.class || action == ListAction.class || action == ItemStackListAction.class){
                 commandHandler.invoke(action, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddRewardCommandBuilder()
                         .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action"), ActionFor.QUEST);
                 commandHandler.invoke(action, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddRewardCommandBuilder()

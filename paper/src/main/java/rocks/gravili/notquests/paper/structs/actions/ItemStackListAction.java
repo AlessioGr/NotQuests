@@ -23,15 +23,20 @@ import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.flags.CommandFlag;
 import cloud.commandframework.arguments.standard.BooleanArgument;
+import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueArgument;
+import rocks.gravili.notquests.paper.commands.arguments.variables.ItemStackListVariableValueArgument;
+import rocks.gravili.notquests.paper.commands.arguments.variables.ListVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
@@ -52,7 +57,7 @@ public class ItemStackListAction extends Action {
     private HashMap<String, String> additionalNumberArguments;
     private HashMap<String, Boolean> additionalBooleanArguments;
 
-    private String newValueExpression;
+    private ItemStack itemStack;
 
     public final String getOperator(){
         return operator;
@@ -69,12 +74,12 @@ public class ItemStackListAction extends Action {
         this.variableName = variableName;
     }
 
-    public void setNewValueExpression(final String newValueExpression){
-        this.newValueExpression = newValueExpression;
+    public void setItemStack(final ItemStack itemStack){
+        this.itemStack = itemStack;
     }
 
-    public final String getNewValueExpression(){
-        return newValueExpression;
+    public final ItemStack getItemStack(){
+        return itemStack;
     }
 
     private void setAdditionalStringArguments(HashMap<String, String> additionalStringArguments) {
@@ -119,17 +124,42 @@ public class ItemStackListAction extends Action {
 
                         return completions;
                     }).build(), ArgumentDescription.of("Operator."))
-                    .argument(BooleanVariableValueArgument.newBuilder("expression", main, variable), ArgumentDescription.of("Expression"))
+                    .argument(ItemStackListVariableValueArgument.newBuilder("expression", main, variable), ArgumentDescription.of("Expression"))
+                    .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of items"))
                     .handler((context) -> {
 
                         final String expression = context.get("expression");
+                        int amount = context.get("amount");
+
+                        ItemStack itemStack;
+                        if (expression.equalsIgnoreCase("hand")) {
+                            if (context.getSender() instanceof Player player) {
+                                itemStack = player.getInventory().getItemInMainHand().clone();
+                                itemStack.setAmount(amount);
+                            } else {
+                                context.getSender().sendMessage(main.parse(
+                                        "<error>This must be run by a player."
+                                ));
+                                return;
+                            }
+                        } else {
+                            if (expression.equalsIgnoreCase("any")) {
+                                context.getSender().sendMessage(main.parse(
+                                        "<error>You cannot use <highlight>'any'</highlight> here!"
+                                ));
+                                return;
+                            }
+                            itemStack = new ItemStack(Material.valueOf(expression), amount);
+                        }
+
+
 
                         final String operator = context.get("operator");
 
                         ItemStackListAction listAction = new ItemStackListAction(main);
                         listAction.setVariableName(variable.getVariableType());
                         listAction.setOperator(operator);
-                        listAction.setNewValueExpression(expression);
+                        listAction.setItemStack(itemStack);
 
 
                         HashMap<String, String> additionalStringArguments = new HashMap<>();
@@ -148,7 +178,7 @@ public class ItemStackListAction extends Action {
                         for(BooleanArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
                             additionalBooleanArguments.put(booleanArgument.getName(), context.get(booleanArgument.getName()));
                         }
-                        for(CommandFlag<CommandSender> commandFlag : variable.getRequiredBooleanFlags()){
+                        for(CommandFlag<?> commandFlag : variable.getRequiredBooleanFlags()){
                             additionalBooleanArguments.put(commandFlag.getName(), context.flags().isPresent(commandFlag.getName()));
                         }
                         listAction.setAdditionalBooleanArguments(additionalBooleanArguments);
@@ -159,26 +189,26 @@ public class ItemStackListAction extends Action {
         }
     }
 
-    public final String[] evaluateExpression(final QuestPlayer questPlayer){
+    /*public final String[] evaluateExpression(final QuestPlayer questPlayer){
         return getNewValueExpression().split(",");
-    }
+    }*/
 
     @Override
     public void execute(final Player player, Object... objects) {
         Variable<?> variable = main.getVariablesManager().getVariableFromString(variableName);
 
-        if(variable == null){
+        if (variable == null) {
             main.sendMessage(player, "<ERROR>Error: variable </highlight>" + variableName + "<highlight> not found. Report this to the Server owner.");
             return;
         }
 
-        if(additionalStringArguments != null && !additionalStringArguments.isEmpty()){
+        if (additionalStringArguments != null && !additionalStringArguments.isEmpty()) {
             variable.setAdditionalStringArguments(additionalStringArguments);
         }
-        if(additionalNumberArguments != null && !additionalNumberArguments.isEmpty()){
+        if (additionalNumberArguments != null && !additionalNumberArguments.isEmpty()) {
             variable.setAdditionalNumberArguments(additionalNumberArguments);
         }
-        if(additionalBooleanArguments != null && !additionalBooleanArguments.isEmpty()){
+        if (additionalBooleanArguments != null && !additionalBooleanArguments.isEmpty()) {
             variable.setAdditionalBooleanArguments(additionalBooleanArguments);
         }
 
@@ -186,34 +216,134 @@ public class ItemStackListAction extends Action {
 
         Object currentValueObject = variable.getValue(player, questPlayer, objects);
 
-        String[] currentValue;
-        if (currentValueObject instanceof String[] stringList) {
-            currentValue = stringList;
-        }else if (currentValueObject instanceof ArrayList<?> stringList) {
-            currentValue = stringList.toArray(new String[0]);
-        }else{
-            currentValue = (String[]) currentValueObject;
+        if (currentValueObject == null) {
+            main.sendMessage(player, "Error executing " + getActionName() + " action: Current value object is null.");
+            main.getLogManager().warn("Error executing " + getActionName() + " action: Current value object is null.");
+            return;
+        }
+
+        ItemStack[] currentValue;
+        if (currentValueObject instanceof ItemStack[] itemStackList) {
+            currentValue = itemStackList;
+        } else if (currentValueObject instanceof ArrayList<?> itemStackList) {
+            currentValue = itemStackList.toArray(new ItemStack[0]);
+        } else {
+            currentValue = (ItemStack[]) currentValueObject;
+        }
+
+        if(currentValue == null){
+            main.sendMessage(player, "Error executing " + getActionName() + " action: Current value is null.");
+            main.getLogManager().warn("Error executing " + getActionName() + " action: Current value is null.");
+            return;
+        }
+
+        ArrayList<ItemStack> currentValueArrayList = new ArrayList<>();
+
+        for (ItemStack o : currentValue){
+            if (o != null) {
+                currentValueArrayList.add(o);
+            }
         }
 
 
-        String[] nextNewValue = evaluateExpression(questPlayer);
+        if(getItemStack() == null){
+            main.sendMessage(player, "Error executing " + getActionName() + " action: New itemStack is null.");
+            main.getLogManager().warn("Error executing " + getActionName() + " action: New itemStack is null.");
+            return;
+        }
+
+        ArrayList<ItemStack> nextNewValueList = new ArrayList<>();
+        ItemStack[] nextNewValue = null;
 
         if(getOperator().equalsIgnoreCase("set")){
-            nextNewValue = nextNewValue;
+            variable.addAdditionalBooleanArgument("set", true);
+            int amountLeft = getItemStack().getAmount();
+            if(getItemStack().getAmount() > getItemStack().getMaxStackSize()){
+                while (amountLeft > 0){
+                    ItemStack clone = getItemStack().clone();
+                    clone.setAmount(clone.getMaxStackSize());
+                    nextNewValueList.add(clone);
+                    amountLeft -= clone.getMaxStackSize();
+                }
+            }else{
+                nextNewValueList.add(getItemStack());
+            }
+            nextNewValue = nextNewValueList.toArray(new ItemStack[nextNewValueList.size()]);
         }else if(getOperator().equalsIgnoreCase("add")){
-            ArrayList<String> nextNewValueList = new ArrayList<>(Arrays.asList(nextNewValue));
-            nextNewValueList.addAll(List.of(currentValue));
+            variable.addAdditionalBooleanArgument("add", true);
 
-            nextNewValue = nextNewValueList.toArray(new String[0]);
+            int amountLeft = getItemStack().getAmount();
+            if(getItemStack().getAmount() > getItemStack().getMaxStackSize()){
+                while (amountLeft > 0){
+                    ItemStack clone = getItemStack().clone();
+                    clone.setAmount(clone.getMaxStackSize());
+                    nextNewValueList.add(clone);
+                    amountLeft -= clone.getMaxStackSize();
+                }
+            }else{
+                nextNewValueList.add(getItemStack());
+            }
+
+            /*nextNewValueList.addAll(currentValueArrayList);
+            int amountLeft = getItemStack().getAmount();
+            for(ItemStack itemStack : nextNewValueList){
+                if(amountLeft == 0){
+                    break;
+                }
+                if(itemStack.isSimilar(getItemStack())){
+                    int whatCanBeAdded = itemStack.getMaxStackSize() - itemStack.getAmount();
+                    if(whatCanBeAdded > 0){
+                        if(amountLeft > whatCanBeAdded){
+                            itemStack.setAmount(itemStack.getMaxStackSize());
+                            amountLeft = whatCanBeAdded;
+                        }else{
+                            itemStack.setAmount(itemStack.getAmount() + amountLeft);
+                            amountLeft = 0;
+                        }
+                    }
+                }
+            }
+            if(amountLeft > 0){
+                if(getItemStack().getAmount() > getItemStack().getMaxStackSize()){
+                    while (amountLeft > 0){
+                        ItemStack clone = getItemStack().clone();
+                        clone.setAmount(clone.getMaxStackSize());
+                        nextNewValueList.add(clone);
+                        amountLeft -= clone.getMaxStackSize();
+                    }
+                }else{
+                    nextNewValueList.add(getItemStack());
+                }
+            }
+            player.sendMessage("S: " + nextNewValueList.toString());*/
+
+
+            nextNewValue = nextNewValueList.toArray(new ItemStack[nextNewValueList.size()]);
         }else if(getOperator().equalsIgnoreCase("remove")){
-            ArrayList<String> nextNewValueList = new ArrayList<>(Arrays.asList(currentValue));
-            nextNewValueList.removeAll(List.of(nextNewValue));
+            int amountLeft = getItemStack().getAmount();
+            if(getItemStack().getAmount() > getItemStack().getMaxStackSize()){
+                while (amountLeft > 0){
+                    ItemStack clone = getItemStack().clone();
+                    clone.setAmount(clone.getMaxStackSize());
+                    nextNewValueList.add(clone);
+                    amountLeft -= clone.getMaxStackSize();
+                }
+            }else{
+                nextNewValueList.add(getItemStack());
+            }
+            variable.addAdditionalBooleanArgument("remove", true);
+            /* nextNewValueList.addAll(currentValueArrayList);
+            nextNewValueList.removeAll(currentValueArrayList);*/
 
-            nextNewValue = nextNewValueList.toArray(new String[0]);
+            nextNewValue = nextNewValueList.toArray(new ItemStack[nextNewValueList.size()]);
         }else if(getOperator().equalsIgnoreCase("clear")){
-            nextNewValue = new String[0];
+            variable.addAdditionalBooleanArgument("clear", true);
+            nextNewValue = new ItemStack[0];
         }else{
             main.sendMessage(player, "<ERROR>Error: variable operator <highlight>" + getOperator() + "</highlight> is invalid. Report this to the Server owner.");
+            return;
+        }
+        if(nextNewValue == null){
             return;
         }
 
@@ -221,26 +351,26 @@ public class ItemStackListAction extends Action {
 
 
 
-        if(currentValueObject instanceof String[]){
-            ((Variable<String[]>)variable).setValue(nextNewValue, player, objects);
+        if(currentValueObject instanceof ItemStack[]){
+            ((Variable<ItemStack[]>)variable).setValue(nextNewValue, player, objects);
         }else if(currentValueObject instanceof ArrayList<?>){
-            ((Variable<ArrayList<?>>)variable).setValue((ArrayList<?>) Arrays.asList(nextNewValue), player, objects);
+            ((Variable<ArrayList<ItemStack>>)variable).setValue((ArrayList<ItemStack>) Arrays.asList(nextNewValue), player, objects);
         }else{
-            main.getLogManager().warn("Cannot execute boolean action, because the number type " + currentValueObject.getClass().getName() + " is invalid.");
+            main.getLogManager().warn("Cannot execute ItemStackList action, because the number type " + currentValueObject.getClass().getName() + " is invalid.");
         }
 
     }
 
     @Override
     public String getActionDescription(final Player player, final Object... objects) {
-        return variableName + ": " + Arrays.toString(evaluateExpression(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId())));
+        return variableName + ": " + main.getMiniMessage().serialize(getItemStack().displayName());
     }
 
 
 
     @Override
     public void save(final FileConfiguration configuration, String initialPath) {
-        configuration.set(initialPath + ".specifics.expression", getNewValueExpression());
+        configuration.set(initialPath + ".specifics.itemStack", getItemStack());
 
         configuration.set(initialPath + ".specifics.variableName", getVariableName());
         configuration.set(initialPath + ".specifics.operator", getOperator());
@@ -259,7 +389,7 @@ public class ItemStackListAction extends Action {
 
     @Override
     public void load(final FileConfiguration configuration, String initialPath) {
-        this.newValueExpression = configuration.getString(initialPath + ".specifics.expression", "");
+        this.itemStack = configuration.getItemStack(initialPath + ".specifics.itemStack", null);
 
         this.variableName = configuration.getString(initialPath + ".specifics.variableName");
         this.operator = configuration.getString(initialPath + ".specifics.operator", "");
@@ -292,12 +422,12 @@ public class ItemStackListAction extends Action {
         this.variableName = arguments.get(0);
 
         this.operator = arguments.get(1);
-        this.newValueExpression = arguments.get(2);
+        this.itemStack = new ItemStack(Material.valueOf(arguments.get(2)), Integer.parseInt(arguments.get(3)));
 
-        if(arguments.size() >= 4){
+        if(arguments.size() >= 5){
 
             Variable<?> variable = main.getVariablesManager().getVariableFromString(variableName);
-            if(variable == null || !variable.isCanSetValue() || variable.getVariableDataType() != VariableDataType.LIST){
+            if(variable == null || !variable.isCanSetValue() || variable.getVariableDataType() != VariableDataType.ITEMSTACKLIST){
                 return;
             }
 
@@ -309,7 +439,7 @@ public class ItemStackListAction extends Action {
 
             for (String argument : arguments){
                 counter++;
-                if(counter >= 4){
+                if(counter >= 5){
                     if(variable.getRequiredStrings().size() > counterStrings){
                         additionalStringArguments.put(variable.getRequiredStrings().get(counter-4).getName(), argument);
                         counterStrings++;

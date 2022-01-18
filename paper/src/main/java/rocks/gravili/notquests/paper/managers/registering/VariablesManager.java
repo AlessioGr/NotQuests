@@ -75,6 +75,7 @@ public class VariablesManager {
 
         registerVariable("Chance", ChanceVariable.class);
         registerVariable("Advancement", AdvancementVariable.class);
+        registerVariable("Inventory", InventoryVariable.class);
 
         if(main.getIntegrationsManager().isPlaceholderAPIEnabled()){
             registerVariable("PlaceholderAPINumber", PlaceholderAPINumberVariable.class);
@@ -111,7 +112,7 @@ public class VariablesManager {
                 }
             }
             if(variable.getRequiredBooleanFlags() != null){
-                for(CommandFlag<CommandSender> commandFlag : variable.getRequiredBooleanFlags()){
+                for(CommandFlag<?> commandFlag : variable.getRequiredBooleanFlags()){
                     newBuilder = newBuilder.flag(commandFlag);
                 }
             }

@@ -149,7 +149,7 @@ public class ListAction extends Action {
                         for(BooleanArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
                             additionalBooleanArguments.put(booleanArgument.getName(), context.get(booleanArgument.getName()));
                         }
-                        for(CommandFlag<CommandSender> commandFlag : variable.getRequiredBooleanFlags()){
+                        for(CommandFlag<?> commandFlag : variable.getRequiredBooleanFlags()){
                             additionalBooleanArguments.put(commandFlag.getName(), context.flags().isPresent(commandFlag.getName()));
                         }
                         listAction.setAdditionalBooleanArguments(additionalBooleanArguments);
@@ -227,7 +227,7 @@ public class ListAction extends Action {
         }else if(currentValueObject instanceof ArrayList<?>){
             ((Variable<ArrayList<?>>)variable).setValue((ArrayList<?>) Arrays.asList(nextNewValue), player, objects);
         }else{
-            main.getLogManager().warn("Cannot execute boolean action, because the number type " + currentValueObject.getClass().getName() + " is invalid.");
+            main.getLogManager().warn("Cannot execute list action, because the number type " + currentValueObject.getClass().getName() + " is invalid.");
         }
 
     }

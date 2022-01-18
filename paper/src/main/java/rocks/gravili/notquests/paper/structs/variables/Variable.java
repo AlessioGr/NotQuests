@@ -2,10 +2,11 @@ package rocks.gravili.notquests.paper.structs.variables;
 
 import cloud.commandframework.arguments.flags.CommandFlag;
 import cloud.commandframework.arguments.standard.BooleanArgument;
-import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
+import com.sun.jna.platform.unix.solaris.LibKstat;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 
@@ -19,7 +20,7 @@ public abstract class Variable<T> {
     private final ArrayList<StringArgument<CommandSender>> requiredStrings;
     private final ArrayList<NumberVariableValueArgument<CommandSender>> requiredNumbers;
     private final ArrayList<BooleanArgument<CommandSender>> requiredBooleans;
-    private final ArrayList<CommandFlag<CommandSender>> requiredBooleanFlags;
+    private final ArrayList<CommandFlag<Void>> requiredBooleanFlags;
 
 
     private HashMap<String, String> additionalStringArguments;
@@ -44,13 +45,18 @@ public abstract class Variable<T> {
         Class<T> typeOf = (Class<T>)
                 ((ParameterizedType)getClass()
                         .getGenericSuperclass())
-                        .getActualTypeArguments()[0];;
+                        .getActualTypeArguments()[0];
 
         if(typeOf == String.class || typeOf == Character.class){
             variableDataType = VariableDataType.STRING;
         }else if(typeOf == Boolean.class){
             variableDataType = VariableDataType.BOOLEAN;
-        }else if(typeOf == String[].class || typeOf == ArrayList.class){
+        }else if(typeOf == String[].class){
+            variableDataType = VariableDataType.LIST;
+        }else if(typeOf == ItemStack[].class){
+            variableDataType = VariableDataType.ITEMSTACKLIST;
+        }else if(typeOf == ArrayList.class){
+            main.getLogManager().warn("Error: ArrayList variables are not supported yet. Using LIST variable...");
             variableDataType = VariableDataType.LIST;
         }else{
             variableDataType = VariableDataType.NUMBER;
@@ -78,7 +84,7 @@ public abstract class Variable<T> {
     protected void addRequiredBoolean(final BooleanArgument<CommandSender> booleanArgument){
         requiredBooleans.add(booleanArgument);
     }
-    protected void addRequiredBooleanFlag(final CommandFlag<CommandSender> commandFlag){
+    protected void addRequiredBooleanFlag(final CommandFlag<Void> commandFlag){
         requiredBooleanFlags.add(commandFlag);
     }
 
@@ -91,7 +97,7 @@ public abstract class Variable<T> {
     public final ArrayList<BooleanArgument<CommandSender>> getRequiredBooleans(){
         return requiredBooleans;
     }
-    public final ArrayList<CommandFlag<CommandSender>> getRequiredBooleanFlags(){
+    public final ArrayList<CommandFlag<Void>> getRequiredBooleanFlags(){
         return requiredBooleanFlags;
     }
 
@@ -104,7 +110,7 @@ public abstract class Variable<T> {
         return main.getVariablesManager().evaluateExpression(additionalNumberArguments.get(key), player);
     }
     protected final boolean getRequiredBooleanValue(String key){
-        return additionalBooleanArguments.get(key);
+        return additionalBooleanArguments.getOrDefault(key, false);
     }
 
     public abstract T getValue(final Player player, final Object... objects);
@@ -129,5 +135,15 @@ public abstract class Variable<T> {
     }
     public void setAdditionalBooleanArguments(HashMap<String, Boolean> additionalBooleanArguments) {
         this.additionalBooleanArguments = additionalBooleanArguments;
+    }
+
+    public void addAdditionalBooleanArgument(String key, boolean value){
+        additionalBooleanArguments.put(key, value);
+    }
+    public void addAdditionalStringArgument(String key, String value){
+        additionalStringArguments.put(key, value);
+    }
+    public void addAdditionalNumberArgument(String key, String value){
+        additionalStringArguments.put(key, value);
     }
 }

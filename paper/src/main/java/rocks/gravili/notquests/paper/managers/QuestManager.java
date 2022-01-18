@@ -956,6 +956,8 @@ public class QuestManager {
             actionType = booleanAction.getVariableName();
         }else if(action instanceof ListAction listAction){
             actionType = listAction.getVariableName();
+        }else if(action instanceof ItemStackListAction itemStackListAction){
+            actionType = itemStackListAction.getVariableName();
         }
 
         return actionType;

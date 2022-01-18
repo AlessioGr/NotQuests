@@ -147,7 +147,7 @@ public class BooleanAction extends Action {
                         for(BooleanArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
                             additionalBooleanArguments.put(booleanArgument.getName(), context.get(booleanArgument.getName()));
                         }
-                        for(CommandFlag<CommandSender> commandFlag : variable.getRequiredBooleanFlags()){
+                        for(CommandFlag<?> commandFlag : variable.getRequiredBooleanFlags()){
                             additionalBooleanArguments.put(commandFlag.getName(), context.flags().isPresent(commandFlag.getName()));
                         }
                         booleanAction.setAdditionalBooleanArguments(additionalBooleanArguments);
