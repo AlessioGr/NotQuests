@@ -39,6 +39,7 @@ public abstract class Action {
     private Objective objective;
     private final ArrayList<Condition> conditions;
     private Category category;
+    private int actionID = -1;
 
 
     public Action(NotQuests main) {
@@ -46,6 +47,14 @@ public abstract class Action {
         conditions = new ArrayList<>();
         category = main.getDataManager().getDefaultCategory();
         main.allActions.add(this); //For bStats
+    }
+
+    public final int getActionID() {
+        return actionID;
+    }
+
+    public void setActionID(int actionID) {
+        this.actionID = actionID;
     }
 
     public final Category getCategory() {

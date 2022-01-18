@@ -200,8 +200,8 @@ public class QuestManager {
                                 validObjectiveID = false;
                                 main.getDataManager().disablePluginAndSaving("Error parsing loaded objective ID <highlight>" + objectiveNumber + "</highlight>.", quest, ex);
                                 return;
-
                             }
+
                             if (validObjectiveID && objectiveID > 0 && objectiveType != null) {
 
 
@@ -300,6 +300,7 @@ public class QuestManager {
                                     condition.setNegated(negated);
                                     condition.setDescription(description);
                                     condition.setCategory(category);
+                                    condition.setConditionID(requirementID);
                                     condition.load(category.getQuestsConfig(), "quests." + questName + ".requirements." + requirementID);
                                 } catch (Exception ex) {
                                     main.getDataManager().disablePluginAndSaving("Error parsing requirement Type of requirement with ID <highlight>" + requirementNumber + "</highlight>.", quest, ex);
@@ -353,6 +354,7 @@ public class QuestManager {
                                     reward = actionType.getDeclaredConstructor(NotQuests.class).newInstance(main);
                                     reward.setQuest(quest);
                                     reward.setCategory(category);
+                                    reward.setActionID(rewardID);
                                     reward.load(category.getQuestsConfig(), "quests." + questName + ".rewards." + rewardID);
 
                                 } catch (Exception ex) {
@@ -496,6 +498,7 @@ public class QuestManager {
                                         condition.setNegated(negated);
                                         condition.setDescription(description);
                                         condition.setCategory(category);
+                                        condition.setConditionID(conditionID);
 
                                         condition.load(category.getQuestsConfig(), "quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditions." + objectiveConditionNumber);
                                     } catch (Exception ex) {
@@ -546,6 +549,7 @@ public class QuestManager {
                                         reward.setQuest(quest);
                                         reward.load(category.getQuestsConfig(), initialObjectiveRewardsPath + rewardID);
                                         reward.setCategory(category);
+                                        reward.setActionID(rewardID);
 
                                     } catch (Exception ex) {
                                         main.getDataManager().disablePluginAndSaving("Error parsing reward Type of reward with ID <highlight>" + objectiveRewardNumber + "</highlight>.", quest, objective, ex);
@@ -1353,21 +1357,19 @@ public class QuestManager {
             sender.sendMessage(main.parse(
                     "   <highlight>Conditions:"
             ));
-            int counter2 = 1;
             for (final Condition condition : objective.getConditions()) {
                 if(sender instanceof Player player){
                     sender.sendMessage(main.parse(
-                            "         <highlight>" + counter2 + ".</highlight> <main>Condition:</main> <highlight2>" + condition.getConditionDescription(player)
+                            "         <highlight>" + condition.getConditionID() + ".</highlight> <main>Condition:</main> <highlight2>" + condition.getConditionDescription(player)
                     ));
                 }else{
                     sender.sendMessage(main.parse(
-                            "         <highlight>" + counter2 + ".</highlight> <main>Condition:</main> <highlight2>" + condition.getConditionDescription(null)
+                            "         <highlight>" + condition.getConditionID() + ".</highlight> <main>Condition:</main> <highlight2>" + condition.getConditionDescription(null)
                     ));
                 }
 
-                counter2++;
             }
-            if (counter2 == 1) {
+            if (objective.getConditions().size() == 0) {
                 sender.sendMessage(main.parse(
                         "      <unimportant>No conditions found!"
                 ));

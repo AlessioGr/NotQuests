@@ -38,12 +38,21 @@ public abstract class Condition {
     private boolean negated = false;
     private Category category;
     private String description = "";
+    private int conditionID = -1;
 
 
     public Condition(NotQuests main) {
         this.main = main;
         category = main.getDataManager().getDefaultCategory();
         main.allConditions.add(this); //For bStats
+    }
+
+    public final int getConditionID() {
+        return conditionID;
+    }
+
+    public void setConditionID(int conditionID) {
+        this.conditionID = conditionID;
     }
 
     public final String getDescription(){

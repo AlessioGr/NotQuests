@@ -125,7 +125,7 @@ public class TriggerManager {
             trigger.setAction(action);
             trigger.setApplyOn(applyOn);
             trigger.setWorldName(worldString);
-            trigger.setTriggerID(quest.getTriggers().size() + 1);
+            trigger.setTriggerID(quest.getTriggers().size() + 1); //TODO: Create non-dupe ID finder which is safer
             trigger.setAmountNeeded(amount);
 
             quest.addTrigger(trigger, true);

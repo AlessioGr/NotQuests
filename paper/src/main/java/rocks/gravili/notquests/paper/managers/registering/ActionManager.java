@@ -148,6 +148,7 @@ public class ActionManager {
             action.setCategory(quest.getCategory());
             if (objectiveOfQuest != null) {//Objective Reward
                 action.setObjective(objectiveOfQuest);
+                action.setActionID(objectiveOfQuest.getRewards().size() + 1); //TODO: Create non-dupe ID finder which is safer
 
                 objectiveOfQuest.addReward(action, true); //TODO: Also do addAction which are executed when the objective is unlocked (and not just when completed)
 
@@ -155,6 +156,7 @@ public class ActionManager {
                         "<success>" + getActionType(action.getClass()) + " Reward successfully added to Objective <highlight>"
                                 + objectiveOfQuest.getObjectiveFinalName() + "</highlight>!"));
             } else { //Quest Reward
+                action.setActionID(quest.getRewards().size() + 1); //TODO: Create non-dupe ID finder which is safer
                 quest.addReward(action, true);
 
                 context.getSender().sendMessage(main.parse(

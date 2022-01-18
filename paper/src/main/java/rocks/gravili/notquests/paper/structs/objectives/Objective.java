@@ -137,32 +137,54 @@ public abstract class Objective {
 
 
     public void addCondition(final Condition condition, final boolean save) {
-        conditions.add(condition);
-        if (save) {
-            quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions." + conditions.size() + ".conditionType", condition.getConditionType());
-            quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions." + conditions.size() + ".progressNeeded", condition.getProgressNeeded());
-            quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions." + conditions.size() + ".negated", condition.isNegated());
-            quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions." + conditions.size() + ".description", condition.getDescription());
+        boolean dupeID = false;
+        for (Condition condition1 : conditions) {
+            if (condition.getConditionID() == condition1.getConditionID()) {
+                dupeID = true;
+                break;
+            }
+        }
+        if (!dupeID) {
+            conditions.add(condition);
+            if (save) {
+                quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions." + condition.getConditionID() + ".conditionType", condition.getConditionType());
+                quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions." + condition.getConditionID() + ".progressNeeded", condition.getProgressNeeded());
+                quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions." + condition.getConditionID() + ".negated", condition.isNegated());
+                quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions." + condition.getConditionID() + ".description", condition.getDescription());
 
-            condition.save(quest.getCategory().getQuestsConfig(), "quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions." + conditions.size());
-            quest.getCategory().saveQuestsConfig();
+                condition.save(quest.getCategory().getQuestsConfig(), "quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions." + condition.getConditionID());
+                quest.getCategory().saveQuestsConfig();
+            }
+        } else {
+            main.getLogManager().warn("ERROR: Tried to add condition to objective with the ID <highlight>" + getObjectiveID() + "</highlight> with the ID <highlight>" + condition.getConditionID() + "</highlight> but the ID was a DUPLICATE!");
         }
     }
 
     public void addReward(final Action action, final boolean save) {
-        rewards.add(action);
-        if (save) {
-            quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".rewards." + rewards.size() + ".actionType", action.getActionType());
-            if (!action.getActionName().isBlank()) {
-                quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".rewards." + rewards.size() + ".displayName", action.getActionName());
+        boolean dupeID = false;
+        for (Action action1 : rewards) {
+            if (action.getActionID() == action1.getActionID()) {
+                dupeID = true;
+                break;
             }
-            action.save(quest.getCategory().getQuestsConfig(), "quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".rewards." + rewards.size());
-            quest.getCategory().saveQuestsConfig();
+        }
+        if (!dupeID) {
+            rewards.add(action);
+            if (save) {
+                quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".rewards." + action.getActionID() + ".actionType", action.getActionType());
+                if (!action.getActionName().isBlank()) {
+                    quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".rewards." + action.getActionID() + ".displayName", action.getActionName());
+                }
+                action.save(quest.getCategory().getQuestsConfig(), "quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".rewards." + action.getActionID());
+                quest.getCategory().saveQuestsConfig();
+            }
+        } else {
+            main.getLogManager().warn("ERROR: Tried to add reward to objective with the ID <highlight>" + getObjectiveID() + "</highlight> with the ID <highlight>" + action.getActionID() + "</highlight> but the ID was a DUPLICATE!");
         }
     }
 
     public void removeCondition(final Condition condition, final boolean save) {
-        int conditionID = conditions.indexOf(condition)+1;
+        int conditionID = condition.getConditionID();
         conditions.remove(condition);
         if (save) {
             quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions." + conditionID, null);
@@ -171,7 +193,7 @@ public abstract class Objective {
     }
 
     public void removeReward(final Action action, final boolean save) {
-        int rewardID = rewards.indexOf(action)+1;
+        int rewardID = action.getActionID();
         rewards.remove(action);
         if (save) {
             quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".rewards." + rewardID, null);

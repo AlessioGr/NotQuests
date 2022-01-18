@@ -163,46 +163,78 @@ public class Quest {
 
 
     public void addRequirement(final Condition condition, final boolean save) {
-        conditions.add(condition);
-        if (save) {
-            category.getQuestsConfig().set("quests." + questName + ".requirements." + conditions.size() + ".conditionType", condition.getConditionType());
-            category.getQuestsConfig().set("quests." + questName + ".requirements." + conditions.size() + ".progressNeeded", condition.getProgressNeeded());
-            category.getQuestsConfig().set("quests." + questName + ".requirements." + conditions.size() + ".negated", condition.isNegated());
-            category.getQuestsConfig().set("quests." + questName + ".requirements." + conditions.size() + ".description", condition.getDescription());
+        boolean dupeID = false;
+        for (Condition condition1 : conditions) {
+            if (condition.getConditionID() == condition1.getConditionID()) {
+                dupeID = true;
+                break;
+            }
+        }
+        if (!dupeID) {
+            conditions.add(condition);
+            if (save) {
+                category.getQuestsConfig().set("quests." + questName + ".requirements." + condition.getConditionID() + ".conditionType", condition.getConditionType());
+                category.getQuestsConfig().set("quests." + questName + ".requirements." + condition.getConditionID() + ".progressNeeded", condition.getProgressNeeded());
+                category.getQuestsConfig().set("quests." + questName + ".requirements." + condition.getConditionID() + ".negated", condition.isNegated());
+                category.getQuestsConfig().set("quests." + questName + ".requirements." + condition.getConditionID() + ".description", condition.getDescription());
 
-            condition.save(category.getQuestsConfig(), "quests." + questName + ".requirements." + conditions.size());
-            category.saveQuestsConfig();
+                condition.save(category.getQuestsConfig(), "quests." + questName + ".requirements." + condition.getConditionID());
+                category.saveQuestsConfig();
+            }
+        } else {
+            main.getLogManager().warn("ERROR: Tried to add requirement to quest <highlight>" + getQuestName() + "</highlight> with the ID <highlight>" + condition.getConditionID() + "</highlight> but the ID was a DUPLICATE!");
         }
 
     }
 
     public void addReward(Action action, final boolean save) {
-        rewards.add(action);
-        if (save) {
-            category.getQuestsConfig().set("quests." + questName + ".rewards." + rewards.size() + ".actionType", action.getActionType());
-            if (!action.getActionName().isBlank()) {
-                category.getQuestsConfig().set("quests." + questName + ".rewards." + rewards.size() + ".displayName", action.getActionName());
+        boolean dupeID = false;
+        for (Action action1 : rewards) {
+            if (action.getActionID() == action1.getActionID()) {
+                dupeID = true;
+                break;
             }
+        }
+        if (!dupeID) {
+            rewards.add(action);
+            if (save) {
+                category.getQuestsConfig().set("quests." + questName + ".rewards." + action.getActionID() + ".actionType", action.getActionType());
+                if (!action.getActionName().isBlank()) {
+                    category.getQuestsConfig().set("quests." + questName + ".rewards." + action.getActionID() + ".displayName", action.getActionName());
+                }
 
-            action.save(category.getQuestsConfig(), "quests." + questName + ".rewards." + rewards.size());
-            category.saveQuestsConfig();
+                action.save(category.getQuestsConfig(), "quests." + questName + ".rewards." + action.getActionID());
+                category.saveQuestsConfig();
+            }
+        } else {
+            main.getLogManager().warn("ERROR: Tried to add reward to quest <highlight>" + getQuestName() + "</highlight> with the ID <highlight>" + action.getActionID() + "</highlight> but the ID was a DUPLICATE!");
         }
     }
 
     public void addTrigger(final Trigger trigger, final boolean save) {
-        triggers.add(trigger);
-
-        if (save) {
-            category.getQuestsConfig().set("quests." + questName + ".triggers." + triggers.size() + ".triggerType", trigger.getTriggerType());
-            category.getQuestsConfig().set("quests." + questName + ".triggers." + triggers.size() + ".triggerActionName", trigger.getTriggerAction().getActionName());
-            category.getQuestsConfig().set("quests." + questName + ".triggers." + triggers.size() + ".applyOn", trigger.getApplyOn());
-            category.getQuestsConfig().set("quests." + questName + ".triggers." + triggers.size() + ".amountNeeded", trigger.getAmountNeeded());
-            category.getQuestsConfig().set("quests." + questName + ".triggers." + triggers.size() + ".worldName", trigger.getWorldName());
-
-            trigger.save(category.getQuestsConfig(), "quests." + questName + ".triggers." + triggers.size());
-            category.saveQuestsConfig();
+        boolean dupeID = false;
+        for (Trigger trigger1 : triggers) {
+            if (trigger.getTriggerID() == trigger1.getTriggerID()) {
+                dupeID = true;
+                break;
+            }
         }
+        if (!dupeID) {
+            triggers.add(trigger);
 
+            if (save) {
+                category.getQuestsConfig().set("quests." + questName + ".triggers." + trigger.getTriggerID() + ".triggerType", trigger.getTriggerType());
+                category.getQuestsConfig().set("quests." + questName + ".triggers." + trigger.getTriggerID() + ".triggerActionName", trigger.getTriggerAction().getActionName());
+                category.getQuestsConfig().set("quests." + questName + ".triggers." + trigger.getTriggerID() + ".applyOn", trigger.getApplyOn());
+                category.getQuestsConfig().set("quests." + questName + ".triggers." + trigger.getTriggerID() + ".amountNeeded", trigger.getAmountNeeded());
+                category.getQuestsConfig().set("quests." + questName + ".triggers." + trigger.getTriggerID() + ".worldName", trigger.getWorldName());
+
+                trigger.save(category.getQuestsConfig(), "quests." + questName + ".triggers." + trigger.getTriggerID());
+                category.saveQuestsConfig();
+            }
+        } else {
+            main.getLogManager().warn("ERROR: Tried to add trigger to quest <highlight>" + getQuestName() + "</highlight> with the ID <highlight>" + trigger.getTriggerID() + "</highlight> but the ID was a DUPLICATE!");
+        }
     }
 
     public void clearObjectives() {
@@ -421,29 +453,22 @@ public class Quest {
 
 
     public void removeReward(final Action action) {
-        category.getQuestsConfig().set("quests." + questName + ".rewards." + (rewards.indexOf(action)+1), null);
+        category.getQuestsConfig().set("quests." + questName + ".rewards." + action.getActionID(), null);
         category.saveQuestsConfig();
         rewards.remove(action);
     }
 
     public void removeRequirement(final Condition requirement) {
-        category.getQuestsConfig().set("quests." + questName + ".requirements." + (conditions.indexOf(requirement)+1), null);
+        category.getQuestsConfig().set("quests." + questName + ".requirements." + requirement.getConditionID(), null);
         category.saveQuestsConfig();
         conditions.remove(requirement);
     }
 
-    public String removeTrigger(int triggerID) {
-        if (triggers.get((triggerID - 1)) != null) {
-
-
-            category.getQuestsConfig().set("quests." + questName + ".triggers." + triggerID, null);
-            category.saveQuestsConfig();
-            triggers.remove(triggers.get((triggerID - 1)));
-            return "<highlight>Trigger successfully removed!";
-
-        } else {
-            return "<RED>Error: Trigger not found!";
-        }
+    public String removeTrigger(final Trigger trigger) {
+        category.getQuestsConfig().set("quests." + questName + ".triggers." + trigger.getTriggerID(), null);
+        category.saveQuestsConfig();
+        triggers.remove(trigger);
+        return "<highlight>Trigger successfully removed!";
     }
 
     public final ItemStack getTakeItem() {

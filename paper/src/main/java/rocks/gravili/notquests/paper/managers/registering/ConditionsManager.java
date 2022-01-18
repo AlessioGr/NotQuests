@@ -187,6 +187,7 @@ public class ConditionsManager {
             condition.setCategory(quest.getCategory());
             if (objectiveOfQuest != null) {//Objective Condition
                 condition.setObjective(objectiveOfQuest);
+                condition.setConditionID(objectiveOfQuest.getConditions().size() + 1); //TODO: Create non-dupe ID finder which is safer
 
                 objectiveOfQuest.addCondition(condition, true);
 
@@ -195,6 +196,7 @@ public class ConditionsManager {
                         "<success>" + getConditionType(condition.getClass()) + " Condition successfully added to Objective <highlight>"
                                 + objectiveOfQuest.getObjectiveFinalName() + "</highlight>!"));
             } else { //Quest Requirement
+                condition.setConditionID(quest.getRequirements().size() + 1); //TODO: Create non-dupe ID finder which is safer
                 quest.addRequirement(condition, true);
 
                 context.getSender().sendMessage(main.parse(

@@ -295,7 +295,7 @@ public class ArmorStandEvents implements Listener {
                         if (quest != null) {
                             TalkToNPCObjective talkToNPCObjective = new TalkToNPCObjective(main);
                             talkToNPCObjective.setQuest(quest);
-                            talkToNPCObjective.setObjectiveID(quest.getObjectives().size() + 1);
+                            talkToNPCObjective.setObjectiveID(quest.getObjectives().size() + 1); //TODO: Create non-dupe ID finder which is safer
                             talkToNPCObjective.setArmorStandUUID(armorStand.getUniqueId());
                             quest.addObjective(talkToNPCObjective, true);
                             player.sendMessage(main.parse(
@@ -354,7 +354,7 @@ public class ArmorStandEvents implements Listener {
                                 deliverItemsObjective.setProgressNeeded(amountToDeliver);
                                 deliverItemsObjective.setRecipientArmorStandUUID(armorStand.getUniqueId());
                                 deliverItemsObjective.setQuest(quest);
-                                deliverItemsObjective.setObjectiveID(quest.getObjectives().size() + 1);
+                                deliverItemsObjective.setObjectiveID(quest.getObjectives().size() + 1); //TODO: Create non-dupe ID finder which is safer
                                 deliverItemsObjective.setDeliverAnyItem(deliverAny);
 
                                 quest.addObjective(deliverItemsObjective, true);

@@ -843,18 +843,16 @@ public class AdminEditCommands {
                             "<highlight>Conditions of objective with ID <highlight2>" + objectiveID
                                     + "</highlight2>:"
                     ));
-                    int counter = 1;
                     for (Condition condition : objective.getConditions()) {
-                        context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>" + condition.getConditionType() + "</main>"));
+                        context.getSender().sendMessage(main.parse("<highlight>" + condition.getConditionID() + ".</highlight> <main>" + condition.getConditionType() + "</main>"));
                         if(context.getSender() instanceof Player player){
                             context.getSender().sendMessage(main.parse("<main>" + condition.getConditionDescription(player)));
                         }else{
                             context.getSender().sendMessage(main.parse("<main>" + condition.getConditionDescription(null)));
                         }
-                        counter += 1;
                     }
 
-                    if (counter == 1) {
+                    if (objective.getConditions().size() == 0) {
                         context.getSender().sendMessage(main.parse("<warn>This objective has no conditions!"));
                     }
                 }));
@@ -1239,15 +1237,13 @@ public class AdminEditCommands {
                     final Quest quest = context.get("quest");
 
                     context.getSender().sendMessage(main.parse("<highlight>Requirements for Quest <highlight2>" + quest.getQuestName() + "</highlight2>:"));
-                    int counter = 1;
                     for (Condition condition : quest.getRequirements()) {
-                        context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>" + condition.getConditionType()));
+                        context.getSender().sendMessage(main.parse("<highlight>" + condition.getConditionID() + ".</highlight> <main>" + condition.getConditionType()));
                         if(context.getSender() instanceof Player player){
                             context.getSender().sendMessage(main.parse("<main>" + condition.getConditionDescription(player)));
                         }else {
                             context.getSender().sendMessage(main.parse("<main>" + condition.getConditionDescription(null)));
                         }
-                        counter += 1;
                     }
                 }));
 
@@ -1386,15 +1382,13 @@ public class AdminEditCommands {
                     final Quest quest = context.get("quest");
 
                     context.getSender().sendMessage(main.parse("<highlight>Rewards for Quest <highlight2>" + quest.getQuestName() + "</highlight2>:"));
-                    int counter = 1;
                     for (final Action action : quest.getRewards()) {
-                        context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>" + action.getActionType()));
+                        context.getSender().sendMessage(main.parse("<highlight>" + action.getActionID() + ".</highlight> <main>" + action.getActionType()));
                         if(context.getSender() instanceof Player player){
                             context.getSender().sendMessage(main.parse("<unimportant>--</unimportant> <main>" + action.getActionDescription(player)));
                         }else {
                             context.getSender().sendMessage(main.parse("<unimportant>--</unimportant> <main>" + action.getActionDescription(null)));
                         }
-                        counter++;
                     }
 
                 }));
@@ -1450,15 +1444,13 @@ public class AdminEditCommands {
                     assert objective != null; //Shouldn't be null
 
                     context.getSender().sendMessage(main.parse("<highlight>Rewards for Objective with ID <highlight2>" + objectiveID + "</highlight2> of Quest <highlight2>" + quest.getQuestName() + "</highlight2>:"));
-                    int counter = 1;
                     for (final Action action : objective.getRewards()) {
-                        context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>" + action.getActionType()));
+                        context.getSender().sendMessage(main.parse("<highlight>" + action.getActionID() + ".</highlight> <main>" + action.getActionType()));
                         if(context.getSender() instanceof Player player){
                             context.getSender().sendMessage(main.parse("<unimportant>--</unimportant> <main>" + action.getActionDescription(player)));
                         }else{
                             context.getSender().sendMessage(main.parse("<unimportant>--</unimportant> <main>" + action.getActionDescription(null)));
                         }
-                        counter++;
                     }
                 }));
 
@@ -1810,9 +1802,8 @@ public class AdminEditCommands {
 
                     context.getSender().sendMessage(main.parse("<highlight>Triggers for Quest <highlight2>" + quest.getQuestName() + "</highlight2>:"));
 
-                    int counter = 1;
                     for (Trigger trigger : quest.getTriggers()) {
-                        context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> Type: <main>" + trigger.getTriggerType()));
+                        context.getSender().sendMessage(main.parse("<highlight>" + trigger.getTriggerID() + ".</highlight> Type: <main>" + trigger.getTriggerType()));
 
 
                         final String triggerDescription = trigger.getTriggerDescription();
@@ -1843,7 +1834,6 @@ public class AdminEditCommands {
                             context.getSender().sendMessage(main.parse("<unimportant>--- In World:</unimportant> <main>" + trigger.getWorldName()));
                         }
 
-                        counter++;
                     }
 
                 }));
@@ -1881,8 +1871,17 @@ public class AdminEditCommands {
 
                     final int triggerID = context.get("Trigger ID");
 
+                    Trigger trigger = quest.getTriggers().get(triggerID-1);
+
+                    if(trigger == null){
+                        context.getSender().sendMessage(main.parse(
+                                "<error> Error: Trigger with the ID <highlight>" + triggerID+1 + "</highlight> was not found!"
+                        ));
+                        return;
+                    }
+
                     context.getSender().sendMessage(main.parse(
-                            quest.removeTrigger(triggerID)
+                            quest.removeTrigger(trigger)
                     ));
 
                 }));
