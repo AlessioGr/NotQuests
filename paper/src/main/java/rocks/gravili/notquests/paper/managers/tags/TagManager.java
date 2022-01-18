@@ -14,6 +14,7 @@ import rocks.gravili.notquests.paper.structs.actions.Action;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class TagManager {
     private final NotQuests main;
@@ -36,9 +37,25 @@ public class TagManager {
     public void loadAllOnlinePlayerTags(){
         main.getLogManager().info("Loading tags of all online players...");
         for(Player player : Bukkit.getOnlinePlayers()){
+            main.getLogManager().info("Loading tags of all online player " + player.getName());
             QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
             if(questPlayer != null){
                 onJoin(questPlayer, player);
+            }else{
+                main.getLogManager().info("Loading Saving tags of all online player " + player.getName() + " because they have no questplayer.");
+            }
+        }
+    }
+
+    public void saveAllOnlinePlayerTags(){
+        main.getLogManager().info("Saving tags of all online players...");
+        for(Player player : Bukkit.getOnlinePlayers()){
+            main.getLogManager().info("Saving tags of all online player " + player.getName());
+            QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+            if(questPlayer != null){
+                onQuit(questPlayer, player);
+            }else{
+                main.getLogManager().info("Skip Saving tags of all online player " + player.getName() + " because they have no questplayer.");
             }
         }
     }
@@ -46,8 +63,11 @@ public class TagManager {
     //TODO: test if hashmap => bytestream serialization is faster
     public void onJoin(final QuestPlayer questPlayer, final Player player){
         if(questPlayer.getTags().size() > 0){
+            main.getLogManager().info("Skip Loading tags for " + player.getName() + "! Size: " + questPlayer.getTags().size());
             return;
         }
+        main.getLogManager().info("Loading tags for " + player.getName() + "...");
+
         PersistentDataContainer persistentDataContainer = player.getPersistentDataContainer();
         PersistentDataContainer booleanTagsContainer = persistentDataContainer.get(booleanTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER);
         PersistentDataContainer integerTagsContainer = persistentDataContainer.get(integerTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER);
@@ -84,6 +104,14 @@ public class TagManager {
                 questPlayer.setTag(key.getKey(), stringTagsContainer.get(key, PersistentDataType.STRING));
             }
         }
+
+        main.getLogManager().info("Loading " + questPlayer.getTags().size() + " tags for " + player.getName() + ":");
+        if(questPlayer.getTags().size() > 0){
+            for(String tagIdentifier : questPlayer.getTags().keySet()){
+                main.getLogManager().info("   " + tagIdentifier + ": " + questPlayer.getTag(tagIdentifier));
+            }
+        }
+
 
     }
 
@@ -137,7 +165,7 @@ public class TagManager {
     }
 
     public final Tag getTag(final String tagIdentifier){
-        return identifiersAndTags.get(tagIdentifier);
+        return identifiersAndTags.get(tagIdentifier.toLowerCase(Locale.ROOT));
     }
 
     public void addTag(final Tag newTag){
@@ -196,7 +224,7 @@ public class TagManager {
 
 
                 if (tag != null) {
-                    identifiersAndTags.put(tagIdentifier, tag);
+                    identifiersAndTags.put(tagIdentifier.toLowerCase(Locale.ROOT), tag);
                 } else {
                     main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading tags.yml tag data.");
                 }

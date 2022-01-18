@@ -37,6 +37,7 @@ import rocks.gravili.notquests.paper.structs.objectives.OtherQuestObjective;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -87,10 +88,10 @@ public class QuestPlayer {
     }
 
     public final Object getTag(final String tagIdentifier){
-        return tags.get(tagIdentifier);
+        return tags.get(tagIdentifier.toLowerCase(Locale.ROOT));
     }
     public void setTag(final String tagIdentifier, Object newValue){
-        tags.put(tagIdentifier, newValue);
+        tags.put(tagIdentifier.toLowerCase(Locale.ROOT), newValue);
     }
 
     public final HashMap<String, Object> getTags(){

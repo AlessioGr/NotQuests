@@ -232,7 +232,6 @@ public class NotQuests {
 
         tagManager = new TagManager(this);
 
-        tagManager.loadAllOnlinePlayerTags();
 
         webManager = new WebManager(this);
 
@@ -340,6 +339,8 @@ public class NotQuests {
      */
     public void onDisable() {
         getLogManager().info("NotQuests is shutting down...");
+
+        tagManager.saveAllOnlinePlayerTags();
 
 
         //Save all kinds of data

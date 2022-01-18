@@ -68,6 +68,7 @@ public class QuestPlayerManager {
                     questPlayer.setQuestPoints(questPoints, false);
 
 
+
                 } else {
                     main.getLogManager().severe("ERROR: QuestPlayer with the UUID <highlight>" + uuid + "</highlight> could not be loaded from database");
 
@@ -219,6 +220,8 @@ public class QuestPlayerManager {
         } catch (SQLException sqlException) {
             sqlException.printStackTrace();
         }
+
+        main.getTagManager().loadAllOnlinePlayerTags();
 
 
     }

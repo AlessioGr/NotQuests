@@ -57,6 +57,7 @@ public class IntegerTagVariable extends Variable<Integer> {
             return 0;
         }
 
+        //main.getLogManager().info("Getting tag for " + tagName);
         Object value = questPlayer.getTag(tagName);
 
         if(value instanceof Integer integerValue){
