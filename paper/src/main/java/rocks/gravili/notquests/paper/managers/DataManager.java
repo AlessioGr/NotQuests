@@ -254,6 +254,7 @@ public class DataManager {
 
 
             final Category category = new Category(main, categoryFolder.getName(), categoryFolder);
+            category.setCategoryFile(categoryYMLFile);
             category.setQuestsFile(questsFile);
             category.setActionsFile(actionsFile);
             category.setConditionsFile(conditionsFile);

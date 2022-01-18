@@ -138,7 +138,7 @@ public class TagManager {
 
         newTag.getCategory().getTagsConfig().set("tags." + newTag.getTagName() + ".tagType", newTag.getTagType().name());
 
-        newTag.getCategory().saveCategoryConfig();
+        newTag.getCategory().saveTagsConfig();
     }
 
     public final Collection<Tag> getTags(){
