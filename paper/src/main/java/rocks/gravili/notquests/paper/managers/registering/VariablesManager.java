@@ -32,6 +32,7 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.variables.*;
 import rocks.gravili.notquests.paper.structs.variables.hooks.*;
+import rocks.gravili.notquests.paper.structs.variables.tags.*;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -75,6 +76,13 @@ public class VariablesManager {
         registerVariable("Advancement", AdvancementVariable.class);
         registerVariable("Inventory", InventoryVariable.class);
         registerVariable("ContainerInventory", ContainerInventoryVariable.class);
+
+        registerVariable("TagBoolean", BooleanTagVariable.class);
+        registerVariable("TagInteger", IntegerTagVariable.class);
+        registerVariable("TagFloat", FloatTagVariable.class);
+        registerVariable("TagDouble", DoubleTagVariable.class);
+        registerVariable("TagString", StringTagVariable.class);
+
 
         if(main.getIntegrationsManager().isPlaceholderAPIEnabled()){
             registerVariable("PlaceholderAPINumber", PlaceholderAPINumberVariable.class);

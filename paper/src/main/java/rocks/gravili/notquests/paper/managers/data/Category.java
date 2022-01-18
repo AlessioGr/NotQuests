@@ -12,8 +12,8 @@ public class Category {
     private final String categoryName;
     private final File categoryFolder;
 
-    private File categoryFile, questsFile, actionsFile, conditionsFile, conversationsFolder;
-    private FileConfiguration categoryConfig, questsConfig, actionsConfig, conditionsConfig;
+    private File categoryFile, questsFile, actionsFile, conditionsFile, tagsFile, conversationsFolder;
+    private FileConfiguration categoryConfig, questsConfig, actionsConfig, conditionsConfig, tagsConfig;
     private final ArrayList<FileConfiguration> conversationsConfigs;
 
     private Category parentCategory = null;
@@ -87,6 +87,14 @@ public class Category {
         this.conditionsFile = conditionsFile;
     }
 
+    public final File getTagsFile() {
+        return tagsFile;
+    }
+
+    public void setTagsFile(final File tagsFile) {
+        this.tagsFile = tagsFile;
+    }
+
     public final File getConversationsFolder() {
         return conversationsFolder;
     }
@@ -101,6 +109,7 @@ public class Category {
         questsConfig = loadConfig(questsFile, questsConfig);
         actionsConfig = loadConfig(actionsFile, actionsConfig);
         conditionsConfig = loadConfig(conditionsFile, conditionsConfig);
+        tagsConfig = loadConfig(tagsFile, tagsConfig);
 
         if (!conversationsConfigs.isEmpty()) {
             return;
@@ -137,6 +146,11 @@ public class Category {
     public FileConfiguration getConditionsConfig() {
         return conditionsConfig;
     }
+
+    public FileConfiguration getTagsConfig() {
+        return tagsConfig;
+    }
+
 
     public final ArrayList<FileConfiguration> getConversationsConfigs() {
         return conversationsConfigs;
@@ -175,6 +189,16 @@ public class Category {
         if(main.getDataManager().isSavingEnabled()){
             try {
                 conditionsConfig.save(conditionsFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void saveTagsConfig(){
+        if(main.getDataManager().isSavingEnabled()){
+            try {
+                tagsConfig.save(tagsFile);
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -969,23 +969,6 @@ public class QuestEvents implements Listener {
     }
 
 
-    @EventHandler
-    private void onDisconnectEvent(PlayerQuitEvent e) { //Disconnect objectives
-        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(e.getPlayer().getUniqueId());
-        if (questPlayer != null) {
-            questPlayer.onQuit();
-            if (questPlayer.getActiveQuests().size() > 0) {
-                for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-
-                    for (final ActiveTrigger activeTrigger : activeQuest.getActiveTriggers()) {
-                        if (activeTrigger.getTrigger().getTriggerType().equals("DISCONNECT")) {
-                            handleGeneralTrigger(questPlayer, activeTrigger);
-                        }
-                    }
-                }
-            }
-        }
-    }
 
 
 
@@ -1142,9 +1125,31 @@ public class QuestEvents implements Listener {
 
 
 
+    @EventHandler
+    private void onDisconnectEvent(PlayerQuitEvent e) { //Disconnect objectives
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(e.getPlayer().getUniqueId());
+        if (questPlayer != null) {
+            questPlayer.onQuit();
+            main.getTagManager().onQuit(questPlayer, e.getPlayer());
+            if (questPlayer.getActiveQuests().size() > 0) {
+                for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+
+                    for (final ActiveTrigger activeTrigger : activeQuest.getActiveTriggers()) {
+                        if (activeTrigger.getTrigger().getTriggerType().equals("DISCONNECT")) {
+                            handleGeneralTrigger(questPlayer, activeTrigger);
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(e.getPlayer().getUniqueId());
+        if (questPlayer != null) {
+            main.getTagManager().onJoin(questPlayer, e.getPlayer());
+        }
         if (e.getPlayer().isOp() && main.getConfiguration().isUpdateCheckerNotifyOpsInChat()) {
             //Component message = new C("Click me");
             //message.setClickEvent( new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.spigotmc.org/resources/%E2%9A%A1-fancybags-%E2%9A%A1-new-way-to-store-items-1-8-1-16-2.79997/" ) );

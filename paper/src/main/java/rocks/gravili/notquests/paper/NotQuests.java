@@ -1,6 +1,5 @@
 package rocks.gravili.notquests.paper;
 
-import io.lumine.xikage.mythicmobs.skills.conditions.ConditionAction;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
@@ -20,6 +19,7 @@ import rocks.gravili.notquests.paper.events.notquests.NotQuestsFullyLoadedEvent;
 import rocks.gravili.notquests.paper.managers.*;
 import rocks.gravili.notquests.paper.managers.packets.PacketManager;
 import rocks.gravili.notquests.paper.managers.registering.*;
+import rocks.gravili.notquests.paper.managers.tags.TagManager;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.actions.*;
 import rocks.gravili.notquests.paper.structs.conditions.*;
@@ -53,6 +53,7 @@ public class NotQuests {
     private GUIManager guiManager;
     private BackupManager backupManager;
     private MessageManager messageManager;
+    private TagManager tagManager;
     private WebManager webManager;
 
     //Registering Managers
@@ -228,6 +229,8 @@ public class NotQuests {
         main.getServer().getPluginManager().registerEvents(new ConversationEvents(this, conversationManager), main);
 
         commandManager.setupAdminConversationCommands(conversationManager);
+
+        tagManager = new TagManager(this);
 
         webManager = new WebManager(this);
 
@@ -476,6 +479,10 @@ public class NotQuests {
 
     public final MessageManager getMessageManager(){
         return messageManager;
+    }
+
+    public final TagManager getTagManager(){
+        return tagManager;
     }
 
     public final WebManager getWebManager(){

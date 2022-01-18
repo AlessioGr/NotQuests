@@ -66,6 +66,10 @@ public class QuestPlayer {
 
     private BossBar bossBar;
 
+    //Tags
+    private final HashMap<String, Object> tags;
+
+
 
     public QuestPlayer(NotQuests main, UUID uuid) {
         this.main = main;
@@ -79,6 +83,18 @@ public class QuestPlayer {
         locationsAndBeacons = new HashMap<>();
         activeLocationAndBeams = new HashMap<>();
 
+        tags = new HashMap<>();
+    }
+
+    public final Object getTag(final String tagIdentifier){
+        return tags.get(tagIdentifier);
+    }
+    public void setTag(final String tagIdentifier, Object newValue){
+        tags.put(tagIdentifier, newValue);
+    }
+
+    public final HashMap<String, Object> getTags(){
+        return tags;
     }
 
     public ActiveObjective getTrackingObjective() {

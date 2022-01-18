@@ -223,6 +223,8 @@ public class DataManager {
             File questsFile = null;
             File actionsFile = null;
             File conditionsFile = null;
+            File tagsFile = null;
+
 
             File conversationsFolder = null;
 
@@ -236,6 +238,8 @@ public class DataManager {
                         actionsFile = file;
                     } else if (file.getName().equalsIgnoreCase("conditions.yml")) {
                         conditionsFile = file;
+                    } else if (file.getName().equalsIgnoreCase("tags.yml")) {
+                        tagsFile = file;
                     }
                 } else {
                     if (file.getName().equalsIgnoreCase("conversations")) {
@@ -254,6 +258,7 @@ public class DataManager {
             category.setActionsFile(actionsFile);
             category.setConditionsFile(conditionsFile);
             category.setConversationsFolder(conversationsFolder);
+            category.setTagsFile(tagsFile);
 
             main.getLogManager().info("  Loading real category: <highlight>" + category.getCategoryFullName());
 
@@ -358,6 +363,12 @@ public class DataManager {
                     return null;
                 }
 
+                File tagsFile = new File(categoryFolder, "tags.yml");
+                if (!tagsFile.exists() && !tagsFile.createNewFile()) {
+                    disablePluginAndSaving("There was an error creating the " + categoryName + " category tags.yml...");
+                    return null;
+                }
+
                 File conversationsFolder = new File(categoryFolder, "conversations");
                 if (!conversationsFolder.exists() && !conversationsFolder.mkdir()) {
                     disablePluginAndSaving("There was an error creating the " + categoryName + " category conversations folder..");
@@ -370,6 +381,7 @@ public class DataManager {
                 category.setActionsFile(actionsFile);
                 category.setConditionsFile(conditionsFile);
                 category.setConversationsFolder(conversationsFolder);
+                category.setTagsFile(tagsFile);
 
 
                 if (parentCategory != null) {

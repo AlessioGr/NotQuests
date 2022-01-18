@@ -70,6 +70,7 @@ public class CommandManager {
     //Builders
     private Command.Builder<CommandSender> adminCommandBuilder;
     private Command.Builder<CommandSender> adminEditCommandBuilder;
+    private Command.Builder<CommandSender> adminTagCommandBuilder;
     private Command.Builder<CommandSender> adminConversationCommandBuilder;
     private Command.Builder<CommandSender> adminEditAddObjectiveCommandBuilder;
     private Command.Builder<CommandSender> adminEditAddRequirementCommandBuilder;
@@ -89,6 +90,7 @@ public class CommandManager {
     public CommandFlag<String> speakerColor;
     private AdminCommands adminCommands;
     private AdminEditCommands adminEditCommands;
+    private AdminTagCommands adminTagCommands;
     private AdminConversationCommands adminConversationCommands;
     public CommandFlag<Integer> applyOn; //0 = Quest
     public CommandFlag<World> world;
@@ -337,6 +339,9 @@ public class CommandManager {
                 .literal("edit", "e")
                 .argument(QuestSelector.of("quest", main), ArgumentDescription.of("Quest Name"));
 
+        adminTagCommandBuilder = adminCommandBuilder
+                .literal("tags", "t");
+
         adminConversationCommandBuilder = adminCommandBuilder
                 .literal("conversations", "c");
 
@@ -516,6 +521,8 @@ public class CommandManager {
 
         adminEditCommands = new AdminEditCommands(main, commandManager, adminEditCommandBuilder);
 
+        adminTagCommands = new AdminTagCommands(main, commandManager, adminTagCommandBuilder);
+
 
     }
 
@@ -529,6 +536,10 @@ public class CommandManager {
 
     public final Command.Builder<CommandSender> getAdminEditCommandBuilder() {
         return adminEditCommandBuilder;
+    }
+
+    public final Command.Builder<CommandSender> getAdminTagCommandBuilder() {
+        return adminTagCommandBuilder;
     }
 
     public final Command.Builder<CommandSender> getAdminConversationCommandBuilder() {
@@ -589,6 +600,9 @@ public class CommandManager {
 
     public final AdminEditCommands getAdminEditCommands() {
         return adminEditCommands;
+    }
+    public final AdminTagCommands getAdminTagCommands() {
+        return adminTagCommands;
     }
 
     public final AdminConversationCommands getAdminConversationCommands() {
