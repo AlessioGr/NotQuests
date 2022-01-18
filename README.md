@@ -20,7 +20,7 @@ You can find the releases here: https://github.com/AlessioGr/NotQuests/releases.
 Do not commit your translations on GitHub. Instead, use translate.notquests.com. Translations are always welcome :) Check https://translate.notquests.com/notquests#readme before translating.
 
 ## How to build
-Git clone this project and build it with these Gradle commands: clean build shadowJar
+Git clone this project and build it with these Gradle commands: `clean build reobfJar`
 
 The output file should be in the folder plugin/build/libs/plugin-version-all.jar
 
