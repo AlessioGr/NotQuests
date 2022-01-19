@@ -98,6 +98,10 @@ public class CommandManager {
     public CommandFlag<World> world;
     public CommandFlag<String> triggerWorldString;
     public CommandFlag<Long> minimumTimeAfterCompletion;
+    public CommandFlag<String> withProjectKorraAbilityFlag;
+
+
+
     //User
     private MinecraftHelp<CommandSender> minecraftUserHelp;
     private Command.Builder<CommandSender> userCommandBuilder;
@@ -231,6 +235,27 @@ public class CommandManager {
                 .withArgument(LongArgument.of("waitTimeAfterCompletion"))
                 .withDescription(ArgumentDescription.of("Enter minimum time you have to wait after completion."))
                 .build(); //0 = Quest
+
+        if(main.getIntegrationsManager().isProjectKorraEnabled()){
+            withProjectKorraAbilityFlag = CommandFlag
+                    .newBuilder("withProjectKorraAbility")
+                    .withArgument(StringArgument.<CommandSender>newBuilder("ability_name").withSuggestionsProvider(
+                            (context, lastString) -> {
+                                final List<String> allArgs = context.getRawInput();
+                                main.getUtilManager().sendFancyCommandCompletion((CommandSender)context.getSender(), allArgs.toArray(new String[0]), "[Ability Name / 'ALL']", "");
+
+                                ArrayList<String> completions = new ArrayList<>();
+
+                                completions.add("any");
+
+                                completions.addAll(main.getIntegrationsManager().getProjectKorraManager().getAbilityCompletions());
+
+                                return completions;
+                            }
+                    ).single().build())
+                    .withDescription(ArgumentDescription.of("Project Korra Ability"))
+                    .build();
+        }
 
 
         categoryFlag = CommandFlag

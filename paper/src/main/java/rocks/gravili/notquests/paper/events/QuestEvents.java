@@ -907,6 +907,9 @@ public class QuestEvents implements Listener {
                         for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
                             if (activeObjective.getObjective() instanceof KillMobsObjective killMobsObjective) {
                                 if (activeObjective.isUnlocked()) {
+                                    if(main.getIntegrationsManager().isProjectKorraEnabled() && !killMobsObjective.getProjectKorraAbility().isBlank()){
+                                        continue; //See ProjectKorraEvents.java onEntityKilled() for that.
+                                    }
                                     final EntityType killedMob = e.getEntity().getType();
                                     if (killMobsObjective.getMobToKill().equalsIgnoreCase("any") || killMobsObjective.getMobToKill().equalsIgnoreCase(killedMob.toString())) {
                                         if (e.getEntity() != e.getEntity().getKiller()) { //Suicide prevention

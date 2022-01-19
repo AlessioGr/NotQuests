@@ -21,7 +21,6 @@ package rocks.gravili.notquests.paper.structs.objectives;
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.IntegerArgument;
-import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -36,53 +35,67 @@ public class KillMobsObjective extends Objective {
     private String nameTagContainsAny = "";
     private String nameTagEquals = "";
 
+    private String projectKorraAbility = "";
+
     public KillMobsObjective(NotQuests main) {
         super(main);
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
-        manager.command(addObjectiveBuilder
+        addObjectiveBuilder = addObjectiveBuilder
                 .argument(EntityTypeSelector.of("entityType", main), ArgumentDescription.of("Type of Entity the player has to kill."))
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of kills needed"))
                 .flag(main.getCommandManager().nametag_equals)
-                .flag(main.getCommandManager().nametag_containsany)
-                .handler((context) -> {
+                .flag(main.getCommandManager().nametag_containsany);
 
-                    final String entityType = context.get("entityType");
-                    final int amountToKill = context.get("amount");
+        if(main.getIntegrationsManager().isProjectKorraEnabled()){
+            addObjectiveBuilder = addObjectiveBuilder.flag(main.getCommandManager().withProjectKorraAbilityFlag);
+        }
 
-                    final String[] a = context.flags().getValue(main.getCommandManager().nametag_equals, new String[]{""});
-                    final String[] b = context.flags().getValue(main.getCommandManager().nametag_containsany, new String[]{""});
-                    final String nametag_equals = String.join(" ", a);
-                    final String nametag_containsany = String.join(" ", b);
+        addObjectiveBuilder = addObjectiveBuilder.handler((context) -> {
 
-                    KillMobsObjective killMobsObjective = new KillMobsObjective(main);
+            final String entityType = context.get("entityType");
+            final int amountToKill = context.get("amount");
 
-                    killMobsObjective.setMobToKillType(entityType);
-                    killMobsObjective.setProgressNeeded(amountToKill);
+            final String[] a = context.flags().getValue(main.getCommandManager().nametag_equals, new String[]{""});
+            final String[] b = context.flags().getValue(main.getCommandManager().nametag_containsany, new String[]{""});
+            final String nametag_equals = String.join(" ", a);
+            final String nametag_containsany = String.join(" ", b);
 
-                    //Add flags
-                    killMobsObjective.setNameTagEquals(nametag_equals);
-                    killMobsObjective.setNameTagContainsAny(nametag_containsany);
+            KillMobsObjective killMobsObjective = new KillMobsObjective(main);
+
+            killMobsObjective.setMobToKillType(entityType);
+            killMobsObjective.setProgressNeeded(amountToKill);
+
+            //Add flags
+            killMobsObjective.setNameTagEquals(nametag_equals);
+            killMobsObjective.setNameTagContainsAny(nametag_containsany);
+
+            if(main.getIntegrationsManager().isProjectKorraEnabled()){
+                final String abilityName = context.flags().getValue(main.getCommandManager().withProjectKorraAbilityFlag, "");
+                killMobsObjective.setProjectKorraAbility(abilityName);
+            }
 
 
-                    main.getObjectiveManager().addObjective(killMobsObjective, context);
+            main.getObjectiveManager().addObjective(killMobsObjective, context);
 
 
-                    if (!nametag_equals.isBlank()) {
-                        context.getSender().sendMessage(main.parse(
-                                "<main>With nametag_equals flag: <highlight>"
-                                        + nametag_equals + "</highlight>!"
-                        ));
-                    }
-                    if (!nametag_containsany.isBlank()) {
-                        context.getSender().sendMessage(main.parse(
-                                "main>With nametag_containsany flag: <highlight>"
-                                        + nametag_containsany + "</highlight>!"
-                        ));
-                    }
+            if (!nametag_equals.isBlank()) {
+                context.getSender().sendMessage(main.parse(
+                        "<main>With nametag_equals flag: <highlight>"
+                                + nametag_equals + "</highlight>!"
+                ));
+            }
+            if (!nametag_containsany.isBlank()) {
+                context.getSender().sendMessage(main.parse(
+                        "main>With nametag_containsany flag: <highlight>"
+                                + nametag_containsany + "</highlight>!"
+                ));
+            }
 
-                }));
+        });
+
+        manager.command(addObjectiveBuilder);
     }
 
 
@@ -108,6 +121,10 @@ public class KillMobsObjective extends Objective {
         if (!getNameTagEquals().isBlank()) {
             configuration.set(initialPath + ".extras.nameTagEquals", getNameTagEquals());
         }
+
+        if(!projectKorraAbility.isBlank()){
+            configuration.set(initialPath + ".extras.projectKorraAbility", getProjectKorraAbility());
+        }
     }
 
     @Override
@@ -115,6 +132,14 @@ public class KillMobsObjective extends Objective {
     }
     @Override
     public void onObjectiveCompleteOrLock(final ActiveObjective activeObjective, final boolean lockedOrCompletedDuringPluginStartupQuestLoadingProcess, final boolean completed) {
+    }
+
+    public final String getProjectKorraAbility(){
+        return projectKorraAbility;
+    }
+
+    public void setProjectKorraAbility(final String projectKorraAbility){
+        this.projectKorraAbility = projectKorraAbility;
     }
 
     public final String getMobToKill() {
@@ -157,5 +182,8 @@ public class KillMobsObjective extends Objective {
         if (!nameTagEquals.isBlank()) {
             setNameTagEquals(nameTagEquals);
         }
+
+        setProjectKorraAbility(configuration.getString(initialPath + ".extras.projectKorraAbility", ""));
+
     }
 }

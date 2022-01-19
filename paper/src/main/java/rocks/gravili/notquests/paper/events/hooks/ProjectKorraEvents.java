@@ -1,13 +1,18 @@
 package rocks.gravili.notquests.paper.events.hooks;
 
 import com.projectkorra.projectkorra.event.AbilityStartEvent;
+import com.projectkorra.projectkorra.event.EntityBendingDeathEvent;
+import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
+import rocks.gravili.notquests.paper.structs.objectives.KillMobsObjective;
 import rocks.gravili.notquests.paper.structs.objectives.hooks.projectkorra.ProjectKorraUseAbilityObjective;
+
+import java.util.Locale;
 
 public class ProjectKorraEvents implements Listener {
     private final NotQuests main;
@@ -37,6 +42,61 @@ public class ProjectKorraEvents implements Listener {
                     }
                     questPlayer.removeCompletedQuests();
                 }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onEntityKilled(EntityBendingDeathEvent e) {
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(e.getAttacker().getUniqueId());
+        if (questPlayer != null) {
+            if (questPlayer.getActiveQuests().size() > 0) {
+                for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+                    for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
+                        if (activeObjective.getObjective() instanceof KillMobsObjective killMobsObjective) {
+                            if (activeObjective.isUnlocked()) {
+                                if(main.getIntegrationsManager().isProjectKorraEnabled() && killMobsObjective.getProjectKorraAbility().isBlank()){
+                                    continue;
+                                }
+                                if(!killMobsObjective.getProjectKorraAbility().equalsIgnoreCase("any") && !killMobsObjective.getProjectKorraAbility().equalsIgnoreCase(e.getAbility().getName()) ){
+                                    continue;
+                                }
+                                final EntityType killedMob = e.getEntity().getType();
+                                if (killMobsObjective.getMobToKill().equalsIgnoreCase("any") || killMobsObjective.getMobToKill().equalsIgnoreCase(killedMob.toString())) {
+                                    if (e.getEntity() != e.getAttacker()) { //Suicide prevention
+
+                                        //Extra Flags
+                                        if (!killMobsObjective.getNameTagContainsAny().isBlank()) {
+                                            if (e.getEntity().getCustomName() == null || e.getEntity().getCustomName().isBlank()) {
+                                                continue;
+                                            }
+                                            boolean foundOneNotFitting = false;
+                                            for (final String namePart : killMobsObjective.getNameTagContainsAny().toLowerCase(Locale.ROOT).split(" ")) {
+                                                if (!e.getEntity().getCustomName().toLowerCase(Locale.ROOT).contains(namePart)) {
+                                                    foundOneNotFitting = true;
+                                                }
+                                            }
+                                            if (foundOneNotFitting) {
+                                                continue;
+                                            }
+                                        }
+                                        if (!killMobsObjective.getNameTagEquals().isBlank()) {
+                                            if (e.getEntity().getCustomName() == null || e.getEntity().getCustomName().isBlank() || !e.getEntity().getCustomName().equalsIgnoreCase(killMobsObjective.getNameTagEquals())) {
+                                                continue;
+                                            }
+                                        }
+
+                                        activeObjective.addProgress(1);
+                                    }
+
+                                }
+                            }
+
+                        }
+                    }
+                    activeQuest.removeCompletedObjectives(true);
+                }
+                questPlayer.removeCompletedQuests();
             }
         }
     }
