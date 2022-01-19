@@ -2,7 +2,10 @@ package rocks.gravili.notquests.paper.commands;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
+import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
+import cloud.commandframework.bukkit.arguments.selector.SinglePlayerSelector;
+import cloud.commandframework.bukkit.parsers.selector.SinglePlayerSelectorArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.Material;
@@ -12,11 +15,13 @@ import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.ActionSelector;
 import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
+import rocks.gravili.notquests.paper.commands.arguments.MiniMessageSelector;
 import rocks.gravili.notquests.paper.commands.arguments.NQItemSelector;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.managers.items.NQItem;
 import rocks.gravili.notquests.paper.managers.tags.Tag;
+import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 
 public class AdminItemsCommands {
@@ -97,7 +102,10 @@ public class AdminItemsCommands {
                     int counter = 1;
 
                     for(NQItem nqItem : main.getItemsManager().getItems()){
-                        context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>" + nqItem.getItemName() + "</main> <highlight2>Type: <main>" + nqItem.getItemStack().getType().name()));
+                        context.getSender().sendMessage(main.parse(
+                                "<highlight>" + counter + ".</highlight> <main>" + nqItem.getItemName() + "</main> <highlight2>Type: <main>" + nqItem.getItemStack().getType().name()
+                                        + " <highlight2>Display Name:</highlight2> <white><reset>" + main.getMiniMessage().serialize(nqItem.getItemStack().displayName())
+                        ));
                         counter++;
                     }
                 }));
@@ -111,6 +119,32 @@ public class AdminItemsCommands {
     }
 
     public void handleEditCommands(Command.Builder<CommandSender> builder){
+        manager.command(builder.literal("give")
+                .argument(SinglePlayerSelectorArgument.of("player"), ArgumentDescription.of("Player who should receive the item"))
+                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of items the player should receive"))
+                .meta(CommandMeta.DESCRIPTION, "Gives the player the item.")
+                .handler((context) -> {
+                    NQItem nqItem = context.get("item");
+                    final int amount = context.get("amount");
+                    final SinglePlayerSelector singlePlayerSelector = context.get("player");
+
+
+                    if (singlePlayerSelector.hasAny() && singlePlayerSelector.getPlayer() != null) {
+                        ItemStack itemStack = nqItem.getItemStack().clone();
+                        itemStack.setAmount(amount);
+                        singlePlayerSelector.getPlayer().getInventory().addItem(itemStack);
+
+                        context.getSender().sendMessage(main.parse(
+                                "<success>The item <highlight>" + nqItem.getItemName() + "</highlight> has given to player <highlight2>" + singlePlayerSelector.getPlayer().getName() + "</highlight2>!"
+                        ));
+                    } else {
+                        context.getSender().sendMessage(main.parse("<error>" + "Player is not online or was not found!"));
+                    }
+
+
+                }));
+
+
         manager.command(builder.literal("remove", "delete")
                 .meta(CommandMeta.DESCRIPTION, "Removes a NotQuests Item.")
                 .handler((context) -> {
@@ -120,6 +154,45 @@ public class AdminItemsCommands {
 
                     context.getSender().sendMessage(main.parse(
                             "<success>The item <highlight>" + nqItem.getItemName() + "</highlight> has been deleted successfully!"
+                    ));
+                }));
+
+        manager.command(builder.literal("displayName")
+                .literal("set")
+                .meta(CommandMeta.DESCRIPTION, "Sets an item's display name.")
+                .argument(MiniMessageSelector.<CommandSender>newBuilder("Display Name", main).build(), ArgumentDescription.of("New display name"))
+                .handler((context) -> {
+                    NQItem nqItem = context.get("item");
+                    final String displayName = String.join(" ", (String[]) context.get("Display Name"));
+
+                    nqItem.setDisplayName(displayName, true);
+
+                    context.getSender().sendMessage(main.parse(
+                            "<success>The display name of item <highlight>" + nqItem.getItemName() + "</highlight> has been set to: <white><reset>" + displayName
+                    ));
+                }));
+        manager.command(builder.literal("displayName")
+                .literal("remove")
+                .meta(CommandMeta.DESCRIPTION, "Removes an item's display name.")
+                .handler((context) -> {
+                    NQItem nqItem = context.get("item");
+
+                    nqItem.setDisplayName(null, true);
+
+                    context.getSender().sendMessage(main.parse(
+                            "<success>The display name of item <highlight>" + nqItem.getItemName() + "</highlight> has been removed!"
+                    ));
+                }));
+
+        manager.command(builder.literal("displayName")
+                .literal("show", "check", "view")
+                .meta(CommandMeta.DESCRIPTION, "Shows an item's current display name.")
+                .handler((context) -> {
+                    NQItem nqItem = context.get("item");
+
+                    context.getSender().sendMessage(main.parse(
+                            "<success>The display name of item <highlight>" + nqItem.getItemName() + "</highlight> is: \n<white><reset>"
+                                    + main.getMiniMessage().serialize(nqItem.getItemStack().displayName())
                     ));
                 }));
     }

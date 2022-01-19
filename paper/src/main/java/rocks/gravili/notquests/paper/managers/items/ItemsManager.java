@@ -79,6 +79,10 @@ public class ItemsManager {
                 NQItem nqItem = new NQItem(main, itemIdentifier, itemStack);
                 nqItem.setCategory(category);
 
+                String displayName = itemsConfigurationSection.getString(itemIdentifier + ".displayName", "");
+                nqItem.setDisplayName(displayName, false);
+
+
 
                 if (nqItem != null) {
                     identifiersAndItems.put(itemIdentifier.toLowerCase(Locale.ROOT), nqItem);

@@ -151,7 +151,7 @@ public class MiniMessageSelector<C> extends CommandArgument<C, String[]> {
             List<String> completions = new java.util.ArrayList<>();
 
             String rawInput = context.getRawInputJoined();
-            if (input.startsWith("{")) {
+            if (input.startsWith("{") && withPlaceholders) {
                 completions.addAll(main.getCommandManager().getAdminCommands().placeholders);
             } else {
                 if(input.startsWith("<")){
