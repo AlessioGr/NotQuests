@@ -163,7 +163,7 @@ public class ListCondition extends Condition {
 
             for (String s : listRequirement) {
                 if (Arrays.stream(stringArray).noneMatch(s::equals)) {
-                    return "<YELLOW>The " + variable.getPlural() + " need to contain :<highlight>" + Arrays.toString(listRequirement) + "</highlight>.";
+                    return "<YELLOW>The " + variable.getPlural() + " need to contain: <highlight>" + Arrays.toString(listRequirement) + "</highlight>.";
                 }
             }
         }else if(getOperator().equalsIgnoreCase("containsIgnoreCase")){
