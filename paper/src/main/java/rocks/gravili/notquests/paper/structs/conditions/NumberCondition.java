@@ -49,6 +49,7 @@ public class NumberCondition extends Condition {
     private HashMap<String, Boolean> additionalBooleanArguments;
 
 
+
     public final String getMathOperator(){
         return mathOperator;
     }
