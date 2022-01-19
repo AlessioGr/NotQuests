@@ -96,6 +96,10 @@ public class VariablesManager {
             registerVariable("TownyNationName", TownyNationNameVariable.class);
         }
 
+        if(main.getIntegrationsManager().isProjectKorraEnabled()){
+            registerVariable("ProjectKorraElement", ProjectKorraElementVariable.class);
+        }
+
 
     }
 
