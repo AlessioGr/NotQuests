@@ -797,6 +797,10 @@ public class QuestPlayer {
         bossBar = null;
     }
 
+    public final BossBar getBossBar(){
+        return bossBar;
+    }
+
     public void sendObjectiveProgress(ActiveObjective activeObjective) {
         Player player = getPlayer();
         if(player == null){

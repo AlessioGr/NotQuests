@@ -8,6 +8,7 @@ import org.bstats.charts.AdvancedPie;
 import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import rocks.gravili.notquests.paper.conversation.ConversationEvents;
 import rocks.gravili.notquests.paper.conversation.ConversationManager;
@@ -21,6 +22,7 @@ import rocks.gravili.notquests.paper.managers.packets.PacketManager;
 import rocks.gravili.notquests.paper.managers.registering.*;
 import rocks.gravili.notquests.paper.managers.tags.TagManager;
 import rocks.gravili.notquests.paper.structs.Quest;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.actions.*;
 import rocks.gravili.notquests.paper.structs.conditions.*;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
@@ -341,6 +343,14 @@ public class NotQuests {
         getLogManager().info("NotQuests is shutting down...");
 
         tagManager.saveAllOnlinePlayerTags();
+
+        //Hide existing bossbars
+        for(Player player : Bukkit.getOnlinePlayers()){
+            QuestPlayer questPlayer = getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+            if(questPlayer != null && questPlayer.getBossBar() != null){
+                player.hideBossBar(questPlayer.getBossBar());
+            }
+        }
 
 
         //Save all kinds of data
