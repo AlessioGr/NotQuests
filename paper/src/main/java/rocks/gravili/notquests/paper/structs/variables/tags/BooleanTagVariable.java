@@ -4,7 +4,6 @@ import cloud.commandframework.arguments.standard.StringArgument;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.managers.tags.Tag;
 import rocks.gravili.notquests.paper.managers.tags.TagType;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -57,7 +56,7 @@ public class BooleanTagVariable extends Variable<Boolean> {
             return false;
         }
 
-        Object value = questPlayer.getTag(tagName);
+        Object value = questPlayer.getTagValue(tagName);
 
         if(value instanceof Boolean boolValue){
             return boolValue;
@@ -87,7 +86,7 @@ public class BooleanTagVariable extends Variable<Boolean> {
 
 
 
-        questPlayer.setTag(tagName, newValue);
+        questPlayer.setTagValue(tagName, newValue);
 
         return true;
     }

@@ -36,6 +36,7 @@ import rocks.gravili.notquests.paper.structs.variables.tags.*;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Locale;
 
 
 public class VariablesManager {

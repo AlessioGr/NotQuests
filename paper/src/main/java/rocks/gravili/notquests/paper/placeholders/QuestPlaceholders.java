@@ -21,7 +21,9 @@ package rocks.gravili.notquests.paper.placeholders;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.managers.tags.Tag;
 import rocks.gravili.notquests.paper.structs.*;
+import rocks.gravili.notquests.paper.structs.variables.Variable;
 
 /**
  * This class will be registered through the register-method in the
@@ -336,6 +338,36 @@ public class QuestPlaceholders extends PlaceholderExpansion {
                 return "No";
             }
             return "No";
+        }
+
+
+
+        //Variables
+        if (identifier.startsWith("player_variable_")) {
+            final String variableName = identifier.replace("player_variable_", "");
+            Variable<?> variable = main.getVariablesManager().getVariableFromString(variableName);
+            if (variable != null) {
+                Object value = variable.getValue(player);
+                return value != null ? ""+value : "";
+            }
+            return "";
+        }
+        //Tags
+        if (identifier.startsWith("player_tag_")) {
+            final String tagName = identifier.replace("player_tag_", "");
+            Tag tag = main.getTagManager().getTag(tagName);
+            if (tag != null) {
+                final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                if (questPlayer != null) {
+                    Object tagValue = questPlayer.getTagValue(tagName);
+                    if (tagValue != null) {
+                        return ""+tagValue;
+
+                    }
+                }
+            }
+            return "";
+
         }
 
 

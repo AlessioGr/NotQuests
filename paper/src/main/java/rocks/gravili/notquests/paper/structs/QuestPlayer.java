@@ -99,10 +99,10 @@ public class QuestPlayer {
     }
 
 
-    public final Object getTag(final String tagIdentifier){
+    public final Object getTagValue(final String tagIdentifier){
         return tags.get(tagIdentifier.toLowerCase(Locale.ROOT));
     }
-    public void setTag(final String tagIdentifier, Object newValue){
+    public void setTagValue(final String tagIdentifier, Object newValue){
         tags.put(tagIdentifier.toLowerCase(Locale.ROOT), newValue);
     }
 
