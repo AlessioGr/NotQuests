@@ -252,6 +252,19 @@ public class DataManager {
                 continue; //No real category, just a random folder. skip.
             }
 
+            //Create new tags.yml if doesn't exist:
+            try{
+                if (tagsFile == null || !tagsFile.exists()) {
+                    tagsFile = new File(categoryFolder, "tags.yml");
+                    if(!tagsFile.createNewFile()){
+                        main.getLogManager().warn("Couldn't create a (1) tags.yml file for category <highlight>" + categoryFolder.getName());
+                    }
+                }
+            }catch (Exception e){
+                main.getLogManager().warn("Couldn't create a (2) tags.yml file for category <highlight>" + categoryFolder.getName());
+            }
+
+
 
             final Category category = new Category(main, categoryFolder.getName(), categoryFolder);
             category.setCategoryFile(categoryYMLFile);
