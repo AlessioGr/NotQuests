@@ -31,7 +31,7 @@ public class CompletedQuestsVariable extends Variable<String[]>{
     }
 
     @Override
-    public boolean setValue(String[] newValue, Player player, Object... objects) {
+    public boolean setValueInternally(String[] newValue, Player player, Object... objects) {
         final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
         if(questPlayer == null){
             return false;

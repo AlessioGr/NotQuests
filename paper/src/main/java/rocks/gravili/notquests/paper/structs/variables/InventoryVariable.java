@@ -24,7 +24,7 @@ public class InventoryVariable extends Variable<ItemStack[]>{
     }
 
     @Override
-    public boolean setValue(ItemStack[] newValue, Player player, Object... objects) {
+    public boolean setValueInternally(ItemStack[] newValue, Player player, Object... objects) {
         if(getRequiredBooleanValue("add")){
 
             HashMap<Integer, ItemStack> left =  player.getInventory().addItem(newValue);

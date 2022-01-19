@@ -79,7 +79,7 @@ public class GiveQuestAction extends Action {
     }
 
     @Override
-    public void execute(final Player player, Object... objects) {
+    public void executeInternally(final Player player, Object... objects) {
         Quest foundQuest = main.getQuestManager().getQuest(getQuestToGiveName());
         if (foundQuest == null) {
             main.getLogManager().warn("Tried to execute GiveQuest action with null quest. Cannot find the following Quest: " + getQuestToGiveName());

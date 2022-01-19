@@ -32,6 +32,7 @@ public class BetonQuestManager {
         this.main = main;
         betonQuest = BetonQuest.getInstance();
         initialize();
+
     }
 
     public void initialize() {

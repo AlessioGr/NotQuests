@@ -55,6 +55,7 @@ public class ObjectiveManager {
 
     public void registerDefaultObjectives(){
         objectives.clear();
+        registerObjective("Condition", ConditionObjective.class);
         registerObjective("BreakBlocks", BreakBlocksObjective.class);
         registerObjective("PlaceBlocks", PlaceBlocksObjective.class);
         registerObjective("CollectItems", CollectItemsObjective.class);

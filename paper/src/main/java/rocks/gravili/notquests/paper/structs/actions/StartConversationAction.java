@@ -79,7 +79,7 @@ public class StartConversationAction extends Action {
     }
 
     @Override
-    public void execute(final Player player, Object... objects) {
+    public void executeInternally(final Player player, Object... objects) {
         Conversation foundConversation = main.getConversationManager().getConversation(getConversationToStart());
         if (foundConversation == null) {
             main.getLogManager().warn("Tried to execute StartConversation action with null quest. Cannot find the following Conversation: " + getConversationToStart());

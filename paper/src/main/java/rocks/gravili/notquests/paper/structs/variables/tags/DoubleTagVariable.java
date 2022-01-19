@@ -68,7 +68,7 @@ public class DoubleTagVariable extends Variable<Double> {
     }
 
     @Override
-    public boolean setValue(Double newValue, Player player, Object... objects) {
+    public boolean setValueInternally(Double newValue, Player player, Object... objects) {
         final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
         if(questPlayer == null){
             return false;

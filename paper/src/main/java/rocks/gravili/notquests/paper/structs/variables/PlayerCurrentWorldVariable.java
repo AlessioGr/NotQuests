@@ -24,7 +24,7 @@ public class PlayerCurrentWorldVariable extends Variable<String>{
     }
 
     @Override
-    public boolean setValue(String newValue, Player player, Object... objects) {
+    public boolean setValueInternally(String newValue, Player player, Object... objects) {
         if (player != null) {
             final World world = Bukkit.getWorld(newValue);
             if(world == null){

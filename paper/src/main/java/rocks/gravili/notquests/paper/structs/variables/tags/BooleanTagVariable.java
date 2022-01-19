@@ -68,7 +68,7 @@ public class BooleanTagVariable extends Variable<Boolean> {
     }
 
     @Override
-    public boolean setValue(Boolean newValue, Player player, Object... objects) {
+    public boolean setValueInternally(Boolean newValue, Player player, Object... objects) {
         final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
         if(questPlayer == null){
             return false;

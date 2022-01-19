@@ -25,7 +25,7 @@ public class MoneyVariable extends Variable<Double>{
     }
 
     @Override
-    public boolean setValue(Double newValue, Player player, Object... objects) {
+    public boolean setValueInternally(Double newValue, Player player, Object... objects) {
         if (player != null) {
             if (!main.getIntegrationsManager().isVaultEnabled() || main.getIntegrationsManager().getVaultManager().getEconomy() == null) {
                 return false;

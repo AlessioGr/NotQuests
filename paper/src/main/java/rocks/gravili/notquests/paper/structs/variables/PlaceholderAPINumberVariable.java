@@ -60,7 +60,7 @@ public class PlaceholderAPINumberVariable extends Variable<Double>{
     }
 
     @Override
-    public boolean setValue(Double newValue, Player player, Object... objects) {
+    public boolean setValueInternally(Double newValue, Player player, Object... objects) {
         return false;
     }
 

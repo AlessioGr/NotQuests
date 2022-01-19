@@ -84,7 +84,7 @@ public class GiveItemAction extends Action {
     }
 
     @Override
-    public void execute(final Player player, Object... objects) {
+    public void executeInternally(final Player player, Object... objects) {
         if (item == null) {
             main.getLogManager().warn("Tried to give item reward with invalid reward item");
             return;

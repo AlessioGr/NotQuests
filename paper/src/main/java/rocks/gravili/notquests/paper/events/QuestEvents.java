@@ -67,6 +67,9 @@ public class QuestEvents implements Listener {
 
     private final HashMap<QuestPlayer, String> beaconsToUpdate;
 
+    int beaconCounter = 0;
+    int conditionObjectiveCounter = 0;
+
 
     public QuestEvents(NotQuests main) {
         this.main = main;
@@ -74,20 +77,37 @@ public class QuestEvents implements Listener {
         if(main.getConfiguration().getBeamMode().equals("end_gateway")){
             Bukkit.getScheduler().scheduleSyncRepeatingTask(main.getMain(), new Runnable() {
                 @Override
-                public void run() {
-                    for(Player player : Bukkit.getOnlinePlayers()) {
-                        QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
-                        if(questPlayer == null){
-                            return;
-                        }
-                        questPlayer.updateBeaconLocations(player);
+                public void run() { //Main Loop
+                    beaconCounter++;
+                    if(beaconCounter >= 4){
+                        for(Player player : Bukkit.getOnlinePlayers()) {
+                            QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                            if(questPlayer == null){
+                                return;
+                            }
+                            questPlayer.updateBeaconLocations(player);
 
+                        }
+                        beaconCounter = 0;
+                    }
+
+                    conditionObjectiveCounter++;
+                    if(conditionObjectiveCounter >= 2){
+                        for(Player player : Bukkit.getOnlinePlayers()) {
+                            QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                            if(questPlayer == null){
+                                return;
+                            }
+                            questPlayer.updateConditionObjectives(player);
+
+                        }
+                        conditionObjectiveCounter = 0;
                     }
 
 
 
                 }
-            }, 0L, 80L); //0 Tick initial delay, 20 Tick (1 Second) between repeats
+            }, 0L, 20L); //0 Tick initial delay, 20 Tick (1 Second) between repeats
         }else{
             Bukkit.getScheduler().scheduleSyncRepeatingTask(main.getMain(), new Runnable() {
                 @Override

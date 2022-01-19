@@ -136,7 +136,7 @@ public class SpawnMobAction extends Action {
     }
 
     @Override
-    public void execute(final Player player, Object... objects) {
+    public void executeInternally(final Player player, Object... objects) {
         if (!Bukkit.isPrimaryThread()) { //Can only be run in main thread (at least for bukkit entities) :(
             Bukkit.getScheduler().runTask(main.getMain(), () -> {
                 execute2(player, objects);

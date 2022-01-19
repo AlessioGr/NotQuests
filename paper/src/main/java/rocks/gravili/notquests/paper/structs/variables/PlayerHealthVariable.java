@@ -26,7 +26,7 @@ public class PlayerHealthVariable extends Variable<Double>{
     }
 
     @Override
-    public boolean setValue(Double newValue, Player player, Object... objects) {
+    public boolean setValueInternally(Double newValue, Player player, Object... objects) {
         if (player != null) {
             player.setHealth(newValue);
             return true;

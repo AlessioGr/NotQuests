@@ -138,10 +138,12 @@ public class JobsRebornReachJobLevel extends Objective {
             main.getLogManager().warn("The job <highlight>" + getJobName() + "</highlight> does not exist.");
         }
     }
-
-
     @Override
-    public void onObjectiveUnlock(ActiveObjective activeObjective) {
+    public void onObjectiveUnlock(final ActiveObjective activeObjective, final boolean unlockedDuringPluginStartupQuestLoadingProcess) {
+        if(activeObjective.getCurrentProgress() != 0){
+            return;
+        }
+
         activeObjective.addProgress(1); //Job levels start at 1 and not 0
         if (!main.getIntegrationsManager().isJobsRebornEnabled() || !isCountPreviousLevels()) {
             return;
@@ -167,4 +169,8 @@ public class JobsRebornReachJobLevel extends Objective {
 
         activeObjective.addProgress(jobProgression.getLevel());
     }
+    @Override
+    public void onObjectiveCompleteOrLock(final ActiveObjective activeObjective, final boolean lockedOrCompletedDuringPluginStartupQuestLoadingProcess, final boolean completed) {
+    }
+
 }

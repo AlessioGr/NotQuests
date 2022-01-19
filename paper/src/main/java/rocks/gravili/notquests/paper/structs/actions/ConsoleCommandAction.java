@@ -60,7 +60,7 @@ public class ConsoleCommandAction extends Action {
     }
 
     @Override
-    public void execute(final Player player, Object... objects) {
+    public void executeInternally(final Player player, Object... objects) {
         if (consoleCommand.isBlank()) {
             main.getLogManager().warn("Tried to execute ConsoleCommand action with invalid console command.");
             return;

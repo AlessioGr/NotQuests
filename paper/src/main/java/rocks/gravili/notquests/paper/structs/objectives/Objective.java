@@ -311,7 +311,9 @@ public abstract class Objective {
 
     public abstract void load(final FileConfiguration configuration, final String initialPath);
 
-    public abstract void onObjectiveUnlock(final ActiveObjective activeObjective);
+    public abstract void onObjectiveUnlock(final ActiveObjective activeObjective, final boolean unlockedDuringPluginStartupQuestLoadingProcess);
+
+    public abstract void onObjectiveCompleteOrLock(final ActiveObjective activeObjective, final boolean lockedOrCompletedDuringPluginStartupQuestLoadingProcess, final boolean completed);
 
 
     public final int getFreeRewardID(){

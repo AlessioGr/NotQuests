@@ -85,7 +85,7 @@ public class TriggerCommandAction extends Action {
 
 
     @Override
-    public void execute(final Player player, Object... objects) {
+    public void executeInternally(final Player player, Object... objects) {
 
         if (player == null) {
             return;

@@ -21,7 +21,7 @@ public class PlayerExperienceVariable extends Variable<Integer>{
     }
 
     @Override
-    public boolean setValue(Integer newValue, Player player, Object... objects) {
+    public boolean setValueInternally(Integer newValue, Player player, Object... objects) {
         if (player != null) {
             player.setExp(0);
             player.setLevel(0);

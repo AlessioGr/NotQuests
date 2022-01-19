@@ -79,7 +79,7 @@ public class ContainerInventoryVariable extends Variable<ItemStack[]>{
     }
 
     @Override
-    public boolean setValue(ItemStack[] newValue, Player player, Object... objects) {
+    public boolean setValueInternally(ItemStack[] newValue, Player player, Object... objects) {
         String worldName = getRequiredStringValue("world");
         World world = Bukkit.getWorld(worldName);
         double x = getRequiredNumberValue("x", player);

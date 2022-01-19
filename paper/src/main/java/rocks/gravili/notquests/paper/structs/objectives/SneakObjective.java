@@ -51,10 +51,11 @@ public class SneakObjective extends Objective {
     }
 
     @Override
-    public void onObjectiveUnlock(final ActiveObjective activeObjective) {
-
+    public void onObjectiveUnlock(final ActiveObjective activeObjective, final boolean unlockedDuringPluginStartupQuestLoadingProcess) {
     }
-
+    @Override
+    public void onObjectiveCompleteOrLock(final ActiveObjective activeObjective, final boolean lockedOrCompletedDuringPluginStartupQuestLoadingProcess, final boolean completed) {
+    }
 
     public final long getAmountToSneak() {
         return super.getProgressNeeded();

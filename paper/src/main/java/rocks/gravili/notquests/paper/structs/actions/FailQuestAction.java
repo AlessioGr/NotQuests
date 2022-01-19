@@ -66,7 +66,7 @@ public class FailQuestAction extends Action {
 
 
     @Override
-    public void execute(final Player player, Object... objects) {
+    public void executeInternally(final Player player, Object... objects) {
         Quest foundQuest = main.getQuestManager().getQuest(getQuestToFailName());
         if (foundQuest == null) {
             main.getLogManager().warn("Tried to execute FailQuest action with null quest. Cannot find the following Quest: " + getQuestToFailName());

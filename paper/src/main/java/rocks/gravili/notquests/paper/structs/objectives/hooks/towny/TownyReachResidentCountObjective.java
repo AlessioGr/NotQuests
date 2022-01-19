@@ -95,9 +95,12 @@ public class TownyReachResidentCountObjective extends Objective {
         countPreviousResidents = configuration.getBoolean(initialPath + ".specifics.countPreviousResidents");
     }
 
-
     @Override
-    public void onObjectiveUnlock(ActiveObjective activeObjective) {
+    public void onObjectiveUnlock(final ActiveObjective activeObjective, final boolean unlockedDuringPluginStartupQuestLoadingProcess) {
+        if(activeObjective.getCurrentProgress() != 0){
+            return;
+        }
+
         activeObjective.getQuestPlayer().sendDebugMessage("TownyReachResidentCountObjective onObjectiveUnlock");
         if (!main.getIntegrationsManager().isTownyEnabled() || !isCountPreviousResidents()) {
             activeObjective.getQuestPlayer().sendDebugMessage("TownyReachResidentCountObjective onObjectiveUnlock cancel 1");
@@ -127,4 +130,8 @@ public class TownyReachResidentCountObjective extends Objective {
 
         activeObjective.addProgress(town.getNumResidents());
     }
+    @Override
+    public void onObjectiveCompleteOrLock(final ActiveObjective activeObjective, final boolean lockedOrCompletedDuringPluginStartupQuestLoadingProcess, final boolean completed) {
+    }
+
 }

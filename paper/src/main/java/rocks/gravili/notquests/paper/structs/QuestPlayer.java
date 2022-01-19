@@ -32,6 +32,7 @@ import rocks.gravili.notquests.paper.events.notquests.QuestFinishAcceptEvent;
 import rocks.gravili.notquests.paper.events.notquests.QuestPointsChangeEvent;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
+import rocks.gravili.notquests.paper.structs.objectives.ConditionObjective;
 import rocks.gravili.notquests.paper.structs.objectives.OtherQuestObjective;
 
 import java.time.Duration;
@@ -70,6 +71,8 @@ public class QuestPlayer {
     //Tags
     private final HashMap<String, Object> tags;
 
+    private boolean hasActiveConditionObjectives = false;
+
 
 
     public QuestPlayer(NotQuests main, UUID uuid) {
@@ -86,6 +89,15 @@ public class QuestPlayer {
 
         tags = new HashMap<>();
     }
+
+
+    public void setHasActiveConditionObjectives(final boolean hasActiveConditionObjectives){
+        this.hasActiveConditionObjectives = hasActiveConditionObjectives;
+    }
+    public boolean isHasActiveConditionObjectives(){
+        return hasActiveConditionObjectives;
+    }
+
 
     public final Object getTag(final String tagIdentifier){
         return tags.get(tagIdentifier.toLowerCase(Locale.ROOT));
@@ -809,5 +821,33 @@ public class QuestPlayer {
 
         }
 
+    }
+
+    public void updateConditionObjectives(Player player) {
+        if(!isHasActiveConditionObjectives()){
+            return;
+        }
+        for(ActiveQuest activeQuest : getActiveQuests()){
+            for(ActiveObjective activeObjective : activeQuest.getActiveObjectives()){
+                if(activeObjective.getObjective() instanceof ConditionObjective conditionObjective){
+                    if(conditionObjective.isCheckOnlyWhenCorrespondingVariableValueChanged() || !activeObjective.isUnlocked()){
+                        continue;
+                    }
+
+                    Condition condition = conditionObjective.getCondition();
+                    if(condition == null){
+                        continue;
+                    }
+                    if (!condition.check(this).isBlank()) {
+                        continue;
+                    }
+
+                    activeObjective.addProgress(1);
+
+                }
+            }
+            activeQuest.removeCompletedObjectives(true);
+        }
+        removeCompletedQuests();
     }
 }

@@ -25,7 +25,7 @@ public class UltimateClansClanLevelVariable extends Variable<Integer> {
     }
 
     @Override
-    public boolean setValue(Integer newValue, Player player, Object... objects) {
+    public boolean setValueInternally(Integer newValue, Player player, Object... objects) {
         if (!main.getIntegrationsManager().isUltimateClansEnabled()) {
             return false;
         }

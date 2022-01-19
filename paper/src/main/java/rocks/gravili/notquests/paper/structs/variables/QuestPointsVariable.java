@@ -22,7 +22,7 @@ public class QuestPointsVariable extends Variable<Long>{
     }
 
     @Override
-    public boolean setValue(Long newValue, Player player, Object... objects) {
+    public boolean setValueInternally(Long newValue, Player player, Object... objects) {
         final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
         if(questPlayer == null){
             return false;

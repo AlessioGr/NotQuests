@@ -191,7 +191,7 @@ public class ItemStackListAction extends Action {
     }*/
 
     @Override
-    public void execute(final Player player, Object... objects) {
+    public void executeInternally(final Player player, Object... objects) {
         Variable<?> variable = main.getVariablesManager().getVariableFromString(variableName);
 
         if (variable == null) {

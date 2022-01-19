@@ -26,7 +26,7 @@ public class ChanceVariable extends Variable<Boolean>{
     }
 
     @Override
-    public boolean setValue(Boolean newValue, Player player, Object... objects) {
+    public boolean setValueInternally(Boolean newValue, Player player, Object... objects) {
         return false;
     }
 

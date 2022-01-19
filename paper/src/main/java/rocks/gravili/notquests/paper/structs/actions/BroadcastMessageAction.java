@@ -63,7 +63,7 @@ public class BroadcastMessageAction extends Action {
 
 
     @Override
-    public void execute(final Player player, Object... objects) {
+    public void executeInternally(final Player player, Object... objects) {
         if (getMessageToBroadcast().isBlank()) {
             main.getLogManager().warn("Tried to execute SendMessage action with empty message.");
             return;

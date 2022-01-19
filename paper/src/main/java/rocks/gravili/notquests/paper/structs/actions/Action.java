@@ -25,6 +25,7 @@ import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.Quest;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
@@ -99,7 +100,11 @@ public abstract class Action {
 
     public abstract String getActionDescription(final Player player, final Object... objects);
 
-    public abstract void execute(final Player player, Object... objects);
+    public abstract void executeInternally(final Player player, Object... objects);
+
+    public void execute(final Player player, Object... objects){
+        executeInternally(player, objects);
+    }
 
     public abstract void save(final FileConfiguration configuration, final String initialPath);
 

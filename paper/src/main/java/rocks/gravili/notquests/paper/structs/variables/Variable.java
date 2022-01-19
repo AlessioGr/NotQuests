@@ -9,6 +9,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
+import rocks.gravili.notquests.paper.structs.ActiveObjective;
+import rocks.gravili.notquests.paper.structs.ActiveQuest;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
+import rocks.gravili.notquests.paper.structs.conditions.*;
+import rocks.gravili.notquests.paper.structs.objectives.ConditionObjective;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
@@ -115,7 +120,57 @@ public abstract class Variable<T> {
 
     public abstract T getValue(final Player player, final Object... objects);
 
-    public abstract boolean setValue(final T newValue, final Player player, final Object... objects);
+    public boolean setValue(final T newValue, final Player player, final Object... objects){
+        if(!isCanSetValue()){
+            return false;
+        }
+        boolean result = setValueInternally(newValue, player, objects);
+
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+        if(questPlayer != null && questPlayer.isHasActiveConditionObjectives()) {
+            for(ActiveQuest activeQuest : questPlayer.getActiveQuests()){
+                for(ActiveObjective activeObjective : activeQuest.getActiveObjectives()){
+                    if(activeObjective.getObjective() instanceof ConditionObjective conditionObjective){
+                        if(!activeObjective.isUnlocked()){
+                            continue;
+                        }
+
+                        Condition condition = conditionObjective.getCondition();
+                        if(condition == null){
+                            continue;
+                        }
+                        String activeObjectiveVariableName = "";
+                        if(condition instanceof BooleanCondition booleanCondition){
+                            activeObjectiveVariableName = booleanCondition.getVariableName();
+                        }else if(condition instanceof ListCondition listCondition){
+                            activeObjectiveVariableName = listCondition.getVariableName();
+                        }else if(condition instanceof NumberCondition numberCondition){
+                            activeObjectiveVariableName = numberCondition.getVariableName();
+                        }else if(condition instanceof StringCondition stringCondition){
+                            activeObjectiveVariableName = stringCondition.getVariableName();
+                        }
+                        if(activeObjectiveVariableName.equalsIgnoreCase(getVariableType())){
+                            if (!condition.check(questPlayer).isBlank()) {
+                                continue;
+                            }
+
+                            activeObjective.addProgress(1);
+                        }
+                    }
+                }
+                activeQuest.removeCompletedObjectives(true);
+            }
+            questPlayer.removeCompletedQuests();
+        }
+
+
+
+        return result;
+
+    }
+
+    public abstract boolean setValueInternally(final T newValue, final Player player, final Object... objects);
+
 
     public abstract List<String> getPossibleValues(final Player player, final Object... objects);
 

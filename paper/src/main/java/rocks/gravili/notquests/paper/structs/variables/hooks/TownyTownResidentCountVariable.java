@@ -35,7 +35,7 @@ public class TownyTownResidentCountVariable extends Variable<Integer> {
     }
 
     @Override
-    public boolean setValue(Integer newValue, Player player, Object... objects) {
+    public boolean setValueInternally(Integer newValue, Player player, Object... objects) {
         return false;
     }
 

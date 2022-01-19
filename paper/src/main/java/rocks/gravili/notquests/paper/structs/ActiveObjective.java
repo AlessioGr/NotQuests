@@ -80,7 +80,7 @@ public class ActiveObjective {
                     return;
                 }
 
-                objective.onObjectiveUnlock(this);
+                objective.onObjectiveUnlock(this, main.getDataManager().isCurrentlyLoading());
 
                 getQuestPlayer().setTrackingObjective(this);
 
@@ -112,6 +112,8 @@ public class ActiveObjective {
                     }
                 }
 
+            }else{
+                objective.onObjectiveCompleteOrLock(this, main.getDataManager().isCurrentlyLoading(), isCompleted(null));
             }
         }
 
@@ -262,6 +264,7 @@ public class ActiveObjective {
         this.hasBeenCompleted = hasBeenCompleted;
         if(hasBeenCompleted){
             getQuestPlayer().disableTrackingObjective(this);
+            objective.onObjectiveCompleteOrLock(this, main.getDataManager().isCurrentlyLoading(), true);
         }
     }
 }

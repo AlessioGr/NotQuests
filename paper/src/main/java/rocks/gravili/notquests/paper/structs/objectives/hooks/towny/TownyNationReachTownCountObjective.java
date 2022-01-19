@@ -95,9 +95,12 @@ public class TownyNationReachTownCountObjective extends Objective {
         countPreviousTowns = configuration.getBoolean(initialPath + ".specifics.countPreviousTowns");
     }
 
-
     @Override
-    public void onObjectiveUnlock(ActiveObjective activeObjective) {
+    public void onObjectiveUnlock(final ActiveObjective activeObjective, final boolean unlockedDuringPluginStartupQuestLoadingProcess) {
+        if(activeObjective.getCurrentProgress() != 0){
+            return;
+        }
+
         if (!main.getIntegrationsManager().isTownyEnabled() || !isCountPreviousTowns()) {
             return;
         }
@@ -124,4 +127,9 @@ public class TownyNationReachTownCountObjective extends Objective {
 
         activeObjective.addProgress(nation.getNumTowns());
     }
+
+    @Override
+    public void onObjectiveCompleteOrLock(final ActiveObjective activeObjective, final boolean lockedOrCompletedDuringPluginStartupQuestLoadingProcess, final boolean completed) {
+    }
+
 }

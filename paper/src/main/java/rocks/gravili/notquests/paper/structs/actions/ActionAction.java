@@ -87,7 +87,7 @@ public class ActionAction extends Action {
     }
 
     @Override
-    public void execute(final Player player, Object... objects) {
+    public void executeInternally(final Player player, Object... objects) {
         if (action == null) {
             main.getLogManager().warn("Tried to execute Action of Action action with null action.");
             return;

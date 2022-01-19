@@ -69,7 +69,7 @@ public class IntegerTagVariable extends Variable<Integer> {
     }
 
     @Override
-    public boolean setValue(Integer newValue, Player player, Object... objects) {
+    public boolean setValueInternally(Integer newValue, Player player, Object... objects) {
         final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
         if(questPlayer == null){
             return false;
