@@ -618,7 +618,7 @@ public class CommandManager {
         return adminTagCommands;
     }
 
-    public final AdminTagCommands getAdminItemsCommands() {
+    public final AdminItemsCommands getAdminItemsCommands() {
         return adminItemsCommands;
     }
 
