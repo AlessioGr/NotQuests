@@ -51,4 +51,12 @@ public class ProjectKorraManager {
         BendingPlayer.getBendingPlayer(player).getElements().addAll(elements1);
     }
 
+    public final ArrayList<String> getAllElements() {
+        ArrayList<String> allElementsStringList = new ArrayList<>();
+        for(Element element : Element.getAllElements()){
+            allElementsStringList.add(element.getName());
+        }
+        return allElementsStringList;
+    }
+
 }

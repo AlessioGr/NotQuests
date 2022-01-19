@@ -43,7 +43,7 @@ public class ProjectKorraElementVariable extends Variable<String[]> {
 
     @Override
     public List<String> getPossibleValues(Player player, Object... objects) {
-        return null;
+        return main.getIntegrationsManager().getProjectKorraManager().getAllElements();
     }
 
     @Override
