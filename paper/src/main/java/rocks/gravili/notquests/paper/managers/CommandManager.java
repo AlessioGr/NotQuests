@@ -71,6 +71,7 @@ public class CommandManager {
     private Command.Builder<CommandSender> adminCommandBuilder;
     private Command.Builder<CommandSender> adminEditCommandBuilder;
     private Command.Builder<CommandSender> adminTagCommandBuilder;
+    private Command.Builder<CommandSender> adminItemsCommandBuilder;
     private Command.Builder<CommandSender> adminConversationCommandBuilder;
     private Command.Builder<CommandSender> adminEditAddObjectiveCommandBuilder;
     private Command.Builder<CommandSender> adminEditAddRequirementCommandBuilder;
@@ -91,6 +92,7 @@ public class CommandManager {
     private AdminCommands adminCommands;
     private AdminEditCommands adminEditCommands;
     private AdminTagCommands adminTagCommands;
+    private AdminItemsCommands adminItemsCommands;
     private AdminConversationCommands adminConversationCommands;
     public CommandFlag<Integer> applyOn; //0 = Quest
     public CommandFlag<World> world;
@@ -342,6 +344,10 @@ public class CommandManager {
         adminTagCommandBuilder = adminCommandBuilder
                 .literal("tags", "t");
 
+        adminItemsCommandBuilder = adminCommandBuilder
+                .literal("items", "item", "i");
+
+
         adminConversationCommandBuilder = adminCommandBuilder
                 .literal("conversations", "c");
 
@@ -523,6 +529,8 @@ public class CommandManager {
 
         adminTagCommands = new AdminTagCommands(main, commandManager, adminTagCommandBuilder);
 
+        adminItemsCommands = new AdminItemsCommands(main, commandManager, adminItemsCommandBuilder);
+
 
     }
 
@@ -537,6 +545,11 @@ public class CommandManager {
     public final Command.Builder<CommandSender> getAdminEditCommandBuilder() {
         return adminEditCommandBuilder;
     }
+
+    public final Command.Builder<CommandSender> getAdminItemsCommandBuilder() {
+        return adminItemsCommandBuilder;
+    }
+
 
     public final Command.Builder<CommandSender> getAdminTagCommandBuilder() {
         return adminTagCommandBuilder;
@@ -603,6 +616,10 @@ public class CommandManager {
     }
     public final AdminTagCommands getAdminTagCommands() {
         return adminTagCommands;
+    }
+
+    public final AdminTagCommands getAdminItemsCommands() {
+        return adminItemsCommands;
     }
 
     public final AdminConversationCommands getAdminConversationCommands() {

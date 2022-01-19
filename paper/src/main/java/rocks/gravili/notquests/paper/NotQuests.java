@@ -56,6 +56,7 @@ public class NotQuests {
     private BackupManager backupManager;
     private MessageManager messageManager;
     private TagManager tagManager;
+    private ItemsManager itemsManager;
     private WebManager webManager;
 
     //Registering Managers
@@ -234,6 +235,7 @@ public class NotQuests {
 
         tagManager = new TagManager(this);
 
+        itemsManager = new ItemsManager(this);
 
         webManager = new WebManager(this);
 
@@ -496,6 +498,10 @@ public class NotQuests {
 
     public final TagManager getTagManager(){
         return tagManager;
+    }
+
+    public final ItemsManager getItemsManager(){
+        return itemsManager;
     }
 
     public final WebManager getWebManager(){

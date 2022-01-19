@@ -12,8 +12,8 @@ public class Category {
     private final String categoryName;
     private final File categoryFolder;
 
-    private File categoryFile, questsFile, actionsFile, conditionsFile, tagsFile, conversationsFolder;
-    private FileConfiguration categoryConfig, questsConfig, actionsConfig, conditionsConfig, tagsConfig;
+    private File categoryFile, questsFile, actionsFile, conditionsFile, tagsFile, itemsFile, conversationsFolder;
+    private FileConfiguration categoryConfig, questsConfig, actionsConfig, conditionsConfig, tagsConfig, itemsConfig;
     private final ArrayList<FileConfiguration> conversationsConfigs;
 
     private Category parentCategory = null;
@@ -95,6 +95,14 @@ public class Category {
         this.tagsFile = tagsFile;
     }
 
+    public final File getItemsFile() {
+        return itemsFile;
+    }
+
+    public void setItemsFile(final File itemsFile) {
+        this.itemsFile = itemsFile;
+    }
+
     public final File getConversationsFolder() {
         return conversationsFolder;
     }
@@ -110,6 +118,7 @@ public class Category {
         actionsConfig = loadConfig(actionsFile, actionsConfig);
         conditionsConfig = loadConfig(conditionsFile, conditionsConfig);
         tagsConfig = loadConfig(tagsFile, tagsConfig);
+        itemsConfig = loadConfig(itemsFile, itemsConfig);
 
         if (!conversationsConfigs.isEmpty()) {
             return;
@@ -149,6 +158,10 @@ public class Category {
 
     public FileConfiguration getTagsConfig() {
         return tagsConfig;
+    }
+
+    public FileConfiguration getItemsConfig() {
+        return itemsConfig;
     }
 
 
@@ -199,6 +212,16 @@ public class Category {
         if(main.getDataManager().isSavingEnabled()){
             try {
                 tagsConfig.save(tagsFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void saveItemsConfig(){
+        if(main.getDataManager().isSavingEnabled()){
+            try {
+                itemsConfig.save(itemsFile);
             } catch (IOException e) {
                 e.printStackTrace();
             }

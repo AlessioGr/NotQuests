@@ -224,6 +224,7 @@ public class DataManager {
             File actionsFile = null;
             File conditionsFile = null;
             File tagsFile = null;
+            File itemsFile = null;
 
 
             File conversationsFolder = null;
@@ -240,6 +241,8 @@ public class DataManager {
                         conditionsFile = file;
                     } else if (file.getName().equalsIgnoreCase("tags.yml")) {
                         tagsFile = file;
+                    } else if (file.getName().equalsIgnoreCase("items.yml")) {
+                        itemsFile = file;
                     }
                 } else {
                     if (file.getName().equalsIgnoreCase("conversations")) {
@@ -264,6 +267,18 @@ public class DataManager {
                 main.getLogManager().warn("Couldn't create a (2) tags.yml file for category <highlight>" + categoryFolder.getName());
             }
 
+            //Create new items.yml if doesn't exist:
+            try{
+                if (itemsFile == null || !itemsFile.exists()) {
+                    itemsFile = new File(categoryFolder, "items.yml");
+                    if(!itemsFile.createNewFile()){
+                        main.getLogManager().warn("Couldn't create a (1) items.yml file for category <highlight>" + categoryFolder.getName());
+                    }
+                }
+            }catch (Exception e){
+                main.getLogManager().warn("Couldn't create a (2) items.yml file for category <highlight>" + categoryFolder.getName());
+            }
+
 
 
             final Category category = new Category(main, categoryFolder.getName(), categoryFolder);
@@ -273,6 +288,7 @@ public class DataManager {
             category.setConditionsFile(conditionsFile);
             category.setConversationsFolder(conversationsFolder);
             category.setTagsFile(tagsFile);
+            category.setItemsFile(itemsFile);
 
             main.getLogManager().info("  Loading real category: <highlight>" + category.getCategoryFullName());
 
@@ -383,6 +399,12 @@ public class DataManager {
                     return null;
                 }
 
+                File itemsFile = new File(categoryFolder, "items.yml");
+                if (!itemsFile.exists() && !itemsFile.createNewFile()) {
+                    disablePluginAndSaving("There was an error creating the " + categoryName + " category items.yml...");
+                    return null;
+                }
+
                 File conversationsFolder = new File(categoryFolder, "conversations");
                 if (!conversationsFolder.exists() && !conversationsFolder.mkdir()) {
                     disablePluginAndSaving("There was an error creating the " + categoryName + " category conversations folder..");
@@ -396,6 +418,7 @@ public class DataManager {
                 category.setConditionsFile(conditionsFile);
                 category.setConversationsFolder(conversationsFolder);
                 category.setTagsFile(tagsFile);
+                category.setItemsFile(itemsFile);
 
 
                 if (parentCategory != null) {
