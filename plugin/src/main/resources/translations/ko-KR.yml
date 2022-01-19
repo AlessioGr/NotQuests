@@ -1,6 +1,6 @@
 ---
 chat:
-  wrong-command-usage: <error>Wrong command usage!
+  wrong-command-usage: <error>잘못된 커맨드 사용법입니다!
   missing-permission: '<error>No permission! Required permission node: <highlight>%PERMISSION%'
   too-many-arguments: <error>Too many arguments!
   quest-successfully-accepted: |2
@@ -21,7 +21,7 @@ chat:
     <CENTER><positive>[Quest Completed]
     <CENTER><highlight><BOLD>%QUESTNAME%
     <EMPTY>
-  quest-completed-rewards-prefix: '    <highlight>Rewards:'
+  quest-completed-rewards-prefix: '    <highlight>보상:'
   quest-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
   quest-completed-rewards-suffix: <EMPTY>
   missing-quest-description: <unimportant>This quest has no quest description.
@@ -128,11 +128,11 @@ gui:
         x: 8
         y: 0
       takequest:
-        name: "<positive>Take a Quest"
+        name: "<positive> 퀘스트 수락"
         lore:
-          - "<unimportant>Start a new Quest!"
+          - "<unimportant> 새로운 퀘스트 시작!"
           - ""
-          - "<veryUnimportant>Some Quests cannot be"
+          - "<veryUnimportant>일부 퀘스트들은 다음이 불가능합니다:"
           - "<veryUnimportant>started like this."
         x: 0
         y: 1
@@ -145,7 +145,7 @@ gui:
         x: 0
         y: 2
       activequests:
-        name: "<highlight>Active Quests"
+        name: "<highlight>진행중인 퀘스트"
         lore:
           - ""
           - "<veryUnimportant>Shows all of your"
@@ -169,16 +169,16 @@ gui:
         name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTED]"
         lore:
           - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
-          - "<main>Click to open Quest!"
+          - "<main>퀘스트 열기"
   takeQuestChoose:
-    title: <highlight2>Which Quest do you want to take?
+    title: <highlight2>어떤 퀘스트를 선택하시겠습니까?
     button:
       questPreview:
         name-if-not-accepted: "<highlight>%QUESTNAME%"
-        name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTED]"
+        name-if-accepted: "<highlight>%QUESTNAME%<reset><positive>[ACCEPTED]"
         lore:
           - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
-          - "<main>Click to preview Quest!"
+          - "<main>퀘스트 미리보기"
   abortQuestChoose:
     title: '  <highlight2>Active Quests you can abort'
     button:
