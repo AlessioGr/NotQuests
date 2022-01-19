@@ -36,7 +36,6 @@ import rocks.gravili.notquests.paper.structs.variables.tags.*;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Locale;
 
 
 public class VariablesManager {
@@ -97,7 +96,7 @@ public class VariablesManager {
         }
 
         if(main.getIntegrationsManager().isProjectKorraEnabled()){
-            registerVariable("ProjectKorraElement", ProjectKorraElementVariable.class);
+            registerVariable("ProjectKorraElements", ProjectKorraElementsVariable.class);
         }
 
 

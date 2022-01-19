@@ -8,8 +8,8 @@ import rocks.gravili.notquests.paper.structs.variables.Variable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProjectKorraElementVariable extends Variable<String[]> {
-    public ProjectKorraElementVariable(NotQuests main) {
+public class ProjectKorraElementsVariable extends Variable<String[]> {
+    public ProjectKorraElementsVariable(NotQuests main) {
         super(main);
         setCanSetValue(true);
     }
