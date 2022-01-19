@@ -25,8 +25,11 @@ package rocks.gravili.notquests.paper.commands.arguments.variables;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.arguments.CommandArgument;
+import cloud.commandframework.arguments.flags.CommandFlag;
 import cloud.commandframework.arguments.parser.ArgumentParseResult;
 import cloud.commandframework.arguments.parser.ArgumentParser;
+import cloud.commandframework.arguments.standard.BooleanArgument;
+import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.exceptions.parsing.NoInputProvidedException;
 import org.bukkit.command.CommandSender;
@@ -211,7 +214,38 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Str
                 if(variable.getRequiredStrings().isEmpty() && variable.getRequiredNumbers().isEmpty() && variable.getRequiredBooleans().isEmpty() && variable.getRequiredBooleanFlags().isEmpty()){
                     completions.add(variableString);
                 }else{
-                    completions.add(variableString+"(");
+                    if(!input.endsWith(variableString+"(")){
+                        if(input.endsWith(",")){
+                            for(StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()){
+                                completions.add(input + stringArgument.getName() + ":<Enter Value>");
+                            }
+                            for(NumberVariableValueArgument<CommandSender> numberVariableValueArgument : variable.getRequiredNumbers()){
+                                completions.add(input + numberVariableValueArgument.getName() + ":<Enter Value>");
+                            }
+                            for(BooleanArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
+                                completions.add(input + booleanArgument.getName() + ":<Enter Value>");
+                            }
+                            for(CommandFlag<Void> flag : variable.getRequiredBooleanFlags()){
+                                completions.add(input + "--" + flag.getName() + "");
+                            }
+                        }else if(!input.endsWith(")")){
+                            completions.add(variableString+"(");
+                        }
+                    }else{//Moree completionss
+                        for(StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()){
+                            completions.add(variableString+"(" + stringArgument.getName() + ":<Enter Value>");
+                        }
+                        for(NumberVariableValueArgument<CommandSender> numberVariableValueArgument : variable.getRequiredNumbers()){
+                            completions.add(variableString+"(" + numberVariableValueArgument.getName() + ":<Enter Value>");
+                        }
+                        for(BooleanArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
+                            completions.add(variableString+"(" + booleanArgument.getName() + ":<Enter Value>");
+                        }
+                        for(CommandFlag<Void> flag : variable.getRequiredBooleanFlags()){
+                            completions.add(variableString+"(--" + flag.getName() + "");
+                        }
+
+                    }
                 }
             }
 

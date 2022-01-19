@@ -199,6 +199,44 @@ public class VariablesManager {
                 main.getLogManager().debug("Null variable: <highlight>" + variableString);
                 continue;
             }
+
+            //Extra Arguments:
+            if(expression.contains(variableString + "(")){
+                String everythingAfterBracket = expression.substring(expression.indexOf(variableString+"(") +  variableString.length()+1 );
+                String insideBracket = everythingAfterBracket.substring(0, everythingAfterBracket.indexOf(")"));
+                //main.getLogManager().info("Inside Bracket: " + insideBracket);
+                String[] extraArguments = insideBracket.split(",");
+                for(String extraArgument : extraArguments){
+                    //main.getLogManager().info("Extra: " + extraArgument);
+                    if(extraArgument.startsWith("--")){
+                        variable.addAdditionalBooleanArgument(extraArgument.replace("--", ""), true);
+                        //main.getLogManager().info("AddBoolFlag: " + extraArgument.replace("--", ""));
+                    }else{
+                        String[] split = extraArgument.split(":");
+                        String key = split[0];
+                        String value = split[1];
+                        for(StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()){
+                            if(stringArgument.getName().equalsIgnoreCase(key)){
+                                variable.addAdditionalStringArgument(key, value);
+                                //main.getLogManager().info("AddString: " + key + " val: " + value);
+                            }
+                        }
+                        for(NumberVariableValueArgument<CommandSender> numberVariableValueArgument : variable.getRequiredNumbers()){
+                            variable.addAdditionalNumberArgument(key, value);
+                            //main.getLogManager().info("AddNumb: " + key + " val: " + value);
+                        }
+                        for(BooleanArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
+                            variable.addAdditionalBooleanArgument(key, Boolean.parseBoolean(value));
+                            //main.getLogManager().info("AddBool: " + key + " val: " + value);
+                        }
+                    }
+                }
+
+                variableString = variableString+"(" + insideBracket + ")"; //For the replacing with the actual number below
+            }
+
+
+
             Object valueObject = variable.getValue(player, objects);
             if(valueObject instanceof Number n){
                 expression = expression.replace(variableString, ""+n.doubleValue());

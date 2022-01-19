@@ -18,7 +18,7 @@ public class IntegerTagVariable extends Variable<Integer> {
         super(main);
 
         addRequiredString(
-                StringArgument.<CommandSender>newBuilder("Tag Name").withSuggestionsProvider(
+                StringArgument.<CommandSender>newBuilder("TagName").withSuggestionsProvider(
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
                             main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Tag Name]", "[...]");
@@ -45,7 +45,7 @@ public class IntegerTagVariable extends Variable<Integer> {
             return 0;
         }
 
-        final String tagName = getRequiredStringValue("Tag Name");
+        final String tagName = getRequiredStringValue("TagName");
         final Tag tag = main.getTagManager().getTag(tagName);
         if(tag == null){
             main.getLogManager().warn("Error reading tag " + tagName + ". Tag does not exist.");
@@ -74,7 +74,7 @@ public class IntegerTagVariable extends Variable<Integer> {
             return false;
         }
 
-        final String tagName = getRequiredStringValue("Tag Name");
+        final String tagName = getRequiredStringValue("TagName");
         final Tag tag = main.getTagManager().getTag(tagName);
         if(tag == null){
             main.getLogManager().warn("Error reading tag " + tagName + ". Tag does not exist. All possible tags: " + main.getTagManager().getTagIdentifiers().toString());
