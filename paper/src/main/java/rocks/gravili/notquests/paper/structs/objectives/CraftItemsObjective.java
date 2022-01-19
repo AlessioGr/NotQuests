@@ -37,9 +37,18 @@ public class CraftItemsObjective extends Objective {
 
     private ItemStack itemToCraft;
     private boolean craftAnyItem = false;
+    private String nqItemName = "";
+
 
     public CraftItemsObjective(NotQuests main) {
         super(main);
+    }
+
+    public void setNQItem(final String nqItemName){
+        this.nqItemName = nqItemName;
+    }
+    public final String getNQItem(){
+        return nqItemName;
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
@@ -66,12 +75,18 @@ public class CraftItemsObjective extends Objective {
                             craftAnyItem = true;
                             itemToCraft = null;
                         } else {
-                            itemToCraft = new ItemStack(Material.valueOf(materialOrHand.material), 1);
+                            itemToCraft = main.getItemsManager().getItemStack(materialOrHand.material);
                         }
                     }
 
                     CraftItemsObjective craftItemsObjective = new CraftItemsObjective(main);
-                    craftItemsObjective.setItemToCraft(itemToCraft);
+
+                    if(main.getItemsManager().getItem(materialOrHand.material) != null){
+                        craftItemsObjective.setNQItem(main.getItemsManager().getItem(materialOrHand.material).getItemName());
+                    }else{
+                        craftItemsObjective.setItemToCraft(itemToCraft);
+                    }
+
                     craftItemsObjective.setCraftAnyItem(craftAnyItem);
                     craftItemsObjective.setProgressNeeded(amount);
 
@@ -99,7 +114,11 @@ public class CraftItemsObjective extends Objective {
     }
 
     public final ItemStack getItemToCraft() {
-        return itemToCraft;
+        if(!getNQItem().isBlank()){
+            return main.getItemsManager().getItem(getNQItem()).getItemStack().clone();
+        }else{
+            return itemToCraft;
+        }
     }
 
     public final long getAmountToCraft() {
@@ -143,13 +162,22 @@ public class CraftItemsObjective extends Objective {
 
     @Override
     public void save(FileConfiguration configuration, String initialPath) {
-        configuration.set(initialPath + ".specifics.itemToCraft.itemstack", getItemToCraft());
+        if(!getNQItem().isBlank()){
+            configuration.set(initialPath + ".specifics.nqitem", getNQItem());
+        }else {
+            configuration.set(initialPath + ".specifics.itemToCraft.itemstack", getItemToCraft());
+        }
+
         configuration.set(initialPath + ".specifics.craftAnyItem", isCraftAnyItem());
     }
 
     @Override
     public void load(FileConfiguration configuration, String initialPath) {
-        itemToCraft = configuration.getItemStack(initialPath + ".specifics.itemToCraft.itemstack");
+        this.nqItemName = configuration.getString(initialPath + ".specifics.nqitem", "");
+        if(nqItemName.isBlank()){
+            itemToCraft = configuration.getItemStack(initialPath + ".specifics.itemToCraft.itemstack");
+        }
+
         craftAnyItem = configuration.getBoolean(initialPath + ".specifics.craftAnyItem", false);
     }
 }

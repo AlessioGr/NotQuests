@@ -35,9 +35,18 @@ public class PlaceBlocksObjective extends Objective {
 
     private String blockToPlace;
     private boolean deductIfBlockIsBroken = true;
+    private String nqItemName = "";
+
 
     public PlaceBlocksObjective(NotQuests main) {
         super(main);
+    }
+
+    public void setNQItem(final String nqItemName){
+        this.nqItemName = nqItemName;
+    }
+    public final String getNQItem(){
+        return nqItemName;
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
@@ -64,11 +73,18 @@ public class PlaceBlocksObjective extends Objective {
                             return;
                         }
                     } else {
-                        materialToPlace = materialOrHand.material;
+                        materialToPlace = main.getItemsManager().getMaterial(materialOrHand.material).name();
                     }
 
                     PlaceBlocksObjective placeBlocksObjective = new PlaceBlocksObjective(main);
-                    placeBlocksObjective.setBlockToPlace(materialToPlace);
+
+                    if(main.getItemsManager().getItem(materialOrHand.material) != null){
+                        placeBlocksObjective.setNQItem(main.getItemsManager().getItem(materialOrHand.material).getItemName());
+                    }else{
+                        placeBlocksObjective.setBlockToPlace(materialToPlace);
+                    }
+
+
                     placeBlocksObjective.setDeductIfBlockIsBroken(deductIfBlockIsBroken);
                     placeBlocksObjective.setProgressNeeded(amount);
 
@@ -89,18 +105,32 @@ public class PlaceBlocksObjective extends Objective {
 
     @Override
     public void save(FileConfiguration configuration, String initialPath) {
-        configuration.set(initialPath + ".specifics.blockToPlace.material", getBlockToPlace());
+        if(!getNQItem().isBlank()){
+            configuration.set(initialPath + ".specifics.nqitem", getNQItem());
+        }else {
+            configuration.set(initialPath + ".specifics.blockToPlace.material", getBlockToPlace());
+        }
+
         configuration.set(initialPath + ".specifics.deductIfBlockBroken", isDeductIfBlockBroken());
     }
 
     @Override
     public void load(FileConfiguration configuration, String initialPath) {
-        blockToPlace = configuration.getString(initialPath + ".specifics.blockToPlace.material");
+        this.nqItemName = configuration.getString(initialPath + ".specifics.nqitem", "");
+
+        if(nqItemName.isBlank()){
+            blockToPlace = configuration.getString(initialPath + ".specifics.blockToPlace.material");
+        }
+
         deductIfBlockIsBroken = configuration.getBoolean(initialPath + ".specifics.deductIfBlockBroken", true);
     }
 
     public final String getBlockToPlace() {
-        return blockToPlace;
+        if(!nqItemName.isBlank()){
+            return main.getItemsManager().getItem(nqItemName).getItemStack().getType().name();
+        }else {
+            return blockToPlace;
+        }
     }
 
 

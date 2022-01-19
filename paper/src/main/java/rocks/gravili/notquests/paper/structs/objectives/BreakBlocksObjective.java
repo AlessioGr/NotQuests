@@ -21,9 +21,7 @@ package rocks.gravili.notquests.paper.structs.objectives;
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.IntegerArgument;
-import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
-import net.kyori.adventure.text.TranslatableComponent;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -33,15 +31,22 @@ import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 
-import java.util.Locale;
 
 public class BreakBlocksObjective extends Objective {
     private String blockToBreak;
     private boolean deductIfBlockIsPlaced = true;
 
+    private String nqItemName = "";
 
     public BreakBlocksObjective(NotQuests main) {
         super(main);
+    }
+
+    public void setNQItem(final String nqItemName){
+        this.nqItemName = nqItemName;
+    }
+    public final String getNQItem(){
+        return nqItemName;
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
@@ -69,11 +74,15 @@ public class BreakBlocksObjective extends Objective {
                             return;
                         }
                     } else {
-                        materialToBreak = materialOrHand.material;
+                        materialToBreak = main.getItemsManager().getMaterial(materialOrHand.material).name();
                     }
 
                     BreakBlocksObjective breakBlocksObjective = new BreakBlocksObjective(main);
-                    breakBlocksObjective.setBlockToBreak(materialToBreak);
+                    if(main.getItemsManager().getItem(materialOrHand.material) != null){
+                        breakBlocksObjective.setNQItem(main.getItemsManager().getItem(materialOrHand.material).getItemName());
+                    }else{
+                        breakBlocksObjective.setBlockToBreak(materialToBreak);
+                    }
                     breakBlocksObjective.setProgressNeeded(amount);
                     breakBlocksObjective.setDeductIfBlockIsPlaced(deductIfBlockIsPlaced);
 
@@ -84,19 +93,28 @@ public class BreakBlocksObjective extends Objective {
 
     @Override
     public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
-        String translatedMaterialName = "<lang:" + Material.valueOf(getBlockToBreak()).translationKey() + ">";
+        String translatedMaterialName;
+        try{
+            translatedMaterialName = "<lang:" + Material.valueOf(getBlockToBreakMaterial()).translationKey() + ">";
+        }catch (Exception ignored){
+            translatedMaterialName = getBlockToBreakMaterial();
+        }
 
         //TODO: translatedMaterialName doesnt work in gradients yet. Wait until minimessage fixed that bug
 
 
         return main.getLanguageManager().getString("chat.objectives.taskDescription.breakBlocks.base", player)
                 .replace("%EVENTUALCOLOR%", eventualColor)
-                .replace("%BLOCKTOBREAK%", getBlockToBreak());
+                .replace("%BLOCKTOBREAK%", getBlockToBreakMaterial());
     }
 
     @Override
     public void save(FileConfiguration configuration, String initialPath) {
-        configuration.set(initialPath + ".specifics.blockToBreak.material", getBlockToBreak());
+        if(!getNQItem().isBlank()){
+            configuration.set(initialPath + ".specifics.nqitem", getNQItem());
+        }else {
+            configuration.set(initialPath + ".specifics.blockToBreak.material", getBlockToBreakMaterial());
+        }
         configuration.set(initialPath + ".specifics.deductIfBlockPlaced", isDeductIfBlockPlaced());
     }
 
@@ -104,8 +122,12 @@ public class BreakBlocksObjective extends Objective {
         this.deductIfBlockIsPlaced = deductIfBlockIsPlaced;
     }
 
-    public final String getBlockToBreak() {
-        return blockToBreak;
+    public final String getBlockToBreakMaterial() {
+        if(!nqItemName.isBlank()){
+            return main.getItemsManager().getItem(nqItemName).getItemStack().getType().name();
+        }else {
+            return blockToBreak;
+        }
     }
 
 
@@ -131,7 +153,12 @@ public class BreakBlocksObjective extends Objective {
 
     @Override
     public void load(FileConfiguration configuration, String initialPath) {
-        blockToBreak = configuration.getString(initialPath + ".specifics.blockToBreak.material");
+        this.nqItemName = configuration.getString(initialPath + ".specifics.nqitem", "");
+
+        if(nqItemName.isBlank()){
+            blockToBreak = configuration.getString(initialPath + ".specifics.blockToBreak.material");
+        }
+
         deductIfBlockIsPlaced = configuration.getBoolean(initialPath + ".specifics.deductIfBlockPlaced", true);
     }
 }

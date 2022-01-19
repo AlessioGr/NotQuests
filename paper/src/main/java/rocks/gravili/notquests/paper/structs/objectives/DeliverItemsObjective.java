@@ -46,15 +46,25 @@ import java.util.*;
 
 public class DeliverItemsObjective extends Objective {
 
-    private ItemStack itemToDeliver = null;
     private int recipientNPCID = -1;
     private UUID recipientArmorStandUUID = null;
     private boolean deliverAnyItem = false;
+
+    private ItemStack itemToDeliver = null;
+    private String nqItemName = "";
+
 
 
     //For Citizens NPCs
     public DeliverItemsObjective(NotQuests main) {
         super(main);
+    }
+
+    public void setNQItem(final String nqItemName){
+        this.nqItemName = nqItemName;
+    }
+    public final String getNQItem(){
+        return nqItemName;
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
@@ -96,7 +106,7 @@ public class DeliverItemsObjective extends Objective {
                             deliverAnyItem = true;
                             itemToDeliver = null;
                         } else {
-                            itemToDeliver = new ItemStack(Material.valueOf(materialOrHand.material), 1);
+                            itemToDeliver = main.getItemsManager().getItemStack(materialOrHand.material);
                         }
                     }
 
@@ -123,7 +133,12 @@ public class DeliverItemsObjective extends Objective {
                             return;
                         }
                         DeliverItemsObjective deliverItemsObjective = new DeliverItemsObjective(main);
-                        deliverItemsObjective.setItemToDeliver(itemToDeliver);
+                        if(main.getItemsManager().getItem(materialOrHand.material) != null){
+                            deliverItemsObjective.setNQItem(main.getItemsManager().getItem(materialOrHand.material).getItemName());
+                        }else{
+                            deliverItemsObjective.setItemToDeliver(itemToDeliver);
+                        }
+
                         deliverItemsObjective.setProgressNeeded(amountToDeliver);
                         deliverItemsObjective.setRecipientNPCID(npcID);
                         deliverItemsObjective.setDeliverAnyItem(deliverAnyItem);
@@ -136,7 +151,12 @@ public class DeliverItemsObjective extends Objective {
                             Random rand = new Random();
                             int randomNum = rand.nextInt((Integer.MAX_VALUE - 1) + 1) + 1;
 
-                            main.getDataManager().getItemStackCache().put(randomNum, itemToDeliver);
+                            if(main.getItemsManager().getItem(materialOrHand.material) != null){
+                                main.getDataManager().getItemStackCache().put(randomNum, main.getItemsManager().getItem(materialOrHand.material).getItemName());
+                            }else{
+                                main.getDataManager().getItemStackCache().put(randomNum, itemToDeliver);
+                            }
+
 
 
                             ItemStack itemStack = new ItemStack(Material.PAPER, 1);
@@ -151,7 +171,7 @@ public class DeliverItemsObjective extends Objective {
 
 
                             ItemMeta itemMeta = itemStack.getItemMeta();
-                             List<Component> lore = new ArrayList<>();
+                            List<Component> lore = new ArrayList<>();
 
                             assert itemMeta != null;
 
@@ -236,7 +256,11 @@ public class DeliverItemsObjective extends Objective {
     }
 
     public final ItemStack getItemToDeliver() {
-        return itemToDeliver;
+        if(!getNQItem().isBlank()){
+            return main.getItemsManager().getItem(getNQItem()).getItemStack().clone();
+        }else{
+            return itemToDeliver;
+        }
     }
 
     //Probably never used, because we use the objective progress instead
@@ -312,7 +336,11 @@ public class DeliverItemsObjective extends Objective {
 
     @Override
     public void save(FileConfiguration configuration, String initialPath) {
-        configuration.set(initialPath + ".specifics.itemToCollect.itemstack", getItemToDeliver());
+        if(!getNQItem().isBlank()){
+            configuration.set(initialPath + ".specifics.nqitem", getNQItem());
+        }else {
+            configuration.set(initialPath + ".specifics.itemToCollect.itemstack", getItemToDeliver());
+        }
 
         configuration.set(initialPath + ".specifics.recipientNPCID", getRecipientNPCID());
         if (getRecipientArmorStandUUID() != null) {
@@ -325,7 +353,11 @@ public class DeliverItemsObjective extends Objective {
 
     @Override
     public void load(FileConfiguration configuration, String initialPath) {
-        itemToDeliver = configuration.getItemStack(initialPath + ".specifics.itemToCollect.itemstack");
+        this.nqItemName = configuration.getString(initialPath + ".specifics.nqitem", "");
+        if(nqItemName.isBlank()){
+            itemToDeliver = configuration.getItemStack(initialPath + ".specifics.itemToCollect.itemstack");
+        }
+
         recipientNPCID = configuration.getInt(initialPath + ".specifics.recipientNPCID");
 
         if (recipientNPCID != -1) {

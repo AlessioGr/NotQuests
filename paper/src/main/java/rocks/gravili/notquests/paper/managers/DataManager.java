@@ -152,7 +152,7 @@ public class DataManager {
     /*
      * ItemStack Cache used for 'storing ItemStacks to PDBs' (used for attaching Objectives To Armor Stands)
      */
-    private final HashMap<Integer, ItemStack> itemStackCache;
+    private final HashMap<Integer, Object> itemStackCache;
 
 
     private final ArrayList<Category> categories, topLevelOnlyCategories;
@@ -1719,7 +1719,7 @@ public class DataManager {
     }
 
 
-    public HashMap<Integer, ItemStack> getItemStackCache() {
+    public HashMap<Integer, Object> getItemStackCache() {
         return itemStackCache;
     }
 

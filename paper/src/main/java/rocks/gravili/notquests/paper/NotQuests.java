@@ -18,6 +18,7 @@ import rocks.gravili.notquests.paper.events.QuestEvents;
 import rocks.gravili.notquests.paper.events.TriggerEvents;
 import rocks.gravili.notquests.paper.events.notquests.NotQuestsFullyLoadedEvent;
 import rocks.gravili.notquests.paper.managers.*;
+import rocks.gravili.notquests.paper.managers.items.ItemsManager;
 import rocks.gravili.notquests.paper.managers.packets.PacketManager;
 import rocks.gravili.notquests.paper.managers.registering.*;
 import rocks.gravili.notquests.paper.managers.tags.TagManager;

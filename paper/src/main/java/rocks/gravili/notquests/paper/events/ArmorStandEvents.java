@@ -346,11 +346,15 @@ public class ArmorStandEvents implements Listener {
                                 deliverAny = true;
                             }
 
-                            final ItemStack itemToDeliver = main.getDataManager().getItemStackCache().get(itemStackCache);
+                            final Object itemToDeliver = main.getDataManager().getItemStackCache().get(itemStackCache);
 
                             if (itemToDeliver != null) {
                                 DeliverItemsObjective deliverItemsObjective = new DeliverItemsObjective(main);
-                                deliverItemsObjective.setItemToDeliver(itemToDeliver);
+                                if(itemToDeliver instanceof ItemStack itemToDeliverItemStack){
+                                    deliverItemsObjective.setItemToDeliver(itemToDeliverItemStack);
+                                }else if(itemToDeliver instanceof String nqItemName){
+                                    deliverItemsObjective.setNQItem(nqItemName);
+                                }
                                 deliverItemsObjective.setProgressNeeded(amountToDeliver);
                                 deliverItemsObjective.setRecipientArmorStandUUID(armorStand.getUniqueId());
                                 deliverItemsObjective.setQuest(quest);

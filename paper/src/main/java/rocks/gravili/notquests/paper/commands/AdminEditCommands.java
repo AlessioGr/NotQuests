@@ -276,7 +276,7 @@ public class AdminEditCommands {
                         if (materialOrHand.material.equalsIgnoreCase("any")) {
                             takeItem = new ItemStack(Material.BOOK, 1);
                         } else {
-                            takeItem = new ItemStack(Material.valueOf(materialOrHand.material), 1);
+                            takeItem = main.getItemsManager().getItemStack(materialOrHand.material);
                         }
                     }
                     if (glow) {

@@ -201,7 +201,7 @@ public class TagManager {
         if (tagsConfigurationSection != null) {
             for (final String tagIdentifier : tagsConfigurationSection.getKeys(false)) {
                 if (identifiersAndTags.get(tagIdentifier) != null) {
-                    main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading tags.yml tag data: The action " + tagIdentifier + " already exists.");
+                    main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading tags.yml tag data: The tag " + tagIdentifier + " already exists.");
                     return;
                 }
                 main.getLogManager().info("Loading tag <highlight>" + tagIdentifier);

@@ -32,12 +32,15 @@ import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
+import rocks.gravili.notquests.paper.managers.items.NQItem;
 
 import java.util.ArrayList;
 
 public class GiveItemAction extends Action {
 
     private ItemStack item = null;
+    private String nqItemName = "";
+    private int nqItemAmount = 1;
 
     public GiveItemAction(final NotQuests main) {
         super(main);
@@ -69,14 +72,34 @@ public class GiveItemAction extends Action {
                             ));
                             return;
                         }
-                        itemStack = new ItemStack(Material.valueOf(materialOrHand.material), itemRewardAmount);
+                        itemStack = main.getItemsManager().getItemStack(materialOrHand.material);
+                        itemStack.setAmount(itemRewardAmount);
                     }
 
                     GiveItemAction giveItemAction = new GiveItemAction(main);
-                    giveItemAction.setItem(itemStack);
+                    if(main.getItemsManager().getItem(materialOrHand.material) != null){
+                        giveItemAction.setNQItem(main.getItemsManager().getItem(materialOrHand.material).getItemName());
+                        giveItemAction.setNqItemAmount(itemRewardAmount);
+                    }else{
+                        giveItemAction.setItem(itemStack);
+                    }
 
                     main.getActionManager().addAction(giveItemAction, context);
                 }));
+    }
+
+    public void setNQItem(final String nqItemName){
+        this.nqItemName = nqItemName;
+    }
+    public final String getNQItem(){
+        return nqItemName;
+    }
+
+    public void setNqItemAmount(final int nqItemAmount){
+        this.nqItemAmount = nqItemAmount;
+    }
+    public final int getNqItemAmount(){
+        return nqItemAmount;
     }
 
     public void setItem(final ItemStack item) {
@@ -85,7 +108,7 @@ public class GiveItemAction extends Action {
 
     @Override
     public void executeInternally(final Player player, Object... objects) {
-        if (item == null) {
+        if (getItemReward() == null) {
             main.getLogManager().warn("Tried to give item reward with invalid reward item");
             return;
         }
@@ -95,9 +118,9 @@ public class GiveItemAction extends Action {
         }
 
         if (Bukkit.isPrimaryThread()) {
-            player.getInventory().addItem(item);
+            player.getInventory().addItem(getItemReward() );
         } else {
-            Bukkit.getScheduler().runTask(main.getMain(), () -> player.getInventory().addItem(item)); //TODO: Check if I can't just run it async if it already is async`?
+            Bukkit.getScheduler().runTask(main.getMain(), () -> player.getInventory().addItem(getItemReward() )); //TODO: Check if I can't just run it async if it already is async`?
         }
 
 
@@ -105,36 +128,61 @@ public class GiveItemAction extends Action {
 
     @Override
     public String getActionDescription(final Player player, final Object... objects) {
-        return "Item: " + getItemReward();
+        return "Item: " + getItemReward().getType().name();
     }
 
     @Override
     public void save(final FileConfiguration configuration, String initialPath) {
-        configuration.set(initialPath + ".specifics.item", getItemReward());
+        if(!getNQItem().isBlank()){
+            configuration.set(initialPath + ".specifics.nqitem", getNQItem());
+            configuration.set(initialPath + ".specifics.nqitemamount", getNqItemAmount());
+        }else {
+            configuration.set(initialPath + ".specifics.item", getItemReward());
+        }
     }
 
 
     public final ItemStack getItemReward() {
-        return item;
+        if(!getNQItem().isBlank()){
+            ItemStack itemStack = main.getItemsManager().getItem(getNQItem()).getItemStack().clone();
+            itemStack.setAmount(getNqItemAmount());
+            return itemStack;
+        }else{
+            return item;
+        }
     }
 
     @Override
     public void load(final FileConfiguration configuration, String initialPath) {
-        this.item = configuration.getItemStack(initialPath + ".specifics.item");
+        this.nqItemName = configuration.getString(initialPath + ".specifics.nqitem", "");
+        this.nqItemAmount = configuration.getInt(initialPath + ".specifics.nqitemamount", 1);
 
-        if(this.item == null){
-            this.item = configuration.getItemStack(initialPath + ".specifics.rewardItem");
+        if(nqItemName.isBlank()){
+            this.item = configuration.getItemStack(initialPath + ".specifics.item");
+            if(this.item == null){
+                this.item = configuration.getItemStack(initialPath + ".specifics.rewardItem");
+            }
         }
     }
 
     @Override
     public void deserializeFromSingleLineString(ArrayList<String> arguments) {
-        final ItemStack itemStack = new ItemStack(Material.valueOf(arguments.get(0)));
+        String itemName = arguments.get(0);
 
-        if(arguments.size() >= 2){
-            itemStack.setAmount(Integer.parseInt(arguments.get(1)));
+        NQItem nqItem = main.getItemsManager().getItem(itemName);
+        if(nqItem == null){
+            final ItemStack itemStack = new ItemStack(Material.valueOf(arguments.get(0)));
+            if(arguments.size() >= 2){
+                itemStack.setAmount(Integer.parseInt(arguments.get(1)));
+            }
+            this.item = itemStack;
+        }else{
+            this.nqItemName = nqItem.getItemName();
+            nqItemAmount = Integer.parseInt(arguments.get(1));
         }
 
-        this.item = itemStack;
+
+
+
     }
 }

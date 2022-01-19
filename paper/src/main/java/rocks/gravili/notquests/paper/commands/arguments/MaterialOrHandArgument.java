@@ -55,6 +55,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
+import rocks.gravili.notquests.paper.managers.items.NQItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -190,7 +191,15 @@ public class MaterialOrHandArgument<C> extends CommandArgument<C, MaterialOrHand
                     inputQueue.remove();
                     return ArgumentParseResult.success(materialOrHand);
                 } else {
-                    materialOrHand.material = Material.valueOf(input.toUpperCase()).name();
+                    try{
+                        materialOrHand.material = Material.valueOf(input.toUpperCase()).name();
+                    }catch (Exception ignored){
+                        if(main.getItemsManager().getItem(input) != null){
+                            materialOrHand.material = input;
+                        }else{
+                            return ArgumentParseResult.failure(new MaterialOrHandArgument.MaterialParseException(input, commandContext));
+                        }
+                    }
                     inputQueue.remove();
                     return ArgumentParseResult.success(materialOrHand);
                 }
@@ -208,6 +217,11 @@ public class MaterialOrHandArgument<C> extends CommandArgument<C, MaterialOrHand
             for (Material value : Material.values()) {
                 completions.add(value.name().toLowerCase());
             }
+
+            for(NQItem nqItem : main.getItemsManager().getItems()){
+                completions.add(nqItem.getItemName());
+            }
+
             completions.add("hand");
             completions.add("any");
 

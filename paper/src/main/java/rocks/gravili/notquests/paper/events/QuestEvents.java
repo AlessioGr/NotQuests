@@ -728,7 +728,7 @@ public class QuestEvents implements Listener {
                         for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
                             if (activeObjective.isUnlocked()) {
                                 if (activeObjective.getObjective() instanceof BreakBlocksObjective breakBlocksObjective) {
-                                    if (breakBlocksObjective.getBlockToBreak().equalsIgnoreCase("any") || breakBlocksObjective.getBlockToBreak().equalsIgnoreCase(e.getBlock().getType().name())) {
+                                    if (breakBlocksObjective.getBlockToBreakMaterial().equalsIgnoreCase("any") || breakBlocksObjective.getBlockToBreakMaterial().equalsIgnoreCase(e.getBlock().getType().name())) {
                                         activeObjective.addProgress(1);
                                     }
                                 } else if (activeObjective.getObjective() instanceof PlaceBlocksObjective placeBlocksObjective) { //Deduct if Block is Broken for PlaceBlocksObjective
@@ -762,7 +762,7 @@ public class QuestEvents implements Listener {
                             if (activeObjective.isUnlocked()) {
                                 //This is for the BreakBlocksObjective. It should deduct the progress if the player placed the same block again (if willDeductIfBlockPlaced() is set to true)
                                 if (activeObjective.getObjective() instanceof BreakBlocksObjective breakBlocksObjective) {
-                                    if (breakBlocksObjective.getBlockToBreak().equalsIgnoreCase("any") || breakBlocksObjective.getBlockToBreak().equalsIgnoreCase(e.getBlock().getType().name())) {
+                                    if (breakBlocksObjective.getBlockToBreakMaterial().equalsIgnoreCase("any") || breakBlocksObjective.getBlockToBreakMaterial().equalsIgnoreCase(e.getBlock().getType().name())) {
                                         if (breakBlocksObjective.isDeductIfBlockPlaced()) {
                                             activeObjective.removeProgress(1, false);
                                         }

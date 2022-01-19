@@ -32,16 +32,26 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
+import rocks.gravili.notquests.paper.structs.actions.GiveItemAction;
 
 public class CollectItemsObjective extends Objective {
 
-    private ItemStack itemToCollect;
+    private ItemStack itemToCollect = null;
     private boolean deductIfItemIsDropped = true;
     private boolean collectAnyItem = false;
+    private String nqItemName = "";
 
     public CollectItemsObjective(NotQuests main) {
         super(main);
     }
+
+    public void setNQItem(final String nqItemName){
+        this.nqItemName = nqItemName;
+    }
+    public final String getNQItem(){
+        return nqItemName;
+    }
+
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
         manager.command(addObjectiveBuilder
@@ -73,12 +83,21 @@ public class CollectItemsObjective extends Objective {
                             collectAnyItem = true;
                             itemToCollect = null;
                         } else {
-                            itemToCollect = new ItemStack(Material.valueOf(materialOrHand.material), 1);
+                            itemToCollect = main.getItemsManager().getItemStack(materialOrHand.material);
                         }
                     }
 
                     CollectItemsObjective collectItemsObjective = new CollectItemsObjective(main);
-                    collectItemsObjective.setItemToCollect(itemToCollect);
+
+
+                    if(main.getItemsManager().getItem(materialOrHand.material) != null){
+                        collectItemsObjective.setNQItem(main.getItemsManager().getItem(materialOrHand.material).getItemName());
+                    }else{
+                        collectItemsObjective.setItemToCollect(itemToCollect);
+                    }
+
+
+
                     collectItemsObjective.setCollectAnyItem(collectAnyItem);
                     collectItemsObjective.setProgressNeeded(amount);
                     collectItemsObjective.setDeductIfItemIsDropped(deductIfItemIsDropped);
@@ -138,20 +157,32 @@ public class CollectItemsObjective extends Objective {
 
     @Override
     public void save(FileConfiguration configuration, String initialPath) {
-        configuration.set(initialPath + ".specifics.itemToCollect.itemstack", getItemToCollect());
+        if(!getNQItem().isBlank()){
+            configuration.set(initialPath + ".specifics.nqitem", getNQItem());
+        }else {
+            configuration.set(initialPath + ".specifics.itemToCollect.itemstack", getItemToCollect());
+        }
+
         configuration.set(initialPath + ".specifics.deductIfItemDropped", isDeductIfItemIsDropped());
         configuration.set(initialPath + ".specifics.collectAnyItem", isCollectAnyItem());
     }
 
     @Override
     public void load(FileConfiguration configuration, String initialPath) {
-        itemToCollect = configuration.getItemStack(initialPath + ".specifics.itemToCollect.itemstack");
+        this.nqItemName = configuration.getString(initialPath + ".specifics.nqitem", "");
+        if(nqItemName.isBlank()){
+            itemToCollect = configuration.getItemStack(initialPath + ".specifics.itemToCollect.itemstack");
+        }
         deductIfItemIsDropped = configuration.getBoolean(initialPath + ".specifics.deductIfItemDropped", true);
         collectAnyItem = configuration.getBoolean(initialPath + ".specifics.collectAnyItem", false);
     }
 
     public final ItemStack getItemToCollect() {
-        return itemToCollect;
+        if(!getNQItem().isBlank()){
+            return main.getItemsManager().getItem(getNQItem()).getItemStack().clone();
+        }else{
+            return itemToCollect;
+        }
     }
 
     public final long getAmountToCollect() {

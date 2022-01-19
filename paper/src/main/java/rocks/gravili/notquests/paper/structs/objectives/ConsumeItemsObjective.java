@@ -37,9 +37,17 @@ public class ConsumeItemsObjective extends Objective {
 
     private ItemStack itemToConsume;
     private boolean consumeAnyItem = false;
+    private String nqItemName = "";
 
     public ConsumeItemsObjective(NotQuests main) {
         super(main);
+    }
+
+    public void setNQItem(final String nqItemName){
+        this.nqItemName = nqItemName;
+    }
+    public final String getNQItem(){
+        return nqItemName;
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
@@ -67,12 +75,18 @@ public class ConsumeItemsObjective extends Objective {
                             consumeAnyItem = true;
                             itemToConsume = null;
                         } else {
-                            itemToConsume = new ItemStack(Material.valueOf(materialOrHand.material), 1);
+                            itemToConsume = main.getItemsManager().getItemStack(materialOrHand.material);
                         }
                     }
 
                     ConsumeItemsObjective consumeItemsObjective = new ConsumeItemsObjective(main);
-                    consumeItemsObjective.setItemToConsume(itemToConsume);
+
+                    if(main.getItemsManager().getItem(materialOrHand.material) != null){
+                        consumeItemsObjective.setNQItem(main.getItemsManager().getItem(materialOrHand.material).getItemName());
+                    }else{
+                        consumeItemsObjective.setItemToConsume(itemToConsume);
+                    }
+
                     consumeItemsObjective.setConsumeAnyItem(consumeAnyItem);
                     consumeItemsObjective.setProgressNeeded(amount);
 
@@ -101,7 +115,11 @@ public class ConsumeItemsObjective extends Objective {
     }
 
     public final ItemStack getItemToConsume() {
-        return itemToConsume;
+        if(!getNQItem().isBlank()){
+            return main.getItemsManager().getItem(getNQItem()).getItemStack().clone();
+        }else{
+            return itemToConsume;
+        }
     }
 
     public final long getAmountToConsume() {
@@ -144,13 +162,21 @@ public class ConsumeItemsObjective extends Objective {
 
     @Override
     public void save(FileConfiguration configuration, String initialPath) {
-        configuration.set(initialPath + ".specifics.itemToConsume.itemstack", getItemToConsume());
+        if(!getNQItem().isBlank()){
+            configuration.set(initialPath + ".specifics.nqitem", getNQItem());
+        }else {
+            configuration.set(initialPath + ".specifics.itemToConsume.itemstack", getItemToConsume());
+        }
+
         configuration.set(initialPath + ".specifics.consumeAnyItem", isConsumeAnyItem());
     }
 
     @Override
     public void load(FileConfiguration configuration, String initialPath) {
-        itemToConsume = configuration.getItemStack(initialPath + ".specifics.itemToConsume.itemstack");
+        this.nqItemName = configuration.getString(initialPath + ".specifics.nqitem", "");
+        if(nqItemName.isBlank()){
+            itemToConsume = configuration.getItemStack(initialPath + ".specifics.itemToConsume.itemstack");
+        }
         consumeAnyItem = configuration.getBoolean(initialPath + ".specifics.consumeAnyItem", false);
     }
 }

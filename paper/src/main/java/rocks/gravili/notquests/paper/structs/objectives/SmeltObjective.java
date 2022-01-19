@@ -37,9 +37,17 @@ public class SmeltObjective extends Objective {
 
     private ItemStack itemToSmelt;
     private boolean smeltAnyItem = false;
+    private String nqItemName = "";
 
     public SmeltObjective(NotQuests main) {
         super(main);
+    }
+
+    public void setNQItem(final String nqItemName){
+        this.nqItemName = nqItemName;
+    }
+    public final String getNQItem(){
+        return nqItemName;
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
@@ -67,13 +75,19 @@ public class SmeltObjective extends Objective {
                             smeltAnyItem = true;
                             itemToSmelt = null;
                         } else {
-                            itemToSmelt = new ItemStack(Material.valueOf(materialOrHand.material), 1);
+                            itemToSmelt = main.getItemsManager().getItemStack(materialOrHand.material);
                         }
                     }
 
                     SmeltObjective smeltObjective = new SmeltObjective(main);
+
+                    if(main.getItemsManager().getItem(materialOrHand.material) != null){
+                        smeltObjective.setNQItem(main.getItemsManager().getItem(materialOrHand.material).getItemName());
+                    }else{
+                        smeltObjective.setItemToSmelt(itemToSmelt);
+                    }
+
                     smeltObjective.setProgressNeeded(amount);
-                    smeltObjective.setItemToSmelt(itemToSmelt);
                     smeltObjective.setSmeltAnyItem(smeltAnyItem);
 
                     main.getObjectiveManager().addObjective(smeltObjective, context);
@@ -100,7 +114,11 @@ public class SmeltObjective extends Objective {
     }
 
     public final ItemStack getItemToSmelt() {
-        return itemToSmelt;
+        if(!getNQItem().isBlank()){
+            return main.getItemsManager().getItem(getNQItem()).getItemStack().clone();
+        }else{
+            return itemToSmelt;
+        }
     }
 
     public final long getAmountToSmelt() {
@@ -145,13 +163,22 @@ public class SmeltObjective extends Objective {
 
     @Override
     public void save(FileConfiguration configuration, String initialPath) {
-        configuration.set(initialPath + ".specifics.itemToSmelt.itemstack", getItemToSmelt());
+        if(!getNQItem().isBlank()){
+            configuration.set(initialPath + ".specifics.nqitem", getNQItem());
+        }else {
+            configuration.set(initialPath + ".specifics.itemToSmelt.itemstack", getItemToSmelt());
+        }
+
         configuration.set(initialPath + ".specifics.smeltAnyItem", isSmeltAnyItem());
     }
 
     @Override
     public void load(FileConfiguration configuration, String initialPath) {
-        itemToSmelt = configuration.getItemStack(initialPath + ".specifics.itemToSmelt.itemstack");
+        this.nqItemName = configuration.getString(initialPath + ".specifics.nqitem", "");
+        if(nqItemName.isBlank()){
+            itemToSmelt = configuration.getItemStack(initialPath + ".specifics.itemToSmelt.itemstack");
+        }
+
         smeltAnyItem = configuration.getBoolean(initialPath + ".specifics.smeltAnyItem");
     }
 }
