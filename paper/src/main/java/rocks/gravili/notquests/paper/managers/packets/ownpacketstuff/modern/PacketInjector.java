@@ -74,9 +74,9 @@ public class PacketInjector {
         try {
 
             Channel ch = getChannel(getConnection(getServerPlayer(player).connection));
-            if (ch != null && ch.pipeline().get("PacketInjector") == null) {
+            if (ch != null && ch.pipeline().get("notquests-packetinjector") == null) {
                 NQPacketListener h = new NQPacketListener(main, player);
-                ch.pipeline().addBefore("packet_handler", "PacketInjector", h);
+                ch.pipeline().addBefore("packet_handler", "notquests-packetinjector", h);
             }
         } catch (Throwable t) {
             if (main.getConfiguration().debug) {
@@ -90,8 +90,8 @@ public class PacketInjector {
     public void removePlayer(Player player) {
         try {
             Channel ch = getChannel(getConnection(getServerPlayer(player).connection));
-            if (ch != null && ch.pipeline().get("PacketInjector") != null) {
-                ch.pipeline().remove("PacketInjector");
+            if (ch != null && ch.pipeline().get("notquests-packetinjector") != null) {
+                ch.pipeline().remove("notquests-packetinjector");
             }
         } catch (Throwable t) {
             if (main.getConfiguration().debug) {
