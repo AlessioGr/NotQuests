@@ -137,6 +137,9 @@ public class EscortNPCObjective extends Objective {
 
     @Override
     public void onObjectiveUnlock(final ActiveObjective activeObjective, final boolean unlockedDuringPluginStartupQuestLoadingProcess) {
+        if (main.getIntegrationsManager().isCitizensEnabled()) {
+            main.getIntegrationsManager().getCitizensManager().handleEscortNPCObjectiveForActiveObjective(this, activeObjective.getActiveQuest());
+        }
     }
     @Override
     public void onObjectiveCompleteOrLock(final ActiveObjective activeObjective, final boolean lockedOrCompletedDuringPluginStartupQuestLoadingProcess, final boolean completed) {

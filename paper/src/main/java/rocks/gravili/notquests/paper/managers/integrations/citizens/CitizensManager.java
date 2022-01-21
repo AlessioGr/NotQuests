@@ -158,6 +158,7 @@ public class CitizensManager {
                 npcToEscort.addTrait(followerTrait);
             }
 
+
             if (followerTrait != null) {
                 final Player player = Bukkit.getPlayer(activeQuest.getQuestPlayer().getUUID());
                 if (player != null) {
@@ -172,6 +173,7 @@ public class CitizensManager {
                                 finalFollowerTrait.toggle(player, false);
                             });
                         } else {
+
                             followerTrait.toggle(player, false);
                         }
                     }
