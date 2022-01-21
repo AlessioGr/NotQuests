@@ -180,8 +180,6 @@ public class ActiveObjective {
         currentProgress += progressToAdd;
         getQuestPlayer().setTrackingObjective(this);
 
-        getQuestPlayer().sendObjectiveProgress(this);
-
 
         if (isCompleted(armorStandUUID)) {
             setHasBeenCompleted(true);

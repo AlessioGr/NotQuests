@@ -153,7 +153,12 @@ public class CitizensManager {
             }
             if (followerTrait == null) {
                 followerTrait = new FollowTrait();
-                npcToEscort.addTrait(followerTrait);
+                if (!Bukkit.isPrimaryThread()) {
+                    FollowTrait finalFollowerTrait1 = followerTrait;
+                    Bukkit.getScheduler().runTaskAsynchronously(main.getMain(), () -> {
+                        npcToEscort.addTrait(finalFollowerTrait1);
+                    });
+                }
             }
 
 
