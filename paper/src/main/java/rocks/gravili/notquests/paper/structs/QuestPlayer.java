@@ -813,6 +813,9 @@ public class QuestPlayer {
         }
         if(main.getConfiguration().isVisualObjectiveTrackingShowProgressInBossBar()){
             float progress = (float)activeObjective.getCurrentProgress() / (float)activeObjective.getProgressNeeded();
+            if(progress > 1.0){
+                progress = 1.0f;
+            }
 
             if (bossBar != null) {
                 bossBar.name(main.getLanguageManager().getComponent("objective-tracking.actionbar-progress-update", getPlayer(), this, activeObjective, activeObjective.getActiveQuest()));
