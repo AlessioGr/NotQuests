@@ -63,6 +63,7 @@ public class PlaceBlocksObjective extends Objective {
 
                     final MaterialOrHand materialOrHand = context.get("material");
                     final String materialToPlace;
+
                     if (materialOrHand.hand) { //"hand"
                         if (context.getSender() instanceof Player player) {
                             materialToPlace = player.getInventory().getItemInMainHand().getType().name();
@@ -73,12 +74,16 @@ public class PlaceBlocksObjective extends Objective {
                             return;
                         }
                     } else {
-                        materialToPlace = main.getItemsManager().getMaterial(materialOrHand.material).name();
+                        if (!materialOrHand.material.equalsIgnoreCase("any")) {
+                            materialToPlace = main.getItemsManager().getMaterial(materialOrHand.material).name();
+                        }else{
+                            materialToPlace = "any";
+                        }
                     }
 
                     PlaceBlocksObjective placeBlocksObjective = new PlaceBlocksObjective(main);
 
-                    if(main.getItemsManager().getItem(materialOrHand.material) != null){
+                    if(!materialOrHand.material.equalsIgnoreCase("any") && main.getItemsManager().getItem(materialOrHand.material) != null){
                         placeBlocksObjective.setNQItem(main.getItemsManager().getItem(materialOrHand.material).getItemName());
                     }else{
                         placeBlocksObjective.setBlockToPlace(materialToPlace);

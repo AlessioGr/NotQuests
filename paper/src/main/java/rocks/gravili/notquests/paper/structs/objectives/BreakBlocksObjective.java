@@ -74,11 +74,16 @@ public class BreakBlocksObjective extends Objective {
                             return;
                         }
                     } else {
-                        materialToBreak = main.getItemsManager().getMaterial(materialOrHand.material).name();
+                        if (!materialOrHand.material.equalsIgnoreCase("any")) {
+                            materialToBreak = main.getItemsManager().getMaterial(materialOrHand.material).name();
+                        }else{
+                            materialToBreak = "any";
+                        }
+
                     }
 
                     BreakBlocksObjective breakBlocksObjective = new BreakBlocksObjective(main);
-                    if(main.getItemsManager().getItem(materialOrHand.material) != null){
+                    if(!materialOrHand.material.equalsIgnoreCase("any") && main.getItemsManager().getItem(materialOrHand.material) != null){
                         breakBlocksObjective.setNQItem(main.getItemsManager().getItem(materialOrHand.material).getItemName());
                     }else{
                         breakBlocksObjective.setBlockToBreak(materialToBreak);

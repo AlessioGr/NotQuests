@@ -130,7 +130,6 @@ public class ItemsManager {
     }
     public final ItemStack getItemStack(final String name){
         ItemStack itemStack;
-        Material material;
         try{
             itemStack = new ItemStack(Material.valueOf(name));
         }catch (Exception ignored){
