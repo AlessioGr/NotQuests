@@ -300,9 +300,11 @@ public class UtilManager {
         //String[] lines = miniMessageToLegacy(message).split("\n", 40);//TODO: Rethink with minimessage in mind
         StringBuilder returnMessage = new StringBuilder();
 
-        String[] lines = main.getMiniMessage().stripTokens(message.toLowerCase(Locale.ROOT).replace("<bold>", "§l")).split("\n", 40);
+        String[] lines = main.getMiniMessage().stripTokens(message.toLowerCase(Locale.ROOT).replace("<bold>", "§l").replace("<reset>", "§r").replace("</bold>", "§r")).split("\n", 40);
         String[] miniMessageLines = message.split("\n", 40);
 
+        main.getLogManager().info("Lines: " + Arrays.toString(lines));
+        main.getMain().getLogger().info("MSG: " + message);
 
         int lineCounter = 0;
         for (String line : lines) { //TODO: Rethink with minimessage in mind
