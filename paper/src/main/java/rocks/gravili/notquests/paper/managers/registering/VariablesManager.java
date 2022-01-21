@@ -97,6 +97,7 @@ public class VariablesManager {
 
         if(main.getIntegrationsManager().isProjectKorraEnabled()){
             registerVariable("ProjectKorraElements", ProjectKorraElementsVariable.class);
+            registerVariable("ProjectKorraSubElements", ProjectKorraSubElementsVariable.class);
         }
 
 
