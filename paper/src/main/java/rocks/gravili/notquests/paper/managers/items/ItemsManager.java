@@ -24,6 +24,9 @@ public class ItemsManager {
     }
 
     public final NQItem getItem(final String itemIdentifier){
+        if(itemIdentifier == null){
+            return null;
+        }
         return identifiersAndItems.get(itemIdentifier.toLowerCase(Locale.ROOT));
     }
 
