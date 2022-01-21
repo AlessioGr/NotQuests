@@ -814,10 +814,13 @@ public class QuestPlayer {
         }
         if(main.getConfiguration().isVisualObjectiveTrackingShowProgressInBossBar()){
             float progress = (float)activeObjective.getCurrentProgress() / (float)activeObjective.getProgressNeeded();
-            if(progress > 1.0){
-                progress = 1.0f;
+            if(progress >= 1.0f){
+                //progress = 1.0f;
+                player.sendMessage("A");
+                player.hideBossBar(bossBar);
                 return; //Hide bossbar once it reached 100%
             }
+            player.sendMessage("B");
 
             if (bossBar != null) {
                 bossBar.name(main.getLanguageManager().getComponent("objective-tracking.actionbar-progress-update", getPlayer(), this, activeObjective, activeObjective.getActiveQuest()));
