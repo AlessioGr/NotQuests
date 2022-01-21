@@ -5,11 +5,14 @@ quests:
       murder the infected villagers to prevent the virus from spreading further.
     requirements:
       '1':
-        requirementType: QuestPoints
-        progressNeeded: 10
+        conditionType: Number
+        progressNeeded: 1
+        negated: false
+        description: ''
         specifics:
-          questPointRequirement: 10
-          deductQuestPoints: false
+          variableName: QuestPoints
+          operator: moreOrEqualThan
+          expression: '10'
     objectives:
       '1':
         objectiveType: BreakBlocks
@@ -25,14 +28,18 @@ quests:
         objectiveType: KillMobs
         progressNeeded: 15
         specifics:
-          mobToKill: ZOMBIE_VILLAGER
-          amountToKill: 15
+          mobToKill: zombie_villager
         description: You can see the infected villagers in front of you! Murder them
           all to stop the virus from spreading!
         displayName: Zombies ahead!
-        dependantObjectives:
+        conditions:
           '1':
-            objectiveID: 1
+            conditionType: CompletedObjective
+            progressNeeded: 1
+            negated: false
+            description: ''
+            specifics:
+              objectiveID: 1
     triggers:
       '1':
         triggerType: BEGIN
@@ -42,23 +49,28 @@ quests:
         worldName: ALL
     rewards:
       '1':
-        rewardType: QuestPoints
+        actionType: Number
         specifics:
-          rewardedQuestPoints: 2
+          expression: '2'
+          variableName: QuestPoints
+          operator: add
+        displayName: +2 Quest Points
       '2':
-        rewardType: Item
+        actionType: GiveItem
         specifics:
-          rewardItem:
+          item:
             ==: org.bukkit.inventory.ItemStack
-            v: 2730
+            v: 2865
             type: WOODEN_SWORD
             amount: 2
+        displayName: +2 handcrafted Wooden Swords
       '3':
-        rewardType: ConsoleCommand
+        actionType: Number
         specifics:
-          consoleCommand: 'eco give {PLAYER} 300 '
+          expression: '300'
+          variableName: Money
+          operator: add
+        displayName: +300 Coins
     acceptCooldown: 1200
     maxAccepts: 10
-actions:
-  Spawn15ZombieVillagers:
-    consoleCommand: spawnmob zombievillager 15 {PLAYER}
+    takeEnabled: false
