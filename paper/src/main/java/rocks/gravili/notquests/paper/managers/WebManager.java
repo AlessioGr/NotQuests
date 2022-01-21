@@ -45,8 +45,8 @@ public class WebManager {
     }
 
     public String sendRequest(JsonObject jsonObject) throws IOException {
-        //String       postURL       = "www.notquests.com/webeditornew";// put in your url
-        String postURL = "https://www.notquests.com/api/webeditors";
+        //String       postURL       = "editor.notquests.com/webeditornew";// put in your url
+        String postURL = "https://editor.notquests.com/api/webeditors";
         HttpClient   httpClient    = HttpClientBuilder.create().build();
         HttpPost post          = new HttpPost(postURL);
         StringEntity postingString = new StringEntity(gson.toJson(jsonObject));//gson.tojson() converts your pojo to json
