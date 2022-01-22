@@ -1,4 +1,4 @@
-package rocks.gravili.notquests.paper.structs.variables;
+package rocks.gravili.notquests.paper.structs.variables.hooks;
 
 import cloud.commandframework.arguments.standard.StringArgument;
 import org.betonquest.betonquest.BetonQuest;
@@ -10,11 +10,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.structs.variables.Variable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BetonQuestConditionVariable extends Variable<Boolean>{
+public class BetonQuestConditionVariable extends Variable<Boolean> {
     private ConditionID cachedConditionID = null;
 
 
