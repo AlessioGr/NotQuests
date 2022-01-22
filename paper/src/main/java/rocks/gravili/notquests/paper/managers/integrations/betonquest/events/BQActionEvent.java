@@ -23,6 +23,7 @@ import org.betonquest.betonquest.api.QuestEvent;
 import org.betonquest.betonquest.exceptions.InstructionParseException;
 import org.betonquest.betonquest.exceptions.QuestRuntimeException;
 import org.betonquest.betonquest.utils.PlayerConverter;
+import org.betonquest.betonquest.utils.Utils;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
@@ -30,11 +31,13 @@ import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BQActionEvent extends QuestEvent {
 
     private final NotQuests main;
     private Action action;
-    private Quest quest;
 
     /**
      * Creates new instance of the event. The event should parse instruction
@@ -51,33 +54,20 @@ public class BQActionEvent extends QuestEvent {
         super(instruction, false);
         this.main = NotQuests.getInstance();
 
-        final String actionName = instruction.getPart(1);
 
-        String questName = "";
+        final List<String> allActionsString = new ArrayList<>();
+        allActionsString.add(instruction.toString().replace("nq_action ", ""));
+
 
         try {
-            questName = instruction.getPart(2);
-        } catch (InstructionParseException ignored) {
-
+            action = main.getConversationManager().parseActionString(allActionsString).get(0);
+        } catch (Exception e) {
+            throw new RuntimeException("Invalid Action line: " + e.getLocalizedMessage());
         }
 
-        if (!questName.isBlank()) {
-            boolean foundQuest = false;
-            for (final Quest quest : main.getQuestManager().getAllQuests()) {
-                if (quest.getQuestName().equalsIgnoreCase(questName)) {
-                    this.quest = quest;
-                    foundQuest = true;
-                }
-            }
-            if (!foundQuest) {
-                throw new InstructionParseException("NotQuests Quest with the name '" + questName + "' does not exist - even though you have specified it. Specifying a quest name is not necessary.");
-            }
-        }
-
-        this.action = main.getActionsYMLManager().getAction(actionName);
 
         if (action == null) {
-            throw new InstructionParseException("NotQuests Action with the name '" + actionName + "' does not exist.");
+            throw new InstructionParseException("NotQuests Action with the name '" + instruction.toString() + "' does not exist.");
         }
 
     }
@@ -85,34 +75,15 @@ public class BQActionEvent extends QuestEvent {
     @Override
     protected Void execute(String playerID) throws QuestRuntimeException {
 
-        final Player player = PlayerConverter.getPlayer(playerID);
-
-
         //execute action here
-        if (player != null && action != null) {
-            if (quest != null) {
-                final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
-                if (questPlayer != null) {
-                    if (questPlayer.getActiveQuests().size() > 0) {
-                        ActiveQuest foundActiveQuest = null;
-                        for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-                            if (activeQuest.getQuest().getQuestName().equalsIgnoreCase(this.quest.getQuestName())) {
-                                foundActiveQuest = activeQuest;
-                                break;
-                            }
-                        }
-                        if (foundActiveQuest != null) {
-                            main.getActionManager().executeActionWithConditions(action, questPlayer, null, true, foundActiveQuest);
-                        }
-                    }
-                }
-            } else {
-                main.getActionManager().executeActionWithConditions(action, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), null, true);
-            }
+        if (action != null) {
+            final Player player = PlayerConverter.getPlayer(playerID);
+            action.execute(player);
+
 
         } else {
-            main.getLogManager().warn("Error executing action (triggered by BetonQuests) - action or player was not found.");
-            throw new QuestRuntimeException("Error executing NotQuests action (triggered by BetonQuests) - action or player was not found.");
+            main.getLogManager().warn("Error executing action (triggered by BetonQuests) - action was not found.");
+            throw new QuestRuntimeException("Error executing NotQuests action (triggered by BetonQuests) - action was not found.");
         }
 
         return null;
