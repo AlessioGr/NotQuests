@@ -38,7 +38,10 @@ chat:
     description: '   <main>描述: <highlight>%OBJECTIVEDESCRIPTION%'
     progress: '   <unimportant>进度: <main>%ACTIVEOBJECTIVEPROGRESS% <main>/ %OBJECTIVEPROGRESSNEEDED%'
     successfully-completed: |2
-      <success>You have successfully completed the objective <warn>%OBJECTIVENAME% <success>for quest <highlight>%QUESTNAME%<success>!
+
+      <CENTER><success>[Objective Completed]
+      <CENTER><highlight><bold>%OBJECTIVENAME%</bold> <RESET><main>(%QUESTNAME%)
+      <EMPTY>
     successfully-completed-rewards-prefix: '    <highlight>Rewards:'
     successfully-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
     successfully-completed-rewards-suffix: <EMPTY>
