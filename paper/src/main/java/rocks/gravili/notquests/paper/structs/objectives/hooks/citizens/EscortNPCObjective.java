@@ -20,10 +20,13 @@ package rocks.gravili.notquests.paper.structs.objectives.hooks.citizens;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
+import cloud.commandframework.arguments.flags.CommandFlag;
 import cloud.commandframework.arguments.standard.IntegerArgument;
+import cloud.commandframework.bukkit.parsers.location.LocationArgument;
 import cloud.commandframework.paper.PaperCommandManager;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -38,6 +41,15 @@ public class EscortNPCObjective extends Objective {
 
     private int npcToEscortID = -1;
     private int npcToEscortToID = -1;
+    private Location spawnLocation = null;
+
+    public final Location getSpawnLocation(){
+        return spawnLocation;
+    }
+
+    public void setSpawnLocation(final Location spawnLocation){
+        this.spawnLocation = spawnLocation;
+    }
 
     public EscortNPCObjective(NotQuests main) {
         super(main);
@@ -47,6 +59,12 @@ public class EscortNPCObjective extends Objective {
         if (!main.getIntegrationsManager().isCitizensEnabled()) {
             return;
         }
+
+        CommandFlag<Location> spawnLocationCommandFlag = CommandFlag
+                .newBuilder("spawnLocation")
+                .withArgument(LocationArgument.of("spawnLocation"))
+                .withDescription(ArgumentDescription.of("Spawn Location"))
+                .build();
 
         manager.command(addObjectiveBuilder
                 .argument(IntegerArgument.<CommandSender>newBuilder("NPC to escort").withSuggestionsProvider((context, lastString) -> {
@@ -77,9 +95,13 @@ public class EscortNPCObjective extends Objective {
 
                     return completions;
                 }).build(), ArgumentDescription.of("ID of the destination Citizens NPC where the player has to escort the NPC to escort to."))
+                .flag(spawnLocationCommandFlag)
                 .handler((context) -> {
                     final int toEscortNPCID = context.get("NPC to escort");
                     final int destinationNPCID = context.get("Destination NPC");
+
+                    final Location spawnLocation = context.flags().getValue(spawnLocationCommandFlag, null);
+
 
                     if (toEscortNPCID == destinationNPCID) {
                         context.getSender().sendMessage(
@@ -91,6 +113,8 @@ public class EscortNPCObjective extends Objective {
                     }
 
                     EscortNPCObjective escortNPCObjective = new EscortNPCObjective(main);
+
+                    escortNPCObjective.setSpawnLocation(spawnLocation);
 
                     escortNPCObjective.setNpcToEscortID(toEscortNPCID);
                     escortNPCObjective.setNpcToEscortToID(destinationNPCID);
@@ -132,6 +156,9 @@ public class EscortNPCObjective extends Objective {
     public void save(FileConfiguration configuration, String initialPath) {
         configuration.set(initialPath + ".specifics.NPCToEscortID", getNpcToEscortID());
         configuration.set(initialPath + ".specifics.destinationNPCID", getNpcToEscortToID());
+        if(getSpawnLocation() != null){
+            configuration.set(initialPath + ".specifics.spawnLocation", getSpawnLocation());
+        }
     }
 
 
@@ -157,5 +184,6 @@ public class EscortNPCObjective extends Objective {
     public void load(FileConfiguration configuration, String initialPath) {
         npcToEscortID = configuration.getInt(initialPath + ".specifics.NPCToEscortID");
         npcToEscortToID = configuration.getInt(initialPath + ".specifics.destinationNPCID");
+        setSpawnLocation( configuration.getLocation(initialPath + ".specifics.spawnLocation", null));
     }
 }

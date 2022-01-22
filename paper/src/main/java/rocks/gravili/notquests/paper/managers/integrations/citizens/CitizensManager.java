@@ -25,6 +25,7 @@ import net.citizensnpcs.api.trait.TraitInfo;
 import net.citizensnpcs.trait.FollowTrait;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.conversation.Conversation;
@@ -156,12 +157,12 @@ public class CitizensManager {
                     Bukkit.getScheduler().runTask(main.getMain(), () -> {
                         FollowTrait followTrait = new FollowTrait();
                         npcToEscort.addTrait(followTrait);
-                        handleEscortNPCObjectiveForActiveObjectiveSynchronous(npcToEscort, destinationNPC, followTrait, activeQuest);
+                        handleEscortNPCObjectiveForActiveObjectiveSynchronous(npcToEscort, destinationNPC, followTrait, activeQuest, escortNPCObjective);
                     });
                 }else {
                     final FollowTrait finalFollowerTrait = followerTrait;
                     Bukkit.getScheduler().runTask(main.getMain(), () -> {
-                        handleEscortNPCObjectiveForActiveObjectiveSynchronous(npcToEscort, destinationNPC, finalFollowerTrait, activeQuest);
+                        handleEscortNPCObjectiveForActiveObjectiveSynchronous(npcToEscort, destinationNPC, finalFollowerTrait, activeQuest, escortNPCObjective);
                     });
                 }
             }else {
@@ -169,7 +170,7 @@ public class CitizensManager {
                     followerTrait = new FollowTrait();
                     npcToEscort.addTrait(followerTrait);
                 }
-                handleEscortNPCObjectiveForActiveObjectiveSynchronous(npcToEscort, destinationNPC, followerTrait, activeQuest);
+                handleEscortNPCObjectiveForActiveObjectiveSynchronous(npcToEscort, destinationNPC, followerTrait, activeQuest, escortNPCObjective);
             }
 
 
@@ -196,11 +197,12 @@ public class CitizensManager {
         }
     }
 
-    private void handleEscortNPCObjectiveForActiveObjectiveSynchronous(final NPC npcToEscort, final NPC destinationNPC, final FollowTrait followerTrait, final ActiveQuest activeQuest) {
+    private void handleEscortNPCObjectiveForActiveObjectiveSynchronous(final NPC npcToEscort, final NPC destinationNPC, final FollowTrait followerTrait, final ActiveQuest activeQuest, final EscortNPCObjective escortNPCObjective) {
         final Player player = Bukkit.getPlayer(activeQuest.getQuestPlayer().getUUID());
         if (player != null) {
+            final Location spawnLocation = escortNPCObjective.getSpawnLocation() != null ? escortNPCObjective.getSpawnLocation() : player.getLocation();
             if (!npcToEscort.isSpawned()) {
-                npcToEscort.spawn(player.getLocation());
+                npcToEscort.spawn(spawnLocation);
             }
 
             if (followerTrait.getFollowingPlayer() == null || !followerTrait.getFollowingPlayer().equals(player)) {

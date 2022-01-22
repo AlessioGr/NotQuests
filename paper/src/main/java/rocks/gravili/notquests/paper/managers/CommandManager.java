@@ -29,6 +29,7 @@ import cloud.commandframework.arguments.standard.StringArrayArgument;
 import cloud.commandframework.brigadier.CloudBrigadierManager;
 import cloud.commandframework.bukkit.CloudBukkitCapabilities;
 import cloud.commandframework.bukkit.parsers.WorldArgument;
+import cloud.commandframework.bukkit.parsers.location.LocationArgument;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.minecraft.extras.AudienceProvider;
@@ -39,6 +40,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import io.leangen.geantyref.TypeToken;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
@@ -263,6 +265,8 @@ public class CommandManager {
                 .withArgument(CategorySelector.of("category", main))
                 .withDescription(ArgumentDescription.of("Category name"))
                 .build();
+
+
 
     }
 
