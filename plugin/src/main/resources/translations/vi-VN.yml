@@ -41,7 +41,10 @@ chat:
     description: '   <main>Mô Tả: <highlight>%OBJECTIVEDESCRIPTION%'
     progress: '   <unimportant>Tiến Trình: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
     successfully-completed: |2
-      <success>Bạn đã hoàn thành mục tiêu <warn>%OBJECTIVENAME% <success>cho nhiệm vụ <highlight>%QUESTNAME%<success>!
+
+      <CENTER><success>[Objective Completed]
+      <CENTER><highlight><bold>%OBJECTIVENAME%</bold> <RESET><main>(%QUESTNAME%)
+      <EMPTY>
     successfully-completed-rewards-prefix: '    <highlight>Phần thưởng:'
     successfully-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
     successfully-completed-rewards-suffix: <EMPTY>
