@@ -62,9 +62,16 @@ public class BetonQuestFireInlineEventAction extends Action {
                             );
                             String[] curInputSplit =  curInput.split(" ");
 
-                            //context.getSender().sendMessage(curInput);
 
-                            if(curInputSplit.length <= 0){
+                            int length = curInputSplit.length;
+                            if(curInput.endsWith(" ")){
+                                length++;
+                            }
+                            /*context.getSender().sendMessage(curInput);
+                            context.getSender().sendMessage(curInputSplit);
+                            context.getSender().sendMessage("Length: " + length);*/
+
+                            if(length <= 1){
                                 Map<String, Class<? extends QuestEvent>> eventTypes = null;
                                 try{
                                     Class<?> betonQuestClass = BetonQuest.class;
@@ -83,16 +90,45 @@ public class BetonQuestFireInlineEventAction extends Action {
                                 if (eventClass == null) {
                                     return null;
                                 }
-                                int lenght = curInputSplit.length;
 
                                 switch (eventClassName){
                                     case "cancel":
-                                        if(lenght == 1){
+                                        if(length == 2){
                                             completions.add("<name of a quest canceler, as defined in main.yml>");
                                         }
                                         break;
                                     case "chat":
                                         completions.add("<enter chat message>");
+                                        break;
+                                    case "chestclear":
+                                        if(length == 2){
+                                            completions.add("<location>");
+                                        }
+                                        break;
+                                    case "chestgive":
+                                        if(length == 2){
+                                            completions.add("<location>");
+                                        }else if(length == 3){
+                                            completions.add("<items>");
+                                        }
+                                        break;
+                                    case "chesttake":
+                                        if(length == 2){
+                                            completions.add("<location>");
+                                        }else if(length == 3){
+                                            completions.add("<items>");
+                                        }
+                                        break;
+                                    case "clear":
+                                        if(length == 2){
+                                            completions.add("<mobs>");
+                                        }else if(length == 3){
+                                            completions.add("<location>");
+                                        }else if(length == 4){
+                                            completions.add("<radius around location>");
+                                        }else if(length == 5){
+                                            completions.add("<Optional arguments>");
+                                        }
                                         break;
                                     default:
                                         completions.add("<arguments>");
@@ -110,11 +146,11 @@ public class BetonQuestFireInlineEventAction extends Action {
 
                     //QuestEvent questEvent;
 
-                    BetonQuestFireEventAction betonQuestFireEventAction = new BetonQuestFireEventAction(main);
-                    betonQuestFireEventAction.setEventName(event);
+                    BetonQuestFireInlineEventAction betonQuestFireInlineEventAction = new BetonQuestFireInlineEventAction(main);
+                    betonQuestFireInlineEventAction.setEvent(event);
 
 
-                    main.getActionManager().addAction(betonQuestFireEventAction, context);
+                    main.getActionManager().addAction(betonQuestFireInlineEventAction, context);
                 }));
     }
 

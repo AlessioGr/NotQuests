@@ -100,6 +100,10 @@ public class VariablesManager {
             registerVariable("ProjectKorraSubElements", ProjectKorraSubElementsVariable.class);
         }
 
+        if(main.getIntegrationsManager().isBetonQuestEnabled()){
+            registerVariable("BetonQuestCondition", BetonQuestConditionVariable.class);
+        }
+
 
     }
 
