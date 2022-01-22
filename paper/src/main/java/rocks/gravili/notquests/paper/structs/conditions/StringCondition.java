@@ -82,7 +82,7 @@ public class StringCondition extends Condition {
         Variable<?> variable = main.getVariablesManager().getVariableFromString(variableName);
 
         if(variable == null){
-            return "<ERROR>Error: variable </highlight>" + variableName + "<highlight> not found. Report this to the Server owner.";
+            return "<ERROR>Error: variable <highlight>" + variableName + "</highlight> not found. Report this to the Server owner.";
         }
 
         if(additionalStringArguments != null && !additionalStringArguments.isEmpty()){
@@ -126,7 +126,7 @@ public class StringCondition extends Condition {
                 return "<ERROR>Error: variable operator <highlight>" + getStringOperator() + "</highlight> is invalid. Report this to the Server owner.";
             }
         }else{
-            return "<ERROR>Error: variable </highlight>" + variableName + "<highlight> is not a String.";
+            return "<ERROR>Error: variable <highlight>" + variableName + "</highlight> is not a String.";
         }
 
         return "";
