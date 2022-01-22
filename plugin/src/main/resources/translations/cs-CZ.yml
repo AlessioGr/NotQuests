@@ -41,7 +41,10 @@ chat:
     description: '   <BLUE>Popis: <GOLD>%OBJECTIVEDESCRIPTION%'
     progress: '   <GRAY>Postup: <WHITE>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
     successfully-completed: |2
-      <GREEN>Úspěšně jsi dokončil/a úkol <YELLOW>%OBJECTIVENAME%</YELLOW> pro quest <highlight>%QUESTNAME%</AQUA>!
+
+      <CENTER><success>[Objective Completed]
+      <CENTER><highlight><bold>%OBJECTIVENAME%</bold> <RESET><main>(%QUESTNAME%)
+      <EMPTY>
     successfully-completed-rewards-prefix: '    <highlight>Rewards:'
     successfully-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
     successfully-completed-rewards-suffix: <EMPTY>
