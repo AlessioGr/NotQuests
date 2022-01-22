@@ -219,16 +219,16 @@ public class VariablesManager {
                         for(StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()){
                             if(stringArgument.getName().equalsIgnoreCase(key)){
                                 variable.addAdditionalStringArgument(key, value);
-                                //main.getLogManager().info("AddString: " + key + " val: " + value);
+                                main.getLogManager().info("AddString: " + key + " val: " + value);
                             }
                         }
                         for(NumberVariableValueArgument<CommandSender> numberVariableValueArgument : variable.getRequiredNumbers()){
                             variable.addAdditionalNumberArgument(key, value);
-                            //main.getLogManager().info("AddNumb: " + key + " val: " + value);
+                            main.getLogManager().info("AddNumb: " + key + " val: " + value);
                         }
                         for(BooleanArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
                             variable.addAdditionalBooleanArgument(key, Boolean.parseBoolean(value));
-                            //main.getLogManager().info("AddBool: " + key + " val: " + value);
+                            main.getLogManager().info("AddBool: " + key + " val: " + value);
                         }
                     }
                 }
