@@ -220,23 +220,18 @@ public class PacketInjector {
         net.minecraft.world.level.block.Block nmsBlock = craftBlockState.getHandle().getBlock();
 
 
-
-
-
-
         BlockPos blockPos = new BlockPos(location.getBlockX(), location.getBlockY(), location.getBlockZ());
 
         player.teleport(location.clone().add(0,1,0));
 
         //player.sendMessage("nmsBlock: " + nmsBlock.getName().getString());
 
-
         ClientboundBlockEventPacket clientboundBlockEventPacket = new ClientboundBlockEventPacket(blockPos, nmsBlock, 1, 1); //BlockPost, Block, Action ID (1=recalculate), Action Type (ignored for beacons)
 
         //player.sendMessage("sent!");
         //connection.send(clientboundBlockEventPacket);
         connection.send(clientboundBlockEventPacket, (future) -> {
-          //  player.sendMessage("Arrived!");
+            //  player.sendMessage("Arrived!");
         });
 
 

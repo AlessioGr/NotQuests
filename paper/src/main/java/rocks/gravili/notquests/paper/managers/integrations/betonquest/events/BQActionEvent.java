@@ -55,8 +55,29 @@ public class BQActionEvent extends QuestEvent {
         this.main = NotQuests.getInstance();
 
 
+        String instructionString = "";
+        int counter = 0;
+        // main.getLogManager().info("instruction before: " + instruction.toString());
+        for(String instructionPart : instruction.toString().split(" ")){
+            //main.getLogManager().info("instruction part: " + instructionPart);
+            String[] semicolonSplit = instructionPart.split(";");
+            if(semicolonSplit.length >= 4){
+                instructionPart = semicolonSplit[3] + " " + semicolonSplit[0] + " " + semicolonSplit[1] + " " + semicolonSplit[2];
+            }
+
+
+            if(++counter == 1){
+                instructionString += instructionPart;
+            }else{
+                instructionString += " " +instructionPart;
+            }
+        }
+        //main.getLogManager().info("instruction after: " + instructionString);
+
+
+
         final List<String> allActionsString = new ArrayList<>();
-        allActionsString.add(instruction.toString().replace("nq_action ", ""));
+        allActionsString.add(instructionString.replace("nq_action ", ""));
 
 
         try {

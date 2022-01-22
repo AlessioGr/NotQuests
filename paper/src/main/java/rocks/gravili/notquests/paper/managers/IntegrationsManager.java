@@ -112,6 +112,7 @@ public class IntegrationsManager {
                 betonQuestEnabled = true;
                 main.getLogManager().info("BetonQuest found! Enabling BetonQuest support...");
                 betonQuestManager = new BetonQuestManager(main);
+                main.getMain().getServer().getPluginManager().registerEvents(new BetonQuestEvents(main), main.getMain());
             }
         }
 
