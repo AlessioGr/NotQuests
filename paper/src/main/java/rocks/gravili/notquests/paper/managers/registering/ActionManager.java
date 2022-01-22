@@ -73,6 +73,9 @@ public class ActionManager {
         registerAction("List", ListAction.class);
         registerAction("ItemStackList", ItemStackListAction.class);
 
+        registerAction("Beam", BeamAction.class);
+
+
 
     }
 
