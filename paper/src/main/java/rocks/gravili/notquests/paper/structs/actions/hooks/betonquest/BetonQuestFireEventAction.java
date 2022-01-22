@@ -57,7 +57,7 @@ public class BetonQuestFireEventAction extends Action {
                     main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Package Name]", "[Event Name]");
 
                     return completions;
-                }).build(), ArgumentDescription.of("BetonQuest Event Name"))
+                }).build(), ArgumentDescription.of("BetonQuest Event Package Name"))
                 .argument(StringArgument.<CommandSender>newBuilder("event").withSuggestionsProvider((context, lastString) -> {
 
 

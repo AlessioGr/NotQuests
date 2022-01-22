@@ -6,7 +6,6 @@ import org.betonquest.betonquest.config.Config;
 import org.betonquest.betonquest.config.ConfigPackage;
 import org.betonquest.betonquest.exceptions.ObjectNotFoundException;
 import org.betonquest.betonquest.id.ConditionID;
-import org.betonquest.betonquest.id.EventID;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -69,7 +68,7 @@ public class BetonQuestConditionVariable extends Variable<Boolean>{
 
     @Override
     public boolean setValueInternally(Boolean newValue, Player player, Object... objects) {
-       return false;
+        return false;
     }
 
 

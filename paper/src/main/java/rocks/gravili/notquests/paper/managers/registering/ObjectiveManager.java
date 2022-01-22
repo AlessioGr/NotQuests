@@ -26,6 +26,7 @@ import org.bukkit.command.CommandSender;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.objectives.*;
+import rocks.gravili.notquests.paper.structs.objectives.hooks.betonquest.BetonQuestObjectiveStateChangeObjective;
 import rocks.gravili.notquests.paper.structs.objectives.hooks.citizens.EscortNPCObjective;
 import rocks.gravili.notquests.paper.structs.objectives.hooks.elitemobs.KillEliteMobsObjective;
 import rocks.gravili.notquests.paper.structs.objectives.hooks.jobsreborn.JobsRebornReachJobLevel;
@@ -87,6 +88,10 @@ public class ObjectiveManager {
 
         //ProjectKorra
         registerObjective("ProjectKorraUseAbility", ProjectKorraUseAbilityObjective.class);
+
+        if(main.getIntegrationsManager().isBetonQuestEnabled()){
+            registerObjective("BetonQuestObjectiveStateChange", BetonQuestObjectiveStateChangeObjective.class);
+        }
 
 
         //registerObjectiveCommandCompletionHandler("KillMobs", this::eee);
