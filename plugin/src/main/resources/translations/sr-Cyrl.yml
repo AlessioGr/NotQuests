@@ -43,8 +43,8 @@ chat:
     progress: "   <highlight>Напредак:\n<main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%"
     successfully-completed: |2
 
-      <CENTER><success>[Циљ јe Завршен]
-      <CENTER><highlight><BOLD>%OBJECTIVENAME%<RESET><main>(%QUESTNAME%)
+      <CENTER><success>[Objective Completed]
+      <CENTER><highlight><bold>%OBJECTIVENAME%</bold> <RESET><main>(%QUESTNAME%)
       <EMPTY>
     successfully-completed-rewards-prefix: '    <highlight>Награде:'
     successfully-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
