@@ -1059,7 +1059,7 @@ public class QuestEvents implements Listener {
                                 if (activeObjective.getObjective() instanceof final ReachLocationObjective reachLocationObjective) {
 
                                     final Location minLocation = reachLocationObjective.getMinLocation();
-                                    if (minLocation.getWorld() != null && currentLocation.getWorld() != null && !currentLocation.getWorld().equals(minLocation.getWorld())) {
+                                    if (minLocation != null && minLocation.getWorld() != null && currentLocation.getWorld() != null && !currentLocation.getWorld().equals(minLocation.getWorld())) {
                                         continue;
                                     }
                                     final Location maxLocation = reachLocationObjective.getMaxLocation();
