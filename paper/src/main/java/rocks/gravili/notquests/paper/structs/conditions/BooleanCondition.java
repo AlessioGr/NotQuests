@@ -40,6 +40,7 @@ import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BooleanCondition extends Condition {
 
@@ -117,7 +118,9 @@ public class BooleanCondition extends Condition {
         Variable<?> variable = main.getVariablesManager().getVariableFromString(variableName);
 
         if(variable == null){
-            return "<ERROR>Error: variable <highlight>" + variableName + "</highlight> not found. Report this to the Server owner.";
+            return main.getLanguageManager().getString("chat.conditions.boolean.variable-not-found", questPlayer.getPlayer(), questPlayer, Map.of(
+                    "%VARIABLENAME%", variableName
+            ));
         }
 
         if(additionalStringArguments != null && !additionalStringArguments.isEmpty()){
@@ -135,15 +138,27 @@ public class BooleanCondition extends Condition {
         if(getOperator().equalsIgnoreCase("equals")){
             if(value instanceof Boolean bool){
                 if (booleanRequirement != bool) {
-                    return "<YELLOW>Following needs to be " + booleanRequirement + ": <highlight>" + variable.getSingular()+ "</highlight>.";
+                    return main.getLanguageManager().getString("chat.conditions.boolean.not-fulfilled", questPlayer.getPlayer(), questPlayer, Map.of(
+                            "%OPERATOR%", getOperator(),
+                            "%BOOLEANREQUIREMENT%", booleanRequirement,
+                            "%VARIABLESINGULAR%", variable.getSingular(),
+                            "%VARIABLEPLURAL%", variable.getPlural()
+                    ));
                 }
             }else{
                 if (booleanRequirement != (boolean)value) {
-                    return "<YELLOW>Following needs to be " + booleanRequirement + ": <highlight>" + variable.getSingular()+ "</highlight>.";
+                    return main.getLanguageManager().getString("chat.conditions.boolean.not-fulfilled", questPlayer.getPlayer(), questPlayer, Map.of(
+                            "%OPERATOR%", getOperator(),
+                            "%BOOLEANREQUIREMENT%", booleanRequirement,
+                            "%VARIABLESINGULAR%", variable.getSingular(),
+                            "%VARIABLEPLURAL%", variable.getPlural()
+                    ));
                 }
             }
         }else{
-            return "<ERROR>Error: variable operator <highlight>" + getOperator() + "</highlight> is invalid. Report this to the Server owner.";
+            return main.getLanguageManager().getString("chat.conditions.boolean.wrong-operator", questPlayer.getPlayer(), questPlayer, Map.of(
+                    "%OPERATOR%", getOperator()
+            ));
         }
 
         return "";
