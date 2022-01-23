@@ -108,7 +108,12 @@ chat:
       BetonQuestCompleteObjective:
         base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Finish Objective: <main>%EVENTUALCOLOR%%BETONQUESTOBJECTIVENAME%'
 objective-tracking:
-  actionbar-progress-update: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
+  actionbar-progress-update:
+    default: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
+    only-one-max-progress: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
+  bossbar-progress-update:
+    default: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
+    only-one-max-progress: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
 titles:
   quest-accepted:
     title: <main>Quest accepted

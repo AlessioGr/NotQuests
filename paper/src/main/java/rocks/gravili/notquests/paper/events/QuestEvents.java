@@ -78,33 +78,32 @@ public class QuestEvents implements Listener {
             Bukkit.getScheduler().scheduleSyncRepeatingTask(main.getMain(), new Runnable() {
                 @Override
                 public void run() { //Main Loop
-                    beaconCounter++;
-                    if(beaconCounter >= 4){
-                        for(Player player : Bukkit.getOnlinePlayers()) {
-                            QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
-                            if(questPlayer == null){
-                                return;
-                            }
+                    for(Player player : Bukkit.getOnlinePlayers()) {
+                        QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                        if(questPlayer == null){
+                            return;
+                        }
+
+                        if(questPlayer.getBossBar() != null){
+                            questPlayer.increaseBossBarTimeByOneSecond();
+                        }
+
+                        beaconCounter++;
+                        if(beaconCounter >= 4){
                             questPlayer.updateBeaconLocations(player);
-
+                            beaconCounter = 0;
                         }
-                        beaconCounter = 0;
-                    }
 
-                    conditionObjectiveCounter++;
-                    if(conditionObjectiveCounter >= 2){
-                        for(Player player : Bukkit.getOnlinePlayers()) {
-                            QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
-                            if(questPlayer == null){
-                                return;
-                            }
+                        conditionObjectiveCounter++;
+                        if(conditionObjectiveCounter >= 2){
                             questPlayer.updateConditionObjectives(player);
-
+                            conditionObjectiveCounter = 0;
                         }
-                        conditionObjectiveCounter = 0;
+
+
+
+
                     }
-
-
 
                 }
             }, 0L, 20L); //0 Tick initial delay, 20 Tick (1 Second) between repeats

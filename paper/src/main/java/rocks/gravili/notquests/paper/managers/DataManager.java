@@ -843,18 +843,30 @@ public class DataManager {
         }
         configuration.visualTitleQuestCompleted_enabled = getGeneralConfig().getBoolean(key);
 
-        key = "visual.objective-tracking.show-progress-in-actionbar";
+        key = "visual.objective-tracking.actionbar.enabled";
         if (!getGeneralConfig().isBoolean(key)) {
             getGeneralConfig().set(key, true);
             valueChanged = true;
         }
         configuration.setVisualObjectiveTrackingShowProgressInActionBar(getGeneralConfig().getBoolean(key));
-        key = "visual.objective-tracking.show-progress-in-bossbar";
+        key = "visual.objective-tracking.bossbar.enabled";
+        if (!getGeneralConfig().isBoolean(key)) {
+            getGeneralConfig().set(key, true);
+            valueChanged = true;
+        }
+        configuration.setVisualObjectiveTrackingShowProgressInBossBar(getGeneralConfig().getBoolean(key));
+        key = "visual.objective-tracking.bossbar.show-time";
+        if (!getGeneralConfig().isInt(key)) {
+            getGeneralConfig().set(key, 10);
+            valueChanged = true;
+        }
+        configuration.setVisualObjectiveTrackingBossBarTimer(getGeneralConfig().getInt(key));
+        key = "visual.objective-tracking.bossbar.show-if-objective-is-completed";
         if (!getGeneralConfig().isBoolean(key)) {
             getGeneralConfig().set(key, false);
             valueChanged = true;
         }
-        configuration.setVisualObjectiveTrackingShowProgressInBossBar(getGeneralConfig().getBoolean(key));
+        configuration.setVisualObjectiveTrackingShowProgressInBossBarIfObjectiveCompleted(getGeneralConfig().getBoolean(key));
 
         //GUI
         key = "gui.questpreview.enabled";
