@@ -249,6 +249,9 @@ public class StringCondition extends Condition {
             if(variable == null || variable.getVariableDataType() != VariableDataType.STRING){
                 continue;
             }
+            if(main.getVariablesManager().alreadyFullRegisteredVariables.contains(variableString)){
+                continue;
+            }
 
             main.getLogManager().info("Registering string condition: <highlight>" + variableString);
 

@@ -41,6 +41,7 @@ import rocks.gravili.notquests.paper.structs.Quest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class TalkToNPCObjective extends Objective {
@@ -154,16 +155,16 @@ public class TalkToNPCObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
+    public String getObjectiveTaskDescription(final Player player) {
         String toReturn = "";
         if (main.getIntegrationsManager().isCitizensEnabled() && getNPCtoTalkID() != -1) {
             final NPC npc = CitizensAPI.getNPCRegistry().getById(getNPCtoTalkID());
             if (npc != null) {
-                toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.talkToNPC.base", player)
-                        .replace("%EVENTUALCOLOR%", eventualColor)
-                        .replace("%NAME%", npc.getName());
+                toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.talkToNPC.base", player, Map.of(
+                        "%NAME%", npc.getName()
+                ));
             } else {
-                toReturn = "    <GRAY>" + eventualColor + "The target NPC is currently not available!";
+                toReturn = "    <GRAY>The target NPC is currently not available!";
             }
         } else {
             if (getNPCtoTalkID() != -1) {
@@ -171,11 +172,11 @@ public class TalkToNPCObjective extends Objective {
             } else { //Armor Stands
                 final UUID armorStandUUID = getArmorStandUUID();
                 if (armorStandUUID != null) {
-                    toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.talkToNPC.base", player)
-                            .replace("%EVENTUALCOLOR%", eventualColor)
-                            .replace("%NAME%", main.getArmorStandManager().getArmorStandName(armorStandUUID));
+                    toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.talkToNPC.base", player, Map.of(
+                            "%NAME%", main.getArmorStandManager().getArmorStandName(armorStandUUID)
+                    ));
                 } else {
-                    toReturn += "    <GRAY>" + eventualColor + "The target Armor Stand is currently not available!";
+                    toReturn += "    <GRAY>The target Armor Stand is currently not available!";
                 }
             }
         }

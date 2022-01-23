@@ -39,6 +39,7 @@ import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class JobsRebornReachJobLevel extends Objective {
 
@@ -114,11 +115,11 @@ public class JobsRebornReachJobLevel extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.jobsRebornReachJobLevel.base", player)
-                .replace("%EVENTUALCOLOR%", eventualColor)
-                .replace("%AMOUNT%", "" + getLevelToReach())
-                .replace("%JOB%", "" + getJobName());
+    public String getObjectiveTaskDescription(final Player player) {
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.jobsRebornReachJobLevel.base", player, Map.of(
+                "%AMOUNT%", "" + getLevelToReach(),
+                "%JOB%", getJobName()
+        ));
     }
 
     @Override

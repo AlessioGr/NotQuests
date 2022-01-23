@@ -36,10 +36,7 @@ import rocks.gravili.notquests.paper.structs.objectives.ConditionObjective;
 import rocks.gravili.notquests.paper.structs.objectives.OtherQuestObjective;
 
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -67,11 +64,13 @@ public class QuestPlayer {
     private ActiveObjective trackingObjective;
 
     private BossBar bossBar;
+    private int lastBossBarActiveTimeInSeconds = 0;
 
     //Tags
     private final HashMap<String, Object> tags;
 
     private boolean hasActiveConditionObjectives = false;
+
 
 
 
@@ -346,7 +345,7 @@ public class QuestPlayer {
 
 
                 if (!requirementsStillNeeded.toString().isBlank()) {
-                    return "<RED>You do not fulfill all the requirements this quest needs! Requirement still needed:" + requirementsStillNeeded;
+                    return main.getLanguageManager().getString("chat.quest-not-all-requirements-fulfilled", getPlayer()) + requirementsStillNeeded;
                 }
 
 
@@ -499,8 +498,9 @@ public class QuestPlayer {
                     if(counterWithRewardNames == 1){
                         fullRewardString += main.getLanguageManager().getString("chat.quest-completed-rewards-prefix", player, this, quest, action);
                     }
-                    fullRewardString += "\n"+ main.getLanguageManager().getString("chat.quest-completed-rewards-rewardformat", player, this, quest, action)
-                            .replace("%reward%", action.getActionName());
+                    fullRewardString += "\n"+ main.getLanguageManager().getString("chat.quest-completed-rewards-rewardformat", player, this, quest, action, Map.of(
+                            "%reward%", action.getActionName()
+                    ));
                 }
             }
         }
@@ -808,31 +808,51 @@ public class QuestPlayer {
             return;
         }
         if(main.getConfiguration().isVisualObjectiveTrackingShowProgressInActionBar()){
-            getPlayer().sendActionBar(main.parse(
-                    main.getLanguageManager().getString("objective-tracking.actionbar-progress-update", getPlayer(), this, activeObjective, activeObjective.getActiveQuest())
-            ));
+            if(activeObjective.getProgressNeeded() == 1){
+                getPlayer().sendActionBar(main.parse(
+                        main.getLanguageManager().getString("objective-tracking.actionbar-progress-update.only-one-max-progress", getPlayer(), this, activeObjective, activeObjective.getActiveQuest())
+                ));
+            }else{
+                getPlayer().sendActionBar(main.parse(
+                        main.getLanguageManager().getString("objective-tracking.actionbar-progress-update.default", getPlayer(), this, activeObjective, activeObjective.getActiveQuest())
+                ));
+            }
         }
         if(main.getConfiguration().isVisualObjectiveTrackingShowProgressInBossBar()){
             float progress = (float)activeObjective.getCurrentProgress() / (float)activeObjective.getProgressNeeded();
-            if(progress >= 1.0f && bossBar != null){
-                player.hideBossBar(bossBar);
-                bossBar = null;
+            if(progress >= 1.0f && !main.getConfiguration().isVisualObjectiveTrackingShowProgressInBossBarIfObjectiveCompleted()){
+                if(bossBar != null){
+                    player.hideBossBar(bossBar);
+                    bossBar = null;
+                    lastBossBarActiveTimeInSeconds = 0;
+                }
                 return; //Hide bossbar once it reached 100%
             }else if(progress < 0.0f){
                 progress = 0;
             }
 
+            final String languageString = activeObjective.getProgressNeeded() == 1 ? "objective-tracking.bossbar-progress-update.only-one-max-progress" : "objective-tracking.bossbar-progress-update.default";
             if (bossBar != null) {
-                bossBar.name(main.getLanguageManager().getComponent("objective-tracking.actionbar-progress-update", getPlayer(), this, activeObjective, activeObjective.getActiveQuest()));
+                bossBar.name(main.getLanguageManager().getComponent(languageString, getPlayer(), this, activeObjective, activeObjective.getActiveQuest()));
                 bossBar.progress(progress);
+                lastBossBarActiveTimeInSeconds = 0;
             } else {
-                bossBar = BossBar.bossBar(main.getLanguageManager().getComponent("objective-tracking.actionbar-progress-update", getPlayer(), this, activeObjective, activeObjective.getActiveQuest()),
+                bossBar = BossBar.bossBar(main.getLanguageManager().getComponent(languageString, getPlayer(), this, activeObjective, activeObjective.getActiveQuest()),
                         progress, BossBar.Color.BLUE, BossBar.Overlay.PROGRESS);
                 player.showBossBar(bossBar);
+                lastBossBarActiveTimeInSeconds = 0;
             }
 
         }
+    }
 
+    public void increaseBossBarTimeByOneSecond(){
+        lastBossBarActiveTimeInSeconds++;
+        if(main.getConfiguration().getVisualObjectiveTrackingBossBarTimer() >0 && lastBossBarActiveTimeInSeconds >= main.getConfiguration().getVisualObjectiveTrackingBossBarTimer()){
+            getPlayer().hideBossBar(bossBar);
+            bossBar = null;
+            lastBossBarActiveTimeInSeconds = 0;
+        }
     }
 
     public void updateConditionObjectives(Player player) {

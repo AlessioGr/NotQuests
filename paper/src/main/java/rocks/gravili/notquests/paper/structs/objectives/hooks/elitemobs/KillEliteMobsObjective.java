@@ -36,6 +36,7 @@ import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class KillEliteMobsObjective extends Objective {
 
@@ -241,34 +242,33 @@ public class KillEliteMobsObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
+    public String getObjectiveTaskDescription(final Player player) {
         String toReturn;
         if (!getEliteMobToKillContainsName().isBlank()) {
-            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.killEliteMobs.base", player)
-                    .replace("%EVENTUALCOLOR%", eventualColor)
-                    .replace("%ELITEMOBNAME%", "" + getEliteMobToKillContainsName());
+            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.killEliteMobs.base", player, Map.of(
+                    "%ELITEMOBNAME%", getEliteMobToKillContainsName()
+            ));
         } else {
-            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.killEliteMobs.any", player)
-                    .replace("%EVENTUALCOLOR%", eventualColor);
+            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.killEliteMobs.any", player);
         }
         if (getMinimumLevel() != -1) {
             if (getMaximumLevel() != -1) {
-                toReturn += "\n        <GRAY>" + eventualColor + "Level: <WHITE>" + eventualColor + getMinimumLevel() + "-" + getMaximumLevel();
+                toReturn += "\n        <GRAY>Level: <WHITE>" + getMinimumLevel() + "-" + getMaximumLevel();
             } else {
-                toReturn += "\n        <GRAY>" + eventualColor + "Minimum Level: <WHITE>" + eventualColor + getMinimumLevel();
+                toReturn += "\n        <GRAY>Minimum Level: <WHITE>" + getMinimumLevel();
             }
         } else {
             if (getMaximumLevel() != -1) {
-                toReturn += "\n        <GRAY>" + eventualColor + "Maximum Level: <WHITE>" + eventualColor + getMaximumLevel();
+                toReturn += "\n        <GRAY>Maximum Level: <WHITE>" + getMaximumLevel();
             }
         }
 
         if (!getSpawnReason().isBlank()) {
-            toReturn += "\n        <GRAY>" + eventualColor + "Spawned from: <WHITE>" + eventualColor + getSpawnReason();
+            toReturn += "\n        <GRAY>Spawned from: <WHITE>" + getSpawnReason();
         }
 
         if (getMinimumDamagePercentage() != -1) {
-            toReturn += "\n        <GRAY>" + eventualColor + "Inflict minimum damage: <WHITE>" + eventualColor + getMinimumDamagePercentage() + "%";
+            toReturn += "\n        <GRAY>Inflict minimum damage: <WHITE>"+ getMinimumDamagePercentage() + "%";
         }
         return toReturn;
     }

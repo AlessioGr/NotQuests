@@ -251,4 +251,46 @@ public class ConditionsManager {
     public final Condition getConditionFromString(final String conditionString) {
         return null; //TODO
     }
+
+    public void updateVariableConditions() {
+        try{
+            for(Class<? extends Condition> condition : getConditions()){
+                String identifier = getConditionType(condition);
+
+                Method commandHandler = condition.getMethod("handleCommands", main.getClass(), PaperCommandManager.class, Command.Builder.class, ConditionFor.class);
+
+                commandHandler.setAccessible(true);
+                if(condition == NumberCondition.class || condition == StringCondition.class || condition == BooleanCondition.class || condition == ListCondition.class || condition == ItemStackListCondition.class){
+
+                    main.getLogManager().info("Re-registering condition " + identifier + " due to variable changes...");
+
+                    commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddRequirementCommandBuilder().flag(
+                                    main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
+                                            .withDescription(ArgumentDescription.of("Negates this condition"))
+                            )
+                            .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition"), ConditionFor.QUEST);
+                    commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddConditionCommandBuilder().flag(
+                                    main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
+                                            .withDescription(ArgumentDescription.of("Negates this condition"))
+                            )
+                            .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition"), ConditionFor.OBJECTIVE);
+                    commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminAddConditionCommandBuilder().flag(
+                                    main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
+                                            .withDescription(ArgumentDescription.of("Negates this condition"))
+                            )
+                            .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition")
+                            .flag(main.getCommandManager().categoryFlag), ConditionFor.ConditionsYML); //For Actions.yml
+                    commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminActionsAddConditionCommandBuilder().flag(
+                                    main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
+                                            .withDescription(ArgumentDescription.of("Negates this condition"))
+                            )
+                            .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition"), ConditionFor.Action); //For Actions.yml
+
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
 }

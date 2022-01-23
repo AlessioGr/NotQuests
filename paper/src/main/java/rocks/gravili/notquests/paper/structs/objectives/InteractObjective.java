@@ -33,6 +33,8 @@ import org.bukkit.util.Vector;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 
+import java.util.Map;
+
 
 public class InteractObjective extends Objective {
 
@@ -129,7 +131,7 @@ public class InteractObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
+    public String getObjectiveTaskDescription(final Player player) {
         String toReturn;
         String interactType = "";
         if (isLeftClick()) {
@@ -148,18 +150,18 @@ public class InteractObjective extends Objective {
         }
 
         if (taskDescription.isBlank()) {
-            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.interact.base", player)
-                    .replace("%EVENTUALCOLOR%", eventualColor)
-                    .replace("%INTERACTTYPE%", interactType)
-                    .replace("%COORDINATES%", "X: " + getLocationToInteract().getX() + " Y: " + getLocationToInteract().getY() + " Z: " + getLocationToInteract().getZ())
-                    .replace("%WORLDNAME%", worldName);
+            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.interact.base", player, Map.of(
+                    "%INTERACTTYPE%", interactType,
+                    "%COORDINATES%", "X: " + getLocationToInteract().getX() + " Y: " + getLocationToInteract().getY() + " Z: " + getLocationToInteract().getZ(),
+                    "%WORLDNAME%", worldName
+            ));
         } else {
-            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.interact.taskDescriptionProvided", player)
-                    .replace("%TASKDESCRIPTION%", getTaskDescription())
-                    .replace("%EVENTUALCOLOR%", eventualColor)
-                    .replace("%INTERACTTYPE%", interactType)
-                    .replace("%COORDINATES%", "X: " + getLocationToInteract().getX() + " Y: " + getLocationToInteract().getY() + " Z: " + getLocationToInteract().getZ())
-                    .replace("%WORLDNAME%", worldName);
+            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.interact.taskDescriptionProvided", player, Map.of(
+                    "%TASKDESCRIPTION%", getTaskDescription(),
+                    "%INTERACTTYPE%", interactType,
+                    "%COORDINATES%", "X: " + getLocationToInteract().getX() + " Y: " + getLocationToInteract().getY() + " Z: " + getLocationToInteract().getZ(),
+                    "%WORLDNAME%", worldName
+            ));
         }
 
         return toReturn;

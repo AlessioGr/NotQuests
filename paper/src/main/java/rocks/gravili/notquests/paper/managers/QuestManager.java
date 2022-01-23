@@ -1285,28 +1285,29 @@ public class QuestManager {
 
     public final String getObjectiveTaskDescription(final Objective objective, boolean completed, final Player player) {
         String toReturn = "";
-        String eventualColor = "";
-        if (completed) {
-            eventualColor = "<strikethrough>";
-        }
-        toReturn += objective.getObjectiveTaskDescription(eventualColor, player);
+
+        toReturn += objective.getObjectiveTaskDescription(player);
 
         if (objective.getCompletionNPCID() != -1) {
             if (main.getIntegrationsManager().isCitizensEnabled()) {
                 final NPC npc = CitizensAPI.getNPCRegistry().getById(objective.getCompletionNPCID());
                 if (npc != null) {
-                    toReturn += "\n    <GRAY>" + eventualColor + "To complete: Talk to <highlight>" + eventualColor + npc.getName();
+                    toReturn += "\n    <GRAY>To complete: Talk to <highlight>"+ npc.getName();
                 } else {
-                    toReturn += "\n    <GRAY>" + eventualColor + "To complete: Talk to NPC with ID <highlight>" + eventualColor + objective.getCompletionNPCID() + " <RED>" + eventualColor + "[Currently not available]";
+                    toReturn += "\n    <GRAY>To complete: Talk to NPC with ID <highlight>" + objective.getCompletionNPCID() + " <RED>[Currently not available]";
                 }
             } else {
                 toReturn += "    <RED>Error: Citizens plugin not installed. Contact an admin.";
             }
         }
         if (objective.getCompletionArmorStandUUID() != null) {
-            toReturn += "\n    <GRAY>" + eventualColor + "To complete: Talk to <highlight>" + eventualColor + "" + main.getArmorStandManager().getArmorStandName(objective.getCompletionArmorStandUUID());
+            toReturn += "\n    <GRAY>To complete: Talk to <highlight>" + main.getArmorStandManager().getArmorStandName(objective.getCompletionArmorStandUUID());
         }
-        return toReturn;
+        if(completed){
+            return "<strikethrough>" + toReturn + "</strikethrough>";
+        }else{
+            return toReturn;
+        }
     }
 
     public void sendActiveObjectivesAndProgress(final Player player, final ActiveQuest activeQuest) {

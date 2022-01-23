@@ -36,6 +36,7 @@ import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class BetonQuestObjectiveStateChangeObjective extends Objective {
     private String packageName = "";
@@ -163,10 +164,10 @@ public class BetonQuestObjectiveStateChangeObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.BetonQuestCompleteObjective.base", player)
-                .replace("%EVENTUALCOLOR%", eventualColor)
-                .replace("%BETONQUESTOBJECTIVENAME%", getObjectiveName());
+    public String getObjectiveTaskDescription(final Player player) {
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.BetonQuestCompleteObjective.base", player, Map.of(
+                "%BETONQUESTOBJECTIVENAME%", getObjectiveName()
+        ));
     }
 
 

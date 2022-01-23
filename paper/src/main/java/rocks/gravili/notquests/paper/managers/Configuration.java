@@ -35,7 +35,9 @@ public class Configuration {
     private final String beamMode = "end_gateway"; //end_gateway, beacon, end_crystal
 
     public boolean visualObjectiveTrackingShowProgressInActionBar = true;
-    public boolean visualObjectiveTrackingShowProgressInBossBar = false;
+    public boolean visualObjectiveTrackingShowProgressInBossBar = true;
+    public boolean visualObjectiveTrackingShowProgressInBossBarIfObjectiveCompleted = false;
+    public int visualObjectiveTrackingBossBarTimer = 10;
 
 
     public String configurationVersion = "";
@@ -130,9 +132,6 @@ public class Configuration {
     private boolean guiQuestPreviewDescription_enabled = true;
     private boolean guiQuestPreviewRewards_enabled = true;
     private boolean guiQuestPreviewRequirements_enabled = true;
-    private char guiQuestPreviewDescription_slot = '1';
-    private char guiQuestPreviewRewards_slot = '3';
-    private char guiQuestPreviewRequirements_slot = '5';
     public boolean showQuestItemAmount = false;
     public boolean showObjectiveItemAmount = true;
 

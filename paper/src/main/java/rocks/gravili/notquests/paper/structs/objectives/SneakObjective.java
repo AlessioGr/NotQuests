@@ -29,6 +29,8 @@ import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 
+import java.util.Map;
+
 public class SneakObjective extends Objective {
 
 
@@ -62,10 +64,10 @@ public class SneakObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.sneak.base", player)
-                .replace("%EVENTUALCOLOR%", eventualColor)
-                .replace("%AMOUNTOFSNEAKS%", "" + getAmountToSneak());
+    public String getObjectiveTaskDescription(final Player player) {
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.sneak.base", player, Map.of(
+                "%AMOUNTOFSNEAKS%", "" + getAmountToSneak()
+        ));
     }
 
     @Override

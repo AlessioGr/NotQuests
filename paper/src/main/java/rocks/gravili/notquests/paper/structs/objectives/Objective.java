@@ -305,7 +305,7 @@ public abstract class Objective {
         return quest;
     }
 
-    public abstract String getObjectiveTaskDescription(final String eventualColor, final Player player);
+    public abstract String getObjectiveTaskDescription(final Player player);
 
     public abstract void save(final FileConfiguration configuration, final String initialPath);
 

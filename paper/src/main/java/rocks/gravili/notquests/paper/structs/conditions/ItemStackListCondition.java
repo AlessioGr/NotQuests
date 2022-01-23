@@ -283,6 +283,9 @@ public class ItemStackListCondition extends Condition {
             if(variable == null || variable.getVariableDataType() != VariableDataType.ITEMSTACKLIST){
                 continue;
             }
+            if(main.getVariablesManager().alreadyFullRegisteredVariables.contains(variableString)){
+                continue;
+            }
 
             main.getLogManager().info("Registering ItemStackList condition: <highlight>" + variableString);
 

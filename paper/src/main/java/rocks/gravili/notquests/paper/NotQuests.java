@@ -181,9 +181,10 @@ public class NotQuests {
 
         objectiveManager = new ObjectiveManager(this);
         conditionsManager = new ConditionsManager(this);
-
         actionManager = new ActionManager(this);
         triggerManager = new TriggerManager(this);
+
+        variablesManager.alreadyFullRegisteredVariables.addAll(variablesManager.getVariableIdentifiers());
 
         commandManager.setupCommands();
 

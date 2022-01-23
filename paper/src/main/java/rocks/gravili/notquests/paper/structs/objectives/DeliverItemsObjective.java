@@ -277,7 +277,7 @@ public class DeliverItemsObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
+    public String getObjectiveTaskDescription(final Player player) {
         final String displayName;
         if (!isDeliverAnyItem()) {
             if (getItemToDeliver().getItemMeta() != null) {
@@ -294,39 +294,43 @@ public class DeliverItemsObjective extends Objective {
 
         String toReturn;
         if (!displayName.isBlank()) {
-            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.base", player)
-                    .replace("%EVENTUALCOLOR%", eventualColor)
-                    .replace("%ITEMTODELIVERTYPE%", "" + itemType)
-                    .replace("%ITEMTODELIVERNAME%", "" + displayName)
-                    .replace("%(%", "(")
-                    .replace("%)%", "<RESET>)");
+            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.base", player, Map.of(
+                    "%ITEMTODELIVERTYPE%", itemType,
+                    "%ITEMTODELIVERNAME%", displayName,
+                    "%(%", "(",
+                    "%)%", "<RESET>)"
+            ));
         } else {
-            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.base", player)
-                    .replace("%EVENTUALCOLOR%", eventualColor)
-                    .replace("%ITEMTODELIVERTYPE%", "" + itemType)
-                    .replace("%ITEMTODELIVERNAME%", "")
-                    .replace("%(%", "")
-                    .replace("%)%", "");
+            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.base", player, Map.of(
+                    "%ITEMTODELIVERTYPE%", itemType,
+                    "%ITEMTODELIVERNAME%", "",
+                    "%(%", "",
+                    "%)%", ""
+            ));
         }
 
 
         if (main.getIntegrationsManager().isCitizensEnabled() && getRecipientNPCID() != -1) {
             final NPC npc = CitizensAPI.getNPCRegistry().getById(getRecipientNPCID());
             if (npc != null) {
-                toReturn += "\n      <GRAY>" + eventualColor + "Deliver it to <WHITE>" + eventualColor + npc.getName();
+                toReturn += "\n" + main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.deliver-to-npc", player, Map.of(
+                        "%NPCNAME%", npc.getName()
+                ));
             } else {
-                toReturn += "\n      <GRAY>" + eventualColor + "The delivery NPC is currently not available!";
+                toReturn += "\n" + main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.deliver-to-npc-not-available", player);
             }
         } else {
 
             if (getRecipientNPCID() != -1) {
-                toReturn += "    <RED>Error: Citizens plugin not installed. Contact an admin.";
+                toReturn += main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.deliver-to-npc-citizens-not-found", player);
             } else { //Armor Stands
                 final UUID armorStandUUID = getRecipientArmorStandUUID();
                 if (armorStandUUID != null) {
-                    toReturn += "\n    <GRAY>" + eventualColor + "Deliver it to <WHITE>" + eventualColor + main.getArmorStandManager().getArmorStandName(armorStandUUID);
+                    toReturn += "\n" + main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.deliver-to-armorstand", player, Map.of(
+                            "%ARMORSTANDNAME%", main.getArmorStandManager().getArmorStandName(armorStandUUID)
+                    ));
                 } else {
-                    toReturn += "\n    <GRAY>" + eventualColor + "The target Armor Stand is currently not available!";
+                    toReturn += "\n" + main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.deliver-to-armorstand-not-available", player);
                 }
             }
 

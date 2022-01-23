@@ -33,6 +33,7 @@ import rocks.gravili.notquests.paper.structs.triggers.ActiveTrigger;
 import rocks.gravili.notquests.paper.structs.triggers.Trigger;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -147,8 +148,9 @@ public class ActiveQuest {
                         if(counterWithRewardNames == 1){
                             fullRewardString += main.getLanguageManager().getString("chat.objectives.successfully-completed-rewards-prefix", player, this, activeObjective, rewardAction);
                         }
-                        fullRewardString += "\n"+ main.getLanguageManager().getString("chat.objectives.successfully-completed-rewards-rewardformat", player, this, activeObjective, rewardAction)
-                                .replace("%reward%", rewardAction.getActionName());
+                        fullRewardString += "\n"+ main.getLanguageManager().getString("chat.objectives.successfully-completed-rewards-rewardformat", player, this, activeObjective, rewardAction, Map.of(
+                                "%reward%", rewardAction.getActionName()
+                        ));
                     }
                 }
             }

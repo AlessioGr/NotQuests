@@ -111,8 +111,12 @@ visual:
   show-rewards-after-quest-completion: true
   show-rewards-after-objective-completion: true
   objective-tracking:
-    show-progress-in-actionbar: true
-    show-progress-in-bossbar: false
+    actionbar:
+      enabled: true
+    bossbar:
+      enabled: true
+      show-time: 10
+      show-if-objective-is-completed: false
 gui:
   show-quest-item-amount: false
   show-objective-item-amount: true
@@ -135,7 +139,7 @@ gui:
     # If set to false, clickable text will be used for all the other /q commands instead
     enabled: true
 placeholders:
-  support_placeholders_in_translation_strings: false
+  support_placeholderapi_in_translation_strings: false
   player_active_quests_list_horizontal:
     separator: '|'
     limit: -1 #-1 for unlimited

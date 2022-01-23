@@ -62,12 +62,10 @@ public class LanguageManager {
 
     private FileConfiguration defaultLanguageConfig = null;
 
-    final Map<String, String> internalPlaceholderReplacements;
 
 
     public LanguageManager(final NotQuests main) {
         this.main = main;
-        internalPlaceholderReplacements = new HashMap<>();
     }
 
 
@@ -312,6 +310,7 @@ public class LanguageManager {
         return main.parse(getString(languageString, targetPlayer, internalPlaceholderObjects)).decoration(TextDecoration.ITALIC, false);
     }
 
+    //Usually used for GUI
     public final List<Component> getComponentList(final String languageString, final Player targetPlayer, Object... internalPlaceholderObjects){
         List<Component> components = new ArrayList<>();
         if (!getLanguageConfig().isList(languageString)) {
@@ -324,11 +323,15 @@ public class LanguageManager {
 
             if (!main.getConfiguration().supportPlaceholderAPIInTranslationStrings || !main.getIntegrationsManager().isPlaceholderAPIEnabled() || targetPlayer == null) {
                 for(String componentPart : applySpecial(applyInternalPlaceholders(translatedString, targetPlayer, internalPlaceholderObjects))){
-                    components.add(main.parse(componentPart).decoration(TextDecoration.ITALIC, false));
+                    for(String splitPart : componentPart.split("\n")){
+                        components.add(main.parse(splitPart).decoration(TextDecoration.ITALIC, false));
+                    }
                 }
             } else {
                 for(String componentPart : applySpecial(PlaceholderAPI.setPlaceholders(targetPlayer, applyInternalPlaceholders(translatedString, targetPlayer, internalPlaceholderObjects)))) {
-                    components.add(main.parse(componentPart).decoration(TextDecoration.ITALIC, false));
+                    for(String splitPart : componentPart.split("\n")){
+                        components.add(main.parse(splitPart).decoration(TextDecoration.ITALIC, false));
+                    }
                 }
             }
         }
@@ -384,25 +387,34 @@ public class LanguageManager {
     }
 
     public String applyInternalPlaceholders(String initialMessage, final Player player, Object... internalPlaceholderObjects) {
-
         if (internalPlaceholderObjects.length == 0) {
             return initialMessage;
         }
-        internalPlaceholderReplacements.clear();
+
+        final Map<String, String> internalPlaceholderReplacements = new HashMap<>(); //With this method probably being used simultaneously, we cannot just have 1 HashMap and clear it. It would get cleared while another thing is processing
+
+
+
+        //main.getLogManager().severe("Initial: " + initialMessage);
+
+        //internalPlaceholderReplacements.clear();
         internalPlaceholderReplacements.put("%QUESTPOINTS%", "0");
         for (Object internalPlaceholderObject : internalPlaceholderObjects) {
+
+            //main.getLogManager().severe("Object: " + internalPlaceholderObject.toString());
             if (internalPlaceholderObject instanceof ActiveQuest activeQuest) {
-                //main.getLogManager().log(Level.INFO, "Applying ActiveQuest placeholders...");
+                // main.getLogManager().info("Quest placeholders...");
                 internalPlaceholderReplacements.put("%QUESTNAME%", activeQuest.getQuest().getQuestFinalName());
                 internalPlaceholderReplacements.put("%QUESTDESCRIPTION%", activeQuest.getQuest().getQuestDescription());
                 internalPlaceholderReplacements.put("%COMPLETEDOBJECTIVESCOUNT%", "" + activeQuest.getCompletedObjectives().size());
                 internalPlaceholderReplacements.put("%ALLOBJECTIVESCOUNT%", "" + activeQuest.getQuest().getObjectives().size());
             } else if (internalPlaceholderObject instanceof Quest quest) {
-                //main.getLogManager().log(Level.INFO, "Applying Quest placeholders...");
+                //main.getLogManager().info("Applying Quest placeholders...");
                 internalPlaceholderReplacements.put("%QUESTNAME%", quest.getQuestFinalName());
                 internalPlaceholderReplacements.put("%QUESTDESCRIPTION%", quest.getQuestDescription());
             } else if (internalPlaceholderObject instanceof ActiveObjective activeObjective) {
-                //main.getLogManager().log(Level.INFO, "Applying ActiveObjective placeholders...");
+
+                //main.getLogManager().info("Applying ActiveObjective placeholders...");
                 internalPlaceholderReplacements.put("%OBJECTIVEID%", "" + activeObjective.getObjective().getObjectiveID());
                 internalPlaceholderReplacements.put("%ACTIVEOBJECTIVEID%", "" + activeObjective.getObjective().getObjectiveID());
                 internalPlaceholderReplacements.put("%OBJECTIVENAME%", "" + activeObjective.getObjective().getObjectiveFinalName());
@@ -411,8 +423,9 @@ public class LanguageManager {
                 internalPlaceholderReplacements.put("%OBJECTIVEPROGRESSPERCENTAGE%", "" + (int)((float)((float)activeObjective.getCurrentProgress() / (float)activeObjective.getProgressNeeded() )*100) );
                 internalPlaceholderReplacements.put("%ACTIVEOBJECTIVEDESCRIPTION%", main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), false, player));
                 internalPlaceholderReplacements.put("%COMPLETEDOBJECTIVEDESCRIPTION%", main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), true, player));
+
             } else if (internalPlaceholderObject instanceof Objective objective) {
-                //main.getLogManager().log(Level.INFO, "Applying Objective placeholders...");
+                //main.getLogManager().info("Applying Objective placeholders...");
                 internalPlaceholderReplacements.put("%OBJECTIVEID%", "" + objective.getObjectiveID());
                 internalPlaceholderReplacements.put("%OBJECTIVENAME%", "" + objective.getObjectiveFinalName());
             } else if (internalPlaceholderObject instanceof Trigger trigger) {
@@ -420,8 +433,15 @@ public class LanguageManager {
             } else if (internalPlaceholderObject instanceof QuestPlayer questPlayer) {
                 //main.getLogManager().log(Level.INFO, "Applying QuestPlayer placeholders...");
                 internalPlaceholderReplacements.put("%QUESTPOINTS%", "" + questPlayer.getQuestPoints());
+            } else if(internalPlaceholderObject instanceof final Map providedInternalPlaceholderReplacements){
+                for(Object key : providedInternalPlaceholderReplacements.keySet()){
+                    internalPlaceholderReplacements.put((String) key, (String) providedInternalPlaceholderReplacements.get(key));
+                }
             }
+
+
         }
+
         return main.getUtilManager().replaceFromMap(initialMessage, internalPlaceholderReplacements);
     }
 
@@ -435,7 +455,7 @@ public class LanguageManager {
 
 
 
-        public String applySpecial(String initialMessage) { //TODO: Fix center if that message is later processed for placeholders => process the placeholders here instead
+    public String applySpecial(String initialMessage) { //TODO: Fix center if that message is later processed for placeholders => process the placeholders here instead
         initialMessage = initialMessage.replace("<EMPTY>", " ");
 
 

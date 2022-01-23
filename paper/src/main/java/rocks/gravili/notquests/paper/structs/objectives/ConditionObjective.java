@@ -58,7 +58,7 @@ public class ConditionObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
+    public String getObjectiveTaskDescription(final Player player) {
         if(condition != null){
             return condition.getConditionDescription(player, getQuest());
         }else{

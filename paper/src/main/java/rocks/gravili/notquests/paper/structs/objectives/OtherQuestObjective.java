@@ -31,6 +31,8 @@ import rocks.gravili.notquests.paper.commands.arguments.QuestSelector;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.Quest;
 
+import java.util.Map;
+
 public class OtherQuestObjective extends Objective {
     private String otherQuestName = "";
     private boolean countPreviousCompletions = false;
@@ -68,10 +70,10 @@ public class OtherQuestObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.otherQuest.base", player)
-                .replace("%EVENTUALCOLOR%", eventualColor)
-                .replace("%OTHERQUESTNAME%", "" + getOtherQuest().getQuestName());
+    public String getObjectiveTaskDescription(final Player player) {
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.otherQuest.base", player, Map.of(
+                "%OTHERQUESTNAME%", getOtherQuest().getQuestName()
+        ));
     }
 
     public void setCountPreviousCompletions(final boolean countPreviousCompletions) {

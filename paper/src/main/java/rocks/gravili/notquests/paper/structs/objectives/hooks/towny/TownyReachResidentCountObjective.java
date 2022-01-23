@@ -33,6 +33,8 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
+import java.util.Map;
+
 public class TownyReachResidentCountObjective extends Objective {
 
     private boolean countPreviousResidents = true;
@@ -79,10 +81,10 @@ public class TownyReachResidentCountObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.townyReachResidentCount.base", player)
-                .replace("%EVENTUALCOLOR%", eventualColor)
-                .replace("%AMOUNT%", "" + getAmountOfResidentsToReach());
+    public String getObjectiveTaskDescription(final Player player) {
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.townyReachResidentCount.base", player, Map.of(
+                "%AMOUNT%", "" + getAmountOfResidentsToReach()
+        ));
     }
 
     @Override

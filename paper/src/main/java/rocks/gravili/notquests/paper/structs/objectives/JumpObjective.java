@@ -29,6 +29,8 @@ import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 
+import java.util.Map;
+
 public class JumpObjective extends Objective {
 
 
@@ -63,10 +65,10 @@ public class JumpObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.jump.base", player)
-                .replace("%EVENTUALCOLOR%", eventualColor)
-                .replace("%AMOUNTOFJUMPS%", "" + getAmountToJump());
+    public String getObjectiveTaskDescription(final Player player) {
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.jump.base", player, Map.of(
+                "%AMOUNTOFJUMPS%", ""+getAmountToJump()
+        ));
     }
 
     @Override

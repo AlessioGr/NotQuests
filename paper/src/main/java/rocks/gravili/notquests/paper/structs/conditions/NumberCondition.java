@@ -338,6 +338,9 @@ public class NumberCondition extends Condition {
             if(variable == null || variable.getVariableDataType() != VariableDataType.NUMBER){
                 continue;
             }
+            if(main.getVariablesManager().alreadyFullRegisteredVariables.contains(variableString)){
+                continue;
+            }
 
             main.getLogManager().info("Registering number condition: <highlight>" + variableString);
 

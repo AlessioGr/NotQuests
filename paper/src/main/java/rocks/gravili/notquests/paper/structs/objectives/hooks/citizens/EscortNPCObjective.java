@@ -36,6 +36,7 @@ import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class EscortNPCObjective extends Objective {
 
@@ -128,19 +129,19 @@ public class EscortNPCObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
+    public String getObjectiveTaskDescription(final Player player) {
         String toReturn = "";
         if (main.getIntegrationsManager().isCitizensEnabled()) {
             final NPC npc = CitizensAPI.getNPCRegistry().getById(getNpcToEscortID());
             final NPC npcDestination = CitizensAPI.getNPCRegistry().getById(getNpcToEscortToID());
 
             if (npc != null && npcDestination != null) {
-                toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.escortNPC.base", player)
-                        .replace("%EVENTUALCOLOR%", eventualColor)
-                        .replace("%NPCNAME%", "" + npc.getName())
-                        .replace("%DESTINATIONNPCNAME%", "" + npcDestination.getName());
+                toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.escortNPC.base", player, Map.of(
+                        "%NPCNAME%", npc.getName(),
+                        "%DESTINATIONNPCNAME%", npcDestination.getName()
+                ));
             } else {
-                toReturn = "    <GRAY>" + eventualColor + "The target or destination NPC is currently not available!";
+                toReturn = "    <GRAY>The target or destination NPC is currently not available!";
             }
         } else {
             toReturn += "    <RED>Error: Citizens plugin not installed. Contact an admin.";

@@ -33,6 +33,8 @@ import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 
+import java.util.Map;
+
 public class ConsumeItemsObjective extends Objective {
 
     private ItemStack itemToConsume;
@@ -127,7 +129,7 @@ public class ConsumeItemsObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
+    public String getObjectiveTaskDescription(final Player player) {
         final String displayName;
         if (!isConsumeAnyItem()) {
             if (getItemToConsume().getItemMeta() != null) {
@@ -142,19 +144,19 @@ public class ConsumeItemsObjective extends Objective {
         String itemType = isConsumeAnyItem() ? "Any" : getItemToConsume().getType().name();
 
         if (!displayName.isBlank()) {
-            return main.getLanguageManager().getString("chat.objectives.taskDescription.consumeItems.base", player)
-                    .replace("%EVENTUALCOLOR%", eventualColor)
-                    .replace("%ITEMTOCONSUMETYPE%", "" + itemType)
-                    .replace("%ITEMTOCONSUMENAME%", "" + displayName)
-                    .replace("%(%", "(")
-                    .replace("%)%", "<RESET>)");
+            return main.getLanguageManager().getString("chat.objectives.taskDescription.consumeItems.base", player, Map.of(
+                    "%ITEMTOCONSUMETYPE%", itemType,
+                    "%ITEMTOCONSUMENAME%", displayName,
+                    "%(%", "(",
+                    "%)%", "<RESET>)"
+            ));
         } else {
-            return main.getLanguageManager().getString("chat.objectives.taskDescription.consumeItems.base", player)
-                    .replace("%EVENTUALCOLOR%", eventualColor)
-                    .replace("%ITEMTOCONSUMETYPE%", "" + itemType)
-                    .replace("%ITEMTOCONSUMENAME%", "")
-                    .replace("%(%", "")
-                    .replace("%)%", ")");
+            return main.getLanguageManager().getString("chat.objectives.taskDescription.consumeItems.base", player, Map.of(
+                    "%ITEMTOCONSUMETYPE%", itemType,
+                    "%ITEMTOCONSUMENAME%", "",
+                    "%(%", "",
+                    "%)%", ""
+            ));
         }
 
 

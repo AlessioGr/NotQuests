@@ -33,6 +33,8 @@ import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 
+import java.util.Map;
+
 public class SmeltObjective extends Objective {
 
     private ItemStack itemToSmelt;
@@ -126,7 +128,7 @@ public class SmeltObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
+    public String getObjectiveTaskDescription(final Player player) {
         final String displayName;
         if (!isSmeltAnyItem()) {
             if (getItemToSmelt().getItemMeta() != null) {
@@ -143,19 +145,19 @@ public class SmeltObjective extends Objective {
 
 
         if (!displayName.isBlank()) {
-            return main.getLanguageManager().getString("chat.objectives.taskDescription.smelt.base", player)
-                    .replace("%EVENTUALCOLOR%", eventualColor)
-                    .replace("%ITEMTOSMELTTYPE%", "" + itemType)
-                    .replace("%ITEMTOSMELTNAME%", "" + displayName)
-                    .replace("%(%", "(")
-                    .replace("%)%", "<RESET>)");
+            return main.getLanguageManager().getString("chat.objectives.taskDescription.smelt.base", player, Map.of(
+                    "%ITEMTOSMELTTYPE%", itemType,
+                    "%ITEMTOSMELTNAME%", displayName,
+                    "%(%", "(",
+                    "%)%", "<RESET>)"
+            ));
         } else {
-            return main.getLanguageManager().getString("chat.objectives.taskDescription.smelt.base", player)
-                    .replace("%EVENTUALCOLOR%", eventualColor)
-                    .replace("%ITEMTOSMELTTYPE%", "" + itemType)
-                    .replace("%ITEMTOSMELTNAME%", "")
-                    .replace("%(%", "")
-                    .replace("%)%", "");
+            return main.getLanguageManager().getString("chat.objectives.taskDescription.smelt.base", player, Map.of(
+                    "%ITEMTOSMELTTYPE%", itemType,
+                    "%ITEMTOSMELTNAME%", "",
+                    "%(%", "",
+                    "%)%", ""
+            ));
         }
 
 

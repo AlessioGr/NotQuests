@@ -30,6 +30,8 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
+import java.util.Map;
+
 public class SlimefunResearchObjective extends Objective {
 
 
@@ -53,9 +55,8 @@ public class SlimefunResearchObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.SlimefunResearch.base", player)
-                .replace("%EVENTUALCOLOR%", eventualColor);
+    public String getObjectiveTaskDescription(final Player player) {
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.SlimefunResearch.base", player);
     }
 
     @Override
