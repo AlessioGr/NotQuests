@@ -132,9 +132,6 @@ public class Configuration {
     private boolean guiQuestPreviewDescription_enabled = true;
     private boolean guiQuestPreviewRewards_enabled = true;
     private boolean guiQuestPreviewRequirements_enabled = true;
-    private char guiQuestPreviewDescription_slot = '1';
-    private char guiQuestPreviewRewards_slot = '3';
-    private char guiQuestPreviewRequirements_slot = '5';
     public boolean showQuestItemAmount = false;
     public boolean showObjectiveItemAmount = true;
 

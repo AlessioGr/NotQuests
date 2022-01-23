@@ -21,6 +21,7 @@ package rocks.gravili.notquests.paper.managers;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
@@ -43,10 +44,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 
 /**
@@ -157,6 +155,8 @@ public class DataManager {
 
     private final ArrayList<Category> categories, topLevelOnlyCategories;
     private Category defaultCategory;
+
+    private boolean valueChanged = false;
 
 
     /**
@@ -516,649 +516,486 @@ public class DataManager {
         //For upgrades from older versions who didn't have the enable flag but still used MySQL
         boolean mysqlstorageenabledbooleannotloadedyet = false;
 
-        boolean valueChanged = false;
+        valueChanged = false;
 
-        String key;
+        //Storage Stuff
+        {
+            String key = "storage.database.enabled";
+            if (!getGeneralConfig().isBoolean(key)) {
+                getGeneralConfig().set(key, false);
+                mysqlstorageenabledbooleannotloadedyet = true;
+                valueChanged = true;
+            }
+            key = "storage.database.host";
+            if (!getGeneralConfig().isString(key)) {
+                getGeneralConfig().set(key, "");
+                errored = true;
+                valueChanged = true;
+            }
+            key = "storage.database.port";
+            if (!getGeneralConfig().isInt(key)) {
+                getGeneralConfig().set(key, 3306);
+                //errored = true;
+                configuration.setDatabasePort(3306);
+                valueChanged = true;
+            }
+            key = "storage.database.database";
+            if (!getGeneralConfig().isString(key)) {
+                getGeneralConfig().set(key, "");
+                errored = true;
+                valueChanged = true;
+            }
+            key = "storage.database.username";
+            if (!getGeneralConfig().isString(key)) {
+                getGeneralConfig().set(key, "");
+                errored = true;
+                valueChanged = true;
+            }
+            key = "storage.database.password";
+            if (!getGeneralConfig().isString(key)) {
+                getGeneralConfig().set(key, "");
+                errored = true;
+                valueChanged = true;
+            }
 
-        key = "config-version-do-not-edit";
-        if (!getGeneralConfig().isString(key)) {
-            getGeneralConfig().set(key, main.getMain().getDescription().getVersion());
-            valueChanged = true;
-        }
-        configuration.setConfigurationVersion(getGeneralConfig().getString(key));
+            //For upgrades from older versions who didn't have the enable flag but still used MySQL
+            if (mysqlstorageenabledbooleannotloadedyet && !errored) {
+                configuration.setMySQLEnabled(true);
+                getGeneralConfig().set("storage.database.enabled", true);
+            }
 
-        key = "debug";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, false);
-            valueChanged = true;
-        }
-        configuration.debug = getGeneralConfig().getBoolean(key);
-
-        key = "storage.database.enabled";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, false);
-            mysqlstorageenabledbooleannotloadedyet = true;
-            valueChanged = true;
-        }
-        key = "storage.database.host";
-        if (!getGeneralConfig().isString(key)) {
-            getGeneralConfig().set(key, "");
-            errored = true;
-            valueChanged = true;
-        }
-        key = "storage.database.port";
-        if (!getGeneralConfig().isInt(key)) {
-            getGeneralConfig().set(key, 3306);
-            //errored = true;
-            configuration.setDatabasePort(3306);
-            valueChanged = true;
-        }
-        key = "storage.database.database";
-        if (!getGeneralConfig().isString(key)) {
-            getGeneralConfig().set(key, "");
-            errored = true;
-            valueChanged = true;
-        }
-        key = "storage.database.username";
-        if (!getGeneralConfig().isString(key)) {
-            getGeneralConfig().set(key, "");
-            errored = true;
-            valueChanged = true;
-        }
-        key = "storage.database.password";
-        if (!getGeneralConfig().isString(key)) {
-            getGeneralConfig().set(key, "");
-            errored = true;
-            valueChanged = true;
-        }
-
-        key = "storage.load-playerdata";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, true);
-            valueChanged = true;
-        }
-        configuration.loadPlayerData = generalConfig.getBoolean(key);
-
-        key = "storage.save-playerdata";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, true);
-            valueChanged = true;
-        }
-        configuration.savePlayerData = generalConfig.getBoolean(key);
-
-        key = "storage.backups.create-when-server-shuts-down";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, true);
-            valueChanged = true;
-        }
-        configuration.storageCreateBackupsWhenServerShutsDown = generalConfig.getBoolean(key);
-
-        //For upgrades from older versions who didn't have the enable flag but still used MySQL
-        if (mysqlstorageenabledbooleannotloadedyet && !errored) {
-            configuration.setMySQLEnabled(true);
-            getGeneralConfig().set("storage.database.enabled", true);
-        }
-
-        if (!configuration.isMySQLEnabled()) {
-            //No need to error previous stuff, since SQLite will be used
-            errored = false;
+            if (!configuration.isMySQLEnabled()) {
+                //No need to error previous stuff, since SQLite will be used
+                errored = false;
+            }
         }
 
 
+        //Other Stuff
 
 
-        //Other values from general.yml
-        key = "general.max-active-quests-per-player";
-        if (!getGeneralConfig().isInt(key)) {
-            getGeneralConfig().set(key, -1);
-            valueChanged = true;
-        }
-        configuration.setMaxActiveQuestsPerPlayer(getGeneralConfig().getInt(key));
+        configuration.setConfigurationVersion(getGeneralConfigString(
+                "config-version-do-not-edit",
+                main.getMain().getDescription().getVersion()
+        ));
 
-        key = "visual.language";
-        if (!getGeneralConfig().isString(key)) {
-            getGeneralConfig().set(key, "en");
-            valueChanged = true;
-        }
-        configuration.setLanguageCode(getGeneralConfig().getString(key));
+        configuration.setDebug(getGeneralConfigBoolean(
+                "debug",
+                false
+        ));
 
+        configuration.setLoadPlayerData(getGeneralConfigBoolean(
+                "storage.load-playerdata",
+                true
+        ));
 
+        configuration.setSavePlayerData(getGeneralConfigBoolean(
+                "storage.save-playerdata",
+                true
+        ));
 
+        configuration.setStorageCreateBackupsWhenServerShutsDown(getGeneralConfigBoolean(
+                "storage.backups.create-when-server-shuts-down",
+                true
+        ));
 
-        //Particles Citizens
-        key = "visual.citizensnpc.quest-giver-indicator-particle.enabled";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, true);
-            valueChanged = true;
-        }
-        configuration.setCitizensNPCQuestGiverIndicatorParticleEnabled(getGeneralConfig().getBoolean(key));
+        configuration.setMaxActiveQuestsPerPlayer(getGeneralConfigInt(
+                "general.max-active-quests-per-player",
+                -1
+        ));
 
-        key = "visual.citizensnpc.quest-giver-indicator-particle.type";
-        if (!getGeneralConfig().isString(key)) {
-            getGeneralConfig().set(key, "VILLAGER_ANGRY");
-            valueChanged = true;
-        }
-        configuration.setCitizensNPCQuestGiverIndicatorParticleType(Particle.valueOf(getGeneralConfig().getString(key)));
+        configuration.setLanguageCode(getGeneralConfigString(
+                "visual.language",
+                "en-US"
+        ));
 
-        key = "visual.citizensnpc.quest-giver-indicator-particle.spawn-interval";
-        if (!getGeneralConfig().isInt(key)) {
-            getGeneralConfig().set(key, 10);
-            valueChanged = true;
-        }
-        configuration.setCitizensNPCQuestGiverIndicatorParticleSpawnInterval(getGeneralConfig().getInt(key));
+        //NPC particles Citizens
+        configuration.setCitizensNPCQuestGiverIndicatorParticleEnabled(getGeneralConfigBoolean(
+                "visual.citizensnpc.quest-giver-indicator-particle.enabled",
+                true
+        ));
 
-        key = "visual.citizensnpc.quest-giver-indicator-particle.count";
-        if (!getGeneralConfig().isInt(key)) {
-            getGeneralConfig().set(key, 1);
-            valueChanged = true;
-        }
-        configuration.setCitizensNPCQuestGiverIndicatorParticleCount(getGeneralConfig().getInt(key));
+        configuration.setCitizensNPCQuestGiverIndicatorParticleType(Particle.valueOf(getGeneralConfigString(
+                "visual.citizensnpc.quest-giver-indicator-particle.type",
+                "VILLAGER_ANGRY"
+        )));
 
-        key = "visual.citizensnpc.quest-giver-indicator-particle.disable-if-tps-below";
-        if (!getGeneralConfig().isDouble(key)) {
-            getGeneralConfig().set(key, -1d);
-            valueChanged = true;
-        }
-        configuration.setCitizensNPCQuestGiverIndicatorParticleDisableIfTPSBelow(getGeneralConfig().getDouble(key));
+        configuration.setCitizensNPCQuestGiverIndicatorParticleSpawnInterval(getGeneralConfigInt(
+                "visual.citizensnpc.quest-giver-indicator-particle.spawn-interval",
+                10
+        ));
 
-        key = "visual.hide-rewards-without-name";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, true);
-            valueChanged = true;
-        }
-        configuration.hideRewardsWithoutName = getGeneralConfig().getBoolean(key);
+        configuration.setCitizensNPCQuestGiverIndicatorParticleCount(getGeneralConfigInt(
+                "visual.citizensnpc.quest-giver-indicator-particle.count",
+                1
+        ));
 
-        key = "visual.show-rewards-after-quest-completion";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, true);
-            valueChanged = true;
-        }
-        configuration.showRewardsAfterQuestCompletion = getGeneralConfig().getBoolean(key);
+        configuration.setCitizensNPCQuestGiverIndicatorParticleDisableIfTPSBelow(getGeneralConfigDouble(
+                "visual.citizensnpc.quest-giver-indicator-particle.disable-if-tps-below",
+                -1d
+        ));
+        //
 
-        key = "visual.show-rewards-after-objective-completion";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, true);
-            valueChanged = true;
-        }
-        configuration.showRewardsAfterObjectiveCompletion = getGeneralConfig().getBoolean(key);
+        configuration.setHideRewardsWithoutName(getGeneralConfigBoolean(
+                "visual.hide-rewards-without-name",
+                true
+        ));
+
+        configuration.setShowRewardsAfterQuestCompletion(getGeneralConfigBoolean(
+                "visual.show-rewards-after-quest-completion",
+                true
+        ));
+
+        configuration.setShowRewardsAfterObjectiveCompletion(getGeneralConfigBoolean(
+                "visual.show-rewards-after-objective-completion",
+                true
+        ));
 
 
         //Prevent armorstand editing
-        key = "visual.armorstands.prevent-editing";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, true);
-            valueChanged = true;
-        }
-        configuration.setArmorStandPreventEditing(getGeneralConfig().getBoolean(key));
-
+        configuration.setArmorStandPreventEditing(getGeneralConfigBoolean(
+                "visual.armorstands.prevent-editing",
+                true
+        ));
 
         //Particles ArmorStands
-        key = "visual.armorstands.quest-giver-indicator-particle.enabled";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, true);
-            valueChanged = true;
-        }
-        configuration.setArmorStandQuestGiverIndicatorParticleEnabled(getGeneralConfig().getBoolean(key));
+        configuration.setArmorStandQuestGiverIndicatorParticleEnabled(getGeneralConfigBoolean(
+                "visual.armorstands.quest-giver-indicator-particle.enabled",
+                true
+        ));
 
-        key = "visual.armorstands.quest-giver-indicator-particle.type";
-        if (!getGeneralConfig().isString(key)) {
-            getGeneralConfig().set(key, "VILLAGER_ANGRY");
-            valueChanged = true;
-        }
-        configuration.setArmorStandQuestGiverIndicatorParticleType(Particle.valueOf(getGeneralConfig().getString(key)));
+        configuration.setArmorStandQuestGiverIndicatorParticleType(Particle.valueOf(getGeneralConfigString(
+                "visual.armorstands.quest-giver-indicator-particle.type",
+                "VILLAGER_ANGRY"
+        )));
 
-        key = "visual.armorstands.quest-giver-indicator-particle.spawn-interval";
-        if (!getGeneralConfig().isInt(key)) {
-            getGeneralConfig().set(key, 10);
-            valueChanged = true;
-        }
-        configuration.setArmorStandQuestGiverIndicatorParticleSpawnInterval(getGeneralConfig().getInt(key));
+        configuration.setArmorStandQuestGiverIndicatorParticleSpawnInterval(getGeneralConfigInt(
+                "visual.armorstands.quest-giver-indicator-particle.spawn-interval",
+                10
+        ));
 
-        key = "visual.armorstands.quest-giver-indicator-particle.count";
-        if (!getGeneralConfig().isInt(key)) {
-            getGeneralConfig().set(key, 1);
-            valueChanged = true;
-        }
-        configuration.setArmorStandQuestGiverIndicatorParticleCount(getGeneralConfig().getInt(key));
+        configuration.setArmorStandQuestGiverIndicatorParticleCount(getGeneralConfigInt(
+                "visual.armorstands.quest-giver-indicator-particle.count",
+                1
+        ));
 
-        key = "visual.armorstands.quest-giver-indicator-particle.disable-if-tps-below";
-        if (!getGeneralConfig().isDouble(key)) {
-            getGeneralConfig().set(key, -1d);
-            valueChanged = true;
-        }
-        configuration.setArmorStandQuestGiverIndicatorParticleDisableIfTPSBelow(getGeneralConfig().getDouble(key));
-
+        configuration.setArmorStandQuestGiverIndicatorParticleDisableIfTPSBelow(getGeneralConfigDouble(
+                "visual.armorstands.quest-giver-indicator-particle.disable-if-tps-below",
+                -1d
+        ));
 
         //Visual Colors
-        key = "visual.colors.main";
-        if (!getGeneralConfig().isList(key)) {
-            final List<String> mainColors = new ArrayList<>();
-            mainColors.add("#1985ff");
-            mainColors.add("#2bc7ff");
-            getGeneralConfig().set(key, mainColors);
-            valueChanged = true;
-        }
-        configuration.setColorsMain(getGeneralConfig().getStringList(key));
-        key = "visual.colors.highlight";
-        if (!getGeneralConfig().isList(key)) {
-            final List<String> mainColors = new ArrayList<>();
-            mainColors.add("#00fffb");
-            mainColors.add("#00ffc3");
-            getGeneralConfig().set(key, mainColors);
-            valueChanged = true;
-        }
-        configuration.setColorsHighlight(getGeneralConfig().getStringList(key));
-        key = "visual.colors.highlight2";
-        if (!getGeneralConfig().isList(key)) {
-            final List<String> mainColors = new ArrayList<>();
-            mainColors.add("#ff2465");
-            mainColors.add("#ff24a0");
-            getGeneralConfig().set(key, mainColors);
-            valueChanged = true;
-        }
-        configuration.setColorsHighlight2(getGeneralConfig().getStringList(key));
-        key = "visual.colors.error";
-        if (!getGeneralConfig().isList(key)) {
-            final List<String> mainColors = new ArrayList<>();
-            mainColors.add("#ff004c");
-            mainColors.add("#a80000");
-            getGeneralConfig().set(key, mainColors);
-            valueChanged = true;
-        }
-        configuration.setColorsError(getGeneralConfig().getStringList(key));
-        key = "visual.colors.success";
-        if (!getGeneralConfig().isList(key)) {
-            final List<String> mainColors = new ArrayList<>();
-            mainColors.add("#54b2ff");
-            mainColors.add("#ff5ecc");
-            getGeneralConfig().set(key, mainColors);
-            valueChanged = true;
-        }
-        configuration.setColorsSuccess(getGeneralConfig().getStringList(key));
-        key = "visual.colors.unimportant";
-        if (!getGeneralConfig().isList(key)) {
-            final List<String> mainColors = new ArrayList<>();
-            mainColors.add("#9c9c9c");
-            mainColors.add("#858383");
-            getGeneralConfig().set(key, mainColors);
-            valueChanged = true;
-        }
-        configuration.setColorsUnimportant(getGeneralConfig().getStringList(key));
-        key = "visual.colors.veryUnimportant";
-        if (!getGeneralConfig().isList(key)) {
-            final List<String> mainColors = new ArrayList<>();
-            mainColors.add("#5c5c5c");
-            mainColors.add("#454545");
-            getGeneralConfig().set(key, mainColors);
-            valueChanged = true;
-        }
-        configuration.setColorsVeryUnimportant(getGeneralConfig().getStringList(key));
-        key = "visual.colors.warn";
-        if (!getGeneralConfig().isList(key)) {
-            final List<String> mainColors = new ArrayList<>();
-            mainColors.add("#fff700");
-            mainColors.add("#ffa629");
-            getGeneralConfig().set(key, mainColors);
-            valueChanged = true;
-        }
-        configuration.setColorsWarn(getGeneralConfig().getStringList(key));
-        key = "visual.colors.positive";
-        if (!getGeneralConfig().isList(key)) {
-            final List<String> mainColors = new ArrayList<>();
-            mainColors.add("#73ff00");
-            mainColors.add("#00ffd0");
-            getGeneralConfig().set(key, mainColors);
-            valueChanged = true;
-        }
-        configuration.setColorsPositive(getGeneralConfig().getStringList(key));
-        key = "visual.colors.negative";
-        if (!getGeneralConfig().isList(key)) {
-            final List<String> mainColors = new ArrayList<>();
-            mainColors.add("#ff006f");
-            mainColors.add("#ff002f");
-            getGeneralConfig().set(key, mainColors);
-            valueChanged = true;
-        }
-        configuration.setColorsNegative(getGeneralConfig().getStringList(key));
+        configuration.setColorsMain(getGeneralConfigStringList(
+                "visual.colors.main",
+                Arrays.asList("#1985ff", "#2bc7ff")
+        ));
 
+        configuration.setColorsHighlight(getGeneralConfigStringList(
+                "visual.colors.highlight",
+                Arrays.asList("#00fffb", "#00ffc3")
+        ));
+
+        configuration.setColorsHighlight2(getGeneralConfigStringList(
+                "visual.colors.highlight2",
+                Arrays.asList("#ff2465", "#ff24a0")
+        ));
+
+        configuration.setColorsError(getGeneralConfigStringList(
+                "visual.colors.error",
+                Arrays.asList("#ff004c", "#a80000")
+        ));
+
+        configuration.setColorsSuccess(getGeneralConfigStringList(
+                "visual.colors.success",
+                Arrays.asList("#54b2ff", "#ff5ecc")
+        ));
+
+        configuration.setColorsUnimportant(getGeneralConfigStringList(
+                "visual.colors.unimportant",
+                Arrays.asList("#9c9c9c", "#858383")
+        ));
+
+        configuration.setColorsVeryUnimportant(getGeneralConfigStringList(
+                "visual.colors.veryUnimportant",
+                Arrays.asList("#5c5c5c", "#454545")
+        ));
+
+        configuration.setColorsWarn(getGeneralConfigStringList(
+                "visual.colors.warn",
+                Arrays.asList("#fff700", "#ffa629")
+        ));
+
+        configuration.setColorsPositive(getGeneralConfigStringList(
+                "visual.colors.positive",
+                Arrays.asList("#73ff00", "#00ffd0")
+        ));
+
+        configuration.setColorsNegative(getGeneralConfigStringList(
+                "visual.colors.negative",
+                Arrays.asList("#ff006f", "#ff002f")
+        ));
 
 
         //Visual More
-        key = "visual.titles.quest-successfully-accepted.enabled";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, true);
-            valueChanged = true;
-        }
-        configuration.visualTitleQuestSuccessfullyAccepted_enabled = getGeneralConfig().getBoolean(key);
-        key = "visual.titles.quest-failed.enabled";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, true);
-            valueChanged = true;
-        }
-        configuration.visualTitleQuestFailed_enabled = getGeneralConfig().getBoolean(key);
-        key = "visual.titles.quest-completed.enabled";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, true);
-            valueChanged = true;
-        }
-        configuration.visualTitleQuestCompleted_enabled = getGeneralConfig().getBoolean(key);
+        configuration.setVisualTitleQuestSuccessfullyAccepted_enabled(getGeneralConfigBoolean(
+                "visual.titles.quest-successfully-accepted.enabled",
+                true
+        ));
 
-        key = "visual.objective-tracking.actionbar.enabled";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, true);
-            valueChanged = true;
-        }
-        configuration.setVisualObjectiveTrackingShowProgressInActionBar(getGeneralConfig().getBoolean(key));
-        key = "visual.objective-tracking.bossbar.enabled";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, true);
-            valueChanged = true;
-        }
-        configuration.setVisualObjectiveTrackingShowProgressInBossBar(getGeneralConfig().getBoolean(key));
-        key = "visual.objective-tracking.bossbar.show-time";
-        if (!getGeneralConfig().isInt(key)) {
-            getGeneralConfig().set(key, 10);
-            valueChanged = true;
-        }
-        configuration.setVisualObjectiveTrackingBossBarTimer(getGeneralConfig().getInt(key));
-        key = "visual.objective-tracking.bossbar.show-if-objective-is-completed";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, false);
-            valueChanged = true;
-        }
-        configuration.setVisualObjectiveTrackingShowProgressInBossBarIfObjectiveCompleted(getGeneralConfig().getBoolean(key));
+        configuration.setVisualTitleQuestFailed_enabled(getGeneralConfigBoolean(
+                "visual.titles.quest-failed.enabled",
+                true
+        ));
+
+        configuration.setVisualTitleQuestCompleted_enabled(getGeneralConfigBoolean(
+                "visual.titles.quest-completed.enabled",
+                true
+        ));
+
+        configuration.setVisualObjectiveTrackingShowProgressInActionBar(getGeneralConfigBoolean(
+                "visual.objective-tracking.actionbar.enabled",
+                true
+        ));
+
+        configuration.setVisualObjectiveTrackingShowProgressInBossBar(getGeneralConfigBoolean(
+                "visual.objective-tracking.bossbar.enabled",
+                true
+        ));
+
+        configuration.setVisualObjectiveTrackingBossBarTimer(getGeneralConfigInt(
+                "visual.objective-tracking.bossbar.show-time",
+                10
+        ));
+
+        configuration.setVisualObjectiveTrackingShowProgressInBossBarIfObjectiveCompleted(getGeneralConfigBoolean(
+                "visual.objective-tracking.bossbar.show-if-objective-is-completed",
+                false
+        ));
+
 
         //GUI
-        key = "gui.questpreview.enabled";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, true);
-            valueChanged = true;
-        }
-        configuration.setQuestPreviewUseGUI(getGeneralConfig().getBoolean(key));
-
+        configuration.setQuestPreviewUseGUI(getGeneralConfigBoolean(
+                "gui.questpreview.enabled",
+                true
+        ));
 
         //Description
-        key = "gui.questpreview.description.enabled";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, true);
-            valueChanged = true;
-        }
-        configuration.setGuiQuestPreviewDescription_enabled(getGeneralConfig().getBoolean(key));
+        configuration.setGuiQuestPreviewDescription_enabled(getGeneralConfigBoolean(
+                "gui.questpreview.description.enabled",
+                true
+        ));
 
-        key = "gui.questpreview.description.slot";
+
+       /* key = "gui.questpreview.description.slot";
         if (!getGeneralConfig().isString("gui.questpreview.description.slot")) {
             getGeneralConfig().set(key, '1');
             valueChanged = true;
         }
-        configuration.setGuiQuestPreviewDescription_slot(getGeneralConfig().getString(key, "1").charAt(0));
+        configuration.setGuiQuestPreviewDescription_slot(getGeneralConfig().getString(key, "1").charAt(0));*/
 
-        key = "gui.show-quest-item-amount";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, false);
-            valueChanged = true;
-        }
-        configuration.showQuestItemAmount = getGeneralConfig().getBoolean(key);
+        configuration.setShowQuestItemAmount(getGeneralConfigBoolean(
+                "gui.show-quest-item-amount",
+                false
+        ));
 
-        key = "gui.show-objective-item-amount";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, true);
-            valueChanged = true;
-        }
-        configuration.showObjectiveItemAmount = getGeneralConfig().getBoolean(key);
+        configuration.setShowObjectiveItemAmount(getGeneralConfigBoolean(
+                "gui.show-objective-item-amount",
+                true
+        ));
 
-        key = "gui.quest-description-max-line-length";
-        if (!getGeneralConfig().isInt(key)) {
-            getGeneralConfig().set(key, 50);
-            valueChanged = true;
-        }
-        configuration.guiQuestDescriptionMaxLineLength = getGeneralConfig().getInt(key);
+        configuration.setGuiQuestDescriptionMaxLineLength(getGeneralConfigInt(
+                "gui.quest-description-max-line-length",
+                50
+        ));
 
-        key = "gui.objective-description-max-line-length";
-        if (!getGeneralConfig().isInt(key)) {
-            getGeneralConfig().set(key, 50);
-            valueChanged = true;
-        }
-        configuration.guiObjectiveDescriptionMaxLineLength = getGeneralConfig().getInt(key);
+        configuration.setGuiObjectiveDescriptionMaxLineLength(getGeneralConfigInt(
+                "gui.objective-description-max-line-length",
+                50
+        ));
 
-        key = "gui.wrap-long-words";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, false);
-            valueChanged = true;
-        }
-        configuration.wrapLongWords = getGeneralConfig().getBoolean(key);
+        configuration.setWrapLongWords(getGeneralConfigBoolean(
+                "gui.wrap-long-words",
+                false
+        ));
+
 
         //Rewards
-        key = "gui.questpreview.rewards.enabled";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, true);
-            valueChanged = true;
-        }
-        configuration.setGuiQuestPreviewRewards_enabled(getGeneralConfig().getBoolean(key));
+        configuration.setGuiQuestPreviewRewards_enabled(getGeneralConfigBoolean(
+                "gui.questpreview.rewards.enabled",
+                true
+        ));
 
-        key = "gui.questpreview.rewards.slot";
+
+        /*key = "gui.questpreview.rewards.slot";
         if (!getGeneralConfig().isString(key)) {
             getGeneralConfig().set(key, '3');
             valueChanged = true;
         }
-        configuration.setGuiQuestPreviewRewards_slot(getGeneralConfig().getString(key, "3").charAt(0));
+        configuration.setGuiQuestPreviewRewards_slot(getGeneralConfig().getString(key, "3").charAt(0));*/
 
         //Requirements
-        key = "gui.questpreview.requirements.enabled";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, true);
-            valueChanged = true;
-        }
-        configuration.setGuiQuestPreviewRequirements_enabled(getGeneralConfig().getBoolean(key));
+        configuration.setGuiQuestPreviewRequirements_enabled(getGeneralConfigBoolean(
+                "gui.questpreview.requirements.enabled",
+                true
+        ));
 
-        key = "gui.questpreview.requirements.slot";
+
+        /*key = "gui.questpreview.requirements.slot";
         if (!getGeneralConfig().isString(key)) {
             getGeneralConfig().set(key, '5');
             valueChanged = true;
         }
-        configuration.setGuiQuestPreviewRequirements_slot(getGeneralConfig().getString(key, "5").charAt(0));
-
-        key = "gui.usercommands.enabled";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, true);
-            valueChanged = true;
-        }
-        configuration.setUserCommandsUseGUI(getGeneralConfig().getBoolean(key));
-
-        key = "placeholders.support_placeholderapi_in_translation_strings";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, false);
-            valueChanged = true;
-        }
-        configuration.supportPlaceholderAPIInTranslationStrings = getGeneralConfig().getBoolean(key);
-
-        key = "placeholders.player_active_quests_list_horizontal.separator";
-        if (!getGeneralConfig().isString(key)) {
-            getGeneralConfig().set(key, " | ");
-            valueChanged = true;
-        }
-        configuration.placeholder_player_active_quests_list_horizontal_separator = getGeneralConfig().getString(key);
-
-        key = "placeholders.player_active_quests_list_horizontal.limit";
-        if (!getGeneralConfig().isInt(key)) {
-            getGeneralConfig().set(key, -1);
-            valueChanged = true;
-        }
-        configuration.placeholder_player_active_quests_list_horizontal_limit = getGeneralConfig().getInt(key);
-
-        key = "placeholders.player_active_quests_list_vertical.limit";
-        if (!getGeneralConfig().isInt(key)) {
-            getGeneralConfig().set(key, -1);
-            valueChanged = true;
-        }
-        configuration.placeholder_player_active_quests_list_vertical_limit = getGeneralConfig().getInt(key);
-
-        key = "placeholders.player_active_quests_list_horizontal.use-displayname-if-available";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, true);
-            valueChanged = true;
-        }
-        configuration.placeholder_player_active_quests_list_horizontal_use_displayname_if_available = getGeneralConfig().getBoolean(key);
-
-        key = "placeholders.player_active_quests_list_vertical.use-displayname-if-available";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, true);
-            valueChanged = true;
-        }
-        configuration.placeholder_player_active_quests_list_vertical_use_displayname_if_available = getGeneralConfig().getBoolean(key);
+        configuration.setGuiQuestPreviewRequirements_slot(getGeneralConfig().getString(key, "5").charAt(0));*/
 
 
-        key = "integrations.citizens.enabled";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, true);
-            valueChanged = true;
-        }
-        configuration.setIntegrationCitizensEnabled(getGeneralConfig().getBoolean(key));
+        configuration.setUserCommandsUseGUI(getGeneralConfigBoolean(
+                "gui.usercommands.enabled",
+                true
+        ));
 
-        key = "integrations.vault.enabled";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, true);
-            valueChanged = true;
-        }
-        configuration.setIntegrationVaultEnabled(getGeneralConfig().getBoolean(key));
+        configuration.setSupportPlaceholderAPIInTranslationStrings(getGeneralConfigBoolean(
+                "placeholders.support_placeholderapi_in_translation_strings",
+                true
+        ));
 
-        key = "integrations.placeholderapi.enabled";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, true);
-            valueChanged = true;
-        }
-        configuration.setIntegrationPlaceholderAPIEnabled(getGeneralConfig().getBoolean(key));
 
-        key = "integrations.mythicmobs.enabled";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, true);
-            valueChanged = true;
-        }
-        configuration.setIntegrationMythicMobsEnabled(getGeneralConfig().getBoolean(key));
+        configuration.setPlaceholder_player_active_quests_list_horizontal_separator(getGeneralConfigString(
+                "placeholders.player_active_quests_list_horizontal.separator",
+                " | "
+        ));
 
-        key = "integrations.elitemobs.enabled";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, true);
-            valueChanged = true;
-        }
-        configuration.setIntegrationEliteMobsEnabled(getGeneralConfig().getBoolean(key));
+        configuration.setPlaceholder_player_active_quests_list_horizontal_limit(getGeneralConfigInt(
+                "placeholders.player_active_quests_list_horizontal.limit",
+                -1
+        ));
 
-        key = "integrations.betonquest.enabled";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, true);
-            valueChanged = true;
-        }
-        configuration.setIntegrationBetonQuestEnabled(getGeneralConfig().getBoolean(key));
+        configuration.setPlaceholder_player_active_quests_list_vertical_limit(getGeneralConfigInt(
+                "placeholders.player_active_quests_list_vertical.limit",
+                -1
+        ));
 
-        key = "integrations.worldedit.enabled";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, true);
-            valueChanged = true;
-        }
-        configuration.setIntegrationWorldEditEnabled(getGeneralConfig().getBoolean(key));
+        configuration.setPlaceholder_player_active_quests_list_horizontal_use_displayname_if_available(getGeneralConfigBoolean(
+                "placeholders.player_active_quests_list_horizontal.use-displayname-if-available",
+                true
+        ));
 
-        key = "integrations.slimefun.enabled";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, true);
-            valueChanged = true;
-        }
-        configuration.setIntegrationSlimeFunEnabled(getGeneralConfig().getBoolean(key));
+        configuration.setPlaceholder_player_active_quests_list_vertical_use_displayname_if_available(getGeneralConfigBoolean(
+                "placeholders.player_active_quests_list_vertical.use-displayname-if-available",
+                true
+        ));
 
-        key = "integrations.luckperms.enabled";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, true);
-            valueChanged = true;
-        }
-        configuration.setIntegrationLuckPermsEnabled(getGeneralConfig().getBoolean(key));
 
-        key = "integrations.ultimateclans.enabled";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, true);
-            valueChanged = true;
-        }
-        configuration.setIntegrationUltimateClansEnabled(getGeneralConfig().getBoolean(key));
+        configuration.setIntegrationCitizensEnabled(getGeneralConfigBoolean(
+                "integrations.citizens.enabled",
+                true
+        ));
 
-        key = "integrations.towny.enabled";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, true);
-            valueChanged = true;
-        }
-        configuration.setIntegrationTownyEnabled(getGeneralConfig().getBoolean(key));
+        configuration.setIntegrationVaultEnabled(getGeneralConfigBoolean(
+                "integrations.vault.enabled",
+                true
+        ));
 
-        key = "integrations.jobs-reborn.enabled";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, true);
-            valueChanged = true;
-        }
-        configuration.setIntegrationJobsRebornEnabled(getGeneralConfig().getBoolean(key));
+        configuration.setIntegrationPlaceholderAPIEnabled(getGeneralConfigBoolean(
+                "integrations.placeholderapi.enabled",
+                true
+        ));
 
-        key = "integrations.project-korra.enabled";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, true);
-            valueChanged = true;
-        }
-        configuration.setIntegrationProjectKorraEnabled(getGeneralConfig().getBoolean(key));
+        configuration.setIntegrationMythicMobsEnabled(getGeneralConfigBoolean(
+                "integrations.mythicmobs.enabled",
+                true
+        ));
 
-        key = "integrations.ecoBosses.enabled";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, true);
-            valueChanged = true;
-        }
-        configuration.setIntegrationEcoBossesEnabled(getGeneralConfig().getBoolean(key));
+        configuration.setIntegrationEliteMobsEnabled(getGeneralConfigBoolean(
+                "integrations.elitemobs.enabled",
+                true
+        ));
 
-        key = "visual.fancy-command-completion.actionbar-enabled";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, true);
-            valueChanged = true;
-        }
-        configuration.setActionBarFancyCommandCompletionEnabled(getGeneralConfig().getBoolean(key));
+        configuration.setIntegrationBetonQuestEnabled(getGeneralConfigBoolean(
+                "integrations.betonquest.enabled",
+                true
+        ));
 
-        key = "visual.fancy-command-completion.title-enabled";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, false);
-            valueChanged = true;
-        }
-        configuration.setTitleFancyCommandCompletionEnabled(getGeneralConfig().getBoolean(key));
+        configuration.setIntegrationWorldEditEnabled(getGeneralConfigBoolean(
+                "integrations.worldedit.enabled",
+                true
+        ));
 
-        key = "visual.fancy-command-completion.bossbar-enabled";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, false);
-            valueChanged = true;
-        }
-        configuration.setBossBarFancyCommandCompletionEnabled(getGeneralConfig().getBoolean(key));
+        configuration.setIntegrationSlimeFunEnabled(getGeneralConfigBoolean(
+                "integrations.slimefun.enabled",
+                true
+        ));
 
-        key = "visual.fancy-command-completion.max-previous-arguments-displayed";
-        if (!getGeneralConfig().isInt(key)) {
-            getGeneralConfig().set(key, 2);
-            valueChanged = true;
-        }
-        configuration.setFancyCommandCompletionMaxPreviousArgumentsDisplayed(getGeneralConfig().getInt(key));
+        configuration.setIntegrationLuckPermsEnabled(getGeneralConfigBoolean(
+                "integrations.luckperms.enabled",
+                true
+        ));
 
-        key = "general.enable-move-event";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, true);
-            valueChanged = true;
-        }
-        configuration.setMoveEventEnabled(getGeneralConfig().getBoolean(key));
+        configuration.setIntegrationUltimateClansEnabled(getGeneralConfigBoolean(
+                "integrations.ultimateclans.enabled",
+                true
+        ));
 
-        key = "general.journal-item.enabled-worlds";
-        if (!getGeneralConfig().isList(key)) {
-            getGeneralConfig().set(key, List.of(""));
-            valueChanged = true;
-        }
-        configuration.journalItemEnabledWorlds = getGeneralConfig().getStringList(key);
+        configuration.setIntegrationTownyEnabled(getGeneralConfigBoolean(
+                "integrations.towny.enabled",
+                true
+        ));
 
-        key = "general.journal-item.inventory-slot";
-        if (!getGeneralConfig().isInt(key)) {
-            getGeneralConfig().set(key, 8);
-            valueChanged = true;
-        }
-        configuration.journalInventorySlot = getGeneralConfig().getInt(key);
+        configuration.setIntegrationJobsRebornEnabled(getGeneralConfigBoolean(
+                "integrations.jobs-reborn.enabled",
+                true
+        ));
 
-        key = "general.journal-item.item";
+        configuration.setIntegrationProjectKorraEnabled(getGeneralConfigBoolean(
+                "integrations.project-korra.enabled",
+                true
+        ));
+
+        configuration.setIntegrationEcoBossesEnabled(getGeneralConfigBoolean(
+                "integrations.ecoBosses.enabled",
+                true
+        ));
+
+
+        configuration.setActionBarFancyCommandCompletionEnabled(getGeneralConfigBoolean(
+                "visual.fancy-command-completion.actionbar-enabled",
+                true
+        ));
+
+        configuration.setTitleFancyCommandCompletionEnabled(getGeneralConfigBoolean(
+                "visual.fancy-command-completion.title-enabled",
+                false
+        ));
+
+        configuration.setBossBarFancyCommandCompletionEnabled(getGeneralConfigBoolean(
+                "visual.fancy-command-completion.bossbar-enabled",
+                false
+        ));
+
+        configuration.setFancyCommandCompletionMaxPreviousArgumentsDisplayed(getGeneralConfigInt(
+                "visual.fancy-command-completion.max-previous-arguments-displayed",
+                2
+        ));
+
+
+        configuration.setMoveEventEnabled(getGeneralConfigBoolean(
+                "general.enable-move-event",
+                true
+        ));
+
+        configuration.setJournalItemEnabledWorlds(getGeneralConfigStringList(
+                "general.journal-item.enabled-worlds",
+                List.of("")
+        ));
+
+        configuration.setJournalInventorySlot(getGeneralConfigInt(
+                "general.journal-item.inventory-slot",
+                8
+        ));
+
         ItemStack journal = new ItemStack(Material.ENCHANTED_BOOK, 1);
         ItemMeta im = journal.getItemMeta();
         ArrayList<Component> lore = new ArrayList<>();
-        lore.add(main.parse("<GRAY>A book containing all your quest information"));
+        lore.add(main.parse("<GRAY>A book containing all your quest information").decoration(TextDecoration.ITALIC, false));
         if (im != null) {
             im.displayName(main.parse(
                     "<BLUE><ITALIC>Journal"
@@ -1166,79 +1003,67 @@ public class DataManager {
             im.lore(lore);
         }
         journal.setItemMeta(im);
-        if (!getGeneralConfig().isItemStack(key)) {
-            getGeneralConfig().set(key, journal);
-            valueChanged = true;
-        }
+        configuration.setJournalItem(getGeneralConfigItemStack(
+                "general.journal-item.item",
+                journal
+        ));
 
 
-        configuration.journalItem = getGeneralConfig().getItemStack(key);
+        configuration.setPacketMagic(getGeneralConfigBoolean(
+                "general.packet-magic.enabled",
+                true
+        ));
 
-        key = "general.packet-magic.enabled";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, true);
-            valueChanged = true;
-        }
-        configuration.packetMagic = getGeneralConfig().getBoolean(key);
+        configuration.setUsePacketEvents(getGeneralConfigString(
+                "general.packet-magic.mode",
+                "internal"
+        ).equalsIgnoreCase("packetevents"));
 
-        key = "general.packet-magic.mode";
-        if (!getGeneralConfig().isString(key)) {
-            getGeneralConfig().set(key, "internal");
-            valueChanged = true;
-        }
-        configuration.usePacketEvents = getGeneralConfig().getString(key, "internal").equalsIgnoreCase("packetevents");
 
-        key = "general.packet-magic.unsafe-disregard-version";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, true);
-            valueChanged = true;
-        }
-        configuration.packetMagicUnsafeDisregardVersion = getGeneralConfig().getBoolean(key);
+        configuration.setPacketMagicUnsafeDisregardVersion(getGeneralConfigBoolean(
+                "general.packet-magic.unsafe-disregard-version",
+                false
+        ));
+
 
         main.getLogManager().info("Detected version: " + Bukkit.getBukkitVersion() + " <highlight>(Paper)");
 
         if (!Bukkit.getBukkitVersion().contains("1.18") && !Bukkit.getBukkitVersion().contains("1.17")) {
-            if (configuration.packetMagicUnsafeDisregardVersion) {
-                configuration.packetMagic = false;
+            if (configuration.isPacketMagicUnsafeDisregardVersion()) {
+                configuration.setPacketMagic(false);
                 main.getLogManager().info("Packet magic has been disabled, because you are using an unsupported bukkit version...");
             } else {
                 main.getLogManager().info("You are using an unsupported version for packet magic. However, because the unsafe-disregard-version flag which is set to true in your config, we will try to do some packet magic anyways. Let's hope it works - good luck!");
             }
         }
 
-        key = "general.packet-magic.conversations.delete-previous";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, true);
-            valueChanged = true;
-        }
-        configuration.deletePreviousConversations = getGeneralConfig().getBoolean(key);
+        configuration.setDeletePreviousConversations(getGeneralConfigBoolean(
+                "general.packet-magic.conversations.delete-previous",
+                true
+        ));
 
-        key = "general.packet-magic.conversations.history-size";
-        if (!getGeneralConfig().isInt(key)) {
-            getGeneralConfig().set(key, 20);
-            valueChanged = true;
-        }
-        configuration.previousConversationsHistorySize = getGeneralConfig().getInt(key);
+        configuration.setPreviousConversationsHistorySize(getGeneralConfigInt(
+                "general.packet-magic.conversations.history-size",
+                20
+        ));
 
+        configuration.setUpdateCheckerNotifyOpsInChat(getGeneralConfigBoolean(
+                "general.update-checker.notify-ops-in-chat",
+                true
+        ));
 
-        key = "general.update-checker.notify-ops-in-chat";
-        if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, true);
-            valueChanged = true;
-        }
-        configuration.setUpdateCheckerNotifyOpsInChat(getGeneralConfig().getBoolean(key));
 
 
 
         //Do potential data updating here
         /////
         //Now update config version value, assuming everything is updated
-        key = "config-version-do-not-edit";
-        if (getGeneralConfig().isString(key)) {
-            getGeneralConfig().set(key, main.getMain().getDescription().getVersion());
+        if (!getGeneralConfig().isString("config-version-do-not-edit") ||
+           (getGeneralConfig().isString("config-version-do-not-edit") && !getGeneralConfig().getString("config-version-do-not-edit", "").equalsIgnoreCase(main.getMain().getDescription().getVersion()) )) {
+            getGeneralConfig().set("config-version-do-not-edit", main.getMain().getDescription().getVersion());
             valueChanged = true;
         }
-        configuration.setConfigurationVersion(getGeneralConfig().getString(key));
+        configuration.setConfigurationVersion(getGeneralConfig().getString("config-version-do-not-edit"));
 
 
 
@@ -1252,6 +1077,50 @@ public class DataManager {
         if (errored) {
             disablePluginAndSaving("Please specify your database information");
         }
+    }
+
+    public String getGeneralConfigString(String key, String defaultValue){
+        if (getGeneralConfig().isString(key)) {
+            getGeneralConfig().set(key, defaultValue);
+            valueChanged = true;
+        }
+        return getGeneralConfig().getString(key);
+    }
+    public boolean getGeneralConfigBoolean(String key, boolean defaultValue){
+        if (getGeneralConfig().isBoolean(key)) {
+            getGeneralConfig().set(key, defaultValue);
+            valueChanged = true;
+        }
+        return getGeneralConfig().getBoolean(key);
+    }
+    public int getGeneralConfigInt(String key, int defaultValue){
+        if (getGeneralConfig().isInt(key)) {
+            getGeneralConfig().set(key, defaultValue);
+            valueChanged = true;
+        }
+        return getGeneralConfig().getInt(key);
+    }
+    public double getGeneralConfigDouble(String key, double defaultValue){
+        if (getGeneralConfig().isDouble(key)) {
+            getGeneralConfig().set(key, defaultValue);
+            valueChanged = true;
+        }
+        return getGeneralConfig().getDouble(key);
+    }
+    public ItemStack getGeneralConfigItemStack(String key, ItemStack defaultValue){
+        if (getGeneralConfig().isItemStack(key)) {
+            getGeneralConfig().set(key, defaultValue);
+            valueChanged = true;
+        }
+        return getGeneralConfig().getItemStack(key);
+    }
+
+    public List<String> getGeneralConfigStringList(String key, List<String> defaultValue){
+        if (getGeneralConfig().isList(key)) {
+            getGeneralConfig().set(key, defaultValue);
+            valueChanged = true;
+        }
+        return getGeneralConfig().getStringList(key);
     }
 
 
