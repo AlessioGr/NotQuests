@@ -24,6 +24,8 @@ chat:
   quest-completed-rewards-prefix: '    <highlight>Belohnungen:'
   quest-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
   quest-completed-rewards-suffix: <EMPTY>
+  quest-not-all-requirements-fulfilled: '<negative>Du erfüllst nicht alle Voraussetzungen, die diese Quest benötigt! Die Voraussetzungen werden noch benötigt:'
+  action-not-all-conditions-fulfilled: '<negative>Du erfüllst nicht alle Bedingungen, die diese Aktion benötigt! Die Voraussetzungen werden noch benötigt:'
   missing-quest-description: <unimportant>Diese Quest hat keine Beschreibung
   objectives-label-after-quest-accepting: '<highlight>Aufgaben:'
   questpoints:
@@ -67,6 +69,11 @@ chat:
         base: '    <veryUnimportant>└─ <unimportant>Items craften: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
         base: '    <veryUnimportant>└─ <unimportant>Items liefern: <main>%ITEMTODELIVERTYPE% %(%%ITEMTODELIVERNAME%%)%'
+        deliver-to-npc: '      <GRAY>Bringe es zu <WHITE>%NPCNAME%'
+        deliver-to-npc-not-available: '      <GRAY>Der Empfänger-NPC ist derzeit nicht verfügbar!'
+        deliver-to-npc-citizens-not-found: '    <RED>Fehler: Das Citizens Plugin ist nicht installiert. Bitte kontaktiere einen Admin.'
+        deliver-to-armorstand: '    <GRAY>Bringe es zu <WHITE>%ARMORSTANDNAME%'
+        deliver-to-armorstand-not-available: '    <GRAY>Der Empfänger-NPC ist derzeit nicht verfügbar!'
       escortNPC:
         base: '    <veryUnimportant>└─ <unimportant>Eskortiere <main>%NPCNAME% <unimportant>zu <main>%DESTINATIONNPCNAME%'
       killMobs:
@@ -106,9 +113,19 @@ chat:
       ProjectKorraUseAbility:
         base: '    <veryUnimportant>└─ <unimportant>Fähigkeit nutzen: <main>%ABILITY%'
       BetonQuestCompleteObjective:
-        base: '    <veryUnimportant>└─ <unimportant>Finish Objective: <main>%BETONQUESTOBJECTIVENAME%'
+        base: '    <veryUnimportant>└─ <unimportant>Aufgabe fertigstellen: <main>%BETONQUESTOBJECTIVENAME%'
+  conditions:
+    boolean:
+      not-fulfilled: "<warn>Folgendes muss %BOOLEANREQUIREMENT% sein: <highlight>%VARIABLESINGULAR%</highlight>."
+      variable-not-found: "<error>Fehler: Die Variable <highlight>%VARIABLENAME%</highlight> wurde nicht gefunden. Bitte melde das an den Serverbesitzer."
+      wrong-operator: "<error>Fehler: Der Variablen-Operator <highlight>%OPERATOR%/highlight> ist nicht gültig. Bitte melde das an den Serverbesitzer."
 objective-tracking:
-  actionbar-progress-update: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
+  actionbar-progress-update:
+    default: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
+    only-one-max-progress: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
+  bossbar-progress-update:
+    default: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
+    only-one-max-progress: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
 titles:
   quest-accepted:
     title: <main>Quest Akzeptiert

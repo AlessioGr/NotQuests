@@ -24,6 +24,8 @@ chat:
   quest-completed-rewards-prefix: '    <highlight>Récompenses :'
   quest-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
   quest-completed-rewards-suffix: <EMPTY>
+  quest-not-all-requirements-fulfilled: '<negative>Vous ne remplissez pas toutes les exigences de cette quête! Exigences encore requises:'
+  action-not-all-conditions-fulfilled: '<negative>Vous ne remplissez pas toutes les conditions requises par cette action. Conditions à remplir:'
   missing-quest-description: <unimportant>Cette quête n'a pas de description.
   objectives-label-after-quest-accepting: '<highlight>Objectifs:'
   questpoints:
@@ -67,6 +69,11 @@ chat:
         base: '    <veryUnimportant>└─<unimportant>Fabriquer des Objets : <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
         base: '    <veryUnimportant>└─<unimportant>Livrer des Objets : <main>%ITEMTODELIVERTYPE% %(%ITEMTODELIVERNAME%)'
+        deliver-to-npc: '      <GRAY>Livrez-le à <WHITE>%NPCNAME%'
+        deliver-to-npc-not-available: '      <GRAY>Le PNJ de livraison n''est actuellement pas disponible!'
+        deliver-to-npc-citizens-not-found: '    <RED>Erreur: Le plugin Citizens n''est pas installé. Contactez un administrateur.'
+        deliver-to-armorstand: '    <GRAY>Livrez-le à <WHITE>%ARMORSTANDNAME%'
+        deliver-to-armorstand-not-available: '    <GRAY>Le porte-armure de destination n''est actuellement pas disponible !'
       escortNPC:
         base: '    <veryUnimportant>└─<unimportant>Escorter <main>%NPCNAME%</main> à <main>%DESTINATIONNPCNAME%'
       killMobs:
@@ -106,9 +113,19 @@ chat:
       ProjectKorraUseAbility:
         base: '    <veryUnimportant>└─ <unimportant>Utiliser la capacité : <main>%ABILITY%'
       BetonQuestCompleteObjective:
-        base: '    <veryUnimportant>└─ <unimportant>Finish Objective: <main>%BETONQUESTOBJECTIVENAME%'
+        base: '    <veryUnimportant>└─ <unimportant>Terminer l''Objectif: <main>%BETONQUESTOBJECTIVENAME%'
+  conditions:
+    boolean:
+      not-fulfilled: "<warn>Ce qui suit doit être %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."
+      variable-not-found: "<error>Erreur: variable <highlight>%VARIABLENAME%</highlight> introuvable. Rapportez cet événement à un administrateur."
+      wrong-operator: "<error>Erreur: L'opérateur <highlight>%OPERATOR%/highlight> est invalide. Rapportez cet énénement à un administrateur."
 objective-tracking:
-  actionbar-progress-update: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
+  actionbar-progress-update:
+    default: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
+    only-one-max-progress: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
+  bossbar-progress-update:
+    default: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
+    only-one-max-progress: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
 titles:
   quest-accepted:
     title: <main>Quête acceptée
@@ -161,7 +178,7 @@ gui:
         name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
         lore:
           - "<unimportant>Progression: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<main>Clic pour plus de détails !"
+          - "<main>Cliquer pour afficher les détails !"
   reward-hidden-text: . <unimportant>[CACHÉ]
   availableQuests:
     title: '         <highlight2>Quêtes Disponibles'
@@ -171,13 +188,13 @@ gui:
         name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTER]"
         lore:
           - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
-          - "<main>Clic pour ouvrir la quête !"
+          - "<main>Cliquer pour ouvrir la quête !"
   takeQuestChoose:
     title: <highlight2>Quelle quête voulez-vous prendre?
     button:
       questPreview:
         name-if-not-accepted: "<highlight>%QUESTNAME%"
-        name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTER]"
+        name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTÉE]"
         lore:
           - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
           - "<main>Cliquez pour prévisualiser la quête !"
@@ -188,7 +205,7 @@ gui:
         name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
         lore:
           - "<unimportant>Progression: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<negative>Clic pour abandonner la quête !"
+          - "<negative>Cliquer pour abandonner la quête !"
   abortQuest:
     title: '         <negative>Valider l''abandon de la quête'
     button:
@@ -196,13 +213,13 @@ gui:
         name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
         lore:
           - "<unimportant>Progression: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<negative>Clic pour annuler la quête <highlight>%QUESTNAME%</highlight>!"
+          - "<negative>Cliquer pour annuler la quête <highlight>%QUESTNAME%</highlight>!"
         x: 3
         y: 1
       cancelAbort:
-        name: "<positive>Cliquer n'abandonnera pas la quête"
+        name: "<positive>Cliquer pour NE PAS abandonner la quête"
         lore:
-          - "<positive>mais annulera l'action"
+          - "<positive>et annuler l'action"
         x: 5
         y: 1
   previewQuest:
@@ -235,13 +252,13 @@ gui:
       confirmTake:
         name: "<highlight>%QUESTNAME%"
         lore:
-          - "<positive>Clic pour prendre la quête <highlight>%QUESTNAME%"
+          - "<positive>Cliquer pour prendre la quête <highlight>%QUESTNAME%"
         x: 3
         y: 2
       cancelTake:
-        name: "<negative>Clic pour ne pas prendre la quête"
+        name: "<negative>Cliquer pour NE PAS prendre la quête"
         lore:
-          - "<negative>et annuler votre action"
+          - "<negative>et annuler cette action"
         x: 5
         y: 2
   progress:
