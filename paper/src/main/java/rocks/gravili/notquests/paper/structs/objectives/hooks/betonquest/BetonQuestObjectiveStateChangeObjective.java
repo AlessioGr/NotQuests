@@ -164,9 +164,8 @@ public class BetonQuestObjectiveStateChangeObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
+    public String getObjectiveTaskDescription(final Player player) {
         return main.getLanguageManager().getString("chat.objectives.taskDescription.BetonQuestCompleteObjective.base", player, Map.of(
-                "%EVENTUALCOLOR%", eventualColor,
                 "%BETONQUESTOBJECTIVENAME%", getObjectiveName()
         ));
     }

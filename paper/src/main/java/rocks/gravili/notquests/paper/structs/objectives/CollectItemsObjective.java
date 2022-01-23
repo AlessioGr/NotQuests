@@ -121,7 +121,7 @@ public class CollectItemsObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
+    public String getObjectiveTaskDescription(final Player player) {
         final String displayName;
         if (!isCollectAnyItem()) {
             if (getItemToCollect().getItemMeta() != null) {
@@ -137,7 +137,6 @@ public class CollectItemsObjective extends Objective {
 
         if (!displayName.isBlank()) {
             return main.getLanguageManager().getString("chat.objectives.taskDescription.collectItems.base", player, Map.of(
-                    "%EVENTUALCOLOR%", eventualColor,
                     "%ITEMTOCOLLECTTYPE%", itemType,
                     "%ITEMTOCOLLECTNAME%", displayName,
                     "%(%", "(",
@@ -145,7 +144,6 @@ public class CollectItemsObjective extends Objective {
             ));
         } else {
             return main.getLanguageManager().getString("chat.objectives.taskDescription.collectItems.base", player, Map.of(
-                    "%EVENTUALCOLOR", eventualColor,
                     "%ITEMTOCOLLECTTYPE%", itemType,
                     "%ITEMTOCOLLECTNAME%", "",
                     "%(%", "",

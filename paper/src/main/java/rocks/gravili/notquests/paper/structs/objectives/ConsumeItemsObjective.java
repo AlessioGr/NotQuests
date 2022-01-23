@@ -129,7 +129,7 @@ public class ConsumeItemsObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
+    public String getObjectiveTaskDescription(final Player player) {
         final String displayName;
         if (!isConsumeAnyItem()) {
             if (getItemToConsume().getItemMeta() != null) {
@@ -145,7 +145,6 @@ public class ConsumeItemsObjective extends Objective {
 
         if (!displayName.isBlank()) {
             return main.getLanguageManager().getString("chat.objectives.taskDescription.consumeItems.base", player, Map.of(
-                    "%EVENTUALCOLOR%", eventualColor,
                     "%ITEMTOCONSUMETYPE%", itemType,
                     "%ITEMTOCONSUMENAME%", displayName,
                     "%(%", "(",
@@ -153,7 +152,6 @@ public class ConsumeItemsObjective extends Objective {
             ));
         } else {
             return main.getLanguageManager().getString("chat.objectives.taskDescription.consumeItems.base", player, Map.of(
-                    "%EVENTUALCOLOR%", eventualColor,
                     "%ITEMTOCONSUMETYPE%", itemType,
                     "%ITEMTOCONSUMENAME%", "",
                     "%(%", "",

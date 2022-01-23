@@ -115,9 +115,8 @@ public class JobsRebornReachJobLevel extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
+    public String getObjectiveTaskDescription(final Player player) {
         return main.getLanguageManager().getString("chat.objectives.taskDescription.jobsRebornReachJobLevel.base", player, Map.of(
-                "%EVENTUALCOLOR%", eventualColor,
                 "%AMOUNT%", "" + getLevelToReach(),
                 "%JOB%", getJobName()
         ));

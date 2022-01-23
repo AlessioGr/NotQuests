@@ -102,9 +102,8 @@ public class KillMobsObjective extends Objective {
 
 
     @Override
-    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
+    public String getObjectiveTaskDescription(final Player player) {
         return main.getLanguageManager().getString("chat.objectives.taskDescription.killMobs.base", player, Map.of(
-                "%EVENTUALCOLOR%", eventualColor,
                 "%MOBTOKILL%", getMobToKill()
         ));
     }

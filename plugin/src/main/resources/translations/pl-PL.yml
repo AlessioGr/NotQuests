@@ -56,57 +56,57 @@ chat:
     successfully-completed-rewards-suffix: <EMPTY>
     taskDescription:
       breakBlocks:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Zniszcz Klocki: <main>%EVENTUALCOLOR%%BLOCKTOBREAK%'
+        base: '    <veryUnimportant>└─ <unimportant>Zniszcz Klocki: <main>%BLOCKTOBREAK%'
       breed:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Rozmnóż Moby: <main>%EVENTUALCOLOR%%ENTITYTOBREED%'
+        base: '    <veryUnimportant>└─ <unimportant>Rozmnóż Moby: <main>%ENTITYTOBREED%'
       collectItems:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Zbierz Przedmioty: <main>%EVENTUALCOLOR%%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
+        base: '    <veryUnimportant>└─ <unimportant>Zbierz Przedmioty: <main>%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
       consumeItems:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Sporzyj Przedmioty: <main>%EVENTUALCOLOR%%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
+        base: '    <veryUnimportant>└─ <unimportant>Sporzyj Przedmioty: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Stwórz Przedmioty: <main>%EVENTUALCOLOR%%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
+        base: '    <veryUnimportant>└─ <unimportant>Stwórz Przedmioty: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Dostarcz Przedmioty: <main>%EVENTUALCOLOR%%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
+        base: '    <veryUnimportant>└─ <unimportant>Dostarcz Przedmioty: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
       escortNPC:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Eskortuj: <main>%EVENTUALCOLOR%%NPCNAME%</main> %EVENTUALCOLOR%to <main>%EVENTUALCOLOR%%DESTINATIONNPCNAME%'
+        base: '    <veryUnimportant>└─ <unimportant>Eskortuj: <main>%NPCNAME%</main> to <main>%DESTINATIONNPCNAME%'
       killMobs:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Zabij Moby: <main>%EVENTUALCOLOR%%MOBTOKILL%'
+        base: '    <veryUnimportant>└─ <unimportant>Zabij Moby: <main>%MOBTOKILL%'
       otherQuest:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Ukończ Questa: <main>%EVENTUALCOLOR%%OTHERQUESTNAME%'
+        base: '    <veryUnimportant>└─ <unimportant>Ukończ Questa: <main>%OTHERQUESTNAME%'
       placeBlocks:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Postaw Klocki: <main>%EVENTUALCOLOR%%BLOCKTOPLACE%'
+        base: '    <veryUnimportant>└─ <unimportant>Postaw Klocki: <main>%BLOCKTOPLACE%'
       reachLocation:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Dotrzyj do Lokacji: <main>%EVENTUALCOLOR%%LOCATIONNAME%'
+        base: '    <veryUnimportant>└─ <unimportant>Dotrzyj do Lokacji: <main>%LOCATIONNAME%'
       talkToNPC:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Porozmawiaj z: <main>%EVENTUALCOLOR%%NAME%'
+        base: '    <veryUnimportant>└─ <unimportant>Porozmawiaj z: <main>%NAME%'
       triggerCommand:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Cel: <main>%EVENTUALCOLOR%%TRIGGERNAME%'
+        base: '    <veryUnimportant>└─ <unimportant>Cel: <main>%TRIGGERNAME%'
       killEliteMobs:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Zabij Elitarne Moby: <main>%EVENTUALCOLOR%%ELITEMOBNAME%'
-        any: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Zabij jakiego kolwiek Elitarnego Moba!'
+        base: '    <veryUnimportant>└─ <unimportant>Zabij Elitarne Moby: <main>%ELITEMOBNAME%'
+        any: '    <veryUnimportant>└─ <unimportant>Zabij jakiego kolwiek Elitarnego Moba!'
       runCommand:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Użyj komendy: <main>%EVENTUALCOLOR%%COMMANDTORUN%'
+        base: '    <veryUnimportant>└─ <unimportant>Użyj komendy: <main>%COMMANDTORUN%'
       interact:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%%INTERACTTYPE%Lokacja: <main>%EVENTUALCOLOR%%COORDINATES% <main>%EVENTUALCOLOR%w świecie %EVENTUALCOLOR%%WORLDNAME%'
-        taskDescriptionProvided: '    <veryUnimportant>└─ <GRAY>%EVENTUALCOLOR%%TASKDESCRIPTION%'
+        base: '    <veryUnimportant>└─ <unimportant>%INTERACTTYPE%Lokacja: <main>%COORDINATES% <main>w świecie %WORLDNAME%'
+        taskDescriptionProvided: '    <veryUnimportant>└─ <GRAY>%TASKDESCRIPTION%'
       jump:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Skocz <main>%EVENTUALCOLOR%%AMOUNTOFJUMPS%</main> %EVENTUALCOLOR%razy'
+        base: '    <veryUnimportant>└─ <unimportant>Skocz <main>%AMOUNTOFJUMPS%</main> razy'
       sneak:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Skradaj się <main>%EVENTUALCOLOR%%AMOUNTOFSNEAKS%</main> %EVENTUALCOLOR%razy'
+        base: '    <veryUnimportant>└─ <unimportant>Skradaj się <main>%AMOUNTOFSNEAKS%</main> razy'
       smelt:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Przetop Przedmioty: <main>%EVENTUALCOLOR%%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+        base: '    <veryUnimportant>└─ <unimportant>Przetop Przedmioty: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       townyReachResidentCount:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Osiągnij ilość mieszkańców: <main>%EVENTUALCOLOR%%AMOUNT%'
+        base: '    <veryUnimportant>└─ <unimportant>Osiągnij ilość mieszkańców: <main>%AMOUNT%'
       townyNationReachTownCount:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Osiągnij ilość miast ze swoją nacją: <main>%EVENTUALCOLOR%%AMOUNT%'
+        base: '    <veryUnimportant>└─ <unimportant>Osiągnij ilość miast ze swoją nacją: <main>%AMOUNT%'
       jobsRebornReachJobLevel:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Osiągnij poziom pracy <main>%EVENTUALCOLOR%%AMOUNT%</main> w <main>%EVENTUALCOLOR%%JOB%'
+        base: '    <veryUnimportant>└─ <unimportant>Osiągnij poziom pracy <main>%AMOUNT%</main> w <main>%JOB%'
       SlimefunResearch:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Wydaj na badania'
+        base: '    <veryUnimportant>└─ <unimportant>Wydaj na badania'
       ProjectKorraUseAbility:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Użyj Umiejętności: <main>%EVENTUALCOLOR%%ABILITY%'
+        base: '    <veryUnimportant>└─ <unimportant>Użyj Umiejętności: <main>%ABILITY%'
       BetonQuestCompleteObjective:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Finish Objective: <main>%EVENTUALCOLOR%%BETONQUESTOBJECTIVENAME%'
+        base: '    <veryUnimportant>└─ <unimportant>Finish Objective: <main>%BETONQUESTOBJECTIVENAME%'
 objective-tracking:
   actionbar-progress-update: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
 titles:

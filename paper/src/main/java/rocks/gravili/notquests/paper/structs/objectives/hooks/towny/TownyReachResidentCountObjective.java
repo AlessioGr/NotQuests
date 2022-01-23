@@ -81,9 +81,8 @@ public class TownyReachResidentCountObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
+    public String getObjectiveTaskDescription(final Player player) {
         return main.getLanguageManager().getString("chat.objectives.taskDescription.townyReachResidentCount.base", player, Map.of(
-                "%EVENTUALCOLOR%", eventualColor,
                 "%AMOUNT%", "" + getAmountOfResidentsToReach()
         ));
     }

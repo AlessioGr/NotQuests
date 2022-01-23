@@ -129,7 +129,7 @@ public class EscortNPCObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
+    public String getObjectiveTaskDescription(final Player player) {
         String toReturn = "";
         if (main.getIntegrationsManager().isCitizensEnabled()) {
             final NPC npc = CitizensAPI.getNPCRegistry().getById(getNpcToEscortID());
@@ -137,12 +137,11 @@ public class EscortNPCObjective extends Objective {
 
             if (npc != null && npcDestination != null) {
                 toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.escortNPC.base", player, Map.of(
-                        "%EVENTUALCOLOR%", eventualColor,
                         "%NPCNAME%", npc.getName(),
                         "%DESTINATIONNPCNAME%", npcDestination.getName()
                 ));
             } else {
-                toReturn = "    <GRAY>" + eventualColor + "The target or destination NPC is currently not available!";
+                toReturn = "    <GRAY>The target or destination NPC is currently not available!";
             }
         } else {
             toReturn += "    <RED>Error: Citizens plugin not installed. Contact an admin.";

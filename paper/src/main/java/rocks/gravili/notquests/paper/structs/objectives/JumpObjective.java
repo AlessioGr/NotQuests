@@ -65,9 +65,8 @@ public class JumpObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
+    public String getObjectiveTaskDescription(final Player player) {
         return main.getLanguageManager().getString("chat.objectives.taskDescription.jump.base", player, Map.of(
-                "%EVENTUALCOLOR%", eventualColor,
                 "%AMOUNTOFJUMPS%", ""+getAmountToJump()
         ));
     }

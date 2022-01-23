@@ -99,7 +99,7 @@ public class BreakBlocksObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
+    public String getObjectiveTaskDescription(final Player player) {
         String translatedMaterialName;
         try{
             translatedMaterialName = "<lang:" + Material.valueOf(getBlockToBreakMaterial()).translationKey() + ">";
@@ -111,7 +111,6 @@ public class BreakBlocksObjective extends Objective {
 
 
         return main.getLanguageManager().getString("chat.objectives.taskDescription.breakBlocks.base", player, Map.of(
-                "%EVENTUALCOLOR%", eventualColor,
                 "%BLOCKTOBREAK%", getBlockToBreakMaterial()
         ));
     }

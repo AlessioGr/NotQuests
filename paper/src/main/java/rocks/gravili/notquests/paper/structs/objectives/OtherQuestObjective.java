@@ -70,9 +70,8 @@ public class OtherQuestObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
+    public String getObjectiveTaskDescription(final Player player) {
         return main.getLanguageManager().getString("chat.objectives.taskDescription.otherQuest.base", player, Map.of(
-                "%EVENTUALCOLOR%", eventualColor,
                 "%OTHERQUESTNAME%", getOtherQuest().getQuestName()
         ));
     }

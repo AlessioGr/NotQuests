@@ -131,7 +131,7 @@ public class InteractObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
+    public String getObjectiveTaskDescription(final Player player) {
         String toReturn;
         String interactType = "";
         if (isLeftClick()) {
@@ -151,7 +151,6 @@ public class InteractObjective extends Objective {
 
         if (taskDescription.isBlank()) {
             toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.interact.base", player, Map.of(
-                    "%EVENTUALCOLOR%", eventualColor,
                     "%INTERACTTYPE%", interactType,
                     "%COORDINATES%", "X: " + getLocationToInteract().getX() + " Y: " + getLocationToInteract().getY() + " Z: " + getLocationToInteract().getZ(),
                     "%WORLDNAME%", worldName
@@ -159,7 +158,6 @@ public class InteractObjective extends Objective {
         } else {
             toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.interact.taskDescriptionProvided", player, Map.of(
                     "%TASKDESCRIPTION%", getTaskDescription(),
-                    "%EVENTUALCOLOR%", eventualColor,
                     "%INTERACTTYPE%", interactType,
                     "%COORDINATES%", "X: " + getLocationToInteract().getX() + " Y: " + getLocationToInteract().getY() + " Z: " + getLocationToInteract().getZ(),
                     "%WORLDNAME%", worldName

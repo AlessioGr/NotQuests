@@ -128,7 +128,7 @@ public class CraftItemsObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
+    public String getObjectiveTaskDescription(final Player player) {
         final String displayName;
         if (!isCraftAnyItem()) {
             if (getItemToCraft().getItemMeta() != null) {
@@ -145,7 +145,6 @@ public class CraftItemsObjective extends Objective {
 
         if (!displayName.isBlank()) {
             return main.getLanguageManager().getString("chat.objectives.taskDescription.craftItems.base", player, Map.of(
-                    "%EVENTUALCOLOR%", eventualColor,
                     "%ITEMTOCRAFTTYPE%", itemType,
                     "%ITEMTOCRAFTNAME%", displayName,
                     "%(%", "(",
@@ -153,7 +152,6 @@ public class CraftItemsObjective extends Objective {
             ));
         } else {
             return main.getLanguageManager().getString("chat.objectives.taskDescription.craftItems.base", player, Map.of(
-                    "%EVENTUALCOLOR%", eventualColor,
                     "%ITEMTOCRAFTTYPE%", itemType,
                     "%ITEMTOCRAFTNAME%", displayName,
                     "%(%", "",

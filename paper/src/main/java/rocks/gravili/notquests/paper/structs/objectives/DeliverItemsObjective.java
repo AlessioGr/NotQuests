@@ -277,7 +277,7 @@ public class DeliverItemsObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
+    public String getObjectiveTaskDescription(final Player player) {
         final String displayName;
         if (!isDeliverAnyItem()) {
             if (getItemToDeliver().getItemMeta() != null) {
@@ -295,7 +295,6 @@ public class DeliverItemsObjective extends Objective {
         String toReturn;
         if (!displayName.isBlank()) {
             toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.base", player, Map.of(
-                    "%EVENTUALCOLOR%", eventualColor,
                     "%ITEMTODELIVERTYPE%", itemType,
                     "%ITEMTODELIVERNAME%", displayName,
                     "%(%", "(",
@@ -303,7 +302,6 @@ public class DeliverItemsObjective extends Objective {
             ));
         } else {
             toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.base", player, Map.of(
-                    "%EVENTUALCOLOR%", eventualColor,
                     "%ITEMTODELIVERTYPE%", itemType,
                     "%ITEMTODELIVERNAME%", "",
                     "%(%", "",
@@ -315,9 +313,9 @@ public class DeliverItemsObjective extends Objective {
         if (main.getIntegrationsManager().isCitizensEnabled() && getRecipientNPCID() != -1) {
             final NPC npc = CitizensAPI.getNPCRegistry().getById(getRecipientNPCID());
             if (npc != null) {
-                toReturn += "\n      <GRAY>" + eventualColor + "Deliver it to <WHITE>" + eventualColor + npc.getName();
+                toReturn += "\n      <GRAY>Deliver it to <WHITE>" + npc.getName();
             } else {
-                toReturn += "\n      <GRAY>" + eventualColor + "The delivery NPC is currently not available!";
+                toReturn += "\n      <GRAY>The delivery NPC is currently not available!";
             }
         } else {
 
@@ -326,9 +324,9 @@ public class DeliverItemsObjective extends Objective {
             } else { //Armor Stands
                 final UUID armorStandUUID = getRecipientArmorStandUUID();
                 if (armorStandUUID != null) {
-                    toReturn += "\n    <GRAY>" + eventualColor + "Deliver it to <WHITE>" + eventualColor + main.getArmorStandManager().getArmorStandName(armorStandUUID);
+                    toReturn += "\n    <GRAY>Deliver it to <WHITE>" + main.getArmorStandManager().getArmorStandName(armorStandUUID);
                 } else {
-                    toReturn += "\n    <GRAY>" + eventualColor + "The target Armor Stand is currently not available!";
+                    toReturn += "\n    <GRAY>The target Armor Stand is currently not available!";
                 }
             }
 

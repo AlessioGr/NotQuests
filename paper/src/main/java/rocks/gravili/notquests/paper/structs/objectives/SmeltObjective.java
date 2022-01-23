@@ -128,7 +128,7 @@ public class SmeltObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
+    public String getObjectiveTaskDescription(final Player player) {
         final String displayName;
         if (!isSmeltAnyItem()) {
             if (getItemToSmelt().getItemMeta() != null) {
@@ -146,7 +146,6 @@ public class SmeltObjective extends Objective {
 
         if (!displayName.isBlank()) {
             return main.getLanguageManager().getString("chat.objectives.taskDescription.smelt.base", player, Map.of(
-                    "%EVENTUALCOLOR%", eventualColor,
                     "%ITEMTOSMELTTYPE%", itemType,
                     "%ITEMTOSMELTNAME%", displayName,
                     "%(%", "(",
@@ -154,7 +153,6 @@ public class SmeltObjective extends Objective {
             ));
         } else {
             return main.getLanguageManager().getString("chat.objectives.taskDescription.smelt.base", player, Map.of(
-                    "%EVENTUALCOLOR%", eventualColor,
                     "%ITEMTOSMELTTYPE%", itemType,
                     "%ITEMTOSMELTNAME%", "",
                     "%(%", "",
