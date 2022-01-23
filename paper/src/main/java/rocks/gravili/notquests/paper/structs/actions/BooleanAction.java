@@ -191,7 +191,7 @@ public class BooleanAction extends Action {
         Variable<?> variable = main.getVariablesManager().getVariableFromString(variableName);
 
         if(variable == null){
-            main.sendMessage(player, "<ERROR>Error: variable </highlight>" + variableName + "<highlight> not found. Report this to the Server owner.");
+            main.sendMessage(player, "<ERROR>Error: variable <highlight>" + variableName + "</highlight> not found. Report this to the Server owner.");
             return;
         }
 

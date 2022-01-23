@@ -48,7 +48,7 @@ chat:
     progress: '   <highlight>Fortschritt: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
     successfully-completed: |2
 
-      <CENTER><success>[Objective Completed]
+      <CENTER><success>[Aufgabe Abgeschlossen]
       <CENTER><highlight><bold>%OBJECTIVENAME%</bold> <RESET><main>(%QUESTNAME%)
       <EMPTY>
     successfully-completed-rewards-prefix: '    <highlight>Belohnungen:'

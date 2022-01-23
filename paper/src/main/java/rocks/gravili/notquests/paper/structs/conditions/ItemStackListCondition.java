@@ -98,7 +98,7 @@ public class ItemStackListCondition extends Condition {
         Variable<?> variable = main.getVariablesManager().getVariableFromString(variableName);
 
         if(variable == null){
-            return "<ERROR>Error: variable </highlight>" + variableName + "<highlight> not found. Report this to the Server owner.";
+            return "<ERROR>Error: variable <highlight>" + variableName + "</highlight> not found. Report this to the Server owner.";
         }
 
         if(additionalStringArguments != null && !additionalStringArguments.isEmpty()){

@@ -42,13 +42,12 @@ public class ProjectKorraManager {
     }
 
     public void setElements(Player player, ArrayList<String> elements) {
-        BendingPlayer.getBendingPlayer(player).getElements().clear();
-        ArrayList<Element> elements1 = new ArrayList<>();
+        BendingPlayer bendingPlayer = BendingPlayer.getBendingPlayer(player);
+        bendingPlayer.getElements().clear();
 
         for(String elementString : elements){
-            elements1.add(Element.getElement(elementString));
+            bendingPlayer.addElement(Element.getElement(elementString));
         }
-        BendingPlayer.getBendingPlayer(player).getElements().addAll(elements1);
     }
 
     public final ArrayList<String> getAllElements() {
@@ -59,5 +58,33 @@ public class ProjectKorraManager {
         return allElementsStringList;
     }
 
+    public void setSubElements(Player player, ArrayList<String> subElements) {
+        BendingPlayer bendingPlayer = BendingPlayer.getBendingPlayer(player);
+        bendingPlayer.getSubElements().clear();
+
+        for(String subElementString : subElements){
+            for(Element.SubElement subElement : Element.getAllSubElements()){
+                if(subElement.getName().equalsIgnoreCase(subElementString)){
+                    bendingPlayer.addSubElement(subElement);
+                }
+            }
+        }
+    }
+
+    public final ArrayList<String> getAllSubElements() {
+        ArrayList<String> allSubElementsStringList = new ArrayList<>();
+        for(Element.SubElement subElement : Element.getAllSubElements()){
+            allSubElementsStringList.add(subElement.getName());
+        }
+        return allSubElementsStringList;
+    }
+
+    public final ArrayList<String> getSubElements(Player player) {
+        ArrayList<String> subElements = new ArrayList<>();
+        for(Element.SubElement subElement : BendingPlayer.getBendingPlayer(player).getSubElements()){
+            subElements.add(subElement.getName());
+        }
+        return subElements;
+    }
 
 }

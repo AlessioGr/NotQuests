@@ -23,16 +23,15 @@ import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitInfo;
 import net.citizensnpcs.trait.FollowTrait;
-import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.conversation.Conversation;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
-import rocks.gravili.notquests.paper.structs.objectives.EscortNPCObjective;
+import rocks.gravili.notquests.paper.structs.objectives.hooks.citizens.EscortNPCObjective;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -153,45 +152,30 @@ public class CitizensManager {
                     followerTrait = (FollowTrait) trait;
                 }
             }
-            if (followerTrait == null) {
-                followerTrait = new FollowTrait();
-                npcToEscort.addTrait(followerTrait);
+            if (!Bukkit.isPrimaryThread()) {
+                if (followerTrait == null) {
+                    Bukkit.getScheduler().runTask(main.getMain(), () -> {
+                        FollowTrait followTrait = new FollowTrait();
+                        npcToEscort.addTrait(followTrait);
+                        handleEscortNPCObjectiveForActiveObjectiveSynchronous(npcToEscort, destinationNPC, followTrait, activeQuest, escortNPCObjective);
+                    });
+                }else {
+                    final FollowTrait finalFollowerTrait = followerTrait;
+                    Bukkit.getScheduler().runTask(main.getMain(), () -> {
+                        handleEscortNPCObjectiveForActiveObjectiveSynchronous(npcToEscort, destinationNPC, finalFollowerTrait, activeQuest, escortNPCObjective);
+                    });
+                }
+            }else {
+                if (followerTrait == null) {
+                    followerTrait = new FollowTrait();
+                    npcToEscort.addTrait(followerTrait);
+                }
+                handleEscortNPCObjectiveForActiveObjectiveSynchronous(npcToEscort, destinationNPC, followerTrait, activeQuest, escortNPCObjective);
             }
 
-            if (followerTrait != null) {
-                final Player player = Bukkit.getPlayer(activeQuest.getQuestPlayer().getUUID());
-                if (player != null) {
-                    if (!npcToEscort.isSpawned()) {
-                        npcToEscort.spawn(player.getLocation());
-                    }
-
-                    if (followerTrait.getFollowingPlayer() == null || !followerTrait.getFollowingPlayer().equals(player)) {
-                        if (!Bukkit.isPrimaryThread()) {
-                            final FollowTrait finalFollowerTrait = followerTrait;
-                            Bukkit.getScheduler().runTask(main.getMain(), () -> {
-                                finalFollowerTrait.toggle(player, false);
-                            });
-                        } else {
-                            followerTrait.toggle(player, false);
-                        }
-                    }
-
-                    player.sendMessage(main.parse(
-                            "<GREEN>Escort quest started! Please escort <highlight>" + npcToEscort.getName() + "</highlight> to <highlight>" + destinationNPC.getName() + "</highlight>."
-                    ));
-                } else {
-                    main.getLogManager().warn("Error: The escort objective could not be started, because the player with the UUID <highlight>" + activeQuest.getQuestPlayer().getUUID() + "</highlight> was not found!");
 
 
-                }
-            } else {
-                final Player player = Bukkit.getPlayer(activeQuest.getQuestPlayer().getUUID());
-                if (player != null) {
-                    player.sendMessage(Component.text("The NPC you have to escort is not configured properly. Please consult an admin."));
-                }
-                main.getLogManager().warn("Error: The escort NPC with the ID <highlight>" + npcToEscortID + "</highlight> is not configured properly (Follow trait not found)!");
 
-            }
         } else {
             if (destinationNPC == null) {
                 final Player player = Bukkit.getPlayer(activeQuest.getQuestPlayer().getUUID());
@@ -209,6 +193,36 @@ public class CitizensManager {
                 main.getLogManager().warn("Error: The escort NPC with the ID <highlight>" + npcToEscortID + "</highlight> was not found!");
 
             }
+
+        }
+    }
+
+    private void handleEscortNPCObjectiveForActiveObjectiveSynchronous(final NPC npcToEscort, final NPC destinationNPC, final FollowTrait followerTrait, final ActiveQuest activeQuest, final EscortNPCObjective escortNPCObjective) {
+        final Player player = Bukkit.getPlayer(activeQuest.getQuestPlayer().getUUID());
+        if (player != null) {
+            final Location spawnLocation = escortNPCObjective.getSpawnLocation() != null ? escortNPCObjective.getSpawnLocation() : player.getLocation();
+            if (!npcToEscort.isSpawned()) {
+                npcToEscort.spawn(spawnLocation);
+            }
+
+            if (followerTrait.getFollowingPlayer() == null || !followerTrait.getFollowingPlayer().equals(player)) {
+                if (!Bukkit.isPrimaryThread()) {
+                    final FollowTrait finalFollowerTrait = followerTrait;
+                    Bukkit.getScheduler().runTask(main.getMain(), () -> {
+                        finalFollowerTrait.toggle(player, false);
+                    });
+                } else {
+
+                    followerTrait.toggle(player, false);
+                }
+            }
+
+            player.sendMessage(main.parse(
+                    "<GREEN>Escort quest started! Please escort <highlight>" + npcToEscort.getName() + "</highlight> to <highlight>" + destinationNPC.getName() + "</highlight>."
+            ));
+        } else {
+            main.getLogManager().warn("Error: The escort objective could not be started, because the player with the UUID <highlight>" + activeQuest.getQuestPlayer().getUUID() + "</highlight> was not found!");
+
 
         }
     }

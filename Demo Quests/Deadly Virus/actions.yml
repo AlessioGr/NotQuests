@@ -1,0 +1,8 @@
+actions:
+  Spawn15ZombieVillagers:
+    actionType: SpawnMob
+    displayName: Spawn15ZombieVillagers
+    specifics:
+      mobToSpawn: zombie_villager
+      usePlayerLocation: true
+      amount: 15

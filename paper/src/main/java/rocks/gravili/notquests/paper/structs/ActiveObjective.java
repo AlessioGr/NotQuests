@@ -25,7 +25,6 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.NotQuestColors;
 import rocks.gravili.notquests.paper.events.notquests.ObjectiveUnlockEvent;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
-import rocks.gravili.notquests.paper.structs.objectives.EscortNPCObjective;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 import rocks.gravili.notquests.paper.structs.objectives.OtherQuestObjective;
 
@@ -84,15 +83,6 @@ public class ActiveObjective {
 
                 getQuestPlayer().setTrackingObjective(this);
 
-
-
-
-                if (objective instanceof EscortNPCObjective escortNPCObjective) {
-                    if (main.getIntegrationsManager().isCitizensEnabled()) {
-                        main.getIntegrationsManager().getCitizensManager().handleEscortNPCObjectiveForActiveObjective(escortNPCObjective, activeQuest);
-                    }
-
-                }
 
 
                 //TODO: What?
@@ -189,8 +179,6 @@ public class ActiveObjective {
     public void addProgress(long progressToAdd, final int NPCID, final UUID armorStandUUID, boolean silent) {
         currentProgress += progressToAdd;
         getQuestPlayer().setTrackingObjective(this);
-
-        getQuestPlayer().sendObjectiveProgress(this);
 
 
         if (isCompleted(armorStandUUID)) {

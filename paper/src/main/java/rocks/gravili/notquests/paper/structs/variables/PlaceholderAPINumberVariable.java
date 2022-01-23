@@ -1,5 +1,6 @@
 package rocks.gravili.notquests.paper.structs.variables;
 
+import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.arguments.standard.StringArgument;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.command.CommandSender;
@@ -29,6 +30,11 @@ public class PlaceholderAPINumberVariable extends Variable<Double>{
                         }
                 ).single().build()
         );
+
+        addRequiredBooleanFlag(
+                main.getCommandManager().getPaperCommandManager().flagBuilder("removeTextFromPlaceholderValue")
+                        .withDescription(ArgumentDescription.of("Tries to remove all text from the placeholder before parsing")).build()
+        );
     }
 
     @Override
@@ -38,7 +44,11 @@ public class PlaceholderAPINumberVariable extends Variable<Double>{
                 return 0D;
             }
 
-            final String placeholder = PlaceholderAPI.setPlaceholders(player, getRequiredStringValue("Placeholder"));
+            String placeholder = PlaceholderAPI.setPlaceholders(player, getRequiredStringValue("Placeholder"));
+
+            if(getRequiredBooleanValue("removeTextFromPlaceholderValue")){
+                placeholder = placeholder.replaceAll("[^\\d.]", "");
+            }
 
             double parsedPlaceholder;
             try{

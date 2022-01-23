@@ -635,7 +635,7 @@ public class AdminCommands {
                         editorURL = "error";
                     }
 
-                    editorURL = "https://www.notquests.com/editor/" + editorURL;
+                    editorURL = "https://editor.notquests.com/editor/" + editorURL;
 
                     context.getSender().sendMessage(main.parse(
                             "<success>Click following link to open the editor: \n<highlight><click:open_url:" + editorURL + "><hover:show_text:\"<highlight>Click to open the web editor\">" + editorURL

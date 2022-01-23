@@ -49,6 +49,7 @@ public class NumberCondition extends Condition {
     private HashMap<String, Boolean> additionalBooleanArguments;
 
 
+
     public final String getMathOperator(){
         return mathOperator;
     }
@@ -88,7 +89,7 @@ public class NumberCondition extends Condition {
         Variable<?> variable = main.getVariablesManager().getVariableFromString(variableName);
 
         if(variable == null){
-            return "<ERROR>Error: variable </highlight>" + variableName + "<highlight> not found. Report this to the Server owner.";
+            return "<ERROR>Error: variable <highlight>" + variableName + "</highlight> not found. Report this to the Server owner.";
         }
 
         if(additionalStringArguments != null && !additionalStringArguments.isEmpty()){

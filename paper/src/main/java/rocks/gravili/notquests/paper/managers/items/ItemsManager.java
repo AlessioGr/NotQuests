@@ -24,6 +24,9 @@ public class ItemsManager {
     }
 
     public final NQItem getItem(final String itemIdentifier){
+        if(itemIdentifier == null){
+            return null;
+        }
         return identifiersAndItems.get(itemIdentifier.toLowerCase(Locale.ROOT));
     }
 
@@ -127,7 +130,6 @@ public class ItemsManager {
     }
     public final ItemStack getItemStack(final String name){
         ItemStack itemStack;
-        Material material;
         try{
             itemStack = new ItemStack(Material.valueOf(name));
         }catch (Exception ignored){

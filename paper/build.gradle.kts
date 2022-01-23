@@ -134,7 +134,7 @@ dependencies {
     compileOnly("com.sk89q.worldedit:worldedit-core:7.3.0-SNAPSHOT")
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.3.0-SNAPSHOT")
 
-    compileOnly("com.github.TheBusyBiscuit:Slimefun4:RC-29")
+    compileOnly("com.github.TheBusyBiscuit:Slimefun4:RC-30")
 
     compileOnly("net.luckperms:api:5.3")
 

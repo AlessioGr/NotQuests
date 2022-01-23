@@ -108,7 +108,7 @@ public abstract class Variable<T> {
 
 
     protected final String getRequiredStringValue(String key){
-        return additionalStringArguments.get(key);
+        return additionalStringArguments.getOrDefault(key, "");
     }
 
     protected final double getRequiredNumberValue(String key, Player player){

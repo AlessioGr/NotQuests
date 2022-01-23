@@ -121,6 +121,7 @@ public class QuestPlayer {
 
     public void setTrackingObjective(ActiveObjective trackingObjective) {
         this.trackingObjective = trackingObjective;
+        sendObjectiveProgress(trackingObjective);
         if(trackingObjective.getObjective().isShowLocation() && trackingObjective.getObjective().getLocation() != null){
             trackBeacon(trackingObjective.getObjectiveID()+"", trackingObjective.getObjective().getLocation());;
         }
@@ -813,6 +814,13 @@ public class QuestPlayer {
         }
         if(main.getConfiguration().isVisualObjectiveTrackingShowProgressInBossBar()){
             float progress = (float)activeObjective.getCurrentProgress() / (float)activeObjective.getProgressNeeded();
+            if(progress >= 1.0f && bossBar != null){
+                player.hideBossBar(bossBar);
+                bossBar = null;
+                return; //Hide bossbar once it reached 100%
+            }else if(progress < 0.0f){
+                progress = 0;
+            }
 
             if (bossBar != null) {
                 bossBar.name(main.getLanguageManager().getComponent("objective-tracking.actionbar-progress-update", getPlayer(), this, activeObjective, activeObjective.getActiveQuest()));

@@ -26,14 +26,12 @@ import org.betonquest.betonquest.utils.PlayerConverter;
 import org.betonquest.betonquest.utils.Utils;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.structs.CompletedQuest;
-import rocks.gravili.notquests.paper.structs.Quest;
-import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class BQRequirementsCondition extends org.betonquest.betonquest.api.Condition { //TODO: Make it dynamic for future or API requirements
+public class BQConditionsCondition extends org.betonquest.betonquest.api.Condition { //TODO: Make it dynamic for future or API requirements
 
     private final NotQuests main;
     private Condition condition = null;
@@ -49,14 +47,15 @@ public class BQRequirementsCondition extends org.betonquest.betonquest.api.Condi
      *                    ID.generateInstruction()} or create it from an instruction
      *                    string
      */
-    public BQRequirementsCondition(Instruction instruction) throws InstructionParseException {
+    public BQConditionsCondition(Instruction instruction) throws InstructionParseException {
         super(instruction, false);
         this.main = NotQuests.getInstance();
 
-        final String[] conditionLine = Utils.split(instruction.toString());
+        final List<String> allConditionsString = new ArrayList<>();
+        allConditionsString.add(instruction.toString().replace("nq_condition ", ""));
 
         try {
-            condition = main.getConversationManager().parseConditionsString(List.of(conditionLine)).get(0);
+            condition = main.getConversationManager().parseConditionsString(allConditionsString).get(0);
         } catch (Exception e) {
             throw new RuntimeException("Invalid Condition line: " + e.getLocalizedMessage());
         }

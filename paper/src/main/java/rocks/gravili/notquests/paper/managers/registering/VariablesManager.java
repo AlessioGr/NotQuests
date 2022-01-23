@@ -97,6 +97,11 @@ public class VariablesManager {
 
         if(main.getIntegrationsManager().isProjectKorraEnabled()){
             registerVariable("ProjectKorraElements", ProjectKorraElementsVariable.class);
+            registerVariable("ProjectKorraSubElements", ProjectKorraSubElementsVariable.class);
+        }
+
+        if(main.getIntegrationsManager().isBetonQuestEnabled()){
+            registerVariable("BetonQuestCondition", BetonQuestConditionVariable.class);
         }
 
 
@@ -190,6 +195,19 @@ public class VariablesManager {
 
     public double evaluateExpression(String expression, final Player player, final Object... objects){
 
+        expression = evaluateExpressionVariables(expression, player, objects);
+
+        main.getLogManager().debug("To evaluate: <highlight>" + expression);
+
+        CompiledExpression exp = Crunch.compileExpression(expression);
+
+
+        return exp.evaluate();
+    }
+
+
+    public String evaluateExpressionVariables(String expression, final Player player, final Object... objects){
+        boolean foundOne = false;
         for(String variableString : main.getVariablesManager().getVariableIdentifiers()){
             if(!expression.contains(variableString)){
                 continue;
@@ -199,6 +217,45 @@ public class VariablesManager {
                 main.getLogManager().debug("Null variable: <highlight>" + variableString);
                 continue;
             }
+
+            //Extra Arguments:
+            if(expression.contains(variableString + "(")){
+                foundOne = true;
+                String everythingAfterBracket = expression.substring(expression.indexOf(variableString+"(") +  variableString.length()+1 );
+                String insideBracket = everythingAfterBracket.substring(0, everythingAfterBracket.indexOf(")"));
+                main.getLogManager().debug("Inside Bracket: " + insideBracket);
+                String[] extraArguments = insideBracket.split(",");
+                for(String extraArgument : extraArguments){
+                    main.getLogManager().debug("Extra: " + extraArgument);
+                    if(extraArgument.startsWith("--")){
+                        variable.addAdditionalBooleanArgument(extraArgument.replace("--", ""), true);
+                        main.getLogManager().debug("AddBoolFlag: " + extraArgument.replace("--", ""));
+                    }else{
+                        String[] split = extraArgument.split(":");
+                        String key = split[0];
+                        String value = split[1];
+                        for(StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()){
+                            if(stringArgument.getName().equalsIgnoreCase(key)){
+                                variable.addAdditionalStringArgument(key, value);
+                                main.getLogManager().debug("AddString: " + key + " val: " + value);
+                            }
+                        }
+                        for(NumberVariableValueArgument<CommandSender> numberVariableValueArgument : variable.getRequiredNumbers()){
+                            variable.addAdditionalNumberArgument(key, value);
+                            main.getLogManager().debug("AddNumb: " + key + " val: " + value);
+                        }
+                        for(BooleanArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
+                            variable.addAdditionalBooleanArgument(key, Boolean.parseBoolean(value));
+                            main.getLogManager().debug("AddBool: " + key + " val: " + value);
+                        }
+                    }
+                }
+
+                variableString = variableString+"(" + insideBracket + ")"; //For the replacing with the actual number below
+            }
+
+
+
             Object valueObject = variable.getValue(player, objects);
             if(valueObject instanceof Number n){
                 expression = expression.replace(variableString, ""+n.doubleValue());
@@ -207,12 +264,10 @@ public class VariablesManager {
 
             }
         }
+        if(!foundOne){
+            return expression;
+        }
 
-        main.getLogManager().debug("To evaluate: <highlight>" + expression);
-
-        CompiledExpression exp = Crunch.compileExpression(expression);
-
-
-        return exp.evaluate();
+        return evaluateExpressionVariables(expression, player, objects);
     }
 }
