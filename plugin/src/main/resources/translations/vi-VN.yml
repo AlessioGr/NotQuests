@@ -41,7 +41,10 @@ chat:
     description: '   <main>Mô Tả: <highlight>%OBJECTIVEDESCRIPTION%'
     progress: '   <unimportant>Tiến Trình: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
     successfully-completed: |2
-      <success>Bạn đã hoàn thành mục tiêu <warn>%OBJECTIVENAME% <success>cho nhiệm vụ <highlight>%QUESTNAME%<success>!
+
+      <CENTER><success>[Objective Completed]
+      <CENTER><highlight><bold>%OBJECTIVENAME%</bold> <RESET><main>(%QUESTNAME%)
+      <EMPTY>
     successfully-completed-rewards-prefix: '    <highlight>Phần thưởng:'
     successfully-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
     successfully-completed-rewards-suffix: <EMPTY>
@@ -96,6 +99,8 @@ chat:
         base: '    <veryUnimportant>└─<unimportant>%EVENTUALCOLOR%Tốc độ tìm lại'
       ProjectKorraUseAbility:
         base: '    <veryUnimportant>└─<unimportant>%EVENTUALCOLOR%Dùng Ability:<main>%EVENTUALCOLOR%%ABILITY%'
+      BetonQuestCompleteObjective:
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Finish Objective: <main>%EVENTUALCOLOR%%BETONQUESTOBJECTIVENAME%'
 objective-tracking:
   actionbar-progress-update: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
 titles:

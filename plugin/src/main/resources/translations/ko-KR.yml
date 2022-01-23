@@ -49,7 +49,7 @@ chat:
     successfully-completed: |2
 
       <CENTER><success>[Objective Completed]
-      <CENTER><highlight><BOLD>%OBJECTIVENAME% <RESET><main>(%QUESTNAME%)
+      <CENTER><highlight><bold>%OBJECTIVENAME%</bold> <RESET><main>(%QUESTNAME%)
       <EMPTY>
     successfully-completed-rewards-prefix: '    <highlight>Rewards:'
     successfully-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
@@ -105,6 +105,8 @@ chat:
         base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Spend on research'
       ProjectKorraUseAbility:
         base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Use Ability: <main>%EVENTUALCOLOR%%ABILITY%'
+      BetonQuestCompleteObjective:
+        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Finish Objective: <main>%EVENTUALCOLOR%%BETONQUESTOBJECTIVENAME%'
 objective-tracking:
   actionbar-progress-update: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
 titles:
