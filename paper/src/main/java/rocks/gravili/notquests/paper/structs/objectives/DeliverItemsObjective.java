@@ -313,20 +313,24 @@ public class DeliverItemsObjective extends Objective {
         if (main.getIntegrationsManager().isCitizensEnabled() && getRecipientNPCID() != -1) {
             final NPC npc = CitizensAPI.getNPCRegistry().getById(getRecipientNPCID());
             if (npc != null) {
-                toReturn += "\n      <GRAY>Deliver it to <WHITE>" + npc.getName();
+                toReturn += "\n" + main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.deliver-to-npc", player, Map.of(
+                        "%NPCNAME%", npc.getName()
+                ));
             } else {
-                toReturn += "\n      <GRAY>The delivery NPC is currently not available!";
+                toReturn += "\n" + main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.deliver-to-npc-not-available", player);
             }
         } else {
 
             if (getRecipientNPCID() != -1) {
-                toReturn += "    <RED>Error: Citizens plugin not installed. Contact an admin.";
+                toReturn += main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.deliver-to-npc-citizens-not-found", player);
             } else { //Armor Stands
                 final UUID armorStandUUID = getRecipientArmorStandUUID();
                 if (armorStandUUID != null) {
-                    toReturn += "\n    <GRAY>Deliver it to <WHITE>" + main.getArmorStandManager().getArmorStandName(armorStandUUID);
+                    toReturn += "\n" + main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.deliver-to-armorstand", player, Map.of(
+                            "%ARMORSTANDNAME%", main.getArmorStandManager().getArmorStandName(armorStandUUID)
+                    ));
                 } else {
-                    toReturn += "\n    <GRAY>The target Armor Stand is currently not available!";
+                    toReturn += "\n" + main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.deliver-to-armorstand-not-available", player);
                 }
             }
 
