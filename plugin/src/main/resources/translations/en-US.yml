@@ -24,6 +24,8 @@ chat:
   quest-completed-rewards-prefix: '    <highlight>Rewards:'
   quest-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
   quest-completed-rewards-suffix: <EMPTY>
+  quest-not-all-requirements-fulfilled: '<negative>You do not fulfill all the requirements this quest needs! Requirement still needed:'
+  action-not-all-conditions-fulfilled: '<negative>You do not fulfill all the conditions this action needs! Conditions still needed:'
   missing-quest-description: <unimportant>This quest has no quest description.
   objectives-label-after-quest-accepting: '<highlight>Objectives:'
   questpoints:

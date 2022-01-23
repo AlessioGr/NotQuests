@@ -222,7 +222,7 @@ public class ActionManager {
 
         if (!unfulfilledConditions.toString().isBlank()) {
             if (!silent) {
-                sender.sendMessage(main.parse("<error>You do not fulfill all the conditions this action needs! Conditions still needed:" + unfulfilledConditions));
+                sender.sendMessage(main.parse(main.getLanguageManager().getString("chat.action-not-all-conditions-fulfilled", questPlayer.getPlayer(), questPlayer) + unfulfilledConditions));
             }
         } else {
             main.getLogManager().debug("   All Conditions fulfilled!");

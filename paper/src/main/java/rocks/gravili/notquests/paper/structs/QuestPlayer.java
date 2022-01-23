@@ -345,7 +345,7 @@ public class QuestPlayer {
 
 
                 if (!requirementsStillNeeded.toString().isBlank()) {
-                    return "<RED>You do not fulfill all the requirements this quest needs! Requirement still needed:" + requirementsStillNeeded;
+                    return main.getLanguageManager().getString("chat.quest-not-all-requirements-fulfilled", getPlayer()) + requirementsStillNeeded;
                 }
 
 
