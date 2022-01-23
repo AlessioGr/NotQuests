@@ -24,6 +24,8 @@ chat:
   quest-completed-rewards-prefix: '    <highlight>Récompenses :'
   quest-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
   quest-completed-rewards-suffix: <EMPTY>
+  quest-not-all-requirements-fulfilled: '<negative>Vous ne remplissez pas toutes les exigences de cette quête! Exigences encore requises:'
+  action-not-all-conditions-fulfilled: '<negative>Vous ne remplissez pas toutes les conditions requises par cette action. Conditions à remplir:'
   missing-quest-description: <unimportant>Cette quête n'a pas de description.
   objectives-label-after-quest-accepting: '<highlight>Objectifs:'
   questpoints:
@@ -56,59 +58,74 @@ chat:
     successfully-completed-rewards-suffix: <EMPTY>
     taskDescription:
       breakBlocks:
-        base: '    <veryUnimportant>└─<unimportant>%EVENTUALCOLOR%Blocs à cassée : <main>%EVENTUALCOLOR%%BLOCKTOBREAK%'
+        base: '    <veryUnimportant>└─<unimportant>Blocs à cassée : <main>%BLOCKTOBREAK%'
       breed:
-        base: '    <veryUnimportant>└─<unimportant>%EVENTUALCOLOR%Reproduire des animaux : <main>%EVENTUALCOLOR%%ENTITYTOBREED%'
+        base: '    <veryUnimportant>└─<unimportant>Reproduire des animaux : <main>%ENTITYTOBREED%'
       collectItems:
-        base: '    <veryUnimportant>└─<unimportant>%EVENTUALCOLOR%Collecter des Objets : <main>%EVENTUALCOLOR%%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
+        base: '    <veryUnimportant>└─<unimportant>Collecter des Objets : <main>%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
       consumeItems:
-        base: '    <veryUnimportant>└─<unimportant>%EVENTUALCOLOR%Consommer des objets : <main>%EVENTUALCOLOR%%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
+        base: '    <veryUnimportant>└─<unimportant>Consommer des objets : <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
-        base: '    <veryUnimportant>└─<unimportant>%EVENTUALCOLOR%Fabriquer des Objets : <main>%EVENTUALCOLOR%%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
+        base: '    <veryUnimportant>└─<unimportant>Fabriquer des Objets : <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: '    <veryUnimportant>└─<unimportant>%EVENTUALCOLOR%Livrer des Objets : <main>%EVENTUALCOLOR%%ITEMTODELIVERTYPE% %(%ITEMTODELIVERNAME%)'
+        base: '    <veryUnimportant>└─<unimportant>Livrer des Objets : <main>%ITEMTODELIVERTYPE% %(%ITEMTODELIVERNAME%)'
+        deliver-to-npc: '      <GRAY>Livrez-le à <WHITE>%NPCNAME%'
+        deliver-to-npc-not-available: '      <GRAY>Le PNJ de livraison n''est actuellement pas disponible!'
+        deliver-to-npc-citizens-not-found: '    <RED>Erreur: Le plugin Citizens n''est pas installé. Contactez un administrateur.'
+        deliver-to-armorstand: '    <GRAY>Livrez-le à <WHITE>%ARMORSTANDNAME%'
+        deliver-to-armorstand-not-available: '    <GRAY>Le porte-armure de destination n''est actuellement pas disponible !'
       escortNPC:
-        base: '    <veryUnimportant>└─<unimportant>%EVENTUALCOLOR%Escorter <main>%EVENTUALCOLOR%%NPCNAME%</main> %EVENTUALCOLOR%à <main>%EVENTUALCOLOR%%DESTINATIONNPCNAME%'
+        base: '    <veryUnimportant>└─<unimportant>Escorter <main>%NPCNAME%</main> à <main>%DESTINATIONNPCNAME%'
       killMobs:
-        base: '    <veryUnimportant>└─<unimportant>%EVENTUALCOLOR%Tuer les monstres : <main>%EVENTUALCOLOR%%MOBTOKILL%'
+        base: '    <veryUnimportant>└─<unimportant>Tuer les monstres : <main>%MOBTOKILL%'
       otherQuest:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Terminez la Quête : <main>%EVENTUALCOLOR%%OTHERQUESTNAME%'
+        base: '    <veryUnimportant>└─ <unimportant>Terminez la Quête : <main>%OTHERQUESTNAME%'
       placeBlocks:
-        base: '    <veryUnimportant>└─<unimportant>%EVENTUALCOLOR%Placer des blocs : <main>%EVENTUALCOLOR%%BLOCKTOPLACE%'
+        base: '    <veryUnimportant>└─<unimportant>Placer des blocs : <main>%BLOCKTOPLACE%'
       reachLocation:
-        base: '    <veryUnimportant>└─<unimportant>%EVENTUALCOLOR%Atteindre l''emplacement : <main>%EVENTUALCOLOR%%LOCATIONNAME%'
+        base: '    <veryUnimportant>└─<unimportant>Atteindre l''emplacement : <main>%LOCATIONNAME%'
       talkToNPC:
-        base: '    <veryUnimportant>└─<unimportant>%EVENTUALCOLOR%Parlez à : <main>%EVENTUALCOLOR%%NAME%'
+        base: '    <veryUnimportant>└─<unimportant>Parlez à : <main>%NAME%'
       triggerCommand:
-        base: '    <veryUnimportant>└─<unimportant>%EVENTUALCOLOR%Objectif : <main>%EVENTUALCOLOR%%TRIGGERNAME%'
+        base: '    <veryUnimportant>└─<unimportant>Objectif : <main>%TRIGGERNAME%'
       killEliteMobs:
-        base: '    <veryUnimportant>└─<unimportant>%EVENTUALCOLOR%Tuez le monstre d''élite : <main>%EVENTUALCOLOR%%ELITEMOBNAME%'
-        any: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Tuez n''importe quel Mobs d''élite!'
+        base: '    <veryUnimportant>└─<unimportant>Tuez le monstre d''élite : <main>%ELITEMOBNAME%'
+        any: '    <veryUnimportant>└─ <unimportant>Tuez n''importe quel Mobs d''élite!'
       runCommand:
-        base: '    <veryUnimportant>└─<unimportant>%EVENTUALCOLOR%Exécute la commande: <main>%EVENTUALCOLOR%%COMMANDTORUN%'
+        base: '    <veryUnimportant>└─<unimportant>Exécute la commande: <main>%COMMANDTORUN%'
       interact:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%%INTERACTTYPE% Emplacement: <main>%EVENTUALCOLOR%%COORDINATES% <main>%EVENTUALCOLOR%dans le monde %EVENTUALCOLOR%%WORLDNAME%'
-        taskDescriptionProvided: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%%TASKDESCRIPTION%'
+        base: '    <veryUnimportant>└─ <unimportant>%INTERACTTYPE% Emplacement: <main>%COORDINATES% <main>dans le monde %WORLDNAME%'
+        taskDescriptionProvided: '    <veryUnimportant>└─ <unimportant>%TASKDESCRIPTION%'
       jump:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Sauter <main>%EVENTUALCOLOR%%AMOUNTOFJUMPS%</main> %EVENTUALCOLOR%fois'
+        base: '    <veryUnimportant>└─ <unimportant>Sauter <main>%AMOUNTOFJUMPS%</main> fois'
       sneak:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Accroupissez vous <main>%EVENTUALCOLOR%%AMOUNTOFSNEAKS%</main> %EVENTUALCOLOR%fois'
+        base: '    <veryUnimportant>└─ <unimportant>Accroupissez vous <main>%AMOUNTOFSNEAKS%</main> fois'
       smelt:
-        base: '    <veryUnimportant>└─<unimportant>%EVENTUALCOLOR%Faites fondre des objets : <main>%EVENTUALCOLOR%%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+        base: '    <veryUnimportant>└─<unimportant>Faites fondre des objets : <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       townyReachResidentCount:
-        base: '    <veryUnimportant>└─<unimportant>%EVENTUALCOLOR%Atteindre le nombre de résidents de: <main>%EVENTUALCOLOR%%AMOUNT%'
+        base: '    <veryUnimportant>└─<unimportant>Atteindre le nombre de résidents de: <main>%AMOUNT%'
       townyNationReachTownCount:
-        base: '    <veryUnimportant>└─<unimportant>%EVENTUALCOLOR%Atteindre un nombre de villes avec votre nation de : <main>%EVENTUALCOLOR%%AMOUNT%'
+        base: '    <veryUnimportant>└─<unimportant>Atteindre un nombre de villes avec votre nation de : <main>%AMOUNT%'
       jobsRebornReachJobLevel:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Atteindre le niveau <main>%EVENTUALCOLOR%%AMOUNT%</main> avec le métier <main>%EVENTUALCOLOR%%JOB%'
+        base: '    <veryUnimportant>└─ <unimportant>Atteindre le niveau <main>%AMOUNT%</main> avec le métier <main>%JOB%'
       SlimefunResearch:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Dépenser en recherche'
+        base: '    <veryUnimportant>└─ <unimportant>Dépenser en recherche'
       ProjectKorraUseAbility:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Utiliser la capacité : <main>%EVENTUALCOLOR%%ABILITY%'
+        base: '    <veryUnimportant>└─ <unimportant>Utiliser la capacité : <main>%ABILITY%'
       BetonQuestCompleteObjective:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Finish Objective: <main>%EVENTUALCOLOR%%BETONQUESTOBJECTIVENAME%'
+        base: '    <veryUnimportant>└─ <unimportant>Terminer l''Objectif: <main>%BETONQUESTOBJECTIVENAME%'
+  conditions:
+    boolean:
+      not-fulfilled: "<warn>Ce qui suit doit être %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."
+      variable-not-found: "<error>Erreur: variable <highlight>%VARIABLENAME%</highlight> introuvable. Rapportez cet événement à un administrateur."
+      wrong-operator: "<error>Erreur: L'opérateur <highlight>%OPERATOR%/highlight> est invalide. Rapportez cet énénement à un administrateur."
 objective-tracking:
-  actionbar-progress-update: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
+  actionbar-progress-update:
+    default: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
+    only-one-max-progress: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
+  bossbar-progress-update:
+    default: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
+    only-one-max-progress: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
 titles:
   quest-accepted:
     title: <main>Quête acceptée
@@ -161,7 +178,7 @@ gui:
         name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
         lore:
           - "<unimportant>Progression: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<main>Clic pour plus de détails !"
+          - "<main>Cliquer pour afficher les détails !"
   reward-hidden-text: . <unimportant>[CACHÉ]
   availableQuests:
     title: '         <highlight2>Quêtes Disponibles'
@@ -171,13 +188,13 @@ gui:
         name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTER]"
         lore:
           - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
-          - "<main>Clic pour ouvrir la quête !"
+          - "<main>Cliquer pour ouvrir la quête !"
   takeQuestChoose:
     title: <highlight2>Quelle quête voulez-vous prendre?
     button:
       questPreview:
         name-if-not-accepted: "<highlight>%QUESTNAME%"
-        name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTER]"
+        name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTÉE]"
         lore:
           - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
           - "<main>Cliquez pour prévisualiser la quête !"
@@ -188,7 +205,7 @@ gui:
         name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
         lore:
           - "<unimportant>Progression: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<negative>Clic pour abandonner la quête !"
+          - "<negative>Cliquer pour abandonner la quête !"
   abortQuest:
     title: '         <negative>Valider l''abandon de la quête'
     button:
@@ -196,13 +213,13 @@ gui:
         name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
         lore:
           - "<unimportant>Progression: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<negative>Clic pour annuler la quête <highlight>%QUESTNAME%</highlight>!"
+          - "<negative>Cliquer pour annuler la quête <highlight>%QUESTNAME%</highlight>!"
         x: 3
         y: 1
       cancelAbort:
-        name: "<positive>Cliquer n'abandonnera pas la quête"
+        name: "<positive>Cliquer pour NE PAS abandonner la quête"
         lore:
-          - "<positive>mais annulera l'action"
+          - "<positive>et annuler l'action"
         x: 5
         y: 1
   previewQuest:
@@ -235,13 +252,13 @@ gui:
       confirmTake:
         name: "<highlight>%QUESTNAME%"
         lore:
-          - "<positive>Clic pour prendre la quête <highlight>%QUESTNAME%"
+          - "<positive>Cliquer pour prendre la quête <highlight>%QUESTNAME%"
         x: 3
         y: 2
       cancelTake:
-        name: "<negative>Clic pour ne pas prendre la quête"
+        name: "<negative>Cliquer pour NE PAS prendre la quête"
         lore:
-          - "<negative>et annuler votre action"
+          - "<negative>et annuler cette action"
         x: 5
         y: 2
   progress:
