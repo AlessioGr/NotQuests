@@ -140,7 +140,7 @@ public class BooleanCondition extends Condition {
                 if (booleanRequirement != bool) {
                     return main.getLanguageManager().getString("chat.conditions.boolean.not-fulfilled", questPlayer.getPlayer(), questPlayer, Map.of(
                             "%OPERATOR%", getOperator(),
-                            "%BOOLEANREQUIREMENT%", booleanRequirement,
+                            "%BOOLEANREQUIREMENT%", ""+booleanRequirement,
                             "%VARIABLESINGULAR%", variable.getSingular(),
                             "%VARIABLEPLURAL%", variable.getPlural()
                     ));
@@ -149,7 +149,7 @@ public class BooleanCondition extends Condition {
                 if (booleanRequirement != (boolean)value) {
                     return main.getLanguageManager().getString("chat.conditions.boolean.not-fulfilled", questPlayer.getPlayer(), questPlayer, Map.of(
                             "%OPERATOR%", getOperator(),
-                            "%BOOLEANREQUIREMENT%", booleanRequirement,
+                            "%BOOLEANREQUIREMENT%", ""+booleanRequirement,
                             "%VARIABLESINGULAR%", variable.getSingular(),
                             "%VARIABLEPLURAL%", variable.getPlural()
                     ));
