@@ -18,6 +18,8 @@ chat:
   quest-completed-rewards-prefix: '    <highlight>Rewards:'
   quest-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
   quest-completed-rewards-suffix: <EMPTY>
+  quest-not-all-requirements-fulfilled: '<negative>You do not fulfill all the requirements this quest needs! Requirement still needed:'
+  action-not-all-conditions-fulfilled: '<negative>You do not fulfill all the conditions this action needs! Conditions still needed:'
   missing-quest-description: <YELLOW>Tento quest nemá popis.
   objectives-label-after-quest-accepting: '<BLUE>Cíle:'
   questpoints:
@@ -50,59 +52,74 @@ chat:
     successfully-completed-rewards-suffix: <EMPTY>
     taskDescription:
       breakBlocks:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Blok ke zničení : <WHITE>%EVENTUALCOLOR%%BLOCKTOBREAK%'
+        base: '    <DARK_GRAY>└─ <GRAY>Blok ke zničení : <WHITE>%BLOCKTOBREAK%'
       breed:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Zvíře k rozmnožení: <WHITE>%EVENTUALCOLOR%%ENTITYTOBREED%'
+        base: '    <DARK_GRAY>└─ <GRAY>Zvíře k rozmnožení: <WHITE>%ENTITYTOBREED%'
       collectItems:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Itemy ke sbírání: <WHITE>%EVENTUALCOLOR%%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
+        base: '    <DARK_GRAY>└─ <GRAY>Itemy ke sbírání: <WHITE>%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
       consumeItems:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Itemy ke snězení: <WHITE>%EVENTUALCOLOR%%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
+        base: '    <DARK_GRAY>└─ <GRAY>Itemy ke snězení: <WHITE>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Craft Items: <main>%EVENTUALCOLOR%%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
+        base: '    <veryUnimportant>└─ <unimportant>Craft Items: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Itemy k doručení: <WHITE>%EVENTUALCOLOR%%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
+        base: '    <DARK_GRAY>└─ <GRAY>Itemy k doručení: <WHITE>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
+        deliver-to-npc: '      <GRAY>Deliver it to <WHITE>%NPCNAME%'
+        deliver-to-npc-not-available: '      <GRAY>The delivery NPC is currently not available!'
+        deliver-to-npc-citizens-not-found: '    <RED>Error: Citizens plugin not installed. Contact an admin.'
+        deliver-to-armorstand: '    <GRAY>Deliver it to <WHITE>%ARMORSTANDNAME%'
+        deliver-to-armorstand-not-available: '    <GRAY>The target Armor Stand is currently not available!'
       escortNPC:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Převézt <WHITE>%EVENTUALCOLOR%%NPCNAME%</WHITE> %EVENTUALCOLOR%to <WHITE>%EVENTUALCOLOR%%DESTINATIONNPCNAME%'
+        base: '    <DARK_GRAY>└─ <GRAY>Převézt <WHITE>%NPCNAME%</WHITE> to <WHITE>%DESTINATIONNPCNAME%'
       killMobs:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Moby k zabití: <WHITE>%EVENTUALCOLOR%%MOBTOKILL%'
+        base: '    <DARK_GRAY>└─ <GRAY>Moby k zabití: <WHITE>%MOBTOKILL%'
       otherQuest:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Dokončení questu: <WHITE>%EVENTUALCOLOR%%OTHERQUESTNAME%'
+        base: '    <DARK_GRAY>└─ <GRAY>Dokončení questu: <WHITE>%OTHERQUESTNAME%'
       placeBlocks:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Blok k položení: <WHITE>%EVENTUALCOLOR%%BLOCKTOPLACE%'
+        base: '    <DARK_GRAY>└─ <GRAY>Blok k položení: <WHITE>%BLOCKTOPLACE%'
       reachLocation:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Dosáhnout lokace: <WHITE>%EVENTUALCOLOR%%LOCATIONNAME%'
+        base: '    <DARK_GRAY>└─ <GRAY>Dosáhnout lokace: <WHITE>%LOCATIONNAME%'
       talkToNPC:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Mluvit s <WHITE>%EVENTUALCOLOR%%NAME%'
+        base: '    <DARK_GRAY>└─ <GRAY>Mluvit s <WHITE>%NAME%'
       triggerCommand:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Cíl: <WHITE>%EVENTUALCOLOR%%TRIGGERNAME%'
+        base: '    <DARK_GRAY>└─ <GRAY>Cíl: <WHITE>%TRIGGERNAME%'
       killEliteMobs:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Zabít elitního moba: <WHITE>%EVENTUALCOLOR%%ELITEMOBNAME%'
-        any: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Zabít jakéhokoliv elitního moba!'
+        base: '    <DARK_GRAY>└─ <GRAY>Zabít elitního moba: <WHITE>%ELITEMOBNAME%'
+        any: '    <DARK_GRAY>└─ <GRAY>Zabít jakéhokoliv elitního moba!'
       runCommand:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Spustit příkaz: <WHITE>%EVENTUALCOLOR%%COMMANDTORUN%'
+        base: '    <DARK_GRAY>└─ <GRAY>Spustit příkaz: <WHITE>%COMMANDTORUN%'
       interact:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%%INTERACTTYPE% Lokace: <WHITE>%EVENTUALCOLOR%%COORDINATES% <WHITE>%EVENTUALCOLOR%ve světě %EVENTUALCOLOR%%WORLDNAME%'
-        taskDescriptionProvided: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%%TASKDESCRIPTION%'
+        base: '    <DARK_GRAY>└─ <GRAY>%INTERACTTYPE% Lokace: <WHITE>%COORDINATES% <WHITE>ve světě %WORLDNAME%'
+        taskDescriptionProvided: '    <DARK_GRAY>└─ <GRAY>%TASKDESCRIPTION%'
       jump:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Vyskočit <WHITE>%EVENTUALCOLOR%%AMOUNTOFJUMPS%</WHITE> %EVENTUALCOLOR%krát'
+        base: '    <DARK_GRAY>└─ <GRAY>Vyskočit <WHITE>%AMOUNTOFJUMPS%</WHITE> krát'
       sneak:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Sneak <main>%EVENTUALCOLOR%%AMOUNTOFSNEAKS%</main> %EVENTUALCOLOR%times'
+        base: '    <veryUnimportant>└─ <unimportant>Sneak <main>%AMOUNTOFSNEAKS%</main> times'
       smelt:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Itemy k roztavení : <WHITE>%EVENTUALCOLOR%%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+        base: '    <DARK_GRAY>└─ <GRAY>Itemy k roztavení : <WHITE>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       townyReachResidentCount:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Dosáhnout residentního počtu: <WHITE>%EVENTUALCOLOR%%AMOUNT%'
+        base: '    <DARK_GRAY>└─ <GRAY>Dosáhnout residentního počtu: <WHITE>%AMOUNT%'
       townyNationReachTownCount:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Dostat se do města s tvojí vlastí: <WHITE>%EVENTUALCOLOR%%AMOUNT%'
+        base: '    <DARK_GRAY>└─ <GRAY>Dostat se do města s tvojí vlastí: <WHITE>%AMOUNT%'
       jobsRebornReachJobLevel:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Dosáhnout levelu práce <WHITE>%EVENTUALCOLOR%%AMOUNT%</WHITE> s prací <WHITE>%EVENTUALCOLOR%%JOB%'
+        base: '    <DARK_GRAY>└─ <GRAY>Dosáhnout levelu práce <WHITE>%AMOUNT%</WHITE> s prací <WHITE>%JOB%'
       SlimefunResearch:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Strávit na výzkumu'
+        base: '    <DARK_GRAY>└─ <GRAY>Strávit na výzkumu'
       ProjectKorraUseAbility:
-        base: '    <DARK_GRAY>└─ <GRAY>%EVENTUALCOLOR%Použít schopnost: <WHITE>%EVENTUALCOLOR%%ABILITY%'
+        base: '    <DARK_GRAY>└─ <GRAY>Použít schopnost: <WHITE>%ABILITY%'
       BetonQuestCompleteObjective:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Finish Objective: <main>%EVENTUALCOLOR%%BETONQUESTOBJECTIVENAME%'
+        base: '    <veryUnimportant>└─ <unimportant>Finish Objective: <main>%BETONQUESTOBJECTIVENAME%'
+  conditions:
+    boolean:
+      not-fulfilled: "<warn>Following needs to be %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."
+      variable-not-found: "<error>Error: variable <highlight>%VARIABLENAME%</highlight> not found. Report this to the Server owner."
+      wrong-operator: "<error>Error: variable operator <highlight>%OPERATOR%/highlight> is invalid. Report this to the Server owner."
 objective-tracking:
-  actionbar-progress-update: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
+  actionbar-progress-update:
+    default: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
+    only-one-max-progress: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
+  bossbar-progress-update:
+    default: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
+    only-one-max-progress: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
 titles:
   quest-accepted:
     title: <main>Quest přijat
