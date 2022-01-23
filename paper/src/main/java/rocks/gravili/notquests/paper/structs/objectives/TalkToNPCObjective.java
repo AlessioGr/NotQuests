@@ -41,6 +41,7 @@ import rocks.gravili.notquests.paper.structs.Quest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class TalkToNPCObjective extends Objective {
@@ -159,9 +160,10 @@ public class TalkToNPCObjective extends Objective {
         if (main.getIntegrationsManager().isCitizensEnabled() && getNPCtoTalkID() != -1) {
             final NPC npc = CitizensAPI.getNPCRegistry().getById(getNPCtoTalkID());
             if (npc != null) {
-                toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.talkToNPC.base", player)
-                        .replace("%EVENTUALCOLOR%", eventualColor)
-                        .replace("%NAME%", npc.getName());
+                toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.talkToNPC.base", player, Map.of(
+                        "%EVENTUALCOLOR%", eventualColor,
+                        "%NAME%", npc.getName()
+                ));
             } else {
                 toReturn = "    <GRAY>" + eventualColor + "The target NPC is currently not available!";
             }
@@ -171,9 +173,10 @@ public class TalkToNPCObjective extends Objective {
             } else { //Armor Stands
                 final UUID armorStandUUID = getArmorStandUUID();
                 if (armorStandUUID != null) {
-                    toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.talkToNPC.base", player)
-                            .replace("%EVENTUALCOLOR%", eventualColor)
-                            .replace("%NAME%", main.getArmorStandManager().getArmorStandName(armorStandUUID));
+                    toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.talkToNPC.base", player, Map.of(
+                            "%EVENTUALCOLOR%", eventualColor,
+                            "%NAME%", main.getArmorStandManager().getArmorStandName(armorStandUUID)
+                    ));
                 } else {
                     toReturn += "    <GRAY>" + eventualColor + "The target Armor Stand is currently not available!";
                 }

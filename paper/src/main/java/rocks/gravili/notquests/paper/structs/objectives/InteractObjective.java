@@ -33,6 +33,8 @@ import org.bukkit.util.Vector;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 
+import java.util.Map;
+
 
 public class InteractObjective extends Objective {
 
@@ -148,18 +150,20 @@ public class InteractObjective extends Objective {
         }
 
         if (taskDescription.isBlank()) {
-            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.interact.base", player)
-                    .replace("%EVENTUALCOLOR%", eventualColor)
-                    .replace("%INTERACTTYPE%", interactType)
-                    .replace("%COORDINATES%", "X: " + getLocationToInteract().getX() + " Y: " + getLocationToInteract().getY() + " Z: " + getLocationToInteract().getZ())
-                    .replace("%WORLDNAME%", worldName);
+            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.interact.base", player, Map.of(
+                    "%EVENTUALCOLOR%", eventualColor,
+                    "%INTERACTTYPE%", interactType,
+                    "%COORDINATES%", "X: " + getLocationToInteract().getX() + " Y: " + getLocationToInteract().getY() + " Z: " + getLocationToInteract().getZ(),
+                    "%WORLDNAME%", worldName
+            ));
         } else {
-            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.interact.taskDescriptionProvided", player)
-                    .replace("%TASKDESCRIPTION%", getTaskDescription())
-                    .replace("%EVENTUALCOLOR%", eventualColor)
-                    .replace("%INTERACTTYPE%", interactType)
-                    .replace("%COORDINATES%", "X: " + getLocationToInteract().getX() + " Y: " + getLocationToInteract().getY() + " Z: " + getLocationToInteract().getZ())
-                    .replace("%WORLDNAME%", worldName);
+            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.interact.taskDescriptionProvided", player, Map.of(
+                    "%TASKDESCRIPTION%", getTaskDescription(),
+                    "%EVENTUALCOLOR%", eventualColor,
+                    "%INTERACTTYPE%", interactType,
+                    "%COORDINATES%", "X: " + getLocationToInteract().getX() + " Y: " + getLocationToInteract().getY() + " Z: " + getLocationToInteract().getZ(),
+                    "%WORLDNAME%", worldName
+            ));
         }
 
         return toReturn;

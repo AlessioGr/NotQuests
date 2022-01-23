@@ -128,12 +128,13 @@ public class UtilManager {
      * The order in which replacements are applied depends on the order of the
      * map's entry set.
      */
-    public String replaceFromMap(String string,
-                                 Map<String, String> replacements) {
+    public String replaceFromMap(String string, Map<String, String> replacements) {
         StringBuilder sb = new StringBuilder(string);
         for (Map.Entry<String, String> entry : replacements.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
+
+            //main.getLogManager().info("Replacing key: " + key + " and value: " + value);
 
             int start = sb.indexOf(key, 0);
             while (start > -1) {
@@ -142,6 +143,9 @@ public class UtilManager {
                 sb.replace(start, end, value);
                 start = sb.indexOf(key, nextSearchStart);
             }
+
+            //main.getLogManager().info("State: " + sb.toString());
+
         }
         return sb.toString();
     }

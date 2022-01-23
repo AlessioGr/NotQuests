@@ -35,6 +35,7 @@ import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
 import java.util.List;
+import java.util.Map;
 
 public class ProjectKorraUseAbilityObjective extends Objective {
     private String abilityName = "";
@@ -86,9 +87,10 @@ public class ProjectKorraUseAbilityObjective extends Objective {
 
     @Override
     public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.ProjectKorraUseAbility.base", player)
-                .replace("%EVENTUALCOLOR%", eventualColor)
-                .replace("%ABILITY%", getAbilityName());
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.ProjectKorraUseAbility.base", player, Map.of(
+                "%EVENTUALCOLOR%", eventualColor,
+                "%%ABILITY%%", getAbilityName()
+        ));
     }
 
     @Override

@@ -31,6 +31,8 @@ import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 
+import java.util.Map;
+
 
 public class BreakBlocksObjective extends Objective {
     private String blockToBreak;
@@ -108,9 +110,10 @@ public class BreakBlocksObjective extends Objective {
         //TODO: translatedMaterialName doesnt work in gradients yet. Wait until minimessage fixed that bug
 
 
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.breakBlocks.base", player)
-                .replace("%EVENTUALCOLOR%", eventualColor)
-                .replace("%BLOCKTOBREAK%", getBlockToBreakMaterial());
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.breakBlocks.base", player, Map.of(
+                "%EVENTUALCOLOR%", eventualColor,
+                "%BLOCKTOBREAK%", getBlockToBreakMaterial()
+        ));
     }
 
     @Override

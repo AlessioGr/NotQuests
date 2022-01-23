@@ -33,6 +33,8 @@ import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 
+import java.util.Map;
+
 public class CraftItemsObjective extends Objective {
 
     private ItemStack itemToCraft;
@@ -142,19 +144,21 @@ public class CraftItemsObjective extends Objective {
 
 
         if (!displayName.isBlank()) {
-            return main.getLanguageManager().getString("chat.objectives.taskDescription.craftItems.base", player)
-                    .replace("%EVENTUALCOLOR%", eventualColor)
-                    .replace("%ITEMTOCRAFTTYPE%", "" + itemType)
-                    .replace("%ITEMTOCRAFTNAME%", "" + displayName)
-                    .replace("%(%", "(")
-                    .replace("%)%", "<RESET>)");
+            return main.getLanguageManager().getString("chat.objectives.taskDescription.craftItems.base", player, Map.of(
+                    "%EVENTUALCOLOR%", eventualColor,
+                    "%ITEMTOCRAFTTYPE%", itemType,
+                    "%ITEMTOCRAFTNAME%", displayName,
+                    "%(%", "(",
+                    "%)%", "<RESET>)"
+            ));
         } else {
-            return main.getLanguageManager().getString("chat.objectives.taskDescription.craftItems.base", player)
-                    .replace("%EVENTUALCOLOR%", eventualColor)
-                    .replace("%ITEMTOCRAFTTYPE%", "" + itemType)
-                    .replace("%ITEMTOCRAFTNAME%", "")
-                    .replace("%(%", "")
-                    .replace("%)%", "");
+            return main.getLanguageManager().getString("chat.objectives.taskDescription.craftItems.base", player, Map.of(
+                    "%EVENTUALCOLOR%", eventualColor,
+                    "%ITEMTOCRAFTTYPE%", itemType,
+                    "%ITEMTOCRAFTNAME%", displayName,
+                    "%(%", "",
+                    "%)%", ""
+            ));
         }
 
 

@@ -294,19 +294,21 @@ public class DeliverItemsObjective extends Objective {
 
         String toReturn;
         if (!displayName.isBlank()) {
-            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.base", player)
-                    .replace("%EVENTUALCOLOR%", eventualColor)
-                    .replace("%ITEMTODELIVERTYPE%", "" + itemType)
-                    .replace("%ITEMTODELIVERNAME%", "" + displayName)
-                    .replace("%(%", "(")
-                    .replace("%)%", "<RESET>)");
+            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.base", player, Map.of(
+                    "%EVENTUALCOLOR%", eventualColor,
+                    "%ITEMTODELIVERTYPE%", itemType,
+                    "%ITEMTODELIVERNAME%", displayName,
+                    "%(%", "(",
+                    "%)%", "<RESET>)"
+            ));
         } else {
-            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.base", player)
-                    .replace("%EVENTUALCOLOR%", eventualColor)
-                    .replace("%ITEMTODELIVERTYPE%", "" + itemType)
-                    .replace("%ITEMTODELIVERNAME%", "")
-                    .replace("%(%", "")
-                    .replace("%)%", "");
+            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.base", player, Map.of(
+                    "%EVENTUALCOLOR%", eventualColor,
+                    "%ITEMTODELIVERTYPE%", itemType,
+                    "%ITEMTODELIVERNAME%", "",
+                    "%(%", "",
+                    "%)%", ""
+            ));
         }
 
 

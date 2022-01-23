@@ -36,10 +36,7 @@ import rocks.gravili.notquests.paper.structs.objectives.ConditionObjective;
 import rocks.gravili.notquests.paper.structs.objectives.OtherQuestObjective;
 
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -501,8 +498,9 @@ public class QuestPlayer {
                     if(counterWithRewardNames == 1){
                         fullRewardString += main.getLanguageManager().getString("chat.quest-completed-rewards-prefix", player, this, quest, action);
                     }
-                    fullRewardString += "\n"+ main.getLanguageManager().getString("chat.quest-completed-rewards-rewardformat", player, this, quest, action)
-                            .replace("%reward%", action.getActionName());
+                    fullRewardString += "\n"+ main.getLanguageManager().getString("chat.quest-completed-rewards-rewardformat", player, this, quest, action, Map.of(
+                            "%reward%", action.getActionName()
+                    ));
                 }
             }
         }

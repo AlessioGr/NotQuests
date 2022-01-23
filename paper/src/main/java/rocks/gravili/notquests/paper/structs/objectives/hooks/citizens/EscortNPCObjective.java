@@ -36,6 +36,7 @@ import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class EscortNPCObjective extends Objective {
 
@@ -135,10 +136,11 @@ public class EscortNPCObjective extends Objective {
             final NPC npcDestination = CitizensAPI.getNPCRegistry().getById(getNpcToEscortToID());
 
             if (npc != null && npcDestination != null) {
-                toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.escortNPC.base", player)
-                        .replace("%EVENTUALCOLOR%", eventualColor)
-                        .replace("%NPCNAME%", "" + npc.getName())
-                        .replace("%DESTINATIONNPCNAME%", "" + npcDestination.getName());
+                toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.escortNPC.base", player, Map.of(
+                        "%EVENTUALCOLOR%", eventualColor,
+                        "%NPCNAME%", npc.getName(),
+                        "%DESTINATIONNPCNAME%", npcDestination.getName()
+                ));
             } else {
                 toReturn = "    <GRAY>" + eventualColor + "The target or destination NPC is currently not available!";
             }

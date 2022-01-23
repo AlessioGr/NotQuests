@@ -31,6 +31,8 @@ import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 
+import java.util.Map;
+
 public class PlaceBlocksObjective extends Objective {
 
     private String blockToPlace;
@@ -99,9 +101,10 @@ public class PlaceBlocksObjective extends Objective {
 
     @Override
     public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.placeBlocks.base", player)
-                .replace("%EVENTUALCOLOR%", eventualColor)
-                .replace("%BLOCKTOPLACE%", getBlockToPlace());
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.placeBlocks.base", player, Map.of(
+                "%EVENTUALCOLOR%", eventualColor,
+                "%BLOCKTOPLACE%", getBlockToPlace()
+        ));
     }
 
     public void setDeductIfBlockIsBroken(final boolean deductIfBlockIsBroken) {

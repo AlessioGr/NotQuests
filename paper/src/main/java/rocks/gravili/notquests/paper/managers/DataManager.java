@@ -853,9 +853,10 @@ public class DataManager {
                 true
         ));
 
+
         configuration.setSupportPlaceholderAPIInTranslationStrings(getGeneralConfigBoolean(
                 "placeholders.support_placeholderapi_in_translation_strings",
-                true
+                false
         ));
 
 
@@ -1080,35 +1081,35 @@ public class DataManager {
     }
 
     public String getGeneralConfigString(String key, String defaultValue){
-        if (getGeneralConfig().isString(key)) {
+        if (!getGeneralConfig().isString(key)) {
             getGeneralConfig().set(key, defaultValue);
             valueChanged = true;
         }
         return getGeneralConfig().getString(key);
     }
     public boolean getGeneralConfigBoolean(String key, boolean defaultValue){
-        if (getGeneralConfig().isBoolean(key)) {
+        if (!getGeneralConfig().isBoolean(key)) {
             getGeneralConfig().set(key, defaultValue);
             valueChanged = true;
         }
         return getGeneralConfig().getBoolean(key);
     }
     public int getGeneralConfigInt(String key, int defaultValue){
-        if (getGeneralConfig().isInt(key)) {
+        if (!getGeneralConfig().isInt(key)) {
             getGeneralConfig().set(key, defaultValue);
             valueChanged = true;
         }
         return getGeneralConfig().getInt(key);
     }
     public double getGeneralConfigDouble(String key, double defaultValue){
-        if (getGeneralConfig().isDouble(key)) {
+        if (!getGeneralConfig().isDouble(key)) {
             getGeneralConfig().set(key, defaultValue);
             valueChanged = true;
         }
         return getGeneralConfig().getDouble(key);
     }
     public ItemStack getGeneralConfigItemStack(String key, ItemStack defaultValue){
-        if (getGeneralConfig().isItemStack(key)) {
+        if (!getGeneralConfig().isItemStack(key)) {
             getGeneralConfig().set(key, defaultValue);
             valueChanged = true;
         }
@@ -1116,7 +1117,7 @@ public class DataManager {
     }
 
     public List<String> getGeneralConfigStringList(String key, List<String> defaultValue){
-        if (getGeneralConfig().isList(key)) {
+        if (!getGeneralConfig().isList(key)) {
             getGeneralConfig().set(key, defaultValue);
             valueChanged = true;
         }

@@ -29,6 +29,8 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.EntityTypeSelector;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 
+import java.util.Map;
+
 public class KillMobsObjective extends Objective {
 
     private String mobToKillType;
@@ -101,9 +103,10 @@ public class KillMobsObjective extends Objective {
 
     @Override
     public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.killMobs.base", player)
-                .replace("%EVENTUALCOLOR%", eventualColor)
-                .replace("%MOBTOKILL%", "" + getMobToKill());
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.killMobs.base", player, Map.of(
+                "%EVENTUALCOLOR%", eventualColor,
+                "%MOBTOKILL%", getMobToKill()
+        ));
     }
 
     public void setMobToKillType(final String mobToKillType) {

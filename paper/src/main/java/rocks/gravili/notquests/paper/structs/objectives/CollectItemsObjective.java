@@ -34,6 +34,8 @@ import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.actions.GiveItemAction;
 
+import java.util.Map;
+
 public class CollectItemsObjective extends Objective {
 
     private ItemStack itemToCollect = null;
@@ -134,19 +136,21 @@ public class CollectItemsObjective extends Objective {
         String itemType = isCollectAnyItem() ? "Any" : getItemToCollect().getType().name();
 
         if (!displayName.isBlank()) {
-            return main.getLanguageManager().getString("chat.objectives.taskDescription.collectItems.base", player)
-                    .replace("%EVENTUALCOLOR%", eventualColor)
-                    .replace("%ITEMTOCOLLECTTYPE%", "" + itemType)
-                    .replace("%ITEMTOCOLLECTNAME%", "" + displayName)
-                    .replace("%(%", "(")
-                    .replace("%)%", "<RESET>)");
+            return main.getLanguageManager().getString("chat.objectives.taskDescription.collectItems.base", player, Map.of(
+                    "%EVENTUALCOLOR%", eventualColor,
+                    "%ITEMTOCOLLECTTYPE%", itemType,
+                    "%ITEMTOCOLLECTNAME%", displayName,
+                    "%(%", "(",
+                    "%)%", "<RESET>)"
+            ));
         } else {
-            return main.getLanguageManager().getString("chat.objectives.taskDescription.collectItems.base", player)
-                    .replace("%EVENTUALCOLOR%", eventualColor)
-                    .replace("%ITEMTOCOLLECTTYPE%", "" + itemType)
-                    .replace("%ITEMTOCOLLECTNAME%", "")
-                    .replace("%(%", "")
-                    .replace("%)%", "");
+            return main.getLanguageManager().getString("chat.objectives.taskDescription.collectItems.base", player, Map.of(
+                    "%EVENTUALCOLOR", eventualColor,
+                    "%ITEMTOCOLLECTTYPE%", itemType,
+                    "%ITEMTOCOLLECTNAME%", "",
+                    "%(%", "",
+                    "%)%", ""
+            ));
         }
 
     }

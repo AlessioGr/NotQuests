@@ -32,6 +32,7 @@ import rocks.gravili.notquests.paper.structs.ActiveObjective;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ReachLocationObjective extends Objective {
     private Location min, max;
@@ -79,9 +80,10 @@ public class ReachLocationObjective extends Objective {
 
     @Override
     public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.reachLocation.base", player)
-                .replace("%EVENTUALCOLOR%", eventualColor)
-                .replace("%LOCATIONNAME%", getLocationName());
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.reachLocation.base", player, Map.of(
+                "%EVENTUALCOLOR%", eventualColor,
+                "%LOCATIONNAME%", getLocationName()
+        ));
     }
 
     public void setLocationName(final String locationName) {

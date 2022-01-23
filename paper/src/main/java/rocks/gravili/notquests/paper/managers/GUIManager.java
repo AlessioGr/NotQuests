@@ -443,6 +443,7 @@ public class GUIManager {
                         itemStack.setAmount(count);
                         ItemMeta itemMeta = itemStack.getItemMeta();
 
+
                         if (activeObjective.isUnlocked()) {
                             itemMeta.displayName(main.getLanguageManager().getComponent("gui.progress.button.unlockedObjective.name", player, questPlayer, activeQuest, activeObjective));
 

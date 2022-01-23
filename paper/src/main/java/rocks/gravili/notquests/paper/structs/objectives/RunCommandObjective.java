@@ -32,6 +32,7 @@ import rocks.gravili.notquests.paper.structs.ActiveObjective;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class RunCommandObjective extends Objective {
 
@@ -99,9 +100,10 @@ public class RunCommandObjective extends Objective {
 
     @Override
     public String getObjectiveTaskDescription(final String eventualColor, final Player player) {
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.runCommand.base", player)
-                .replace("%EVENTUALCOLOR%", eventualColor)
-                .replace("%COMMANDTORUN%", getCommandToRun());
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.runCommand.base", player, Map.of(
+                "%EVENTUALCOLOR%", eventualColor,
+                "%COMMANDTORUN%", getCommandToRun()
+        ));
     }
 
     @Override
