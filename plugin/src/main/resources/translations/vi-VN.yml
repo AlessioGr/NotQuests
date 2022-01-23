@@ -18,6 +18,8 @@ chat:
   quest-completed-rewards-prefix: '    <highlight>Phần thưởng:'
   quest-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
   quest-completed-rewards-suffix: <EMPTY>
+  quest-not-all-requirements-fulfilled: '<negative>You do not fulfill all the requirements this quest needs! Requirement still needed:'
+  action-not-all-conditions-fulfilled: '<negative>You do not fulfill all the conditions this action needs! Conditions still needed:'
   missing-quest-description: <warn>Nhiệm vụ chưa có mô tả.
   objectives-label-after-quest-accepting: 'Mục Tiêu <main>:'
   questpoints:
@@ -50,59 +52,74 @@ chat:
     successfully-completed-rewards-suffix: <EMPTY>
     taskDescription:
       breakBlocks:
-        base: '    <unimportant>%EVENTUALCOLOR%Phá Vỡ Khối: <main>%EVENTUALCOLOR%%BLOCKTOBREAK%'
+        base: '    <unimportant>Phá Vỡ Khối: <main>%BLOCKTOBREAK%'
       breed:
-        base: '    <unimportant>%EVENTUALCOLOR%Làm Mob Sinh Sản: <main>%EVENTUALCOLOR%%ENTITYTOBREED%'
+        base: '    <unimportant>Làm Mob Sinh Sản: <main>%ENTITYTOBREED%'
       collectItems:
-        base: '    <unimportant>%EVENTUALCOLOR%Thư Nhập Vật Phẩm: <main>%EVENTUALCOLOR%%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
+        base: '    <unimportant>Thư Nhập Vật Phẩm: <main>%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
       consumeItems:
-        base: '    <unimportant>%EVENTUALCOLOR%Dùng Vật Phẩm: <main>%EVENTUALCOLOR%%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
+        base: '    <unimportant>Dùng Vật Phẩm: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Chế Tạo Vật Phẩm: <main>%EVENTUALCOLOR%%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
+        base: '    <veryUnimportant>└─ <unimportant>Chế Tạo Vật Phẩm: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: '    <unimportant>%EVENTUALCOLOR%Giao Vật Phẩm: <main>%EVENTUALCOLOR%%ITEMTODELIVERTYPE% %(%%ITEMTODELIVERNAME%%)%'
+        base: '    <unimportant>Giao Vật Phẩm: <main>%ITEMTODELIVERTYPE% %(%%ITEMTODELIVERNAME%%)%'
+        deliver-to-npc: '      <GRAY>Deliver it to <WHITE>%NPCNAME%'
+        deliver-to-npc-not-available: '      <GRAY>The delivery NPC is currently not available!'
+        deliver-to-npc-citizens-not-found: '    <RED>Error: Citizens plugin not installed. Contact an admin.'
+        deliver-to-armorstand: '    <GRAY>Deliver it to <WHITE>%ARMORSTANDNAME%'
+        deliver-to-armorstand-not-available: '    <GRAY>The target Armor Stand is currently not available!'
       escortNPC:
-        base: '    <unimportant>%EVENTUALCOLOR%Đi Theo <main>%EVENTUALCOLOR%%NPCNAME% <unimportant>%EVENTUALCOLOR% Đến <main>%EVENTUALCOLOR%%DESTINATIONNPCNAME%'
+        base: '    <unimportant>Đi Theo <main>%NPCNAME% <unimportant> Đến <main>%DESTINATIONNPCNAME%'
       killMobs:
-        base: '    <unimportant>%EVENTUALCOLOR%Tiêu Diệt Quái: <main>%EVENTUALCOLOR%%MOBTOKILL%'
+        base: '    <unimportant>Tiêu Diệt Quái: <main>%MOBTOKILL%'
       otherQuest:
-        base: '    <unimportant>%EVENTUALCOLOR%Hoàn Thành Nhiệm Vụ: <main>%EVENTUALCOLOR%%OTHERQUESTNAME%'
+        base: '    <unimportant>Hoàn Thành Nhiệm Vụ: <main>%OTHERQUESTNAME%'
       placeBlocks:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Block to place: <main>%EVENTUALCOLOR%%BLOCKTOPLACE%'
+        base: '    <veryUnimportant>└─ <unimportant>Block to place: <main>%BLOCKTOPLACE%'
       reachLocation:
-        base: '    <unimportant>%EVENTUALCOLOR%Đi Đến Địa Điểm: <main>%EVENTUALCOLOR%%LOCATIONNAME%'
+        base: '    <unimportant>Đi Đến Địa Điểm: <main>%LOCATIONNAME%'
       talkToNPC:
-        base: '    <unimportant>%EVENTUALCOLOR%Nói Chuyện Với <main>%EVENTUALCOLOR%%NAME%'
+        base: '    <unimportant>Nói Chuyện Với <main>%NAME%'
       triggerCommand:
-        base: '    <unimportant>%EVENTUALCOLOR%Dùng Lệnh: <main>%EVENTUALCOLOR%%TRIGGERNAME%'
+        base: '    <unimportant>Dùng Lệnh: <main>%TRIGGERNAME%'
       killEliteMobs:
-        base: '    <unimportant>%EVENTUALCOLOR%Tiêu Diệt Elite Mobs: <main>%EVENTUALCOLOR%%ELITEMOBNAME%'
-        any: '    <unimportant>%EVENTUALCOLOR%Tiêu Diệt Bất Kì EliteMobs Nào!'
+        base: '    <unimportant>Tiêu Diệt Elite Mobs: <main>%ELITEMOBNAME%'
+        any: '    <unimportant>Tiêu Diệt Bất Kì EliteMobs Nào!'
       runCommand:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Dùng Lệnh: <main>%EVENTUALCOLOR%%COMMANDTORUN%'
+        base: '    <veryUnimportant>└─ <unimportant>Dùng Lệnh: <main>%COMMANDTORUN%'
       interact:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%%INTERACTTYPE% Vị Trí: <main>%EVENTUALCOLOR%%COORDINATES% <main>%EVENTUALCOLOR% Ở Thế Giới%EVENTUALCOLOR% %WORLDNAME%'
-        taskDescriptionProvided: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%%TASKDESCRIPTION%'
+        base: '    <veryUnimportant>└─ <unimportant>%INTERACTTYPE% Vị Trí: <main>%COORDINATES% <main> Ở Thế Giới %WORLDNAME%'
+        taskDescriptionProvided: '    <veryUnimportant>└─ <unimportant>%TASKDESCRIPTION%'
       jump:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Nhảy <main>%EVENTUALCOLOR%%AMOUNTOFJUMPS% <unimportant>%EVENTUALCOLOR%times'
+        base: '    <veryUnimportant>└─ <unimportant>Nhảy <main>%AMOUNTOFJUMPS% <unimportant>times'
       sneak:
-        base: '    <veryUnimportant>└─<unimportant>%EVENTUALCOLOR%Rón rén<main>%EVENTUALCOLOR%%AMOUNTOFSNEAKS%</main>%EVENTUALCOLOR%lần'
+        base: '    <veryUnimportant>└─<unimportant>Rón rén<main>%AMOUNTOFSNEAKS%</main>lần'
       smelt:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Nung Vật Phẩm: <main>%EVENTUALCOLOR%%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+        base: '    <veryUnimportant>└─ <unimportant>Nung Vật Phẩm: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       townyReachResidentCount:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Số Lượng Thành Viên Thị Trấn Đạt Đến: <main>%EVENTUALCOLOR%%AMOUNT%'
+        base: '    <veryUnimportant>└─ <unimportant>Số Lượng Thành Viên Thị Trấn Đạt Đến: <main>%AMOUNT%'
       townyNationReachTownCount:
-        base: '    <veryUnimportant>└─<unimportant>%EVENTUALCOLOR%Đạt số tiền thị trấn với quốc gia của bạn: <main>%EVENTUALCOLOR%%AMOUNT%'
+        base: '    <veryUnimportant>└─<unimportant>Đạt số tiền thị trấn với quốc gia của bạn: <main>%AMOUNT%'
       jobsRebornReachJobLevel:
-        base: '    <veryUnimportant>└─<unimportant>%EVENTUALCOLOR%Cấp độ nghề đạt đến<main>%EVENTUALCOLOR%%AMOUNT%</main>với nghề<main>%EVENTUALCOLOR%%JOB%'
+        base: '    <veryUnimportant>└─<unimportant>Cấp độ nghề đạt đến<main>%AMOUNT%</main>với nghề<main>%JOB%'
       SlimefunResearch:
-        base: '    <veryUnimportant>└─<unimportant>%EVENTUALCOLOR%Tốc độ tìm lại'
+        base: '    <veryUnimportant>└─<unimportant>Tốc độ tìm lại'
       ProjectKorraUseAbility:
-        base: '    <veryUnimportant>└─<unimportant>%EVENTUALCOLOR%Dùng Ability:<main>%EVENTUALCOLOR%%ABILITY%'
+        base: '    <veryUnimportant>└─<unimportant>Dùng Ability:<main>%ABILITY%'
       BetonQuestCompleteObjective:
-        base: '    <veryUnimportant>└─ <unimportant>%EVENTUALCOLOR%Finish Objective: <main>%EVENTUALCOLOR%%BETONQUESTOBJECTIVENAME%'
+        base: '    <veryUnimportant>└─ <unimportant>Finish Objective: <main>%BETONQUESTOBJECTIVENAME%'
+  conditions:
+    boolean:
+      not-fulfilled: "<warn>Following needs to be %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."
+      variable-not-found: "<error>Error: variable <highlight>%VARIABLENAME%</highlight> not found. Report this to the Server owner."
+      wrong-operator: "<error>Error: variable operator <highlight>%OPERATOR%/highlight> is invalid. Report this to the Server owner."
 objective-tracking:
-  actionbar-progress-update: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
+  actionbar-progress-update:
+    default: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
+    only-one-max-progress: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
+  bossbar-progress-update:
+    default: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
+    only-one-max-progress: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
 titles:
   quest-accepted:
     title: <main>Chấp Nhận Nhiệm Vụ
