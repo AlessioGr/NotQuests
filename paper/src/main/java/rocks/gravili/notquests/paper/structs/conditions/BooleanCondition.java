@@ -271,6 +271,10 @@ public class BooleanCondition extends Condition {
                 continue;
             }
 
+            if(main.getVariablesManager().alreadyFullRegisteredVariables.contains(variableString)){
+                continue;
+            }
+
             main.getLogManager().info("Registering boolean condition: <highlight>" + variableString);
 
 

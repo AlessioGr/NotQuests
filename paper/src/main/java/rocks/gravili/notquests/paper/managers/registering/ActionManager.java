@@ -235,4 +235,28 @@ public class ActionManager {
     }
 
 
+    public void updateVariableActions() {
+        try {
+            for(Class<? extends Action> action : getActions()){
+                String identifier = getActionType(action);
+
+
+                Method commandHandler = action.getMethod("handleCommands", main.getClass(), PaperCommandManager.class, Command.Builder.class, ActionFor.class);
+                if(action == NumberAction.class || action == StringAction.class || action == BooleanAction.class || action == ListAction.class || action == ItemStackListAction.class) {
+
+                    main.getLogManager().info("Re-registering action " + identifier + " due to variable changes...");
+
+                    commandHandler.invoke(action, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddRewardCommandBuilder()
+                            .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action"), ActionFor.QUEST);
+                    commandHandler.invoke(action, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddRewardCommandBuilder()
+                            .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action"), ActionFor.OBJECTIVE);
+                    commandHandler.invoke(action, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminAddActionCommandBuilder()
+                            .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action")
+                            .flag(main.getCommandManager().categoryFlag), ActionFor.ActionsYML); //For Actions.yml
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 }

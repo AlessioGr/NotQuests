@@ -34,6 +34,7 @@ import rocks.gravili.notquests.paper.structs.variables.*;
 import rocks.gravili.notquests.paper.structs.variables.hooks.*;
 import rocks.gravili.notquests.paper.structs.variables.tags.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -42,6 +43,8 @@ public class VariablesManager {
     private final NotQuests main;
 
     private final HashMap<String, Class<? extends Variable<?>>> variables;
+
+    public ArrayList<String> alreadyFullRegisteredVariables = new ArrayList<>();
 
 
     public VariablesManager(final NotQuests main) {
@@ -137,9 +140,22 @@ public class VariablesManager {
     }
 
 
-    public void registerVariable(final String identifier, final Class<? extends Variable<?>> Variable) {
+    public void registerVariable(final String identifier, final Class<? extends Variable<?>> variable) {
         main.getLogManager().info("Registering Variable <highlight>" + identifier);
-        variables.put(identifier, Variable);
+        variables.put(identifier, variable);
+
+        /*if(main.getActionManager() != null){
+            main.getActionManager().updateVariableActions();
+        }*/
+        if(!main.getDataManager().isCurrentlyLoading()){
+            if(main.getConditionsManager() != null){
+                main.getConditionsManager().updateVariableConditions();
+            }
+            if(main.getActionManager() != null){
+                main.getActionManager().updateVariableActions();
+            }
+            alreadyFullRegisteredVariables.add(identifier);
+        }
 
 
         /*try {

@@ -106,6 +106,9 @@ public class BooleanAction extends Action {
             if(variable == null || !variable.isCanSetValue() || variable.getVariableDataType() != VariableDataType.BOOLEAN){
                 continue;
             }
+            if(main.getVariablesManager().alreadyFullRegisteredVariables.contains(variableString)){
+                continue;
+            }
 
             manager.command(main.getVariablesManager().registerVariableCommands(variableString, builder)
                     .argument(StringArgument.<CommandSender>newBuilder("operator").withSuggestionsProvider((context, lastString) -> {

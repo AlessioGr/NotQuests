@@ -300,6 +300,9 @@ public class ListCondition extends Condition {
             if(variable == null || variable.getVariableDataType() != VariableDataType.LIST){
                 continue;
             }
+            if(main.getVariablesManager().alreadyFullRegisteredVariables.contains(variableString)){
+                continue;
+            }
 
             main.getLogManager().info("Registering list condition: <highlight>" + variableString);
 
