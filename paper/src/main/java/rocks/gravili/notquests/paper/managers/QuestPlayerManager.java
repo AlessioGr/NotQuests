@@ -23,8 +23,10 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.*;
 import rocks.gravili.notquests.paper.structs.triggers.ActiveTrigger;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -51,10 +53,25 @@ public class QuestPlayerManager {
 
         questPlayersAndUUIDs.clear();
 
+        Connection connection = null;
+        Statement statement = null;
+        try{
+            connection = main.getDataManager().getConnection();
+            statement = connection.createStatement();
+        }catch (Exception e){
+            main.getDataManager().disablePluginAndSaving("There was a database error, so questplayer loading has been disabled. (1.1)");
+            return;
+        }
+        if (statement == null) {
+            main.getDataManager().disablePluginAndSaving("There was a database error, so questplayer loading has been disabled. (1.2)");
+            return;
+        }
 
         //Quest Players
         try {
-            ResultSet result = main.getDataManager().getDatabaseStatement().executeQuery("SELECT * FROM QuestPlayerData");
+
+
+            ResultSet result = statement.executeQuery("SELECT * FROM QuestPlayerData");
             while (result.next()) {
                 final UUID uuid = UUID.fromString(result.getString("PlayerUUID"));
                 createQuestPlayer(uuid);
@@ -89,7 +106,7 @@ public class QuestPlayerManager {
 
 
                 //Completed Quests
-                ResultSet completedQuestsResults = main.getDataManager().getDatabaseStatement().executeQuery("SELECT QuestName, TimeCompleted FROM CompletedQuests WHERE PlayerUUID = '" + questPlayer.getUUID().toString() + "';");
+                ResultSet completedQuestsResults = statement.executeQuery("SELECT QuestName, TimeCompleted FROM CompletedQuests WHERE PlayerUUID = '" + questPlayer.getUUID().toString() + "';");
                 while (completedQuestsResults.next()) {
                     final String questName = completedQuestsResults.getString("QuestName");
                     final Quest quest = main.getQuestManager().getQuest(questName);
@@ -111,7 +128,7 @@ public class QuestPlayerManager {
 
 
                 //Active Quests
-                ResultSet activeQuestsResults = main.getDataManager().getDatabaseStatement().executeQuery("SELECT QuestName FROM ActiveQuests WHERE PlayerUUID = '" + questPlayer.getUUID() + "';");
+                ResultSet activeQuestsResults = statement.executeQuery("SELECT QuestName FROM ActiveQuests WHERE PlayerUUID = '" + questPlayer.getUUID() + "';");
                 while (activeQuestsResults.next()) {
                     final String questName = activeQuestsResults.getString("QuestName");
                     final Quest quest = main.getQuestManager().getQuest(questName);
@@ -129,7 +146,7 @@ public class QuestPlayerManager {
                 for (ActiveQuest activeQuest : activeQuests) {
 
                     //Active Triggers
-                    ResultSet activeQuestTriggerResults = main.getDataManager().getDatabaseStatement().executeQuery("SELECT * FROM ActiveTriggers WHERE PlayerUUID = '" + questPlayer.getUUID() + "' AND QuestName = '" + activeQuest.getQuest().getQuestName() + "';");
+                    ResultSet activeQuestTriggerResults = statement.executeQuery("SELECT * FROM ActiveTriggers WHERE PlayerUUID = '" + questPlayer.getUUID() + "' AND QuestName = '" + activeQuest.getQuest().getQuestName() + "';");
                     while (activeQuestTriggerResults.next()) {
                         final String triggerTypeString = activeQuestTriggerResults.getString("TriggerType");
                         final long currentProgress = activeQuestTriggerResults.getLong("currentProgress");
@@ -156,7 +173,7 @@ public class QuestPlayerManager {
 
 
                     //Active Objectives
-                    ResultSet activeQuestObjectiveResults = main.getDataManager().getDatabaseStatement().executeQuery("SELECT * FROM ActiveObjectives WHERE PlayerUUID = '" + questPlayer.getUUID() + "' AND QuestName = '" + activeQuest.getQuest().getQuestName() + "';");
+                    ResultSet activeQuestObjectiveResults = statement.executeQuery("SELECT * FROM ActiveObjectives WHERE PlayerUUID = '" + questPlayer.getUUID() + "' AND QuestName = '" + activeQuest.getQuest().getQuestName() + "';");
                     while (activeQuestObjectiveResults.next()) {
                         final String objectiveTypeString = activeQuestObjectiveResults.getString("ObjectiveType");
                         final long currentProgress = activeQuestObjectiveResults.getLong("currentProgress");
@@ -217,9 +234,15 @@ public class QuestPlayerManager {
                 questPlayer.removeCompletedQuests();
             }
 
+
+            statement.close();
+            connection.close();
+
         } catch (SQLException sqlException) {
             sqlException.printStackTrace();
         }
+
+
 
         main.getTagManager().loadAllOnlinePlayerTags();
 
@@ -235,8 +258,23 @@ public class QuestPlayerManager {
         main.getLogManager().info("Saving player data...");
 
 
-        main.getLogManager().info("Re-opening database connection...");
-        main.getDataManager().refreshDatabaseConnection(false);
+        Connection connection = null;
+        Statement statement = null;
+        try{
+            connection = main.getDataManager().getConnection();
+            statement = connection.createStatement();
+        }catch (Exception e){
+            main.getLogManager().severe("There was a database error, so questplayer saving has been disabled. (1.1)");
+            return;
+        }
+        if (statement == null) {
+            main.getLogManager().severe("There was a database error, so questplayer saving has been disabled. (1.2)");
+            return;
+        }
+
+
+        //main.getLogManager().info("Re-opening database connection...");
+        //main.getDataManager().refreshDatabaseConnection(false);
 
 
         for (QuestPlayer questPlayer : questPlayersAndUUIDs.values()) {
@@ -244,36 +282,38 @@ public class QuestPlayerManager {
             final UUID questPlayerUUID = questPlayer.getUUID();
             try {
                 //QuestPoints
-                main.getDataManager().getDatabaseStatement().executeUpdate("DELETE FROM QuestPlayerData WHERE PlayerUUID = '" + questPlayerUUID.toString() + "';");
-                main.getDataManager().getDatabaseStatement().executeUpdate("INSERT INTO QuestPlayerData (PlayerUUID, QuestPoints) VALUES ('" + questPlayerUUID + "', " + questPoints + ");");
+                statement.executeUpdate("DELETE FROM QuestPlayerData WHERE PlayerUUID = '" + questPlayerUUID.toString() + "';");
+                statement.executeUpdate("INSERT INTO QuestPlayerData (PlayerUUID, QuestPoints) VALUES ('" + questPlayerUUID + "', " + questPoints + ");");
 
                 //Active Quests
-                main.getDataManager().getDatabaseStatement().executeUpdate("DELETE FROM ActiveQuests WHERE PlayerUUID = '" + questPlayerUUID + "';");
-                main.getDataManager().getDatabaseStatement().executeUpdate("DELETE FROM ActiveObjectives WHERE PlayerUUID = '" + questPlayerUUID + "';");
+                statement.executeUpdate("DELETE FROM ActiveQuests WHERE PlayerUUID = '" + questPlayerUUID + "';");
+                statement.executeUpdate("DELETE FROM ActiveObjectives WHERE PlayerUUID = '" + questPlayerUUID + "';");
                 for (ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-                    main.getDataManager().getDatabaseStatement().executeUpdate("INSERT INTO ActiveQuests (QuestName, PlayerUUID) VALUES ('" + activeQuest.getQuest().getQuestName() + "', '" + questPlayerUUID + "');");
+                    statement.executeUpdate("INSERT INTO ActiveQuests (QuestName, PlayerUUID) VALUES ('" + activeQuest.getQuest().getQuestName() + "', '" + questPlayerUUID + "');");
                     //Active Triggers
                     for (ActiveTrigger activeTrigger : activeQuest.getActiveTriggers()) {
-                        main.getDataManager().getDatabaseStatement().executeUpdate("INSERT INTO ActiveTriggers (TriggerType, QuestName, PlayerUUID, CurrentProgress, TriggerID) VALUES ('" + activeTrigger.getTrigger().getTriggerType() + "', '" + activeTrigger.getActiveQuest().getQuest().getQuestName() + "', '" + questPlayerUUID + "', " + activeTrigger.getCurrentProgress() + ", " + activeTrigger.getTriggerID() + ");");
+                        statement.executeUpdate("INSERT INTO ActiveTriggers (TriggerType, QuestName, PlayerUUID, CurrentProgress, TriggerID) VALUES ('" + activeTrigger.getTrigger().getTriggerType() + "', '" + activeTrigger.getActiveQuest().getQuest().getQuestName() + "', '" + questPlayerUUID + "', " + activeTrigger.getCurrentProgress() + ", " + activeTrigger.getTriggerID() + ");");
                     }
 
                     //Active Objectives
                     for (ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-                        main.getDataManager().getDatabaseStatement().executeUpdate("INSERT INTO ActiveObjectives (ObjectiveType, QuestName, PlayerUUID, CurrentProgress, ObjectiveID, HasBeenCompleted) VALUES ('" + main.getObjectiveManager().getObjectiveType(activeObjective.getObjective().getClass()) + "', '" + activeObjective.getActiveQuest().getQuest().getQuestName() + "', '" + questPlayerUUID + "', " + activeObjective.getCurrentProgress() + ", " + activeObjective.getObjectiveID() + ", " + activeObjective.hasBeenCompleted() + ");");
+                        statement.executeUpdate("INSERT INTO ActiveObjectives (ObjectiveType, QuestName, PlayerUUID, CurrentProgress, ObjectiveID, HasBeenCompleted) VALUES ('" + main.getObjectiveManager().getObjectiveType(activeObjective.getObjective().getClass()) + "', '" + activeObjective.getActiveQuest().getQuest().getQuestName() + "', '" + questPlayerUUID + "', " + activeObjective.getCurrentProgress() + ", " + activeObjective.getObjectiveID() + ", " + activeObjective.hasBeenCompleted() + ");");
                     }
                     //Active Objectives from completed Objective list
                     for (ActiveObjective completedObjective : activeQuest.getCompletedObjectives()) {
-                        main.getDataManager().getDatabaseStatement().executeUpdate("INSERT INTO ActiveObjectives (ObjectiveType, QuestName, PlayerUUID, CurrentProgress, ObjectiveID, HasBeenCompleted) VALUES ('" + main.getObjectiveManager().getObjectiveType(completedObjective.getObjective().getClass()) + "', '" + completedObjective.getActiveQuest().getQuest().getQuestName() + "', '" + questPlayerUUID + "', " + completedObjective.getCurrentProgress() + ", " + completedObjective.getObjectiveID() + ", " + completedObjective.hasBeenCompleted() + ");");
+                        statement.executeUpdate("INSERT INTO ActiveObjectives (ObjectiveType, QuestName, PlayerUUID, CurrentProgress, ObjectiveID, HasBeenCompleted) VALUES ('" + main.getObjectiveManager().getObjectiveType(completedObjective.getObjective().getClass()) + "', '" + completedObjective.getActiveQuest().getQuest().getQuestName() + "', '" + questPlayerUUID + "', " + completedObjective.getCurrentProgress() + ", " + completedObjective.getObjectiveID() + ", " + completedObjective.hasBeenCompleted() + ");");
                     }
                 }
 
 
                 //Completed Quests
-                main.getDataManager().getDatabaseStatement().executeUpdate("DELETE FROM CompletedQuests WHERE PlayerUUID = '" + questPlayerUUID + "';");
+                statement.executeUpdate("DELETE FROM CompletedQuests WHERE PlayerUUID = '" + questPlayerUUID + "';");
                 for (CompletedQuest completedQuest : questPlayer.getCompletedQuests()) {
-                    main.getDataManager().getDatabaseStatement().executeUpdate("INSERT INTO CompletedQuests (QuestName, PlayerUUID, TimeCompleted) VALUES ('" + completedQuest.getQuest().getQuestName() + "', '" + questPlayerUUID + "', " + completedQuest.getTimeCompleted() + ");");
+                    statement.executeUpdate("INSERT INTO CompletedQuests (QuestName, PlayerUUID, TimeCompleted) VALUES ('" + completedQuest.getQuest().getQuestName() + "', '" + questPlayerUUID + "', " + completedQuest.getTimeCompleted() + ");");
                 }
 
+                statement.close();
+                connection.close();
 
             } catch (SQLException sqlException) {
                 main.getLogManager().warn("There was an error saving the playerdata of player with UUID <highlight>" + questPlayer.getUUID() + "</highlight>! Stacktrace:");

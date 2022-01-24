@@ -197,6 +197,7 @@ dependencies {
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.13.1")
     implementation("org.apache.httpcomponents:httpclient:4.5.13")
 
+    implementation("com.zaxxer:HikariCP:5.0.1")
 
 
 }
@@ -240,6 +241,7 @@ tasks.withType<ShadowJar> {
 
     relocate("org.apache.http", "$shadowPath.apache.http")
 
+    relocate("com.zaxxer.hikari", "$shadowPath.hikari")
 
 
     dependencies {
@@ -269,6 +271,9 @@ tasks.withType<ShadowJar> {
         include(dependency("com.fasterxml.jackson.core:"))
 
         include(dependency("org.apache.httpcomponents:"))
+
+        include(dependency("com.zaxxer:"))
+
     }
 
 

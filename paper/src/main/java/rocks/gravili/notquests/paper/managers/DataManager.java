@@ -18,6 +18,8 @@
 
 package rocks.gravili.notquests.paper.managers;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.kyori.adventure.text.Component;
@@ -40,10 +42,7 @@ import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
 import java.io.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.*;
 
 
@@ -92,14 +91,7 @@ public class DataManager {
      */
     public final List<String> standardEliteMobNamesCompletions = new ArrayList<>();
 
-    /**
-     * MYSQL Database Connection Object
-     */
-    private Connection connection;
-    /**
-     * MYSQL Database Connection Object
-     */
-    private Statement statement;
+
 
     /*
      * Quests.yml Configuration File
@@ -157,6 +149,12 @@ public class DataManager {
     private Category defaultCategory;
 
     private boolean valueChanged = false;
+
+
+    //HikariCP
+    private HikariConfig hikariConfig;
+    private HikariDataSource hikariDataSource;
+
 
 
     /**
@@ -1229,48 +1227,6 @@ public class DataManager {
     }
 
 
-    /**
-     * If the plugin has been running for some time, the MySQL Database connection is
-     * sometimes interrupted which causes errors when it tries to save data once the plugin
-     * is disabled.
-     * <p>
-     * This is especially bad, because if the plugin has been running for a while, that data will be lost.
-     * <p>
-     * This method will try to re-open the database connection statement, so data can be saved to the database
-     * safely again.
-     *
-     * @param newTask sets if the plugin should force an asynchronous thread to re-open the database connection. If
-     *                set to false, it will do it in whatever thread this method is run in.
-     */
-    public void refreshDatabaseConnection(final boolean newTask) {
-        if (newTask) {
-            if (Bukkit.isPrimaryThread()) {
-                Bukkit.getScheduler().runTaskAsynchronously(main.getMain(), () -> {
-                    openConnection();
-                    try {
-                        statement = connection.createStatement();
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                });
-            } else {
-                openConnection();
-                try {
-                    statement = connection.createStatement();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        } else {
-            openConnection();
-            try {
-                statement = connection.createStatement();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-
-    }
 
 
     /**
@@ -1308,35 +1264,53 @@ public class DataManager {
 
     private void reloadData2() {
         openConnection();
+
+        Connection connection = null;
+        try{
+            connection = getConnection();
+        }catch (Exception e){
+            disablePluginAndSaving("There was a database error, so loading has been disabled. (1.1)");
+            return;
+        }
         if (connection == null) {
-            disablePluginAndSaving("There was a database error, so loading has been disabled. (1)");
+            disablePluginAndSaving("There was a database error, so loading has been disabled. (1.2)");
             return;
         }
-        try {
-            statement = connection.createStatement();
-        } catch (SQLException e) {
-            disablePluginAndSaving("There was a database error, so loading has been disabled. (2)", e);
-            return;
-        }
+
+
+
+
 
 
         //Create Database tables if they don't exist yet
         try {
             main.getLogManager().info(LogCategory.DATA, "Creating database table 'QuestPlayerData' if it doesn't exist yet...");
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS `QuestPlayerData` (`PlayerUUID` varchar(200), `QuestPoints` BIGINT(255), PRIMARY KEY (PlayerUUID))");
+            PreparedStatement createQuestPlayerDataTableStatement = connection.prepareStatement( "CREATE TABLE IF NOT EXISTS `QuestPlayerData` (`PlayerUUID` varchar(200), `QuestPoints` BIGINT(255), PRIMARY KEY (PlayerUUID))" );
+            createQuestPlayerDataTableStatement.executeUpdate();
+            createQuestPlayerDataTableStatement.close();
 
             main.getLogManager().info(LogCategory.DATA, "Creating database table 'ActiveQuests' if it doesn't exist yet...");
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS `ActiveQuests` (`QuestName` varchar(200), `PlayerUUID` varchar(200))");
+            PreparedStatement createActiveQuestsDataTableStatement = connection.prepareStatement( "CREATE TABLE IF NOT EXISTS `ActiveQuests` (`QuestName` varchar(200), `PlayerUUID` varchar(200))" );
+            createActiveQuestsDataTableStatement.executeUpdate();
+            createActiveQuestsDataTableStatement.close();
 
             main.getLogManager().info(LogCategory.DATA, "Creating database table 'CompletedQuests' if it doesn't exist yet...");
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS `CompletedQuests` (`QuestName` varchar(200), `PlayerUUID` varchar(200), `TimeCompleted` BIGINT(255))");
+            PreparedStatement createCompletedQuestsDataTableStatement = connection.prepareStatement( "CREATE TABLE IF NOT EXISTS `CompletedQuests` (`QuestName` varchar(200), `PlayerUUID` varchar(200), `TimeCompleted` BIGINT(255))" );
+            createCompletedQuestsDataTableStatement.executeUpdate();
+            createCompletedQuestsDataTableStatement.close();
 
             main.getLogManager().info(LogCategory.DATA, "Creating database table 'ActiveObjectives' if it doesn't exist yet...");
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS `ActiveObjectives` (`ObjectiveType` varchar(200), `QuestName` varchar(200), `PlayerUUID` varchar(200), `CurrentProgress` BIGINT(255), `ObjectiveID` INT(255), `HasBeenCompleted` BOOLEAN)");
+            PreparedStatement createActiveObjectivesDataTableStatement = connection.prepareStatement( "CREATE TABLE IF NOT EXISTS `ActiveObjectives` (`ObjectiveType` varchar(200), `QuestName` varchar(200), `PlayerUUID` varchar(200), `CurrentProgress` BIGINT(255), `ObjectiveID` INT(255), `HasBeenCompleted` BOOLEAN)" );
+            createActiveObjectivesDataTableStatement.executeUpdate();
+            createActiveObjectivesDataTableStatement.close();
 
             main.getLogManager().info(LogCategory.DATA, "Creating database table 'ActiveTriggers' if it doesn't exist yet...");
+            PreparedStatement createActiveTriggersDataTableStatement = connection.prepareStatement( "CREATE TABLE IF NOT EXISTS `ActiveTriggers` (`TriggerType` varchar(200), `QuestName` varchar(200), `PlayerUUID` varchar(200), `CurrentProgress` BIGINT(255), `TriggerID` INT(255))" );
+            createActiveTriggersDataTableStatement.executeUpdate();
+            createActiveTriggersDataTableStatement.close();
 
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS `ActiveTriggers` (`TriggerType` varchar(200), `QuestName` varchar(200), `PlayerUUID` varchar(200), `CurrentProgress` BIGINT(255), `TriggerID` INT(255))");
+            connection.close();
+
 
 
         } catch (SQLException e) {
@@ -1414,64 +1388,9 @@ public class DataManager {
     }
 
 
-    /**
-     * This will open a MySQL connection statement which is needed to save and load
-     * to the MySQL Database.
-     * <p>
-     * This is where it tries to log-in to the Database.
-     *
-     */
-    public void openConnection() {
-        try {
-            if (connection != null && !connection.isClosed()) {
-                return;
-            }
-            if(!getConfiguration().isMySQLEnabled()){
-                File dataFolder = new File(main.getMain().getDataFolder(), "database_sqlite.db");
-                if (!dataFolder.exists()){
-                    try {
-                        if(!dataFolder.createNewFile()){
-                            main.getLogManager().severe("File write error: database_sqlite.db (1)");
-                        }
-                    } catch (IOException e) {
-                        main.getLogManager().severe("File write error: database_sqlite.db (2)");
-                    }
-                }
-                try {
-                    if(connection!=null && !connection.isClosed()){
-                        return;
-                    }
-                    Class.forName("org.sqlite.JDBC");
-                    connection = DriverManager.getConnection("jdbc:sqlite:" + dataFolder);
-                } catch (SQLException ex) {
-                    main.getLogManager().severe("SQLite exception on initialize");
-                    ex.printStackTrace();
-                } catch (ClassNotFoundException ex) {
-                    main.getLogManager().severe("You need the SQLite JBDC library. Google it. Put it in /lib folder.");
-                }
-            }else{
-                // Class.forName("com.mysql.jdbc.Driver"); - Use this with old version of the Driver
-                Class.forName("com.mysql.cj.jdbc.Driver");
-                connection = DriverManager.getConnection("jdbc:mysql://"
-                                + configuration.getDatabaseHost() + ":" + configuration.getDatabasePort() + "/" + configuration.getDatabaseName() + "?autoReconnect=true",
-                        configuration.getDatabaseUsername(), configuration.getDatabasePassword());
-            }
-
-        } catch (SQLException | ClassNotFoundException e) {
-            disablePluginAndSaving("Could not connect to MySQL Database. Please check the information you entered in the general.yml. If you're not using MySQL, make sure it's disable in the general.yml. It would then use SQLite instead.", e);
-        }
-    }
 
 
-    /**
-     * This returns the MySQL Database Statement, with which Database operations can be
-     * performed / executed.
-     *
-     * @return the MySQL Database Statement
-     */
-    public final Statement getDatabaseStatement() {
-        return statement;
-    }
+
 
     /**
      * @return if the plugin will try to save data once it's disabled.
@@ -1686,15 +1605,137 @@ public class DataManager {
         }
     }
 
+
+
+
+    /*public void openConnection() {
+        try {
+            if (connection != null && !connection.isClosed()) {
+                return;
+            }
+            if(!getConfiguration().isMySQLEnabled()){
+                File dataFolder = new File(main.getMain().getDataFolder(), "database_sqlite.db");
+                if (!dataFolder.exists()){
+                    try {
+                        if(!dataFolder.createNewFile()){
+                            main.getLogManager().severe("File write error: database_sqlite.db (1)");
+                        }
+                    } catch (IOException e) {
+                        main.getLogManager().severe("File write error: database_sqlite.db (2)");
+                    }
+                }
+                try {
+                    if(connection!=null && !connection.isClosed()){
+                        return;
+                    }
+                    Class.forName("org.sqlite.JDBC");
+                    connection = DriverManager.getConnection("jdbc:sqlite:" + dataFolder);
+                } catch (SQLException ex) {
+                    main.getLogManager().severe("SQLite exception on initialize");
+                    ex.printStackTrace();
+                } catch (ClassNotFoundException ex) {
+                    main.getLogManager().severe("You need the SQLite JBDC library. Google it. Put it in /lib folder.");
+                }
+            }else{
+                // Class.forName("com.mysql.jdbc.Driver"); - Use this with old version of the Driver
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                connection = DriverManager.getConnection("jdbc:mysql://"
+                                + configuration.getDatabaseHost() + ":" + configuration.getDatabasePort() + "/" + configuration.getDatabaseName() + "?autoReconnect=true",
+                        configuration.getDatabaseUsername(), configuration.getDatabasePassword());
+            }
+
+        } catch (SQLException | ClassNotFoundException e) {
+            disablePluginAndSaving("Could not connect to MySQL Database. Please check the information you entered in the general.yml. If you're not using MySQL, make sure it's disable in the general.yml. It would then use SQLite instead.", e);
+        }
+    }*/
+
+    public void openConnection(){
+        if(hikariDataSource != null){
+            return;
+        }
+        hikariConfig = new HikariConfig();
+        if(!getConfiguration().isMySQLEnabled()){
+            File dataFolder = new File(main.getMain().getDataFolder(), "database_sqlite.db");
+            if (!dataFolder.exists()){
+                try {
+                    if(!dataFolder.createNewFile()){
+                        main.getLogManager().severe("File write error: database_sqlite.db (1)");
+                    }
+                } catch (IOException e) {
+                    main.getLogManager().severe("File write error: database_sqlite.db (2)");
+                }
+            }
+
+            hikariConfig.setJdbcUrl("jdbc:sqlite:" +  dataFolder);
+        }else{
+            hikariConfig.setJdbcUrl("jdbc:mysql://" +  configuration.getDatabaseHost() + ":" + configuration.getDatabasePort() + "/" + configuration.getDatabaseName());
+            hikariConfig.setUsername(configuration.getDatabaseUsername());
+            hikariConfig.setPassword(configuration.getDatabasePassword());
+            hikariConfig.addDataSourceProperty("cachePrepStmts", "true");
+            hikariConfig.addDataSourceProperty("prepStmtCacheSize", "250");
+            hikariConfig.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+        }
+
+
+        hikariDataSource = new HikariDataSource(hikariConfig);
+    }
+
+    public final Connection getConnection() throws SQLException {
+        return hikariDataSource.getConnection();
+    }
+
     public void closeDatabaseConnection() {
         main.getLogManager().info("Closing database connection...");
         try{
-            statement.close();
-            connection.close();
+            getConnection().close();
         }catch (Exception e){
             main.getLogManager().severe("Error closing database connection:");
             e.printStackTrace();
         }
-
     }
+
+
+    /**
+     * If the plugin has been running for some time, the MySQL Database connection is
+     * sometimes interrupted which causes errors when it tries to save data once the plugin
+     * is disabled.
+     * <p>
+     * This is especially bad, because if the plugin has been running for a while, that data will be lost.
+     * <p>
+     * This method will try to re-open the database connection statement, so data can be saved to the database
+     * safely again.
+     *
+     * @param newTask sets if the plugin should force an asynchronous thread to re-open the database connection. If
+     *                set to false, it will do it in whatever thread this method is run in.
+     */
+    /*public void refreshDatabaseConnection(final boolean newTask) {
+        if (newTask) {
+            if (Bukkit.isPrimaryThread()) {
+                Bukkit.getScheduler().runTaskAsynchronously(main.getMain(), () -> {
+                    openConnection();
+                    try {
+                        statement = connection.createStatement();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                });
+            } else {
+                openConnection();
+                try {
+                    statement = connection.createStatement();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            openConnection();
+            try {
+                statement = connection.createStatement();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }*/
+
 }
