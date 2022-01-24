@@ -312,14 +312,19 @@ public class QuestPlayerManager {
                     statement.executeUpdate("INSERT INTO CompletedQuests (QuestName, PlayerUUID, TimeCompleted) VALUES ('" + completedQuest.getQuest().getQuestName() + "', '" + questPlayerUUID + "', " + completedQuest.getTimeCompleted() + ");");
                 }
 
-                statement.close();
-                connection.close();
+
 
             } catch (SQLException sqlException) {
                 main.getLogManager().warn("There was an error saving the playerdata of player with UUID <highlight>" + questPlayer.getUUID() + "</highlight>! Stacktrace:");
                 sqlException.printStackTrace();
             }
 
+        }
+        try{
+            statement.close();
+            connection.close();
+        }catch (Exception e){
+            main.getLogManager().warn("There was an error closing the Database connection when saving QuestPlayer data.");
         }
         main.getLogManager().info("PlayerData saved");
 
