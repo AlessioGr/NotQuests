@@ -114,6 +114,8 @@ chat:
         base: '    <veryUnimportant>└─ <unimportant>Use Ability: <main>%ABILITY%'
       BetonQuestCompleteObjective:
         base: '    <veryUnimportant>└─ <unimportant>Finish Objective: <main>%BETONQUESTOBJECTIVENAME%'
+      ultimateJobsRebornReachJobLevel:
+        base: '    <veryUnimportant>└─ <unimportant>Reach job level <main>%AMOUNT%</main> with job <main>%JOBID%'
   conditions:
     boolean:
       not-fulfilled: "<warn>Following needs to be %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."

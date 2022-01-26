@@ -255,6 +255,10 @@ public class IntegrationsManager {
         if (isEcoBossesEnabled()) {
             main.getMain().getServer().getPluginManager().registerEvents(new EcoBossesEvents(main), main.getMain());
         }
+
+        if(isUltimateJobsEnabled()){
+            main.getMain().getServer().getPluginManager().registerEvents(new UltimateJobsEvents(main), main.getMain());
+        }
     }
 
 

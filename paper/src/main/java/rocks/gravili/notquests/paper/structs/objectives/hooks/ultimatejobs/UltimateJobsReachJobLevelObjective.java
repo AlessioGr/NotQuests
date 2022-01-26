@@ -28,6 +28,7 @@ import com.gamingmesh.jobs.Jobs;
 import com.gamingmesh.jobs.container.Job;
 import com.gamingmesh.jobs.container.JobProgression;
 import com.gamingmesh.jobs.container.JobsPlayer;
+import de.warsteiner.jobs.UltimateJobs;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -37,6 +38,7 @@ import rocks.gravili.notquests.paper.commands.NotQuestColors;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +46,7 @@ import java.util.Map;
 public class UltimateJobsReachJobLevelObjective extends Objective {
 
     private boolean countPreviousLevels = true;
-    private String jobName;
+    private String jobID;
 
     public UltimateJobsReachJobLevelObjective(NotQuests main) {
         super(main);
@@ -55,19 +57,22 @@ public class UltimateJobsReachJobLevelObjective extends Objective {
             return;
         }
 
-        manager.command(addObjectiveBuilder.literal("JobsRebornReachJobLevel")
-                .argument(StringArgument.<CommandSender>newBuilder("Job Name").withSuggestionsProvider(
+        manager.command(addObjectiveBuilder
+                .argument(StringArgument.<CommandSender>newBuilder("Job ID").withSuggestionsProvider(
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
-                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Job Name]", "");
+                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Job ID]", "");
 
                             ArrayList<String> completions = new ArrayList<>();
                             for (Job job : Jobs.getJobs()) {
                                 completions.add(job.getName());
                             }
+                            for(File loadedJob : UltimateJobs.getPlugin().getLoadedJobs()){
+                                UltimateJobs.getPlugin().getJobAPI().getID(loadedJob);
+                            }
                             return completions;
                         }
-                ).single().build(), ArgumentDescription.of("Name of the job"))
+                ).single().build(), ArgumentDescription.of("ID of the job"))
                 .argument(IntegerArgument.<CommandSender>newBuilder("level").withMin(1), ArgumentDescription.of("Job Level which needs to be reached"))
                 .flag(
                         manager.flagBuilder("doNotCountPreviousLevels")
@@ -76,30 +81,24 @@ public class UltimateJobsReachJobLevelObjective extends Objective {
                 .handler((context) -> {
                     int amount = context.get("level");
                     final boolean countPreviousLevels = !context.flags().isPresent("doNotCountPreviousLevels");
-                    final String jobName = context.get("Job Name");
+                    final String jobID = context.get("Job ID");
 
-                    if (Jobs.getJob(jobName) == null) {
-                        context.getSender().sendMessage(main.parse(
-                                "<error>Error: The Job with the name <highlight>"+ jobName + "</highlight> was not found!"
-                        ));
-                        return;
-                    }
+                    UltimateJobsReachJobLevelObjective ultimateJobsReachJobLevelObjective = new UltimateJobsReachJobLevelObjective(main);
+                    ultimateJobsReachJobLevelObjective.setProgressNeeded(amount);
+                    ultimateJobsReachJobLevelObjective.setCountPreviousLevels(countPreviousLevels);
+                    ultimateJobsReachJobLevelObjective.setJobID(jobID);
 
-                    JobsRebornReachJobLevel jobsRebornReachJobLevel = new JobsRebornReachJobLevel(main);
-                    jobsRebornReachJobLevel.setProgressNeeded(amount);
-                    jobsRebornReachJobLevel.setCountPreviousLevels(countPreviousLevels);
-                    jobsRebornReachJobLevel.setJobName(jobName);
 
-                    main.getObjectiveManager().addObjective(jobsRebornReachJobLevel, context);
+                    main.getObjectiveManager().addObjective(ultimateJobsReachJobLevelObjective, context);
                 }));
     }
 
-    public final String getJobName() {
-        return jobName;
+    public final String getJobID() {
+        return jobID;
     }
 
-    public void setJobName(final String jobName) {
-        this.jobName = jobName;
+    public void setJobID(final String jobID) {
+        this.jobID = jobID;
     }
 
     public final boolean isCountPreviousLevels() {
@@ -116,28 +115,23 @@ public class UltimateJobsReachJobLevelObjective extends Objective {
 
     @Override
     public String getObjectiveTaskDescription(final Player player) {
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.jobsRebornReachJobLevel.base", player, Map.of(
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.ultimateJobsRebornReachJobLevel.base", player, Map.of(
                 "%AMOUNT%", "" + getLevelToReach(),
-                "%JOB%", getJobName()
+                "%JOBID%", getJobID()
         ));
     }
 
     @Override
     public void save(FileConfiguration configuration, String initialPath) {
         configuration.set(initialPath + ".specifics.countPreviousLevels", isCountPreviousLevels());
-        configuration.set(initialPath + ".specifics.jobName", getJobName());
+        configuration.set(initialPath + ".specifics.jobID", getJobID());
     }
 
     @Override
     public void load(FileConfiguration configuration, String initialPath) {
         countPreviousLevels = configuration.getBoolean(initialPath + ".specifics.countPreviousTowns");
-        jobName = configuration.getString(initialPath + ".specifics.jobName");
+        jobID = configuration.getString(initialPath + ".specifics.jobID");
 
-        //Warn
-        final Job job = Jobs.getJob(getJobName());
-        if (job == null) {
-            main.getLogManager().warn("The job <highlight>" + getJobName() + "</highlight> does not exist.");
-        }
     }
     @Override
     public void onObjectiveUnlock(final ActiveObjective activeObjective, final boolean unlockedDuringPluginStartupQuestLoadingProcess) {
@@ -150,25 +144,7 @@ public class UltimateJobsReachJobLevelObjective extends Objective {
             return;
         }
 
-        final Job job = Jobs.getJob(getJobName());
-        if (job == null) {
-            main.getLogManager().warn("The job <highlight>" + getJobName() + "</highlight> does not exist.");
-            return;
-        }
-
-
-        final JobsPlayer jobsPlayer = Jobs.getPlayerManager().getJobsPlayer(activeObjective.getQuestPlayer().getUUID());
-        if (jobsPlayer == null) {
-            return;
-        }
-
-        JobProgression jobProgression = jobsPlayer.getJobProgression(job);
-
-        if (jobProgression == null) {
-            return;
-        }
-
-        activeObjective.addProgress(jobProgression.getLevel());
+        activeObjective.addProgress(UltimateJobs.getPlugin().getPlayerAPI().getJobLevel(activeObjective.getQuestPlayer().getUUID().toString(), jobID));
     }
     @Override
     public void onObjectiveCompleteOrLock(final ActiveObjective activeObjective, final boolean lockedOrCompletedDuringPluginStartupQuestLoadingProcess, final boolean completed) {
