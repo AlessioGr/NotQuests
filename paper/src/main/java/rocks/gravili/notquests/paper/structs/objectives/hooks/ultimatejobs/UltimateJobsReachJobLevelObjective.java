@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.paper.structs.objectives.hooks.jobsreborn;
+package rocks.gravili.notquests.paper.structs.objectives.hooks.ultimatejobs;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
@@ -41,17 +41,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class JobsRebornReachJobLevel extends Objective {
+public class UltimateJobsReachJobLevelObjective extends Objective {
 
     private boolean countPreviousLevels = true;
     private String jobName;
 
-    public JobsRebornReachJobLevel(NotQuests main) {
+    public UltimateJobsReachJobLevelObjective(NotQuests main) {
         super(main);
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
-        if (!main.getIntegrationsManager().isJobsRebornEnabled()) {
+        if (!main.getIntegrationsManager().isUltimateJobsEnabled()) {
             return;
         }
 

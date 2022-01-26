@@ -29,6 +29,7 @@ public class IntegrationsManager {
     private boolean betonQuestEnabled = false;
     private boolean mythicMobsEnabled = false;
     private boolean ecoBossesEnabled = false;
+    private boolean ultimateJobsEnabled = false;
 
     //Managers
     private VaultManager vaultManager;
@@ -48,6 +49,14 @@ public class IntegrationsManager {
     }
 
     public void enableIntegrations() {
+
+        //UltimateJobs
+        if (main.getConfiguration().isIntegrationUltimateJobsEnabled()) {
+            if (Bukkit.getPluginManager().getPlugin("UltimateJobs") != null) {
+                ultimateJobsEnabled = true;
+                main.getLogManager().info("EcoBosses found! Enabling UltimateJobs support...");
+            }
+        }
 
         //EcoBosses
         if (main.getConfiguration().isIntegrationEcoBossesEnabled()) {
@@ -344,6 +353,10 @@ public class IntegrationsManager {
 
     public boolean isEcoBossesEnabled() {
         return ecoBossesEnabled;
+    }
+
+    public boolean isUltimateJobsEnabled() {
+        return ultimateJobsEnabled;
     }
 
 

@@ -49,7 +49,7 @@ public class TownyReachResidentCountObjective extends Objective {
             return;
         }
 
-        manager.command(addObjectiveBuilder.literal("TownyReachResidentCount")
+        manager.command(addObjectiveBuilder
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Minimum amounts of residents"))
                 .flag(
                         manager.flagBuilder("doNotCountPreviousResidents")

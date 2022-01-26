@@ -50,6 +50,7 @@ repositories {
             includeGroup("com.github.TownyAdvanced")
             includeGroup("com.github.Zrips")
             includeGroup("com.willfp")
+            includeGroup("com.github.Warsteiner37")
         }
         metadataSources {
             artifact()
@@ -198,6 +199,8 @@ dependencies {
     implementation("org.apache.httpcomponents:httpclient:4.5.13")
 
     implementation("com.zaxxer:HikariCP:5.0.1")
+
+    compileOnly("com.github.Warsteiner37:UltimateJobs:SNAPSHOT")
 
 
 }

@@ -44,7 +44,7 @@ public class SlimefunResearchObjective extends Objective {
             return;
         }
 
-        manager.command(addObjectiveBuilder.literal("SlimefunResearch")
+        manager.command(addObjectiveBuilder
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount to spend on research"))
                 .handler((context) -> {
                     SlimefunResearchObjective slimefunResearchobjective = new SlimefunResearchObjective(main);

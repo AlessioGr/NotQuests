@@ -49,7 +49,7 @@ public class ProjectKorraUseAbilityObjective extends Objective {
             return;
         }
 
-        manager.command(addObjectiveBuilder.literal("ProjectKorraUseAbility")
+        manager.command(addObjectiveBuilder
                 .argument(StringArgument.<CommandSender>newBuilder("Ability").withSuggestionsProvider(
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();

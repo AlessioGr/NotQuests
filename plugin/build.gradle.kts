@@ -229,7 +229,8 @@ bukkit {
         "Jobs",
         "ProjectKorra",
         "EcoBosses",
-        "eco"
+        "eco",
+        "UltimateJobs"
     )
 
     load = net.minecrell.pluginyml.bukkit.BukkitPluginDescription.PluginLoadOrder.POSTWORLD

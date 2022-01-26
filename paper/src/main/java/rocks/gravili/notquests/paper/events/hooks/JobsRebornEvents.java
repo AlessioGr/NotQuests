@@ -7,7 +7,7 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
-import rocks.gravili.notquests.paper.structs.objectives.hooks.jobsreborn.JobsRebornReachJobLevel;
+import rocks.gravili.notquests.paper.structs.objectives.hooks.jobsreborn.JobsRebornReachJobLevelObjective;
 
 public class JobsRebornEvents implements Listener {
     private final NotQuests main;
@@ -25,7 +25,7 @@ public class JobsRebornEvents implements Listener {
                     for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                         for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
                             if (activeObjective.isUnlocked()) {
-                                if (activeObjective.getObjective() instanceof JobsRebornReachJobLevel jobsRebornReachJobLevel) {
+                                if (activeObjective.getObjective() instanceof JobsRebornReachJobLevelObjective jobsRebornReachJobLevel) {
                                     if (!e.getJob().getName().equalsIgnoreCase(jobsRebornReachJobLevel.getJobName())) {
                                         continue;
                                     }

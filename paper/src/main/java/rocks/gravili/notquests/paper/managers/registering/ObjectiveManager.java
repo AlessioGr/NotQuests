@@ -29,11 +29,12 @@ import rocks.gravili.notquests.paper.structs.objectives.*;
 import rocks.gravili.notquests.paper.structs.objectives.hooks.betonquest.BetonQuestObjectiveStateChangeObjective;
 import rocks.gravili.notquests.paper.structs.objectives.hooks.citizens.EscortNPCObjective;
 import rocks.gravili.notquests.paper.structs.objectives.hooks.elitemobs.KillEliteMobsObjective;
-import rocks.gravili.notquests.paper.structs.objectives.hooks.jobsreborn.JobsRebornReachJobLevel;
+import rocks.gravili.notquests.paper.structs.objectives.hooks.jobsreborn.JobsRebornReachJobLevelObjective;
 import rocks.gravili.notquests.paper.structs.objectives.hooks.projectkorra.ProjectKorraUseAbilityObjective;
 import rocks.gravili.notquests.paper.structs.objectives.hooks.slimefun.SlimefunResearchObjective;
 import rocks.gravili.notquests.paper.structs.objectives.hooks.towny.TownyNationReachTownCountObjective;
 import rocks.gravili.notquests.paper.structs.objectives.hooks.towny.TownyReachResidentCountObjective;
+import rocks.gravili.notquests.paper.structs.objectives.hooks.ultimatejobs.UltimateJobsReachJobLevelObjective;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -84,13 +85,17 @@ public class ObjectiveManager {
         registerObjective("TownyNationReachTownCount", TownyNationReachTownCountObjective.class);
 
         //Jobs
-        registerObjective("JobsRebornReachJobLevel", JobsRebornReachJobLevel.class);
+        registerObjective("JobsRebornReachJobLevel", JobsRebornReachJobLevelObjective.class);
 
         //ProjectKorra
         registerObjective("ProjectKorraUseAbility", ProjectKorraUseAbilityObjective.class);
 
         if(main.getIntegrationsManager().isBetonQuestEnabled()){
             registerObjective("BetonQuestObjectiveStateChange", BetonQuestObjectiveStateChangeObjective.class);
+        }
+
+        if(main.getIntegrationsManager().isUltimateJobsEnabled()){
+            registerObjective("UltimateJobsReachJobLevel", UltimateJobsReachJobLevelObjective.class);
         }
 
 
