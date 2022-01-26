@@ -54,7 +54,7 @@ public class IntegrationsManager {
         if (main.getConfiguration().isIntegrationUltimateJobsEnabled()) {
             if (Bukkit.getPluginManager().getPlugin("UltimateJobs") != null) {
                 ultimateJobsEnabled = true;
-                main.getLogManager().info("EcoBosses found! Enabling UltimateJobs support...");
+                main.getLogManager().info("UltimateJobs found! Enabling UltimateJobs support...");
             }
         }
 
