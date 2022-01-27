@@ -31,12 +31,27 @@ chat:
   questpoints:
     query: <main>Aktualnie posiadasz <highlight>%QUESTPOINTS%</highlight> punkt(y,ów) questa.
     none: <error>Wygląda na to że nie posiadasz punktów questa!
+    notify-when-changed:
+      set: '<main>Your quest points have been set to <highlight>%NEWQUESTPOINTSAMOUNT%</highlight>.'
+      add: '<highlight>+%QUESTPOINTSTOADD% <success>quest points!'
+      remove: '<highlight>-%QUESTPOINTSTOREMOVE% <negative>quest points!'
   no-quests-accepted: <error>Wygląda na to że nie posiadasz aktywnych questów!
   quest-does-not-exist: <error>Quest <highlight>%QUESTNAME%</highlight> nie istnieje!
   quest-not-found-or-does-not-exist: <error>Quest <highlight>%QUESTNAME%</highlight> nie został znaleziony bądź nie jest aktywny!
   active-quests-label: '<highlight>Aktywne questy:'
   take-disabled: <error>Akceptacja albo podgląd questa <highlight>%QUESTNAME%</highlight> zostały wyłączone.
   quest-not-active-error: '<error>Błąd: <highlight>%QUESTNAME%</highlight> nie jest aktywnym questem!'
+  force-add-active-quest-accepted: '<success>Successfully accepted the quest (Forced).'
+  add-active-quest-player-object-not-found: '<warn>Error: Player object not found. Please report this to the plugin developer.'
+  reached-max-accepts-limit: '<red>You have finished this quests too many times already. You can only accept it <highlight>%MAXACCEPTS%</highlight> times, but you have already accepted it <highlight>%COMPLETEDAMOUNT%</highlight> times.'
+  reached-max-active-quests-per-player-limit: '<red>You can not accept more than <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> Quests.'
+  quest-on-cooldown:
+    minute: '<red>This quest is on a cooldown! You have to wait another <highlight>1 minute</highlight> until you can take it again.'
+    minutes: '<red>This quest is on a cooldown! You have to wait another <highlight>%MINUTES% minutes</highlight> until you can take it again.'
+    hour: '<red>This quest is on a cooldown! You have to wait another <highlight>1 hour</highlight> until you can take it again.'
+    hours: '<red>This quest is on a cooldown! You have to wait another <highlight>%HOURS% hours</highlight> until you can take it again.'
+    day: '<red>This quest is on a cooldown! You have to wait another <highlight>1 day</highlight> until you can take it again.'
+    days: '<red>This quest is on a cooldown! You have to wait another <highlight>%DAYS% days</highlight> until you can take it again.'
   conversations:
     choose-answer-prefix: |-
       <EMPTY>
@@ -114,6 +129,8 @@ chat:
         base: '    <veryUnimportant>└─ <unimportant>Użyj Umiejętności: <main>%ABILITY%'
       BetonQuestCompleteObjective:
         base: '    <veryUnimportant>└─ <unimportant>Finish Objective: <main>%BETONQUESTOBJECTIVENAME%'
+      ultimateJobsRebornReachJobLevel:
+        base: '    <veryUnimportant>└─ <unimportant>Reach job level <main>%AMOUNT%</main> with job <main>%JOBID%'
   conditions:
     boolean:
       not-fulfilled: "<warn>Following needs to be %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."
