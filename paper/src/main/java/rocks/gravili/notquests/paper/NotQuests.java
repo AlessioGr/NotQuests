@@ -38,6 +38,8 @@ public class NotQuests {
     private static NotQuests instance;
     private final JavaPlugin main;
 
+    private QuestEvents questEvents;
+
     //Managers
     private UtilManager utilManager;
     private LogManager logManager;
@@ -190,7 +192,8 @@ public class NotQuests {
 
 
         //Register the Event Listeners in QuestEvents
-        main.getServer().getPluginManager().registerEvents(new QuestEvents(this), main);
+        questEvents = new QuestEvents(this);
+        main.getServer().getPluginManager().registerEvents(questEvents, main);
 
         //Register the Event Listeners in InventoryEvents
         main.getServer().getPluginManager().registerEvents(new InventoryEvents(this), main);
@@ -345,8 +348,6 @@ public class NotQuests {
      */
     public void onDisable() {
         getLogManager().info("NotQuests is shutting down...");
-
-        tagManager.saveAllOnlinePlayerTags();
 
         //Hide existing bossbars
         for(Player player : Bukkit.getOnlinePlayers()){
@@ -528,6 +529,10 @@ public class NotQuests {
         if(!PlainTextComponentSerializer.plainText().serialize(component).isBlank() && sender != null){
             sender.sendMessage(component);
         }
+    }
+
+    public final QuestEvents getQuestEvents() {
+        return questEvents;
     }
 
 }

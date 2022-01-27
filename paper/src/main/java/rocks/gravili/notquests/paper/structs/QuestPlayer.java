@@ -34,6 +34,7 @@ import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 import rocks.gravili.notquests.paper.structs.objectives.ConditionObjective;
 import rocks.gravili.notquests.paper.structs.objectives.OtherQuestObjective;
+import rocks.gravili.notquests.paper.structs.triggers.ActiveTrigger;
 
 import java.time.Duration;
 import java.util.*;
@@ -70,6 +71,8 @@ public class QuestPlayer {
     private final HashMap<String, Object> tags;
 
     private boolean hasActiveConditionObjectives = false;
+
+    private Player player;
 
 
 
@@ -800,7 +803,12 @@ public class QuestPlayer {
 
 
     public final Player getPlayer(){
-        return Bukkit.getPlayer(uuid);
+        if(player != null){
+            return player;
+        }else{
+            this.player = Bukkit.getPlayer(uuid);
+            return player;
+        }
     }
 
     public final ActiveQuest getActiveQuest(final Quest quest) {
@@ -813,9 +821,7 @@ public class QuestPlayer {
     }
 
 
-    public void onQuit(){
-        bossBar = null;
-    }
+
 
     public final BossBar getBossBar(){
         return bossBar;
@@ -900,5 +906,35 @@ public class QuestPlayer {
             activeQuest.removeCompletedObjectives(true);
         }
         removeCompletedQuests();
+    }
+
+
+    public void onQuit(final Player player){
+        main.getTagManager().onQuit(this, player);
+
+        if (getActiveQuests().size() > 0) {
+            for (final ActiveQuest activeQuest : getActiveQuests()) {
+
+                for (final ActiveTrigger activeTrigger : activeQuest.getActiveTriggers()) {
+                    if (activeTrigger.getTrigger().getTriggerType().equals("DISCONNECT")) {
+
+                        main.getQuestEvents().handleGeneralTrigger(this, activeTrigger);
+                    }
+                }
+            }
+        }
+    }
+
+    public void onQuitAsync(final Player player){
+        bossBar = null;
+    }
+
+    public void onJoin(final Player player){
+        this.player = player;
+        main.getTagManager().onJoin(this, player);
+    }
+
+    public void onJoinAsync(final Player player){
+        this.player = player;
     }
 }

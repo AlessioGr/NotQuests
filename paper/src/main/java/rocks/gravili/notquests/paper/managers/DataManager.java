@@ -33,11 +33,13 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.Quest;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
@@ -589,6 +591,16 @@ public class DataManager {
 
         configuration.setSavePlayerData(getGeneralConfigBoolean(
                 "storage.save-playerdata",
+                true
+        ));
+
+        configuration.setLoadPlayerDataOnJoin(getGeneralConfigBoolean(
+                "storage.load-playerdata-on-join",
+                true
+        ));
+
+        configuration.setSavePlayerDataOnQuit(getGeneralConfigBoolean(
+                "storage.save-playerdata-on-quit",
                 true
         ));
 
@@ -1222,7 +1234,15 @@ public class DataManager {
      */
     public void saveData() {
         if (isSavingEnabled()) {
-            main.getQuestPlayerManager().savePlayerData();
+            if(!main.getConfiguration().isSavePlayerDataOnQuit()){
+                main.getTagManager().saveAllOnlinePlayerTags();
+                main.getQuestPlayerManager().savePlayerData();
+            }else{
+                for(QuestPlayer questPlayer : main.getQuestPlayerManager().getQuestPlayers()){
+                    main.getTagManager().onQuit(questPlayer, questPlayer.getPlayer());
+                    main.getQuestPlayerManager().saveSinglePlayerData(questPlayer.getPlayer());
+                }
+            }
             backupQuests();
             //saveQuestsConfig();
         } else {
@@ -1341,7 +1361,21 @@ public class DataManager {
 
             }
 
-            main.getQuestPlayerManager().loadPlayerData();
+            if(!main.getConfiguration().isLoadPlayerDataOnJoin()){
+                main.getQuestPlayerManager().loadPlayerData();
+            }else{
+                if (Bukkit.isPrimaryThread()) {
+                    Bukkit.getScheduler().runTaskAsynchronously(main.getMain(), () -> {
+                        for(final Player player : Bukkit.getOnlinePlayers()){
+                            main.getQuestPlayerManager().loadSinglePlayerData(player);
+                        }
+                    });
+                }else{
+                    for(final Player player : Bukkit.getOnlinePlayers()){
+                        main.getQuestPlayerManager().loadSinglePlayerData(player);
+                    }                }
+
+            }
 
             //Citizens stuff if Citizens is enabled
             if (main.getIntegrationsManager().isCitizensEnabled()) {

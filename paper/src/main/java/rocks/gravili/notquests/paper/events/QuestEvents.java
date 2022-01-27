@@ -1002,7 +1002,7 @@ public class QuestEvents implements Listener {
      * @param questPlayer   is the QuestPlayer object, used to check the world of the player
      * @param activeTrigger is the trigger which we need in order to add progress to it
      */
-    private void handleGeneralTrigger(final QuestPlayer questPlayer, final ActiveTrigger activeTrigger) {
+    public void handleGeneralTrigger(final QuestPlayer questPlayer, final ActiveTrigger activeTrigger) {
 
         //Handle Trigger applyOn
         if (activeTrigger.getTrigger().getApplyOn() >= 1) { //Trigger applies to a specific objective of the Quest and not the Quest itself
@@ -1152,41 +1152,63 @@ public class QuestEvents implements Listener {
 
     @EventHandler
     private void onDisconnectEvent(PlayerQuitEvent e) { //Disconnect objectives
-        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(e.getPlayer().getUniqueId());
-        if (questPlayer != null) {
-            questPlayer.onQuit();
-            main.getTagManager().onQuit(questPlayer, e.getPlayer());
-            if (questPlayer.getActiveQuests().size() > 0) {
-                for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-
-                    for (final ActiveTrigger activeTrigger : activeQuest.getActiveTriggers()) {
-                        if (activeTrigger.getTrigger().getTriggerType().equals("DISCONNECT")) {
-                            handleGeneralTrigger(questPlayer, activeTrigger);
-                        }
-                    }
+        if(main.getConfiguration().isSavePlayerDataOnQuit()){
+            if (Bukkit.isPrimaryThread()) {
+                Bukkit.getScheduler().runTaskAsynchronously(main.getMain(), () -> {
+                    main.getQuestPlayerManager().saveSinglePlayerData(e.getPlayer());
+                });
+            }else{
+                main.getQuestPlayerManager().saveSinglePlayerData(e.getPlayer());
+            }
+        }else{
+            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(e.getPlayer().getUniqueId());
+            if (questPlayer != null) {
+                if (Bukkit.isPrimaryThread()) {
+                    Bukkit.getScheduler().runTaskAsynchronously(main.getMain(), () -> {
+                        questPlayer.onQuitAsync(e.getPlayer());
+                    });
+                    questPlayer.onQuit(e.getPlayer());
+                }else{
+                    Bukkit.getScheduler().runTask(main.getMain(), () -> {
+                        questPlayer.onQuit(e.getPlayer());
+                    });
+                    questPlayer.onQuitAsync(e.getPlayer());
                 }
             }
         }
+
     }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
-        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(e.getPlayer().getUniqueId());
-        if (questPlayer != null) {
-            main.getTagManager().onJoin(questPlayer, e.getPlayer());
-        }
-        if (e.getPlayer().isOp() && main.getConfiguration().isUpdateCheckerNotifyOpsInChat()) {
-            //Component message = new C("Click me");
-            //message.setClickEvent( new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.spigotmc.org/resources/%E2%9A%A1-fancybags-%E2%9A%A1-new-way-to-store-items-1-8-1-16-2.79997/" ) );
-            //message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(Utils.color("&7Click here to download the latest version of the plugin!")).create()));
-            //message.setColor(net.md_5.bungee.api.ChatColor.GOLD);
+        if(main.getConfiguration().isLoadPlayerDataOnJoin()){
+            if (Bukkit.isPrimaryThread()) {
+                Bukkit.getScheduler().runTaskAsynchronously(main.getMain(), () -> {
+                    main.getQuestPlayerManager().loadSinglePlayerData(e.getPlayer());
+                });
+            }else{
+                main.getQuestPlayerManager().loadSinglePlayerData(e.getPlayer());
+            }
+        }else{
+            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(e.getPlayer().getUniqueId());
 
+            if (questPlayer != null) {
+                Bukkit.getScheduler().runTaskAsynchronously(main.getMain(), () -> {
+                    questPlayer.onJoinAsync(e.getPlayer());
+                });
+                questPlayer.onJoin(e.getPlayer());
+                main.getTagManager().onJoin(questPlayer, e.getPlayer());
+            }
+        }
+
+        if (e.getPlayer().isOp() && main.getConfiguration().isUpdateCheckerNotifyOpsInChat()) {
             if(main.getUpdateManager().isUpdateAvailable()){
                 e.getPlayer().sendMessage(main.parse("<click:open_url:https://www.spigotmc.org/resources/95872/><hover:show_text:\"<highlight>Click to update!\"><main>[NotQuests]</main> <warn>The version <highlight>" + main.getMain().getDescription().getVersion()
                         + "</highlight> is not the latest version (<Green>" + main.getUpdateManager().getLatestVersion() + "</green>). Click this message to update!</hover></click>"));
             }
 
         }
+
 
     }
 

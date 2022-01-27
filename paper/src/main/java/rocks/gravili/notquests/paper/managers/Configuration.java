@@ -53,6 +53,10 @@ public class Configuration {
     public boolean loadPlayerData = true;
     public boolean savePlayerData = true;
 
+    public boolean loadPlayerDataOnJoin = true;
+    public boolean savePlayerDataOnQuit = true;
+
+
 
     private boolean questPreviewUseGUI = true;
     private boolean userCommandsUseGUI = true;

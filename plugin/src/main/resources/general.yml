@@ -2,6 +2,8 @@ debug: false
 storage:
   load-playerdata: true
   save-playerdata: true
+  load-playerdata-on-join: true
+  save-playerdata-on-quit: true
   backups:
     create-when-server-shuts-down: true
   database:
