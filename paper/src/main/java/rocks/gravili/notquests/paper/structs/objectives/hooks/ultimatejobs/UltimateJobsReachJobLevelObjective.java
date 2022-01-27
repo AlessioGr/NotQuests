@@ -105,7 +105,7 @@ public class UltimateJobsReachJobLevelObjective extends Objective {
 
     @Override
     public String getObjectiveTaskDescription(final Player player) {
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.ultimateJobsRebornReachJobLevel.base", player, Map.of(
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.ultimateJobsReachJobLevel.base", player, Map.of(
                 "%AMOUNT%", "" + getLevelToReach(),
                 "%JOBID%", getJobID()
         ));
@@ -130,7 +130,7 @@ public class UltimateJobsReachJobLevelObjective extends Objective {
         }
 
         activeObjective.addProgress(1); //Job levels start at 1 and not 0
-        if (!main.getIntegrationsManager().isJobsRebornEnabled() || !isCountPreviousLevels()) {
+        if (!main.getIntegrationsManager().isUltimateJobsEnabled() || !isCountPreviousLevels()) {
             return;
         }
 
