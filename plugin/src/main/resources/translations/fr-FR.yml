@@ -32,26 +32,26 @@ chat:
     query: <main>Vous avez actuellement <highlight>%QUESTPOINTS%</highlight> points de quête.
     none: <error>Il semble que vous n'avez aucun point de quête !
     notify-when-changed:
-      set: '<main>Your quest points have been set to <highlight>%NEWQUESTPOINTSAMOUNT%</highlight>.'
-      add: '<highlight>+%QUESTPOINTSTOADD% <success>quest points!'
-      remove: '<highlight>-%QUESTPOINTSTOREMOVE% <negative>quest points!'
+      set: '<main>Vos points de quête ont été définis à <highlight>%NEWQUESTPOINTSAMOUNT%</highlight>.'
+      add: '<highlight>+%QUESTPOINTSTOADD% <success>points de quête!'
+      remove: '<highlight>-%QUESTPOINTSTOREMOVE% <negative>points de quête!'
   no-quests-accepted: <error>Il semble que vous n'avez aucune quête active !
   quest-does-not-exist: <error> La quête <highlight>%QUESTNAME%</highlight> n'existe pas !
   quest-not-found-or-does-not-exist: <error>La quête <highlight>%QUESTNAME%</highlight> est introuvable ou non active !
   active-quests-label: '<highlight>Quêtes actives :'
   take-disabled: <error>L'acceptation ou l'aperçu de la quête <highlight>%QUESTNAME%</highlight> est désactivée.
   quest-not-active-error: '<error>Erreur: <highlight>%QUESTNAME%</highlight> n''est pas une quête active !'
-  force-add-active-quest-accepted: '<success>Successfully accepted the quest (Forced).'
-  add-active-quest-player-object-not-found: '<warn>Error: Player object not found. Please report this to the plugin developer.'
-  reached-max-accepts-limit: '<red>You have finished this quests too many times already. You can only accept it <highlight>%MAXACCEPTS%</highlight> times, but you have already accepted it <highlight>%COMPLETEDAMOUNT%</highlight> times.'
-  reached-max-active-quests-per-player-limit: '<red>You can not accept more than <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> Quests.'
+  force-add-active-quest-accepted: '<success>Quête acceptée avec succès (Forcé).'
+  add-active-quest-player-object-not-found: '<warn>Erreur: Objet joueur introuvable (Player object not found). Merci d''aviser le développeur du plugin.'
+  reached-max-accepts-limit: '<red>Vous avez déjà complété cette quête trop souvent. Vous ne pouvez seulement l''accepter <highlight>%MAXACCEPTS%</highlight> fois, mais vous l''avez acceptée <highlight>%COMPLETEDAMOUNT%</highlight> fois.'
+  reached-max-active-quests-per-player-limit: '<red>Vous ne pouvez pas accepter plus de <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> quêtes.'
   quest-on-cooldown:
-    minute: '<red>This quest is on a cooldown! You have to wait another <highlight>1 minute</highlight> until you can take it again.'
-    minutes: '<red>This quest is on a cooldown! You have to wait another <highlight>%MINUTES% minutes</highlight> until you can take it again.'
-    hour: '<red>This quest is on a cooldown! You have to wait another <highlight>1 hour</highlight> until you can take it again.'
-    hours: '<red>This quest is on a cooldown! You have to wait another <highlight>%HOURS% hours</highlight> until you can take it again.'
-    day: '<red>This quest is on a cooldown! You have to wait another <highlight>1 day</highlight> until you can take it again.'
-    days: '<red>This quest is on a cooldown! You have to wait another <highlight>%DAYS% days</highlight> until you can take it again.'
+    minute: '<red>Cette quête est en attente! Vous devez patienter encore <highlight>1 minute</highlight> avant de pouvoir l''accepter à nouveau.'
+    minutes: '<red>Cette quête est en attente! Vous devez patienter encore <highlight>%MINUTES% minutes</highlight> avant de pouvoir l''accepter à nouveau.'
+    hour: '<red>Cette quête est en attente! Vous devez patienter encore <highlight>1 heure</highlight> avant de pouvoir l''accepter à nouveau.'
+    hours: '<red>Cette quête est en attente! Vous devez patienter encore <highlight>%HOURS% heures</highlight> avant de pouvoir l''accepter à nouveau.'
+    day: '<red>Cette quête est en attente! Vous devez patienter encore <highlight>1 jour</highlight> avant de pouvoir l''accepter à nouveau.'
+    days: '<red>Cette quête est en attente! Vous devez patienter encore <highlight>%DAYS% jours</highlight> avant de pouvoir l''accepter à nouveau.'
   conversations:
     choose-answer-prefix: |-
       <EMPTY>
@@ -130,7 +130,7 @@ chat:
       BetonQuestCompleteObjective:
         base: '    <veryUnimportant>└─ <unimportant>Terminer l''Objectif: <main>%BETONQUESTOBJECTIVENAME%'
       ultimateJobsRebornReachJobLevel:
-        base: '    <veryUnimportant>└─ <unimportant>Reach job level <main>%AMOUNT%</main> with job <main>%JOBID%'
+        base: '    <veryUnimportant>└─ <unimportant>Atteindre le niveau d''emploi <main>%AMOUNT%</main> avec l''emploi <main>%JOBID%'
   conditions:
     boolean:
       not-fulfilled: "<warn>Ce qui suit doit être %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."
