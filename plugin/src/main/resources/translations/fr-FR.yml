@@ -32,7 +32,7 @@ chat:
     query: <main>Vous avez actuellement <highlight>%QUESTPOINTS%</highlight> points de quête.
     none: <error>Il semble que vous n'avez aucun point de quête !
   no-quests-accepted: <error>Il semble que vous n'avez aucune quête active !
-  quest-does-not-exist: <error> la quête <highlight>%QUESTNAME%</highlight> n'existe pas !
+  quest-does-not-exist: <error> La quête <highlight>%QUESTNAME%</highlight> n'existe pas !
   quest-not-found-or-does-not-exist: <error>La quête <highlight>%QUESTNAME%</highlight> est introuvable ou non active !
   active-quests-label: '<highlight>Quêtes actives :'
   take-disabled: <error>L'acceptation ou l'aperçu de la quête <highlight>%QUESTNAME%</highlight> est désactivée.
@@ -58,9 +58,9 @@ chat:
     successfully-completed-rewards-suffix: <EMPTY>
     taskDescription:
       breakBlocks:
-        base: '    <veryUnimportant>└─<unimportant>Blocs à cassée : <main>%BLOCKTOBREAK%'
+        base: '    <veryUnimportant>└─<unimportant>Casser des Blocs : <main>%BLOCKTOBREAK%'
       breed:
-        base: '    <veryUnimportant>└─<unimportant>Reproduire des animaux : <main>%ENTITYTOBREED%'
+        base: '    <veryUnimportant>└─<unimportant>Reproduire des Animaux : <main>%ENTITYTOBREED%'
       collectItems:
         base: '    <veryUnimportant>└─<unimportant>Collecter des Objets : <main>%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
       consumeItems:
@@ -85,12 +85,12 @@ chat:
       reachLocation:
         base: '    <veryUnimportant>└─<unimportant>Atteindre l''emplacement : <main>%LOCATIONNAME%'
       talkToNPC:
-        base: '    <veryUnimportant>└─<unimportant>Parlez à : <main>%NAME%'
+        base: '    <veryUnimportant>└─<unimportant>Parler à : <main>%NAME%'
       triggerCommand:
         base: '    <veryUnimportant>└─<unimportant>Objectif : <main>%TRIGGERNAME%'
       killEliteMobs:
-        base: '    <veryUnimportant>└─<unimportant>Tuez le monstre d''élite : <main>%ELITEMOBNAME%'
-        any: '    <veryUnimportant>└─ <unimportant>Tuez n''importe quel Mobs d''élite!'
+        base: '    <veryUnimportant>└─<unimportant>Tuer le monstre d''élite : <main>%ELITEMOBNAME%'
+        any: '    <veryUnimportant>└─ <unimportant>Tuer n''importe quel Mobs d''élite!'
       runCommand:
         base: '    <veryUnimportant>└─<unimportant>Exécute la commande: <main>%COMMANDTORUN%'
       interact:
@@ -99,9 +99,9 @@ chat:
       jump:
         base: '    <veryUnimportant>└─ <unimportant>Sauter <main>%AMOUNTOFJUMPS%</main> fois'
       sneak:
-        base: '    <veryUnimportant>└─ <unimportant>Accroupissez vous <main>%AMOUNTOFSNEAKS%</main> fois'
+        base: '    <veryUnimportant>└─ <unimportant>S''accroupir <main>%AMOUNTOFSNEAKS%</main> fois'
       smelt:
-        base: '    <veryUnimportant>└─<unimportant>Faites fondre des objets : <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+        base: '    <veryUnimportant>└─<unimportant>Faire fondre des objets : <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       townyReachResidentCount:
         base: '    <veryUnimportant>└─<unimportant>Atteindre le nombre de résidents de: <main>%AMOUNT%'
       townyNationReachTownCount:
@@ -151,7 +151,7 @@ gui:
         lore:
           - "<unimportant>Démarrer une nouvelle quête !"
           - ""
-          - "<veryUnimportant>Certaine quête ne peut être"
+          - "<veryUnimportant>Certaines quêtes ne peuvent être"
           - "<veryUnimportant>démarrer ainsi."
         x: 0
         y: 1
@@ -164,11 +164,11 @@ gui:
         x: 0
         y: 2
       activequests:
-        name: "<highlight>Quêtes active"
+        name: "<highlight>Quêtes actives"
         lore:
           - ""
           - "<veryUnimportant>Voir tout vos"
-          - "<veryUnimportant>quêtes active."
+          - "<veryUnimportant>quêtes actives."
         x: 0
         y: 3
   activeQuests:
@@ -188,7 +188,7 @@ gui:
         name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTER]"
         lore:
           - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
-          - "<main>Cliquer pour ouvrir la quête !"
+          - "<main>Cliquez pour ouvrir la quête !"
   takeQuestChoose:
     title: <highlight2>Quelle quête voulez-vous prendre?
     button:
@@ -205,7 +205,7 @@ gui:
         name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
         lore:
           - "<unimportant>Progression: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<negative>Cliquer pour abandonner la quête !"
+          - "<negative>Cliquez pour abandonner la quête !"
   abortQuest:
     title: '         <negative>Valider l''abandon de la quête'
     button:
@@ -213,11 +213,11 @@ gui:
         name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
         lore:
           - "<unimportant>Progression: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<negative>Cliquer pour annuler la quête <highlight>%QUESTNAME%</highlight>!"
+          - "<negative>Cliquez pour annuler la quête <highlight>%QUESTNAME%</highlight>!"
         x: 3
         y: 1
       cancelAbort:
-        name: "<positive>Cliquer pour NE PAS abandonner la quête"
+        name: "<positive>Cliquez pour NE PAS abandonner la quête"
         lore:
           - "<positive>et annuler l'action"
         x: 5
@@ -252,11 +252,11 @@ gui:
       confirmTake:
         name: "<highlight>%QUESTNAME%"
         lore:
-          - "<positive>Cliquer pour prendre la quête <highlight>%QUESTNAME%"
+          - "<positive>Cliquez pour prendre la quête <highlight>%QUESTNAME%"
         x: 3
         y: 2
       cancelTake:
-        name: "<negative>Cliquer pour NE PAS prendre la quête"
+        name: "<negative>Cliquez pour NE PAS prendre la quête"
         lore:
           - "<negative>et annuler cette action"
         x: 5
