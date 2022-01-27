@@ -32,26 +32,26 @@ chat:
     query: <main>Du hast zurzeit <highlight>%QUESTPOINTS% <warn>Questpunkte.
     none: <error>Du hast wohl gerade keine Questpunkte!
     notify-when-changed:
-      set: '<main>Your quest points have been set to <highlight>%NEWQUESTPOINTSAMOUNT%</highlight>.'
-      add: '<highlight>+%QUESTPOINTSTOADD% <success>quest points!'
-      remove: '<highlight>-%QUESTPOINTSTOREMOVE% <negative>quest points!'
+      set: '<main>Deine Questpunkte wurden auf <highlight>%NEWQUESTPOINTSAMOUNT%</highlight> gesetzt.'
+      add: '<highlight>+%QUESTPOINTSTOADD% <success>Questpunkte!'
+      remove: '<highlight>-%QUESTPOINTSTOREMOVE% <negative>Questpunkte!'
   no-quests-accepted: <error>Du hast wohl gerade keine aktiven Quests!
   quest-does-not-exist: <error>Quest <highlight>%QUESTNAME%</highlight> existiert nicht!
   quest-not-found-or-does-not-exist: <error>Quest <highlight>%QUESTNAME%</highlight> nicht gefunden oder nicht aktiv!
   active-quests-label: '<highlight>Aktive Quests:'
   take-disabled: <error>Das Akzeptieren oder Ansehen der Vorschau der Quest <highlight>%QUESTNAME%</highlight> wurde deaktiviert.
   quest-not-active-error: '<error>Fehler: <highlight>%QUESTNAME% <error>ist keine aktive Quest!'
-  force-add-active-quest-accepted: '<success>Successfully accepted the quest (Forced).'
-  add-active-quest-player-object-not-found: '<warn>Error: Player object not found. Please report this to the plugin developer.'
-  reached-max-accepts-limit: '<red>You have finished this quests too many times already. You can only accept it <highlight>%MAXACCEPTS%</highlight> times, but you have already accepted it <highlight>%COMPLETEDAMOUNT%</highlight> times.'
-  reached-max-active-quests-per-player-limit: '<red>You can not accept more than <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> Quests.'
+  force-add-active-quest-accepted: '<success>Quest erfolgreich angenommen (Erzwungen).'
+  add-active-quest-player-object-not-found: '<warn>Fehler. Spieler nicht gefunden. Bitte melde das an den Plugin-Entwickler.'
+  reached-max-accepts-limit: '<red>Du hast diese Quest schon zu oft abgeschlossen. Du darfst sie nur <highlight>%MAXACCEPTS%</highlight> mal abschließen, aber du hast sie schon <highlight>%COMPLETEDAMOUNT%</highlight> mal abgeschlossen.'
+  reached-max-active-quests-per-player-limit: '<red>Du darfst nicht mehr als <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> Quests gleichzeitig aktiv haben.'
   quest-on-cooldown:
-    minute: '<red>This quest is on a cooldown! You have to wait another <highlight>1 minute</highlight> until you can take it again.'
-    minutes: '<red>This quest is on a cooldown! You have to wait another <highlight>%MINUTES% minutes</highlight> until you can take it again.'
-    hour: '<red>This quest is on a cooldown! You have to wait another <highlight>1 hour</highlight> until you can take it again.'
-    hours: '<red>This quest is on a cooldown! You have to wait another <highlight>%HOURS% hours</highlight> until you can take it again.'
-    day: '<red>This quest is on a cooldown! You have to wait another <highlight>1 day</highlight> until you can take it again.'
-    days: '<red>This quest is on a cooldown! You have to wait another <highlight>%DAYS% days</highlight> until you can take it again.'
+    minute: '<red>Diese Quest ist auf Abklingzeit! Du musst noch <highlight>1 Minute</highlight> warten, bis du sie annehmen kannst.'
+    minutes: '<red>Diese Quest ist auf Abklingzeit! Du musst noch <highlight>%MINUTES% Minuten</highlight> warten, bis du sie annehmen kannst.'
+    hour: '<red>Diese Quest ist auf Abklingzeit! Du musst noch <highlight>1 Stunde</highlight> warten, bis du sie annehmen kannst.'
+    hours: '<red>Diese Quest ist auf Abklingzeit! Du musst noch <highlight>%HOURS% Stunden</highlight> warten, bis du sie annehmen kannst.'
+    day: '<red>Diese Quest ist auf Abklingzeit! Du musst noch <highlight>1 Tag</highlight> warten, bis du sie annehmen kannst.'
+    days: '<red>Diese Quest ist auf Abklingzeit! Du musst noch <highlight>%DAYS% Tage</highlight> warten, bis du sie annehmen kannst.'
   conversations:
     choose-answer-prefix: |-
       <EMPTY>
@@ -130,7 +130,7 @@ chat:
       BetonQuestCompleteObjective:
         base: '    <veryUnimportant>└─ <unimportant>Aufgabe fertigstellen: <main>%BETONQUESTOBJECTIVENAME%'
       ultimateJobsRebornReachJobLevel:
-        base: '    <veryUnimportant>└─ <unimportant>Reach job level <main>%AMOUNT%</main> with job <main>%JOBID%'
+        base: '    <veryUnimportant>└─ <unimportant>Erreiche Job Level <main>%AMOUNT%</main> mit dem Job <main>%JOBID%'
   conditions:
     boolean:
       not-fulfilled: "<warn>Folgendes muss %BOOLEANREQUIREMENT% sein: <highlight>%VARIABLESINGULAR%</highlight>."
