@@ -123,8 +123,10 @@ public class Category {
         if (!conversationsConfigs.isEmpty()) {
             return;
         }
-        for (File conversationFile : main.getUtilManager().listFilesRecursively(conversationsFolder)) {
-            conversationsConfigs.add(loadConfig(conversationFile, null));
+        if(conversationsFolder != null){
+            for (File conversationFile : main.getUtilManager().listFilesRecursively(conversationsFolder)) {
+                conversationsConfigs.add(loadConfig(conversationFile, null));
+            }
         }
     }
 
