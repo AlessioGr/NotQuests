@@ -1246,7 +1246,7 @@ public class DataManager {
             backupQuests();
             //saveQuestsConfig();
         } else {
-            main.getLogManager().warn("NotQuests > Saving is disabled => no data has been saved.");
+            main.getLogManager().warn("Saving is disabled => no data has been saved.");
         }
     }
 
