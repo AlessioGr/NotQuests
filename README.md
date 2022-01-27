@@ -59,6 +59,7 @@ Admin Commands - Quest Editing:
 
 
 ![Banner_Features](https://user-images.githubusercontent.com/70709113/133997198-bbc020b6-69c5-454b-b5b5-5f1bec0bab0d.png)
+- Proxy support (like Velocity, Waterfall & BungeeCord)
 - Conversation system (Beta)
 - Great API
 - MythicMobs integration
