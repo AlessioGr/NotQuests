@@ -22,19 +22,12 @@ import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
-import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
-import com.gamingmesh.jobs.Jobs;
-import com.gamingmesh.jobs.container.Job;
-import com.gamingmesh.jobs.container.JobProgression;
-import com.gamingmesh.jobs.container.JobsPlayer;
 import de.warsteiner.jobs.UltimateJobs;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.NotQuestColors;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
@@ -64,9 +57,6 @@ public class UltimateJobsReachJobLevelObjective extends Objective {
                             main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Job ID]", "");
 
                             ArrayList<String> completions = new ArrayList<>();
-                            for (Job job : Jobs.getJobs()) {
-                                completions.add(job.getName());
-                            }
                             for(File loadedJob : UltimateJobs.getPlugin().getLoadedJobs()){
                                 UltimateJobs.getPlugin().getJobAPI().getID(loadedJob);
                             }

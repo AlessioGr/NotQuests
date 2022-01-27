@@ -177,4 +177,4 @@ integrations: #These should usually be left to true. These integrations will onl
   ecoBosses:
     enabled: true
   ultimatejobs:
-    enabled: true
+    enabled: false

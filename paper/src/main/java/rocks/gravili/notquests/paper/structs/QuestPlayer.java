@@ -294,7 +294,9 @@ public class QuestPlayer {
 
         //Configuration Option: general.max-active-quests-per-player
         if (main.getConfiguration().getMaxActiveQuestsPerPlayer() != -1 && activeQuests.size() >= main.getConfiguration().getMaxActiveQuestsPerPlayer()) {
-            return "<RED>You can not accept more than <highlight>" + main.getConfiguration().getMaxActiveQuestsPerPlayer() + "</highlight> Quests.";
+            return main.getLanguageManager().getString("chat.reached-max-active-quests-per-player-limit", getPlayer(), this, quest, Map.of(
+                    "%MAXACTIVEQUESTSPERPLAYER%", ""+main.getConfiguration().getMaxActiveQuestsPerPlayer()
+            ));
         }
 
         for (ActiveQuest activeQuest : activeQuests) {
@@ -332,7 +334,7 @@ public class QuestPlayer {
                 StringBuilder requirementsStillNeeded = new StringBuilder();
 
                 if (getPlayer() == null) {
-                    requirementsStillNeeded.append("\n<YELLOW>Error: Player object not found. Please report this to the plugin developer.");
+                    requirementsStillNeeded.append("\n").append(main.getLanguageManager().getString("chat.add-active-quest-player-object-not-found", null, this, quest));
                 }
 
                 for (final Condition condition : quest.getQuest().getRequirements()) {
@@ -393,30 +395,41 @@ public class QuestPlayer {
                 return "accepted";
             } else {
                 if (timeToWaitInMinutes < 60) {
-                    return "<RED>This quest is on a cooldown! You have to wait another <highlight>" + timeToWaitInMinutes + " minutes</highlight> until you can take it again.";
+                    if(timeToWaitInMinutes == 1){
+                        return main.getLanguageManager().getString("chat.quest-on-cooldown.minute", getPlayer(), this, quest);
+                    }else{
+                        return main.getLanguageManager().getString("chat.quest-on-cooldown.minutes", getPlayer(), this, quest, Map.of(
+                                "%MINUTES%", ""+timeToWaitInMinutes
+                        ));
+                    }
                 } else {
                     if (timeToWaitInHours < 24) {
                         if (timeToWaitInHours == 1) {
-                            return "<RED>This quest is on a cooldown! You have to wait another <highlight>" + timeToWaitInHours + " hour</highlight> until you can take it again.";
-
+                            return main.getLanguageManager().getString("chat.quest-on-cooldown.hour", getPlayer(), this, quest);
                         } else {
-                            return "<RED>This quest is on a cooldown! You have to wait another <highlight>" + timeToWaitInHours + " hours</highlight> until you can take it again.";
+                            return main.getLanguageManager().getString("chat.quest-on-cooldown.hours", getPlayer(), this, quest, Map.of(
+                                    "%HOURS%", ""+timeToWaitInHours
+                            ));
                         }
                     } else {
                         if (timeToWaitInDays == 1) {
-                            return "<RED>This quest is on a cooldown! You have to wait another <highlight>" + timeToWaitInDays + " day</highlight> until you can take it again.";
+                            return main.getLanguageManager().getString("chat.quest-on-cooldown.day", getPlayer(), this, quest);
 
                         } else {
-                            return "<RED>This quest is on a cooldown! You have to wait another <highlight>" + timeToWaitInDays + " days</highlight> until you can take it again.";
+                            return main.getLanguageManager().getString("chat.quest-on-cooldown.days", getPlayer(), this, quest, Map.of(
+                                    "%DAYS%", ""+timeToWaitInDays
+                            ));
                         }
                     }
                 }
             }
 
         } else {
-            return "<RED>You have finished this quests too many times already. You can only accept it <highlight>" + quest.getQuest().getMaxAccepts() + "</highlight> times, but you have already accepted it <highlight>" + completedAmount + "</highlight> times.";
+            return main.getLanguageManager().getString("chat.reached-max-accepts-limit", getPlayer(), this, quest, Map.of(
+                    "%MAXACCEPTS%", ""+quest.getQuest().getMaxAccepts(),
+                    "%COMPLETEDAMOUNT%", ""+completedAmount
+            ));
         }
-
 
     }
 
@@ -449,11 +462,11 @@ public class QuestPlayer {
     public String forceAddActiveQuest(final ActiveQuest quest, boolean triggerAcceptQuestTrigger) { //ignores max amount, cooldown and requirements
         for (ActiveQuest activeQuest : activeQuests) {
             if (activeQuest.getQuest().equals(quest.getQuest())) {
-                return main.getLanguageManager().getString("chat.quest-already-accepted", getPlayer());
+                return main.getLanguageManager().getString("chat.quest-already-accepted", getPlayer(), this);
             }
         }
         finishAddingQuest(quest, triggerAcceptQuestTrigger, false);
-        return "<GREEN>Successfully accepted the quest (Forced).";
+        return main.getLanguageManager().getString("chat.force-add-active-quest-accepted", getPlayer(), this);
     }
 
     public final UUID getUUID() {
@@ -668,7 +681,9 @@ public class QuestPlayer {
                 final Player player = getPlayer();
                 if (player != null) {
                     player.sendMessage(main.parse(
-                            "<YELLOW>Your quest points have been set to <highlight>" + newQuestPoints + "</highlight>."
+                            main.getLanguageManager().getString("chat.questpoints.notify-when-changed.set", player, this, Map.of(
+                                    "%NEWQUESTPOINTSAMOUNT%", ""+newQuestPoints
+                            ))
                     ));
                 }
             }
@@ -681,7 +696,9 @@ public class QuestPlayer {
             final Player player = getPlayer();
             if (player != null) {
                 player.sendMessage(main.parse(
-                        "<highlight>+" + questPointsToAdd + " <GREEN>quest points!"
+                        main.getLanguageManager().getString("chat.questpoints.notify-when-changed.add", player, this, Map.of(
+                                "%QUESTPOINTSTOADD%", ""+questPointsToAdd
+                        ))
                 ));
             }
         }
@@ -693,7 +710,9 @@ public class QuestPlayer {
             final Player player = getPlayer();
             if (player != null) {
                 player.sendMessage(main.parse(
-                        "<highlight>>-" + questPointsToRemove + " <RED>>quest points!"
+                        main.getLanguageManager().getString("chat.questpoints.notify-when-changed.remove", player, this, Map.of(
+                                "%QUESTPOINTSTOREMOVE%", ""+questPointsToRemove
+                        ))
                 ));
             }
         }

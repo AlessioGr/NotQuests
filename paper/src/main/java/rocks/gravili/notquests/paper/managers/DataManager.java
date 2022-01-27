@@ -956,7 +956,7 @@ public class DataManager {
 
         configuration.setIntegrationUltimateJobsEnabled(getGeneralConfigBoolean(
                 "integrations.ultimatejobs.enabled",
-                true
+                false
         ));
 
         configuration.setActionBarFancyCommandCompletionEnabled(getGeneralConfigBoolean(

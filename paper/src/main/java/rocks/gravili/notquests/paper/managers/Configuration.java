@@ -118,7 +118,7 @@ public class Configuration {
     private boolean integrationJobsRebornEnabled = true;
     private boolean integrationProjectKorraEnabled = true;
     private boolean integrationEcoBossesEnabled = true;
-    private boolean integrationUltimateJobsEnabled = true;
+    private boolean integrationUltimateJobsEnabled = false;
 
 
     //Other
