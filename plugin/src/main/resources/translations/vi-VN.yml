@@ -26,26 +26,26 @@ chat:
     query: <warn>Bạn đang có <highlight>%QUESTPOINTS% <warn>điểm nhiệm vụ.
     none: <error>Có vẻ như bạn không có bất kỳ điểm nhiệm vụ nào!
     notify-when-changed:
-      set: '<main>Your quest points have been set to <highlight>%NEWQUESTPOINTSAMOUNT%</highlight>.'
-      add: '<highlight>+%QUESTPOINTSTOADD% <success>quest points!'
-      remove: '<highlight>-%QUESTPOINTSTOREMOVE% <negative>quest points!'
+      set: '<main>Điểm nhiệm vụ của bạn đã được chỉnh thành <highlight>%NEWQUESTPOINTSAMOUNT%</highlight>.'
+      add: 'Điểm nhiệm vụ <highlight>+%QUESTPOINTSTOADD% <success>!'
+      remove: 'Điểm nhiệm vụ <highlight>-%QUESTPOINTSTOREMOVE% <negative>!'
   no-quests-accepted: <error>Có vẻ như bạn không có bất kỳ nhiệm vụ nào đang hoạt động!
   quest-does-not-exist: <error>Nhiệm vụ <highlight>%QUESTNAME% <error>không tồn tại!
   quest-not-found-or-does-not-exist: <error>Nhiệm vụ <highlight>%QUESTNAME% <error>không tìm thấy hoặc không hoạt động!
   active-quests-label: '<warn>Nhiệm vụ đã được hoạt động:'
   take-disabled: <error>Đồng ý hoặc xem trước nhiệm vụ <highlight>%QUESTNAME%</highlight> đã bị tắt.
   quest-not-active-error: '<error>Lỗi: <highlight>%QUESTNAME% <error>nhiệm vụ chưa được hoạt động!'
-  force-add-active-quest-accepted: '<success>Successfully accepted the quest (Forced).'
-  add-active-quest-player-object-not-found: '<warn>Error: Player object not found. Please report this to the plugin developer.'
-  reached-max-accepts-limit: '<red>You have finished this quests too many times already. You can only accept it <highlight>%MAXACCEPTS%</highlight> times, but you have already accepted it <highlight>%COMPLETEDAMOUNT%</highlight> times.'
-  reached-max-active-quests-per-player-limit: '<red>You can not accept more than <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> Quests.'
+  force-add-active-quest-accepted: '<success>Đã chập nhận thành công nhiệm vụ (Bắt buộc).'
+  add-active-quest-player-object-not-found: '<warn>Lỗi: Không tìm thấy người chơi. Vui lòng báo cáo điều này cho nhà phát triển plugin.'
+  reached-max-accepts-limit: "<red>Bạn đã hoàn thành nhiệm vụ này quá nhiều lần rồi. Bạn chỉ có thể chấp nhận nó\n<highlight>%MAXACCEPTS%</highlight> lần, nhưng bạn đã chấp nhận nó rồi\n<highlight>%COMPLETEDAMOUNT%</highlight>lần thành công."
+  reached-max-active-quests-per-player-limit: '<red>Bạn không thể chấp nhận nhiều hơn <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> nhiệm vụ.'
   quest-on-cooldown:
-    minute: '<red>This quest is on a cooldown! You have to wait another <highlight>1 minute</highlight> until you can take it again.'
-    minutes: '<red>This quest is on a cooldown! You have to wait another <highlight>%MINUTES% minutes</highlight> until you can take it again.'
-    hour: '<red>This quest is on a cooldown! You have to wait another <highlight>1 hour</highlight> until you can take it again.'
-    hours: '<red>This quest is on a cooldown! You have to wait another <highlight>%HOURS% hours</highlight> until you can take it again.'
-    day: '<red>This quest is on a cooldown! You have to wait another <highlight>1 day</highlight> until you can take it again.'
-    days: '<red>This quest is on a cooldown! You have to wait another <highlight>%DAYS% days</highlight> until you can take it again.'
+    minute: '<red>Nhiệm vụ này đang trong thời gian chờ! Bạn phải đợi khoảng <highlight>1 phút</highlight> cho đến khi bạn có thể làm nhiệm vụ đó.'
+    minutes: '<red>Nhiệm vụ này đang trong thời gian chờ! Bạn phải đợi khoảng <highlight>%MINUTES% phút</highlight> cho đến khi bạn có thể làm nhiệm vụ đó.'
+    hour: '<red>Nhiệm vụ này đang trong thời gian chờ! Bạn phải đợi khoảng <highlight>1 tiếng</highlight> cho đến khi bạn có thể làm nhiệm vụ đó.'
+    hours: '<red>Nhiệm vụ này đang trong thời gian chờ! Bạn phải đợi khoảng <highlight>%HOURS% tiếng</highlight> cho đến khi bạn có thể làm nhiệm vụ đó.'
+    day: '<red>Nhiệm vụ này đang trong thời gian chờ! Bạn phải đợi khoảng <highlight>1 ngày</highlight> cho đến khi bạn có thể làm nhiệm vụ đó.'
+    days: '<red>Nhiệm vụ này đang trong thời gian chờ! Bạn phải đợi khoảng <highlight>%DAYS% ngày</highlight> cho đến khi bạn có thể làm nhiệm vụ đó.'
   conversations:
     choose-answer-prefix: |-
       <EMPTY>
@@ -123,7 +123,7 @@ chat:
         base: '    <veryUnimportant>└─<unimportant>Dùng Ability:<main>%ABILITY%'
       BetonQuestCompleteObjective:
         base: '    <veryUnimportant>└─ <unimportant>Finish Objective: <main>%BETONQUESTOBJECTIVENAME%'
-      ultimateJobsRebornReachJobLevel:
+      ultimateJobsReachJobLevel:
         base: '    <veryUnimportant>└─ <unimportant>Reach job level <main>%AMOUNT%</main> with job <main>%JOBID%'
   conditions:
     boolean:

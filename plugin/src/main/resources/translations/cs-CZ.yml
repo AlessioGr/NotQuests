@@ -123,7 +123,7 @@ chat:
         base: '    <DARK_GRAY>└─ <GRAY>Použít schopnost: <WHITE>%ABILITY%'
       BetonQuestCompleteObjective:
         base: '    <veryUnimportant>└─ <unimportant>Finish Objective: <main>%BETONQUESTOBJECTIVENAME%'
-      ultimateJobsRebornReachJobLevel:
+      ultimateJobsReachJobLevel:
         base: '    <veryUnimportant>└─ <unimportant>Reach job level <main>%AMOUNT%</main> with job <main>%JOBID%'
   conditions:
     boolean:
