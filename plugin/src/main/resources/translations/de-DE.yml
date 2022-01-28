@@ -129,7 +129,7 @@ chat:
         base: '    <veryUnimportant>└─ <unimportant>Fähigkeit nutzen: <main>%ABILITY%'
       BetonQuestCompleteObjective:
         base: '    <veryUnimportant>└─ <unimportant>Aufgabe fertigstellen: <main>%BETONQUESTOBJECTIVENAME%'
-      ultimateJobsRebornReachJobLevel:
+      ultimateJobsReachJobLevel:
         base: '    <veryUnimportant>└─ <unimportant>Erreiche Job Level <main>%AMOUNT%</main> mit dem Job <main>%JOBID%'
   conditions:
     boolean:
