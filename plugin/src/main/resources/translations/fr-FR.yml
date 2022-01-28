@@ -129,7 +129,7 @@ chat:
         base: '    <veryUnimportant>└─ <unimportant>Utiliser la capacité : <main>%ABILITY%'
       BetonQuestCompleteObjective:
         base: '    <veryUnimportant>└─ <unimportant>Terminer l''Objectif: <main>%BETONQUESTOBJECTIVENAME%'
-      ultimateJobsRebornReachJobLevel:
+      ultimateJobsReachJobLevel:
         base: '    <veryUnimportant>└─ <unimportant>Atteindre le niveau d''emploi <main>%AMOUNT%</main> avec l''emploi <main>%JOBID%'
   conditions:
     boolean:
