@@ -24,10 +24,7 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.*;
 import rocks.gravili.notquests.paper.structs.triggers.ActiveTrigger;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -53,23 +50,13 @@ public class QuestPlayerManager {
         }
         final UUID uuid = player.getUniqueId();
         questPlayersAndUUIDs.remove(uuid);
-        Connection connection = null;
-        Statement statement = null;
-        try{
-            connection = main.getDataManager().getConnection();
-            statement = connection.createStatement();
-        }catch (Exception e){
-            main.getDataManager().disablePluginAndSaving("There was a database error, so questplayer loading has been disabled. (1.1)", e);
-            return;
-        }
-        if (statement == null) {
-            main.getDataManager().disablePluginAndSaving("There was a database error, so questplayer loading has been disabled. (1.2)");
-            return;
-        }
+
 
         QuestPlayer questPlayer = null;
 
-        try {
+        try (Connection connection = main.getDataManager().getConnection();
+             Statement statement = connection.createStatement();
+        ) {
             ResultSet result = statement.executeQuery("SELECT QuestPoints FROM QuestPlayerData WHERE PlayerUUID LIKE '" + uuid.toString() + "';");
             if (result.next()) {
                 createQuestPlayer(uuid);
@@ -87,19 +74,13 @@ public class QuestPlayerManager {
                 }
 
             }
-            result.close();
-        } catch (SQLException sqlException) {
-            sqlException.printStackTrace();
-        }
 
-        if(questPlayer == null){
-            return;
-        }
+            if(questPlayer == null){
+                return;
+            }
 
-        //Active Quests
-        final ArrayList<ActiveQuest> activeQuests = new ArrayList<>();
-        try {
-
+            //Active Quests
+            final ArrayList<ActiveQuest> activeQuests = new ArrayList<>();
             //Completed Quests
             ResultSet completedQuestsResults = statement.executeQuery("SELECT QuestName, TimeCompleted FROM CompletedQuests WHERE PlayerUUID = '" + uuid + "';");
             while (completedQuestsResults.next()) {
@@ -119,7 +100,7 @@ public class QuestPlayerManager {
                     main.getLogManager().warn("ERROR: Quest with name <highlight>" + questName + "</highlight> could not be loaded from database (requested for loading completed Quests)");
                 }
             }
-            completedQuestsResults.close();
+            //completedQuestsResults.close();
 
 
             //Active Quests
@@ -136,7 +117,7 @@ public class QuestPlayerManager {
                     main.getLogManager().warn("ERROR: Quest with name <highlight>" + questName + "</highlight> could not be loaded from database");
                 }
             }
-            activeQuestsResults.close();
+            //activeQuestsResults.close();
 
             for (ActiveQuest activeQuest : activeQuests) {
                 //Active Triggers
@@ -162,7 +143,7 @@ public class QuestPlayerManager {
 
                     }
                 }
-                activeQuestTriggerResults.close();
+                //activeQuestTriggerResults.close();
 
 
                 //Active Objectives
@@ -220,19 +201,21 @@ public class QuestPlayerManager {
                     activeObjectiveToCheckForIfUnlocked.updateUnlocked(false, true);
                 }
 
-                activeQuestObjectiveResults.close();
+                //activeQuestObjectiveResults.close();
             }
 
             questPlayer.removeCompletedQuests();
 
 
 
-            statement.close();
-            connection.close();
-
-        } catch (SQLException sqlException) {
-            sqlException.printStackTrace();
+        } catch (Exception e) {
+            main.getDataManager().disablePluginAndSaving("There was a database error, so QuestPlayer loading for player <highlight>" + player.getName() + "</highlight> has been disabled. (1.1)", e);
+            return;
         }
+
+
+
+
 
         questPlayer.onJoinAsync(player);
         final QuestPlayer finalQuestPlayer = questPlayer;
@@ -249,35 +232,17 @@ public class QuestPlayerManager {
             return;
         }
 
-
-        Connection connection = null;
-        Statement statement = null;
-        try{
-            connection = main.getDataManager().getConnection();
-            statement = connection.createStatement();
-        }catch (Exception e){
-            main.getLogManager().severe("There was a database error, so questplayer saving has been disabled. (1.1)");
-            e.printStackTrace();
-            return;
-        }
-        if (statement == null) {
-            main.getLogManager().severe("There was a database error, so questplayer saving has been disabled. (1.2)");
-            return;
-        }
-
-
-        //main.getLogManager().info("Re-opening database connection...");
-        //main.getDataManager().refreshDatabaseConnection(false);
-
         QuestPlayer questPlayer = getQuestPlayer(player.getUniqueId());
         if(questPlayer == null){
             return;
         }
 
-
         final long questPoints = questPlayer.getQuestPoints();
         final UUID questPlayerUUID = questPlayer.getUUID();
-        try {
+
+        try (Connection connection = main.getDataManager().getConnection();
+             Statement statement = connection.createStatement();
+        ) {
             //QuestPoints
             statement.executeUpdate("DELETE FROM QuestPlayerData WHERE PlayerUUID = '" + questPlayerUUID.toString() + "';");
             statement.executeUpdate("INSERT INTO QuestPlayerData (PlayerUUID, QuestPoints) VALUES ('" + questPlayerUUID + "', " + questPoints + ");");
@@ -308,22 +273,13 @@ public class QuestPlayerManager {
             for (CompletedQuest completedQuest : questPlayer.getCompletedQuests()) {
                 statement.executeUpdate("INSERT INTO CompletedQuests (QuestName, PlayerUUID, TimeCompleted) VALUES ('" + completedQuest.getQuest().getQuestName() + "', '" + questPlayerUUID + "', " + completedQuest.getTimeCompleted() + ");");
             }
-
-
-
-            } catch (SQLException sqlException) {
-                main.getLogManager().warn("There was an error saving the playerdata of player with UUID <highlight>" + questPlayer.getUUID() + "</highlight>! Stacktrace:");
-                sqlException.printStackTrace();
-            }
-
-
-        try{
-            statement.close();
-            connection.close();
         }catch (Exception e){
-            main.getLogManager().warn("There was an error closing the Database connection when saving QuestPlayer data.");
+            main.getLogManager().warn("There was an error saving the playerdata of player with UUID <highlight>" + questPlayer.getUUID() + "</highlight>! Stacktrace:");
             e.printStackTrace();
+            return;
         }
+
+
         main.getLogManager().info("PlayerData saved");
 
         questPlayer.onQuitAsync(player);
