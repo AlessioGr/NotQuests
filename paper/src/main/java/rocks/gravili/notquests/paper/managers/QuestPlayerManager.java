@@ -59,7 +59,7 @@ public class QuestPlayerManager {
             connection = main.getDataManager().getConnection();
             statement = connection.createStatement();
         }catch (Exception e){
-            main.getDataManager().disablePluginAndSaving("There was a database error, so questplayer loading has been disabled. (1.1)");
+            main.getDataManager().disablePluginAndSaving("There was a database error, so questplayer loading has been disabled. (1.1)", e);
             return;
         }
         if (statement == null) {
@@ -257,6 +257,7 @@ public class QuestPlayerManager {
             statement = connection.createStatement();
         }catch (Exception e){
             main.getLogManager().severe("There was a database error, so questplayer saving has been disabled. (1.1)");
+            e.printStackTrace();
             return;
         }
         if (statement == null) {
@@ -321,6 +322,7 @@ public class QuestPlayerManager {
             connection.close();
         }catch (Exception e){
             main.getLogManager().warn("There was an error closing the Database connection when saving QuestPlayer data.");
+            e.printStackTrace();
         }
         main.getLogManager().info("PlayerData saved");
 
@@ -353,6 +355,7 @@ public class QuestPlayerManager {
             statement = connection.createStatement();
         }catch (Exception e){
             main.getDataManager().disablePluginAndSaving("There was a database error, so questplayer loading has been disabled. (1.1)");
+            e.printStackTrace();
             return;
         }
         if (statement == null) {
@@ -559,6 +562,7 @@ public class QuestPlayerManager {
             statement = connection.createStatement();
         }catch (Exception e){
             main.getLogManager().severe("There was a database error, so questplayer saving has been disabled. (1.1)");
+            e.printStackTrace();
             return;
         }
         if (statement == null) {
@@ -619,6 +623,7 @@ public class QuestPlayerManager {
             connection.close();
         }catch (Exception e){
             main.getLogManager().warn("There was an error closing the Database connection when saving QuestPlayer data.");
+            e.printStackTrace();
         }
         main.getLogManager().info("PlayerData saved");
 
