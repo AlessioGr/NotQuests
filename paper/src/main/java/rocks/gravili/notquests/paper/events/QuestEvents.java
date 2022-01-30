@@ -1179,6 +1179,7 @@ public class QuestEvents implements Listener {
 
     }
 
+
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         if(main.getConfiguration().isLoadPlayerDataOnJoin()){

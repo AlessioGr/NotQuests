@@ -24,6 +24,8 @@ import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.paper.PaperCommandManager;
 import de.warsteiner.jobs.UltimateJobs;
+import de.warsteiner.jobs.api.Job;
+import de.warsteiner.jobs.api.JobsPlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -57,8 +59,8 @@ public class UltimateJobsReachJobLevelObjective extends Objective {
                             main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Job ID]", "");
 
                             ArrayList<String> completions = new ArrayList<>();
-                            for(File loadedJob : UltimateJobs.getPlugin().getLoadedJobs()){
-                                UltimateJobs.getPlugin().getJobAPI().getID(loadedJob);
+                            for(String jobID : UltimateJobs.getPlugin().getAPI().getJobsInListAsID()){
+                                completions.add(jobID);
                             }
                             return completions;
                         }
@@ -125,6 +127,9 @@ public class UltimateJobsReachJobLevelObjective extends Objective {
     }
     @Override
     public void onObjectiveUnlock(final ActiveObjective activeObjective, final boolean unlockedDuringPluginStartupQuestLoadingProcess) {
+        if(unlockedDuringPluginStartupQuestLoadingProcess){
+            return;
+        }
         if(activeObjective.getCurrentProgress() != 0){
             return;
         }
@@ -134,7 +139,19 @@ public class UltimateJobsReachJobLevelObjective extends Objective {
             return;
         }
 
-        activeObjective.addProgress(UltimateJobs.getPlugin().getPlayerAPI().getJobLevel(activeObjective.getQuestPlayer().getUUID().toString(), jobID));
+        JobsPlayer jobsPlayer = UltimateJobs.getPlugin().getPlayerManager().getJonPlayers().get(activeObjective.getQuestPlayer().getUUID().toString());
+        Job job = UltimateJobs.getPlugin().getAPI().isJobFromConfigID(jobID);
+
+        if(jobsPlayer == null || job == null){
+            return;
+        }
+
+        if(jobsPlayer.getLevelOf(job.getID()) == null){
+            return;
+        }
+
+
+        activeObjective.addProgress( jobsPlayer.getLevelOf(job.getID())-1);
     }
     @Override
     public void onObjectiveCompleteOrLock(final ActiveObjective activeObjective, final boolean lockedOrCompletedDuringPluginStartupQuestLoadingProcess, final boolean completed) {

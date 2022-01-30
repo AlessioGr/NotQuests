@@ -50,7 +50,7 @@ repositories {
             includeGroup("com.github.TownyAdvanced")
             includeGroup("com.github.Zrips")
             includeGroup("com.willfp")
-            includeGroup("com.github.Warsteiner37")
+            includeGroup("com.github.war-systems")
         }
         metadataSources {
             artifact()
@@ -201,7 +201,7 @@ dependencies {
 
     implementation("com.zaxxer:HikariCP:5.0.1")
 
-    compileOnly("com.github.Warsteiner37:UltimateJobs:SNAPSHOT")
+    compileOnly("com.github.war-systems:UltimateJobs:0.2.6")
 
 
 }

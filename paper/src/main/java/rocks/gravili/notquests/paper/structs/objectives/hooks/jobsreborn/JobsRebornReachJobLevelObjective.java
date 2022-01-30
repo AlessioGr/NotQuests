@@ -138,9 +138,13 @@ public class JobsRebornReachJobLevelObjective extends Objective {
     }
     @Override
     public void onObjectiveUnlock(final ActiveObjective activeObjective, final boolean unlockedDuringPluginStartupQuestLoadingProcess) {
+        if(unlockedDuringPluginStartupQuestLoadingProcess){
+            return;
+        }
         if(activeObjective.getCurrentProgress() != 0){
             return;
         }
+
 
         activeObjective.addProgress(1); //Job levels start at 1 and not 0
         if (!main.getIntegrationsManager().isJobsRebornEnabled() || !isCountPreviousLevels()) {

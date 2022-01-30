@@ -1,7 +1,7 @@
 package rocks.gravili.notquests.paper.events.hooks;
 
 import de.warsteiner.jobs.UltimateJobs;
-import de.warsteiner.jobs.utils.cevents.PlayerJobExpEvent;
+import de.warsteiner.jobs.utils.cevents.PlayerLevelJobEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -18,7 +18,7 @@ public class UltimateJobsEvents implements Listener {
     }
 
     @EventHandler
-    public void onJobsLevelUp(PlayerJobExpEvent e) {
+    public void onJobsLevelUp(PlayerLevelJobEvent e) {
         final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(e.getPlayer().getUniqueId());
         if (questPlayer != null) {
             if (questPlayer.getActiveQuests().size() > 0) {
@@ -26,7 +26,7 @@ public class UltimateJobsEvents implements Listener {
                     for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
                         if (activeObjective.isUnlocked()) {
                             if (activeObjective.getObjective() instanceof UltimateJobsReachJobLevelObjective ultimateJobsReachJobLevelObjective) {
-                                if (!UltimateJobs.getPlugin().getJobAPI().getID(e.getJob()).equalsIgnoreCase(ultimateJobsReachJobLevelObjective.getJobID())) {
+                                if (!e.getJob().getID().equalsIgnoreCase(ultimateJobsReachJobLevelObjective.getJobID())) {
                                     return;
                                 }
                                 activeObjective.addProgress(1);
