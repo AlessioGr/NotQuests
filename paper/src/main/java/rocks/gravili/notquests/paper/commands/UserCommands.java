@@ -135,6 +135,10 @@ public class UserCommands {
                 .argument(QuestSelector.<CommandSender>newBuilder("Quest Name", main).takeEnabledOnly().build(), ArgumentDescription.of("Quest Name"))
                 .meta(CommandMeta.DESCRIPTION, "Starts a Quest.")
                 .handler((context) -> {
+                    if(main.getDataManager().isDisabled()){
+                        context.getSender().sendMessage(main.parse("<error>Error - NotQuests is disabled. This usually happens when something goes wrong during loading any data from not quests (usually a faulty quest configuration). NotQuests does this to protect itself from data loss. Please report this to the server owner and tell him to check the console for any errors BEFORE the 'notquests has been disabled' message."));
+                        return;
+                    }
 
                     final Quest quest = context.get("Quest Name");
 
@@ -151,6 +155,10 @@ public class UserCommands {
                 .senderType(Player.class)
                 .meta(CommandMeta.DESCRIPTION, "Starts a Quest.")
                 .handler((context) -> {
+                    if(main.getDataManager().isDisabled()){
+                        context.getSender().sendMessage(main.parse("<error>Error - NotQuests is disabled. This usually happens when something goes wrong during loading any data from not quests (usually a faulty quest configuration). NotQuests does this to protect itself from data loss. Please report this to the server owner and tell him to check the console for any errors BEFORE the 'notquests has been disabled' message."));
+                        return;
+                    }
                     final Player player = (Player) context.getSender();
                     QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
 
@@ -172,6 +180,10 @@ public class UserCommands {
                 .senderType(Player.class)
                 .meta(CommandMeta.DESCRIPTION, "Opens NotQuests GUI.")
                 .handler((context) -> {
+                    if(main.getDataManager().isDisabled()){
+                        context.getSender().sendMessage(main.parse("<error>Error - NotQuests is disabled. This usually happens when something goes wrong during loading any data from not quests (usually a faulty quest configuration). NotQuests does this to protect itself from data loss. Please report this to the server owner and tell him to check the console for any errors BEFORE the 'notquests has been disabled' message."));
+                        return;
+                    }
                     final Player player = (Player) context.getSender();
                     final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
 
@@ -182,6 +194,10 @@ public class UserCommands {
                 .senderType(Player.class)
                 .meta(CommandMeta.DESCRIPTION, "Starts a Quest.")
                 .handler((context) -> {
+                    if(main.getDataManager().isDisabled()){
+                        context.getSender().sendMessage(main.parse("<error>Error - NotQuests is disabled. This usually happens when something goes wrong during loading any data from not quests (usually a faulty quest configuration). NotQuests does this to protect itself from data loss. Please report this to the server owner and tell him to check the console for any errors BEFORE the 'notquests has been disabled' message."));
+                        return;
+                    }
                     final Player player = (Player) context.getSender();
                     QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
 
@@ -192,6 +208,10 @@ public class UserCommands {
                 .senderType(Player.class)
                 .meta(CommandMeta.DESCRIPTION, "Shows your active Quests.")
                 .handler((context) -> {
+                    if(main.getDataManager().isDisabled()){
+                        context.getSender().sendMessage(main.parse("<error>Error - NotQuests is disabled. This usually happens when something goes wrong during loading any data from not quests (usually a faulty quest configuration). NotQuests does this to protect itself from data loss. Please report this to the server owner and tell him to check the console for any errors BEFORE the 'notquests has been disabled' message."));
+                        return;
+                    }
                     final Player player = (Player) context.getSender();
                     final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
 
@@ -203,6 +223,10 @@ public class UserCommands {
                 .senderType(Player.class)
                 .meta(CommandMeta.DESCRIPTION, "Aborts an active Quest.")
                 .handler((context) -> {
+                    if(main.getDataManager().isDisabled()){
+                        context.getSender().sendMessage(main.parse("<error>Error - NotQuests is disabled. This usually happens when something goes wrong during loading any data from not quests (usually a faulty quest configuration). NotQuests does this to protect itself from data loss. Please report this to the server owner and tell him to check the console for any errors BEFORE the 'notquests has been disabled' message."));
+                        return;
+                    }
                     final Player player = (Player) context.getSender();
                     final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
                     if (questPlayer != null) {
@@ -220,6 +244,10 @@ public class UserCommands {
                 .senderType(Player.class)
                 .meta(CommandMeta.DESCRIPTION, "Shows a Preview for a Quest.")
                 .handler((context) -> {
+                    if(main.getDataManager().isDisabled()){
+                        context.getSender().sendMessage(main.parse("<error>Error - NotQuests is disabled. This usually happens when something goes wrong during loading any data from not quests (usually a faulty quest configuration). NotQuests does this to protect itself from data loss. Please report this to the server owner and tell him to check the console for any errors BEFORE the 'notquests has been disabled' message."));
+                        return;
+                    }
                     final Player player = (Player) context.getSender();
                     final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
 
@@ -232,6 +260,10 @@ public class UserCommands {
                 .argument(ActiveQuestSelector.of("Active Quest", main, null), ArgumentDescription.of("Name of the active Quest which should be aborted/failed"))
                 .meta(CommandMeta.DESCRIPTION, "Aborts an active Quest")
                 .handler((context) -> {
+                    if(main.getDataManager().isDisabled()){
+                        context.getSender().sendMessage(main.parse("<error>Error - NotQuests is disabled. This usually happens when something goes wrong during loading any data from not quests (usually a faulty quest configuration). NotQuests does this to protect itself from data loss. Please report this to the server owner and tell him to check the console for any errors BEFORE the 'notquests has been disabled' message."));
+                        return;
+                    }
                     final Player player = (Player) context.getSender();
                     QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
                     final ActiveQuest activeQuest = context.get("Active Quest");
@@ -251,6 +283,10 @@ public class UserCommands {
                 .argument(QuestSelector.<CommandSender>newBuilder("Quest Name", main).takeEnabledOnly().build(), ArgumentDescription.of("Quest Name"))
                 .meta(CommandMeta.DESCRIPTION, "Previews a Quest")
                 .handler((context) -> {
+                    if(main.getDataManager().isDisabled()){
+                        context.getSender().sendMessage(main.parse("<error>Error - NotQuests is disabled. This usually happens when something goes wrong during loading any data from not quests (usually a faulty quest configuration). NotQuests does this to protect itself from data loss. Please report this to the server owner and tell him to check the console for any errors BEFORE the 'notquests has been disabled' message."));
+                        return;
+                    }
                     final Player player = (Player) context.getSender();
                     final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer((player.getUniqueId()));
                     final Quest quest = context.get("Quest Name");
@@ -265,6 +301,10 @@ public class UserCommands {
                 .argument(ActiveQuestSelector.of("Active Quest", main, null), ArgumentDescription.of("Name of the active Quest of which you want to see the progress"))
                 .meta(CommandMeta.DESCRIPTION, "Shows progress for an active Quest")
                 .handler((context) -> {
+                    if(main.getDataManager().isDisabled()){
+                        context.getSender().sendMessage(main.parse("<error>Error - NotQuests is disabled. This usually happens when something goes wrong during loading any data from not quests (usually a faulty quest configuration). NotQuests does this to protect itself from data loss. Please report this to the server owner and tell him to check the console for any errors BEFORE the 'notquests has been disabled' message."));
+                        return;
+                    }
                     final Player player = (Player) context.getSender();
                     QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
                     if (questPlayer != null && questPlayer.getActiveQuests().size() > 0) {
@@ -315,6 +355,10 @@ public class UserCommands {
                 .senderType(Player.class)
                 .meta(CommandMeta.DESCRIPTION, "Opens NotQuests GUI.")
                 .handler((context) -> {
+                    if(main.getDataManager().isDisabled()){
+                        context.getSender().sendMessage(main.parse("<error>Error - NotQuests is disabled. This usually happens when something goes wrong during loading any data from not quests (usually a faulty quest configuration). NotQuests does this to protect itself from data loss. Please report this to the server owner and tell him to check the console for any errors BEFORE the 'notquests has been disabled' message."));
+                        return;
+                    }
                     context.getSender().sendMessage(Component.empty());
                     context.getSender().sendMessage(firstLevelCommands);
                 }));
@@ -324,6 +368,10 @@ public class UserCommands {
                 .senderType(Player.class)
                 .meta(CommandMeta.DESCRIPTION, "Starts a Quest.")
                 .handler((context) -> {
+                    if(main.getDataManager().isDisabled()){
+                        context.getSender().sendMessage(main.parse("<error>Error - NotQuests is disabled. This usually happens when something goes wrong during loading any data from not quests (usually a faulty quest configuration). NotQuests does this to protect itself from data loss. Please report this to the server owner and tell him to check the console for any errors BEFORE the 'notquests has been disabled' message."));
+                        return;
+                    }
                     context.getSender().sendMessage(main.parse(
                             "<RED>Please specify the <highlight>name of the quest</highlight> you wish to take.\n"
                                     + "<YELLOW>/nquests <GOLD>take <DARK_AQUA>[Quest Name]"
@@ -335,6 +383,10 @@ public class UserCommands {
                 .senderType(Player.class)
                 .meta(CommandMeta.DESCRIPTION, "Shows your active Quests.")
                 .handler((context) -> {
+                    if(main.getDataManager().isDisabled()){
+                        context.getSender().sendMessage(main.parse("<error>Error - NotQuests is disabled. This usually happens when something goes wrong during loading any data from not quests (usually a faulty quest configuration). NotQuests does this to protect itself from data loss. Please report this to the server owner and tell him to check the console for any errors BEFORE the 'notquests has been disabled' message."));
+                        return;
+                    }
                     final Player player = (Player) context.getSender();
                     final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());if (questPlayer != null) {
                         context.getSender().sendMessage(main.parse(
@@ -360,6 +412,10 @@ public class UserCommands {
                 .senderType(Player.class)
                 .meta(CommandMeta.DESCRIPTION, "Aborts an active Quest.")
                 .handler((context) -> {
+                    if(main.getDataManager().isDisabled()){
+                        context.getSender().sendMessage(main.parse("<error>Error - NotQuests is disabled. This usually happens when something goes wrong during loading any data from not quests (usually a faulty quest configuration). NotQuests does this to protect itself from data loss. Please report this to the server owner and tell him to check the console for any errors BEFORE the 'notquests has been disabled' message."));
+                        return;
+                    }
                     final Player player = (Player) context.getSender();
                     final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());if (questPlayer != null) {
                         context.getSender().sendMessage(main.parse(
@@ -377,6 +433,10 @@ public class UserCommands {
                 .senderType(Player.class)
                 .meta(CommandMeta.DESCRIPTION, "Shows a Preview for a Quest.")
                 .handler((context) -> {
+                    if(main.getDataManager().isDisabled()){
+                        context.getSender().sendMessage(main.parse("<error>Error - NotQuests is disabled. This usually happens when something goes wrong during loading any data from not quests (usually a faulty quest configuration). NotQuests does this to protect itself from data loss. Please report this to the server owner and tell him to check the console for any errors BEFORE the 'notquests has been disabled' message."));
+                        return;
+                    }
                     final Player player = (Player) context.getSender();
                     context.getSender().sendMessage(main.parse(
                             "<RED>Please specify the <highlight>name of the quest</highlight> you wish to preview.\n"
@@ -390,6 +450,10 @@ public class UserCommands {
                 .argument(ActiveQuestSelector.of("Active Quest", main, null), ArgumentDescription.of("Name of the active Quest which should be aborted/failed"))
                 .meta(CommandMeta.DESCRIPTION, "Aborts an active Quest")
                 .handler((context) -> {
+                    if(main.getDataManager().isDisabled()){
+                        context.getSender().sendMessage(main.parse("<error>Error - NotQuests is disabled. This usually happens when something goes wrong during loading any data from not quests (usually a faulty quest configuration). NotQuests does this to protect itself from data loss. Please report this to the server owner and tell him to check the console for any errors BEFORE the 'notquests has been disabled' message."));
+                        return;
+                    }
                     final Player player = (Player) context.getSender();
                     QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
                     if (questPlayer != null && questPlayer.getActiveQuests().size() > 0) {
@@ -412,6 +476,10 @@ public class UserCommands {
                 .argument(QuestSelector.<CommandSender>newBuilder("Quest Name", main).takeEnabledOnly().build(), ArgumentDescription.of("Quest Name"))
                 .meta(CommandMeta.DESCRIPTION, "Previews a Quest")
                 .handler((context) -> {
+                    if(main.getDataManager().isDisabled()){
+                        context.getSender().sendMessage(main.parse("<error>Error - NotQuests is disabled. This usually happens when something goes wrong during loading any data from not quests (usually a faulty quest configuration). NotQuests does this to protect itself from data loss. Please report this to the server owner and tell him to check the console for any errors BEFORE the 'notquests has been disabled' message."));
+                        return;
+                    }
                     final Player player = (Player) context.getSender();
 
                     final Quest quest = context.get("Quest Name");
@@ -424,6 +492,10 @@ public class UserCommands {
                 .argument(ActiveQuestSelector.of("Active Quest", main, null), ArgumentDescription.of("Name of the active Quest of which you want to see the progress"))
                 .meta(CommandMeta.DESCRIPTION, "Shows progress for an active Quest")
                 .handler((context) -> {
+                    if(main.getDataManager().isDisabled()){
+                        context.getSender().sendMessage(main.parse("<error>Error - NotQuests is disabled. This usually happens when something goes wrong during loading any data from not quests (usually a faulty quest configuration). NotQuests does this to protect itself from data loss. Please report this to the server owner and tell him to check the console for any errors BEFORE the 'notquests has been disabled' message."));
+                        return;
+                    }
                     final Player player = (Player) context.getSender();
                     QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
                     if (questPlayer != null && questPlayer.getActiveQuests().size() > 0) {

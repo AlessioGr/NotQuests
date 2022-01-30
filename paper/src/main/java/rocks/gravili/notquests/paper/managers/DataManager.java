@@ -140,6 +140,8 @@ public class DataManager {
      */
     private final Configuration configuration;
 
+    private boolean disabled = false;
+
 
     /*
      * ItemStack Cache used for 'storing ItemStacks to PDBs' (used for attaching Objectives To Armor Stands)
@@ -157,6 +159,10 @@ public class DataManager {
     private HikariConfig hikariConfig;
     private HikariDataSource hikariDataSource;
 
+
+    public final boolean isDisabled(){
+        return disabled;
+    }
 
 
     /**
@@ -1222,6 +1228,8 @@ public class DataManager {
         }
         setSavingEnabled(false);
         setLoadingEnabled(false);
+
+        disabled = true;
         main.getMain().getServer().getPluginManager().disablePlugin(main.getMain());
     }
 

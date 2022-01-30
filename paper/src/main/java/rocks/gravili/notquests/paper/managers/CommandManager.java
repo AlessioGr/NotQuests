@@ -526,6 +526,10 @@ public class CommandManager {
                 userCommandBuilder.literal("help")
                         .argument(StringArgument.optional("query", StringArgument.StringMode.GREEDY))
                         .handler(context -> {
+                            if(main.getDataManager().isDisabled()){
+                                context.getSender().sendMessage(main.parse("<error>Error - NotQuests is disabled. This usually happens when something goes wrong during loading any data from not quests (usually a faulty quest configuration). NotQuests does this to protect itself from data loss. Please report this to the server owner and tell him to check the console for any errors BEFORE the 'notquests has been disabled' message."));
+                                return;
+                            }
                             minecraftUserHelp.queryCommands(context.getOrDefault("query", "nq *"), context.getSender());
                         })
         );
@@ -537,8 +541,12 @@ public class CommandManager {
         //Admin Stuff
         //Help Menu
         commandManager.command(adminCommandBuilder.meta(CommandMeta.DESCRIPTION, "Opens the help menu").handler((context) -> {
+            if(main.getDataManager().isDisabled()){
+                context.getSender().sendMessage(main.parse("<error>Error - NotQuests is disabled. This usually happens when something goes wrong during loading any data from not quests (usually a faulty quest configuration). NotQuests does this to protect itself from data loss. Please report this to the server owner and tell him to check the console for any errors BEFORE the 'notquests has been disabled' message."));
+                return;
+            }
             minecraftAdminHelp.queryCommands("qa *", context.getSender());
-           final List<String> allArgs = context.getRawInput();
+            final List<String> allArgs = context.getRawInput();
             main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[What would you like to do?]", "[...]");
 
         }));
@@ -547,6 +555,10 @@ public class CommandManager {
                         .argument(StringArgument.optional("query", StringArgument.StringMode.GREEDY))
 
                         .handler(context -> {
+                            if(main.getDataManager().isDisabled()){
+                                context.getSender().sendMessage(main.parse("<error>Error - NotQuests is disabled. This usually happens when something goes wrong during loading any data from not quests (usually a faulty quest configuration). NotQuests does this to protect itself from data loss. Please report this to the server owner and tell him to check the console for any errors BEFORE the 'notquests has been disabled' message."));
+                                return;
+                            }
                             minecraftAdminHelp.queryCommands(context.getOrDefault("query", "qa *"), context.getSender());
                         })
         );
