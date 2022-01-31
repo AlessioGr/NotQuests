@@ -24,34 +24,34 @@ chat:
   quest-completed-rewards-prefix: '    <highlight>Nagrody:'
   quest-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
   quest-completed-rewards-suffix: <EMPTY>
-  quest-not-all-requirements-fulfilled: '<negative>You do not fulfill all the requirements this quest needs! Requirement still needed:'
-  action-not-all-conditions-fulfilled: '<negative>You do not fulfill all the conditions this action needs! Conditions still needed:'
+  quest-not-all-requirements-fulfilled: '<negative>Nie spełniasz wszystkich wymagań tego zadania! Wymaganie jest nadal:'
+  action-not-all-conditions-fulfilled: '<negative>Nie spełniasz wszystkich warunków wymaganych przez to działanie! Warunki nadal potrzebne:'
   missing-quest-description: <unimportant>Ten quest nie posiada opisu.
   objectives-label-after-quest-accepting: '<highlight>Cele:'
   questpoints:
     query: <main>Aktualnie posiadasz <highlight>%QUESTPOINTS%</highlight> punkt(y,ów) questa.
     none: <error>Wygląda na to że nie posiadasz punktów questa!
     notify-when-changed:
-      set: '<main>Your quest points have been set to <highlight>%NEWQUESTPOINTSAMOUNT%</highlight>.'
-      add: '<highlight>+%QUESTPOINTSTOADD% <success>quest points!'
-      remove: '<highlight>-%QUESTPOINTSTOREMOVE% <negative>quest points!'
+      set: '<main>Twoje punkty zadania zostały ustawione na <highlight>%NEWQUESTPOINTSAMOUNT%</highlight>.'
+      add: '<highlight>+%QUESTPOINTSTOADD% <success>punktów zadań!'
+      remove: '<highlight>-%QUESTPOINTSTOREMOVE% <negative>punktów zadań!'
   no-quests-accepted: <error>Wygląda na to że nie posiadasz aktywnych questów!
   quest-does-not-exist: <error>Quest <highlight>%QUESTNAME%</highlight> nie istnieje!
   quest-not-found-or-does-not-exist: <error>Quest <highlight>%QUESTNAME%</highlight> nie został znaleziony bądź nie jest aktywny!
   active-quests-label: '<highlight>Aktywne questy:'
   take-disabled: <error>Akceptacja albo podgląd questa <highlight>%QUESTNAME%</highlight> zostały wyłączone.
   quest-not-active-error: '<error>Błąd: <highlight>%QUESTNAME%</highlight> nie jest aktywnym questem!'
-  force-add-active-quest-accepted: '<success>Successfully accepted the quest (Forced).'
-  add-active-quest-player-object-not-found: '<warn>Error: Player object not found. Please report this to the plugin developer.'
-  reached-max-accepts-limit: '<red>You have finished this quests too many times already. You can only accept it <highlight>%MAXACCEPTS%</highlight> times, but you have already accepted it <highlight>%COMPLETEDAMOUNT%</highlight> times.'
-  reached-max-active-quests-per-player-limit: '<red>You can not accept more than <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> Quests.'
+  force-add-active-quest-accepted: '<success>Pomyślnie zaakceptował zadanie (siła).'
+  add-active-quest-player-object-not-found: '<warn>Błąd: Nie znaleziono obiektu gracza. Proszę zgłosić to do twórcy wtyczki.'
+  reached-max-accepts-limit: '<red>Już skończyłeś te zadania zbyt wiele razy. Możesz zaakceptować tylko <highlight>%MAXACCEPTS%</highlight> razy, ale już zaakceptowałeś to <highlight>%COMPLETEDAMOUNT%</highlight> razy.'
+  reached-max-active-quests-per-player-limit: '<red>Nie możesz zaakceptować więcej niż <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> Zadań.'
   quest-on-cooldown:
-    minute: '<red>This quest is on a cooldown! You have to wait another <highlight>1 minute</highlight> until you can take it again.'
-    minutes: '<red>This quest is on a cooldown! You have to wait another <highlight>%MINUTES% minutes</highlight> until you can take it again.'
-    hour: '<red>This quest is on a cooldown! You have to wait another <highlight>1 hour</highlight> until you can take it again.'
-    hours: '<red>This quest is on a cooldown! You have to wait another <highlight>%HOURS% hours</highlight> until you can take it again.'
-    day: '<red>This quest is on a cooldown! You have to wait another <highlight>1 day</highlight> until you can take it again.'
-    days: '<red>This quest is on a cooldown! You have to wait another <highlight>%DAYS% days</highlight> until you can take it again.'
+    minute: '<red>To zadanie ma odnowienie! Musisz poczekać jeszcze <highlight>1 minutę</highlight>, aby odebrać je ponownie.'
+    minutes: '<red>To zadanie ma odnowienie! Musisz poczekać kolejne <highlight>%MINUTES% minut</highlight> aby odebrać je ponownie.'
+    hour: '<red>To zadanie jest odnawiane! Musisz poczekać następną <highlight>1 godzinę</highlight> aby odebrać je ponownie.'
+    hours: '<red>To zadanie ma odnowienie! Musisz poczekać następne <highlight>%HOURS% godzin</highlight> aby odebrać je ponownie.'
+    day: '<red>To zadanie jest odnawiane! Musisz poczekać następny <highlight>1 dzień</highlight> aby odebrać je ponownie.'
+    days: '<red>To zadanie ma odnowienie! Musisz poczekać kolejne <highlight>%DAYS% dni</highlight> aby odebrać je ponownie.'
   conversations:
     choose-answer-prefix: |-
       <EMPTY>
@@ -65,7 +65,7 @@ chat:
     progress: '   <highlight>Postęp: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
     successfully-completed: |2
 
-      <CENTER><success>[Objective Completed]
+      <CENTER><success>[Ukończono Cel]
       <CENTER><highlight><bold>%OBJECTIVENAME%</bold> <RESET><main>(%QUESTNAME%)
       <EMPTY>
     successfully-completed-rewards-prefix: '    <highlight>Nagrody:'
@@ -84,7 +84,7 @@ chat:
         base: '    <veryUnimportant>└─ <unimportant>Stwórz Przedmioty: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
         base: '    <veryUnimportant>└─ <unimportant>Dostarcz Przedmioty: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
-        deliver-to-npc: '      <GRAY>Deliver it to <WHITE>%NPCNAME%'
+        deliver-to-npc: '      <GRAY>Dostarcz to do <WHITE>%NPCNAME%'
         deliver-to-npc-not-available: '      <GRAY>The delivery NPC is currently not available!'
         deliver-to-npc-citizens-not-found: '    <RED>Error: Citizens plugin not installed. Contact an admin.'
         deliver-to-armorstand: '    <GRAY>Deliver it to <WHITE>%ARMORSTANDNAME%'
