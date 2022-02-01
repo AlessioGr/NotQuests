@@ -85,10 +85,10 @@ chat:
       deliverItems:
         base: '    <veryUnimportant>└─ <unimportant>Dostarcz Przedmioty: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
         deliver-to-npc: '      <GRAY>Dostarcz to do <WHITE>%NPCNAME%'
-        deliver-to-npc-not-available: '      <GRAY>The delivery NPC is currently not available!'
-        deliver-to-npc-citizens-not-found: '    <RED>Error: Citizens plugin not installed. Contact an admin.'
-        deliver-to-armorstand: '    <GRAY>Deliver it to <WHITE>%ARMORSTANDNAME%'
-        deliver-to-armorstand-not-available: '    <GRAY>The target Armor Stand is currently not available!'
+        deliver-to-npc-not-available: '      <GRAY>Dostawa NPC jest obecnie niedostępna!'
+        deliver-to-npc-citizens-not-found: '    <RED>Błąd: Nie zainstalowano wtyczki "Citizens". Skontaktuj się z administratorem.'
+        deliver-to-armorstand: '    <GRAY>Dostarcz to do <WHITE>%ARMORSTANDNAME%'
+        deliver-to-armorstand-not-available: '    <GRAY> Docelowy stojak na jest obecnie niedostępny!'
       escortNPC:
         base: '    <veryUnimportant>└─ <unimportant>Eskortuj: <main>%NPCNAME%</main> to <main>%DESTINATIONNPCNAME%'
       killMobs:
@@ -130,12 +130,12 @@ chat:
       BetonQuestCompleteObjective:
         base: '    <veryUnimportant>└─ <unimportant>Finish Objective: <main>%BETONQUESTOBJECTIVENAME%'
       ultimateJobsReachJobLevel:
-        base: '    <veryUnimportant>└─ <unimportant>Reach job level <main>%AMOUNT%</main> with job <main>%JOBID%'
+        base: '    <veryUnimportant>└─ <unimportant>Osiągnij poziom pracy <main>%AMOUNT%</main> w <main>%JOBID%'
   conditions:
     boolean:
-      not-fulfilled: "<warn>Following needs to be %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."
-      variable-not-found: "<error>Error: variable <highlight>%VARIABLENAME%</highlight> not found. Report this to the Server owner."
-      wrong-operator: "<error>Error: variable operator <highlight>%OPERATOR%/highlight> is invalid. Report this to the Server owner."
+      not-fulfilled: "<warn>Następujące osoby muszą być %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."
+      variable-not-found: "<error>Błąd: zmienna <highlight>%VARIABLENAME%</highlight> nieznaleziona. Zgłoś to właścicielowi serwera."
+      wrong-operator: "<error>Błąd: operator zmiennej <highlight>%OPERATOR%/highlight> jest nieprawidłowy. Zgłoś to właścicielowi serwera."
 objective-tracking:
   actionbar-progress-update:
     default: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
@@ -158,34 +158,34 @@ gui:
     title: '                <highlight2>Questy'
     button:
       questpoints:
-        name: "<highlight>Quest Points"
+        name: "<highlight>Punktów Zadania"
         lore:
-          - "<main>Current quest points: <highlight2>%QUESTPOINTS%"
+          - "<main>Aktualne punkty misji: <highlight2>%QUESTPOINTS%"
         x: 8
         y: 0
       takequest:
-        name: "<positive>Take a Quest"
+        name: "<positive>Przyjmij Zadanie"
         lore:
-          - "<unimportant>Start a new Quest!"
+          - "<unimportant>Rozpocznij nowe Zadanie!"
           - ""
-          - "<veryUnimportant>Some Quests cannot be"
-          - "<veryUnimportant>started like this."
+          - "<veryUnimportant>Niektóre zadania nie mogą być"
+          - "<veryUnimportant>Zaczęło się tak."
         x: 0
         y: 1
       abortquest:
-        name: "<negative>Abort a Quest"
+        name: "<negative>Przerwij Zadanie"
         lore:
           - ""
-          - "<veryUnimportant>Aborting a Quest may"
-          - "<veryUnimportant>lead to punishments."
+          - "<veryUnimportant>Przerwanie zadania może"
+          - "<veryUnimportant>Prowadzi do kar."
         x: 0
         y: 2
       activequests:
-        name: "<highlight>Active Quests"
+        name: "<highlight>Aktywne Zadania"
         lore:
           - ""
-          - "<veryUnimportant>Shows all of your"
-          - "<veryUnimportant>active Quests."
+          - "<veryUnimportant>Pokazuje wszystkie twoje"
+          - "<veryUnimportant>Aktywne Zadania."
         x: 0
         y: 3
   activeQuests:
@@ -194,8 +194,8 @@ gui:
       activeQuestButton:
         name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
         lore:
-          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<main>Click to see details!"
+          - "<unimportant>Postęp: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
+          - "<main>Kliknij, aby zobaczyć szczegóły!"
   reward-hidden-text: . <unimportant>[UKRYTE]
   availableQuests:
     title: '         <highlight2>Dostępne Questy'
@@ -205,7 +205,7 @@ gui:
         name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTED]"
         lore:
           - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
-          - "<main>Click to open Quest!"
+          - "<main>Kliknij, aby otworzyć Zadanie!"
   takeQuestChoose:
     title: <highlight2>Którego Questa chcesz wziąść?
     button:
@@ -221,29 +221,29 @@ gui:
       abortQuestPreview:
         name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
         lore:
-          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<negative>Click to abort Quest!"
+          - "<unimportant>Postęp: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
+          - "<negative>Kliknij, aby przerwać Zadanie!"
   abortQuest:
     title: '         <negative>Potwierdzenie Przerwania Questa'
     button:
       confirmAbort:
         name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
         lore:
-          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<negative>Click to abort the quest <highlight>%QUESTNAME%</highlight>!"
+          - "<unimportant>Postęp: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
+          - "<negative>Kliknij, aby przerwać zadanie <highlight>%QUESTNAME%</highlight>!"
         x: 3
         y: 1
       cancelAbort:
-        name: "<positive>Click to NOT abort this quest"
+        name: "<positive>Kliknij, aby NIE przerywać tego zadania"
         lore:
-          - "<positive>and cancel this action"
+          - "<positive>i anuluj tę akcję"
         x: 5
         y: 1
   previewQuest:
-    title: <highlight2>Quest Preview
+    title: <highlight2>Podgląd zadań
     button:
       description:
-        name: "<highlight>Description"
+        name: "<highlight>Opis"
         lore:
           - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
         lore-if-empty:
@@ -251,7 +251,7 @@ gui:
         x: 2
         y: 0
       rewards:
-        name: "<positive>Rewards"
+        name: "<positive>Nagrody"
         lore:
           - "<WHITE>%QUESTREWARDS%"
         lore-if-empty:
@@ -259,7 +259,7 @@ gui:
         x: 4
         y: 0
       requirements:
-        name: "<negative>Requirements"
+        name: "<negative>Wymagania"
         lore:
           - "<WHITE>%QUESTREQUIREMENTS%"
         lore-if-empty:
@@ -269,48 +269,48 @@ gui:
       confirmTake:
         name: "<highlight>%QUESTNAME%"
         lore:
-          - "<positive>Click to take the quest <highlight>%QUESTNAME%"
+          - "<positive>Kliknij, aby wziąć zadanie <highlight>%QUESTNAME%"
         x: 3
         y: 2
       cancelTake:
-        name: "<negative>Click to NOT take this quest"
+        name: "<negative>Kliknij, aby NIE brać tego zadania"
         lore:
-          - "<negative>and cancel this action"
+          - "<negative>i anuluj tę akcję"
         x: 5
         y: 2
   progress:
-    title: <highlight2>Details for Quest
+    title: <highlight2>Szczegóły Zadania
     button:
       unlockedObjective:
         name: "<highlight2>%ACTIVEOBJECTIVEID%. <highlight>%OBJECTIVENAME%"
         lore:
-          - "<main><BOLD>ACTIVE</BOLD>"
+          - "<main><BOLD>AKTYWNY</BOLD>"
           - "<veryUnimportant>%WRAPPEDOBJECTIVEDESCRIPTION%"
           - "<unimportant>%ACTIVEOBJECTIVEDESCRIPTION%"
           - ""
-          - "<unimportant>Progress: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
+          - "<unimportant>Postęp: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
         lore-if-description-empty:
-          - "<main><BOLD>ACTIVE</BOLD>"
-          - "<veryUnimportant>No Description"
+          - "<main><BOLD>AKTYWNY</BOLD>"
+          - "<veryUnimportant>Brak opisu"
           - "<unimportant>%ACTIVEOBJECTIVEDESCRIPTION%"
           - ""
-          - "<unimportant>Progress: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
+          - "<unimportant>Postęp: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
       lockedObjective:
         name: "<highlight2>%ACTIVEOBJECTIVEID%. <unimportant><BOLD>[HIDDEN]"
         lore:
-          - "<warn>This objective has not yet"
-          - "<warn>been unlocked!"
+          - "<warn>Ten cel jeszcze nie został osiągnięty"
+          - "<warn>Został odblokowany!"
       completedObjective:
         name: "<highlight2><strikethrough>%ACTIVEOBJECTIVEID%. <positive><strikethrough>%OBJECTIVENAME%"
         lore:
-          - "<positive><BOLD>COMPLETED</BOLD>"
+          - "<positive><BOLD>UKOŃCZONO</BOLD>"
           - "<veryUnimportant><strikethrough>%WRAPPEDOBJECTIVEDESCRIPTION%"
           - "<veryUnimportant>%COMPLETEDOBJECTIVEDESCRIPTION%"
           - ""
-          - "<unimportant><strikethrough>Progress: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
+          - "<unimportant><strikethrough>Postęp: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
         lore-if-description-empty:
-          - "<positive><BOLD>COMPLETED</BOLD>"
-          - "<veryUnimportant><strikethrough>No Description"
+          - "<positive><BOLD>UKOŃCZONO</BOLD>"
+          - "<veryUnimportant><strikethrough>Brak opisu"
           - "<veryUnimportant>%COMPLETEDOBJECTIVEDESCRIPTION%"
           - ""
-          - "<unimportant><strikethrough>Progress: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
+          - "<unimportant><strikethrough>Postęp: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
