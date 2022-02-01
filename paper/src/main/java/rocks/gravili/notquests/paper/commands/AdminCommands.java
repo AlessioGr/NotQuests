@@ -145,7 +145,7 @@ public class AdminCommands {
                     if (singlePlayerSelector.hasAny() && singlePlayerSelector.getPlayer() != null) {
                         context.getSender().sendMessage(main.parse("<main>" + main.getQuestPlayerManager().acceptQuest(singlePlayerSelector.getPlayer(), quest, true, true)));
                     } else {
-                        context.getSender().sendMessage(main.parse("<error>" + "Player is not online or was not found!"));
+                        context.getSender().sendMessage(main.parse("<error>Player is not online or was not found!"));
                     }
 
                 }));
