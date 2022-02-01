@@ -74,6 +74,7 @@ public class QuestPlayer {
 
     private Player player;
 
+    private boolean currentlyLoading = true;
 
 
 
@@ -936,5 +937,13 @@ public class QuestPlayer {
 
     public void onJoinAsync(final Player player){
         this.player = player;
+    }
+
+    public boolean isCurrentlyLoading() {
+        return currentlyLoading;
+    }
+
+    public void setCurrentlyLoading(boolean currentlyLoading) {
+        this.currentlyLoading = currentlyLoading;
     }
 }

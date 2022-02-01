@@ -206,7 +206,7 @@ public class QuestPlayerManager {
 
             questPlayer.removeCompletedQuests();
 
-
+            questPlayer.setCurrentlyLoading(false);
 
         } catch (Exception e) {
             main.getDataManager().disablePluginAndSaving("There was a database error, so QuestPlayer loading for player <highlight>" + player.getName() + "</highlight> has been disabled. (1.1)", e);
@@ -484,6 +484,8 @@ public class QuestPlayerManager {
 
 
                 questPlayer.removeCompletedQuests();
+
+                questPlayer.setCurrentlyLoading(false);
             }
 
 
@@ -498,7 +500,6 @@ public class QuestPlayerManager {
 
 
         main.getTagManager().loadAllOnlinePlayerTags();
-
 
     }
 

@@ -79,7 +79,7 @@ public class ActiveObjective {
                     return;
                 }
 
-                objective.onObjectiveUnlock(this, main.getDataManager().isCurrentlyLoading());
+                objective.onObjectiveUnlock(this, main.getDataManager().isCurrentlyLoading() || getQuestPlayer().isCurrentlyLoading());
 
                 getQuestPlayer().setTrackingObjective(this);
 
@@ -103,7 +103,7 @@ public class ActiveObjective {
                 }
 
             }else{
-                objective.onObjectiveCompleteOrLock(this, main.getDataManager().isCurrentlyLoading(), isCompleted(null));
+                objective.onObjectiveCompleteOrLock(this, main.getDataManager().isCurrentlyLoading() || getQuestPlayer().isCurrentlyLoading() , isCompleted(null));
             }
         }
 
@@ -188,6 +188,9 @@ public class ActiveObjective {
             }else{
                 activeQuest.notifyActiveObjectiveCompleted(this, silent, NPCID);
             }
+        }
+        if(main.getConfiguration().isDebug()){
+            main.getLogManager().debug("+" + progressToAdd + " progress for objective " + NotQuestColors.debugHighlightGradient + getObjective().getObjectiveFinalName() + "</gradient> of quest " + NotQuestColors.debugHighlightGradient + getActiveQuest().getQuest().getQuestFinalName() + "</gradient>. Silent: " + silent);
         }
         getQuestPlayer().sendDebugMessage("+" + progressToAdd + " progress for objective " + NotQuestColors.debugHighlightGradient + getObjective().getObjectiveFinalName() + "</gradient> of quest " + NotQuestColors.debugHighlightGradient + getActiveQuest().getQuest().getQuestFinalName() + "</gradient>. Silent: " + silent);
     }
