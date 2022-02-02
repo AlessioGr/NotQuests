@@ -93,7 +93,7 @@ public class ActionAction extends Action {
     @Override
     public void executeInternally(final Player player, Object... objects) {
         if (actions == null || actions.isEmpty()) {
-            main.getLogManager().warn("Tried to execute Action of Action action with no valid actions.");
+            main.getLogManager().warn("Tried to execute Action Action action with no valid actions.");
             return;
         }
 
@@ -174,7 +174,7 @@ public class ActionAction extends Action {
         for(String actionName : actionNames.split(",")){
             final Action action = main.getActionsYMLManager().getAction(actionName);
             if (action == null) {
-                main.getLogManager().warn("Error: ActionAction cannot find the action with name " + actionName + ". Action Name: " + arguments.get(0));
+                main.getLogManager().warn("Error: ActionAction cannot find the action with name " + actionName + ". Actions string: " + arguments.get(0));
             }else{
                 actions.add(action);
             }
