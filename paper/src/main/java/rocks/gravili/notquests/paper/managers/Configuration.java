@@ -18,7 +18,6 @@
 
 package rocks.gravili.notquests.paper.managers;
 
-import lombok.Data;
 import org.bukkit.Particle;
 import org.bukkit.inventory.ItemStack;
 
@@ -29,7 +28,7 @@ import java.util.List;
  *
  * @author Alessio Gravili
  */
-@Data
+
 public class Configuration {
 
     private final String beamMode = "end_gateway"; //end_gateway, beacon, end_crystal
@@ -167,4 +166,736 @@ public class Configuration {
     private List<String> colorsWarn;
     private List<String> colorsPositive;
     private List<String> colorsNegative;
+
+    public String getBeamMode() {
+        return beamMode;
+    }
+
+    public boolean isVisualObjectiveTrackingShowProgressInActionBar() {
+        return visualObjectiveTrackingShowProgressInActionBar;
+    }
+
+    public void setVisualObjectiveTrackingShowProgressInActionBar(boolean visualObjectiveTrackingShowProgressInActionBar) {
+        this.visualObjectiveTrackingShowProgressInActionBar = visualObjectiveTrackingShowProgressInActionBar;
+    }
+
+    public boolean isVisualObjectiveTrackingShowProgressInBossBar() {
+        return visualObjectiveTrackingShowProgressInBossBar;
+    }
+
+    public void setVisualObjectiveTrackingShowProgressInBossBar(boolean visualObjectiveTrackingShowProgressInBossBar) {
+        this.visualObjectiveTrackingShowProgressInBossBar = visualObjectiveTrackingShowProgressInBossBar;
+    }
+
+    public boolean isVisualObjectiveTrackingShowProgressInBossBarIfObjectiveCompleted() {
+        return visualObjectiveTrackingShowProgressInBossBarIfObjectiveCompleted;
+    }
+
+    public void setVisualObjectiveTrackingShowProgressInBossBarIfObjectiveCompleted(boolean visualObjectiveTrackingShowProgressInBossBarIfObjectiveCompleted) {
+        this.visualObjectiveTrackingShowProgressInBossBarIfObjectiveCompleted = visualObjectiveTrackingShowProgressInBossBarIfObjectiveCompleted;
+    }
+
+    public int getVisualObjectiveTrackingBossBarTimer() {
+        return visualObjectiveTrackingBossBarTimer;
+    }
+
+    public void setVisualObjectiveTrackingBossBarTimer(int visualObjectiveTrackingBossBarTimer) {
+        this.visualObjectiveTrackingBossBarTimer = visualObjectiveTrackingBossBarTimer;
+    }
+
+    public String getConfigurationVersion() {
+        return configurationVersion;
+    }
+
+    public void setConfigurationVersion(String configurationVersion) {
+        this.configurationVersion = configurationVersion;
+    }
+
+    public boolean isDebug() {
+        return debug;
+    }
+
+    public void setDebug(boolean debug) {
+        this.debug = debug;
+    }
+
+    public String getDatabaseHost() {
+        return databaseHost;
+    }
+
+    public void setDatabaseHost(String databaseHost) {
+        this.databaseHost = databaseHost;
+    }
+
+    public String getDatabaseName() {
+        return databaseName;
+    }
+
+    public void setDatabaseName(String databaseName) {
+        this.databaseName = databaseName;
+    }
+
+    public String getDatabaseUsername() {
+        return databaseUsername;
+    }
+
+    public void setDatabaseUsername(String databaseUsername) {
+        this.databaseUsername = databaseUsername;
+    }
+
+    public String getDatabasePassword() {
+        return databasePassword;
+    }
+
+    public void setDatabasePassword(String databasePassword) {
+        this.databasePassword = databasePassword;
+    }
+
+    public int getDatabasePort() {
+        return databasePort;
+    }
+
+    public void setDatabasePort(int databasePort) {
+        this.databasePort = databasePort;
+    }
+
+    public boolean isLoadPlayerData() {
+        return loadPlayerData;
+    }
+
+    public void setLoadPlayerData(boolean loadPlayerData) {
+        this.loadPlayerData = loadPlayerData;
+    }
+
+    public boolean isSavePlayerData() {
+        return savePlayerData;
+    }
+
+    public void setSavePlayerData(boolean savePlayerData) {
+        this.savePlayerData = savePlayerData;
+    }
+
+    public boolean isLoadPlayerDataOnJoin() {
+        return loadPlayerDataOnJoin;
+    }
+
+    public void setLoadPlayerDataOnJoin(boolean loadPlayerDataOnJoin) {
+        this.loadPlayerDataOnJoin = loadPlayerDataOnJoin;
+    }
+
+    public boolean isSavePlayerDataOnQuit() {
+        return savePlayerDataOnQuit;
+    }
+
+    public void setSavePlayerDataOnQuit(boolean savePlayerDataOnQuit) {
+        this.savePlayerDataOnQuit = savePlayerDataOnQuit;
+    }
+
+    public boolean isQuestPreviewUseGUI() {
+        return questPreviewUseGUI;
+    }
+
+    public void setQuestPreviewUseGUI(boolean questPreviewUseGUI) {
+        this.questPreviewUseGUI = questPreviewUseGUI;
+    }
+
+    public boolean isUserCommandsUseGUI() {
+        return userCommandsUseGUI;
+    }
+
+    public void setUserCommandsUseGUI(boolean userCommandsUseGUI) {
+        this.userCommandsUseGUI = userCommandsUseGUI;
+    }
+
+    public boolean isMySQLEnabled() {
+        return mySQLEnabled;
+    }
+
+    public void setMySQLEnabled(boolean mySQLEnabled) {
+        this.mySQLEnabled = mySQLEnabled;
+    }
+
+    public boolean isStorageCreateBackupsWhenServerShutsDown() {
+        return storageCreateBackupsWhenServerShutsDown;
+    }
+
+    public void setStorageCreateBackupsWhenServerShutsDown(boolean storageCreateBackupsWhenServerShutsDown) {
+        this.storageCreateBackupsWhenServerShutsDown = storageCreateBackupsWhenServerShutsDown;
+    }
+
+    public String getPlaceholder_player_active_quests_list_horizontal_separator() {
+        return placeholder_player_active_quests_list_horizontal_separator;
+    }
+
+    public void setPlaceholder_player_active_quests_list_horizontal_separator(String placeholder_player_active_quests_list_horizontal_separator) {
+        this.placeholder_player_active_quests_list_horizontal_separator = placeholder_player_active_quests_list_horizontal_separator;
+    }
+
+    public int getPlaceholder_player_active_quests_list_horizontal_limit() {
+        return placeholder_player_active_quests_list_horizontal_limit;
+    }
+
+    public void setPlaceholder_player_active_quests_list_horizontal_limit(int placeholder_player_active_quests_list_horizontal_limit) {
+        this.placeholder_player_active_quests_list_horizontal_limit = placeholder_player_active_quests_list_horizontal_limit;
+    }
+
+    public int getPlaceholder_player_active_quests_list_vertical_limit() {
+        return placeholder_player_active_quests_list_vertical_limit;
+    }
+
+    public void setPlaceholder_player_active_quests_list_vertical_limit(int placeholder_player_active_quests_list_vertical_limit) {
+        this.placeholder_player_active_quests_list_vertical_limit = placeholder_player_active_quests_list_vertical_limit;
+    }
+
+    public boolean isPlaceholder_player_active_quests_list_horizontal_use_displayname_if_available() {
+        return placeholder_player_active_quests_list_horizontal_use_displayname_if_available;
+    }
+
+    public void setPlaceholder_player_active_quests_list_horizontal_use_displayname_if_available(boolean placeholder_player_active_quests_list_horizontal_use_displayname_if_available) {
+        this.placeholder_player_active_quests_list_horizontal_use_displayname_if_available = placeholder_player_active_quests_list_horizontal_use_displayname_if_available;
+    }
+
+    public boolean isPlaceholder_player_active_quests_list_vertical_use_displayname_if_available() {
+        return placeholder_player_active_quests_list_vertical_use_displayname_if_available;
+    }
+
+    public void setPlaceholder_player_active_quests_list_vertical_use_displayname_if_available(boolean placeholder_player_active_quests_list_vertical_use_displayname_if_available) {
+        this.placeholder_player_active_quests_list_vertical_use_displayname_if_available = placeholder_player_active_quests_list_vertical_use_displayname_if_available;
+    }
+
+    public int getMaxActiveQuestsPerPlayer() {
+        return maxActiveQuestsPerPlayer;
+    }
+
+    public void setMaxActiveQuestsPerPlayer(int maxActiveQuestsPerPlayer) {
+        this.maxActiveQuestsPerPlayer = maxActiveQuestsPerPlayer;
+    }
+
+    public boolean isArmorStandPreventEditing() {
+        return armorStandPreventEditing;
+    }
+
+    public void setArmorStandPreventEditing(boolean armorStandPreventEditing) {
+        this.armorStandPreventEditing = armorStandPreventEditing;
+    }
+
+    public List<String> getJournalItemEnabledWorlds() {
+        return journalItemEnabledWorlds;
+    }
+
+    public void setJournalItemEnabledWorlds(List<String> journalItemEnabledWorlds) {
+        this.journalItemEnabledWorlds = journalItemEnabledWorlds;
+    }
+
+    public int getJournalInventorySlot() {
+        return journalInventorySlot;
+    }
+
+    public void setJournalInventorySlot(int journalInventorySlot) {
+        this.journalInventorySlot = journalInventorySlot;
+    }
+
+    public ItemStack getJournalItem() {
+        return journalItem;
+    }
+
+    public void setJournalItem(ItemStack journalItem) {
+        this.journalItem = journalItem;
+    }
+
+    public boolean isPacketMagic() {
+        return packetMagic;
+    }
+
+    public void setPacketMagic(boolean packetMagic) {
+        this.packetMagic = packetMagic;
+    }
+
+    public boolean isUsePacketEvents() {
+        return usePacketEvents;
+    }
+
+    public void setUsePacketEvents(boolean usePacketEvents) {
+        this.usePacketEvents = usePacketEvents;
+    }
+
+    public boolean isPacketMagicUnsafeDisregardVersion() {
+        return packetMagicUnsafeDisregardVersion;
+    }
+
+    public void setPacketMagicUnsafeDisregardVersion(boolean packetMagicUnsafeDisregardVersion) {
+        this.packetMagicUnsafeDisregardVersion = packetMagicUnsafeDisregardVersion;
+    }
+
+    public boolean isDeletePreviousConversations() {
+        return deletePreviousConversations;
+    }
+
+    public void setDeletePreviousConversations(boolean deletePreviousConversations) {
+        this.deletePreviousConversations = deletePreviousConversations;
+    }
+
+    public int getPreviousConversationsHistorySize() {
+        return previousConversationsHistorySize;
+    }
+
+    public void setPreviousConversationsHistorySize(int previousConversationsHistorySize) {
+        this.previousConversationsHistorySize = previousConversationsHistorySize;
+    }
+
+    public boolean isUpdateCheckerNotifyOpsInChat() {
+        return updateCheckerNotifyOpsInChat;
+    }
+
+    public void setUpdateCheckerNotifyOpsInChat(boolean updateCheckerNotifyOpsInChat) {
+        this.updateCheckerNotifyOpsInChat = updateCheckerNotifyOpsInChat;
+    }
+
+    public int getCitizensNPCQuestGiverIndicatorParticleSpawnInterval() {
+        return citizensNPCQuestGiverIndicatorParticleSpawnInterval;
+    }
+
+    public void setCitizensNPCQuestGiverIndicatorParticleSpawnInterval(int citizensNPCQuestGiverIndicatorParticleSpawnInterval) {
+        this.citizensNPCQuestGiverIndicatorParticleSpawnInterval = citizensNPCQuestGiverIndicatorParticleSpawnInterval;
+    }
+
+    public int getCitizensNPCQuestGiverIndicatorParticleCount() {
+        return citizensNPCQuestGiverIndicatorParticleCount;
+    }
+
+    public void setCitizensNPCQuestGiverIndicatorParticleCount(int citizensNPCQuestGiverIndicatorParticleCount) {
+        this.citizensNPCQuestGiverIndicatorParticleCount = citizensNPCQuestGiverIndicatorParticleCount;
+    }
+
+    public Particle getCitizensNPCQuestGiverIndicatorParticleType() {
+        return citizensNPCQuestGiverIndicatorParticleType;
+    }
+
+    public void setCitizensNPCQuestGiverIndicatorParticleType(Particle citizensNPCQuestGiverIndicatorParticleType) {
+        this.citizensNPCQuestGiverIndicatorParticleType = citizensNPCQuestGiverIndicatorParticleType;
+    }
+
+    public boolean isCitizensNPCQuestGiverIndicatorParticleEnabled() {
+        return citizensNPCQuestGiverIndicatorParticleEnabled;
+    }
+
+    public void setCitizensNPCQuestGiverIndicatorParticleEnabled(boolean citizensNPCQuestGiverIndicatorParticleEnabled) {
+        this.citizensNPCQuestGiverIndicatorParticleEnabled = citizensNPCQuestGiverIndicatorParticleEnabled;
+    }
+
+    public double getCitizensNPCQuestGiverIndicatorParticleDisableIfTPSBelow() {
+        return citizensNPCQuestGiverIndicatorParticleDisableIfTPSBelow;
+    }
+
+    public void setCitizensNPCQuestGiverIndicatorParticleDisableIfTPSBelow(double citizensNPCQuestGiverIndicatorParticleDisableIfTPSBelow) {
+        this.citizensNPCQuestGiverIndicatorParticleDisableIfTPSBelow = citizensNPCQuestGiverIndicatorParticleDisableIfTPSBelow;
+    }
+
+    public int getArmorStandQuestGiverIndicatorParticleSpawnInterval() {
+        return armorStandQuestGiverIndicatorParticleSpawnInterval;
+    }
+
+    public void setArmorStandQuestGiverIndicatorParticleSpawnInterval(int armorStandQuestGiverIndicatorParticleSpawnInterval) {
+        this.armorStandQuestGiverIndicatorParticleSpawnInterval = armorStandQuestGiverIndicatorParticleSpawnInterval;
+    }
+
+    public int getArmorStandQuestGiverIndicatorParticleCount() {
+        return armorStandQuestGiverIndicatorParticleCount;
+    }
+
+    public void setArmorStandQuestGiverIndicatorParticleCount(int armorStandQuestGiverIndicatorParticleCount) {
+        this.armorStandQuestGiverIndicatorParticleCount = armorStandQuestGiverIndicatorParticleCount;
+    }
+
+    public Particle getArmorStandQuestGiverIndicatorParticleType() {
+        return armorStandQuestGiverIndicatorParticleType;
+    }
+
+    public void setArmorStandQuestGiverIndicatorParticleType(Particle armorStandQuestGiverIndicatorParticleType) {
+        this.armorStandQuestGiverIndicatorParticleType = armorStandQuestGiverIndicatorParticleType;
+    }
+
+    public boolean isArmorStandQuestGiverIndicatorParticleEnabled() {
+        return armorStandQuestGiverIndicatorParticleEnabled;
+    }
+
+    public void setArmorStandQuestGiverIndicatorParticleEnabled(boolean armorStandQuestGiverIndicatorParticleEnabled) {
+        this.armorStandQuestGiverIndicatorParticleEnabled = armorStandQuestGiverIndicatorParticleEnabled;
+    }
+
+    public double getArmorStandQuestGiverIndicatorParticleDisableIfTPSBelow() {
+        return armorStandQuestGiverIndicatorParticleDisableIfTPSBelow;
+    }
+
+    public void setArmorStandQuestGiverIndicatorParticleDisableIfTPSBelow(double armorStandQuestGiverIndicatorParticleDisableIfTPSBelow) {
+        this.armorStandQuestGiverIndicatorParticleDisableIfTPSBelow = armorStandQuestGiverIndicatorParticleDisableIfTPSBelow;
+    }
+
+    public String getLanguageCode() {
+        return languageCode;
+    }
+
+    public void setLanguageCode(String languageCode) {
+        this.languageCode = languageCode;
+    }
+
+    public boolean isIntegrationCitizensEnabled() {
+        return integrationCitizensEnabled;
+    }
+
+    public void setIntegrationCitizensEnabled(boolean integrationCitizensEnabled) {
+        this.integrationCitizensEnabled = integrationCitizensEnabled;
+    }
+
+    public boolean isIntegrationVaultEnabled() {
+        return integrationVaultEnabled;
+    }
+
+    public void setIntegrationVaultEnabled(boolean integrationVaultEnabled) {
+        this.integrationVaultEnabled = integrationVaultEnabled;
+    }
+
+    public boolean isIntegrationPlaceholderAPIEnabled() {
+        return integrationPlaceholderAPIEnabled;
+    }
+
+    public void setIntegrationPlaceholderAPIEnabled(boolean integrationPlaceholderAPIEnabled) {
+        this.integrationPlaceholderAPIEnabled = integrationPlaceholderAPIEnabled;
+    }
+
+    public boolean isIntegrationMythicMobsEnabled() {
+        return integrationMythicMobsEnabled;
+    }
+
+    public void setIntegrationMythicMobsEnabled(boolean integrationMythicMobsEnabled) {
+        this.integrationMythicMobsEnabled = integrationMythicMobsEnabled;
+    }
+
+    public boolean isIntegrationEliteMobsEnabled() {
+        return integrationEliteMobsEnabled;
+    }
+
+    public void setIntegrationEliteMobsEnabled(boolean integrationEliteMobsEnabled) {
+        this.integrationEliteMobsEnabled = integrationEliteMobsEnabled;
+    }
+
+    public boolean isIntegrationBetonQuestEnabled() {
+        return integrationBetonQuestEnabled;
+    }
+
+    public void setIntegrationBetonQuestEnabled(boolean integrationBetonQuestEnabled) {
+        this.integrationBetonQuestEnabled = integrationBetonQuestEnabled;
+    }
+
+    public boolean isIntegrationWorldEditEnabled() {
+        return integrationWorldEditEnabled;
+    }
+
+    public void setIntegrationWorldEditEnabled(boolean integrationWorldEditEnabled) {
+        this.integrationWorldEditEnabled = integrationWorldEditEnabled;
+    }
+
+    public boolean isIntegrationSlimeFunEnabled() {
+        return integrationSlimeFunEnabled;
+    }
+
+    public void setIntegrationSlimeFunEnabled(boolean integrationSlimeFunEnabled) {
+        this.integrationSlimeFunEnabled = integrationSlimeFunEnabled;
+    }
+
+    public boolean isIntegrationLuckPermsEnabled() {
+        return integrationLuckPermsEnabled;
+    }
+
+    public void setIntegrationLuckPermsEnabled(boolean integrationLuckPermsEnabled) {
+        this.integrationLuckPermsEnabled = integrationLuckPermsEnabled;
+    }
+
+    public boolean isIntegrationUltimateClansEnabled() {
+        return integrationUltimateClansEnabled;
+    }
+
+    public void setIntegrationUltimateClansEnabled(boolean integrationUltimateClansEnabled) {
+        this.integrationUltimateClansEnabled = integrationUltimateClansEnabled;
+    }
+
+    public boolean isIntegrationTownyEnabled() {
+        return integrationTownyEnabled;
+    }
+
+    public void setIntegrationTownyEnabled(boolean integrationTownyEnabled) {
+        this.integrationTownyEnabled = integrationTownyEnabled;
+    }
+
+    public boolean isIntegrationJobsRebornEnabled() {
+        return integrationJobsRebornEnabled;
+    }
+
+    public void setIntegrationJobsRebornEnabled(boolean integrationJobsRebornEnabled) {
+        this.integrationJobsRebornEnabled = integrationJobsRebornEnabled;
+    }
+
+    public boolean isIntegrationProjectKorraEnabled() {
+        return integrationProjectKorraEnabled;
+    }
+
+    public void setIntegrationProjectKorraEnabled(boolean integrationProjectKorraEnabled) {
+        this.integrationProjectKorraEnabled = integrationProjectKorraEnabled;
+    }
+
+    public boolean isIntegrationEcoBossesEnabled() {
+        return integrationEcoBossesEnabled;
+    }
+
+    public void setIntegrationEcoBossesEnabled(boolean integrationEcoBossesEnabled) {
+        this.integrationEcoBossesEnabled = integrationEcoBossesEnabled;
+    }
+
+    public boolean isIntegrationUltimateJobsEnabled() {
+        return integrationUltimateJobsEnabled;
+    }
+
+    public void setIntegrationUltimateJobsEnabled(boolean integrationUltimateJobsEnabled) {
+        this.integrationUltimateJobsEnabled = integrationUltimateJobsEnabled;
+    }
+
+    public boolean isActionBarFancyCommandCompletionEnabled() {
+        return actionBarFancyCommandCompletionEnabled;
+    }
+
+    public void setActionBarFancyCommandCompletionEnabled(boolean actionBarFancyCommandCompletionEnabled) {
+        this.actionBarFancyCommandCompletionEnabled = actionBarFancyCommandCompletionEnabled;
+    }
+
+    public boolean isTitleFancyCommandCompletionEnabled() {
+        return titleFancyCommandCompletionEnabled;
+    }
+
+    public void setTitleFancyCommandCompletionEnabled(boolean titleFancyCommandCompletionEnabled) {
+        this.titleFancyCommandCompletionEnabled = titleFancyCommandCompletionEnabled;
+    }
+
+    public boolean isBossBarFancyCommandCompletionEnabled() {
+        return bossBarFancyCommandCompletionEnabled;
+    }
+
+    public void setBossBarFancyCommandCompletionEnabled(boolean bossBarFancyCommandCompletionEnabled) {
+        this.bossBarFancyCommandCompletionEnabled = bossBarFancyCommandCompletionEnabled;
+    }
+
+    public int getFancyCommandCompletionMaxPreviousArgumentsDisplayed() {
+        return fancyCommandCompletionMaxPreviousArgumentsDisplayed;
+    }
+
+    public void setFancyCommandCompletionMaxPreviousArgumentsDisplayed(int fancyCommandCompletionMaxPreviousArgumentsDisplayed) {
+        this.fancyCommandCompletionMaxPreviousArgumentsDisplayed = fancyCommandCompletionMaxPreviousArgumentsDisplayed;
+    }
+
+    public boolean isMoveEventEnabled() {
+        return moveEventEnabled;
+    }
+
+    public void setMoveEventEnabled(boolean moveEventEnabled) {
+        this.moveEventEnabled = moveEventEnabled;
+    }
+
+    public boolean isGuiQuestPreviewDescription_enabled() {
+        return guiQuestPreviewDescription_enabled;
+    }
+
+    public void setGuiQuestPreviewDescription_enabled(boolean guiQuestPreviewDescription_enabled) {
+        this.guiQuestPreviewDescription_enabled = guiQuestPreviewDescription_enabled;
+    }
+
+    public boolean isGuiQuestPreviewRewards_enabled() {
+        return guiQuestPreviewRewards_enabled;
+    }
+
+    public void setGuiQuestPreviewRewards_enabled(boolean guiQuestPreviewRewards_enabled) {
+        this.guiQuestPreviewRewards_enabled = guiQuestPreviewRewards_enabled;
+    }
+
+    public boolean isGuiQuestPreviewRequirements_enabled() {
+        return guiQuestPreviewRequirements_enabled;
+    }
+
+    public void setGuiQuestPreviewRequirements_enabled(boolean guiQuestPreviewRequirements_enabled) {
+        this.guiQuestPreviewRequirements_enabled = guiQuestPreviewRequirements_enabled;
+    }
+
+    public boolean isShowQuestItemAmount() {
+        return showQuestItemAmount;
+    }
+
+    public void setShowQuestItemAmount(boolean showQuestItemAmount) {
+        this.showQuestItemAmount = showQuestItemAmount;
+    }
+
+    public boolean isShowObjectiveItemAmount() {
+        return showObjectiveItemAmount;
+    }
+
+    public void setShowObjectiveItemAmount(boolean showObjectiveItemAmount) {
+        this.showObjectiveItemAmount = showObjectiveItemAmount;
+    }
+
+    public boolean isVisualTitleQuestSuccessfullyAccepted_enabled() {
+        return visualTitleQuestSuccessfullyAccepted_enabled;
+    }
+
+    public void setVisualTitleQuestSuccessfullyAccepted_enabled(boolean visualTitleQuestSuccessfullyAccepted_enabled) {
+        this.visualTitleQuestSuccessfullyAccepted_enabled = visualTitleQuestSuccessfullyAccepted_enabled;
+    }
+
+    public boolean isVisualTitleQuestFailed_enabled() {
+        return visualTitleQuestFailed_enabled;
+    }
+
+    public void setVisualTitleQuestFailed_enabled(boolean visualTitleQuestFailed_enabled) {
+        this.visualTitleQuestFailed_enabled = visualTitleQuestFailed_enabled;
+    }
+
+    public boolean isVisualTitleQuestCompleted_enabled() {
+        return visualTitleQuestCompleted_enabled;
+    }
+
+    public void setVisualTitleQuestCompleted_enabled(boolean visualTitleQuestCompleted_enabled) {
+        this.visualTitleQuestCompleted_enabled = visualTitleQuestCompleted_enabled;
+    }
+
+    public boolean isSupportPlaceholderAPIInTranslationStrings() {
+        return supportPlaceholderAPIInTranslationStrings;
+    }
+
+    public void setSupportPlaceholderAPIInTranslationStrings(boolean supportPlaceholderAPIInTranslationStrings) {
+        this.supportPlaceholderAPIInTranslationStrings = supportPlaceholderAPIInTranslationStrings;
+    }
+
+    public int getGuiQuestDescriptionMaxLineLength() {
+        return guiQuestDescriptionMaxLineLength;
+    }
+
+    public void setGuiQuestDescriptionMaxLineLength(int guiQuestDescriptionMaxLineLength) {
+        this.guiQuestDescriptionMaxLineLength = guiQuestDescriptionMaxLineLength;
+    }
+
+    public int getGuiObjectiveDescriptionMaxLineLength() {
+        return guiObjectiveDescriptionMaxLineLength;
+    }
+
+    public void setGuiObjectiveDescriptionMaxLineLength(int guiObjectiveDescriptionMaxLineLength) {
+        this.guiObjectiveDescriptionMaxLineLength = guiObjectiveDescriptionMaxLineLength;
+    }
+
+    public boolean isWrapLongWords() {
+        return wrapLongWords;
+    }
+
+    public void setWrapLongWords(boolean wrapLongWords) {
+        this.wrapLongWords = wrapLongWords;
+    }
+
+    public boolean isHideRewardsWithoutName() {
+        return hideRewardsWithoutName;
+    }
+
+    public void setHideRewardsWithoutName(boolean hideRewardsWithoutName) {
+        this.hideRewardsWithoutName = hideRewardsWithoutName;
+    }
+
+    public boolean isShowRewardsAfterQuestCompletion() {
+        return showRewardsAfterQuestCompletion;
+    }
+
+    public void setShowRewardsAfterQuestCompletion(boolean showRewardsAfterQuestCompletion) {
+        this.showRewardsAfterQuestCompletion = showRewardsAfterQuestCompletion;
+    }
+
+    public boolean isShowRewardsAfterObjectiveCompletion() {
+        return showRewardsAfterObjectiveCompletion;
+    }
+
+    public void setShowRewardsAfterObjectiveCompletion(boolean showRewardsAfterObjectiveCompletion) {
+        this.showRewardsAfterObjectiveCompletion = showRewardsAfterObjectiveCompletion;
+    }
+
+    public List<String> getColorsMain() {
+        return colorsMain;
+    }
+
+    public void setColorsMain(List<String> colorsMain) {
+        this.colorsMain = colorsMain;
+    }
+
+    public List<String> getColorsHighlight() {
+        return colorsHighlight;
+    }
+
+    public void setColorsHighlight(List<String> colorsHighlight) {
+        this.colorsHighlight = colorsHighlight;
+    }
+
+    public List<String> getColorsHighlight2() {
+        return colorsHighlight2;
+    }
+
+    public void setColorsHighlight2(List<String> colorsHighlight2) {
+        this.colorsHighlight2 = colorsHighlight2;
+    }
+
+    public List<String> getColorsError() {
+        return colorsError;
+    }
+
+    public void setColorsError(List<String> colorsError) {
+        this.colorsError = colorsError;
+    }
+
+    public List<String> getColorsSuccess() {
+        return colorsSuccess;
+    }
+
+    public void setColorsSuccess(List<String> colorsSuccess) {
+        this.colorsSuccess = colorsSuccess;
+    }
+
+    public List<String> getColorsUnimportant() {
+        return colorsUnimportant;
+    }
+
+    public void setColorsUnimportant(List<String> colorsUnimportant) {
+        this.colorsUnimportant = colorsUnimportant;
+    }
+
+    public List<String> getColorsVeryUnimportant() {
+        return colorsVeryUnimportant;
+    }
+
+    public void setColorsVeryUnimportant(List<String> colorsVeryUnimportant) {
+        this.colorsVeryUnimportant = colorsVeryUnimportant;
+    }
+
+    public List<String> getColorsWarn() {
+        return colorsWarn;
+    }
+
+    public void setColorsWarn(List<String> colorsWarn) {
+        this.colorsWarn = colorsWarn;
+    }
+
+    public List<String> getColorsPositive() {
+        return colorsPositive;
+    }
+
+    public void setColorsPositive(List<String> colorsPositive) {
+        this.colorsPositive = colorsPositive;
+    }
+
+    public List<String> getColorsNegative() {
+        return colorsNegative;
+    }
+
+    public void setColorsNegative(List<String> colorsNegative) {
+        this.colorsNegative = colorsNegative;
+    }
 }

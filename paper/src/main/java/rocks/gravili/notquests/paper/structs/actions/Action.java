@@ -154,6 +154,17 @@ public abstract class Action {
 
         category.getActionsConfig().set("actions." + getActionName(), actionsConfigurationSection);
         category.saveActionsConfig();
+    }
 
+    @Override
+    public String toString() {
+        return "Action{" +
+                "actionName='" + actionName + '\'' +
+                ", quest=" + quest +
+                ", objective=" + objective +
+                ", conditions=" + conditions +
+                ", category=" + category +
+                ", actionID=" + actionID +
+                '}';
     }
 }

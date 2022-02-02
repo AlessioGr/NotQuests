@@ -26,14 +26,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.ActionSelector;
+import rocks.gravili.notquests.paper.commands.arguments.MultipleActionsSelector;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class ActionAction extends Action {
 
-    private Action action = null;
+    private ArrayList<Action> actions = null;
     private int amount = 1;
     private boolean ignoreConditions = false;
 
@@ -44,30 +45,33 @@ public class ActionAction extends Action {
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor rewardFor) {
         manager.command(builder
-                .argument(ActionSelector.of("Action", main), ArgumentDescription.of("Name of the action which will be executed"))
+                .argument(MultipleActionsSelector.of("Actions", main), ArgumentDescription.of("Name of the actions which will be executed"))
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").asOptionalWithDefault(1).withMin(1), ArgumentDescription.of("Amount of times the action will be executed."))
                 .flag(
                         manager.flagBuilder("ignoreConditions")
                                 .withDescription(ArgumentDescription.of("Ignores action conditions"))
                 )
                 .handler((context) -> {
-                    Action foundAction = context.get("Action");
+                    ArrayList<Action> foundActions = context.get("Actions");
                     int amount = context.get("amount");
+                    final boolean ignoreConditions = context.flags().isPresent("ignoreConditions");
 
                     ActionAction actionAction = new ActionAction(main);
-                    actionAction.setAction(foundAction);
+                    actionAction.setActions(foundActions);
                     actionAction.setAmount(amount);
+
+                    actionAction.setIgnoreConditions(ignoreConditions);
 
                     main.getActionManager().addAction(actionAction, context);
                 }));
     }
 
-    public final Action getAction() {
-        return action;
+    public final ArrayList<Action> getActions() {
+        return actions;
     }
 
-    public void setAction(final Action action) {
-        this.action = action;
+    public void setActions(final ArrayList<Action> actions) {
+        this.actions = actions;
     }
 
     public final int getAmount() {
@@ -88,27 +92,29 @@ public class ActionAction extends Action {
 
     @Override
     public void executeInternally(final Player player, Object... objects) {
-        if (action == null) {
-            main.getLogManager().warn("Tried to execute Action of Action action with null action.");
+        if (actions == null || actions.isEmpty()) {
+            main.getLogManager().warn("Tried to execute Action of Action action with no valid actions.");
             return;
         }
 
         main.getLogManager().debug("Executing Action action. IsIgnoreConditions: " + isIgnoreConditions());
 
-        if (!isIgnoreConditions()) {
-            if (amount == 1) {
-                main.getActionManager().executeActionWithConditions(action, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), null, true, objects);
-            } else {
-                for (int i = 0; i < amount; i++) {
+        for(final Action action : getActions()){
+            if (!isIgnoreConditions()) {
+                if (amount == 1) {
                     main.getActionManager().executeActionWithConditions(action, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), null, true, objects);
+                } else {
+                    for (int i = 0; i < amount; i++) {
+                        main.getActionManager().executeActionWithConditions(action, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), null, true, objects);
+                    }
                 }
-            }
-        } else {
-            if (amount == 1) {
-                action.execute(player, objects);
             } else {
-                for (int i = 0; i < amount; i++) {
+                if (amount == 1) {
                     action.execute(player, objects);
+                } else {
+                    for (int i = 0; i < amount; i++) {
+                        action.execute(player, objects);
+                    }
                 }
             }
         }
@@ -117,8 +123,12 @@ public class ActionAction extends Action {
 
     @Override
     public void save(FileConfiguration configuration, String initialPath) {
-        if (getAction() != null) {
-            configuration.set(initialPath + ".specifics.action", getAction().getActionName());
+        if (getActions() != null && !getActions().isEmpty()) {
+            ArrayList<String> actionsStringList = new ArrayList<>();
+            for(final Action action : getActions()){
+                actionsStringList.add(action.getActionName());
+            }
+            configuration.set(initialPath + ".specifics.actions", actionsStringList);
         } else {
             main.getLogManager().warn("Error: cannot save Action for action action, because it's null. Configuration path: " + initialPath);
         }
@@ -128,11 +138,28 @@ public class ActionAction extends Action {
 
     @Override
     public void load(final FileConfiguration configuration, String initialPath) {
-        String actionName = configuration.getString(initialPath + ".specifics.action");
-        this.action = main.getActionsYMLManager().getAction(actionName);
-        if (action == null) {
-            main.getLogManager().warn("Error: ActionAction cannot find the action with name " + actionName + ". Action Path: " + initialPath);
+        this.actions = new ArrayList<>();
+
+        if(configuration.contains(initialPath + ".specifics.actions")){
+            List<String> actionNames = configuration.getStringList(initialPath + ".specifics.actions");
+            for(String actionName : actionNames){
+                final Action action = main.getActionsYMLManager().getAction(actionName);
+                if (action == null) {
+                    main.getLogManager().warn("Error: ActionAction cannot find the action with name " + actionName + ". Action Path: " + initialPath);
+                }else{
+                    actions.add(action);
+                }
+            }
+        }else{
+            String actionName = configuration.getString(initialPath + ".specifics.action");
+            final Action action = main.getActionsYMLManager().getAction(actionName);
+            if (action == null) {
+                main.getLogManager().warn("Error: ActionAction cannot find the action with name " + actionName + ". Action Path: " + initialPath);
+            }else{
+                actions.add(action);
+            }
         }
+
 
         this.amount = configuration.getInt(initialPath + ".specifics.amount", 1);
         this.ignoreConditions = configuration.getBoolean(initialPath + ".specifics.ignoreConditions", false);
@@ -141,11 +168,18 @@ public class ActionAction extends Action {
 
     @Override
     public void deserializeFromSingleLineString(ArrayList<String> arguments) {
-        String actionName = arguments.get(0);
-        this.action = main.getActionsYMLManager().getAction(actionName);
-        if (action == null) {
-            main.getLogManager().warn("Error: ActionAction cannot find the action with name " + actionName + ". Action Name: " + arguments.get(0));
+        String actionNames = arguments.get(0);
+        this.actions = new ArrayList<>();
+
+        for(String actionName : actionNames.split(",")){
+            final Action action = main.getActionsYMLManager().getAction(actionName);
+            if (action == null) {
+                main.getLogManager().warn("Error: ActionAction cannot find the action with name " + actionName + ". Action Name: " + arguments.get(0));
+            }else{
+                actions.add(action);
+            }
         }
+
 
         if(arguments.size() >= 2){
             this.amount = Integer.parseInt(arguments.get(1));
@@ -160,6 +194,6 @@ public class ActionAction extends Action {
 
     @Override
     public String getActionDescription(final Player player, final Object... objects) {
-        return "Executes Action: " + getAction().getActionName();
+        return "Executes Actions: " + getActions().toString();
     }
 }

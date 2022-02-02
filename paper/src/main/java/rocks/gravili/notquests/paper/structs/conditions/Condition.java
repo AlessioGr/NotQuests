@@ -174,4 +174,15 @@ public abstract class Condition {
 
     }
 
+    @Override
+    public String toString() {
+        return "Condition{" +
+                "conditionName='" + conditionName + '\'' +
+                ", progressNeeded=" + progressNeeded +
+                ", negated=" + negated +
+                ", category=" + category +
+                ", description='" + description + '\'' +
+                ", conditionID=" + conditionID +
+                '}';
+    }
 }

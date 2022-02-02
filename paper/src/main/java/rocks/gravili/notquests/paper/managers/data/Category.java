@@ -230,4 +230,13 @@ public class Category {
         }
     }
 
+    @Override
+    public String toString() {
+        return "Category{" +
+                "categoryName='" + categoryName + '\'' +
+                ", categoryFolder=" + categoryFolder +
+                ", categoryFile=" + categoryFile +
+                ", parentCategory=" + parentCategory +
+                '}';
+    }
 }
