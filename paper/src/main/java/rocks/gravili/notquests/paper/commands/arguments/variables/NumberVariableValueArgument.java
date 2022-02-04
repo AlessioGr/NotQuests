@@ -208,7 +208,7 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Str
 
             for(String variableString : main.getVariablesManager().getVariableIdentifiers()) {
                 Variable<?> variable = main.getVariablesManager().getVariableFromString(variableString);
-                if (variable == null || variable.getVariableDataType() != VariableDataType.NUMBER) {
+                if (variable == null || (variable.getVariableDataType() != VariableDataType.NUMBER && variable.getVariableDataType() != VariableDataType.BOOLEAN )) {
                     continue;
                 }
                 if(variable.getRequiredStrings().isEmpty() && variable.getRequiredNumbers().isEmpty() && variable.getRequiredBooleans().isEmpty() && variable.getRequiredBooleanFlags().isEmpty()){

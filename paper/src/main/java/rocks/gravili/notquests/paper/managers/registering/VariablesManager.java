@@ -244,7 +244,7 @@ public class VariablesManager {
                 continue;
             }
             Variable<?> variable = main.getVariablesManager().getVariableFromString(variableString);
-            if(variable == null || variable.getVariableDataType() != VariableDataType.NUMBER){
+            if(variable == null || (variable.getVariableDataType() != VariableDataType.NUMBER && variable.getVariableDataType() != VariableDataType.BOOLEAN)){
                 main.getLogManager().debug("Null variable: <highlight>" + variableString);
                 continue;
             }
@@ -290,9 +290,11 @@ public class VariablesManager {
             Object valueObject = variable.getValue(player, objects);
             if(valueObject instanceof Number n){
                 expression = expression.replace(variableString, ""+n.doubleValue());
+            }else  if(valueObject instanceof Boolean b) {
+                expression = expression.replace(variableString, ""+ (b ? 1 : 0) );
+
             }else{
                 main.getLogManager().debug("Wrong valueObject for " + variableString +". Null?: " + (valueObject == null) );
-
             }
         }
         if(!foundOne){

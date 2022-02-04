@@ -101,7 +101,7 @@ public class NumberCondition extends Condition {
                 continue;
             }
             Variable<?> variable = main.getVariablesManager().getVariableFromString(variableString);
-            if(variable == null || variable.getVariableDataType() != VariableDataType.NUMBER){
+            if(variable == null || (variable.getVariableDataType() != VariableDataType.NUMBER && variable.getVariableDataType() != VariableDataType.BOOLEAN)){
                 main.getLogManager().debug("Null variable: <highlight>" + variableString);
                 continue;
             }
@@ -146,7 +146,13 @@ public class NumberCondition extends Condition {
             variableCounter++;
             expressions = expressions.replace(variableString, "var" + variableCounter);
             env.addLazyVariable("var" + variableCounter, () -> {
-                return ((Number) variable.getValue(questPlayerToEvaluate.getPlayer(), questPlayerToEvaluate)).doubleValue();
+                final Object valueObject = variable.getValue(questPlayerToEvaluate.getPlayer(), questPlayerToEvaluate);
+                if(valueObject instanceof final Number n){
+                    return n.doubleValue();
+                }else if(valueObject instanceof final Boolean b) {
+                    return b ? 1 : 0;
+                }
+                return 0;
             });
         }
         if(!foundOne){
