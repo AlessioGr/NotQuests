@@ -20,16 +20,22 @@ package rocks.gravili.notquests.paper.structs.objectives;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
+import cloud.commandframework.arguments.standard.BooleanArgument;
 import cloud.commandframework.arguments.standard.IntegerArgument;
+import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import redempt.crunch.functional.EvaluationEnvironment;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
+import rocks.gravili.notquests.paper.structs.variables.Variable;
+import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
 
 import java.util.Map;
 
@@ -50,6 +56,7 @@ public class BreakBlocksObjective extends Objective {
     public final String getNQItem(){
         return nqItemName;
     }
+
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
         manager.command(addObjectiveBuilder

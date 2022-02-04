@@ -28,6 +28,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import redempt.crunch.CompiledExpression;
 import redempt.crunch.Crunch;
+import redempt.crunch.functional.EvaluationEnvironment;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.variables.*;
@@ -37,14 +38,16 @@ import rocks.gravili.notquests.paper.structs.variables.tags.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 
 
 public class VariablesManager {
     private final NotQuests main;
 
     private final HashMap<String, Class<? extends Variable<?>>> variables;
-
     public ArrayList<String> alreadyFullRegisteredVariables = new ArrayList<>();
+
+    EvaluationEnvironment env = new EvaluationEnvironment();
 
 
     public VariablesManager(final NotQuests main) {
@@ -53,6 +56,10 @@ public class VariablesManager {
 
         registerDefaultVariables();
 
+
+        env.addFunction("test", 0, d -> 4);
+        CompiledExpression exp = Crunch.compileExpression("test() + 1", env);
+        exp.evaluate(); // will return 5
     }
 
 
@@ -148,6 +155,8 @@ public class VariablesManager {
         main.getLogManager().info("Registering Variable <highlight>" + identifier);
         variables.put(identifier, variable);
 
+
+
         /*if(main.getActionManager() != null){
             main.getActionManager().updateVariableActions();
         }*/
@@ -224,6 +233,8 @@ public class VariablesManager {
 
         return exp.evaluate();
     }
+
+
 
 
     public String evaluateExpressionVariables(String expression, final Player player, final Object... objects){

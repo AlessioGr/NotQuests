@@ -61,12 +61,7 @@ public class OpenBuriedTreasureObjective extends Objective {
 
     @Override
     public String getObjectiveTaskDescription(final Player player) {
-        if (getProgressNeeded() == 1) {
-            return main.getLanguageManager().getString("chat.objectives.taskDescription.openBuriedTreasure.one", player);
-        } else {
-            return main.getLanguageManager().getString("chat.objectives.taskDescription.openBuriedTreasure.base", player, Map.of(
-                    "%AMOUNT%", getProgressNeeded()));
-        }
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.openBuriedTreasure.one", player);
     }
 
     @Override

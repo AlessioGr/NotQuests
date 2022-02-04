@@ -28,6 +28,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import redempt.crunch.CompiledExpression;
+import redempt.crunch.Crunch;
+import redempt.crunch.data.FastNumberParsing;
+import redempt.crunch.functional.EvaluationEnvironment;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -48,7 +52,14 @@ public class NumberCondition extends Condition {
     private HashMap<String, String> additionalNumberArguments;
     private HashMap<String, Boolean> additionalBooleanArguments;
 
+    private CompiledExpression exp;
+    private EvaluationEnvironment env;
 
+    private int variableCounter = 0;
+
+    Variable<?> cachedVariable = null;
+
+    private QuestPlayer questPlayerToEvaluate = null;
 
     public final String getMathOperator(){
         return mathOperator;
@@ -82,136 +93,212 @@ public class NumberCondition extends Condition {
     }
 
 
+
+    public String getExpressionAndGenerateEnv(String expressions){
+        boolean foundOne = false;
+        for(String variableString : main.getVariablesManager().getVariableIdentifiers()){
+            if(!expression.contains(variableString)){
+                continue;
+            }
+            Variable<?> variable = main.getVariablesManager().getVariableFromString(variableString);
+            if(variable == null || variable.getVariableDataType() != VariableDataType.NUMBER){
+                main.getLogManager().debug("Null variable: <highlight>" + variableString);
+                continue;
+            }
+
+            //Extra Arguments:
+            if(expression.contains(variableString + "(")){
+                foundOne = true;
+                String everythingAfterBracket = expression.substring(expression.indexOf(variableString+"(") +  variableString.length()+1 );
+                String insideBracket = everythingAfterBracket.substring(0, everythingAfterBracket.indexOf(")"));
+                main.getLogManager().debug("Inside Bracket: " + insideBracket);
+                String[] extraArguments = insideBracket.split(",");
+                for(String extraArgument : extraArguments){
+                    main.getLogManager().debug("Extra: " + extraArgument);
+                    if(extraArgument.startsWith("--")){
+                        variable.addAdditionalBooleanArgument(extraArgument.replace("--", ""), true);
+                        main.getLogManager().debug("AddBoolFlag: " + extraArgument.replace("--", ""));
+                    }else{
+                        String[] split = extraArgument.split(":");
+                        String key = split[0];
+                        String value = split[1];
+                        for(StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()){
+                            if(stringArgument.getName().equalsIgnoreCase(key)){
+                                variable.addAdditionalStringArgument(key, value);
+                                main.getLogManager().debug("AddString: " + key + " val: " + value);
+                            }
+                        }
+                        for(NumberVariableValueArgument<CommandSender> numberVariableValueArgument : variable.getRequiredNumbers()){
+                            variable.addAdditionalNumberArgument(key, value);
+                            main.getLogManager().debug("AddNumb: " + key + " val: " + value);
+                        }
+                        for(BooleanArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
+                            variable.addAdditionalBooleanArgument(key, Boolean.parseBoolean(value));
+                            main.getLogManager().debug("AddBool: " + key + " val: " + value);
+                        }
+                    }
+                }
+
+                variableString = variableString+"(" + insideBracket + ")"; //For the replacing with the actual number below
+            }
+
+
+            variableCounter++;
+            expression = expression.replace(variableString, "var" + variableCounter);
+            env.addLazyVariable("var" + variableCounter, () -> {
+                return (double) variable.getValue(questPlayerToEvaluate.getPlayer(), questPlayerToEvaluate);
+            });
+        }
+        if(!foundOne){
+            return expression;
+        }
+
+        return getExpressionAndGenerateEnv(expression);
+    }
+
+    public void initializeExpressionAndCachedVariable(){
+        if(exp == null || env == null){
+            String expression = getExpressionAndGenerateEnv(getExpression());
+            exp = Crunch.compileExpression(expression, env);
+            cachedVariable = main.getVariablesManager().getVariableFromString(variableName);
+        }
+
+    }
+
+
     @Override
     public String checkInternally(final QuestPlayer questPlayer) {
-        final double numberRequirement = main.getVariablesManager().evaluateExpression(getExpression(), questPlayer.getPlayer(), questPlayer);
+        this.questPlayerToEvaluate = questPlayer;
+        initializeExpressionAndCachedVariable();
 
-        Variable<?> variable = main.getVariablesManager().getVariableFromString(variableName);
 
-        if(variable == null){
+        final double numberRequirement = exp.evaluate();
+
+
+        if(cachedVariable == null){
             return "<ERROR>Error: variable <highlight>" + variableName + "</highlight> not found. Report this to the Server owner.";
         }
 
         if(additionalStringArguments != null && !additionalStringArguments.isEmpty()){
-            variable.setAdditionalStringArguments(additionalStringArguments);
+            cachedVariable.setAdditionalStringArguments(additionalStringArguments);
         }
         if(additionalNumberArguments != null && !additionalNumberArguments.isEmpty()){
-            variable.setAdditionalNumberArguments(additionalNumberArguments);
+            cachedVariable.setAdditionalNumberArguments(additionalNumberArguments);
         }
         if(additionalBooleanArguments != null && !additionalBooleanArguments.isEmpty()){
-            variable.setAdditionalBooleanArguments(additionalBooleanArguments);
+            cachedVariable.setAdditionalBooleanArguments(additionalBooleanArguments);
         }
 
-        Object value = variable.getValue(questPlayer.getPlayer(), questPlayer);
+        Object value = cachedVariable.getValue(questPlayer.getPlayer(), questPlayer);
 
         if(getMathOperator().equalsIgnoreCase("moreThan")){
             if(value instanceof Long l){
                 if (l <= numberRequirement) {
-                    return "<YELLOW>You need <highlight>" + (numberRequirement+1 - l) + "</highlight> more " + variable.getPlural() + ".";
+                    return "<YELLOW>You need <highlight>" + (numberRequirement+1 - l) + "</highlight> more " + cachedVariable.getPlural() + ".";
                 }
             }else if(value instanceof Float f){
                 if (f <= numberRequirement) {
-                    return "<YELLOW>You need <highlight>" + (numberRequirement+1 - f) + "</highlight> more " + variable.getPlural() + ".";
+                    return "<YELLOW>You need <highlight>" + (numberRequirement+1 - f) + "</highlight> more " + cachedVariable.getPlural() + ".";
                 }
             }else if(value instanceof Double d){
                 if (d <= numberRequirement) {
-                    return "<YELLOW>You need <highlight>" + (numberRequirement+1 - d) + "</highlight> more " + variable.getPlural() + ".";
+                    return "<YELLOW>You need <highlight>" + (numberRequirement+1 - d) + "</highlight> more " + cachedVariable.getPlural() + ".";
                 }
             }else if(value instanceof Integer i){
                 if (i <= numberRequirement) {
-                    return "<YELLOW>You need <highlight>" + (numberRequirement+1 - i) + "</highlight> more " + variable.getPlural() + ".";
+                    return "<YELLOW>You need <highlight>" + (numberRequirement+1 - i) + "</highlight> more " + cachedVariable.getPlural() + ".";
                 }
             }else{
                 if ((long)value <= numberRequirement) {
-                    return "<YELLOW>You need <highlight>" + (numberRequirement+1 - (long)value) + "</highlight> more " + variable.getPlural() + ".";
+                    return "<YELLOW>You need <highlight>" + (numberRequirement+1 - (long)value) + "</highlight> more " + cachedVariable.getPlural() + ".";
                 }
             }
         }else if(getMathOperator().equalsIgnoreCase("moreOrEqualThan")){
             if(value instanceof Long l){
                 if (l < numberRequirement) {
-                    return "<YELLOW>You need <highlight>" + (numberRequirement - l) + "</highlight> more " + variable.getPlural() + ".";
+                    return "<YELLOW>You need <highlight>" + (numberRequirement - l) + "</highlight> more " + cachedVariable.getPlural() + ".";
                 }
             }else if(value instanceof Float f){
                 if (f < numberRequirement) {
-                    return "<YELLOW>You need <highlight>" + (numberRequirement - f) + "</highlight> more " + variable.getPlural() + ".";
+                    return "<YELLOW>You need <highlight>" + (numberRequirement - f) + "</highlight> more " + cachedVariable.getPlural() + ".";
                 }
             }else if(value instanceof Double d){
                 if (d < numberRequirement) {
-                    return "<YELLOW>You need <highlight>" + (numberRequirement - d) + "</highlight> more " + variable.getPlural() + ".";
+                    return "<YELLOW>You need <highlight>" + (numberRequirement - d) + "</highlight> more " + cachedVariable.getPlural() + ".";
                 }
             }else if(value instanceof Integer i){
                 if (i < numberRequirement) {
-                    return "<YELLOW>You need <highlight>" + (numberRequirement - i) + "</highlight> more " + variable.getPlural() + ".";
+                    return "<YELLOW>You need <highlight>" + (numberRequirement - i) + "</highlight> more " + cachedVariable.getPlural() + ".";
                 }
             }else{
                 if ((long)value < numberRequirement) {
-                    return "<YELLOW>You need <highlight>" + (numberRequirement - (long)value) + "</highlight> more " + variable.getPlural() + ".";
+                    return "<YELLOW>You need <highlight>" + (numberRequirement - (long)value) + "</highlight> more " + cachedVariable.getPlural() + ".";
                 }
             }
         }else if(getMathOperator().equalsIgnoreCase("lessThan")){
             if(value instanceof Long l){
                 if (l >= numberRequirement) {
-                    return "<YELLOW>You have <highlight>" + (l+1 - numberRequirement) + "</highlight> too many " + variable.getPlural() + ".";
+                    return "<YELLOW>You have <highlight>" + (l+1 - numberRequirement) + "</highlight> too many " + cachedVariable.getPlural() + ".";
                 }
             }else if(value instanceof Float f){
                 if (f >= numberRequirement) {
-                    return "<YELLOW>You have <highlight>" + (f+1 - numberRequirement) + "</highlight> too many " + variable.getPlural() + ".";
+                    return "<YELLOW>You have <highlight>" + (f+1 - numberRequirement) + "</highlight> too many " + cachedVariable.getPlural() + ".";
                 }
             }else if(value instanceof Double d){
                 if (d >= numberRequirement) {
-                    return "<YELLOW>You have <highlight>" + (d+1 - numberRequirement) + "</highlight> too many " + variable.getPlural() + ".";
+                    return "<YELLOW>You have <highlight>" + (d+1 - numberRequirement) + "</highlight> too many " + cachedVariable.getPlural() + ".";
                 }
             }else if(value instanceof Integer i){
                 if (i >= numberRequirement) {
-                    return "<YELLOW>You have <highlight>" + (i+1 - numberRequirement) + "</highlight> too many " + variable.getPlural() + ".";
+                    return "<YELLOW>You have <highlight>" + (i+1 - numberRequirement) + "</highlight> too many " + cachedVariable.getPlural() + ".";
                 }
             }else{
                 if ((long)value >= numberRequirement) {
-                    return "<YELLOW>You have <highlight>" + ((long)value+1 - numberRequirement) + "</highlight> too many " + variable.getPlural() + ".";
+                    return "<YELLOW>You have <highlight>" + ((long)value+1 - numberRequirement) + "</highlight> too many " + cachedVariable.getPlural() + ".";
                 }
             }
         }else if(getMathOperator().equalsIgnoreCase("lessOrEqualThan")){
             if(value instanceof Long l){
                 if (l > numberRequirement) {
-                    return "<YELLOW>You have <highlight>" + (l - numberRequirement) + "</highlight> too many " + variable.getPlural() + ".";
+                    return "<YELLOW>You have <highlight>" + (l - numberRequirement) + "</highlight> too many " + cachedVariable.getPlural() + ".";
                 }
             }else if(value instanceof Float f){
                 if (f > numberRequirement) {
-                    return "<YELLOW>You have <highlight>" + (f - numberRequirement) + "</highlight> too many " + variable.getPlural() + ".";
+                    return "<YELLOW>You have <highlight>" + (f - numberRequirement) + "</highlight> too many " + cachedVariable.getPlural() + ".";
                 }
             }else if(value instanceof Double d){
                 if (d > numberRequirement) {
-                    return "<YELLOW>You have <highlight>" + (d - numberRequirement) + "</highlight> too many " + variable.getPlural() + ".";
+                    return "<YELLOW>You have <highlight>" + (d - numberRequirement) + "</highlight> too many " + cachedVariable.getPlural() + ".";
                 }
             }else if(value instanceof Integer i){
                 if (i > numberRequirement) {
-                    return "<YELLOW>You have <highlight>" + (i - numberRequirement) + "</highlight> too many " + variable.getPlural() + ".";
+                    return "<YELLOW>You have <highlight>" + (i - numberRequirement) + "</highlight> too many " + cachedVariable.getPlural() + ".";
                 }
             }else{
                 if ((long)value >= numberRequirement) {
-                    return "<YELLOW>You have <highlight>" + ((long)value - numberRequirement) + "</highlight> too many " + variable.getPlural() + ".";
+                    return "<YELLOW>You have <highlight>" + ((long)value - numberRequirement) + "</highlight> too many " + cachedVariable.getPlural() + ".";
                 }
             }
         }else if(getMathOperator().equalsIgnoreCase("equals")){
             if(value instanceof Long l){
                 if (l != numberRequirement) {
-                    return "<YELLOW>You need EXACTLY <highlight>" + numberRequirement+ "</highlight> " + variable.getPlural() + " - no more or less.";
+                    return "<YELLOW>You need EXACTLY <highlight>" + numberRequirement+ "</highlight> " + cachedVariable.getPlural() + " - no more or less.";
                 }
             }else if(value instanceof Float f){
                 if (f != numberRequirement) {
-                    return "<YELLOW>You need EXACTLY <highlight>" + numberRequirement+ "</highlight> " + variable.getPlural() + " - no more or less.";
+                    return "<YELLOW>You need EXACTLY <highlight>" + numberRequirement+ "</highlight> " + cachedVariable.getPlural() + " - no more or less.";
                 }
             }else if(value instanceof Double d){
                 if (d != numberRequirement) {
-                    return "<YELLOW>You need EXACTLY <highlight>" + numberRequirement+ "</highlight> " + variable.getPlural() + " - no more or less.";
+                    return "<YELLOW>You need EXACTLY <highlight>" + numberRequirement+ "</highlight> " + cachedVariable.getPlural() + " - no more or less.";
                 }
             }else if(value instanceof Integer i){
                 if (i != numberRequirement) {
-                    return "<YELLOW>You need EXACTLY <highlight>" + numberRequirement+ "</highlight> " + variable.getPlural() + " - no more or less.";
+                    return "<YELLOW>You need EXACTLY <highlight>" + numberRequirement+ "</highlight> " + cachedVariable.getPlural() + " - no more or less.";
                 }
             }else{
                 if ((long)value != numberRequirement) {
-                    return "<YELLOW>You need EXACTLY <highlight>" + numberRequirement+ "</highlight> " + variable.getPlural() + " - no more or less.";
+                    return "<YELLOW>You need EXACTLY <highlight>" + numberRequirement+ "</highlight> " + cachedVariable.getPlural() + " - no more or less.";
                 }
             }
         }else{
@@ -266,6 +353,8 @@ public class NumberCondition extends Condition {
                 additionalBooleanArguments.put(key, configuration.getBoolean(initialPath + ".specifics.additionalBooleans." + key, false));
             }
         }
+
+        initializeExpressionAndCachedVariable();
     }
 
     @Override
@@ -307,6 +396,7 @@ public class NumberCondition extends Condition {
                 }
             }
         }
+        initializeExpressionAndCachedVariable();
     }
 
     @Override
@@ -397,6 +487,8 @@ public class NumberCondition extends Condition {
                             additionalBooleanArguments.put(commandFlag.getName(), context.flags().isPresent(commandFlag.getName()));
                         }
                         numberCondition.setAdditionalBooleanArguments(additionalBooleanArguments);
+
+                        numberCondition.initializeExpressionAndCachedVariable();
 
                         main.getConditionsManager().addCondition(numberCondition, context);
                     })
