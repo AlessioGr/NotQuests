@@ -67,6 +67,7 @@ public class VariablesManager {
         variables.clear();
         registerVariable("True", TrueVariable.class);
         registerVariable("False", FalseVariable.class);
+        registerVariable("Condition", ConditionVariable.class);
 
         registerVariable("QuestPoints", QuestPointsVariable.class);
         registerVariable("Money", MoneyVariable.class);

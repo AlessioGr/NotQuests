@@ -52,7 +52,7 @@ public class ConditionsManager {
 
     public void registerDefaultConditions() {
         conditions.clear();
-        registerCondition("Condition", ConditionCondition.class);
+        //registerCondition("Condition", ConditionCondition.class); //Old. Replaced with Condition Variable
 
         //registerCondition("CompletedQuest", CompletedQuestCondition.class);
         registerCondition("CompletedObjective", CompletedObjectiveCondition.class);

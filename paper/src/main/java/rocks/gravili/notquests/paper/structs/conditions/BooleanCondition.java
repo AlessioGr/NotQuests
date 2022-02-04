@@ -195,7 +195,6 @@ public class BooleanCondition extends Condition {
             exp = Crunch.compileExpression(expression, env);
             cachedVariable = main.getVariablesManager().getVariableFromString(variableName);
         }
-
     }
 
     @Override
