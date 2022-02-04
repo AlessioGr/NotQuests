@@ -111,6 +111,9 @@ chat:
         base: '    <veryUnimportant>└─<unimportant>Rón rén<main>%AMOUNTOFSNEAKS%</main>lần'
       smelt:
         base: '    <veryUnimportant>└─ <unimportant>Nung Vật Phẩm: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+      openBuriedTreasure:
+        base: '    <veryUnimportant>└─ <unimportant>Open <main>%AMOUNT%</main> buried treasures'
+        one: '    <veryUnimportant>└─ <unimportant>Open <main>1</main> buried treasure'
       townyReachResidentCount:
         base: '    <veryUnimportant>└─ <unimportant>Số Lượng Thành Viên Thị Trấn Đạt Đến: <main>%AMOUNT%'
       townyNationReachTownCount:
