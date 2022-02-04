@@ -24,12 +24,14 @@ import cloud.commandframework.Command;
 import cloud.commandframework.arguments.flags.CommandFlag;
 import cloud.commandframework.arguments.standard.BooleanArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
-import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import redempt.crunch.CompiledExpression;
+import redempt.crunch.Crunch;
+import redempt.crunch.functional.EvaluationEnvironment;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -51,6 +53,14 @@ public class NumberAction extends Action {
     private HashMap<String, Boolean> additionalBooleanArguments;
 
     private String newValueExpression;
+
+
+    private CompiledExpression exp;
+    private final EvaluationEnvironment env = new EvaluationEnvironment();
+    private int variableCounter = 0;
+    Variable<?> cachedVariable = null;
+    private Player playerToEvaluate = null;
+    private QuestPlayer questPlayerToEvaluate = null;
 
     public final String getMathOperator(){
         return mathOperator;
@@ -93,6 +103,8 @@ public class NumberAction extends Action {
         additionalNumberArguments = new HashMap<>();
         additionalBooleanArguments = new HashMap<>();
     }
+
+
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor rewardFor) {
 
@@ -159,6 +171,8 @@ public class NumberAction extends Action {
                         }
                         numberAction.setAdditionalBooleanArguments(additionalBooleanArguments);
 
+                        numberAction.initializeExpressionAndCachedVariable();
+
                         main.getActionManager().addAction(numberAction, context);
 
                     })
@@ -166,37 +180,122 @@ public class NumberAction extends Action {
         }
     }
 
+
+    public String getExpressionAndGenerateEnv(String expressions){
+        boolean foundOne = false;
+        for(String variableString : main.getVariablesManager().getVariableIdentifiers()){
+            if(!expressions.contains(variableString)){
+                continue;
+            }
+            Variable<?> variable = main.getVariablesManager().getVariableFromString(variableString);
+            if(variable == null || (variable.getVariableDataType() != VariableDataType.NUMBER && variable.getVariableDataType() != VariableDataType.BOOLEAN)){
+                main.getLogManager().debug("Null variable: <highlight>" + variableString);
+                continue;
+            }
+
+            //Extra Arguments:
+            if(expressions.contains(variableString + "(")){
+                foundOne = true;
+                String everythingAfterBracket = expressions.substring(expressions.indexOf(variableString+"(") +  variableString.length()+1 );
+                String insideBracket = everythingAfterBracket.substring(0, everythingAfterBracket.indexOf(")"));
+                main.getLogManager().debug("Inside Bracket: " + insideBracket);
+                String[] extraArguments = insideBracket.split(",");
+                for(String extraArgument : extraArguments){
+                    main.getLogManager().debug("Extra: " + extraArgument);
+                    if(extraArgument.startsWith("--")){
+                        variable.addAdditionalBooleanArgument(extraArgument.replace("--", ""), true);
+                        main.getLogManager().debug("AddBoolFlag: " + extraArgument.replace("--", ""));
+                    }else{
+                        String[] split = extraArgument.split(":");
+                        String key = split[0];
+                        String value = split[1];
+                        for(StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()){
+                            if(stringArgument.getName().equalsIgnoreCase(key)){
+                                variable.addAdditionalStringArgument(key, value);
+                                main.getLogManager().debug("AddString: " + key + " val: " + value);
+                            }
+                        }
+                        for(NumberVariableValueArgument<CommandSender> numberVariableValueArgument : variable.getRequiredNumbers()){
+                            variable.addAdditionalNumberArgument(key, value);
+                            main.getLogManager().debug("AddNumb: " + key + " val: " + value);
+                        }
+                        for(BooleanArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
+                            variable.addAdditionalBooleanArgument(key, Boolean.parseBoolean(value));
+                            main.getLogManager().debug("AddBool: " + key + " val: " + value);
+                        }
+                    }
+                }
+
+                variableString = variableString+"(" + insideBracket + ")"; //For the replacing with the actual number below
+            }
+
+
+            variableCounter++;
+            expressions = expressions.replace(variableString, "var" + variableCounter);
+            env.addLazyVariable("var" + variableCounter, () -> {
+                final Object valueObject = variable.getValue(playerToEvaluate, questPlayerToEvaluate);
+                if(valueObject instanceof final Number n){
+                    return n.doubleValue();
+                }else if(valueObject instanceof final Boolean b) {
+                    return b ? 1 : 0;
+                }
+                return 0;
+            });
+        }
+        if(!foundOne){
+            return expressions;
+        }
+
+        return getExpressionAndGenerateEnv(expressions);
+    }
+
+    public void initializeExpressionAndCachedVariable(){
+        if(exp == null){
+            String expression = getExpressionAndGenerateEnv(getNewValueExpression());
+            exp = Crunch.compileExpression(expression, env);
+            cachedVariable = main.getVariablesManager().getVariableFromString(variableName);
+        }
+
+    }
+
     @Override
     public void executeInternally(final Player player, Object... objects) {
-        Variable<?> variable = main.getVariablesManager().getVariableFromString(variableName);
+        this.playerToEvaluate = player;
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(playerToEvaluate.getUniqueId());
+        this.questPlayerToEvaluate = questPlayer;
+        initializeExpressionAndCachedVariable();
 
-        if(variable == null){
+
+        if(cachedVariable == null){
             main.sendMessage(player, "<ERROR>Error: variable <highlight>" + variableName + "</highlight> not found. Report this to the Server owner.");
             return;
         }
 
         if(additionalStringArguments != null && !additionalStringArguments.isEmpty()){
-            variable.setAdditionalStringArguments(additionalStringArguments);
+            cachedVariable.setAdditionalStringArguments(additionalStringArguments);
         }
         if(additionalNumberArguments != null && !additionalNumberArguments.isEmpty()){
-            variable.setAdditionalNumberArguments(additionalNumberArguments);
+            cachedVariable.setAdditionalNumberArguments(additionalNumberArguments);
         }
         if(additionalBooleanArguments != null && !additionalBooleanArguments.isEmpty()){
-            variable.setAdditionalBooleanArguments(additionalBooleanArguments);
+            cachedVariable.setAdditionalBooleanArguments(additionalBooleanArguments);
         }
 
-        QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
 
-        Object currentValueObject = variable.getValue(player, questPlayer, objects);
+
+
+        final Object currentValueObject = cachedVariable.getValue(player, questPlayer, objects);
 
         double currentValue = 0d;
-        if (currentValueObject instanceof Number number) {
+        if (currentValueObject instanceof final Number number) {
             currentValue = number.doubleValue();
         }else{
             currentValue = (double) currentValueObject;
         }
 
-        double nextNewValue = main.getVariablesManager().evaluateExpression(getNewValueExpression(), player, objects);
+        //double nextNewValue = main.getVariablesManager().evaluateExpression(getNewValueExpression(), player, objects);
+        double nextNewValue = exp.evaluate();
+
 
         if(getMathOperator().equalsIgnoreCase("set")){
             nextNewValue = nextNewValue;
@@ -220,15 +319,14 @@ public class NumberAction extends Action {
         questPlayer.sendDebugMessage("New Value: " + nextNewValue);
 
 
-
         if(currentValueObject instanceof Long){
-            ((Variable<Long>)variable).setValue(Double.valueOf(nextNewValue).longValue(), player, objects);
+            ((Variable<Long>)cachedVariable).setValue(Double.valueOf(nextNewValue).longValue(), player, objects);
         } else if(currentValueObject instanceof Float){
-            ((Variable<Float>)variable).setValue(Double.valueOf(nextNewValue).floatValue(), player, objects);
+            ((Variable<Float>)cachedVariable).setValue(Double.valueOf(nextNewValue).floatValue(), player, objects);
         } else if(currentValueObject instanceof Double){
-            ((Variable<Double>)variable).setValue(nextNewValue, player, objects);
+            ((Variable<Double>)cachedVariable).setValue(nextNewValue, player, objects);
         } else if(currentValueObject instanceof Integer){
-            ((Variable<Integer>)variable).setValue(Double.valueOf(nextNewValue).intValue(), player, objects);
+            ((Variable<Integer>)cachedVariable).setValue(Double.valueOf(nextNewValue).intValue(), player, objects);
         }else{
             main.getLogManager().warn("Cannot execute number action, because the number type " + currentValueObject.getClass().getName() + " is invalid.");
         }
@@ -288,6 +386,7 @@ public class NumberAction extends Action {
                 additionalBooleanArguments.put(key, configuration.getBoolean(initialPath + ".specifics.additionalBooleans." + key, false));
             }
         }
+        initializeExpressionAndCachedVariable();
     }
 
     @Override
@@ -331,7 +430,7 @@ public class NumberAction extends Action {
             }
         }
 
-
+        initializeExpressionAndCachedVariable();
     }
 
 }

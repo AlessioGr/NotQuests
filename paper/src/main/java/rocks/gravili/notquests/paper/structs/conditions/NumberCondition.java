@@ -54,11 +54,8 @@ public class NumberCondition extends Condition {
 
     private CompiledExpression exp;
     private final EvaluationEnvironment env = new EvaluationEnvironment();
-
     private int variableCounter = 0;
-
     Variable<?> cachedVariable = null;
-
     private QuestPlayer questPlayerToEvaluate = null;
 
     public final String getMathOperator(){
