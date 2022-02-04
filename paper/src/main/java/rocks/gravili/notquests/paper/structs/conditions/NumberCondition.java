@@ -97,7 +97,7 @@ public class NumberCondition extends Condition {
     public String getExpressionAndGenerateEnv(String expressions){
         boolean foundOne = false;
         for(String variableString : main.getVariablesManager().getVariableIdentifiers()){
-            if(!expression.contains(variableString)){
+            if(!expressions.contains(variableString)){
                 continue;
             }
             Variable<?> variable = main.getVariablesManager().getVariableFromString(variableString);
@@ -107,9 +107,9 @@ public class NumberCondition extends Condition {
             }
 
             //Extra Arguments:
-            if(expression.contains(variableString + "(")){
+            if(expressions.contains(variableString + "(")){
                 foundOne = true;
-                String everythingAfterBracket = expression.substring(expression.indexOf(variableString+"(") +  variableString.length()+1 );
+                String everythingAfterBracket = expressions.substring(expressions.indexOf(variableString+"(") +  variableString.length()+1 );
                 String insideBracket = everythingAfterBracket.substring(0, everythingAfterBracket.indexOf(")"));
                 main.getLogManager().debug("Inside Bracket: " + insideBracket);
                 String[] extraArguments = insideBracket.split(",");
@@ -144,16 +144,16 @@ public class NumberCondition extends Condition {
 
 
             variableCounter++;
-            expression = expression.replace(variableString, "var" + variableCounter);
+            expressions = expressions.replace(variableString, "var" + variableCounter);
             env.addLazyVariable("var" + variableCounter, () -> {
-                return (double) variable.getValue(questPlayerToEvaluate.getPlayer(), questPlayerToEvaluate);
+                return ((Number) variable.getValue(questPlayerToEvaluate.getPlayer(), questPlayerToEvaluate)).doubleValue();
             });
         }
         if(!foundOne){
-            return expression;
+            return expressions;
         }
 
-        return getExpressionAndGenerateEnv(expression);
+        return getExpressionAndGenerateEnv(expressions);
     }
 
     public void initializeExpressionAndCachedVariable(){
@@ -172,9 +172,6 @@ public class NumberCondition extends Condition {
         initializeExpressionAndCachedVariable();
 
 
-        final double numberRequirement = exp.evaluate();
-
-
         if(cachedVariable == null){
             return "<ERROR>Error: variable <highlight>" + variableName + "</highlight> not found. Report this to the Server owner.";
         }
@@ -190,6 +187,8 @@ public class NumberCondition extends Condition {
         }
 
         Object value = cachedVariable.getValue(questPlayer.getPlayer(), questPlayer);
+
+        final double numberRequirement = exp.evaluate();
 
         if(getMathOperator().equalsIgnoreCase("moreThan")){
             if(value instanceof Long l){

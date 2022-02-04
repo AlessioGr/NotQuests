@@ -47,6 +47,7 @@ import org.bukkit.command.CommandSender;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.*;
 import rocks.gravili.notquests.paper.commands.arguments.*;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueArgument;
 import rocks.gravili.notquests.paper.conversation.ConversationManager;
 import rocks.gravili.notquests.paper.managers.data.Category;
@@ -316,6 +317,9 @@ public class CommandManager {
 
                 cloudBrigadierManager.registerMapping(new TypeToken<StringVariableValueArgument.StringParser<CommandSender>>() {
                 }, builder -> builder.cloudSuggestions().toConstant(StringArgumentType.string()));
+
+                cloudBrigadierManager.registerMapping(new TypeToken<NumberVariableValueArgument.StringParser<CommandSender>>() {
+                }, builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
 
             } else {
                 main.getMain().getLogger().warning("Failed to initialize Brigadier support. Brigadier manager is null.");

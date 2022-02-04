@@ -217,29 +217,64 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Str
                     if(!input.endsWith(variableString+"(")){
                         if(input.endsWith(",")){
                             for(StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()){
-                                completions.add(input + stringArgument.getName() + ":<Enter Value>");
+                                if(!input.contains(stringArgument.getName())){
+                                    completions.add(input + stringArgument.getName() + ":<value>");
+                                }
                             }
                             for(NumberVariableValueArgument<CommandSender> numberVariableValueArgument : variable.getRequiredNumbers()){
-                                completions.add(input + numberVariableValueArgument.getName() + ":<Enter Value>");
+                                if(!input.contains(numberVariableValueArgument.getName())){
+                                    completions.add(input + numberVariableValueArgument.getName() + ":<value>");
+                                }
                             }
                             for(BooleanArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
-                                completions.add(input + booleanArgument.getName() + ":<Enter Value>");
+                                if(!input.contains(booleanArgument.getName())){
+                                    completions.add(input + booleanArgument.getName() + ":<value>");
+                                }
                             }
                             for(CommandFlag<Void> flag : variable.getRequiredBooleanFlags()){
-                                completions.add(input + "--" + flag.getName() + "");
+                                if(!input.contains(flag.getName())){
+                                    completions.add(input + "--" + flag.getName() + "");
+                                }
                             }
                         }else if(!input.endsWith(")")){
-                            completions.add(variableString+"(");
+                            if(input.contains(variableString+"(") && (!input.contains(")") || (input.lastIndexOf("(") < input.lastIndexOf(")"))) ){
+                                String subStringAfter = input.substring(input.indexOf(variableString+"("));
+
+                                for(StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()){
+                                    if(subStringAfter.contains(":")){
+                                        completions.add(input + "<value>");
+                                    }else{
+                                        completions.add(variableString+"(" + stringArgument.getName() + ":<value>");
+                                    }
+                                }
+                                for(NumberVariableValueArgument<CommandSender> numberVariableValueArgument : variable.getRequiredNumbers()) {
+                                    if (subStringAfter.contains(":")) {
+                                        completions.add(input + "<value>");
+                                    } else {
+                                        completions.add(variableString+"(" + numberVariableValueArgument.getName() + ":<value>");
+                                    }
+                                }for(BooleanArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()) {
+                                    if (subStringAfter.contains(":")) {
+                                        completions.add(input + "<value>");
+                                    } else {
+                                        completions.add(variableString+"(" + booleanArgument.getName() + ":<value>");
+                                    }
+                                }for(CommandFlag<Void> flag : variable.getRequiredBooleanFlags()){
+                                    completions.add(variableString+"(--" + flag.getName() + "");
+                                }
+                            }else{
+                                completions.add(variableString+"(");
+                            }
                         }
                     }else{//Moree completionss
                         for(StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()){
-                            completions.add(variableString+"(" + stringArgument.getName() + ":<Enter Value>");
+                            completions.add(variableString+"(" + stringArgument.getName() + ":<value>");
                         }
                         for(NumberVariableValueArgument<CommandSender> numberVariableValueArgument : variable.getRequiredNumbers()){
-                            completions.add(variableString+"(" + numberVariableValueArgument.getName() + ":<Enter Value>");
+                            completions.add(variableString+"(" + numberVariableValueArgument.getName() + ":<value>");
                         }
                         for(BooleanArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
-                            completions.add(variableString+"(" + booleanArgument.getName() + ":<Enter Value>");
+                            completions.add(variableString+"(" + booleanArgument.getName() + ":<value>");
                         }
                         for(CommandFlag<Void> flag : variable.getRequiredBooleanFlags()){
                             completions.add(variableString+"(--" + flag.getName() + "");
@@ -248,7 +283,6 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Str
                     }
                 }
             }
-
 
             //Now the number completions
             final Set<Double> numbers = new TreeSet<>();
