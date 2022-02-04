@@ -110,6 +110,9 @@ chat:
         base: '    <veryUnimportant>└─ <unimportant>Sneak <main>%AMOUNTOFSNEAKS%</main> times'
       smelt:
         base: '    <veryUnimportant>└─ <unimportant>Items to smelt: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+      openBuriedTreasure:
+        base: '    <veryUnimportant>└─ <unimportant>Open <main>%AMOUNT%</main> buried treasures'
+        one: '    <veryUnimportant>└─ <unimportant>Open <main>1</main> buried treasure'
       townyReachResidentCount:
         base: '    <veryUnimportant>└─ <unimportant>Reach resident amount: <main>%AMOUNT%'
       townyNationReachTownCount:
