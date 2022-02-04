@@ -86,6 +86,9 @@ public class VariablesManager {
         registerVariable("TagDouble", DoubleTagVariable.class);
         registerVariable("TagString", StringTagVariable.class);
 
+        registerVariable("QuestOnCooldown", QuestOnCooldownVariable.class);
+
+
 
         if(main.getIntegrationsManager().isPlaceholderAPIEnabled()){
             registerVariable("PlaceholderAPINumber", PlaceholderAPINumberVariable.class);
