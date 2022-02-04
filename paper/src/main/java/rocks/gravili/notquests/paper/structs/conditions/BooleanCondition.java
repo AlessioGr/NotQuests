@@ -30,6 +30,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import redempt.crunch.CompiledExpression;
+import redempt.crunch.Crunch;
+import redempt.crunch.functional.EvaluationEnvironment;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
@@ -51,6 +54,13 @@ public class BooleanCondition extends Condition {
     private HashMap<String, String> additionalStringArguments;
     private HashMap<String, String> additionalNumberArguments;
     private HashMap<String, Boolean> additionalBooleanArguments;
+
+    private CompiledExpression exp;
+    private final EvaluationEnvironment env = new EvaluationEnvironment();
+    private int variableCounter = 0;
+    Variable<?> cachedVariable = null;
+    private QuestPlayer questPlayerToEvaluate = null;
+
 
 
     public final String getOperator(){
@@ -85,7 +95,7 @@ public class BooleanCondition extends Condition {
     }
 
 
-    public final boolean evaluateExpression(final QuestPlayer questPlayer){
+    /*public final boolean evaluateExpression(final QuestPlayer questPlayer){
         boolean booleanRequirement = false;
 
         try{
@@ -108,32 +118,114 @@ public class BooleanCondition extends Condition {
             }
         }
         return booleanRequirement;
+    }*/
+
+
+    public String getExpressionAndGenerateEnv(String expressions){
+        boolean foundOne = false;
+        for(String variableString : main.getVariablesManager().getVariableIdentifiers()){
+            if(!expressions.contains(variableString)){
+                continue;
+            }
+            Variable<?> variable = main.getVariablesManager().getVariableFromString(variableString);
+            if(variable == null || (variable.getVariableDataType() != VariableDataType.NUMBER && variable.getVariableDataType() != VariableDataType.BOOLEAN)){
+                main.getLogManager().debug("Null variable: <highlight>" + variableString);
+                continue;
+            }
+
+            //Extra Arguments:
+            if(expressions.contains(variableString + "(")){
+                foundOne = true;
+                String everythingAfterBracket = expressions.substring(expressions.indexOf(variableString+"(") +  variableString.length()+1 );
+                String insideBracket = everythingAfterBracket.substring(0, everythingAfterBracket.indexOf(")"));
+                main.getLogManager().debug("Inside Bracket: " + insideBracket);
+                String[] extraArguments = insideBracket.split(",");
+                for(String extraArgument : extraArguments){
+                    main.getLogManager().debug("Extra: " + extraArgument);
+                    if(extraArgument.startsWith("--")){
+                        variable.addAdditionalBooleanArgument(extraArgument.replace("--", ""), true);
+                        main.getLogManager().debug("AddBoolFlag: " + extraArgument.replace("--", ""));
+                    }else{
+                        String[] split = extraArgument.split(":");
+                        String key = split[0];
+                        String value = split[1];
+                        for(StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()){
+                            if(stringArgument.getName().equalsIgnoreCase(key)){
+                                variable.addAdditionalStringArgument(key, value);
+                                main.getLogManager().debug("AddString: " + key + " val: " + value);
+                            }
+                        }
+                        for(NumberVariableValueArgument<CommandSender> numberVariableValueArgument : variable.getRequiredNumbers()){
+                            variable.addAdditionalNumberArgument(key, value);
+                            main.getLogManager().debug("AddNumb: " + key + " val: " + value);
+                        }
+                        for(BooleanArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
+                            variable.addAdditionalBooleanArgument(key, Boolean.parseBoolean(value));
+                            main.getLogManager().debug("AddBool: " + key + " val: " + value);
+                        }
+                    }
+                }
+
+                variableString = variableString+"(" + insideBracket + ")"; //For the replacing with the actual number below
+            }
+
+
+            variableCounter++;
+            expressions = expressions.replace(variableString, "var" + variableCounter);
+            env.addLazyVariable("var" + variableCounter, () -> {
+                final Object valueObject = variable.getValue(questPlayerToEvaluate.getPlayer(), questPlayerToEvaluate);
+                if(valueObject instanceof final Number n){
+                    return n.doubleValue();
+                }else if(valueObject instanceof final Boolean b) {
+                    return b ? 1 : 0;
+                }
+                return 0;
+            });
+        }
+        if(!foundOne){
+            return expressions;
+        }
+
+        return getExpressionAndGenerateEnv(expressions);
+    }
+
+    public void initializeExpressionAndCachedVariable(){
+        if(exp == null){
+            String expression = getExpressionAndGenerateEnv(getExpression());
+            exp = Crunch.compileExpression(expression, env);
+            cachedVariable = main.getVariablesManager().getVariableFromString(variableName);
+        }
+
     }
 
     @Override
     public String checkInternally(final QuestPlayer questPlayer) {
-        boolean booleanRequirement = evaluateExpression(questPlayer);
+        this.questPlayerToEvaluate = questPlayer;
+        initializeExpressionAndCachedVariable();
 
 
-        Variable<?> variable = main.getVariablesManager().getVariableFromString(variableName);
 
-        if(variable == null){
+
+        if(cachedVariable == null){
             return main.getLanguageManager().getString("chat.conditions.boolean.variable-not-found", questPlayer.getPlayer(), questPlayer, Map.of(
                     "%VARIABLENAME%", variableName
             ));
         }
 
+        final boolean booleanRequirement = exp.evaluate() >= 0.98d;
+
+
         if(additionalStringArguments != null && !additionalStringArguments.isEmpty()){
-            variable.setAdditionalStringArguments(additionalStringArguments);
+            cachedVariable.setAdditionalStringArguments(additionalStringArguments);
         }
         if(additionalNumberArguments != null && !additionalNumberArguments.isEmpty()){
-            variable.setAdditionalNumberArguments(additionalNumberArguments);
+            cachedVariable.setAdditionalNumberArguments(additionalNumberArguments);
         }
         if(additionalBooleanArguments != null && !additionalBooleanArguments.isEmpty()){
-            variable.setAdditionalBooleanArguments(additionalBooleanArguments);
+            cachedVariable.setAdditionalBooleanArguments(additionalBooleanArguments);
         }
 
-        Object value = variable.getValue(questPlayer.getPlayer(), questPlayer);
+        Object value = cachedVariable.getValue(questPlayer.getPlayer(), questPlayer);
 
         if(getOperator().equalsIgnoreCase("equals")){
             if(value instanceof Boolean bool){
@@ -141,8 +233,8 @@ public class BooleanCondition extends Condition {
                     return main.getLanguageManager().getString("chat.conditions.boolean.not-fulfilled", questPlayer.getPlayer(), questPlayer, Map.of(
                             "%OPERATOR%", getOperator(),
                             "%BOOLEANREQUIREMENT%", ""+booleanRequirement,
-                            "%VARIABLESINGULAR%", variable.getSingular(),
-                            "%VARIABLEPLURAL%", variable.getPlural()
+                            "%VARIABLESINGULAR%", cachedVariable.getSingular(),
+                            "%VARIABLEPLURAL%", cachedVariable.getPlural()
                     ));
                 }
             }else{
@@ -150,8 +242,8 @@ public class BooleanCondition extends Condition {
                     return main.getLanguageManager().getString("chat.conditions.boolean.not-fulfilled", questPlayer.getPlayer(), questPlayer, Map.of(
                             "%OPERATOR%", getOperator(),
                             "%BOOLEANREQUIREMENT%", ""+booleanRequirement,
-                            "%VARIABLESINGULAR%", variable.getSingular(),
-                            "%VARIABLEPLURAL%", variable.getPlural()
+                            "%VARIABLESINGULAR%", cachedVariable.getSingular(),
+                            "%VARIABLEPLURAL%", cachedVariable.getPlural()
                     ));
                 }
             }
@@ -207,6 +299,7 @@ public class BooleanCondition extends Condition {
                 additionalBooleanArguments.put(key, configuration.getBoolean(initialPath + ".specifics.additionalBooleans." + key, false));
             }
         }
+        initializeExpressionAndCachedVariable();
     }
 
     @Override
@@ -248,16 +341,21 @@ public class BooleanCondition extends Condition {
                 }
             }
         }
+        initializeExpressionAndCachedVariable();
     }
 
     @Override
     public String getConditionDescriptionInternally(Player player, Object... objects) {
         //description += "\n<GRAY>--- Will quest points be deducted?: No";
+        this.questPlayerToEvaluate = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
+        initializeExpressionAndCachedVariable();
+        final boolean booleanRequirement = exp.evaluate() >= 0.98d;
+
 
         if(getOperator().equalsIgnoreCase("equals")){
-            return "<GRAY>-- " + variableName + " needs to be " + evaluateExpression(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId())) + "</GRAY>";
+            return "<GRAY>-- " + variableName + " needs to be " + booleanRequirement + "</GRAY>";
         }
-        return "<GRAY>-- " + variableName + " needed: " + evaluateExpression(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId())) + "</GRAY>";
+        return "<GRAY>-- " + variableName + " needed: " + booleanRequirement + "</GRAY>";
     }
 
 
@@ -322,7 +420,7 @@ public class BooleanCondition extends Condition {
                         }
                         booleanCondition.setAdditionalBooleanArguments(additionalBooleanArguments);
 
-
+                        booleanCondition.initializeExpressionAndCachedVariable();
 
                         main.getConditionsManager().addCondition(booleanCondition, context);
                     })

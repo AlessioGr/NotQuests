@@ -25,8 +25,11 @@ package rocks.gravili.notquests.paper.commands.arguments.variables;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.arguments.CommandArgument;
+import cloud.commandframework.arguments.flags.CommandFlag;
 import cloud.commandframework.arguments.parser.ArgumentParseResult;
 import cloud.commandframework.arguments.parser.ArgumentParser;
+import cloud.commandframework.arguments.standard.BooleanArgument;
+import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.exceptions.parsing.NoInputProvidedException;
 import org.bukkit.command.CommandSender;
@@ -172,6 +175,17 @@ public final class BooleanVariableValueArgument<C> extends CommandArgument<C, St
             final String input = inputQueue.peek();
             inputQueue.remove();
 
+            if(context.getSender() instanceof Player player){
+                try{
+                    main.getVariablesManager().evaluateExpression(input, player);
+                }catch (Exception e){
+                    if(main.getConfiguration().isDebug()){
+                        e.printStackTrace();
+                    }
+                    return ArgumentParseResult.failure(new IllegalArgumentException("Invalid Expression: " + input + ". Error: " + e.toString()));
+                }
+            }
+
 
             return ArgumentParseResult.success(input);
 
@@ -196,13 +210,79 @@ public final class BooleanVariableValueArgument<C> extends CommandArgument<C, St
 
             for(String variableString : main.getVariablesManager().getVariableIdentifiers()) {
                 Variable<?> variable = main.getVariablesManager().getVariableFromString(variableString);
-                if (variable == null || variable.getVariableDataType() != VariableDataType.BOOLEAN) {
+                if (variable == null || (variable.getVariableDataType() != VariableDataType.NUMBER && variable.getVariableDataType() != VariableDataType.BOOLEAN )) {
                     continue;
                 }
                 if(variable.getRequiredStrings().isEmpty() && variable.getRequiredNumbers().isEmpty() && variable.getRequiredBooleans().isEmpty() && variable.getRequiredBooleanFlags().isEmpty()){
                     completions.add(variableString);
                 }else{
-                    completions.add(variableString+"(");
+                    if(!input.endsWith(variableString+"(")){
+                        if(input.endsWith(",")){
+                            for(StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()){
+                                if(!input.contains(stringArgument.getName())){
+                                    completions.add(input + stringArgument.getName() + ":<value>");
+                                }
+                            }
+                            for(NumberVariableValueArgument<CommandSender> numberVariableValueArgument : variable.getRequiredNumbers()){
+                                if(!input.contains(numberVariableValueArgument.getName())){
+                                    completions.add(input + numberVariableValueArgument.getName() + ":<value>");
+                                }
+                            }
+                            for(BooleanArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
+                                if(!input.contains(booleanArgument.getName())){
+                                    completions.add(input + booleanArgument.getName() + ":<value>");
+                                }
+                            }
+                            for(CommandFlag<Void> flag : variable.getRequiredBooleanFlags()){
+                                if(!input.contains(flag.getName())){
+                                    completions.add(input + "--" + flag.getName() + "");
+                                }
+                            }
+                        }else if(!input.endsWith(")")){
+                            if(input.contains(variableString+"(") && (!input.contains(")") || (input.lastIndexOf("(") < input.lastIndexOf(")"))) ){
+                                String subStringAfter = input.substring(input.indexOf(variableString+"("));
+
+                                for(StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()){
+                                    if(subStringAfter.contains(":")){
+                                        completions.add(input + "<value>");
+                                    }else{
+                                        completions.add(variableString+"(" + stringArgument.getName() + ":<value>");
+                                    }
+                                }
+                                for(NumberVariableValueArgument<CommandSender> numberVariableValueArgument : variable.getRequiredNumbers()) {
+                                    if (subStringAfter.contains(":")) {
+                                        completions.add(input + "<value>");
+                                    } else {
+                                        completions.add(variableString+"(" + numberVariableValueArgument.getName() + ":<value>");
+                                    }
+                                }for(BooleanArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()) {
+                                    if (subStringAfter.contains(":")) {
+                                        completions.add(input + "<value>");
+                                    } else {
+                                        completions.add(variableString+"(" + booleanArgument.getName() + ":<value>");
+                                    }
+                                }for(CommandFlag<Void> flag : variable.getRequiredBooleanFlags()){
+                                    completions.add(variableString+"(--" + flag.getName() + "");
+                                }
+                            }else{
+                                completions.add(variableString+"(");
+                            }
+                        }
+                    }else{//Moree completionss
+                        for(StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()){
+                            completions.add(variableString+"(" + stringArgument.getName() + ":<value>");
+                        }
+                        for(NumberVariableValueArgument<CommandSender> numberVariableValueArgument : variable.getRequiredNumbers()){
+                            completions.add(variableString+"(" + numberVariableValueArgument.getName() + ":<value>");
+                        }
+                        for(BooleanArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
+                            completions.add(variableString+"(" + booleanArgument.getName() + ":<value>");
+                        }
+                        for(CommandFlag<Void> flag : variable.getRequiredBooleanFlags()){
+                            completions.add(variableString+"(--" + flag.getName() + "");
+                        }
+
+                    }
                 }
             }
 

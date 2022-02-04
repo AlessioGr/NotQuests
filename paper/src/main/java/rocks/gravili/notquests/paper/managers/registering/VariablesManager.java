@@ -65,6 +65,9 @@ public class VariablesManager {
 
     public void registerDefaultVariables() {
         variables.clear();
+        registerVariable("True", TrueVariable.class);
+        registerVariable("False", FalseVariable.class);
+
         registerVariable("QuestPoints", QuestPointsVariable.class);
         registerVariable("Money", MoneyVariable.class);
         registerVariable("UltimateClansClanLevel", UltimateClansClanLevelVariable.class);
