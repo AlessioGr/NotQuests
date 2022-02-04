@@ -87,7 +87,8 @@ public class VariablesManager {
         registerVariable("TagString", StringTagVariable.class);
 
         registerVariable("QuestOnCooldown", QuestOnCooldownVariable.class);
-
+        registerVariable("QuestAbleToAcceptVariable", QuestAbleToAcceptVariable.class);
+        registerVariable("QuestReachedMaxAcceptsVariable", QuestReachedMaxAcceptsVariable.class);
 
 
         if(main.getIntegrationsManager().isPlaceholderAPIEnabled()){

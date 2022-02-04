@@ -7,16 +7,17 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.CompletedQuest;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
+import rocks.gravili.notquests.paper.structs.conditions.Condition;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- * This variable is true if the Quest is on cooldown for the player
+ * This variable is true if the player is able to take the Quest. That means, they fulfill all Quest conditions, as well as other factors like the Quest cooldown or maxAccepts.
  */
-public class QuestOnCooldownVariable extends Variable<Boolean>{
-    public QuestOnCooldownVariable(NotQuests main) {
+public class QuestAbleToAcceptVariable extends Variable<Boolean>{
+    public QuestAbleToAcceptVariable(NotQuests main) {
         super(main);
         addRequiredString(
                 StringArgument.<CommandSender>newBuilder("Quest to check").withSuggestionsProvider(
@@ -40,26 +41,50 @@ public class QuestOnCooldownVariable extends Variable<Boolean>{
         final Quest quest = main.getQuestManager().getQuest(getRequiredStringValue("Quest to check"));
         final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
 
-        if(quest == null || questPlayer == null){
-            return false;
+        if(quest == null){
+            return true;
         }
 
-        //int completedAmount = 0; //only needed for maxAccepts
+        if(questPlayer != null){
+            int completedAmount = 0; //only needed for maxAccepts
 
-        long mostRecentAcceptTime = 0;
-        for (CompletedQuest completedQuest : questPlayer.getCompletedQuests()) {
-            if (completedQuest.getQuest().equals(quest)) {
-                //completedAmount += 1;
-                if (completedQuest.getTimeCompleted() > mostRecentAcceptTime) {
-                    mostRecentAcceptTime = completedQuest.getTimeCompleted();
+            long mostRecentAcceptTime = 0;
+            for (CompletedQuest completedQuest : questPlayer.getCompletedQuests()) {
+                if (completedQuest.getQuest().equals(quest)) {
+                    completedAmount += 1;
+                    if (completedQuest.getTimeCompleted() > mostRecentAcceptTime) {
+                        mostRecentAcceptTime = completedQuest.getTimeCompleted();
+                    }
                 }
+            }
+            final long acceptTimeDifference = System.currentTimeMillis() - mostRecentAcceptTime;
+            final long acceptTimeDifferenceMinutes = TimeUnit.MILLISECONDS.toMinutes(acceptTimeDifference);
+
+            if(acceptTimeDifferenceMinutes < quest.getAcceptCooldown() || quest.getMaxAccepts() == 0 || (quest.getMaxAccepts() > -1 && completedAmount >= quest.getMaxAccepts())){
+                return false;
+            }
+        }else{
+            if(quest.getMaxAccepts() == 0){
+                return false;
             }
         }
 
-        final long acceptTimeDifference = System.currentTimeMillis() - mostRecentAcceptTime;
-        final long acceptTimeDifferenceMinutes = TimeUnit.MILLISECONDS.toMinutes(acceptTimeDifference);
 
-        return acceptTimeDifferenceMinutes < quest.getAcceptCooldown(); // on cooldown
+
+
+
+        for (final Condition condition : quest.getRequirements()) {
+            final String check = condition.check(questPlayer);
+            if (!check.isBlank()) {
+                return false;
+            }
+        }
+
+
+
+
+
+        return true; //Able to accept the Quest
     }
 
     @Override
@@ -75,11 +100,11 @@ public class QuestOnCooldownVariable extends Variable<Boolean>{
 
     @Override
     public String getPlural() {
-        return "Quest on cooldown";
+        return "Able to accept Quest";
     }
 
     @Override
     public String getSingular() {
-        return "Quest on cooldown";
+        return "Able to accept Quest";
     }
 }

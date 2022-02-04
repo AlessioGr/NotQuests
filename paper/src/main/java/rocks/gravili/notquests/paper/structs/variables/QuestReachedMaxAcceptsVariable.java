@@ -10,13 +10,12 @@ import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
- * This variable is true if the Quest is on cooldown for the player
+ * This variable is true if the amount of times the player has previously completed this Quest is equal or higher than the Quests max accepts
  */
-public class QuestOnCooldownVariable extends Variable<Boolean>{
-    public QuestOnCooldownVariable(NotQuests main) {
+public class QuestReachedMaxAcceptsVariable extends Variable<Boolean>{
+    public QuestReachedMaxAcceptsVariable(NotQuests main) {
         super(main);
         addRequiredString(
                 StringArgument.<CommandSender>newBuilder("Quest to check").withSuggestionsProvider(
@@ -44,22 +43,25 @@ public class QuestOnCooldownVariable extends Variable<Boolean>{
             return false;
         }
 
-        //int completedAmount = 0; //only needed for maxAccepts
+        if(quest.getMaxAccepts() <= -1){
+            return false;
+        }else if(quest.getMaxAccepts() == 0){
+            return true;
+        }
 
-        long mostRecentAcceptTime = 0;
+        int completedAmount = 0; //only needed for maxAccepts
+
         for (CompletedQuest completedQuest : questPlayer.getCompletedQuests()) {
             if (completedQuest.getQuest().equals(quest)) {
-                //completedAmount += 1;
-                if (completedQuest.getTimeCompleted() > mostRecentAcceptTime) {
-                    mostRecentAcceptTime = completedQuest.getTimeCompleted();
-                }
+                completedAmount += 1;
             }
         }
 
-        final long acceptTimeDifference = System.currentTimeMillis() - mostRecentAcceptTime;
-        final long acceptTimeDifferenceMinutes = TimeUnit.MILLISECONDS.toMinutes(acceptTimeDifference);
+        if(completedAmount >= quest.getMaxAccepts()){
+            return true;
+        }
 
-        return acceptTimeDifferenceMinutes < quest.getAcceptCooldown(); // on cooldown
+        return false;
     }
 
     @Override
@@ -75,11 +77,11 @@ public class QuestOnCooldownVariable extends Variable<Boolean>{
 
     @Override
     public String getPlural() {
-        return "Quest on cooldown";
+        return "Quest reached max accepts";
     }
 
     @Override
     public String getSingular() {
-        return "Quest on cooldown";
+        return "Quest reached max accepts";
     }
 }
