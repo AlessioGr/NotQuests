@@ -23,6 +23,9 @@ import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
+import org.bukkit.block.Container;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.HumanEntity;
@@ -46,6 +49,7 @@ import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.loot.LootTables;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.conversation.ConversationPlayer;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
@@ -579,20 +583,20 @@ public class QuestEvents implements Listener {
                         );
 
                         if (e.getAction() == Action.RIGHT_CLICK_BLOCK && !interactObjective.isRightClick()) {
-                            return;
+                            continue;
                         }
                         if (e.getAction() == Action.LEFT_CLICK_BLOCK && !interactObjective.isLeftClick()) {
-                            return;
+                            continue;
                         }
                         if (e.getClickedBlock() == null || e.getClickedBlock().getLocation().getWorld() == null || interactObjective.getLocationToInteract().getWorld() == null) {
-                            return;
+                            continue;
                         }
 
                         if (!e.getClickedBlock().getLocation().getWorld().getName().equalsIgnoreCase(interactObjective.getLocationToInteract().getWorld().getName())) {
-                            return;
+                            continue;
                         }
                         if (e.getClickedBlock().getLocation().distance(interactObjective.getLocationToInteract()) > interactObjective.getMaxDistance()) {
-                            return;
+                            continue;
                         }
 
                         activeObjective.addProgress(1);
@@ -600,6 +604,18 @@ public class QuestEvents implements Listener {
                             e.setCancelled(true);
                         }
 
+                    } else if (activeObjective.getObjective() instanceof OpenBuriedTreasureObjective openBuriedTreasureObjective) {
+                        if (e.getAction() != Action.RIGHT_CLICK_BLOCK){
+                            continue;
+                        }
+                        Block clickedBlock = e.getClickedBlock();
+                        if(clickedBlock.getState() instanceof Chest chest){
+
+                            if(chest.getLootTable() != null && chest.getLootTable().getKey().equals(LootTables.BURIED_TREASURE.getKey()) && !chest.hasPlayerLooted(player.getUniqueId())){
+                                activeObjective.addProgress(1);
+                            }
+
+                        }
                     }
                 }
 
