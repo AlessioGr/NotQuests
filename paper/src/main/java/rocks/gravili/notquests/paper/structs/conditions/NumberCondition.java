@@ -53,7 +53,7 @@ public class NumberCondition extends Condition {
     private HashMap<String, Boolean> additionalBooleanArguments;
 
     private CompiledExpression exp;
-    private EvaluationEnvironment env;
+    private final EvaluationEnvironment env = new EvaluationEnvironment();
 
     private int variableCounter = 0;
 
@@ -157,7 +157,7 @@ public class NumberCondition extends Condition {
     }
 
     public void initializeExpressionAndCachedVariable(){
-        if(exp == null || env == null){
+        if(exp == null){
             String expression = getExpressionAndGenerateEnv(getExpression());
             exp = Crunch.compileExpression(expression, env);
             cachedVariable = main.getVariablesManager().getVariableFromString(variableName);
