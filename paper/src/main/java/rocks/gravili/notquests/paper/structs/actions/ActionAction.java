@@ -20,6 +20,7 @@ package rocks.gravili.notquests.paper.structs.actions;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
+import cloud.commandframework.arguments.flags.CommandFlag;
 import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
@@ -27,10 +28,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.MultipleActionsSelector;
+import rocks.gravili.notquests.paper.structs.conditions.Condition;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 public class ActionAction extends Action {
 
@@ -38,12 +38,29 @@ public class ActionAction extends Action {
     private int amount = 1;
     private boolean ignoreConditions = false;
 
+    private int minRandom = -1;
+    private int maxRandom = -1;
+    private boolean onlyCountForRandomIfConditionsFulfilled = false;
+
 
     public ActionAction(final NotQuests main) {
         super(main);
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor rewardFor) {
+
+        CommandFlag<Integer> minRandomFlag = CommandFlag
+                .newBuilder("minRandom")
+                .withArgument(IntegerArgument.<CommandSender>newBuilder("minRandom").asOptionalWithDefault(1).withMin(0))
+                .withDescription(ArgumentDescription.of("If this is set, it will only execute a random amount of quests with this minimum"))
+                .build();
+
+        CommandFlag<Integer> maxRandomFlag = CommandFlag
+                .newBuilder("maxRandom")
+                .withArgument(IntegerArgument.<CommandSender>newBuilder("maxRandom").asOptionalWithDefault(1).withMin(1))
+                .withDescription(ArgumentDescription.of("If this is set, it will only execute a random amount of quests with this maximum"))
+                .build();
+
         manager.command(builder
                 .argument(MultipleActionsSelector.of("Actions", main), ArgumentDescription.of("Name of the actions which will be executed"))
                 .argument(IntegerArgument.<CommandSender>newBuilder("amount").asOptionalWithDefault(1).withMin(1), ArgumentDescription.of("Amount of times the action will be executed."))
@@ -51,19 +68,58 @@ public class ActionAction extends Action {
                         manager.flagBuilder("ignoreConditions")
                                 .withDescription(ArgumentDescription.of("Ignores action conditions"))
                 )
+                .flag(minRandomFlag)
+                .flag(maxRandomFlag)
+                .flag(
+                        manager.flagBuilder("onlyCountForRandomIfConditionsFulfilled")
+                                .withDescription(ArgumentDescription.of("Does not count an action to the min or max random counter if its conditions are not fulfilled, if this flag is set"))
+                )
                 .handler((context) -> {
                     ArrayList<Action> foundActions = context.get("Actions");
                     int amount = context.get("amount");
                     final boolean ignoreConditions = context.flags().isPresent("ignoreConditions");
 
+                    final int minRandom = context.flags().getValue(minRandomFlag, -1);
+                    final int maxRandom = context.flags().getValue(maxRandomFlag, -1);
+                    final boolean onlyCountForRandomIfConditionsFulfilled = context.flags().isPresent("onlyCountForRandomIfConditionsFulfilled");
+
+
                     ActionAction actionAction = new ActionAction(main);
                     actionAction.setActions(foundActions);
                     actionAction.setAmount(amount);
+
+                    actionAction.setMinRandom(minRandom);
+                    actionAction.setMaxRandom(maxRandom);
+                    actionAction.setOnlyCountForRandomIfConditionsFulfilled(onlyCountForRandomIfConditionsFulfilled);
 
                     actionAction.setIgnoreConditions(ignoreConditions);
 
                     main.getActionManager().addAction(actionAction, context);
                 }));
+    }
+
+    public int getMaxRandom() {
+        return maxRandom;
+    }
+
+    public void setMaxRandom(int maxRandom) {
+        this.maxRandom = maxRandom;
+    }
+
+    public int getMinRandom() {
+        return minRandom;
+    }
+
+    public void setMinRandom(int minRandom) {
+        this.minRandom = minRandom;
+    }
+
+    public boolean isOnlyCountForRandomIfConditionsFulfilled() {
+        return onlyCountForRandomIfConditionsFulfilled;
+    }
+
+    public void setOnlyCountForRandomIfConditionsFulfilled(boolean onlyCountForRandomIfConditionsFulfilled) {
+        this.onlyCountForRandomIfConditionsFulfilled = onlyCountForRandomIfConditionsFulfilled;
     }
 
     public final ArrayList<Action> getActions() {
@@ -99,25 +155,59 @@ public class ActionAction extends Action {
 
         main.getLogManager().debug("Executing Action action. IsIgnoreConditions: " + isIgnoreConditions());
 
-        for(final Action action : getActions()){
-            if (!isIgnoreConditions()) {
-                if (amount == 1) {
-                    main.getActionManager().executeActionWithConditions(action, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), null, true, objects);
-                } else {
-                    for (int i = 0; i < amount; i++) {
+        if(minRandom == -1 && maxRandom == -1){
+            for(final Action action : getActions()){
+                if (!isIgnoreConditions()) {
+                    if (amount == 1) {
                         main.getActionManager().executeActionWithConditions(action, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), null, true, objects);
+                    } else {
+                        for (int i = 0; i < amount; i++) {
+                            main.getActionManager().executeActionWithConditions(action, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), null, true, objects);
+                        }
                     }
-                }
-            } else {
-                if (amount == 1) {
-                    action.execute(player, objects);
                 } else {
-                    for (int i = 0; i < amount; i++) {
+                    if (amount == 1) {
                         action.execute(player, objects);
+                    } else {
+                        for (int i = 0; i < amount; i++) {
+                            action.execute(player, objects);
+                        }
                     }
                 }
             }
+        }else{
+            Collections.shuffle(getActions());
+            Random r = new Random();
+            int low = getMinRandom();
+            int high = getMaxRandom();
+            int amountOfActionsToExecute = r.nextInt(high-low) + low;
+
+            for (int a = 0; a < amount; a++) {
+                for(int i=0; i<=amountOfActionsToExecute-1; i++){
+                    if(i >= getActions().size()){
+                        break;
+                    }
+                    final Action actionToExecute = getActions().get(i);
+
+                    if(!isIgnoreConditions() && isOnlyCountForRandomIfConditionsFulfilled()){
+                        for(Condition condition : actionToExecute.getConditions()){
+                            if(!condition.check(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId())).isBlank()){
+                                amountOfActionsToExecute++;
+                                continue;
+                            }
+                        }
+                        actionToExecute.execute(player, objects);
+                    }else if (!isIgnoreConditions()) {
+                        main.getActionManager().executeActionWithConditions(actionToExecute, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), null, true, objects);
+                    } else {
+                        actionToExecute.execute(player, objects);
+                    }
+                }
+            }
+
         }
+
+
 
     }
 
@@ -134,6 +224,11 @@ public class ActionAction extends Action {
         }
         configuration.set(initialPath + ".specifics.amount", getAmount());
         configuration.set(initialPath + ".specifics.ignoreConditions", isIgnoreConditions());
+
+        configuration.set(initialPath + ".specifics.minRandom", getMinRandom());
+        configuration.set(initialPath + ".specifics.maxRandom", getMaxRandom());
+        configuration.set(initialPath + ".specifics.onlyCountForRandomIfConditionsFulfilled", isOnlyCountForRandomIfConditionsFulfilled());
+
     }
 
     @Override
@@ -163,6 +258,10 @@ public class ActionAction extends Action {
 
         this.amount = configuration.getInt(initialPath + ".specifics.amount", 1);
         this.ignoreConditions = configuration.getBoolean(initialPath + ".specifics.ignoreConditions", false);
+
+        this.minRandom = configuration.getInt(initialPath + ".specifics.minRandom", -1);
+        this.maxRandom = configuration.getInt(initialPath + ".specifics.maxRandom", -1);
+        this.onlyCountForRandomIfConditionsFulfilled = configuration.getBoolean(initialPath + ".specifics.onlyCountForRandomIfConditionsFulfilled", false);
 
     }
 
