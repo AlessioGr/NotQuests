@@ -117,6 +117,8 @@ chat:
         base: '    <veryUnimportant>└─ <unimportant>Jongkok <main>%AMOUNTOFSNEAKS%</main> kali'
       smelt:
         base: '    <veryUnimportant>└─ <unimportant>Bakar Item: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+      openBuriedTreasure:
+        base: '    <veryUnimportant>└─ <unimportant>Open buried treasures'
       townyReachResidentCount:
         base: '    <veryUnimportant>└─ <unimportant>Resident yang dicapai: <main>%AMOUNT%'
       townyNationReachTownCount:

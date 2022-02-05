@@ -117,6 +117,8 @@ chat:
         base: '    <veryUnimportant>└─ <unimportant>Skradaj się <main>%AMOUNTOFSNEAKS%</main> razy'
       smelt:
         base: '    <veryUnimportant>└─ <unimportant>Przetop Przedmioty: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+      openBuriedTreasure:
+        base: '    <veryUnimportant>└─ <unimportant>Open buried treasures'
       townyReachResidentCount:
         base: '    <veryUnimportant>└─ <unimportant>Osiągnij ilość mieszkańców: <main>%AMOUNT%'
       townyNationReachTownCount:

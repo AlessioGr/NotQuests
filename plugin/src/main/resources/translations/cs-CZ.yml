@@ -111,6 +111,8 @@ chat:
         base: '    <veryUnimportant>└─ <unimportant>Sneak <main>%AMOUNTOFSNEAKS%</main> times'
       smelt:
         base: '    <DARK_GRAY>└─ <GRAY>Itemy k roztavení : <WHITE>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+      openBuriedTreasure:
+        base: '    <veryUnimportant>└─ <unimportant>Open buried treasures'
       townyReachResidentCount:
         base: '    <DARK_GRAY>└─ <GRAY>Dosáhnout residentního počtu: <WHITE>%AMOUNT%'
       townyNationReachTownCount:

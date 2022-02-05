@@ -18,8 +18,8 @@ chat:
   quest-completed-rewards-prefix: '    <highlight>Phần thưởng:'
   quest-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
   quest-completed-rewards-suffix: <EMPTY>
-  quest-not-all-requirements-fulfilled: '<negative>You do not fulfill all the requirements this quest needs! Requirement still needed:'
-  action-not-all-conditions-fulfilled: '<negative>You do not fulfill all the conditions this action needs! Conditions still needed:'
+  quest-not-all-requirements-fulfilled: '<negative>Bạn không đáp ứng tất cả các yêu cầu mà nhiệm vụ này cần! Yêu cầu:'
+  action-not-all-conditions-fulfilled: '<negative>Bạn không đáp ứng tất cả các điều kiện mà hành động này cần! Các điều kiện cần:'
   missing-quest-description: <warn>Nhiệm vụ chưa có mô tả.
   objectives-label-after-quest-accepting: 'Mục Tiêu <main>:'
   questpoints:
@@ -59,8 +59,8 @@ chat:
     progress: '   <unimportant>Tiến Trình: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
     successfully-completed: |2
 
-      <CENTER><success>[Objective Completed]
-      <CENTER><highlight><bold>%OBJECTIVENAME%</bold> <RESET><main>(%QUESTNAME%)
+      <CENTER><success>[Mục tiêu đã hoàn thành]
+      <CENTER><highlight><bold>%OBJECTIVENAME%</bold><RESET><main>(%QUESTNAME%)
       <EMPTY>
     successfully-completed-rewards-prefix: '    <highlight>Phần thưởng:'
     successfully-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
@@ -78,11 +78,11 @@ chat:
         base: '    <veryUnimportant>└─ <unimportant>Chế Tạo Vật Phẩm: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
         base: '    <unimportant>Giao Vật Phẩm: <main>%ITEMTODELIVERTYPE% %(%%ITEMTODELIVERNAME%%)%'
-        deliver-to-npc: '      <GRAY>Deliver it to <WHITE>%NPCNAME%'
-        deliver-to-npc-not-available: '      <GRAY>The delivery NPC is currently not available!'
-        deliver-to-npc-citizens-not-found: '    <RED>Error: Citizens plugin not installed. Contact an admin.'
+        deliver-to-npc: '      <GRAY>Giao nó cho<WHITE>%NPCNAME%'
+        deliver-to-npc-not-available: '      <GRAY>NPC giao hàng hiện không có sẵn!'
+        deliver-to-npc-citizens-not-found: '    <RED>Lỗi plugin: Citizens chưa tải. Hãy nói với ban quản trị.'
         deliver-to-armorstand: '    <GRAY>Deliver it to <WHITE>%ARMORSTANDNAME%'
-        deliver-to-armorstand-not-available: '    <GRAY>The target Armor Stand is currently not available!'
+        deliver-to-armorstand-not-available: '    <GRAY>Bệ Giáp hiện không có sẵn!'
       escortNPC:
         base: '    <unimportant>Đi Theo <main>%NPCNAME% <unimportant> Đến <main>%DESTINATIONNPCNAME%'
       killMobs:
@@ -111,6 +111,8 @@ chat:
         base: '    <veryUnimportant>└─<unimportant>Rón rén<main>%AMOUNTOFSNEAKS%</main>lần'
       smelt:
         base: '    <veryUnimportant>└─ <unimportant>Nung Vật Phẩm: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+      openBuriedTreasure:
+        base: '    <veryUnimportant>└─ <unimportant>Mở kho báu bị chôn vùi'
       townyReachResidentCount:
         base: '    <veryUnimportant>└─ <unimportant>Số Lượng Thành Viên Thị Trấn Đạt Đến: <main>%AMOUNT%'
       townyNationReachTownCount:
@@ -122,9 +124,9 @@ chat:
       ProjectKorraUseAbility:
         base: '    <veryUnimportant>└─<unimportant>Dùng Ability:<main>%ABILITY%'
       BetonQuestCompleteObjective:
-        base: '    <veryUnimportant>└─ <unimportant>Finish Objective: <main>%BETONQUESTOBJECTIVENAME%'
+        base: '    <veryUnimportant>└─ <unimportant>Hoàn thành Mục tiêu:<main>%BETONQUESTOBJECTIVENAME%'
       ultimateJobsReachJobLevel:
-        base: '    <veryUnimportant>└─ <unimportant>Reach job level <main>%AMOUNT%</main> with job <main>%JOBID%'
+        base: '    <veryUnimportant>└─ <unimportant>Đạt cấp độ nghề đến<main>%AMOUNT%</main>với nghề <main>%JOBID%'
   conditions:
     boolean:
       not-fulfilled: "<warn>Following needs to be %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."
