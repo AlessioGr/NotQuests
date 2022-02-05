@@ -177,10 +177,10 @@ public class ActionAction extends Action {
             }
         }else{
             Collections.shuffle(getActions());
-            Random r = new Random();
-            int low = getMinRandom();
-            int high = getMaxRandom();
-            int amountOfActionsToExecute = r.nextInt(high-low) + low;
+            final Random r = new Random();
+            final int low = getMinRandom();
+            final int high = getMaxRandom();
+            int amountOfActionsToExecute = (low==high) ? low : r.nextInt(high+1-low) + low;
 
             for (int a = 0; a < amount; a++) {
                 for(int i=0; i<=amountOfActionsToExecute-1; i++){
