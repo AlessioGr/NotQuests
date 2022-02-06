@@ -1,7 +1,9 @@
 package rocks.gravili.notquests.paper.managers.integrations;
 
+
+import com.willfp.ecobosses.EcoBossesPlugin;
+import com.willfp.ecobosses.bosses.Bosses;
 import com.willfp.ecobosses.bosses.EcoBoss;
-import com.willfp.ecobosses.bosses.EcoBosses;
 import org.bukkit.Location;
 import rocks.gravili.notquests.paper.NotQuests;
 
@@ -11,18 +13,21 @@ import java.util.Collection;
 public class EcoBossesManager {
     private final NotQuests main;
     private final ArrayList<String> bossNames;
+    private final EcoBossesPlugin ecoBossesPlugin;
 
     public EcoBossesManager(final NotQuests main) {
         this.main = main;
+        ecoBossesPlugin = EcoBossesPlugin.getInstance();
+
         bossNames = new ArrayList<>();
 
 
         try{
-            for(EcoBoss ecoBoss : EcoBosses.values()){
+            for(EcoBoss ecoBoss : Bosses.values()){
                 try{
                     //bossNames.add(ecoBoss.getId());
                     //main.getLogManager().info("Registered EcoBoss: <highlight>" + ecoBoss.getId());
-                    final String id = (String) ecoBoss.getClass().getMethod("getId").invoke(ecoBoss);
+                    final String id = ecoBoss.getId();
 
                     bossNames.add(id);
                     main.getLogManager().info("Registered EcoBoss: <highlight>" + id);
@@ -33,7 +38,7 @@ public class EcoBossesManager {
                 }
 
             }
-            main.getLogManager().info("Registered <highlight>" + EcoBosses.values().size() + "</highlight> EcoBosses.");
+            main.getLogManager().info("Registered <highlight>" + Bosses.values().size() + "</highlight> EcoBosses.");
 
         }catch (Exception ignored){
             main.getLogManager().warn("Failed to add EcoBosses mobs. Are you on the latest version?");
@@ -46,11 +51,11 @@ public class EcoBossesManager {
     }
 
     public final boolean isEcoBoss(final String bossToSpawnType) {
-        return EcoBosses.getByName(bossToSpawnType) != null;
+        return Bosses.getByID(bossToSpawnType) != null;
     }
 
     public void spawnMob(String mobToSpawnType, Location location, int amount) {
-        EcoBoss foundEcoBoss = EcoBosses.getByName(mobToSpawnType);
+        EcoBoss foundEcoBoss = Bosses.getByID(mobToSpawnType);
         if (foundEcoBoss == null) {
             main.getLogManager().warn("Tried to spawn EcoBoss, but the spawn " + mobToSpawnType + " was not found.");
             return;

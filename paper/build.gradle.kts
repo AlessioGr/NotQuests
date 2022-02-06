@@ -189,9 +189,9 @@ dependencies {
 
     implementation("commons-io:commons-io:2.11.0")
 
-    compileOnly("com.willfp:EcoBosses:6.8.0")
-    //compileOnly(files("libs/EcoBosses-v7.0.0.jar"))
-    compileOnly("com.willfp:eco:6.18.3")
+    //compileOnly("com.willfp:EcoBosses:8.0.0")
+    compileOnly(files("libs/EcoBosses-v8.0.1.jar"))
+    compileOnly("com.willfp:eco:6.24.1")
 
     implementation("com.github.Redempt:Crunch:1.1.1")
 
