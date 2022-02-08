@@ -37,6 +37,10 @@ public abstract class Condition {
     private Objective objective;
     private boolean negated = false;
     private Category category;
+
+    /**
+     * Custom Condition description
+     */
     private String description = "";
     private int conditionID = -1;
 
@@ -118,13 +122,17 @@ public abstract class Condition {
     protected abstract String checkInternally(final QuestPlayer questPlayer);
 
     public String check(final QuestPlayer questPlayer){
-        String result = checkInternally(questPlayer);
+        final String result = checkInternally(questPlayer);
 
         if(!isNegated()){
-            if(description.isBlank()){
-                return result;
-            }else {
-                return "<YELLOW>" + description;
+            if(result.isBlank()){
+                return "";
+            }else{
+                if(description.isBlank()){
+                    return result;
+                }else {
+                    return "<YELLOW>" + description;
+                }
             }
         }else{
             if(result.isBlank()){

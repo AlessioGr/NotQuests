@@ -4,7 +4,6 @@ plugins {
     `java-library`
     `maven-publish`
     id ("com.github.johnrengelman.shadow")
-    id("io.freefair.lombok") version "6.3.0"
     id("io.papermc.paperweight.userdev")
     id("xyz.jpenilla.run-paper")
 }
@@ -203,7 +202,7 @@ dependencies {
 
     implementation("com.zaxxer:HikariCP:5.0.1")
 
-    compileOnly("com.github.war-systems:UltimateJobs:0.2.6")
+    compileOnly("com.github.war-systems:UltimateJobs:0.2.7")
 
 
 }

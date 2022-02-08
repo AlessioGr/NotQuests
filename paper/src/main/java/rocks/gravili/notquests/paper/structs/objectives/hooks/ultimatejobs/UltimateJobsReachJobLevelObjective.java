@@ -139,7 +139,7 @@ public class UltimateJobsReachJobLevelObjective extends Objective {
             return;
         }
 
-        JobsPlayer jobsPlayer = UltimateJobs.getPlugin().getPlayerManager().getJonPlayers().get(activeObjective.getQuestPlayer().getUUID().toString());
+        JobsPlayer jobsPlayer = UltimateJobs.getPlugin().getPlayerManager().getOnlineJobPlayers().get(activeObjective.getQuestPlayer().getUUID().toString());
         Job job = UltimateJobs.getPlugin().getAPI().isJobFromConfigID(jobID);
 
         if(jobsPlayer == null || job == null){
