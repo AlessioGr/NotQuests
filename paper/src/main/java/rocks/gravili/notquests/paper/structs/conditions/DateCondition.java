@@ -13,10 +13,7 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.util.*;
 
 public class DateCondition extends Condition {
 
@@ -82,20 +79,18 @@ public class DateCondition extends Condition {
                 .build();
 
         final CommandFlag<String> timeZone = CommandFlag
-                .newBuilder("seconds")
-                .withArgument(StringArgument.<CommandSender>newBuilder("timezone").withSuggestionsProvider(
+                .newBuilder("timeZone")
+                .withArgument(StringArgument.<CommandSender>newBuilder("timeZone").withSuggestionsProvider(
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
                             main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[timezone]", "");
 
                             final ArrayList<String> completions = new ArrayList<>();
-                            for(final String timeZoneString : TimeZone.getAvailableIDs()){
-                                completions.add(timeZoneString);
-                            }
+                            completions.addAll(Arrays.asList(TimeZone.getAvailableIDs()));
                             return completions;
                         }
                 ).single().build())
-                .withDescription(ArgumentDescription.of("Enter seconds."))
+                .withDescription(ArgumentDescription.of("Enter time zone."))
                 .build();
 
 
