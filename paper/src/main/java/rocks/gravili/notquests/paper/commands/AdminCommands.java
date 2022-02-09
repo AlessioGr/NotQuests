@@ -681,7 +681,7 @@ public class AdminCommands {
                 .meta(CommandMeta.DESCRIPTION, "Creates a new category.")
                 .handler((context) -> {
                     String fullNewCategoryIdentifier = context.get("Category Name");
-                    fullNewCategoryIdentifier = fullNewCategoryIdentifier.replaceAll("[^a-zA-Z0-9\\.\\-]", "_");
+                    fullNewCategoryIdentifier = fullNewCategoryIdentifier.replaceAll("[^0-9a-zA-Z-._]", "_");
 
                     if(main.getDataManager().getCategory(fullNewCategoryIdentifier) != null){
                         context.getSender().sendMessage(main.parse(
