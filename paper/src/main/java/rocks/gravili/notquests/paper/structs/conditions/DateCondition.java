@@ -85,9 +85,7 @@ public class DateCondition extends Condition {
                             final List<String> allArgs = context.getRawInput();
                             main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[timezone]", "");
 
-                            final ArrayList<String> completions = new ArrayList<>();
-                            completions.addAll(Arrays.asList(TimeZone.getAvailableIDs()));
-                            return completions;
+                            return new ArrayList<String>(Arrays.asList(TimeZone.getAvailableIDs()));
                         }
                 ).single().build())
                 .withDescription(ArgumentDescription.of("Enter time zone."))
