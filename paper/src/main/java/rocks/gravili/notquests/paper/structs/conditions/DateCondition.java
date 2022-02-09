@@ -260,7 +260,15 @@ public class DateCondition extends Condition {
 
     @Override
     public void deserializeFromSingleLineString(ArrayList<String> arguments) {
-        //minTime = Integer.parseInt(arguments.get(0));
+        operation = arguments.get(0);
+        year = Integer.parseInt(arguments.get(1));
+        month = Integer.parseInt(arguments.get(2));
+        day = Integer.parseInt(arguments.get(3));
+        hours = Integer.parseInt(arguments.get(4));
+        minutes = Integer.parseInt(arguments.get(5));
+        seconds = Integer.parseInt(arguments.get(6));
+
+        timeZone = arguments.get(7).isBlank() ? null : TimeZone.getTimeZone(arguments.get(7));
         //maxTime = Integer.parseInt(arguments.get(1));
     }
 
