@@ -26,6 +26,11 @@ public class DateCondition extends Condition {
     private int hours = -1;
     private int minutes = -1;
     private int seconds = -1;
+    private String operation = "";
+
+    private TimeZone timeZone = null;
+
+
 
     public String getOperation() {
         return operation;
@@ -34,10 +39,6 @@ public class DateCondition extends Condition {
     public void setOperation(String operation) {
         this.operation = operation;
     }
-
-    private String operation = "";
-
-    private TimeZone timeZone = null;
 
     public DateCondition(final NotQuests main) {
         super(main);
@@ -224,7 +225,7 @@ public class DateCondition extends Condition {
         configuration.set(initialPath + ".specifics.minutes", getMinutes());
         configuration.set(initialPath + ".specifics.seconds", getSeconds());
         configuration.set(initialPath + ".specifics.operation", getOperation());
-        configuration.set(initialPath + ".specifics.timeZone", getTimeZone());
+        configuration.set(initialPath + ".specifics.timeZone", getTimeZone() != null ? getTimeZone().getID() : null);
 
 
     }
