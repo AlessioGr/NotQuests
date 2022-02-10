@@ -89,9 +89,10 @@ public class AdminConversationCommands {
                 .flag(main.getCommandManager().categoryFlag)
                 .meta(CommandMeta.DESCRIPTION, "Creates a new conversation file.")
                 .handler((context) -> {
-                    final String conversationName = context.get("Conversation Name");
+                    String conversationName = context.get("Conversation Name");
                     final boolean demo = context.flags().isPresent("demo");
 
+                    conversationName = conversationName.replaceAll("[^0-9a-zA-Z-._]", "_");
 
                     final Conversation existingConversation = main.getConversationManager().getConversation(conversationName);
 
