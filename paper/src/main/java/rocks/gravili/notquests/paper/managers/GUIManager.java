@@ -598,7 +598,7 @@ public class GUIManager {
                     ArrayList<ItemStackElement<ChestPane>> list = new ArrayList<>() {
                         {
                             int count = 1;
-                            for (final Quest quest : selectedQuests) {
+                            for (final Quest quest : main.getQuestManager().getQuestsFromListWithVisibilityEvaluations(questPlayer, selectedQuests)) {
                                 final ItemStack materialToUse = quest.getTakeItem();
 
 
@@ -899,7 +899,7 @@ public class GUIManager {
             ArrayList<ItemStackElement<ChestPane>> list = new ArrayList<>() {
                 {
                     int count = 1;
-                    for (final Quest quest : main.getQuestManager().getAllQuests()) {
+                    for (final Quest quest : main.getQuestManager().getAllQuestsWithVisibilityEvaluations(questPlayer)) {
                         if (quest.isTakeEnabled() && quest.getCategory().getCategoryFullName().equalsIgnoreCase(category.getCategoryFullName())) {
                             final ItemStack materialToUse = quest.getTakeItem();
 

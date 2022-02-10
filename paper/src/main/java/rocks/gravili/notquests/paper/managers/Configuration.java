@@ -139,6 +139,14 @@ public class Configuration {
     public boolean showQuestItemAmount = false;
     public boolean showObjectiveItemAmount = true;
 
+
+
+    public boolean questVisibilityEvaluationMaxAccepts = false;
+    public boolean questVisibilityEvaluationAlreadyAccepted = true;
+    public boolean questVisibilityEvaluationAcceptCooldown = false;
+    public boolean questVisibilityEvaluationConditions = false;
+
+
     //Visual
     public boolean visualTitleQuestSuccessfullyAccepted_enabled = true;
     public boolean visualTitleQuestFailed_enabled = true;
@@ -171,6 +179,14 @@ public class Configuration {
         return beamMode;
     }
 
+    public boolean isQuestVisibilityEvaluationAcceptCooldown() {
+        return questVisibilityEvaluationAcceptCooldown;
+    }
+
+    public void setQuestVisibilityEvaluationAcceptCooldown(boolean questVisibilityEvaluationAcceptCooldown) {
+        this.questVisibilityEvaluationAcceptCooldown = questVisibilityEvaluationAcceptCooldown;
+    }
+
     public boolean isVisualObjectiveTrackingShowProgressInActionBar() {
         return visualObjectiveTrackingShowProgressInActionBar;
     }
@@ -195,6 +211,14 @@ public class Configuration {
         this.visualObjectiveTrackingShowProgressInBossBarIfObjectiveCompleted = visualObjectiveTrackingShowProgressInBossBarIfObjectiveCompleted;
     }
 
+    public boolean isQuestVisibilityEvaluationConditions() {
+        return questVisibilityEvaluationConditions;
+    }
+
+    public void setQuestVisibilityEvaluationConditions(boolean questVisibilityEvaluationConditions) {
+        this.questVisibilityEvaluationConditions = questVisibilityEvaluationConditions;
+    }
+
     public int getVisualObjectiveTrackingBossBarTimer() {
         return visualObjectiveTrackingBossBarTimer;
     }
@@ -209,6 +233,14 @@ public class Configuration {
 
     public void setConfigurationVersion(String configurationVersion) {
         this.configurationVersion = configurationVersion;
+    }
+
+    public boolean isQuestVisibilityEvaluationMaxAccepts() {
+        return questVisibilityEvaluationMaxAccepts;
+    }
+
+    public void setQuestVisibilityEvaluationMaxAccepts(boolean questVisibilityEvaluationMaxAccepts) {
+        this.questVisibilityEvaluationMaxAccepts = questVisibilityEvaluationMaxAccepts;
     }
 
     public boolean isDebug() {
@@ -250,7 +282,13 @@ public class Configuration {
     public void setDatabasePassword(String databasePassword) {
         this.databasePassword = databasePassword;
     }
+    public boolean isQuestVisibilityEvaluationAlreadyAccepted() {
+        return questVisibilityEvaluationAlreadyAccepted;
+    }
 
+    public void setQuestVisibilityEvaluationAlreadyAccepted(boolean questVisibilityEvaluationAlreadyAccepted) {
+        this.questVisibilityEvaluationAlreadyAccepted = questVisibilityEvaluationAlreadyAccepted;
+    }
     public int getDatabasePort() {
         return databasePort;
     }

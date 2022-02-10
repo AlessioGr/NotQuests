@@ -38,10 +38,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
-import rocks.gravili.notquests.paper.structs.ActiveObjective;
-import rocks.gravili.notquests.paper.structs.ActiveQuest;
-import rocks.gravili.notquests.paper.structs.Quest;
-import rocks.gravili.notquests.paper.structs.QuestPlayer;
+import rocks.gravili.notquests.paper.structs.*;
 import rocks.gravili.notquests.paper.structs.actions.*;
 import rocks.gravili.notquests.paper.structs.conditions.*;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
@@ -49,6 +46,7 @@ import rocks.gravili.notquests.paper.structs.triggers.Trigger;
 
 import java.util.ArrayList;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 
 public class QuestManager {
@@ -1470,4 +1468,62 @@ public class QuestManager {
         return this.debugEnabledPlayers.contains(player);
     }
 
+    public final ArrayList<Quest> getAllQuestsWithVisibilityEvaluations(final QuestPlayer questPlayer) {
+        return getQuestsFromListWithVisibilityEvaluations(questPlayer, getAllQuests());
+    }
+
+    public final ArrayList<Quest> getQuestsFromListWithVisibilityEvaluations(final QuestPlayer questPlayer, final ArrayList<Quest> questsList) {
+        final ArrayList<Quest> evaluatedQuests = new ArrayList<>();
+        questLoop: for(final Quest quest : questsList){
+            if(main.getConfiguration().isQuestVisibilityEvaluationAlreadyAccepted()){
+                for (ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+                    if (activeQuest.getQuest().equals(quest)) {
+                        continue questLoop;
+                    }
+                }
+            }
+
+
+            if(main.getConfiguration().isQuestVisibilityEvaluationMaxAccepts() || main.getConfiguration().isQuestVisibilityEvaluationAcceptCooldown()){
+                int completedAmount = 0;
+
+                long mostRecentAcceptTime = 0;
+                for (CompletedQuest completedQuest : questPlayer.getCompletedQuests()) {
+                    if (completedQuest.getQuest().equals(quest)) {
+                        completedAmount += 1;
+                        if (completedQuest.getTimeCompleted() > mostRecentAcceptTime) {
+                            mostRecentAcceptTime = completedQuest.getTimeCompleted();
+                        }
+                    }
+                }
+
+                if(main.getConfiguration().isQuestVisibilityEvaluationMaxAccepts()) {
+                    if (quest.getMaxAccepts() > -1 && completedAmount >= quest.getMaxAccepts()) {
+                        continue questLoop;
+                    }
+                }
+
+                if(main.getConfiguration().isQuestVisibilityEvaluationAcceptCooldown()) {
+                    final long acceptTimeDifference = System.currentTimeMillis() - mostRecentAcceptTime;
+                    final long acceptTimeDifferenceMinutes = TimeUnit.MILLISECONDS.toMinutes(acceptTimeDifference);
+                    if (acceptTimeDifferenceMinutes < quest.getAcceptCooldown()) {
+                        continue questLoop;
+                    }
+                }
+            }
+
+            if(main.getConfiguration().isQuestVisibilityEvaluationConditions()){
+                for (final Condition condition : quest.getRequirements()) {
+                    if (!condition.check(questPlayer).isBlank()) {
+                        continue questLoop;
+                    }
+                }
+            }
+
+
+            evaluatedQuests.add(quest);
+
+        }
+        return evaluatedQuests;
+    }
 }

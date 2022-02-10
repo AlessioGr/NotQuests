@@ -790,6 +790,24 @@ public class DataManager {
 
 
         //GUI
+        configuration.setQuestVisibilityEvaluationAlreadyAccepted(getGeneralConfigBoolean(
+                "gui.quest-visibility-evaluations.already-accepted.enabled",
+                true
+        ));
+
+        configuration.setQuestVisibilityEvaluationMaxAccepts(getGeneralConfigBoolean(
+                "gui.quest-visibility-evaluations.max-accepts.enabled",
+                true
+        ));
+        configuration.setQuestVisibilityEvaluationAcceptCooldown(getGeneralConfigBoolean(
+                "gui.quest-visibility-evaluations.accept-cooldown.enabled",
+                false
+        ));
+        configuration.setQuestVisibilityEvaluationConditions(getGeneralConfigBoolean(
+                "gui.quest-visibility-evaluations.conditions.enabled",
+                false
+        ));
+
         configuration.setQuestPreviewUseGUI(getGeneralConfigBoolean(
                 "gui.questpreview.enabled",
                 true

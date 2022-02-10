@@ -120,6 +120,15 @@ visual:
       show-time: 10
       show-if-objective-is-completed: false
 gui:
+  quest-visibility-evaluations:
+    already-accepted:
+      enabled: true
+    max-accepts:
+      enabled: true
+    accept-cooldown:
+      enabled: false
+    conditions:
+      enabled: false
   show-quest-item-amount: false
   show-objective-item-amount: true
   wrap-long-words: false
