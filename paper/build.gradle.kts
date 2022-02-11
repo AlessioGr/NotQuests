@@ -202,7 +202,7 @@ dependencies {
 
     implementation("com.zaxxer:HikariCP:5.0.1")
 
-    compileOnly("com.github.war-systems:UltimateJobs:0.2.7")
+    compileOnly("com.github.war-systems:UltimateJobs:0.2.8")
 
 
 }
