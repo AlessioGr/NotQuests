@@ -34,6 +34,7 @@ import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.objectives.hooks.citizens.EscortNPCObjective;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Locale;
 
 public class CitizensManager {
@@ -47,12 +48,15 @@ public class CitizensManager {
         main.getLogManager().info("Registering Citizens nquestgiver trait...");
 
         final ArrayList<TraitInfo> toDeregister = new ArrayList<>();
-        for (final TraitInfo traitInfo : net.citizensnpcs.api.CitizensAPI.getTraitFactory().getRegisteredTraits()) {
+
+
+        for (Iterator<TraitInfo> iterator = net.citizensnpcs.api.CitizensAPI.getTraitFactory().getRegisteredTraits().iterator(); iterator.hasNext();) {
+            final TraitInfo traitInfo = iterator.next();
             if (traitInfo.getTraitName().equals("nquestgiver")) {
                 toDeregister.add(traitInfo);
-
             }
         }
+
         for (final TraitInfo traitInfo : toDeregister) {
             net.citizensnpcs.api.CitizensAPI.getTraitFactory().deregisterTrait(traitInfo);
         }

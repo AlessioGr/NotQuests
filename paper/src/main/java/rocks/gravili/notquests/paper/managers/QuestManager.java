@@ -122,9 +122,18 @@ public class QuestManager {
     }
 
     public void loadQuestsFromConfig() {
-        if (main.getIntegrationsManager().isCitizensEnabled()) {
-            main.getIntegrationsManager().getCitizensManager().registerQuestGiverTrait();
+        try{
+            if (main.getIntegrationsManager().isCitizensEnabled()) {
+                main.getIntegrationsManager().getCitizensManager().registerQuestGiverTrait();
+            }
+        }catch (Exception e){
+            if(main.getConfiguration().isDebug()){
+                e.printStackTrace();
+            }else{
+                main.getLogManager().warn("Citizens threw a random error - I don't know why. You can probably safely ignore this.");
+            }
         }
+
 
         ArrayList<String> categoriesStringList = new ArrayList<>();
         for (final Category category : main.getDataManager().getCategories()) {

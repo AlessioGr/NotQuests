@@ -1355,6 +1355,7 @@ public class DataManager {
                 main.getQuestManager().loadQuestsFromConfig();
 
             } else {
+                main.getLogManager().info("Skipped loading Quests data, because they're already loaded (apparently).");
                /* main.getLogManager().info("Loading Data from existing quests.yml... - reloadData");
                 try {
                     questsConfig = loadYAMLConfiguration(questsConfigFile);
@@ -1362,7 +1363,7 @@ public class DataManager {
                     disablePluginAndSaving("Plugin disabled, because there was an error loading data from quests.yml.", e);
                     return;
                 }
-                main.getQuestManager().loadQuestsFromConfig();*///TODO: Check up on that. Can I just commet it out?
+                main.getQuestManager().loadQuestsFromConfig();*///TODO: Check up on that. Can I just comment it out?
 
             }
 
@@ -1510,6 +1511,7 @@ public class DataManager {
         }
         for (Category category : categories) {
             if (category.getQuestsConfig() == null || category.getQuestsConfig() == null) {
+                main.getLogManager().info("Returned false for already loaded quests due to categories not loaded.");
                 return false;
             }
         }
