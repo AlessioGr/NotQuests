@@ -1484,7 +1484,7 @@ public class QuestManager {
     public final ArrayList<Quest> getQuestsFromListWithVisibilityEvaluations(final QuestPlayer questPlayer, final ArrayList<Quest> questsList) {
         final ArrayList<Quest> evaluatedQuests = new ArrayList<>();
         questLoop: for(final Quest quest : questsList){
-            if(main.getConfiguration().isQuestVisibilityEvaluationAlreadyAccepted()){
+            if(main.getConfiguration().isQuestVisibilityEvaluationAlreadyAccepted() && questPlayer != null){
                 for (ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                     if (activeQuest.getQuest().equals(quest)) {
                         continue questLoop;
@@ -1497,14 +1497,17 @@ public class QuestManager {
                 int completedAmount = 0;
 
                 long mostRecentAcceptTime = 0;
-                for (CompletedQuest completedQuest : questPlayer.getCompletedQuests()) {
-                    if (completedQuest.getQuest().equals(quest)) {
-                        completedAmount += 1;
-                        if (completedQuest.getTimeCompleted() > mostRecentAcceptTime) {
-                            mostRecentAcceptTime = completedQuest.getTimeCompleted();
+                if(questPlayer != null){
+                    for (CompletedQuest completedQuest : questPlayer.getCompletedQuests()) {
+                        if (completedQuest.getQuest().equals(quest)) {
+                            completedAmount += 1;
+                            if (completedQuest.getTimeCompleted() > mostRecentAcceptTime) {
+                                mostRecentAcceptTime = completedQuest.getTimeCompleted();
+                            }
                         }
                     }
                 }
+
 
                 if(main.getConfiguration().isQuestVisibilityEvaluationMaxAccepts()) {
                     if (quest.getMaxAccepts() > -1 && completedAmount >= quest.getMaxAccepts()) {
