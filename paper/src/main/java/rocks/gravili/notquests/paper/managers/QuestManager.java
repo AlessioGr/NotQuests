@@ -1097,11 +1097,11 @@ public class QuestManager {
                 loadNPCData(category);
             }
         } else {
-            main.getLogManager().warn("NotQuests > Tried to load NPC data before quest data was loaded. NotQuests is scheduling another load...");
+            main.getLogManager().info("Tried to load NPC data before quest data was loaded. NotQuests is scheduling another load...");
 
             Bukkit.getScheduler().runTaskLaterAsynchronously(main.getMain(), () -> {
                 if (!main.getDataManager().isAlreadyLoadedNPCs()) {
-                    main.getLogManager().warn("NotQuests > Trying to load NPC quest data again...");
+                    main.getLogManager().info("Trying to load NPC quest data again...");
                     main.getDataManager().loadNPCData();
                 }
             }, 60);
