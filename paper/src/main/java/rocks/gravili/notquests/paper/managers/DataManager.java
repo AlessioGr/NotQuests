@@ -1222,6 +1222,8 @@ public class DataManager {
         main.getLogManager().severe("Plugin, saving and loading has been disabled. Reason: " + reason);
         setSavingEnabled(false);
         setLoadingEnabled(false);
+        disabled = true;
+
         main.getMain().getServer().getPluginManager().disablePlugin(main.getMain());
     }
 
