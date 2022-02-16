@@ -103,6 +103,9 @@ public abstract class Action {
     public abstract void executeInternally(final Player player, Object... objects);
 
     public void execute(final Player player, Object... objects){
+        if(main.getDataManager().isDisabled()){
+            return;
+        }
         executeInternally(player, objects);
     }
 
