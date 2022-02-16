@@ -50,10 +50,9 @@ public class NQPacketListener extends ChannelDuplexHandler {
                 //main.getPacketManager().getPacketInjector().setPacketStuffEnabled(false);
             }
 
-        }else if (msg instanceof ClientboundSectionBlocksUpdatePacket clientboundSectionBlocksUpdatePacket) {
+        }else if (msg instanceof ClientboundSectionBlocksUpdatePacket) {
             //player.sendMessage("ClientboundSectionBlocksUpdatePacket");
 
-            msg = null;
         }
     }
 
@@ -105,7 +104,7 @@ public class NQPacketListener extends ChannelDuplexHandler {
             }
 
             main.getLogManager().debug("Registering chat message with Message: " + MiniMessage.builder().build().serialize(adventureComponent));
-            int toRemove = hist.size() - main.getConversationManager().getMaxChatHistory();
+            final int toRemove = hist.size() - main.getConversationManager().getMaxChatHistory();
             if (toRemove > 0) {
                 //main.getLogManager().log(Level.WARNING, "ToRemove: " + i);
                 hist.subList(0, toRemove).clear();

@@ -1387,13 +1387,20 @@ public class DataManager {
             if (main.getIntegrationsManager().isCitizensEnabled()) {
                 //IF an NPC exist, try to load NPC data.
                 boolean foundNPC = false;
-                for (final NPC ignored : CitizensAPI.getNPCRegistry().sorted()) {
-                    foundNPC = true;
-                    break;
+                try{
+                    for (final NPC ignored : CitizensAPI.getNPCRegistry().sorted()) {
+                        foundNPC = true;
+                        break;
+                    }
+                    if (foundNPC && !isAlreadyLoadedNPCs()) {
+                        loadNPCData();
+                    }
+                }catch (Exception e){
+                    if(main.getConfiguration().isDebug()){
+                        e.printStackTrace();
+                    }
                 }
-                if (foundNPC && !isAlreadyLoadedNPCs()) {
-                    loadNPCData();
-                }
+
             }
 
         }
