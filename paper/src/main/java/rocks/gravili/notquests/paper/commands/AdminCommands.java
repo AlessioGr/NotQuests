@@ -721,6 +721,20 @@ public class AdminCommands {
 
     public void handleDebugCommands() {
         manager.command(builder.literal("debug")
+                .literal("worldInfo")
+                .meta(CommandMeta.DESCRIPTION, "Shows you information about the current world")
+                .senderType(Player.class)
+                .handler((context) -> {
+                    context.getSender().sendMessage(Component.empty());
+                    Player player = (Player) context.getSender();
+                    player.sendMessage(main.parse(
+                            "<main>Current world name: <highlight>" + player.getWorld().getName() + "\n" +
+                            "<main>Current world UUD: <highlight>" + player.getWorld().getUID().toString()
+
+                    ));
+                }));
+
+        manager.command(builder.literal("debug")
                 .literal("testcommand")
                 .meta(CommandMeta.DESCRIPTION, "You can probably ignore this.")
                 .senderType(Player.class)
