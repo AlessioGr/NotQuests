@@ -1838,7 +1838,7 @@ public class DataManager {
                 int counter = 0;
                 for(final String criticalError : criticalErrors){
                     commandSender.sendMessage(main.parse(
-                            "<highlight>" + ++counter + " <warn>" + criticalError
+                            "<highlight>" + ++counter + ". <warn>" + criticalError
                     ));
                 }
             }
@@ -1851,7 +1851,7 @@ public class DataManager {
             ));
             for(final String error : main.getLogManager().getErrorLogs()){
                 commandSender.sendMessage(main.parse(
-                        "<highlight>" + ++counter + " <warn>" + error
+                        "<highlight>" + ++counter + ". <warn>" + error
                 ));
             }
         }
@@ -1864,7 +1864,7 @@ public class DataManager {
             ));
             for(final String warning : main.getLogManager().getWarnLogs()){
                 commandSender.sendMessage(main.parse(
-                        "<highlight>" + ++counter + " <warn>" + warning
+                        "<highlight>" + ++counter + ". <warn>" + warning
                 ));
             }
         }
