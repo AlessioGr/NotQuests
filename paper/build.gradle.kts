@@ -114,7 +114,7 @@ dependencies {
     paperDevBundle("1.18.1-R0.1-SNAPSHOT")
     //compileOnly("io.papermc.paper:paper-api:1.18.1-R0.1-SNAPSHOT!!")
 
-    implementation("org.bstats:bstats-bukkit:2.2.1")
+    implementation("org.bstats:bstats-bukkit:3.0.0")
     //implementation("de.themoep:inventorygui:1.5-SNAPSHOT")
 
     compileOnly("net.citizensnpcs:citizens-main:2.0.29-SNAPSHOT")
@@ -137,7 +137,7 @@ dependencies {
 
     compileOnly("com.github.TheBusyBiscuit:Slimefun4:RC-30")
 
-    compileOnly("net.luckperms:api:5.3")
+    compileOnly("net.luckperms:api:5.4")
 
     //compileOnly "com.github.NEZNAMY:TAB:2.9.2"
     compileOnly("com.github.TownyAdvanced:Towny:0.97.5.0")
@@ -202,7 +202,7 @@ dependencies {
 
     implementation("com.zaxxer:HikariCP:5.0.1")
 
-    compileOnly("com.github.war-systems:UltimateJobs:0.2.8")
+    compileOnly("com.github.war-systems:UltimateJobs:0.2.9")
 
 
 }

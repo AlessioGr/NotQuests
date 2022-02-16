@@ -98,6 +98,12 @@ repositories {
         }
     }
 
+    maven("https://repo.incendo.org/content/repositories/snapshots"){
+        content {
+            includeGroup("cloud.commandframework")
+        }
+    }
+
     //mavenLocal()
 
 }
@@ -108,12 +114,12 @@ repositories {
 dependencies {
     //implementation project(':common')
 
-    implementation("org.bstats:bstats-bukkit:2.2.1")
+    implementation("org.bstats:bstats-bukkit:3.0.0")
     implementation("de.themoep:inventorygui:1.5-SNAPSHOT")
 
     compileOnly("org.spigotmc:spigot-api:1.18.1-R0.1-SNAPSHOT")
     compileOnly("net.citizensnpcs:citizens-main:2.0.29-SNAPSHOT")
-    compileOnly("me.clip:placeholderapi:2.11.0")
+    compileOnly("me.clip:placeholderapi:2.11.1")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7")
 
 
@@ -128,9 +134,9 @@ dependencies {
     compileOnly("com.sk89q.worldedit:worldedit-core:7.3.0-SNAPSHOT")
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.3.0-SNAPSHOT")
 
-    compileOnly("com.github.TheBusyBiscuit:Slimefun4:RC-29")
+    compileOnly("com.github.TheBusyBiscuit:Slimefun4:RC-30")
 
-    compileOnly("net.luckperms:api:5.3")
+    compileOnly("net.luckperms:api:5.4")
 
     //compileOnly "com.github.NEZNAMY:TAB:2.9.2"
     compileOnly("com.github.TownyAdvanced:Towny:0.97.5.0")
@@ -139,12 +145,15 @@ dependencies {
 
 
     //Shaded
-    implementation("net.kyori:adventure-text-minimessage:4.10.0-SNAPSHOT")
+    implementation("net.kyori:adventure-text-minimessage:4.10.0-20220207.012501-47") {
+        exclude(group = "net.kyori", module = "adventure-api")
+        exclude(group = "net.kyori", module = "adventure-bom")
+    }
     implementation("net.kyori:adventure-platform-bukkit:4.0.1")
 
     //CloudCommands
-    implementation("cloud.commandframework:cloud-paper:1.6.1")
-    implementation("cloud.commandframework:cloud-minecraft-extras:1.6.1")
+    implementation("cloud.commandframework:cloud-paper:1.7.0-SNAPSHOT")
+    implementation("cloud.commandframework:cloud-minecraft-extras:1.7.0-SNAPSHOT")
     //Else it errors:
     implementation("io.leangen.geantyref:geantyref:1.3.13")
 
