@@ -47,7 +47,7 @@ public class GUIManager {
 
     public void showMainQuestsGUI(QuestPlayer questPlayer, Player player) {
         if(main.getDataManager().isDisabled()){
-            player.sendMessage(main.parse("<error>Error - NotQuests is disabled. This usually happens when something goes wrong during loading any data from not quests (usually a faulty quest configuration). NotQuests does this to protect itself from data loss. Please report this to the server owner and tell him to check the console for any errors BEFORE the 'notquests has been disabled' message."));
+            main.getDataManager().sendPluginDisabledMessage(player);
             return;
         }
         mainInterface.open(PlayerViewer.of(player), HashMapInterfaceArguments.with(ArgumentKey.of("player", Player.class), player).with(ArgumentKey.of("questPlayer", QuestPlayer.class), questPlayer).build());
@@ -55,7 +55,7 @@ public class GUIManager {
 
     public void showPreviewQuestGUI(QuestPlayer questPlayer, Player player, final Quest quest) {
         if(main.getDataManager().isDisabled()){
-            player.sendMessage(main.parse("<error>Error - NotQuests is disabled. This usually happens when something goes wrong during loading any data from not quests (usually a faulty quest configuration). NotQuests does this to protect itself from data loss. Please report this to the server owner and tell him to check the console for any errors BEFORE the 'notquests has been disabled' message."));
+            main.getDataManager().sendPluginDisabledMessage(player);
             return;
         }
         previewQuestInterface.open(PlayerViewer.of(player), HashMapInterfaceArguments
@@ -65,7 +65,7 @@ public class GUIManager {
     }
     public void showAbortQuestGUI(QuestPlayer questPlayer, Player player, final ActiveQuest activeQuest) {
         if(main.getDataManager().isDisabled()){
-            player.sendMessage(main.parse("<error>Error - NotQuests is disabled. This usually happens when something goes wrong during loading any data from not quests (usually a faulty quest configuration). NotQuests does this to protect itself from data loss. Please report this to the server owner and tell him to check the console for any errors BEFORE the 'notquests has been disabled' message."));
+            main.getDataManager().sendPluginDisabledMessage(player);
             return;
         }
         abortQuestInterface.open(PlayerViewer.of(player), HashMapInterfaceArguments
@@ -75,7 +75,7 @@ public class GUIManager {
     }
     public void showQuestProgressGUI(QuestPlayer questPlayer, Player player, final ActiveQuest activeQuest) {
         if(main.getDataManager().isDisabled()){
-            player.sendMessage(main.parse("<error>Error - NotQuests is disabled. This usually happens when something goes wrong during loading any data from not quests (usually a faulty quest configuration). NotQuests does this to protect itself from data loss. Please report this to the server owner and tell him to check the console for any errors BEFORE the 'notquests has been disabled' message."));
+            main.getDataManager().sendPluginDisabledMessage(player);
             return;
         }
         questProgressInterface.open(PlayerViewer.of(player), HashMapInterfaceArguments
@@ -85,7 +85,7 @@ public class GUIManager {
     }
     public void showTakeQuestsGUI(QuestPlayer questPlayer, Player player, final ArrayList<Quest> quests) {
         if(main.getDataManager().isDisabled()){
-            player.sendMessage(main.parse("<error>Error - NotQuests is disabled. This usually happens when something goes wrong during loading any data from not quests (usually a faulty quest configuration). NotQuests does this to protect itself from data loss. Please report this to the server owner and tell him to check the console for any errors BEFORE the 'notquests has been disabled' message."));
+            main.getDataManager().sendPluginDisabledMessage(player);
             return;
         }
         selectiveTakeQuestsInterface.open(PlayerViewer.of(player), HashMapInterfaceArguments
@@ -96,7 +96,7 @@ public class GUIManager {
 
     public void showTakeQuestsGUI(QuestPlayer questPlayer, Player player) {
         if(main.getDataManager().isDisabled()){
-            player.sendMessage(main.parse("<error>Error - NotQuests is disabled. This usually happens when something goes wrong during loading any data from not quests (usually a faulty quest configuration). NotQuests does this to protect itself from data loss. Please report this to the server owner and tell him to check the console for any errors BEFORE the 'notquests has been disabled' message."));
+            main.getDataManager().sendPluginDisabledMessage(player);
             return;
         }
         final HashMapInterfaceArguments arguments = HashMapInterfaceArguments
@@ -108,7 +108,7 @@ public class GUIManager {
 
     public void showActiveQuestsGUI(QuestPlayer questPlayer, Player player) {
         if(main.getDataManager().isDisabled()){
-            player.sendMessage(main.parse("<error>Error - NotQuests is disabled. This usually happens when something goes wrong during loading any data from not quests (usually a faulty quest configuration). NotQuests does this to protect itself from data loss. Please report this to the server owner and tell him to check the console for any errors BEFORE the 'notquests has been disabled' message."));
+            main.getDataManager().sendPluginDisabledMessage(player);
             return;
         }
         final HashMapInterfaceArguments arguments = HashMapInterfaceArguments
@@ -120,7 +120,7 @@ public class GUIManager {
 
     public void showAbortQuestsGUI(QuestPlayer questPlayer, Player player){
         if(main.getDataManager().isDisabled()){
-            player.sendMessage(main.parse("<error>Error - NotQuests is disabled. This usually happens when something goes wrong during loading any data from not quests (usually a faulty quest configuration). NotQuests does this to protect itself from data loss. Please report this to the server owner and tell him to check the console for any errors BEFORE the 'notquests has been disabled' message."));
+            main.getDataManager().sendPluginDisabledMessage(player);
             return;
         }
         final HashMapInterfaceArguments arguments = HashMapInterfaceArguments

@@ -177,6 +177,9 @@ public class ActiveObjective {
     }
 
     public void addProgress(long progressToAdd, final int NPCID, final UUID armorStandUUID, boolean silent) {
+        if(main.getDataManager().isDisabled()){
+            return;
+        }
         currentProgress += progressToAdd;
         getQuestPlayer().setTrackingObjective(this);
 
@@ -198,6 +201,9 @@ public class ActiveObjective {
 
 
     public void removeProgress(int i, boolean capAtZero) {
+        if(main.getDataManager().isDisabled()){
+            return;
+        }
         if (capAtZero) {
             if (currentProgress - i < 0) {
                 if (currentProgress > 0) {

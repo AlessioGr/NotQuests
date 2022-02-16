@@ -82,6 +82,9 @@ public class QuestEvents implements Listener {
             Bukkit.getScheduler().scheduleSyncRepeatingTask(main.getMain(), new Runnable() {
                 @Override
                 public void run() { //Main Loop
+                    if(main.getDataManager().isDisabled()){
+                        return;
+                    }
                     for(Player player : Bukkit.getOnlinePlayers()) {
                         QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
                         if(questPlayer == null){
@@ -115,6 +118,9 @@ public class QuestEvents implements Listener {
             Bukkit.getScheduler().scheduleSyncRepeatingTask(main.getMain(), new Runnable() {
                 @Override
                 public void run() {
+                    if(main.getDataManager().isDisabled()){
+                        return;
+                    }
                     for(QuestPlayer questPlayer : beaconsToUpdate.keySet()) {
                         String locationName = beaconsToUpdate.get(questPlayer);
                         final Player player = questPlayer.getPlayer();
@@ -170,6 +176,9 @@ public class QuestEvents implements Listener {
 
     @EventHandler
     private void onChunkLoad(PlayerChunkLoadEvent e){
+        if(main.getDataManager().isDisabled()){
+            return;
+        }
         final Player player = e.getPlayer();
         final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
         if(questPlayer == null){

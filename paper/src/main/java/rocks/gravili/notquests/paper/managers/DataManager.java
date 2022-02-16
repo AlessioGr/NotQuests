@@ -29,6 +29,7 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -154,6 +155,8 @@ public class DataManager {
 
     private boolean valueChanged = false;
 
+    private ArrayList<String> criticalErrors;
+
 
     //HikariCP
     private HikariConfig hikariConfig;
@@ -175,6 +178,8 @@ public class DataManager {
      */
     public DataManager(NotQuests main) {
         this.main = main;
+
+        criticalErrors = new ArrayList<>();
 
         itemStackCache = new HashMap<>();
         // create an instance of the Configuration object
@@ -1224,33 +1229,61 @@ public class DataManager {
         setLoadingEnabled(false);
         disabled = true;
 
-        main.getMain().getServer().getPluginManager().disablePlugin(main.getMain());
+        criticalErrors.add(reason);
+
+        //main.getMain().getServer().getPluginManager().disablePlugin(main.getMain());
     }
 
     public void disablePluginAndSaving(final String reason, Object... objects) {
 
         main.getLogManager().severe("Plugin, saving and loading has been disabled. Reason: " + reason);
 
+        String reasonWithObjects = reason;
+
         for (Object object : objects) {
             if (object instanceof Exception e) {
                 main.getLogManager().severe("Error message:");
                 e.printStackTrace();
+
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                e.printStackTrace(pw);
+                reasonWithObjects += "\n" + "Error message:" + "\n" + sw.toString();
             }else if (object instanceof Throwable throwable) {
                 main.getLogManager().severe("Error message:");
                 throwable.printStackTrace();
+
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                throwable.printStackTrace(pw);
+                reasonWithObjects += "\n" + "Error message:" + "\n" + sw.toString();
             } else if (object instanceof Quest quest) {
                 main.getLogManager().severe("  <DARK_GRAY>└─</DARK_GRAY> Quest: <highlight>"+ quest.getQuestName());
+                reasonWithObjects += "\n" + "  <DARK_GRAY>└─</DARK_GRAY> Quest: <highlight>"+ quest.getQuestName();
             } else if (object instanceof Objective objective) {
                 main.getLogManager().severe("  <DARK_GRAY>└─</DARK_GRAY> Objective ID: <highlight>" + objective.getObjectiveID() + "</highlight> of Quest: <highlight2>" + ((Objective) object).getQuest().getQuestName());
+                reasonWithObjects += "\n" + "  <DARK_GRAY>└─</DARK_GRAY> Objective ID: <highlight>" + objective.getObjectiveID() + "</highlight> of Quest: <highlight2>" + ((Objective) object).getQuest().getQuestName();
             } else if (object instanceof Action action) {
                 main.getLogManager().severe("  <DARK_GRAY>└─</DARK_GRAY> Action Name: <highlight>" + action.getActionName() + "</highlight> of Type: <highlight2>" + action.getActionType());
+                reasonWithObjects += "\n" + "  <DARK_GRAY>└─</DARK_GRAY> Action Name: <highlight>" + action.getActionName() + "</highlight> of Type: <highlight2>" + action.getActionType();
             }
         }
         setSavingEnabled(false);
         setLoadingEnabled(false);
 
         disabled = true;
-        main.getMain().getServer().getPluginManager().disablePlugin(main.getMain());
+
+        criticalErrors.add(reasonWithObjects);
+        //main.getMain().getServer().getPluginManager().disablePlugin(main.getMain());
+    }
+
+    public void enablePluginAndSaving(final String reason) {
+        main.getLogManager().severe("Plugin, saving and loading has been enabled. Reason: " + reason);
+        setSavingEnabled(true);
+        setLoadingEnabled(true);
+        disabled = false;
+
+        //main.getMain().getServer().getPluginManager().disablePlugin(main.getMain());
     }
 
     /**
@@ -1792,5 +1825,51 @@ public class DataManager {
         }
 
     }*/
+
+
+    public void sendPluginDisabledMessage(final CommandSender commandSender){
+        commandSender.sendMessage(main.parse("<error>Error - NotQuests is disabled. This usually happens when something goes wrong during loading any data from not quests (usually a faulty quest configuration). NotQuests does this to protect itself from data loss. Please report this to the server owner and tell him to check the console for any errors BEFORE the 'notquests has been disabled' message.\n<highlight>Reasons why NotQuests disabled itself (read them & fix them):"));
+        if(criticalErrors.size() == 0){
+            commandSender.sendMessage(main.parse(
+                    "<warn>No critical errors found. Please check your console log for any errors during startup."
+            ));
+        }else{
+            {
+                int counter = 0;
+                for(final String criticalError : criticalErrors){
+                    commandSender.sendMessage(main.parse(
+                            "<highlight>" + ++counter + " <warn>" + criticalError
+                    ));
+                }
+            }
+        }
+        if(main.getLogManager().getErrorLogs().size() > 0) {
+            int counter = 0;
+
+            commandSender.sendMessage(main.parse(
+                   "\n<highlight>Other collected (possibly-relevant) error logs:"
+            ));
+            for(final String error : main.getLogManager().getErrorLogs()){
+                commandSender.sendMessage(main.parse(
+                        "<highlight>" + ++counter + " <warn>" + error
+                ));
+            }
+        }
+
+        if(main.getLogManager().getWarnLogs().size() > 0) {
+            int counter = 0;
+
+            commandSender.sendMessage(main.parse(
+                    "\n<highlight>Other warnings (they are not the cause for this issue, but may still be worth fixing. Some warnings can be ignored):"
+            ));
+            for(final String warning : main.getLogManager().getWarnLogs()){
+                commandSender.sendMessage(main.parse(
+                        "<highlight>" + ++counter + " <warn>" + warning
+                ));
+            }
+        }
+
+        commandSender.sendMessage(main.parse("<unimportant>You could enable the plugin again by using <main>/qa debug enablePluginAndSaving <reason></main>, but it's not recommended. Fix the issues above or in the console log instead - this mechanism is there to protect yourself from faulty quests. If you're an admin of the server and don't know how to fix these issues alone, please contact the me (the plugin developer) and send me this message, together with your full server log and optimally the NotQuests folder - I'll gladly help <3"));
+    }
 
 }

@@ -741,12 +741,44 @@ public class AdminCommands {
                 .senderType(Player.class)
                 .handler((context) -> {
                     context.getSender().sendMessage(Component.empty());
-                    Player player = (Player) context.getSender();
-                    String reason = context.get("reason");
+                    final Player player = (Player) context.getSender();
+
+                    if(main.getDataManager().isDisabled()){
+                        player.sendMessage(main.parse(
+                                "<error>Error: NotQuests is already disabled"
+                        ));
+                        return;
+                    }
+
+                    final String reason = context.get("reason");
                     player.sendMessage(main.parse(
                             "<main>Disabling NotQuests..."
                     ));
                     main.getDataManager().disablePluginAndSaving(reason);
+
+                }));
+
+        manager.command(builder.literal("debug")
+                .literal("enablePluginAndSaving")
+                .argument(StringArgument.of("reason"), ArgumentDescription.of("Reason for enabling the plugin"))
+                .meta(CommandMeta.DESCRIPTION, "Enables NotQuests, saving & loading")
+                .senderType(Player.class)
+                .handler((context) -> {
+                    context.getSender().sendMessage(Component.empty());
+                    final Player player = (Player) context.getSender();
+
+                    if(!main.getDataManager().isDisabled()){
+                        player.sendMessage(main.parse(
+                                "<error>Error: NotQuests is already enabled"
+                        ));
+                        return;
+                    }
+
+                    final String reason = context.get("reason");
+                    player.sendMessage(main.parse(
+                            "<main>Enabling NotQuests..."
+                    ));
+                    main.getDataManager().enablePluginAndSaving(reason);
 
                 }));
 

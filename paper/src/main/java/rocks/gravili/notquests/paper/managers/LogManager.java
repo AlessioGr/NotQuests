@@ -23,6 +23,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import rocks.gravili.notquests.paper.NotQuests;
 
+import java.util.ArrayList;
 import java.util.logging.Level;
 
 public class LogManager {
@@ -31,8 +32,15 @@ public class LogManager {
     private final Component prefix;
     private final String prefixText;
 
+
+
+    private final ArrayList<String> severeLogs, warnLogs;
+
     public LogManager(final NotQuests main) {
         this.main = main;
+        severeLogs = new ArrayList<>();
+        warnLogs = new ArrayList<>();
+
         consoleSender = Bukkit.getConsoleSender();
 
         prefixText = "<#393e46>[<gradient:#E0EAFC:#CFDEF3>NotQuests<#393e46>]<#636c73>: ";
@@ -43,6 +51,12 @@ public class LogManager {
 
     }
 
+    public final ArrayList<String> getErrorLogs() {
+        return severeLogs;
+    }
+    public final ArrayList<String> getWarnLogs() {
+        return warnLogs;
+    }
 
     private void log(final Level level, final String color, final String message) {
         log(level, LogCategory.DEFAULT, color, message);
@@ -69,6 +83,7 @@ public class LogManager {
 
     public void warn(final LogCategory logCategory, final String message) {
         log(Level.WARNING, logCategory, "<warn>", message);
+        warnLogs.add(message);
     }
 
     public void warn(final String message) {
@@ -77,6 +92,7 @@ public class LogManager {
 
     public void severe(final LogCategory logCategory, final String message) {
         log(Level.SEVERE, logCategory, "<error>", message);
+        severeLogs.add(message);
     }
 
     public void severe(final String message) {

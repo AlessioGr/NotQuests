@@ -188,6 +188,9 @@ public class ActiveQuest {
 
 
     public void removeCompletedObjectives(final boolean notifyPlayer) {
+        if(main.getDataManager().isDisabled()){
+            return;
+        }
         if (toRemove.size() == 0) {
             return;
         }

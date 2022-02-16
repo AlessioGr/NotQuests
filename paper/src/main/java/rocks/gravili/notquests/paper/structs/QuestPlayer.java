@@ -193,6 +193,7 @@ public class QuestPlayer {
     }
 
     public final boolean updateBeaconLocations(final Player player){
+
         boolean toReturn = false;
         clearActiveBeacons();
         if(locationsAndBeacons.isEmpty() || player == null){
@@ -295,6 +296,9 @@ public class QuestPlayer {
     }
 
     public String addActiveQuest(final ActiveQuest quest, final boolean triggerAcceptQuestTrigger, final boolean sendQuestInfo) {
+        if(main.getDataManager().isDisabled()){
+            return "Plugin is disabled due to misconfiguration - you currently cannot take any new quests anymore";
+        }
 
         //Configuration Option: general.max-active-quests-per-player
         if (main.getConfiguration().getMaxActiveQuestsPerPlayer() != -1 && activeQuests.size() >= main.getConfiguration().getMaxActiveQuestsPerPlayer()) {
@@ -498,6 +502,9 @@ public class QuestPlayer {
     }*/
 
     public void giveReward(Quest quest) {
+        if(main.getDataManager().isDisabled()){
+            return;
+        }
         sendDebugMessage("QuestPlayer.giveReward(). Quest: " + quest.getQuestName());
 
 
@@ -664,6 +671,9 @@ public class QuestPlayer {
     }
 
     public void setQuestPoints(long newQuestPoints, boolean notifyPlayer) {
+        if(main.getDataManager().isDisabled()){
+            return;
+        }
         if (newQuestPoints < 0) { //Prevent questPoints from going below 0
             newQuestPoints = 0;
         }
@@ -730,6 +740,9 @@ public class QuestPlayer {
     }
 
     public void removeCompletedQuests() {
+        if(main.getDataManager().isDisabled()){
+            return;
+        }
         if (questsToComplete.size() == 0) {
             return;
         }
