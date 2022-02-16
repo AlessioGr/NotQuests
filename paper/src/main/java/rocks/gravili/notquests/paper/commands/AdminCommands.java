@@ -735,6 +735,22 @@ public class AdminCommands {
                 }));
 
         manager.command(builder.literal("debug")
+                .literal("disablePluginAndSaving")
+                .argument(StringArgument.of("reason"), ArgumentDescription.of("Reason for disabling the plugin"))
+                .meta(CommandMeta.DESCRIPTION, "Disables NotQuests, saving & loading")
+                .senderType(Player.class)
+                .handler((context) -> {
+                    context.getSender().sendMessage(Component.empty());
+                    Player player = (Player) context.getSender();
+                    String reason = context.get("reason");
+                    player.sendMessage(main.parse(
+                            "<main>Disabling NotQuests..."
+                    ));
+                    main.getDataManager().disablePluginAndSaving(reason);
+
+                }));
+
+        manager.command(builder.literal("debug")
                 .literal("testcommand")
                 .meta(CommandMeta.DESCRIPTION, "You can probably ignore this.")
                 .senderType(Player.class)
