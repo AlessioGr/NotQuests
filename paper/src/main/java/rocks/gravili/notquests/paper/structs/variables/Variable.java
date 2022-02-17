@@ -146,10 +146,10 @@ public abstract class Variable<T> {
     }
 
     protected final double getRequiredNumberValue(String key, Player player){
-        return main.getVariablesManager().evaluateExpression(additionalNumberArguments.get(key), player);
+        return main.getVariablesManager().evaluateExpression(additionalNumberArguments.get(key), player); //TODO: Improve performance by only creating the env / expression thingy once
     }
     protected final boolean getRequiredBooleanValue(String key, Player player){
-        return main.getVariablesManager().evaluateExpression(additionalNumberArguments.get(key), player) >= 0.98d;
+        return main.getVariablesManager().evaluateExpression(additionalBooleanArguments.get(key), player) >= 0.98d; //TODO: Improve performance by only creating the env / expression thingy once
     }
 
     public final HashMap<String, String> getAdditionalNumberArguments(){

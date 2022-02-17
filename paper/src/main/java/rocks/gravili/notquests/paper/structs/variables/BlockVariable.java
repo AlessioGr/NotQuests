@@ -1,6 +1,5 @@
 package rocks.gravili.notquests.paper.structs.variables;
 
-import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.arguments.standard.StringArgument;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
