@@ -201,8 +201,8 @@ public class SpawnMobAction extends Action {
         xToAdd = getSpawnRadiusX() != 0 ? ( (-getSpawnRadiusX() ==getSpawnRadiusX()) ? -getSpawnRadiusX() : r.nextInt(getSpawnRadiusX()+1+getSpawnRadiusX()) - getSpawnRadiusX()) : 0;
         yToAdd = getSpawnRadiusY() != 0 ? ( (-getSpawnRadiusY() ==getSpawnRadiusY()) ? -getSpawnRadiusY() : r.nextInt(getSpawnRadiusY()+1+getSpawnRadiusY()) - getSpawnRadiusY()) : 0;
         zToAdd = getSpawnRadiusZ() != 0 ? ( (-getSpawnRadiusZ() ==getSpawnRadiusZ()) ? -getSpawnRadiusZ() : r.nextInt(getSpawnRadiusZ()+1+getSpawnRadiusZ()) - getSpawnRadiusZ()) : 0;
-        baseLocation.clone().add(xToAdd, yToAdd, zToAdd);
-        return baseLocation;
+
+        return baseLocation.clone().add(xToAdd, yToAdd, zToAdd);
     }
 
     public void execute2(final Player player, Object... objects) {
@@ -262,13 +262,7 @@ public class SpawnMobAction extends Action {
 
     }
 
-    public int getSpawnRadiusY() {
-        return spawnRadiusY;
-    }
 
-    public void setSpawnRadiusY(int spawnRadiusY) {
-        this.spawnRadiusY = spawnRadiusY;
-    }
 
     @Override
     public void load(final FileConfiguration configuration, String initialPath) {
@@ -277,7 +271,7 @@ public class SpawnMobAction extends Action {
         this.usePlayerLocation = configuration.getBoolean(initialPath + ".specifics.usePlayerLocation");
         this.spawnAmount = configuration.getInt(initialPath + ".specifics.amount", 1);
         this.spawnRadiusX = configuration.getInt(initialPath + ".specifics.spawnRadiusX", 0);
-        this.spawnRadiusY = configuration.getInt(initialPath + ".specifics.spawnRadiusX", 0);
+        this.spawnRadiusY = configuration.getInt(initialPath + ".specifics.spawnRadiusY", 0);
         this.spawnRadiusZ = configuration.getInt(initialPath + ".specifics.spawnRadiusZ", 0);
 
     }
@@ -312,6 +306,14 @@ public class SpawnMobAction extends Action {
 
     public void setSpawnRadiusX(int spawnRadiusX) {
         this.spawnRadiusX = spawnRadiusX;
+    }
+
+    public int getSpawnRadiusY() {
+        return spawnRadiusY;
+    }
+
+    public void setSpawnRadiusY(int spawnRadiusY) {
+        this.spawnRadiusY = spawnRadiusY;
     }
 
     public int getSpawnRadiusZ() {
