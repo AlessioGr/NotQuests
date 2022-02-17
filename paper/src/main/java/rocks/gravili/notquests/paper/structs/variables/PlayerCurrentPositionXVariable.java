@@ -1,5 +1,6 @@
 package rocks.gravili.notquests.paper.structs.variables;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 
@@ -23,7 +24,7 @@ public class PlayerCurrentPositionXVariable extends Variable<Double>{
     @Override
     public boolean setValueInternally(Double newValue, Player player, Object... objects) {
         if (player != null) {
-            player.teleportAsync(player.getLocation().add(newValue, 0, 0));
+            player.teleportAsync(new Location(player.getLocation().getWorld(), newValue, player.getLocation().getY(), player.getLocation().getZ()));
             return true;
         } else {
             return false;
