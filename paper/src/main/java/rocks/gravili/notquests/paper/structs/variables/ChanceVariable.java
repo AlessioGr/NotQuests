@@ -13,7 +13,7 @@ public class ChanceVariable extends Variable<Boolean>{
         super(main);
 
         addRequiredNumber(
-                NumberVariableValueArgument.<CommandSender>newBuilder("chance", main, this).build()
+                NumberVariableValueArgument.<CommandSender>newBuilder("chance", main, null).build()
         );
     }
 

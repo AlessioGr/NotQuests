@@ -343,7 +343,9 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Str
             main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.getSender(), allArgs.toArray(new String[0]), "[Enter Variable / Mathematical Expression]", "[...]");
 
 
+
             if(context.getSender() instanceof Player player){
+
                 if(variable == null || variable.getPossibleValues(player) == null){
                     return completions;
                 }

@@ -35,13 +35,13 @@ public class BlockVariable extends Variable<String>{
                 ).single().build()
         );
         addRequiredNumber(
-                NumberVariableValueArgument.<CommandSender>newBuilder("x", main, this).build()
+                NumberVariableValueArgument.<CommandSender>newBuilder("x", main, null).build()
         );
         addRequiredNumber(
-                NumberVariableValueArgument.<CommandSender>newBuilder("y", main, this).build()
+                NumberVariableValueArgument.<CommandSender>newBuilder("y", main, null).build()
         );
         addRequiredNumber(
-                NumberVariableValueArgument.<CommandSender>newBuilder("z", main, this).build()
+                NumberVariableValueArgument.<CommandSender>newBuilder("z", main, null).build()
         );
 
     }

@@ -14,10 +14,10 @@ public class RandomNumberBetweenRangeVariable extends Variable<Integer>{
         super(main);
 
         addRequiredNumber(
-                NumberVariableValueArgument.<CommandSender>newBuilder("min", main, this).build()
+                NumberVariableValueArgument.<CommandSender>newBuilder("min", main, null).build()
         );
         addRequiredNumber(
-                NumberVariableValueArgument.<CommandSender>newBuilder("max", main, this).build()
+                NumberVariableValueArgument.<CommandSender>newBuilder("max", main, null).build()
         );
     }
 
