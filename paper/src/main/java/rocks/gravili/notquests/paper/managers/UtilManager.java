@@ -527,17 +527,38 @@ public class UtilManager {
             }
         }
 
+        if(quest != null){
+            toReturn = toReturn.replace("{QUEST}", "" + quest.getQuestName());
+        }
+
         if(player != null){
             toReturn = toReturn.replace("{PLAYER}", player.getName()).replace("{PLAYERUUID}", player.getUniqueId().toString())
                     .replace("{PLAYERX}", "" + player.getLocation().getX())
                     .replace("{PLAYERY}", "" + player.getLocation().getY())
                     .replace("{PLAYERZ}", "" + player.getLocation().getZ())
                     .replace("{WORLD}", "" + player.getWorld().getName());
+
+            //Now expressions {{expression}}
+            if(toReturn.contains("}}")){
+                for(String split : toReturn.split("}}")){
+                    if(!split.contains("{{")){
+                        continue;
+                    }
+                    if(!split.contains("{{~")){
+                        int indexOfOpening = split.indexOf("{{");
+                        String expression = split.substring(indexOfOpening+2);
+                        toReturn = toReturn.replace("{{"+expression+"}}", ""+main.getVariablesManager().evaluateExpression(expression, player));
+                    }else{//round
+                        int indexOfOpening = split.indexOf("{{~");
+                        String expression = split.substring(indexOfOpening+3);
+                        toReturn = toReturn.replace("{{~"+expression+"}}", ""+ (int) Math.round(main.getVariablesManager().evaluateExpression(expression, player)));
+                    }
+
+                }
+            }
+
         }
 
-        if(quest != null){
-            toReturn = toReturn.replace("{QUEST}", "" + quest.getQuestName());
-        }
 
         if(main.getIntegrationsManager().isPlaceholderAPIEnabled()){
             toReturn = PlaceholderAPI.setPlaceholders(player, toReturn);
@@ -545,4 +566,6 @@ public class UtilManager {
 
         return toReturn;
     }
+
+
 }

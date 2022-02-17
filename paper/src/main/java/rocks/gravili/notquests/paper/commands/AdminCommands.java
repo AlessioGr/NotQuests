@@ -83,6 +83,7 @@ public class AdminCommands {
         placeholders.add("{PLAYERZ}");
         placeholders.add("{WORLD}");
         placeholders.add("{QUEST}");
+        placeholders.add("{{expression}}");
 
         resultDate = new Date();
 

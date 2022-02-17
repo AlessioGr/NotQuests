@@ -79,6 +79,10 @@ public class VariablesManager {
         registerVariable("Experience", PlayerExperienceVariable.class);
         registerVariable("ExperienceLevel", PlayerExperienceLevelVariable.class);
         registerVariable("CurrentWorld", PlayerCurrentWorldVariable.class);
+        registerVariable("CurrentPositionX", PlayerCurrentPositionXVariable.class);
+        registerVariable("CurrentPositionY", PlayerCurrentPositionYVariable.class);
+        registerVariable("CurrentPositionZ", PlayerCurrentPositionZVariable.class);
+
         registerVariable("Sneaking", PlayerSneakingVariable.class);
         registerVariable("Health", PlayerHealthVariable.class);
         registerVariable("GameMode", PlayerGameModeVariable.class);

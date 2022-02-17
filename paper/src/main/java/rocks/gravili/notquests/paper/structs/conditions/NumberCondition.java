@@ -165,7 +165,6 @@ public class NumberCondition extends Condition {
             exp = Crunch.compileExpression(expression, env);
             cachedVariable = main.getVariablesManager().getVariableFromString(variableName);
         }
-
     }
 
 
