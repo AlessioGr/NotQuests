@@ -6,6 +6,7 @@ import com.willfp.ecobosses.bosses.Bosses;
 import com.willfp.ecobosses.bosses.EcoBoss;
 import org.bukkit.Location;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.structs.actions.SpawnMobAction;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -54,7 +55,7 @@ public class EcoBossesManager {
         return Bosses.getByID(bossToSpawnType) != null;
     }
 
-    public void spawnMob(String mobToSpawnType, Location location, int amount) {
+    public void spawnMob(String mobToSpawnType, Location location, int amount, final SpawnMobAction spawnMobAction) {
         EcoBoss foundEcoBoss = Bosses.getByID(mobToSpawnType);
         if (foundEcoBoss == null) {
             main.getLogManager().warn("Tried to spawn EcoBoss, but the spawn " + mobToSpawnType + " was not found.");
@@ -70,14 +71,17 @@ public class EcoBossesManager {
         }
 
         try{
-            foundEcoBoss.spawn(location);
+            for (int i = 0; i < amount; i++) {
+                foundEcoBoss.spawn(spawnMobAction.getRandomLocationWithRadius(location));
+            }
         }catch (NoSuchMethodError e){
             try{
-                foundEcoBoss.getClass().getMethod("spawn", Location.class).invoke(foundEcoBoss, location);
+                for (int i = 0; i < amount; i++) {
+                    foundEcoBoss.getClass().getMethod("spawn", Location.class).invoke(foundEcoBoss, spawnMobAction.getRandomLocationWithRadius(location));
+                }
             }catch (Exception ignored) {
                 main.getLogManager().warn("Failed to add EcoBosses mobs. Are you on the latest version?");
             }
-
         }
 
 

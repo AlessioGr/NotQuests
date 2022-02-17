@@ -20,7 +20,9 @@ package rocks.gravili.notquests.paper.structs.actions;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
+import cloud.commandframework.arguments.flags.CommandFlag;
 import cloud.commandframework.arguments.standard.IntegerArgument;
+import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.bukkit.parsers.WorldArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
@@ -36,7 +38,9 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.EntityTypeSelector;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 public class SpawnMobAction extends Action {
 
@@ -44,15 +48,37 @@ public class SpawnMobAction extends Action {
     private boolean usePlayerLocation = false;
     private Location spawnLocation;
     private int spawnAmount = 1;
+    private int spawnRadiusX = 0;
+    private int spawnRadiusY = 0;
+    private int spawnRadiusZ = 0;
 
     public SpawnMobAction(final NotQuests main) {
         super(main);
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor rewardFor) {
+        CommandFlag<Integer> spawnRadiusX = CommandFlag
+                .newBuilder("spawnRadiusX")
+                .withArgument(IntegerArgument.<CommandSender>newBuilder("spawnRadiusX").withMin(0).build())
+                .build();
+        CommandFlag<Integer> spawnRadiusY = CommandFlag
+                .newBuilder("spawnRadiusY")
+                .withArgument(IntegerArgument.<CommandSender>newBuilder("spawnRadiusY").withMin(0).build())
+                .build();
+        CommandFlag<Integer> spawnRadiusZ = CommandFlag
+                .newBuilder("spawnRadiusZ")
+                .withArgument(IntegerArgument.<CommandSender>newBuilder("spawnRadiusZ").withMin(0).build())
+                .build();
+
+
         Command.Builder<CommandSender> commonBuilder = builder
                 .argument(EntityTypeSelector.of("entityType", main), ArgumentDescription.of("Type of Entity which should be spawned."))
-                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of mobs which should be spawned"));
+                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of mobs which should be spawned"))
+                .flag(spawnRadiusX)
+                .flag(spawnRadiusY)
+                .flag(spawnRadiusZ);
+
+
 
         manager.command(commonBuilder
                 .literal("PlayerLocation", ArgumentDescription.of("Takes the location the player currently is in (when executing the action). So, this is a dynamic location."))
@@ -64,6 +90,14 @@ public class SpawnMobAction extends Action {
                     spawnMobAction.setMobToSpawnType(entityType);
                     spawnMobAction.setSpawnAmount(amountToSpawn);
                     spawnMobAction.setUsePlayerLocation(true);
+
+                    final int spawnRadiusXValue = context.flags().getValue(spawnRadiusX, 0);
+                    final int spawnRadiusYValue = context.flags().getValue(spawnRadiusY, 0);
+                    final int spawnRadiusZValue = context.flags().getValue(spawnRadiusZ, 0);
+                    spawnMobAction.setSpawnRadiusX(spawnRadiusXValue);
+                    spawnMobAction.setSpawnRadiusY(spawnRadiusYValue);
+                    spawnMobAction.setSpawnRadiusZ(spawnRadiusZValue);
+
 
                     main.getActionManager().addAction(spawnMobAction, context);
                 }));
@@ -92,6 +126,13 @@ public class SpawnMobAction extends Action {
                     spawnMobAction.setMobToSpawnType(entityType);
                     spawnMobAction.setSpawnAmount(amountToSpawn);
                     spawnMobAction.setUsePlayerLocation(false);
+
+                    final int spawnRadiusXValue = context.flags().getValue(spawnRadiusX, 0);
+                    final int spawnRadiusYValue = context.flags().getValue(spawnRadiusY, 0);
+                    final int spawnRadiusZValue = context.flags().getValue(spawnRadiusZ, 0);
+                    spawnMobAction.setSpawnRadiusX(spawnRadiusXValue);
+                    spawnMobAction.setSpawnRadiusY(spawnRadiusYValue);
+                    spawnMobAction.setSpawnRadiusZ(spawnRadiusZValue);
 
                     final World world = context.get("world");
                     final Vector coordinates = new Vector(context.get("x"), context.get("y"), context.get("z"));
@@ -148,13 +189,32 @@ public class SpawnMobAction extends Action {
 
     }
 
+    public final Location getRandomLocationWithRadius(final Location baseLocation){
+        if(getSpawnRadiusX() == 0 && getSpawnRadiusY() == 0 && getSpawnRadiusZ() == 0){
+            return baseLocation;
+        }
+        int xToAdd;
+        int yToAdd;
+        int zToAdd;
+        final Random r = new Random();
+
+        xToAdd = getSpawnRadiusX() != 0 ? ( (-getSpawnRadiusX() ==getSpawnRadiusX()) ? -getSpawnRadiusX() : r.nextInt(getSpawnRadiusX()+1+getSpawnRadiusX()) - getSpawnRadiusX()) : 0;
+        yToAdd = getSpawnRadiusY() != 0 ? ( (-getSpawnRadiusY() ==getSpawnRadiusY()) ? -getSpawnRadiusY() : r.nextInt(getSpawnRadiusY()+1+getSpawnRadiusY()) - getSpawnRadiusY()) : 0;
+        zToAdd = getSpawnRadiusZ() != 0 ? ( (-getSpawnRadiusZ() ==getSpawnRadiusZ()) ? -getSpawnRadiusZ() : r.nextInt(getSpawnRadiusZ()+1+getSpawnRadiusZ()) - getSpawnRadiusZ()) : 0;
+        baseLocation.clone().add(xToAdd, yToAdd, zToAdd);
+        return baseLocation;
+    }
+
     public void execute2(final Player player, Object... objects) {
         try {
             EntityType entityType = EntityType.valueOf(getMobToSpawnType().toUpperCase(Locale.ROOT));
 
             if (isUsePlayerLocation()) {
+                final Location location = player.getLocation().clone().add(new Vector(0, 1, 0));
+
                 for (int i = 0; i < getSpawnAmount(); i++) {
-                    player.getWorld().spawnEntity(player.getLocation().clone().add(new Vector(0, 1, 0)), entityType);
+
+                    player.getWorld().spawnEntity(getRandomLocationWithRadius(location), entityType);
                 }
             } else {
                 if (getSpawnLocation() == null) {
@@ -165,22 +225,24 @@ public class SpawnMobAction extends Action {
                     main.getLogManager().warn("Tried to execute SpawnMob action with invalid world.");
                     return;
                 }
+                final Location location = getSpawnLocation().clone().add(new Vector(0, 1, 0));
+
                 for (int i = 0; i < getSpawnAmount(); i++) {
-                    getSpawnLocation().getWorld().spawnEntity(getSpawnLocation().clone().add(new Vector(0, 1, 0)), entityType);
+                    getSpawnLocation().getWorld().spawnEntity(getRandomLocationWithRadius(location), entityType);
                 }
             }
         } catch (IllegalArgumentException e) {
             if (main.getIntegrationsManager().isMythicMobsEnabled() && main.getIntegrationsManager().getMythicMobsManager().isMythicMob(getMobToSpawnType())) {
                 if (isUsePlayerLocation()) {
-                    main.getIntegrationsManager().getMythicMobsManager().spawnMob(getMobToSpawnType(), player.getLocation(), getSpawnAmount());
+                    main.getIntegrationsManager().getMythicMobsManager().spawnMob(getMobToSpawnType(), player.getLocation(), getSpawnAmount(), this);
                 } else {
-                    main.getIntegrationsManager().getMythicMobsManager().spawnMob(getMobToSpawnType(), getSpawnLocation(), getSpawnAmount());
+                    main.getIntegrationsManager().getMythicMobsManager().spawnMob(getMobToSpawnType(), getSpawnLocation(), getSpawnAmount(), this);
                 }
             } else if (main.getIntegrationsManager().isEcoBossesEnabled() && main.getIntegrationsManager().getEcoBossesManager().isEcoBoss(getMobToSpawnType())) {
                 if (isUsePlayerLocation()) {
-                    main.getIntegrationsManager().getEcoBossesManager().spawnMob(getMobToSpawnType(), player.getLocation(), getSpawnAmount());
+                    main.getIntegrationsManager().getEcoBossesManager().spawnMob(getMobToSpawnType(), player.getLocation(), getSpawnAmount(), this);
                 } else {
-                    main.getIntegrationsManager().getEcoBossesManager().spawnMob(getMobToSpawnType(), getSpawnLocation(), getSpawnAmount());
+                    main.getIntegrationsManager().getEcoBossesManager().spawnMob(getMobToSpawnType(), getSpawnLocation(), getSpawnAmount(), this);
                 }
             }else{
                 main.getLogManager().warn("Tried to execute SpawnMob with an either invalid mob, or a mythic mob while the mythic mobs plugin is not installed.");
@@ -193,8 +255,18 @@ public class SpawnMobAction extends Action {
         configuration.set(initialPath + ".specifics.mobToSpawn", getMobToSpawnType());
         configuration.set(initialPath + ".specifics.spawnLocation", getSpawnLocation());
         configuration.set(initialPath + ".specifics.usePlayerLocation", isUsePlayerLocation());
-        configuration.set(initialPath + ".specifics.amount", getSpawnAmount());
+        configuration.set(initialPath + ".specifics.spawnRadiusX", getSpawnRadiusX());
+        configuration.set(initialPath + ".specifics.spawnRadiusY", getSpawnRadiusY());
+        configuration.set(initialPath + ".specifics.spawnRadiusZ", getSpawnRadiusZ());
 
+    }
+
+    public int getSpawnRadiusY() {
+        return spawnRadiusY;
+    }
+
+    public void setSpawnRadiusY(int spawnRadiusY) {
+        this.spawnRadiusY = spawnRadiusY;
     }
 
     @Override
@@ -203,6 +275,10 @@ public class SpawnMobAction extends Action {
         this.spawnLocation = configuration.getLocation(initialPath + ".specifics.spawnLocation");
         this.usePlayerLocation = configuration.getBoolean(initialPath + ".specifics.usePlayerLocation");
         this.spawnAmount = configuration.getInt(initialPath + ".specifics.amount", 1);
+        this.spawnRadiusX = configuration.getInt(initialPath + ".specifics.spawnRadiusX", 0);
+        this.spawnRadiusY = configuration.getInt(initialPath + ".specifics.spawnRadiusX", 0);
+        this.spawnRadiusZ = configuration.getInt(initialPath + ".specifics.spawnRadiusZ", 0);
+
     }
 
     @Override
@@ -227,5 +303,21 @@ public class SpawnMobAction extends Action {
     @Override
     public String getActionDescription(final Player player, final Object... objects) {
         return "Spawns Mob: " + getMobToSpawnType();
+    }
+
+    public int getSpawnRadiusX() {
+        return spawnRadiusX;
+    }
+
+    public void setSpawnRadiusX(int spawnRadiusX) {
+        this.spawnRadiusX = spawnRadiusX;
+    }
+
+    public int getSpawnRadiusZ() {
+        return spawnRadiusZ;
+    }
+
+    public void setSpawnRadiusZ(int spawnRadiusZ) {
+        this.spawnRadiusZ = spawnRadiusZ;
     }
 }
