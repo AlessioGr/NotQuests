@@ -255,6 +255,7 @@ public class SpawnMobAction extends Action {
         configuration.set(initialPath + ".specifics.mobToSpawn", getMobToSpawnType());
         configuration.set(initialPath + ".specifics.spawnLocation", getSpawnLocation());
         configuration.set(initialPath + ".specifics.usePlayerLocation", isUsePlayerLocation());
+        configuration.set(initialPath + ".specifics.amount", getSpawnAmount());
         configuration.set(initialPath + ".specifics.spawnRadiusX", getSpawnRadiusX());
         configuration.set(initialPath + ".specifics.spawnRadiusY", getSpawnRadiusY());
         configuration.set(initialPath + ".specifics.spawnRadiusZ", getSpawnRadiusZ());
