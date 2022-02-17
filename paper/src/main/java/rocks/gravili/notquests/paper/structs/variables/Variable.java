@@ -118,6 +118,10 @@ public abstract class Variable<T> {
         return additionalBooleanArguments.getOrDefault(key, false);
     }
 
+    public final HashMap<String, String> getAdditionalNumberArguments(){
+        return additionalNumberArguments;
+    }
+
     public abstract T getValue(final Player player, final Object... objects);
 
     public boolean setValue(final T newValue, final Player player, final Object... objects){
@@ -199,6 +203,6 @@ public abstract class Variable<T> {
         additionalStringArguments.put(key, value);
     }
     public void addAdditionalNumberArgument(String key, String value){
-        additionalStringArguments.put(key, value);
+        additionalNumberArguments.put(key, value);
     }
 }

@@ -156,12 +156,16 @@ public class BooleanCondition extends Condition {
                             }
                         }
                         for(NumberVariableValueArgument<CommandSender> numberVariableValueArgument : variable.getRequiredNumbers()){
-                            variable.addAdditionalNumberArgument(key, value);
-                            main.getLogManager().debug("AddNumb: " + key + " val: " + value);
+                            if(numberVariableValueArgument.getName().equalsIgnoreCase(key)){
+                                variable.addAdditionalNumberArgument(key, value);
+                                main.getLogManager().debug("AddNumb: " + key + " val: " + value);
+                            }
                         }
                         for(BooleanArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
-                            variable.addAdditionalBooleanArgument(key, Boolean.parseBoolean(value));
-                            main.getLogManager().debug("AddBool: " + key + " val: " + value);
+                            if(booleanArgument.getName().equalsIgnoreCase(key)){
+                                variable.addAdditionalBooleanArgument(key, Boolean.parseBoolean(value));
+                                main.getLogManager().debug("AddBool: " + key + " val: " + value);
+                            }
                         }
                     }
                 }

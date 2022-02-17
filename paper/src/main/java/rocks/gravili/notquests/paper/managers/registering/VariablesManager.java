@@ -232,7 +232,10 @@ public class VariablesManager {
 
 
     public double evaluateExpression(String expression, final Player player, final Object... objects){
-
+        if(expression == null){
+            main.getLogManager().warn("Error: Tried to evaluate null expression");
+            return 0;
+        }
         expression = evaluateExpressionVariables(expression, player, objects);
 
         main.getLogManager().debug("To evaluate: <highlight>" + expression);
@@ -281,34 +284,59 @@ public class VariablesManager {
                             }
                         }
                         for(NumberVariableValueArgument<CommandSender> numberVariableValueArgument : variable.getRequiredNumbers()){
-                            variable.addAdditionalNumberArgument(key, value);
-                            main.getLogManager().debug("AddNumb: " + key + " val: " + value);
+                            if(numberVariableValueArgument.getName().equalsIgnoreCase(key)){
+                                variable.addAdditionalNumberArgument(key, value);
+                                main.getLogManager().debug("AddNumb: " + key + " val: " + value);
+                                main.getLogManager().debug("Val of " + key + ": " + variable.getAdditionalNumberArguments().get(key));
+                                main.getLogManager().debug("addnumbargs string: " + variable.getAdditionalNumberArguments().toString());
+
+
+                            }
                         }
                         for(BooleanArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
-                            variable.addAdditionalBooleanArgument(key, Boolean.parseBoolean(value));
-                            main.getLogManager().debug("AddBool: " + key + " val: " + value);
+                            if(booleanArgument.getName().equalsIgnoreCase(key)){
+                                variable.addAdditionalBooleanArgument(key, Boolean.parseBoolean(value));
+                                main.getLogManager().debug("AddBool: " + key + " val: " + value);
+                            }
+
                         }
                     }
                 }
+                main.getLogManager().debug("Putting together...");
+                main.getLogManager().debug("VarString old: " + variableString);
 
                 variableString = variableString+"(" + insideBracket + ")"; //For the replacing with the actual number below
+
+                main.getLogManager().debug("VarString new: " + variableString);
+
             }
 
-
+            main.getLogManager().debug("Getting valueObject for variable " + variable.getVariableType() + "...");
 
             Object valueObject = variable.getValue(player, objects);
-            if(valueObject instanceof Number n){
-                expression = expression.replace(variableString, ""+n.doubleValue());
-            }else  if(valueObject instanceof Boolean b) {
-                expression = expression.replace(variableString, ""+ (b ? 1 : 0) );
+            main.getLogManager().debug("Got valueObject for variable " + variable.getVariableType());
 
+            if(valueObject != null){
+                main.getLogManager().debug("Old expression " + expression  );
+                if(valueObject instanceof Number n){
+                    expression = expression.replace(variableString, ""+n.doubleValue());
+                }else if(valueObject instanceof Boolean b) {
+                    expression = expression.replace(variableString, ""+ (b ? 1 : 0) );
+
+                }else{
+                    main.getLogManager().debug("Wrong valueObject for " + variableString  );
+                }
+                main.getLogManager().debug("New expression " + expression );
             }else{
-                main.getLogManager().debug("Wrong valueObject for " + variableString +". Null?: " + (valueObject == null) );
+                main.getLogManager().debug("Null valueObject for " + variableString +"." );
             }
+
+
         }
         if(!foundOne){
             return expression;
         }
+
 
         return evaluateExpressionVariables(expression, player, objects);
     }

@@ -1,5 +1,6 @@
 package rocks.gravili.notquests.paper.structs.variables;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -22,16 +23,22 @@ public class RandomNumberBetweenRangeVariable extends Variable<Integer>{
 
     @Override
     public Integer getValue(Player player, Object... objects) {
-        if (player != null) {
-            final Random r = new Random();
+        final Random r = new Random();
 
-            int min = (int) Math.round(getRequiredNumberValue("min", player));
-            int max = (int) Math.round(getRequiredNumberValue("max", player));
+        main.getLogManager().debug("0");
 
-            return (min==max) ? min : r.nextInt(max+1-min) + min;
-        } else {
-            return null;
-        }
+        main.getLogManager().debug("AddNumArgs get: " + getAdditionalNumberArguments().get("min"));
+
+        main.getLogManager().debug("reqnumbervalue: " + getRequiredNumberValue("min", player));
+
+
+        int min = (int) Math.round(getRequiredNumberValue("min", player));
+        main.getLogManager().debug("1");
+
+        int max = (int) Math.round(getRequiredNumberValue("max", player));
+
+
+        return (min==max) ? min : r.nextInt(max+1-min) + min;
     }
 
     @Override

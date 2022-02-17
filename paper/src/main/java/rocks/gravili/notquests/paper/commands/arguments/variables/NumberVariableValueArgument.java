@@ -242,20 +242,32 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Str
 
                                 for(StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()){
                                     if(subStringAfter.contains(":")){
-                                        completions.add(input + "<value>");
+                                        if(subStringAfter.endsWith(":")){
+                                            completions.add(input + "<value>");
+                                        }else{
+                                            completions.add(input + ":<value>");
+                                        }
                                     }else{
                                         completions.add(variableString+"(" + stringArgument.getName() + ":<value>");
                                     }
                                 }
                                 for(NumberVariableValueArgument<CommandSender> numberVariableValueArgument : variable.getRequiredNumbers()) {
                                     if (subStringAfter.contains(":")) {
-                                        completions.add(input + "<value>");
+                                        if(subStringAfter.endsWith(":")){
+                                            completions.add(input + "<value>");
+                                        }else{
+                                            completions.add(input + ":<value>");
+                                        }
                                     } else {
                                         completions.add(variableString+"(" + numberVariableValueArgument.getName() + ":<value>");
                                     }
                                 }for(BooleanArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()) {
                                     if (subStringAfter.contains(":")) {
-                                        completions.add(input + "<value>");
+                                        if(subStringAfter.endsWith(":")){
+                                            completions.add(input + "<value>");
+                                        }else{
+                                            completions.add(input + ":<value>");
+                                        }
                                     } else {
                                         completions.add(variableString+"(" + booleanArgument.getName() + ":<value>");
                                     }
