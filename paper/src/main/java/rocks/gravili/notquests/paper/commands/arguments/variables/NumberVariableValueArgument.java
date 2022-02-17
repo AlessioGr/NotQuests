@@ -215,7 +215,7 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Str
                     completions.add(variableString);
                 }else{
                     if(!input.endsWith(variableString+"(")){
-                        if(input.endsWith(",")){
+                        if(input.endsWith(",") && input.contains(variableString+"(")){
                             for(StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()){
                                 if(!input.contains(stringArgument.getName())){
                                     completions.add(input + stringArgument.getName() + ":<value>");
@@ -314,7 +314,9 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Str
                 //return Collections.emptyList();
             }
 
-
+            for(int i=0; i<10; i++){
+                completions.add(i + ".0");
+            }
 
 
 

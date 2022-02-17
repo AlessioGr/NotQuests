@@ -217,7 +217,7 @@ public final class BooleanVariableValueArgument<C> extends CommandArgument<C, St
                     completions.add(variableString);
                 }else{
                     if(!input.endsWith(variableString+"(")){
-                        if(input.endsWith(",")){
+                        if(input.endsWith(",") && input.contains(variableString+"(")){
                             for(StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()){
                                 if(!input.contains(stringArgument.getName())){
                                     completions.add(input + stringArgument.getName() + ":<value>");
