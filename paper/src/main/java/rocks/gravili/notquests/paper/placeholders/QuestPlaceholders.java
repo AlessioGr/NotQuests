@@ -121,6 +121,7 @@ public class QuestPlaceholders extends PlaceholderExpansion {
             return "";
         }
 
+
         if (identifier.startsWith("player_questpoints")) {
             final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
             if (questPlayer != null) {
@@ -338,6 +339,17 @@ public class QuestPlaceholders extends PlaceholderExpansion {
                 return "No";
             }
             return "No";
+        }
+
+
+        if (identifier.startsWith("player_expression_")) {
+            final String expression = identifier.replace("player_expression_", "");
+
+            return ""+main.getVariablesManager().evaluateExpression(expression, player);
+        }else if (identifier.startsWith("player_rounded_expression_")) {
+            final String expression = identifier.replace("player_rounded_expression_", "");
+
+            return ""+ (int) Math.round(main.getVariablesManager().evaluateExpression(expression, player));
         }
 
 
