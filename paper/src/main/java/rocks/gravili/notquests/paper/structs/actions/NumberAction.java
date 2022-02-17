@@ -33,6 +33,7 @@ import redempt.crunch.CompiledExpression;
 import redempt.crunch.Crunch;
 import redempt.crunch.functional.EvaluationEnvironment;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
@@ -50,7 +51,7 @@ public class NumberAction extends Action {
 
     private HashMap<String, String> additionalStringArguments;
     private HashMap<String, String> additionalNumberArguments;
-    private HashMap<String, Boolean> additionalBooleanArguments;
+    private HashMap<String, String> additionalBooleanArguments;
 
     private String newValueExpression;
 
@@ -91,7 +92,7 @@ public class NumberAction extends Action {
     private void setAdditionalNumberArguments(HashMap<String, String> additionalNumberArguments) {
         this.additionalNumberArguments = additionalNumberArguments;
     }
-    private void setAdditionalBooleanArguments(HashMap<String, Boolean> additionalBooleanArguments) {
+    private void setAdditionalBooleanArguments(HashMap<String, String> additionalBooleanArguments) {
         this.additionalBooleanArguments = additionalBooleanArguments;
     }
 
@@ -162,12 +163,12 @@ public class NumberAction extends Action {
                         }
                         numberAction.setAdditionalNumberArguments(additionalNumberArguments);
 
-                        HashMap<String, Boolean> additionalBooleanArguments = new HashMap<>();
-                        for(BooleanArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
+                        HashMap<String, String> additionalBooleanArguments = new HashMap<>();
+                        for(BooleanVariableValueArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
                             additionalBooleanArguments.put(booleanArgument.getName(), context.get(booleanArgument.getName()));
                         }
                         for(CommandFlag<?> commandFlag : variable.getRequiredBooleanFlags()){
-                            additionalBooleanArguments.put(commandFlag.getName(), context.flags().isPresent(commandFlag.getName()));
+                            additionalBooleanArguments.put(commandFlag.getName(), context.flags().isPresent(commandFlag.getName()) ? "true" : "false");
                         }
                         numberAction.setAdditionalBooleanArguments(additionalBooleanArguments);
 
@@ -203,7 +204,7 @@ public class NumberAction extends Action {
                 for(String extraArgument : extraArguments){
                     main.getLogManager().debug("Extra: " + extraArgument);
                     if(extraArgument.startsWith("--")){
-                        variable.addAdditionalBooleanArgument(extraArgument.replace("--", ""), true);
+                        variable.addAdditionalBooleanArgument(extraArgument.replace("--", ""), "true");
                         main.getLogManager().debug("AddBoolFlag: " + extraArgument.replace("--", ""));
                     }else{
                         String[] split = extraArgument.split(":");
@@ -221,9 +222,9 @@ public class NumberAction extends Action {
                                 main.getLogManager().debug("AddNumb: " + key + " val: " + value);
                             }
                         }
-                        for(BooleanArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
+                        for(BooleanVariableValueArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
                             if(booleanArgument.getName().equalsIgnoreCase(key)){
-                                variable.addAdditionalBooleanArgument(key, Boolean.parseBoolean(value));
+                                variable.addAdditionalBooleanArgument(key, value);
                                 main.getLogManager().debug("AddBool: " + key + " val: " + value);
                             }
                         }
@@ -387,7 +388,7 @@ public class NumberAction extends Action {
         final ConfigurationSection additionalBooleansConfigurationSection = configuration.getConfigurationSection(initialPath + ".specifics.additionalBooleans");
         if (additionalBooleansConfigurationSection != null) {
             for (String key : additionalBooleansConfigurationSection.getKeys(false)) {
-                additionalBooleanArguments.put(key, configuration.getBoolean(initialPath + ".specifics.additionalBooleans." + key, false));
+                additionalBooleanArguments.put(key, configuration.getBoolean(initialPath + ".specifics.additionalBooleans." + key, false) ? "true" : "false");
             }
         }
         initializeExpressionAndCachedVariable();
@@ -424,10 +425,10 @@ public class NumberAction extends Action {
                         additionalNumberArguments.put(variable.getRequiredNumbers().get(counter-4).getName(), argument);
                         counterNumbers++;
                     } else if(variable.getRequiredBooleans().size()  > counterBooleans){
-                        additionalBooleanArguments.put(variable.getRequiredBooleans().get(counter-4).getName(), Boolean.parseBoolean(argument));
+                        additionalBooleanArguments.put(variable.getRequiredBooleans().get(counter-4).getName(), argument);
                         counterBooleans++;
                     } else if(variable.getRequiredBooleanFlags().size()  > counterBooleanFlags){
-                        additionalBooleanArguments.put(variable.getRequiredBooleanFlags().get(counter-4).getName(), Boolean.parseBoolean(argument));
+                        additionalBooleanArguments.put(variable.getRequiredBooleanFlags().get(counter-4).getName(), argument);
                         counterBooleanFlags++;
                     }
                 }

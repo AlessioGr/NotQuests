@@ -24,12 +24,14 @@ import cloud.commandframework.arguments.flags.CommandFlag;
 import cloud.commandframework.arguments.standard.BooleanArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.context.CommandContext;
+import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import redempt.crunch.CompiledExpression;
 import redempt.crunch.Crunch;
 import redempt.crunch.functional.EvaluationEnvironment;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.variables.*;
 import rocks.gravili.notquests.paper.structs.variables.hooks.*;
@@ -95,6 +97,8 @@ public class VariablesManager {
         registerVariable("Advancement", AdvancementVariable.class);
         registerVariable("Inventory", InventoryVariable.class);
         registerVariable("ContainerInventory", ContainerInventoryVariable.class);
+        registerVariable("Block", BlockVariable.class);
+
 
         registerVariable("TagBoolean", BooleanTagVariable.class);
         registerVariable("TagInteger", IntegerTagVariable.class);
@@ -146,7 +150,7 @@ public class VariablesManager {
                 }
             }
             if(variable.getRequiredBooleans() != null){
-                for(BooleanArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
+                for(BooleanVariableValueArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
                     newBuilder = newBuilder.argument(booleanArgument, ArgumentDescription.of("Optional Boolean Argument"));
                 }
             }
@@ -271,7 +275,7 @@ public class VariablesManager {
                 for(String extraArgument : extraArguments){
                     main.getLogManager().debug("Extra: " + extraArgument);
                     if(extraArgument.startsWith("--")){
-                        variable.addAdditionalBooleanArgument(extraArgument.replace("--", ""), true);
+                        variable.addAdditionalBooleanArgument(extraArgument.replace("--", ""), "true");
                         main.getLogManager().debug("AddBoolFlag: " + extraArgument.replace("--", ""));
                     }else{
                         String[] split = extraArgument.split(":");
@@ -293,9 +297,9 @@ public class VariablesManager {
 
                             }
                         }
-                        for(BooleanArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
+                        for(BooleanVariableValueArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
                             if(booleanArgument.getName().equalsIgnoreCase(key)){
-                                variable.addAdditionalBooleanArgument(key, Boolean.parseBoolean(value));
+                                variable.addAdditionalBooleanArgument(key, value);
                                 main.getLogManager().debug("AddBool: " + key + " val: " + value);
                             }
 

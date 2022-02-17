@@ -32,6 +32,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.ItemStackListVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.ListVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
@@ -52,7 +53,7 @@ public class ItemStackListCondition extends Condition {
 
     private HashMap<String, String> additionalStringArguments;
     private HashMap<String, String> additionalNumberArguments;
-    private HashMap<String, Boolean> additionalBooleanArguments;
+    private HashMap<String, String> additionalBooleanArguments;
 
     public final String getOperator(){
         return operator;
@@ -215,7 +216,7 @@ public class ItemStackListCondition extends Condition {
         final ConfigurationSection additionalBooleansConfigurationSection = configuration.getConfigurationSection(initialPath + ".specifics.additionalBooleans");
         if (additionalBooleansConfigurationSection != null) {
             for (String key : additionalBooleansConfigurationSection.getKeys(false)) {
-                additionalBooleanArguments.put(key, configuration.getBoolean(initialPath + ".specifics.additionalBooleans." + key, false));
+                additionalBooleanArguments.put(key, configuration.getBoolean(initialPath + ".specifics.additionalBooleans." + key, false) ? "true" : "false");
             }
         }
     }
@@ -250,10 +251,10 @@ public class ItemStackListCondition extends Condition {
                         additionalNumberArguments.put(variable.getRequiredNumbers().get(counter-5).getName(), argument);
                         counterNumbers++;
                     } else if(variable.getRequiredBooleans().size()  > counterBooleans){
-                        additionalBooleanArguments.put(variable.getRequiredBooleans().get(counter-5).getName(), Boolean.parseBoolean(argument));
+                        additionalBooleanArguments.put(variable.getRequiredBooleans().get(counter-5).getName(), argument);
                         counterBooleans++;
                     } else if(variable.getRequiredBooleanFlags().size()  > counterBooleanFlags){
-                        additionalBooleanArguments.put(variable.getRequiredBooleanFlags().get(counter-5).getName(), Boolean.parseBoolean(argument));
+                        additionalBooleanArguments.put(variable.getRequiredBooleanFlags().get(counter-5).getName(), argument);
                         counterBooleanFlags++;
                     }
                 }
@@ -349,12 +350,12 @@ public class ItemStackListCondition extends Condition {
                         }
                         listCondition.setAdditionalNumberArguments(additionalNumberArguments);
 
-                        HashMap<String, Boolean> additionalBooleanArguments = new HashMap<>();
-                        for(BooleanArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
+                        HashMap<String, String> additionalBooleanArguments = new HashMap<>();
+                        for(BooleanVariableValueArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
                             additionalBooleanArguments.put(booleanArgument.getName(), context.get(booleanArgument.getName()));
                         }
                         for(CommandFlag<?> commandFlag : variable.getRequiredBooleanFlags()){
-                            additionalBooleanArguments.put(commandFlag.getName(), context.flags().isPresent(commandFlag.getName()));
+                            additionalBooleanArguments.put(commandFlag.getName(), context.flags().isPresent(commandFlag.getName()) ? "true" : "false");
                         }
                         listCondition.setAdditionalBooleanArguments(additionalBooleanArguments);
 
@@ -374,7 +375,7 @@ public class ItemStackListCondition extends Condition {
     private void setAdditionalNumberArguments(HashMap<String, String> additionalNumberArguments) {
         this.additionalNumberArguments = additionalNumberArguments;
     }
-    private void setAdditionalBooleanArguments(HashMap<String, Boolean> additionalBooleanArguments) {
+    private void setAdditionalBooleanArguments(HashMap<String, String> additionalBooleanArguments) {
         this.additionalBooleanArguments = additionalBooleanArguments;
     }
 

@@ -122,7 +122,7 @@ public class ItemsManager {
     public final Material getMaterial(final String name){
         Material material;
         try{
-            material = Material.valueOf(name);
+            material = Material.valueOf(name.toUpperCase(Locale.ROOT));
         }catch (Exception ignored){
             material = getItem(name).getItemStack().getType();
         }

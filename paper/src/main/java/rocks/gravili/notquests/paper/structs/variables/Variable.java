@@ -1,14 +1,14 @@
 package rocks.gravili.notquests.paper.structs.variables;
 
 import cloud.commandframework.arguments.flags.CommandFlag;
-import cloud.commandframework.arguments.standard.BooleanArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
-import com.sun.jna.platform.unix.solaris.LibKstat;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
+import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -24,17 +24,51 @@ public abstract class Variable<T> {
     protected final NotQuests main;
     private final ArrayList<StringArgument<CommandSender>> requiredStrings;
     private final ArrayList<NumberVariableValueArgument<CommandSender>> requiredNumbers;
-    private final ArrayList<BooleanArgument<CommandSender>> requiredBooleans;
+    private final ArrayList<BooleanVariableValueArgument<CommandSender>> requiredBooleans;
     private final ArrayList<CommandFlag<Void>> requiredBooleanFlags;
 
+    private final ArrayList<String> setOnlyRequiredValues = new ArrayList<>(); //TODO: Implement
+    private final ArrayList<String> getOnlyRequiredValues = new ArrayList<>(); //TODO: Implement
 
     private HashMap<String, String> additionalStringArguments;
     private HashMap<String, String> additionalNumberArguments; //Second string is an expression
-    private HashMap<String, Boolean> additionalBooleanArguments;
+    private HashMap<String, String> additionalBooleanArguments;
 
     private boolean canSetValue = false;
 
     private final VariableDataType variableDataType;
+
+
+
+
+
+
+
+    public final ArrayList<String> getSetOnlyRequiredValues() {
+        return setOnlyRequiredValues;
+    }
+
+    public final ArrayList<String> getGetOnlyRequiredValues() {
+        return getOnlyRequiredValues;
+    }
+
+    public final HashMap<String, String> getAdditionalStringArguments() {
+        return additionalStringArguments;
+    }
+
+    public final HashMap<String, String> getAdditionalBooleanArguments() {
+        return additionalBooleanArguments;
+    }
+
+
+    public void addSetOnlyRequiredValue(final String value){
+        setOnlyRequiredValues.add(value);
+    }
+    public void addGetOnlyRequiredValue(final String value){
+        getOnlyRequiredValues.add(value);
+    }
+
+
 
     public Variable(final NotQuests main){
         this.main = main;
@@ -86,7 +120,7 @@ public abstract class Variable<T> {
     protected void addRequiredNumber(final NumberVariableValueArgument<CommandSender> numberVariableValueArgument){
         requiredNumbers.add(numberVariableValueArgument);
     }
-    protected void addRequiredBoolean(final BooleanArgument<CommandSender> booleanArgument){
+    protected void addRequiredBoolean(final BooleanVariableValueArgument<CommandSender> booleanArgument){
         requiredBooleans.add(booleanArgument);
     }
     protected void addRequiredBooleanFlag(final CommandFlag<Void> commandFlag){
@@ -99,7 +133,7 @@ public abstract class Variable<T> {
     public final ArrayList<NumberVariableValueArgument<CommandSender>> getRequiredNumbers(){
         return requiredNumbers;
     }
-    public final ArrayList<BooleanArgument<CommandSender>> getRequiredBooleans(){
+    public final ArrayList<BooleanVariableValueArgument<CommandSender>> getRequiredBooleans(){
         return requiredBooleans;
     }
     public final ArrayList<CommandFlag<Void>> getRequiredBooleanFlags(){
@@ -114,8 +148,8 @@ public abstract class Variable<T> {
     protected final double getRequiredNumberValue(String key, Player player){
         return main.getVariablesManager().evaluateExpression(additionalNumberArguments.get(key), player);
     }
-    protected final boolean getRequiredBooleanValue(String key){
-        return additionalBooleanArguments.getOrDefault(key, false);
+    protected final boolean getRequiredBooleanValue(String key, Player player){
+        return main.getVariablesManager().evaluateExpression(additionalNumberArguments.get(key), player) >= 0.98d;
     }
 
     public final HashMap<String, String> getAdditionalNumberArguments(){
@@ -192,11 +226,11 @@ public abstract class Variable<T> {
     public void setAdditionalNumberArguments(HashMap<String, String> additionalNumberArguments) {
         this.additionalNumberArguments = additionalNumberArguments;
     }
-    public void setAdditionalBooleanArguments(HashMap<String, Boolean> additionalBooleanArguments) {
+    public void setAdditionalBooleanArguments(HashMap<String, String> additionalBooleanArguments) {
         this.additionalBooleanArguments = additionalBooleanArguments;
     }
 
-    public void addAdditionalBooleanArgument(String key, boolean value){
+    public void addAdditionalBooleanArgument(String key, String value){
         additionalBooleanArguments.put(key, value);
     }
     public void addAdditionalStringArgument(String key, String value){

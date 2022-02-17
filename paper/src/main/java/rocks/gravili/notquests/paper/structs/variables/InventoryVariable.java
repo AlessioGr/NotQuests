@@ -25,15 +25,15 @@ public class InventoryVariable extends Variable<ItemStack[]>{
 
     @Override
     public boolean setValueInternally(ItemStack[] newValue, Player player, Object... objects) {
-        if(getRequiredBooleanValue("add")){
+        if(getRequiredBooleanValue("add", player)){
 
             HashMap<Integer, ItemStack> left =  player.getInventory().addItem(newValue);
-            if(!getRequiredBooleanValue("skipItemIfInventoryFull")){
+            if(!getRequiredBooleanValue("skipItemIfInventoryFull", player)){
                 for(ItemStack leftItemStack : left.values()){
                     player.getWorld().dropItem(player.getLocation(), leftItemStack);
                 }
             }
-        }else if(getRequiredBooleanValue("remove")){
+        }else if(getRequiredBooleanValue("remove", player)){
 
             player.getInventory().removeItemAnySlot(newValue);
         }else{

@@ -46,7 +46,7 @@ public class PlaceholderAPINumberVariable extends Variable<Double>{
 
             String placeholder = PlaceholderAPI.setPlaceholders(player, getRequiredStringValue("Placeholder"));
 
-            if(getRequiredBooleanValue("removeTextFromPlaceholderValue")){
+            if(getRequiredBooleanValue("removeTextFromPlaceholderValue", player)){
                 placeholder = placeholder.replaceAll("[^\\d.]", "");
             }
 

@@ -4,21 +4,19 @@ import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.arguments.standard.StringArgument;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.Container;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
+import rocks.gravili.notquests.paper.managers.items.NQItem;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
-public class ContainerInventoryVariable extends Variable<ItemStack[]>{
-    public ContainerInventoryVariable(NotQuests main) {
+public class BlockVariable extends Variable<String>{
+    public BlockVariable(NotQuests main) {
         super(main);
         setCanSetValue(true);
 
@@ -47,14 +45,10 @@ public class ContainerInventoryVariable extends Variable<ItemStack[]>{
                 NumberVariableValueArgument.<CommandSender>newBuilder("z", main, this).build()
         );
 
-        addRequiredBooleanFlag(
-                main.getCommandManager().getPaperCommandManager().flagBuilder("skipItemIfInventoryFull")
-                        .withDescription(ArgumentDescription.of("Does not drop the item if inventory full if flag set")).build()
-        );
     }
 
     @Override
-    public ItemStack[] getValue(Player player, Object... objects) {
+    public String getValue(Player player, Object... objects) {
         String worldName = getRequiredStringValue("world");
         World world = Bukkit.getWorld(worldName);
         double x = getRequiredNumberValue("x", player);
@@ -68,18 +62,11 @@ public class ContainerInventoryVariable extends Variable<ItemStack[]>{
         Location location = new Location(world, x, y, z);
         Block block = location.getBlock();
 
-        if(block.getState() instanceof Container container){
-            return container.getInventory().getStorageContents();
-
-        }else{
-            main.getLogManager().warn("Error: cannot get value of chest inventory variable, because the location does not have a container block. Real type: " + block.getType().name());
-            return new ItemStack[0];
-        }
-
+        return block.getType().name().toLowerCase(Locale.ROOT);
     }
 
     @Override
-    public boolean setValueInternally(ItemStack[] newValue, Player player, Object... objects) {
+    public boolean setValueInternally(String newValue, Player player, Object... objects) {
         String worldName = getRequiredStringValue("world");
         World world = Bukkit.getWorld(worldName);
         double x = getRequiredNumberValue("x", player);
@@ -93,24 +80,26 @@ public class ContainerInventoryVariable extends Variable<ItemStack[]>{
         Location location = new Location(world, x, y, z);
         Block block = location.getBlock();
 
-        if(block.getState() instanceof Container container){
-            if(getRequiredBooleanValue("add", player)){
 
-                HashMap<Integer, ItemStack> left =  container.getInventory().addItem(newValue);
-                if(!getRequiredBooleanValue("skipItemIfInventoryFull", player)){
-                    for(ItemStack leftItemStack : left.values()){
-                        world.dropItem(location, leftItemStack);
-                    }
-                }
-            }else if(getRequiredBooleanValue("remove", player)){
-                container.getInventory().removeItemAnySlot(newValue);
-            }else{
-                container.getInventory().setContents(newValue);
+
+
+        final String materialToBreak;
+        if (newValue.equalsIgnoreCase("hand")) { //"hand"
+            if (player != null) {
+                materialToBreak = player.getInventory().getItemInMainHand().getType().name();
+            } else {
+                return false;
             }
-        }else{
-            main.getLogManager().warn("Error: cannot set value of chest inventory variable, because the location does not have a container block. Real type: " + block.getType().name());
-            return false;
+        } else {
+            if (!newValue.equalsIgnoreCase("any")) {
+                materialToBreak = main.getItemsManager().getMaterial(newValue).name();
+            }else{
+                int rnd = new Random().nextInt(Material.values().length);
+                materialToBreak = Material.values()[rnd].name().toLowerCase(Locale.ROOT);
+            }
         }
+        block.setType(Material.valueOf(materialToBreak));
+
 
         return true;
     }
@@ -118,16 +107,28 @@ public class ContainerInventoryVariable extends Variable<ItemStack[]>{
 
     @Override
     public List<String> getPossibleValues(Player player, Object... objects) {
-        return null;
+        final List<String> completions = new ArrayList<>();
+        for (Material value : Material.values()) {
+            completions.add(value.name().toLowerCase());
+        }
+
+        for(NQItem nqItem : main.getItemsManager().getItems()){
+            completions.add(nqItem.getItemName());
+        }
+
+        completions.add("hand");
+        completions.add("any");
+
+        return completions;
     }
 
     @Override
     public String getPlural() {
-        return "Container Inventory";
+        return "Blocks";
     }
 
     @Override
     public String getSingular() {
-        return "Container Inventory";
+        return "Block";
     }
 }

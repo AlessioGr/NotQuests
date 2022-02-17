@@ -33,6 +33,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.ItemStackListVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -52,7 +53,7 @@ public class ItemStackListAction extends Action {
 
     private HashMap<String, String> additionalStringArguments;
     private HashMap<String, String> additionalNumberArguments;
-    private HashMap<String, Boolean> additionalBooleanArguments;
+    private HashMap<String, String> additionalBooleanArguments;
 
     private ItemStack itemStack;
 
@@ -85,7 +86,7 @@ public class ItemStackListAction extends Action {
     private void setAdditionalNumberArguments(HashMap<String, String> additionalNumberArguments) {
         this.additionalNumberArguments = additionalNumberArguments;
     }
-    private void setAdditionalBooleanArguments(HashMap<String, Boolean> additionalBooleanArguments) {
+    private void setAdditionalBooleanArguments(HashMap<String, String> additionalBooleanArguments) {
         this.additionalBooleanArguments = additionalBooleanArguments;
     }
 
@@ -174,12 +175,12 @@ public class ItemStackListAction extends Action {
                         }
                         listAction.setAdditionalNumberArguments(additionalNumberArguments);
 
-                        HashMap<String, Boolean> additionalBooleanArguments = new HashMap<>();
-                        for(BooleanArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
+                        HashMap<String, String> additionalBooleanArguments = new HashMap<>();
+                        for(BooleanVariableValueArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
                             additionalBooleanArguments.put(booleanArgument.getName(), context.get(booleanArgument.getName()));
                         }
                         for(CommandFlag<?> commandFlag : variable.getRequiredBooleanFlags()){
-                            additionalBooleanArguments.put(commandFlag.getName(), context.flags().isPresent(commandFlag.getName()));
+                            additionalBooleanArguments.put(commandFlag.getName(), context.flags().isPresent(commandFlag.getName()) ? "true" : "false");
                         }
                         listAction.setAdditionalBooleanArguments(additionalBooleanArguments);
 
@@ -256,7 +257,7 @@ public class ItemStackListAction extends Action {
         ItemStack[] nextNewValue = null;
 
         if(getOperator().equalsIgnoreCase("set")){
-            variable.addAdditionalBooleanArgument("set", true);
+            variable.addAdditionalBooleanArgument("set", "true");
             int amountLeft = getItemStack().getAmount();
             if(getItemStack().getAmount() > getItemStack().getMaxStackSize()){
                 while (amountLeft > 0){
@@ -270,7 +271,7 @@ public class ItemStackListAction extends Action {
             }
             nextNewValue = nextNewValueList.toArray(new ItemStack[nextNewValueList.size()]);
         }else if(getOperator().equalsIgnoreCase("add")){
-            variable.addAdditionalBooleanArgument("add", true);
+            variable.addAdditionalBooleanArgument("add", "true");
 
             int amountLeft = getItemStack().getAmount();
             if(getItemStack().getAmount() > getItemStack().getMaxStackSize()){
@@ -331,13 +332,13 @@ public class ItemStackListAction extends Action {
             }else{
                 nextNewValueList.add(getItemStack());
             }
-            variable.addAdditionalBooleanArgument("remove", true);
+            variable.addAdditionalBooleanArgument("remove", "true");
             /* nextNewValueList.addAll(currentValueArrayList);
             nextNewValueList.removeAll(currentValueArrayList);*/
 
             nextNewValue = nextNewValueList.toArray(new ItemStack[nextNewValueList.size()]);
         }else if(getOperator().equalsIgnoreCase("clear")){
-            variable.addAdditionalBooleanArgument("clear", true);
+            variable.addAdditionalBooleanArgument("clear", "true");
             nextNewValue = new ItemStack[0];
         }else{
             main.sendMessage(player, "<ERROR>Error: variable operator <highlight>" + getOperator() + "</highlight> is invalid. Report this to the Server owner.");
@@ -411,7 +412,7 @@ public class ItemStackListAction extends Action {
         final ConfigurationSection additionalBooleansConfigurationSection = configuration.getConfigurationSection(initialPath + ".specifics.additionalBooleans");
         if (additionalBooleansConfigurationSection != null) {
             for (String key : additionalBooleansConfigurationSection.getKeys(false)) {
-                additionalBooleanArguments.put(key, configuration.getBoolean(initialPath + ".specifics.additionalBooleans." + key, false));
+                additionalBooleanArguments.put(key, configuration.getBoolean(initialPath + ".specifics.additionalBooleans." + key, false) ? "true" : "false");
             }
         }
     }
@@ -447,10 +448,10 @@ public class ItemStackListAction extends Action {
                         additionalNumberArguments.put(variable.getRequiredNumbers().get(counter-5).getName(), argument);
                         counterNumbers++;
                     } else if(variable.getRequiredBooleans().size()  > counterBooleans){
-                        additionalBooleanArguments.put(variable.getRequiredBooleans().get(counter-5).getName(), Boolean.parseBoolean(argument));
+                        additionalBooleanArguments.put(variable.getRequiredBooleans().get(counter-5).getName(),argument);
                         counterBooleans++;
                     } else if(variable.getRequiredBooleanFlags().size()  > counterBooleanFlags){
-                        additionalBooleanArguments.put(variable.getRequiredBooleanFlags().get(counter-5).getName(), Boolean.parseBoolean(argument));
+                        additionalBooleanArguments.put(variable.getRequiredBooleanFlags().get(counter-5).getName(), argument);
                         counterBooleanFlags++;
                     }
                 }

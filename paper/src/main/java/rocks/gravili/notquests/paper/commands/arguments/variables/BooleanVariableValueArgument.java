@@ -228,7 +228,7 @@ public final class BooleanVariableValueArgument<C> extends CommandArgument<C, St
                                     completions.add(input + numberVariableValueArgument.getName() + ":<value>");
                                 }
                             }
-                            for(BooleanArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
+                            for(BooleanVariableValueArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
                                 if(!input.contains(booleanArgument.getName())){
                                     completions.add(input + booleanArgument.getName() + ":<value>");
                                 }
@@ -263,7 +263,7 @@ public final class BooleanVariableValueArgument<C> extends CommandArgument<C, St
                                     } else {
                                         completions.add(variableString+"(" + numberVariableValueArgument.getName() + ":<value>");
                                     }
-                                }for(BooleanArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()) {
+                                }for(BooleanVariableValueArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()) {
                                     if (subStringAfter.contains(":")) {
                                         if(subStringAfter.endsWith(":")){
                                             completions.add(input + "<value>");
@@ -287,7 +287,7 @@ public final class BooleanVariableValueArgument<C> extends CommandArgument<C, St
                         for(NumberVariableValueArgument<CommandSender> numberVariableValueArgument : variable.getRequiredNumbers()){
                             completions.add(variableString+"(" + numberVariableValueArgument.getName() + ":<value>");
                         }
-                        for(BooleanArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
+                        for(BooleanVariableValueArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
                             completions.add(variableString+"(" + booleanArgument.getName() + ":<value>");
                         }
                         for(CommandFlag<Void> flag : variable.getRequiredBooleanFlags()){
