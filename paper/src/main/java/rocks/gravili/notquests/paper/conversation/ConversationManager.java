@@ -457,7 +457,7 @@ public class ConversationManager {
                         foundCondition.setNegated(negated);
                         conditions.add(foundCondition);
                     } else {
-                        main.getLogManager().warn("Unable to find conversation line condition: " + conditionString);
+                        main.getLogManager().warn("Unable to find conversation line condition (1): " + conditionString);
                     }
 
                 }else {
@@ -468,6 +468,10 @@ public class ConversationManager {
                         //Check for NumberAction or StringAction first
 
                         for(String variableString : main.getVariablesManager().getVariableIdentifiers()) {
+                            if(!variableString.equalsIgnoreCase(singleLineConditionStringArguments.get(0))){
+                                continue;
+                            }
+                            main.getLogManager().info("Found variable for condition string " + conditionString + ": " + variableString);
 
                             Variable<?> variable = main.getVariablesManager().getVariableFromString(variableString);
                             if (variable == null || !variable.isCanSetValue()) {
@@ -510,6 +514,7 @@ public class ConversationManager {
                                 conditions.add(condition);
                                 continue conditionLineLoop;
                             }else if(variable.getVariableDataType() == VariableDataType.LIST){
+
                                 final ListCondition condition = new ListCondition(main);
                                 try{
                                     condition.deserializeFromSingleLineString(singleLineConditionStringArguments);
@@ -522,12 +527,12 @@ public class ConversationManager {
                                 conditions.add(condition);
                                 continue conditionLineLoop;
                             }else{
-                                main.getLogManager().warn("Unable to find conversation line condition: " + singleLineConditionStringArguments.get(0));
+                                main.getLogManager().warn("Unable to find conversation line condition's data type: " + singleLineConditionStringArguments.get(0) + ". Data type: " + variable.getVariableDataType().toString());
                                 continue;
                             }
                         }
 
-                        main.getLogManager().warn("Unable to find conversation line condition: " + singleLineConditionStringArguments.get(0));
+                        main.getLogManager().warn("Unable to find conversation line condition type: " + singleLineConditionStringArguments.get(0));
                         continue;
                     }
 
@@ -578,6 +583,10 @@ public class ConversationManager {
                         //Check for NumberAction or StringAction first
 
                         for(String variableString : main.getVariablesManager().getVariableIdentifiers()) {
+                            if(!variableString.equalsIgnoreCase(singleLineActionStringArguments.get(0))){
+                                continue;
+                            }
+                            main.getLogManager().info("Found variable for action string " + actionString + ": " + variableString);
 
                             Variable<?> variable = main.getVariablesManager().getVariableFromString(variableString);
                             if (variable == null || !variable.isCanSetValue()) {
