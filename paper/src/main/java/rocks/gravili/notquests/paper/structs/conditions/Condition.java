@@ -111,6 +111,10 @@ public abstract class Condition {
         return conditionName;
     }
 
+    public final String getConditionIdentifier() {
+        return "Name: " + conditionName + " Type: " + getConditionType() + " Description: " + getDescription() + " Negated: " + negated;
+    }
+
     public void setConditionName(final String conditionName) {
         this.conditionName = conditionName;
     }

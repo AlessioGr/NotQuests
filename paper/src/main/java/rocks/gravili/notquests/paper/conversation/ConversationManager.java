@@ -487,6 +487,7 @@ public class ConversationManager {
                                     continue conditionLineLoop;
                                 }
                                 main.getLogManager().debug("Found conversation line condition: " + condition.getConditionName());
+                                condition.setNegated(negated);
                                 conditions.add(condition);
                                 continue conditionLineLoop;
                             }else if(variable.getVariableDataType() == VariableDataType.STRING){
@@ -499,6 +500,7 @@ public class ConversationManager {
                                     continue conditionLineLoop;
                                 }
                                 main.getLogManager().debug("Found conversation line condition: " + condition.getConditionName());
+                                condition.setNegated(negated);
                                 conditions.add(condition);
                                 continue conditionLineLoop;
                             }else if(variable.getVariableDataType() == VariableDataType.BOOLEAN){
@@ -511,6 +513,7 @@ public class ConversationManager {
                                     continue conditionLineLoop;
                                 }
                                 main.getLogManager().debug("Found conversation line condition: " + condition.getConditionName());
+                                condition.setNegated(negated);
                                 conditions.add(condition);
                                 continue conditionLineLoop;
                             }else if(variable.getVariableDataType() == VariableDataType.LIST){
@@ -524,6 +527,7 @@ public class ConversationManager {
                                     continue conditionLineLoop;
                                 }
                                 main.getLogManager().debug("Found conversation line condition: " + condition.getConditionName());
+                                condition.setNegated(negated);
                                 conditions.add(condition);
                                 continue conditionLineLoop;
                             }else{
