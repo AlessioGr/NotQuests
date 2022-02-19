@@ -56,6 +56,12 @@ repositories {
         }
     }
 
+    maven("https://repo.glaremasters.me/repository/towny/"){
+        content{
+            includeGroup("com.palmergames.bukkit.towny")
+        }
+    }
+
     /*maven("https://repo.minebench.de/"){
         content {
             includeGroup("de.themoep")
@@ -140,7 +146,7 @@ dependencies {
     compileOnly("net.luckperms:api:5.4")
 
     //compileOnly "com.github.NEZNAMY:TAB:2.9.2"
-    compileOnly("com.github.TownyAdvanced:Towny:0.97.5.0")
+    compileOnly("com.palmergames.bukkit.towny:towny:0.98.0.0")
 
     compileOnly("com.github.Zrips:Jobs:v4.17.2")
 
