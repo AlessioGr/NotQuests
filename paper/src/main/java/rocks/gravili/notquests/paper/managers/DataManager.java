@@ -1299,7 +1299,7 @@ public class DataManager {
                 main.getTagManager().saveAllOnlinePlayerTags();
                 main.getQuestPlayerManager().savePlayerData();
             }else{
-                for(QuestPlayer questPlayer : main.getQuestPlayerManager().getQuestPlayers()){
+                for(QuestPlayer questPlayer : new ArrayList<>(main.getQuestPlayerManager().getQuestPlayers())) {
                     main.getTagManager().onQuit(questPlayer, questPlayer.getPlayer());
                     main.getQuestPlayerManager().saveSinglePlayerData(questPlayer.getPlayer());
                 }
