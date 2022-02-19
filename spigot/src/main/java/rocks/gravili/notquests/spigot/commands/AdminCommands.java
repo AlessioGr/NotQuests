@@ -617,7 +617,7 @@ public class AdminCommands {
                     final Audience audience = main.adventure().sender(context.getSender());
 
                     final String versionInformation = ("<main>NotQuests version: <highlight>"+ main.getMain().getDescription().getVersion() +
-                            "\n<main>NotQuests module: <yellow>Spigot" +
+                            "\n<main>NotQuests module: <yellow>Spigot <red>(limited functionality)" +
                             "\n<main>Server version: <highlight>" + Bukkit.getVersion()+
                             "\n<main>Server Brand: <highlight>" + Bukkit.getServer().getName() +
                             "\n<main>Java version: <highlight>" + (System.getProperty("java.version") != null ? System.getProperty("java.version") : "null") +
