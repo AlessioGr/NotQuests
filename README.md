@@ -141,7 +141,8 @@ Player Placeholders:
 %notquests_player_questpoints%
 %notquests_player_active_quests_list_horizontal%
 %notquests_player_active_quests_list_vertical%
-
+%notquests_player_expression_EXPRESSION%
+%notquests_player_rounded_expression_EXPRESSION%
 
 ![Banner_Future_Plans](https://user-images.githubusercontent.com/70709113/133997163-a98072a9-db72-4bf4-a0eb-b27ec67ad566.png)
 
