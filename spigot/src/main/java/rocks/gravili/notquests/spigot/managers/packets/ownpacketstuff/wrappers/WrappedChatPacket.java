@@ -63,7 +63,7 @@ public class WrappedChatPacket {
 
         //System.out.println("READ: " + readString());
 
-        try {//paper only
+        /*try {//paper only
             if (NotQuests.getInstance().getPacketManager().getPacketInjector().getPaperGsonComponentSerializer() != null) {
                 adventureComponent = Reflection.getFieldValueOfObject(packetObject, "adventure$message");
 
@@ -77,8 +77,11 @@ public class WrappedChatPacket {
                 //NotQuests.getInstance().getLogManager().debug("Null gson serializer :(");
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+            if (NotQuests.getInstance().getConfiguration().debug) {
+                throw new RuntimeException(e);
+
+            }
+        }**/ //Commented out cuz useless on spigot servers?
 
     }
 

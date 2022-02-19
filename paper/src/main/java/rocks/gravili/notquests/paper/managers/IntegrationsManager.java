@@ -9,6 +9,7 @@ import rocks.gravili.notquests.paper.managers.integrations.betonquest.BetonQuest
 import rocks.gravili.notquests.paper.managers.integrations.citizens.CitizensManager;
 import rocks.gravili.notquests.paper.placeholders.QuestPlaceholders;
 
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.logging.Level;
 
@@ -43,9 +44,15 @@ public class IntegrationsManager {
     private UltimateClansManager ultimateClansManager;
     private EcoBossesManager ecoBossesManager;
 
+    private final ArrayList<String> enabledIntegrations = new ArrayList<>();
+
 
     public IntegrationsManager(final NotQuests main) {
         this.main = main;
+    }
+
+    public final ArrayList<String> getEnabledIntegrations() {
+        return enabledIntegrations;
     }
 
     public void enableIntegrations() {
@@ -54,6 +61,7 @@ public class IntegrationsManager {
         if (main.getConfiguration().isIntegrationUltimateJobsEnabled()) {
             if (Bukkit.getPluginManager().getPlugin("UltimateJobs") != null) {
                 ultimateJobsEnabled = true;
+                enabledIntegrations.add("UltimateJobs");
                 main.getLogManager().info("UltimateJobs found! Enabling UltimateJobs support...");
             }
         }
@@ -62,6 +70,7 @@ public class IntegrationsManager {
         if (main.getConfiguration().isIntegrationEcoBossesEnabled()) {
             if (Bukkit.getPluginManager().getPlugin("EcoBosses") != null) {
                 ecoBossesEnabled = true;
+                enabledIntegrations.add("EcoBosses");
                 main.getLogManager().info("EcoBosses found! Enabling EcoBosses support... Bosses will be loaded in 10 seconds, because they are not loaded when the plugin starts. Don't blame me");
                 Bukkit.getScheduler().scheduleSyncDelayedTask(main.getMain(), new Runnable() {
                     @Override
@@ -77,6 +86,7 @@ public class IntegrationsManager {
         if (main.getConfiguration().isIntegrationPlaceholderAPIEnabled()) {
             if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
                 placeholderAPIEnabled = true;
+                enabledIntegrations.add("PlaceholderAPI");
                 main.getLogManager().info("PlaceholderAPI found! Enabling PlaceholderAPI support...");
             }
         }
@@ -91,6 +101,7 @@ public class IntegrationsManager {
                     vaultManager.setupPermissions();
                     vaultManager.setupChat();
                     vaultEnabled = true;
+                    enabledIntegrations.add("Vault");
                     main.getLogManager().info("Vault found! Enabling Vault support...");
                 }
             }
@@ -101,6 +112,7 @@ public class IntegrationsManager {
         if (main.getConfiguration().isIntegrationMythicMobsEnabled()) {
             if (main.getMain().getServer().getPluginManager().getPlugin("MythicMobs") != null && Objects.requireNonNull(main.getMain().getServer().getPluginManager().getPlugin("MythicMobs")).isEnabled()) {
                 mythicMobsEnabled = true;
+                enabledIntegrations.add("MythicMobs");
                 main.getLogManager().info("MythicMobs found! Enabling MythicMobs support...");
                 mythicMobsManager = new MythicMobsManager(main);
             }
@@ -111,6 +123,7 @@ public class IntegrationsManager {
         if (main.getConfiguration().isIntegrationEliteMobsEnabled()) {
             if (main.getMain().getServer().getPluginManager().getPlugin("EliteMobs") != null && Objects.requireNonNull(main.getMain().getServer().getPluginManager().getPlugin("EliteMobs")).isEnabled()) {
                 eliteMobsEnabled = true;
+                enabledIntegrations.add("EliteMobs");
                 main.getLogManager().info("EliteMobs found! Enabling EliteMobs support...");
             }
         }
@@ -119,6 +132,7 @@ public class IntegrationsManager {
         if (main.getConfiguration().isIntegrationBetonQuestEnabled()) {
             if (main.getMain().getServer().getPluginManager().getPlugin("BetonQuest") != null && Objects.requireNonNull(main.getMain().getServer().getPluginManager().getPlugin("BetonQuest")).isEnabled()) {
                 betonQuestEnabled = true;
+                enabledIntegrations.add("BetonQuest");
                 main.getLogManager().info("BetonQuest found! Enabling BetonQuest support...");
                 betonQuestManager = new BetonQuestManager(main);
                 main.getMain().getServer().getPluginManager().registerEvents(new BetonQuestEvents(main), main.getMain());
@@ -130,9 +144,9 @@ public class IntegrationsManager {
         if (main.getConfiguration().isIntegrationWorldEditEnabled()) {
             if (main.getMain().getServer().getPluginManager().getPlugin("WorldEdit") != null) {
                 worldEditManager = new WorldEditManager(main);
-                worldEditEnabled = false;
                 main.getLogManager().info("WorldEdit found! Enabling WorldEdit support...");
                 worldEditEnabled = true;
+                enabledIntegrations.add("WorldEdit");
             }
         }
 
@@ -143,8 +157,9 @@ public class IntegrationsManager {
                 main.getLogManager().info("Citizens Dependency not found! Congratulations! In NotQuests, you can use armor stands instead of Citizens NPCs");
 
             } else {
-                citizensManager = new CitizensManager(main);
                 citizensEnabled = true;
+                enabledIntegrations.add("Citizens");
+                citizensManager = new CitizensManager(main);
                 main.getLogManager().info("Citizens found! Enabling Citizens support...");
             }
         }
@@ -154,9 +169,10 @@ public class IntegrationsManager {
             if (main.getMain().getServer().getPluginManager().getPlugin("Slimefun") == null || !Objects.requireNonNull(main.getMain().getServer().getPluginManager().getPlugin("Slimefun")).isEnabled()) {
                 slimefunEnabled = false;
             } else {
+                slimefunEnabled = true;
+                enabledIntegrations.add("Slimefun");
                 slimefunManager = new SlimefunManager(main);
                 main.getLogManager().info("SlimeFun found! Enabling SlimeFun support...");
-                slimefunEnabled = true;
             }
         }
 
@@ -165,6 +181,7 @@ public class IntegrationsManager {
             if (main.getMain().getServer().getPluginManager().getPlugin("LuckPerms") != null) {
                 luckpermsManager = new LuckpermsManager(main);
                 luckpermsEnabled = true;
+                enabledIntegrations.add("LuckPerms");
                 main.getLogManager().info("LuckPerms found! Enabling LuckPerms support...");
             }
 
@@ -174,6 +191,7 @@ public class IntegrationsManager {
         if (main.getConfiguration().isIntegrationUltimateClansEnabled()) {
             if (main.getMain().getServer().getPluginManager().getPlugin("UltimateClans") != null) {
                 ultimateClansEnabled = true;
+                enabledIntegrations.add("UltimateClans");
                 ultimateClansManager = new UltimateClansManager(main);
                 main.getLogManager().info("UltimateClans found! Enabling UltimateClans support...");
             }
@@ -183,6 +201,7 @@ public class IntegrationsManager {
         if (main.getConfiguration().isIntegrationTownyEnabled()) {
             if (main.getMain().getServer().getPluginManager().getPlugin("Towny") != null) {
                 townyEnabled = true;
+                enabledIntegrations.add("Towny");
                 main.getLogManager().info("Towny found! Enabling Towny support...");
             }
         }
@@ -191,6 +210,7 @@ public class IntegrationsManager {
         if (main.getConfiguration().isIntegrationJobsRebornEnabled()) {
             if (main.getMain().getServer().getPluginManager().getPlugin("Jobs") != null) {
                 jobsRebornEnabled = true;
+                enabledIntegrations.add("JobsReborn");
                 main.getLogManager().info("Jobs Reborn found! Enabling Jobs Reborn support...");
             }
         }
@@ -200,6 +220,7 @@ public class IntegrationsManager {
             if (main.getMain().getServer().getPluginManager().getPlugin("ProjectKorra") != null) {
                 projectKorraManager = new ProjectKorraManager(main);
                 projectKorraEnabled = true;
+                enabledIntegrations.add("ProjectKorra");
                 main.getLogManager().info("Project Korra found! Enabling Project Korra support...");
             }
         }
@@ -215,6 +236,7 @@ public class IntegrationsManager {
         if (main.getConfiguration().isIntegrationPlaceholderAPIEnabled() && !isPlaceholderAPIEnabled()) {
             if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
                 placeholderAPIEnabled = true;
+                enabledIntegrations.add("PlaceholderAPI");
                 main.getLogManager().info("PlaceholderAPI found! Enabling PlaceholderAPI support...");
                 new QuestPlaceholders(main).register();
             }
@@ -265,6 +287,7 @@ public class IntegrationsManager {
     public void enableMythicMobs() {
         if (mythicMobsManager == null && main.getConfiguration().isIntegrationMythicMobsEnabled()) {
             mythicMobsEnabled = true;
+            enabledIntegrations.add("MythicMobs");
             main.getLogManager().info("MythicMobs found! Enabling MythicMobs support (late)...");
             mythicMobsManager = new MythicMobsManager(main);
             main.getMain().getServer().getPluginManager().registerEvents(new MythicMobsEvents(main), main.getMain());
@@ -279,6 +302,7 @@ public class IntegrationsManager {
                 citizensManager = new CitizensManager(main);
             }
             citizensEnabled = true;
+            enabledIntegrations.add("Citizens");
             main.getLogManager().info("Citizens found! Enabling Citizens support (late)...");
             main.getDataManager().setAlreadyLoadedNPCs(false);
             main.getMain().getServer().getPluginManager().registerEvents(new CitizensEvents(main), main.getMain());

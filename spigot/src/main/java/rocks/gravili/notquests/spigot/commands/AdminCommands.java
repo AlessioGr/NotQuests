@@ -611,13 +611,21 @@ public class AdminCommands {
                     audience.sendMessage(miniMessage.deserialize(NotQuestColors.successGradient + "NotQuests configuration and player data has been saved"));
                 }));
 
-        manager.command(builder.literal("version")
+        manager.command(builder.literal("version", "ver", "v", "info")
                 .meta(CommandMeta.DESCRIPTION, "Displays the version of the NotQuests plugin you're using.")
                 .handler((context) -> {
                     final Audience audience = main.adventure().sender(context.getSender());
 
+                    final String versionInformation = ("<main>NotQuests version: <highlight>"+ main.getMain().getDescription().getVersion() +
+                            "\n<main>NotQuests module: <yellow>Spigot" +
+                            "\n<main>Server version: <highlight>" + Bukkit.getVersion()+
+                            "\n<main>Server Brand: <highlight>" + Bukkit.getServer().getName() +
+                            "\n<main>Java version: <highlight>" + (System.getProperty("java.version") != null ? System.getProperty("java.version") : "null") +
+                            "\n<main>Enabled integrations: <highlight>" + String.join(", ", main.getIntegrationsManager().getEnabledIntegrations()))
+                            .replace("<main>", NotQuestColors.mainGradient)
+                            .replace("<highlight>", highlightGradient);
 
-                    audience.sendMessage(miniMessage.deserialize(NotQuestColors.mainGradient + "Current NotQuests version: " + highlightGradient + main.getMain().getDescription().getVersion() + highlight2Gradient + " (Spigot " + Bukkit.getVersion()  + ")"));
+                    audience.sendMessage(miniMessage.deserialize(versionInformation));
                 }));
 
 

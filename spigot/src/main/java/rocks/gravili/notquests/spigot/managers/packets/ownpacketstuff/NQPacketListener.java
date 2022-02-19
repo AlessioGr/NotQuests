@@ -45,7 +45,7 @@ public class NQPacketListener extends ChannelDuplexHandler {
                 main.getLogManager().debug("Valid chat packet! Type: " + wrappedChatPacket.getType().toString());
 
                 handleMainChatHistorySavingLogic(wrappedChatPacket, player);
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 if (main.getConfiguration().debug) {
                     e.printStackTrace();
                 }

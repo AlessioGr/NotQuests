@@ -596,11 +596,16 @@ public class AdminCommands {
                     context.getSender().sendMessage(main.parse("<success>NotQuests configuration and player data has been saved"));
                 }));
 
-        manager.command(builder.literal("version")
+        manager.command(builder.literal("version", "ver", "v", "info")
                 .meta(CommandMeta.DESCRIPTION, "Displays the version of the NotQuests plugin you're using.")
                 .handler((context) -> {
-                    context.getSender().sendMessage(main.parse("<main>Current NotQuests version: <highlight>"+ main.getMain().getDescription().getVersion() + "</highlight> <highlight2>(Paper " + Bukkit.getVersion() + ")"));
-
+                    context.getSender().sendMessage(main.parse("<main>NotQuests version: <highlight>"+ main.getMain().getDescription().getVersion() +
+                            "\n<main>NotQuests module: <highlight>Paper" +
+                            "\n<main>Server version: <highlight>" + Bukkit.getVersion() +
+                            "\n<main>Server Brand: <highlight>" + Bukkit.getServer().getName() +
+                            "\n<main>Java version: <highlight>" + (System.getProperty("java.version") != null ? System.getProperty("java.version") : "null") +
+                            "\n<main>Enabled integrations: <highlight>" + String.join(", ", main.getIntegrationsManager().getEnabledIntegrations())
+                    ));
                 }));
 
 
