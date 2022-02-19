@@ -300,12 +300,13 @@ public class DataManager {
             category.setConversationsFolder(conversationsFolder);
             category.setTagsFile(tagsFile);
             category.setItemsFile(itemsFile);
-            category.loadDataFromCategoryConfig();
 
             main.getLogManager().info("  Loading real category: <highlight>" + category.getCategoryFullName());
 
 
             category.initializeConfigurations();
+
+            category.loadDataFromCategoryConfig();
 
             if (parent != null) {
                 category.setParentCategory(parent);
@@ -315,6 +316,7 @@ public class DataManager {
                     defaultCategory = category;
                 }
             }
+
 
             categories.add(category);
 
