@@ -115,7 +115,7 @@ public class NQPacketListener extends ChannelDuplexHandler {
             main.getConversationManager().getChatHistory().put(player.getUniqueId(), hist);
 
 
-        } catch (Exception e) {
+        } catch (Throwable e) {
             if (main.getConfiguration().debug) {
                 main.getLogManager().warn("Exception reading chat packet: ");
                 e.printStackTrace();
