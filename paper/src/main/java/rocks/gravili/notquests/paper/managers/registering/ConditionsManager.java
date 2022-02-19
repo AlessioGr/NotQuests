@@ -201,7 +201,7 @@ public class ConditionsManager {
 
                 context.getSender().sendMessage(main.parse(
                         "<success>" + getConditionType(condition.getClass()) + " Condition successfully added to Objective <highlight>"
-                                + objectiveOfQuest.getObjectiveFinalName() + "</highlight>!"));
+                                + objectiveOfQuest.getFinalName() + "</highlight>!"));
             } else { //Quest Requirement
                 condition.setConditionID(quest.getFreeRequirementID());
                 quest.addRequirement(condition, true);

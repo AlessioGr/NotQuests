@@ -22,7 +22,6 @@ import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.parser.ArgumentParseResult;
 import cloud.commandframework.arguments.standard.IntegerArgument;
-import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -78,7 +77,7 @@ public class CompletedObjectiveCondition extends Condition {
         }
 
         if(activeQuest.getActiveObjectiveFromID(getObjectiveToCompleteID()) != null){
-            return "<YELLOW>Finish the following objective first: <highlight>" + objectiveToComplete.getObjectiveFinalName();
+            return "<YELLOW>Finish the following objective first: <highlight>" + objectiveToComplete.getFinalName();
         }
         return "";
 
@@ -89,7 +88,7 @@ public class CompletedObjectiveCondition extends Condition {
     public String getConditionDescriptionInternally(Player player, Object... objects) {
         final Objective otherObjective = getObjectiveToComplete();
         if (otherObjective != null) {
-            return "<GRAY>-- Finish Objective first: " + otherObjective.getObjectiveFinalName();
+            return "<GRAY>-- Finish Objective first: " + otherObjective.getFinalName();
         } else {
             return "<GRAY>-- Finish otherObjective first: " + getObjectiveToCompleteID();
         }

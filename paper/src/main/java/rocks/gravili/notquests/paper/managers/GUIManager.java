@@ -479,13 +479,13 @@ public class GUIManager {
                         if (activeObjective.isUnlocked()) {
                             itemMeta.displayName(main.getLanguageManager().getComponent("gui.progress.button.unlockedObjective.name", player, questPlayer, activeQuest, activeObjective));
 
-                            if(!activeObjective.getObjective().getObjectiveDescription().isBlank()){
+                            if(!activeObjective.getObjective().getDescription().isBlank()){
                                 List<String> loreStringList = main.getLanguageManager().getStringList("gui.progress.button.unlockedObjective.lore", player, questPlayer, activeQuest, activeObjective);
                                 List<Component> lore = new ArrayList<>();
 
                                 for(String loreString : loreStringList){
                                     if(loreString.contains("%WRAPPEDOBJECTIVEDESCRIPTION%")){
-                                        for(String objectiveDescriptionLine : activeObjective.getObjective().getObjectiveDescriptionLines(main.getConfiguration().guiQuestDescriptionMaxLineLength)){
+                                        for(String objectiveDescriptionLine : activeObjective.getObjective().getDescriptionLines(main.getConfiguration().guiQuestDescriptionMaxLineLength)){
                                             lore.add(main.parse(loreString.replace("%WRAPPEDOBJECTIVEDESCRIPTION%", "") + objectiveDescriptionLine).decoration(TextDecoration.ITALIC, false));
                                         }
                                     }else{
@@ -536,13 +536,13 @@ public class GUIManager {
 
                         itemMeta.displayName(main.getLanguageManager().getComponent("gui.progress.button.completedObjective.name", player, questPlayer, activeQuest, activeObjective));
 
-                        if(!activeObjective.getObjective().getObjectiveDescription().isBlank()){
+                        if(!activeObjective.getObjective().getDescription().isBlank()){
                             List<String> loreStringList = main.getLanguageManager().getStringList("gui.progress.button.completedObjective.lore", player, questPlayer, activeQuest, activeObjective);
                             List<Component> lore = new ArrayList<>();
 
                             for(String loreString : loreStringList){
                                 if(loreString.contains("%WRAPPEDOBJECTIVEDESCRIPTION%")){
-                                    for(String objectiveDescriptionLine : activeObjective.getObjective().getObjectiveDescriptionLines(main.getConfiguration().guiQuestDescriptionMaxLineLength)){
+                                    for(String objectiveDescriptionLine : activeObjective.getObjective().getDescriptionLines(main.getConfiguration().guiQuestDescriptionMaxLineLength)){
                                         lore.add(main.parse(loreString.replace("%WRAPPEDOBJECTIVEDESCRIPTION%", "") + objectiveDescriptionLine).decoration(TextDecoration.ITALIC, false));
                                     }
                                 }else{
@@ -865,7 +865,7 @@ public class GUIManager {
                         ItemStack itemStack = new ItemStack(Material.CHEST);
                         ItemMeta itemMeta = itemStack.getItemMeta();
 
-                        itemMeta.displayName(main.parse(category.getCategoryName()).decoration(TextDecoration.ITALIC, false));
+                        itemMeta.displayName(main.parse(category.getFinalName()).decoration(TextDecoration.ITALIC, false));
 
                         itemStack.setItemMeta(itemMeta);
 

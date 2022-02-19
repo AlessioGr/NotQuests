@@ -26,14 +26,12 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -241,9 +239,9 @@ public class QuestManager {
                                         objective.setCompletionArmorStandUUID(completionArmorStandUUID, false);
                                     }
 
-                                    objective.setObjectiveDescription(objectiveDescription.replace("\\n", "\n"), false);
+                                    objective.setDescription(objectiveDescription.replace("\\n", "\n"), false);
 
-                                    objective.setObjectiveDisplayName(objectiveDisplayName.replace("\\n", "\n"), false);
+                                    objective.setDisplayName(objectiveDisplayName.replace("\\n", "\n"), false);
 
 
                                     objective.setCompletionNPCID(completionNPCID, false);
@@ -1269,11 +1267,11 @@ public class QuestManager {
     public void sendCompletedObjectivesAndProgress(final Player player, final ActiveQuest activeQuest) {
         for (ActiveObjective activeObjective : activeQuest.getCompletedObjectives()) {
 
-            final String objectiveDescription = activeObjective.getObjective().getObjectiveDescription();
+            final String objectiveDescription = activeObjective.getObjective().getDescription();
 
 
             player.sendMessage(main.parse(
-                    "<strikethrough><GRAY>" + activeObjective.getObjective().getObjectiveID() + ". " + activeObjective.getObjective().getObjectiveFinalName() + ":" + "</strikethrough>"
+                    "<strikethrough><GRAY>" + activeObjective.getObjective().getObjectiveID() + ". " + activeObjective.getObjective().getFinalName() + ":" + "</strikethrough>"
             ));
 
             player.sendMessage(main.parse(
@@ -1325,9 +1323,9 @@ public class QuestManager {
 
     public void sendObjectives(final Player player, final Quest quest) {
         for (final Objective objective : quest.getObjectives()) {
-            final String objectiveDescription = objective.getObjectiveDescription();
+            final String objectiveDescription = objective.getDescription();
             player.sendMessage(main.parse(
-                    "<GREEN>" + objective.getObjectiveID() + ". <YELLOW>" + objective.getObjectiveFinalName()
+                    "<GREEN>" + objective.getObjectiveID() + ". <YELLOW>" + objective.getFinalName()
             ));
 
 
@@ -1349,9 +1347,9 @@ public class QuestManager {
 
         for (final Objective objective : quest.getObjectives()) {
 
-            final String objectiveDescription = objective.getObjectiveDescription();
+            final String objectiveDescription = objective.getDescription();
             sender.sendMessage(main.parse(
-                    "<highlight>" + objective.getObjectiveID() + ".</highlight> <main>" + objective.getObjectiveFinalName()
+                    "<highlight>" + objective.getObjectiveID() + ".</highlight> <main>" + objective.getFinalName()
             ));
 
 
@@ -1391,7 +1389,7 @@ public class QuestManager {
 
     public void sendActiveObjective(final Player player, ActiveObjective activeObjective) {
         if (activeObjective.isUnlocked()) {
-            final String objectiveDescription = activeObjective.getObjective().getObjectiveDescription();
+            final String objectiveDescription = activeObjective.getObjective().getDescription();
             player.sendMessage(main.parse(
                     main.getLanguageManager().getString("chat.objectives.counter", player, activeObjective.getActiveQuest(), activeObjective)
             ));
@@ -1399,7 +1397,7 @@ public class QuestManager {
             if (!objectiveDescription.isBlank()) {
                 player.sendMessage(main.parse(
                         main.getLanguageManager().getString("chat.objectives.description", player, activeObjective.getActiveQuest(), activeObjective)
-                                .replace("%OBJECTIVEDESCRIPTION%", activeObjective.getObjective().getObjectiveDescription())
+                                .replace("%OBJECTIVEDESCRIPTION%", activeObjective.getObjective().getDescription())
                 ));
             }
 

@@ -165,7 +165,7 @@ public class ActionManager {
 
                 context.getSender().sendMessage(main.parse(
                         "<success>" + getActionType(action.getClass()) + " Reward successfully added to Objective <highlight>"
-                                + objectiveOfQuest.getObjectiveFinalName() + "</highlight>!"));
+                                + objectiveOfQuest.getFinalName() + "</highlight>!"));
             } else { //Quest Reward
                 action.setActionID(quest.getFreeRewardID());
                 quest.addReward(action, true);

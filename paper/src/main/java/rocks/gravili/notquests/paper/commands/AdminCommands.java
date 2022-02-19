@@ -23,6 +23,7 @@ import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
+import cloud.commandframework.arguments.standard.StringArrayArgument;
 import cloud.commandframework.bukkit.arguments.selector.SinglePlayerSelector;
 import cloud.commandframework.bukkit.parsers.WorldArgument;
 import cloud.commandframework.bukkit.parsers.selector.SinglePlayerSelectorArgument;
@@ -35,6 +36,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.Connection;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.chunk.LevelChunk;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.*;
 import org.bukkit.block.BlockState;
 import org.bukkit.command.CommandSender;
@@ -717,6 +719,79 @@ public class AdminCommands {
                         context.getSender().sendMessage(main.parse( "<success>Category <highlight>" + fullNewCategoryIdentifier + "</highlight> has successfully been created!"));
                     }
 
+                }));
+
+        final Command.Builder<CommandSender>  editCategoryBuilder = builder
+                .literal("edit", "e")
+                .argument(CategorySelector.of("category", main), ArgumentDescription.of("Category Name"));
+
+        handleCategoryEditCommands(editCategoryBuilder);
+    }
+
+    public void handleCategoryEditCommands(final Command.Builder<CommandSender> editCategoryBuilder){
+        manager.command(editCategoryBuilder.literal("displayName")
+                .literal("show")
+                .meta(CommandMeta.DESCRIPTION, "Shows current Category display name.")
+                .handler((context) -> {
+                    final Category category = context.get("category");
+
+                    context.getSender().sendMessage(main.parse(
+                            "<main>Current display name of Category <highlight>" + category.getCategoryFullName() + "</highlight>: <highlight2>"
+                                    + category.getDisplayName()
+                    ));
+                }));
+        manager.command(editCategoryBuilder.literal("displayName")
+                .literal("remove")
+                .meta(CommandMeta.DESCRIPTION, "Removes current Category display name.")
+                .handler((context) -> {
+                    final Category category = context.get("category");
+
+                    category.removeDisplayName(true);
+                    context.getSender().sendMessage(main.parse("<success>Display name successfully removed from Category <highlight>"
+                            + category.getCategoryFullName() + "</highlight>!"
+                    ));
+                }));
+
+        manager.command(editCategoryBuilder.literal("displayName")
+                .literal("set")
+                .argument(StringArrayArgument.of("DisplayName",
+                        (context, lastString) -> {
+                            final List<String> allArgs = context.getRawInput();
+                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "<Enter new Category display name>", "");
+                            ArrayList<String> completions = new ArrayList<>();
+
+                            String rawInput = context.getRawInputJoined();
+                            if (lastString.startsWith("{")) {
+                                completions.addAll(main.getCommandManager().getAdminCommands().placeholders);
+                            } else {
+                                if(lastString.startsWith("<")){
+                                    for(String color : main.getUtilManager().getMiniMessageTokens()){
+                                        completions.add("<"+ color +">");
+                                        //Now the closings. First we search IF it contains an opening and IF it doesnt contain more closings than the opening
+                                        if(rawInput.contains("<"+color+">")){
+                                            if(StringUtils.countMatches(rawInput, "<"+color+">") > StringUtils.countMatches(rawInput, "</"+color+">")){
+                                                completions.add("</"+ color +">");
+                                            }
+                                        }
+                                    }
+                                }else{
+                                    completions.add("<Enter new Category display name>");
+                                }
+                            }
+                            return completions;
+                        }
+                ), ArgumentDescription.of("Category display name"))
+                .meta(CommandMeta.DESCRIPTION, "Sets the new display name of the Category.")
+                .handler((context) -> {
+                    final Category category = context.get("category");
+
+                    final String displayName = String.join(" ", (String[]) context.get("DisplayName"));
+
+                    category.setDisplayName(displayName, true);
+                    context.getSender().sendMessage(main.parse("<success>Display name successfully added to category <highlight>"
+                            + category.getCategoryFullName() + "</highlight>! New display name: <highlight2>"
+                            + category.getDisplayName()
+                    ));
                 }));
     }
 

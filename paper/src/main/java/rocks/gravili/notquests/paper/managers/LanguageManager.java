@@ -417,7 +417,7 @@ public class LanguageManager {
                 //main.getLogManager().info("Applying ActiveObjective placeholders...");
                 internalPlaceholderReplacements.put("%OBJECTIVEID%", "" + activeObjective.getObjective().getObjectiveID());
                 internalPlaceholderReplacements.put("%ACTIVEOBJECTIVEID%", "" + activeObjective.getObjective().getObjectiveID());
-                internalPlaceholderReplacements.put("%OBJECTIVENAME%", "" + activeObjective.getObjective().getObjectiveFinalName());
+                internalPlaceholderReplacements.put("%OBJECTIVENAME%", "" + activeObjective.getObjective().getFinalName());
                 internalPlaceholderReplacements.put("%ACTIVEOBJECTIVEPROGRESS%", "" + activeObjective.getCurrentProgress());
                 internalPlaceholderReplacements.put("%OBJECTIVEPROGRESSNEEDED%", "" + activeObjective.getProgressNeeded());
                 internalPlaceholderReplacements.put("%OBJECTIVEPROGRESSPERCENTAGE%", "" + (int)((float)((float)activeObjective.getCurrentProgress() / (float)activeObjective.getProgressNeeded() )*100) );
@@ -427,7 +427,7 @@ public class LanguageManager {
             } else if (internalPlaceholderObject instanceof Objective objective) {
                 //main.getLogManager().info("Applying Objective placeholders...");
                 internalPlaceholderReplacements.put("%OBJECTIVEID%", "" + objective.getObjectiveID());
-                internalPlaceholderReplacements.put("%OBJECTIVENAME%", "" + objective.getObjectiveFinalName());
+                internalPlaceholderReplacements.put("%OBJECTIVENAME%", "" + objective.getFinalName());
             } else if (internalPlaceholderObject instanceof Trigger trigger) {
                 //main.getLogManager().log(Level.INFO, "Applying Trigger placeholders...");
             } else if (internalPlaceholderObject instanceof QuestPlayer questPlayer) {

@@ -119,7 +119,7 @@ public class ActiveObjective {
         boolean foundStillFalseConditions = false;
         for (final Condition condition : objective.getConditions()){
             String check = condition.check(getQuestPlayer());
-            getQuestPlayer().sendDebugMessage("Condition status for " + objective.getObjectiveFinalName() + ": " + check);
+            getQuestPlayer().sendDebugMessage("Condition status for " + objective.getFinalName() + ": " + check);
 
             if(!check.isBlank()) {
                 foundStillFalseConditions = true;
@@ -132,7 +132,7 @@ public class ActiveObjective {
             }
         }
         if (!foundStillFalseConditions) {
-            getQuestPlayer().sendDebugMessage("Active objective " + objective.getObjectiveFinalName() + " has been set to unlocked!");
+            getQuestPlayer().sendDebugMessage("Active objective " + objective.getFinalName() + " has been set to unlocked!");
             setUnlocked(true, notifyPlayer, triggerAcceptQuestTrigger);
 
         }
@@ -193,9 +193,9 @@ public class ActiveObjective {
             }
         }
         if(main.getConfiguration().isDebug()){
-            main.getLogManager().debug("+" + progressToAdd + " progress for objective " + NotQuestColors.debugHighlightGradient + getObjective().getObjectiveFinalName() + "</gradient> of quest " + NotQuestColors.debugHighlightGradient + getActiveQuest().getQuest().getQuestFinalName() + "</gradient>. Silent: " + silent);
+            main.getLogManager().debug("+" + progressToAdd + " progress for objective " + NotQuestColors.debugHighlightGradient + getObjective().getFinalName() + "</gradient> of quest " + NotQuestColors.debugHighlightGradient + getActiveQuest().getQuest().getQuestFinalName() + "</gradient>. Silent: " + silent);
         }
-        getQuestPlayer().sendDebugMessage("+" + progressToAdd + " progress for objective " + NotQuestColors.debugHighlightGradient + getObjective().getObjectiveFinalName() + "</gradient> of quest " + NotQuestColors.debugHighlightGradient + getActiveQuest().getQuest().getQuestFinalName() + "</gradient>. Silent: " + silent);
+        getQuestPlayer().sendDebugMessage("+" + progressToAdd + " progress for objective " + NotQuestColors.debugHighlightGradient + getObjective().getFinalName() + "</gradient> of quest " + NotQuestColors.debugHighlightGradient + getActiveQuest().getQuest().getQuestFinalName() + "</gradient>. Silent: " + silent);
     }
 
 
@@ -216,7 +216,7 @@ public class ActiveObjective {
             currentProgress -= i;
         }
 
-        getQuestPlayer().sendDebugMessage("-" + i + " progress for objective " + NotQuestColors.debugHighlightGradient + getObjective().getObjectiveFinalName() + "</gradient> of quest " + NotQuestColors.debugHighlightGradient + getActiveQuest().getQuest().getQuestFinalName() + "</gradient>.");
+        getQuestPlayer().sendDebugMessage("-" + i + " progress for objective " + NotQuestColors.debugHighlightGradient + getObjective().getFinalName() + "</gradient> of quest " + NotQuestColors.debugHighlightGradient + getActiveQuest().getQuest().getQuestFinalName() + "</gradient>.");
 
     }
 

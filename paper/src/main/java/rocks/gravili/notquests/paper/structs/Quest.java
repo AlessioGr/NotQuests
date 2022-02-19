@@ -304,7 +304,6 @@ public class Quest {
             category.getQuestsConfig().set("quests." + questName + ".description", newQuestDescription);
             category.saveQuestsConfig();
         }
-
     }
 
     public void removeQuestDescription(boolean save) {
@@ -313,7 +312,6 @@ public class Quest {
             category.getQuestsConfig().set("quests." + questName + ".description", null);
             category.saveQuestsConfig();
         }
-
     }
 
     public final String getQuestDescription(final int maxLengthPerLine) {

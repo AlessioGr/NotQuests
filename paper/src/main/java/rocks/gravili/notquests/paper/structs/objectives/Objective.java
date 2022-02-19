@@ -29,7 +29,6 @@ import rocks.gravili.notquests.paper.structs.conditions.Condition;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.UUID;
 
 public abstract class Objective {
@@ -233,19 +232,19 @@ public abstract class Objective {
         quest.getCategory().saveQuestsConfig();
     }
 
-    public final String getObjectiveDisplayName() {
+    public final String getDisplayName() {
         return objectiveDisplayName;
     }
 
-    public final String getObjectiveFinalName() {
+    public final String getFinalName() {
         if (!objectiveDisplayName.isBlank()) {
-            return getObjectiveDisplayName();
+            return getDisplayName();
         } else {
             return main.getObjectiveManager().getObjectiveType(this.getClass());
         }
     }
 
-    public void setObjectiveDisplayName(String newObjectiveDisplayName, boolean save) {
+    public void setDisplayName(String newObjectiveDisplayName, boolean save) {
         newObjectiveDisplayName = main.getUtilManager().replaceLegacyWithMiniMessage(newObjectiveDisplayName);
         this.objectiveDisplayName = newObjectiveDisplayName;
         if (save) {
@@ -254,7 +253,7 @@ public abstract class Objective {
         }
     }
 
-    public void removeObjectiveDisplayName(boolean save) {
+    public void removeDisplayName(boolean save) {
         this.objectiveDisplayName = "";
         if (save) {
             quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".displayName", null);
@@ -263,7 +262,7 @@ public abstract class Objective {
     }
 
 
-    public final String getObjectiveDescription() { //MiniMessage
+    public final String getDescription() { //MiniMessage
         return objectiveDescription;
     }
 
@@ -275,16 +274,16 @@ public abstract class Objective {
      * @param maxLengthPerLine how long the description can be per-line
      * @return the description of the objective with proper line-breaks
      */
-    public final String getObjectiveDescription(final int maxLengthPerLine) {
-        return main.getUtilManager().wrapText(getObjectiveDescription(), maxLengthPerLine);
+    public final String getDescription(final int maxLengthPerLine) {
+        return main.getUtilManager().wrapText(getDescription(), maxLengthPerLine);
     }
 
-    public final List<String> getObjectiveDescriptionLines(final int maxLengthPerLine) {
-        return main.getUtilManager().wrapTextToList(getObjectiveDescription(), maxLengthPerLine);
+    public final List<String> getDescriptionLines(final int maxLengthPerLine) {
+        return main.getUtilManager().wrapTextToList(getDescription(), maxLengthPerLine);
     }
 
 
-    public void setObjectiveDescription(String newObjectiveDescription, boolean save) {
+    public void setDescription(String newObjectiveDescription, boolean save) {
         newObjectiveDescription = main.getUtilManager().replaceLegacyWithMiniMessage(newObjectiveDescription);
         this.objectiveDescription = newObjectiveDescription;
         if (save) {
@@ -293,7 +292,7 @@ public abstract class Objective {
         }
     }
 
-    public void removeObjectiveDescription(boolean save) {
+    public void removeDescription(boolean save) {
         this.objectiveDescription = "";
         if (save) {
             quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".description", null);

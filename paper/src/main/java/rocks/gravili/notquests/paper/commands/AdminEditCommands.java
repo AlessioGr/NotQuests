@@ -1052,7 +1052,7 @@ public class AdminEditCommands {
 
                     context.getSender().sendMessage(main.parse(
                             "<main>Current description of objective with ID <highlight>" + objectiveID + "</highlight>: <highlight2>"
-                                    + objective.getObjectiveDescription()
+                                    + objective.getDescription()
                     ));
                 }));
         manager.command(builder.literal("description")
@@ -1064,10 +1064,10 @@ public class AdminEditCommands {
                     final Objective objective = quest.getObjectiveFromID(objectiveID);
                     assert objective != null; //Shouldn't be null
 
-                    objective.removeObjectiveDescription(true);
+                    objective.removeDescription(true);
                     context.getSender().sendMessage(main.parse(
                             "<main>Description successfully removed from objective with ID <highlight>" + objectiveID + "</highlight>! New description: <highlight2>"
-                                    + objective.getObjectiveDescription()
+                                    + objective.getDescription()
                     ));
                 }));
 
@@ -1109,10 +1109,10 @@ public class AdminEditCommands {
                     assert objective != null; //Shouldn't be null
 
                     final String description = String.join(" ", (String[]) context.get("Objective Description"));
-                    objective.setObjectiveDescription(description, true);
+                    objective.setDescription(description, true);
                     context.getSender().sendMessage(main.parse(
                             "<main>Description successfully added to objective with ID <highlight>" + objectiveID + "</highlight>! New description: <highlight2>"
-                                    + objective.getObjectiveDescription()
+                                    + objective.getDescription()
                     ));
                 }));
 
@@ -1128,7 +1128,7 @@ public class AdminEditCommands {
 
                     context.getSender().sendMessage(main.parse(
                             "<main>Current displayname of objective with ID <highlight>" + objectiveID + "</highlight>: <highlight2>"
-                                    + objective.getObjectiveDisplayName()
+                                    + objective.getDisplayName()
                     ));
                 }));
         manager.command(builder.literal("displayname")
@@ -1140,10 +1140,10 @@ public class AdminEditCommands {
                     final Objective objective = quest.getObjectiveFromID(objectiveID);
                     assert objective != null; //Shouldn't be null
 
-                    objective.removeObjectiveDisplayName(true);
+                    objective.removeDisplayName(true);
                     context.getSender().sendMessage(main.parse(
                             "<main>Displayname successfully removed from objective with ID <highlight>" + objectiveID + "</highlight>! New displayname: <highlight2>"
-                                    + objective.getObjectiveDescription()
+                                    + objective.getDescription()
                     ));
                 }));
 
@@ -1185,10 +1185,10 @@ public class AdminEditCommands {
                     assert objective != null; //Shouldn't be null
 
                     final String description = String.join(" ", (String[]) context.get("Objective Displayname"));
-                    objective.setObjectiveDisplayName(description, true);
+                    objective.setDisplayName(description, true);
                     context.getSender().sendMessage(main.parse(
                             "<main>Displayname successfully added to objective with ID <highlight>" + objectiveID + "</highlight>! New displayname: <highlight2>"
-                                    + objective.getObjectiveDisplayName()
+                                    + objective.getDisplayName()
                     ));
                 }));
 
@@ -1216,10 +1216,10 @@ public class AdminEditCommands {
                     context.getSender().sendMessage(main.parse(main.getQuestManager().getObjectiveTaskDescription(objective, false, null)));
 
                     context.getSender().sendMessage(main.parse(
-                            "<highlight>Objective DisplayName: <main>" + objective.getObjectiveDisplayName()
+                            "<highlight>Objective DisplayName: <main>" + objective.getDisplayName()
                     ));
                     context.getSender().sendMessage(main.parse(
-                            "<highlight>Objective Description: <main>" + objective.getObjectiveDescription()
+                            "<highlight>Objective Description: <main>" + objective.getDescription()
                     ));
 
                     context.getSender().sendMessage(main.parse(

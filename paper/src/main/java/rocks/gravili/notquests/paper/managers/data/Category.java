@@ -48,6 +48,15 @@ public class Category {
         }
     }
 
+    public final String getFinalName() {
+        if (!displayName.isBlank()) {
+            return getDisplayName();
+        } else {
+            return getCategoryName();
+        }
+    }
+
+
     public final Category getParentCategory() {
         return parentCategory;
     }
@@ -242,6 +251,15 @@ public class Category {
             saveCategoryConfig();
         }
     }
+
+    public void removeDisplayName(boolean save) {
+        this.displayName = "";
+        if(save){
+            getCategoryConfig().set("displayName", null);
+            saveCategoryConfig();
+        }
+    }
+
 
     public void loadDataFromCategoryConfig(){
         this.displayName = getCategoryConfig().getString("displayName", "");
