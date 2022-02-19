@@ -296,12 +296,24 @@ public class Quest {
         return description;
     }
 
-    public void setQuestDescription(String newQuestDescription) {
+    public void setQuestDescription(String newQuestDescription, boolean save) {
         newQuestDescription = main.getUtilManager().replaceLegacyWithMiniMessage(newQuestDescription);
 
         this.description = newQuestDescription;
-        category.getQuestsConfig().set("quests." + questName + ".description", newQuestDescription);
-        category.saveQuestsConfig();
+        if(save){
+            category.getQuestsConfig().set("quests." + questName + ".description", newQuestDescription);
+            category.saveQuestsConfig();
+        }
+
+    }
+
+    public void removeQuestDescription(boolean save) {
+        this.description = "";
+        if(save){
+            category.getQuestsConfig().set("quests." + questName + ".description", null);
+            category.saveQuestsConfig();
+        }
+
     }
 
     public final String getQuestDescription(final int maxLengthPerLine) {
@@ -330,12 +342,22 @@ public class Quest {
         }
     }
 
-    public void setQuestDisplayName(String newQuestDisplayName) {
+    public void setQuestDisplayName(String newQuestDisplayName, boolean save) {
         newQuestDisplayName = main.getUtilManager().replaceLegacyWithMiniMessage(newQuestDisplayName);
 
         this.displayName = newQuestDisplayName;
-        category.getQuestsConfig().set("quests." + questName + ".displayName", newQuestDisplayName);
-        category.saveQuestsConfig();
+        if(save){
+            category.getQuestsConfig().set("quests." + questName + ".displayName", newQuestDisplayName);
+            category.saveQuestsConfig();
+        }
+    }
+
+    public void removeQuestDisplayName(boolean save) {
+        this.displayName = "";
+        if (save) {
+            category.getQuestsConfig().set("quests." + questName + ".displayName", null);
+            category.saveQuestsConfig();
+        }
     }
 
 

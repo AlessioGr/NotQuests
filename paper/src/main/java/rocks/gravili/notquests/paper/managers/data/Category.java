@@ -17,6 +17,7 @@ public class Category {
     private final ArrayList<FileConfiguration> conversationsConfigs;
 
     private Category parentCategory = null;
+    private String displayName = "";
 
 
     public Category(final NotQuests main, final String categoryName, final File categoryFolder) {
@@ -228,6 +229,22 @@ public class Category {
                 e.printStackTrace();
             }
         }
+    }
+
+    public final String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String newDisplayName, boolean save) {
+        this.displayName = newDisplayName;
+        if(save){
+            getCategoryConfig().set("displayName", newDisplayName);
+            saveCategoryConfig();
+        }
+    }
+
+    public void loadDataFromCategoryConfig(){
+        this.displayName = getCategoryConfig().getString("displayName", "");
     }
 
     @Override

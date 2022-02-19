@@ -100,7 +100,33 @@ public class AdminEditCommands {
         handleArmorStands(armorstandBuilder);
 
 
+
         manager.command(editBuilder.literal("description")
+                .literal("show")
+                .meta(CommandMeta.DESCRIPTION, "Shows current Quest description.")
+                .handler((context) -> {
+                    final Quest quest = context.get("quest");
+
+                    context.getSender().sendMessage(main.parse(
+                            "<main>Current description of Quest <highlight>" + quest.getQuestName() + "</highlight>: <highlight2>"
+                                    + quest.getQuestDescription()
+                    ));
+                }));
+        manager.command(editBuilder.literal("description")
+                .literal("remove")
+                .meta(CommandMeta.DESCRIPTION, "Removes current Quest description.")
+                .handler((context) -> {
+                    final Quest quest = context.get("quest");
+
+                    quest.removeQuestDescription(true);
+                    context.getSender().sendMessage(main.parse("<success>Description successfully removed from quest <highlight>"
+                            + quest.getQuestName() + "</highlight>!"
+                    ));
+                }));
+
+
+        manager.command(editBuilder.literal("description")
+                .literal("set")
                 .argument(StringArrayArgument.of("Description",
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
@@ -122,7 +148,6 @@ public class AdminEditCommands {
                                     }
                                 }else{
                                     completions.add("<Enter new Quest description>");
-                                    completions.add("clear");
                                 }
                             }
                             return completions;
@@ -134,21 +159,39 @@ public class AdminEditCommands {
 
                     final String description = String.join(" ", (String[]) context.get("Description"));
 
-                    if (description.equalsIgnoreCase("clear")) {
-                        quest.setQuestDescription("");
-                        context.getSender().sendMessage(main.parse("<success>Description successfully removed from quest <highlight>"
-                                + quest.getQuestName() + "</highlight>!"
-                        ));
-                    } else {
-                        quest.setQuestDescription(description);
-                        context.getSender().sendMessage(main.parse("<success>Description successfully added to quest <highlight>"
-                                + quest.getQuestName() + "</highlight>! New description: <highlight2>"
-                                + quest.getQuestDescription()
-                        ));
-                    }
+                    quest.setQuestDescription(description, true);
+                    context.getSender().sendMessage(main.parse("<success>Description successfully added to quest <highlight>"
+                            + quest.getQuestName() + "</highlight>! New description: <highlight2>"
+                            + quest.getQuestDescription()
+                    ));
                 }));
 
         manager.command(editBuilder.literal("displayName")
+                .literal("show")
+                .meta(CommandMeta.DESCRIPTION, "Shows current Quest display name.")
+                .handler((context) -> {
+                    final Quest quest = context.get("quest");
+
+                    context.getSender().sendMessage(main.parse(
+                            "<main>Current display name of Quest <highlight>" + quest.getQuestName() + "</highlight>: <highlight2>"
+                                    + quest.getQuestDisplayName()
+                    ));
+                }));
+        manager.command(editBuilder.literal("displayName")
+                .literal("remove")
+                .meta(CommandMeta.DESCRIPTION, "Removes current Quest display name.")
+                .handler((context) -> {
+                    final Quest quest = context.get("quest");
+
+
+                    quest.removeQuestDisplayName(true);
+                    context.getSender().sendMessage(main.parse("<success>Display name successfully removed from quest <highlight>"
+                            + quest.getQuestName() + "</highlight>!"
+                    ));
+                }));
+
+        manager.command(editBuilder.literal("displayName")
+        .literal("set")
                 .argument(StringArrayArgument.of("DisplayName",
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
@@ -171,7 +214,6 @@ public class AdminEditCommands {
                                     }
                                 }else{
                                     completions.add("<Enter new Quest display name>");
-                                    completions.add("clear");
                                 }
                             }
                             return completions;
@@ -183,18 +225,11 @@ public class AdminEditCommands {
 
                     final String displayName = String.join(" ", (String[]) context.get("DisplayName"));
 
-                    if (displayName.equalsIgnoreCase("clear")) {
-                        quest.setQuestDisplayName("");
-                        context.getSender().sendMessage(main.parse("<success>Display name successfully removed from quest <highlight>"
-                                + quest.getQuestName() + "</highlight>!"
-                        ));
-                    } else {
-                        quest.setQuestDisplayName(displayName);
-                        context.getSender().sendMessage(main.parse("<success>Display name successfully added to quest <highlight>"
-                                + quest.getQuestName() + "</highlight>! New display name: <highlight2>"
-                                + quest.getQuestDisplayName()
-                        ));
-                    }
+                    quest.setQuestDisplayName(displayName, true);
+                    context.getSender().sendMessage(main.parse("<success>Display name successfully added to quest <highlight>"
+                            + quest.getQuestName() + "</highlight>! New display name: <highlight2>"
+                            + quest.getQuestDisplayName()
+                    ));
                 }));
 
 

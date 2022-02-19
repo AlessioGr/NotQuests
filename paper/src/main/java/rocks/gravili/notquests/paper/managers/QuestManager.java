@@ -174,11 +174,11 @@ public class QuestManager {
 
                     quest.setQuestDescription(
                             category.getQuestsConfig().getString("quests." + questName + ".description", "")
-                                    .replace("\\n", "\n")
+                                    .replace("\\n", "\n"), false
                     );
                     quest.setQuestDisplayName(
                             category.getQuestsConfig().getString("quests." + questName + ".displayName", "")
-                                    .replace("\\n", "\n")
+                                    .replace("\\n", "\n"), false
                     );
 
                     //Objectives:

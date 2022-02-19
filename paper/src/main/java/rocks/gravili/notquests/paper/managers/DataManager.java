@@ -300,6 +300,7 @@ public class DataManager {
             category.setConversationsFolder(conversationsFolder);
             category.setTagsFile(tagsFile);
             category.setItemsFile(itemsFile);
+            category.loadDataFromCategoryConfig();
 
             main.getLogManager().info("  Loading real category: <highlight>" + category.getCategoryFullName());
 
