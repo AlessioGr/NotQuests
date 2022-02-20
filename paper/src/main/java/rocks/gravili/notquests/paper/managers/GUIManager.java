@@ -484,13 +484,16 @@ public class GUIManager {
                                 List<Component> lore = new ArrayList<>();
 
                                 for(String loreString : loreStringList){
-                                    if(loreString.contains("%WRAPPEDOBJECTIVEDESCRIPTION%")){
-                                        for(String objectiveDescriptionLine : activeObjective.getObjective().getDescriptionLines(main.getConfiguration().guiQuestDescriptionMaxLineLength)){
-                                            lore.add(main.parse(loreString.replace("%WRAPPEDOBJECTIVEDESCRIPTION%", "") + objectiveDescriptionLine).decoration(TextDecoration.ITALIC, false));
+                                    for(String loreStringSplit : loreString.split("\n")){
+                                        if(loreStringSplit.contains("%WRAPPEDOBJECTIVEDESCRIPTION%")){
+                                            for(String objectiveDescriptionLine : activeObjective.getObjective().getDescriptionLines(main.getConfiguration().guiQuestDescriptionMaxLineLength)){
+                                                lore.add(main.parse(loreStringSplit.replace("%WRAPPEDOBJECTIVEDESCRIPTION%", "") + objectiveDescriptionLine).decoration(TextDecoration.ITALIC, false));
+                                            }
+                                        }else{
+                                            lore.add(main.parse(loreStringSplit).decoration(TextDecoration.ITALIC, false));
                                         }
-                                    }else{
-                                        lore.add(main.parse(loreString).decoration(TextDecoration.ITALIC, false));
                                     }
+
                                 }
                                 itemMeta.lore(lore);
                             }else{
@@ -541,13 +544,19 @@ public class GUIManager {
                             List<Component> lore = new ArrayList<>();
 
                             for(String loreString : loreStringList){
-                                if(loreString.contains("%WRAPPEDOBJECTIVEDESCRIPTION%")){
-                                    for(String objectiveDescriptionLine : activeObjective.getObjective().getDescriptionLines(main.getConfiguration().guiQuestDescriptionMaxLineLength)){
-                                        lore.add(main.parse(loreString.replace("%WRAPPEDOBJECTIVEDESCRIPTION%", "") + objectiveDescriptionLine).decoration(TextDecoration.ITALIC, false));
+                                for(String loreStringSplit : loreString.split("\n")){
+                                    if(loreStringSplit.contains("</strikethrough>")){
+                                        loreStringSplit = "<strikethrough><unimportant>"+loreStringSplit;
                                     }
-                                }else{
-                                    lore.add(main.parse(loreString).decoration(TextDecoration.ITALIC, false));
+                                    if(loreStringSplit.contains("%WRAPPEDOBJECTIVEDESCRIPTION%")){
+                                        for(String objectiveDescriptionLine : activeObjective.getObjective().getDescriptionLines(main.getConfiguration().guiQuestDescriptionMaxLineLength)){
+                                            lore.add(main.parse(loreStringSplit.replace("%WRAPPEDOBJECTIVEDESCRIPTION%", "") + objectiveDescriptionLine).decoration(TextDecoration.ITALIC, false));
+                                        }
+                                    }else{
+                                        lore.add(main.parse(loreStringSplit).decoration(TextDecoration.ITALIC, false));
+                                    }
                                 }
+
                             }
                             itemMeta.lore(lore);
                         }else{
