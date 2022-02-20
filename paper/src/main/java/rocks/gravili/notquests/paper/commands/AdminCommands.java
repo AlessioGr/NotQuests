@@ -1544,7 +1544,7 @@ public class AdminCommands {
                         action.execute(player);
                         context.getSender().sendMessage(main.parse("<success>Action with the name <highlight>" + action.getActionName() + "</highlight> has been executed!"));
                     } else {
-                        main.getActionManager().executeActionWithConditions(action, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), player, false);
+                        main.getActionManager().executeActionWithConditions(action, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), context.getSender(), false);
                     }
 
                 }));
