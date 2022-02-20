@@ -462,6 +462,63 @@ public class AdminCommands {
                     }
                 }));
 
+        manager.command(builder.literal("resetAndRemoveQuestForPlayer")
+                .argument(SinglePlayerSelectorArgument.of("player"), ArgumentDescription.of("Player name"))
+                .argument(QuestSelector.of("quest", main), ArgumentDescription.of("Name of the Quest which should be reset and removed."))
+                .meta(CommandMeta.DESCRIPTION, "Removes the quest from a specific player players, removes it from completed quests, resets the accept cooldown and basically everything else.")
+                .handler((context) -> {
+                    context.getSender().sendMessage(Component.empty());
+
+                    final SinglePlayerSelector singlePlayerSelector = context.get("player");
+                    final Player player = singlePlayerSelector.getPlayer();
+                    if(player == null){
+                        context.getSender().sendMessage(main.parse(
+                                "<error>Error: Player <highlight>" + singlePlayerSelector.getSelector() + "</highlight> not found."
+                        ));
+                        return;
+                    }
+
+                    final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+
+                    if(questPlayer == null){
+                        context.getSender().sendMessage(main.parse(
+                                "<error>Error: QuestPlayer of Player <highlight>" + singlePlayerSelector.getSelector() + "</highlight> not found."
+                        ));
+                        return;
+                    }
+
+                    final Quest quest = context.get("quest");
+                    final ArrayList<ActiveQuest> activeQuestsToRemove = new ArrayList<>();
+                    for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+                        if (activeQuest.getQuest().equals(quest)) {
+                            activeQuestsToRemove.add(activeQuest);
+                            context.getSender().sendMessage(main.parse("<success>Removed the quest as an active quest for the player with the UUID <highlight>"
+                                    + questPlayer.getUUID().toString() + "</highlight> and name <highlight2>"
+                                    + Bukkit.getOfflinePlayer(questPlayer.getUUID()).getName() + "</highlight2>."
+                            ));
+
+                        }
+                    }
+
+                    questPlayer.getActiveQuests().removeAll(activeQuestsToRemove);
+
+                    final ArrayList<CompletedQuest> completedQuestsToRemove = new ArrayList<>();
+
+                    for (final CompletedQuest completedQuest : questPlayer.getCompletedQuests()) {
+                        if (completedQuest.getQuest().equals(quest)) {
+                            completedQuestsToRemove.add(completedQuest);
+                            context.getSender().sendMessage(main.parse("<success>Removed the quest as a completed quest for the player with the UUID <highlight>"
+                                    + questPlayer.getUUID().toString() + "</highlight> and name <highlight2>"
+                                    + Bukkit.getOfflinePlayer(questPlayer.getUUID()).getName() + "</highlight2>."
+                            ));
+                        }
+
+                    }
+
+                    questPlayer.getCompletedQuests().removeAll(completedQuestsToRemove);
+                    context.getSender().sendMessage(main.parse("<success>Operation done!"));
+                }));
+
         manager.command(builder.literal("resetAndRemoveQuestForAllPlayers")
                 .argument(QuestSelector.of("quest", main), ArgumentDescription.of("Name of the Quest which should be reset and removed."))
                 .meta(CommandMeta.DESCRIPTION, "Removes the quest from all players, removes it from completed quests, resets the accept cooldown and basically everything else.")
@@ -937,6 +994,9 @@ public class AdminCommands {
                     final Location location = coordinates.toLocation(world);
 
                     if(player == null){
+                        context.getSender().sendMessage(main.parse(
+                                "<error>Error: Player not found."
+                        ));
                         return;
                     }
 
