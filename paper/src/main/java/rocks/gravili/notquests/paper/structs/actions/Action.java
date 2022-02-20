@@ -106,6 +106,10 @@ public abstract class Action {
         if(main.getDataManager().isDisabled()){
             return;
         }
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+        if(questPlayer != null){
+            questPlayer.sendDebugMessage("Executing action " + getActionName());
+        }
         executeInternally(player, objects);
     }
 

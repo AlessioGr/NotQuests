@@ -224,6 +224,9 @@ public class ActionManager {
             if (!silent) {
                 sender.sendMessage(main.parse(main.getLanguageManager().getString("chat.action-not-all-conditions-fulfilled", questPlayer.getPlayer(), questPlayer) + unfulfilledConditions));
             }
+            questPlayer.sendDebugMessage(
+                    main.getLanguageManager().getString("chat.action-not-all-conditions-fulfilled", questPlayer.getPlayer(), questPlayer) + unfulfilledConditions
+            );
         } else {
             main.getLogManager().debug("   All Conditions fulfilled!");
 

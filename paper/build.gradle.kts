@@ -136,7 +136,7 @@ dependencies {
 
 
 
-    compileOnly("org.betonquest:betonquest:2.0.0-SNAPSHOT")
+    compileOnly("org.betonquest:betonquest:2.0.0-20220215.210836-148")
 
     compileOnly("com.sk89q.worldedit:worldedit-core:7.3.0-SNAPSHOT")
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.3.0-SNAPSHOT")
