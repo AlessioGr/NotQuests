@@ -526,7 +526,7 @@ public class AdminCommands {
                     context.getSender().sendMessage(Component.empty());
 
                     final Quest quest = context.get("quest");
-                    for (final QuestPlayer questPlayer : main.getQuestPlayerManager().getQuestPlayers()) {
+                    for (final QuestPlayer questPlayer : main.getQuestPlayerManager().getQuestPlayers()) { //TODO: Doesn't include players which aren't loaded from the database
                         final ArrayList<ActiveQuest> activeQuestsToRemove = new ArrayList<>();
                         for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                             if (activeQuest.getQuest().equals(quest)) {
@@ -568,7 +568,7 @@ public class AdminCommands {
                     final Quest quest = context.get("quest");
 
 
-                    for (final QuestPlayer questPlayer : main.getQuestPlayerManager().getQuestPlayers()) {
+                    for (final QuestPlayer questPlayer : main.getQuestPlayerManager().getQuestPlayers()) { //TODO: Doesn't include players which aren't loaded from the database
                         final ArrayList<ActiveQuest> activeQuestsToRemove = new ArrayList<>();
                         for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                             if (activeQuest.getQuest().equals(quest)) {
