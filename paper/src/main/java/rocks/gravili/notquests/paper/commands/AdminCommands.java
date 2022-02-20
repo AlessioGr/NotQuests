@@ -1523,6 +1523,10 @@ public class AdminCommands {
                         manager.flagBuilder("ignoreConditions")
                                 .withDescription(ArgumentDescription.of("Ignores action conditions"))
                 )
+                .flag(
+                        manager.flagBuilder("silent")
+                                .withDescription(ArgumentDescription.of("Doesn't show the action executed message"))
+                )
                 .meta(CommandMeta.DESCRIPTION, "Executes an action")
                 .handler((context) -> {
                     final Action action = context.get("action");
@@ -1544,7 +1548,7 @@ public class AdminCommands {
                         action.execute(player);
                         context.getSender().sendMessage(main.parse("<success>Action with the name <highlight>" + action.getActionName() + "</highlight> has been executed!"));
                     } else {
-                        main.getActionManager().executeActionWithConditions(action, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), context.getSender(), false);
+                        main.getActionManager().executeActionWithConditions(action, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), context.getSender(), context.flags().contains("silent"));
                     }
 
                 }));
