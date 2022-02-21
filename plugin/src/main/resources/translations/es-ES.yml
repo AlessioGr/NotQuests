@@ -307,12 +307,12 @@ gui:
         lore:
           - "<positive><BOLD>Completadas</BOLD>"
           - "<veryUnimportant><strikethrough>%WRAPPEDOBJECTIVEDESCRIPTION%"
-          - "<veryUnimportant>%COMPLETEDOBJECTIVEDESCRIPTION%"
+          - "<veryUnimportant><strikethrough>%COMPLETEDOBJECTIVEDESCRIPTION%"
           - ""
           - "<unimportant><strikethrough>Progreso: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
         lore-if-description-empty:
           - "<positive><BOLD>Completadas</BOLD>"
           - "<veryUnimportant><strikethrough>Sin descripción"
-          - "<veryUnimportant>%COMPLETEDOBJECTIVEDESCRIPTION%"
+          - "<veryUnimportant><strikethrough>%COMPLETEDOBJECTIVEDESCRIPTION%"
           - ""
           - "<unimportant><strikethrough>Progreso: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
