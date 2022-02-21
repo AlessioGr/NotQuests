@@ -189,7 +189,7 @@ dependencies {
     //implementation 'org.apache.commons:commons-lang3:3.12.0'
     //implementation 'org.apache.commons:commons-lang:3.1'
 
-    implementation("io.netty:netty-all:4.1.72.Final")
+    implementation("io.netty:netty-all:4.1.74.Final")
 
 
 
