@@ -2,11 +2,12 @@ package rocks.gravili.notquests.paper.structs.variables.hooks;
 
 import cloud.commandframework.arguments.standard.StringArgument;
 import org.betonquest.betonquest.BetonQuest;
+import org.betonquest.betonquest.api.config.QuestPackage;
 import org.betonquest.betonquest.config.Config;
-import org.betonquest.betonquest.config.ConfigPackage;
 import org.betonquest.betonquest.exceptions.ObjectNotFoundException;
 import org.betonquest.betonquest.id.ConditionID;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -37,8 +38,11 @@ public class BetonQuestConditionVariable extends Variable<Boolean> {
         addRequiredString(
                 StringArgument.<CommandSender>newBuilder("condition").withSuggestionsProvider((context, lastString) -> {
                     String packageName = context.get("package");
-                    final ConfigPackage configPack = Config.getPackages().get(packageName);
-                    FileConfiguration conditionsFileConfiguration = configPack.getConditions().getConfig();
+                    final QuestPackage configPack = Config.getPackages().get(packageName);
+                    ConfigurationSection conditionsFileConfiguration = configPack.getConfig().getConfigurationSection("conditions");
+                    if(conditionsFileConfiguration == null){
+                        return new ArrayList<>();
+                    }
                     final ArrayList<String> completions = new ArrayList<>(conditionsFileConfiguration.getKeys(false));
 
                     final List<String> allArgs = context.getRawInput();
@@ -51,7 +55,7 @@ public class BetonQuestConditionVariable extends Variable<Boolean> {
 
     public final ConditionID getConditionID(){
         if(cachedConditionID == null){
-            final ConfigPackage configPack = Config.getPackages().get(getRequiredStringValue("package"));
+            final QuestPackage configPack = Config.getPackages().get(getRequiredStringValue("package"));
             try{
                 cachedConditionID = new ConditionID(configPack, getRequiredStringValue("condition"));
             }catch (final ObjectNotFoundException e) {

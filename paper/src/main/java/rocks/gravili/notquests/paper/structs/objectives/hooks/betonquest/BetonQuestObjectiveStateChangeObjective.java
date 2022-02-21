@@ -23,11 +23,12 @@ import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.paper.PaperCommandManager;
+import org.betonquest.betonquest.api.config.QuestPackage;
 import org.betonquest.betonquest.config.Config;
-import org.betonquest.betonquest.config.ConfigPackage;
 import org.betonquest.betonquest.exceptions.ObjectNotFoundException;
 import org.betonquest.betonquest.id.ObjectiveID;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -70,7 +71,7 @@ public class BetonQuestObjectiveStateChangeObjective extends Objective {
 
     public final ObjectiveID getBQObjectiveID(){
         if(cachedObjectiveID == null){
-            final ConfigPackage configPack = Config.getPackages().get(getPackageName());
+            final QuestPackage configPack = Config.getPackages().get(getPackageName());
             try{
                 cachedObjectiveID = new ObjectiveID(configPack, getObjectiveName());
             }catch (final ObjectNotFoundException e) {
@@ -101,8 +102,11 @@ public class BetonQuestObjectiveStateChangeObjective extends Objective {
 
 
                     String packageName = context.get("package");
-                    final ConfigPackage configPack = Config.getPackages().get(packageName);
-                    FileConfiguration objectivesFileConfiguration = configPack.getObjectives().getConfig();
+                    final QuestPackage configPack = Config.getPackages().get(packageName);
+                    ConfigurationSection objectivesFileConfiguration = configPack.getConfig().getConfigurationSection("objectives");
+                    if(objectivesFileConfiguration == null){
+                        return new ArrayList<>();
+                    }
                     final ArrayList<String> completions = new ArrayList<>(objectivesFileConfiguration.getKeys(false));
 
                     final List<String> allArgs = context.getRawInput();
@@ -129,7 +133,7 @@ public class BetonQuestObjectiveStateChangeObjective extends Objective {
                     final String objectiveStateString = context.get("objectiveState");
 
                     try{
-                        final ConfigPackage configPack = Config.getPackages().get(packageName);
+                        final QuestPackage configPack = Config.getPackages().get(packageName);
                         ObjectiveID cachedObjectiveID = new ObjectiveID(configPack, objectiveName);
                     }catch (final ObjectNotFoundException e) {
                         context.getSender().sendMessage(main.parse(

@@ -23,11 +23,12 @@ import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.betonquest.betonquest.BetonQuest;
+import org.betonquest.betonquest.api.config.QuestPackage;
 import org.betonquest.betonquest.config.Config;
-import org.betonquest.betonquest.config.ConfigPackage;
 import org.betonquest.betonquest.exceptions.ObjectNotFoundException;
 import org.betonquest.betonquest.id.EventID;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -62,8 +63,12 @@ public class BetonQuestFireEventAction extends Action {
 
 
                     String packageName = context.get("package");
-                    final ConfigPackage configPack = Config.getPackages().get(packageName);
-                    FileConfiguration eventsFileConfiguration = configPack.getEvents().getConfig();
+
+                    final QuestPackage configPack = Config.getPackages().get(packageName);
+                    ConfigurationSection eventsFileConfiguration = configPack.getConfig().getConfigurationSection("events");
+                    if(eventsFileConfiguration == null){
+                        return new ArrayList<>();
+                    }
                     final ArrayList<String> completions = new ArrayList<>(eventsFileConfiguration.getKeys(false));
 
                     final List<String> allArgs = context.getRawInput();
@@ -105,7 +110,7 @@ public class BetonQuestFireEventAction extends Action {
 
     public final EventID getEventID(){
         if(cachedEventID == null){
-            final ConfigPackage configPack = Config.getPackages().get(getPackageName());
+            final QuestPackage configPack = Config.getPackages().get(getPackageName());
             try{
                 cachedEventID = new EventID(configPack, getEventName());
             }catch (final ObjectNotFoundException e) {
