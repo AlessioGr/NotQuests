@@ -6,6 +6,7 @@ plugins {
     id ("com.github.johnrengelman.shadow")
     id("io.papermc.paperweight.userdev")
     id("xyz.jpenilla.run-paper")
+    id("name.remal.check-dependency-updates")
 }
 
 group = "rocks.gravili.notquests"
@@ -208,7 +209,7 @@ dependencies {
 
     implementation("com.zaxxer:HikariCP:5.0.1")
 
-    compileOnly("com.github.war-systems:UltimateJobs:0.2.9")
+    compileOnly("com.github.war-systems:UltimateJobs:0.2.9.1")
 
 
 }
