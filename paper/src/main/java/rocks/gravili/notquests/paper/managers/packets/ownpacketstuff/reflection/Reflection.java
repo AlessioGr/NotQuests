@@ -1,8 +1,8 @@
 package rocks.gravili.notquests.paper.managers.packets.ownpacketstuff.reflection;
 
-import io.lumine.xikage.mythicmobs.utils.scoreboard.Scoreboard;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.Scoreboard;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

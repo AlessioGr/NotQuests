@@ -178,7 +178,7 @@ dependencies {
         exclude(group= "com.destroystokyo.paper", module= "paper-api")
     }
 
-    compileOnly("com.mojang:brigadier:1.0.18")
+    //compileOnly("com.mojang:brigadier:1.0.18")
 
 
     //implementation 'com.github.retrooper.packetevents:bukkit:2.0-SNAPSHOT'
@@ -189,7 +189,7 @@ dependencies {
     //implementation 'org.apache.commons:commons-lang3:3.12.0'
     //implementation 'org.apache.commons:commons-lang:3.1'
 
-    implementation("io.netty:netty-all:4.1.74.Final")
+    //implementation("io.netty:netty-all:4.1.74.Final")
 
 
 
