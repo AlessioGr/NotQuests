@@ -199,7 +199,7 @@ dependencies {
     compileOnly(files("libs/EcoBosses-v8.0.1.jar"))
     compileOnly("com.willfp:eco:6.24.1")
 
-    implementation("com.github.Redempt:Crunch:1.1.1")
+    implementation("com.github.Redempt:Crunch:1.1.2")
 
     //compileOnly("com.fasterxml.jackson.core:jackson-core:2.13.1")
     //compileOnly("com.fasterxml.jackson.core:jackson-databind:2.13.1")
