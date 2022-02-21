@@ -183,6 +183,10 @@ public class ConversationManager {
         /*if (!prepareConversationsFolder()) {
             return;
         }*/
+        if(category.getConversationsFolder() == null){
+            main.getLogManager().warn("The category <highlight>" + category.getCategoryFullName() + "</highlight> does not have a conversation folder. The loading of conversations from this category has been skipped.");
+            return;
+        }
 
         for (File conversationFile : main.getUtilManager().listFilesRecursively(category.getConversationsFolder())) {
             linesForOneFile.clear();

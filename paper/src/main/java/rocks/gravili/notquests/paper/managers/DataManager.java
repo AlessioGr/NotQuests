@@ -290,6 +290,14 @@ public class DataManager {
                 main.getLogManager().warn("Couldn't create a (2) items.yml file for category <highlight>" + categoryFolder.getName());
             }
 
+            if(conversationsFolder == null || !conversationsFolder.exists()){
+                main.getLogManager().info("Conversations folder for category <highlight>" + categoryFolder.getName() + "</highlight> was not found! Creating a new conversations folder...");
+                conversationsFolder = new File(categoryFolder, "conversations");
+                if (!conversationsFolder.exists() && !conversationsFolder.mkdir()) {
+                    disablePluginAndSaving("There was an error creating the " + categoryFolder.getName() + " category conversations folder..");
+                }
+            }
+
 
 
             final Category category = new Category(main, categoryFolder.getName(), categoryFolder);
