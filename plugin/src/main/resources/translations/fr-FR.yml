@@ -204,7 +204,7 @@ gui:
     button:
       questPreview:
         name-if-not-accepted: "<highlight>%QUESTNAME%"
-        name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTER]"
+        name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTÉE]"
         lore:
           - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
           - "<main>Cliquez pour ouvrir la quête !"
@@ -307,12 +307,12 @@ gui:
         lore:
           - "<positive><BOLD>TERMINÉ</BOLD>"
           - "<veryUnimportant><strikethrough>%WRAPPEDOBJECTIVEDESCRIPTION%"
-          - "<veryUnimportant>%COMPLETEDOBJECTIVEDESCRIPTION%"
+          - "<veryUnimportant><strikethrough>%COMPLETEDOBJECTIVEDESCRIPTION%"
           - ""
           - "<unimportant><strikethrough>Progression: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
         lore-if-description-empty:
           - "<positive><BOLD>TERMINÉ</BOLD>"
           - "<veryUnimportant><strikethrough>Aucune description"
-          - "<veryUnimportant>%COMPLETEDOBJECTIVEDESCRIPTION%"
+          - "<veryUnimportant><strikethrough>%COMPLETEDOBJECTIVEDESCRIPTION%"
           - ""
           - "<unimportant><strikethrough>Progression: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
