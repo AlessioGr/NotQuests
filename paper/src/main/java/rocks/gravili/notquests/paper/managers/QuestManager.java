@@ -1115,6 +1115,11 @@ public class QuestManager {
             return;
         }
 
+        if(category.getQuestsConfig() == null){
+            main.getLogManager().warn("Skipped loading NPC data because the entire quests configuration of the category <highlight>" + category.getCategoryFullName() + "</highlight> was null. This should never happen.");
+            return;
+        }
+
 
 
 
@@ -1185,7 +1190,7 @@ public class QuestManager {
                     }
                 }
             } else {
-                main.getLogManager().info("Skipped loading NPC data because questsConfigurationSetting was null.");
+                main.getLogManager().info("Skipped loading NPC data because the 'quests' configuration section of the quests configuration for the category <highlight>" + category.getCategoryFullName() + "</highlight> was null.");
             }
             main.getLogManager().info("NPC data loaded!");
             main.getDataManager().setAlreadyLoadedNPCs(true);
