@@ -37,7 +37,7 @@ import net.kyori.adventure.text.minimessage.parser.node.ValueNode;
 import net.kyori.adventure.text.minimessage.transformation.Modifying;
 import net.kyori.adventure.text.minimessage.transformation.Transformation;
 
-import net.kyori.adventure.text.minimessage.transformation.inbuild.ComponentTransformation;
+import net.kyori.adventure.text.minimessage.transformation.inbuild.TemplateTransformation;
 import net.kyori.examination.ExaminableProperty;
 import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -169,8 +169,8 @@ public final class SimpleGradientTransformation extends Transformation implement
             this.size += value.codePointCount(0, value.length());
         } else if (curr instanceof TagNode) {
             final TagNode tag = (TagNode) curr;
-            if (tag.transformation() instanceof ComponentTransformation) {
-                // ComponentTransformation.apply() returns the value of the component placeholder
+            if (tag.transformation() instanceof TemplateTransformation) {
+                // TemplateTransformation.apply() returns the value of the component template
                 ComponentFlattener.textOnly().flatten(tag.transformation().apply(), s -> this.size += s.codePointCount(0, s.length()));
             }
         }
