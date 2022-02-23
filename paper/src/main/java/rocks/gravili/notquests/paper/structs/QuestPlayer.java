@@ -262,7 +262,6 @@ public class QuestPlayer {
 
 
                 //Now send instant packet
-                main.getPacketManager().sendBeaconUpdatePacket(player, lowestDistanceLocation, beaconBlockState);
             }else if(main.getConfiguration().getBeamMode().equals("end_gateway")){
                 BlockState beaconBlockState = lowestDistanceLocation.getBlock().getState();
                 beaconBlockState.setType(Material.END_GATEWAY);

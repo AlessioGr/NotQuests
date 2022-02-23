@@ -19,8 +19,6 @@
 
 package rocks.gravili.notquests;
 
-import io.papermc.lib.PaperLib;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Level;
@@ -36,7 +34,6 @@ public final class Main extends JavaPlugin {
     private static Main instance;
 
     private rocks.gravili.notquests.paper.NotQuests notQuests;
-    private rocks.gravili.notquests.spigot.NotQuests notQuestsSpigot;
 
 
     @Override
@@ -46,9 +43,6 @@ public final class Main extends JavaPlugin {
 
     public final rocks.gravili.notquests.paper.NotQuests getNotQuests(){
         return notQuests;
-    }
-    public final rocks.gravili.notquests.spigot.NotQuests getNotQuestsSpigot(){
-        return notQuestsSpigot;
     }
 
     public static Main getInstance() {
@@ -62,23 +56,15 @@ public final class Main extends JavaPlugin {
     @Override
     public void onEnable() {
 
-        if(PaperLib.isPaper()){
-            getLogger().log(Level.INFO, "Loading NotQuests Paper...");
-            notQuests = new rocks.gravili.notquests.paper.NotQuests(instance);
-            notQuests.onLoad();
-        }else{
-            getLogger().log(Level.INFO, "Loading NotQuests Spigot...");
-
-            notQuestsSpigot = new rocks.gravili.notquests.spigot.NotQuests(instance);
-            notQuestsSpigot.onLoad();
-        }
+        getLogger().log(Level.INFO, "Loading NotQuests Paper...");
+        notQuests = new rocks.gravili.notquests.paper.NotQuests(instance);
+        notQuests.onLoad();
 
         if(notQuests != null){
             getLogger().log(Level.INFO, "Enabling NotQuests Paper...");
             notQuests.onEnable();
         }else{
             getLogger().log(Level.INFO, "Enabling NotQuests Spigot...");
-            notQuestsSpigot.onEnable();
         }
 
         /*getLogger().log(Level.INFO, "NotQuests has started. It will start loading in 5 seconds. Why the delay? Because spigot's load order system is broken. It does not work correctly. Without the delay, some integrations will stop working.");
@@ -122,8 +108,6 @@ public final class Main extends JavaPlugin {
     public void onDisable() {
         if(notQuests != null){
             notQuests.onDisable();
-        }else{
-            notQuestsSpigot.onDisable();
         }
 
     }

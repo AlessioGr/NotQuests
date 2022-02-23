@@ -104,19 +104,6 @@ public class WebManager {
                 String ymlActionsString = category.getActionsConfig().saveToString();
                 String ymlConditionsString = category.getConditionsConfig().saveToString();
 
-                if(!ymlQuestsString.isBlank()){
-                    String jsonQuestsString = convertYamlToJson(ymlQuestsString);
-                    categoryObject.add("Quests",  JsonParser.parseString(jsonQuestsString));
-                }
-                if(!ymlActionsString.isBlank()){
-                    String jsonActionsString = convertYamlToJson(ymlActionsString);
-                    categoryObject.add("Actions", JsonParser.parseString(jsonActionsString));
-                }
-                if(!ymlConditionsString.isBlank()){
-                    String jsonConditionsString = convertYamlToJson(ymlConditionsString);
-                    categoryObject.add("Conditions", JsonParser.parseString(jsonConditionsString));
-                }
-
 
 
 

@@ -29,8 +29,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
-import org.bukkit.event.world.EntitiesLoadEvent;
-import org.bukkit.event.world.EntitiesUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
@@ -560,47 +558,6 @@ public class ArmorStandEvents implements Listener {
         }
 
     }
-
-
-    @EventHandler
-    private void onArmorStandLoad(EntitiesLoadEvent event) {
-        if (!main.getConfiguration().isArmorStandQuestGiverIndicatorParticleEnabled()) {
-            return;
-        }
-        for(final Entity entity : event.getEntities()){
-            if (entity instanceof final ArmorStand armorStand) {
-                final PersistentDataContainer armorStandPDB = armorStand.getPersistentDataContainer();
-
-                if (!armorStandPDB.has(main.getArmorStandManager().getAttachedQuestsShowingKey(), PersistentDataType.STRING) && !armorStandPDB.has(main.getArmorStandManager().getAttachedQuestsNonShowingKey(), PersistentDataType.STRING) && !armorStandPDB.has(main.getArmorStandManager().getAttachedConversationKey(), PersistentDataType.STRING)) {
-                    return;
-                }
-
-                main.getArmorStandManager().addArmorStandWithQuestsOrConversationAttachedToThem(armorStand);
-
-            }
-        }
-
-    }
-
-    @EventHandler
-    private void onArmorStandUnload(EntitiesUnloadEvent event) {
-        if (!main.getConfiguration().isArmorStandQuestGiverIndicatorParticleEnabled()) {
-            return;
-        }
-        for (final Entity entity : event.getEntities()) {
-            if (entity instanceof final ArmorStand armorStand) {
-                final PersistentDataContainer armorStandPDB = armorStand.getPersistentDataContainer();
-
-
-                if (!armorStandPDB.has(main.getArmorStandManager().getAttachedQuestsShowingKey(), PersistentDataType.STRING) && !armorStandPDB.has(main.getArmorStandManager().getAttachedQuestsNonShowingKey(), PersistentDataType.STRING) && !armorStandPDB.has(main.getArmorStandManager().getAttachedConversationKey(), PersistentDataType.STRING)) {
-                    continue;
-                }
-
-                main.getArmorStandManager().removeArmorStandWithQuestsOrConversationAttachedToThem(armorStand);
-            }
-        }
-    }
-
 
     //This probably will never happen and is not really needed, because armor stands are not spawned immediately with the PDB - you have to assign it to them first
     @EventHandler

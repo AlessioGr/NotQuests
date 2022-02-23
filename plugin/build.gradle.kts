@@ -4,7 +4,6 @@ plugins {
     `java-library`
     `maven-publish`
     id ("com.github.johnrengelman.shadow")
-    id("io.papermc.paperweight.userdev")
     id("xyz.jpenilla.run-paper")
     id("net.minecrell.plugin-yml.bukkit") version "0.5.1"
 }
@@ -19,7 +18,8 @@ repositories {
         content {
             includeGroup("io.papermc.paper")
             includeGroup("net.kyori")
-            includeGroup("io.papermc")
+            includeGroup("com.destroystokyo.paper")
+            includeGroup("com.destroystokyo")
         }
     }
 
@@ -99,9 +99,7 @@ repositories {
 }
 
 dependencies {
-    paperDevBundle("1.18.1-R0.1-SNAPSHOT")
-
-    implementation(project(path= ":spigot", configuration= "shadow"))
+    compileOnly("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT")
     implementation(project(path= ":paper", configuration= "shadow"))
 
     //implementation(project(":spigot"))
@@ -109,7 +107,6 @@ dependencies {
 
     //compileOnly("io.papermc.paper:paper-api:1.18.1-R0.1-SNAPSHOT")
 
-    implementation("io.papermc:paperlib:1.0.7")
 }
 
 /**
@@ -121,12 +118,10 @@ tasks.withType<ShadowJar> {
 
     //relocate("rocks.gravili.notquests.spigot", "$shadowPath.spigot")
     //relocate("rocks.gravili.notquests.paper", "$shadowPath.paper")
-    relocate("io.papermc.lib", "$shadowPath.paperlib")
 
     dependencies {
         include(dependency(":spigot"))
         include(dependency(":paper"))
-        include(dependency("io.papermc:paperlib:"))
     }
     //archiveBaseName.set("notquests")
     archiveClassifier.set("")
@@ -148,25 +143,17 @@ tasks {
     //    dependsOn(shadowJar)
     //}
 
-    build {
-        dependsOn(reobfJar)
-    }
+
 
     compileJava {
         options.encoding = Charsets.UTF_8.name()
-        options.release.set(17)
+        options.release.set(16)
     }
     javadoc {
         options.encoding = Charsets.UTF_8.name()
     }
     processResources {
         filteringCharset = Charsets.UTF_8.name()
-    }
-    runServer {
-        // Configure the Minecraft version for our task.
-        // This is the only required configuration besides applying the plugin.
-        // Your plugin's jar (or shadowJar if present) will be used automatically.
-        minecraftVersion("1.18.1")
     }
 }
 
@@ -206,7 +193,7 @@ bukkit {
     name = "NotQuests"
     version = rootProject.version.toString()
     main = "rocks.gravili.notquests.Main"
-    apiVersion = "1.17"
+    apiVersion = "1.16"
     authors = listOf("NoeX")
     description = "Flexible, open, GUI Quest Plugin for Minecraft 1.17 and 1.18"
     website = "quests.notnot.pro"

@@ -4,7 +4,6 @@ plugins {
     `java-library`
     `maven-publish`
     id ("com.github.johnrengelman.shadow")
-    id("io.papermc.paperweight.userdev")
     id("xyz.jpenilla.run-paper")
     id("name.remal.check-dependency-updates")
 }
@@ -23,6 +22,8 @@ repositories {
         content {
             includeGroup("io.papermc.paper")
             includeGroup("net.kyori")
+            includeGroup("com.destroystokyo.paper")
+            includeGroup("com.destroystokyo")
         }
     }
 
@@ -118,7 +119,7 @@ repositories {
 
 dependencies {
     //implementation project(':common')
-    paperDevBundle("1.18.1-R0.1-SNAPSHOT")
+    compileOnly("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT")
     //compileOnly("io.papermc.paper:paper-api:1.18.1-R0.1-SNAPSHOT!!")
 
     implementation("org.bstats:bstats-bukkit:3.0.0")
@@ -158,9 +159,6 @@ dependencies {
         exclude(group = "net.kyori", module = "adventure-bom")
     }
 
-    implementation("net.kyori:adventure-text-serializer-bungeecord:4.0.1"){
-        exclude(group= "net.kyori", module= "adventure-api")
-    }
 
     //CloudCommands
     implementation("cloud.commandframework:cloud-paper:1.7.0-SNAPSHOT"){
@@ -240,7 +238,6 @@ tasks.withType<ShadowJar> {
     //Packet Stuff
     //relocate('net.kyori.adventure.text.serializer.bungeecord', path.concat('.kyori.bungeecord'))
     //relocate('net.kyori.adventure.platform.bukkit', path.concat('.kyori.platform-bukkit'))
-    relocate("net.kyori.adventure.text.serializer.bungeecord", "$shadowPath.kyori.bungeecord")
 
     //MiniMessage
     relocate("net.kyori.adventure.text.minimessage", "$shadowPath.kyori.minimessage")
@@ -275,7 +272,6 @@ tasks.withType<ShadowJar> {
 
         //include(dependency('net.kyori:adventure-platform-bukkit:')
         include(dependency("net.kyori:adventure-text-minimessage:"))
-        include(dependency("net.kyori:adventure-text-serializer-bungeecord:"))
 
         include(dependency("com.github.Redempt:Crunch:"))
 
@@ -308,13 +304,6 @@ tasks {
     //build {
     //    dependsOn(shadowJar)
     //}
-    assemble {
-        dependsOn(reobfJar)
-    }
-
-    build {
-        dependsOn(reobfJar)
-    }
 
     /*shadowJar {
         dependsOn(reobfJar)
@@ -322,19 +311,13 @@ tasks {
 
     compileJava {
         options.encoding = Charsets.UTF_8.name()
-        options.release.set(17)
+        options.release.set(16)
     }
     javadoc {
         options.encoding = Charsets.UTF_8.name()
     }
     processResources {
         filteringCharset = Charsets.UTF_8.name()
-    }
-    runServer {
-        // Configure the Minecraft version for our task.
-        // This is the only required configuration besides applying the plugin.
-        // Your plugin's jar (or shadowJar if present) will be used automatically.
-        minecraftVersion("1.18.1")
     }
 }
 

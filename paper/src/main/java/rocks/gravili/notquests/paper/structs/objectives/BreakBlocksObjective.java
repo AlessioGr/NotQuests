@@ -107,12 +107,7 @@ public class BreakBlocksObjective extends Objective {
 
     @Override
     public String getObjectiveTaskDescription(final Player player) {
-        String translatedMaterialName;
-        try{
-            translatedMaterialName = "<lang:" + Material.valueOf(getBlockToBreakMaterial()).translationKey() + ">";
-        }catch (Exception ignored){
-            translatedMaterialName = getBlockToBreakMaterial();
-        }
+
 
         //TODO: translatedMaterialName doesnt work in gradients yet. Wait until minimessage fixed that bug
 

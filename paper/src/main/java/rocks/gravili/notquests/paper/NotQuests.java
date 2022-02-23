@@ -19,7 +19,6 @@ import rocks.gravili.notquests.paper.events.TriggerEvents;
 import rocks.gravili.notquests.paper.events.notquests.NotQuestsFullyLoadedEvent;
 import rocks.gravili.notquests.paper.managers.*;
 import rocks.gravili.notquests.paper.managers.items.ItemsManager;
-import rocks.gravili.notquests.paper.managers.packets.PacketManager;
 import rocks.gravili.notquests.paper.managers.registering.*;
 import rocks.gravili.notquests.paper.managers.tags.TagManager;
 import rocks.gravili.notquests.paper.structs.Quest;
@@ -53,7 +52,6 @@ public class NotQuests {
     private PerformanceManager performanceManager;
     private CommandManager commandManager;
     private ConversationManager conversationManager;
-    private PacketManager packetManager;
     private UpdateManager updateManager;
     private GUIManager guiManager;
     private BackupManager backupManager;
@@ -102,10 +100,6 @@ public class NotQuests {
             dataManager.loadGeneralConfig();
         }
 
-        if (packetManager == null) {
-            packetManager = new PacketManager(this);
-            packetManager.onLoad();
-        }
     }
 
 
@@ -333,11 +327,6 @@ public class NotQuests {
         }));
 
 
-        if (packetManager == null) {
-            packetManager = new PacketManager(this);
-        }
-
-        packetManager.initialize();
     }
 
 
@@ -369,7 +358,6 @@ public class NotQuests {
 
 
 
-        packetManager.terminate();
 
         /* This is kind of useful for compatibility with ServerUtils or Plugman.
          * If this is false, the plugin will try to load NPCs again if the Citizens plugin is reloaded or enabled.
@@ -475,9 +463,6 @@ public class NotQuests {
     }
 
 
-    public PacketManager getPacketManager() {
-        return packetManager;
-    }
 
     public UpdateManager getUpdateManager() {
         return updateManager;

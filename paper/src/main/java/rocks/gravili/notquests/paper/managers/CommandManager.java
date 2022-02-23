@@ -35,7 +35,6 @@ import cloud.commandframework.minecraft.extras.AudienceProvider;
 import cloud.commandframework.minecraft.extras.MinecraftExceptionHandler;
 import cloud.commandframework.minecraft.extras.MinecraftHelp;
 import cloud.commandframework.paper.PaperCommandManager;
-import com.mojang.brigadier.arguments.StringArgumentType;
 import io.leangen.geantyref.TypeToken;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
@@ -309,23 +308,6 @@ public class CommandManager {
             if (cloudBrigadierManager != null) {
                 cloudBrigadierManager.setNativeNumberSuggestions(false);
 
-
-                cloudBrigadierManager.registerMapping(new TypeToken<CommandSelector.CommandParser<CommandSender>>() {
-                }, builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
-
-                cloudBrigadierManager.registerMapping(new TypeToken<MiniMessageSelector.MiniMessageParser<CommandSender>>() {
-                }, builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
-
-                cloudBrigadierManager.registerMapping(new TypeToken<StringVariableValueArgument.StringParser<CommandSender>>() {
-                }, builder -> builder.cloudSuggestions().toConstant(StringArgumentType.string()));
-
-                //Greedy string to prevent false, red brigardier color when entering special symbols like a comma
-                cloudBrigadierManager.registerMapping(new TypeToken<NumberVariableValueArgument.StringParser<CommandSender>>() {
-                }, builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
-                cloudBrigadierManager.registerMapping(new TypeToken<BooleanVariableValueArgument.StringParser<CommandSender>>() {
-                }, builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
-                cloudBrigadierManager.registerMapping(new TypeToken<MultipleActionsSelector.ListActionsParser<CommandSender>>() {
-                }, builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
             } else {
                 main.getMain().getLogger().warning("Failed to initialize Brigadier support. Brigadier manager is null.");
             }

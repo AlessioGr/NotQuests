@@ -4,7 +4,6 @@ plugins {
     `java-library`
     `maven-publish`
     id ("com.github.johnrengelman.shadow") version "7.1.2"
-    id("io.papermc.paperweight.userdev") version "1.3.4"
     id("xyz.jpenilla.run-paper") version "1.0.6" // Adds runServer and runMojangMappedServer tasks for testing
     id("name.remal.check-dependency-updates") version "1.5.0"
 }
@@ -19,9 +18,7 @@ version = "4.16.1"
 repositories {
 }
 
-dependencies {
-    paperDevBundle("1.18.1-R0.1-SNAPSHOT")
-}
+
 
 /**
  * Configure NotQuests for shading
@@ -38,7 +35,7 @@ tasks {
     //}
     compileJava {
         options.encoding = Charsets.UTF_8.name()
-        options.release.set(17)
+        options.release.set(16)
     }
     javadoc {
         options.encoding = Charsets.UTF_8.name()
@@ -46,12 +43,7 @@ tasks {
     processResources {
         filteringCharset = Charsets.UTF_8.name()
     }
-    runServer {
-        // Configure the Minecraft version for our task.
-        // This is the only required configuration besides applying the plugin.
-        // Your plugin's jar (or shadowJar if present) will be used automatically.
-        minecraftVersion("1.18.1")
-    }
+
 }
 
 
