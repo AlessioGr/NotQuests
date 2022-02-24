@@ -218,7 +218,7 @@ public class AdminCommands {
                             for (CompletedQuest completedQuest : questPlayer.getCompletedQuests()) {
                                 resultDate.setTime(completedQuest.getTimeCompleted());
                                 context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <highlight2>" + completedQuest.getQuest().getQuestName()
-                                        + "</highlight2> <main>Completed: </main> <highlight2>" + resultDate + "</highlight2>"
+                                        + "</highlight2> <main>Completed: </main><highlight2>" + resultDate + "</highlight2>"
                                 ));
                                 counter += 1;
                             }
