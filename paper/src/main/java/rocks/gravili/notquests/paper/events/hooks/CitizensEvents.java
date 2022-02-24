@@ -37,8 +37,8 @@ import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.objectives.DeliverItemsObjective;
-import rocks.gravili.notquests.paper.structs.objectives.hooks.citizens.EscortNPCObjective;
 import rocks.gravili.notquests.paper.structs.objectives.TalkToNPCObjective;
+import rocks.gravili.notquests.paper.structs.objectives.hooks.citizens.EscortNPCObjective;
 import rocks.gravili.notquests.paper.structs.triggers.ActiveTrigger;
 import rocks.gravili.notquests.paper.structs.triggers.types.NPCDeathTrigger;
 
@@ -67,7 +67,7 @@ public class CitizensEvents implements Listener {
                                     if (activeTrigger.getTrigger().getWorldName().equalsIgnoreCase("ALL")) {
                                         activeTrigger.addAndCheckTrigger(activeQuest);
                                     } else {
-                                        final Player player = Bukkit.getPlayer(questPlayer.getUUID());
+                                        final Player player = Bukkit.getPlayer(questPlayer.getUniqueId());
                                         if (player != null && player.getWorld().getName().equalsIgnoreCase(activeTrigger.getTrigger().getWorldName())) {
                                             activeTrigger.addAndCheckTrigger(activeQuest);
                                         }
@@ -81,7 +81,7 @@ public class CitizensEvents implements Listener {
                                     if (activeTrigger.getTrigger().getWorldName().equalsIgnoreCase("ALL")) {
                                         activeTrigger.addAndCheckTrigger(activeQuest);
                                     } else {
-                                        final Player player = Bukkit.getPlayer(questPlayer.getUUID());
+                                        final Player player = Bukkit.getPlayer(questPlayer.getUniqueId());
                                         if (player != null && player.getWorld().getName().equalsIgnoreCase(activeTrigger.getTrigger().getWorldName())) {
                                             activeTrigger.addAndCheckTrigger(activeQuest);
                                         }
@@ -208,12 +208,12 @@ public class CitizensEvents implements Listener {
         }
 
         //Quest Preview
-        main.getQuestManager().sendQuestsPreviewOfQuestShownNPCs(npc, player);
+        main.getQuestManager().sendQuestsPreviewOfQuestShownNPCs(npc, questPlayer);
 
         //Conversations
         final Conversation foundConversation = main.getConversationManager().getConversationForNPCID(npc.getId());
         if (foundConversation != null) {
-            main.getConversationManager().playConversation(player, foundConversation);
+            main.getConversationManager().playConversation(questPlayer, foundConversation);
         }
 
 

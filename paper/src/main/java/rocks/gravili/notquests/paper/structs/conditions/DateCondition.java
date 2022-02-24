@@ -8,7 +8,6 @@ import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
@@ -189,7 +188,7 @@ public class DateCondition extends Condition {
 
 
     @Override
-    public String getConditionDescriptionInternally(Player player, Object... objects) {
+    public String getConditionDescriptionInternally(QuestPlayer questPlayer, Object... objects) {
         final LocalDateTime currentTime = timeZone == null ? LocalDateTime.now() : LocalDateTime.now(timeZone.toZoneId());
 
         final LocalDateTime timeToCompare = LocalDateTime.of(

@@ -21,19 +21,12 @@ package rocks.gravili.notquests.paper.structs.objectives;
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.IntegerArgument;
-import cloud.commandframework.bukkit.parsers.WorldArgument;
-import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
-import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.util.Vector;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
-
-import java.util.Map;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 
 public class OpenBuriedTreasureObjective extends Objective {
@@ -60,8 +53,8 @@ public class OpenBuriedTreasureObjective extends Objective {
 
 
     @Override
-    public String getObjectiveTaskDescription(final Player player) {
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.openBuriedTreasure.base", player);
+    public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.openBuriedTreasure.base", questPlayer);
     }
 
     @Override

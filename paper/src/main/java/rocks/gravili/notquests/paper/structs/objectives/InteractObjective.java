@@ -22,16 +22,15 @@ import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.bukkit.parsers.WorldArgument;
-import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.Map;
 
@@ -131,7 +130,7 @@ public class InteractObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final Player player) {
+    public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
         String toReturn;
         String interactType = "";
         if (isLeftClick()) {
@@ -150,13 +149,13 @@ public class InteractObjective extends Objective {
         }
 
         if (taskDescription.isBlank()) {
-            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.interact.base", player, Map.of(
+            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.interact.base", questPlayer, Map.of(
                     "%INTERACTTYPE%", interactType,
                     "%COORDINATES%", "X: " + getLocationToInteract().getX() + " Y: " + getLocationToInteract().getY() + " Z: " + getLocationToInteract().getZ(),
                     "%WORLDNAME%", worldName
             ));
         } else {
-            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.interact.taskDescriptionProvided", player, Map.of(
+            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.interact.taskDescriptionProvided", questPlayer, Map.of(
                     "%TASKDESCRIPTION%", getTaskDescription(),
                     "%INTERACTTYPE%", interactType,
                     "%COORDINATES%", "X: " + getLocationToInteract().getX() + " Y: " + getLocationToInteract().getY() + " Z: " + getLocationToInteract().getZ(),

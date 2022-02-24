@@ -182,7 +182,7 @@ public class CitizensManager {
 
         } else {
             if (destinationNPC == null) {
-                final Player player = Bukkit.getPlayer(activeQuest.getQuestPlayer().getUUID());
+                final Player player = Bukkit.getPlayer(activeQuest.getQuestPlayer().getUniqueId());
                 if (player != null) {
                     player.sendMessage(Component.text("The Destination NPC does not exist. Please consult an admin."));
                 }
@@ -190,7 +190,7 @@ public class CitizensManager {
 
             }
             if (npcToEscort == null) {
-                final Player player = Bukkit.getPlayer(activeQuest.getQuestPlayer().getUUID());
+                final Player player = Bukkit.getPlayer(activeQuest.getQuestPlayer().getUniqueId());
                 if (player != null) {
                     player.sendMessage(Component.text("The NPC you have to escort does not exist. Please consult an admin."));
                 }
@@ -202,7 +202,7 @@ public class CitizensManager {
     }
 
     private void handleEscortNPCObjectiveForActiveObjectiveSynchronous(final NPC npcToEscort, final NPC destinationNPC, final FollowTrait followerTrait, final ActiveQuest activeQuest, final EscortNPCObjective escortNPCObjective) {
-        final Player player = Bukkit.getPlayer(activeQuest.getQuestPlayer().getUUID());
+        final Player player = Bukkit.getPlayer(activeQuest.getQuestPlayer().getUniqueId());
         if (player != null) {
             final Location spawnLocation = escortNPCObjective.getSpawnLocation() != null ? escortNPCObjective.getSpawnLocation() : player.getLocation();
             if (!npcToEscort.isSpawned()) {
@@ -225,7 +225,7 @@ public class CitizensManager {
                     "<GREEN>Escort quest started! Please escort <highlight>" + npcToEscort.getName() + "</highlight> to <highlight>" + destinationNPC.getName() + "</highlight>."
             ));
         } else {
-            main.getLogManager().warn("Error: The escort objective could not be started, because the player with the UUID <highlight>" + activeQuest.getQuestPlayer().getUUID() + "</highlight> was not found!");
+            main.getLogManager().warn("Error: The escort objective could not be started, because the player with the UUID <highlight>" + activeQuest.getQuestPlayer().getUniqueId() + "</highlight> was not found!");
 
 
         }

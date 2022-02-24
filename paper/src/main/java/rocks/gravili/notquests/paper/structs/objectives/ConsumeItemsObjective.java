@@ -21,9 +21,8 @@ package rocks.gravili.notquests.paper.structs.objectives;
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.IntegerArgument;
-import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
-import org.bukkit.Material;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -32,6 +31,7 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.Map;
 
@@ -129,11 +129,11 @@ public class ConsumeItemsObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final Player player) {
+    public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
         final String displayName;
         if (!isConsumeAnyItem()) {
             if (getItemToConsume().getItemMeta() != null) {
-                displayName = getItemToConsume().getItemMeta().getDisplayName();
+                displayName = PlainTextComponentSerializer.plainText().serializeOr(getItemToConsume().getItemMeta().displayName(), getItemToConsume().getType().name());
             } else {
                 displayName = getItemToConsume().getType().name();
             }
@@ -144,14 +144,14 @@ public class ConsumeItemsObjective extends Objective {
         String itemType = isConsumeAnyItem() ? "Any" : getItemToConsume().getType().name();
 
         if (!displayName.isBlank()) {
-            return main.getLanguageManager().getString("chat.objectives.taskDescription.consumeItems.base", player, Map.of(
+            return main.getLanguageManager().getString("chat.objectives.taskDescription.consumeItems.base", questPlayer, Map.of(
                     "%ITEMTOCONSUMETYPE%", itemType,
                     "%ITEMTOCONSUMENAME%", displayName,
                     "%(%", "(",
                     "%)%", "<RESET>)"
             ));
         } else {
-            return main.getLanguageManager().getString("chat.objectives.taskDescription.consumeItems.base", player, Map.of(
+            return main.getLanguageManager().getString("chat.objectives.taskDescription.consumeItems.base", questPlayer, Map.of(
                     "%ITEMTOCONSUMETYPE%", itemType,
                     "%ITEMTOCONSUMENAME%", "",
                     "%(%", "",

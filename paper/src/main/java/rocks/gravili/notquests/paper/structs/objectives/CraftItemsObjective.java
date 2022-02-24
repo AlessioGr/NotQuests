@@ -21,9 +21,8 @@ package rocks.gravili.notquests.paper.structs.objectives;
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.IntegerArgument;
-import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
-import org.bukkit.Material;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -32,6 +31,7 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.Map;
 
@@ -128,11 +128,11 @@ public class CraftItemsObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final Player player) {
+    public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
         final String displayName;
         if (!isCraftAnyItem()) {
             if (getItemToCraft().getItemMeta() != null) {
-                displayName = getItemToCraft().getItemMeta().getDisplayName();
+                displayName = PlainTextComponentSerializer.plainText().serializeOr(getItemToCraft().getItemMeta().displayName(), getItemToCraft().getType().name());
             } else {
                 displayName = getItemToCraft().getType().name();
             }
@@ -144,14 +144,14 @@ public class CraftItemsObjective extends Objective {
 
 
         if (!displayName.isBlank()) {
-            return main.getLanguageManager().getString("chat.objectives.taskDescription.craftItems.base", player, Map.of(
+            return main.getLanguageManager().getString("chat.objectives.taskDescription.craftItems.base", questPlayer, Map.of(
                     "%ITEMTOCRAFTTYPE%", itemType,
                     "%ITEMTOCRAFTNAME%", displayName,
                     "%(%", "(",
                     "%)%", "<RESET>)"
             ));
         } else {
-            return main.getLanguageManager().getString("chat.objectives.taskDescription.craftItems.base", player, Map.of(
+            return main.getLanguageManager().getString("chat.objectives.taskDescription.craftItems.base", questPlayer, Map.of(
                     "%ITEMTOCRAFTTYPE%", itemType,
                     "%ITEMTOCRAFTNAME%", displayName,
                     "%(%", "",

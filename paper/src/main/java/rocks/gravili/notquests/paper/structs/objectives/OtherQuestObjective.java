@@ -21,15 +21,14 @@ package rocks.gravili.notquests.paper.structs.objectives;
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.IntegerArgument;
-import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.QuestSelector;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.Quest;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.Map;
 
@@ -70,8 +69,8 @@ public class OtherQuestObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final Player player) {
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.otherQuest.base", player, Map.of(
+    public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.otherQuest.base", questPlayer, Map.of(
                 "%OTHERQUESTNAME%", getOtherQuest().getQuestName()
         ));
     }

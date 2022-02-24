@@ -327,7 +327,7 @@ public class ConversationPlayer {
             return;
         }
         //Send back old messages
-        ArrayList<Component> allChatHistory = main.getConversationManager().getChatHistory().get(getQuestPlayer().getUUID());
+        ArrayList<Component> allChatHistory = main.getConversationManager().getChatHistory().get(getQuestPlayer().getUniqueId());
 
         main.getLogManager().debug("Conversation stop stage 1");
 
@@ -335,7 +335,7 @@ public class ConversationPlayer {
             return;
         }
 
-        ArrayList<Component> allConversationHistory = main.getConversationManager().getConversationChatHistory().get(getQuestPlayer().getUUID());
+        ArrayList<Component> allConversationHistory = main.getConversationManager().getConversationChatHistory().get(getQuestPlayer().getUniqueId());
         main.getLogManager().debug("Conversation stop stage 1.5");
         if (allConversationHistory == null) {
             return;
@@ -357,8 +357,8 @@ public class ConversationPlayer {
 
         allChatHistory.removeAll(allConversationHistory);
         allConversationHistory.clear();
-        main.getConversationManager().getChatHistory().put(getQuestPlayer().getUUID(), allChatHistory);
-        main.getConversationManager().getConversationChatHistory().put(getQuestPlayer().getUUID(), allConversationHistory);
+        main.getConversationManager().getChatHistory().put(getQuestPlayer().getUniqueId(), allChatHistory);
+        main.getConversationManager().getConversationChatHistory().put(getQuestPlayer().getUniqueId(), allConversationHistory);
 
         //maybe this won't send the huge, 1-component-chat-history again
         allConversationHistory.add(collectiveComponent);

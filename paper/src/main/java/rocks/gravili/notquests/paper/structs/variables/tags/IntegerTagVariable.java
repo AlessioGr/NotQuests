@@ -2,7 +2,6 @@ package rocks.gravili.notquests.paper.structs.variables.tags;
 
 import cloud.commandframework.arguments.standard.StringArgument;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.tags.Tag;
 import rocks.gravili.notquests.paper.managers.tags.TagType;
@@ -39,15 +38,14 @@ public class IntegerTagVariable extends Variable<Integer> {
     }
 
     @Override
-    public Integer getValue(Player player, Object... objects) {
-        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
-        if(questPlayer == null){
+    public Integer getValue(QuestPlayer questPlayer, Object... objects) {
+        if (questPlayer == null) {
             return 0;
         }
 
         final String tagName = getRequiredStringValue("TagName");
         final Tag tag = main.getTagManager().getTag(tagName);
-        if(tag == null){
+        if (tag == null) {
             main.getLogManager().warn("Error reading tag " + tagName + ". Tag does not exist.");
             return 0;
         }
@@ -68,15 +66,14 @@ public class IntegerTagVariable extends Variable<Integer> {
     }
 
     @Override
-    public boolean setValueInternally(Integer newValue, Player player, Object... objects) {
-        final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
-        if(questPlayer == null){
+    public boolean setValueInternally(Integer newValue, QuestPlayer questPlayer, Object... objects) {
+        if (questPlayer == null) {
             return false;
         }
 
         final String tagName = getRequiredStringValue("TagName");
         final Tag tag = main.getTagManager().getTag(tagName);
-        if(tag == null){
+        if (tag == null) {
             main.getLogManager().warn("Error reading tag " + tagName + ". Tag does not exist. All possible tags: " + main.getTagManager().getTagIdentifiers().toString());
             return false;
         }
@@ -94,7 +91,7 @@ public class IntegerTagVariable extends Variable<Integer> {
 
 
     @Override
-    public List<String> getPossibleValues(Player player, Object... objects) {
+    public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
         return null;
     }
 

@@ -1,7 +1,7 @@
 package rocks.gravili.notquests.paper.structs.variables;
 
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.List;
 
@@ -12,18 +12,18 @@ public class PlayerSneakingVariable extends Variable<Boolean>{
     }
 
     @Override
-    public Boolean getValue(Player player, Object... objects) {
-        if (player != null) {
-            return player.isSneaking();
+    public Boolean getValue(QuestPlayer questPlayer, Object... objects) {
+        if (questPlayer != null) {
+            return questPlayer.getPlayer().isSneaking();
         } else {
             return false;
         }
     }
 
     @Override
-    public boolean setValueInternally(Boolean newValue, Player player, Object... objects) {
-        if (player != null) {
-            player.setSneaking(newValue);
+    public boolean setValueInternally(Boolean newValue, QuestPlayer questPlayer, Object... objects) {
+        if (questPlayer != null) {
+            questPlayer.getPlayer().setSneaking(newValue);
             return true;
         } else {
             return false;
@@ -32,7 +32,7 @@ public class PlayerSneakingVariable extends Variable<Boolean>{
 
 
     @Override
-    public List<String> getPossibleValues(Player player, Object... objects) {
+    public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
         return null;
     }
 

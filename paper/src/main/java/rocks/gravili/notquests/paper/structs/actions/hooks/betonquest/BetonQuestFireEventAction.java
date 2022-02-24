@@ -30,8 +30,8 @@ import org.betonquest.betonquest.id.EventID;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.actions.ActionFor;
 
@@ -123,9 +123,9 @@ public class BetonQuestFireEventAction extends Action {
 
 
     @Override
-    public void executeInternally(final Player player, Object... objects) {
-        if(getEventID() != null){
-            BetonQuest.event(player.getUniqueId().toString(), getEventID());
+    public void executeInternally(final QuestPlayer questPlayer, Object... objects) {
+        if (getEventID() != null) {
+            BetonQuest.event(questPlayer.getPlayer().getUniqueId().toString(), getEventID());
         }
 
     }
@@ -150,7 +150,7 @@ public class BetonQuestFireEventAction extends Action {
 
 
     @Override
-    public String getActionDescription(final Player player, final Object... objects) {
+    public String getActionDescription(final QuestPlayer questPlayer, final Object... objects) {
         return "Executes Event: " + getEventName() + " of package " + getPackageName();
 
     }

@@ -21,11 +21,8 @@ package rocks.gravili.notquests.paper.structs.actions;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
-import cloud.commandframework.arguments.CommandArgument;
 import cloud.commandframework.arguments.flags.CommandFlag;
-import cloud.commandframework.arguments.standard.BooleanArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
-import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
@@ -163,7 +160,7 @@ public class BooleanAction extends Action {
             variableCounter++;
             expressions = expressions.replace(variableString, "var" + variableCounter);
             env.addLazyVariable("var" + variableCounter, () -> {
-                final Object valueObject = variable.getValue(playerToEvaluate, questPlayerToEvaluate);
+                final Object valueObject = variable.getValue(questPlayerToEvaluate);
                 if(valueObject instanceof final Number n){
                     return n.doubleValue();
                 }else if(valueObject instanceof final Boolean b) {
@@ -270,11 +267,11 @@ public class BooleanAction extends Action {
                     continue;
                 }
                 final Variable<?> otherVariable = main.getVariablesManager().getVariableFromString(otherVariableName);
-                if(otherVariable == null || otherVariable.getVariableDataType() != VariableDataType.BOOLEAN){
+                if (otherVariable == null || otherVariable.getVariableDataType() != VariableDataType.BOOLEAN) {
                     main.getLogManager().debug("Null variable: <highlight>" + otherVariableName);
                     continue;
                 }
-                if(otherVariable.getValue(questPlayer.getPlayer(), questPlayer) instanceof Boolean bool){
+                if (otherVariable.getValue(questPlayer) instanceof Boolean bool) {
                     booleanRequirement = bool;
                     break;
                 }
@@ -284,17 +281,15 @@ public class BooleanAction extends Action {
     }
 
     @Override
-    public void executeInternally(final Player player, Object... objects) {
+    public void executeInternally(final QuestPlayer questPlayer, Object... objects) {
 
-        this.playerToEvaluate = player;
-        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(playerToEvaluate.getUniqueId());
+        this.playerToEvaluate = questPlayer.getPlayer();
         this.questPlayerToEvaluate = questPlayer;
         initializeExpressionAndCachedVariable();
 
 
-
-        if(cachedVariable == null){
-            main.sendMessage(player, "<ERROR>Error: variable <highlight>" + variableName + "</highlight> not found. Report this to the Server owner.");
+        if (cachedVariable == null) {
+            main.sendMessage(playerToEvaluate, "<ERROR>Error: variable <highlight>" + variableName + "</highlight> not found. Report this to the Server owner.");
             return;
         }
 
@@ -309,7 +304,7 @@ public class BooleanAction extends Action {
         }
 
 
-        Object currentValueObject = cachedVariable.getValue(player, questPlayer, objects);
+        Object currentValueObject = cachedVariable.getValue(questPlayer, objects);
 
         /*boolean currentValue = false;
         if (currentValueObject instanceof Boolean bool) {
@@ -325,7 +320,7 @@ public class BooleanAction extends Action {
         }else if(getOperator().equalsIgnoreCase("setNot")){
             nextNewValue = !nextNewValue;
         }else{
-            main.sendMessage(player, "<ERROR>Error: variable operator <highlight>" + getOperator() + "</highlight> is invalid. Report this to the Server owner.");
+            main.sendMessage(playerToEvaluate, "<ERROR>Error: variable operator <highlight>" + getOperator() + "</highlight> is invalid. Report this to the Server owner.");
             return;
         }
 
@@ -334,7 +329,7 @@ public class BooleanAction extends Action {
 
 
         if(currentValueObject instanceof Boolean){
-            ((Variable<Boolean>)cachedVariable).setValue(nextNewValue, player, objects);
+            ((Variable<Boolean>) cachedVariable).setValue(nextNewValue, questPlayer, objects);
         }else{
             main.getLogManager().warn("Cannot execute boolean action, because the number type " + currentValueObject.getClass().getName() + " is invalid.");
         }
@@ -342,8 +337,8 @@ public class BooleanAction extends Action {
     }
 
     @Override
-    public String getActionDescription(final Player player, final Object... objects) {
-        return variableName + ": " + evaluateExpression(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()));
+    public String getActionDescription(final QuestPlayer questPlayer, final Object... objects) {
+        return variableName + ": " + evaluateExpression(questPlayer);
     }
 
 

@@ -1,8 +1,8 @@
 package rocks.gravili.notquests.paper.structs.variables;
 
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.List;
 
@@ -13,18 +13,18 @@ public class PlayerCurrentPositionYVariable extends Variable<Double>{
     }
 
     @Override
-    public Double getValue(Player player, Object... objects) {
-        if (player != null) {
-            return player.getLocation().getY();
+    public Double getValue(QuestPlayer questPlayer, Object... objects) {
+        if (questPlayer != null) {
+            return questPlayer.getPlayer().getLocation().getY();
         } else {
             return null;
         }
     }
 
     @Override
-    public boolean setValueInternally(Double newValue, Player player, Object... objects) {
-        if (player != null) {
-            player.teleportAsync(new Location(player.getLocation().getWorld(), player.getLocation().getX(), newValue, player.getLocation().getZ()));
+    public boolean setValueInternally(Double newValue, QuestPlayer questPlayer, Object... objects) {
+        if (questPlayer != null) {
+            questPlayer.getPlayer().teleportAsync(new Location(questPlayer.getPlayer().getLocation().getWorld(), questPlayer.getPlayer().getLocation().getX(), newValue, questPlayer.getPlayer().getLocation().getZ()));
             return true;
         } else {
             return false;
@@ -33,7 +33,7 @@ public class PlayerCurrentPositionYVariable extends Variable<Double>{
 
 
     @Override
-    public List<String> getPossibleValues(Player player, Object... objects) {
+    public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
         return null;
     }
 

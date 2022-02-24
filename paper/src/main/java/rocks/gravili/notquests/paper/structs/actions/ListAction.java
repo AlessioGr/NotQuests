@@ -22,14 +22,11 @@ package rocks.gravili.notquests.paper.structs.actions;
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.flags.CommandFlag;
-import cloud.commandframework.arguments.standard.BooleanArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
-import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.ListVariableValueArgument;
@@ -168,15 +165,15 @@ public class ListAction extends Action {
     }
 
     @Override
-    public void executeInternally(final Player player, Object... objects) {
+    public void executeInternally(final QuestPlayer questPlayer, Object... objects) {
         Variable<?> variable = main.getVariablesManager().getVariableFromString(variableName);
 
-        if(variable == null){
-            main.sendMessage(player, "<ERROR>Error: variable <highlight>" + variableName + "</highlight> not found. Report this to the Server owner.");
+        if (variable == null) {
+            main.sendMessage(questPlayer.getPlayer(), "<ERROR>Error: variable <highlight>" + variableName + "</highlight> not found. Report this to the Server owner.");
             return;
         }
 
-        if(additionalStringArguments != null && !additionalStringArguments.isEmpty()){
+        if (additionalStringArguments != null && !additionalStringArguments.isEmpty()) {
             variable.setAdditionalStringArguments(additionalStringArguments);
         }
         if(additionalNumberArguments != null && !additionalNumberArguments.isEmpty()){
@@ -186,9 +183,8 @@ public class ListAction extends Action {
             variable.setAdditionalBooleanArguments(additionalBooleanArguments);
         }
 
-        QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
 
-        Object currentValueObject = variable.getValue(player, questPlayer, objects);
+        Object currentValueObject = variable.getValue(questPlayer, questPlayer, objects);
 
         String[] currentValue;
         if (currentValueObject instanceof String[] stringList) {
@@ -217,7 +213,7 @@ public class ListAction extends Action {
         }else if(getOperator().equalsIgnoreCase("clear")){
             nextNewValue = new String[0];
         }else{
-            main.sendMessage(player, "<ERROR>Error: variable operator <highlight>" + getOperator() + "</highlight> is invalid. Report this to the Server owner.");
+            main.sendMessage(questPlayer.getPlayer(), "<ERROR>Error: variable operator <highlight>" + getOperator() + "</highlight> is invalid. Report this to the Server owner.");
             return;
         }
 
@@ -226,9 +222,9 @@ public class ListAction extends Action {
 
 
         if(currentValueObject instanceof String[]){
-            ((Variable<String[]>)variable).setValue(nextNewValue, player, objects);
+            ((Variable<String[]>) variable).setValue(nextNewValue, questPlayer, objects);
         }else if(currentValueObject instanceof ArrayList<?>){
-            ((Variable<ArrayList<?>>)variable).setValue((ArrayList<?>) Arrays.asList(nextNewValue), player, objects);
+            ((Variable<ArrayList<?>>) variable).setValue((ArrayList<?>) Arrays.asList(nextNewValue), questPlayer, objects);
         }else{
             main.getLogManager().warn("Cannot execute list action, because the number type " + currentValueObject.getClass().getName() + " is invalid.");
         }
@@ -236,8 +232,8 @@ public class ListAction extends Action {
     }
 
     @Override
-    public String getActionDescription(final Player player, final Object... objects) {
-        return variableName + ": " + Arrays.toString(evaluateExpression(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId())));
+    public String getActionDescription(final QuestPlayer questPlayer, final Object... objects) {
+        return variableName + ": " + Arrays.toString(evaluateExpression(questPlayer));
     }
 
 

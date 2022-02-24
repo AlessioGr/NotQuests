@@ -345,11 +345,11 @@ public class QuestPlaceholders extends PlaceholderExpansion {
         if (identifier.startsWith("player_expression_")) {
             final String expression = identifier.replace("player_expression_", "");
 
-            return ""+main.getVariablesManager().evaluateExpression(expression, player);
+            return "" + main.getVariablesManager().evaluateExpression(expression, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()));
         }else if (identifier.startsWith("player_rounded_expression_")) {
             final String expression = identifier.replace("player_rounded_expression_", "");
 
-            return ""+ (int) Math.round(main.getVariablesManager().evaluateExpression(expression, player));
+            return "" + (int) Math.round(main.getVariablesManager().evaluateExpression(expression, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId())));
         }
 
 
@@ -359,7 +359,7 @@ public class QuestPlaceholders extends PlaceholderExpansion {
             final String variableName = identifier.replace("player_variable_", "");
             Variable<?> variable = main.getVariablesManager().getVariableFromString(variableName);
             if (variable != null) {
-                Object value = variable.getValue(player);
+                Object value = variable.getValue(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()));
                 return value != null ? ""+value : "";
             }
             return "";

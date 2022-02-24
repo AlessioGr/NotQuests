@@ -136,17 +136,16 @@ public class ConversationManager {
     }
 
 
-    public void playConversation(final Player player, final Conversation conversation) {
-        final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
-
-        final ConversationPlayer openConversation = getOpenConversation(questPlayer.getUUID());
+    public void playConversation(final QuestPlayer questPlayer, final Conversation conversation) {
+        final Player player = questPlayer.getPlayer();
+        final ConversationPlayer openConversation = getOpenConversation(questPlayer.getUniqueId());
         if (openConversation != null) {
             main.sendMessage(player, main.getLanguageManager().getString("chat.conversations.ended-previous-conversation", player, conversation));
             stopConversation(openConversation);
         }
 
         ConversationPlayer conversationPlayer = new ConversationPlayer(main, questPlayer, player, conversation);
-        openConversations.put(questPlayer.getUUID(), conversationPlayer);
+        openConversations.put(questPlayer.getUniqueId(), conversationPlayer);
 
         conversationPlayer.play();
 
@@ -407,7 +406,7 @@ public class ConversationManager {
 
     public void stopConversation(final ConversationPlayer conversationPlayer) {
         conversationPlayer.getQuestPlayer().sendDebugMessage("Stopping conversation...");
-        openConversations.remove(conversationPlayer.getQuestPlayer().getUUID());
+        openConversations.remove(conversationPlayer.getQuestPlayer().getUniqueId());
 
         //Send back old messages
         /*ArrayList<Component> allChatHistory = main.getPacketManager().getChatHistory().get(conversationPlayer.getQuestPlayer().getUUID());

@@ -34,6 +34,7 @@ import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
 
 import java.util.*;
@@ -348,12 +349,13 @@ public final class PlainNumberVariableValueArgument<C> extends CommandArgument<C
 
 
 
-            if(commandContext.getSender() instanceof Player player){
-                if(variable.getPossibleValues(player) == null){
+            if(commandContext.getSender() instanceof Player player) {
+                final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
+                if (variable.getPossibleValues(questPlayer) == null) {
                     return getSuggestions(this.min, this.max, input);
                 }
 
-                return variable.getPossibleValues(player);
+                return variable.getPossibleValues(questPlayer);
             }else{
                 if(variable.getPossibleValues(null) == null){
                     return getSuggestions(this.min, this.max, input);

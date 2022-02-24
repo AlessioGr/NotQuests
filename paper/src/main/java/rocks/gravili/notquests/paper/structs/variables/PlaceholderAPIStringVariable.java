@@ -3,8 +3,8 @@ package rocks.gravili.notquests.paper.structs.variables;
 import cloud.commandframework.arguments.standard.StringArgument;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,21 +33,21 @@ public class PlaceholderAPIStringVariable extends Variable<String>{
     }
 
     @Override
-    public String getValue(Player player, Object... objects) {
-        if (player != null) {
-            return PlaceholderAPI.setPlaceholders(player, getRequiredStringValue("Placeholder"));
+    public String getValue(QuestPlayer questPlayer, Object... objects) {
+        if (questPlayer != null) {
+            return PlaceholderAPI.setPlaceholders(questPlayer.getPlayer(), getRequiredStringValue("Placeholder"));
         } else {
             return "";
         }
     }
 
     @Override
-    public boolean setValueInternally(String newValue, Player player, Object... objects) {
+    public boolean setValueInternally(String newValue, QuestPlayer questPlayer, Object... objects) {
         return false;
     }
 
     @Override
-    public List<String> getPossibleValues(Player player, Object... objects) {
+    public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
         return null;
     }
 

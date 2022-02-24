@@ -28,6 +28,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.MultipleActionsSelector;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 
 import java.util.*;
@@ -147,7 +148,7 @@ public class ActionAction extends Action {
     }
 
     @Override
-    public void executeInternally(final Player player, Object... objects) {
+    public void executeInternally(final QuestPlayer questPlayer, Object... objects) {
         if (actions == null || actions.isEmpty()) {
             main.getLogManager().warn("Tried to execute Action Action action with no valid actions.");
             return;
@@ -155,22 +156,24 @@ public class ActionAction extends Action {
 
         main.getLogManager().debug("Executing Action action. IsIgnoreConditions: " + isIgnoreConditions());
 
-        if(minRandom == -1 && maxRandom == -1){
-            for(final Action action : getActions()){
+        final Player player = questPlayer.getPlayer();
+
+        if (minRandom == -1 && maxRandom == -1) {
+            for (final Action action : getActions()) {
                 if (!isIgnoreConditions()) {
                     if (amount == 1) {
-                        main.getActionManager().executeActionWithConditions(action, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), null, true, objects);
+                        main.getActionManager().executeActionWithConditions(action, questPlayer, null, true, objects);
                     } else {
                         for (int i = 0; i < amount; i++) {
-                            main.getActionManager().executeActionWithConditions(action, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), null, true, objects);
+                            main.getActionManager().executeActionWithConditions(action, questPlayer, null, true, objects);
                         }
                     }
                 } else {
                     if (amount == 1) {
-                        action.execute(player, objects);
+                        action.execute(questPlayer, objects);
                     } else {
                         for (int i = 0; i < amount; i++) {
-                            action.execute(player, objects);
+                            action.execute(questPlayer, objects);
                         }
                     }
                 }
@@ -191,16 +194,16 @@ public class ActionAction extends Action {
 
                     if(!isIgnoreConditions() && isOnlyCountForRandomIfConditionsFulfilled()){
                         for(Condition condition : actionToExecute.getConditions()){
-                            if(!condition.check(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId())).isBlank()){
+                            if (!condition.check(questPlayer).isBlank()) {
                                 amountOfActionsToExecute++;
                                 continue;
                             }
                         }
-                        actionToExecute.execute(player, objects);
+                        actionToExecute.execute(questPlayer, objects);
                     }else if (!isIgnoreConditions()) {
-                        main.getActionManager().executeActionWithConditions(actionToExecute, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), null, true, objects);
+                        main.getActionManager().executeActionWithConditions(actionToExecute, questPlayer, null, true, objects);
                     } else {
-                        actionToExecute.execute(player, objects);
+                        actionToExecute.execute(questPlayer, objects);
                     }
                 }
             }
@@ -292,7 +295,7 @@ public class ActionAction extends Action {
 
 
     @Override
-    public String getActionDescription(final Player player, final Object... objects) {
+    public String getActionDescription(final QuestPlayer questPlayer, final Object... objects) {
         return "Executes Actions: " + getActions().toString();
     }
 }

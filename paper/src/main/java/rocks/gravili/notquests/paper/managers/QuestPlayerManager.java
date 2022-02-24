@@ -24,13 +24,14 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.*;
 import rocks.gravili.notquests.paper.structs.triggers.ActiveTrigger;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
-
-import static rocks.gravili.notquests.paper.commands.NotQuestColors.*;
 
 public class QuestPlayerManager {
     private final NotQuests main;
@@ -51,16 +52,14 @@ public class QuestPlayerManager {
         final UUID uuid = player.getUniqueId();
         questPlayersAndUUIDs.remove(uuid);
 
-
-        QuestPlayer questPlayer = null;
+        createQuestPlayer(uuid);
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(uuid);
 
         try (Connection connection = main.getDataManager().getConnection();
              Statement statement = connection.createStatement();
         ) {
             ResultSet result = statement.executeQuery("SELECT QuestPoints FROM QuestPlayerData WHERE PlayerUUID LIKE '" + uuid.toString() + "';");
             if (result.next()) {
-                createQuestPlayer(uuid);
-                questPlayer = main.getQuestPlayerManager().getQuestPlayer(uuid);
 
                 final long questPoints = result.getLong("QuestPoints");
                 main.getLogManager().info("Loaded player with uuid <highlight>" + uuid + "</highlight> and questPoints: " + questPoints);
@@ -238,7 +237,7 @@ public class QuestPlayerManager {
         }
 
         final long questPoints = questPlayer.getQuestPoints();
-        final UUID questPlayerUUID = questPlayer.getUUID();
+        final UUID questPlayerUUID = questPlayer.getUniqueId();
 
         try (Connection connection = main.getDataManager().getConnection();
              Statement statement = connection.createStatement();
@@ -274,7 +273,7 @@ public class QuestPlayerManager {
                 statement.executeUpdate("INSERT INTO CompletedQuests (QuestName, PlayerUUID, TimeCompleted) VALUES ('" + completedQuest.getQuest().getQuestName() + "', '" + questPlayerUUID + "', " + completedQuest.getTimeCompleted() + ");");
             }
         }catch (Exception e){
-            main.getLogManager().warn("There was an error saving the playerdata of player with UUID <highlight>" + questPlayer.getUUID() + "</highlight>! Stacktrace:");
+            main.getLogManager().warn("There was an error saving the playerdata of player with UUID <highlight>" + questPlayer.getUniqueId() + "</highlight>! Stacktrace:");
             e.printStackTrace();
             return;
         }
@@ -358,7 +357,7 @@ public class QuestPlayerManager {
 
 
                 //Completed Quests
-                ResultSet completedQuestsResults = statement.executeQuery("SELECT QuestName, TimeCompleted FROM CompletedQuests WHERE PlayerUUID = '" + questPlayer.getUUID().toString() + "';");
+                ResultSet completedQuestsResults = statement.executeQuery("SELECT QuestName, TimeCompleted FROM CompletedQuests WHERE PlayerUUID = '" + questPlayer.getUniqueId().toString() + "';");
                 while (completedQuestsResults.next()) {
                     final String questName = completedQuestsResults.getString("QuestName");
                     final Quest quest = main.getQuestManager().getQuest(questName);
@@ -380,7 +379,7 @@ public class QuestPlayerManager {
 
 
                 //Active Quests
-                ResultSet activeQuestsResults = statement.executeQuery("SELECT QuestName FROM ActiveQuests WHERE PlayerUUID = '" + questPlayer.getUUID() + "';");
+                ResultSet activeQuestsResults = statement.executeQuery("SELECT QuestName FROM ActiveQuests WHERE PlayerUUID = '" + questPlayer.getUniqueId() + "';");
                 while (activeQuestsResults.next()) {
                     final String questName = activeQuestsResults.getString("QuestName");
                     final Quest quest = main.getQuestManager().getQuest(questName);
@@ -398,7 +397,7 @@ public class QuestPlayerManager {
                 for (ActiveQuest activeQuest : activeQuests) {
 
                     //Active Triggers
-                    ResultSet activeQuestTriggerResults = statement.executeQuery("SELECT * FROM ActiveTriggers WHERE PlayerUUID = '" + questPlayer.getUUID() + "' AND QuestName = '" + activeQuest.getQuest().getQuestName() + "';");
+                    ResultSet activeQuestTriggerResults = statement.executeQuery("SELECT * FROM ActiveTriggers WHERE PlayerUUID = '" + questPlayer.getUniqueId() + "' AND QuestName = '" + activeQuest.getQuest().getQuestName() + "';");
                     while (activeQuestTriggerResults.next()) {
                         final String triggerTypeString = activeQuestTriggerResults.getString("TriggerType");
                         final long currentProgress = activeQuestTriggerResults.getLong("CurrentProgress");
@@ -425,7 +424,7 @@ public class QuestPlayerManager {
 
 
                     //Active Objectives
-                    ResultSet activeQuestObjectiveResults = statement.executeQuery("SELECT * FROM ActiveObjectives WHERE PlayerUUID = '" + questPlayer.getUUID() + "' AND QuestName = '" + activeQuest.getQuest().getQuestName() + "';");
+                    ResultSet activeQuestObjectiveResults = statement.executeQuery("SELECT * FROM ActiveObjectives WHERE PlayerUUID = '" + questPlayer.getUniqueId() + "' AND QuestName = '" + activeQuest.getQuest().getQuestName() + "';");
                     while (activeQuestObjectiveResults.next()) {
                         final String objectiveTypeString = activeQuestObjectiveResults.getString("ObjectiveType");
                         final long currentProgress = activeQuestObjectiveResults.getLong("CurrentProgress");
@@ -534,7 +533,7 @@ public class QuestPlayerManager {
 
         for (QuestPlayer questPlayer : questPlayersAndUUIDs.values()) {
             final long questPoints = questPlayer.getQuestPoints();
-            final UUID questPlayerUUID = questPlayer.getUUID();
+            final UUID questPlayerUUID = questPlayer.getUniqueId();
             try {
                 //QuestPoints
                 statement.executeUpdate("DELETE FROM QuestPlayerData WHERE PlayerUUID = '" + questPlayerUUID.toString() + "';");
@@ -570,7 +569,7 @@ public class QuestPlayerManager {
 
 
             } catch (SQLException sqlException) {
-                main.getLogManager().warn("There was an error saving the playerdata of player with UUID <highlight>" + questPlayer.getUUID() + "</highlight>! Stacktrace:");
+                main.getLogManager().warn("There was an error saving the playerdata of player with UUID <highlight>" + questPlayer.getUniqueId() + "</highlight>! Stacktrace:");
                 sqlException.printStackTrace();
             }
 
@@ -605,6 +604,12 @@ public class QuestPlayerManager {
 
     public String acceptQuest(final Player player, final Quest quest, final boolean triggerAcceptQuestTrigger, final boolean sendQuestInfo) {
         QuestPlayer questPlayer = getOrCreateQuestPlayer(player.getUniqueId());
+        final ActiveQuest newActiveQuest = new ActiveQuest(main, quest, questPlayer);
+
+        return questPlayer.addActiveQuest(newActiveQuest, triggerAcceptQuestTrigger, sendQuestInfo);
+    }
+
+    public String acceptQuest(final QuestPlayer questPlayer, final Quest quest, final boolean triggerAcceptQuestTrigger, final boolean sendQuestInfo) {
         final ActiveQuest newActiveQuest = new ActiveQuest(main, quest, questPlayer);
 
         return questPlayer.addActiveQuest(newActiveQuest, triggerAcceptQuestTrigger, sendQuestInfo);

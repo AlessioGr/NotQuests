@@ -1,8 +1,8 @@
 package rocks.gravili.notquests.paper.structs.variables;
 
 import org.bukkit.block.Biome;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,24 +14,24 @@ public class PlayerCurrentBiomeVariable extends Variable<String>{
     }
 
     @Override
-    public String getValue(Player player, Object... objects) {
-        if (player != null) {
-            return player.getLocation().getBlock().getBiome().name().toLowerCase(Locale.ROOT);
+    public String getValue(QuestPlayer questPlayer, Object... objects) {
+        if (questPlayer != null) {
+            return questPlayer.getPlayer().getLocation().getBlock().getBiome().name().toLowerCase(Locale.ROOT);
         } else {
             return null;
         }
     }
 
     @Override
-    public boolean setValueInternally(String newValue, Player player, Object... objects) {
+    public boolean setValueInternally(String newValue, QuestPlayer questPlayer, Object... objects) {
         return false;
     }
 
 
     @Override
-    public List<String> getPossibleValues(Player player, Object... objects) {
+    public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
         List<String> possibleValues = new ArrayList<>();
-        for(Biome biome : Biome.values()){
+        for (Biome biome : Biome.values()) {
             possibleValues.add(biome.name().toLowerCase(Locale.ROOT));
         }
         return possibleValues;

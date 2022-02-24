@@ -20,7 +20,6 @@ package rocks.gravili.notquests.paper.structs;
 
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.NotQuestColors;
 import rocks.gravili.notquests.paper.events.notquests.ObjectiveUnlockEvent;
@@ -96,10 +95,7 @@ public class ActiveObjective {
                     }
                 }
                 if (notifyPlayer) {
-                    final Player player = Bukkit.getPlayer(getQuestPlayer().getUUID());
-                    if (player != null) {
-                        main.getQuestManager().sendActiveObjective(player, this);
-                    }
+                    main.getQuestManager().sendActiveObjective(getQuestPlayer(), this);
                 }
 
             }else{
@@ -123,7 +119,7 @@ public class ActiveObjective {
 
             if(!check.isBlank()) {
                 foundStillFalseConditions = true;
-                getQuestPlayer().sendDebugMessage("Following objective condition is still unfinished: " + condition.getConditionDescription(getQuestPlayer().getPlayer()));
+                getQuestPlayer().sendDebugMessage("Following objective condition is still unfinished: " + condition.getConditionDescription(getQuestPlayer()));
                 setUnlocked(false, notifyPlayer, triggerAcceptQuestTrigger);
             }
 

@@ -20,10 +20,10 @@ package rocks.gravili.notquests.paper.structs.objectives;
 
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.Quest;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 
@@ -304,7 +304,7 @@ public abstract class Objective {
         return quest;
     }
 
-    public abstract String getObjectiveTaskDescription(final Player player);
+    public abstract String getObjectiveTaskDescription(final QuestPlayer questPlayer);
 
     public abstract void save(final FileConfiguration configuration, final String initialPath);
 

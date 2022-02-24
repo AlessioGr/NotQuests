@@ -2,7 +2,6 @@ package rocks.gravili.notquests.paper.structs.variables;
 
 import cloud.commandframework.arguments.standard.StringArgument;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.CompletedQuest;
 import rocks.gravili.notquests.paper.structs.Quest;
@@ -37,15 +36,14 @@ public class QuestAbleToAcceptVariable extends Variable<Boolean>{
     }
 
     @Override
-    public Boolean getValue(Player player, Object... objects) {
+    public Boolean getValue(QuestPlayer questPlayer, Object... objects) {
         final Quest quest = main.getQuestManager().getQuest(getRequiredStringValue("Quest to check"));
-        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
 
-        if(quest == null){
+        if (quest == null) {
             return true;
         }
 
-        if(questPlayer != null){
+        if (questPlayer != null) {
             int completedAmount = 0; //only needed for maxAccepts
 
             long mostRecentAcceptTime = 0;
@@ -88,13 +86,13 @@ public class QuestAbleToAcceptVariable extends Variable<Boolean>{
     }
 
     @Override
-    public boolean setValueInternally(Boolean newValue, Player player, Object... objects) {
+    public boolean setValueInternally(Boolean newValue, QuestPlayer questPlayer, Object... objects) {
         return false;
     }
 
 
     @Override
-    public List<String> getPossibleValues(Player player, Object... objects) {
+    public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
         return null;
     }
 

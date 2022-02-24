@@ -33,7 +33,6 @@ import rocks.gravili.notquests.paper.structs.actions.hooks.betonquest.BetonQuest
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -204,7 +203,7 @@ public class ActionManager {
 
         if (action.getConditions().size() == 0) {
             main.getLogManager().debug("   Skipping Conditions");
-            action.execute(questPlayer.getPlayer(), objects);
+            action.execute(questPlayer, objects);
             if (!silent) {
                 sender.sendMessage(main.parse("<success>Action with the name <highlight>" + action.getActionName() + "</highlight> has been executed!"));
             }
@@ -230,7 +229,7 @@ public class ActionManager {
         } else {
             main.getLogManager().debug("   All Conditions fulfilled!");
 
-            action.execute(questPlayer.getPlayer(), objects);
+            action.execute(questPlayer, objects);
             if (!silent) {
                 sender.sendMessage(main.parse("<success>Action with the name <highlight>" + action.getActionName() + "</highlight> has been executed!"));
             }

@@ -25,7 +25,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
-import org.bukkit.block.Container;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.HumanEntity;
@@ -1041,7 +1040,7 @@ public class QuestEvents implements Listener {
 
         //Handle Trigger World Name
         if (!activeTrigger.getTrigger().getWorldName().equalsIgnoreCase("ALL")) {
-            final Player qPlayer = Bukkit.getPlayer(questPlayer.getUUID());
+            final Player qPlayer = Bukkit.getPlayer(questPlayer.getUniqueId());
             //If the player is not in the world which the Trigger needs, cancel.
             if (qPlayer == null || !qPlayer.getWorld().getName().equalsIgnoreCase(activeTrigger.getTrigger().getWorldName())) {
                 return;

@@ -20,7 +20,6 @@ package rocks.gravili.notquests.paper.structs.conditions;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.Quest;
@@ -140,7 +139,7 @@ public abstract class Condition {
             }
         }else{
             if(result.isBlank()){
-                return "<YELLOW>You cannot fulfill this condition: <unimportant>" + getConditionDescription(questPlayer.getPlayer());
+                return "<YELLOW>You cannot fulfill this condition: <unimportant>" + getConditionDescription(questPlayer);
             }else{
                 return "";
             }
@@ -148,15 +147,15 @@ public abstract class Condition {
 
     }
 
-    public String getConditionDescription(Player player, Object... objects){
-        if(description.isBlank()){
-            return getConditionDescriptionInternally(player, objects);
-        }else {
+    public String getConditionDescription(QuestPlayer questPlayer, Object... objects) {
+        if (description.isBlank()) {
+            return getConditionDescriptionInternally(questPlayer, objects);
+        } else {
             return "<GRAY>" + description;
         }
     }
 
-    protected abstract String getConditionDescriptionInternally(Player player, Object... objects);
+    protected abstract String getConditionDescriptionInternally(QuestPlayer questPlayer, Object... objects);
 
     public abstract void save(final FileConfiguration configuration, final String initialPath);
 

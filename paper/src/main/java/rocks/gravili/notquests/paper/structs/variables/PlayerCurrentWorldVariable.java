@@ -2,11 +2,10 @@ package rocks.gravili.notquests.paper.structs.variables;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class PlayerCurrentWorldVariable extends Variable<String>{
     public PlayerCurrentWorldVariable(NotQuests main) {
@@ -15,22 +14,22 @@ public class PlayerCurrentWorldVariable extends Variable<String>{
     }
 
     @Override
-    public String getValue(Player player, Object... objects) {
-        if (player != null) {
-            return player.getWorld().getName();
+    public String getValue(QuestPlayer questPlayer, Object... objects) {
+        if (questPlayer != null) {
+            return questPlayer.getPlayer().getWorld().getName();
         } else {
             return null;
         }
     }
 
     @Override
-    public boolean setValueInternally(String newValue, Player player, Object... objects) {
-        if (player != null) {
+    public boolean setValueInternally(String newValue, QuestPlayer questPlayer, Object... objects) {
+        if (questPlayer != null) {
             final World world = Bukkit.getWorld(newValue);
-            if(world == null){
+            if (world == null) {
                 return false;
             }
-            player.teleport(world.getSpawnLocation());
+            questPlayer.getPlayer().teleport(world.getSpawnLocation());
             return true;
         } else {
             return false;
@@ -39,7 +38,7 @@ public class PlayerCurrentWorldVariable extends Variable<String>{
 
 
     @Override
-    public List<String> getPossibleValues(Player player, Object... objects) {
+    public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
         return Bukkit.getWorlds().stream().map(world -> world.getName()).toList();
     }
 

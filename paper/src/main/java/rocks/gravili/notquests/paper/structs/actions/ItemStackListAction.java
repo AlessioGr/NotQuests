@@ -22,7 +22,6 @@ package rocks.gravili.notquests.paper.structs.actions;
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.flags.CommandFlag;
-import cloud.commandframework.arguments.standard.BooleanArgument;
 import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.paper.PaperCommandManager;
@@ -195,11 +194,11 @@ public class ItemStackListAction extends Action {
     }*/
 
     @Override
-    public void executeInternally(final Player player, Object... objects) {
+    public void executeInternally(final QuestPlayer questPlayer, Object... objects) {
         Variable<?> variable = main.getVariablesManager().getVariableFromString(variableName);
 
         if (variable == null) {
-            main.sendMessage(player, "<ERROR>Error: variable <highlight>" + variableName + "</highlight> not found. Report this to the Server owner.");
+            main.sendMessage(questPlayer.getPlayer(), "<ERROR>Error: variable <highlight>" + variableName + "</highlight> not found. Report this to the Server owner.");
             return;
         }
 
@@ -213,12 +212,11 @@ public class ItemStackListAction extends Action {
             variable.setAdditionalBooleanArguments(additionalBooleanArguments);
         }
 
-        QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
 
-        Object currentValueObject = variable.getValue(player, questPlayer, objects);
+        Object currentValueObject = variable.getValue(questPlayer, objects);
 
         if (currentValueObject == null) {
-            main.sendMessage(player, "Error executing " + getActionName() + " action: Current value object is null.");
+            main.sendMessage(questPlayer.getPlayer(), "Error executing " + getActionName() + " action: Current value object is null.");
             main.getLogManager().warn("Error executing " + getActionName() + " action: Current value object is null.");
             return;
         }
@@ -233,7 +231,7 @@ public class ItemStackListAction extends Action {
         }
 
         if(currentValue == null){
-            main.sendMessage(player, "Error executing " + getActionName() + " action: Current value is null.");
+            main.sendMessage(questPlayer.getPlayer(), "Error executing " + getActionName() + " action: Current value is null.");
             main.getLogManager().warn("Error executing " + getActionName() + " action: Current value is null.");
             return;
         }
@@ -248,7 +246,7 @@ public class ItemStackListAction extends Action {
 
 
         if(getItemStack() == null){
-            main.sendMessage(player, "Error executing " + getActionName() + " action: New itemStack is null.");
+            main.sendMessage(questPlayer.getPlayer(), "Error executing " + getActionName() + " action: New itemStack is null.");
             main.getLogManager().warn("Error executing " + getActionName() + " action: New itemStack is null.");
             return;
         }
@@ -341,7 +339,7 @@ public class ItemStackListAction extends Action {
             variable.addAdditionalBooleanArgument("clear", "true");
             nextNewValue = new ItemStack[0];
         }else{
-            main.sendMessage(player, "<ERROR>Error: variable operator <highlight>" + getOperator() + "</highlight> is invalid. Report this to the Server owner.");
+            main.sendMessage(questPlayer.getPlayer(), "<ERROR>Error: variable operator <highlight>" + getOperator() + "</highlight> is invalid. Report this to the Server owner.");
             return;
         }
         if(nextNewValue == null){
@@ -353,9 +351,9 @@ public class ItemStackListAction extends Action {
 
 
         if(currentValueObject instanceof ItemStack[]){
-            ((Variable<ItemStack[]>)variable).setValue(nextNewValue, player, objects);
+            ((Variable<ItemStack[]>) variable).setValue(nextNewValue, questPlayer, objects);
         }else if(currentValueObject instanceof ArrayList<?>){
-            ((Variable<ArrayList<ItemStack>>)variable).setValue((ArrayList<ItemStack>) Arrays.asList(nextNewValue), player, objects);
+            ((Variable<ArrayList<ItemStack>>) variable).setValue((ArrayList<ItemStack>) Arrays.asList(nextNewValue), questPlayer, objects);
         }else{
             main.getLogManager().warn("Cannot execute ItemStackList action, because the number type " + currentValueObject.getClass().getName() + " is invalid.");
         }
@@ -363,7 +361,7 @@ public class ItemStackListAction extends Action {
     }
 
     @Override
-    public String getActionDescription(final Player player, final Object... objects) {
+    public String getActionDescription(final QuestPlayer questPlayer, final Object... objects) {
         return variableName + ": " + main.getMiniMessage().serialize(getItemStack().displayName());
     }
 

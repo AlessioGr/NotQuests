@@ -35,6 +35,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
 
 import java.util.List;
@@ -195,11 +196,12 @@ public final class StringVariableValueArgument<C> extends CommandArgument<C, Str
             main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.getSender(), allArgs.toArray(new String[0]), "[Enter String]", "[...]");
 
 
-            if(context.getSender() instanceof Player player){
-                if(variable.getPossibleValues(player) == null){
+            if(context.getSender() instanceof Player player) {
+                final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
+                if (variable.getPossibleValues(questPlayer) == null) {
                     return completions;
                 }
-                completions.addAll(variable.getPossibleValues(player));
+                completions.addAll(variable.getPossibleValues(questPlayer));
             }else{
                 if(variable.getPossibleValues(null) == null){
                     return completions;

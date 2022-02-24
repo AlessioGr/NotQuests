@@ -29,9 +29,9 @@ import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
 import java.util.ArrayList;
@@ -129,14 +129,14 @@ public class EscortNPCObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final Player player) {
+    public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
         String toReturn = "";
         if (main.getIntegrationsManager().isCitizensEnabled()) {
             final NPC npc = CitizensAPI.getNPCRegistry().getById(getNpcToEscortID());
             final NPC npcDestination = CitizensAPI.getNPCRegistry().getById(getNpcToEscortToID());
 
             if (npc != null && npcDestination != null) {
-                toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.escortNPC.base", player, Map.of(
+                toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.escortNPC.base", questPlayer, Map.of(
                         "%NPCNAME%", npc.getName(),
                         "%DESTINATIONNPCNAME%", npcDestination.getName()
                 ));

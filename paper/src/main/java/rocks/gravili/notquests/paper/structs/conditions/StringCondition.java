@@ -21,14 +21,11 @@ package rocks.gravili.notquests.paper.structs.conditions;
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.flags.CommandFlag;
-import cloud.commandframework.arguments.standard.BooleanArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
-import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
@@ -96,7 +93,7 @@ public class StringCondition extends Condition {
             variable.setAdditionalBooleanArguments(additionalBooleanArguments);
         }
 
-        Object value = variable.getValue(questPlayer.getPlayer(), questPlayer);
+        Object value = variable.getValue(questPlayer, questPlayer);
 
         if(value instanceof final String stringValue){
             if(getStringOperator().equalsIgnoreCase("equals")){
@@ -221,16 +218,16 @@ public class StringCondition extends Condition {
     }
 
     @Override
-    public String getConditionDescriptionInternally(Player player, Object... objects) {
+    public String getConditionDescriptionInternally(QuestPlayer questPlayer, Object... objects) {
         //description += "\n<GRAY>--- Will quest points be deducted?: No";
 
-        if(getStringOperator().equalsIgnoreCase("equals")){
+        if (getStringOperator().equalsIgnoreCase("equals")) {
             return "<GRAY>-- " + variableName + " needs to be equal to " + getString() + "</GRAY>";
-        }else if(getStringOperator().equalsIgnoreCase("equalsIgnoreCase")){
+        } else if (getStringOperator().equalsIgnoreCase("equalsIgnoreCase")) {
             return "<GRAY>-- " + variableName + " needs to be equal (case-insensitive) to " + getString() + "</GRAY>";
-        }else if(getStringOperator().equalsIgnoreCase("contains")){
+        } else if (getStringOperator().equalsIgnoreCase("contains")) {
             return "<GRAY>-- " + variableName + " needs to contain " + getString() + "</GRAY>";
-        }else if(getStringOperator().equalsIgnoreCase("startsWith")){
+        } else if (getStringOperator().equalsIgnoreCase("startsWith")) {
             return "<GRAY>-- " + variableName + " needs to start with " + getString() + "</GRAY>";
         }else if(getStringOperator().equalsIgnoreCase("endsWith")){
             return "<GRAY>-- " + variableName + " needs to end with " + getString() + "</GRAY>";

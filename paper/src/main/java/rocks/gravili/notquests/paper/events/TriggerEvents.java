@@ -90,7 +90,7 @@ public class TriggerEvents implements Listener {
                         if (activeTrigger.getTrigger().getWorldName().equalsIgnoreCase("ALL")) {
                             activeTrigger.addAndCheckTrigger(e.getActiveQuest());
                         } else {
-                            final Player player = Bukkit.getPlayer(e.getQuestPlayer().getUUID());
+                            final Player player = Bukkit.getPlayer(e.getQuestPlayer().getUniqueId());
                             if (player != null && player.getWorld().getName().equalsIgnoreCase(activeTrigger.getTrigger().getWorldName())) {
                                 activeTrigger.addAndCheckTrigger(e.getActiveQuest());
                             }
@@ -121,7 +121,7 @@ public class TriggerEvents implements Listener {
                         activeTrigger.addAndCheckTrigger(activeQuest);
 
                     } else {
-                        final Player player = Bukkit.getPlayer(questPlayer.getUUID());
+                        final Player player = Bukkit.getPlayer(questPlayer.getUniqueId());
                         if (player != null && player.getWorld().getName().equalsIgnoreCase(activeTrigger.getTrigger().getWorldName())) {
                             activeTrigger.addAndCheckTrigger(activeQuest);
                         }
@@ -137,7 +137,7 @@ public class TriggerEvents implements Listener {
                         if (activeTrigger.getTrigger().getWorldName().equalsIgnoreCase("ALL")) {
                             activeTrigger.addAndCheckTrigger(activeQuest);
                         } else {
-                            final Player player = Bukkit.getPlayer(questPlayer.getUUID());
+                            final Player player = Bukkit.getPlayer(questPlayer.getUniqueId());
                             if (player != null && player.getWorld().getName().equalsIgnoreCase(activeTrigger.getTrigger().getWorldName())) {
                                 activeTrigger.addAndCheckTrigger(activeQuest);
                             }
@@ -163,7 +163,7 @@ public class TriggerEvents implements Listener {
                             if (activeTrigger.getTrigger().getWorldName().equalsIgnoreCase("ALL")) {
                                 activeTrigger.addAndCheckTrigger(e.getActiveQuest());
                             } else {
-                                final Player player = Bukkit.getPlayer(e.getQuestPlayer().getUUID());
+                                final Player player = Bukkit.getPlayer(e.getQuestPlayer().getUniqueId());
                                 if (player != null && player.getWorld().getName().equalsIgnoreCase(activeTrigger.getTrigger().getWorldName())) {
                                     activeTrigger.addAndCheckTrigger(e.getActiveQuest());
                                 }

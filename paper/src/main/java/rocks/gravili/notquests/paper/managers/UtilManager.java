@@ -547,11 +547,11 @@ public class UtilManager {
                     if(!split.contains("{{~")){
                         int indexOfOpening = split.indexOf("{{");
                         String expression = split.substring(indexOfOpening+2);
-                        toReturn = toReturn.replace("{{"+expression+"}}", ""+main.getVariablesManager().evaluateExpression(expression, player));
+                        toReturn = toReturn.replace("{{" + expression + "}}", "" + main.getVariablesManager().evaluateExpression(expression, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId())));
                     }else{//round
                         int indexOfOpening = split.indexOf("{{~");
                         String expression = split.substring(indexOfOpening+3);
-                        toReturn = toReturn.replace("{{~"+expression+"}}", ""+ (int) Math.round(main.getVariablesManager().evaluateExpression(expression, player)));
+                        toReturn = toReturn.replace("{{~" + expression + "}}", "" + (int) Math.round(main.getVariablesManager().evaluateExpression(expression, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()))));
                     }
 
                 }

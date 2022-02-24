@@ -22,16 +22,12 @@ import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.LongArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
-import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.NotQuestColors;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
 import java.util.List;
@@ -86,8 +82,8 @@ public class ProjectKorraUseAbilityObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final Player player) {
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.ProjectKorraUseAbility.base", player, Map.of(
+    public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.ProjectKorraUseAbility.base", questPlayer, Map.of(
                 "%%ABILITY%%", getAbilityName()
         ));
     }

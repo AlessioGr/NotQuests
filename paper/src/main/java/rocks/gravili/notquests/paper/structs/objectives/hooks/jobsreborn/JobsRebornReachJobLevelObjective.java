@@ -29,9 +29,9 @@ import com.gamingmesh.jobs.container.JobProgression;
 import com.gamingmesh.jobs.container.JobsPlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
 import java.util.ArrayList;
@@ -112,8 +112,8 @@ public class JobsRebornReachJobLevelObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final Player player) {
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.jobsRebornReachJobLevel.base", player, Map.of(
+    public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.jobsRebornReachJobLevel.base", questPlayer, Map.of(
                 "%AMOUNT%", "" + getLevelToReach(),
                 "%JOB%", getJobName()
         ));
@@ -158,7 +158,7 @@ public class JobsRebornReachJobLevelObjective extends Objective {
         }
 
 
-        final JobsPlayer jobsPlayer = Jobs.getPlayerManager().getJobsPlayer(activeObjective.getQuestPlayer().getUUID());
+        final JobsPlayer jobsPlayer = Jobs.getPlayerManager().getJobsPlayer(activeObjective.getQuestPlayer().getUniqueId());
         if (jobsPlayer == null) {
             return;
         }

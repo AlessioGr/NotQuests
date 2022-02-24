@@ -21,7 +21,6 @@ package rocks.gravili.notquests.paper.structs.actions;
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.IntegerArgument;
-import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -33,6 +32,7 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
 import rocks.gravili.notquests.paper.managers.items.NQItem;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
 
@@ -107,27 +107,27 @@ public class GiveItemAction extends Action {
     }
 
     @Override
-    public void executeInternally(final Player player, Object... objects) {
+    public void executeInternally(final QuestPlayer questPlayer, Object... objects) {
         if (getItemReward() == null) {
             main.getLogManager().warn("Tried to give item reward with invalid reward item");
             return;
         }
-        if (player == null) {
+        if (questPlayer.getPlayer() == null) {
             main.getLogManager().warn("Tried to give item reward with invalid player object");
             return;
         }
 
         if (Bukkit.isPrimaryThread()) {
-            player.getInventory().addItem(getItemReward() );
+            questPlayer.getPlayer().getInventory().addItem(getItemReward());
         } else {
-            Bukkit.getScheduler().runTask(main.getMain(), () -> player.getInventory().addItem(getItemReward() )); //TODO: Check if I can't just run it async if it already is async`?
+            Bukkit.getScheduler().runTask(main.getMain(), () -> questPlayer.getPlayer().getInventory().addItem(getItemReward())); //TODO: Check if I can't just run it async if it already is async`?
         }
 
 
     }
 
     @Override
-    public String getActionDescription(final Player player, final Object... objects) {
+    public String getActionDescription(final QuestPlayer questPlayer, final Object... objects) {
         return "Item: " + getItemReward().getType().name();
     }
 

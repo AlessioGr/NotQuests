@@ -3,8 +3,8 @@ package rocks.gravili.notquests.paper.structs.variables.hooks;
 import com.palmergames.bukkit.towny.TownyUniverse;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
 
 import java.util.List;
@@ -16,12 +16,12 @@ public class TownyNationNameVariable extends Variable<String> {
     }
 
     @Override
-    public String getValue(Player player, Object... objects) {
+    public String getValue(QuestPlayer questPlayer, Object... objects) {
         if (!main.getIntegrationsManager().isTownyEnabled()) {
             return "";
         }
-        if (player != null) {
-            Resident resident = TownyUniverse.getInstance().getResident(player.getUniqueId());
+        if (questPlayer != null) {
+            Resident resident = TownyUniverse.getInstance().getResident(questPlayer.getPlayer().getUniqueId());
             if (resident != null && resident.getTownOrNull() != null && resident.hasNation() && resident.getNationOrNull() != null) {
                 Nation nation = resident.getNationOrNull();
                 return nation.getName().replace("_", " ");
@@ -36,12 +36,12 @@ public class TownyNationNameVariable extends Variable<String> {
     }
 
     @Override
-    public boolean setValueInternally(String newValue, Player player, Object... objects) {
+    public boolean setValueInternally(String newValue, QuestPlayer questPlayer, Object... objects) {
         if (!main.getIntegrationsManager().isTownyEnabled()) {
             return false;
         }
-        if (player != null) {
-            Resident resident = TownyUniverse.getInstance().getResident(player.getUniqueId());
+        if (questPlayer != null) {
+            Resident resident = TownyUniverse.getInstance().getResident(questPlayer.getUniqueId());
             if (resident != null && resident.getTownOrNull() != null && resident.hasNation() && resident.getNationOrNull() != null) {
                 Nation nation = resident.getNationOrNull();
                 nation.setName(newValue);
@@ -57,7 +57,7 @@ public class TownyNationNameVariable extends Variable<String> {
     }
 
     @Override
-    public List<String> getPossibleValues(Player player, Object... objects) {
+    public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
         return null;
     }
 

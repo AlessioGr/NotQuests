@@ -1,8 +1,8 @@
 package rocks.gravili.notquests.paper.structs.variables;
 
 import org.bukkit.GameMode;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,18 +15,18 @@ public class PlayerGameModeVariable extends Variable<String>{
     }
 
     @Override
-    public String getValue(Player player, Object... objects) {
-        if (player != null) {
-            return player.getGameMode().name().toLowerCase(Locale.ROOT);
+    public String getValue(QuestPlayer questPlayer, Object... objects) {
+        if (questPlayer != null) {
+            return questPlayer.getPlayer().getGameMode().name().toLowerCase(Locale.ROOT);
         } else {
             return null;
         }
     }
 
     @Override
-    public boolean setValueInternally(String newValue, Player player, Object... objects) {
-        if (player != null) {
-            player.setGameMode(GameMode.valueOf(newValue));
+    public boolean setValueInternally(String newValue, QuestPlayer questPlayer, Object... objects) {
+        if (questPlayer != null) {
+            questPlayer.getPlayer().setGameMode(GameMode.valueOf(newValue));
             return true;
         } else {
             return false;
@@ -35,9 +35,9 @@ public class PlayerGameModeVariable extends Variable<String>{
 
 
     @Override
-    public List<String> getPossibleValues(Player player, Object... objects) {
+    public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
         List<String> possibleValues = new ArrayList<>();
-        for(GameMode gameMode : GameMode.values()){
+        for (GameMode gameMode : GameMode.values()) {
             possibleValues.add(gameMode.name().toLowerCase(Locale.ROOT));
         }
         return possibleValues;

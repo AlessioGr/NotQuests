@@ -8,10 +8,10 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Container;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,13 +54,13 @@ public class ContainerInventoryVariable extends Variable<ItemStack[]>{
     }
 
     @Override
-    public ItemStack[] getValue(Player player, Object... objects) {
+    public ItemStack[] getValue(QuestPlayer questPlayer, Object... objects) {
         String worldName = getRequiredStringValue("world");
         World world = Bukkit.getWorld(worldName);
-        double x = getRequiredNumberValue("x", player);
-        double y = getRequiredNumberValue("y", player);
-        double z = getRequiredNumberValue("z", player);
-        if(world == null){
+        double x = getRequiredNumberValue("x", questPlayer);
+        double y = getRequiredNumberValue("y", questPlayer);
+        double z = getRequiredNumberValue("z", questPlayer);
+        if (world == null) {
             main.getLogManager().warn("Error: cannot get value of chest inventory variable, because the world " + worldName + " does not exist.");
             return null;
         }
@@ -68,7 +68,7 @@ public class ContainerInventoryVariable extends Variable<ItemStack[]>{
         Location location = new Location(world, x, y, z);
         Block block = location.getBlock();
 
-        if(block.getState() instanceof Container container){
+        if (block.getState() instanceof Container container) {
             return container.getInventory().getStorageContents();
 
         }else{
@@ -79,13 +79,13 @@ public class ContainerInventoryVariable extends Variable<ItemStack[]>{
     }
 
     @Override
-    public boolean setValueInternally(ItemStack[] newValue, Player player, Object... objects) {
+    public boolean setValueInternally(ItemStack[] newValue, QuestPlayer questPlayer, Object... objects) {
         String worldName = getRequiredStringValue("world");
         World world = Bukkit.getWorld(worldName);
-        double x = getRequiredNumberValue("x", player);
-        double y = getRequiredNumberValue("y", player);
-        double z = getRequiredNumberValue("z", player);
-        if(world == null){
+        double x = getRequiredNumberValue("x", questPlayer);
+        double y = getRequiredNumberValue("y", questPlayer);
+        double z = getRequiredNumberValue("z", questPlayer);
+        if (world == null) {
             main.getLogManager().warn("Error: cannot set value of chest inventory variable, because the world " + worldName + " does not exist.");
             return false;
         }
@@ -93,18 +93,18 @@ public class ContainerInventoryVariable extends Variable<ItemStack[]>{
         Location location = new Location(world, x, y, z);
         Block block = location.getBlock();
 
-        if(block.getState() instanceof Container container){
-            if(getRequiredBooleanValue("add", player)){
+        if (block.getState() instanceof Container container) {
+            if (getRequiredBooleanValue("add", questPlayer)) {
 
-                HashMap<Integer, ItemStack> left =  container.getInventory().addItem(newValue);
-                if(!getRequiredBooleanValue("skipItemIfInventoryFull", player)){
-                    for(ItemStack leftItemStack : left.values()){
+                HashMap<Integer, ItemStack> left = container.getInventory().addItem(newValue);
+                if (!getRequiredBooleanValue("skipItemIfInventoryFull", questPlayer)) {
+                    for (ItemStack leftItemStack : left.values()) {
                         world.dropItem(location, leftItemStack);
                     }
                 }
-            }else if(getRequiredBooleanValue("remove", player)){
+            } else if (getRequiredBooleanValue("remove", questPlayer)) {
                 container.getInventory().removeItemAnySlot(newValue);
-            }else{
+            } else {
                 container.getInventory().setContents(newValue);
             }
         }else{
@@ -117,7 +117,7 @@ public class ContainerInventoryVariable extends Variable<ItemStack[]>{
 
 
     @Override
-    public List<String> getPossibleValues(Player player, Object... objects) {
+    public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
         return null;
     }
 

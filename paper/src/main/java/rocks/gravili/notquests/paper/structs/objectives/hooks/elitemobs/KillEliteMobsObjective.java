@@ -23,15 +23,13 @@ import cloud.commandframework.Command;
 import cloud.commandframework.arguments.flags.CommandFlag;
 import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
-import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
-import net.kyori.adventure.audience.Audience;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
 import java.util.ArrayList;
@@ -242,14 +240,14 @@ public class KillEliteMobsObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final Player player) {
+    public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
         String toReturn;
         if (!getEliteMobToKillContainsName().isBlank()) {
-            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.killEliteMobs.base", player, Map.of(
+            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.killEliteMobs.base", questPlayer, Map.of(
                     "%ELITEMOBNAME%", getEliteMobToKillContainsName()
             ));
         } else {
-            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.killEliteMobs.any", player);
+            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.killEliteMobs.any", questPlayer);
         }
         if (getMinimumLevel() != -1) {
             if (getMaximumLevel() != -1) {

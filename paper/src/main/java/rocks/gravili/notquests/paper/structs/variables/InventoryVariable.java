@@ -1,9 +1,9 @@
 package rocks.gravili.notquests.paper.structs.variables;
 
 import cloud.commandframework.ArgumentDescription;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,32 +19,32 @@ public class InventoryVariable extends Variable<ItemStack[]>{
     }
 
     @Override
-    public ItemStack[] getValue(Player player, Object... objects) {
-        return player.getInventory().getContents();
+    public ItemStack[] getValue(QuestPlayer questPlayer, Object... objects) {
+        return questPlayer.getPlayer().getInventory().getContents();
     }
 
     @Override
-    public boolean setValueInternally(ItemStack[] newValue, Player player, Object... objects) {
-        if(getRequiredBooleanValue("add", player)){
+    public boolean setValueInternally(ItemStack[] newValue, QuestPlayer questPlayer, Object... objects) {
+        if (getRequiredBooleanValue("add", questPlayer)) {
 
-            HashMap<Integer, ItemStack> left =  player.getInventory().addItem(newValue);
-            if(!getRequiredBooleanValue("skipItemIfInventoryFull", player)){
-                for(ItemStack leftItemStack : left.values()){
-                    player.getWorld().dropItem(player.getLocation(), leftItemStack);
+            HashMap<Integer, ItemStack> left = questPlayer.getPlayer().getInventory().addItem(newValue);
+            if (!getRequiredBooleanValue("skipItemIfInventoryFull", questPlayer)) {
+                for (ItemStack leftItemStack : left.values()) {
+                    questPlayer.getPlayer().getWorld().dropItem(questPlayer.getPlayer().getLocation(), leftItemStack);
                 }
             }
-        }else if(getRequiredBooleanValue("remove", player)){
+        } else if (getRequiredBooleanValue("remove", questPlayer)) {
 
-            player.getInventory().removeItemAnySlot(newValue);
-        }else{
-            player.getInventory().setContents(newValue);
+            questPlayer.getPlayer().getInventory().removeItemAnySlot(newValue);
+        } else {
+            questPlayer.getPlayer().getInventory().setContents(newValue);
         }
         return true;
     }
 
 
     @Override
-    public List<String> getPossibleValues(Player player, Object... objects) {
+    public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
         return null;
     }
 

@@ -4,8 +4,8 @@ import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.arguments.standard.StringArgument;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,15 +38,15 @@ public class PlaceholderAPINumberVariable extends Variable<Double>{
     }
 
     @Override
-    public Double getValue(Player player, Object... objects) {
-        if (player != null) {
-            if(getRequiredStringValue("Placeholder") == null){
+    public Double getValue(QuestPlayer questPlayer, Object... objects) {
+        if (questPlayer != null) {
+            if (getRequiredStringValue("Placeholder") == null) {
                 return 0D;
             }
 
-            String placeholder = PlaceholderAPI.setPlaceholders(player, getRequiredStringValue("Placeholder"));
+            String placeholder = PlaceholderAPI.setPlaceholders(questPlayer.getPlayer(), getRequiredStringValue("Placeholder"));
 
-            if(getRequiredBooleanValue("removeTextFromPlaceholderValue", player)){
+            if (getRequiredBooleanValue("removeTextFromPlaceholderValue", questPlayer)) {
                 placeholder = placeholder.replaceAll("[^\\d.]", "");
             }
 
@@ -70,12 +70,12 @@ public class PlaceholderAPINumberVariable extends Variable<Double>{
     }
 
     @Override
-    public boolean setValueInternally(Double newValue, Player player, Object... objects) {
+    public boolean setValueInternally(Double newValue, QuestPlayer questPlayer, Object... objects) {
         return false;
     }
 
     @Override
-    public List<String> getPossibleValues(Player player, Object... objects) {
+    public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
         return null;
     }
 

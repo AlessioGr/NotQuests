@@ -45,7 +45,6 @@ import rocks.gravili.notquests.paper.conversation.ConversationLine;
 import rocks.gravili.notquests.paper.conversation.ConversationManager;
 import rocks.gravili.notquests.paper.conversation.Speaker;
 import rocks.gravili.notquests.paper.managers.data.Category;
-import rocks.gravili.notquests.paper.structs.actions.Action;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -172,7 +171,7 @@ public class AdminConversationCommands {
                         context.getSender().sendMessage(main.parse(
                                 "<main>Playing test conversation..."
                         ));
-                        conversationManager.playConversation(player, conversationManager.createTestConversation());
+                        conversationManager.playConversation(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), conversationManager.createTestConversation());
                     }));
         }
 
@@ -241,7 +240,7 @@ public class AdminConversationCommands {
                     context.getSender().sendMessage(main.parse(
                             "<main>Playing <highlight>" + foundConversation.getIdentifier() + "</highlight> conversation..."
                     ));
-                    conversationManager.playConversation(player, foundConversation);
+                    conversationManager.playConversation(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), foundConversation);
                 }));
 
 

@@ -66,7 +66,7 @@ public class InventoryEvents implements Listener {
         final ItemStack itemInHand = player.getInventory().getItemInMainHand();
         if (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             if (itemInHand.isSimilar(main.getConfiguration().journalItem)) {
-                main.getGuiManager().showActiveQuestsGUI(main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId()), player);
+                main.getGuiManager().showActiveQuestsGUI(main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId()));
             }
         }
     }

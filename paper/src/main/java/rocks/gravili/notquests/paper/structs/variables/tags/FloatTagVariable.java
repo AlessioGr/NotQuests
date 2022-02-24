@@ -2,7 +2,6 @@ package rocks.gravili.notquests.paper.structs.variables.tags;
 
 import cloud.commandframework.arguments.standard.StringArgument;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.tags.Tag;
 import rocks.gravili.notquests.paper.managers.tags.TagType;
@@ -39,15 +38,14 @@ public class FloatTagVariable extends Variable<Float> {
     }
 
     @Override
-    public Float getValue(Player player, Object... objects) {
-        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
-        if(questPlayer == null){
+    public Float getValue(QuestPlayer questPlayer, Object... objects) {
+        if (questPlayer == null) {
             return 0f;
         }
 
         final String tagName = getRequiredStringValue("TagName");
         final Tag tag = main.getTagManager().getTag(tagName);
-        if(tag == null){
+        if (tag == null) {
             main.getLogManager().warn("Error reading tag " + tagName + ". Tag does not exist.");
             return 0f;
         }
@@ -67,15 +65,14 @@ public class FloatTagVariable extends Variable<Float> {
     }
 
     @Override
-    public boolean setValueInternally(Float newValue, Player player, Object... objects) {
-        final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
-        if(questPlayer == null){
+    public boolean setValueInternally(Float newValue, QuestPlayer questPlayer, Object... objects) {
+        if (questPlayer == null) {
             return false;
         }
 
         final String tagName = getRequiredStringValue("TagName");
         final Tag tag = main.getTagManager().getTag(tagName);
-        if(tag == null){
+        if (tag == null) {
             main.getLogManager().warn("Error reading tag " + tagName + ". Tag does not exist.");
             return false;
         }
@@ -93,7 +90,7 @@ public class FloatTagVariable extends Variable<Float> {
 
 
     @Override
-    public List<String> getPossibleValues(Player player, Object... objects) {
+    public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
         return null;
     }
 

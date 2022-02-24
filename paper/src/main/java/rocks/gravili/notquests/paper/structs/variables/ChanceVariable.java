@@ -1,9 +1,9 @@
 package rocks.gravili.notquests.paper.structs.variables;
 
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.List;
 
@@ -18,21 +18,21 @@ public class ChanceVariable extends Variable<Boolean>{
     }
 
     @Override
-    public Boolean getValue(Player player, Object... objects) {
-        double chanceToHave = getRequiredNumberValue("chance", player);
+    public Boolean getValue(QuestPlayer questPlayer, Object... objects) {
+        double chanceToHave = getRequiredNumberValue("chance", questPlayer);
 
         double random = Math.random() * 100;
         return random < chanceToHave;
     }
 
     @Override
-    public boolean setValueInternally(Boolean newValue, Player player, Object... objects) {
+    public boolean setValueInternally(Boolean newValue, QuestPlayer questPlayer, Object... objects) {
         return false;
     }
 
 
     @Override
-    public List<String> getPossibleValues(Player player, Object... objects) {
+    public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
         return null;
     }
 

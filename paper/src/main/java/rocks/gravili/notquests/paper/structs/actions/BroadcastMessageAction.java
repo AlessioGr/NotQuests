@@ -20,14 +20,13 @@ package rocks.gravili.notquests.paper.structs.actions;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
-import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.MiniMessageSelector;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
 
@@ -63,14 +62,14 @@ public class BroadcastMessageAction extends Action {
 
 
     @Override
-    public void executeInternally(final Player player, Object... objects) {
+    public void executeInternally(final QuestPlayer questPlayer, Object... objects) {
         if (getMessageToBroadcast().isBlank()) {
             main.getLogManager().warn("Tried to execute SendMessage action with empty message.");
             return;
         }
 
         Bukkit.broadcast(main.parse(
-                main.getUtilManager().applyPlaceholders(getMessageToBroadcast(), player, getQuest(), objects)
+                main.getUtilManager().applyPlaceholders(getMessageToBroadcast(), questPlayer.getPlayer(), questPlayer, getQuest(), objects)
         ));
     }
 
@@ -91,7 +90,7 @@ public class BroadcastMessageAction extends Action {
 
 
     @Override
-    public String getActionDescription(final Player player, final Object... objects) {
+    public String getActionDescription(final QuestPlayer questPlayer, final Object... objects) {
         return "Broadcasts Message: " + getMessageToBroadcast();
     }
 }

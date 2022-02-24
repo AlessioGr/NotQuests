@@ -29,21 +29,14 @@ import cloud.commandframework.bukkit.parsers.WorldArgument;
 import cloud.commandframework.bukkit.parsers.selector.SinglePlayerSelectorArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
-import net.citizensnpcs.api.npc.NPC;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.minecraft.core.BlockPos;
-import net.minecraft.network.Connection;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.chunk.LevelChunk;
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.*;
-import org.bukkit.block.BlockState;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_18_R1.CraftChunk;
-import org.bukkit.craftbukkit.v1_18_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_18_R1.block.CraftBlockState;
-import org.bukkit.entity.Cat;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import org.json.simple.JSONArray;
@@ -262,11 +255,11 @@ public class AdminCommands {
                 .senderType(Player.class)
                 .handler((context) -> {
 
-                    if (main.getQuestManager().isDebugEnabledPlayer((Player) context.getSender())) {
-                        main.getQuestManager().removeDebugEnabledPlayer((Player) context.getSender());
+                    if (main.getQuestManager().isDebugEnabledPlayer(((Player) context.getSender()).getUniqueId())) {
+                        main.getQuestManager().removeDebugEnabledPlayer(((Player) context.getSender()).getUniqueId());
                         context.getSender().sendMessage(main.parse("<success>Your debug mode has been disabled."));
                     } else {
-                        main.getQuestManager().addDebugEnabledPlayer((Player) context.getSender());
+                        main.getQuestManager().addDebugEnabledPlayer(((Player) context.getSender()).getUniqueId());
                         context.getSender().sendMessage(main.parse("<success>Your debug mode has been enabled."));
                     }
 
@@ -493,8 +486,8 @@ public class AdminCommands {
                         if (activeQuest.getQuest().equals(quest)) {
                             activeQuestsToRemove.add(activeQuest);
                             context.getSender().sendMessage(main.parse("<success>Removed the quest as an active quest for the player with the UUID <highlight>"
-                                    + questPlayer.getUUID().toString() + "</highlight> and name <highlight2>"
-                                    + Bukkit.getOfflinePlayer(questPlayer.getUUID()).getName() + "</highlight2>."
+                                    + questPlayer.getUniqueId().toString() + "</highlight> and name <highlight2>"
+                                    + Bukkit.getOfflinePlayer(questPlayer.getUniqueId()).getName() + "</highlight2>."
                             ));
 
                         }
@@ -508,8 +501,8 @@ public class AdminCommands {
                         if (completedQuest.getQuest().equals(quest)) {
                             completedQuestsToRemove.add(completedQuest);
                             context.getSender().sendMessage(main.parse("<success>Removed the quest as a completed quest for the player with the UUID <highlight>"
-                                    + questPlayer.getUUID().toString() + "</highlight> and name <highlight2>"
-                                    + Bukkit.getOfflinePlayer(questPlayer.getUUID()).getName() + "</highlight2>."
+                                    + questPlayer.getUniqueId().toString() + "</highlight> and name <highlight2>"
+                                    + Bukkit.getOfflinePlayer(questPlayer.getUniqueId()).getName() + "</highlight2>."
                             ));
                         }
 
@@ -532,8 +525,8 @@ public class AdminCommands {
                             if (activeQuest.getQuest().equals(quest)) {
                                 activeQuestsToRemove.add(activeQuest);
                                 context.getSender().sendMessage(main.parse("<success>Removed the quest as an active quest for the player with the UUID <highlight>"
-                                        + questPlayer.getUUID().toString() + "</highlight> and name <highlight2>"
-                                        + Bukkit.getOfflinePlayer(questPlayer.getUUID()).getName() + "</highlight2>."
+                                        + questPlayer.getUniqueId().toString() + "</highlight> and name <highlight2>"
+                                        + Bukkit.getOfflinePlayer(questPlayer.getUniqueId()).getName() + "</highlight2>."
                                 ));
 
                             }
@@ -547,8 +540,8 @@ public class AdminCommands {
                             if (completedQuest.getQuest().equals(quest)) {
                                 completedQuestsToRemove.add(completedQuest);
                                 context.getSender().sendMessage(main.parse("<success>Removed the quest as a completed quest for the player with the UUID <highlight>"
-                                        + questPlayer.getUUID().toString() + "</highlight> and name <highlight2>"
-                                        + Bukkit.getOfflinePlayer(questPlayer.getUUID()).getName() + "</highlight2>."
+                                        + questPlayer.getUniqueId().toString() + "</highlight> and name <highlight2>"
+                                        + Bukkit.getOfflinePlayer(questPlayer.getUniqueId()).getName() + "</highlight2>."
                                 ));
                             }
 
@@ -579,8 +572,8 @@ public class AdminCommands {
                         for (final ActiveQuest activeQuest : activeQuestsToRemove) {
                             questPlayer.failQuest(activeQuest);
                             context.getSender().sendMessage(main.parse("<success>Failed the quest as an active quest for the player with the UUID <highlight>"
-                                    + questPlayer.getUUID().toString() + "</highlight> and name <highlight2>"
-                                    + Bukkit.getOfflinePlayer(questPlayer.getUUID()).getName() + "</highlight2>."
+                                    + questPlayer.getUniqueId().toString() + "</highlight> and name <highlight2>"
+                                    + Bukkit.getOfflinePlayer(questPlayer.getUniqueId()).getName() + "</highlight2>."
                             ));
 
                         }
@@ -593,8 +586,8 @@ public class AdminCommands {
                             if (completedQuest.getQuest().equals(quest)) {
                                 completedQuestsToRemove.add(completedQuest);
                                 context.getSender().sendMessage(main.parse("<success>Removed the quest as a completed quest for the player with the UUID <highlight>"
-                                        + questPlayer.getUUID().toString() + "</highlight> and name <highlight2>"
-                                        + Bukkit.getOfflinePlayer(questPlayer.getUUID()).getName() + "</highlight2>."
+                                        + questPlayer.getUniqueId().toString() + "</highlight> and name <highlight2>"
+                                        + Bukkit.getOfflinePlayer(questPlayer.getUniqueId()).getName() + "</highlight2>."
                                 ));
                             }
 
@@ -1605,7 +1598,7 @@ public class AdminCommands {
                     }
 
                     if (context.flags().contains("ignoreConditions")) {
-                        action.execute(player);
+                        action.execute(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()));
                         context.getSender().sendMessage(main.parse("<success>Action with the name <highlight>" + action.getActionName() + "</highlight> has been executed!"));
                     } else {
                         main.getActionManager().executeActionWithConditions(action, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), context.getSender(), context.flags().contains("silent"));
@@ -1656,7 +1649,7 @@ public class AdminCommands {
                     for (Condition condition : action.getConditions()) {
                         context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>" + condition.getConditionType()));
                         if(context.getSender() instanceof Player player){
-                            context.getSender().sendMessage(main.parse("<main>" + condition.getConditionDescription(player)));
+                            context.getSender().sendMessage(main.parse("<main>" + condition.getConditionDescription(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()))));
                         }else{
                             context.getSender().sendMessage(main.parse("<main>" + condition.getConditionDescription(null)));
                         }
@@ -1866,13 +1859,13 @@ public class AdminCommands {
                             "<main>Completed Objectives for Quest <highlight>" + activeQuest.getQuest().getQuestName() + "</highlight> of player <highlight2>"
                                     + playerName + "</highlight2> <green>(online)</green>:"
                     ));
-                    main.getQuestManager().sendCompletedObjectivesAndProgress((Player) sender, activeQuest);
+                    main.getQuestManager().sendCompletedObjectivesAndProgress(questPlayer, activeQuest);
 
                     sender.sendMessage(main.parse(
                             "<main>>Active Objectives for Quest <highlight>" + activeQuest.getQuest().getQuestName() + "</highlight> of player <highlight2>"
                                     + playerName + "</highlight2> <green>(online)</green>:"
                     ));
-                    main.getQuestManager().sendActiveObjectivesAndProgress((Player) sender, activeQuest);
+                    main.getQuestManager().sendActiveObjectivesAndProgress(questPlayer, activeQuest);
 
 
                 } else {
@@ -1907,13 +1900,13 @@ public class AdminCommands {
                             "<main>Completed Objectives for Quest <highlight>" + activeQuest.getQuest().getQuestName() + "</highlight> of player <highlight2>"
                                     + playerName + "</highlight2> <red>(offline)</red>:"
                     ));
-                    main.getQuestManager().sendCompletedObjectivesAndProgress((Player) sender, activeQuest);
+                    main.getQuestManager().sendCompletedObjectivesAndProgress(questPlayer, activeQuest);
 
                     sender.sendMessage(main.parse(
-                             "<main>Active Objectives for Quest <highlight>" + activeQuest.getQuest().getQuestName() + "</highlight> of player <highlight2>"
+                            "<main>Active Objectives for Quest <highlight>" + activeQuest.getQuest().getQuestName() + "</highlight> of player <highlight2>"
                                     + playerName + "</highlight2> <red>(offline)</red>:"
                     ));
-                    main.getQuestManager().sendActiveObjectivesAndProgress((Player) sender, activeQuest);
+                    main.getQuestManager().sendActiveObjectivesAndProgress(questPlayer, activeQuest);
 
 
                 } else {

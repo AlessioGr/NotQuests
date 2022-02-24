@@ -1,7 +1,7 @@
 package rocks.gravili.notquests.paper.structs.variables.hooks;
 
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
 
 import java.util.List;
@@ -13,24 +13,24 @@ public class UltimateClansClanLevelVariable extends Variable<Integer> {
     }
 
     @Override
-    public Integer getValue(Player player, Object... objects) {
+    public Integer getValue(QuestPlayer questPlayer, Object... objects) {
         if (!main.getIntegrationsManager().isUltimateClansEnabled()) {
             return 0;
         }
-        if (player != null) {
-            return main.getIntegrationsManager().getUltimateClansManager().getClanLevel(player);
+        if (questPlayer != null) {
+            return main.getIntegrationsManager().getUltimateClansManager().getClanLevel(questPlayer.getPlayer());
         } else {
             return 0;
         }
     }
 
     @Override
-    public boolean setValueInternally(Integer newValue, Player player, Object... objects) {
+    public boolean setValueInternally(Integer newValue, QuestPlayer questPlayer, Object... objects) {
         if (!main.getIntegrationsManager().isUltimateClansEnabled()) {
             return false;
         }
-        if (player != null) {
-            main.getIntegrationsManager().getUltimateClansManager().setClanLevel(player, newValue);
+        if (questPlayer != null) {
+            main.getIntegrationsManager().getUltimateClansManager().setClanLevel(questPlayer.getPlayer(), newValue);
             return true;
         } else {
             return false;
@@ -38,7 +38,7 @@ public class UltimateClansClanLevelVariable extends Variable<Integer> {
     }
 
     @Override
-    public List<String> getPossibleValues(Player player, Object... objects) {
+    public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
         return null;
     }
 

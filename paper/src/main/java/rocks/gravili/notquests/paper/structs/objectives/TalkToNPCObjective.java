@@ -21,7 +21,6 @@ package rocks.gravili.notquests.paper.structs.objectives;
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.StringArgument;
-import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
@@ -38,6 +37,7 @@ import org.bukkit.persistence.PersistentDataType;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.Quest;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -155,12 +155,12 @@ public class TalkToNPCObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final Player player) {
+    public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
         String toReturn = "";
         if (main.getIntegrationsManager().isCitizensEnabled() && getNPCtoTalkID() != -1) {
             final NPC npc = CitizensAPI.getNPCRegistry().getById(getNPCtoTalkID());
             if (npc != null) {
-                toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.talkToNPC.base", player, Map.of(
+                toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.talkToNPC.base", questPlayer, Map.of(
                         "%NAME%", npc.getName()
                 ));
             } else {
@@ -172,7 +172,7 @@ public class TalkToNPCObjective extends Objective {
             } else { //Armor Stands
                 final UUID armorStandUUID = getArmorStandUUID();
                 if (armorStandUUID != null) {
-                    toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.talkToNPC.base", player, Map.of(
+                    toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.talkToNPC.base", questPlayer, Map.of(
                             "%NAME%", main.getArmorStandManager().getArmorStandName(armorStandUUID)
                     ));
                 } else {

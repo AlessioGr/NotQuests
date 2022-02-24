@@ -21,9 +21,8 @@ package rocks.gravili.notquests.paper.structs.objectives;
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.IntegerArgument;
-import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
-import org.bukkit.Material;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -32,6 +31,7 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.Map;
 
@@ -128,11 +128,11 @@ public class SmeltObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final Player player) {
+    public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
         final String displayName;
         if (!isSmeltAnyItem()) {
             if (getItemToSmelt().getItemMeta() != null) {
-                displayName = getItemToSmelt().getItemMeta().getDisplayName();
+                displayName = PlainTextComponentSerializer.plainText().serializeOr(getItemToSmelt().getItemMeta().displayName(), getItemToSmelt().getType().name());
             } else {
                 displayName = getItemToSmelt().getType().name();
             }
@@ -145,14 +145,14 @@ public class SmeltObjective extends Objective {
 
 
         if (!displayName.isBlank()) {
-            return main.getLanguageManager().getString("chat.objectives.taskDescription.smelt.base", player, Map.of(
+            return main.getLanguageManager().getString("chat.objectives.taskDescription.smelt.base", questPlayer, Map.of(
                     "%ITEMTOSMELTTYPE%", itemType,
                     "%ITEMTOSMELTNAME%", displayName,
                     "%(%", "(",
                     "%)%", "<RESET>)"
             ));
         } else {
-            return main.getLanguageManager().getString("chat.objectives.taskDescription.smelt.base", player, Map.of(
+            return main.getLanguageManager().getString("chat.objectives.taskDescription.smelt.base", questPlayer, Map.of(
                     "%ITEMTOSMELTTYPE%", itemType,
                     "%ITEMTOSMELTNAME%", "",
                     "%(%", "",

@@ -21,7 +21,6 @@ package rocks.gravili.notquests.paper.structs.actions;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.Quest;
@@ -98,19 +97,18 @@ public abstract class Action {
         this.objective = objective;
     }
 
-    public abstract String getActionDescription(final Player player, final Object... objects);
+    public abstract String getActionDescription(final QuestPlayer questPlayer, final Object... objects);
 
-    public abstract void executeInternally(final Player player, Object... objects);
+    public abstract void executeInternally(final QuestPlayer questPlayer, Object... objects);
 
-    public void execute(final Player player, Object... objects){
-        if(main.getDataManager().isDisabled()){
+    public void execute(final QuestPlayer questPlayer, Object... objects) {
+        if (main.getDataManager().isDisabled()) {
             return;
         }
-        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
-        if(questPlayer != null){
+        if (questPlayer != null) {
             questPlayer.sendDebugMessage("Executing action " + getActionName());
         }
-        executeInternally(player, objects);
+        executeInternally(questPlayer, objects);
     }
 
     public abstract void save(final FileConfiguration configuration, final String initialPath);

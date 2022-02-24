@@ -23,13 +23,13 @@ import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
-import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,8 +72,8 @@ public class TriggerCommandObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final Player player) {
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.triggerCommand.base", player, Map.of(
+    public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.triggerCommand.base", questPlayer, Map.of(
                 "%TRIGGERNAME%", getTriggerName()
         ));
     }

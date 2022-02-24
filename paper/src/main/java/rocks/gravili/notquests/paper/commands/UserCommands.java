@@ -174,7 +174,7 @@ public class UserCommands {
                     final Player player = (Player) context.getSender();
                     final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
 
-                    main.getGuiManager().showMainQuestsGUI(questPlayer, player);
+                    main.getGuiManager().showMainQuestsGUI(questPlayer);
                 }));
 
         manager.command(builder.literal("take")
@@ -184,7 +184,7 @@ public class UserCommands {
                     final Player player = (Player) context.getSender();
                     QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
 
-                    main.getGuiManager().showTakeQuestsGUI(questPlayer, player);
+                    main.getGuiManager().showTakeQuestsGUI(questPlayer);
                 }));
 
         manager.command(builder.literal("activeQuests")
@@ -194,7 +194,7 @@ public class UserCommands {
                     final Player player = (Player) context.getSender();
                     final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
 
-                    main.getGuiManager().showActiveQuestsGUI(questPlayer, player);
+                    main.getGuiManager().showActiveQuestsGUI(questPlayer);
                 }));
 
 
@@ -206,7 +206,7 @@ public class UserCommands {
                     final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
                     if (questPlayer != null) {
 
-                        main.getGuiManager().showAbortQuestsGUI(questPlayer, player);
+                        main.getGuiManager().showAbortQuestsGUI(questPlayer);
                     } else {
                         context.getSender().sendMessage(main.parse(
                                 main.getLanguageManager().getString("chat.no-quests-accepted", player)
@@ -222,7 +222,7 @@ public class UserCommands {
                     final Player player = (Player) context.getSender();
                     final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
 
-                    main.getGuiManager().showTakeQuestsGUI(questPlayer, player);
+                    main.getGuiManager().showTakeQuestsGUI(questPlayer);
                 }));
 
 
@@ -236,7 +236,7 @@ public class UserCommands {
                     final ActiveQuest activeQuest = context.get("Active Quest");
 
                     if (questPlayer != null && questPlayer.getActiveQuests().size() > 0) {
-                        main.getGuiManager().showAbortQuestGUI(questPlayer, player, activeQuest);
+                        main.getGuiManager().showAbortQuestGUI(questPlayer, activeQuest);
                     } else {
                         context.getSender().sendMessage(main.parse(
                                 main.getLanguageManager().getString("chat.no-quests-accepted", player)
@@ -254,7 +254,7 @@ public class UserCommands {
                     final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer((player.getUniqueId()));
                     final Quest quest = context.get("Quest Name");
 
-                    main.getGuiManager().showPreviewQuestGUI(questPlayer, player, quest);
+                    main.getGuiManager().showPreviewQuestGUI(questPlayer, quest);
 
                 }));
 
@@ -269,7 +269,7 @@ public class UserCommands {
                     if (questPlayer != null && questPlayer.getActiveQuests().size() > 0) {
                         final ActiveQuest activeQuest = context.get("Active Quest");
 
-                        main.getGuiManager().showQuestProgressGUI(questPlayer, player, activeQuest);
+                        main.getGuiManager().showQuestProgressGUI(questPlayer, activeQuest);
 
                         /*for (final ActiveObjective activeObjective : activeQuest.getCompletedObjectives()) {
 
@@ -415,7 +415,7 @@ public class UserCommands {
 
                     final Quest quest = context.get("Quest Name");
 
-                    main.getQuestManager().sendSingleQuestPreview(player, quest);
+                    main.getQuestManager().sendSingleQuestPreview(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), quest);
                 }));
 
         manager.command(builder.literal("progress")
@@ -424,18 +424,18 @@ public class UserCommands {
                 .meta(CommandMeta.DESCRIPTION, "Shows progress for an active Quest")
                 .handler((context) -> {
                     final Player player = (Player) context.getSender();
-                    QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                    QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
                     if (questPlayer != null && questPlayer.getActiveQuests().size() > 0) {
                         final ActiveQuest activeQuest = context.get("Active Quest");
 
                         context.getSender().sendMessage(main.parse(
                                 "<GREEN>Completed Objectives for Quest <highlight>" + activeQuest.getQuest().getQuestFinalName() + "<YELLOW>:"
                         ));
-                        main.getQuestManager().sendCompletedObjectivesAndProgress(player, activeQuest);
+                        main.getQuestManager().sendCompletedObjectivesAndProgress(questPlayer, activeQuest);
                         context.getSender().sendMessage(main.parse(
                                 "<GREEN>Active Objectives for Quest <highlight>" + activeQuest.getQuest().getQuestFinalName() + "<YELLOW>:"
                         ));
-                        main.getQuestManager().sendActiveObjectivesAndProgress(player, activeQuest);
+                        main.getQuestManager().sendActiveObjectivesAndProgress(questPlayer, activeQuest);
 
                     } else {
                         context.getSender().sendMessage(main.parse(

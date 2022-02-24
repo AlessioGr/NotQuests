@@ -30,9 +30,9 @@ import org.betonquest.betonquest.id.ObjectiveID;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
 import java.util.ArrayList;
@@ -168,8 +168,8 @@ public class BetonQuestObjectiveStateChangeObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final Player player) {
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.BetonQuestCompleteObjective.base", player, Map.of(
+    public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.BetonQuestCompleteObjective.base", questPlayer, Map.of(
                 "%BETONQUESTOBJECTIVENAME%", getObjectiveName()
         ));
     }

@@ -21,18 +21,16 @@ package rocks.gravili.notquests.paper.managers.registering;
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.flags.CommandFlag;
-import cloud.commandframework.arguments.standard.BooleanArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.context.CommandContext;
-import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import redempt.crunch.CompiledExpression;
 import redempt.crunch.Crunch;
 import redempt.crunch.functional.EvaluationEnvironment;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.*;
 import rocks.gravili.notquests.paper.structs.variables.hooks.*;
 import rocks.gravili.notquests.paper.structs.variables.tags.*;
@@ -40,7 +38,6 @@ import rocks.gravili.notquests.paper.structs.variables.tags.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Map;
 
 
 public class VariablesManager {
@@ -235,12 +232,12 @@ public class VariablesManager {
     }
 
 
-    public double evaluateExpression(String expression, final Player player, final Object... objects){
-        if(expression == null){
+    public double evaluateExpression(String expression, QuestPlayer questPlayer, final Object... objects) {
+        if (expression == null) {
             main.getLogManager().warn("Error: Tried to evaluate null expression");
             return 0;
         }
-        expression = evaluateExpressionVariables(expression, player, objects);
+        expression = evaluateExpressionVariables(expression, questPlayer, objects);
 
         main.getLogManager().debug("To evaluate: <highlight>" + expression);
 
@@ -251,16 +248,14 @@ public class VariablesManager {
     }
 
 
-
-
-    public String evaluateExpressionVariables(String expression, final Player player, final Object... objects){
+    public String evaluateExpressionVariables(String expression, final QuestPlayer questPlayer, final Object... objects) {
         boolean foundOne = false;
-        for(String variableString : main.getVariablesManager().getVariableIdentifiers()){
-            if(!expression.contains(variableString)){
+        for (String variableString : main.getVariablesManager().getVariableIdentifiers()) {
+            if (!expression.contains(variableString)) {
                 continue;
             }
             Variable<?> variable = main.getVariablesManager().getVariableFromString(variableString);
-            if(variable == null || (variable.getVariableDataType() != VariableDataType.NUMBER && variable.getVariableDataType() != VariableDataType.BOOLEAN)){
+            if (variable == null || (variable.getVariableDataType() != VariableDataType.NUMBER && variable.getVariableDataType() != VariableDataType.BOOLEAN)) {
                 main.getLogManager().debug("Null variable: <highlight>" + variableString);
                 continue;
             }
@@ -317,7 +312,7 @@ public class VariablesManager {
 
             main.getLogManager().debug("Getting valueObject for variable " + variable.getVariableType() + "...");
 
-            Object valueObject = variable.getValue(player, objects);
+            Object valueObject = variable.getValue(questPlayer, objects);
             main.getLogManager().debug("Got valueObject for variable " + variable.getVariableType());
 
             if(valueObject != null){
@@ -342,6 +337,6 @@ public class VariablesManager {
         }
 
 
-        return evaluateExpressionVariables(expression, player, objects);
+        return evaluateExpressionVariables(expression, questPlayer, objects);
     }
 }

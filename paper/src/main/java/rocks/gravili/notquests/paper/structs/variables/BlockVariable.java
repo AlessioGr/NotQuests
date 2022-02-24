@@ -7,12 +7,15 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.managers.items.NQItem;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Random;
 
 public class BlockVariable extends Variable<String>{
     public BlockVariable(NotQuests main) {
@@ -47,13 +50,13 @@ public class BlockVariable extends Variable<String>{
     }
 
     @Override
-    public String getValue(Player player, Object... objects) {
+    public String getValue(QuestPlayer questPlayer, Object... objects) {
         String worldName = getRequiredStringValue("world");
         World world = Bukkit.getWorld(worldName);
-        double x = getRequiredNumberValue("x", player);
-        double y = getRequiredNumberValue("y", player);
-        double z = getRequiredNumberValue("z", player);
-        if(world == null){
+        double x = getRequiredNumberValue("x", questPlayer);
+        double y = getRequiredNumberValue("y", questPlayer);
+        double z = getRequiredNumberValue("z", questPlayer);
+        if (world == null) {
             main.getLogManager().warn("Error: cannot get value of chest inventory variable, because the world " + worldName + " does not exist.");
             return null;
         }
@@ -65,13 +68,13 @@ public class BlockVariable extends Variable<String>{
     }
 
     @Override
-    public boolean setValueInternally(String newValue, Player player, Object... objects) {
+    public boolean setValueInternally(String newValue, QuestPlayer questPlayer, Object... objects) {
         String worldName = getRequiredStringValue("world");
         World world = Bukkit.getWorld(worldName);
-        double x = getRequiredNumberValue("x", player);
-        double y = getRequiredNumberValue("y", player);
-        double z = getRequiredNumberValue("z", player);
-        if(world == null){
+        double x = getRequiredNumberValue("x", questPlayer);
+        double y = getRequiredNumberValue("y", questPlayer);
+        double z = getRequiredNumberValue("z", questPlayer);
+        if (world == null) {
             main.getLogManager().warn("Error: cannot set value of chest inventory variable, because the world " + worldName + " does not exist.");
             return false;
         }
@@ -84,8 +87,8 @@ public class BlockVariable extends Variable<String>{
 
         final String materialToBreak;
         if (newValue.equalsIgnoreCase("hand")) { //"hand"
-            if (player != null) {
-                materialToBreak = player.getInventory().getItemInMainHand().getType().name();
+            if (questPlayer != null) {
+                materialToBreak = questPlayer.getPlayer().getInventory().getItemInMainHand().getType().name();
             } else {
                 return false;
             }
@@ -105,13 +108,13 @@ public class BlockVariable extends Variable<String>{
 
 
     @Override
-    public List<String> getPossibleValues(Player player, Object... objects) {
+    public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
         final List<String> completions = new ArrayList<>();
         for (Material value : Material.values()) {
             completions.add(value.name().toLowerCase());
         }
 
-        for(NQItem nqItem : main.getItemsManager().getItems()){
+        for (NQItem nqItem : main.getItemsManager().getItems()) {
             completions.add(nqItem.getItemName());
         }
 

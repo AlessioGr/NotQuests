@@ -20,22 +20,17 @@ package rocks.gravili.notquests.paper.structs.objectives;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
-import cloud.commandframework.arguments.standard.BooleanArgument;
 import cloud.commandframework.arguments.standard.IntegerArgument;
-import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import redempt.crunch.functional.EvaluationEnvironment;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
-import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
-import rocks.gravili.notquests.paper.structs.variables.Variable;
-import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.Map;
 
@@ -106,18 +101,18 @@ public class BreakBlocksObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final Player player) {
+    public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
         String translatedMaterialName;
-        try{
+        try {
             translatedMaterialName = "<lang:" + Material.valueOf(getBlockToBreakMaterial()).translationKey() + ">";
-        }catch (Exception ignored){
+        } catch (Exception ignored) {
             translatedMaterialName = getBlockToBreakMaterial();
         }
 
         //TODO: translatedMaterialName doesnt work in gradients yet. Wait until minimessage fixed that bug
 
 
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.breakBlocks.base", player, Map.of(
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.breakBlocks.base", questPlayer, Map.of(
                 "%BLOCKTOBREAK%", getBlockToBreakMaterial()
         ));
     }

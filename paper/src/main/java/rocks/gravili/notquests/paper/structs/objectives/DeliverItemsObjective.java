@@ -22,11 +22,11 @@ import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
-import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
@@ -41,6 +41,7 @@ import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.Quest;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.*;
 
@@ -277,11 +278,11 @@ public class DeliverItemsObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final Player player) {
+    public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
         final String displayName;
         if (!isDeliverAnyItem()) {
             if (getItemToDeliver().getItemMeta() != null) {
-                displayName = getItemToDeliver().getItemMeta().getDisplayName();
+                displayName = PlainTextComponentSerializer.plainText().serializeOr(getItemToDeliver().getItemMeta().displayName(), getItemToDeliver().getType().name());
             } else {
                 displayName = getItemToDeliver().getType().name();
             }
@@ -294,14 +295,14 @@ public class DeliverItemsObjective extends Objective {
 
         String toReturn;
         if (!displayName.isBlank()) {
-            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.base", player, Map.of(
+            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.base", questPlayer, Map.of(
                     "%ITEMTODELIVERTYPE%", itemType,
                     "%ITEMTODELIVERNAME%", displayName,
                     "%(%", "(",
                     "%)%", "<RESET>)"
             ));
         } else {
-            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.base", player, Map.of(
+            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.base", questPlayer, Map.of(
                     "%ITEMTODELIVERTYPE%", itemType,
                     "%ITEMTODELIVERNAME%", "",
                     "%(%", "",
@@ -313,24 +314,24 @@ public class DeliverItemsObjective extends Objective {
         if (main.getIntegrationsManager().isCitizensEnabled() && getRecipientNPCID() != -1) {
             final NPC npc = CitizensAPI.getNPCRegistry().getById(getRecipientNPCID());
             if (npc != null) {
-                toReturn += "\n" + main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.deliver-to-npc", player, Map.of(
+                toReturn += "\n" + main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.deliver-to-npc", questPlayer, Map.of(
                         "%NPCNAME%", npc.getName()
                 ));
             } else {
-                toReturn += "\n" + main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.deliver-to-npc-not-available", player);
+                toReturn += "\n" + main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.deliver-to-npc-not-available", questPlayer);
             }
         } else {
 
             if (getRecipientNPCID() != -1) {
-                toReturn += main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.deliver-to-npc-citizens-not-found", player);
+                toReturn += main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.deliver-to-npc-citizens-not-found", questPlayer);
             } else { //Armor Stands
                 final UUID armorStandUUID = getRecipientArmorStandUUID();
                 if (armorStandUUID != null) {
-                    toReturn += "\n" + main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.deliver-to-armorstand", player, Map.of(
+                    toReturn += "\n" + main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.deliver-to-armorstand", questPlayer, Map.of(
                             "%ARMORSTANDNAME%", main.getArmorStandManager().getArmorStandName(armorStandUUID)
                     ));
                 } else {
-                    toReturn += "\n" + main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.deliver-to-armorstand-not-available", player);
+                    toReturn += "\n" + main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.deliver-to-armorstand-not-available", questPlayer);
                 }
             }
 

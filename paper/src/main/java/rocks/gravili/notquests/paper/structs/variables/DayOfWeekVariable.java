@@ -1,7 +1,7 @@
 package rocks.gravili.notquests.paper.structs.variables;
 
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -15,7 +15,7 @@ public class DayOfWeekVariable extends Variable<String>{
     }
 
     @Override
-    public String getValue(Player player, Object... objects) {
+    public String getValue(QuestPlayer questPlayer, Object... objects) {
         DayOfWeek dayOfWeek = LocalDate.now().getDayOfWeek();
 
         return dayOfWeek.name().toLowerCase(Locale.ROOT);
@@ -23,15 +23,15 @@ public class DayOfWeekVariable extends Variable<String>{
     }
 
     @Override
-    public boolean setValueInternally(String newValue, Player player, Object... objects) {
+    public boolean setValueInternally(String newValue, QuestPlayer questPlayer, Object... objects) {
         return false;
     }
 
 
     @Override
-    public List<String> getPossibleValues(Player player, Object... objects) {
+    public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
         List<String> possibleValues = new ArrayList<>();
-        for(DayOfWeek dayOfWeek : DayOfWeek.values()){
+        for (DayOfWeek dayOfWeek : DayOfWeek.values()) {
             possibleValues.add(dayOfWeek.name().toLowerCase(Locale.ROOT));
         }
         return possibleValues;

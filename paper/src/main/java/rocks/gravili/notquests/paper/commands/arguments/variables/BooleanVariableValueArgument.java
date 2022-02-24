@@ -28,7 +28,6 @@ import cloud.commandframework.arguments.CommandArgument;
 import cloud.commandframework.arguments.flags.CommandFlag;
 import cloud.commandframework.arguments.parser.ArgumentParseResult;
 import cloud.commandframework.arguments.parser.ArgumentParser;
-import cloud.commandframework.arguments.standard.BooleanArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.exceptions.parsing.NoInputProvidedException;
@@ -38,6 +37,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
 import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
 
@@ -177,7 +177,7 @@ public final class BooleanVariableValueArgument<C> extends CommandArgument<C, St
 
             if(context.getSender() instanceof Player player){
                 try{
-                    main.getVariablesManager().evaluateExpression(input, player);
+                    main.getVariablesManager().evaluateExpression(input, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()));
                 }catch (Exception e){
                     if(main.getConfiguration().isDebug()){
                         e.printStackTrace();
@@ -303,11 +303,12 @@ public final class BooleanVariableValueArgument<C> extends CommandArgument<C, St
 
             main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.getSender(), allArgs.toArray(new String[0]), "[Enter Variable]", "[...]");
 
-            if(context.getSender() instanceof Player player){
-                if(variable.getPossibleValues(player) == null){
+            if(context.getSender() instanceof Player player) {
+                final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
+                if (variable.getPossibleValues(questPlayer) == null) {
                     return completions;
                 }
-                completions.addAll(variable.getPossibleValues(player));
+                completions.addAll(variable.getPossibleValues(questPlayer));
             }else{
                 if(variable.getPossibleValues(null) == null){
                     return completions;

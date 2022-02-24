@@ -21,13 +21,11 @@ package rocks.gravili.notquests.paper.structs.conditions;
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.flags.CommandFlag;
-import cloud.commandframework.arguments.standard.BooleanArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.ListVariableValueArgument;
@@ -108,7 +106,7 @@ public class ListCondition extends Condition {
             variable.setAdditionalBooleanArguments(additionalBooleanArguments);
         }
 
-        Object value = variable.getValue(questPlayer.getPlayer(), questPlayer);
+        Object value = variable.getValue(questPlayer);
 
         if(value == null){
             return "<YELLOW>You don't have any " + variable.getPlural() + "!";
@@ -276,17 +274,17 @@ public class ListCondition extends Condition {
     }
 
     @Override
-    public String getConditionDescriptionInternally(Player player, Object... objects) {
+    public String getConditionDescriptionInternally(QuestPlayer questPlayer, Object... objects) {
         //description += "\n<GRAY>--- Will quest points be deducted?: No";
 
-        if(getOperator().equalsIgnoreCase("equals")){
-            return "<GRAY>-- " + variableName + " needs to be equal " + Arrays.toString(evaluateExpression(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()))) + "</GRAY>";
-        }else if(getOperator().equalsIgnoreCase("equalsIgnoreCase")){
-            return "<GRAY>-- " + variableName + " needs to be equal " + Arrays.toString(evaluateExpression(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()))) + " (case-insensitive)</GRAY>";
-        }else if(getOperator().equalsIgnoreCase("contains")){
-            return "<GRAY>-- " + variableName + " needs to be contain " + Arrays.toString(evaluateExpression(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()))) + "</GRAY>";
-        }else if(getOperator().equalsIgnoreCase("containsIgnoreCase")){
-            return "<GRAY>-- " + variableName + " needs to be contain " + Arrays.toString(evaluateExpression(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()))) + " (case-insensitive)</GRAY>";
+        if (getOperator().equalsIgnoreCase("equals")) {
+            return "<GRAY>-- " + variableName + " needs to be equal " + Arrays.toString(evaluateExpression(questPlayer)) + "</GRAY>";
+        } else if (getOperator().equalsIgnoreCase("equalsIgnoreCase")) {
+            return "<GRAY>-- " + variableName + " needs to be equal " + Arrays.toString(evaluateExpression(questPlayer)) + " (case-insensitive)</GRAY>";
+        } else if (getOperator().equalsIgnoreCase("contains")) {
+            return "<GRAY>-- " + variableName + " needs to be contain " + Arrays.toString(evaluateExpression(questPlayer)) + "</GRAY>";
+        } else if (getOperator().equalsIgnoreCase("containsIgnoreCase")) {
+            return "<GRAY>-- " + variableName + " needs to be contain " + Arrays.toString(evaluateExpression(questPlayer)) + " (case-insensitive)</GRAY>";
         }
         return "<GRAY>Error: invalid expression.</GRAY>";
     }

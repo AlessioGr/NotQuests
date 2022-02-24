@@ -3,12 +3,10 @@ package rocks.gravili.notquests.paper.structs.variables;
 import cloud.commandframework.arguments.flags.CommandFlag;
 import cloud.commandframework.arguments.standard.StringArgument;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
-import rocks.gravili.notquests.paper.commands.arguments.variables.StringVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -136,40 +134,41 @@ public abstract class Variable<T> {
     public final ArrayList<BooleanVariableValueArgument<CommandSender>> getRequiredBooleans(){
         return requiredBooleans;
     }
-    public final ArrayList<CommandFlag<Void>> getRequiredBooleanFlags(){
+
+    public final ArrayList<CommandFlag<Void>> getRequiredBooleanFlags() {
         return requiredBooleanFlags;
     }
 
 
-    protected final String getRequiredStringValue(String key){
+    protected final String getRequiredStringValue(String key) {
         return additionalStringArguments.getOrDefault(key, "");
     }
 
-    protected final double getRequiredNumberValue(String key, Player player){
-        return main.getVariablesManager().evaluateExpression(additionalNumberArguments.get(key), player); //TODO: Improve performance by only creating the env / expression thingy once
-    }
-    protected final boolean getRequiredBooleanValue(String key, Player player){
-        return main.getVariablesManager().evaluateExpression(additionalBooleanArguments.get(key), player) >= 0.98d; //TODO: Improve performance by only creating the env / expression thingy once
+    protected final double getRequiredNumberValue(String key, QuestPlayer questPlayer) {
+        return main.getVariablesManager().evaluateExpression(additionalNumberArguments.get(key), questPlayer); //TODO: Improve performance by only creating the env / expression thingy once
     }
 
-    public final HashMap<String, String> getAdditionalNumberArguments(){
+    protected final boolean getRequiredBooleanValue(String key, QuestPlayer questPlayer) {
+        return main.getVariablesManager().evaluateExpression(additionalBooleanArguments.get(key), questPlayer) >= 0.98d; //TODO: Improve performance by only creating the env / expression thingy once
+    }
+
+    public final HashMap<String, String> getAdditionalNumberArguments() {
         return additionalNumberArguments;
     }
 
-    public abstract T getValue(final Player player, final Object... objects);
+    public abstract T getValue(final QuestPlayer questPlayer, final Object... objects);
 
-    public boolean setValue(final T newValue, final Player player, final Object... objects){
-        if(!isCanSetValue()){
+    public boolean setValue(final T newValue, final QuestPlayer questPlayer, final Object... objects) {
+        if (!isCanSetValue()) {
             return false;
         }
-        boolean result = setValueInternally(newValue, player, objects);
+        boolean result = setValueInternally(newValue, questPlayer, objects);
 
-        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
-        if(questPlayer != null && questPlayer.isHasActiveConditionObjectives()) {
-            for(ActiveQuest activeQuest : questPlayer.getActiveQuests()){
-                for(ActiveObjective activeObjective : activeQuest.getActiveObjectives()){
-                    if(activeObjective.getObjective() instanceof ConditionObjective conditionObjective){
-                        if(!activeObjective.isUnlocked()){
+        if (questPlayer != null && questPlayer.isHasActiveConditionObjectives()) {
+            for (ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+                for (ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
+                    if (activeObjective.getObjective() instanceof ConditionObjective conditionObjective) {
+                        if (!activeObjective.isUnlocked()) {
                             continue;
                         }
 
@@ -207,10 +206,10 @@ public abstract class Variable<T> {
 
     }
 
-    public abstract boolean setValueInternally(final T newValue, final Player player, final Object... objects);
+    public abstract boolean setValueInternally(final T newValue, final QuestPlayer questPlayer, final Object... objects);
 
 
-    public abstract List<String> getPossibleValues(final Player player, final Object... objects);
+    public abstract List<String> getPossibleValues(final QuestPlayer questPlayer, final Object... objects);
 
     public final String getVariableType() {
         return main.getVariablesManager().getVariableType(this.getClass());

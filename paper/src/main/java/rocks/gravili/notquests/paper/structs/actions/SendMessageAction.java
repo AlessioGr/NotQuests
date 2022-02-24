@@ -20,13 +20,12 @@ package rocks.gravili.notquests.paper.structs.actions;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
-import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.MiniMessageSelector;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
 
@@ -63,14 +62,14 @@ public class SendMessageAction extends Action {
 
 
     @Override
-    public void executeInternally(final Player player, Object... objects) {
+    public void executeInternally(final QuestPlayer questPlayer, Object... objects) {
         if (getMessageToSend().isBlank()) {
             main.getLogManager().warn("Tried to execute SendMessage action with empty message.");
             return;
         }
 
-        player.sendMessage(main.parse(
-                main.getUtilManager().applyPlaceholders(getMessageToSend(), player, getQuest(), objects)
+        questPlayer.getPlayer().sendMessage(main.parse(
+                main.getUtilManager().applyPlaceholders(getMessageToSend(), questPlayer.getPlayer(), getQuest(), objects)
         ));
     }
 
@@ -91,7 +90,7 @@ public class SendMessageAction extends Action {
 
 
     @Override
-    public String getActionDescription(final Player player, final Object... objects) {
+    public String getActionDescription(final QuestPlayer questPlayerr, final Object... objects) {
         return "Sends Message: " + getMessageToSend();
     }
 }

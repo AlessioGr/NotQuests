@@ -8,9 +8,8 @@ import org.betonquest.betonquest.exceptions.ObjectNotFoundException;
 import org.betonquest.betonquest.id.ConditionID;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
 
 import java.util.ArrayList;
@@ -67,18 +66,18 @@ public class BetonQuestConditionVariable extends Variable<Boolean> {
     }
 
     @Override
-    public Boolean getValue(Player player, Object... objects) {
-        return player != null && BetonQuest.condition(player.getUniqueId().toString(), getConditionID());
+    public Boolean getValue(QuestPlayer questPlayer, Object... objects) {
+        return questPlayer != null && BetonQuest.condition(questPlayer.getUniqueId().toString(), getConditionID());
     }
 
     @Override
-    public boolean setValueInternally(Boolean newValue, Player player, Object... objects) {
+    public boolean setValueInternally(Boolean newValue, QuestPlayer questPlayer, Object... objects) {
         return false;
     }
 
 
     @Override
-    public List<String> getPossibleValues(Player player, Object... objects) {
+    public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
         return null;
     }
 

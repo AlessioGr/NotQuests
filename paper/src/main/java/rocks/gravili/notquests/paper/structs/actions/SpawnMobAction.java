@@ -22,9 +22,7 @@ import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.flags.CommandFlag;
 import cloud.commandframework.arguments.standard.IntegerArgument;
-import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.bukkit.parsers.WorldArgument;
-import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -36,9 +34,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.EntityTypeSelector;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
@@ -177,13 +175,13 @@ public class SpawnMobAction extends Action {
     }
 
     @Override
-    public void executeInternally(final Player player, Object... objects) {
+    public void executeInternally(final QuestPlayer questPlayer, Object... objects) {
         if (!Bukkit.isPrimaryThread()) { //Can only be run in main thread (at least for bukkit entities) :(
             Bukkit.getScheduler().runTask(main.getMain(), () -> {
-                execute2(player, objects);
+                execute2(questPlayer.getPlayer(), objects);
             });
         } else {
-            execute2(player, objects);
+            execute2(questPlayer.getPlayer(), objects);
         }
 
 
@@ -296,7 +294,7 @@ public class SpawnMobAction extends Action {
 
 
     @Override
-    public String getActionDescription(final Player player, final Object... objects) {
+    public String getActionDescription(final QuestPlayer questPlayer, final Object... objects) {
         return "Spawns Mob: " + getMobToSpawnType();
     }
 

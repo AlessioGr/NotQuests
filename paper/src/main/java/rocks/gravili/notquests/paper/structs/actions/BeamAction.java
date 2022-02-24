@@ -29,7 +29,6 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -130,17 +129,15 @@ public class BeamAction extends Action {
     }
 
     @Override
-    public void executeInternally(final Player player, Object... objects) {
-        if(isRemove()){
-            QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
-            if(questPlayer != null){
-                if(questPlayer.getActiveLocationsAndBeacons().containsKey(getBeamName())){
+    public void executeInternally(final QuestPlayer questPlayer, Object... objects) {
+        if (isRemove()) {
+            if (questPlayer != null) {
+                if (questPlayer.getActiveLocationsAndBeacons().containsKey(getBeamName())) {
                     questPlayer.clearBeacons();
                 }
             }
-        }else{
-            QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
-            if(getBeamLocation() == null){
+        } else {
+            if (getBeamLocation() == null) {
                 return;
             }
             questPlayer.trackBeacon(beamName, getBeamLocation());
@@ -168,20 +165,23 @@ public class BeamAction extends Action {
 
         this.remove = String.join(" ", arguments).toLowerCase(Locale.ROOT).contains("--remove");
 
-        if(!remove){
+        if(!remove) {
             final World world = Bukkit.getWorld(arguments.get(1));
-            final Vector coordinates = new Vector(Integer.parseInt(arguments.get(2)), Integer.parseInt(arguments.get(3)), Integer.parseInt(arguments.get(4)));
 
-            this.beamLocation = coordinates.toLocation(world);
+            if (world != null) {
+                final Vector coordinates = new Vector(Integer.parseInt(arguments.get(2)), Integer.parseInt(arguments.get(3)), Integer.parseInt(arguments.get(4)));
+
+                this.beamLocation = coordinates.toLocation(world);
+            }
         }
     }
 
 
     @Override
-    public String getActionDescription(final Player player, final Object... objects) {
-        if(remove){
+    public String getActionDescription(final QuestPlayer questPlayer, final Object... objects) {
+        if (remove) {
             return "Despawns beam: " + getBeamName();
-        }else{
+        } else {
             return "Spawns beam: " + getBeamName();
         }
     }

@@ -21,16 +21,13 @@ package rocks.gravili.notquests.paper.structs.conditions;
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.flags.CommandFlag;
-import cloud.commandframework.arguments.standard.BooleanArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import redempt.crunch.CompiledExpression;
 import redempt.crunch.Crunch;
-import redempt.crunch.data.FastNumberParsing;
 import redempt.crunch.functional.EvaluationEnvironment;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueArgument;
@@ -149,7 +146,7 @@ public class NumberCondition extends Condition {
             variableCounter++;
             expressions = expressions.replace(variableString, "var" + variableCounter);
             env.addLazyVariable("var" + variableCounter, () -> {
-                final Object valueObject = variable.getValue(questPlayerToEvaluate.getPlayer(), questPlayerToEvaluate);
+                final Object valueObject = variable.getValue(questPlayerToEvaluate);
                 if(valueObject instanceof final Number n){
                     return n.doubleValue();
                 }else if(valueObject instanceof final Boolean b) {
@@ -194,7 +191,7 @@ public class NumberCondition extends Condition {
             cachedVariable.setAdditionalBooleanArguments(additionalBooleanArguments);
         }
 
-        Object value = cachedVariable.getValue(questPlayer.getPlayer(), questPlayer);
+        Object value = cachedVariable.getValue(questPlayer);
 
         final double numberRequirement = exp.evaluate();
 
@@ -407,22 +404,22 @@ public class NumberCondition extends Condition {
     }
 
     @Override
-    public String getConditionDescriptionInternally(Player player, Object... objects) {
+    public String getConditionDescriptionInternally(QuestPlayer questPlayer, Object... objects) {
         //description += "\n<GRAY>--- Will quest points be deducted?: No";
 
-        if(getMathOperator().equalsIgnoreCase("moreThan")){
-            return "<GRAY>-- " + variableName + " needed: More than " + main.getVariablesManager().evaluateExpression(getExpression(), player, objects) + "</GRAY>";
-        }else if(getMathOperator().equalsIgnoreCase("moreOrEqualThan")){
-            return "<GRAY>-- " + variableName + " needed: More or equal than " + main.getVariablesManager().evaluateExpression(getExpression(), player, objects)  + "</GRAY>";
-        }else if(getMathOperator().equalsIgnoreCase("lessThan")){
-            return "<GRAY>-- " + variableName + " needed: Less than " + main.getVariablesManager().evaluateExpression(getExpression(), player, objects) + "</GRAY>";
-        }else if(getMathOperator().equalsIgnoreCase("lessOrEqualThan")){
-            return "<GRAY>-- " + variableName + " needed: Less or equal than" + main.getVariablesManager().evaluateExpression(getExpression(), player, objects)  + "</GRAY>";
+        if (getMathOperator().equalsIgnoreCase("moreThan")) {
+            return "<GRAY>-- " + variableName + " needed: More than " + main.getVariablesManager().evaluateExpression(getExpression(), questPlayer, objects) + "</GRAY>";
+        } else if (getMathOperator().equalsIgnoreCase("moreOrEqualThan")) {
+            return "<GRAY>-- " + variableName + " needed: More or equal than " + main.getVariablesManager().evaluateExpression(getExpression(), questPlayer, objects) + "</GRAY>";
+        } else if (getMathOperator().equalsIgnoreCase("lessThan")) {
+            return "<GRAY>-- " + variableName + " needed: Less than " + main.getVariablesManager().evaluateExpression(getExpression(), questPlayer, objects) + "</GRAY>";
+        } else if (getMathOperator().equalsIgnoreCase("lessOrEqualThan")) {
+            return "<GRAY>-- " + variableName + " needed: Less or equal than" + main.getVariablesManager().evaluateExpression(getExpression(), questPlayer, objects) + "</GRAY>";
         }else if(getMathOperator().equalsIgnoreCase("equals")){
-            return "<GRAY>-- " + variableName + " needed: Exactly " + main.getVariablesManager().evaluateExpression(getExpression(), player, objects)+ "</GRAY>";
+            return "<GRAY>-- " + variableName + " needed: Exactly " + main.getVariablesManager().evaluateExpression(getExpression(), questPlayer, objects) + "</GRAY>";
         }
 
-        return "<GRAY>-- " + variableName + " needed: " + main.getVariablesManager().evaluateExpression(getExpression(), player, objects)  + "</GRAY>";
+        return "<GRAY>-- " + variableName + " needed: " + main.getVariablesManager().evaluateExpression(getExpression(), questPlayer, objects) + "</GRAY>";
     }
 
 

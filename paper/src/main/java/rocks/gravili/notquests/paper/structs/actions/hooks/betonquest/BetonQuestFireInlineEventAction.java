@@ -22,7 +22,6 @@ import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.StringArrayArgument;
 import cloud.commandframework.paper.PaperCommandManager;
-import org.apache.commons.lang.StringUtils;
 import org.betonquest.betonquest.BetonQuest;
 import org.betonquest.betonquest.Instruction;
 import org.betonquest.betonquest.api.QuestEvent;
@@ -30,8 +29,8 @@ import org.betonquest.betonquest.config.Config;
 import org.betonquest.betonquest.exceptions.QuestRuntimeException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.actions.ActionFor;
 
@@ -198,10 +197,10 @@ public class BetonQuestFireInlineEventAction extends Action {
 
 
     @Override
-    public void executeInternally(final Player player, Object... objects) {
-        if(getQuestEvent() != null){
+    public void executeInternally(final QuestPlayer questPlayer, Object... objects) {
+        if (getQuestEvent() != null) {
             try {
-                getQuestEvent().fire(player.getUniqueId().toString());
+                getQuestEvent().fire(questPlayer.getPlayer().getUniqueId().toString());
             } catch (final QuestRuntimeException e) {
                 main.getLogManager().warn("Error while firing BetonQuest '" + getEvent().split(" ")[0] + "' event: " + e.getMessage());
             }
@@ -226,7 +225,7 @@ public class BetonQuestFireInlineEventAction extends Action {
 
 
     @Override
-    public String getActionDescription(final Player player, final Object... objects) {
+    public String getActionDescription(final QuestPlayer questPlayer, final Object... objects) {
         return "Executes Event: " + getEvent();
 
     }

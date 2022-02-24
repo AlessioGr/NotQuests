@@ -2,6 +2,7 @@ package rocks.gravili.notquests.paper.structs.variables;
 
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.List;
 
@@ -12,20 +13,20 @@ public class PlayerExperienceVariable extends Variable<Integer>{
     }
 
     @Override
-    public Integer getValue(Player player, Object... objects) {
-        if (player != null) {
-            return getPlayerExp(player);
+    public Integer getValue(QuestPlayer questPlayer, Object... objects) {
+        if (questPlayer != null) {
+            return getPlayerExp(questPlayer.getPlayer());
         } else {
             return null;
         }
     }
 
     @Override
-    public boolean setValueInternally(Integer newValue, Player player, Object... objects) {
-        if (player != null) {
-            player.setExp(0);
-            player.setLevel(0);
-            player.giveExp(newValue);
+    public boolean setValueInternally(Integer newValue, QuestPlayer questPlayer, Object... objects) {
+        if (questPlayer != null) {
+            questPlayer.getPlayer().setExp(0);
+            questPlayer.getPlayer().setLevel(0);
+            questPlayer.getPlayer().giveExp(newValue);
             return true;
         } else {
             return false;
@@ -34,7 +35,7 @@ public class PlayerExperienceVariable extends Variable<Integer>{
 
 
     @Override
-    public List<String> getPossibleValues(Player player, Object... objects) {
+    public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
         return null;
     }
 

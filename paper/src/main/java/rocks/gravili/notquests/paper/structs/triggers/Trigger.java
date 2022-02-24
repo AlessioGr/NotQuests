@@ -106,7 +106,7 @@ public abstract class Trigger {
 
     public void trigger(ActiveQuest activeQuest) { //or void completeTrigger() or finishTrigger()
         //execute action here
-        final Player player = Bukkit.getPlayer(activeQuest.getQuestPlayer().getUUID());
+        final Player player = Bukkit.getPlayer(activeQuest.getQuestPlayer().getUniqueId());
 
         if (player != null) {
             activeQuest.getQuestPlayer().sendDebugMessage("Trigger: Executing action " + action.getActionName() + " for Quest " + activeQuest.getQuest().getQuestName());

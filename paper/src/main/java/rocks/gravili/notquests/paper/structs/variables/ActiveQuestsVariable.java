@@ -1,13 +1,10 @@
 package rocks.gravili.notquests.paper.structs.variables;
 
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class ActiveQuestsVariable extends Variable<String[]>{
@@ -17,10 +14,9 @@ public class ActiveQuestsVariable extends Variable<String[]>{
     }
 
     @Override
-    public String[] getValue(Player player, Object... objects) {
+    public String[] getValue(QuestPlayer questPlayer, Object... objects) {
         String[] activeQuests;
-        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
-        if(questPlayer == null){
+        if (questPlayer == null) {
             return null;
         }
 
@@ -31,16 +27,14 @@ public class ActiveQuestsVariable extends Variable<String[]>{
     }
 
     @Override
-    public boolean setValueInternally(String[] newValue, Player player, Object... objects) {
-        final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
-        if(questPlayer == null){
+    public boolean setValueInternally(String[] newValue, QuestPlayer questPlayer, Object... objects) {
+        if (questPlayer == null) {
             return false;
         }
 
-        for(ActiveQuest acceptedQuest : questPlayer.getActiveQuests()){
+        for (ActiveQuest acceptedQuest : questPlayer.getActiveQuests()) {
             boolean foundQuest = false;
-            for (int i = 0; i < newValue.length; i++)
-            {
+            for (int i = 0; i < newValue.length; i++) {
                 if (newValue[i].equalsIgnoreCase(acceptedQuest.getQuestName())) {
                     foundQuest = true;
                     break;
@@ -55,7 +49,7 @@ public class ActiveQuestsVariable extends Variable<String[]>{
         {
             Quest quest = main.getQuestManager().getQuest(newValue[i]);
             if(quest != null && !questPlayer.hasAcceptedQuest(quest)){
-                main.getQuestPlayerManager().forceAcceptQuest(questPlayer.getUUID(), quest);
+                main.getQuestPlayerManager().forceAcceptQuest(questPlayer.getUniqueId(), quest);
             }
         }
 
@@ -64,7 +58,7 @@ public class ActiveQuestsVariable extends Variable<String[]>{
 
 
     @Override
-    public List<String> getPossibleValues(Player player, Object... objects) {
+    public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
         return main.getQuestManager().getAllQuests().stream().map(quest -> quest.getQuestName()).toList();
     }
 

@@ -23,10 +23,10 @@ import cloud.commandframework.Command;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.ConditionSelector;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 
 public class ConditionObjective extends Objective {
@@ -58,10 +58,10 @@ public class ConditionObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final Player player) {
-        if(condition != null){
-            return condition.getConditionDescription(player, getQuest());
-        }else{
+    public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
+        if (condition != null) {
+            return condition.getConditionDescription(questPlayer, getQuest());
+        } else {
             return "<YELLOW>Error: Condition not found.";
         }
     }

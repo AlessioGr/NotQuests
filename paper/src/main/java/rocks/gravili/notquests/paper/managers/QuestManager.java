@@ -53,7 +53,7 @@ public class QuestManager {
 
     private final ArrayList<Quest> quests;
 
-    private final ArrayList<Player> debugEnabledPlayers;
+    private final ArrayList<UUID> debugEnabledPlayers;
 
 
     public QuestManager(NotQuests main) {
@@ -720,17 +720,18 @@ public class QuestManager {
     }
 
 
-    public boolean sendQuestsPreviewOfQuestShownArmorstands(ArmorStand armorStand, Player player) {
+    public boolean sendQuestsPreviewOfQuestShownArmorstands(ArmorStand armorStand, QuestPlayer questPlayer) {
         final ArrayList<Quest> questsAttachedToNPC = getQuestsAttachedToArmorstandWithShowing(armorStand);
 
         //No quests attached or all quests are set to not showing (more likely). THen nothing should show. That should make it work with Interactions plugin and takeEnabled = false.
         if (questsAttachedToNPC.size() == 0) {
             return false;
         }
+        final Player player = questPlayer.getPlayer();
 
         if (main.getConfiguration().isQuestPreviewUseGUI()) {
 
-            main.getGuiManager().showTakeQuestsGUI(main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId()), player, questsAttachedToNPC);
+            main.getGuiManager().showTakeQuestsGUI(questPlayer, questsAttachedToNPC);
             /*String[] guiSetup = {
                     "xxxxxxxxx",
                     "xgggggggx",
@@ -831,15 +832,17 @@ public class QuestManager {
     }
 
 
-    public void sendQuestsPreviewOfQuestShownNPCs(NPC npc, Player player) {
+    public void sendQuestsPreviewOfQuestShownNPCs(NPC npc, QuestPlayer questPlayer) {
         final ArrayList<Quest> questsAttachedToNPC = getQuestsAttachedToNPCWithShowing(npc);
 
         //No quests attached or all quests are set to not showing (more likely). THen nothing should show. That should make it work with Interactions plugin and takeEnabled = false.
-        if(questsAttachedToNPC.size() == 0){
+        if (questsAttachedToNPC.size() == 0) {
             return;
         }
+
+        final Player player = questPlayer.getPlayer();
         if (main.getConfiguration().isQuestPreviewUseGUI()) {
-            main.getGuiManager().showTakeQuestsGUI(main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId()), player, questsAttachedToNPC );
+            main.getGuiManager().showTakeQuestsGUI(questPlayer, questsAttachedToNPC);
             /*String[] guiSetup = {
                     "xxxxxxxxx",
                     "xgggggggx",
@@ -937,16 +940,16 @@ public class QuestManager {
 
     }
 
-    public final String getQuestRequirements(final Quest quest, final Player player) {
+    public final String getQuestRequirements(final Quest quest, final QuestPlayer questPlayer) {
         StringBuilder requirements = new StringBuilder();
         int counter = 1;
         for (final Condition condition : quest.getRequirements()) {
-            if(counter != 1){
+            if (counter != 1) {
                 requirements.append("\n");
             }
             requirements.append("<GREEN>").append(counter).append(". <YELLOW>").append(condition.getConditionType()).append("\n");
 
-            requirements.append(condition.getConditionDescription(player)).append("\n");
+            requirements.append(condition.getConditionDescription(questPlayer)).append("\n");
 
 
             counter += 1;
@@ -990,19 +993,19 @@ public class QuestManager {
         return conditionType;
     }
 
-    public final ArrayList<String> getQuestRequirementsList(final Quest quest, final Player player) {
+    public final ArrayList<String> getQuestRequirementsList(final Quest quest, final QuestPlayer questPlayer) {
         final ArrayList<String> requirements = new ArrayList<>();
         int counter = 1;
         for (final Condition condition : quest.getRequirements()) {
             requirements.add("<GREEN>" + counter + ". <YELLOW>" + getDisplayConditionType(condition));
-            requirements.add(condition.getConditionDescription(player, quest));
+            requirements.add(condition.getConditionDescription(questPlayer, quest));
 
             counter += 1;
         }
         return requirements;
     }
 
-    public final String getQuestRewards(final Quest quest, final Player player) {
+    public final String getQuestRewards(final Quest quest, final QuestPlayer questPlayer) {
         StringBuilder rewards = new StringBuilder();
         int counter = 1;
         for (final Action reward : quest.getRewards()) {
@@ -1013,9 +1016,9 @@ public class QuestManager {
                 rewards.append("<GREEN>").append(counter).append(". <BLUE>").append(reward.getActionName()).append("</GREEN>");
             } else {
                 if (main.getConfiguration().hideRewardsWithoutName) {
-                    rewards.append("<GREEN>").append(counter).append(main.getLanguageManager().getString("gui.reward-hidden-text", player, quest, reward)).append("</GREEN>");
+                    rewards.append("<GREEN>").append(counter).append(main.getLanguageManager().getString("gui.reward-hidden-text", questPlayer, quest, reward)).append("</GREEN>");
                 } else {
-                    rewards.append("<GREEN>").append(counter).append(". <BLUE>").append(reward.getActionDescription(player)).append("</GREEN>");
+                    rewards.append("<GREEN>").append(counter).append(". <BLUE>").append(reward.getActionDescription(questPlayer)).append("</GREEN>");
                 }
 
             }
@@ -1024,7 +1027,8 @@ public class QuestManager {
         }
         return rewards.toString();
     }
-    public final ArrayList<String> getQuestRewardsList(final Quest quest, final Player player) {
+
+    public final ArrayList<String> getQuestRewardsList(final Quest quest, final QuestPlayer questPlayer) {
         ArrayList<String> rewards = new ArrayList<>();
         int counter = 1;
         for (final Action reward : quest.getRewards()) {
@@ -1032,9 +1036,9 @@ public class QuestManager {
                 rewards.add("<GREEN>" + counter + ". <BLUE>" + reward.getActionName() + "</GREEN>");
             } else {
                 if (main.getConfiguration().hideRewardsWithoutName) {
-                    rewards.add("<GREEN>" + counter + main.getLanguageManager().getString("gui.reward-hidden-text", player, quest, reward) + "</GREEN>");
+                    rewards.add("<GREEN>" + counter + main.getLanguageManager().getString("gui.reward-hidden-text", questPlayer, quest, reward) + "</GREEN>");
                 } else {
-                    rewards.add("<GREEN>" + counter + ". <BLUE>" + reward.getActionDescription(player) + "</GREEN>");
+                    rewards.add("<GREEN>" + counter + ". <BLUE>" + reward.getActionDescription(questPlayer) + "</GREEN>");
                 }
             }
             counter += 1;
@@ -1043,7 +1047,8 @@ public class QuestManager {
         return rewards;
     }
 
-    public void sendSingleQuestPreview(Player player, Quest quest) {
+    public void sendSingleQuestPreview(QuestPlayer questPlayer, Quest quest) {
+        final Player player = questPlayer.getPlayer();
         player.sendMessage(Component.empty());
         player.sendMessage(main.parse("<GRAY>-----------------------------------"));
         player.sendMessage(main.parse(
@@ -1066,14 +1071,14 @@ public class QuestManager {
         ));
 
         player.sendMessage(main.parse(
-                getQuestRequirements(quest, player)
+                getQuestRequirements(quest, questPlayer)
         ));
 
         player.sendMessage(main.parse(
                 "<BLUE>Quest Rewards:"
         ));
         player.sendMessage(main.parse(
-                getQuestRewards(quest, player)
+                getQuestRewards(quest, questPlayer)
         ));
 
         Component acceptComponent = main.parse("<GREEN>**[ACCEPT THIS QUEST]")
@@ -1267,9 +1272,9 @@ public class QuestManager {
     }
 
 
+    public void sendCompletedObjectivesAndProgress(final QuestPlayer questPlayer, final ActiveQuest activeQuest) {
+        final Player player = questPlayer.getPlayer();
 
-
-    public void sendCompletedObjectivesAndProgress(final Player player, final ActiveQuest activeQuest) {
         for (ActiveObjective activeObjective : activeQuest.getCompletedObjectives()) {
 
             final String objectiveDescription = activeObjective.getObjective().getDescription();
@@ -1284,7 +1289,7 @@ public class QuestManager {
             ));
 
             player.sendMessage(main.parse(
-                    getObjectiveTaskDescription(activeObjective.getObjective(), true, player)
+                    getObjectiveTaskDescription(activeObjective.getObjective(), true, questPlayer)
             ));
             player.sendMessage(main.parse(
                     "   <strikethrough><GRAY>Progress: <WHITE>" + activeObjective.getCurrentProgress() + " / " + activeObjective.getProgressNeeded() + "</strikethrough>"
@@ -1293,16 +1298,16 @@ public class QuestManager {
     }
 
 
-    public final String getObjectiveTaskDescription(final Objective objective, boolean completed, final Player player) {
+    public final String getObjectiveTaskDescription(final Objective objective, boolean completed, QuestPlayer questPlayer) {
         String toReturn = "";
 
-        toReturn += objective.getObjectiveTaskDescription(player);
+        toReturn += objective.getObjectiveTaskDescription(questPlayer);
 
         if (objective.getCompletionNPCID() != -1) {
             if (main.getIntegrationsManager().isCitizensEnabled()) {
                 final NPC npc = CitizensAPI.getNPCRegistry().getById(objective.getCompletionNPCID());
                 if (npc != null) {
-                    toReturn += "\n    <GRAY>To complete: Talk to <highlight>"+ npc.getName();
+                    toReturn += "\n    <GRAY>To complete: Talk to <highlight>" + npc.getName();
                 } else {
                     toReturn += "\n    <GRAY>To complete: Talk to NPC with ID <highlight>" + objective.getCompletionNPCID() + " <RED>[Currently not available]";
                 }
@@ -1320,13 +1325,14 @@ public class QuestManager {
         }
     }
 
-    public void sendActiveObjectivesAndProgress(final Player player, final ActiveQuest activeQuest) {
+    public void sendActiveObjectivesAndProgress(final QuestPlayer questPlayer, final ActiveQuest activeQuest) {
         for (ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-            sendActiveObjective(player, activeObjective);
+            sendActiveObjective(questPlayer, activeObjective);
         }
     }
 
-    public void sendObjectives(final Player player, final Quest quest) {
+    public void sendObjectives(final QuestPlayer questPlayer, final Quest quest) {
+        final Player player = questPlayer.getPlayer();
         for (final Objective objective : quest.getObjectives()) {
             final String objectiveDescription = objective.getDescription();
             player.sendMessage(main.parse(
@@ -1340,7 +1346,7 @@ public class QuestManager {
                 ));
             }
             player.sendMessage(main.parse(
-                    getObjectiveTaskDescription(objective, false, player)
+                    getObjectiveTaskDescription(objective, false, questPlayer)
             ));
 
 
@@ -1371,7 +1377,7 @@ public class QuestManager {
             for (final Condition condition : objective.getConditions()) {
                 if(sender instanceof Player player){
                     sender.sendMessage(main.parse(
-                            "         <highlight>" + condition.getConditionID() + ".</highlight> <main>Condition:</main> <highlight2>" + condition.getConditionDescription(player)
+                            "         <highlight>" + condition.getConditionID() + ".</highlight> <main>Condition:</main> <highlight2>" + condition.getConditionDescription(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()))
                     ));
                 }else{
                     sender.sendMessage(main.parse(
@@ -1392,7 +1398,8 @@ public class QuestManager {
     }
 
 
-    public void sendActiveObjective(final Player player, ActiveObjective activeObjective) {
+    public void sendActiveObjective(final QuestPlayer questPlayer, ActiveObjective activeObjective) {
+        final Player player = questPlayer.getPlayer();
         if (activeObjective.isUnlocked()) {
             final String objectiveDescription = activeObjective.getObjective().getDescription();
             player.sendMessage(main.parse(
@@ -1407,7 +1414,7 @@ public class QuestManager {
             }
 
             player.sendMessage(main.parse(
-                    getObjectiveTaskDescription(activeObjective.getObjective(), false, player)
+                    getObjectiveTaskDescription(activeObjective.getObjective(), false, questPlayer)
             ));
 
             player.sendMessage(main.parse(
@@ -1426,17 +1433,18 @@ public class QuestManager {
     /**
      * Checks if the player is close to a Citizens NPC or Armor Stand which has the specified Quest attached to it
      *
-     * @param player the player who should be close to the Citizens NPC or Armor Stand
-     * @param quest the Quest which needs to be attached to the Citizens NPC or Armor Stand
+     * @param questPlayer the QuestPlayer who should be close to the Citizens NPC or Armor Stand
+     * @param quest       the Quest which needs to be attached to the Citizens NPC or Armor Stand
      * @return if the player is close to a Citizens NPC or Armor Stand which has the specified Quest attached to it
      */
-    public final boolean isPlayerCloseToCitizenOrArmorstandWithQuest(final Player player, final Quest quest){
+    public final boolean isPlayerCloseToCitizenOrArmorstandWithQuest(final QuestPlayer questPlayer, final Quest quest) {
         final int closenessCheckDistance = 6;
+        final Player player = questPlayer.getPlayer();
 
         //First check Armor stands since I think that check is probably faster - especially if the user has a lot of Citizen NPCs
-        for(final Entity entity : player.getNearbyEntities(closenessCheckDistance, closenessCheckDistance, closenessCheckDistance)){
-            if(entity instanceof ArmorStand armorStand){
-                if(getAllQuestsAttachedToArmorstand(armorStand).contains(quest)){
+        for (final Entity entity : player.getNearbyEntities(closenessCheckDistance, closenessCheckDistance, closenessCheckDistance)) {
+            if (entity instanceof ArmorStand armorStand) {
+                if (getAllQuestsAttachedToArmorstand(armorStand).contains(quest)) {
                     return true;
                 }
             }
@@ -1464,20 +1472,20 @@ public class QuestManager {
 
     }
 
-    public final ArrayList<Player> getDebugEnabledPlayers() {
+    public final ArrayList<UUID> getDebugEnabledPlayers() {
         return debugEnabledPlayers;
     }
 
-    public void addDebugEnabledPlayer(final Player player) {
-        this.debugEnabledPlayers.add(player);
+    public void addDebugEnabledPlayer(final UUID uuid) {
+        this.debugEnabledPlayers.add(uuid);
     }
 
-    public void removeDebugEnabledPlayer(final Player player) {
-        this.debugEnabledPlayers.remove(player);
+    public void removeDebugEnabledPlayer(final UUID uuid) {
+        this.debugEnabledPlayers.remove(uuid);
     }
 
-    public final boolean isDebugEnabledPlayer(final Player player) {
-        return this.debugEnabledPlayers.contains(player);
+    public final boolean isDebugEnabledPlayer(final UUID uuid) {
+        return this.debugEnabledPlayers.contains(uuid);
     }
 
     public final ArrayList<Quest> getAllQuestsWithVisibilityEvaluations(final QuestPlayer questPlayer) {
@@ -1486,8 +1494,9 @@ public class QuestManager {
 
     public final ArrayList<Quest> getQuestsFromListWithVisibilityEvaluations(final QuestPlayer questPlayer, final ArrayList<Quest> questsList) {
         final ArrayList<Quest> evaluatedQuests = new ArrayList<>();
-        questLoop: for(final Quest quest : questsList){
-            if(main.getConfiguration().isQuestVisibilityEvaluationAlreadyAccepted() && questPlayer != null){
+        questLoop:
+        for (final Quest quest : questsList) {
+            if (main.getConfiguration().isQuestVisibilityEvaluationAlreadyAccepted() && questPlayer != null){
                 for (ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                     if (activeQuest.getQuest().equals(quest)) {
                         continue questLoop;

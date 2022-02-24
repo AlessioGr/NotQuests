@@ -346,6 +346,10 @@ public class LanguageManager {
         }
     }
 
+    public final String getString(final String languageString, final QuestPlayer questPlayer, Object... internalPlaceholderObjects) {
+        return getString(languageString, questPlayer.getPlayer(), internalPlaceholderObjects);
+    }
+
     public final String getString(final String languageString, final Player targetPlayer, Object... internalPlaceholderObjects) {
         if (!getLanguageConfig().isString(languageString)) {
             return "Language string not found: " + languageString;
@@ -420,9 +424,9 @@ public class LanguageManager {
                 internalPlaceholderReplacements.put("%OBJECTIVENAME%", "" + activeObjective.getObjective().getFinalName());
                 internalPlaceholderReplacements.put("%ACTIVEOBJECTIVEPROGRESS%", "" + activeObjective.getCurrentProgress());
                 internalPlaceholderReplacements.put("%OBJECTIVEPROGRESSNEEDED%", "" + activeObjective.getProgressNeeded());
-                internalPlaceholderReplacements.put("%OBJECTIVEPROGRESSPERCENTAGE%", "" + (int)((float)((float)activeObjective.getCurrentProgress() / (float)activeObjective.getProgressNeeded() )*100) );
-                internalPlaceholderReplacements.put("%ACTIVEOBJECTIVEDESCRIPTION%", main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), false, player));
-                internalPlaceholderReplacements.put("%COMPLETEDOBJECTIVEDESCRIPTION%", main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), true, player));
+                internalPlaceholderReplacements.put("%OBJECTIVEPROGRESSPERCENTAGE%", "" + (int) ((float) ((float) activeObjective.getCurrentProgress() / (float) activeObjective.getProgressNeeded()) * 100));
+                internalPlaceholderReplacements.put("%ACTIVEOBJECTIVEDESCRIPTION%", main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), false, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId())));
+                internalPlaceholderReplacements.put("%COMPLETEDOBJECTIVEDESCRIPTION%", main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), true, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId())));
 
             } else if (internalPlaceholderObject instanceof Objective objective) {
                 //main.getLogManager().info("Applying Objective placeholders...");

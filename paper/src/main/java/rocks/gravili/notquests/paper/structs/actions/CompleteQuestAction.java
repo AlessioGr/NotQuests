@@ -20,11 +20,9 @@ package rocks.gravili.notquests.paper.structs.actions;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
-import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.QuestSelector;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
@@ -66,14 +64,13 @@ public class CompleteQuestAction extends Action {
 
 
     @Override
-    public void executeInternally(final Player player, Object... objects) {
+    public void executeInternally(final QuestPlayer questPlayer, Object... objects) {
         Quest foundQuest = main.getQuestManager().getQuest(getQuestToCompleteName());
         if (foundQuest == null) {
             main.getLogManager().warn("Tried to execute CompleteQuest action with null quest. Cannot find the following Quest: " + getQuestToCompleteName());
             return;
         }
 
-        QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
         if (questPlayer == null) {
             return;
         }
@@ -104,7 +101,7 @@ public class CompleteQuestAction extends Action {
 
 
     @Override
-    public String getActionDescription(final Player player, final Object... objects) {
+    public String getActionDescription(final QuestPlayer questPlayer, final Object... objects) {
         return "Completes Quest: " + getQuestToCompleteName();
     }
 }

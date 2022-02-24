@@ -1,6 +1,5 @@
 package rocks.gravili.notquests.paper.structs.variables;
 
-import cloud.commandframework.arguments.standard.BooleanArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -8,7 +7,6 @@ import redempt.crunch.CompiledExpression;
 import redempt.crunch.Crunch;
 import redempt.crunch.functional.EvaluationEnvironment;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
@@ -53,9 +51,9 @@ public class ConditionVariable extends Variable<Boolean>{
     }
 
     @Override
-    public Boolean getValue(Player player, Object... objects) {
-        this.playerToEvaluate = player;
-        this.questPlayerToEvaluate = main.getQuestPlayerManager().getQuestPlayer(playerToEvaluate.getUniqueId());
+    public Boolean getValue(QuestPlayer questPlayer, Object... objects) {
+        this.playerToEvaluate = questPlayer.getPlayer();
+        this.questPlayerToEvaluate = questPlayer;
         initializeExpressionAndCachedVariable();
 
         return exp.evaluate() >= 0.98d;
@@ -91,13 +89,13 @@ public class ConditionVariable extends Variable<Boolean>{
     }
 
     @Override
-    public boolean setValueInternally(Boolean newValue, Player player, Object... objects) {
+    public boolean setValueInternally(Boolean newValue, QuestPlayer questPlayer, Object... objects) {
         return false;
     }
 
 
     @Override
-    public List<String> getPossibleValues(Player player, Object... objects) {
+    public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
         return null;
     }
 

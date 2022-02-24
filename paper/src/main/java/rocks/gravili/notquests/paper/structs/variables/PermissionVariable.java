@@ -2,8 +2,8 @@ package rocks.gravili.notquests.paper.structs.variables;
 
 import cloud.commandframework.arguments.standard.StringArgument;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,20 +31,20 @@ public class PermissionVariable extends Variable<Boolean>{
     }
 
     @Override
-    public Boolean getValue(Player player, Object... objects) {
-        return player != null && player.hasPermission(getRequiredStringValue("Permission"));
+    public Boolean getValue(QuestPlayer questPlayer, Object... objects) {
+        return questPlayer != null && questPlayer.getPlayer().hasPermission(getRequiredStringValue("Permission"));
     }
 
     @Override
-    public boolean setValueInternally(Boolean newValue, Player player, Object... objects) {
-        if(!main.getIntegrationsManager().isLuckpermsEnabled()){
+    public boolean setValueInternally(Boolean newValue, QuestPlayer questPlayer, Object... objects) {
+        if (!main.getIntegrationsManager().isLuckpermsEnabled()) {
             return false;
         }
 
-        if(newValue){
-            main.getIntegrationsManager().getLuckPermsManager().givePermission(player.getUniqueId(), getRequiredStringValue("Permission"));
-        }else {
-            main.getIntegrationsManager().getLuckPermsManager().denyPermission(player.getUniqueId(), getRequiredStringValue("Permission"));
+        if (newValue) {
+            main.getIntegrationsManager().getLuckPermsManager().givePermission(questPlayer.getUniqueId(), getRequiredStringValue("Permission"));
+        } else {
+            main.getIntegrationsManager().getLuckPermsManager().denyPermission(questPlayer.getUniqueId(), getRequiredStringValue("Permission"));
         }
 
 
@@ -53,7 +53,7 @@ public class PermissionVariable extends Variable<Boolean>{
 
 
     @Override
-    public List<String> getPossibleValues(Player player, Object... objects) {
+    public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
         return null;
     }
 

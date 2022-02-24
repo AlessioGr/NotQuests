@@ -342,7 +342,7 @@ public class QuestPlayer {
                 StringBuilder requirementsStillNeeded = new StringBuilder();
 
                 if (getPlayer() == null) {
-                    requirementsStillNeeded.append("\n").append(main.getLanguageManager().getString("chat.add-active-quest-player-object-not-found", null, this, quest));
+                    requirementsStillNeeded.append("\n").append(main.getLanguageManager().getString("chat.add-active-quest-player-object-not-found", (QuestPlayer) null, this, quest));
                 }
 
                 for (final Condition condition : quest.getQuest().getRequirements()) {
@@ -371,7 +371,7 @@ public class QuestPlayer {
                             main.sendMessage(player, main.getLanguageManager().getString("chat.objectives-label-after-quest-accepting", player));
                         }
 
-                        main.getQuestManager().sendActiveObjectivesAndProgress(player, quest);
+                        main.getQuestManager().sendActiveObjectivesAndProgress(this, quest);
 
                         if (main.getConfiguration().visualTitleQuestSuccessfullyAccepted_enabled) {
 
@@ -477,7 +477,7 @@ public class QuestPlayer {
         return main.getLanguageManager().getString("chat.force-add-active-quest-accepted", getPlayer(), this);
     }
 
-    public final UUID getUUID() {
+    public final UUID getUniqueId() {
         return uuid;
     }
 
@@ -556,7 +556,7 @@ public class QuestPlayer {
     public void sendDebugMessage(String message) {
         final Player player = getPlayer();
         if (player != null) {
-            if (main.getQuestManager().isDebugEnabledPlayer(player)) {
+            if (main.getQuestManager().isDebugEnabledPlayer(getUniqueId())) {
                 player.sendMessage(main.parse(NotQuestColors.debugTitleGradient + "[NotQuests Debug]</gradient> " + NotQuestColors.debugGradient + message + "</gradient>"));
             }
 

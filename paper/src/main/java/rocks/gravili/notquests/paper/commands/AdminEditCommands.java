@@ -881,7 +881,7 @@ public class AdminEditCommands {
                     for (Condition condition : objective.getConditions()) {
                         context.getSender().sendMessage(main.parse("<highlight>" + condition.getConditionID() + ".</highlight> <main>" + condition.getConditionType() + "</main>"));
                         if(context.getSender() instanceof Player player){
-                            context.getSender().sendMessage(main.parse("<main>" + condition.getConditionDescription(player)));
+                            context.getSender().sendMessage(main.parse("<main>" + condition.getConditionDescription(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()))));
                         }else{
                             context.getSender().sendMessage(main.parse("<main>" + condition.getConditionDescription(null)));
                         }
@@ -1229,7 +1229,7 @@ public class AdminEditCommands {
                     for (final Condition condition : objective.getConditions()) {
                         if(context.getSender() instanceof Player player){
                             context.getSender().sendMessage(main.parse(
-                                    "    <highlight>" + counter + ". Description: " + condition.getConditionDescription(player)
+                                    "    <highlight>" + counter + ". Description: " + condition.getConditionDescription(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()))
                             ));
                         }else {
                             context.getSender().sendMessage(main.parse(
@@ -1275,7 +1275,7 @@ public class AdminEditCommands {
                     for (Condition condition : quest.getRequirements()) {
                         context.getSender().sendMessage(main.parse("<highlight>" + condition.getConditionID() + ".</highlight> <main>" + condition.getConditionType()));
                         if(context.getSender() instanceof Player player){
-                            context.getSender().sendMessage(main.parse("<main>" + condition.getConditionDescription(player)));
+                            context.getSender().sendMessage(main.parse("<main>" + condition.getConditionDescription(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()))));
                         }else {
                             context.getSender().sendMessage(main.parse("<main>" + condition.getConditionDescription(null)));
                         }
@@ -1420,7 +1420,7 @@ public class AdminEditCommands {
                     for (final Action action : quest.getRewards()) {
                         context.getSender().sendMessage(main.parse("<highlight>" + action.getActionID() + ".</highlight> <main>" + action.getActionType()));
                         if(context.getSender() instanceof Player player){
-                            context.getSender().sendMessage(main.parse("<unimportant>--</unimportant> <main>" + action.getActionDescription(player)));
+                            context.getSender().sendMessage(main.parse("<unimportant>--</unimportant> <main>" + action.getActionDescription(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()))));
                         }else {
                             context.getSender().sendMessage(main.parse("<unimportant>--</unimportant> <main>" + action.getActionDescription(null)));
                         }
@@ -1482,7 +1482,7 @@ public class AdminEditCommands {
                     for (final Action action : objective.getRewards()) {
                         context.getSender().sendMessage(main.parse("<highlight>" + action.getActionID() + ".</highlight> <main>" + action.getActionType()));
                         if(context.getSender() instanceof Player player){
-                            context.getSender().sendMessage(main.parse("<unimportant>--</unimportant> <main>" + action.getActionDescription(player)));
+                            context.getSender().sendMessage(main.parse("<unimportant>--</unimportant> <main>" + action.getActionDescription(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()))));
                         }else{
                             context.getSender().sendMessage(main.parse("<unimportant>--</unimportant> <main>" + action.getActionDescription(null)));
                         }
@@ -1564,7 +1564,7 @@ public class AdminEditCommands {
 
                     if(context.getSender() instanceof Player player){
                         context.getSender().sendMessage(main.parse(
-                                "<unimportant>--</unimportant> <main>" + foundReward.getActionDescription(player)
+                                "<unimportant>--</unimportant> <main>" + foundReward.getActionDescription(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()))
                         ));
                     }else{
                         context.getSender().sendMessage(main.parse(
@@ -1708,7 +1708,7 @@ public class AdminEditCommands {
 
                     if(context.getSender() instanceof Player player){
                         context.getSender().sendMessage(main.parse(
-                                "<unimportant>--</unimportant> <main>" + foundReward.getActionDescription(player)
+                                "<unimportant>--</unimportant> <main>" + foundReward.getActionDescription(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()))
                         ));
                     }else{
                         context.getSender().sendMessage(main.parse(
@@ -1848,7 +1848,7 @@ public class AdminEditCommands {
 
                         context.getSender().sendMessage(main.parse("<unimportant>--- Action Name:</unimportant> <main>" + trigger.getTriggerAction().getActionName()));
                         if(context.getSender() instanceof Player player){
-                            context.getSender().sendMessage(main.parse("<unimportant>------ Description:</unimportant> <main>" + trigger.getTriggerAction().getActionDescription(player)));
+                            context.getSender().sendMessage(main.parse("<unimportant>------ Description:</unimportant> <main>" + trigger.getTriggerAction().getActionDescription(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()))));
 
                         }else{
                             context.getSender().sendMessage(main.parse("<unimportant>------ Description:</unimportant> <main>" + trigger.getTriggerAction().getActionDescription(null)));

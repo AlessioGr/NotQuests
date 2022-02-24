@@ -22,7 +22,6 @@ package rocks.gravili.notquests.paper.structs.actions;
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.flags.CommandFlag;
-import cloud.commandframework.arguments.standard.BooleanArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
@@ -238,7 +237,7 @@ public class NumberAction extends Action {
             variableCounter++;
             expressions = expressions.replace(variableString, "var" + variableCounter);
             env.addLazyVariable("var" + variableCounter, () -> {
-                final Object valueObject = variable.getValue(playerToEvaluate, questPlayerToEvaluate);
+                final Object valueObject = variable.getValue(questPlayerToEvaluate);
                 if(valueObject instanceof final Number n){
                     return n.doubleValue();
                 }else if(valueObject instanceof final Boolean b) {
@@ -264,19 +263,18 @@ public class NumberAction extends Action {
     }
 
     @Override
-    public void executeInternally(final Player player, Object... objects) {
-        this.playerToEvaluate = player;
-        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(playerToEvaluate.getUniqueId());
+    public void executeInternally(final QuestPlayer questPlayer, Object... objects) {
+        this.playerToEvaluate = questPlayer.getPlayer();
         this.questPlayerToEvaluate = questPlayer;
         initializeExpressionAndCachedVariable();
 
 
-        if(cachedVariable == null){
-            main.sendMessage(player, "<ERROR>Error: variable <highlight>" + variableName + "</highlight> not found. Report this to the Server owner.");
+        if (cachedVariable == null) {
+            main.sendMessage(questPlayer.getPlayer(), "<ERROR>Error: variable <highlight>" + variableName + "</highlight> not found. Report this to the Server owner.");
             return;
         }
 
-        if(additionalStringArguments != null && !additionalStringArguments.isEmpty()){
+        if (additionalStringArguments != null && !additionalStringArguments.isEmpty()) {
             cachedVariable.setAdditionalStringArguments(additionalStringArguments);
         }
         if(additionalNumberArguments != null && !additionalNumberArguments.isEmpty()){
@@ -287,9 +285,7 @@ public class NumberAction extends Action {
         }
 
 
-
-
-        final Object currentValueObject = cachedVariable.getValue(player, questPlayer, objects);
+        final Object currentValueObject = cachedVariable.getValue(questPlayer, questPlayer, objects);
 
         double currentValue = 0d;
         if (currentValueObject instanceof final Number number) {
@@ -312,12 +308,12 @@ public class NumberAction extends Action {
             nextNewValue = currentValue * nextNewValue;
         }else if(getMathOperator().equalsIgnoreCase("divide")){
             if(nextNewValue == 0){
-                main.sendMessage(player, "<ERROR>Error: variable operator <highlight>" + getMathOperator() + "</highlight> cannot be used, because you cannot divide by 0. Report this to the Server owner.");
+                main.sendMessage(questPlayer.getPlayer(), "<ERROR>Error: variable operator <highlight>" + getMathOperator() + "</highlight> cannot be used, because you cannot divide by 0. Report this to the Server owner.");
                 return;
             }
             nextNewValue = currentValue / nextNewValue;
         }else{
-            main.sendMessage(player, "<ERROR>Error: variable operator <highlight>" + getMathOperator() + "</highlight> is invalid. Report this to the Server owner.");
+            main.sendMessage(questPlayer.getPlayer(), "<ERROR>Error: variable operator <highlight>" + getMathOperator() + "</highlight> is invalid. Report this to the Server owner.");
             return;
         }
 
@@ -325,13 +321,13 @@ public class NumberAction extends Action {
 
 
         if(currentValueObject instanceof Long){
-            ((Variable<Long>)cachedVariable).setValue(Double.valueOf(nextNewValue).longValue(), player, objects);
+            ((Variable<Long>) cachedVariable).setValue(Double.valueOf(nextNewValue).longValue(), questPlayer, objects);
         } else if(currentValueObject instanceof Float){
-            ((Variable<Float>)cachedVariable).setValue(Double.valueOf(nextNewValue).floatValue(), player, objects);
+            ((Variable<Float>) cachedVariable).setValue(Double.valueOf(nextNewValue).floatValue(), questPlayer, objects);
         } else if(currentValueObject instanceof Double){
-            ((Variable<Double>)cachedVariable).setValue(nextNewValue, player, objects);
+            ((Variable<Double>) cachedVariable).setValue(nextNewValue, questPlayer, objects);
         } else if(currentValueObject instanceof Integer){
-            ((Variable<Integer>)cachedVariable).setValue(Double.valueOf(nextNewValue).intValue(), player, objects);
+            ((Variable<Integer>) cachedVariable).setValue(Double.valueOf(nextNewValue).intValue(), questPlayer, objects);
         }else{
             main.getLogManager().warn("Cannot execute number action, because the number type " + currentValueObject.getClass().getName() + " is invalid.");
         }
@@ -339,8 +335,8 @@ public class NumberAction extends Action {
     }
 
     @Override
-    public String getActionDescription(final Player player, final Object... objects) {
-        return variableName + ": " + main.getVariablesManager().evaluateExpression(getNewValueExpression(), player, objects);
+    public String getActionDescription(final QuestPlayer questPlayer, final Object... objects) {
+        return variableName + ": " + main.getVariablesManager().evaluateExpression(getNewValueExpression(), questPlayer, objects);
     }
 
 

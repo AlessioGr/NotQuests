@@ -45,89 +45,92 @@ public class GUIManager {
 
 
 
-    public void showMainQuestsGUI(QuestPlayer questPlayer, Player player) {
-        if(main.getDataManager().isDisabled()){
-            main.getDataManager().sendPluginDisabledMessage(player);
+    public void showMainQuestsGUI(QuestPlayer questPlayer) {
+        if (main.getDataManager().isDisabled()) {
+            main.getDataManager().sendPluginDisabledMessage(questPlayer.getPlayer());
             return;
         }
-        mainInterface.open(PlayerViewer.of(player), HashMapInterfaceArguments.with(ArgumentKey.of("player", Player.class), player).with(ArgumentKey.of("questPlayer", QuestPlayer.class), questPlayer).build());
+        mainInterface.open(PlayerViewer.of(questPlayer.getPlayer()), HashMapInterfaceArguments.with(ArgumentKey.of("player", Player.class), questPlayer.getPlayer()).with(ArgumentKey.of("questPlayer", QuestPlayer.class), questPlayer).build());
     }
 
-    public void showPreviewQuestGUI(QuestPlayer questPlayer, Player player, final Quest quest) {
-        if(main.getDataManager().isDisabled()){
-            main.getDataManager().sendPluginDisabledMessage(player);
+    public void showPreviewQuestGUI(QuestPlayer questPlayer, final Quest quest) {
+        if (main.getDataManager().isDisabled()) {
+            main.getDataManager().sendPluginDisabledMessage(questPlayer.getPlayer());
             return;
         }
-        previewQuestInterface.open(PlayerViewer.of(player), HashMapInterfaceArguments
-                .with(ArgumentKey.of("player", Player.class), player)
+        previewQuestInterface.open(PlayerViewer.of(questPlayer.getPlayer()), HashMapInterfaceArguments
+                .with(ArgumentKey.of("player", Player.class), questPlayer.getPlayer())
                 .with(ArgumentKey.of("questPlayer", QuestPlayer.class), questPlayer)
                 .with(ArgumentKey.of("quest", Quest.class), quest).build());
     }
-    public void showAbortQuestGUI(QuestPlayer questPlayer, Player player, final ActiveQuest activeQuest) {
-        if(main.getDataManager().isDisabled()){
-            main.getDataManager().sendPluginDisabledMessage(player);
+
+    public void showAbortQuestGUI(QuestPlayer questPlayer, final ActiveQuest activeQuest) {
+        if (main.getDataManager().isDisabled()) {
+            main.getDataManager().sendPluginDisabledMessage(questPlayer.getPlayer());
             return;
         }
-        abortQuestInterface.open(PlayerViewer.of(player), HashMapInterfaceArguments
-                .with(ArgumentKey.of("player", Player.class), player)
+        abortQuestInterface.open(PlayerViewer.of(questPlayer.getPlayer()), HashMapInterfaceArguments
+                .with(ArgumentKey.of("player", Player.class), questPlayer.getPlayer())
                 .with(ArgumentKey.of("questPlayer", QuestPlayer.class), questPlayer)
                 .with(ArgumentKey.of("activeQuest", ActiveQuest.class), activeQuest).build());
     }
-    public void showQuestProgressGUI(QuestPlayer questPlayer, Player player, final ActiveQuest activeQuest) {
-        if(main.getDataManager().isDisabled()){
-            main.getDataManager().sendPluginDisabledMessage(player);
+
+    public void showQuestProgressGUI(QuestPlayer questPlayer, final ActiveQuest activeQuest) {
+        if (main.getDataManager().isDisabled()) {
+            main.getDataManager().sendPluginDisabledMessage(questPlayer.getPlayer());
             return;
         }
-        questProgressInterface.open(PlayerViewer.of(player), HashMapInterfaceArguments
-                .with(ArgumentKey.of("player", Player.class), player)
+        questProgressInterface.open(PlayerViewer.of(questPlayer.getPlayer()), HashMapInterfaceArguments
+                .with(ArgumentKey.of("player", Player.class), questPlayer.getPlayer())
                 .with(ArgumentKey.of("questPlayer", QuestPlayer.class), questPlayer)
                 .with(ArgumentKey.of("activeQuest", ActiveQuest.class), activeQuest).build());
     }
-    public void showTakeQuestsGUI(QuestPlayer questPlayer, Player player, final ArrayList<Quest> quests) {
-        if(main.getDataManager().isDisabled()){
-            main.getDataManager().sendPluginDisabledMessage(player);
+
+    public void showTakeQuestsGUI(QuestPlayer questPlayer, final ArrayList<Quest> quests) {
+        if (main.getDataManager().isDisabled()) {
+            main.getDataManager().sendPluginDisabledMessage(questPlayer.getPlayer());
             return;
         }
-        selectiveTakeQuestsInterface.open(PlayerViewer.of(player), HashMapInterfaceArguments
-                .with(ArgumentKey.of("player", Player.class), player)
+        selectiveTakeQuestsInterface.open(PlayerViewer.of(questPlayer.getPlayer()), HashMapInterfaceArguments
+                .with(ArgumentKey.of("player", Player.class), questPlayer.getPlayer())
                 .with(ArgumentKey.of("questPlayer", QuestPlayer.class), questPlayer)
                 .with(ArgumentKey.of("quests", ArrayList.class), quests).build());
     }
 
-    public void showTakeQuestsGUI(QuestPlayer questPlayer, Player player) {
-        if(main.getDataManager().isDisabled()){
-            main.getDataManager().sendPluginDisabledMessage(player);
+    public void showTakeQuestsGUI(QuestPlayer questPlayer) {
+        if (main.getDataManager().isDisabled()) {
+            main.getDataManager().sendPluginDisabledMessage(questPlayer.getPlayer());
             return;
         }
         final HashMapInterfaceArguments arguments = HashMapInterfaceArguments
-                .with(ArgumentKey.of("player", Player.class), player)
+                .with(ArgumentKey.of("player", Player.class), questPlayer.getPlayer())
                 .with(ArgumentKey.of("questPlayer", QuestPlayer.class), questPlayer)
                 .with(ArgumentKey.of("paneType", String.class), "takequest").build();
-        constructMainInterface(main.getLanguageManager().getComponent("gui.takeQuestChoose.title", null )).open(PlayerViewer.of(player), arguments);
+        constructMainInterface(main.getLanguageManager().getComponent("gui.takeQuestChoose.title", null)).open(PlayerViewer.of(questPlayer.getPlayer()), arguments);
     }
 
-    public void showActiveQuestsGUI(QuestPlayer questPlayer, Player player) {
-        if(main.getDataManager().isDisabled()){
-            main.getDataManager().sendPluginDisabledMessage(player);
+    public void showActiveQuestsGUI(QuestPlayer questPlayer) {
+        if (main.getDataManager().isDisabled()) {
+            main.getDataManager().sendPluginDisabledMessage(questPlayer.getPlayer());
             return;
         }
         final HashMapInterfaceArguments arguments = HashMapInterfaceArguments
-                .with(ArgumentKey.of("player", Player.class), player)
+                .with(ArgumentKey.of("player", Player.class), questPlayer.getPlayer())
                 .with(ArgumentKey.of("questPlayer", QuestPlayer.class), questPlayer)
                 .with(ArgumentKey.of("paneType", String.class), "activequests").build();
-        constructMainInterface(main.getLanguageManager().getComponent("gui.activeQuests.title", null )).open(PlayerViewer.of(player), arguments);
+        constructMainInterface(main.getLanguageManager().getComponent("gui.activeQuests.title", null)).open(PlayerViewer.of(questPlayer.getPlayer()), arguments);
     }
 
-    public void showAbortQuestsGUI(QuestPlayer questPlayer, Player player){
-        if(main.getDataManager().isDisabled()){
-            main.getDataManager().sendPluginDisabledMessage(player);
+    public void showAbortQuestsGUI(QuestPlayer questPlayer) {
+        if (main.getDataManager().isDisabled()) {
+            main.getDataManager().sendPluginDisabledMessage(questPlayer.getPlayer());
             return;
         }
         final HashMapInterfaceArguments arguments = HashMapInterfaceArguments
-                .with(ArgumentKey.of("player", Player.class), player)
+                .with(ArgumentKey.of("player", Player.class), questPlayer.getPlayer())
                 .with(ArgumentKey.of("questPlayer", QuestPlayer.class), questPlayer)
                 .with(ArgumentKey.of("paneType", String.class), "abortquest").build();
-        constructMainInterface(main.getLanguageManager().getComponent("gui.abortQuestChoose.title", null )).open(PlayerViewer.of(player), arguments);
+        constructMainInterface(main.getLanguageManager().getComponent("gui.abortQuestChoose.title", null)).open(PlayerViewer.of(questPlayer.getPlayer()), arguments);
     }
 
     public GUIManager(final NotQuests main) {
@@ -302,7 +305,7 @@ public class GUIManager {
 
                             for(String loreString : loreStringList){
                                 if(loreString.contains("%QUESTREWARDS%")){
-                                    for(String rewardLine : main.getQuestManager().getQuestRewardsList(quest, player)){
+                                    for (String rewardLine : main.getQuestManager().getQuestRewardsList(quest, questPlayer)) {
                                         lore.add(main.parse(loreString.replace("%QUESTREWARDS%", "") + rewardLine).decoration(TextDecoration.ITALIC, false));
                                     }
                                 }else{
@@ -331,7 +334,7 @@ public class GUIManager {
 
                             for(String loreString : loreStringList){
                                 if(loreString.contains("%QUESTREQUIREMENTS%")){
-                                    for(String requirementLine : main.getQuestManager().getQuestRequirementsList(quest, player)){
+                                    for (String requirementLine : main.getQuestManager().getQuestRequirementsList(quest, questPlayer)) {
                                         lore.add(main.parse(loreString.replace("%QUESTREQUIREMENTS%", "") + requirementLine).decoration(TextDecoration.ITALIC, false));
                                     }
                                 }else{
@@ -649,7 +652,7 @@ public class GUIManager {
 
                                 add(ItemStackElement.of(itemStack,
                                         (clickHandler) -> {
-                                            showPreviewQuestGUI(questPlayer, player, quest);
+                                            showPreviewQuestGUI(questPlayer, quest);
                                         }
                                 ));
 
@@ -754,7 +757,7 @@ public class GUIManager {
                     result = result.element(ItemStackElement.of(takeQuestItemStack,
                             // Handle click
                             (clickHandler) -> {
-                                showTakeQuestsGUI(clickHandler.view().arguments().get(ArgumentKey.of("questPlayer", QuestPlayer.class)), player);
+                                showTakeQuestsGUI(clickHandler.view().arguments().get(ArgumentKey.of("questPlayer", QuestPlayer.class)));
                             }
                     ), main.getLanguageManager().getInt("gui.main.button.takequest.x"), main.getLanguageManager().getInt("gui.main.button.takequest.y"));
 
@@ -772,7 +775,7 @@ public class GUIManager {
                     result = result.element(ItemStackElement.of(abortQuestItemStack,
                             // Handle click
                             (clickHandler) -> {
-                                showAbortQuestsGUI(clickHandler.view().arguments().get(ArgumentKey.of("questPlayer", QuestPlayer.class)), player);
+                                showAbortQuestsGUI(clickHandler.view().arguments().get(ArgumentKey.of("questPlayer", QuestPlayer.class)));
                             }
                     ), main.getLanguageManager().getInt("gui.main.button.abortquest.x"), main.getLanguageManager().getInt("gui.main.button.abortquest.y"));
 
@@ -789,7 +792,7 @@ public class GUIManager {
                     result = result.element(ItemStackElement.of(activeQuestsItemStack,
                             // Handle click
                             (clickHandler) -> {
-                                showActiveQuestsGUI(clickHandler.view().arguments().get(ArgumentKey.of("questPlayer", QuestPlayer.class)), player);
+                                showActiveQuestsGUI(clickHandler.view().arguments().get(ArgumentKey.of("questPlayer", QuestPlayer.class)));
                             }
                     ), main.getLanguageManager().getInt("gui.main.button.activequests.x"), main.getLanguageManager().getInt("gui.main.button.activequests.y"));
 
@@ -840,7 +843,7 @@ public class GUIManager {
 
                         add(ItemStackElement.of(itemStack,
                                 (clickHandler) -> {
-                                    showQuestProgressGUI(questPlayer, player, activeQuest);
+                                    showQuestProgressGUI(questPlayer, activeQuest);
                                 }
                         ));
                     }
@@ -957,7 +960,7 @@ public class GUIManager {
 
                             add(ItemStackElement.of(itemStack,
                                     (clickHandler) -> {
-                                            showPreviewQuestGUI(questPlayer, player, quest);
+                                        showPreviewQuestGUI(questPlayer, quest);
                                     }
                             ));
 
@@ -1018,7 +1021,7 @@ public class GUIManager {
                                 // Handle click
                                 (clickHandler) -> {
                                     // final @NonNull InterfaceArguments argument = view.arguments();
-                                    showAbortQuestGUI(questPlayer, player, activeQuest);
+                                    showAbortQuestGUI(questPlayer, activeQuest);
                                 }
                         ));
 

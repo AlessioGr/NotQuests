@@ -28,12 +28,11 @@ import de.warsteiner.jobs.api.Job;
 import de.warsteiner.jobs.api.JobsPlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -106,8 +105,8 @@ public class UltimateJobsReachJobLevelObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final Player player) {
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.ultimateJobsReachJobLevel.base", player, Map.of(
+    public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.ultimateJobsReachJobLevel.base", questPlayer, Map.of(
                 "%AMOUNT%", "" + getLevelToReach(),
                 "%JOBID%", getJobID()
         ));
@@ -139,7 +138,7 @@ public class UltimateJobsReachJobLevelObjective extends Objective {
             return;
         }
 
-        JobsPlayer jobsPlayer = UltimateJobs.getPlugin().getPlayerManager().getOnlineJobPlayers().get(activeObjective.getQuestPlayer().getUUID().toString());
+        JobsPlayer jobsPlayer = UltimateJobs.getPlugin().getPlayerManager().getOnlineJobPlayers().get(activeObjective.getQuestPlayer().getUniqueId().toString());
         Job job = UltimateJobs.getPlugin().getAPI().isJobFromConfigID(jobID);
 
         if(jobsPlayer == null || job == null){

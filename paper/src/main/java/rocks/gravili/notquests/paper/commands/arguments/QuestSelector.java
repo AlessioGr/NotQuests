@@ -53,6 +53,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.Quest;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.List;
 import java.util.Queue;
@@ -176,16 +177,16 @@ public class QuestSelector<C> extends CommandArgument<C, Quest> {
                 if (context.getSender() instanceof Player player) {
                     return ArgumentParseResult.failure(new IllegalArgumentException(main.getLanguageManager().getString("chat.quest-does-not-exist", player).replace("%QUESTNAME%", input)));
                 } else {
-                    return ArgumentParseResult.failure(new IllegalArgumentException(main.getLanguageManager().getString("chat.quest-does-not-exist", null).replace("%QUESTNAME%", input)));
+                    return ArgumentParseResult.failure(new IllegalArgumentException(main.getLanguageManager().getString("chat.quest-does-not-exist", (QuestPlayer) null).replace("%QUESTNAME%", input)));
                 }
             }
             if (this.takeEnabledOnly && !foundQuest.isTakeEnabled() ) {
                 if (context.getSender() instanceof Player player) {
-                    if(!main.getQuestManager().isPlayerCloseToCitizenOrArmorstandWithQuest(player, foundQuest)){
+                    if (!main.getQuestManager().isPlayerCloseToCitizenOrArmorstandWithQuest(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), foundQuest)) {
                         return ArgumentParseResult.failure(new IllegalArgumentException(main.getLanguageManager().getString("chat.take-disabled", player, foundQuest)));
                     }
                 } else {
-                    return ArgumentParseResult.failure(new IllegalArgumentException(main.getLanguageManager().getString("chat.take-disabled", null, foundQuest)));
+                    return ArgumentParseResult.failure(new IllegalArgumentException(main.getLanguageManager().getString("chat.take-disabled", (QuestPlayer) null, foundQuest)));
                 }
             }
 

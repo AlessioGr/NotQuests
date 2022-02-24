@@ -6,8 +6,8 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.advancement.AdvancementProgress;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -39,32 +39,32 @@ public class AdvancementVariable extends Variable<Boolean>{
     }
 
     @Override
-    public Boolean getValue(Player player, Object... objects) {
+    public Boolean getValue(QuestPlayer questPlayer, Object... objects) {
         NamespacedKey namespacedKey = NamespacedKey.fromString(getRequiredStringValue("Advancement"));
-        if(namespacedKey == null){
+        if (namespacedKey == null) {
             return false;
         }
         Advancement advancement = Bukkit.getAdvancement(namespacedKey);
-        if(advancement == null){
+        if (advancement == null) {
             return false;
         }
-        return player != null && player.getAdvancementProgress(
+        return questPlayer != null && questPlayer.getPlayer().getAdvancementProgress(
                 advancement
         ).isDone();
     }
 
     @Override
-    public boolean setValueInternally(Boolean newValue, Player player, Object... objects) {
+    public boolean setValueInternally(Boolean newValue, QuestPlayer questPlayer, Object... objects) {
         NamespacedKey namespacedKey = NamespacedKey.fromString(getRequiredStringValue("Advancement"));
-        if(namespacedKey == null){
+        if (namespacedKey == null) {
             return false;
         }
         Advancement advancement = Bukkit.getAdvancement(namespacedKey);
-        if(advancement == null){
+        if (advancement == null) {
             return false;
         }
 
-        AdvancementProgress progress = player.getAdvancementProgress(advancement);
+        AdvancementProgress progress = questPlayer.getPlayer().getAdvancementProgress(advancement);
 
         if(newValue){
             for (String criteria : progress.getRemainingCriteria()){
@@ -81,7 +81,7 @@ public class AdvancementVariable extends Variable<Boolean>{
 
 
     @Override
-    public List<String> getPossibleValues(Player player, Object... objects) {
+    public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
         return null;
     }
 

@@ -20,16 +20,12 @@ package rocks.gravili.notquests.paper.structs.conditions;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
-import cloud.commandframework.arguments.CommandArgument;
 import cloud.commandframework.arguments.flags.CommandFlag;
-import cloud.commandframework.arguments.standard.BooleanArgument;
-import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import redempt.crunch.CompiledExpression;
 import redempt.crunch.Crunch;
 import redempt.crunch.functional.EvaluationEnvironment;
@@ -177,7 +173,7 @@ public class BooleanCondition extends Condition {
             variableCounter++;
             expressions = expressions.replace(variableString, "var" + variableCounter);
             env.addLazyVariable("var" + variableCounter, () -> {
-                final Object valueObject = variable.getValue(questPlayerToEvaluate.getPlayer(), questPlayerToEvaluate);
+                final Object valueObject = variable.getValue(questPlayerToEvaluate);
                 if(valueObject instanceof final Number n){
                     return n.doubleValue();
                 }else if(valueObject instanceof final Boolean b) {
@@ -228,7 +224,7 @@ public class BooleanCondition extends Condition {
             cachedVariable.setAdditionalBooleanArguments(additionalBooleanArguments);
         }
 
-        Object value = cachedVariable.getValue(questPlayer.getPlayer(), questPlayer);
+        Object value = cachedVariable.getValue(questPlayer);
 
         if(getOperator().equalsIgnoreCase("equals")){
             if(value instanceof Boolean bool){
@@ -348,14 +344,14 @@ public class BooleanCondition extends Condition {
     }
 
     @Override
-    public String getConditionDescriptionInternally(Player player, Object... objects) {
+    public String getConditionDescriptionInternally(QuestPlayer questPlayer, Object... objects) {
         //description += "\n<GRAY>--- Will quest points be deducted?: No";
-        this.questPlayerToEvaluate = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
+        this.questPlayerToEvaluate = questPlayer;
         initializeExpressionAndCachedVariable();
         final boolean booleanRequirement = exp.evaluate() >= 0.98d;
 
 
-        if(getOperator().equalsIgnoreCase("equals")){
+        if (getOperator().equalsIgnoreCase("equals")) {
             return "<GRAY>-- " + variableName + " needs to be " + booleanRequirement + "</GRAY>";
         }
         return "<GRAY>-- " + variableName + " needed: " + booleanRequirement + "</GRAY>";

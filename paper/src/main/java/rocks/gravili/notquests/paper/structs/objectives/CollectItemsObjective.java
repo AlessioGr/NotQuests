@@ -21,9 +21,7 @@ package rocks.gravili.notquests.paper.structs.objectives;
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.IntegerArgument;
-import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
-import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -32,7 +30,7 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
-import rocks.gravili.notquests.paper.structs.actions.GiveItemAction;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.Map;
 
@@ -121,7 +119,7 @@ public class CollectItemsObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final Player player) {
+    public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
         final String displayName;
         if (!isCollectAnyItem()) {
             if (getItemToCollect().getItemMeta() != null) {
@@ -136,14 +134,14 @@ public class CollectItemsObjective extends Objective {
         String itemType = isCollectAnyItem() ? "Any" : getItemToCollect().getType().name();
 
         if (!displayName.isBlank()) {
-            return main.getLanguageManager().getString("chat.objectives.taskDescription.collectItems.base", player, Map.of(
+            return main.getLanguageManager().getString("chat.objectives.taskDescription.collectItems.base", questPlayer, Map.of(
                     "%ITEMTOCOLLECTTYPE%", itemType,
                     "%ITEMTOCOLLECTNAME%", displayName,
                     "%(%", "(",
                     "%)%", "<RESET>)"
             ));
         } else {
-            return main.getLanguageManager().getString("chat.objectives.taskDescription.collectItems.base", player, Map.of(
+            return main.getLanguageManager().getString("chat.objectives.taskDescription.collectItems.base", questPlayer, Map.of(
                     "%ITEMTOCOLLECTTYPE%", itemType,
                     "%ITEMTOCOLLECTNAME%", "",
                     "%(%", "",

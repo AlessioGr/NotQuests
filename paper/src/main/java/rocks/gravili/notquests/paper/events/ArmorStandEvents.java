@@ -546,14 +546,14 @@ public class ArmorStandEvents implements Listener {
 
 
         //If Armor Stand has Quests attached to it and it prevent-editing is true in the config
-        if (main.getQuestManager().sendQuestsPreviewOfQuestShownArmorstands(armorStand, player) && main.getConfiguration().isArmorStandPreventEditing()) {
+        if (main.getQuestManager().sendQuestsPreviewOfQuestShownArmorstands(armorStand, questPlayer) && main.getConfiguration().isArmorStandPreventEditing()) {
             event.setCancelled(true);
         }
 
         //Conversations
         final Conversation foundConversation = main.getConversationManager().getConversationAttachedToArmorstand(armorStand);
         if (foundConversation != null) {
-            main.getConversationManager().playConversation(player, foundConversation);
+            main.getConversationManager().playConversation(questPlayer, foundConversation);
             if (main.getConfiguration().isArmorStandPreventEditing()) {
                 event.setCancelled(true);
             }

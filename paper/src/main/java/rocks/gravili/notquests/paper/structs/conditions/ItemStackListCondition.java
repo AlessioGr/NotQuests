@@ -21,7 +21,6 @@ package rocks.gravili.notquests.paper.structs.conditions;
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.flags.CommandFlag;
-import cloud.commandframework.arguments.standard.BooleanArgument;
 import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.paper.PaperCommandManager;
@@ -34,14 +33,12 @@ import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.ItemStackListVariableValueArgument;
-import rocks.gravili.notquests.paper.commands.arguments.variables.ListVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
 import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -112,7 +109,7 @@ public class ItemStackListCondition extends Condition {
             variable.setAdditionalBooleanArguments(additionalBooleanArguments);
         }
 
-        Object value = variable.getValue(questPlayer.getPlayer(), questPlayer);
+        Object value = variable.getValue(questPlayer);
 
         if(value == null){
             return "<YELLOW>You don't have any " + variable.getPlural() + "!";
@@ -263,12 +260,12 @@ public class ItemStackListCondition extends Condition {
     }
 
     @Override
-    public String getConditionDescriptionInternally(Player player, Object... objects) {
+    public String getConditionDescriptionInternally(QuestPlayer questPlayer, Object... objects) {
         //description += "\n<GRAY>--- Will quest points be deducted?: No";
 
-        if(getOperator().equalsIgnoreCase("equals")){
+        if (getOperator().equalsIgnoreCase("equals")) {
             return "<GRAY>-- " + variableName + " needs to be equal " + main.getMiniMessage().serialize(getItemStack().displayName()) + "</GRAY>";
-        }else if(getOperator().equalsIgnoreCase("contains")){
+        } else if (getOperator().equalsIgnoreCase("contains")) {
             return "<GRAY>-- " + variableName + " needs to be contain " + main.getMiniMessage().serialize(getItemStack().displayName()) + "</GRAY>";
         }
         return "<GRAY>Error: invalid expression.</GRAY>";

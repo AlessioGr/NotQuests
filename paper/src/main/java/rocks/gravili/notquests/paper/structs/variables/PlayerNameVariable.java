@@ -1,8 +1,9 @@
 package rocks.gravili.notquests.paper.structs.variables;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.List;
 
@@ -13,18 +14,18 @@ public class PlayerNameVariable extends Variable<String>{
     }
 
     @Override
-    public String getValue(Player player, Object... objects) {
-        if (player != null) {
-            return player.getName();
+    public String getValue(QuestPlayer questPlayer, Object... objects) {
+        if (questPlayer != null) {
+            return questPlayer.getPlayer().getName();
         } else {
             return null;
         }
     }
 
     @Override
-    public boolean setValueInternally(String newValue, Player player, Object... objects) {
-        if (player != null) {
-            player.setCustomName(newValue);
+    public boolean setValueInternally(String newValue, QuestPlayer questPlayer, Object... objects) {
+        if (questPlayer != null) {
+            questPlayer.getPlayer().customName(Component.text(newValue));
             return true;
         } else {
             return false;
@@ -33,7 +34,7 @@ public class PlayerNameVariable extends Variable<String>{
 
 
     @Override
-    public List<String> getPossibleValues(Player player, Object... objects) {
+    public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
         return Bukkit.getOnlinePlayers().stream().map(playerObject -> playerObject.getName()).toList();
     }
 
