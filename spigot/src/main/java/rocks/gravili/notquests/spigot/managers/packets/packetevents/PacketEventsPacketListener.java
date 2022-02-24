@@ -1,6 +1,6 @@
 /*
  * NotQuests - A Questing plugin for Minecraft Servers
- * Copyright (C) $originalComment.match("Copyright \(c\) (\d+)", 1, "-", "$today.year")2021 Alessio Gravili
+ * Copyright (C) 2022 Alessio Gravili
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

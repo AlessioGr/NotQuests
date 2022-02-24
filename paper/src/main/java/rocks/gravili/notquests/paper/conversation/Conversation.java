@@ -1,6 +1,6 @@
 /*
  * NotQuests - A Questing plugin for Minecraft Servers
- * Copyright (C) 2021 Alessio Gravili
+ * Copyright (C) 2021-2022 Alessio Gravili
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +22,6 @@ package rocks.gravili.notquests.paper.conversation;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;

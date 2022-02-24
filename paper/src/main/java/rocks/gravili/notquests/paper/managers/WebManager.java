@@ -1,14 +1,22 @@
-package rocks.gravili.notquests.paper.managers;
+/*
+ * NotQuests - A Questing plugin for Minecraft Servers
+ * Copyright (C) 2022 Alessio Gravili
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import rocks.gravili.notquests.paper.NotQuests;
+package rocks.gravili.notquests.paper.managers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,11 +24,16 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
+import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
 public class WebManager {
     private final NotQuests main;
@@ -52,7 +65,6 @@ public class WebManager {
         StringEntity postingString = new StringEntity(gson.toJson(jsonObject));//gson.tojson() converts your pojo to json
         post.setEntity(postingString);
         post.setHeader("Content-type", "application/json");
-
 
 
         HttpResponse result = httpClient.execute(post);
@@ -93,7 +105,6 @@ public class WebManager {
         main.getLogManager().info("JSON to send: \n" + jsonDefaultCategoryQuests);*/
 
 
-
         JsonObject categories = new JsonObject();
 
         try{
@@ -118,9 +129,6 @@ public class WebManager {
                 }
 
 
-
-
-
                 categories.add(category.getCategoryName(), categoryObject);
 
             }
@@ -128,7 +136,6 @@ public class WebManager {
             main.getLogManager().warn("Cannot convert Quests YAML to web-ready JSON.");
             e.printStackTrace();
         }
-
 
 
         return categories;

@@ -1,6 +1,6 @@
 /*
  * NotQuests - A Questing plugin for Minecraft Servers
- * Copyright (C) 2021 Alessio Gravili
+ * Copyright (C) 2021-2022 Alessio Gravili
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,12 +24,12 @@ import cloud.commandframework.paper.PaperCommandManager;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
-import rocks.gravili.notquests.spigot.structs.triggers.Trigger;
-import rocks.gravili.notquests.spigot.structs.triggers.types.*;
 import rocks.gravili.notquests.spigot.NotQuests;
 import rocks.gravili.notquests.spigot.commands.NotQuestColors;
 import rocks.gravili.notquests.spigot.structs.Quest;
 import rocks.gravili.notquests.spigot.structs.actions.Action;
+import rocks.gravili.notquests.spigot.structs.triggers.Trigger;
+import rocks.gravili.notquests.spigot.structs.triggers.types.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

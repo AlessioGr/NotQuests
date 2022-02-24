@@ -1,6 +1,6 @@
 /*
  * NotQuests - A Questing plugin for Minecraft Servers
- * Copyright (C) 2021 Alessio Gravili
+ * Copyright (C) 2021-2022 Alessio Gravili
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,18 +18,15 @@
 
 package rocks.gravili.notquests.paper.managers;
 
-import rocks.gravili.notquests.paper.NotQuests;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
+import org.apache.commons.lang.math.NumberUtils;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import rocks.gravili.notquests.paper.NotQuests;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -38,12 +35,6 @@ import java.net.URL;
 import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.commons.lang.math.NumberUtils;
-import org.bukkit.plugin.java.JavaPlugin;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * A utility class to assist in checking for updates for plugins uploaded to

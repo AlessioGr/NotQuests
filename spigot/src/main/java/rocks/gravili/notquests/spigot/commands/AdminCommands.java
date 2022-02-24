@@ -1,6 +1,6 @@
 /*
  * NotQuests - A Questing plugin for Minecraft Servers
- * Copyright (C) 2021 Alessio Gravili
+ * Copyright (C) 2021-2022 Alessio Gravili
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,7 +52,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static rocks.gravili.notquests.spigot.commands.NotQuestColors.highlight2Gradient;
 import static rocks.gravili.notquests.spigot.commands.NotQuestColors.highlightGradient;
 
 public class AdminCommands {

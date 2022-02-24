@@ -1,8 +1,6 @@
-package rocks.gravili.notquests.paper.structs.actions;
-
 /*
  * NotQuests - A Questing plugin for Minecraft Servers
- * Copyright (C) 2021 Alessio Gravili
+ * Copyright (C) 2022 Alessio Gravili
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +16,7 @@ package rocks.gravili.notquests.paper.structs.actions;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+package rocks.gravili.notquests.paper.structs.actions;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;

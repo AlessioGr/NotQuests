@@ -1,3 +1,21 @@
+/*
+ * NotQuests - A Questing plugin for Minecraft Servers
+ * Copyright (C) 2022 Alessio Gravili
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package rocks.gravili.notquests.paper.structs.variables;
 
 import cloud.commandframework.arguments.flags.CommandFlag;
@@ -37,11 +55,6 @@ public abstract class Variable<T> {
     private final VariableDataType variableDataType;
 
 
-
-
-
-
-
     public final ArrayList<String> getSetOnlyRequiredValues() {
         return setOnlyRequiredValues;
     }
@@ -62,10 +75,10 @@ public abstract class Variable<T> {
     public void addSetOnlyRequiredValue(final String value){
         setOnlyRequiredValues.add(value);
     }
+
     public void addGetOnlyRequiredValue(final String value){
         getOnlyRequiredValues.add(value);
     }
-
 
 
     public Variable(final NotQuests main){
@@ -115,12 +128,15 @@ public abstract class Variable<T> {
     protected void addRequiredString(final StringArgument<CommandSender> stringArgument){
         requiredStrings.add(stringArgument);
     }
+
     protected void addRequiredNumber(final NumberVariableValueArgument<CommandSender> numberVariableValueArgument){
         requiredNumbers.add(numberVariableValueArgument);
     }
+
     protected void addRequiredBoolean(final BooleanVariableValueArgument<CommandSender> booleanArgument){
         requiredBooleans.add(booleanArgument);
     }
+
     protected void addRequiredBooleanFlag(final CommandFlag<Void> commandFlag){
         requiredBooleanFlags.add(commandFlag);
     }
@@ -128,9 +144,11 @@ public abstract class Variable<T> {
     public final ArrayList<StringArgument<CommandSender>> getRequiredStrings(){
         return requiredStrings;
     }
+
     public final ArrayList<NumberVariableValueArgument<CommandSender>> getRequiredNumbers(){
         return requiredNumbers;
     }
+
     public final ArrayList<BooleanVariableValueArgument<CommandSender>> getRequiredBooleans(){
         return requiredBooleans;
     }
@@ -201,7 +219,6 @@ public abstract class Variable<T> {
         }
 
 
-
         return result;
 
     }
@@ -216,6 +233,7 @@ public abstract class Variable<T> {
     }
 
     public abstract String getPlural();
+
     public abstract String getSingular();
 
     public void setAdditionalStringArguments(HashMap<String, String> additionalStringArguments) {
@@ -225,6 +243,7 @@ public abstract class Variable<T> {
     public void setAdditionalNumberArguments(HashMap<String, String> additionalNumberArguments) {
         this.additionalNumberArguments = additionalNumberArguments;
     }
+
     public void setAdditionalBooleanArguments(HashMap<String, String> additionalBooleanArguments) {
         this.additionalBooleanArguments = additionalBooleanArguments;
     }
@@ -232,9 +251,11 @@ public abstract class Variable<T> {
     public void addAdditionalBooleanArgument(String key, String value){
         additionalBooleanArguments.put(key, value);
     }
+
     public void addAdditionalStringArgument(String key, String value){
         additionalStringArguments.put(key, value);
     }
+
     public void addAdditionalNumberArgument(String key, String value){
         additionalNumberArguments.put(key, value);
     }

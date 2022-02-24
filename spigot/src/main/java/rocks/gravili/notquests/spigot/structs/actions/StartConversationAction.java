@@ -1,6 +1,6 @@
 /*
  * NotQuests - A Questing plugin for Minecraft Servers
- * Copyright (C) 2021 Alessio Gravili
+ * Copyright (C) 2021-2022 Alessio Gravili
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,10 +25,10 @@ import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import rocks.gravili.notquests.spigot.commands.arguments.ConversationSelector;
-import rocks.gravili.notquests.spigot.conversation.ConversationPlayer;
 import rocks.gravili.notquests.spigot.NotQuests;
+import rocks.gravili.notquests.spigot.commands.arguments.ConversationSelector;
 import rocks.gravili.notquests.spigot.conversation.Conversation;
+import rocks.gravili.notquests.spigot.conversation.ConversationPlayer;
 
 public class StartConversationAction extends Action {
 

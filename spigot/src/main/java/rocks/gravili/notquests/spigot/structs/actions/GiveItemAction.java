@@ -1,6 +1,6 @@
 /*
  * NotQuests - A Questing plugin for Minecraft Servers
- * Copyright (C) 2021 Alessio Gravili
+ * Copyright (C) 2021-2022 Alessio Gravili
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,10 +31,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import rocks.gravili.notquests.spigot.commands.arguments.MaterialOrHandArgument;
-import rocks.gravili.notquests.spigot.commands.arguments.wrappers.MaterialOrHand;
 import rocks.gravili.notquests.spigot.NotQuests;
 import rocks.gravili.notquests.spigot.commands.NotQuestColors;
+import rocks.gravili.notquests.spigot.commands.arguments.MaterialOrHandArgument;
+import rocks.gravili.notquests.spigot.commands.arguments.wrappers.MaterialOrHand;
 
 public class GiveItemAction extends Action {
 

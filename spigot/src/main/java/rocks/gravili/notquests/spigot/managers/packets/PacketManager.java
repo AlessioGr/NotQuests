@@ -1,6 +1,6 @@
 /*
  * NotQuests - A Questing plugin for Minecraft Servers
- * Copyright (C) $originalComment.match("Copyright \(c\) (\d+)", 1, "-", "$today.year")2021 Alessio Gravili
+ * Copyright (C) 2022 Alessio Gravili
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,9 +30,9 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import rocks.gravili.notquests.spigot.NotQuests;
 import rocks.gravili.notquests.spigot.managers.packets.ownpacketstuff.PacketInjector;
 import rocks.gravili.notquests.spigot.managers.packets.packetevents.PacketEventsPacketListener;
-import rocks.gravili.notquests.spigot.NotQuests;
 
 public class PacketManager implements Listener {
     private final NotQuests main;

@@ -1,3 +1,21 @@
+/*
+ * NotQuests - A Questing plugin for Minecraft Servers
+ * Copyright (C) 2022 Alessio Gravili
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package rocks.gravili.notquests.paper.structs.variables;
 
 import org.bukkit.entity.Player;
@@ -6,7 +24,7 @@ import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.List;
 
-public class PlayerExperienceVariable extends Variable<Integer>{
+public class PlayerExperienceVariable extends Variable<Integer> {
     public PlayerExperienceVariable(NotQuests main) {
         super(main);
         setCanSetValue(true);
@@ -50,7 +68,6 @@ public class PlayerExperienceVariable extends Variable<Integer>{
     }
 
 
-
     /*
      * Code taken from https://www.spigotmc.org/threads/how-to-get-players-exp-points.239171/
      * by DOGC_Kyle
@@ -64,6 +81,7 @@ public class PlayerExperienceVariable extends Variable<Integer>{
             return 9*level-158;
         }
     }
+
     // Calculate total experience up to a level
     public int getExpAtLevel(int level){
         if(level <= 16){
@@ -74,6 +92,7 @@ public class PlayerExperienceVariable extends Variable<Integer>{
             return (int) (4.5*Math.pow(level,2) - 162.5*level + 2220.0);
         }
     }
+
     // Calculate player's current EXP amount
     public int getPlayerExp(Player player){
         int exp = 0;
