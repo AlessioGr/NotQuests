@@ -94,6 +94,10 @@ public class NumberExpression {
         }
     }
 
+    public final boolean calculateBooleanValue(final QuestPlayer questPlayer) {
+        return calculateValue(questPlayer) >= 0.98d;
+    }
+
     public final boolean isResultStatic() {
         return resultStatic;
     }
