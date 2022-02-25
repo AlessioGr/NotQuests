@@ -98,6 +98,9 @@ public class NumberExpression {
         return resultStatic;
     }
 
+    public final String getRawExpression() {
+        return expression;
+    }
 
     public final String getExpressionAndGenerateEnv(String expressions) {
         boolean foundAVariable = false;

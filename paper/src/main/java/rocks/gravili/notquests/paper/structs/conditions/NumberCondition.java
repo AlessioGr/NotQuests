@@ -26,12 +26,10 @@ import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import redempt.crunch.CompiledExpression;
-import redempt.crunch.Crunch;
-import redempt.crunch.functional.EvaluationEnvironment;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
+import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
 import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
@@ -44,40 +42,13 @@ public class NumberCondition extends Condition {
 
     private String variableName;
     private String mathOperator;
-    private String expression;
 
     private HashMap<String, String> additionalStringArguments;
     private HashMap<String, String> additionalNumberArguments;
     private HashMap<String, String> additionalBooleanArguments;
 
-    private CompiledExpression exp;
-    private final EvaluationEnvironment env = new EvaluationEnvironment();
-    private int variableCounter = 0;
-    Variable<?> cachedVariable = null;
-    private QuestPlayer questPlayerToEvaluate = null;
-
-    public final String getMathOperator(){
-        return mathOperator;
-    }
-    public void setMathOperator(final String mathOperator){
-        this.mathOperator = mathOperator;
-    }
-
-    public final String getVariableName(){
-        return variableName;
-    }
-
-    public void setVariableName(final String variableName){
-        this.variableName = variableName;
-    }
-
-    public void setExpression(final String expression){
-        this.expression = expression;
-    }
-
-    public final String getExpression(){
-        return expression;
-    }
+    private Variable<?> cachedVariable;
+    private NumberExpression numberExpression;
 
 
     public NumberCondition(NotQuests main) {
@@ -87,97 +58,95 @@ public class NumberCondition extends Condition {
         additionalBooleanArguments = new HashMap<>();
     }
 
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
+        for (String variableString : main.getVariablesManager().getVariableIdentifiers()) {
 
-
-    public String getExpressionAndGenerateEnv(String expressions){
-        boolean foundOne = false;
-        for(String variableString : main.getVariablesManager().getVariableIdentifiers()){
-            if(!expressions.contains(variableString)){
-                continue;
-            }
             Variable<?> variable = main.getVariablesManager().getVariableFromString(variableString);
-            if(variable == null || (variable.getVariableDataType() != VariableDataType.NUMBER && variable.getVariableDataType() != VariableDataType.BOOLEAN)){
-                main.getLogManager().debug("Null variable: <highlight>" + variableString);
+
+            if (variable == null || variable.getVariableDataType() != VariableDataType.NUMBER) {
+                continue;
+            }
+            if (main.getVariablesManager().alreadyFullRegisteredVariables.contains(variableString)) {
                 continue;
             }
 
-            //Extra Arguments:
-            if(expressions.contains(variableString + "(")){
-                foundOne = true;
-                String everythingAfterBracket = expressions.substring(expressions.indexOf(variableString+"(") +  variableString.length()+1 );
-                String insideBracket = everythingAfterBracket.substring(0, everythingAfterBracket.indexOf(")"));
-                main.getLogManager().debug("Inside Bracket: " + insideBracket);
-                String[] extraArguments = insideBracket.split(",");
-                for(String extraArgument : extraArguments){
-                    main.getLogManager().debug("Extra: " + extraArgument);
-                    if(extraArgument.startsWith("--")){
-                        variable.addAdditionalBooleanArgument(extraArgument.replace("--", ""), "true");
-                        main.getLogManager().debug("AddBoolFlag: " + extraArgument.replace("--", ""));
-                    }else{
-                        String[] split = extraArgument.split(":");
-                        String key = split[0];
-                        String value = split[1];
-                        for(StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()){
-                            if(stringArgument.getName().equalsIgnoreCase(key)){
-                                variable.addAdditionalStringArgument(key, value);
-                                main.getLogManager().debug("AddString: " + key + " val: " + value);
-                            }
+            main.getLogManager().info("Registering number condition: <highlight>" + variableString);
+
+
+            manager.command(main.getVariablesManager().registerVariableCommands(variableString, builder)
+                    .argument(StringArgument.<CommandSender>newBuilder("operator").withSuggestionsProvider((context, lastString) -> {
+                        ArrayList<String> completions = new ArrayList<>();
+                        completions.add("equals");
+                        completions.add("lessThan");
+                        completions.add("moreThan");
+                        completions.add("moreOrEqualThan");
+                        completions.add("lessOrEqualThan");
+
+                        final List<String> allArgs = context.getRawInput();
+                        main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Math Comparison Operator]", "[...]");
+
+                        return completions;
+                    }).build(), ArgumentDescription.of("Math operator."))
+                    .argument(NumberVariableValueArgument.newBuilder("amount", main, variable), ArgumentDescription.of("Amount"))
+                    .handler((context) -> {
+
+                        final String amountExpression = context.get("amount");
+
+
+                        final String mathOperator = context.get("operator");
+
+                        final NumberCondition numberCondition = new NumberCondition(main);
+                        numberCondition.setVariableName(variableString);
+
+                        numberCondition.setMathOperator(mathOperator);
+                        //numberCondition.setProgressNeeded(variable.getValue());
+
+                        //questPointsCondition.setDeductQuestPoints(deductQuestPoints);
+
+
+                        HashMap<String, String> additionalStringArguments = new HashMap<>();
+                        for (StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()) {
+                            additionalStringArguments.put(stringArgument.getName(), context.get(stringArgument.getName()));
                         }
-                        for(NumberVariableValueArgument<CommandSender> numberVariableValueArgument : variable.getRequiredNumbers()){
-                            if(numberVariableValueArgument.getName().equalsIgnoreCase(key)){
-                                variable.addAdditionalNumberArgument(key, value);
-                                main.getLogManager().debug("AddNumb: " + key + " val: " + value);
-                            }
+                        numberCondition.setAdditionalStringArguments(additionalStringArguments);
+
+                        HashMap<String, String> additionalNumberArguments = new HashMap<>();
+                        for (NumberVariableValueArgument<CommandSender> numberVariableValueArgument : variable.getRequiredNumbers()) {
+                            additionalNumberArguments.put(numberVariableValueArgument.getName(), context.get(numberVariableValueArgument.getName()));
                         }
-                        for(BooleanVariableValueArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
-                            if(booleanArgument.getName().equalsIgnoreCase(key)){
-                                variable.addAdditionalBooleanArgument(key, value);
-                                main.getLogManager().debug("AddBool: " + key + " val: " + value);
-                            }
+                        numberCondition.setAdditionalNumberArguments(additionalNumberArguments);
 
+                        HashMap<String, String> additionalBooleanArguments = new HashMap<>();
+                        for (BooleanVariableValueArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()) {
+                            additionalBooleanArguments.put(booleanArgument.getName(), context.get(booleanArgument.getName()));
                         }
-                    }
-                }
+                        for (CommandFlag<?> commandFlag : variable.getRequiredBooleanFlags()) {
+                            additionalBooleanArguments.put(commandFlag.getName(), context.flags().isPresent(commandFlag.getName()) ? "true" : "false");
+                        }
+                        numberCondition.setAdditionalBooleanArguments(additionalBooleanArguments);
 
-                variableString = variableString+"(" + insideBracket + ")"; //For the replacing with the actual number below
-            }
+                        numberCondition.initializeExpressionAndCachedVariable(amountExpression);
+
+                        main.getConditionsManager().addCondition(numberCondition, context);
+                    })
+            );
 
 
-            variableCounter++;
-            expressions = expressions.replace(variableString, "var" + variableCounter);
-            env.addLazyVariable("var" + variableCounter, () -> {
-                final Object valueObject = variable.getValue(questPlayerToEvaluate);
-                if(valueObject instanceof final Number n){
-                    return n.doubleValue();
-                }else if(valueObject instanceof final Boolean b) {
-                    return b ? 1 : 0;
-                }
-                return 0;
-            });
         }
-        if(!foundOne){
-            return expressions;
-        }
 
-        return getExpressionAndGenerateEnv(expressions);
+
     }
 
-    public void initializeExpressionAndCachedVariable(){
-        if(exp == null){
-            String expression = getExpressionAndGenerateEnv(getExpression());
-            exp = Crunch.compileExpression(expression, env);
+    public void initializeExpressionAndCachedVariable(final String expression) {
+        if (numberExpression == null) {
+            numberExpression = new NumberExpression(main, expression);
             cachedVariable = main.getVariablesManager().getVariableFromString(variableName);
         }
     }
 
-
     @Override
     public String checkInternally(final QuestPlayer questPlayer) {
-        this.questPlayerToEvaluate = questPlayer;
-        initializeExpressionAndCachedVariable();
-
-
-        if(cachedVariable == null){
+        if (cachedVariable == null) {
             return "<ERROR>Error: variable <highlight>" + variableName + "</highlight> not found. Report this to the Server owner.";
         }
 
@@ -193,7 +162,7 @@ public class NumberCondition extends Condition {
 
         Object value = cachedVariable.getValue(questPlayer);
 
-        final double numberRequirement = exp.evaluate();
+        final double numberRequirement = numberExpression.calculateValue(questPlayer);
 
         if(getMathOperator().equalsIgnoreCase("moreThan")){
             if(value instanceof Long l){
@@ -318,7 +287,7 @@ public class NumberCondition extends Condition {
     public void save(FileConfiguration configuration, final String initialPath) {
         configuration.set(initialPath + ".specifics.variableName", getVariableName());
         configuration.set(initialPath + ".specifics.operator", getMathOperator());
-        configuration.set(initialPath + ".specifics.expression", getExpression());
+        configuration.set(initialPath + ".specifics.expression", numberExpression.getRawExpression());
 
         for(final String key : additionalStringArguments.keySet()){
             configuration.set(initialPath + ".specifics.additionalStrings." + key, additionalStringArguments.get(key));
@@ -335,7 +304,7 @@ public class NumberCondition extends Condition {
     public void load(FileConfiguration configuration, String initialPath) {
         this.variableName = configuration.getString(initialPath + ".specifics.variableName");
         this.mathOperator = configuration.getString(initialPath + ".specifics.operator", "");
-        this.expression = configuration.getString(initialPath + ".specifics.expression", "");
+        initializeExpressionAndCachedVariable(configuration.getString(initialPath + ".specifics.expression", ""));
 
         final ConfigurationSection additionalStringsConfigurationSection = configuration.getConfigurationSection(initialPath + ".specifics.additionalStrings");
         if (additionalStringsConfigurationSection != null) {
@@ -358,7 +327,6 @@ public class NumberCondition extends Condition {
             }
         }
 
-        initializeExpressionAndCachedVariable();
     }
 
     @Override
@@ -366,7 +334,7 @@ public class NumberCondition extends Condition {
         this.variableName = arguments.get(0);
 
         this.mathOperator = arguments.get(1);
-        setExpression(arguments.get(2));
+        initializeExpressionAndCachedVariable(arguments.get(2));
 
         if(arguments.size() >= 4){
 
@@ -400,119 +368,54 @@ public class NumberCondition extends Condition {
                 }
             }
         }
-        initializeExpressionAndCachedVariable();
     }
 
     @Override
     public String getConditionDescriptionInternally(QuestPlayer questPlayer, Object... objects) {
         //description += "\n<GRAY>--- Will quest points be deducted?: No";
 
+        final double expressionValue = numberExpression.calculateValue(questPlayer);
+
         if (getMathOperator().equalsIgnoreCase("moreThan")) {
-            return "<GRAY>-- " + variableName + " needed: More than " + main.getVariablesManager().evaluateExpression(getExpression(), questPlayer, objects) + "</GRAY>";
+            return "<GRAY>-- " + variableName + " needed: More than " + expressionValue + "</GRAY>";
         } else if (getMathOperator().equalsIgnoreCase("moreOrEqualThan")) {
-            return "<GRAY>-- " + variableName + " needed: More or equal than " + main.getVariablesManager().evaluateExpression(getExpression(), questPlayer, objects) + "</GRAY>";
+            return "<GRAY>-- " + variableName + " needed: More or equal than " + expressionValue + "</GRAY>";
         } else if (getMathOperator().equalsIgnoreCase("lessThan")) {
-            return "<GRAY>-- " + variableName + " needed: Less than " + main.getVariablesManager().evaluateExpression(getExpression(), questPlayer, objects) + "</GRAY>";
+            return "<GRAY>-- " + variableName + " needed: Less than " + expressionValue + "</GRAY>";
         } else if (getMathOperator().equalsIgnoreCase("lessOrEqualThan")) {
-            return "<GRAY>-- " + variableName + " needed: Less or equal than" + main.getVariablesManager().evaluateExpression(getExpression(), questPlayer, objects) + "</GRAY>";
-        }else if(getMathOperator().equalsIgnoreCase("equals")){
-            return "<GRAY>-- " + variableName + " needed: Exactly " + main.getVariablesManager().evaluateExpression(getExpression(), questPlayer, objects) + "</GRAY>";
+            return "<GRAY>-- " + variableName + " needed: Less or equal than" + expressionValue + "</GRAY>";
+        } else if (getMathOperator().equalsIgnoreCase("equals")) {
+            return "<GRAY>-- " + variableName + " needed: Exactly " + expressionValue + "</GRAY>";
         }
 
-        return "<GRAY>-- " + variableName + " needed: " + main.getVariablesManager().evaluateExpression(getExpression(), questPlayer, objects) + "</GRAY>";
-    }
-
-
-
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
-        for(String variableString : main.getVariablesManager().getVariableIdentifiers()){
-
-            Variable<?> variable = main.getVariablesManager().getVariableFromString(variableString);
-
-            if(variable == null || variable.getVariableDataType() != VariableDataType.NUMBER){
-                continue;
-            }
-            if(main.getVariablesManager().alreadyFullRegisteredVariables.contains(variableString)){
-                continue;
-            }
-
-            main.getLogManager().info("Registering number condition: <highlight>" + variableString);
-
-
-            manager.command(main.getVariablesManager().registerVariableCommands(variableString, builder)
-                    .argument(StringArgument.<CommandSender>newBuilder("operator").withSuggestionsProvider((context, lastString) -> {
-                        ArrayList<String> completions = new ArrayList<>();
-                        completions.add("equals");
-                        completions.add("lessThan");
-                        completions.add("moreThan");
-                        completions.add("moreOrEqualThan");
-                        completions.add("lessOrEqualThan");
-
-                        final List<String> allArgs = context.getRawInput();
-                        main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Math Comparison Operator]", "[...]");
-
-                        return completions;
-                    }).build(), ArgumentDescription.of("Math operator."))
-                    .argument(NumberVariableValueArgument.newBuilder("amount", main, variable), ArgumentDescription.of("Amount"))
-                    .handler((context) -> {
-
-                        final String amountExpression = context.get("amount");
-
-
-                        final String mathOperator = context.get("operator");
-
-                        NumberCondition numberCondition = new NumberCondition(main);
-                        numberCondition.setVariableName(variableString);
-
-                        numberCondition.setMathOperator(mathOperator);
-                        //numberCondition.setProgressNeeded(variable.getValue());
-
-                        numberCondition.setExpression(amountExpression);
-                        //questPointsCondition.setDeductQuestPoints(deductQuestPoints);
-
-
-                        HashMap<String, String> additionalStringArguments = new HashMap<>();
-                        for(StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()){
-                            additionalStringArguments.put(stringArgument.getName(), context.get(stringArgument.getName()));
-                        }
-                        numberCondition.setAdditionalStringArguments(additionalStringArguments);
-
-                        HashMap<String, String> additionalNumberArguments = new HashMap<>();
-                        for(NumberVariableValueArgument<CommandSender> numberVariableValueArgument : variable.getRequiredNumbers()){
-                            additionalNumberArguments.put(numberVariableValueArgument.getName(), context.get(numberVariableValueArgument.getName()));
-                        }
-                        numberCondition.setAdditionalNumberArguments(additionalNumberArguments);
-
-                        HashMap<String, String> additionalBooleanArguments = new HashMap<>();
-                        for(BooleanVariableValueArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
-                            additionalBooleanArguments.put(booleanArgument.getName(), context.get(booleanArgument.getName()));
-                        }
-                        for(CommandFlag<?> commandFlag : variable.getRequiredBooleanFlags()){
-                            additionalBooleanArguments.put(commandFlag.getName(), context.flags().isPresent(commandFlag.getName()) ? "true" : "false");
-                        }
-                        numberCondition.setAdditionalBooleanArguments(additionalBooleanArguments);
-
-                        numberCondition.initializeExpressionAndCachedVariable();
-
-                        main.getConditionsManager().addCondition(numberCondition, context);
-                    })
-            );
-
-
-        }
-
-
+        return "<GRAY>-- " + variableName + " needed: " + numberExpression.calculateValue(questPlayer) + "</GRAY>";
     }
 
     private void setAdditionalStringArguments(HashMap<String, String> additionalStringArguments) {
         this.additionalStringArguments = additionalStringArguments;
     }
+
     private void setAdditionalNumberArguments(HashMap<String, String> additionalNumberArguments) {
         this.additionalNumberArguments = additionalNumberArguments;
     }
+
     private void setAdditionalBooleanArguments(HashMap<String, String> additionalBooleanArguments) {
         this.additionalBooleanArguments = additionalBooleanArguments;
     }
 
+    public final String getMathOperator() {
+        return mathOperator;
+    }
 
+    public void setMathOperator(final String mathOperator) {
+        this.mathOperator = mathOperator;
+    }
+
+    public final String getVariableName() {
+        return variableName;
+    }
+
+    public void setVariableName(final String variableName) {
+        this.variableName = variableName;
+    }
 }
