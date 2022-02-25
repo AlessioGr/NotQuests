@@ -58,6 +58,13 @@ public class NumberCondition extends Condition {
         additionalBooleanArguments = new HashMap<>();
     }
 
+    public void initializeExpressionAndCachedVariable(final String expression) {
+        if (numberExpression == null) {
+            numberExpression = new NumberExpression(main, expression);
+            cachedVariable = main.getVariablesManager().getVariableFromString(variableName);
+        }
+    }
+
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
         for (String variableString : main.getVariablesManager().getVariableIdentifiers()) {
 
@@ -135,13 +142,6 @@ public class NumberCondition extends Condition {
         }
 
 
-    }
-
-    public void initializeExpressionAndCachedVariable(final String expression) {
-        if (numberExpression == null) {
-            numberExpression = new NumberExpression(main, expression);
-            cachedVariable = main.getVariablesManager().getVariableFromString(variableName);
-        }
     }
 
     @Override

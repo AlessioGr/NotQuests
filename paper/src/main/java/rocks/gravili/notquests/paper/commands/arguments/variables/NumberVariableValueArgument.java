@@ -31,6 +31,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
 import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
@@ -171,11 +172,13 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Str
             final String input = inputQueue.peek();
             inputQueue.remove();
 
-            if(context.getSender() instanceof Player player){
-                try{
-                    main.getVariablesManager().evaluateExpression(input, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()));
-                }catch (Exception e){
-                    if(main.getConfiguration().isDebug()){
+            final NumberExpression numberExpression = new NumberExpression(main, input);
+
+            if (context.getSender() instanceof Player player) {
+                try {
+                    numberExpression.calculateValue(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()));
+                } catch (Exception e) {
+                    if (main.getConfiguration().isDebug()) {
                         e.printStackTrace();
                     }
                     return ArgumentParseResult.failure(new IllegalArgumentException("Invalid Expression: " + input + ". Error: " + e.toString()));

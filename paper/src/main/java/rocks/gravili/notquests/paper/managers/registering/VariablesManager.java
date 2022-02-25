@@ -30,7 +30,6 @@ import redempt.crunch.functional.EvaluationEnvironment;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
-import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.*;
 import rocks.gravili.notquests.paper.structs.variables.hooks.*;
 import rocks.gravili.notquests.paper.structs.variables.tags.*;
@@ -229,114 +228,5 @@ public class VariablesManager {
         }catch (Exception e){
             return null;
         }
-    }
-
-
-    public double evaluateExpression(String expression, QuestPlayer questPlayer, final Object... objects) {
-        if (expression == null) {
-            main.getLogManager().warn("Error: Tried to evaluate null expression");
-            return 0;
-        }
-        expression = evaluateExpressionVariables(expression, questPlayer, objects);
-
-        main.getLogManager().debug("To evaluate: <highlight>" + expression);
-
-        CompiledExpression exp = Crunch.compileExpression(expression);
-
-
-        return exp.evaluate();
-    }
-
-
-    public String evaluateExpressionVariables(String expression, final QuestPlayer questPlayer, final Object... objects) {
-        boolean foundOne = false;
-        for (String variableString : main.getVariablesManager().getVariableIdentifiers()) {
-            if (!expression.contains(variableString)) {
-                continue;
-            }
-            Variable<?> variable = main.getVariablesManager().getVariableFromString(variableString);
-            if (variable == null || (variable.getVariableDataType() != VariableDataType.NUMBER && variable.getVariableDataType() != VariableDataType.BOOLEAN)) {
-                main.getLogManager().debug("Null variable: <highlight>" + variableString);
-                continue;
-            }
-
-            //Extra Arguments:
-            if(expression.contains(variableString + "(")){
-                foundOne = true;
-                String everythingAfterBracket = expression.substring(expression.indexOf(variableString+"(") +  variableString.length()+1 );
-                String insideBracket = everythingAfterBracket.substring(0, everythingAfterBracket.indexOf(")"));
-                main.getLogManager().debug("Inside Bracket: " + insideBracket);
-                String[] extraArguments = insideBracket.split(",");
-                for(String extraArgument : extraArguments){
-                    main.getLogManager().debug("Extra: " + extraArgument);
-                    if(extraArgument.startsWith("--")){
-                        variable.addAdditionalBooleanArgument(extraArgument.replace("--", ""), "true");
-                        main.getLogManager().debug("AddBoolFlag: " + extraArgument.replace("--", ""));
-                    }else{
-                        String[] split = extraArgument.split(":");
-                        String key = split[0];
-                        String value = split[1];
-                        for(StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()){
-                            if(stringArgument.getName().equalsIgnoreCase(key)){
-                                variable.addAdditionalStringArgument(key, value);
-                                main.getLogManager().debug("AddString: " + key + " val: " + value);
-                            }
-                        }
-                        for(NumberVariableValueArgument<CommandSender> numberVariableValueArgument : variable.getRequiredNumbers()){
-                            if(numberVariableValueArgument.getName().equalsIgnoreCase(key)){
-                                variable.addAdditionalNumberArgument(key, value);
-                                main.getLogManager().debug("AddNumb: " + key + " val: " + value);
-                                main.getLogManager().debug("Val of " + key + ": " + variable.getAdditionalNumberArguments().get(key));
-                                main.getLogManager().debug("addnumbargs string: " + variable.getAdditionalNumberArguments().toString());
-
-
-                            }
-                        }
-                        for(BooleanVariableValueArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
-                            if(booleanArgument.getName().equalsIgnoreCase(key)){
-                                variable.addAdditionalBooleanArgument(key, value);
-                                main.getLogManager().debug("AddBool: " + key + " val: " + value);
-                            }
-
-                        }
-                    }
-                }
-                main.getLogManager().debug("Putting together...");
-                main.getLogManager().debug("VarString old: " + variableString);
-
-                variableString = variableString+"(" + insideBracket + ")"; //For the replacing with the actual number below
-
-                main.getLogManager().debug("VarString new: " + variableString);
-
-            }
-
-            main.getLogManager().debug("Getting valueObject for variable " + variable.getVariableType() + "...");
-
-            Object valueObject = variable.getValue(questPlayer, objects);
-            main.getLogManager().debug("Got valueObject for variable " + variable.getVariableType());
-
-            if(valueObject != null){
-                main.getLogManager().debug("Old expression " + expression  );
-                if(valueObject instanceof Number n){
-                    expression = expression.replace(variableString, ""+n.doubleValue());
-                }else if(valueObject instanceof Boolean b) {
-                    expression = expression.replace(variableString, ""+ (b ? 1 : 0) );
-
-                }else{
-                    main.getLogManager().debug("Wrong valueObject for " + variableString  );
-                }
-                main.getLogManager().debug("New expression " + expression );
-            }else{
-                main.getLogManager().debug("Null valueObject for " + variableString +"." );
-            }
-
-
-        }
-        if(!foundOne){
-            return expression;
-        }
-
-
-        return evaluateExpressionVariables(expression, questPlayer, objects);
     }
 }
