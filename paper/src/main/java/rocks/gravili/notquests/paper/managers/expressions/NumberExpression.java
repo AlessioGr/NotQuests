@@ -30,6 +30,13 @@ import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
 import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
 
+/**
+ * The NumberExpression generates a Compiled Expression based on an Expression String, which supports NotQuests variables.
+ * The expression is compiled the NumberExpression object is created only once, and potential static results are chaches.
+ * This ensures the highest performance - especially during runtime - in exchange for slightly slower load times.
+ * <p>
+ * //TODO: Support static/cached results for static/final variables which won't change (if there are such variables). Because right now, any present variable will make result not static. Such variables are very rare though.
+ */
 public class NumberExpression {
     private final NotQuests main;
 
@@ -85,6 +92,10 @@ public class NumberExpression {
         }
     }
 
+    /**
+     * @param questPlayer The QuestPlayer for which the variables present in the expression will be calculated
+     * @return The final result of the expression. It either evaluates the pre-compiled expression, or returns a static, cached result.
+     */
     public final double calculateValue(final QuestPlayer questPlayer) {
         if (isResultStatic()) {
             return cachedStaticResult;
@@ -94,18 +105,33 @@ public class NumberExpression {
         }
     }
 
+    /**
+     * @param questPlayer The QuestPlayer for which the variables present in the expression will be calculated
+     * @return This returns true if the result of the calculateValue() double is bigger than 0.98. Otherwise, it returns false.
+     */
     public final boolean calculateBooleanValue(final QuestPlayer questPlayer) {
         return calculateValue(questPlayer) >= 0.98d;
     }
 
+    /**
+     * @return if the result of the number expression is static/final (meaning it can be cached, as it never changes).
+     * This is the case if, for example, the expression is a simple "1" or any math expression without any variables.
+     */
     public final boolean isResultStatic() {
         return resultStatic;
     }
 
+    /**
+     * @return the raw expression string which was used the create the Number Expression
+     */
     public final String getRawExpression() {
         return expression;
     }
 
+    /**
+     * @param expressions current state of the expression (either raw or partially processed by getExpressionAndGenerateEnv)
+     * @return replaced expression string with modified variable names which will be fed into the evaluationEnvironment
+     */
     public final String getExpressionAndGenerateEnv(String expressions) {
         boolean foundAVariable = false;
 
