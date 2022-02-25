@@ -21,6 +21,7 @@ package rocks.gravili.notquests.paper.placeholders;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.managers.tags.Tag;
 import rocks.gravili.notquests.paper.structs.*;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
@@ -345,11 +346,13 @@ public class QuestPlaceholders extends PlaceholderExpansion {
         if (identifier.startsWith("player_expression_")) {
             final String expression = identifier.replace("player_expression_", "");
 
-            return "" + main.getVariablesManager().evaluateExpression(expression, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()));
+            final NumberExpression numberExpression = new NumberExpression(main, expression);
+            return "" + numberExpression.calculateValue(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()));
         }else if (identifier.startsWith("player_rounded_expression_")) {
             final String expression = identifier.replace("player_rounded_expression_", "");
 
-            return "" + (int) Math.round(main.getVariablesManager().evaluateExpression(expression, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId())));
+            final NumberExpression numberExpression = new NumberExpression(main, expression);
+            return "" + (int) Math.round(numberExpression.calculateValue(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId())));
         }
 
 

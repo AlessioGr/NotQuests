@@ -34,6 +34,7 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.ItemStackListVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
+import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
 import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
@@ -49,17 +50,18 @@ public class ItemStackListCondition extends Condition {
     private ItemStack itemStack;
 
     private HashMap<String, String> additionalStringArguments;
-    private HashMap<String, String> additionalNumberArguments;
-    private HashMap<String, String> additionalBooleanArguments;
+    private HashMap<String, NumberExpression> additionalNumberArguments;
+    private HashMap<String, NumberExpression> additionalBooleanArguments;
 
-    public final String getOperator(){
+    public final String getOperator() {
         return operator;
     }
-    public void setOperator(final String operator){
+
+    public void setOperator(final String operator) {
         this.operator = operator;
     }
 
-    public final String getVariableName(){
+    public final String getVariableName() {
         return variableName;
     }
 
@@ -173,106 +175,6 @@ public class ItemStackListCondition extends Condition {
         return "";
     }
 
-    @Override
-    public void save(FileConfiguration configuration, final String initialPath) {
-        configuration.set(initialPath + ".specifics.variableName", getVariableName());
-        configuration.set(initialPath + ".specifics.operator", getOperator());
-        configuration.set(initialPath + ".specifics.itemStack", getItemStack());
-
-        for(final String key : additionalStringArguments.keySet()){
-            configuration.set(initialPath + ".specifics.additionalStrings." + key, additionalStringArguments.get(key));
-        }
-        for(final String key : additionalNumberArguments.keySet()){
-            configuration.set(initialPath + ".specifics.additionalNumbers." + key, additionalNumberArguments.get(key));
-        }
-        for(final String key : additionalBooleanArguments.keySet()){
-            configuration.set(initialPath + ".specifics.additionalBooleans." + key, additionalBooleanArguments.get(key));
-        }
-    }
-
-    @Override
-    public void load(FileConfiguration configuration, String initialPath) {
-        this.variableName = configuration.getString(initialPath + ".specifics.variableName");
-        this.operator = configuration.getString(initialPath + ".specifics.operator", "");
-        this.itemStack = configuration.getItemStack(initialPath + ".specifics.itemStack", null);
-
-        final ConfigurationSection additionalStringsConfigurationSection = configuration.getConfigurationSection(initialPath + ".specifics.additionalStrings");
-        if (additionalStringsConfigurationSection != null) {
-            for (String key : additionalStringsConfigurationSection.getKeys(false)) {
-                additionalStringArguments.put(key, configuration.getString(initialPath + ".specifics.additionalStrings." + key, ""));
-            }
-        }
-
-        final ConfigurationSection additionalIntegersConfigurationSection = configuration.getConfigurationSection(initialPath + ".specifics.additionalNumbers");
-        if (additionalIntegersConfigurationSection != null) {
-            for (String key : additionalIntegersConfigurationSection.getKeys(false)) {
-                additionalNumberArguments.put(key, configuration.getString(initialPath + ".specifics.additionalNumbers." + key, "0"));
-            }
-        }
-
-        final ConfigurationSection additionalBooleansConfigurationSection = configuration.getConfigurationSection(initialPath + ".specifics.additionalBooleans");
-        if (additionalBooleansConfigurationSection != null) {
-            for (String key : additionalBooleansConfigurationSection.getKeys(false)) {
-                additionalBooleanArguments.put(key, configuration.getBoolean(initialPath + ".specifics.additionalBooleans." + key, false) ? "true" : "false");
-            }
-        }
-    }
-
-    @Override
-    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
-        this.variableName = arguments.get(0);
-
-        this.operator = arguments.get(1);
-        setItemStack(new ItemStack(Material.valueOf(arguments.get(2)), Integer.parseInt(arguments.get(3))));
-
-        if(arguments.size() >= 5){
-
-            Variable<?> variable = main.getVariablesManager().getVariableFromString(variableName);
-            if(variable == null || !variable.isCanSetValue() || variable.getVariableDataType() != VariableDataType.ITEMSTACKLIST){
-                return;
-            }
-
-            int counter = 0;
-            int counterStrings = 0;
-            int counterNumbers = 0;
-            int counterBooleans = 0;
-            int counterBooleanFlags = 0;
-
-            for (String argument : arguments){
-                counter++;
-                if(counter >= 5){
-                    if(variable.getRequiredStrings().size() > counterStrings){
-                        additionalStringArguments.put(variable.getRequiredStrings().get(counter-5).getName(), argument);
-                        counterStrings++;
-                    } else if(variable.getRequiredNumbers().size() > counterNumbers){
-                        additionalNumberArguments.put(variable.getRequiredNumbers().get(counter-5).getName(), argument);
-                        counterNumbers++;
-                    } else if(variable.getRequiredBooleans().size()  > counterBooleans){
-                        additionalBooleanArguments.put(variable.getRequiredBooleans().get(counter-5).getName(), argument);
-                        counterBooleans++;
-                    } else if(variable.getRequiredBooleanFlags().size()  > counterBooleanFlags){
-                        additionalBooleanArguments.put(variable.getRequiredBooleanFlags().get(counter-5).getName(), argument);
-                        counterBooleanFlags++;
-                    }
-                }
-            }
-        }
-    }
-
-    @Override
-    public String getConditionDescriptionInternally(QuestPlayer questPlayer, Object... objects) {
-        //description += "\n<GRAY>--- Will quest points be deducted?: No";
-
-        if (getOperator().equalsIgnoreCase("equals")) {
-            return "<GRAY>-- " + variableName + " needs to be equal " + main.getMiniMessage().serialize(getItemStack().displayName()) + "</GRAY>";
-        } else if (getOperator().equalsIgnoreCase("contains")) {
-            return "<GRAY>-- " + variableName + " needs to be contain " + main.getMiniMessage().serialize(getItemStack().displayName()) + "</GRAY>";
-        }
-        return "<GRAY>Error: invalid expression.</GRAY>";
-    }
-
-
-
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
         for(String variableString : main.getVariablesManager().getVariableIdentifiers()){
 
@@ -341,18 +243,18 @@ public class ItemStackListCondition extends Condition {
                         }
                         listCondition.setAdditionalStringArguments(additionalStringArguments);
 
-                        HashMap<String, String> additionalNumberArguments = new HashMap<>();
+                        HashMap<String, NumberExpression> additionalNumberArguments = new HashMap<>();
                         for(NumberVariableValueArgument<CommandSender> numberVariableValueArgument : variable.getRequiredNumbers()){
-                            additionalNumberArguments.put(numberVariableValueArgument.getName(), context.get(numberVariableValueArgument.getName()));
+                            additionalNumberArguments.put(numberVariableValueArgument.getName(), new NumberExpression(main, context.get(numberVariableValueArgument.getName())));
                         }
                         listCondition.setAdditionalNumberArguments(additionalNumberArguments);
 
-                        HashMap<String, String> additionalBooleanArguments = new HashMap<>();
+                        HashMap<String, NumberExpression> additionalBooleanArguments = new HashMap<>();
                         for(BooleanVariableValueArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
-                            additionalBooleanArguments.put(booleanArgument.getName(), context.get(booleanArgument.getName()));
+                            additionalBooleanArguments.put(booleanArgument.getName(), new NumberExpression(main, context.get(booleanArgument.getName())));
                         }
                         for(CommandFlag<?> commandFlag : variable.getRequiredBooleanFlags()){
-                            additionalBooleanArguments.put(commandFlag.getName(), context.flags().isPresent(commandFlag.getName()) ? "true" : "false");
+                            additionalBooleanArguments.put(commandFlag.getName(), context.flags().isPresent(commandFlag.getName()) ? NumberExpression.ofStatic(main, 1) : NumberExpression.ofStatic(main, 0));
                         }
                         listCondition.setAdditionalBooleanArguments(additionalBooleanArguments);
 
@@ -366,13 +268,113 @@ public class ItemStackListCondition extends Condition {
 
     }
 
+    @Override
+    public void save(FileConfiguration configuration, final String initialPath) {
+        configuration.set(initialPath + ".specifics.variableName", getVariableName());
+        configuration.set(initialPath + ".specifics.operator", getOperator());
+        configuration.set(initialPath + ".specifics.itemStack", getItemStack());
+
+        for (final String key : additionalStringArguments.keySet()) {
+            configuration.set(initialPath + ".specifics.additionalStrings." + key, additionalStringArguments.get(key));
+        }
+        for (final String key : additionalNumberArguments.keySet()) {
+            configuration.set(initialPath + ".specifics.additionalNumbers." + key, additionalNumberArguments.get(key).getRawExpression());
+        }
+        for (final String key : additionalBooleanArguments.keySet()) {
+            configuration.set(initialPath + ".specifics.additionalBooleans." + key, additionalBooleanArguments.get(key).getRawExpression());
+        }
+    }
+
+    @Override
+    public void load(FileConfiguration configuration, String initialPath) {
+        this.variableName = configuration.getString(initialPath + ".specifics.variableName");
+        this.operator = configuration.getString(initialPath + ".specifics.operator", "");
+        this.itemStack = configuration.getItemStack(initialPath + ".specifics.itemStack", null);
+
+        final ConfigurationSection additionalStringsConfigurationSection = configuration.getConfigurationSection(initialPath + ".specifics.additionalStrings");
+        if (additionalStringsConfigurationSection != null) {
+            for (String key : additionalStringsConfigurationSection.getKeys(false)) {
+                additionalStringArguments.put(key, configuration.getString(initialPath + ".specifics.additionalStrings." + key, ""));
+            }
+        }
+
+        final ConfigurationSection additionalIntegersConfigurationSection = configuration.getConfigurationSection(initialPath + ".specifics.additionalNumbers");
+        if (additionalIntegersConfigurationSection != null) {
+            for (String key : additionalIntegersConfigurationSection.getKeys(false)) {
+                additionalNumberArguments.put(key, new NumberExpression(main, configuration.getString(initialPath + ".specifics.additionalNumbers." + key, "0")));
+            }
+        }
+
+        final ConfigurationSection additionalBooleansConfigurationSection = configuration.getConfigurationSection(initialPath + ".specifics.additionalBooleans");
+        if (additionalBooleansConfigurationSection != null) {
+            for (String key : additionalBooleansConfigurationSection.getKeys(false)) {
+                additionalBooleanArguments.put(key, new NumberExpression(main, configuration.getString(initialPath + ".specifics.additionalBooleans." + key, "false")));
+            }
+        }
+    }
+
+    @Override
+    public String getConditionDescriptionInternally(QuestPlayer questPlayer, Object... objects) {
+        //description += "\n<GRAY>--- Will quest points be deducted?: No";
+
+        if (getOperator().equalsIgnoreCase("equals")) {
+            return "<GRAY>-- " + variableName + " needs to be equal " + main.getMiniMessage().serialize(getItemStack().displayName()) + "</GRAY>";
+        } else if (getOperator().equalsIgnoreCase("contains")) {
+            return "<GRAY>-- " + variableName + " needs to be contain " + main.getMiniMessage().serialize(getItemStack().displayName()) + "</GRAY>";
+        }
+        return "<GRAY>Error: invalid expression.</GRAY>";
+    }
+
+    @Override
+    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+        this.variableName = arguments.get(0);
+
+        this.operator = arguments.get(1);
+        setItemStack(new ItemStack(Material.valueOf(arguments.get(2)), Integer.parseInt(arguments.get(3))));
+
+        if (arguments.size() >= 5) {
+
+            Variable<?> variable = main.getVariablesManager().getVariableFromString(variableName);
+            if (variable == null || !variable.isCanSetValue() || variable.getVariableDataType() != VariableDataType.ITEMSTACKLIST) {
+                return;
+            }
+
+            int counter = 0;
+            int counterStrings = 0;
+            int counterNumbers = 0;
+            int counterBooleans = 0;
+            int counterBooleanFlags = 0;
+
+            for (String argument : arguments) {
+                counter++;
+                if (counter >= 5) {
+                    if (variable.getRequiredStrings().size() > counterStrings) {
+                        additionalStringArguments.put(variable.getRequiredStrings().get(counter - 5).getName(), argument);
+                        counterStrings++;
+                    } else if (variable.getRequiredNumbers().size() > counterNumbers) {
+                        additionalNumberArguments.put(variable.getRequiredNumbers().get(counter - 5).getName(), new NumberExpression(main, argument));
+                        counterNumbers++;
+                    } else if (variable.getRequiredBooleans().size() > counterBooleans) {
+                        additionalBooleanArguments.put(variable.getRequiredBooleans().get(counter - 5).getName(), new NumberExpression(main, argument));
+                        counterBooleans++;
+                    } else if (variable.getRequiredBooleanFlags().size() > counterBooleanFlags) {
+                        additionalBooleanArguments.put(variable.getRequiredBooleanFlags().get(counter - 5).getName(), new NumberExpression(main, argument));
+                        counterBooleanFlags++;
+                    }
+                }
+            }
+        }
+    }
+
     private void setAdditionalStringArguments(HashMap<String, String> additionalStringArguments) {
         this.additionalStringArguments = additionalStringArguments;
     }
-    private void setAdditionalNumberArguments(HashMap<String, String> additionalNumberArguments) {
+
+    private void setAdditionalNumberArguments(HashMap<String, NumberExpression> additionalNumberArguments) {
         this.additionalNumberArguments = additionalNumberArguments;
     }
-    private void setAdditionalBooleanArguments(HashMap<String, String> additionalBooleanArguments) {
+
+    private void setAdditionalBooleanArguments(HashMap<String, NumberExpression> additionalBooleanArguments) {
         this.additionalBooleanArguments = additionalBooleanArguments;
     }
 

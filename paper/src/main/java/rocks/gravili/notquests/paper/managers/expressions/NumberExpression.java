@@ -92,6 +92,21 @@ public class NumberExpression {
         }
     }
 
+    private NumberExpression(final NotQuests main, final double staticValue) {
+        this.main = main;
+        this.expression = "" + staticValue;
+
+        cachedStaticResult = staticValue;
+        resultStatic = true;
+
+        compiledExpression = null;
+    }
+
+    public static NumberExpression ofStatic(final NotQuests main, final double staticValue) {
+        return new NumberExpression(main, staticValue);
+    }
+
+
     /**
      * @param questPlayer The QuestPlayer for which the variables present in the expression will be calculated
      * @return The final result of the expression. It either evaluates the pre-compiled expression, or returns a static, cached result.
@@ -155,7 +170,7 @@ public class NumberExpression {
                 for (final String extraArgument : extraArguments) {
                     main.getLogManager().debug("Extra: " + extraArgument);
                     if (extraArgument.startsWith("--")) {
-                        variable.addAdditionalBooleanArgument(extraArgument.replace("--", ""), "true");
+                        variable.addAdditionalBooleanArgument(extraArgument.replace("--", ""), new NumberExpression(main, "true"));
                         main.getLogManager().debug("AddBoolFlag: " + extraArgument.replace("--", ""));
                     } else {
                         final String[] split = extraArgument.split(":");
@@ -169,13 +184,13 @@ public class NumberExpression {
                         }
                         for (final NumberVariableValueArgument<CommandSender> numberVariableValueArgument : variable.getRequiredNumbers()) {
                             if (numberVariableValueArgument.getName().equalsIgnoreCase(key)) {
-                                variable.addAdditionalNumberArgument(key, value);
+                                variable.addAdditionalNumberArgument(key, new NumberExpression(main, value));
                                 main.getLogManager().debug("AddNumb: " + key + " val: " + value);
                             }
                         }
                         for (final BooleanVariableValueArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()) {
                             if (booleanArgument.getName().equalsIgnoreCase(key)) {
-                                variable.addAdditionalBooleanArgument(key, value);
+                                variable.addAdditionalBooleanArgument(key, new NumberExpression(main, value));
                                 main.getLogManager().debug("AddBool: " + key + " val: " + value);
                             }
 

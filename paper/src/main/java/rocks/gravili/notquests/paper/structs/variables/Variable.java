@@ -25,6 +25,7 @@ import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
+import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -47,8 +48,8 @@ public abstract class Variable<T> {
     private final ArrayList<String> getOnlyRequiredValues = new ArrayList<>(); //TODO: Implement
 
     private HashMap<String, String> additionalStringArguments;
-    private HashMap<String, String> additionalNumberArguments; //Second string is an expression
-    private HashMap<String, String> additionalBooleanArguments;
+    private HashMap<String, NumberExpression> additionalNumberArguments;
+    private HashMap<String, NumberExpression> additionalBooleanArguments;
 
     private boolean canSetValue = false;
 
@@ -67,16 +68,20 @@ public abstract class Variable<T> {
         return additionalStringArguments;
     }
 
-    public final HashMap<String, String> getAdditionalBooleanArguments() {
+    public final HashMap<String, NumberExpression> getAdditionalBooleanArguments() {
         return additionalBooleanArguments;
     }
 
+    public void setAdditionalBooleanArguments(HashMap<String, NumberExpression> additionalBooleanArguments) {
+        this.additionalBooleanArguments = additionalBooleanArguments;
+    }
 
-    public void addSetOnlyRequiredValue(final String value){
+
+    public void addSetOnlyRequiredValue(final String value) {
         setOnlyRequiredValues.add(value);
     }
 
-    public void addGetOnlyRequiredValue(final String value){
+    public void addGetOnlyRequiredValue(final String value) {
         getOnlyRequiredValues.add(value);
     }
 
@@ -157,22 +162,18 @@ public abstract class Variable<T> {
         return requiredBooleanFlags;
     }
 
+    public final HashMap<String, NumberExpression> getAdditionalNumberArguments() {
+        return additionalNumberArguments;
+    }
 
-    protected final String getRequiredStringValue(String key) {
+    public void setAdditionalNumberArguments(HashMap<String, NumberExpression> additionalNumberArguments) {
+        this.additionalNumberArguments = additionalNumberArguments;
+    }
+
+    protected final String getRequiredStringValue(final String key) {
         return additionalStringArguments.getOrDefault(key, "");
     }
 
-    protected final double getRequiredNumberValue(String key, QuestPlayer questPlayer) {
-        return main.getVariablesManager().evaluateExpression(additionalNumberArguments.get(key), questPlayer); //TODO: Improve performance by only creating the env / expression thingy once
-    }
-
-    protected final boolean getRequiredBooleanValue(String key, QuestPlayer questPlayer) {
-        return main.getVariablesManager().evaluateExpression(additionalBooleanArguments.get(key), questPlayer) >= 0.98d; //TODO: Improve performance by only creating the env / expression thingy once
-    }
-
-    public final HashMap<String, String> getAdditionalNumberArguments() {
-        return additionalNumberArguments;
-    }
 
     public abstract T getValue(final QuestPlayer questPlayer, final Object... objects);
 
@@ -240,23 +241,24 @@ public abstract class Variable<T> {
         this.additionalStringArguments = additionalStringArguments;
     }
 
-    public void setAdditionalNumberArguments(HashMap<String, String> additionalNumberArguments) {
-        this.additionalNumberArguments = additionalNumberArguments;
+    protected final double getRequiredNumberValue(final String key, final QuestPlayer questPlayer) {
+        return additionalNumberArguments.get(key).calculateValue(questPlayer);
     }
 
-    public void setAdditionalBooleanArguments(HashMap<String, String> additionalBooleanArguments) {
-        this.additionalBooleanArguments = additionalBooleanArguments;
+    protected final boolean getRequiredBooleanValue(final String key, final QuestPlayer questPlayer) {
+        return additionalBooleanArguments.get(key).calculateBooleanValue(questPlayer);
     }
 
-    public void addAdditionalBooleanArgument(String key, String value){
+    public void addAdditionalBooleanArgument(String key, NumberExpression value) {
         additionalBooleanArguments.put(key, value);
     }
 
-    public void addAdditionalStringArgument(String key, String value){
+    public void addAdditionalNumberArgument(String key, NumberExpression value) {
+        additionalNumberArguments.put(key, value);
+    }
+
+    public void addAdditionalStringArgument(String key, String value) {
         additionalStringArguments.put(key, value);
     }
 
-    public void addAdditionalNumberArgument(String key, String value){
-        additionalNumberArguments.put(key, value);
-    }
 }

@@ -45,8 +45,8 @@ public class NumberAction extends Action {
     private String mathOperator;
 
     private HashMap<String, String> additionalStringArguments;
-    private HashMap<String, String> additionalNumberArguments;
-    private HashMap<String, String> additionalBooleanArguments;
+    private HashMap<String, NumberExpression> additionalNumberArguments;
+    private HashMap<String, NumberExpression> additionalBooleanArguments;
 
 
     private Variable<?> cachedVariable;
@@ -78,12 +78,6 @@ public class NumberAction extends Action {
 
     private void setAdditionalStringArguments(HashMap<String, String> additionalStringArguments) {
         this.additionalStringArguments = additionalStringArguments;
-    }
-    private void setAdditionalNumberArguments(HashMap<String, String> additionalNumberArguments) {
-        this.additionalNumberArguments = additionalNumberArguments;
-    }
-    private void setAdditionalBooleanArguments(HashMap<String, String> additionalBooleanArguments) {
-        this.additionalBooleanArguments = additionalBooleanArguments;
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor rewardFor) {
@@ -134,22 +128,22 @@ public class NumberAction extends Action {
                         }
                         numberAction.setAdditionalStringArguments(additionalStringArguments);
 
-                        HashMap<String, String> additionalNumberArguments = new HashMap<>();
+                        HashMap<String, NumberExpression> additionalNumberArguments = new HashMap<>();
                         for(NumberVariableValueArgument<CommandSender> numberVariableValueArgument : variable.getRequiredNumbers()){
-                            additionalNumberArguments.put(numberVariableValueArgument.getName(), context.get(numberVariableValueArgument.getName()));
+                            additionalNumberArguments.put(numberVariableValueArgument.getName(), new NumberExpression(main, context.get(numberVariableValueArgument.getName())));
                         }
                         numberAction.setAdditionalNumberArguments(additionalNumberArguments);
 
-                        HashMap<String, String> additionalBooleanArguments = new HashMap<>();
+                        HashMap<String, NumberExpression> additionalBooleanArguments = new HashMap<>();
                         for(BooleanVariableValueArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
-                            additionalBooleanArguments.put(booleanArgument.getName(), context.get(booleanArgument.getName()));
+                            additionalBooleanArguments.put(booleanArgument.getName(), new NumberExpression(main, context.get(booleanArgument.getName())));
                         }
                         for(CommandFlag<?> commandFlag : variable.getRequiredBooleanFlags()){
-                            additionalBooleanArguments.put(commandFlag.getName(), context.flags().isPresent(commandFlag.getName()) ? "true" : "false");
+                            additionalBooleanArguments.put(commandFlag.getName(), context.flags().isPresent(commandFlag.getName()) ? NumberExpression.ofStatic(main, 1) : NumberExpression.ofStatic(main, 0));
                         }
                         numberAction.setAdditionalBooleanArguments(additionalBooleanArguments);
 
-                        numberAction.initializeExpressionAndCachedVariable(amountExpression);
+                        numberAction.initializeExpressionAndCachedVariable(amountExpression, variable.getVariableType());
 
                         main.getActionManager().addAction(numberAction, context);
 
@@ -158,7 +152,15 @@ public class NumberAction extends Action {
         }
     }
 
-    public void initializeExpressionAndCachedVariable(final String expression) {
+    private void setAdditionalNumberArguments(HashMap<String, NumberExpression> additionalNumberArguments) {
+        this.additionalNumberArguments = additionalNumberArguments;
+    }
+
+    private void setAdditionalBooleanArguments(HashMap<String, NumberExpression> additionalBooleanArguments) {
+        this.additionalBooleanArguments = additionalBooleanArguments;
+    }
+
+    public void initializeExpressionAndCachedVariable(final String expression, final String variableName) {
         if (numberExpression == null) {
             numberExpression = new NumberExpression(main, expression);
             cachedVariable = main.getVariablesManager().getVariableFromString(variableName);
@@ -249,10 +251,10 @@ public class NumberAction extends Action {
             configuration.set(initialPath + ".specifics.additionalStrings." + key, additionalStringArguments.get(key));
         }
         for(final String key : additionalNumberArguments.keySet()){
-            configuration.set(initialPath + ".specifics.additionalNumbers." + key, additionalNumberArguments.get(key));
+            configuration.set(initialPath + ".specifics.additionalNumbers." + key, additionalNumberArguments.get(key).getRawExpression());
         }
         for(final String key : additionalBooleanArguments.keySet()){
-            configuration.set(initialPath + ".specifics.additionalBooleans." + key, additionalBooleanArguments.get(key));
+            configuration.set(initialPath + ".specifics.additionalBooleans." + key, additionalBooleanArguments.get(key).getRawExpression());
         }
     }
 
@@ -262,7 +264,7 @@ public class NumberAction extends Action {
         this.variableName = configuration.getString(initialPath + ".specifics.variableName");
         this.mathOperator = configuration.getString(initialPath + ".specifics.operator", "");
 
-        initializeExpressionAndCachedVariable(configuration.getString(initialPath + ".specifics.expression", ""));
+        initializeExpressionAndCachedVariable(configuration.getString(initialPath + ".specifics.expression", ""), variableName);
 
         final ConfigurationSection additionalStringsConfigurationSection = configuration.getConfigurationSection(initialPath + ".specifics.additionalStrings");
         if (additionalStringsConfigurationSection != null) {
@@ -274,14 +276,14 @@ public class NumberAction extends Action {
         final ConfigurationSection additionalIntegersConfigurationSection = configuration.getConfigurationSection(initialPath + ".specifics.additionalNumbers");
         if (additionalIntegersConfigurationSection != null) {
             for (String key : additionalIntegersConfigurationSection.getKeys(false)) {
-                additionalNumberArguments.put(key, configuration.getString(initialPath + ".specifics.additionalNumbers." + key, "0"));
+                additionalNumberArguments.put(key, new NumberExpression(main, configuration.getString(initialPath + ".specifics.additionalNumbers." + key, "0")));
             }
         }
 
         final ConfigurationSection additionalBooleansConfigurationSection = configuration.getConfigurationSection(initialPath + ".specifics.additionalBooleans");
         if (additionalBooleansConfigurationSection != null) {
             for (String key : additionalBooleansConfigurationSection.getKeys(false)) {
-                additionalBooleanArguments.put(key, configuration.getBoolean(initialPath + ".specifics.additionalBooleans." + key, false) ? "true" : "false");
+                additionalBooleanArguments.put(key, new NumberExpression(main, configuration.getString(initialPath + ".specifics.additionalBooleans." + key, "false")));
             }
         }
     }
@@ -293,7 +295,7 @@ public class NumberAction extends Action {
 
         this.mathOperator = arguments.get(1);
 
-        initializeExpressionAndCachedVariable(arguments.get(2));
+        initializeExpressionAndCachedVariable(arguments.get(2), variableName);
 
         if (arguments.size() >= 4) {
 
@@ -315,13 +317,13 @@ public class NumberAction extends Action {
                         additionalStringArguments.put(variable.getRequiredStrings().get(counter-4).getName(), argument);
                         counterStrings++;
                     } else if(variable.getRequiredNumbers().size() > counterNumbers){
-                        additionalNumberArguments.put(variable.getRequiredNumbers().get(counter-4).getName(), argument);
+                        additionalNumberArguments.put(variable.getRequiredNumbers().get(counter - 4).getName(), new NumberExpression(main, argument));
                         counterNumbers++;
                     } else if(variable.getRequiredBooleans().size()  > counterBooleans){
-                        additionalBooleanArguments.put(variable.getRequiredBooleans().get(counter-4).getName(), argument);
+                        additionalBooleanArguments.put(variable.getRequiredBooleans().get(counter - 4).getName(), new NumberExpression(main, argument));
                         counterBooleans++;
                     } else if(variable.getRequiredBooleanFlags().size()  > counterBooleanFlags){
-                        additionalBooleanArguments.put(variable.getRequiredBooleanFlags().get(counter-4).getName(), argument);
+                        additionalBooleanArguments.put(variable.getRequiredBooleanFlags().get(counter - 4).getName(), new NumberExpression(main, argument));
                         counterBooleanFlags++;
                     }
                 }

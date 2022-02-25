@@ -30,6 +30,7 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.ListVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
+import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
 import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
@@ -46,15 +47,16 @@ public class ListAction extends Action {
     private String operator;
 
     private HashMap<String, String> additionalStringArguments;
-    private HashMap<String, String> additionalNumberArguments;
-    private HashMap<String, String> additionalBooleanArguments;
+    private HashMap<String, NumberExpression> additionalNumberArguments;
+    private HashMap<String, NumberExpression> additionalBooleanArguments;
 
     private String newValueExpression;
 
-    public final String getOperator(){
+    public final String getOperator() {
         return operator;
     }
-    public void setOperator(final String mathOperator){
+
+    public void setOperator(final String mathOperator) {
         this.operator = mathOperator;
     }
 
@@ -76,21 +78,6 @@ public class ListAction extends Action {
 
     private void setAdditionalStringArguments(HashMap<String, String> additionalStringArguments) {
         this.additionalStringArguments = additionalStringArguments;
-    }
-    private void setAdditionalNumberArguments(HashMap<String, String> additionalNumberArguments) {
-        this.additionalNumberArguments = additionalNumberArguments;
-    }
-    private void setAdditionalBooleanArguments(HashMap<String, String> additionalBooleanArguments) {
-        this.additionalBooleanArguments = additionalBooleanArguments;
-    }
-
-
-
-    public ListAction(final NotQuests main) {
-        super(main);
-        additionalStringArguments = new HashMap<>();
-        additionalNumberArguments = new HashMap<>();
-        additionalBooleanArguments = new HashMap<>();
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor rewardFor) {
@@ -138,18 +125,18 @@ public class ListAction extends Action {
                         }
                         listAction.setAdditionalStringArguments(additionalStringArguments);
 
-                        HashMap<String, String> additionalNumberArguments = new HashMap<>();
+                        HashMap<String, NumberExpression> additionalNumberArguments = new HashMap<>();
                         for(NumberVariableValueArgument<CommandSender> numberVariableValueArgument : variable.getRequiredNumbers()){
-                            additionalNumberArguments.put(numberVariableValueArgument.getName(), context.get(numberVariableValueArgument.getName()));
+                            additionalNumberArguments.put(numberVariableValueArgument.getName(), new NumberExpression(main, context.get(numberVariableValueArgument.getName())));
                         }
                         listAction.setAdditionalNumberArguments(additionalNumberArguments);
 
-                        HashMap<String, String> additionalBooleanArguments = new HashMap<>();
+                        HashMap<String, NumberExpression> additionalBooleanArguments = new HashMap<>();
                         for(BooleanVariableValueArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()){
-                            additionalBooleanArguments.put(booleanArgument.getName(), context.get(booleanArgument.getName()));
+                            additionalBooleanArguments.put(booleanArgument.getName(), new NumberExpression(main, context.get(booleanArgument.getName())));
                         }
                         for(CommandFlag<?> commandFlag : variable.getRequiredBooleanFlags()){
-                            additionalBooleanArguments.put(commandFlag.getName(), context.flags().isPresent(commandFlag.getName()) ? "true" : "false");
+                            additionalBooleanArguments.put(commandFlag.getName(), context.flags().isPresent(commandFlag.getName()) ? NumberExpression.ofStatic(main, 1) : NumberExpression.ofStatic(main, 0));
                         }
                         listAction.setAdditionalBooleanArguments(additionalBooleanArguments);
 
@@ -159,7 +146,23 @@ public class ListAction extends Action {
         }
     }
 
-    public final String[] evaluateExpression(final QuestPlayer questPlayer){
+    private void setAdditionalNumberArguments(HashMap<String, NumberExpression> additionalNumberArguments) {
+        this.additionalNumberArguments = additionalNumberArguments;
+    }
+
+
+    public ListAction(final NotQuests main) {
+        super(main);
+        additionalStringArguments = new HashMap<>();
+        additionalNumberArguments = new HashMap<>();
+        additionalBooleanArguments = new HashMap<>();
+    }
+
+    private void setAdditionalBooleanArguments(HashMap<String, NumberExpression> additionalBooleanArguments) {
+        this.additionalBooleanArguments = additionalBooleanArguments;
+    }
+
+    public final String[] evaluateExpression(final QuestPlayer questPlayer) {
         return getNewValueExpression().split(",");
     }
 
@@ -235,8 +238,6 @@ public class ListAction extends Action {
         return variableName + ": " + Arrays.toString(evaluateExpression(questPlayer));
     }
 
-
-
     @Override
     public void save(final FileConfiguration configuration, String initialPath) {
         configuration.set(initialPath + ".specifics.expression", getNewValueExpression());
@@ -248,10 +249,10 @@ public class ListAction extends Action {
             configuration.set(initialPath + ".specifics.additionalStrings." + key, additionalStringArguments.get(key));
         }
         for(final String key : additionalNumberArguments.keySet()){
-            configuration.set(initialPath + ".specifics.additionalNumbers." + key, additionalNumberArguments.get(key));
+            configuration.set(initialPath + ".specifics.additionalNumbers." + key, additionalNumberArguments.get(key).getRawExpression());
         }
         for(final String key : additionalBooleanArguments.keySet()){
-            configuration.set(initialPath + ".specifics.additionalBooleans." + key, additionalBooleanArguments.get(key));
+            configuration.set(initialPath + ".specifics.additionalBooleans." + key, additionalBooleanArguments.get(key).getClass());
         }
     }
 
@@ -273,14 +274,14 @@ public class ListAction extends Action {
         final ConfigurationSection additionalIntegersConfigurationSection = configuration.getConfigurationSection(initialPath + ".specifics.additionalNumbers");
         if (additionalIntegersConfigurationSection != null) {
             for (String key : additionalIntegersConfigurationSection.getKeys(false)) {
-                additionalNumberArguments.put(key, configuration.getString(initialPath + ".specifics.additionalNumbers." + key, "0"));
+                additionalNumberArguments.put(key, new NumberExpression(main, configuration.getString(initialPath + ".specifics.additionalNumbers." + key, "0")));
             }
         }
 
         final ConfigurationSection additionalBooleansConfigurationSection = configuration.getConfigurationSection(initialPath + ".specifics.additionalBooleans");
         if (additionalBooleansConfigurationSection != null) {
             for (String key : additionalBooleansConfigurationSection.getKeys(false)) {
-                additionalBooleanArguments.put(key, configuration.getBoolean(initialPath + ".specifics.additionalBooleans." + key, false) ? "true" : "false");
+                additionalBooleanArguments.put(key, new NumberExpression(main, configuration.getString(initialPath + ".specifics.additionalBooleans." + key, "false")));
             }
         }
     }
@@ -313,13 +314,13 @@ public class ListAction extends Action {
                         additionalStringArguments.put(variable.getRequiredStrings().get(counter-4).getName(), argument);
                         counterStrings++;
                     } else if(variable.getRequiredNumbers().size() > counterNumbers){
-                        additionalNumberArguments.put(variable.getRequiredNumbers().get(counter-4).getName(), argument);
+                        additionalNumberArguments.put(variable.getRequiredNumbers().get(counter - 4).getName(), new NumberExpression(main, argument));
                         counterNumbers++;
                     } else if(variable.getRequiredBooleans().size()  > counterBooleans){
-                        additionalBooleanArguments.put(variable.getRequiredBooleans().get(counter-4).getName(), argument);
+                        additionalBooleanArguments.put(variable.getRequiredBooleans().get(counter - 4).getName(), new NumberExpression(main, argument));
                         counterBooleans++;
                     } else if(variable.getRequiredBooleanFlags().size()  > counterBooleanFlags){
-                        additionalBooleanArguments.put(variable.getRequiredBooleanFlags().get(counter-4).getName(), argument);
+                        additionalBooleanArguments.put(variable.getRequiredBooleanFlags().get(counter - 4).getName(), new NumberExpression(main, argument));
                         counterBooleanFlags++;
                     }
                 }

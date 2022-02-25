@@ -36,6 +36,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.NotQuestColors;
+import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.structs.Quest;
 
 import java.io.File;
@@ -514,15 +515,15 @@ public class UtilManager {
     }
 
 
-    public final String applyPlaceholders(String message, Object... objects){
+    public final String applyPlaceholders(final String message, final Object... objects) {
         String toReturn = message;
 
         Quest quest = null;
         Player player = null;
-        for (Object object : objects) {
-            if(player == null && object instanceof Player foundPlayer){
+        for (final Object object : objects) {
+            if (player == null && object instanceof Player foundPlayer) {
                 player = foundPlayer;
-            }else if (quest == null && object instanceof Quest foundQuest) {
+            } else if (quest == null && object instanceof Quest foundQuest) {
                 quest = foundQuest;
             }
         }
@@ -540,18 +541,26 @@ public class UtilManager {
 
             //Now expressions {{expression}}
             if(toReturn.contains("}}")){
-                for(String split : toReturn.split("}}")){
-                    if(!split.contains("{{")){
+                for (final String split : toReturn.split("}}")) {
+                    if (!split.contains("{{")) {
                         continue;
                     }
-                    if(!split.contains("{{~")){
-                        int indexOfOpening = split.indexOf("{{");
-                        String expression = split.substring(indexOfOpening+2);
-                        toReturn = toReturn.replace("{{" + expression + "}}", "" + main.getVariablesManager().evaluateExpression(expression, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId())));
-                    }else{//round
-                        int indexOfOpening = split.indexOf("{{~");
-                        String expression = split.substring(indexOfOpening+3);
-                        toReturn = toReturn.replace("{{~" + expression + "}}", "" + (int) Math.round(main.getVariablesManager().evaluateExpression(expression, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()))));
+                    if (!split.contains("{{~")) {
+                        final int indexOfOpening = split.indexOf("{{");
+
+                        final String expression = split.substring(indexOfOpening + 2);
+                        final NumberExpression numberExpression = new NumberExpression(main, expression);
+                        final double calculatedExpression = numberExpression.calculateValue(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()));
+
+                        toReturn = toReturn.replace("{{" + expression + "}}", "" + calculatedExpression);
+                    }else {//round
+                        final int indexOfOpening = split.indexOf("{{~");
+
+                        final String expression = split.substring(indexOfOpening + 3);
+                        final NumberExpression numberExpression = new NumberExpression(main, expression);
+                        final double calculatedExpression = numberExpression.calculateValue(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()));
+
+                        toReturn = toReturn.replace("{{~" + expression + "}}", "" + (int) Math.round(calculatedExpression));
                     }
 
                 }

@@ -42,15 +42,8 @@ public class RandomNumberBetweenRangeVariable extends Variable<Integer>{
     public Integer getValue(QuestPlayer questPlayer, Object... objects) {
         final Random r = new Random();
 
-        main.getLogManager().debug("0");
-
-        main.getLogManager().debug("AddNumArgs get: " + getAdditionalNumberArguments().get("min"));
-
-        main.getLogManager().debug("reqnumbervalue: " + getRequiredNumberValue("min", questPlayer));
-
 
         int min = (int) Math.round(getRequiredNumberValue("min", questPlayer));
-        main.getLogManager().debug("1");
 
         int max = (int) Math.round(getRequiredNumberValue("max", questPlayer));
 
