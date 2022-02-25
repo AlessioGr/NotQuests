@@ -98,8 +98,10 @@ public class NumberExpression {
      */
     public final double calculateValue(final QuestPlayer questPlayer) {
         if (isResultStatic()) {
+            questPlayer.sendMessage("returning static result: " + cachedStaticResult);
             return cachedStaticResult;
         } else {
+            questPlayer.sendMessage("returning dynamic result. Vars: " + variableCounter);
             this.questPlayerToEvaluate = questPlayer;
             return compiledExpression.evaluate();
         }
