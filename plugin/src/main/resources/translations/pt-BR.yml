@@ -1,10 +1,9 @@
 ---
 chat:
-  wrong-command-usage: <error>Wrong command usage!
-  missing-permission: '<error>No permission! Required permission node: <highlight>%PERMISSION%'
-  too-many-arguments: <error>Too many arguments!
+  wrong-command-usage: Uso de comando errado!
+  missing-permission: 'Sem permissão! Permissão necessária'
+  too-many-arguments: Muitos argumentos!
   quest-successfully-accepted: |2
-
     <CENTER><main>[Quest Accepted]
     <CENTER><highlight><BOLD>%QUESTNAME%
     <EMPTY>
@@ -155,6 +154,16 @@ titles:
   quest-failed:
     title: <negative>Quest Failed
     subtitle: <highlight>%QUESTNAME%
+placeholders:
+  questcooldownleftformatted:
+    prefix: ''
+    minute: '1 minute'
+    minutes: '%MINUTES% minutes'
+    hour: '1 hour'
+    hours: '%HOURS% hours'
+    day: '1 day'
+    days: '%DAYS% days'
+    no-cooldown: ''
 gui:
   main:
     title: '                <highlight2>Quests'
