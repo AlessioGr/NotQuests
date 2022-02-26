@@ -18,6 +18,7 @@
 
 package rocks.gravili.notquests.paper.structs.variables;
 
+import cloud.commandframework.ArgumentDescription;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
@@ -27,6 +28,10 @@ public class QuestPointsVariable extends Variable<Long> {
     public QuestPointsVariable(NotQuests main) {
         super(main);
         setCanSetValue(true);
+        addRequiredBooleanFlag(
+                main.getCommandManager().getPaperCommandManager().flagBuilder("notifyPlayer")
+                        .withDescription(ArgumentDescription.of("Notifies the player for when their QuestPoints are changed/set")).build() //TODO: setOnlyRequiredValues once implemented
+        );
     }
 
     @Override
@@ -42,7 +47,7 @@ public class QuestPointsVariable extends Variable<Long> {
         if (questPlayer == null) {
             return false;
         }
-        questPlayer.setQuestPoints(newValue, false);
+        questPlayer.setQuestPoints(newValue, getRequiredBooleanValue("notifyPlayer", questPlayer));
         return true;
     }
 
