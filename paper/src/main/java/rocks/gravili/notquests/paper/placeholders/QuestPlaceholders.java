@@ -391,11 +391,7 @@ public class QuestPlaceholders extends PlaceholderExpansion {
             if (quest != null) {
                 final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
                 if (questPlayer != null) {
-                    for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-                        if (activeQuest.getQuest().equals(quest)) {
-                            return questPlayer.getCooldownFormatted(quest);
-                        }
-                    }
+                    return questPlayer.getCooldownFormatted(quest);
                 }
             }
             final String prefix = main.getLanguageManager().getString("placeholders.questcooldownleftformatted.prefix", player);
