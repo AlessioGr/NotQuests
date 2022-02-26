@@ -568,4 +568,6 @@ public class Quest {
         }
         return getTriggers().size()+1;
     }
+
+
 }

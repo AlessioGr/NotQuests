@@ -398,11 +398,14 @@ public class LanguageManager {
         final Map<String, String> internalPlaceholderReplacements = new HashMap<>(); //With this method probably being used simultaneously, we cannot just have 1 HashMap and clear it. It would get cleared while another thing is processing
 
 
-
         //main.getLogManager().severe("Initial: " + initialMessage);
 
         //internalPlaceholderReplacements.clear();
         internalPlaceholderReplacements.put("%QUESTPOINTS%", "0");
+
+        Quest foundQuest = null;
+        QuestPlayer foundQuestPlayer = null;
+
         for (Object internalPlaceholderObject : internalPlaceholderObjects) {
 
             //main.getLogManager().severe("Object: " + internalPlaceholderObject.toString());
@@ -416,6 +419,7 @@ public class LanguageManager {
                 //main.getLogManager().info("Applying Quest placeholders...");
                 internalPlaceholderReplacements.put("%QUESTNAME%", quest.getQuestFinalName());
                 internalPlaceholderReplacements.put("%QUESTDESCRIPTION%", quest.getQuestDescription());
+                foundQuest = quest;
             } else if (internalPlaceholderObject instanceof ActiveObjective activeObjective) {
 
                 //main.getLogManager().info("Applying ActiveObjective placeholders...");
@@ -437,13 +441,17 @@ public class LanguageManager {
             } else if (internalPlaceholderObject instanceof QuestPlayer questPlayer) {
                 //main.getLogManager().log(Level.INFO, "Applying QuestPlayer placeholders...");
                 internalPlaceholderReplacements.put("%QUESTPOINTS%", "" + questPlayer.getQuestPoints());
-            } else if(internalPlaceholderObject instanceof final Map providedInternalPlaceholderReplacements){
-                for(Object key : providedInternalPlaceholderReplacements.keySet()){
+                foundQuestPlayer = questPlayer;
+            } else if (internalPlaceholderObject instanceof final Map providedInternalPlaceholderReplacements) {
+                for (Object key : providedInternalPlaceholderReplacements.keySet()) {
                     internalPlaceholderReplacements.put((String) key, (String) providedInternalPlaceholderReplacements.get(key));
                 }
             }
 
+        }
 
+        if (foundQuest != null && foundQuestPlayer != null) {
+            internalPlaceholderReplacements.put("%QUESTCOOLDOWNLEFTFORMATTED%", foundQuestPlayer.getCooldownFormatted(foundQuest));
         }
 
         return main.getUtilManager().replaceFromMap(initialMessage, internalPlaceholderReplacements);

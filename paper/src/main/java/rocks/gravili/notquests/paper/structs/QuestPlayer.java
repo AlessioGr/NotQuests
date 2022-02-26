@@ -295,15 +295,71 @@ public class QuestPlayer {
 
     }
 
+    public final String getCooldownFormatted(final Quest quest) {
+
+        long mostRecentAcceptTime = 0;
+        for (CompletedQuest completedQuest : completedQuests) {
+            if (completedQuest.getQuest().equals(quest)) {
+                if (completedQuest.getTimeCompleted() > mostRecentAcceptTime) {
+                    mostRecentAcceptTime = completedQuest.getTimeCompleted();
+                }
+            }
+        }
+
+        final long acceptTimeDifference = System.currentTimeMillis() - mostRecentAcceptTime;
+        final long acceptTimeDifferenceMinutes = TimeUnit.MILLISECONDS.toMinutes(acceptTimeDifference);
+
+
+        final long timeToWaitInMinutes = quest.getAcceptCooldown() - acceptTimeDifferenceMinutes;
+        final double timeToWaitInHours = Math.round((timeToWaitInMinutes / 60f) * 10) / 10.0;
+        final double timeToWaitInDays = Math.round((timeToWaitInHours / 24f) * 10) / 10.0;
+
+        final String prefix = main.getLanguageManager().getString("placeholders.questcooldownleftformatted.prefix", this, quest);
+        //Cooldown:
+        if (acceptTimeDifferenceMinutes >= quest.getAcceptCooldown()) {
+            return prefix + main.getLanguageManager().getString("placeholders.questcooldownleftformatted.no-cooldown", this, quest);
+        } else {
+            if (timeToWaitInMinutes < 60) {
+                if (timeToWaitInMinutes == 1) {
+                    return prefix + main.getLanguageManager().getString("placeholders.questcooldownleftformatted.minute", this, quest);
+                } else {
+                    return prefix + main.getLanguageManager().getString("placeholders.questcooldownleftformatted.minutes", this, quest, Map.of(
+                            "%MINUTES%", "" + timeToWaitInMinutes
+                    ));
+
+                }
+            } else {
+                if (timeToWaitInHours < 24) {
+                    if (timeToWaitInHours == 1) {
+                        return prefix + main.getLanguageManager().getString("placeholders.questcooldownleftformatted.hour", this, quest);
+                    } else {
+                        return main.getLanguageManager().getString("placeholders.questcooldownleftformatted.hours", this, quest, Map.of(
+                                "%HOURS%", "" + timeToWaitInHours
+                        ));
+                    }
+                } else {
+                    if (timeToWaitInDays == 1) {
+                        return prefix + main.getLanguageManager().getString("placeholders.questcooldownleftformatted.day", this, quest);
+
+                    } else {
+                        return main.getLanguageManager().getString("placeholders.questcooldownleftformatted.days", this, quest, Map.of(
+                                "%DAYS%", "" + timeToWaitInDays
+                        ));
+                    }
+                }
+            }
+        }
+    }
+
     public String addActiveQuest(final ActiveQuest quest, final boolean triggerAcceptQuestTrigger, final boolean sendQuestInfo) {
-        if(main.getDataManager().isDisabled()){
+        if (main.getDataManager().isDisabled()) {
             return "Plugin is disabled due to misconfiguration - you currently cannot take any new quests anymore";
         }
 
         //Configuration Option: general.max-active-quests-per-player
         if (main.getConfiguration().getMaxActiveQuestsPerPlayer() != -1 && activeQuests.size() >= main.getConfiguration().getMaxActiveQuestsPerPlayer()) {
             return main.getLanguageManager().getString("chat.reached-max-active-quests-per-player-limit", getPlayer(), this, quest, Map.of(
-                    "%MAXACTIVEQUESTSPERPLAYER%", ""+main.getConfiguration().getMaxActiveQuestsPerPlayer()
+                    "%MAXACTIVEQUESTSPERPLAYER%", "" + main.getConfiguration().getMaxActiveQuestsPerPlayer()
             ));
         }
 
