@@ -28,6 +28,8 @@ The output file should be in the folder `plugin/build/libs/plugin-version.jar`
 
 ![Banner_Images](https://user-images.githubusercontent.com/70709113/133997397-fbe14d0b-22fe-4ede-98e2-4d7a2cbcb489.png)
 
+The images are all OLD and need to be updated:
+
 Quest Giver NPC:
 
 ![image](https://user-images.githubusercontent.com/70709113/131539574-ef73ddfb-1dcd-4ab8-a85c-9b38d2f95a8d.png)
