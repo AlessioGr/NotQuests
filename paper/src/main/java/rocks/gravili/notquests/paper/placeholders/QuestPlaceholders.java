@@ -240,7 +240,6 @@ public class QuestPlaceholders extends PlaceholderExpansion {
                 }
             }
             return "No";
-
         }
 
         if (identifier.startsWith("player_is_objective_unlocked_and_active") && identifier.contains("_from_active_quest_")) {
@@ -376,13 +375,31 @@ public class QuestPlaceholders extends PlaceholderExpansion {
                 if (questPlayer != null) {
                     Object tagValue = questPlayer.getTagValue(tagName);
                     if (tagValue != null) {
-                        return ""+tagValue;
+                        return "" + tagValue;
 
                     }
                 }
             }
             return "";
 
+        }
+
+        if (identifier.startsWith("player_quest_cooldown_left_formatted_")) {
+            final String questName = identifier.replace("player_quest_cooldown_left_formatted_", "");
+            final Quest quest = main.getQuestManager().getQuest(questName);
+
+            if (quest != null) {
+                final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                if (questPlayer != null) {
+                    for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+                        if (activeQuest.getQuest().equals(quest)) {
+                            return questPlayer.getCooldownFormatted(quest);
+                        }
+                    }
+                }
+            }
+            final String prefix = main.getLanguageManager().getString("placeholders.questcooldownleftformatted.prefix", player);
+            return prefix + main.getLanguageManager().getString("placeholders.questcooldownleftformatted.no-cooldown", player);
         }
 
 
