@@ -30,7 +30,7 @@ public class QuestPointsVariable extends Variable<Long> {
         setCanSetValue(true);
         addRequiredBooleanFlag(
                 main.getCommandManager().getPaperCommandManager().flagBuilder("notifyPlayer")
-                        .withDescription(ArgumentDescription.of("Notifies the player for when their QuestPoints are changed/set")).build() //TODO: setOnlyRequiredValues once implemented
+                        .withDescription(ArgumentDescription.of("Notifies the player for when their QuestPoints are changed or set")).build() //TODO: setOnlyRequiredValues once implemented
         );
     }
 
