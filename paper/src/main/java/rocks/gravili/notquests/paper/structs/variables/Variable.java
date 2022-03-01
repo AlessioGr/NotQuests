@@ -246,7 +246,12 @@ public abstract class Variable<T> {
     }
 
     protected final boolean getRequiredBooleanValue(final String key, final QuestPlayer questPlayer) {
-        return additionalBooleanArguments.get(key).calculateBooleanValue(questPlayer);
+        final NumberExpression numberExpression = additionalBooleanArguments.get(key);
+        if (numberExpression != null) {
+            return additionalBooleanArguments.get(key).calculateBooleanValue(questPlayer);
+        } else {
+            return false;
+        }
     }
 
     public void addAdditionalBooleanArgument(String key, NumberExpression value) {
