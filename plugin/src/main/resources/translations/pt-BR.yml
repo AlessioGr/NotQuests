@@ -170,7 +170,7 @@ gui:
         lore:
           - "<unimportant>Comece uma nova missão!"
           - ""
-          - "<veryUnimportant>Algumas Missões não podem ser
+          - "<veryUnimportant>Algumas Missões não podem ser"
           - "<veryUnimportant>começar assim."
         x: 0
         y: 1
