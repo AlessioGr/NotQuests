@@ -246,9 +246,9 @@ public abstract class Variable<T> {
     }
 
     protected final boolean getRequiredBooleanValue(final String key, final QuestPlayer questPlayer) {
-        final NumberExpression numberExpression = additionalBooleanArguments.get(key);
+        final NumberExpression numberExpression = additionalBooleanArguments.getOrDefault(key, null);
         if (numberExpression != null) {
-            return additionalBooleanArguments.get(key).calculateBooleanValue(questPlayer);
+            return numberExpression.calculateBooleanValue(questPlayer);
         } else {
             return false;
         }

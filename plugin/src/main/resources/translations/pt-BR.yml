@@ -155,16 +155,6 @@ titles:
   quest-failed:
     title: <negative>Missão falhou
     subtitle: <highlight>%QUESTNAME%
-placeholders:
-  questcooldownleftformatted:
-    prefix: ''
-    minute: '1 minute'
-    minutes: '%MINUTES% minutes'
-    hour: '1 hour'
-    hours: '%HOURS% hours'
-    day: '1 day'
-    days: '%DAYS% days'
-    no-cooldown: ''
 gui:
   main:
     title: '                <highlight2>Missões'
@@ -180,8 +170,8 @@ gui:
         lore:
           - "<unimportant>Comece uma nova missão!"
           - ""
-          - "<veryUnimportant>Algumas Missões não podem ser - \"<veryUnimportant>começar assim."
-          - "<veryUnimportant>started like this."
+          - "<veryUnimportant>Algumas Missões não podem ser"
+          - "<veryUnimportant>começar assim."
         x: 0
         y: 1
       abortquest:
