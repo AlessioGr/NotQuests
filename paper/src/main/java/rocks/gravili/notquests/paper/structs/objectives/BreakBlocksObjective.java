@@ -32,6 +32,7 @@ import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
+import java.util.Locale;
 import java.util.Map;
 
 
@@ -104,7 +105,7 @@ public class BreakBlocksObjective extends Objective {
     public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
         String translatedMaterialName;
         try {
-            translatedMaterialName = "<lang:" + Material.valueOf(getBlockToBreakMaterial()).translationKey() + ">";
+            translatedMaterialName = "<lang:" + Material.valueOf(getBlockToBreakMaterial().toUpperCase(Locale.ROOT)).translationKey() + ">";
         } catch (Exception ignored) {
             translatedMaterialName = getBlockToBreakMaterial();
         }

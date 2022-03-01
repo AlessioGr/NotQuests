@@ -89,7 +89,7 @@ public class ItemsManager {
 
                 Material material;
                 try{
-                    material = Material.valueOf(materialString);
+                    material = Material.valueOf(materialString.toUpperCase(Locale.ROOT));
                 }catch (Exception e){
                     main.getLogManager().warn("Loading of item " + itemIdentifier + " has been skipped, because the material cannot be found.");
                     continue;
@@ -150,7 +150,7 @@ public class ItemsManager {
     public final ItemStack getItemStack(final String name){
         ItemStack itemStack;
         try{
-            itemStack = new ItemStack(Material.valueOf(name));
+            itemStack = new ItemStack(Material.valueOf(name.toUpperCase(Locale.ROOT)));
         }catch (Exception ignored){
             itemStack = getItem(name).getItemStack();
         }

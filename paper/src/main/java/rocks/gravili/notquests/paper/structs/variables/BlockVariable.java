@@ -116,7 +116,7 @@ public class BlockVariable extends Variable<String>{
                 materialToBreak = Material.values()[rnd].name().toLowerCase(Locale.ROOT);
             }
         }
-        block.setType(Material.valueOf(materialToBreak));
+        block.setType(Material.valueOf(materialToBreak.toUpperCase(Locale.ROOT)));
 
 
         return true;

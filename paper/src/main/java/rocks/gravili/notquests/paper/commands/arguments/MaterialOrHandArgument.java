@@ -37,6 +37,7 @@ import rocks.gravili.notquests.paper.managers.items.NQItem;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Queue;
 import java.util.function.BiFunction;
 
@@ -170,7 +171,7 @@ public class MaterialOrHandArgument<C> extends CommandArgument<C, MaterialOrHand
                     return ArgumentParseResult.success(materialOrHand);
                 } else {
                     try{
-                        materialOrHand.material = Material.valueOf(input.toUpperCase()).name();
+                        materialOrHand.material = Material.valueOf(input.toUpperCase(Locale.ROOT)).name();
                     }catch (Exception ignored){
                         if(main.getItemsManager().getItem(input) != null){
                             materialOrHand.material = input;

@@ -39,10 +39,7 @@ import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
 import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 
 public class ItemStackListAction extends Action {
@@ -135,7 +132,7 @@ public class ItemStackListAction extends Action {
                                 ));
                                 return;
                             }
-                            itemStack = new ItemStack(Material.valueOf(expression), amount);
+                            itemStack = new ItemStack(Material.valueOf(expression.toUpperCase(Locale.ROOT)), amount);
                         }
 
 
@@ -423,7 +420,7 @@ public class ItemStackListAction extends Action {
         this.variableName = arguments.get(0);
 
         this.operator = arguments.get(1);
-        this.itemStack = new ItemStack(Material.valueOf(arguments.get(2)), Integer.parseInt(arguments.get(3)));
+        this.itemStack = new ItemStack(Material.valueOf(arguments.get(2).toUpperCase(Locale.ROOT)), Integer.parseInt(arguments.get(3)));
 
         if(arguments.size() >= 5){
 

@@ -42,6 +42,7 @@ import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 public class ItemStackListCondition extends Condition {
 
@@ -226,7 +227,7 @@ public class ItemStackListCondition extends Condition {
                                 ));
                                 return;
                             }
-                            itemStack = new ItemStack(Material.valueOf(expression), amount);
+                            itemStack = new ItemStack(Material.valueOf(expression.toUpperCase(Locale.ROOT)), amount);
                         }
                         final String operator = context.get("operator");
 
@@ -330,7 +331,7 @@ public class ItemStackListCondition extends Condition {
         this.variableName = arguments.get(0);
 
         this.operator = arguments.get(1);
-        setItemStack(new ItemStack(Material.valueOf(arguments.get(2)), Integer.parseInt(arguments.get(3))));
+        setItemStack(new ItemStack(Material.valueOf(arguments.get(2).toUpperCase(Locale.ROOT)), Integer.parseInt(arguments.get(3))));
 
         if (arguments.size() >= 5) {
 

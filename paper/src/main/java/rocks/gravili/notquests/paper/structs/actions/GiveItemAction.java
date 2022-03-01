@@ -35,6 +35,7 @@ import rocks.gravili.notquests.paper.managers.items.NQItem;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class GiveItemAction extends Action {
 
@@ -171,7 +172,7 @@ public class GiveItemAction extends Action {
 
         NQItem nqItem = main.getItemsManager().getItem(itemName);
         if(nqItem == null){
-            final ItemStack itemStack = new ItemStack(Material.valueOf(arguments.get(0)));
+            final ItemStack itemStack = new ItemStack(Material.valueOf(arguments.get(0).toUpperCase(Locale.ROOT)));
             if(arguments.size() >= 2){
                 itemStack.setAmount(Integer.parseInt(arguments.get(1)));
             }
