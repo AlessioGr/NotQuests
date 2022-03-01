@@ -155,6 +155,16 @@ titles:
   quest-failed:
     title: <negative>Quest Nie Powiódł Się
     subtitle: <highlight>%QUESTNAME%
+placeholders:
+  questcooldownleftformatted:
+    prefix: ''
+    minute: '1 minute'
+    minutes: '%MINUTES% minutes'
+    hour: '1 hour'
+    hours: '%HOURS% hours'
+    day: '1 day'
+    days: '%DAYS% days'
+    no-cooldown: ''
 gui:
   main:
     title: '                <highlight2>Questy'
