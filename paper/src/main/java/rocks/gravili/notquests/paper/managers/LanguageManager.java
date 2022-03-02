@@ -29,6 +29,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
@@ -347,10 +348,10 @@ public class LanguageManager {
     }
 
     public final String getString(final String languageString, final QuestPlayer questPlayer, Object... internalPlaceholderObjects) {
-        return getString(languageString, questPlayer.getPlayer(), internalPlaceholderObjects);
+        return getString(languageString, questPlayer != null ? questPlayer.getPlayer() : null, internalPlaceholderObjects);
     }
 
-    public final String getString(final String languageString, final Player targetPlayer, Object... internalPlaceholderObjects) {
+    public final String getString(final String languageString, @Nullable final Player targetPlayer, Object... internalPlaceholderObjects) {
         if (!getLanguageConfig().isString(languageString)) {
             return "Language string not found: " + languageString;
         } else {
@@ -390,7 +391,7 @@ public class LanguageManager {
         return toReturn;
     }
 
-    public String applyInternalPlaceholders(String initialMessage, final Player player, Object... internalPlaceholderObjects) {
+    public String applyInternalPlaceholders(String initialMessage, @Nullable final Player player, Object... internalPlaceholderObjects) {
         if (internalPlaceholderObjects.length == 0) {
             return initialMessage;
         }

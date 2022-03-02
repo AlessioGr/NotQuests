@@ -30,7 +30,7 @@ plugins {
 //extra["version"] = "4.0.0-dev1"
 
 group = "rocks.gravili.notquests"
-version = "4.18.1"
+version = "4.18.2"
 
 
 repositories {
