@@ -24,7 +24,6 @@ plugins {
     id("com.github.johnrengelman.shadow")
     id("io.papermc.paperweight.userdev")
     id("xyz.jpenilla.run-paper")
-    id("name.remal.check-dependency-updates")
 }
 
 group = "rocks.gravili.notquests"
