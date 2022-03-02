@@ -347,7 +347,7 @@ public class LanguageManager {
         }
     }
 
-    public final String getString(final String languageString, final QuestPlayer questPlayer, Object... internalPlaceholderObjects) {
+    public final String getString(final String languageString, @Nullable final QuestPlayer questPlayer, Object... internalPlaceholderObjects) {
         return getString(languageString, questPlayer != null ? questPlayer.getPlayer() : null, internalPlaceholderObjects);
     }
 
@@ -367,7 +367,7 @@ public class LanguageManager {
         }
     }
 
-    public final List<String> getStringList(final String languageString, final Player targetPlayer, Object... internalPlaceholderObjects) {
+    public final List<String> getStringList(final String languageString, @Nullable final Player targetPlayer, Object... internalPlaceholderObjects) {
         if (!getLanguageConfig().isList(languageString)) {
             return Collections.singletonList("Language string list not found: " + languageString);
         } else {
@@ -383,9 +383,9 @@ public class LanguageManager {
         }
     }
 
-    public List<String> applyInternalPlaceholders(List<String> initialMessage,final Player player, Object... internalPlaceholderObjects) {
+    public List<String> applyInternalPlaceholders(List<String> initialMessage, @Nullable final Player player, Object... internalPlaceholderObjects) {
         List<String> toReturn = new ArrayList<>();
-        for(String message : initialMessage){
+        for (String message : initialMessage) {
             toReturn.add(applyInternalPlaceholders(message, player, internalPlaceholderObjects));
         }
         return toReturn;
