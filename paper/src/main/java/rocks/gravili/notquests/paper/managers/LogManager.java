@@ -30,7 +30,7 @@ public class LogManager {
     private final NotQuests main;
     private ConsoleCommandSender consoleSender;
     private final Component prefix;
-    private final String prefixText;
+    private String prefixText;
 
 
 
@@ -48,7 +48,7 @@ public class LogManager {
     }
 
     public void lateInit() {
-
+        prefixText = main.getConfiguration().getColorsConsolePrefixPrefix() + "NotQuests" + main.getConfiguration().getColorsConsolePrefixSuffix();
     }
 
     public final ArrayList<String> getErrorLogs() {
@@ -69,11 +69,11 @@ public class LogManager {
 
     public void info(final LogCategory logCategory, final String message) {
         if (logCategory == LogCategory.DEFAULT) {
-            log(Level.INFO, logCategory, "<main>", message);
+            log(Level.INFO, logCategory, main.getConfiguration().getColorsConsoleInfoDefault(), message);
         } else if (logCategory == LogCategory.DATA) {
-            log(Level.INFO, logCategory, "<gradient:#1FA2FF:#12D8FA:#A6FFCB>", message);
+            log(Level.INFO, logCategory, main.getConfiguration().getColorsConsoleInfoData(), message);
         } else if (logCategory == LogCategory.LANGUAGE) {
-            log(Level.INFO, logCategory, "<gradient:#AA076B:#61045F>", message);
+            log(Level.INFO, logCategory, main.getConfiguration().getColorsConsoleInfoLanguage(), message);
         }
     }
 
@@ -82,7 +82,7 @@ public class LogManager {
     }
 
     public void warn(final LogCategory logCategory, final String message) {
-        log(Level.WARNING, logCategory, "<warn>", message);
+        log(Level.WARNING, logCategory, main.getConfiguration().getColorsConsoleWarnDefault(), message);
         warnLogs.add(message);
     }
 
@@ -91,7 +91,7 @@ public class LogManager {
     }
 
     public void severe(final LogCategory logCategory, final String message) {
-        log(Level.SEVERE, logCategory, "<error>", message);
+        log(Level.SEVERE, logCategory, main.getConfiguration().getColorsConsoleSevereDefault(), message);
         severeLogs.add(message);
     }
 
@@ -101,7 +101,7 @@ public class LogManager {
 
     public void debug(final LogCategory logCategory, final String message) {
         if (main.getConfiguration().debug) {
-            log(Level.FINE, logCategory, "<unimportant>", message);
+            log(Level.FINE, logCategory, main.getConfiguration().getColorsConsoleDebugDefault(), message);
         }
     }
 

@@ -719,53 +719,89 @@ public class DataManager {
         ));
 
         //Visual Colors
+
+        //Console colors
+        configuration.setColorsConsolePrefixPrefix(getGeneralConfigString(
+                "visual.colors.console.prefix.prefix",
+                "<#393e46>[<gradient:#E0EAFC:#CFDEF3>"
+        ));
+        configuration.setColorsConsolePrefixSuffix(getGeneralConfigString(
+                "visual.colors.console.prefix.suffix",
+                "<#393e46>]<#636c73>: "
+        ));
+        configuration.setColorsConsoleInfoDefault(getGeneralConfigString(
+                "visual.colors.console.info.default",
+                "<main>"
+        ));
+        configuration.setColorsConsoleInfoData(getGeneralConfigString(
+                "visual.colors.console.info.data",
+                "<gradient:#1FA2FF:#12D8FA:#A6FFCB>"
+        ));
+        configuration.setColorsConsoleInfoLanguage(getGeneralConfigString(
+                "visual.colors.console.info.language",
+                "<gradient:#AA076B:#61045F>"
+        ));
+        configuration.setColorsConsoleWarnDefault(getGeneralConfigString(
+                "visual.colors.console.warn.default",
+                "<warn>"
+        ));
+        configuration.setColorsConsoleSevereDefault(getGeneralConfigString(
+                "visual.colors.console.severe.default",
+                "<error>"
+        ));
+        configuration.setColorsConsoleDebugDefault(getGeneralConfigString(
+                "visual.colors.console.debug.default",
+                "<unimportant>"
+        ));
+
+        //CustomTags
         configuration.setColorsMain(getGeneralConfigStringList(
-                "visual.colors.main",
+                "visual.colors.tags.main",
                 Arrays.asList("#1985ff", "#2bc7ff")
         ));
 
         configuration.setColorsHighlight(getGeneralConfigStringList(
-                "visual.colors.highlight",
+                "visual.colors.tags.highlight",
                 Arrays.asList("#00fffb", "#00ffc3")
         ));
 
         configuration.setColorsHighlight2(getGeneralConfigStringList(
-                "visual.colors.highlight2",
+                "visual.colors.tags.highlight2",
                 Arrays.asList("#ff2465", "#ff24a0")
         ));
 
         configuration.setColorsError(getGeneralConfigStringList(
-                "visual.colors.error",
+                "visual.colors.tags.error",
                 Arrays.asList("#ff004c", "#a80000")
         ));
 
         configuration.setColorsSuccess(getGeneralConfigStringList(
-                "visual.colors.success",
+                "visual.colors.tags.success",
                 Arrays.asList("#54b2ff", "#ff5ecc")
         ));
 
         configuration.setColorsUnimportant(getGeneralConfigStringList(
-                "visual.colors.unimportant",
+                "visual.colors.tags.unimportant",
                 Arrays.asList("#9c9c9c", "#858383")
         ));
 
         configuration.setColorsVeryUnimportant(getGeneralConfigStringList(
-                "visual.colors.veryUnimportant",
+                "visual.colors.tags.veryUnimportant",
                 Arrays.asList("#5c5c5c", "#454545")
         ));
 
         configuration.setColorsWarn(getGeneralConfigStringList(
-                "visual.colors.warn",
+                "visual.colors.tags.warn",
                 Arrays.asList("#fff700", "#ffa629")
         ));
 
         configuration.setColorsPositive(getGeneralConfigStringList(
-                "visual.colors.positive",
+                "visual.colors.tags.positive",
                 Arrays.asList("#73ff00", "#00ffd0")
         ));
 
         configuration.setColorsNegative(getGeneralConfigStringList(
-                "visual.colors.negative",
+                "visual.colors.tags.negative",
                 Arrays.asList("#ff006f", "#ff002f")
         ));
 

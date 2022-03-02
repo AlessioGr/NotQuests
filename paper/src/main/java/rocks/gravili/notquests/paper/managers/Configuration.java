@@ -163,6 +163,14 @@ public class Configuration {
     public boolean showRewardsAfterQuestCompletion = true;
     public boolean showRewardsAfterObjectiveCompletion = true;
 
+    private String colorsConsolePrefixPrefix = "<#393e46>[<gradient:#E0EAFC:#CFDEF3>";
+    private String colorsConsolePrefixSuffix = "<#393e46>]<#636c73>: ";
+    private String colorsConsoleInfoDefault = "<main>";
+    private String colorsConsoleInfoData = "<gradient:#1FA2FF:#12D8FA:#A6FFCB>";
+    private String colorsConsoleInfoLanguage = "<gradient:#AA076B:#61045F>";
+    private String colorsConsoleWarnDefault = "<warn>";
+    private String colorsConsoleSevereDefault = "<error>";
+    private String colorsConsoleDebugDefault = "<unimportant>";
 
     private List<String> colorsMain;
     private List<String> colorsHighlight;
@@ -935,5 +943,69 @@ public class Configuration {
 
     public void setColorsNegative(List<String> colorsNegative) {
         this.colorsNegative = colorsNegative;
+    }
+
+    public String getColorsConsoleInfoDefault() {
+        return colorsConsoleInfoDefault;
+    }
+
+    public void setColorsConsoleInfoDefault(String colorsConsoleInfoDefault) {
+        this.colorsConsoleInfoDefault = colorsConsoleInfoDefault;
+    }
+
+    public String getColorsConsoleInfoData() {
+        return colorsConsoleInfoData;
+    }
+
+    public void setColorsConsoleInfoData(String colorsConsoleInfoData) {
+        this.colorsConsoleInfoData = colorsConsoleInfoData;
+    }
+
+    public String getColorsConsoleInfoLanguage() {
+        return colorsConsoleInfoLanguage;
+    }
+
+    public void setColorsConsoleInfoLanguage(String colorsConsoleInfoLanguage) {
+        this.colorsConsoleInfoLanguage = colorsConsoleInfoLanguage;
+    }
+
+    public String getColorsConsoleWarnDefault() {
+        return colorsConsoleWarnDefault;
+    }
+
+    public void setColorsConsoleWarnDefault(String colorsConsoleWarnDefault) {
+        this.colorsConsoleWarnDefault = colorsConsoleWarnDefault;
+    }
+
+    public String getColorsConsoleSevereDefault() {
+        return colorsConsoleSevereDefault;
+    }
+
+    public void setColorsConsoleSevereDefault(String colorsConsoleSevereDefault) {
+        this.colorsConsoleSevereDefault = colorsConsoleSevereDefault;
+    }
+
+    public String getColorsConsoleDebugDefault() {
+        return colorsConsoleDebugDefault;
+    }
+
+    public void setColorsConsoleDebugDefault(String colorsConsoleDebugDefault) {
+        this.colorsConsoleDebugDefault = colorsConsoleDebugDefault;
+    }
+
+    public String getColorsConsolePrefixPrefix() {
+        return colorsConsolePrefixPrefix;
+    }
+
+    public void setColorsConsolePrefixPrefix(String colorsConsolePrefixPrefix) {
+        this.colorsConsolePrefixPrefix = colorsConsolePrefixPrefix;
+    }
+
+    public String getColorsConsolePrefixSuffix() {
+        return colorsConsolePrefixSuffix;
+    }
+
+    public void setColorsConsolePrefixSuffix(String colorsConsolePrefixSuffix) {
+        this.colorsConsolePrefixSuffix = colorsConsolePrefixSuffix;
     }
 }
