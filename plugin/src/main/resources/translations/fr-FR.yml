@@ -160,10 +160,10 @@ placeholders:
     prefix: ''
     minute: '1 minute'
     minutes: '%MINUTES% minutes'
-    hour: '1 hour'
-    hours: '%HOURS% hours'
-    day: '1 day'
-    days: '%DAYS% days'
+    hour: '1 heure'
+    hours: '%HOURS% heures'
+    day: '1 jour'
+    days: '%DAYS% jours'
     no-cooldown: ''
 gui:
   main:
