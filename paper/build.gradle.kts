@@ -135,7 +135,7 @@ repositories {
 
 dependencies {
     //implementation project(':common')
-    paperDevBundle("1.18.1-R0.1-SNAPSHOT")
+    paperDevBundle("1.18.2-R0.1-SNAPSHOT")
     //compileOnly("io.papermc.paper:paper-api:1.18.1-R0.1-SNAPSHOT!!")
 
     implementation("org.bstats:bstats-bukkit:3.0.0")
@@ -169,21 +169,18 @@ dependencies {
 
 
     //Shaded
-    implementation("net.kyori:adventure-text-minimessage:4.10.0-20220207.012501-47") {
-        exclude(group = "net.kyori", module = "adventure-api")
-        exclude(group = "net.kyori", module = "adventure-bom")
-    }
 
-    implementation("net.kyori:adventure-text-serializer-bungeecord:4.0.1"){
-        exclude(group= "net.kyori", module= "adventure-api")
+
+    implementation("net.kyori:adventure-text-serializer-bungeecord:4.1.0") {
+        exclude(group = "net.kyori", module = "adventure-api")
     }
 
     //CloudCommands
-    implementation("cloud.commandframework:cloud-paper:1.7.0-SNAPSHOT"){
-        exclude(group= "net.kyori", module= "adventure-api")
+    implementation("cloud.commandframework:cloud-paper:1.7.0-SNAPSHOT") {
+        exclude(group = "net.kyori", module = "adventure-api")
     }
-    implementation("cloud.commandframework:cloud-minecraft-extras:1.7.0-SNAPSHOT"){
-        exclude(group= "net.kyori", module= "adventure-api")
+    implementation("cloud.commandframework:cloud-minecraft-extras:1.7.0-SNAPSHOT") {
+        exclude(group = "net.kyori", module = "adventure-api")
     }
     //Else it errors:
     implementation("io.leangen.geantyref:geantyref:1.3.13")
@@ -257,8 +254,6 @@ tasks.withType<ShadowJar> {
     //relocate('net.kyori.adventure.platform.bukkit', path.concat('.kyori.platform-bukkit'))
     relocate("net.kyori.adventure.text.serializer.bungeecord", "$shadowPath.kyori.bungeecord")
 
-    //MiniMessage
-    relocate("net.kyori.adventure.text.minimessage", "$shadowPath.kyori.minimessage")
 
     relocate("org.incendo.interfaces", "$shadowPath.interfaces")
 
@@ -289,7 +284,6 @@ tasks.withType<ShadowJar> {
         include(dependency("org.incendo.interfaces:"))
 
         //include(dependency('net.kyori:adventure-platform-bukkit:')
-        include(dependency("net.kyori:adventure-text-minimessage:"))
         include(dependency("net.kyori:adventure-text-serializer-bungeecord:"))
 
         include(dependency("com.github.Redempt:Crunch:"))
@@ -347,7 +341,7 @@ tasks {
         // Configure the Minecraft version for our task.
         // This is the only required configuration besides applying the plugin.
         // Your plugin's jar (or shadowJar if present) will be used automatically.
-        minecraftVersion("1.18.1")
+        minecraftVersion("1.18.2")
     }
 }
 

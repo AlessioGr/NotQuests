@@ -117,7 +117,7 @@ repositories {
 }
 
 dependencies {
-    paperDevBundle("1.18.1-R0.1-SNAPSHOT")
+    paperDevBundle("1.18.2-R0.1-SNAPSHOT")
 
     implementation(project(path= ":spigot", configuration= "shadow"))
     implementation(project(path= ":paper", configuration= "shadow"))
@@ -184,7 +184,7 @@ tasks {
         // Configure the Minecraft version for our task.
         // This is the only required configuration besides applying the plugin.
         // Your plugin's jar (or shadowJar if present) will be used automatically.
-        minecraftVersion("1.18.1")
+        minecraftVersion("1.18.2")
     }
 }
 
@@ -224,9 +224,9 @@ bukkit {
     name = "NotQuests"
     version = rootProject.version.toString()
     main = "rocks.gravili.notquests.Main"
-    apiVersion = "1.17"
+    apiVersion = "1.18.2"
     authors = listOf("NoeX")
-    description = "Flexible, open, GUI Quest Plugin for Minecraft 1.17 and 1.18"
+    description = "Flexible, open, GUI Quest Plugin for Minecraft 1.18.2"
     website = "quests.notnot.pro"
     softDepend = listOf(
         "ProtocolLib",

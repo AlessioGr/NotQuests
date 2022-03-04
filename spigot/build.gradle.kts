@@ -135,7 +135,7 @@ dependencies {
     implementation("org.bstats:bstats-bukkit:3.0.0")
     implementation("de.themoep:inventorygui:1.5-SNAPSHOT")
 
-    compileOnly("org.spigotmc:spigot-api:1.18.1-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.18.2-R0.1-SNAPSHOT")
     compileOnly("net.citizensnpcs:citizens-main:2.0.29-SNAPSHOT")
     compileOnly("me.clip:placeholderapi:2.11.1")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7")
@@ -163,11 +163,11 @@ dependencies {
 
 
     //Shaded
-    implementation("net.kyori:adventure-text-minimessage:4.10.0-20220207.012501-47") {
+    implementation("net.kyori:adventure-text-minimessage:4.10.0") {
         exclude(group = "net.kyori", module = "adventure-api")
         exclude(group = "net.kyori", module = "adventure-bom")
     }
-    implementation("net.kyori:adventure-platform-bukkit:4.0.1")
+    implementation("net.kyori:adventure-platform-bukkit:4.1.0")
 
     //CloudCommands
     implementation("cloud.commandframework:cloud-paper:1.7.0-SNAPSHOT")

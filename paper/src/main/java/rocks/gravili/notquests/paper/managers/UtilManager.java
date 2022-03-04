@@ -306,7 +306,7 @@ public class UtilManager {
         StringBuilder returnMessage = new StringBuilder();
 
 
-        String[] lines = main.getMiniMessage().stripTokens(message.toLowerCase(Locale.ROOT).replace("<bold>", "§l").replace("<reset>", "§r").replace("</bold>", "§r")).split("\n", 40);
+        String[] lines = main.getMiniMessage().stripTags(message.toLowerCase(Locale.ROOT).replace("<bold>", "§l").replace("<reset>", "§r").replace("</bold>", "§r")).split("\n", 40);
         String[] miniMessageLines = message.split("\n", 40);
 
 
