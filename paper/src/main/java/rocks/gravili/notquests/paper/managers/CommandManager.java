@@ -327,10 +327,10 @@ public class CommandManager {
                 cloudBrigadierManager.registerMapping(new TypeToken<MultipleActionsSelector.ListActionsParser<CommandSender>>() {
                 }, builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
             } else {
-                main.getMain().getLogger().warning("Failed to initialize Brigadier support. Brigadier manager is null.");
+                main.getLogManager().warn("Failed to initialize Brigadier support. Brigadier manager is null.");
             }
         } catch (final Exception e) {
-            main.getMain().getLogger().warning("Failed to initialize Brigadier support: <highlight>" + e.getMessage());
+            main.getLogManager().warn("Failed to initialize Brigadier support: <highlight>" + e.getMessage());
         }
 
         commandPostProcessor = new CommandPostProcessor(main);

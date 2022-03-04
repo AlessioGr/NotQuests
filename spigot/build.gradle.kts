@@ -170,8 +170,8 @@ dependencies {
     implementation("net.kyori:adventure-platform-bukkit:4.1.0")
 
     //CloudCommands
-    implementation("cloud.commandframework:cloud-paper:1.7.0-SNAPSHOT")
-    implementation("cloud.commandframework:cloud-minecraft-extras:1.7.0-SNAPSHOT")
+    implementation("cloud.commandframework:cloud-paper:1.6.2")
+    implementation("cloud.commandframework:cloud-minecraft-extras:1.6.2")
     //Else it errors:
     implementation("io.leangen.geantyref:geantyref:1.3.13")
 
