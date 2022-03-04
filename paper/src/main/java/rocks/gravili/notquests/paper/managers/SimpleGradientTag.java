@@ -20,15 +20,22 @@ package rocks.gravili.notquests.paper.managers;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.flattener.ComponentFlattener;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.minimessage.Context;
+import net.kyori.adventure.text.minimessage.internal.parser.node.TagNode;
+import net.kyori.adventure.text.minimessage.internal.parser.node.ValueNode;
+import net.kyori.adventure.text.minimessage.tag.Inserting;
 import net.kyori.adventure.text.minimessage.tag.Modifying;
 import net.kyori.adventure.text.minimessage.tag.Tag;
 import net.kyori.adventure.text.minimessage.tag.resolver.ArgumentQueue;
+import net.kyori.adventure.text.minimessage.tree.Node;
+import net.kyori.adventure.util.ShadyPines;
 import net.kyori.examination.Examinable;
 import net.kyori.examination.ExaminableProperty;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 
 import java.util.*;
@@ -39,9 +46,11 @@ import java.util.stream.Stream;
  *
  * @since 4.10.0
  */
-public final class SimpleGradientTransformation implements Modifying, Examinable {
+public final class SimpleGradientTag implements Modifying, Examinable {
     public static final String GRADIENT = "gradient";
 
+
+    private boolean visited;
     private int size = 0;
     private int disableApplyingColorDepth = -1;
 
@@ -91,15 +100,32 @@ public final class SimpleGradientTransformation implements Modifying, Examinable
     }
 
     public static Tag positive(final ArgumentQueue args, final Context ctx) {
-        return create(NotQuests.getInstance() != null &&NotQuests.getInstance().getConfiguration().getColorsPositive() != null ? NotQuests.getInstance().getConfiguration().getColorsPositive() : fallbackColors);
+        return create(NotQuests.getInstance() != null && NotQuests.getInstance().getConfiguration().getColorsPositive() != null ? NotQuests.getInstance().getConfiguration().getColorsPositive() : fallbackColors);
     }
 
     public static Tag negative(final ArgumentQueue args, final Context ctx) {
-        return create(NotQuests.getInstance() != null &&NotQuests.getInstance().getConfiguration().getColorsNegative() != null ? NotQuests.getInstance().getConfiguration().getColorsNegative() : fallbackColors);
+        return create(NotQuests.getInstance() != null && NotQuests.getInstance().getConfiguration().getColorsNegative() != null ? NotQuests.getInstance().getConfiguration().getColorsNegative() : fallbackColors);
 
     }
 
-    public static SimpleGradientTransformation create(final List<String> args) {
+    private SimpleGradientTag(final float phase, final List<TextColor> colors) {
+        if (phase < 0) {
+            this.negativePhase = true;
+            this.phase = 1 + phase;
+            Collections.reverse(colors);
+        } else {
+            this.negativePhase = false;
+            this.phase = phase;
+        }
+
+        if (colors.isEmpty()) {
+            this.colors = new TextColor[]{TextColor.color(0xffffff), TextColor.color(0x000000)};
+        } else {
+            this.colors = colors.toArray(new TextColor[0]);
+        }
+    }
+
+    public static SimpleGradientTag create(final List<String> args) {
         float phase = 0;
         final List<TextColor> textColors;
         if (!args.isEmpty()) {
@@ -130,31 +156,11 @@ public final class SimpleGradientTransformation implements Modifying, Examinable
             textColors = Collections.emptyList();
         }
 
-        return new SimpleGradientTransformation(phase, textColors);
+        return new SimpleGradientTag(phase, textColors);
     }
 
-    private SimpleGradientTransformation(final float phase, final List<TextColor> colors) {
-        if (phase < 0) {
-            this.negativePhase = true;
-            this.phase = 1 + phase;
-            Collections.reverse(colors);
-        } else {
-            this.negativePhase = false;
-            this.phase = phase;
-        }
-
-        if (colors.isEmpty()) {
-            this.colors = new TextColor[]{TextColor.color(0xffffff), TextColor.color(0x000000)};
-        } else {
-            this.colors = colors.toArray(new TextColor[0]);
-        }
-    }
-
-
-    @Override
-    public void postVisit() {
-        // init
-        int sectorLength = this.size / (this.colors.length - 1);
+    private void init() {
+        int sectorLength = this.size() / (this.colors.length - 1);
         if (sectorLength < 1) {
             sectorLength = 1;
         }
@@ -163,10 +169,48 @@ public final class SimpleGradientTransformation implements Modifying, Examinable
         this.index = 0;
     }
 
+    private void advanceColor() {
+        // color switch needed?
+        this.index++;
+        if (this.factorStep * this.index > 1) {
+            this.colorIndex++;
+            this.index = 0;
+        }
+    }
+
+    protected final int size() {
+        return this.size;
+    }
+
     @Override
-    public Component apply(final @NotNull Component current, final int depth) {
+    public final void visit(final @NotNull Node current, final int depth) {
+        if (this.visited) {
+            throw new IllegalStateException("Color changing tag instances cannot be re-used, return a new one for each resolve");
+        }
+
+        if (current instanceof ValueNode) {
+            final String value = ((ValueNode) current).value();
+            this.size += value.codePointCount(0, value.length());
+        } else if (current instanceof TagNode) {
+            final TagNode tag = (TagNode) current;
+            if (tag.tag() instanceof Inserting) {
+                // ComponentTransformation.apply() returns the value of the component placeholder
+                ComponentFlattener.textOnly().flatten(((Inserting) tag.tag()).value(), s -> this.size += s.codePointCount(0, s.length()));
+            }
+        }
+    }
+
+    @Override
+    public final void postVisit() {
+        // init
+        this.visited = true;
+        this.init();
+    }
+
+    @Override
+    public final Component apply(final @NotNull Component current, final int depth) {
         if ((this.disableApplyingColorDepth != -1 && depth > this.disableApplyingColorDepth) || current.style().color() != null) {
-            if (this.disableApplyingColorDepth == -1) {
+            if (this.disableApplyingColorDepth == -1 || depth < this.disableApplyingColorDepth) {
                 this.disableApplyingColorDepth = depth;
             }
             // This component has its own color applied, which overrides ours
@@ -176,7 +220,7 @@ public final class SimpleGradientTransformation implements Modifying, Examinable
                 final int len = content.codePointCount(0, content.length());
                 for (int i = 0; i < len; i++) {
                     // increment our color index
-                    this.color();
+                    this.advanceColor();
                 }
             }
             return current.children(Collections.emptyList());
@@ -194,6 +238,7 @@ public final class SimpleGradientTransformation implements Modifying, Examinable
             for (final PrimitiveIterator.OfInt it = content.codePoints().iterator(); it.hasNext();) {
                 holder[0] = it.nextInt();
                 final Component comp = Component.text(new String(holder, 0, 1), this.color());
+                this.advanceColor();
                 parent.append(comp);
             }
 
@@ -202,17 +247,11 @@ public final class SimpleGradientTransformation implements Modifying, Examinable
 
         return Component.empty().mergeStyle(current);
     }
-
+    // The lifecycle
 
 
     private TextColor color() {
-        // color switch needed?
-        if (this.factorStep * this.index > 1) {
-            this.colorIndex++;
-            this.index = 0;
-        }
-
-        float factor = this.factorStep * (this.index++ + this.phase);
+        float factor = this.factorStep * (this.index + this.phase);
         // loop around if needed
         if (factor > 1) {
             factor = 1 - (factor - 1);
@@ -235,13 +274,13 @@ public final class SimpleGradientTransformation implements Modifying, Examinable
     }
 
     @Override
-    public boolean equals(final Object other) {
+    public boolean equals(final @Nullable Object other) {
         if (this == other) return true;
         if (other == null || this.getClass() != other.getClass()) return false;
-        final SimpleGradientTransformation that = (SimpleGradientTransformation) other;
+        final SimpleGradientTag that = (SimpleGradientTag) other;
         return this.index == that.index
                 && this.colorIndex == that.colorIndex
-                && Float.compare(that.factorStep, this.factorStep) == 0
+                && ShadyPines.equals(that.factorStep, this.factorStep)
                 && this.phase == that.phase && Arrays.equals(this.colors, that.colors);
     }
 

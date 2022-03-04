@@ -36,16 +36,16 @@ public class MessageManager {
         this.main = main;
 
 
-        final TagResolver mainGradient = TagResolver.resolver("main", SimpleGradientTransformation::main);
-        final TagResolver highlight = TagResolver.resolver("highlight", SimpleGradientTransformation::highlight);
-        final TagResolver highlight2 = TagResolver.resolver("highlight2", SimpleGradientTransformation::highlight2);
-        final TagResolver error = TagResolver.resolver("error", SimpleGradientTransformation::error);
-        final TagResolver success = TagResolver.resolver("success", SimpleGradientTransformation::success);
-        final TagResolver unimportant = TagResolver.resolver("unimportant", SimpleGradientTransformation::unimportant);
-        final TagResolver warn = TagResolver.resolver("warn", SimpleGradientTransformation::warn);
-        final TagResolver veryUnimportant = TagResolver.resolver("veryunimportant", SimpleGradientTransformation::veryUnimportant);
-        final TagResolver negative = TagResolver.resolver("negative", SimpleGradientTransformation::negative);
-        final TagResolver positive = TagResolver.resolver("positive", SimpleGradientTransformation::positive);
+        final TagResolver mainGradient = TagResolver.resolver("main", SimpleGradientTag::main);
+        final TagResolver highlight = TagResolver.resolver("highlight", SimpleGradientTag::highlight);
+        final TagResolver highlight2 = TagResolver.resolver("highlight2", SimpleGradientTag::highlight2);
+        final TagResolver error = TagResolver.resolver("error", SimpleGradientTag::error);
+        final TagResolver success = TagResolver.resolver("success", SimpleGradientTag::success);
+        final TagResolver unimportant = TagResolver.resolver("unimportant", SimpleGradientTag::unimportant);
+        final TagResolver warn = TagResolver.resolver("warn", SimpleGradientTag::warn);
+        final TagResolver veryUnimportant = TagResolver.resolver("veryunimportant", SimpleGradientTag::veryUnimportant);
+        final TagResolver negative = TagResolver.resolver("negative", SimpleGradientTag::negative);
+        final TagResolver positive = TagResolver.resolver("positive", SimpleGradientTag::positive);
 
         final TagResolver tagResolver = TagResolver.builder().resolvers(
                 TagResolver.standard(),
