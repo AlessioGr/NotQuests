@@ -305,10 +305,8 @@ public class UtilManager {
         //String[] lines = miniMessageToLegacy(message).split("\n", 40);//TODO: Rethink with minimessage in mind
         StringBuilder returnMessage = new StringBuilder();
 
-
-        String[] lines = main.getMiniMessage().stripTags(message.toLowerCase(Locale.ROOT).replace("<bold>", "§l").replace("<reset>", "§r").replace("</bold>", "§r")).split("\n", 40);
+        String[] lines = main.getMiniMessage().stripTags(message.toLowerCase(Locale.ROOT).replace("<bold>", "☕l").replace("<reset>", "☕r").replace("</bold>", "☕r")).split("\n", 40);
         String[] miniMessageLines = message.split("\n", 40);
-
 
         int lineCounter = 0;
         for (String line : lines) { //TODO: Rethink with minimessage in mind
@@ -318,7 +316,7 @@ public class UtilManager {
             boolean isBold = false;
 
             for (char c : line.toCharArray()) {
-                if (c == '§') {
+                if (c == '☕') {
                     previousCode = true;
                 } else if (previousCode) {
                     previousCode = false;
@@ -451,17 +449,15 @@ public class UtilManager {
             return toReplace;
         }
         Component component = LegacyComponentSerializer.builder().hexColors().build().deserialize(ChatColor.translateAlternateColorCodes('&', toReplace));
-        String finalS = main.getMiniMessage().serialize(component);
 
         //main.getLogManager().debug("legacy => minimessage Converted <RESET>" + toReplace + "</RESET> to <RESET>" + finalS + "</RESET>");
-        return finalS;
+        return main.getMiniMessage().serialize(component);
     }
 
     public final String miniMessageToLegacy(String miniMessageString) {
-        String legacy = LegacyComponentSerializer.builder().hexColors().build().serialize(main.parse(miniMessageString));
         //main.getLogManager().debug("mm => legacy: Converted <RESET>" + miniMessageString + "</RESET> to <RESET>" + legacy + "</RESET>");
 
-        return legacy;
+        return LegacyComponentSerializer.builder().hexColors().build().serialize(main.parse(miniMessageString));
     }
 
     public String miniMessageToLegacyWithSpigotRGB(String miniMessageString) {

@@ -139,14 +139,6 @@ public class UserCommands {
         constructCommands();
     }
 
-    public final String convert(final String old) { //Converts MiniMessage to legacy
-        //main.getLogManager().info("Old: " + old);
-        //main.getLogManager().info("New: " + main.getUtilManager().miniMessageToLegacyWithSpigotRGB(old));
-
-        return main.getUtilManager().miniMessageToLegacyWithSpigotRGB(old);
-        //return main.getUtilManager().miniMessageToLegacyWithSpigotRGB(old);
-    }
-
     public void constructCommands() {
         manager.command(builder.literal("take")
                 .senderType(Player.class)

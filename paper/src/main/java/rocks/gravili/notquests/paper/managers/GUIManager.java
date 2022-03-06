@@ -233,9 +233,6 @@ public class GUIManager {
         constructInterfaces();
     }
 
-    public final String convert(final String old) { //Converts MiniMessage to legacy
-        return main.getUtilManager().miniMessageToLegacyWithSpigotRGB(old);
-    }
 
     public void constructInterfaces(){
         PaperInterfaceListeners.install(main.getMain());

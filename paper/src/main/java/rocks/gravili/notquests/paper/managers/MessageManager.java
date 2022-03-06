@@ -61,11 +61,6 @@ public class MessageManager {
                 positive
         ).build();
 
-
-
-
-        //TagResolver tagResolver = TagResolver.builder().build();
-
         miniMessage = MiniMessage.builder().tags(tagResolver).build();
     }
 }
