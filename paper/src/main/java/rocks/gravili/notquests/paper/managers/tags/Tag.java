@@ -18,6 +18,7 @@
 
 package rocks.gravili.notquests.paper.managers.tags;
 
+import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
 
@@ -29,7 +30,7 @@ public class Tag {
     private final String tagName;
     private Category category;
 
-    public Tag(final NotQuests main, final String tagName, final TagType tagType){
+    public Tag(@NotNull final NotQuests main, @NotNull final String tagName, @NotNull final TagType tagType) {
         this.main = main;
         this.tagName = tagName.toLowerCase(Locale.ROOT);
         this.tagType = tagType;
