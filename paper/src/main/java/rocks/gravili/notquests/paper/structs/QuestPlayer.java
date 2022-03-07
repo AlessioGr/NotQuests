@@ -951,14 +951,14 @@ public class QuestPlayer {
         }
     }
 
-    public void updateConditionObjectives(Player player) {
-        if(!isHasActiveConditionObjectives()){
+    public void updateConditionObjectives(final Player player) {
+        if (!isHasActiveConditionObjectives()) {
             return;
         }
-        for(ActiveQuest activeQuest : getActiveQuests()){
-            for(ActiveObjective activeObjective : activeQuest.getActiveObjectives()){
-                if(activeObjective.getObjective() instanceof ConditionObjective conditionObjective){
-                    if(conditionObjective.isCheckOnlyWhenCorrespondingVariableValueChanged() || !activeObjective.isUnlocked()){
+        for (ActiveQuest activeQuest : getActiveQuests()) {
+            for (ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
+                if (activeObjective.getObjective() instanceof ConditionObjective conditionObjective) {
+                    if (conditionObjective.isCheckOnlyWhenCorrespondingVariableValueChanged() || !activeObjective.isUnlocked()) {
                         continue;
                     }
 

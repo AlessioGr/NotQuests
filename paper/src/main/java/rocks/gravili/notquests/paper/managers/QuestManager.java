@@ -160,10 +160,10 @@ public class QuestManager {
 
 
             if (questsConfigurationSection != null) {
-                for (String questName : questsConfigurationSection.getKeys(false)) {
+                for (final String questName : questsConfigurationSection.getKeys(false)) {
                     main.getLogManager().info("   Loading Quest <highlight>" + questName + "</highlight>...");
 
-                    Quest quest = new Quest(main, questName, category);
+                    final Quest quest = new Quest(main, questName, category);
                     quest.setMaxAccepts(category.getQuestsConfig().getInt("quests." + questName + ".maxAccepts", -1));
                     quest.setTakeEnabled(category.getQuestsConfig().getBoolean("quests." + questName + ".takeEnabled", true));
                     quest.setAcceptCooldown(category.getQuestsConfig().getLong("quests." + questName + ".acceptCooldown", -1));
@@ -196,7 +196,7 @@ public class QuestManager {
                             final boolean showLocation = category.getQuestsConfig().getBoolean("quests." + questName + ".objectives." + objectiveNumber + ".showLocation", false);
 
 
-                            int objectiveID;
+                            final int objectiveID;
                             try {
                                 objectiveID = Integer.parseInt(objectiveNumber);
                             } catch (java.lang.NumberFormatException ex) {
@@ -210,7 +210,7 @@ public class QuestManager {
                             }
 
 
-                            Objective objective;
+                            final Objective objective;
 
                             try {
                                 objective = objectiveType.getDeclaredConstructor(NotQuests.class).newInstance(main);
@@ -253,7 +253,7 @@ public class QuestManager {
                     if (requirementsConfigurationSection != null) {
                         for (final String requirementNumber : requirementsConfigurationSection.getKeys(false)) {
 
-                            int requirementID;
+                            final int requirementID;
                             try {
                                 requirementID = Integer.parseInt(requirementNumber);
                             } catch (java.lang.NumberFormatException ex) {
@@ -282,7 +282,7 @@ public class QuestManager {
                             final String description = category.getQuestsConfig().getString("quests." + questName + ".requirements." + requirementNumber + ".description", "");
 
 
-                            Condition condition;
+                            final Condition condition;
 
                             try {
                                 condition = conditionType.getDeclaredConstructor(NotQuests.class).newInstance(main);
@@ -308,7 +308,7 @@ public class QuestManager {
                     if (rewardsConfigurationSection != null) {
                         for (final String rewardNumber : rewardsConfigurationSection.getKeys(false)) {
 
-                            int rewardID;
+                            final int rewardID;
                             try {
                                 rewardID = Integer.parseInt(rewardNumber);
                             } catch (java.lang.NumberFormatException ex) {
@@ -330,7 +330,7 @@ public class QuestManager {
                             }
 
 
-                            Action reward;
+                            final Action reward;
 
                             try {
                                 reward = actionType.getDeclaredConstructor(NotQuests.class).newInstance(main);
@@ -359,7 +359,7 @@ public class QuestManager {
                         for (final String triggerNumber : triggersConfigurationSection.getKeys(false)) {
 
 
-                            int triggerID;
+                            final int triggerID;
                             try {
                                 triggerID = Integer.parseInt(triggerNumber);
                             } catch (java.lang.NumberFormatException ex) {
@@ -400,7 +400,7 @@ public class QuestManager {
                                 return;
                             }
 
-                            Trigger trigger;
+                            final Trigger trigger;
 
                             try {
                                 trigger = triggerType.getDeclaredConstructor(NotQuests.class).newInstance(main);
@@ -434,7 +434,7 @@ public class QuestManager {
                         final ConfigurationSection objectiveConditionsConfigurationSection = category.getQuestsConfig().getConfigurationSection("quests." + quest.getQuestName() + ".objectives." + objective.getObjectiveID() + ".conditions.");
                         if (objectiveConditionsConfigurationSection != null) {
                             for (final String objectiveConditionNumber : objectiveConditionsConfigurationSection.getKeys(false)) {
-                                int conditionID;
+                                final int conditionID;
                                 try {
                                     conditionID = Integer.parseInt(objectiveConditionNumber);
                                 } catch (java.lang.NumberFormatException ex) {
@@ -460,7 +460,7 @@ public class QuestManager {
                                 final boolean negated = category.getQuestsConfig().getBoolean("quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditions." + objectiveConditionNumber + ".negated", false);
                                 final String description = category.getQuestsConfig().getString("quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditions." + objectiveConditionNumber + ".description", "");
 
-                                Condition condition;
+                                final Condition condition;
 
                                 try {
                                     condition = conditionType.getDeclaredConstructor(NotQuests.class).newInstance(main);
@@ -486,8 +486,8 @@ public class QuestManager {
                         final String initialObjectiveRewardsPath = "quests." + quest.getQuestName() + ".objectives." + objective.getObjectiveID() + ".rewards.";
                         final ConfigurationSection objectiveRewardsConfigurationSection = category.getQuestsConfig().getConfigurationSection(initialObjectiveRewardsPath);
                         if (objectiveRewardsConfigurationSection != null) {
-                            for (String objectiveRewardNumber : objectiveRewardsConfigurationSection.getKeys(false)) {
-                                int rewardID;
+                            for (final String objectiveRewardNumber : objectiveRewardsConfigurationSection.getKeys(false)) {
+                                final int rewardID;
                                 try {
                                     rewardID = Integer.parseInt(objectiveRewardNumber);
                                 } catch (java.lang.NumberFormatException ex) {
@@ -508,7 +508,7 @@ public class QuestManager {
                                     return;
                                 }
 
-                                Action reward;
+                                final Action reward;
                                 try {
                                     reward = actionType.getDeclaredConstructor(NotQuests.class).newInstance(main);
                                     reward.setQuest(quest);
