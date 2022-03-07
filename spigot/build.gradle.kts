@@ -163,7 +163,7 @@ dependencies {
 
 
     //Shaded
-    implementation("net.kyori:adventure-text-minimessage:4.10.0") {
+    implementation("net.kyori:adventure-text-minimessage:4.10.1") {
         exclude(group = "net.kyori", module = "adventure-api")
         exclude(group = "net.kyori", module = "adventure-bom")
     }
