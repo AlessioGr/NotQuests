@@ -116,7 +116,8 @@ public class QuestPlayer {
     public ActiveObjective getTrackingObjective() {
         return trackingObjective;
     }
-    public void trackBeacon(String name, Location location) {
+
+    public void trackBeacon(final String name, final Location location) {
         clearBeacons();
         getLocationsAndBeacons().put(name, location);
         updateBeaconLocations(getPlayer());
@@ -434,7 +435,7 @@ public class QuestPlayer {
                             player.showTitle(
                                     Title.title(main.parse(main.getLanguageManager().getString("titles.quest-accepted.title", player)),
                                             main.parse(main.getLanguageManager().getString("titles.quest-accepted.subtitle", player, this, quest)),
-                                            Title.Times.of(Duration.ofMillis(2), Duration.ofSeconds(3), Duration.ofMillis(8))
+                                            Title.Times.times(Duration.ofMillis(2), Duration.ofSeconds(3), Duration.ofMillis(8))
                                     ));
                         }
 
@@ -651,7 +652,7 @@ public class QuestPlayer {
                 player.showTitle(
                         Title.title(main.parse(main.getLanguageManager().getString("titles.quest-completed.title", player)),
                                 main.parse(main.getLanguageManager().getString("titles.quest-completed.subtitle", player, this, activeQuest)),
-                                Title.Times.of(Duration.ofMillis(2), Duration.ofSeconds(3), Duration.ofMillis(8))
+                                Title.Times.times(Duration.ofMillis(2), Duration.ofSeconds(3), Duration.ofMillis(8))
                         ));
 
             }
@@ -706,7 +707,7 @@ public class QuestPlayer {
                     player.showTitle(
                             Title.title(main.parse(main.getLanguageManager().getString("titles.quest-completed.title", player)),
                                     main.parse(main.getLanguageManager().getString("titles.quest-completed.subtitle", player, this, activeQuest)),
-                                    Title.Times.of(Duration.ofMillis(2), Duration.ofSeconds(3), Duration.ofMillis(8))
+                                    Title.Times.times(Duration.ofMillis(2), Duration.ofSeconds(3), Duration.ofMillis(8))
                             ));
                 }
                 player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.MASTER, 100, 40);
@@ -834,7 +835,7 @@ public class QuestPlayer {
                         player.showTitle(
                                 Title.title(main.parse(main.getLanguageManager().getString("titles.quest-failed.title", player)),
                                         main.parse(main.getLanguageManager().getString("titles.quest-failed.subtitle", player, this, activeQuestToFail)),
-                                        Title.Times.of(Duration.ofMillis(2), Duration.ofSeconds(3), Duration.ofMillis(8))
+                                        Title.Times.times(Duration.ofMillis(2), Duration.ofSeconds(3), Duration.ofMillis(8))
                                 ));
                     }
                     player.playSound(player.getLocation(), Sound.ENTITY_RAVAGER_DEATH, SoundCategory.MASTER, 100, 1);

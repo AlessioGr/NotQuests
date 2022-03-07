@@ -38,7 +38,7 @@ public class TagManager {
     private final NotQuests main;
     private final HashMap<String, Tag> identifiersAndTags;
 
-    NamespacedKey booleanTagsNestedPDCKey, integerTagsNestedPDCKey, floatTagsNestedPDCKey, doubleTagsNestedPDCKey, stringTagsNestedPDC;
+    final NamespacedKey booleanTagsNestedPDCKey, integerTagsNestedPDCKey, floatTagsNestedPDCKey, doubleTagsNestedPDCKey, stringTagsNestedPDC;
 
     public TagManager(final NotQuests main) {
         this.main = main;
@@ -54,9 +54,9 @@ public class TagManager {
 
     public void loadAllOnlinePlayerTags() {
         main.getLogManager().info("Loading tags of all online players...");
-        for (Player player : Bukkit.getOnlinePlayers()) {
+        for (final Player player : Bukkit.getOnlinePlayers()) {
             main.getLogManager().info("Loading tags of all online player " + player.getName());
-            QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
             if (questPlayer != null) {
                 onJoin(questPlayer, player);
             } else {
@@ -67,9 +67,9 @@ public class TagManager {
 
     public void saveAllOnlinePlayerTags() {
         main.getLogManager().info("Saving tags of all online players...");
-        for (Player player : Bukkit.getOnlinePlayers()) {
+        for (final Player player : Bukkit.getOnlinePlayers()) {
             main.getLogManager().info("Saving tags of all online player " + player.getName());
-            QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
             if (questPlayer != null) {
                 onQuit(questPlayer, player);
             } else {
@@ -312,7 +312,7 @@ public class TagManager {
         newTag.getCategory().saveTagsConfig();
     }
 
-    public void deleteTag(Tag foundTag) {
+    public void deleteTag(final Tag foundTag) {
         if (identifiersAndTags.get(foundTag.getTagName()) == null) {
             return;
         }

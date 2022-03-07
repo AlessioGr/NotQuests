@@ -154,7 +154,7 @@ public class QuestPlayer {
                             audience.showTitle(
                                     Title.title(MiniMessage.miniMessage().deserialize(main.getLanguageManager().getString("titles.quest-accepted.title", player)),
                                             MiniMessage.miniMessage().deserialize(main.getLanguageManager().getString("titles.quest-accepted.subtitle", player, this, quest)),
-                                            Title.Times.of(Duration.ofMillis(2), Duration.ofSeconds(3), Duration.ofMillis(8))
+                                            Title.Times.times(Duration.ofMillis(2), Duration.ofSeconds(3), Duration.ofMillis(8))
                                     ));
                         }
 
@@ -322,7 +322,7 @@ public class QuestPlayer {
                 audience.showTitle(
                         Title.title(MiniMessage.miniMessage().deserialize(main.getLanguageManager().getString("titles.quest-completed.title", player)),
                                 MiniMessage.miniMessage().deserialize(main.getLanguageManager().getString("titles.quest-completed.subtitle", player, this, activeQuest)),
-                                Title.Times.of(Duration.ofMillis(2), Duration.ofSeconds(3), Duration.ofMillis(8))
+                                Title.Times.times(Duration.ofMillis(2), Duration.ofSeconds(3), Duration.ofMillis(8))
                         ));
 
             }
@@ -376,7 +376,7 @@ public class QuestPlayer {
                     audience.showTitle(
                             Title.title(MiniMessage.miniMessage().deserialize(main.getLanguageManager().getString("titles.quest-completed.title", player)),
                                     MiniMessage.miniMessage().deserialize(main.getLanguageManager().getString("titles.quest-completed.subtitle", player, this, activeQuest)),
-                                    Title.Times.of(Duration.ofMillis(2), Duration.ofSeconds(3), Duration.ofMillis(8))
+                                    Title.Times.times(Duration.ofMillis(2), Duration.ofSeconds(3), Duration.ofMillis(8))
                             ));
                 }
                 player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.MASTER, 100, 40);
@@ -490,7 +490,7 @@ public class QuestPlayer {
                         audience.showTitle(
                                 Title.title(MiniMessage.miniMessage().deserialize(main.getLanguageManager().getString("titles.quest-failed.title", player)),
                                         MiniMessage.miniMessage().deserialize(main.getLanguageManager().getString("titles.quest-failed.subtitle", player, this, activeQuestToFail)),
-                                        Title.Times.of(Duration.ofMillis(2), Duration.ofSeconds(3), Duration.ofMillis(8))
+                                        Title.Times.times(Duration.ofMillis(2), Duration.ofSeconds(3), Duration.ofMillis(8))
                                 ));
                     }
                     player.playSound(player.getLocation(), Sound.ENTITY_RAVAGER_DEATH, SoundCategory.MASTER, 100, 1);
