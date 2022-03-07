@@ -547,15 +547,15 @@ public class QuestManager {
 
     public final ArrayList<Quest> getAllQuestsAttachedToArmorstand(final ArmorStand armorstand) {
         return new ArrayList<>() {{
-            PersistentDataContainer armorstandPDB = armorstand.getPersistentDataContainer();
-            NamespacedKey attachedShowingQuestsKey = new NamespacedKey(main.getMain(), "notquests-attachedQuests-showing");
-            NamespacedKey attachedNonShowingQuestsKey = new NamespacedKey(main.getMain(), "notquests-attachedQuests-nonshowing");
+            final PersistentDataContainer armorstandPDB = armorstand.getPersistentDataContainer();
+            final NamespacedKey attachedShowingQuestsKey = new NamespacedKey(main.getMain(), "notquests-attachedQuests-showing");
+            final NamespacedKey attachedNonShowingQuestsKey = new NamespacedKey(main.getMain(), "notquests-attachedQuests-nonshowing");
 
             //Showing
             if (armorstandPDB.has(attachedShowingQuestsKey, PersistentDataType.STRING)) {
-                String existingAttachedQuests = armorstandPDB.get(attachedShowingQuestsKey, PersistentDataType.STRING);
+                final String existingAttachedQuests = armorstandPDB.get(attachedShowingQuestsKey, PersistentDataType.STRING);
                 if (existingAttachedQuests != null && existingAttachedQuests.length() >= 1) {
-                    for (String split : existingAttachedQuests.split("°")) {
+                    for (final String split : existingAttachedQuests.split("°")) {
                         final Quest foundQuest = getQuest(split);
                         if (foundQuest != null) {
                             add(foundQuest);
@@ -566,9 +566,9 @@ public class QuestManager {
 
             //Nonshowing
             if (armorstandPDB.has(attachedNonShowingQuestsKey, PersistentDataType.STRING)) {
-                String existingAttachedQuests = armorstandPDB.get(attachedNonShowingQuestsKey, PersistentDataType.STRING);
+                final String existingAttachedQuests = armorstandPDB.get(attachedNonShowingQuestsKey, PersistentDataType.STRING);
                 if (existingAttachedQuests != null && existingAttachedQuests.length() >= 1) {
-                    for (String split : existingAttachedQuests.split("°")) {
+                    for (final String split : existingAttachedQuests.split("°")) {
                         final Quest foundQuest = getQuest(split);
                         if (foundQuest != null) {
                             add(foundQuest);
@@ -583,13 +583,13 @@ public class QuestManager {
 
     public final ArrayList<Quest> getQuestsAttachedToArmorstandWithShowing(final ArmorStand armorstand) {
         return new ArrayList<>() {{
-            PersistentDataContainer armorstandPDB = armorstand.getPersistentDataContainer();
-            NamespacedKey attachedQuestsKey = new NamespacedKey(main.getMain(), "notquests-attachedQuests-showing");
+            final PersistentDataContainer armorstandPDB = armorstand.getPersistentDataContainer();
+            final NamespacedKey attachedQuestsKey = new NamespacedKey(main.getMain(), "notquests-attachedQuests-showing");
 
             if (armorstandPDB.has(attachedQuestsKey, PersistentDataType.STRING)) {
-                String existingAttachedQuests = armorstandPDB.get(attachedQuestsKey, PersistentDataType.STRING);
+                final String existingAttachedQuests = armorstandPDB.get(attachedQuestsKey, PersistentDataType.STRING);
                 if (existingAttachedQuests != null && existingAttachedQuests.length() >= 1) {
-                    for (String split : existingAttachedQuests.split("°")) {
+                    for (final String split : existingAttachedQuests.split("°")) {
                         final Quest foundQuest = getQuest(split);
                         if (foundQuest != null) {
                             add(foundQuest);
