@@ -19,6 +19,7 @@
 package rocks.gravili.notquests.paper.managers;
 
 import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.actions.Action;
@@ -223,7 +224,7 @@ public class ActionsYMLManager {
         return actionsAndIdentifiers;
     }
 
-    public final Action getAction(String actionIdentifier) {
+    public final Action getAction(@NotNull String actionIdentifier) {
         return actionsAndIdentifiers.get(actionIdentifier);
     }
 

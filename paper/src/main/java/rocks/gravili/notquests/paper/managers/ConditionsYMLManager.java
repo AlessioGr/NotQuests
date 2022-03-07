@@ -19,6 +19,7 @@
 package rocks.gravili.notquests.paper.managers;
 
 import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
@@ -167,7 +168,7 @@ public class ConditionsYMLManager {
         return conditionsAndIdentifiers;
     }
 
-    public final Condition getCondition(String conditionIdentifier) {
+    public final Condition getCondition(@NotNull String conditionIdentifier) {
         return conditionsAndIdentifiers.get(conditionIdentifier);
     }
 

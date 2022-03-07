@@ -23,6 +23,7 @@ import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.objectives.*;
@@ -124,14 +125,13 @@ public class ObjectiveManager {
     }
 
 
-
-
-    public final Class<? extends Objective> getObjectiveClass(final String type){
+    public final Class<? extends Objective> getObjectiveClass(@NotNull final String type) {
         return objectives.get(type);
     }
-    public final String getObjectiveType(final Class<? extends Objective> objective){
-        for(final String objectiveType : objectives.keySet()){
-            if(objectives.get(objectiveType).equals(objective)) {
+
+    public final String getObjectiveType(final Class<? extends Objective> objective) {
+        for (final String objectiveType : objectives.keySet()) {
+            if (objectives.get(objectiveType).equals(objective)) {
                 return objectiveType;
             }
         }

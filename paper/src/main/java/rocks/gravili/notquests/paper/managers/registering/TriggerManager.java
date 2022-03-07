@@ -23,6 +23,7 @@ import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.actions.Action;
@@ -77,7 +78,7 @@ public class TriggerManager {
     }
 
 
-    public final Class<? extends Trigger> getTriggerClass(final String type) {
+    public final Class<? extends Trigger> getTriggerClass(@NotNull final String type) {
         return triggers.get(type);
     }
 

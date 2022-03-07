@@ -1289,7 +1289,7 @@ public class DataManager {
 
         String reasonWithObjects = reason;
 
-        for (Object object : objects) {
+        for (final Object object : objects) {
             if (object instanceof Exception e) {
                 main.getLogManager().severe("Error message:");
                 e.printStackTrace();
@@ -1298,7 +1298,7 @@ public class DataManager {
                 PrintWriter pw = new PrintWriter(sw);
                 e.printStackTrace(pw);
                 reasonWithObjects += "\n" + "Error message:" + "\n" + sw.toString();
-            }else if (object instanceof Throwable throwable) {
+            } else if (object instanceof Throwable throwable) {
                 main.getLogManager().severe("Error message:");
                 throwable.printStackTrace();
 
@@ -1315,6 +1315,9 @@ public class DataManager {
             } else if (object instanceof Action action) {
                 main.getLogManager().severe("  <DARK_GRAY>└─</DARK_GRAY> Action Name: <highlight>" + action.getActionName() + "</highlight> of Type: <highlight2>" + action.getActionType());
                 reasonWithObjects += "\n" + "  <DARK_GRAY>└─</DARK_GRAY> Action Name: <highlight>" + action.getActionName() + "</highlight> of Type: <highlight2>" + action.getActionType();
+            } else if (object instanceof Category category) {
+                main.getLogManager().severe("  <DARK_GRAY>└─</DARK_GRAY> Category name: <highlight>" + category.getCategoryFullName() + "</highlight>.");
+                reasonWithObjects += "\n" + "  <DARK_GRAY>└─</DARK_GRAY> Category name: <highlight>" + category.getCategoryFullName() + "</highlight>.";
             }
         }
         setSavingEnabled(false);

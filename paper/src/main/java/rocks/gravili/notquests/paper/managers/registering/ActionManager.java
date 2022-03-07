@@ -23,6 +23,7 @@ import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.Quest;
@@ -117,7 +118,7 @@ public class ActionManager {
     }
 
 
-    public final Class<? extends Action> getActionClass(final String type) {
+    public final Class<? extends Action> getActionClass(@NotNull final String type) {
         return actions.get(type);
     }
 
