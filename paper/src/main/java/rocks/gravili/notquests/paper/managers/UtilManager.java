@@ -303,29 +303,28 @@ public class UtilManager {
 
     public final String getCenteredMessage(final String message) {
         //String[] lines = miniMessageToLegacy(message).split("\n", 40);//TODO: Rethink with minimessage in mind
-        StringBuilder returnMessage = new StringBuilder();
+        final StringBuilder returnMessage = new StringBuilder();
 
-        String[] lines = main.getMiniMessage().stripTags(message.toLowerCase(Locale.ROOT).replace("<bold>", "☕l").replace("<reset>", "☕r").replace("</bold>", "☕r")).split("\n", 40);
-        String[] miniMessageLines = message.split("\n", 40);
+        //☕ = bold
+        //☗ = reset
+        final String[] lines = main.getMiniMessage().stripTags(message.toLowerCase(Locale.ROOT).replace("<bold>", "☕").replace("<reset>", "☗").replace("</bold>", "☗")).split("\n", 40);
+        final String[] miniMessageLines = message.split("\n", 40);
 
         int lineCounter = 0;
-        for (String line : lines) { //TODO: Rethink with minimessage in mind
+        for (final String line : lines) { //TODO: Rethink with minimessage in mind
             lineCounter++;
             int messagePxSize = 0;
-            boolean previousCode = false;
             boolean isBold = false;
 
-            for (char c : line.toCharArray()) {
+            for (final char c : line.toCharArray()) {
                 if (c == '☕') {
-                    previousCode = true;
-                } else if (previousCode) {
-                    previousCode = false;
-                    isBold = c == 'l';
-                } else {
-                    DefaultFontInfo dFI = DefaultFontInfo.getDefaultFontInfo(c);
-                    messagePxSize = isBold ? messagePxSize + dFI.getBoldLength() : messagePxSize + dFI.getLength();
-                    messagePxSize++;
+                    isBold = true;
+                } else if (c == '☗') {
+                    isBold = false;
                 }
+                final DefaultFontInfo dFI = DefaultFontInfo.getDefaultFontInfo(c);
+                messagePxSize = isBold ? messagePxSize + dFI.getBoldLength() : messagePxSize + dFI.getLength();
+                messagePxSize++;
             }
             int toCompensate = CENTER_PX - messagePxSize / 2;
             int spaceLength = DefaultFontInfo.SPACE.getLength() + 1;
@@ -341,7 +340,7 @@ public class UtilManager {
             }
         }
 
-        main.getLogManager().debug("Centered message! Old message:\n" + message + "\nCentered Message:\n" + returnMessage);
+        //main.getLogManager().debug("Centered message! Old message:\n" + message + "\nCentered Message:\n" + returnMessage);
 
         return returnMessage.toString();
     }
