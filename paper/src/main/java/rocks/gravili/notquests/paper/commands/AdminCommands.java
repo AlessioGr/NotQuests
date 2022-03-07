@@ -900,9 +900,9 @@ public class AdminCommands {
                     context.getSender().sendMessage(Component.empty());
 
                     if (!printToConsole) {
-                        main.getDataManager().sendPluginDisabledMessage(context.getSender());
+                        main.getDataManager().sendErrorsAndWarnings(context.getSender());
                     } else {
-                        main.getDataManager().sendPluginDisabledMessage(main.getMain().getServer().getConsoleSender());
+                        main.getDataManager().sendErrorsAndWarnings(main.getMain().getServer().getConsoleSender());
                     }
                 }));
 

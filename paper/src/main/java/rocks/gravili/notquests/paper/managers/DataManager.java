@@ -1877,49 +1877,52 @@ public class DataManager {
         }
 
     }*/
-
-
-    public void sendPluginDisabledMessage(final CommandSender commandSender){
-        commandSender.sendMessage(main.parse("<error>Error - NotQuests is disabled. This usually happens when something goes wrong during loading any data from not quests (usually a faulty quest configuration). NotQuests does this to protect itself from data loss. Please report this to the server owner and tell him to check the console for any errors BEFORE the 'notquests has been disabled' message.\n<highlight>Reasons why NotQuests disabled itself (read them & fix them):"));
-        if(criticalErrors.size() == 0){
+    public void sendErrorsAndWarnings(final CommandSender commandSender) {
+        if (criticalErrors.size() == 0) {
             commandSender.sendMessage(main.parse(
                     "<warn>No critical errors found. Please check your console log for any errors during startup."
             ));
-        }else{
+        } else {
             {
                 int counter = 0;
-                for(final String criticalError : criticalErrors){
+                for (final String criticalError : criticalErrors) {
                     commandSender.sendMessage(main.parse(
                             "<highlight>" + ++counter + ". <warn>" + criticalError
                     ));
                 }
             }
         }
-        if(main.getLogManager().getErrorLogs().size() > 0) {
+        if (main.getLogManager().getErrorLogs().size() > 0) {
             int counter = 0;
 
             commandSender.sendMessage(main.parse(
-                   "\n<highlight>Other collected (possibly-relevant) error logs:"
+                    "\n<highlight>Other collected (possibly-relevant) error logs:"
             ));
-            for(final String error : main.getLogManager().getErrorLogs()){
+            for (final String error : main.getLogManager().getErrorLogs()) {
                 commandSender.sendMessage(main.parse(
                         "<highlight>" + ++counter + ". <warn>" + error
                 ));
             }
         }
 
-        if(main.getLogManager().getWarnLogs().size() > 0) {
+        if (main.getLogManager().getWarnLogs().size() > 0) {
             int counter = 0;
 
             commandSender.sendMessage(main.parse(
                     "\n<highlight>Other warnings (they are not the cause for this issue, but may still be worth fixing. Some warnings can be ignored):"
             ));
-            for(final String warning : main.getLogManager().getWarnLogs()){
+            for (final String warning : main.getLogManager().getWarnLogs()) {
                 commandSender.sendMessage(main.parse(
                         "<highlight>" + ++counter + ". <warn>" + warning
                 ));
             }
         }
+    }
+
+    public void sendPluginDisabledMessage(final CommandSender commandSender){
+        commandSender.sendMessage(main.parse("<error>Error - NotQuests is disabled. This usually happens when something goes wrong during loading any data from not quests (usually a faulty quest configuration). NotQuests does this to protect itself from data loss. Please report this to the server owner and tell him to check the console for any errors BEFORE the 'notquests has been disabled' message.\n<highlight>Reasons why NotQuests disabled itself (read them & fix them):"));
+
+        sendErrorsAndWarnings(commandSender);
 
         commandSender.sendMessage(main.parse("<unimportant>You could enable the plugin again by using <main>/qa debug enablePluginAndSaving <reason></main>, but it's not recommended. Fix the issues above or in the console log instead - this mechanism is there to protect yourself from faulty quests. If you're an admin of the server and don't know how to fix these issues alone, please contact the me (the plugin developer) and send me this message, together with your full server log and optimally the NotQuests folder - I'll gladly help <3"));
     }
