@@ -321,10 +321,11 @@ public class UtilManager {
                     isBold = true;
                 } else if (c == '☗') {
                     isBold = false;
+                } else {
+                    final DefaultFontInfo dFI = DefaultFontInfo.getDefaultFontInfo(c);
+                    messagePxSize = isBold ? messagePxSize + dFI.getBoldLength() : messagePxSize + dFI.getLength();
+                    messagePxSize++;
                 }
-                final DefaultFontInfo dFI = DefaultFontInfo.getDefaultFontInfo(c);
-                messagePxSize = isBold ? messagePxSize + dFI.getBoldLength() : messagePxSize + dFI.getLength();
-                messagePxSize++;
             }
             int toCompensate = CENTER_PX - messagePxSize / 2;
             int spaceLength = DefaultFontInfo.SPACE.getLength() + 1;
