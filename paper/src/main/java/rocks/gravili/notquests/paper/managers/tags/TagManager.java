@@ -94,31 +94,41 @@ public class TagManager {
 
         if(booleanTagsContainer != null){
             for(NamespacedKey key : booleanTagsContainer.getKeys()){
-                questPlayer.setTagValue(key.getKey(), booleanTagsContainer.get(key, PersistentDataType.BYTE)!=0);
+                if (booleanTagsContainer.has(key, PersistentDataType.BYTE)) {
+                    questPlayer.setTagValue(key.getKey(), booleanTagsContainer.get(key, PersistentDataType.BYTE) != 0);
+                }
             }
         }
 
-        if(integerTagsContainer != null){
-            for(NamespacedKey key : integerTagsContainer.getKeys()){
-                questPlayer.setTagValue(key.getKey(), integerTagsContainer.get(key, PersistentDataType.INTEGER));
+        if(integerTagsContainer != null) {
+            for (NamespacedKey key : integerTagsContainer.getKeys()) {
+                if (integerTagsContainer.has(key, PersistentDataType.INTEGER)) {
+                    questPlayer.setTagValue(key.getKey(), integerTagsContainer.get(key, PersistentDataType.INTEGER));
+                }
             }
         }
 
-        if(floatTagsContainer != null){
-            for(NamespacedKey key : floatTagsContainer.getKeys()){
-                questPlayer.setTagValue(key.getKey(), floatTagsContainer.get(key, PersistentDataType.FLOAT));
+        if(floatTagsContainer != null) {
+            for (NamespacedKey key : floatTagsContainer.getKeys()) {
+                if (floatTagsContainer.has(key, PersistentDataType.FLOAT)) {
+                    questPlayer.setTagValue(key.getKey(), floatTagsContainer.get(key, PersistentDataType.FLOAT));
+                }
             }
         }
 
-        if(doubleTagsContainer != null){
-            for(NamespacedKey key : doubleTagsContainer.getKeys()){
-                questPlayer.setTagValue(key.getKey(), doubleTagsContainer.get(key, PersistentDataType.DOUBLE));
+        if(doubleTagsContainer != null) {
+            for (NamespacedKey key : doubleTagsContainer.getKeys()) {
+                if (doubleTagsContainer.has(key, PersistentDataType.DOUBLE)) {
+                    questPlayer.setTagValue(key.getKey(), doubleTagsContainer.get(key, PersistentDataType.DOUBLE));
+                }
             }
         }
 
-        if(stringTagsContainer != null){
-            for(NamespacedKey key : stringTagsContainer.getKeys()){
-                questPlayer.setTagValue(key.getKey(), stringTagsContainer.get(key, PersistentDataType.STRING));
+        if(stringTagsContainer != null) {
+            for (NamespacedKey key : stringTagsContainer.getKeys()) {
+                if (stringTagsContainer.has(key, PersistentDataType.STRING)) {
+                    questPlayer.setTagValue(key.getKey(), stringTagsContainer.get(key, PersistentDataType.STRING));
+                }
             }
         }
 
@@ -162,21 +172,21 @@ public class TagManager {
                 }
                 floatTagsContainer.set(new NamespacedKey(main.getMain(), tagIdentifier), PersistentDataType.FLOAT, floatValue);
 
-                persistentDataContainer.set(integerTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER, floatTagsContainer); //TODO: Check if needed
+                persistentDataContainer.set(floatTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER, floatTagsContainer); //TODO: Check if needed
             }else if(tagValue instanceof Double doubleValue){
                 if(doubleTagsContainer == null){
                     doubleTagsContainer = persistentDataContainer.getAdapterContext().newPersistentDataContainer();
                 }
                 doubleTagsContainer.set(new NamespacedKey(main.getMain(), tagIdentifier), PersistentDataType.DOUBLE, doubleValue);
 
-                persistentDataContainer.set(integerTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER, doubleTagsContainer); //TODO: Check if needed
+                persistentDataContainer.set(doubleTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER, doubleTagsContainer); //TODO: Check if needed
             }else if(tagValue instanceof String stringTagValue){
                 if(stringTagsContainer == null){
                     stringTagsContainer = persistentDataContainer.getAdapterContext().newPersistentDataContainer();
                 }
                 stringTagsContainer.set(new NamespacedKey(main.getMain(), tagIdentifier), PersistentDataType.STRING, stringTagValue);
 
-                persistentDataContainer.set(integerTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER, stringTagsContainer); //TODO: Check if needed
+                persistentDataContainer.set(stringTagsNestedPDC, PersistentDataType.TAG_CONTAINER, stringTagsContainer); //TODO: Check if needed
             }
         }
     }
