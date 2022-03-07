@@ -209,9 +209,9 @@ public class AdminConversationCommands {
                 .handler((context) -> {
                     final Conversation foundConversation = context.get("conversation");
 
-                    boolean printToConsole = context.flags().contains("printToConsole");
+                    final boolean printToConsole = context.flags().contains("printToConsole");
 
-                    for (ConversationLine conversationLine : foundConversation.getStartingLines()) {
+                    for (final ConversationLine conversationLine : foundConversation.getStartingLines()) {
                         final String analyzed = main.getConversationManager().analyze(conversationLine, "  ");
 
                         if (printToConsole) {

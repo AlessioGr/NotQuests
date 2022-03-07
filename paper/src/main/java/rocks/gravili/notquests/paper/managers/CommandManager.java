@@ -114,7 +114,7 @@ public class CommandManager {
 
     private CommandMap commandMap;
 
-    private CommandPostProcessor commandPostProcessor;
+    private CommandPostProcessor<CommandSender> commandPostProcessor;
 
 
     public CommandManager(final NotQuests main) {
@@ -333,7 +333,7 @@ public class CommandManager {
             main.getLogManager().warn("Failed to initialize Brigadier support: <highlight>" + e.getMessage());
         }
 
-        commandPostProcessor = new CommandPostProcessor(main);
+        commandPostProcessor = new CommandPostProcessor<>(main);
         commandManager.registerCommandPostProcessor(commandPostProcessor);
     }
 

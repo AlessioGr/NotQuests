@@ -34,8 +34,8 @@ public class CommandPostProcessor<C> implements CommandPostprocessor<C> {
 
     @Override
     public void accept(@NotNull final CommandPostprocessingContext<C> context) {
-        if(main.getDataManager().isDisabled() && !(context.getCommand().getArguments().size() >= 3 && (context.getCommand().getArguments().get(2).getName().equalsIgnoreCase("enablePluginAndSaving") || context.getCommand().getArguments().get(2).getName().equalsIgnoreCase("disablePluginAndSaving") )) ){
-            if(context.getCommandContext().getSender() instanceof final CommandSender commandSender){
+        if (main.getDataManager().isDisabled() && !(context.getCommand().getArguments().size() >= 3 && (context.getCommand().getArguments().get(2).getName().equalsIgnoreCase("enablePluginAndSaving") || context.getCommand().getArguments().get(2).getName().equalsIgnoreCase("disablePluginAndSaving") || context.getCommand().getArguments().get(2).getName().equalsIgnoreCase("showErrorsAndWarnings")))) {
+            if (context.getCommandContext().getSender() instanceof final CommandSender commandSender) {
                 main.getDataManager().sendPluginDisabledMessage(commandSender);
             }
             ConsumerService.interrupt();

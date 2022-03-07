@@ -869,20 +869,18 @@ public class AdminCommands {
                 .literal("disablePluginAndSaving")
                 .argument(StringArgument.of("reason"), ArgumentDescription.of("Reason for disabling the plugin"))
                 .meta(CommandMeta.DESCRIPTION, "Disables NotQuests, saving & loading")
-                .senderType(Player.class)
                 .handler((context) -> {
                     context.getSender().sendMessage(Component.empty());
-                    final Player player = (Player) context.getSender();
 
                     if(main.getDataManager().isDisabled()){
-                        player.sendMessage(main.parse(
+                        context.getSender().sendMessage(main.parse(
                                 "<error>Error: NotQuests is already disabled"
                         ));
                         return;
                     }
 
                     final String reason = context.get("reason");
-                    player.sendMessage(main.parse(
+                    context.getSender().sendMessage(main.parse(
                             "<main>Disabling NotQuests..."
                     ));
                     main.getDataManager().disablePluginAndSaving(reason);
@@ -890,23 +888,40 @@ public class AdminCommands {
                 }));
 
         manager.command(builder.literal("debug")
+                .literal("showErrorsAndWarnings")
+                .flag(
+                        manager.flagBuilder("printToConsole")
+                                .withDescription(ArgumentDescription.of("Prints the output to the console"))
+                )
+                .meta(CommandMeta.DESCRIPTION, "Shows the current errors and warnings NotQuests collected")
+                .handler((context) -> {
+                    final boolean printToConsole = context.flags().contains("printToConsole");
+
+                    context.getSender().sendMessage(Component.empty());
+
+                    if (!printToConsole) {
+                        main.getDataManager().sendPluginDisabledMessage(context.getSender());
+                    } else {
+                        main.getDataManager().sendPluginDisabledMessage(main.getMain().getServer().getConsoleSender());
+                    }
+                }));
+
+        manager.command(builder.literal("debug")
                 .literal("enablePluginAndSaving")
                 .argument(StringArgument.of("reason"), ArgumentDescription.of("Reason for enabling the plugin"))
                 .meta(CommandMeta.DESCRIPTION, "Enables NotQuests, saving & loading")
-                .senderType(Player.class)
                 .handler((context) -> {
                     context.getSender().sendMessage(Component.empty());
-                    final Player player = (Player) context.getSender();
 
-                    if(!main.getDataManager().isDisabled()){
-                        player.sendMessage(main.parse(
+                    if (!main.getDataManager().isDisabled()) {
+                        context.getSender().sendMessage(main.parse(
                                 "<error>Error: NotQuests is already enabled"
                         ));
                         return;
                     }
 
                     final String reason = context.get("reason");
-                    player.sendMessage(main.parse(
+                    context.getSender().sendMessage(main.parse(
                             "<main>Enabling NotQuests..."
                     ));
                     main.getDataManager().enablePluginAndSaving(reason);
