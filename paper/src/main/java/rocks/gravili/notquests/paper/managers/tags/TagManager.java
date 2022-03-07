@@ -24,6 +24,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -39,7 +40,7 @@ public class TagManager {
 
     NamespacedKey booleanTagsNestedPDCKey, integerTagsNestedPDCKey, floatTagsNestedPDCKey, doubleTagsNestedPDCKey, stringTagsNestedPDC;
 
-    public TagManager(final NotQuests main){
+    public TagManager(final NotQuests main) {
         this.main = main;
         this.identifiersAndTags = new HashMap<>();
         booleanTagsNestedPDCKey = new NamespacedKey(main.getMain(), "notquests_tags_boolean");
@@ -51,81 +52,81 @@ public class TagManager {
         loadTags();
     }
 
-    public void loadAllOnlinePlayerTags(){
+    public void loadAllOnlinePlayerTags() {
         main.getLogManager().info("Loading tags of all online players...");
-        for(Player player : Bukkit.getOnlinePlayers()){
+        for (Player player : Bukkit.getOnlinePlayers()) {
             main.getLogManager().info("Loading tags of all online player " + player.getName());
             QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
-            if(questPlayer != null){
+            if (questPlayer != null) {
                 onJoin(questPlayer, player);
-            }else{
+            } else {
                 main.getLogManager().info("Loading Saving tags of all online player " + player.getName() + " because they have no questplayer.");
             }
         }
     }
 
-    public void saveAllOnlinePlayerTags(){
+    public void saveAllOnlinePlayerTags() {
         main.getLogManager().info("Saving tags of all online players...");
-        for(Player player : Bukkit.getOnlinePlayers()){
+        for (Player player : Bukkit.getOnlinePlayers()) {
             main.getLogManager().info("Saving tags of all online player " + player.getName());
             QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
-            if(questPlayer != null){
+            if (questPlayer != null) {
                 onQuit(questPlayer, player);
-            }else{
+            } else {
                 main.getLogManager().info("Skip Saving tags of all online player " + player.getName() + " because they have no questplayer.");
             }
         }
     }
 
     //TODO: test if hashmap => bytestream serialization is faster
-    public void onJoin(final QuestPlayer questPlayer, final Player player){
-        if(questPlayer.getTags().size() > 0){
+    public void onJoin(final QuestPlayer questPlayer, final Player player) {
+        if (questPlayer.getTags().size() > 0) {
             main.getLogManager().info("Skip Loading tags for " + player.getName() + "! Size: " + questPlayer.getTags().size());
             return;
         }
         main.getLogManager().info("Loading tags for " + player.getName() + "...");
 
-        PersistentDataContainer persistentDataContainer = player.getPersistentDataContainer();
-        PersistentDataContainer booleanTagsContainer = persistentDataContainer.get(booleanTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER);
-        PersistentDataContainer integerTagsContainer = persistentDataContainer.get(integerTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER);
-        PersistentDataContainer floatTagsContainer = persistentDataContainer.get(floatTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER);
-        PersistentDataContainer doubleTagsContainer = persistentDataContainer.get(doubleTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER);
-        PersistentDataContainer stringTagsContainer = persistentDataContainer.get(stringTagsNestedPDC, PersistentDataType.TAG_CONTAINER);
+        final PersistentDataContainer persistentDataContainer = player.getPersistentDataContainer();
+        final PersistentDataContainer booleanTagsContainer = persistentDataContainer.get(booleanTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER);
+        final PersistentDataContainer integerTagsContainer = persistentDataContainer.get(integerTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER);
+        final PersistentDataContainer floatTagsContainer = persistentDataContainer.get(floatTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER);
+        final PersistentDataContainer doubleTagsContainer = persistentDataContainer.get(doubleTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER);
+        final PersistentDataContainer stringTagsContainer = persistentDataContainer.get(stringTagsNestedPDC, PersistentDataType.TAG_CONTAINER);
 
-        if(booleanTagsContainer != null){
-            for(NamespacedKey key : booleanTagsContainer.getKeys()){
+        if (booleanTagsContainer != null) {
+            for (final NamespacedKey key : booleanTagsContainer.getKeys()) {
                 if (booleanTagsContainer.has(key, PersistentDataType.BYTE)) {
                     questPlayer.setTagValue(key.getKey(), booleanTagsContainer.get(key, PersistentDataType.BYTE) != 0);
                 }
             }
         }
 
-        if(integerTagsContainer != null) {
-            for (NamespacedKey key : integerTagsContainer.getKeys()) {
+        if (integerTagsContainer != null) {
+            for (final NamespacedKey key : integerTagsContainer.getKeys()) {
                 if (integerTagsContainer.has(key, PersistentDataType.INTEGER)) {
                     questPlayer.setTagValue(key.getKey(), integerTagsContainer.get(key, PersistentDataType.INTEGER));
                 }
             }
         }
 
-        if(floatTagsContainer != null) {
-            for (NamespacedKey key : floatTagsContainer.getKeys()) {
+        if (floatTagsContainer != null) {
+            for (final NamespacedKey key : floatTagsContainer.getKeys()) {
                 if (floatTagsContainer.has(key, PersistentDataType.FLOAT)) {
                     questPlayer.setTagValue(key.getKey(), floatTagsContainer.get(key, PersistentDataType.FLOAT));
                 }
             }
         }
 
-        if(doubleTagsContainer != null) {
-            for (NamespacedKey key : doubleTagsContainer.getKeys()) {
+        if (doubleTagsContainer != null) {
+            for (final NamespacedKey key : doubleTagsContainer.getKeys()) {
                 if (doubleTagsContainer.has(key, PersistentDataType.DOUBLE)) {
                     questPlayer.setTagValue(key.getKey(), doubleTagsContainer.get(key, PersistentDataType.DOUBLE));
                 }
             }
         }
 
-        if(stringTagsContainer != null) {
-            for (NamespacedKey key : stringTagsContainer.getKeys()) {
+        if (stringTagsContainer != null) {
+            for (final NamespacedKey key : stringTagsContainer.getKeys()) {
                 if (stringTagsContainer.has(key, PersistentDataType.STRING)) {
                     questPlayer.setTagValue(key.getKey(), stringTagsContainer.get(key, PersistentDataType.STRING));
                 }
@@ -133,8 +134,8 @@ public class TagManager {
         }
 
         main.getLogManager().info("Loading " + questPlayer.getTags().size() + " tags for " + player.getName() + ":");
-        if(questPlayer.getTags().size() > 0){
-            for(String tagIdentifier : questPlayer.getTags().keySet()){
+        if (questPlayer.getTags().size() > 0) {
+            for (final String tagIdentifier : questPlayer.getTags().keySet()) {
                 main.getLogManager().info("   " + tagIdentifier + ": " + questPlayer.getTagValue(tagIdentifier));
             }
         }
@@ -142,46 +143,50 @@ public class TagManager {
 
     }
 
-    public void onQuit(final QuestPlayer questPlayer, final Player player){
-        PersistentDataContainer persistentDataContainer = player.getPersistentDataContainer();
-        PersistentDataContainer booleanTagsContainer = persistentDataContainer.get(booleanTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER);
-        PersistentDataContainer integerTagsContainer = persistentDataContainer.get(integerTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER);
-        PersistentDataContainer floatTagsContainer = persistentDataContainer.get(floatTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER);
-        PersistentDataContainer doubleTagsContainer = persistentDataContainer.get(doubleTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER);
-        PersistentDataContainer stringTagsContainer = persistentDataContainer.get(stringTagsNestedPDC, PersistentDataType.TAG_CONTAINER);
+    public void onQuit(final QuestPlayer questPlayer, final Player player) {
+        final PersistentDataContainer persistentDataContainer = player.getPersistentDataContainer();
+        @Nullable PersistentDataContainer booleanTagsContainer = persistentDataContainer.get(booleanTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER);
+        @Nullable PersistentDataContainer integerTagsContainer = persistentDataContainer.get(integerTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER);
+        @Nullable PersistentDataContainer floatTagsContainer = persistentDataContainer.get(floatTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER);
+        @Nullable PersistentDataContainer doubleTagsContainer = persistentDataContainer.get(doubleTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER);
+        @Nullable PersistentDataContainer stringTagsContainer = persistentDataContainer.get(stringTagsNestedPDC, PersistentDataType.TAG_CONTAINER);
 
-        for(String tagIdentifier : questPlayer.getTags().keySet()){
-            Object tagValue = questPlayer.getTagValue(tagIdentifier);
-            if(tagValue instanceof Boolean booleanTagValue){
-                if(booleanTagsContainer == null){
+        for (final String tagIdentifier : questPlayer.getTags().keySet()) {
+            @Nullable final Object tagValue = questPlayer.getTagValue(tagIdentifier);
+
+            main.getLogManager().info("Saving the tag <highlight>" + tagIdentifier + "</highlight> with value <highlight>" + (tagValue != null ? tagValue : "null") + "</highlight> for player <highlight2>" + player.getName() + "</highlight2>...");
+
+
+            if (tagValue instanceof final Boolean booleanTagValue) {
+                if (booleanTagsContainer == null) {
                     booleanTagsContainer = persistentDataContainer.getAdapterContext().newPersistentDataContainer();
                 }
-                booleanTagsContainer.set(new NamespacedKey(main.getMain(), tagIdentifier), PersistentDataType.BYTE, (byte)(booleanTagValue ? 1 : 0));
+                booleanTagsContainer.set(new NamespacedKey(main.getMain(), tagIdentifier), PersistentDataType.BYTE, (byte) (booleanTagValue ? 1 : 0));
 
                 persistentDataContainer.set(booleanTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER, booleanTagsContainer);  //TODO: Check if needed
-            }else if(tagValue instanceof Integer integerTagValue){
-                if(integerTagsContainer == null){
+            } else if (tagValue instanceof final Integer integerTagValue) {
+                if (integerTagsContainer == null) {
                     integerTagsContainer = persistentDataContainer.getAdapterContext().newPersistentDataContainer();
                 }
                 integerTagsContainer.set(new NamespacedKey(main.getMain(), tagIdentifier), PersistentDataType.INTEGER, integerTagValue);
 
                 persistentDataContainer.set(integerTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER, integerTagsContainer); //TODO: Check if needed
-            }else if(tagValue instanceof Float floatValue){
-                if(floatTagsContainer == null){
+            } else if (tagValue instanceof final Float floatValue) {
+                if (floatTagsContainer == null) {
                     floatTagsContainer = persistentDataContainer.getAdapterContext().newPersistentDataContainer();
                 }
                 floatTagsContainer.set(new NamespacedKey(main.getMain(), tagIdentifier), PersistentDataType.FLOAT, floatValue);
 
                 persistentDataContainer.set(floatTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER, floatTagsContainer); //TODO: Check if needed
-            }else if(tagValue instanceof Double doubleValue){
-                if(doubleTagsContainer == null){
+            } else if (tagValue instanceof final Double doubleValue) {
+                if (doubleTagsContainer == null) {
                     doubleTagsContainer = persistentDataContainer.getAdapterContext().newPersistentDataContainer();
                 }
                 doubleTagsContainer.set(new NamespacedKey(main.getMain(), tagIdentifier), PersistentDataType.DOUBLE, doubleValue);
 
                 persistentDataContainer.set(doubleTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER, doubleTagsContainer); //TODO: Check if needed
-            }else if(tagValue instanceof String stringTagValue){
-                if(stringTagsContainer == null){
+            } else if (tagValue instanceof final String stringTagValue) {
+                if (stringTagsContainer == null) {
                     stringTagsContainer = persistentDataContainer.getAdapterContext().newPersistentDataContainer();
                 }
                 stringTagsContainer.set(new NamespacedKey(main.getMain(), tagIdentifier), PersistentDataType.STRING, stringTagValue);
@@ -191,26 +196,26 @@ public class TagManager {
         }
     }
 
-    public final Tag getTag(final String tagIdentifier){
+    public final Tag getTag(final String tagIdentifier) {
         return identifiersAndTags.get(tagIdentifier.toLowerCase(Locale.ROOT));
     }
 
 
-    public final Collection<Tag> getTags(){
+    public final Collection<Tag> getTags() {
         return identifiersAndTags.values();
     }
 
-    public final Collection<String> getTagIdentifiers(){
+    public final Collection<String> getTagIdentifiers() {
         return identifiersAndTags.keySet();
     }
 
 
     public void loadTags() {
-        ArrayList<String> categoriesStringList = new ArrayList<>();
+        final ArrayList<String> categoriesStringList = new ArrayList<>();
         for (final Category category : main.getDataManager().getCategories()) {
             categoriesStringList.add(category.getCategoryFullName());
         }
-        main.getLogManager().info("Scheduled Tags Data load for following categories: <highlight>" + categoriesStringList.toString() );
+        main.getLogManager().info("Scheduled Tags Data load for following categories: <highlight>" + categoriesStringList.toString());
 
         for (final Category category : main.getDataManager().getCategories()) {
             loadTags(category);
@@ -220,7 +225,7 @@ public class TagManager {
 
     public void loadTags(final Category category) {
         //First load from tags.yml:
-        if(category.getTagsConfig() == null){
+        if (category.getTagsConfig() == null) {
             main.getLogManager().severe("Error: Cannot load tags of category <highlight>" + category.getCategoryFullName() + "</highlight>, because it doesn't have a tags config. This category has been skipped.");
             return;
         }
@@ -250,7 +255,7 @@ public class TagManager {
 
     }
 
-    public void addTag(final Tag newTag){
+    public void addTag(final Tag newTag) {
         if (identifiersAndTags.get(newTag.getTagName()) != null) {
             return;
         }
