@@ -97,6 +97,8 @@ public class TagManager {
             for (final NamespacedKey key : booleanTagsContainer.getKeys()) {
                 if (booleanTagsContainer.has(key, PersistentDataType.BYTE)) {
                     questPlayer.setTagValue(key.getKey(), booleanTagsContainer.get(key, PersistentDataType.BYTE) != 0);
+                } else {
+                    main.getLogManager().warn("Cannot load the tag <highlight>" + key.getKey() + "</highlight> for player <highlight2>" + player.getName() + "</highlight2> because the tag's value is incorrect (should be byte)");
                 }
             }
         }
@@ -105,6 +107,8 @@ public class TagManager {
             for (final NamespacedKey key : integerTagsContainer.getKeys()) {
                 if (integerTagsContainer.has(key, PersistentDataType.INTEGER)) {
                     questPlayer.setTagValue(key.getKey(), integerTagsContainer.get(key, PersistentDataType.INTEGER));
+                } else {
+                    main.getLogManager().warn("Cannot load the tag <highlight>" + key.getKey() + "</highlight> for player <highlight2>" + player.getName() + "</highlight2> because the tag's value is incorrect (should be integer)");
                 }
             }
         }
@@ -113,6 +117,8 @@ public class TagManager {
             for (final NamespacedKey key : floatTagsContainer.getKeys()) {
                 if (floatTagsContainer.has(key, PersistentDataType.FLOAT)) {
                     questPlayer.setTagValue(key.getKey(), floatTagsContainer.get(key, PersistentDataType.FLOAT));
+                } else {
+                    main.getLogManager().warn("Cannot load the tag <highlight>" + key.getKey() + "</highlight> for player <highlight2>" + player.getName() + "</highlight2> because the tag's value is incorrect (should be float)");
                 }
             }
         }
@@ -121,6 +127,8 @@ public class TagManager {
             for (final NamespacedKey key : doubleTagsContainer.getKeys()) {
                 if (doubleTagsContainer.has(key, PersistentDataType.DOUBLE)) {
                     questPlayer.setTagValue(key.getKey(), doubleTagsContainer.get(key, PersistentDataType.DOUBLE));
+                } else {
+                    main.getLogManager().warn("Cannot load the tag <highlight>" + key.getKey() + "</highlight> for player <highlight2>" + player.getName() + "</highlight2> because the tag's value is incorrect (should be double)");
                 }
             }
         }
@@ -129,6 +137,8 @@ public class TagManager {
             for (final NamespacedKey key : stringTagsContainer.getKeys()) {
                 if (stringTagsContainer.has(key, PersistentDataType.STRING)) {
                     questPlayer.setTagValue(key.getKey(), stringTagsContainer.get(key, PersistentDataType.STRING));
+                } else {
+                    main.getLogManager().warn("Cannot load the tag <highlight>" + key.getKey() + "</highlight> for player <highlight2>" + player.getName() + "</highlight2> because the tag's value is incorrect (should be string)");
                 }
             }
         }
