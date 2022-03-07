@@ -94,31 +94,41 @@ public class TagManager {
 
         if(booleanTagsContainer != null){
             for(NamespacedKey key : booleanTagsContainer.getKeys()){
-                questPlayer.setTagValue(key.getKey(), booleanTagsContainer.get(key, PersistentDataType.BYTE)!=0);
+                if (booleanTagsContainer.has(key, PersistentDataType.BYTE)) {
+                    questPlayer.setTagValue(key.getKey(), booleanTagsContainer.get(key, PersistentDataType.BYTE) != 0);
+                }
             }
         }
 
         if(integerTagsContainer != null){
-            for(NamespacedKey key : integerTagsContainer.getKeys()){
-                questPlayer.setTagValue(key.getKey(), integerTagsContainer.get(key, PersistentDataType.INTEGER));
+            for(NamespacedKey key : integerTagsContainer.getKeys()) {
+                if (integerTagsContainer.has(key, PersistentDataType.INTEGER)) {
+                    questPlayer.setTagValue(key.getKey(), integerTagsContainer.get(key, PersistentDataType.INTEGER));
+                }
             }
         }
 
         if(floatTagsContainer != null){
-            for(NamespacedKey key : floatTagsContainer.getKeys()){
-                questPlayer.setTagValue(key.getKey(), floatTagsContainer.get(key, PersistentDataType.FLOAT));
+            for(NamespacedKey key : floatTagsContainer.getKeys()) {
+                if (floatTagsContainer.has(key, PersistentDataType.FLOAT)) {
+                    questPlayer.setTagValue(key.getKey(), floatTagsContainer.get(key, PersistentDataType.FLOAT));
+                }
             }
         }
 
         if(doubleTagsContainer != null){
-            for(NamespacedKey key : doubleTagsContainer.getKeys()){
-                questPlayer.setTagValue(key.getKey(), doubleTagsContainer.get(key, PersistentDataType.DOUBLE));
+            for(NamespacedKey key : doubleTagsContainer.getKeys()) {
+                if (doubleTagsContainer.has(key, PersistentDataType.DOUBLE)) {
+                    questPlayer.setTagValue(key.getKey(), doubleTagsContainer.get(key, PersistentDataType.DOUBLE));
+                }
             }
         }
 
         if(stringTagsContainer != null){
-            for(NamespacedKey key : stringTagsContainer.getKeys()){
-                questPlayer.setTagValue(key.getKey(), stringTagsContainer.get(key, PersistentDataType.STRING));
+            for(NamespacedKey key : stringTagsContainer.getKeys()) {
+                if (stringTagsContainer.has(key, PersistentDataType.STRING)) {
+                    questPlayer.setTagValue(key.getKey(), stringTagsContainer.get(key, PersistentDataType.STRING));
+                }
             }
         }
 
