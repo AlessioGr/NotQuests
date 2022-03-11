@@ -638,7 +638,7 @@ public class UserCommands {
                                         convert(
                                                 main.getLanguageManager().getString("gui.progress.button.unlockedObjective.name", player, activeObjective, questPlayer)
                                                         .replace("%OBJECTIVEDESCRIPTION%", descriptionToDisplay)
-                                                        .replace("%ACTIVEOBJECTIVEDESCRIPTION%", main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), false, player))
+                                                        .replace("%OBJECTIVETASKDESCRIPTION%", main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), false, player))
                                         )
                                 ));
                             } else {
@@ -676,7 +676,7 @@ public class UserCommands {
                                     convert(
                                             main.getLanguageManager().getString("gui.progress.button.completedObjective.name", player, activeObjective, questPlayer)
                                                     .replace("%OBJECTIVEDESCRIPTION%", descriptionToDisplay)
-                                                    .replace("%COMPLETEDOBJECTIVEDESCRIPTION%", main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), true, player))
+                                                    .replace("%COMPLETEDOBJECTIVETASKDESCRIPTION%", main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), true, player))
                                     )
                             ));
                         }

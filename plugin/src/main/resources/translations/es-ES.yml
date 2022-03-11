@@ -298,13 +298,13 @@ gui:
         lore:
           - "<main><BOLD>ACTIVOS</BOLD>"
           - "<veryUnimportant>%WRAPPEDOBJECTIVEDESCRIPTION%"
-          - "<unimportant>%ACTIVEOBJECTIVEDESCRIPTION%"
+          - "<unimportant>%OBJECTIVETASKDESCRIPTION%"
           - ""
           - "<unimportant>Progreso: <positive>%ACTIVEOBJECTIVEPROGRESS%<unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
         lore-if-description-empty:
           - "<main><BOLD>Activos</BOLD>"
           - "<veryUnimportant>Sin descripción"
-          - "<unimportant>%ACTIVEOBJECTIVEDESCRIPTION%"
+          - "<unimportant>%OBJECTIVETASKDESCRIPTION%"
           - ""
           - "<unimportant>Progreso: <positive>%ACTIVEOBJECTIVEPROGRESS%<unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
       lockedObjective:
@@ -317,12 +317,12 @@ gui:
         lore:
           - "<positive><BOLD>Completadas</BOLD>"
           - "<veryUnimportant><strikethrough>%WRAPPEDOBJECTIVEDESCRIPTION%"
-          - "<veryUnimportant><strikethrough>%COMPLETEDOBJECTIVEDESCRIPTION%"
+          - "<veryUnimportant><strikethrough>%COMPLETEDOBJECTIVETASKDESCRIPTION%"
           - ""
           - "<unimportant><strikethrough>Progreso: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
         lore-if-description-empty:
           - "<positive><BOLD>Completadas</BOLD>"
           - "<veryUnimportant><strikethrough>Sin descripción"
-          - "<veryUnimportant><strikethrough>%COMPLETEDOBJECTIVEDESCRIPTION%"
+          - "<veryUnimportant><strikethrough>%COMPLETEDOBJECTIVETASKDESCRIPTION%"
           - ""
           - "<unimportant><strikethrough>Progreso: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"

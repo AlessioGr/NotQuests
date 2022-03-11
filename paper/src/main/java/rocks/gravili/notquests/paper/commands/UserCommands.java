@@ -304,7 +304,7 @@ public class UserCommands {
                                     convert(
                                             main.getLanguageManager().getString("gui.progress.button.completedObjective.text", player, activeObjective, questPlayer)
                                                     .replace("%OBJECTIVEDESCRIPTION%", descriptionToDisplay)
-                                                    .replace("%COMPLETEDOBJECTIVEDESCRIPTION%", main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), true, player))
+                                                    .replace("%COMPLETEDOBJECTIVETASKDESCRIPTION%", main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), true, player))
                                     )
                             ));
                         }*/
