@@ -267,7 +267,7 @@ public class TagManager {
                 floatTagsContainer.set(new NamespacedKey(main.getMain(), tagIdentifier), PersistentDataType.FLOAT, floatValue);
 
                 persistentDataContainer.set(floatTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER, floatTagsContainer); //TODO: Check if needed
-                main.getLogManager().info("Saved float tag!");
+                main.getLogManager().info("Saved float tag! Keys size: " + floatTagsContainer.getKeys().size());
             } else if (tagValue instanceof final Double doubleValue) {
                 if (doubleTagsContainer == null) {
                     doubleTagsContainer = persistentDataContainer.getAdapterContext().newPersistentDataContainer();
