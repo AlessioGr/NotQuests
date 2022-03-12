@@ -127,7 +127,7 @@ public class QuestPlayer {
         this.trackingObjective = trackingObjective;
         sendObjectiveProgress(trackingObjective);
         if(trackingObjective.getObjective().isShowLocation() && trackingObjective.getObjective().getLocation() != null){
-            trackBeacon(trackingObjective.getObjectiveID()+"", trackingObjective.getObjective().getLocation());;
+            trackBeacon(trackingObjective.getObjectiveID() + "", trackingObjective.getObjective().getLocation());
         }
     }
 
@@ -499,7 +499,7 @@ public class QuestPlayer {
     }
 
 
-    private void finishAddingQuest(final ActiveQuest activeQuest, boolean triggerAcceptQuestTrigger, final boolean sendUpdateObjectivesUnlocked) {
+    private void finishAddingQuest(final ActiveQuest activeQuest, final boolean triggerAcceptQuestTrigger, final boolean sendUpdateObjectivesUnlocked) {
 
         QuestFinishAcceptEvent questFinishAcceptEvent = new QuestFinishAcceptEvent(this, activeQuest, triggerAcceptQuestTrigger);
         if (Bukkit.isPrimaryThread()) {
@@ -524,7 +524,7 @@ public class QuestPlayer {
 
     }
 
-    public String forceAddActiveQuest(final ActiveQuest quest, boolean triggerAcceptQuestTrigger) { //ignores max amount, cooldown and requirements
+    public String forceAddActiveQuest(final ActiveQuest quest, final boolean triggerAcceptQuestTrigger) { //ignores max amount, cooldown and requirements
         for (ActiveQuest activeQuest : activeQuests) {
             if (activeQuest.getQuest().equals(quest.getQuest())) {
                 return main.getLanguageManager().getString("chat.quest-already-accepted", getPlayer(), this);
@@ -558,8 +558,8 @@ public class QuestPlayer {
         questsToRemove.clear();
     }*/
 
-    public void giveReward(Quest quest) {
-        if(main.getDataManager().isDisabled()){
+    public void giveReward(final Quest quest) {
+        if (main.getDataManager().isDisabled()) {
             return;
         }
         sendDebugMessage("QuestPlayer.giveReward(). Quest: " + quest.getQuestName());
@@ -603,14 +603,14 @@ public class QuestPlayer {
 
     }
 
-    public void sendMessage(String message) {
+    public void sendMessage(final String message) {
         final Player player = getPlayer();
         if (player != null) {
             player.sendMessage(main.parse(message));
         }
     }
 
-    public void sendDebugMessage(String message) {
+    public void sendDebugMessage(final String message) {
         final Player player = getPlayer();
         if (player != null) {
             if (main.getQuestManager().isDebugEnabledPlayer(getUniqueId())) {
@@ -625,7 +625,7 @@ public class QuestPlayer {
     }
 
 
-    public void forceActiveQuestCompleted(ActiveQuest activeQuest) {
+    public void forceActiveQuestCompleted(final ActiveQuest activeQuest) {
         QuestCompletedEvent questCompletedEvent = new QuestCompletedEvent(this, activeQuest, true);
         if (Bukkit.isPrimaryThread()) {
             Bukkit.getScheduler().runTaskAsynchronously(main.getMain(), () -> {
@@ -662,10 +662,10 @@ public class QuestPlayer {
         }
 
 
-        for (ActiveQuest activeQuest2 : activeQuests) {
-            for (ActiveObjective objective : activeQuest2.getActiveObjectives()) {
-                if (objective.getObjective() instanceof OtherQuestObjective) {
-                    if (((OtherQuestObjective) (objective.getObjective())).getOtherQuest().equals(activeQuest.getQuest())) {
+        for (final ActiveQuest activeQuest2 : activeQuests) {
+            for (final ActiveObjective objective : activeQuest2.getActiveObjectives()) {
+                if (objective.getObjective() instanceof final OtherQuestObjective otherQuestObjective) {
+                    if (otherQuestObjective.getOtherQuest().equals(activeQuest.getQuest())) {
                         objective.addProgress(1, -1);
                     }
                 }
@@ -678,7 +678,7 @@ public class QuestPlayer {
 
     }
 
-    public void notifyActiveQuestCompleted(ActiveQuest activeQuest) {
+    public void notifyActiveQuestCompleted(final ActiveQuest activeQuest) {
         QuestCompletedEvent questCompletedEvent = new QuestCompletedEvent(this, activeQuest, false);
         if (Bukkit.isPrimaryThread()) {
             Bukkit.getScheduler().runTaskAsynchronously(main.getMain(), () -> {
@@ -716,9 +716,9 @@ public class QuestPlayer {
         }
 
         //Handle OtherQuest Objectives for other Quests
-        for (ActiveQuest activeQuest2 : activeQuests) {
-            for (ActiveObjective objective : activeQuest2.getActiveObjectives()) {
-                if (objective.getObjective() instanceof OtherQuestObjective otherQuestObjective) {
+        for (final ActiveQuest activeQuest2 : activeQuests) {
+            for (final ActiveObjective objective : activeQuest2.getActiveObjectives()) {
+                if (objective.getObjective() instanceof final OtherQuestObjective otherQuestObjective) {
                     if (otherQuestObjective.getOtherQuest().equals(activeQuest.getQuest())) {
                         objective.addProgress(1);
                     }
@@ -727,8 +727,8 @@ public class QuestPlayer {
         }
     }
 
-    public void setQuestPoints(long newQuestPoints, boolean notifyPlayer) {
-        if(main.getDataManager().isDisabled()){
+    public void setQuestPoints(long newQuestPoints, final boolean notifyPlayer) {
+        if (main.getDataManager().isDisabled()) {
             return;
         }
         if (newQuestPoints < 0) { //Prevent questPoints from going below 0
@@ -761,14 +761,14 @@ public class QuestPlayer {
         }
     }
 
-    public void addQuestPoints(long questPointsToAdd, boolean notifyPlayer) {
+    public void addQuestPoints(final long questPointsToAdd, final boolean notifyPlayer) {
         setQuestPoints(getQuestPoints() + questPointsToAdd, false);
         if (notifyPlayer) {
             final Player player = getPlayer();
             if (player != null) {
                 player.sendMessage(main.parse(
                         main.getLanguageManager().getString("chat.questpoints.notify-when-changed.add", player, this, Map.of(
-                                "%QUESTPOINTSTOADD%", ""+questPointsToAdd
+                                "%QUESTPOINTSTOADD%", "" + questPointsToAdd
                         ))
                 ));
             }
@@ -819,15 +819,14 @@ public class QuestPlayer {
     }
 
 
-    public void failQuest(ActiveQuest activeQuestToFail) {
+    public void failQuest(final ActiveQuest activeQuestToFail) {
         final ArrayList<ActiveQuest> activeQuestsCopy = new ArrayList<>(activeQuests);
-        for (ActiveQuest foundActiveQuest : activeQuestsCopy) {
+        for (final ActiveQuest foundActiveQuest : activeQuestsCopy) {
             if (activeQuestToFail.equals(foundActiveQuest)) {
 
                 foundActiveQuest.fail();
                 questsToRemove.add(foundActiveQuest);
                 final Player player = getPlayer();
-
 
 
                 if (player != null) {
@@ -850,7 +849,7 @@ public class QuestPlayer {
 
     }
 
-    public ArrayList<ActiveQuest> getActiveQuestsCopy() {
+    public final ArrayList<ActiveQuest> getActiveQuestsCopy() {
         return activeQuestsCopy;
     }
 
@@ -892,23 +891,21 @@ public class QuestPlayer {
     }
 
 
-
-
-    public final BossBar getBossBar(){
+    public final BossBar getBossBar() {
         return bossBar;
     }
 
-    public void sendObjectiveProgress(ActiveObjective activeObjective) {
-        Player player = getPlayer();
-        if(player == null){
+    public void sendObjectiveProgress(final ActiveObjective activeObjective) {
+        final Player player = getPlayer();
+        if (player == null) {
             return;
         }
-        if(main.getConfiguration().isVisualObjectiveTrackingShowProgressInActionBar()){
-            if(activeObjective.getProgressNeeded() == 1){
+        if (main.getConfiguration().isVisualObjectiveTrackingShowProgressInActionBar()) {
+            if (activeObjective.getProgressNeeded() == 1) {
                 getPlayer().sendActionBar(main.parse(
                         main.getLanguageManager().getString("objective-tracking.actionbar-progress-update.only-one-max-progress", getPlayer(), this, activeObjective, activeObjective.getActiveQuest())
                 ));
-            }else{
+            } else {
                 getPlayer().sendActionBar(main.parse(
                         main.getLanguageManager().getString("objective-tracking.actionbar-progress-update.default", getPlayer(), this, activeObjective, activeObjective.getActiveQuest())
                 ));
@@ -955,15 +952,15 @@ public class QuestPlayer {
         if (!isHasActiveConditionObjectives()) {
             return;
         }
-        for (ActiveQuest activeQuest : getActiveQuests()) {
-            for (ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-                if (activeObjective.getObjective() instanceof ConditionObjective conditionObjective) {
+        for (final ActiveQuest activeQuest : getActiveQuests()) {
+            for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
+                if (activeObjective.getObjective() instanceof final ConditionObjective conditionObjective) {
                     if (conditionObjective.isCheckOnlyWhenCorrespondingVariableValueChanged() || !activeObjective.isUnlocked()) {
                         continue;
                     }
 
-                    Condition condition = conditionObjective.getCondition();
-                    if(condition == null){
+                    final Condition condition = conditionObjective.getCondition();
+                    if (condition == null) {
                         continue;
                     }
                     if (!condition.check(this).isBlank()) {
@@ -1009,11 +1006,11 @@ public class QuestPlayer {
         this.player = player;
     }
 
-    public boolean isCurrentlyLoading() {
+    public final boolean isCurrentlyLoading() {
         return currentlyLoading;
     }
 
-    public void setCurrentlyLoading(boolean currentlyLoading) {
+    public void setCurrentlyLoading(final boolean currentlyLoading) {
         this.currentlyLoading = currentlyLoading;
     }
 }
