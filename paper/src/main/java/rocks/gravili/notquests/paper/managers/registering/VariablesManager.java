@@ -72,6 +72,7 @@ public class VariablesManager {
         registerVariable("UltimateClansClanLevel", UltimateClansClanLevelVariable.class);
         registerVariable("ActiveQuests", ActiveQuestsVariable.class);
         registerVariable("CompletedQuests", CompletedQuestsVariable.class);
+        registerVariable("CompletedObjectiveIDsOfQuest", CompletedObjectiveIDsOfQuestVariable.class);
         registerVariable("Permission", PermissionVariable.class);
         registerVariable("Name", PlayerNameVariable.class);
         registerVariable("Experience", PlayerExperienceVariable.class);
