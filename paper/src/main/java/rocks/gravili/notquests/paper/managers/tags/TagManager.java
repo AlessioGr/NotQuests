@@ -94,9 +94,13 @@ public class TagManager {
         final PersistentDataContainer stringTagsContainer = persistentDataContainer.get(stringTagsNestedPDC, PersistentDataType.TAG_CONTAINER);
 
         if (booleanTagsContainer != null) {
+            final ArrayList<NamespacedKey> keysToRemove = new ArrayList<>();
+            main.getLogManager().info("Loading <highlight>" + booleanTagsContainer.getKeys().size() + "</highlight> boolean tags for player <highlight2>" + player.getName() + "</highlight2>...");
+
             for (final NamespacedKey key : booleanTagsContainer.getKeys()) {
                 if (booleanTagsContainer.has(key, PersistentDataType.BYTE)) {
                     final Object value = booleanTagsContainer.get(key, PersistentDataType.BYTE);
+                    main.getLogManager().info("Loaded <highlight>" + key.getKey() + "</highlight> boolean tag for player <highlight2>" + player.getName() + "</highlight2>.");
                     if (value == null) {
                         questPlayer.setTagValue(key.getKey(), null);
                         continue;
@@ -104,52 +108,93 @@ public class TagManager {
 
                     questPlayer.setTagValue(key.getKey(), (byte) value != 0);
                 } else {
-                    main.getLogManager().warn("Cannot load the tag <highlight>" + key.getKey() + "</highlight> for player <highlight2>" + player.getName() + "</highlight2> because the tag's value is incorrect (should be byte)");
+                    main.getLogManager().warn("Cannot load the tag <highlight>" + key.getKey() + "</highlight> for player <highlight2>" + player.getName() + "</highlight2> because the tag's value is incorrect (should be byte). Removing tag...");
+                    keysToRemove.add(key);
                 }
+            }
+            for (final NamespacedKey namespacedKey : keysToRemove) {
+                booleanTagsContainer.remove(namespacedKey);
+                persistentDataContainer.set(booleanTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER, booleanTagsContainer);  //TODO: Check if needed
             }
         }
 
         if (integerTagsContainer != null) {
+            final ArrayList<NamespacedKey> keysToRemove = new ArrayList<>();
+            main.getLogManager().info("Loading <highlight>" + integerTagsContainer.getKeys().size() + "</highlight> integer tags for player <highlight2>" + player.getName() + "</highlight2>...");
+
             for (final NamespacedKey key : integerTagsContainer.getKeys()) {
                 if (integerTagsContainer.has(key, PersistentDataType.INTEGER)) {
                     questPlayer.setTagValue(key.getKey(), integerTagsContainer.get(key, PersistentDataType.INTEGER));
+                    main.getLogManager().info("Loaded <highlight>" + key.getKey() + "</highlight> integer tag for player <highlight2>" + player.getName() + "</highlight2>.");
                 } else {
-                    main.getLogManager().warn("Cannot load the tag <highlight>" + key.getKey() + "</highlight> for player <highlight2>" + player.getName() + "</highlight2> because the tag's value is incorrect (should be integer)");
+                    main.getLogManager().warn("Cannot load the tag <highlight>" + key.getKey() + "</highlight> for player <highlight2>" + player.getName() + "</highlight2> because the tag's value is incorrect (should be integer). Removing tag...");
+                    keysToRemove.add(key);
                 }
+            }
+            for (final NamespacedKey namespacedKey : keysToRemove) {
+                integerTagsContainer.remove(namespacedKey);
+                persistentDataContainer.set(integerTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER, integerTagsContainer);  //TODO: Check if needed
             }
         }
 
         if (floatTagsContainer != null) {
+            final ArrayList<NamespacedKey> keysToRemove = new ArrayList<>();
+            main.getLogManager().info("Loading <highlight>" + floatTagsContainer.getKeys().size() + "</highlight> float tags for player <highlight2>" + player.getName() + "</highlight2>...");
+
             for (final NamespacedKey key : floatTagsContainer.getKeys()) {
                 if (floatTagsContainer.has(key, PersistentDataType.FLOAT)) {
                     questPlayer.setTagValue(key.getKey(), floatTagsContainer.get(key, PersistentDataType.FLOAT));
+                    main.getLogManager().info("Loaded <highlight>" + key.getKey() + "</highlight> float tag for player <highlight2>" + player.getName() + "</highlight2>.");
                 } else {
-                    main.getLogManager().warn("Cannot load the tag <highlight>" + key.getKey() + "</highlight> for player <highlight2>" + player.getName() + "</highlight2> because the tag's value is incorrect (should be float)");
+                    main.getLogManager().warn("Cannot load the tag <highlight>" + key.getKey() + "</highlight> for player <highlight2>" + player.getName() + "</highlight2> because the tag's value is incorrect (should be float). Removing tag...");
+                    keysToRemove.add(key);
                 }
+            }
+            for (final NamespacedKey namespacedKey : keysToRemove) {
+                floatTagsContainer.remove(namespacedKey);
+                persistentDataContainer.set(floatTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER, floatTagsContainer);  //TODO: Check if needed
             }
         }
 
         if (doubleTagsContainer != null) {
+            final ArrayList<NamespacedKey> keysToRemove = new ArrayList<>();
+            main.getLogManager().info("Loading <highlight>" + doubleTagsContainer.getKeys().size() + "</highlight> double tags for player <highlight2>" + player.getName() + "</highlight2>...");
+
             for (final NamespacedKey key : doubleTagsContainer.getKeys()) {
                 if (doubleTagsContainer.has(key, PersistentDataType.DOUBLE)) {
                     questPlayer.setTagValue(key.getKey(), doubleTagsContainer.get(key, PersistentDataType.DOUBLE));
+                    main.getLogManager().info("Loaded <highlight>" + key.getKey() + "</highlight> double tag for player <highlight2>" + player.getName() + "</highlight2>.");
                 } else {
-                    main.getLogManager().warn("Cannot load the tag <highlight>" + key.getKey() + "</highlight> for player <highlight2>" + player.getName() + "</highlight2> because the tag's value is incorrect (should be double)");
+                    main.getLogManager().warn("Cannot load the tag <highlight>" + key.getKey() + "</highlight> for player <highlight2>" + player.getName() + "</highlight2> because the tag's value is incorrect (should be double). Removing tag...");
+                    keysToRemove.add(key);
                 }
+            }
+            for (final NamespacedKey namespacedKey : keysToRemove) {
+                doubleTagsContainer.remove(namespacedKey);
+                persistentDataContainer.set(doubleTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER, doubleTagsContainer);  //TODO: Check if needed
             }
         }
 
         if (stringTagsContainer != null) {
+            final ArrayList<NamespacedKey> keysToRemove = new ArrayList<>();
+            main.getLogManager().info("Loading <highlight>" + stringTagsContainer.getKeys().size() + "</highlight> string tags for player <highlight2>" + player.getName() + "</highlight2>...");
+
             for (final NamespacedKey key : stringTagsContainer.getKeys()) {
                 if (stringTagsContainer.has(key, PersistentDataType.STRING)) {
                     questPlayer.setTagValue(key.getKey(), stringTagsContainer.get(key, PersistentDataType.STRING));
+                    main.getLogManager().info("Loaded <highlight>" + key.getKey() + "</highlight> string tag for player <highlight2>" + player.getName() + "</highlight2>.");
                 } else {
-                    main.getLogManager().warn("Cannot load the tag <highlight>" + key.getKey() + "</highlight> for player <highlight2>" + player.getName() + "</highlight2> because the tag's value is incorrect (should be string)");
+                    main.getLogManager().warn("Cannot load the tag <highlight>" + key.getKey() + "</highlight> for player <highlight2>" + player.getName() + "</highlight2> because the tag's value is incorrect (should be string). Removing tag...");
+                    keysToRemove.add(key);
                 }
+            }
+            for (final NamespacedKey namespacedKey : keysToRemove) {
+                stringTagsContainer.remove(namespacedKey);
+                persistentDataContainer.set(stringTagsNestedPDC, PersistentDataType.TAG_CONTAINER, stringTagsContainer);  //TODO: Check if needed
             }
         }
 
-        main.getLogManager().info("Loading " + questPlayer.getTags().size() + " tags for " + player.getName() + ":");
+        main.getLogManager().info("Loaded " + questPlayer.getTags().size() + " tags for " + player.getName() + ":");
         if (questPlayer.getTags().size() > 0) {
             for (final String tagIdentifier : questPlayer.getTags().keySet()) {
                 main.getLogManager().info("   " + tagIdentifier + ": " + questPlayer.getTagValue(tagIdentifier) + " (" + questPlayer.getTagValue(tagIdentifier).getClass().getName() + ")");
