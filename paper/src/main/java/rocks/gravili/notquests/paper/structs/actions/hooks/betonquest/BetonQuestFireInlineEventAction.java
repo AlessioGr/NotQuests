@@ -27,6 +27,7 @@ import org.betonquest.betonquest.Instruction;
 import org.betonquest.betonquest.api.QuestEvent;
 import org.betonquest.betonquest.config.Config;
 import org.betonquest.betonquest.exceptions.QuestRuntimeException;
+import org.betonquest.betonquest.quest.event.legacy.QuestEventFactory;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -83,16 +84,16 @@ public class BetonQuestFireInlineEventAction extends Action {
                                 if(eventTypes != null){
                                     completions.addAll(eventTypes.keySet());
                                 }
-                            }else{
-                                String eventClassName = curInputSplit[0];
-                                Class<? extends QuestEvent> eventClass = BetonQuest.getInstance().getEventClass(eventClassName);
-                                if (eventClass == null) {
+                            }else {
+                                final String eventClassName = curInputSplit[0];
+                                final QuestEventFactory questEventFactory = BetonQuest.getInstance().getEventFactory(eventClassName);
+                                if (questEventFactory == null) {
                                     return null;
                                 }
 
-                                switch (eventClassName){
+                                switch (eventClassName) {
                                     case "cancel":
-                                        if(length == 2){
+                                        if (length == 2) {
                                             completions.add("<name of a quest canceler, as defined in main.yml>");
                                         }
                                         break;
@@ -162,18 +163,19 @@ public class BetonQuestFireInlineEventAction extends Action {
     }
 
     public final QuestEvent getQuestEvent(){
-        if(cachedEvent == null){
-            final Class<? extends QuestEvent> eventClass = BetonQuest.getInstance().getEventClass(getEvent().split(" ")[0]);
-            if (eventClass == null) {
+        if(cachedEvent == null) {
+            final QuestEventFactory questEventFactory = BetonQuest.getInstance().getEventFactory(getEvent().split(" ")[0]);
+            if (questEventFactory == null) {
                 // if it's null then there is no such type registered, log
                 // an error
                 main.getLogManager().warn("Error: Event type " + getEvent().split(" ")[0] + " was not found!");
                 return null;
             }
 
+
             String instruction = "";
             int counter = 0;
-            for(String part : getEvent().split(" ")){
+            for (String part : getEvent().split(" ")) {
                 if(++counter == 2){
                     instruction += part;
                 }else if(counter > 2){
@@ -184,8 +186,7 @@ public class BetonQuestFireInlineEventAction extends Action {
             Instruction instructionObject = new Instruction(Config.getDefaultPackage(), null, instruction);
 
             try{
-                cachedEvent = eventClass.getConstructor(Instruction.class)
-                        .newInstance(instructionObject);
+                cachedEvent = questEventFactory.parseEventInstruction(instructionObject);
             }catch (Exception e){
                 main.getLogManager().warn("Something went wrong creating BetonQuest Event from: " + getEvent());
             }

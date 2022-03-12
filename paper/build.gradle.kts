@@ -149,11 +149,11 @@ dependencies {
     compileOnly("io.lumine.xikage:MythicMobs:4.12.0")
     compileOnly(files("libs/EliteMobs.jar"))
     compileOnly(files("libs/UClans-API.jar"))
-    compileOnly(files("libs/ProjectKorra-1.9.2.jar"))
+    compileOnly(files("libs/ProjectKorra-1.9.3.jar"))
     //compileOnly(files("libs/UltimateJobs-0.2.0-SNAPSHOT.jar"))
 
 
-    compileOnly("org.betonquest:betonquest:2.0.0-20220220.114610-149")
+    compileOnly("org.betonquest:betonquest:2.0.0-20220309.220545-173")
 
     compileOnly("com.sk89q.worldedit:worldedit-core:7.3.0-SNAPSHOT")
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.3.0-SNAPSHOT")
@@ -163,7 +163,7 @@ dependencies {
     compileOnly("net.luckperms:api:5.4")
 
     //compileOnly "com.github.NEZNAMY:TAB:2.9.2"
-    compileOnly("com.palmergames.bukkit.towny:towny:0.98.0.0")
+    compileOnly("com.palmergames.bukkit.towny:towny:0.98.0.3")
 
     compileOnly("com.github.Zrips:Jobs:v4.17.2")
 
@@ -208,20 +208,19 @@ dependencies {
     implementation("commons-io:commons-io:2.11.0")
 
     //compileOnly("com.willfp:EcoBosses:8.0.0")
-    compileOnly(files("libs/EcoBosses-v8.5.0.jar"))
-    compileOnly("com.willfp:eco:6.24.1")
+    compileOnly(files("libs/EcoBosses-v8.10.0.jar"))
+    compileOnly("com.willfp:eco:6.26.2")
 
     implementation("com.github.Redempt:Crunch:1.1.2")
 
-    //compileOnly("com.fasterxml.jackson.core:jackson-core:2.13.1")
-    //compileOnly("com.fasterxml.jackson.core:jackson-databind:2.13.1")
-    implementation("com.fasterxml.jackson.core:jackson-core:2.13.1")
-    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.13.1")
+
+    implementation("com.fasterxml.jackson.core:jackson-core:2.13.2")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.13.2")
     implementation("org.apache.httpcomponents:httpclient:4.5.13")
 
     implementation("com.zaxxer:HikariCP:5.0.1")
 
-    compileOnly("com.github.war-systems:UltimateJobs:0.3.1")
+    compileOnly("com.github.war-systems:UltimateJobs:0.3.2")
 
 
 }
