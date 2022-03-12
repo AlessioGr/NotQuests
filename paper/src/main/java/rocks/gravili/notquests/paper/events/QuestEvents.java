@@ -1225,8 +1225,6 @@ public class QuestEvents implements Listener {
                 main.getTagManager().onJoin(questPlayer, e.getPlayer());
             }
         }
-        e.getPlayer().sendMessage(main.parse("<hover:show_text:\"<highlight>Click to update!\"><click:open_url:\"https://www.spigotmc.org/resources/95872/\"><main>[NotQuests]</main> <warn>The version <highlight>" + main.getMain().getDescription().getVersion()
-                + "</highlight> is not the latest version (<green>" + main.getUpdateManager().getLatestVersion() + "</green>). Click this message to update!</click></hover>"));
 
         if (e.getPlayer().isOp() && main.getConfiguration().isUpdateCheckerNotifyOpsInChat()) {
             if (main.getUpdateManager().isUpdateAvailable()) {
