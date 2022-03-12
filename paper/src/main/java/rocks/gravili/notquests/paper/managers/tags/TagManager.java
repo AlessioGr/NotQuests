@@ -38,7 +38,7 @@ public class TagManager {
     private final NotQuests main;
     private final HashMap<String, Tag> identifiersAndTags;
 
-    NamespacedKey booleanTagsNestedPDCKey, integerTagsNestedPDCKey, floatTagsNestedPDCKey, doubleTagsNestedPDCKey, stringTagsNestedPDC;
+    final NamespacedKey booleanTagsNestedPDCKey, integerTagsNestedPDCKey, floatTagsNestedPDCKey, doubleTagsNestedPDCKey, stringTagsNestedPDC;
 
     public TagManager(final NotQuests main) {
         this.main = main;
@@ -54,9 +54,9 @@ public class TagManager {
 
     public void loadAllOnlinePlayerTags() {
         main.getLogManager().info("Loading tags of all online players...");
-        for (Player player : Bukkit.getOnlinePlayers()) {
+        for (final Player player : Bukkit.getOnlinePlayers()) {
             main.getLogManager().info("Loading tags of all online player " + player.getName());
-            QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
             if (questPlayer != null) {
                 onJoin(questPlayer, player);
             } else {
@@ -67,9 +67,9 @@ public class TagManager {
 
     public void saveAllOnlinePlayerTags() {
         main.getLogManager().info("Saving tags of all online players...");
-        for (Player player : Bukkit.getOnlinePlayers()) {
+        for (final Player player : Bukkit.getOnlinePlayers()) {
             main.getLogManager().info("Saving tags of all online player " + player.getName());
-            QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
             if (questPlayer != null) {
                 onQuit(questPlayer, player);
             } else {
@@ -96,7 +96,13 @@ public class TagManager {
         if (booleanTagsContainer != null) {
             for (final NamespacedKey key : booleanTagsContainer.getKeys()) {
                 if (booleanTagsContainer.has(key, PersistentDataType.BYTE)) {
-                    questPlayer.setTagValue(key.getKey(), booleanTagsContainer.get(key, PersistentDataType.BYTE) != 0);
+                    final Object value = booleanTagsContainer.get(key, PersistentDataType.BYTE);
+                    if (value == null) {
+                        questPlayer.setTagValue(key.getKey(), null);
+                        continue;
+                    }
+
+                    questPlayer.setTagValue(key.getKey(), (byte) value != 0);
                 } else {
                     main.getLogManager().warn("Cannot load the tag <highlight>" + key.getKey() + "</highlight> for player <highlight2>" + player.getName() + "</highlight2> because the tag's value is incorrect (should be byte)");
                 }
@@ -146,7 +152,7 @@ public class TagManager {
         main.getLogManager().info("Loading " + questPlayer.getTags().size() + " tags for " + player.getName() + ":");
         if (questPlayer.getTags().size() > 0) {
             for (final String tagIdentifier : questPlayer.getTags().keySet()) {
-                main.getLogManager().info("   " + tagIdentifier + ": " + questPlayer.getTagValue(tagIdentifier));
+                main.getLogManager().info("   " + tagIdentifier + ": " + questPlayer.getTagValue(tagIdentifier) + " (" + questPlayer.getTagValue(tagIdentifier).getClass().getName() + ")");
             }
         }
 
@@ -164,8 +170,34 @@ public class TagManager {
         for (final String tagIdentifier : questPlayer.getTags().keySet()) {
             @Nullable final Object tagValue = questPlayer.getTagValue(tagIdentifier);
 
-            main.getLogManager().info("Saving the tag <highlight>" + tagIdentifier + "</highlight> with value <highlight>" + (tagValue != null ? tagValue : "null") + "</highlight> for player <highlight2>" + player.getName() + "</highlight2>...");
+            main.getLogManager().info("Saving the " + (tagValue != null ? tagValue.getClass().getName() : "null") + " tag <highlight>" + tagIdentifier + "</highlight> with value <highlight>" + (tagValue != null ? tagValue : "null") + "</highlight> for player <highlight2>" + player.getName() + "</highlight2>...");
 
+
+            //Remove tag from the player's pdc if it's null
+            if (tagValue == null) {
+                main.getLogManager().info("Null tag => removing the tag");
+                if (booleanTagsContainer != null) {
+                    booleanTagsContainer.remove(new NamespacedKey(main.getMain(), tagIdentifier));
+                    persistentDataContainer.set(booleanTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER, booleanTagsContainer);  //TODO: Check if needed
+                }
+                if (integerTagsContainer != null) {
+                    integerTagsContainer.remove(new NamespacedKey(main.getMain(), tagIdentifier));
+                    persistentDataContainer.set(integerTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER, integerTagsContainer);  //TODO: Check if needed
+                }
+                if (floatTagsContainer != null) {
+                    floatTagsContainer.remove(new NamespacedKey(main.getMain(), tagIdentifier));
+                    persistentDataContainer.set(floatTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER, floatTagsContainer);  //TODO: Check if needed
+                }
+                if (doubleTagsContainer != null) {
+                    doubleTagsContainer.remove(new NamespacedKey(main.getMain(), tagIdentifier));
+                    persistentDataContainer.set(doubleTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER, doubleTagsContainer);  //TODO: Check if needed
+                }
+                if (stringTagsContainer != null) {
+                    stringTagsContainer.remove(new NamespacedKey(main.getMain(), tagIdentifier));
+                    persistentDataContainer.set(stringTagsNestedPDC, PersistentDataType.TAG_CONTAINER, stringTagsContainer);  //TODO: Check if needed
+                }
+                continue;
+            }
 
             if (tagValue instanceof final Boolean booleanTagValue) {
                 if (booleanTagsContainer == null) {
@@ -174,6 +206,7 @@ public class TagManager {
                 booleanTagsContainer.set(new NamespacedKey(main.getMain(), tagIdentifier), PersistentDataType.BYTE, (byte) (booleanTagValue ? 1 : 0));
 
                 persistentDataContainer.set(booleanTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER, booleanTagsContainer);  //TODO: Check if needed
+                main.getLogManager().info("Saved boolean tag!");
             } else if (tagValue instanceof final Integer integerTagValue) {
                 if (integerTagsContainer == null) {
                     integerTagsContainer = persistentDataContainer.getAdapterContext().newPersistentDataContainer();
@@ -181,6 +214,7 @@ public class TagManager {
                 integerTagsContainer.set(new NamespacedKey(main.getMain(), tagIdentifier), PersistentDataType.INTEGER, integerTagValue);
 
                 persistentDataContainer.set(integerTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER, integerTagsContainer); //TODO: Check if needed
+                main.getLogManager().info("Saved integer tag!");
             } else if (tagValue instanceof final Float floatValue) {
                 if (floatTagsContainer == null) {
                     floatTagsContainer = persistentDataContainer.getAdapterContext().newPersistentDataContainer();
@@ -188,6 +222,7 @@ public class TagManager {
                 floatTagsContainer.set(new NamespacedKey(main.getMain(), tagIdentifier), PersistentDataType.FLOAT, floatValue);
 
                 persistentDataContainer.set(floatTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER, floatTagsContainer); //TODO: Check if needed
+                main.getLogManager().info("Saved float tag!");
             } else if (tagValue instanceof final Double doubleValue) {
                 if (doubleTagsContainer == null) {
                     doubleTagsContainer = persistentDataContainer.getAdapterContext().newPersistentDataContainer();
@@ -195,6 +230,7 @@ public class TagManager {
                 doubleTagsContainer.set(new NamespacedKey(main.getMain(), tagIdentifier), PersistentDataType.DOUBLE, doubleValue);
 
                 persistentDataContainer.set(doubleTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER, doubleTagsContainer); //TODO: Check if needed
+                main.getLogManager().info("Saved double tag!");
             } else if (tagValue instanceof final String stringTagValue) {
                 if (stringTagsContainer == null) {
                     stringTagsContainer = persistentDataContainer.getAdapterContext().newPersistentDataContainer();
@@ -202,6 +238,7 @@ public class TagManager {
                 stringTagsContainer.set(new NamespacedKey(main.getMain(), tagIdentifier), PersistentDataType.STRING, stringTagValue);
 
                 persistentDataContainer.set(stringTagsNestedPDC, PersistentDataType.TAG_CONTAINER, stringTagsContainer); //TODO: Check if needed
+                main.getLogManager().info("Saved string tag!");
             }
         }
     }
@@ -225,7 +262,7 @@ public class TagManager {
         for (final Category category : main.getDataManager().getCategories()) {
             categoriesStringList.add(category.getCategoryFullName());
         }
-        main.getLogManager().info("Scheduled Tags Data load for following categories: <highlight>" + categoriesStringList.toString());
+        main.getLogManager().info("Scheduled Tags Data load for following categories: <highlight>" + categoriesStringList);
 
         for (final Category category : main.getDataManager().getCategories()) {
             loadTags(category);
@@ -249,17 +286,21 @@ public class TagManager {
                 }
                 main.getLogManager().info("Loading tag <highlight>" + tagIdentifier);
 
-                String tagTypeString = tagsConfigurationSection.getString(tagIdentifier + ".tagType", "");
+                final String tagTypeString = tagsConfigurationSection.getString(tagIdentifier + ".tagType", "");
 
-                Tag tag = new Tag(main, tagIdentifier, TagType.valueOf(tagTypeString));
+                TagType tagType;
+                try {
+                    tagType = TagType.valueOf(tagTypeString);
+                } catch (Exception e) {
+                    main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading tags.yml tag data: The tag " + tagIdentifier + " has an invalid tag type which could not be loaded: " + tagTypeString);
+                    return;
+                }
+
+                final Tag tag = new Tag(main, tagIdentifier, tagType);
                 tag.setCategory(category);
 
 
-                if (tag != null) {
-                    identifiersAndTags.put(tagIdentifier.toLowerCase(Locale.ROOT), tag);
-                } else {
-                    main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading tags.yml tag data.");
-                }
+                identifiersAndTags.put(tagIdentifier.toLowerCase(Locale.ROOT), tag);
             }
         }
 
@@ -277,7 +318,7 @@ public class TagManager {
         newTag.getCategory().saveTagsConfig();
     }
 
-    public void deleteTag(Tag foundTag) {
+    public void deleteTag(final Tag foundTag) {
         if (identifiersAndTags.get(foundTag.getTagName()) == null) {
             return;
         }
