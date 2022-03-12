@@ -89,6 +89,7 @@ repositories {
     maven("https://mvn.lumine.io/repository/maven-public/"){
         content {
             includeGroup("io.lumine.xikage")
+            includeGroup("io.lumine")
         }
     }
 
@@ -146,7 +147,7 @@ dependencies {
     compileOnly("com.github.MilkBowl:VaultAPI:1.7")
 
 
-    compileOnly("io.lumine.xikage:MythicMobs:4.12.0")
+    compileOnly("io.lumine:Mythic-Dist:5.0.1-SNAPSHOT")
     compileOnly(files("libs/EliteMobs.jar"))
     compileOnly(files("libs/UClans-API.jar"))
     compileOnly(files("libs/ProjectKorra-1.9.3.jar"))

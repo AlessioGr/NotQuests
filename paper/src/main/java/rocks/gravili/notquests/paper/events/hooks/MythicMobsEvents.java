@@ -18,8 +18,9 @@
 
 package rocks.gravili.notquests.paper.events.hooks;
 
-import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobDeathEvent;
-import io.lumine.xikage.mythicmobs.mobs.MythicMob;
+
+import io.lumine.mythic.api.mobs.MythicMob;
+import io.lumine.mythic.bukkit.events.MythicMobDeathEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -39,13 +40,13 @@ public class MythicMobsEvents implements Listener {
     @EventHandler
     public void onMythicMobDeath(final MythicMobDeathEvent event) {
         //KillMobs objectives
-        if (event.getKiller() instanceof Player player) {
+        if (event.getKiller() instanceof final Player player) {
             final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
             if (questPlayer != null) {
                 if (questPlayer.getActiveQuests().size() > 0) {
                     for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                         for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-                            if (activeObjective.getObjective() instanceof KillMobsObjective killMobsObjective) {
+                            if (activeObjective.getObjective() instanceof final KillMobsObjective killMobsObjective) {
                                 if (activeObjective.isUnlocked()) {
                                     final MythicMob killedMob = event.getMobType();
                                     if (killMobsObjective.getMobToKill().equalsIgnoreCase("any") || killMobsObjective.getMobToKill().equals(killedMob.getInternalName())) {
