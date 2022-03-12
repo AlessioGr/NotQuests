@@ -24,7 +24,6 @@ import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -44,7 +43,10 @@ import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -494,6 +496,7 @@ public class DataManager {
                     }
                     main.getLogManager().info("Loading default <highlight>general.yml</highlight>...");
 
+                    /*
                     //Instead of creating a new general.yml file, we will copy the one from inside of the plugin jar into the plugin folder:
                     InputStream inputStream = main.getMain().getResource("general.yml");
                     if (inputStream != null) {
@@ -503,7 +506,7 @@ public class DataManager {
                             disablePluginAndSaving("There was an error creating the general.yml config file (2).", e);
                             return;
                         }
-                    }
+                    }*/
                 } catch (IOException ioException) {
                     disablePluginAndSaving("There was an error creating the general.yml config file. (2)", ioException);
                     return;
@@ -541,6 +544,12 @@ public class DataManager {
         boolean mysqlstorageenabledbooleannotloadedyet = false;
 
         valueChanged = false;
+
+        configuration.setDebug(getGeneralConfigBoolean(
+                "debug",
+                false,
+                "Having debug enabled will send more detailed logs into the console, which becomes very spammy."
+        ));
 
         //Storage Stuff
         {
@@ -598,55 +607,55 @@ public class DataManager {
         //Other Stuff
 
 
-        configuration.setConfigurationVersion(getGeneralConfigString(
-                "config-version-do-not-edit",
-                main.getMain().getDescription().getVersion()
-        ));
 
-        configuration.setDebug(getGeneralConfigBoolean(
-                "debug",
-                false
-        ));
 
         configuration.setLoadPlayerData(getGeneralConfigBoolean(
                 "storage.load-playerdata",
-                true
+                true,
+                "Determines if player data (Quest progress, questpoints etc.) should be loaded at all"
         ));
 
         configuration.setSavePlayerData(getGeneralConfigBoolean(
                 "storage.save-playerdata",
-                true
+                true,
+                "Determines if player data should be loaded at all"
         ));
 
         configuration.setLoadPlayerDataOnJoin(getGeneralConfigBoolean(
                 "storage.load-playerdata-on-join",
-                true
+                true,
+                "If this is set to true, player data will be loaded for each player when they join. If this is set to false, the plugin will load ALL player data at once, the moment NotQuests is enabled."
         ));
 
         configuration.setSavePlayerDataOnQuit(getGeneralConfigBoolean(
                 "storage.save-playerdata-on-quit",
-                true
+                true,
+                "Same as loading playerdata on join, but for saving playerdata & leaving the server"
         ));
 
         configuration.setStorageCreateBackupsWhenServerShutsDown(getGeneralConfigBoolean(
                 "storage.backups.create-when-server-shuts-down",
-                true
+                true,
+                "If this is set to true, all quests.yml files of all categories will be backed up everytime the plugin shuts down. This only include quests data - nothing else."
         ));
 
         configuration.setMaxActiveQuestsPerPlayer(getGeneralConfigInt(
                 "general.max-active-quests-per-player",
-                -1
+                -1,
+                "The maximum amount of active Quests each player can have active at the same time."
         ));
 
         configuration.setLanguageCode(getGeneralConfigString(
                 "visual.language",
-                "en-US"
+                "en-US",
+                "The language of NotQuests. Examples: 'en-US', 'de-DE'. Check the plugins/NotQuests/languages folder for available languages"
         ));
 
         //NPC particles Citizens
         configuration.setCitizensNPCQuestGiverIndicatorParticleEnabled(getGeneralConfigBoolean(
                 "visual.citizensnpc.quest-giver-indicator-particle.enabled",
-                true
+                true,
+                "This controls if particles should be shown above the heads of Citizen NPCs with Quests attached to them"
         ));
 
         configuration.setCitizensNPCQuestGiverIndicatorParticleType(Particle.valueOf(getGeneralConfigString(
@@ -689,13 +698,15 @@ public class DataManager {
         //Prevent armorstand editing
         configuration.setArmorStandPreventEditing(getGeneralConfigBoolean(
                 "visual.armorstands.prevent-editing",
-                true
+                true,
+                "If set to true, you cannot edit the equipments of an armor stand by right-clicking it if it has quests or ACTIVE objectives attached to it"
         ));
 
         //Particles ArmorStands
         configuration.setArmorStandQuestGiverIndicatorParticleEnabled(getGeneralConfigBoolean(
                 "visual.armorstands.quest-giver-indicator-particle.enabled",
-                true
+                true,
+                "This controls if particles should be shown above the heads of Armor Stands with Quests attached to them"
         ));
 
         configuration.setArmorStandQuestGiverIndicatorParticleType(Particle.valueOf(getGeneralConfigString(
@@ -864,7 +875,8 @@ public class DataManager {
 
         configuration.setQuestPreviewUseGUI(getGeneralConfigBoolean(
                 "gui.questpreview.enabled",
-                true
+                true,
+                "If set to false, clickable text will be used for Quest Previews instead"
         ));
 
         //Description
@@ -938,7 +950,8 @@ public class DataManager {
 
         configuration.setUserCommandsUseGUI(getGeneralConfigBoolean(
                 "gui.usercommands.enabled",
-                true
+                true,
+                "If set to false, clickable text will be used for all the other /q commands instead. If this is set to true, a GUI will be used."
         ));
 
 
@@ -955,12 +968,14 @@ public class DataManager {
 
         configuration.setPlaceholder_player_active_quests_list_horizontal_limit(getGeneralConfigInt(
                 "placeholders.player_active_quests_list_horizontal.limit",
-                -1
+                -1,
+                "-1 for unlimited"
         ));
 
         configuration.setPlaceholder_player_active_quests_list_vertical_limit(getGeneralConfigInt(
                 "placeholders.player_active_quests_list_vertical.limit",
-                -1
+                -1,
+                "-1 for unlimited"
         ));
 
         configuration.setPlaceholder_player_active_quests_list_horizontal_use_displayname_if_available(getGeneralConfigBoolean(
@@ -976,7 +991,8 @@ public class DataManager {
 
         configuration.setIntegrationCitizensEnabled(getGeneralConfigBoolean(
                 "integrations.citizens.enabled",
-                true
+                true,
+                "Any integrations settings should usually be left to true. These integrations will only be used, if you have the respective plugin installed."
         ));
 
         configuration.setIntegrationVaultEnabled(getGeneralConfigBoolean(
@@ -1051,38 +1067,45 @@ public class DataManager {
 
         configuration.setActionBarFancyCommandCompletionEnabled(getGeneralConfigBoolean(
                 "visual.fancy-command-completion.actionbar-enabled",
-                true
+                true,
+                "Sets if it should show the fancy, helpful hints in your actionbar when typing some commands"
         ));
 
         configuration.setTitleFancyCommandCompletionEnabled(getGeneralConfigBoolean(
                 "visual.fancy-command-completion.title-enabled",
-                false
+                false,
+                "Sets if it should show the fancy, helpful hints in your title when typing some commands"
         ));
 
         configuration.setBossBarFancyCommandCompletionEnabled(getGeneralConfigBoolean(
                 "visual.fancy-command-completion.bossbar-enabled",
-                false
+                false,
+                "Sets if it should show the fancy, helpful hints in your bossbar when typing some commands"
         ));
 
         configuration.setFancyCommandCompletionMaxPreviousArgumentsDisplayed(getGeneralConfigInt(
                 "visual.fancy-command-completion.max-previous-arguments-displayed",
-                2
+                2,
+                "The maximum amount of previous arguments (arguments you have already typed) which should be displayed"
         ));
 
 
         configuration.setMoveEventEnabled(getGeneralConfigBoolean(
                 "general.enable-move-event",
-                true
+                true,
+                "If set to false, Reach Location Objective will not work anymore - for better performance"
         ));
 
         configuration.setJournalItemEnabledWorlds(getGeneralConfigStringList(
                 "general.journal-item.enabled-worlds",
-                List.of("")
+                List.of(""),
+                "List of worlds where the last slot of a player's inventory should be set to a clickable journal book. Set to '*' for every world"
         ));
 
         configuration.setJournalInventorySlot(getGeneralConfigInt(
                 "general.journal-item.inventory-slot",
-                8
+                8,
+                "Inventory slot in which the journal should appear."
         ));
 
         ItemStack journal = new ItemStack(Material.ENCHANTED_BOOK, 1);
@@ -1109,7 +1132,8 @@ public class DataManager {
 
         configuration.setUsePacketEvents(getGeneralConfigString(
                 "general.packet-magic.mode",
-                "internal"
+                "internal",
+                "Possible modes: 'internal' and 'packetevents'"
         ).equalsIgnoreCase("packetevents"));
 
 
@@ -1146,13 +1170,17 @@ public class DataManager {
         ));
 
 
-
+        configuration.setConfigurationVersion(getGeneralConfigString(
+                "config-version-do-not-edit",
+                main.getMain().getDescription().getVersion(),
+                "Do not modify this line. If you modify it, there is a chance of completely breaking automatic configuration updates."
+        ));
 
         //Do potential data updating here
         /////
         //Now update config version value, assuming everything is updated
         if (!getGeneralConfig().isString("config-version-do-not-edit") ||
-           (getGeneralConfig().isString("config-version-do-not-edit") && !getGeneralConfig().getString("config-version-do-not-edit", "").equalsIgnoreCase(main.getMain().getDescription().getVersion()) )) {
+                (getGeneralConfig().isString("config-version-do-not-edit") && !getGeneralConfig().getString("config-version-do-not-edit", "").equalsIgnoreCase(main.getMain().getDescription().getVersion()))) {
             getGeneralConfig().set("config-version-do-not-edit", main.getMain().getDescription().getVersion());
             valueChanged = true;
         }
@@ -1172,47 +1200,57 @@ public class DataManager {
         }
     }
 
-    public String getGeneralConfigString(String key, String defaultValue){
+    public final String getGeneralConfigString(final String key, final String defaultValue, final String... commentLines) {
         if (!getGeneralConfig().isString(key)) {
             getGeneralConfig().set(key, defaultValue);
             valueChanged = true;
         }
+        getGeneralConfig().setComments(key, Arrays.asList(commentLines));
         return getGeneralConfig().getString(key);
     }
-    public boolean getGeneralConfigBoolean(String key, boolean defaultValue){
+
+    public final boolean getGeneralConfigBoolean(final String key, final boolean defaultValue, final String... commentLines) {
         if (!getGeneralConfig().isBoolean(key)) {
             getGeneralConfig().set(key, defaultValue);
             valueChanged = true;
         }
+        getGeneralConfig().setComments(key, Arrays.asList(commentLines));
         return getGeneralConfig().getBoolean(key);
     }
-    public int getGeneralConfigInt(String key, int defaultValue){
+
+    public final int getGeneralConfigInt(final String key, final int defaultValue, final String... commentLines) {
         if (!getGeneralConfig().isInt(key)) {
             getGeneralConfig().set(key, defaultValue);
             valueChanged = true;
         }
+        getGeneralConfig().setComments(key, Arrays.asList(commentLines));
         return getGeneralConfig().getInt(key);
     }
-    public double getGeneralConfigDouble(String key, double defaultValue){
+
+    public final double getGeneralConfigDouble(final String key, final double defaultValue, final String... commentLines) {
         if (!getGeneralConfig().isDouble(key)) {
             getGeneralConfig().set(key, defaultValue);
             valueChanged = true;
         }
+        getGeneralConfig().setComments(key, Arrays.asList(commentLines));
         return getGeneralConfig().getDouble(key);
     }
-    public ItemStack getGeneralConfigItemStack(String key, ItemStack defaultValue){
+
+    public final ItemStack getGeneralConfigItemStack(final String key, final ItemStack defaultValue, final String... commentLines) {
         if (!getGeneralConfig().isItemStack(key)) {
             getGeneralConfig().set(key, defaultValue);
             valueChanged = true;
         }
+        getGeneralConfig().setComments(key, Arrays.asList(commentLines));
         return getGeneralConfig().getItemStack(key);
     }
 
-    public List<String> getGeneralConfigStringList(String key, List<String> defaultValue){
+    public final List<String> getGeneralConfigStringList(final String key, final List<String> defaultValue, final String... commentLines) {
         if (!getGeneralConfig().isList(key)) {
             getGeneralConfig().set(key, defaultValue);
             valueChanged = true;
         }
+        getGeneralConfig().setComments(key, Arrays.asList(commentLines));
         return getGeneralConfig().getStringList(key);
     }
 
