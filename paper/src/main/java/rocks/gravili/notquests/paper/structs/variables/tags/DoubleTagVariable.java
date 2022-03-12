@@ -31,7 +31,7 @@ import java.util.List;
 
 public class DoubleTagVariable extends Variable<Double> {
 
-    public DoubleTagVariable(NotQuests main) {
+    public DoubleTagVariable(final NotQuests main) {
         super(main);
 
         addRequiredString(
@@ -40,9 +40,9 @@ public class DoubleTagVariable extends Variable<Double> {
                             final List<String> allArgs = context.getRawInput();
                             main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Tag Name]", "[...]");
 
-                            ArrayList<String> suggestions = new ArrayList<>();
-                            for(Tag tag : main.getTagManager().getTags()){
-                                if(tag.getTagType() == TagType.DOUBLE){
+                            final ArrayList<String> suggestions = new ArrayList<>();
+                            for (final Tag tag : main.getTagManager().getTags()) {
+                                if (tag.getTagType() == TagType.DOUBLE) {
                                     suggestions.add("" + tag.getTagName());
                                 }
                             }
@@ -56,7 +56,7 @@ public class DoubleTagVariable extends Variable<Double> {
     }
 
     @Override
-    public Double getValue(QuestPlayer questPlayer, Object... objects) {
+    public Double getValue(final QuestPlayer questPlayer, final Object... objects) {
         if (questPlayer == null) {
             return 0d;
         }
@@ -68,22 +68,22 @@ public class DoubleTagVariable extends Variable<Double> {
             return 0d;
         }
         if(tag.getTagType() != TagType.DOUBLE){
-            main.getLogManager().warn("Error reading tag " + tagName + ". Tag is no integer tag.");
+            main.getLogManager().warn("Error reading tag " + tagName + ". Tag is no double tag.");
             return 0d;
         }
 
-        Object value = questPlayer.getTagValue(tagName);
+        final Object value = questPlayer.getTagValue(tagName);
 
-        if(value instanceof Double doubleValue){
+        if (value instanceof final Double doubleValue) {
             return doubleValue;
-        }else{
+        } else {
             return 0d;
         }
 
     }
 
     @Override
-    public boolean setValueInternally(Double newValue, QuestPlayer questPlayer, Object... objects) {
+    public boolean setValueInternally(final Double newValue, final QuestPlayer questPlayer, final Object... objects) {
         if (questPlayer == null) {
             return false;
         }
@@ -95,7 +95,7 @@ public class DoubleTagVariable extends Variable<Double> {
             return false;
         }
         if(tag.getTagType() != TagType.DOUBLE){
-            main.getLogManager().warn("Error reading tag " + tagName + ". Tag is no integer tag.");
+            main.getLogManager().warn("Error reading tag " + tagName + ". Tag is no double tag.");
             return false;
         }
 
@@ -107,17 +107,17 @@ public class DoubleTagVariable extends Variable<Double> {
 
 
     @Override
-    public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
+    public final List<String> getPossibleValues(final QuestPlayer questPlayer, final Object... objects) {
         return null;
     }
 
     @Override
-    public String getPlural() {
+    public final String getPlural() {
         return "Tags";
     }
 
     @Override
-    public String getSingular() {
+    public final String getSingular() {
         return "Tag";
     }
 }

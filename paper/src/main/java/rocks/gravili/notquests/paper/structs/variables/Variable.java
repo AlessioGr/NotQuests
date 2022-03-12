@@ -166,7 +166,7 @@ public abstract class Variable<T> {
         return additionalNumberArguments;
     }
 
-    public void setAdditionalNumberArguments(HashMap<String, NumberExpression> additionalNumberArguments) {
+    public void setAdditionalNumberArguments(final HashMap<String, NumberExpression> additionalNumberArguments) {
         this.additionalNumberArguments = additionalNumberArguments;
     }
 
@@ -177,26 +177,26 @@ public abstract class Variable<T> {
 
     public abstract T getValue(final QuestPlayer questPlayer, final Object... objects);
 
-    public boolean setValue(final T newValue, final QuestPlayer questPlayer, final Object... objects) {
+    public final boolean setValue(final T newValue, final QuestPlayer questPlayer, final Object... objects) {
         if (!isCanSetValue()) {
             return false;
         }
-        boolean result = setValueInternally(newValue, questPlayer, objects);
+        final boolean result = setValueInternally(newValue, questPlayer, objects);
 
         if (questPlayer != null && questPlayer.isHasActiveConditionObjectives()) {
-            for (ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-                for (ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-                    if (activeObjective.getObjective() instanceof ConditionObjective conditionObjective) {
+            for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+                for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
+                    if (activeObjective.getObjective() instanceof final ConditionObjective conditionObjective) {
                         if (!activeObjective.isUnlocked()) {
                             continue;
                         }
 
-                        Condition condition = conditionObjective.getCondition();
-                        if(condition == null){
+                        final Condition condition = conditionObjective.getCondition();
+                        if (condition == null) {
                             continue;
                         }
                         String activeObjectiveVariableName = "";
-                        if(condition instanceof BooleanCondition booleanCondition){
+                        if (condition instanceof BooleanCondition booleanCondition) {
                             activeObjectiveVariableName = booleanCondition.getVariableName();
                         }else if(condition instanceof ListCondition listCondition){
                             activeObjectiveVariableName = listCondition.getVariableName();
@@ -237,7 +237,7 @@ public abstract class Variable<T> {
 
     public abstract String getSingular();
 
-    public void setAdditionalStringArguments(HashMap<String, String> additionalStringArguments) {
+    public void setAdditionalStringArguments(final HashMap<String, String> additionalStringArguments) {
         this.additionalStringArguments = additionalStringArguments;
     }
 
@@ -254,15 +254,15 @@ public abstract class Variable<T> {
         }
     }
 
-    public void addAdditionalBooleanArgument(String key, NumberExpression value) {
+    public void addAdditionalBooleanArgument(final String key, final NumberExpression value) {
         additionalBooleanArguments.put(key, value);
     }
 
-    public void addAdditionalNumberArgument(String key, NumberExpression value) {
+    public void addAdditionalNumberArgument(final String key, final NumberExpression value) {
         additionalNumberArguments.put(key, value);
     }
 
-    public void addAdditionalStringArgument(String key, String value) {
+    public void addAdditionalStringArgument(final String key, final String value) {
         additionalStringArguments.put(key, value);
     }
 

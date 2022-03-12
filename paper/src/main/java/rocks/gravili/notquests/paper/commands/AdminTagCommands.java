@@ -59,7 +59,7 @@ public class AdminTagCommands {
                         ));
                         return;
                     }
-                    Tag tag = new Tag(main, tagName, TagType.BOOLEAN);
+                    final Tag tag = new Tag(main, tagName, TagType.BOOLEAN);
                     if (context.flags().contains(main.getCommandManager().categoryFlag)) {
                         final Category category = context.flags().getValue(main.getCommandManager().categoryFlag, main.getDataManager().getDefaultCategory());
                         tag.setCategory(category);
@@ -67,7 +67,7 @@ public class AdminTagCommands {
                     main.getTagManager().addTag(tag);
 
                     context.getSender().sendMessage(main.parse(
-                            "<success>The tag <highlight>" + tagName + "</highlight> has been added successfully!"
+                            "<success>The boolean tag <highlight>" + tagName + "</highlight> has been added successfully!"
                     ));
                 }));
 
@@ -86,7 +86,7 @@ public class AdminTagCommands {
                         return;
                     }
 
-                    Tag tag = new Tag(main, tagName, TagType.INTEGER);
+                    final Tag tag = new Tag(main, tagName, TagType.INTEGER);
                     if (context.flags().contains(main.getCommandManager().categoryFlag)) {
                         final Category category = context.flags().getValue(main.getCommandManager().categoryFlag, main.getDataManager().getDefaultCategory());
                         tag.setCategory(category);
@@ -94,7 +94,7 @@ public class AdminTagCommands {
                     main.getTagManager().addTag(tag);
 
                     context.getSender().sendMessage(main.parse(
-                            "<success>The tag <highlight>" + tagName + "</highlight> has been added successfully!"
+                            "<success>The integer tag <highlight>" + tagName + "</highlight> has been added successfully!"
                     ));
                 }));
 
@@ -113,7 +113,7 @@ public class AdminTagCommands {
                         return;
                     }
 
-                    Tag tag = new Tag(main, tagName, TagType.FLOAT);
+                    final Tag tag = new Tag(main, tagName, TagType.FLOAT);
                     if (context.flags().contains(main.getCommandManager().categoryFlag)) {
                         final Category category = context.flags().getValue(main.getCommandManager().categoryFlag, main.getDataManager().getDefaultCategory());
                         tag.setCategory(category);
@@ -121,7 +121,7 @@ public class AdminTagCommands {
                     main.getTagManager().addTag(tag);
 
                     context.getSender().sendMessage(main.parse(
-                            "<success>The tag <highlight>" + tagName + "</highlight> has been added successfully!"
+                            "<success>The float tag <highlight>" + tagName + "</highlight> has been added successfully!"
                     ));
                 }));
 
@@ -140,7 +140,7 @@ public class AdminTagCommands {
                         return;
                     }
 
-                    Tag tag = new Tag(main, tagName, TagType.DOUBLE);
+                    final Tag tag = new Tag(main, tagName, TagType.DOUBLE);
                     if (context.flags().contains(main.getCommandManager().categoryFlag)) {
                         final Category category = context.flags().getValue(main.getCommandManager().categoryFlag, main.getDataManager().getDefaultCategory());
                         tag.setCategory(category);
@@ -148,7 +148,7 @@ public class AdminTagCommands {
                     main.getTagManager().addTag(tag);
 
                     context.getSender().sendMessage(main.parse(
-                            "<success>The tag <highlight>" + tagName + "</highlight> has been added successfully!"
+                            "<success>The double tag <highlight>" + tagName + "</highlight> has been added successfully!"
                     ));
                 }));
 
@@ -167,7 +167,7 @@ public class AdminTagCommands {
                         return;
                     }
 
-                    Tag tag = new Tag(main, tagName, TagType.STRING);
+                    final Tag tag = new Tag(main, tagName, TagType.STRING);
                     if (context.flags().contains(main.getCommandManager().categoryFlag)) {
                         final Category category = context.flags().getValue(main.getCommandManager().categoryFlag, main.getDataManager().getDefaultCategory());
                         tag.setCategory(category);
@@ -175,7 +175,7 @@ public class AdminTagCommands {
                     main.getTagManager().addTag(tag);
 
                     context.getSender().sendMessage(main.parse(
-                            "<success>The tag <highlight>" + tagName + "</highlight> has been added successfully!"
+                            "<success>The string tag <highlight>" + tagName + "</highlight> has been added successfully!"
                     ));
                 }));
 
@@ -186,7 +186,7 @@ public class AdminTagCommands {
                     context.getSender().sendMessage(main.parse("<highlight>All tags:"));
                     int counter = 1;
 
-                    for(Tag tag : main.getTagManager().getTags()){
+                    for (final Tag tag : main.getTagManager().getTags()) {
                         context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>" + tag.getTagName() + "</main> <highlight2>Type: <main>" + tag.getTagType().name()));
                         counter++;
                     }
@@ -198,8 +198,8 @@ public class AdminTagCommands {
                             final List<String> allArgs = context.getRawInput();
                             main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Tag Name]", "");
 
-                            ArrayList<String> suggestions = new ArrayList<>();
-                            for(Tag tag : main.getTagManager().getTags()){
+                            final ArrayList<String> suggestions = new ArrayList<>();
+                            for (final Tag tag : main.getTagManager().getTags()) {
                                 suggestions.add("" + tag.getTagName());
 
                             }
@@ -211,7 +211,7 @@ public class AdminTagCommands {
                 .handler((context) -> {
                     final String tagName = context.get("Tag Name");
 
-                    Tag foundTag = main.getTagManager().getTag(tagName);
+                    final Tag foundTag = main.getTagManager().getTag(tagName);
                     if(foundTag == null){
                         context.getSender().sendMessage(main.parse(
                                 "<error>Error: The tag <highlight>" + tagName + "</highlight> doesn't exists!"

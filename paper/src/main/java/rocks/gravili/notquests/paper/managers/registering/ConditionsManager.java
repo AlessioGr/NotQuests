@@ -221,11 +221,7 @@ public class ConditionsManager {
                 }
 
                 if (main.getConditionsYMLManager().getCondition(conditionIdentifier) == null) {
-                    main.getConditionsYMLManager().addCondition(conditionIdentifier, condition);
-                    context.getSender().sendMessage(main.parse(
-                            "<success>" + getConditionType(condition.getClass()) + " Condition with the name <highlight>"
-                                    + conditionIdentifier + "</highlight> has been created successfully!"
-                    ));
+                    context.getSender().sendMessage((main.parse(main.getConditionsYMLManager().addCondition(conditionIdentifier, condition))));
                 } else {
                     context.getSender().sendMessage(main.parse("<error>Error! A condition with the name <highlight>" + conditionIdentifier + "</highlight> already exists!"));
                 }

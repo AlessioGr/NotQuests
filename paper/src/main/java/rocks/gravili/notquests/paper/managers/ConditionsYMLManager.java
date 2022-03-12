@@ -189,7 +189,10 @@ public class ConditionsYMLManager {
             condition.save(condition.getCategory().getConditionsConfig(), "conditions." + conditionIdentifier);
 
             saveConditions(condition.getCategory());
-            return ("<success>Condition <highlight>" + conditionIdentifier + "</highlight> successfully created!");
+
+
+            return "<success>" + main.getConditionsManager().getConditionType(condition.getClass()) + " Condition with the name <highlight>"
+                    + conditionIdentifier + "</highlight> has been created successfully!";
         } else {
             return ("<error>Condition <highlight>" + conditionIdentifier + "</highlight> already exists!");
         }

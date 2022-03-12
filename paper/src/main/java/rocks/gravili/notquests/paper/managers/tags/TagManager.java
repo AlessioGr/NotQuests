@@ -152,7 +152,7 @@ public class TagManager {
         main.getLogManager().info("Loading " + questPlayer.getTags().size() + " tags for " + player.getName() + ":");
         if (questPlayer.getTags().size() > 0) {
             for (final String tagIdentifier : questPlayer.getTags().keySet()) {
-                main.getLogManager().info("   " + tagIdentifier + ": " + questPlayer.getTagValue(tagIdentifier));
+                main.getLogManager().info("   " + tagIdentifier + ": " + questPlayer.getTagValue(tagIdentifier) + " (" + questPlayer.getTagValue(tagIdentifier).getClass().getName() + ")");
             }
         }
 
@@ -170,30 +170,31 @@ public class TagManager {
         for (final String tagIdentifier : questPlayer.getTags().keySet()) {
             @Nullable final Object tagValue = questPlayer.getTagValue(tagIdentifier);
 
-            main.getLogManager().info("Saving the tag <highlight>" + tagIdentifier + "</highlight> with value <highlight>" + (tagValue != null ? tagValue : "null") + "</highlight> for player <highlight2>" + player.getName() + "</highlight2>...");
+            main.getLogManager().info("Saving the " + (tagValue != null ? tagValue.getClass().getName() : "null") + " tag <highlight>" + tagIdentifier + "</highlight> with value <highlight>" + (tagValue != null ? tagValue : "null") + "</highlight> for player <highlight2>" + player.getName() + "</highlight2>...");
 
 
             //Remove tag from the player's pdc if it's null
             if (tagValue == null) {
+                main.getLogManager().info("Null tag => removing the tag");
                 if (booleanTagsContainer != null) {
                     booleanTagsContainer.remove(new NamespacedKey(main.getMain(), tagIdentifier));
                     persistentDataContainer.set(booleanTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER, booleanTagsContainer);  //TODO: Check if needed
                 }
                 if (integerTagsContainer != null) {
                     integerTagsContainer.remove(new NamespacedKey(main.getMain(), tagIdentifier));
-                    persistentDataContainer.set(booleanTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER, integerTagsContainer);  //TODO: Check if needed
+                    persistentDataContainer.set(integerTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER, integerTagsContainer);  //TODO: Check if needed
                 }
                 if (floatTagsContainer != null) {
                     floatTagsContainer.remove(new NamespacedKey(main.getMain(), tagIdentifier));
-                    persistentDataContainer.set(booleanTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER, floatTagsContainer);  //TODO: Check if needed
+                    persistentDataContainer.set(floatTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER, floatTagsContainer);  //TODO: Check if needed
                 }
                 if (doubleTagsContainer != null) {
                     doubleTagsContainer.remove(new NamespacedKey(main.getMain(), tagIdentifier));
-                    persistentDataContainer.set(booleanTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER, doubleTagsContainer);  //TODO: Check if needed
+                    persistentDataContainer.set(doubleTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER, doubleTagsContainer);  //TODO: Check if needed
                 }
                 if (stringTagsContainer != null) {
                     stringTagsContainer.remove(new NamespacedKey(main.getMain(), tagIdentifier));
-                    persistentDataContainer.set(booleanTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER, stringTagsContainer);  //TODO: Check if needed
+                    persistentDataContainer.set(stringTagsNestedPDC, PersistentDataType.TAG_CONTAINER, stringTagsContainer);  //TODO: Check if needed
                 }
                 continue;
             }
@@ -205,6 +206,7 @@ public class TagManager {
                 booleanTagsContainer.set(new NamespacedKey(main.getMain(), tagIdentifier), PersistentDataType.BYTE, (byte) (booleanTagValue ? 1 : 0));
 
                 persistentDataContainer.set(booleanTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER, booleanTagsContainer);  //TODO: Check if needed
+                main.getLogManager().info("Saved boolean tag!");
             } else if (tagValue instanceof final Integer integerTagValue) {
                 if (integerTagsContainer == null) {
                     integerTagsContainer = persistentDataContainer.getAdapterContext().newPersistentDataContainer();
@@ -212,6 +214,7 @@ public class TagManager {
                 integerTagsContainer.set(new NamespacedKey(main.getMain(), tagIdentifier), PersistentDataType.INTEGER, integerTagValue);
 
                 persistentDataContainer.set(integerTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER, integerTagsContainer); //TODO: Check if needed
+                main.getLogManager().info("Saved integer tag!");
             } else if (tagValue instanceof final Float floatValue) {
                 if (floatTagsContainer == null) {
                     floatTagsContainer = persistentDataContainer.getAdapterContext().newPersistentDataContainer();
@@ -219,6 +222,7 @@ public class TagManager {
                 floatTagsContainer.set(new NamespacedKey(main.getMain(), tagIdentifier), PersistentDataType.FLOAT, floatValue);
 
                 persistentDataContainer.set(floatTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER, floatTagsContainer); //TODO: Check if needed
+                main.getLogManager().info("Saved float tag!");
             } else if (tagValue instanceof final Double doubleValue) {
                 if (doubleTagsContainer == null) {
                     doubleTagsContainer = persistentDataContainer.getAdapterContext().newPersistentDataContainer();
@@ -226,6 +230,7 @@ public class TagManager {
                 doubleTagsContainer.set(new NamespacedKey(main.getMain(), tagIdentifier), PersistentDataType.DOUBLE, doubleValue);
 
                 persistentDataContainer.set(doubleTagsNestedPDCKey, PersistentDataType.TAG_CONTAINER, doubleTagsContainer); //TODO: Check if needed
+                main.getLogManager().info("Saved double tag!");
             } else if (tagValue instanceof final String stringTagValue) {
                 if (stringTagsContainer == null) {
                     stringTagsContainer = persistentDataContainer.getAdapterContext().newPersistentDataContainer();
@@ -233,6 +238,7 @@ public class TagManager {
                 stringTagsContainer.set(new NamespacedKey(main.getMain(), tagIdentifier), PersistentDataType.STRING, stringTagValue);
 
                 persistentDataContainer.set(stringTagsNestedPDC, PersistentDataType.TAG_CONTAINER, stringTagsContainer); //TODO: Check if needed
+                main.getLogManager().info("Saved string tag!");
             }
         }
     }
