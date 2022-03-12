@@ -205,7 +205,7 @@ public class QuestManager {
                             }
 
                             if (objectiveID <= 0) {
-                                main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading quests objective data (2). Objective ID: <highlight>" + objectiveNumber + "</higlight> Reason: " + "Invalid objective ID - it needs to be bigger than 0: " + objectiveID, category, quest);
+                                main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading quests objective data (2). Objective ID: <highlight>" + objectiveNumber + "</higlight> Reason: Invalid objective ID - it needs to be bigger than 0: " + objectiveID, category, quest);
                                 return;
                             }
 

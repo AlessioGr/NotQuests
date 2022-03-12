@@ -37,54 +37,14 @@ public class ActionsYMLManager {
     public ActionsYMLManager(final NotQuests main) {
         this.main = main;
         actionsAndIdentifiers = new HashMap<>();
-
-        //setupFiles();
     }
 
-
-
-    /*public void setupFiles(final Category category) {
-        main.getLogManager().info("Loading actions.yml config");
-        if (actionsConfigFile == null) {
-
-            main.getDataManager().prepareDataFolder();
-
-            actionsConfigFile = new File(main.getMain().getDataFolder(), "actions.yml");
-
-            if (!actionsConfigFile.exists()) {
-                main.getLogManager().info("Actions Configuration (actions.yml) does not exist. Creating a new one...");
-                try {
-                    //Try to create the actions.yml config file, and throw an error if it fails.
-                    if (!actionsConfigFile.createNewFile()) {
-                        main.getDataManager().disablePluginAndSaving("There was an error creating the actions.yml config file.");
-                        return;
-
-                    }
-                } catch (IOException ioException) {
-                    main.getDataManager().disablePluginAndSaving("There was an error creating the actions.yml config file. (2)", ioException);
-                    return;
-                }
-            }
-
-            actionsConfig = new YamlConfiguration();
-            try {
-                actionsConfig.load(actionsConfigFile);
-            } catch (IOException | InvalidConfigurationException e) {
-                e.printStackTrace();
-            }
-
-
-        } else {
-            actionsConfig = YamlConfiguration.loadConfiguration(actionsConfigFile);
-        }
-    }*/
-
     public void loadActions() {
-        ArrayList<String> categoriesStringList = new ArrayList<>();
+        final ArrayList<String> categoriesStringList = new ArrayList<>();
         for (final Category category : main.getDataManager().getCategories()) {
             categoriesStringList.add(category.getCategoryFullName());
         }
-        main.getLogManager().info("Scheduled Actions Data load for following categories: <highlight>" + categoriesStringList.toString() );
+        main.getLogManager().info("Scheduled Actions Data load for following categories: <highlight>" + categoriesStringList);
 
         for (final Category category : main.getDataManager().getCategories()) {
             loadActions(category);
@@ -108,101 +68,100 @@ public class ActionsYMLManager {
                 }
                 main.getLogManager().info("Loading action <highlight>" + actionIdentifier);
 
-                Class<? extends Action> actionType = null;
-                String actionTypeString = actionsConfigurationSection.getString(actionIdentifier + ".actionType", "");
-                /*if (actionTypeString.isBlank()) {
-                    actionTypeString = main.getUpdateManager().convertActionsYMLTypeToActionType(actionsConfigurationSection, actionIdentifier);
-                }*/
+                final String actionTypeString = actionsConfigurationSection.getString(actionIdentifier + ".actionType", "");
+
+                final Class<? extends Action> actionType = main.getActionManager().getActionClass(actionTypeString);
+
+                if (actionType == null) {
+                    main.getDataManager().disablePluginAndSaving("Error parsing actions.yml action Type of action with name <highlight" + actionIdentifier + "</highlight>. Action type: <highlight2>" + actionTypeString, category);
+                    return;
+                }
+
+                if (actionIdentifier.isBlank()) {
+                    main.getLogManager().warn("Skipping loading the action of type <highlight>" + actionTypeString + "</highlight> of category <highlight2>" + category.getCategoryFullName() + "</highlight2> because the action identifier is empty.");
+                    continue;
+                }
+
+
+                final Action action;
 
                 try {
-                    actionType = main.getActionManager().getActionClass(actionTypeString);
-                } catch (NullPointerException ex) {
-                    main.getDataManager().disablePluginAndSaving("Error parsing actions.yml action Type of action with name <highlight>" + actionIdentifier + "</highlight>.", ex);
+                    action = actionType.getDeclaredConstructor(NotQuests.class).newInstance(main);
+                    action.setCategory(category);
+                    action.setActionName(actionIdentifier);
+                    action.load(category.getActionsConfig(), "actions." + actionIdentifier);
+
+                    loadActionConditions(action);
+
+                } catch (final Exception ex) {
+                    main.getDataManager().disablePluginAndSaving("Error parsing action Type of actions.yml action with name <highlight>" + actionIdentifier + "</highlight>.", ex, category);
+                    return;
                 }
 
-                if (!actionIdentifier.isBlank() && actionType != null) {
-                    Action action = null;
 
-                    try {
-                        action = actionType.getDeclaredConstructor(NotQuests.class).newInstance(main);
-                        action.setCategory(category);
-                        action.setActionName(actionIdentifier);
-                        action.load(category.getActionsConfig(), "actions." + actionIdentifier);
-
-                        loadActionConditions(action);
-
-                    } catch (Exception ex) {
-                        main.getDataManager().disablePluginAndSaving("Error parsing action Type of actions.yml action with name <highlight>" + actionIdentifier + "</highlight>.", ex);
-                    }
-
-
-                    if (action != null) {
-                        final String actionsDisplayName = actionsConfigurationSection.getString(actionIdentifier + ".displayName", "");
-                        if (!actionsDisplayName.isBlank()) {
-                            action.setActionName(actionsDisplayName);
-                        }
-                        actionsAndIdentifiers.put(actionIdentifier, action);
-                    } else {
-                        main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading actions.yml actions data.");
-                    }
+                final String actionsDisplayName = actionsConfigurationSection.getString(actionIdentifier + ".displayName", "");
+                if (!actionsDisplayName.isBlank()) {
+                    action.setActionName(actionsDisplayName);
                 }
+                actionsAndIdentifiers.put(actionIdentifier, action);
 
             }
         }
 
     }
 
-    private void loadActionConditions(Action action) {
+    private void loadActionConditions(final Action action) {
         final ConfigurationSection actionsConditionsConfigurationSection = action.getCategory().getActionsConfig().getConfigurationSection("actions." + action.getActionName() + ".conditions.");
 
         if (actionsConditionsConfigurationSection != null) {
-            for (String actionConditionNumber : actionsConditionsConfigurationSection.getKeys(false)) {
-                int conditionID = -1;
-                boolean validConditionID = true;
+            for (final String actionConditionNumber : actionsConditionsConfigurationSection.getKeys(false)) {
+                final int conditionID;
                 try {
                     conditionID = Integer.parseInt(actionConditionNumber);
                 } catch (java.lang.NumberFormatException ex) {
-                    validConditionID = false;
                     main.getDataManager().disablePluginAndSaving("Error parsing loaded condition ID <highlight>" + actionConditionNumber + "</highlight>.", action, ex);
                     return;
                 }
 
-                Class<? extends Condition> conditionType = null;
-                String conditionTypeString = action.getCategory().getActionsConfig().getString("actions." + action.getActionName() + ".conditions." + actionConditionNumber + ".conditionType", "");
+                if (conditionID <= 0) {
+                    main.getDataManager().disablePluginAndSaving("Error parsing condition ID of action with ID <highlight>" + action.getActionName() + "</highlight>. Reason: Invalid condition ID - it needs to be bigger than 0: " + conditionID, action);
+                    return;
+                }
+
+                final String conditionTypeString = action.getCategory().getActionsConfig().getString("actions." + action.getActionName() + ".conditions." + actionConditionNumber + ".conditionType", "");
+
+                final Class<? extends Condition> conditionType;
                 try {
                     conditionType = main.getConditionsManager().getConditionClass(conditionTypeString);
                 } catch (java.lang.NullPointerException ex) {
                     main.getDataManager().disablePluginAndSaving("Error parsing condition Type of action with ID <highlight>" + action.getActionName() + "</highlight>.", action, ex);
                     return;
                 }
-
-                int progressNeeded = action.getCategory().getActionsConfig().getInt("actions." + action.getActionName() + ".conditions." + actionConditionNumber + ".progressNeeded");
-                boolean negated = action.getCategory().getActionsConfig().getBoolean("actions." + action.getActionName() + ".conditions." + actionConditionNumber + ".negated", false);
-                String description = action.getCategory().getActionsConfig().getString("actions." + action.getActionName() + ".conditions." + actionConditionNumber + ".description", "");
-
-
-                if (validConditionID && conditionID > 0 && conditionType != null) {
-                    Condition condition = null;
-
-                    try {
-                        condition = conditionType.getDeclaredConstructor(NotQuests.class).newInstance(main);
-                        condition.setProgressNeeded(progressNeeded);
-                        condition.setNegated(negated);
-                        condition.setDescription(description);
-                        condition.setCategory(action.getCategory());
-                        condition.load(action.getCategory().getActionsConfig(), "actions." + action.getActionName() + ".conditions." + actionConditionNumber);
-                    } catch (Exception ex) {
-                        main.getDataManager().disablePluginAndSaving("Error parsing condition Type of condition with ID <highlight>" + actionConditionNumber + "</highlight>.", action, ex);
-                        return;
-                    }
-                    if (condition != null) {
-                        action.addCondition(condition, false, action.getCategory().getActionsConfig(), "actions." + action.getActionName());
-                    }
-
-                } else {
-                    main.getDataManager().disablePluginAndSaving("Error loading condition. ValidRequirementID: " + validConditionID + " conditionID: " + conditionID + " ConditionTypeNull?" + (conditionType == null) + " ConditionType: " + (conditionType != null ? conditionType.toString() : "null") + " conditionTypeString: " + conditionTypeString, action);
+                if (conditionType == null) {
+                    main.getDataManager().disablePluginAndSaving("Error parsing objective Type of action with ID <highlight>" + action.getActionName() + "</highlight>. Condition type: <highlight2>" + conditionTypeString, action);
                     return;
                 }
+
+                final int progressNeeded = action.getCategory().getActionsConfig().getInt("actions." + action.getActionName() + ".conditions." + actionConditionNumber + ".progressNeeded");
+                final boolean negated = action.getCategory().getActionsConfig().getBoolean("actions." + action.getActionName() + ".conditions." + actionConditionNumber + ".negated", false);
+                final String description = action.getCategory().getActionsConfig().getString("actions." + action.getActionName() + ".conditions." + actionConditionNumber + ".description", "");
+
+
+                final Condition condition;
+
+                try {
+                    condition = conditionType.getDeclaredConstructor(NotQuests.class).newInstance(main);
+                    condition.setProgressNeeded(progressNeeded);
+                    condition.setNegated(negated);
+                    condition.setDescription(description);
+                    condition.setCategory(action.getCategory());
+                    condition.load(action.getCategory().getActionsConfig(), "actions." + action.getActionName() + ".conditions." + actionConditionNumber);
+                } catch (final Exception ex) {
+                    main.getDataManager().disablePluginAndSaving("Error parsing condition Type of condition with ID <highlight>" + actionConditionNumber + "</highlight>.", action, ex);
+                    return;
+                }
+
+                action.addCondition(condition, false, action.getCategory().getActionsConfig(), "actions." + action.getActionName());
             }
         }
     }
@@ -230,7 +189,7 @@ public class ActionsYMLManager {
 
 
     public final String addAction(final String actionIdentifier, final Action action) {
-        boolean nameAlreadyExists = getActionsAndIdentifiers().get(actionIdentifier) != null;
+        final boolean nameAlreadyExists = getActionsAndIdentifiers().get(actionIdentifier) != null;
         action.setActionName(actionIdentifier);
 
         if (actionIdentifier.contains(".")) {
@@ -258,7 +217,7 @@ public class ActionsYMLManager {
     }
 
 
-    public String removeAction(String actionToDeleteIdentifier) {
+    public final String removeAction(String actionToDeleteIdentifier) {
         actionsAndIdentifiers.get(actionToDeleteIdentifier).getCategory().getActionsConfig().set("actions." + actionToDeleteIdentifier, null);
         saveActions(actionsAndIdentifiers.get(actionToDeleteIdentifier).getCategory());
         actionsAndIdentifiers.remove(actionToDeleteIdentifier);
@@ -266,7 +225,7 @@ public class ActionsYMLManager {
         return "<success>Action <highlight>" + actionToDeleteIdentifier + "</highlight> successfully deleted!";
     }
 
-    public String removeAction(Action actionToDelete) {
+    public final String removeAction(Action actionToDelete) {
         actionToDelete.getCategory().getActionsConfig().set("actions." + actionToDelete.getActionName(), null);
         saveActions(actionToDelete.getCategory());
         actionsAndIdentifiers.remove(actionToDelete.getActionName());
