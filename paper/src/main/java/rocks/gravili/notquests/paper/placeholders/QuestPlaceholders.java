@@ -20,6 +20,7 @@ package rocks.gravili.notquests.paper.placeholders;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.managers.tags.Tag;
@@ -74,6 +75,7 @@ public class QuestPlaceholders extends PlaceholderExpansion {
      *
      * @return The name of the author as a String.
      */
+    @NotNull
     @Override
     public String getAuthor() {
         return main.getMain().getDescription().getAuthors().toString();
@@ -88,6 +90,7 @@ public class QuestPlaceholders extends PlaceholderExpansion {
      *
      * @return The identifier in {@code %<identifier>_<value>%} as String.
      */
+    @NotNull
     @Override
     public String getIdentifier() {
         return "notquests";
@@ -101,6 +104,7 @@ public class QuestPlaceholders extends PlaceholderExpansion {
      *
      * @return The version as a String.
      */
+    @NotNull
     @Override
     public String getVersion() {
         return main.getMain().getDescription().getVersion();
@@ -116,7 +120,7 @@ public class QuestPlaceholders extends PlaceholderExpansion {
      * @return possibly-null String of the requested identifier.
      */
     @Override
-    public String onPlaceholderRequest(Player player, String identifier) {
+    public String onPlaceholderRequest(Player player, @NotNull String identifier) {
 
         if (player == null) {
             return "";
