@@ -182,10 +182,8 @@ public class ActionManager {
                 }
 
                 if (main.getActionsYMLManager().getAction(actionIdentifier) == null) {
-                    main.getActionsYMLManager().addAction(actionIdentifier, action);
                     context.getSender().sendMessage(main.parse(
-                            "<success>" + getActionType(action.getClass()) + " Action with the name <highlight>"
-                                    + actionIdentifier + "</highlight> has been created successfully!"
+                            main.getActionsYMLManager().addAction(actionIdentifier, action)
                     ));
                 } else {
                     context.getSender().sendMessage(main.parse("<error>Error! An action with the name <highlight>" + actionIdentifier + "</highlight> already exists!"));

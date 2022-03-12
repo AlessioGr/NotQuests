@@ -232,6 +232,10 @@ public class ActionsYMLManager {
         boolean nameAlreadyExists = getActionsAndIdentifiers().get(actionIdentifier) != null;
         action.setActionName(actionIdentifier);
 
+        if (actionIdentifier.contains(".")) {
+            return "<error>Error: Action name cannot contain a dot.";
+        }
+
         if (!nameAlreadyExists) {
             actionsAndIdentifiers.put(actionIdentifier, action);
 
@@ -243,7 +247,8 @@ public class ActionsYMLManager {
             action.save(action.getCategory().getActionsConfig(), "actions." + actionIdentifier);
 
             saveActions(action.getCategory());
-            return ("<success>Action <highlight>" + actionIdentifier + "</highlight> successfully created!");
+            return ("<success>" + main.getActionManager().getActionType(action.getClass()) + " Action with the name <highlight>"
+                    + actionIdentifier + "</highlight> has been created successfully!");
         } else {
             return ("<error>Action <highlight>" + actionIdentifier + "</highlight> already exists!");
         }
