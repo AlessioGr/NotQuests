@@ -343,35 +343,25 @@ public class QuestPlaceholders extends PlaceholderExpansion {
                 return "No";
             }
             return "No";
-        }
-
-
-        if (identifier.startsWith("player_expression_")) {
+        } else if (identifier.startsWith("player_expression_")) {
             final String expression = identifier.replace("player_expression_", "");
 
             final NumberExpression numberExpression = new NumberExpression(main, expression);
             return "" + numberExpression.calculateValue(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()));
-        }else if (identifier.startsWith("player_rounded_expression_")) {
+        } else if (identifier.startsWith("player_rounded_expression_")) {
             final String expression = identifier.replace("player_rounded_expression_", "");
 
             final NumberExpression numberExpression = new NumberExpression(main, expression);
             return "" + (int) Math.round(numberExpression.calculateValue(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId())));
-        }
-
-
-
-        //Variables
-        if (identifier.startsWith("player_variable_")) {
+        } else if (identifier.startsWith("player_variable_")) { //Variables
             final String variableName = identifier.replace("player_variable_", "");
             Variable<?> variable = main.getVariablesManager().getVariableFromString(variableName);
             if (variable != null) {
                 Object value = variable.getValue(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()));
-                return value != null ? ""+value : "";
+                return value != null ? "" + value : "";
             }
             return "";
-        }
-        //Tags
-        if (identifier.startsWith("player_tag_")) {
+        } else if (identifier.startsWith("player_tag_")) { //Tags
             final String tagName = identifier.replace("player_tag_", "");
             Tag tag = main.getTagManager().getTag(tagName);
             if (tag != null) {
@@ -386,9 +376,7 @@ public class QuestPlaceholders extends PlaceholderExpansion {
             }
             return "";
 
-        }
-
-        if (identifier.startsWith("player_quest_cooldown_left_formatted_")) {
+        } else if (identifier.startsWith("player_quest_cooldown_left_formatted_")) {
             final String questName = identifier.replace("player_quest_cooldown_left_formatted_", "");
             final Quest quest = main.getQuestManager().getQuest(questName);
 
@@ -400,6 +388,81 @@ public class QuestPlaceholders extends PlaceholderExpansion {
             }
             final String prefix = main.getLanguageManager().getString("placeholders.questcooldownleftformatted.prefix", player);
             return prefix + main.getLanguageManager().getString("placeholders.questcooldownleftformatted.no-cooldown", player);
+
+        } else if (identifier.startsWith("player_objective_progress_percentage_") && identifier.contains("_from_active_quest_")) {
+            String objectiveIDName = identifier.replace("player_objective_progress_percentage_", "");
+            objectiveIDName = objectiveIDName.substring(0, objectiveIDName.indexOf("_from_active_quest_"));
+            final int objectiveID = Integer.parseInt(objectiveIDName);
+
+            final String questName = identifier.replace("player_objective_progress_percentage_", "").replace(objectiveIDName, "").replace("_from_active_quest_", "");
+
+
+            final Quest quest = main.getQuestManager().getQuest(questName);
+            if (quest != null) {
+                final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                if (questPlayer != null) {
+                    for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+                        if (activeQuest.getQuest().equals(quest)) {
+                            for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
+                                if (activeObjective.getObjectiveID() == objectiveID) {
+                                    if (activeObjective.isUnlocked()) {
+                                        return "" + ((int) (((float) activeObjective.getCurrentProgress() / (float) activeObjective.getProgressNeeded()) * 100));
+                                    }
+                                }
+                            }
+                            for (final ActiveObjective objective : activeQuest.getCompletedObjectives()) {
+                                if (objective.getObjectiveID() == objectiveID) {
+                                    if (objective.isUnlocked()) {
+                                        return "100";
+                                    }
+                                }
+                            }
+                            return "0";
+                        }
+                    }
+                    return "0";
+                }
+                return "0";
+            }
+            return "0";
+
+        } else if (identifier.startsWith("player_objective_progress_") && identifier.contains("_from_active_quest_")) {
+            String objectiveIDName = identifier.replace("player_objective_progress_", "");
+            objectiveIDName = objectiveIDName.substring(0, objectiveIDName.indexOf("_from_active_quest_"));
+            final int objectiveID = Integer.parseInt(objectiveIDName);
+
+            final String questName = identifier.replace("player_objective_progress_", "").replace(objectiveIDName, "").replace("_from_active_quest_", "");
+
+
+            final Quest quest = main.getQuestManager().getQuest(questName);
+            if (quest != null) {
+                final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                if (questPlayer != null) {
+                    for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+                        if (activeQuest.getQuest().equals(quest)) {
+                            for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
+                                if (activeObjective.getObjectiveID() == objectiveID) {
+                                    if (activeObjective.isUnlocked()) {
+                                        return "" + activeObjective.getCurrentProgress();
+                                    }
+                                }
+                            }
+                            for (final ActiveObjective completedObjective : activeQuest.getCompletedObjectives()) {
+                                if (completedObjective.getObjectiveID() == objectiveID) {
+                                    if (completedObjective.isUnlocked()) {
+                                        return "" + completedObjective.getProgressNeeded();
+                                    }
+                                }
+                            }
+                            return "0";
+                        }
+                    }
+                    return "0";
+                }
+                return "0";
+            }
+            return "0";
+
         }
 
 
