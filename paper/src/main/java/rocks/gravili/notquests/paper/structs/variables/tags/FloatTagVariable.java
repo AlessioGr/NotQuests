@@ -31,7 +31,7 @@ import java.util.List;
 
 public class FloatTagVariable extends Variable<Float> {
 
-    public FloatTagVariable(NotQuests main) {
+    public FloatTagVariable(final NotQuests main) {
         super(main);
 
         addRequiredString(
@@ -40,9 +40,9 @@ public class FloatTagVariable extends Variable<Float> {
                             final List<String> allArgs = context.getRawInput();
                             main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Tag Name]", "[...]");
 
-                            ArrayList<String> suggestions = new ArrayList<>();
-                            for(Tag tag : main.getTagManager().getTags()){
-                                if(tag.getTagType() == TagType.FLOAT){
+                            final ArrayList<String> suggestions = new ArrayList<>();
+                            for (final Tag tag : main.getTagManager().getTags()) {
+                                if (tag.getTagType() == TagType.FLOAT) {
                                     suggestions.add("" + tag.getTagName());
                                 }
                             }
@@ -56,7 +56,7 @@ public class FloatTagVariable extends Variable<Float> {
     }
 
     @Override
-    public Float getValue(QuestPlayer questPlayer, Object... objects) {
+    public final Float getValue(final QuestPlayer questPlayer, final Object... objects) {
         if (questPlayer == null) {
             return 0f;
         }
@@ -68,22 +68,22 @@ public class FloatTagVariable extends Variable<Float> {
             return 0f;
         }
         if(tag.getTagType() != TagType.FLOAT){
-            main.getLogManager().warn("Error reading tag " + tagName + ". Tag is no integer tag.");
+            main.getLogManager().warn("Error reading tag " + tagName + ". Tag is no float tag.");
             return 0f;
         }
 
-        Object value = questPlayer.getTagValue(tagName);
+        final Object value = questPlayer.getTagValue(tagName);
 
-        if(value instanceof Float floatValue){
+        if (value instanceof final Float floatValue) {
             return floatValue;
-        }else{
+        } else {
             return 0f;
         }
 
     }
 
     @Override
-    public boolean setValueInternally(Float newValue, QuestPlayer questPlayer, Object... objects) {
+    public final boolean setValueInternally(final Float newValue, final QuestPlayer questPlayer, final Object... objects) {
         if (questPlayer == null) {
             return false;
         }
@@ -95,7 +95,7 @@ public class FloatTagVariable extends Variable<Float> {
             return false;
         }
         if(tag.getTagType() != TagType.FLOAT){
-            main.getLogManager().warn("Error reading tag " + tagName + ". Tag is no integer tag.");
+            main.getLogManager().warn("Error reading tag " + tagName + ". Tag is no float tag.");
             return false;
         }
 
@@ -107,17 +107,17 @@ public class FloatTagVariable extends Variable<Float> {
 
 
     @Override
-    public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
+    public final List<String> getPossibleValues(final QuestPlayer questPlayer, final Object... objects) {
         return null;
     }
 
     @Override
-    public String getPlural() {
+    public final String getPlural() {
         return "Tags";
     }
 
     @Override
-    public String getSingular() {
+    public final String getSingular() {
         return "Tag";
     }
 }

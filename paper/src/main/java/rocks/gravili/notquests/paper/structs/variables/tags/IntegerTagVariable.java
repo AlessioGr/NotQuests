@@ -31,7 +31,7 @@ import java.util.List;
 
 public class IntegerTagVariable extends Variable<Integer> {
 
-    public IntegerTagVariable(NotQuests main) {
+    public IntegerTagVariable(final NotQuests main) {
         super(main);
 
         addRequiredString(
@@ -40,9 +40,9 @@ public class IntegerTagVariable extends Variable<Integer> {
                             final List<String> allArgs = context.getRawInput();
                             main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Tag Name]", "[...]");
 
-                            ArrayList<String> suggestions = new ArrayList<>();
-                            for(Tag tag : main.getTagManager().getTags()){
-                                if(tag.getTagType() == TagType.INTEGER){
+                            final ArrayList<String> suggestions = new ArrayList<>();
+                            for (final Tag tag : main.getTagManager().getTags()) {
+                                if (tag.getTagType() == TagType.INTEGER) {
                                     suggestions.add("" + tag.getTagName());
                                 }
                             }
@@ -56,7 +56,7 @@ public class IntegerTagVariable extends Variable<Integer> {
     }
 
     @Override
-    public Integer getValue(QuestPlayer questPlayer, Object... objects) {
+    public final Integer getValue(final QuestPlayer questPlayer, final Object... objects) {
         if (questPlayer == null) {
             return 0;
         }
@@ -73,7 +73,7 @@ public class IntegerTagVariable extends Variable<Integer> {
         }
 
         //main.getLogManager().info("Getting tag for " + tagName);
-        Object value = questPlayer.getTagValue(tagName);
+        final Object value = questPlayer.getTagValue(tagName);
 
         if(value instanceof Integer integerValue){
             return integerValue;
@@ -84,7 +84,7 @@ public class IntegerTagVariable extends Variable<Integer> {
     }
 
     @Override
-    public boolean setValueInternally(Integer newValue, QuestPlayer questPlayer, Object... objects) {
+    public final boolean setValueInternally(final Integer newValue, final QuestPlayer questPlayer, final Object... objects) {
         if (questPlayer == null) {
             return false;
         }
@@ -108,17 +108,17 @@ public class IntegerTagVariable extends Variable<Integer> {
 
 
     @Override
-    public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
+    public final List<String> getPossibleValues(final QuestPlayer questPlayer, final Object... objects) {
         return null;
     }
 
     @Override
-    public String getPlural() {
+    public final String getPlural() {
         return "Tags";
     }
 
     @Override
-    public String getSingular() {
+    public final String getSingular() {
         return "Tag";
     }
 }

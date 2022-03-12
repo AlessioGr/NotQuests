@@ -40,9 +40,9 @@ public class StringTagVariable extends Variable<String> {
                             final List<String> allArgs = context.getRawInput();
                             main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Tag Name]", "[...]");
 
-                            ArrayList<String> suggestions = new ArrayList<>();
-                            for(Tag tag : main.getTagManager().getTags()){
-                                if(tag.getTagType() == TagType.STRING){
+                            final ArrayList<String> suggestions = new ArrayList<>();
+                            for (final Tag tag : main.getTagManager().getTags()) {
+                                if (tag.getTagType() == TagType.STRING) {
                                     suggestions.add("" + tag.getTagName());
                                 }
                             }
@@ -56,7 +56,7 @@ public class StringTagVariable extends Variable<String> {
     }
 
     @Override
-    public String getValue(QuestPlayer questPlayer, Object... objects) {
+    public final String getValue(final QuestPlayer questPlayer, final Object... objects) {
         if (questPlayer == null) {
             return "";
         }
@@ -68,22 +68,22 @@ public class StringTagVariable extends Variable<String> {
             return "";
         }
         if(tag.getTagType() != TagType.STRING){
-            main.getLogManager().warn("Error reading tag " + tagName + ". Tag is no integer tag.");
+            main.getLogManager().warn("Error reading tag " + tagName + ". Tag is no string tag.");
             return "";
         }
 
-        Object value = questPlayer.getTagValue(tagName);
+        final Object value = questPlayer.getTagValue(tagName);
 
-        if(value instanceof String stringValue){
+        if (value instanceof final String stringValue) {
             return stringValue;
-        }else{
+        } else {
             return "";
         }
 
     }
 
     @Override
-    public boolean setValueInternally(String newValue, QuestPlayer questPlayer, Object... objects) {
+    public boolean setValueInternally(final String newValue, final QuestPlayer questPlayer, final Object... objects) {
         if (questPlayer == null) {
             return false;
         }
@@ -95,7 +95,7 @@ public class StringTagVariable extends Variable<String> {
             return false;
         }
         if(tag.getTagType() != TagType.STRING){
-            main.getLogManager().warn("Error reading tag " + tagName + ". Tag is no integer tag.");
+            main.getLogManager().warn("Error reading tag " + tagName + ". Tag is no string tag.");
             return false;
         }
 
@@ -107,17 +107,17 @@ public class StringTagVariable extends Variable<String> {
 
 
     @Override
-    public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
+    public final List<String> getPossibleValues(final QuestPlayer questPlayer, final Object... objects) {
         return null;
     }
 
     @Override
-    public String getPlural() {
+    public final String getPlural() {
         return "Tags";
     }
 
     @Override
-    public String getSingular() {
+    public final String getSingular() {
         return "Tag";
     }
 }

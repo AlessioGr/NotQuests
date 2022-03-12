@@ -31,7 +31,7 @@ import java.util.List;
 
 public class BooleanTagVariable extends Variable<Boolean> {
 
-    public BooleanTagVariable(NotQuests main) {
+    public BooleanTagVariable(final NotQuests main) {
         super(main);
 
         addRequiredString(
@@ -40,9 +40,9 @@ public class BooleanTagVariable extends Variable<Boolean> {
                             final List<String> allArgs = context.getRawInput();
                             main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Tag Name]", "[...]");
 
-                            ArrayList<String> suggestions = new ArrayList<>();
-                            for(Tag tag : main.getTagManager().getTags()){
-                                if(tag.getTagType() == TagType.BOOLEAN){
+                            final ArrayList<String> suggestions = new ArrayList<>();
+                            for (final Tag tag : main.getTagManager().getTags()) {
+                                if (tag.getTagType() == TagType.BOOLEAN) {
                                     suggestions.add("" + tag.getTagName());
                                 }
                             }
@@ -56,7 +56,7 @@ public class BooleanTagVariable extends Variable<Boolean> {
     }
 
     @Override
-    public Boolean getValue(QuestPlayer questPlayer, Object... objects) {
+    public final Boolean getValue(final QuestPlayer questPlayer, final Object... objects) {
         if (questPlayer == null) {
             return false;
         }
@@ -72,18 +72,18 @@ public class BooleanTagVariable extends Variable<Boolean> {
             return false;
         }
 
-        Object value = questPlayer.getTagValue(tagName);
+        final Object value = questPlayer.getTagValue(tagName);
 
-        if(value instanceof Boolean boolValue){
+        if (value instanceof final Boolean boolValue) {
             return boolValue;
-        }else{
+        } else {
             return false;
         }
 
     }
 
     @Override
-    public boolean setValueInternally(Boolean newValue, QuestPlayer questPlayer, Object... objects) {
+    public final boolean setValueInternally(final Boolean newValue, final QuestPlayer questPlayer, final Object... objects) {
         if (questPlayer == null) {
             return false;
         }
@@ -107,17 +107,17 @@ public class BooleanTagVariable extends Variable<Boolean> {
 
 
     @Override
-    public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
+    public final List<String> getPossibleValues(final QuestPlayer questPlayer, final Object... objects) {
         return null;
     }
 
     @Override
-    public String getPlural() {
+    public final String getPlural() {
         return "Tags";
     }
 
     @Override
-    public String getSingular() {
+    public final String getSingular() {
         return "Tag";
     }
 }
