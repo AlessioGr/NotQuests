@@ -130,15 +130,10 @@ public class ActionsYMLManager {
 
                 final String conditionTypeString = action.getCategory().getActionsConfig().getString("actions." + action.getActionName() + ".conditions." + actionConditionNumber + ".conditionType", "");
 
-                final Class<? extends Condition> conditionType;
-                try {
-                    conditionType = main.getConditionsManager().getConditionClass(conditionTypeString);
-                } catch (java.lang.NullPointerException ex) {
-                    main.getDataManager().disablePluginAndSaving("Error parsing condition Type of action with ID <highlight>" + action.getActionName() + "</highlight>.", action, ex);
-                    return;
-                }
+                final Class<? extends Condition> conditionType = main.getConditionsManager().getConditionClass(conditionTypeString);
+
                 if (conditionType == null) {
-                    main.getDataManager().disablePluginAndSaving("Error parsing objective Type of action with ID <highlight>" + action.getActionName() + "</highlight>. Condition type: <highlight2>" + conditionTypeString, action);
+                    main.getDataManager().disablePluginAndSaving("Error parsing conditionType Type of action with ID <highlight>" + action.getActionName() + "</highlight>. Condition type: <highlight2>" + conditionTypeString, action);
                     return;
                 }
 
@@ -183,7 +178,7 @@ public class ActionsYMLManager {
         return actionsAndIdentifiers;
     }
 
-    public final Action getAction(@NotNull String actionIdentifier) {
+    public final Action getAction(final @NotNull String actionIdentifier) {
         return actionsAndIdentifiers.get(actionIdentifier);
     }
 

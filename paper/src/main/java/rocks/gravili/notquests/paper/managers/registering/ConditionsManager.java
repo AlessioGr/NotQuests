@@ -90,7 +90,7 @@ public class ConditionsManager {
         conditions.put(identifier, condition);
 
         try {
-            Method commandHandler = condition.getMethod("handleCommands", main.getClass(), PaperCommandManager.class, Command.Builder.class, ConditionFor.class);
+            final Method commandHandler = condition.getMethod("handleCommands", main.getClass(), PaperCommandManager.class, Command.Builder.class, ConditionFor.class);
 
             commandHandler.setAccessible(true);
 
@@ -172,18 +172,18 @@ public class ConditionsManager {
         return conditions.keySet();
     }
 
-    public void addCondition(Condition condition, CommandContext<CommandSender> context) {
+    public void addCondition(final Condition condition, final CommandContext<CommandSender> context) {
         condition.setNegated(context.flags().isPresent("negate"));
 
 
-        Quest quest = context.getOrDefault("quest", null);
+        final Quest quest = context.getOrDefault("quest", null);
         Objective objectiveOfQuest = null;
         if (quest != null && context.contains("Objective ID")) {
-            int objectiveID = context.get("Objective ID");
+            final int objectiveID = context.get("Objective ID");
             objectiveOfQuest = quest.getObjectiveFromID(objectiveID);
         }
 
-        String conditionIdentifier = context.getOrDefault("Condition Identifier", "");
+        final String conditionIdentifier = context.getOrDefault("Condition Identifier", "");
 
 
         String actionIdentifier = context.getOrDefault("Action Identifier", "");
@@ -252,14 +252,14 @@ public class ConditionsManager {
     }
 
     public void updateVariableConditions() {
-        try{
-            for(Class<? extends Condition> condition : getConditions()){
-                String identifier = getConditionType(condition);
+        try {
+            for (final Class<? extends Condition> condition : getConditions()) {
+                final String identifier = getConditionType(condition);
 
-                Method commandHandler = condition.getMethod("handleCommands", main.getClass(), PaperCommandManager.class, Command.Builder.class, ConditionFor.class);
+                final Method commandHandler = condition.getMethod("handleCommands", main.getClass(), PaperCommandManager.class, Command.Builder.class, ConditionFor.class);
 
                 commandHandler.setAccessible(true);
-                if(condition == NumberCondition.class || condition == StringCondition.class || condition == BooleanCondition.class || condition == ListCondition.class || condition == ItemStackListCondition.class){
+                if (condition == NumberCondition.class || condition == StringCondition.class || condition == BooleanCondition.class || condition == ListCondition.class || condition == ItemStackListCondition.class) {
 
                     main.getLogManager().info("Re-registering condition " + identifier + " due to variable changes...");
 
@@ -287,7 +287,7 @@ public class ConditionsManager {
 
                 }
             }
-        }catch (Exception e){
+        } catch (final Exception e) {
             e.printStackTrace();
         }
 

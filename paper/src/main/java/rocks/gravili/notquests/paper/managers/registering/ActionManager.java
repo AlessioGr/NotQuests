@@ -93,7 +93,7 @@ public class ActionManager {
         actions.put(identifier, action);
 
         try {
-            Method commandHandler = action.getMethod("handleCommands", main.getClass(), PaperCommandManager.class, Command.Builder.class, ActionFor.class);
+            final Method commandHandler = action.getMethod("handleCommands", main.getClass(), PaperCommandManager.class, Command.Builder.class, ActionFor.class);
             if(action == NumberAction.class || action == StringAction.class || action == BooleanAction.class || action == ListAction.class || action == ItemStackListAction.class){
                 commandHandler.invoke(action, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditAddRewardCommandBuilder()
                         .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " action"), ActionFor.QUEST);
@@ -143,15 +143,14 @@ public class ActionManager {
         return actions.keySet();
     }
 
-    public void addAction(Action action, CommandContext<CommandSender> context) {
-        Quest quest = context.getOrDefault("quest", null);
+    public void addAction(final Action action, final CommandContext<CommandSender> context) {
+        final Quest quest = context.getOrDefault("quest", null);
         Objective objectiveOfQuest = null;
         if (quest != null && context.contains("Objective ID")) {
-            int objectiveID = context.get("Objective ID");
+            final int objectiveID = context.get("Objective ID");
             objectiveOfQuest = quest.getObjectiveFromID(objectiveID);
         }
-        String actionIdentifier = context.getOrDefault("Action Identifier", context.getOrDefault("action", ""));
-
+        final String actionIdentifier = context.getOrDefault("Action Identifier", context.getOrDefault("action", ""));
 
 
         if (quest != null) {
@@ -196,7 +195,7 @@ public class ActionManager {
     }
 
 
-    public void executeActionWithConditions(Action action, QuestPlayer questPlayer, CommandSender sender, boolean silent, Object... objects) {
+    public void executeActionWithConditions(final Action action, final QuestPlayer questPlayer, final CommandSender sender, final boolean silent, final Object... objects) {
         main.getLogManager().debug("Executing Action " + action.getActionName() + " of type " + action.getActionType() + " with conditions!");
 
         if (action.getConditions().size() == 0) {
@@ -208,7 +207,7 @@ public class ActionManager {
             return;
         }
 
-        StringBuilder unfulfilledConditions = new StringBuilder();
+        final StringBuilder unfulfilledConditions = new StringBuilder();
         for (final Condition condition : action.getConditions()) {
             final String check = condition.check(questPlayer);
             main.getLogManager().debug("   Condition Check Result: " + check);
@@ -237,12 +236,12 @@ public class ActionManager {
 
     public void updateVariableActions() {
         try {
-            for(Class<? extends Action> action : getActions()){
-                String identifier = getActionType(action);
+            for (final Class<? extends Action> action : getActions()) {
+                final String identifier = getActionType(action);
 
 
-                Method commandHandler = action.getMethod("handleCommands", main.getClass(), PaperCommandManager.class, Command.Builder.class, ActionFor.class);
-                if(action == NumberAction.class || action == StringAction.class || action == BooleanAction.class || action == ListAction.class || action == ItemStackListAction.class) {
+                final Method commandHandler = action.getMethod("handleCommands", main.getClass(), PaperCommandManager.class, Command.Builder.class, ActionFor.class);
+                if (action == NumberAction.class || action == StringAction.class || action == BooleanAction.class || action == ListAction.class || action == ItemStackListAction.class) {
 
                     main.getLogManager().info("Re-registering action " + identifier + " due to variable changes...");
 
@@ -255,7 +254,7 @@ public class ActionManager {
                             .flag(main.getCommandManager().categoryFlag), ActionFor.ActionsYML); //For Actions.yml
                 }
             }
-        }catch (Exception e){
+        } catch (final Exception e) {
             e.printStackTrace();
         }
     }
