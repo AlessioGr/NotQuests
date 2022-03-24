@@ -12,10 +12,10 @@ chat:
   quest-aborted: ''
   quest-completed-and-rewards-given: |2
     <success>您已完成任务 <highlight>%QUESTNAME% <success>并得到了奖励!!!
-  quest-completed-rewards-prefix: '    <highlight>Rewards:'
+  quest-completed-rewards-prefix: '    <highlight>奖励:'
   quest-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
   quest-completed-rewards-suffix: <EMPTY>
-  quest-not-all-requirements-fulfilled: '<negative>You do not fulfill all the requirements this quest needs! Requirement still needed:'
+  quest-not-all-requirements-fulfilled: '<negative>您没有满足此任务的所有要求！缺少条件：'
   action-not-all-conditions-fulfilled: '<negative>You do not fulfill all the conditions this action needs! Conditions still needed:'
   missing-quest-description: <warn>此任务没有描述.
   objectives-label-after-quest-accepting: '<main>目标:'
