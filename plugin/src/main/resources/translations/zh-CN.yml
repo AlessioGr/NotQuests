@@ -1,134 +1,143 @@
 ---
 chat:
-  wrong-command-usage: <error>指令错误!
+  wrong-command-usage: <error>指令的用法不对!
   missing-permission: '<error>权限不足! 需要权限: <highlight>%PERMISSION%'
-  too-many-arguments: <error>参数过多!
+  too-many-arguments: <error>指令的参数过多!
   quest-successfully-accepted: |2
-    <success>成功接受任务 <highlight>%QUESTNAME%<success>.
+
+    <CENTER><main>[任务已接受]
+    <CENTER><highlight><BOLD>%QUESTNAME%
+    <EMPTY>
   quest-description: '<main>任务描述: <unimportant>%QUESTDESCRIPTION%'
-  quest-already-accepted: <error>已经接受该任务了.
+  quest-already-accepted: <error>早已接受该任务.
   quest-failed: |2
-    <warn>任务 <highlight>%QUESTNAME% <error><bold>失败<warn>!
+
+    <CENTER><negative>[任务失败]
+    <CENTER><highlight><BOLD>%QUESTNAME%
+    <EMPTY>
   quest-aborted: ''
   quest-completed-and-rewards-given: |2
-    <success>您已完成任务 <highlight>%QUESTNAME% <success>并得到了奖励!!!
+
+    <CENTER><positive>[任务已完成]
+    <CENTER><highlight><BOLD>%QUESTNAME%
+    <EMPTY>
   quest-completed-rewards-prefix: '    <highlight>奖励:'
   quest-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
   quest-completed-rewards-suffix: <EMPTY>
-  quest-not-all-requirements-fulfilled: '<negative>您没有满足此任务的所有要求！缺少条件：'
-  action-not-all-conditions-fulfilled: '<negative>You do not fulfill all the conditions this action needs! Conditions still needed:'
-  missing-quest-description: <warn>此任务没有描述.
-  objectives-label-after-quest-accepting: '<main>目标:'
+  quest-not-all-requirements-fulfilled: '<negative>您没有满足该任务的前置要求! 缺少要求:'
+  action-not-all-conditions-fulfilled: '<negative>您没有满足该任务的前置条件! 缺少条件:'
+  missing-quest-description: <unimportant>此任务没有描述.
+  objectives-label-after-quest-accepting: '<highlight>目标:'
   questpoints:
-    query: <warn>您当前拥有 <highlight>%QUESTPOINTS% <warn>任务点数.
-    none: <error>貌似您还没有任务点数!
+    query: <main>你当前拥有 <highlight>%QUESTPOINTS%</highlight> 任务点数.
+    none: <error>您貌似还没有任务点数!
     notify-when-changed:
-      set: '<main>Your quest points have been set to <highlight>%NEWQUESTPOINTSAMOUNT%</highlight>.'
-      add: '<highlight>+%QUESTPOINTSTOADD% <success>quest points!'
-      remove: '<highlight>-%QUESTPOINTSTOREMOVE% <negative>quest points!'
-  no-quests-accepted: <error>貌似您还没有进行中的任务!
-  quest-does-not-exist: <error>任务 <highlight>%QUESTNAME% <error>不存在!
-  quest-not-found-or-does-not-exist: <error>任务 <highlight>%QUESTNAME% <error>未找到或不在进行中!
-  active-quests-label: '<warn>进行中的任务:'
-  take-disabled: <error>Accepting or previewing the quest <highlight>%QUESTNAME%</highlight> is disabled.
-  quest-not-active-error: '<error>错误: <highlight>%QUESTNAME% <error>不是一个进行中的任务!'
-  force-add-active-quest-accepted: '<success>Successfully accepted the quest (Forced).'
-  add-active-quest-player-object-not-found: '<warn>Error: Player object not found. Please report this to the plugin developer.'
-  reached-max-accepts-limit: '<red>You have finished this quests too many times already. You can only accept it <highlight>%MAXACCEPTS%</highlight> times, but you have already accepted it <highlight>%COMPLETEDAMOUNT%</highlight> times.'
-  reached-max-active-quests-per-player-limit: '<red>You can not accept more than <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> Quests.'
+      set: '<main>您的任务点数已设置为 <highlight>%NEWQUESTPOINTSAMOUNT%</highlight>.'
+      add: '<highlight>+%QUESTPOINTSTOADD%<success>任务点数!'
+      remove: '<highlight>-%QUESTPOINTSTOREMOVE% <negative>任务点数!'
+  no-quests-accepted: <error>您貌似没有进行中的任务!
+  quest-does-not-exist: <error>任务 <highlight>%QUESTNAME%</highlight> 不存在!
+  quest-not-found-or-does-not-exist: <error>任务 <highlight>%QUESTNAME%</highlight> 不存在或还未开始!
+  active-quests-label: '<highlight>进行中的任务:'
+  take-disabled: <error>你不能接受或预览任务 <highlight>%QUESTNAME%</highlight>.
+  quest-not-active-error: '<error>错误: <highlight>%QUESTNAME%</highlight> 好像还没有开始!'
+  force-add-active-quest-accepted: '<success>已接受任务 (强制).'
+  add-active-quest-player-object-not-found: '<warn>错误: 未找到玩家. 请向服务器管理员报告.'
+  reached-max-accepts-limit: '<red>你已达到任务完成次数上限. 你只能接受 <highlight>%MAXACCEPTS%</highlight> 次这个任务, 但你已经接受该任务 <highlight>%COMPLETEDAMOUNT%</highlight> 次.'
+  reached-max-active-quests-per-player-limit: '<red>您最多同时接受 <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> 个任务.'
   quest-on-cooldown:
-    minute: '<red>This quest is on a cooldown! You have to wait another <highlight>1 minute</highlight> until you can take it again.'
-    minutes: '<red>This quest is on a cooldown! You have to wait another <highlight>%MINUTES% minutes</highlight> until you can take it again.'
-    hour: '<red>This quest is on a cooldown! You have to wait another <highlight>1 hour</highlight> until you can take it again.'
-    hours: '<red>This quest is on a cooldown! You have to wait another <highlight>%HOURS% hours</highlight> until you can take it again.'
-    day: '<red>This quest is on a cooldown! You have to wait another <highlight>1 day</highlight> until you can take it again.'
-    days: '<red>This quest is on a cooldown! You have to wait another <highlight>%DAYS% days</highlight> until you can take it again.'
+    minute: '<red>任务冷却中! 您还需要等待 <highlight>1 分钟</highlight> 才能接受该任务.'
+    minutes: '<red>任务冷却中! 您还需要等待 <highlight>%MINUTES% 分钟</highlight> 才能接受该任务.'
+    hour: '<red>任务冷却中! 您还需要等待 <highlight>1 小时</highlight> 才能接受该任务.'
+    hours: '<red>任务冷却中! 您还需要等待 <highlight>%HOURS% 小时</highlight> 才能接受该任务.'
+    day: '<red>任务冷却中! 您还需要等待 <highlight>1 天</highlight> 才能接受该任务.'
+    days: '<red>任务冷却中! 您还需要等待 <highlight>%DAYS% 天</highlight> 才能接受该任务.'
   conversations:
     choose-answer-prefix: |-
       <EMPTY>
-      <main>Choose your answer:</main>
-    choose-answer-answer-hover-text: '<highlight>Click to answer'
-    ended-previous-conversation: '<main>You have ended your previous conversation!'
+      <main>请选择你的答案:</main>
+    choose-answer-answer-hover-text: '<highlight>点击回答'
+    ended-previous-conversation: '<main>您已经结束了之前的对话!'
   objectives:
-    counter: '<warn>%OBJECTIVEID%. %OBJECTIVENAME%:'
-    hidden: <warn>%OBJECTIVEID%. <unimportant><bold>[HIDDEN]
-    description: '   <main>描述: <highlight>%OBJECTIVEDESCRIPTION%'
-    progress: '   <unimportant>进度: <main>%ACTIVEOBJECTIVEPROGRESS% <main>/ %OBJECTIVEPROGRESSNEEDED%'
+    counter: '<highlight>%OBJECTIVEID%.</highlight> <main>%OBJECTIVENAME%:'
+    hidden: <highlight>%OBJECTIVEID%.</highlight> <unimportant><BOLD>[已隐藏]
+    description: '   <highlight>描述: <main>%OBJECTIVEDESCRIPTION%'
+    progress: '   <highlight>进度: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
     successfully-completed: |2
 
-      <CENTER><success>[Objective Completed]
+      <CENTER><success>[目标已完成]
       <CENTER><highlight><bold>%OBJECTIVENAME%</bold> <RESET><main>(%QUESTNAME%)
       <EMPTY>
-    successfully-completed-rewards-prefix: '    <highlight>Rewards:'
+    successfully-completed-rewards-prefix: '    <highlight>奖励:'
     successfully-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
     successfully-completed-rewards-suffix: <EMPTY>
     taskDescription:
       breakBlocks:
-        base: '    <veryUnimportant>└─ <unimportant>Block to break: <main>%BLOCKTOBREAK%'
+        base: '    <veryUnimportant>└─ <unimportant>需要破坏的方块: <main>%BLOCKTOBREAK%'
       breed:
-        base: '    <veryUnimportant>└─ <unimportant>Mob to breed: <main>%ENTITYTOBREED%'
+        base: '    <veryUnimportant>└─ <unimportant>需要哺育的生物: <main>%ENTITYTOBREED%'
       collectItems:
-        base: '    <veryUnimportant>└─ <unimportant>Items to collect: <main>%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
+        base: '    <veryUnimportant>└─ <unimportant>需要收集的物品: <main>%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
       consumeItems:
-        base: '    <veryUnimportant>└─ <unimportant>Items to consume: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
+        base: '    <veryUnimportant>└─ <unimportant>需要消耗的物品: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
-        base: '    <veryUnimportant>└─ <unimportant>Craft Items: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
+        base: '    <veryUnimportant>└─ <unimportant>需要合成的物品: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: '    <veryUnimportant>└─ <unimportant>Items to deliver: <main>%ITEMTODELIVERTYPE% %(%%ITEMTODELIVERNAME%%)%'
-        deliver-to-npc: '      <GRAY>Deliver it to <WHITE>%NPCNAME%'
-        deliver-to-npc-not-available: '      <GRAY>The delivery NPC is currently not available!'
-        deliver-to-npc-citizens-not-found: '    <RED>Error: Citizens plugin not installed. Contact an admin.'
-        deliver-to-armorstand: '    <GRAY>Deliver it to <WHITE>%ARMORSTANDNAME%'
-        deliver-to-armorstand-not-available: '    <GRAY>The target Armor Stand is currently not available!'
+        base: '    <veryUnimportant>└─ <unimportant>需要送达的物品: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
+        deliver-to-npc: '      <GRAY>把物品递交给 <WHITE>%NPCNAME%'
+        deliver-to-npc-not-available: '      <GRAY>负责收取物品的NPC暂时不在!'
+        deliver-to-npc-citizens-not-found: '    <RED>错误: 服务器没有安装 Citizens. 请告知服务器管理员.'
+        deliver-to-armorstand: '    <GRAY>将物品递交给 <WHITE>%ARMORSTANDNAME%'
+        deliver-to-armorstand-not-available: '    <GRAY>负责收取物品的盔甲架不存在!'
       escortNPC:
-        base: '    <veryUnimportant>└─ <unimportant>Escort <main>%NPCNAME% <unimportant>to <main>%DESTINATIONNPCNAME%'
+        base: '    <veryUnimportant>└─ <unimportant>护送 <main>%NPCNAME%</main> 前往 <main>%DESTINATIONNPCNAME%'
       killMobs:
-        base: '    <veryUnimportant>└─ <unimportant>Mobs to kill: <main>%MOBTOKILL%'
+        base: '    <veryUnimportant>└─ <unimportant>需要击杀的怪物: <main>%MOBTOKILL%'
       otherQuest:
-        base: '    <veryUnimportant>└─ <unimportant>Quest completion: <main>%OTHERQUESTNAME%'
+        base: '    <veryUnimportant>└─ <unimportant>任务完成: <main>%OTHERQUESTNAME%'
       placeBlocks:
-        base: '    <veryUnimportant>└─ <unimportant>Block to place: <main>%BLOCKTOPLACE%'
+        base: '    <veryUnimportant>└─ <unimportant>需要放置的方块: <main>%BLOCKTOPLACE%'
       reachLocation:
-        base: '    <veryUnimportant>└─ <unimportant>Reach Location: <main>%LOCATIONNAME%'
+        base: '    <veryUnimportant>└─ <unimportant>前往目的地: <main>%LOCATIONNAME%'
       talkToNPC:
-        base: '    <veryUnimportant>└─ <unimportant>Talk to <main>%NAME%'
+        base: '    <veryUnimportant>└─ <unimportant>与 <main>%NAME%</main> 交谈'
       triggerCommand:
-        base: '    <veryUnimportant>└─ <unimportant>Goal: <main>%TRIGGERNAME%'
+        base: '    <veryUnimportant>└─ <unimportant>目标: <main>%TRIGGERNAME%'
       killEliteMobs:
-        base: '    <veryUnimportant>└─ <unimportant>Kill Elite Mob: <main>%ELITEMOBNAME%'
-        any: '    <veryUnimportant>└─ <unimportant>Kill any Elite Mob!'
+        base: '    <veryUnimportant>└─ <unimportant>需要击杀的 Elite 怪物: <main>%ELITEMOBNAME%'
+        any: '    <veryUnimportant>└─ <unimportant>击杀任意 Elite 怪物!'
       runCommand:
-        base: '    <veryUnimportant>└─ <unimportant>Run command: <main>%COMMANDTORUN%'
+        base: '    <veryUnimportant>└─ <unimportant>输入指令: <main>%COMMANDTORUN%'
       interact:
-        base: '    <veryUnimportant>└─ <unimportant>%INTERACTTYPE% Location: <main>%COORDINATES% <main>in world %WORLDNAME%'
+        base: '    <veryUnimportant>└─ <unimportant>%INTERACTTYPE% 位置: <main>%COORDINATES% <main>世界 %WORLDNAME%'
         taskDescriptionProvided: '    <veryUnimportant>└─ <unimportant>%TASKDESCRIPTION%'
       jump:
-        base: '    <veryUnimportant>└─ <unimportant>Jump <main>%AMOUNTOFJUMPS% <unimportant>times'
+        base: '    <veryUnimportant>└─ <unimportant>跳跃 <main>%AMOUNTOFJUMPS%</main> 次'
       sneak:
-        base: '    <veryUnimportant>└─ <unimportant>Sneak <main>%AMOUNTOFSNEAKS%</main> times'
+        base: '    <veryUnimportant>└─ <unimportant>潜行 <main>%AMOUNTOFSNEAKS%</main> 次'
       smelt:
-        base: '    <veryUnimportant>└─ <unimportant>Items to smelt: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+        base: '    <veryUnimportant>└─ <unimportant>需要熔炼的物品: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       openBuriedTreasure:
-        base: '    <veryUnimportant>└─ <unimportant>Open buried treasures'
+        base: '    <veryUnimportant>└─ <unimportant>打开烧毁的宝藏'
       townyReachResidentCount:
-        base: '    <veryUnimportant>└─ <unimportant>Reach resident amount: <main>%AMOUNT%'
+        base: '    <veryUnimportant>└─ <unimportant>居民数量达到: <main>%AMOUNT%'
       townyNationReachTownCount:
-        base: '    <veryUnimportant>└─ <unimportant>Reach town amount with your nation: <main>%AMOUNT%'
+        base: '    <veryUnimportant>└─ <unimportant>加入国家的城镇数量达到: <main>%AMOUNT%'
       jobsRebornReachJobLevel:
-        base: '    <veryUnimportant>└─ <unimportant>Reach job level <main>%AMOUNT%</main> with job <main>%JOB%'
+        base: '    <veryUnimportant>└─ <unimportant>让工作 <main>%JOB%</main> 的等级达到 <main>%AMOUNT%</main>'
       SlimefunResearch:
-        base: '    <veryUnimportant>└─ <unimportant>Spend on research'
+        base: '    <veryUnimportant>└─ <unimportant>在研究上花费点什么'
       ProjectKorraUseAbility:
-        base: '    <veryUnimportant>└─ <unimportant>Use Ability: <main>%ABILITY%'
+        base: '    <veryUnimportant>└─ <unimportant>使用能力: <main>%ABILITY%'
       BetonQuestCompleteObjective:
-        base: '    <veryUnimportant>└─ <unimportant>Finish Objective: <main>%BETONQUESTOBJECTIVENAME%'
+        base: '    <veryUnimportant>└─ <unimportant>完成目标: <main>%BETONQUESTOBJECTIVENAME%'
       ultimateJobsReachJobLevel:
-        base: '    <veryUnimportant>└─ <unimportant>Reach job level <main>%AMOUNT%</main> with job <main>%JOBID%'
+        base: '    <veryUnimportant>└─ <unimportant>工作 <main>%JOBID%</main> 的等级达到 <main>%AMOUNT%</main>'
   conditions:
     boolean:
-      not-fulfilled: "<warn>Following needs to be %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."
-      variable-not-found: "<error>Error: variable <highlight>%VARIABLENAME%</highlight> not found. Report this to the Server owner."
-      wrong-operator: "<error>Error: variable operator <highlight>%OPERATOR%/highlight> is invalid. Report this to the Server owner."
+      not-fulfilled: "<warn>以下需要 %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."
+      variable-not-found: "<error>错误: 变量 <highlight>%VARIABLENAME%</highlight> 不存在. 请向服务器管理员报告此问题."
+      wrong-operator: "<error>错误: 变量操作符 <highlight>%OPERATOR%/highlight> 无效. 请向服务器管理员报告此问题."
 objective-tracking:
   actionbar-progress-update:
     default: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED% <unimportant>- <highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
@@ -141,112 +150,112 @@ titles:
     title: <main>任务已接受
     subtitle: <highlight>%QUESTNAME%
   quest-completed:
-    title: <success>任务已完成
+    title: <positive>任务已完成
     subtitle: <highlight>%QUESTNAME%
   quest-failed:
-    title: <error>任务失败
+    title: <negative>任务失败
     subtitle: <highlight>%QUESTNAME%
 placeholders:
   questcooldownleftformatted:
     prefix: ''
-    minute: '1 minute'
-    minutes: '%MINUTES% minutes'
-    hour: '1 hour'
-    hours: '%HOURS% hours'
-    day: '1 day'
-    days: '%DAYS% days'
+    minute: '1 分钟'
+    minutes: '%MINUTES% 分钟'
+    hour: '1 小时'
+    hours: '%HOURS% 小时'
+    day: '1 天'
+    days: '%DAYS% 天'
     no-cooldown: ''
 gui:
   main:
-    title: '                <main>任务'
+    title: '                <highlight2>任务'
     button:
       questpoints:
-        name: "<highlight>Quest Points"
+        name: "<highlight>任务点数"
         lore:
-          - "<main>Current quest points: <highlight2>%QUESTPOINTS%"
+          - "<main>当前任务点数: <highlight2>%QUESTPOINTS%"
         x: 8
         y: 0
       takequest:
-        name: "<positive>Take a Quest"
+        name: "<positive>接受任务"
         lore:
-          - "<unimportant>Start a new Quest!"
+          - "<unimportant>开始一个新任务!"
           - ""
-          - "<veryUnimportant>Some Quests cannot be"
-          - "<veryUnimportant>started like this."
+          - "<veryUnimportant>有些任务不能是"
+          - "<veryUnimportant>像这样开始."
         x: 0
         y: 1
       abortquest:
-        name: "<negative>Abort a Quest"
+        name: "<negative>中止任务"
         lore:
           - ""
-          - "<veryUnimportant>Aborting a Quest may"
-          - "<veryUnimportant>lead to punishments."
+          - "<veryUnimportant>中止任务可能"
+          - "<veryUnimportant>会受到惩罚."
         x: 0
         y: 2
       activequests:
-        name: "<highlight>Active Quests"
+        name: "<highlight>进行中的任务"
         lore:
           - ""
-          - "<veryUnimportant>Shows all of your"
-          - "<veryUnimportant>active Quests."
+          - "<veryUnimportant>显示您所有的"
+          - "<veryUnimportant>进行中的任务."
         x: 0
         y: 3
   activeQuests:
-    title: '             <main>进行中的任务'
+    title: '             <highlight2>进行中的任务'
     button:
       activeQuestButton:
-        name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
+        name: "<highlight>%QUESTNAME% <positive>[进行中]"
         lore:
-          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<main>Click to see details!"
-  reward-hidden-text: . <unimportant>[HIDDEN]
+          - "<unimportant>进度: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
+          - "<main>点击查看详细信息"
+  reward-hidden-text: . <unimportant>[已隐藏]
   availableQuests:
-    title: '         <highlight2>Available Quests'
+    title: '         <highlight2>可接受的任务'
     button:
       questPreview:
         name-if-not-accepted: "<highlight>%QUESTNAME%"
-        name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTED]"
+        name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[已接受]"
         lore:
           - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
-          - "<main>Click to open Quest!"
+          - "<main>点击预览任务!"
   takeQuestChoose:
-    title: <main>您想要接受哪个任务?
+    title: <highlight2>您想要接受哪个任务?
     button:
       questPreview:
         name-if-not-accepted: "<highlight>%QUESTNAME%"
-        name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTED]"
+        name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[已接受]"
         lore:
           - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
           - "<success>点击预览任务!"
   abortQuestChoose:
-    title: '  <main>可终止的进行中的任务'
+    title: '  <highlight2>你可以终止这些进行中的任务'
     button:
       abortQuestPreview:
-        name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
+        name: "<highlight>%QUESTNAME% <positive>[进行中]"
         lore:
-          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<negative>Click to abort Quest!"
+          - "<unimportant>进度: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
+          - "<negative>点击中止任务!"
   abortQuest:
-    title: '         <error>确认终止'
+    title: '         <negative>确认终止'
     button:
       confirmAbort:
-        name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
+        name: "<highlight>%QUESTNAME% <positive>[进行中]"
         lore:
-          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<negative>Click to abort the quest <highlight>%QUESTNAME%</highlight>!"
+          - "<unimportant>进度: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
+          - "<negative>点击中止任务 <highlight>%QUESTNAME%</highlight>!"
         x: 3
         y: 1
       cancelAbort:
-        name: "<positive>Click to NOT abort this quest"
+        name: "<positive>点击取消终止任务"
         lore:
-          - "<positive>and cancel this action"
+          - "<positive>并取消此操作"
         x: 5
         y: 1
   previewQuest:
-    title: <highlight2>Quest Preview
+    title: <highlight2>任务预览
     button:
       description:
-        name: "<highlight>Description"
+        name: "<highlight>描述"
         lore:
           - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
         lore-if-empty:
@@ -254,7 +263,7 @@ gui:
         x: 2
         y: 0
       rewards:
-        name: "<positive>Rewards"
+        name: "<positive>奖励"
         lore:
           - "<WHITE>%QUESTREWARDS%"
         lore-if-empty:
@@ -262,7 +271,7 @@ gui:
         x: 4
         y: 0
       requirements:
-        name: "<negative>Requirements"
+        name: "<negative>要求"
         lore:
           - "<WHITE>%QUESTREQUIREMENTS%"
         lore-if-empty:
@@ -272,48 +281,48 @@ gui:
       confirmTake:
         name: "<highlight>%QUESTNAME%"
         lore:
-          - "<positive>Click to take the quest <highlight>%QUESTNAME%"
+          - "<positive>点击接受任务 <highlight>%QUESTNAME%"
         x: 3
         y: 2
       cancelTake:
-        name: "<negative>Click to NOT take this quest"
+        name: "<negative>点击取消接受任务"
         lore:
-          - "<negative>and cancel this action"
+          - "<negative>并取消此操作"
         x: 5
         y: 2
   progress:
-    title: <highlight2>Details for Quest
+    title: <highlight2>任务详情
     button:
       unlockedObjective:
         name: "<highlight2>%ACTIVEOBJECTIVEID%. <highlight>%OBJECTIVENAME%"
         lore:
-          - "<main><BOLD>ACTIVE</BOLD>"
+          - "<main><BOLD>进行中</BOLD>"
           - "<veryUnimportant>%WRAPPEDOBJECTIVEDESCRIPTION%"
           - "<unimportant>%OBJECTIVETASKDESCRIPTION%"
           - ""
-          - "<unimportant>Progress: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
+          - "<unimportant>进度: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
         lore-if-description-empty:
-          - "<main><BOLD>ACTIVE</BOLD>"
-          - "<veryUnimportant>No Description"
+          - "<main><BOLD>进行中</BOLD>"
+          - "<veryUnimportant>没有描述"
           - "<unimportant>%OBJECTIVETASKDESCRIPTION%"
           - ""
-          - "<unimportant>Progress: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
+          - "<unimportant>进度: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
       lockedObjective:
-        name: "<highlight2>%ACTIVEOBJECTIVEID%. <unimportant><BOLD>[HIDDEN]"
+        name: "<highlight2>%ACTIVEOBJECTIVEID%. <unimportant><BOLD>[已隐藏]"
         lore:
-          - "<warn>This objective has not yet"
-          - "<warn>been unlocked!"
+          - "<warn>这个目标还没有"
+          - "<warn>解锁!"
       completedObjective:
         name: "<highlight2><strikethrough>%ACTIVEOBJECTIVEID%. <positive><strikethrough>%OBJECTIVENAME%"
         lore:
-          - "<positive><BOLD>COMPLETED</BOLD>"
+          - "<positive><BOLD>已完成</BOLD>"
           - "<veryUnimportant><strikethrough>%WRAPPEDOBJECTIVEDESCRIPTION%"
           - "<veryUnimportant><strikethrough>%COMPLETEDOBJECTIVETASKDESCRIPTION%"
           - ""
-          - "<unimportant><strikethrough>Progress: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
+          - "<unimportant><strikethrough>进度: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
         lore-if-description-empty:
-          - "<positive><BOLD>COMPLETED</BOLD>"
-          - "<veryUnimportant><strikethrough>No Description"
+          - "<positive><BOLD>已完成</BOLD>"
+          - "<veryUnimportant><strikethrough>没有描述"
           - "<veryUnimportant><strikethrough>%COMPLETEDOBJECTIVETASKDESCRIPTION%"
           - ""
-          - "<unimportant><strikethrough>Progress: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
+          - "<unimportant><strikethrough>进度: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
