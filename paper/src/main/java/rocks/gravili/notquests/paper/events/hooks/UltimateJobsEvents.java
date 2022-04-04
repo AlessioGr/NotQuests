@@ -43,7 +43,7 @@ public class UltimateJobsEvents implements Listener {
                     for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
                         if (activeObjective.isUnlocked()) {
                             if (activeObjective.getObjective() instanceof UltimateJobsReachJobLevelObjective ultimateJobsReachJobLevelObjective) {
-                                if (!e.getJob().getID().equalsIgnoreCase(ultimateJobsReachJobLevelObjective.getJobID())) {
+                                if (!e.getJob().getConfigID().equalsIgnoreCase(ultimateJobsReachJobLevelObjective.getJobID())) {
                                     return;
                                 }
                                 activeObjective.addProgress(1);

@@ -68,6 +68,7 @@ repositories {
             includeGroup("com.github.Zrips")
             includeGroup("com.willfp")
             includeGroup("com.github.war-systems")
+            includeGroup("com.github.MilkBowl")
         }
         metadataSources {
             artifact()
@@ -111,10 +112,16 @@ repositories {
         }
     }
 
-    maven("https://repo.incendo.org/content/repositories/snapshots"){
+    maven("https://oss.sonatype.org/content/repositories/snapshots"){
         content {
             includeGroup("org.incendo.interfaces")
             includeGroup("cloud.commandframework")
+        }
+    }
+
+    maven("https://repo.thbn.me/snapshots"){
+        content {
+            includeGroup("org.incendo.interfaces")
         }
     }
 
@@ -144,22 +151,22 @@ dependencies {
 
     compileOnly("net.citizensnpcs:citizens-main:2.0.29-SNAPSHOT")
     compileOnly("me.clip:placeholderapi:2.11.1")
-    compileOnly("com.github.MilkBowl:VaultAPI:1.7")
+    compileOnly("com.github.MilkBowl:VaultAPI:1.7.1")
 
 
-    compileOnly("io.lumine:Mythic-Dist:5.0.1-SNAPSHOT")
+    compileOnly("io.lumine:Mythic-Dist:5.0.2-SNAPSHOT")
     compileOnly(files("libs/EliteMobs.jar"))
     compileOnly(files("libs/UClans-API.jar"))
     compileOnly(files("libs/ProjectKorra-1.9.3.jar"))
     //compileOnly(files("libs/UltimateJobs-0.2.0-SNAPSHOT.jar"))
 
 
-    compileOnly("org.betonquest:betonquest:2.0.0-20220309.220545-173")
+    compileOnly("org.betonquest:betonquest:2.0.0-SNAPSHOT")
 
     compileOnly("com.sk89q.worldedit:worldedit-core:7.3.0-SNAPSHOT")
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.3.0-SNAPSHOT")
 
-    compileOnly("com.github.TheBusyBiscuit:Slimefun4:RC-30")
+    compileOnly("com.github.TheBusyBiscuit:Slimefun4:RC-31")
 
     compileOnly("net.luckperms:api:5.4")
 
@@ -221,7 +228,7 @@ dependencies {
 
     implementation("com.zaxxer:HikariCP:5.0.1")
 
-    compileOnly("com.github.war-systems:UltimateJobs:0.3.2")
+    compileOnly("com.github.war-systems:UltimateJobs:0.3.5")
 
 
 }

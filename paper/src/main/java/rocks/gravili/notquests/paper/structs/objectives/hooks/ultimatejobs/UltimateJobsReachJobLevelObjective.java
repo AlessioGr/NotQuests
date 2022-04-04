@@ -58,9 +58,9 @@ public class UltimateJobsReachJobLevelObjective extends Objective {
                             main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Job ID]", "");
 
                             ArrayList<String> completions = new ArrayList<>();
-                            for(String jobID : UltimateJobs.getPlugin().getAPI().getJobsInListAsID()){
+                            /*for(String jobID : UltimateJobs.getPlugin().getAPI().getJobsInListAsID()){
                                 completions.add(jobID);
-                            }
+                            }*///TODO: FIx
                             return completions;
                         }
                 ).single().build(), ArgumentDescription.of("ID of the job"))
@@ -138,19 +138,19 @@ public class UltimateJobsReachJobLevelObjective extends Objective {
             return;
         }
 
-        JobsPlayer jobsPlayer = UltimateJobs.getPlugin().getPlayerManager().getOnlineJobPlayers().get(activeObjective.getQuestPlayer().getUniqueId().toString());
+        JobsPlayer jobsPlayer = UltimateJobs.getPlugin().getPlayerManager().getCacheJobPlayers().get(activeObjective.getQuestPlayer().getUniqueId().toString());
         Job job = UltimateJobs.getPlugin().getAPI().isJobFromConfigID(jobID);
 
         if(jobsPlayer == null || job == null){
             return;
         }
 
-        if(jobsPlayer.getLevelOf(job.getID()) == null){
+        if(jobsPlayer.getLevelOf(job.getConfigID()) == null){
             return;
         }
 
 
-        activeObjective.addProgress( jobsPlayer.getLevelOf(job.getID())-1);
+        activeObjective.addProgress( jobsPlayer.getLevelOf(job.getConfigID())-1);
     }
     @Override
     public void onObjectiveCompleteOrLock(final ActiveObjective activeObjective, final boolean lockedOrCompletedDuringPluginStartupQuestLoadingProcess, final boolean completed) {
