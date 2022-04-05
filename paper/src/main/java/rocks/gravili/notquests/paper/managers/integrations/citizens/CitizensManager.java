@@ -49,10 +49,8 @@ public class CitizensManager {
 
         final ArrayList<TraitInfo> toDeregister = new ArrayList<>();
 
-
-        for (Iterator<TraitInfo> iterator = net.citizensnpcs.api.CitizensAPI.getTraitFactory().getRegisteredTraits().iterator(); iterator.hasNext();) {
-            final TraitInfo traitInfo = iterator.next();
-            if (traitInfo.getTraitName().equals("nquestgiver")) {
+        for (final TraitInfo traitInfo : CitizensAPI.getTraitFactory().getRegisteredTraits()) {
+            if (traitInfo.getTraitName() != null && traitInfo.getTraitName().equals("nquestgiver")) {
                 toDeregister.add(traitInfo);
             }
         }
@@ -212,9 +210,7 @@ public class CitizensManager {
             if (followerTrait.getFollowingPlayer() == null || !followerTrait.getFollowingPlayer().equals(player)) {
                 if (!Bukkit.isPrimaryThread()) {
                     final FollowTrait finalFollowerTrait = followerTrait;
-                    Bukkit.getScheduler().runTask(main.getMain(), () -> {
-                        finalFollowerTrait.toggle(player, false);
-                    });
+                    Bukkit.getScheduler().runTask(main.getMain(), () -> finalFollowerTrait.toggle(player, false));
                 } else {
 
                     followerTrait.toggle(player, false);
