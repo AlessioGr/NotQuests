@@ -63,22 +63,11 @@ public class SmeltObjective extends Objective {
 
                     final MaterialOrHand materialOrHand = context.get("material");
                     ItemStack itemToSmelt;
-                    if (materialOrHand.hand) { //"hand"
-                        if (context.getSender() instanceof Player player) {
-                            itemToSmelt = player.getInventory().getItemInMainHand();
-                        } else {
-                            context.getSender().sendMessage(main.parse(
-                                    "<error>This must be run by a player."
-                            ));
-                            return;
-                        }
+                    if (materialOrHand.material.equalsIgnoreCase("any")) {
+                        smeltAnyItem = true;
+                        itemToSmelt = null;
                     } else {
-                        if (materialOrHand.material.equalsIgnoreCase("any")) {
-                            smeltAnyItem = true;
-                            itemToSmelt = null;
-                        } else {
-                            itemToSmelt = main.getItemsManager().getItemStack(materialOrHand.material);
-                        }
+                        itemToSmelt = main.getItemsManager().getItemStack(materialOrHand.material);
                     }
 
                     SmeltObjective smeltObjective = new SmeltObjective(main);

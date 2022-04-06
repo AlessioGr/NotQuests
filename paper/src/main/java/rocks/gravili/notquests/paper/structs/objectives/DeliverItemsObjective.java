@@ -93,22 +93,11 @@ public class DeliverItemsObjective extends Objective {
 
                     final MaterialOrHand materialOrHand = context.get("material");
                     ItemStack itemToDeliver;
-                    if (materialOrHand.hand) { //"hand"
-                        if (context.getSender() instanceof Player player) {
-                            itemToDeliver = player.getInventory().getItemInMainHand();
-                        } else {
-                            context.getSender().sendMessage(main.parse(
-                                    "<error>This must be run by a player."
-                            ));
-                            return;
-                        }
+                    if (materialOrHand.material.equalsIgnoreCase("any")) {
+                        deliverAnyItem = true;
+                        itemToDeliver = null;
                     } else {
-                        if (materialOrHand.material.equalsIgnoreCase("any")) {
-                            deliverAnyItem = true;
-                            itemToDeliver = null;
-                        } else {
-                            itemToDeliver = main.getItemsManager().getItemStack(materialOrHand.material);
-                        }
+                        itemToDeliver = main.getItemsManager().getItemStack(materialOrHand.material);
                     }
 
 

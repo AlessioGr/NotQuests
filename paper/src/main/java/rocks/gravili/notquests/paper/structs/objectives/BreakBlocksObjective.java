@@ -69,22 +69,10 @@ public class BreakBlocksObjective extends Objective {
 
                     final MaterialOrHand materialOrHand = context.get("material");
                     final String materialToBreak;
-                    if (materialOrHand.hand) { //"hand"
-                        if (context.getSender() instanceof Player player) {
-                            materialToBreak = player.getInventory().getItemInMainHand().getType().name();
-                        } else {
-                            context.getSender().sendMessage(main.parse(
-                                    "<error>This must be run by a player."
-                            ));
-                            return;
-                        }
-                    } else {
-                        if (!materialOrHand.material.equalsIgnoreCase("any")) {
-                            materialToBreak = main.getItemsManager().getMaterial(materialOrHand.material).name();
-                        }else{
-                            materialToBreak = "any";
-                        }
-
+                    if (!materialOrHand.material.equalsIgnoreCase("any")) {
+                        materialToBreak = main.getItemsManager().getMaterial(materialOrHand.material).name();
+                    }else{
+                        materialToBreak = "any";
                     }
 
                     BreakBlocksObjective breakBlocksObjective = new BreakBlocksObjective(main);

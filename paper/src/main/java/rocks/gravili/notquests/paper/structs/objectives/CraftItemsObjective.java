@@ -63,22 +63,11 @@ public class CraftItemsObjective extends Objective {
                     boolean craftAnyItem = false;
                     final MaterialOrHand materialOrHand = context.get("material");
                     ItemStack itemToCraft;
-                    if (materialOrHand.hand) { //"hand"
-                        if (context.getSender() instanceof Player player) {
-                            itemToCraft = player.getInventory().getItemInMainHand();
-                        } else {
-                            context.getSender().sendMessage(main.parse(
-                                    "<error>This must be run by a player."
-                            ));
-                            return;
-                        }
+                    if (materialOrHand.material.equalsIgnoreCase("any")) {
+                        craftAnyItem = true;
+                        itemToCraft = null;
                     } else {
-                        if (materialOrHand.material.equalsIgnoreCase("any")) {
-                            craftAnyItem = true;
-                            itemToCraft = null;
-                        } else {
-                            itemToCraft = main.getItemsManager().getItemStack(materialOrHand.material);
-                        }
+                        itemToCraft = main.getItemsManager().getItemStack(materialOrHand.material);
                     }
 
                     CraftItemsObjective craftItemsObjective = new CraftItemsObjective(main);

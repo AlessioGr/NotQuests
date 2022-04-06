@@ -301,22 +301,11 @@ public class AdminEditCommands {
                     final boolean glow = context.flags().isPresent("glow");
 
                     final MaterialOrHand materialOrHand = context.get("material");
-                    ItemStack takeItem;
-                    if (materialOrHand.hand) { //"hand"
-                        if (context.getSender() instanceof Player player) {
-                            takeItem = player.getInventory().getItemInMainHand();
-                        } else {
-                            context.getSender().sendMessage(main.parse(
-                                    "<error>This command must be run by a player."
-                            ));
-                            return;
-                        }
+                    final ItemStack takeItem;
+                    if (materialOrHand.material.equalsIgnoreCase("any")) {
+                        takeItem = new ItemStack(Material.BOOK, 1);
                     } else {
-                        if (materialOrHand.material.equalsIgnoreCase("any")) {
-                            takeItem = new ItemStack(Material.BOOK, 1);
-                        } else {
-                            takeItem = main.getItemsManager().getItemStack(materialOrHand.material);
-                        }
+                        takeItem = main.getItemsManager().getItemStack(materialOrHand.material);
                     }
                     if (glow) {
                         takeItem.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 1);

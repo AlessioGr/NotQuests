@@ -74,26 +74,14 @@ public class AdminItemsCommands {
 
                     final MaterialOrHand materialOrHand = context.get("material");
 
-                    ItemStack itemStack;
-                    if (materialOrHand.hand) { //"hand"
-                        if (context.getSender() instanceof Player player) {
-                            itemStack = player.getInventory().getItemInMainHand().clone();
-                            itemStack.setAmount(1);
-                        } else {
-                            context.getSender().sendMessage(main.parse(
-                                    "<error>This must be run by a player."
-                            ));
-                            return;
-                        }
-                    } else {
-                        if (materialOrHand.material.equalsIgnoreCase("any")) {
-                            context.getSender().sendMessage(main.parse(
-                                    "<error>You cannot use <highlight>'any'</highlight> here!"
-                            ));
-                            return;
-                        }
-                        itemStack = main.getItemsManager().getItemStack(materialOrHand.material);
+                    final ItemStack itemStack;
+                    if (materialOrHand.material.equalsIgnoreCase("any")) {
+                        context.getSender().sendMessage(main.parse(
+                                "<error>You cannot use <highlight>'any'</highlight> here!"
+                        ));
+                        return;
                     }
+                    itemStack = main.getItemsManager().getItemStack(materialOrHand.material);
 
                     NQItem nqItem = new NQItem(main, itemName, itemStack);
 

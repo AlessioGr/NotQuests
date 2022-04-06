@@ -66,21 +66,10 @@ public class PlaceBlocksObjective extends Objective {
                     final MaterialOrHand materialOrHand = context.get("material");
                     final String materialToPlace;
 
-                    if (materialOrHand.hand) { //"hand"
-                        if (context.getSender() instanceof Player player) {
-                            materialToPlace = player.getInventory().getItemInMainHand().getType().name();
-                        } else {
-                            context.getSender().sendMessage(main.parse(
-                                    "<error>This must be run by a player."
-                            ));
-                            return;
-                        }
-                    } else {
-                        if (!materialOrHand.material.equalsIgnoreCase("any")) {
-                            materialToPlace = main.getItemsManager().getMaterial(materialOrHand.material).name();
-                        }else{
-                            materialToPlace = "any";
-                        }
+                    if (!materialOrHand.material.equalsIgnoreCase("any")) {
+                        materialToPlace = main.getItemsManager().getMaterial(materialOrHand.material).name();
+                    }else{
+                        materialToPlace = "any";
                     }
 
                     PlaceBlocksObjective placeBlocksObjective = new PlaceBlocksObjective(main);

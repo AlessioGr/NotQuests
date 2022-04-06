@@ -56,26 +56,14 @@ public class GiveItemAction extends Action {
                     final int itemRewardAmount = context.get("amount");
 
                     ItemStack itemStack;
-                    if (materialOrHand.hand) { //"hand"
-                        if (context.getSender() instanceof Player player) {
-                            itemStack = player.getInventory().getItemInMainHand().clone();
-                            itemStack.setAmount(itemRewardAmount);
-                        } else {
-                            context.getSender().sendMessage(main.parse(
-                                    "<error>This must be run by a player."
-                            ));
-                            return;
-                        }
-                    } else {
-                        if (materialOrHand.material.equalsIgnoreCase("any")) {
-                            context.getSender().sendMessage(main.parse(
-                                    "<error>You cannot use <highlight>'any'</highlight> here!"
-                            ));
-                            return;
-                        }
-                        itemStack = main.getItemsManager().getItemStack(materialOrHand.material);
-                        itemStack.setAmount(itemRewardAmount);
+                    if (materialOrHand.material.equalsIgnoreCase("any")) {
+                        context.getSender().sendMessage(main.parse(
+                                "<error>You cannot use <highlight>'any'</highlight> here!"
+                        ));
+                        return;
                     }
+                    itemStack = main.getItemsManager().getItemStack(materialOrHand.material);
+                    itemStack.setAmount(itemRewardAmount);
 
                     GiveItemAction giveItemAction = new GiveItemAction(main);
                     if(main.getItemsManager().getItem(materialOrHand.material) != null){

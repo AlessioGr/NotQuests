@@ -29,6 +29,7 @@ import cloud.commandframework.exceptions.parsing.NoInputProvidedException;
 import cloud.commandframework.exceptions.parsing.ParserException;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -162,9 +163,14 @@ public class MaterialOrHandArgument<C> extends CommandArgument<C, MaterialOrHand
                 final MaterialOrHand materialOrHand = new MaterialOrHand();
 
                 if (input.equalsIgnoreCase("hand")) {
-                    materialOrHand.hand = true;
-                    inputQueue.remove();
-                    return ArgumentParseResult.success(materialOrHand);
+                    if (commandContext.getSender() instanceof final Player player) {
+                        materialOrHand.material = player.getInventory().getItemInMainHand().getType().name();
+                        inputQueue.remove();
+                        return ArgumentParseResult.success(materialOrHand);
+                    } else {
+                        return ArgumentParseResult.failure(new MaterialOrHandArgument.MaterialParseException(input, commandContext));
+                    }
+
                 } else if (input.equalsIgnoreCase("any")) {
                     materialOrHand.material = "any";
                     inputQueue.remove();

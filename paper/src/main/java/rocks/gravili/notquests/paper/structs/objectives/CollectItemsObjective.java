@@ -69,22 +69,11 @@ public class CollectItemsObjective extends Objective {
 
                     final MaterialOrHand materialOrHand = context.get("material");
                     ItemStack itemToCollect;
-                    if (materialOrHand.hand) { //"hand"
-                        if (context.getSender() instanceof Player player) {
-                            itemToCollect = player.getInventory().getItemInMainHand();
-                        } else {
-                            context.getSender().sendMessage(main.parse(
-                                    "<error>This must be run by a player."
-                            ));
-                            return;
-                        }
+                    if (materialOrHand.material.equalsIgnoreCase("any")) {
+                        collectAnyItem = true;
+                        itemToCollect = null;
                     } else {
-                        if (materialOrHand.material.equalsIgnoreCase("any")) {
-                            collectAnyItem = true;
-                            itemToCollect = null;
-                        } else {
-                            itemToCollect = main.getItemsManager().getItemStack(materialOrHand.material);
-                        }
+                        itemToCollect = main.getItemsManager().getItemStack(materialOrHand.material);
                     }
 
                     CollectItemsObjective collectItemsObjective = new CollectItemsObjective(main);

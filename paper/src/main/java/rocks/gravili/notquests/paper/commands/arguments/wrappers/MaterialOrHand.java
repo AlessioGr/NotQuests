@@ -20,5 +20,4 @@ package rocks.gravili.notquests.paper.commands.arguments.wrappers;
 
 public class MaterialOrHand {
     public String material;
-    public boolean hand = false;
 }

@@ -63,22 +63,11 @@ public class ConsumeItemsObjective extends Objective {
 
                     final MaterialOrHand materialOrHand = context.get("material");
                     ItemStack itemToConsume;
-                    if (materialOrHand.hand) { //"hand"
-                        if (context.getSender() instanceof Player player) {
-                            itemToConsume = player.getInventory().getItemInMainHand();
-                        } else {
-                            context.getSender().sendMessage(main.parse(
-                                    "<error>This must be run by a player."
-                            ));
-                            return;
-                        }
+                    if (materialOrHand.material.equalsIgnoreCase("any")) {
+                        consumeAnyItem = true;
+                        itemToConsume = null;
                     } else {
-                        if (materialOrHand.material.equalsIgnoreCase("any")) {
-                            consumeAnyItem = true;
-                            itemToConsume = null;
-                        } else {
-                            itemToConsume = main.getItemsManager().getItemStack(materialOrHand.material);
-                        }
+                        itemToConsume = main.getItemsManager().getItemStack(materialOrHand.material);
                     }
 
                     ConsumeItemsObjective consumeItemsObjective = new ConsumeItemsObjective(main);
