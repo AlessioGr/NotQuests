@@ -374,6 +374,12 @@ public class DataManager {
         }
         configuration.debug = getGeneralConfig().getBoolean(key);
 
+        key = "loading-messages";
+        if (!getGeneralConfig().isBoolean(key)) {
+            getGeneralConfig().set(key, false);
+            valueChanged = true;
+        }
+        configuration.loadingMessages = getGeneralConfig().getBoolean(key);
 
         //Other values from general.yml
         key = "general.max-active-quests-per-player";

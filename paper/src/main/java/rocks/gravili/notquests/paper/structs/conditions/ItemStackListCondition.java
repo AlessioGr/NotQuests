@@ -188,7 +188,9 @@ public class ItemStackListCondition extends Condition {
                 continue;
             }
 
-            main.getLogManager().info("Registering ItemStackList condition: <highlight>" + variableString);
+            if (main.getConfiguration().isLoadingMessages()) {
+                main.getLogManager().info("Registering ItemStackList condition: <highlight>" + variableString);
+			}
 
             manager.command(main.getVariablesManager().registerVariableCommands(variableString, builder)
                     .argument(StringArgument.<CommandSender>newBuilder("operator").withSuggestionsProvider((context, lastString) -> {

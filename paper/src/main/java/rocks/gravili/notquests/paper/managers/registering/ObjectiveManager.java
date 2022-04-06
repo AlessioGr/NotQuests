@@ -112,7 +112,9 @@ public class ObjectiveManager {
     }*/
 
     public void registerObjective(final String identifier, final Class<? extends Objective> objective) {
-        main.getLogManager().info("Registering objective <highlight>" + identifier);
+        if (main.getConfiguration().isDebug()) {
+            main.getLogManager().info("Registering objective <highlight>" + identifier);
+        }
         objectives.put(identifier, objective);
 
         try {

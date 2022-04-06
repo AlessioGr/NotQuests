@@ -163,7 +163,9 @@ public class VariablesManager {
 
 
     public void registerVariable(final String identifier, final Class<? extends Variable<?>> variable) {
-        main.getLogManager().info("Registering Variable <highlight>" + identifier);
+        if (main.getConfiguration().isDebug()) {
+            main.getLogManager().info("Registering Variable <highlight>" + identifier);
+        }
         variables.put(identifier, variable);
 
 

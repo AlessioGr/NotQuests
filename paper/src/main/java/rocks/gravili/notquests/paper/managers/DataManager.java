@@ -550,6 +550,10 @@ public class DataManager {
                 false,
                 "Having debug enabled will send more detailed logs into the console, which becomes very spammy."
         ));
+        configuration.setLoadingMessages(getGeneralConfigBoolean(
+                "loading-messages",
+                true
+        ));
 
         //Storage Stuff
         {

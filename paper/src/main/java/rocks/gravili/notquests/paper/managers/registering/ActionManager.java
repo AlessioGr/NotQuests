@@ -89,7 +89,9 @@ public class ActionManager {
 
 
     public void registerAction(final String identifier, final Class<? extends Action> action) {
-        main.getLogManager().info("Registering action <highlight>" + identifier);
+        if (main.getConfiguration().isDebug()) {
+            main.getLogManager().info("Registering action <highlight>" + identifier);
+        }
         actions.put(identifier, action);
 
         try {
