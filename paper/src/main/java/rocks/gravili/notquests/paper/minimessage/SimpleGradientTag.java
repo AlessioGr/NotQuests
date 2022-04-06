@@ -15,24 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package rocks.gravili.notquests.paper.managers;
+package rocks.gravili.notquests.paper.minimessage;
 
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.flattener.ComponentFlattener;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.minimessage.Context;
-import net.kyori.adventure.text.minimessage.internal.parser.node.TagNode;
-import net.kyori.adventure.text.minimessage.internal.parser.node.ValueNode;
-import net.kyori.adventure.text.minimessage.tag.Inserting;
-import net.kyori.adventure.text.minimessage.tag.Modifying;
 import net.kyori.adventure.text.minimessage.tag.Tag;
 import net.kyori.adventure.text.minimessage.tag.resolver.ArgumentQueue;
-import net.kyori.adventure.text.minimessage.tree.Node;
 import net.kyori.adventure.util.ShadyPines;
-import net.kyori.examination.Examinable;
 import net.kyori.examination.ExaminableProperty;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -46,13 +37,7 @@ import java.util.stream.Stream;
  *
  * @since 4.10.0
  */
-public final class SimpleGradientTag implements Modifying, Examinable {
-    public static final String GRADIENT = "gradient";
-
-
-    private boolean visited;
-    private int size = 0;
-    private int disableApplyingColorDepth = -1;
+public final class SimpleGradientTag extends AbstractColorChangingTag {
 
     private int index = 0;
     private int colorIndex = 0;
@@ -61,6 +46,8 @@ public final class SimpleGradientTag implements Modifying, Examinable {
     private final TextColor[] colors;
     private float phase;
     private final boolean negativePhase;
+
+
 
     private final static List<String> fallbackColors = Arrays.asList("#1985ff", "#2bc7ff");
 
@@ -108,22 +95,7 @@ public final class SimpleGradientTag implements Modifying, Examinable {
 
     }
 
-    private SimpleGradientTag(final float phase, final List<TextColor> colors) {
-        if (phase < 0) {
-            this.negativePhase = true;
-            this.phase = 1 + phase;
-            Collections.reverse(colors);
-        } else {
-            this.negativePhase = false;
-            this.phase = phase;
-        }
 
-        if (colors.isEmpty()) {
-            this.colors = new TextColor[]{TextColor.color(0xffffff), TextColor.color(0x000000)};
-        } else {
-            this.colors = colors.toArray(new TextColor[0]);
-        }
-    }
 
     public static SimpleGradientTag create(final List<String> args) {
         float phase = 0;
@@ -159,7 +131,25 @@ public final class SimpleGradientTag implements Modifying, Examinable {
         return new SimpleGradientTag(phase, textColors);
     }
 
-    private void init() {
+    private SimpleGradientTag(final float phase, final List<TextColor> colors) {
+        if (phase < 0) {
+            this.negativePhase = true;
+            this.phase = 1 + phase;
+            Collections.reverse(colors);
+        } else {
+            this.negativePhase = false;
+            this.phase = phase;
+        }
+
+        if (colors.isEmpty()) {
+            this.colors = new TextColor[]{TextColor.color(0xffffff), TextColor.color(0x000000)};
+        } else {
+            this.colors = colors.toArray(new TextColor[0]);
+        }
+    }
+
+    @Override
+    protected void init() {
         int sectorLength = this.size() / (this.colors.length - 1);
         if (sectorLength < 1) {
             sectorLength = 1;
@@ -169,7 +159,10 @@ public final class SimpleGradientTag implements Modifying, Examinable {
         this.index = 0;
     }
 
-    private void advanceColor() {
+
+
+    @Override
+    protected void advanceColor() {
         // color switch needed?
         this.index++;
         if (this.factorStep * this.index > 1) {
@@ -178,79 +171,8 @@ public final class SimpleGradientTag implements Modifying, Examinable {
         }
     }
 
-    protected final int size() {
-        return this.size;
-    }
-
     @Override
-    public final void visit(final @NotNull Node current, final int depth) {
-        if (this.visited) {
-            throw new IllegalStateException("Color changing tag instances cannot be re-used, return a new one for each resolve");
-        }
-
-        if (current instanceof ValueNode) {
-            final String value = ((ValueNode) current).value();
-            this.size += value.codePointCount(0, value.length());
-        } else if (current instanceof TagNode) {
-            final TagNode tag = (TagNode) current;
-            if (tag.tag() instanceof Inserting) {
-                // ComponentTransformation.apply() returns the value of the component placeholder
-                ComponentFlattener.textOnly().flatten(((Inserting) tag.tag()).value(), s -> this.size += s.codePointCount(0, s.length()));
-            }
-        }
-    }
-
-    @Override
-    public final void postVisit() {
-        // init
-        this.visited = true;
-        this.init();
-    }
-
-    @Override
-    public final Component apply(final @NotNull Component current, final int depth) {
-        if ((this.disableApplyingColorDepth != -1 && depth > this.disableApplyingColorDepth) || current.style().color() != null) {
-            if (this.disableApplyingColorDepth == -1 || depth < this.disableApplyingColorDepth) {
-                this.disableApplyingColorDepth = depth;
-            }
-            // This component has its own color applied, which overrides ours
-            // We still want to keep track of where we are though if this is text
-            if (current instanceof TextComponent) {
-                final String content = ((TextComponent) current).content();
-                final int len = content.codePointCount(0, content.length());
-                for (int i = 0; i < len; i++) {
-                    // increment our color index
-                    this.advanceColor();
-                }
-            }
-            return current.children(Collections.emptyList());
-        }
-
-        this.disableApplyingColorDepth = -1;
-        if (current instanceof TextComponent && ((TextComponent) current).content().length() > 0) {
-            final TextComponent textComponent = (TextComponent) current;
-            final String content = textComponent.content();
-
-            final TextComponent.Builder parent = Component.text();
-
-            // apply
-            final int[] holder = new int[1];
-            for (final PrimitiveIterator.OfInt it = content.codePoints().iterator(); it.hasNext();) {
-                holder[0] = it.nextInt();
-                final Component comp = Component.text(new String(holder, 0, 1), this.color());
-                this.advanceColor();
-                parent.append(comp);
-            }
-
-            return parent.build();
-        }
-
-        return Component.empty().mergeStyle(current);
-    }
-    // The lifecycle
-
-
-    private TextColor color() {
+    protected TextColor color() {
         float factor = this.factorStep * (this.index + this.phase);
         // loop around if needed
         if (factor > 1) {
