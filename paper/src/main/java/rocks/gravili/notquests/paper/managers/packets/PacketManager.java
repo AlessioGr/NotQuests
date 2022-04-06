@@ -154,14 +154,18 @@ public class PacketManager implements Listener {
         if (usePacketEvents && main.getConfiguration().packetMagic) {
             PacketEvents.getAPI().terminate();
         }else{
-            for(Player player : Bukkit.getOnlinePlayers()){
+            for(final Player player : Bukkit.getOnlinePlayers()){
                 main.getLogManager().debug("Removed player for packet injector. Name: " + player.getName());
                 if(modern){
-                    modernInjector.removePlayer(player);
-                    modernInjector.setPacketStuffEnabled(false);
-                }else {
-                    injector.removePlayer(player);
-                    injector.setPacketStuffEnabled(false);
+                    if(modernInjector != null){
+                        modernInjector.removePlayer(player);
+                        modernInjector.setPacketStuffEnabled(false);
+                    }
+                }else{
+                    if(injector != null){
+                        injector.removePlayer(player);
+                        injector.setPacketStuffEnabled(false);
+                    }
                 }
             }
         }
