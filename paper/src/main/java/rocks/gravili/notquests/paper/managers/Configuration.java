@@ -42,6 +42,7 @@ public class Configuration {
     public String configurationVersion = "";
 
     public boolean debug = false;
+    public boolean verboseLoadingMessages = true;
 
     /**
      * MYSQL Database Connection Information
@@ -255,8 +256,16 @@ public class Configuration {
         return debug;
     }
 
+    public boolean isVerboseLoadingMessages() {
+        return verboseLoadingMessages;
+    }
+
     public void setDebug(boolean debug) {
         this.debug = debug;
+    }
+
+    public void setVerboseLoadingMessages(boolean verboseLoadingMessages) {
+        this.verboseLoadingMessages = verboseLoadingMessages;
     }
 
     public String getDatabaseHost() {

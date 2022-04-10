@@ -200,8 +200,9 @@ public class ListCondition extends Condition {
             if (main.getVariablesManager().alreadyFullRegisteredVariables.contains(variableString)) {
                 continue;
             }
-
-            main.getLogManager().info("Registering list condition: <highlight>" + variableString);
+            if (main.getConfiguration().isVerboseLoadingMessages()) {
+                main.getLogManager().info("Registering list condition: <highlight>" + variableString);
+            }
 
             manager.command(main.getVariablesManager().registerVariableCommands(variableString, builder)
                     .argument(StringArgument.<CommandSender>newBuilder("operator").withSuggestionsProvider((context, lastString) -> {

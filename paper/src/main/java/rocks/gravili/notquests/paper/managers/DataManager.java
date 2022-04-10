@@ -1108,6 +1108,12 @@ public class DataManager {
                 "Inventory slot in which the journal should appear."
         ));
 
+        configuration.setVerboseLoadingMessages(getGeneralConfigBoolean(
+                "logging.verbose-startup-messages",
+                false,
+                "If set to true, more startup messages will be logged."
+        ));
+
         ItemStack journal = new ItemStack(Material.ENCHANTED_BOOK, 1);
         ItemMeta im = journal.getItemMeta();
         ArrayList<Component> lore = new ArrayList<>();

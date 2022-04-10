@@ -31,6 +31,7 @@ import java.util.List;
 public class Configuration {
 
     public boolean debug = false;
+    public boolean verboseLoadingMessages = true;
 
     /**
      * MYSQL Database Connection Information
@@ -142,6 +143,10 @@ public class Configuration {
 
     public Configuration() {
 
+    }
+
+    public final Boolean getVerboseLoadingMessages() {
+        return verboseLoadingMessages;
     }
 
     public final String getDatabaseHost() {
