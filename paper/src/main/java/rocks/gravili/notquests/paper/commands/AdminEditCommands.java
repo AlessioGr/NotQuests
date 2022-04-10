@@ -262,10 +262,6 @@ public class AdminEditCommands {
                     }
                 }));
 
-        if (main.getIntegrationsManager().isCitizensEnabled()) {
-            final Command.Builder<CommandSender> citizensNPCsBuilder = editBuilder.literal("npcs");
-            handleCitizensNPCs(citizensNPCsBuilder);
-        }
 
         manager.command(editBuilder.literal("takeEnabled")
                 .argument(BooleanArgument.<CommandSender>newBuilder("Take Enabled").withLiberal(true).build(),
@@ -379,80 +375,6 @@ public class AdminEditCommands {
                 }));
     }
 
-
-    public void handleCitizensNPCs(final Command.Builder<CommandSender> builder) {
-        manager.command(builder.literal("add")
-                .argument(IntegerArgument.<CommandSender>newBuilder("npc ID").withMin(0).withSuggestionsProvider((context, lastString) -> {
-                    ArrayList<String> completions = new ArrayList<>();
-                    for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
-                        completions.add("" + npc.getId());
-                    }
-                    final List<String> allArgs = context.getRawInput();
-                    main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[ID of the NPC you wish to add]", "(optional: --hideInNPC)");
-
-                    return completions;
-                }).build(), ArgumentDescription.of("ID of the Citizens NPC to whom the Quest should be attached."))
-                .flag(
-                        manager.flagBuilder("hideInNPC")
-                                .withDescription(ArgumentDescription.of("Makes the Quest hidden from in the NPC."))
-                )
-                .meta(CommandMeta.DESCRIPTION, "Attaches the Quest to a Citizens NPC.")
-                .handler((context) -> {
-                    final Quest quest = context.get("quest");
-                    boolean showInNPC = !context.flags().isPresent("hideInNPC");
-
-                    int npcID = context.get("npc ID");
-
-                    final NPC npc = CitizensAPI.getNPCRegistry().getById(npcID);
-                    if (npc != null) {
-                        if (!quest.getAttachedNPCsWithQuestShowing().contains(npc) && !quest.getAttachedNPCsWithoutQuestShowing().contains(npc)) {
-                            quest.bindToNPC(npc, showInNPC);
-                            context.getSender().sendMessage(main.parse(
-                                    "<success>Quest <highlight>" + quest.getQuestName()
-                                            + "</highlight> has been bound to the NPC with the ID <highlight2>" + npcID
-                                            + "</highlight2>! Showing Quest: <highlight>" + showInNPC + "</highlight>."
-                            ));
-                        } else {
-                            context.getSender().sendMessage(main.parse(
-                                    "<warn>Quest <highlight>" + quest.getQuestName()
-                                            + "</highlight> has already been bound to the NPC with the ID <highlight2>" + npcID
-                                            + "</highlight2>!"
-                            ));
-                        }
-
-                    } else {
-                        context.getSender().sendMessage(main.parse("<error>NPC with the ID <highlight>" + npcID + "</highlight> was not found!"));
-                    }
-
-                }));
-
-        manager.command(builder.literal("clear")
-                .meta(CommandMeta.DESCRIPTION, "De-attaches this Quest from all Citizens NPCs.")
-                .handler((context) -> {
-                    final Quest quest = context.get("quest");
-                    quest.clearNPCs();
-                    context.getSender().sendMessage(main.parse("<success>All NPCs of Quest <highlight>" + quest.getQuestName() + "</highlight> have been removed!"));
-
-                }));
-
-        manager.command(builder.literal("list")
-                .meta(CommandMeta.DESCRIPTION, "Lists all Citizens NPCs which have this Quest attached.")
-                .handler((context) -> {
-                    final Quest quest = context.get("quest");
-                    context.getSender().sendMessage(main.parse("<highlight>NPCs bound to quest <highlight2>" + quest.getQuestName() + "</highlight2> with Quest showing:"));
-                    int counter = 1;
-                    for (final NPC npc : quest.getAttachedNPCsWithQuestShowing()) {
-                        context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>ID:</main> <highlight2>" + npc.getId()));
-                        counter++;
-                    }
-                    counter = 1;
-                    context.getSender().sendMessage(main.parse( "<highlight>NPCs bound to quest <highlight2>" + quest.getQuestName() + "</highlight2> without Quest showing:"));
-                    for (NPC npc : quest.getAttachedNPCsWithoutQuestShowing()) {
-                        context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>ID:</main> <highlight2>" + npc.getId()));
-                        counter++;
-                    }
-                }));
-    }
 
 
     public void handleArmorStands(final Command.Builder<CommandSender> builder) {
@@ -757,6 +679,7 @@ public class AdminEditCommands {
                             main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Completion NPC ID / 'armorstand']", "");
 
                             ArrayList<String> completions = new ArrayList<>();
+
 
                             for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
                                 completions.add("" + npc.getId());

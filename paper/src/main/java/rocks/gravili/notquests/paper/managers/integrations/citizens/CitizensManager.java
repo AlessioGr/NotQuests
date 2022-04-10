@@ -18,6 +18,11 @@
 
 package rocks.gravili.notquests.paper.managers.integrations.citizens;
 
+import cloud.commandframework.ArgumentDescription;
+import cloud.commandframework.Command;
+import cloud.commandframework.arguments.standard.IntegerArgument;
+import cloud.commandframework.meta.CommandMeta;
+import cloud.commandframework.paper.PaperCommandManager;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
@@ -26,14 +31,18 @@ import net.citizensnpcs.trait.FollowTrait;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.arguments.ConversationSelector;
 import rocks.gravili.notquests.paper.conversation.Conversation;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
+import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.objectives.hooks.citizens.EscortNPCObjective;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class CitizensManager {
@@ -215,5 +224,123 @@ public class CitizensManager {
 
 
         }
+    }
+
+    public void registerAnyCitizensCommands(){
+
+        final PaperCommandManager<CommandSender> manager = main.getCommandManager().getPaperCommandManager();
+
+        //Conversations
+
+        final Command.Builder<CommandSender> conversationBuilder = main.getCommandManager().getAdminConversationCommandBuilder();
+
+        final Command.Builder<CommandSender> conversationEditBuilder = conversationBuilder.literal("edit")
+                .argument(ConversationSelector.of("conversation", main), ArgumentDescription.of("Name of the Conversation."));
+        manager.command(conversationEditBuilder
+                .literal("npc")
+                .argument(IntegerArgument.<CommandSender>newBuilder("NPC").withSuggestionsProvider((context, lastString) -> {
+                    ArrayList<String> completions = new ArrayList<>();
+                    completions.add("-1");
+                    for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
+                        completions.add("" + npc.getId());
+                    }
+                    final List<String> allArgs = context.getRawInput();
+                    main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[NPC ID]", "");
+
+                    return completions;
+                }).build(), ArgumentDescription.of("ID of the Citizens NPC which should start the conversation (set to -1 to disable)"))
+                .meta(CommandMeta.DESCRIPTION, "Set conversation NPC (-1 = disabled)")
+                .handler((context) -> {
+                    final Conversation foundConversation = context.get("conversation");
+                    final int npcID = context.get("NPC");
+
+                    foundConversation.setNPC(npcID);
+
+                    context.getSender().sendMessage(main.parse(
+                            "<main>NPC of conversation <highlight>" + foundConversation.getIdentifier() + "</highlight> has been set to <highlight2>"
+                                    + npcID + "</highlight2>!"
+                    ));
+                }));
+
+
+
+
+        //Edit commands
+
+        final Command.Builder<CommandSender> editBuilder = main.getCommandManager().getAdminEditCommandBuilder();
+
+        final Command.Builder<CommandSender> citizensNPCsBuilder = editBuilder.literal("npcs");
+        manager.command(citizensNPCsBuilder.literal("add")
+                .argument(IntegerArgument.<CommandSender>newBuilder("npc ID").withMin(0).withSuggestionsProvider((context, lastString) -> {
+                    ArrayList<String> completions = new ArrayList<>();
+                    for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
+                        completions.add("" + npc.getId());
+                    }
+                    final List<String> allArgs = context.getRawInput();
+                    main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[ID of the NPC you wish to add]", "(optional: --hideInNPC)");
+
+                    return completions;
+                }).build(), ArgumentDescription.of("ID of the Citizens NPC to whom the Quest should be attached."))
+                .flag(
+                        manager.flagBuilder("hideInNPC")
+                                .withDescription(ArgumentDescription.of("Makes the Quest hidden from in the NPC."))
+                )
+                .meta(CommandMeta.DESCRIPTION, "Attaches the Quest to a Citizens NPC.")
+                .handler((context) -> {
+                    final Quest quest = context.get("quest");
+                    boolean showInNPC = !context.flags().isPresent("hideInNPC");
+
+                    int npcID = context.get("npc ID");
+
+                    final NPC npc = CitizensAPI.getNPCRegistry().getById(npcID);
+                    if (npc != null) {
+                        if (!quest.getAttachedNPCsWithQuestShowing().contains(npc) && !quest.getAttachedNPCsWithoutQuestShowing().contains(npc)) {
+                            quest.bindToNPC(npc, showInNPC);
+                            context.getSender().sendMessage(main.parse(
+                                    "<success>Quest <highlight>" + quest.getQuestName()
+                                            + "</highlight> has been bound to the NPC with the ID <highlight2>" + npcID
+                                            + "</highlight2>! Showing Quest: <highlight>" + showInNPC + "</highlight>."
+                            ));
+                        } else {
+                            context.getSender().sendMessage(main.parse(
+                                    "<warn>Quest <highlight>" + quest.getQuestName()
+                                            + "</highlight> has already been bound to the NPC with the ID <highlight2>" + npcID
+                                            + "</highlight2>!"
+                            ));
+                        }
+
+                    } else {
+                        context.getSender().sendMessage(main.parse("<error>NPC with the ID <highlight>" + npcID + "</highlight> was not found!"));
+                    }
+
+                }));
+
+        manager.command(citizensNPCsBuilder.literal("clear")
+                .meta(CommandMeta.DESCRIPTION, "De-attaches this Quest from all Citizens NPCs.")
+                .handler((context) -> {
+                    final Quest quest = context.get("quest");
+                    quest.clearNPCs();
+                    context.getSender().sendMessage(main.parse("<success>All NPCs of Quest <highlight>" + quest.getQuestName() + "</highlight> have been removed!"));
+
+                }));
+
+        manager.command(citizensNPCsBuilder.literal("list")
+                .meta(CommandMeta.DESCRIPTION, "Lists all Citizens NPCs which have this Quest attached.")
+                .handler((context) -> {
+                    final Quest quest = context.get("quest");
+                    context.getSender().sendMessage(main.parse("<highlight>NPCs bound to quest <highlight2>" + quest.getQuestName() + "</highlight2> with Quest showing:"));
+                    int counter = 1;
+                    for (final NPC npc : quest.getAttachedNPCsWithQuestShowing()) {
+                        context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>ID:</main> <highlight2>" + npc.getId()));
+                        counter++;
+                    }
+                    counter = 1;
+                    context.getSender().sendMessage(main.parse( "<highlight>NPCs bound to quest <highlight2>" + quest.getQuestName() + "</highlight2> without Quest showing:"));
+                    for (NPC npc : quest.getAttachedNPCsWithoutQuestShowing()) {
+                        context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>ID:</main> <highlight2>" + npc.getId()));
+                        counter++;
+                    }
+                }));
+
     }
 }

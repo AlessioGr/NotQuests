@@ -20,12 +20,9 @@ package rocks.gravili.notquests.paper.commands;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
-import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
-import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.npc.NPC;
 import net.kyori.adventure.text.Component;
 import org.apache.commons.io.IOUtils;
 import org.bukkit.Material;
@@ -248,35 +245,6 @@ public class AdminConversationCommands {
         final Command.Builder<CommandSender> conversationEditBuilder = conversationBuilder.literal("edit")
                 .argument(ConversationSelector.of("conversation", main), ArgumentDescription.of("Name of the Conversation."));
 
-
-
-        if (main.getIntegrationsManager().isCitizensEnabled()) {
-            manager.command(conversationEditBuilder
-                    .literal("npc")
-                    .argument(IntegerArgument.<CommandSender>newBuilder("NPC").withSuggestionsProvider((context, lastString) -> {
-                        ArrayList<String> completions = new ArrayList<>();
-                        completions.add("-1");
-                        for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
-                            completions.add("" + npc.getId());
-                        }
-                        final List<String> allArgs = context.getRawInput();
-                        main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[NPC ID]", "");
-
-                        return completions;
-                    }).build(), ArgumentDescription.of("ID of the Citizens NPC which should start the conversation (set to -1 to disable)"))
-                    .meta(CommandMeta.DESCRIPTION, "Set conversation NPC (-1 = disabled)")
-                    .handler((context) -> {
-                        final Conversation foundConversation = context.get("conversation");
-                        final int npcID = context.get("NPC");
-
-                        foundConversation.setNPC(npcID);
-
-                        context.getSender().sendMessage(main.parse(
-                                "<main>NPC of conversation <highlight>" + foundConversation.getIdentifier() + "</highlight> has been set to <highlight2>"
-                                        + npcID + "</highlight2>!"
-                        ));
-                    }));
-        }
 
 
         manager.command(conversationEditBuilder

@@ -28,7 +28,9 @@ import rocks.gravili.notquests.paper.managers.integrations.citizens.CitizensMana
 import rocks.gravili.notquests.paper.placeholders.QuestPlaceholders;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 public class IntegrationsManager {
     private final NotQuests main;
@@ -265,6 +267,7 @@ public class IntegrationsManager {
     public void registerEvents() {
         if (isCitizensEnabled()) {
             main.getMain().getServer().getPluginManager().registerEvents(new CitizensEvents(main), main.getMain());
+            citizensManager.registerAnyCitizensCommands();
         }
 
         if (isMythicMobsEnabled()) {
@@ -326,6 +329,7 @@ public class IntegrationsManager {
             if (!main.getDataManager().isAlreadyLoadedNPCs()) { //Just making sure
                 main.getDataManager().loadNPCData();
             }
+            citizensManager.registerAnyCitizensCommands();
 
             //Aand the commands
             //final Command.Builder<CommandSender> citizensNPCsBuilder = editBuilder.literal("npcs");
