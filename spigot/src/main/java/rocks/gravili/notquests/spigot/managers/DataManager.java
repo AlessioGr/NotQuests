@@ -376,10 +376,10 @@ public class DataManager {
 
         key = "logging.verbose-startup-messages";
         if (!getGeneralConfig().isBoolean(key)) {
-            getGeneralConfig().set(key, false);
+            getGeneralConfig().set(key, true);
             valueChanged = true;
         }
-        configuration.loadingMessages = getGeneralConfig().getBoolean(key);
+        configuration.verboseLoadingMessages = getGeneralConfig().getBoolean(key);
 
         //Other values from general.yml
         key = "general.max-active-quests-per-player";

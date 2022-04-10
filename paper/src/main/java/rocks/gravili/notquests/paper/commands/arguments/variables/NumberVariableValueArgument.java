@@ -172,17 +172,22 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Str
             final String input = inputQueue.peek();
             inputQueue.remove();
 
-            final NumberExpression numberExpression = new NumberExpression(main, input);
+            try{
+                final NumberExpression numberExpression = new NumberExpression(main, input);
 
-            if (context.getSender() instanceof Player player) {
-                try {
-                    numberExpression.calculateValue(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()));
-                } catch (Exception e) {
-                    if (main.getConfiguration().isDebug()) {
-                        e.printStackTrace();
+                if (context.getSender() instanceof Player player) {
+                    try {
+                        numberExpression.calculateValue(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()));
+                    } catch (Exception e) {
+                        if (main.getConfiguration().isDebug()) {
+                            e.printStackTrace();
+                        }
+                        return ArgumentParseResult.failure(new IllegalArgumentException("Invalid Expression: " + input + ". Error: " + e.toString()));
                     }
-                    return ArgumentParseResult.failure(new IllegalArgumentException("Invalid Expression: " + input + ". Error: " + e.toString()));
                 }
+
+            } catch (Exception e){
+                return ArgumentParseResult.failure(new IllegalArgumentException("Erroring Expression: " + input + ". Error: " + e.toString()));
             }
 
 
