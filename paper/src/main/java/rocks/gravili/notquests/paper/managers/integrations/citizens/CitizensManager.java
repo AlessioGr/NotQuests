@@ -34,7 +34,6 @@ import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.objectives.hooks.citizens.EscortNPCObjective;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Locale;
 
 public class CitizensManager {
@@ -92,9 +91,8 @@ public class CitizensManager {
         final ArrayList<Trait> traitsToRemove = new ArrayList<>();
         for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
             for (final Trait trait : npc.getTraits()) {
-                if (trait.getName().equalsIgnoreCase("nquestgiver")) {
+                if (trait.getName() != null && trait.getName().equalsIgnoreCase("nquestgiver")) {
                     traitsToRemove.add(trait);
-
                 }
             }
             for (final Trait traitToRemove : traitsToRemove) {
@@ -102,9 +100,7 @@ public class CitizensManager {
                 main.getLogManager().info("Removed nquestgiver trait from NPC with the ID <highlight>" + npc.getId());
             }
             traitsToRemove.clear();
-
         }
-
 
         /*
          * Next, the nquestgiver trait itself which is registered via the Citizens API on startup is being
@@ -113,9 +109,8 @@ public class CitizensManager {
         main.getLogManager().info("Deregistering nquestgiver trait...");
         final ArrayList<TraitInfo> toDeregister = new ArrayList<>();
         for (final TraitInfo traitInfo : net.citizensnpcs.api.CitizensAPI.getTraitFactory().getRegisteredTraits()) {
-            if (traitInfo.getTraitName().equals("nquestgiver")) {
+            if (traitInfo.getTraitName() != null && traitInfo.getTraitName().equals("nquestgiver")) {
                 toDeregister.add(traitInfo);
-
             }
         }
         //Actual nquestgiver trait de-registering happens here, to prevent a ConcurrentModificationException
@@ -123,7 +118,6 @@ public class CitizensManager {
             net.citizensnpcs.api.CitizensAPI.getTraitFactory().deregisterTrait(traitInfo);
         }
     }
-
 
     public void handleEscortObjective(final ActiveObjective activeObjective) {
         final NPC npcToEscort = CitizensAPI.getNPCRegistry().getById(((EscortNPCObjective) activeObjective.getObjective()).getNpcToEscortID());
@@ -161,21 +155,19 @@ public class CitizensManager {
                         npcToEscort.addTrait(followTrait);
                         handleEscortNPCObjectiveForActiveObjectiveSynchronous(npcToEscort, destinationNPC, followTrait, activeQuest, escortNPCObjective);
                     });
-                }else {
+                } else {
                     final FollowTrait finalFollowerTrait = followerTrait;
                     Bukkit.getScheduler().runTask(main.getMain(), () -> {
                         handleEscortNPCObjectiveForActiveObjectiveSynchronous(npcToEscort, destinationNPC, finalFollowerTrait, activeQuest, escortNPCObjective);
                     });
                 }
-            }else {
+            } else {
                 if (followerTrait == null) {
                     followerTrait = new FollowTrait();
                     npcToEscort.addTrait(followerTrait);
                 }
                 handleEscortNPCObjectiveForActiveObjectiveSynchronous(npcToEscort, destinationNPC, followerTrait, activeQuest, escortNPCObjective);
             }
-
-
 
 
         } else {
@@ -209,10 +201,8 @@ public class CitizensManager {
 
             if (followerTrait.getFollowingPlayer() == null || !followerTrait.getFollowingPlayer().equals(player)) {
                 if (!Bukkit.isPrimaryThread()) {
-                    final FollowTrait finalFollowerTrait = followerTrait;
-                    Bukkit.getScheduler().runTask(main.getMain(), () -> finalFollowerTrait.toggle(player, false));
+                    Bukkit.getScheduler().runTask(main.getMain(), () -> followerTrait.toggle(player, false));
                 } else {
-
                     followerTrait.toggle(player, false);
                 }
             }
