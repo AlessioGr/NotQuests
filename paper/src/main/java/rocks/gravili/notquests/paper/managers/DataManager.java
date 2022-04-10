@@ -1111,7 +1111,7 @@ public class DataManager {
         configuration.setVerboseLoadingMessages(getGeneralConfigBoolean(
                 "logging.verbose-startup-messages",
                 false,
-                "Inventory slot in which the journal should appear."
+                "If set to true, more startup messages will be logged."
         ));
 
         ItemStack journal = new ItemStack(Material.ENCHANTED_BOOK, 1);
