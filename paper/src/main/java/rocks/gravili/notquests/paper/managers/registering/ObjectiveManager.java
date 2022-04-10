@@ -112,7 +112,7 @@ public class ObjectiveManager {
     }*/
 
     public void registerObjective(final String identifier, final Class<? extends Objective> objective) {
-        if (main.getConfiguration().isVerboseLoadingMessages()) {
+        if (main.getConfiguration().isVerboseStartupMessages()) {
             main.getLogManager().info("Registering objective <highlight>" + identifier);
         }
         objectives.put(identifier, objective);

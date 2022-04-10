@@ -188,7 +188,7 @@ public class ItemStackListCondition extends Condition {
                 continue;
             }
 
-            if (main.getConfiguration().isVerboseLoadingMessages()) {
+            if (main.getConfiguration().isVerboseStartupMessages()) {
                 main.getLogManager().info("Registering ItemStackList condition: <highlight>" + variableString);
 			}
 

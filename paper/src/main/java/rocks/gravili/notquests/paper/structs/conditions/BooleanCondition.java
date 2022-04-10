@@ -72,7 +72,7 @@ public class BooleanCondition extends Condition {
                 continue;
             }
 
-            if (main.getConfiguration().isVerboseLoadingMessages()) {
+            if (main.getConfiguration().isVerboseStartupMessages()) {
                 main.getLogManager().info("Registering boolean condition: <highlight>" + variableString);
             }
 

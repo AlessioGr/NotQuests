@@ -65,7 +65,7 @@ public class TriggerManager {
 
 
     public void registerTrigger(final String identifier, final Class<? extends Trigger> trigger) {
-        if (main.getConfiguration().isVerboseLoadingMessages()) {
+        if (main.getConfiguration().isVerboseStartupMessages()) {
             main.getLogManager().info("Registering trigger <highlight>" + identifier);
         }
         triggers.put(identifier, trigger);

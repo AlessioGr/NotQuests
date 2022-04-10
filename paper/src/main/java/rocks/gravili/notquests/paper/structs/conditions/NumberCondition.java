@@ -70,7 +70,7 @@ public class NumberCondition extends Condition {
                 continue;
             }
 
-            if (main.getConfiguration().isVerboseLoadingMessages()) {
+            if (main.getConfiguration().isVerboseStartupMessages()) {
                 main.getLogManager().info("Registering number condition: <highlight>" + variableString);
             }
 

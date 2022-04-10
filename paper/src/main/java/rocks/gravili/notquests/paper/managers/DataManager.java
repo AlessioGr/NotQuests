@@ -1108,9 +1108,9 @@ public class DataManager {
                 "Inventory slot in which the journal should appear."
         ));
 
-        configuration.setVerboseLoadingMessages(getGeneralConfigBoolean(
+        configuration.setVerboseStartupMessages(getGeneralConfigBoolean(
                 "logging.verbose-startup-messages",
-                false,
+                true,
                 "If set to true, more startup messages will be logged."
         ));
 

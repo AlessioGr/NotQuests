@@ -144,7 +144,7 @@ public class StringCondition extends Condition {
                 continue;
             }
 
-            if (main.getConfiguration().isVerboseLoadingMessages()) {
+            if (main.getConfiguration().isVerboseStartupMessages()) {
                 main.getLogManager().info("Registering string condition: <highlight>" + variableString);
             }
 

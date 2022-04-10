@@ -163,7 +163,7 @@ public class VariablesManager {
 
 
     public void registerVariable(final String identifier, final Class<? extends Variable<?>> variable) {
-        if (main.getConfiguration().isVerboseLoadingMessages()) {
+        if (main.getConfiguration().isVerboseStartupMessages()) {
             main.getLogManager().info("Registering Variable <highlight>" + identifier);
         }
         variables.put(identifier, variable);
