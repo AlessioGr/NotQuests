@@ -86,7 +86,7 @@ public class ConditionsManager {
 
 
     public void registerCondition(final String identifier, final Class<? extends Condition> condition) {
-        if (main.getConfiguration().isLoadingMessages()) {
+        if (main.getConfiguration().isVerboseLoadingMessages()) {
             main.getLogManager().info("Registering condition <highlight>" + identifier);
         }
         conditions.put(identifier, condition);

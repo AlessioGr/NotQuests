@@ -100,7 +100,7 @@ public class ObjectiveManager {
     }*/
 
     public void registerObjective(final String identifier, final Class<? extends Objective> objective) {
-        if (main.getConfiguration().getLoadingMessages()) {
+        if (main.getConfiguration().getVerboseLoadingMessages()) {
             main.getLogManager().info("Registering objective <AQUA>" + identifier);
         }
         objectives.put(identifier, objective);

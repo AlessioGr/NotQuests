@@ -42,7 +42,7 @@ public class Configuration {
     public String configurationVersion = "";
 
     public boolean debug = false;
-    public boolean loadingMessages = true;
+    public boolean verboseLoadingMessages = true;
 
     /**
      * MYSQL Database Connection Information
@@ -256,16 +256,16 @@ public class Configuration {
         return debug;
     }
 
-    public boolean isLoadingMessages() {
-        return loadingMessages;
+    public boolean isVerboseLoadingMessages() {
+        return verboseLoadingMessages;
     }
 
     public void setDebug(boolean debug) {
         this.debug = debug;
     }
 
-    public void setLoadingMessages(boolean loadingMessages) {
-        this.loadingMessages = loadingMessages;
+    public void setVerboseLoadingMessages(boolean verboseLoadingMessages) {
+        this.verboseLoadingMessages = verboseLoadingMessages;
     }
 
     public String getDatabaseHost() {

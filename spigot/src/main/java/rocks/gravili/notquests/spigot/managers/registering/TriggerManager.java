@@ -66,7 +66,7 @@ public class TriggerManager {
 
 
     public void registerTrigger(final String identifier, final Class<? extends Trigger> trigger) {
-        if (main.getConfiguration().getLoadingMessages()) {
+        if (main.getConfiguration().getVerboseLoadingMessages()) {
             main.getLogManager().info("Registering trigger <AQUA>" + identifier);
         }
         triggers.put(identifier, trigger);

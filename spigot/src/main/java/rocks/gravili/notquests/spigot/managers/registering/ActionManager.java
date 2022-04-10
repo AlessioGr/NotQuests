@@ -74,7 +74,7 @@ public class ActionManager {
 
 
     public void registerAction(final String identifier, final Class<? extends Action> action) {
-        if (main.getConfiguration().getLoadingMessages()) {
+        if (main.getConfiguration().getVerboseLoadingMessages()) {
             main.getLogManager().info("Registering action <AQUA>" + identifier);
         }
         actions.put(identifier, action);

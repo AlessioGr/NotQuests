@@ -89,7 +89,7 @@ public class ActionManager {
 
 
     public void registerAction(final String identifier, final Class<? extends Action> action) {
-        if (main.getConfiguration().isDebug()) {
+        if (main.getConfiguration().isVerboseLoadingMessages()) {
             main.getLogManager().info("Registering action <highlight>" + identifier);
         }
         actions.put(identifier, action);

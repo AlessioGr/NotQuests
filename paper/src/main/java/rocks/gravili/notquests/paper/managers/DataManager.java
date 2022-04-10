@@ -550,10 +550,6 @@ public class DataManager {
                 false,
                 "Having debug enabled will send more detailed logs into the console, which becomes very spammy."
         ));
-        configuration.setLoadingMessages(getGeneralConfigBoolean(
-                "loading-messages",
-                true
-        ));
 
         //Storage Stuff
         {
@@ -1109,6 +1105,12 @@ public class DataManager {
         configuration.setJournalInventorySlot(getGeneralConfigInt(
                 "general.journal-item.inventory-slot",
                 8,
+                "Inventory slot in which the journal should appear."
+        ));
+
+        configuration.setVerboseLoadingMessages(getGeneralConfigBoolean(
+                "logging.verbose-startup-messages",
+                false,
                 "Inventory slot in which the journal should appear."
         ));
 

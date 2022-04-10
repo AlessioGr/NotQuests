@@ -200,7 +200,7 @@ public class ListCondition extends Condition {
             if (main.getVariablesManager().alreadyFullRegisteredVariables.contains(variableString)) {
                 continue;
             }
-            if (main.getConfiguration().isLoadingMessages()) {
+            if (main.getConfiguration().isVerboseLoadingMessages()) {
                 main.getLogManager().info("Registering list condition: <highlight>" + variableString);
             }
 

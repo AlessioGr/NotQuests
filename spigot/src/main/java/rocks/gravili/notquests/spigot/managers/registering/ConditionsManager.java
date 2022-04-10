@@ -82,7 +82,7 @@ public class ConditionsManager {
 
 
     public void registerCondition(final String identifier, final Class<? extends Condition> condition) {
-        if (main.getConfiguration().getLoadingMessages()) {
+        if (main.getConfiguration().getVerboseLoadingMessages()) {
             main.getLogManager().info("Registering condition <AQUA>" + identifier);
         }
         conditions.put(identifier, condition);

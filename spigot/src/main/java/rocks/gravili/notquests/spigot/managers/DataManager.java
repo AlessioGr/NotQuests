@@ -374,7 +374,7 @@ public class DataManager {
         }
         configuration.debug = getGeneralConfig().getBoolean(key);
 
-        key = "loading-messages";
+        key = "logging.verbose-startup-messages";
         if (!getGeneralConfig().isBoolean(key)) {
             getGeneralConfig().set(key, false);
             valueChanged = true;
