@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package rocks.gravili.notquests.paper.structs.variables;
+package rocks.gravili.notquests.paper.structs.variables.hooks;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.arguments.standard.StringArgument;
@@ -24,11 +24,12 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.command.CommandSender;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
+import rocks.gravili.notquests.paper.structs.variables.Variable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlaceholderAPINumberVariable extends Variable<Double>{
+public class PlaceholderAPINumberVariable extends Variable<Double> {
     public PlaceholderAPINumberVariable(NotQuests main) {
         super(main);
         addRequiredString(
