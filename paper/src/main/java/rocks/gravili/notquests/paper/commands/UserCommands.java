@@ -182,7 +182,7 @@ public class UserCommands {
                 .meta(CommandMeta.DESCRIPTION, "Opens NotQuests GUI.")
                 .handler((context) -> {
                     final Player player = (Player) context.getSender();
-                    final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                    final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
 
                     main.getGuiManager().showMainQuestsGUI(questPlayer);
                 }));
@@ -192,7 +192,7 @@ public class UserCommands {
                 .meta(CommandMeta.DESCRIPTION, "Starts a Quest.")
                 .handler((context) -> {
                     final Player player = (Player) context.getSender();
-                    QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                    QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
 
                     main.getGuiManager().showTakeQuestsGUI(questPlayer);
                 }));
@@ -202,7 +202,7 @@ public class UserCommands {
                 .meta(CommandMeta.DESCRIPTION, "Shows your active Quests.")
                 .handler((context) -> {
                     final Player player = (Player) context.getSender();
-                    final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                    final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
 
                     main.getGuiManager().showActiveQuestsGUI(questPlayer);
                 }));
@@ -213,7 +213,7 @@ public class UserCommands {
                 .meta(CommandMeta.DESCRIPTION, "Aborts an active Quest.")
                 .handler((context) -> {
                     final Player player = (Player) context.getSender();
-                    final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                    final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
                     if (questPlayer != null) {
 
                         main.getGuiManager().showAbortQuestsGUI(questPlayer);
@@ -230,7 +230,7 @@ public class UserCommands {
                 .meta(CommandMeta.DESCRIPTION, "Shows a Preview for a Quest.")
                 .handler((context) -> {
                     final Player player = (Player) context.getSender();
-                    final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                    final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
 
                     main.getGuiManager().showTakeQuestsGUI(questPlayer);
                 }));
@@ -242,7 +242,7 @@ public class UserCommands {
                 .meta(CommandMeta.DESCRIPTION, "Aborts an active Quest")
                 .handler((context) -> {
                     final Player player = (Player) context.getSender();
-                    QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                    QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
                     final ActiveQuest activeQuest = context.get("Active Quest");
 
                     if (questPlayer != null && questPlayer.getActiveQuests().size() > 0) {
@@ -261,7 +261,7 @@ public class UserCommands {
                 .meta(CommandMeta.DESCRIPTION, "Previews a Quest")
                 .handler((context) -> {
                     final Player player = (Player) context.getSender();
-                    final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer((player.getUniqueId()));
+                    final QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer((player.getUniqueId()));
                     final Quest quest = context.get("Quest Name");
 
                     main.getGuiManager().showPreviewQuestGUI(questPlayer, quest);
@@ -275,7 +275,7 @@ public class UserCommands {
                 .meta(CommandMeta.DESCRIPTION, "Shows progress for an active Quest")
                 .handler((context) -> {
                     final Player player = (Player) context.getSender();
-                    QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+                    QuestPlayer questPlayer = main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId());
                     if (questPlayer != null && questPlayer.getActiveQuests().size() > 0) {
                         final ActiveQuest activeQuest = context.get("Active Quest");
 
