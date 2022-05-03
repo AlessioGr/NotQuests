@@ -49,6 +49,8 @@ public class StringCondition extends Condition {
     private HashMap<String, NumberExpression> additionalNumberArguments;
     private HashMap<String, NumberExpression> additionalBooleanArguments;
 
+    private static boolean alreadyLoadedOnce = false;
+
 
     public final String getStringOperator() {
         return stringOperator;
@@ -144,8 +146,8 @@ public class StringCondition extends Condition {
                 continue;
             }
 
-            if (main.getConfiguration().isVerboseStartupMessages()) {
-                main.getLogManager().info("Registering string condition: <highlight>" + variableString);
+            if (!alreadyLoadedOnce && main.getConfiguration().isVerboseStartupMessages()) {
+                main.getLogManager().info("  Registering string condition: <highlight>" + variableString);
             }
 
 
@@ -206,6 +208,7 @@ public class StringCondition extends Condition {
 
 
         }
+        alreadyLoadedOnce = true;
 
 
     }

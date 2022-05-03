@@ -51,6 +51,8 @@ public class ItemStackListAction extends Action {
     private HashMap<String, NumberExpression> additionalNumberArguments;
     private HashMap<String, NumberExpression> additionalBooleanArguments;
 
+    private static boolean alreadyLoadedOnce = false;
+
     private ItemStack itemStack;
 
     public final String getOperator() {
@@ -92,6 +94,11 @@ public class ItemStackListAction extends Action {
             if(main.getVariablesManager().alreadyFullRegisteredVariables.contains(variableString)){
                 continue;
             }
+
+            if (!alreadyLoadedOnce && main.getConfiguration().isVerboseStartupMessages()) {
+                main.getLogManager().info("  Registering ItemStackList action: <highlight>" + variableString);
+            }
+
 
             manager.command(main.getVariablesManager().registerVariableCommands(variableString, builder)
                     .argument(StringArgument.<CommandSender>newBuilder("operator").withSuggestionsProvider((context, lastString) -> {
@@ -170,6 +177,7 @@ public class ItemStackListAction extends Action {
                     })
             );
         }
+        alreadyLoadedOnce = true;
     }
 
     private void setAdditionalNumberArguments(HashMap<String, NumberExpression> additionalNumberArguments) {

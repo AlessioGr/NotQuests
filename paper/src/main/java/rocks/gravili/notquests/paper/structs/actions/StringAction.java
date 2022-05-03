@@ -49,6 +49,8 @@ public class StringAction extends Action {
     private HashMap<String, NumberExpression> additionalNumberArguments;
     private HashMap<String, NumberExpression> additionalBooleanArguments;
 
+    private static boolean alreadyLoadedOnce = false;
+
     private String newValue;
 
     public final String getStringOperator() {
@@ -90,6 +92,10 @@ public class StringAction extends Action {
             }
             if(main.getVariablesManager().alreadyFullRegisteredVariables.contains(variableString)){
                 continue;
+            }
+
+            if (!alreadyLoadedOnce && main.getConfiguration().isVerboseStartupMessages()) {
+                main.getLogManager().info("  Registering string action: <highlight>" + variableString);
             }
 
             manager.command(main.getVariablesManager().registerVariableCommands(variableString, builder)
@@ -146,6 +152,7 @@ public class StringAction extends Action {
                     })
             );
         }
+        alreadyLoadedOnce = true;
     }
 
     private void setAdditionalNumberArguments(HashMap<String, NumberExpression> additionalNumberArguments) {

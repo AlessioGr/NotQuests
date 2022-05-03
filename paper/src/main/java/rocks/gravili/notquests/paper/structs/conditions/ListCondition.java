@@ -50,6 +50,9 @@ public class ListCondition extends Condition {
     private HashMap<String, NumberExpression> additionalNumberArguments;
     private HashMap<String, NumberExpression> additionalBooleanArguments;
 
+    private static boolean alreadyLoadedOnce = false;
+
+
     public final String getOperator() {
         return operator;
     }
@@ -200,8 +203,8 @@ public class ListCondition extends Condition {
             if (main.getVariablesManager().alreadyFullRegisteredVariables.contains(variableString)) {
                 continue;
             }
-            if (main.getConfiguration().isVerboseStartupMessages()) {
-                main.getLogManager().info("Registering list condition: <highlight>" + variableString);
+            if (!alreadyLoadedOnce && main.getConfiguration().isVerboseStartupMessages()) {
+                main.getLogManager().info("  Registering list condition: <highlight>" + variableString);
             }
 
             manager.command(main.getVariablesManager().registerVariableCommands(variableString, builder)
@@ -258,6 +261,7 @@ public class ListCondition extends Condition {
 
 
         }
+        alreadyLoadedOnce = true;
 
 
     }

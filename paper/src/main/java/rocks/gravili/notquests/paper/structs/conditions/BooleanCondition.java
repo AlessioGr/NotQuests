@@ -51,6 +51,8 @@ public class BooleanCondition extends Condition {
     private Variable<?> cachedVariable;
     private NumberExpression numberExpression;
 
+    private static boolean alreadyLoadedOnce = false;
+
 
     public BooleanCondition(NotQuests main) {
         super(main);
@@ -59,10 +61,10 @@ public class BooleanCondition extends Condition {
         additionalBooleanArguments = new HashMap<>();
     }
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
-        for (String variableString : main.getVariablesManager().getVariableIdentifiers()) {
+    public static void handleCommands(final NotQuests main, final PaperCommandManager<CommandSender> manager, final Command.Builder<CommandSender> builder, final ConditionFor conditionFor) {
+        for (final String variableString : main.getVariablesManager().getVariableIdentifiers()) {
 
-            Variable<?> variable = main.getVariablesManager().getVariableFromString(variableString);
+            final Variable<?> variable = main.getVariablesManager().getVariableFromString(variableString);
 
             if (variable == null || variable.getVariableDataType() != VariableDataType.BOOLEAN) {
                 continue;
@@ -72,8 +74,8 @@ public class BooleanCondition extends Condition {
                 continue;
             }
 
-            if (main.getConfiguration().isVerboseStartupMessages()) {
-                main.getLogManager().info("Registering boolean condition: <highlight>" + variableString);
+            if (!alreadyLoadedOnce && main.getConfiguration().isVerboseStartupMessages()) {
+                main.getLogManager().info("  Registering boolean condition: <highlight>" + variableString);
             }
 
 
@@ -128,6 +130,7 @@ public class BooleanCondition extends Condition {
 
 
         }
+        alreadyLoadedOnce = true;
 
 
     }

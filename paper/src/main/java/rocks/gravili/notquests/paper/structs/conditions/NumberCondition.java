@@ -50,6 +50,8 @@ public class NumberCondition extends Condition {
     private Variable<?> cachedVariable;
     private NumberExpression numberExpression;
 
+    private static boolean alreadyLoadedOnce = false;
+
 
     public NumberCondition(NotQuests main) {
         super(main);
@@ -70,8 +72,8 @@ public class NumberCondition extends Condition {
                 continue;
             }
 
-            if (main.getConfiguration().isVerboseStartupMessages()) {
-                main.getLogManager().info("Registering number condition: <highlight>" + variableString);
+            if (!alreadyLoadedOnce && main.getConfiguration().isVerboseStartupMessages()) {
+                main.getLogManager().info("  Registering number condition: <highlight>" + variableString);
             }
 
 
@@ -135,6 +137,7 @@ public class NumberCondition extends Condition {
 
 
         }
+        alreadyLoadedOnce = true;
 
 
     }

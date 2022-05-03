@@ -54,6 +54,9 @@ public class ItemStackListCondition extends Condition {
     private HashMap<String, NumberExpression> additionalNumberArguments;
     private HashMap<String, NumberExpression> additionalBooleanArguments;
 
+    private static boolean alreadyLoadedOnce = false;
+
+
     public final String getOperator() {
         return operator;
     }
@@ -188,9 +191,9 @@ public class ItemStackListCondition extends Condition {
                 continue;
             }
 
-            if (main.getConfiguration().isVerboseStartupMessages()) {
-                main.getLogManager().info("Registering ItemStackList condition: <highlight>" + variableString);
-			}
+            if (!alreadyLoadedOnce && main.getConfiguration().isVerboseStartupMessages()) {
+                main.getLogManager().info("  Registering ItemStackList condition: <highlight>" + variableString);
+            }
 
             manager.command(main.getVariablesManager().registerVariableCommands(variableString, builder)
                     .argument(StringArgument.<CommandSender>newBuilder("operator").withSuggestionsProvider((context, lastString) -> {
@@ -268,6 +271,7 @@ public class ItemStackListCondition extends Condition {
 
         }
 
+        alreadyLoadedOnce = true;
 
     }
 

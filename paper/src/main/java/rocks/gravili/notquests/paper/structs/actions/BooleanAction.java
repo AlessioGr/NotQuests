@@ -53,6 +53,8 @@ public class BooleanAction extends Action {
     private Variable<?> cachedVariable;
     private NumberExpression numberExpression;
 
+    private static boolean alreadyLoadedOnce = false;
+
     public BooleanAction(final NotQuests main) {
         super(main);
         additionalStringArguments = new HashMap<>();
@@ -72,6 +74,10 @@ public class BooleanAction extends Action {
             }
             if (main.getVariablesManager().alreadyFullRegisteredVariables.contains(variableString)) {
                 continue;
+            }
+
+            if (!alreadyLoadedOnce && main.getConfiguration().isVerboseStartupMessages()) {
+                main.getLogManager().info("  Registering boolean action: <highlight>" + variableString);
             }
 
             manager.command(main.getVariablesManager().registerVariableCommands(variableString, builder)
@@ -127,6 +133,7 @@ public class BooleanAction extends Action {
                     })
             );
         }
+        alreadyLoadedOnce = true;
     }
 
     public final String getOperator() {
