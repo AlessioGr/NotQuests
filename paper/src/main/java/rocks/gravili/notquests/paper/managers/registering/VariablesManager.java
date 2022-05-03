@@ -164,7 +164,7 @@ public class VariablesManager {
 
     public void registerVariable(final String identifier, final Class<? extends Variable<?>> variable) {
         if (main.getConfiguration().isVerboseStartupMessages()) {
-            main.getLogManager().info("Registering Variable <highlight>" + identifier);
+            main.getLogManager().info("Registering variable <highlight>" + identifier);
         }
         variables.put(identifier, variable);
 
