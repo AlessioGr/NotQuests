@@ -145,7 +145,8 @@ public class NotQuests {
         logManager.lateInit(); //To initialize adventure
 
         getLogManager().info("NotQuests (Spigot) is starting...");
-
+        getLogManager().severe("NotQuests is running in limited functionality mode. The latest features have been disabled, because the server jar you are using is lacking the following features: Adventure Components, PlayerJumpEvent, modern Component support for GUI");
+        getLogManager().warn("Please be advised that quests created in the Spigot version of NotQuests (which you are using) will not be compatible with the Paper version, and vice-versa. Your server does not support all features.");
 
         //Create a new instance of the Util Manager which will be re-used everywhere
         utilManager = new UtilManager(this);
