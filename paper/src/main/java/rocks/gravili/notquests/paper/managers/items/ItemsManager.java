@@ -65,7 +65,7 @@ public class ItemsManager {
 
         for (final Category category : main.getDataManager().getCategories()) {
             loadItems(category);
-            main.getLogManager().info("Loading Items for category <highlight>" + category.getCategoryFullName());
+            main.getLogManager().info("  Loading Items for category <highlight>" + category.getCategoryFullName());
         }
     }
 

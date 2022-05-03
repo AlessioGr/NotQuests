@@ -271,7 +271,7 @@ public class NotQuests {
         } else {
             Bukkit.getPluginManager().callEvent(notQuestsFullyLoadedEvent);
         }
-        getLogManager().info("NotQuests initial Loading has completed!");
+        getLogManager().info("Initial loading has completed!");
 
     }
 

@@ -311,7 +311,7 @@ public class TagManager {
 
         for (final Category category : main.getDataManager().getCategories()) {
             loadTags(category);
-            main.getLogManager().info("Loading tags for category <highlight>" + category.getCategoryFullName());
+            main.getLogManager().info("  Loading tags for category <highlight>" + category.getCategoryFullName());
         }
     }
 

@@ -160,7 +160,7 @@ public class Category {
 
     private FileConfiguration loadConfig(File file, FileConfiguration fileConfiguration) {
         if (file != null && fileConfiguration == null) {
-            main.getLogManager().info("Loading " + file.getName() + " of category " + getCategoryName() + "...");
+            main.getLogManager().info("    Loading <highlight>" + file.getName() + "</highlight> of category <highlight>" + getCategoryName() + "</highlight>...");
             try {
                 return main.getDataManager().loadYAMLConfiguration(file);
             } catch (Exception e) {

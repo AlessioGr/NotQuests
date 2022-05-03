@@ -752,7 +752,7 @@ public class QuestManager {
 
             gui.show(player);*/
         } else {
-            main.getLogManager().info("NotQuests > All quest count: <highlight>" + quests.size() + "</highlight>");
+            main.getLogManager().info("All quest count: <highlight>" + quests.size() + "</highlight>");
 
             player.sendMessage(Component.empty());
             player.sendMessage(main.parse(
@@ -864,7 +864,7 @@ public class QuestManager {
 
             gui.show(player);*/
         } else {
-            main.getLogManager().info("NotQuests > All quest count: <highlight>" + quests.size() + "</highlight>");
+            main.getLogManager().info("All quest count: <highlight>" + quests.size() + "</highlight>");
 
             player.sendMessage(Component.empty());
             player.sendMessage(main.parse(
@@ -1195,8 +1195,7 @@ public class QuestManager {
 
                 if (!traitsToRemove.isEmpty()) {
                     buggedNPCsFound += 1;
-                    main.getLogManager().info("NotQuests > Bugged trait removed from npc with ID <highlight>" + npc.getId() + "</highlight> and name <highlight>" + npc.getName() + "</highlight>!");
-
+                    main.getLogManager().info("  Bugged trait removed from npc with ID <highlight>" + npc.getId() + "</highlight> and name <highlight>" + npc.getName() + "</highlight>!");
                 }
 
 
@@ -1206,7 +1205,7 @@ public class QuestManager {
                 for (final Quest attachedQuest : getAllQuestsAttachedToNPC(npc)) {
                     attachedQuestNames.add(attachedQuest.getQuestName());
                 }
-                main.getLogManager().info("NPC with the ID: <highlight>" + npc.getId() + "</highlight> is not bugged, because it has the following quests attached: <highlight>" + attachedQuestNames + "</highlight>");
+                main.getLogManager().info("  NPC with the ID: <highlight>" + npc.getId() + "</highlight> is not bugged, because it has the following quests attached: <highlight>" + attachedQuestNames + "</highlight>");
 
             }
             traitsToRemove.clear();
