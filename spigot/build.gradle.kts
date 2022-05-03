@@ -134,6 +134,7 @@ dependencies {
 
     implementation("org.bstats:bstats-bukkit:3.0.0")
     implementation("de.themoep:inventorygui:1.5-SNAPSHOT")
+    //implementation(files("libs/InventoryGui.jar"))
 
     compileOnly("org.spigotmc:spigot-api:1.18.2-R0.1-SNAPSHOT")
     compileOnly("net.citizensnpcs:citizens-main:2.0.29-SNAPSHOT")
@@ -219,6 +220,7 @@ tasks.withType<ShadowJar> {
 
         //include(dependency('io.papermc:paperlib')
         include(dependency("de.themoep:inventorygui:1.5-SNAPSHOT"))
+
         include(dependency("org.bstats:"))
         include(dependency("cloud.commandframework:"))
         include(dependency("io.leangen.geantyref:"))
