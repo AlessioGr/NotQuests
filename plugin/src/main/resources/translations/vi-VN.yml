@@ -155,26 +155,26 @@ placeholders:
     minute: '1 minute'
     minutes: '%MINUTES% minutes'
     hour: '1 hour'
-    hours: '%HOURS% hours'
+    hours: '%HOURS% giờ'
     day: '1 day'
-    days: '%DAYS% days'
+    days: '%DAYS% ngày'
     no-cooldown: ''
 gui:
   main:
     title: '                <main>Nhiệm Vụ'
     button:
       questpoints:
-        name: "<highlight>Quest Points"
+        name: "<highlight>Điểm nhiệm vụ"
         lore:
-          - "<main>Current quest points: <highlight2>%QUESTPOINTS%"
+          - "<main>Điểm nhiệm vụ hiện tại: <highlight2>%QUESTPOINTS%"
         x: 8
         y: 0
       takequest:
-        name: "<positive>Take a Quest"
+        name: "<positive>Thực hiện nhiệm vụ"
         lore:
-          - "<unimportant>Start a new Quest!"
+          - "<unimportant>Bắt đầu nhiệm vụ mới!"
           - ""
-          - "<veryUnimportant>Some Quests cannot be"
+          - "<veryUnimportant>Một số Nhiệm vụ không được"
           - "<veryUnimportant>started like this."
         x: 0
         y: 1
