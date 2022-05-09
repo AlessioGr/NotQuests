@@ -1,27 +1,27 @@
 ---
 chat:
-  wrong-command-usage: <error>Wrong command usage!
-  missing-permission: '<error>No permission! Required permission node: <highlight>%PERMISSION%'
-  too-many-arguments: <error>Too many arguments!
+  wrong-command-usage: <error>Yanlış komut kullanımı!
+  missing-permission: '<error>Yetkin yok! Gerekli olan yetki: <highlight>%PERMISSION%'
+  too-many-arguments: <error>Gereğinden fazla argüman!
   quest-successfully-accepted: |2
 
-    <CENTER><main>[Quest Accepted]
+    <CENTER><main>[Görev Başladı]
     <CENTER><highlight><BOLD>%QUESTNAME%
     <EMPTY>
-  quest-description: '<main>Quest description: <unimportant>%QUESTDESCRIPTION%'
-  quest-already-accepted: <error>Quest already accepted.
+  quest-description: '<main>Görev açıklaması: <unimportant>%QUESTDESCRIPTION%'
+  quest-already-accepted: <error>Bu göreve zaten başlamışsın.
   quest-failed: |2
 
-    <CENTER><negative>[Quest Failed]
+    <CENTER><negative>[Görev Başarısız]
     <CENTER><highlight><BOLD>%QUESTNAME%
     <EMPTY>
   quest-aborted: ''
   quest-completed-and-rewards-given: |2
 
-    <CENTER><positive>[Quest Completed]
+    <CENTER><positive>[Görev Tamamlandı]
     <CENTER><highlight><BOLD>%QUESTNAME%
     <EMPTY>
-  quest-completed-rewards-prefix: '    <highlight>Rewards:'
+  quest-completed-rewards-prefix: '    <highlight>Ödüller:'
   quest-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
   quest-completed-rewards-suffix: <EMPTY>
   quest-not-all-requirements-fulfilled: '<negative>You do not fulfill all the requirements this quest needs! Requirement still needed:'
