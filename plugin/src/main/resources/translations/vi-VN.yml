@@ -129,7 +129,7 @@ chat:
         base: '    <veryUnimportant>└─ <unimportant>Đạt cấp độ nghề đến<main>%AMOUNT%</main>với nghề <main>%JOBID%'
   conditions:
     boolean:
-      not-fulfilled: "<warn>Following needs to be %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."
+      not-fulfilled: "<warn>Cần phải được %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."
       variable-not-found: "<error>Error: variable <highlight>%VARIABLENAME%</highlight> not found. Report this to the Server owner."
       wrong-operator: "<error>Error: variable operator <highlight>%OPERATOR%/highlight> is invalid. Report this to the Server owner."
 objective-tracking:
@@ -175,7 +175,7 @@ gui:
           - "<unimportant>Bắt đầu nhiệm vụ mới!"
           - ""
           - "<veryUnimportant>Một số Nhiệm vụ không được"
-          - "<veryUnimportant>started like this."
+          - "<veryUnimportant>bắt đầu như thế này."
         x: 0
         y: 1
       abortquest:
