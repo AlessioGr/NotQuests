@@ -84,6 +84,7 @@ public class VariablesManager {
         registerVariable("RandomNumberBetweenRange", RandomNumberBetweenRangeVariable.class);
         registerVariable("PlaytimeTicks", PlayerPlaytimeTicksVariable.class);
         registerVariable("PlaytimeMinutes", PlayerPlaytimeMinutesVariable.class);
+        registerVariable("PlaytimeHours", PlayerPlaytimeHoursVariable.class);
 
         registerVariable("Sneaking", PlayerSneakingVariable.class);
         registerVariable("Health", PlayerHealthVariable.class);
