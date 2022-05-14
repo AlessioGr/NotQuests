@@ -20,6 +20,7 @@ package rocks.gravili.notquests.paper.managers;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.*;
 import rocks.gravili.notquests.paper.structs.triggers.ActiveTrigger;
@@ -530,7 +531,7 @@ public class QuestPlayerManager {
         return questPlayersAndUUIDs.get(uuid);
     }
 
-    public final QuestPlayer getOrCreateQuestPlayer(final UUID uuid) {
+    public final QuestPlayer getOrCreateQuestPlayer(@NonNull final UUID uuid) {
         QuestPlayer foundQuestPlayer = questPlayersAndUUIDs.get(uuid);
         if (foundQuestPlayer == null) {
             createQuestPlayer(uuid);
