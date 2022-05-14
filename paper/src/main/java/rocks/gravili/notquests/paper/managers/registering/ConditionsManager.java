@@ -26,6 +26,7 @@ import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.arguments.VariableSelector;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.actions.Action;
@@ -80,6 +81,9 @@ public class ConditionsManager {
             registerCondition("BetonQuestCheckCondition", BetonQuestCheckConditionCondition.class);
             registerCondition("BetonQuestCheckInlineCondition", BetonQuestCheckInlineConditionCondition.class);
         }*/
+
+
+        //Variable check commands
 
 
     }

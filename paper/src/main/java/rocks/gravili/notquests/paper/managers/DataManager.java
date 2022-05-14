@@ -1883,7 +1883,7 @@ public class DataManager {
      * This method will try to re-open the database connection statement, so data can be saved to the database
      * safely again.
      *
-     * @param newTask sets if the plugin should force an asynchronous thread to re-open the database connection. If
+     * newTask sets if the plugin should force an asynchronous thread to re-open the database connection. If
      *                set to false, it will do it in whatever thread this method is run in.
      */
     /*public void refreshDatabaseConnection(final boolean newTask) {

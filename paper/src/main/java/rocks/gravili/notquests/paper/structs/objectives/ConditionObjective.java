@@ -101,7 +101,7 @@ public class ConditionObjective extends Objective {
 
     @Override
     public void load(FileConfiguration configuration, String initialPath) {
-        String conditionName = configuration.getString(initialPath + ".specifics.condition");
+        String conditionName = configuration.getString(initialPath + ".specifics.condition", "");
         condition = main.getConditionsYMLManager().getCondition(conditionName);
         if(condition == null){
             main.getLogManager().warn("Error: Cannot load Condition <highlight>" + conditionName + "</highlight> of Condition Objective for Quest <highlight2>" + getQuest().getQuestName() + "</highlight>, because the condition does not exist.");

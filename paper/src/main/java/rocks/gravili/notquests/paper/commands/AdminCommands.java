@@ -83,7 +83,6 @@ public class AdminCommands {
         resultDate = new Date();
 
 
-
         manager.command(builder.literal("create")
                 .argument(StringArgument.<CommandSender>newBuilder("Quest Name").withSuggestionsProvider(
                         (context, lastString) -> {

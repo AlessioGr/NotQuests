@@ -583,6 +583,11 @@ public class CommandManager {
         return commandManager;
     }
 
+
+    public final Command.Builder<CommandSender> getAdminCommandBuilder() {
+        return adminCommandBuilder;
+    }
+
     public final Command.Builder<CommandSender> getAdminEditCommandBuilder() {
         return adminEditCommandBuilder;
     }
