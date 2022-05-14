@@ -33,7 +33,7 @@ public class PlayerPlaytimeMinutesVariable extends Variable<Integer> {
     @Override
     public Integer getValue(QuestPlayer questPlayer, Object... objects) {
         if (questPlayer != null) {
-            return questPlayer.getPlayer().getStatistic(Statistic.PLAY_ONE_MINUTE)*1200;
+            return questPlayer.getPlayer().getStatistic(Statistic.PLAY_ONE_MINUTE)/1200;
         } else {
             return null;
         }
@@ -42,7 +42,7 @@ public class PlayerPlaytimeMinutesVariable extends Variable<Integer> {
     @Override
     public boolean setValueInternally(Integer newValue, QuestPlayer questPlayer, Object... objects) {
         if (questPlayer != null) {
-            questPlayer.getPlayer().setStatistic(Statistic.PLAY_ONE_MINUTE, newValue/1200);
+            questPlayer.getPlayer().setStatistic(Statistic.PLAY_ONE_MINUTE, newValue*1200);
             return true;
         } else {
             return false;
