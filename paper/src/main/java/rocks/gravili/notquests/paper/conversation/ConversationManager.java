@@ -49,8 +49,8 @@ public class ConversationManager {
     final ArrayList<ConversationLine> linesForOneFile = new ArrayList<>();
 
 
-    HashMap<UUID, ArrayList<Component>> chatHistory;
-    HashMap<UUID, ArrayList<Component>> conversationChatHistory;
+    final HashMap<UUID, ArrayList<Component>> chatHistory;
+    final HashMap<UUID, ArrayList<Component>> conversationChatHistory;
 
     public ConversationManager(final NotQuests main) {
         this.main = main;
@@ -80,7 +80,7 @@ public class ConversationManager {
 
     public Conversation getConversationForNPCID(final int npcID) {
         for (final Conversation conversation : conversations) {
-            if (conversation.getNPCID() == npcID) {
+            if (conversation.getNPCIDs().contains(npcID)) {
                 return conversation;
             }
         }
@@ -96,7 +96,7 @@ public class ConversationManager {
     }
 
     public Conversation createTestConversation() {
-        final Conversation testConversation = new Conversation(main, null, null, "test", 0, main.getDataManager().getDefaultCategory());
+        final Conversation testConversation = new Conversation(main, null, null, "test", null, main.getDataManager().getDefaultCategory());
 
         final Speaker gustav = new Speaker("Gustav");
 
@@ -200,9 +200,20 @@ public class ConversationManager {
                 continue;
             }
 
-            final int npcID = config.getInt("npcID", -1);
+            //Old conversation npcID converter:
+            if(config.isInt("npcID")){
+                final int oldNPCID = config.getInt("npcID");
+                config.set("npcID", null);
+                config.set("npcIDs", List.of(oldNPCID));
+                try{
+                    config.save(conversationFile);
+                }catch (IOException ignored){
 
-            final Conversation conversation = new Conversation(main, conversationFile, config, conversationFile.getName().replace(".yml", ""), npcID, category);
+                }
+            }
+            final ArrayList<Integer> npcIDs = new ArrayList<>(config.getIntegerList("npcIDs"));
+
+            final Conversation conversation = new Conversation(main, conversationFile, config, conversationFile.getName().replace(".yml", ""), npcIDs, category);
 
 
             //First add all speakers

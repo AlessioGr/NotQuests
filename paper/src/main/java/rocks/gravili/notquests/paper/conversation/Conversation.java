@@ -23,6 +23,7 @@ import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.jetbrains.annotations.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.managers.integrations.citizens.QuestGiverNPCTrait;
@@ -30,6 +31,7 @@ import rocks.gravili.notquests.paper.managers.integrations.citizens.QuestGiverNP
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Conversation {
     private final NotQuests main;
@@ -37,7 +39,7 @@ public class Conversation {
     private final File configFile;
 
     private final String identifier;
-    private int npcID; //-1: no NPC
+    private CopyOnWriteArrayList<Integer> npcIDs; //-1: no NPC
     private final ArrayList<ConversationLine> start;
 
     final ArrayList<Speaker> speakers;
@@ -46,12 +48,17 @@ public class Conversation {
 
 
 
-    public Conversation(final NotQuests main, File configFile, YamlConfiguration config, final String identifier, final int npcID, final Category category) {
+    public Conversation(final NotQuests main, final File configFile, final YamlConfiguration config, final String identifier, @Nullable final ArrayList<Integer> npcIDsToAdd, final Category category) {
         this.main = main;
         this.configFile = configFile;
         this.config = config;
         this.identifier = identifier;
-        setNPC(npcID);
+        npcIDs = new CopyOnWriteArrayList<>();
+        if(npcIDsToAdd != null){
+            for(int npcID : npcIDsToAdd){
+                addNPC(npcID);
+            }
+        }
         start = new ArrayList<>();
         speakers = new ArrayList<>();
         this.category = category;
@@ -141,7 +148,12 @@ public class Conversation {
         return config;
     }
 
-    public void bindToCitizensNPC() {
+    public void bindToAllCitizensNPCs(){
+        for(int npcID : npcIDs){
+            bindToCitizensNPC(npcID);
+        }
+    }
+    public void bindToCitizensNPC(int npcID) {
         if (npcID < 0) {
             return;
         }
@@ -174,12 +186,12 @@ public class Conversation {
         return identifier;
     }
 
-    public final int getNPCID() {
-        return npcID;
+    public final CopyOnWriteArrayList<Integer> getNPCIDs() {
+        return npcIDs;
     }
 
-    public final boolean isCitizensNPC() {
-        return npcID > -1;
+    public final boolean hasCitizensNPC() {
+        return npcIDs.size() > 0 && npcIDs.get(0) != -1;
     }
 
     public void addStarterConversationLine(final ConversationLine conversationLine) {
@@ -192,14 +204,14 @@ public class Conversation {
     }
 
 
-    public void setNPC(int npcID) {
-        this.npcID = npcID;
-        bindToCitizensNPC();
+    public void addNPC(int npcID) {
+        this.npcIDs.add(npcID);
+        bindToCitizensNPC(npcID);
 
         if (configFile == null || config == null) {
             return;
         }
-        config.set("npcID", npcID);
+        config.set("npcIDs", npcIDs);
         try {
             config.save(configFile);
         } catch (IOException e) {

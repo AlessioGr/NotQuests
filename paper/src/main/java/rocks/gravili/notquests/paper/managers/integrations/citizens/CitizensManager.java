@@ -81,9 +81,9 @@ public class CitizensManager {
             main.getLogManager().info("Trying to bind Conversations to NPCs...");
             for (Conversation conversation : main.getConversationManager().getAllConversations()) {
                 if (!Bukkit.isPrimaryThread()) {
-                    Bukkit.getScheduler().runTask(main.getMain(), conversation::bindToCitizensNPC);
+                    Bukkit.getScheduler().runTask(main.getMain(), conversation::bindToAllCitizensNPCs);
                 } else {
-                    conversation.bindToCitizensNPC();
+                    conversation.bindToAllCitizensNPCs();
                 }
 
             }
@@ -237,7 +237,8 @@ public class CitizensManager {
         final Command.Builder<CommandSender> conversationEditBuilder = conversationBuilder.literal("edit")
                 .argument(ConversationSelector.of("conversation", main), ArgumentDescription.of("Name of the Conversation."));
         manager.command(conversationEditBuilder
-                .literal("npc")
+                .literal("npcs")
+                .literal("add")
                 .argument(IntegerArgument.<CommandSender>newBuilder("NPC").withSuggestionsProvider((context, lastString) -> {
                     ArrayList<String> completions = new ArrayList<>();
                     completions.add("-1");
@@ -254,10 +255,10 @@ public class CitizensManager {
                     final Conversation foundConversation = context.get("conversation");
                     final int npcID = context.get("NPC");
 
-                    foundConversation.setNPC(npcID);
+                    foundConversation.addNPC(npcID);
 
                     context.getSender().sendMessage(main.parse(
-                            "<main>NPC of conversation <highlight>" + foundConversation.getIdentifier() + "</highlight> has been set to <highlight2>"
+                            "<main>NPCs of conversation <highlight>" + foundConversation.getIdentifier() + "</highlight> has been added by <highlight2>"
                                     + npcID + "</highlight2>!"
                     ));
                 }));
