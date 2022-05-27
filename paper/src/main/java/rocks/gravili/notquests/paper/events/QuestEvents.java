@@ -707,7 +707,7 @@ public class QuestEvents implements Listener {
     }
 
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     private void onEntityBreed(EntityBreedEvent e) {
         if (!e.isCancelled()) {
             if (e.getBreeder() instanceof final Player player) {
@@ -740,7 +740,7 @@ public class QuestEvents implements Listener {
     }
 
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     private void onBlockBreak(BlockBreakEvent e) {
         if (!e.isCancelled()) {
             final Player player = e.getPlayer();
@@ -773,7 +773,7 @@ public class QuestEvents implements Listener {
 
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     private void onBlockPlace(BlockPlaceEvent e) {
         if (!e.isCancelled()) {
             final Player player = e.getPlayer();
