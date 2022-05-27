@@ -38,6 +38,7 @@ import rocks.gravili.notquests.paper.structs.triggers.ActiveTrigger;
 
 import java.time.Duration;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -54,7 +55,7 @@ public class QuestPlayer {
     private final UUID uuid;
 
 
-    private final ArrayList<ActiveQuest> activeQuests, activeQuestsCopy;
+    private final CopyOnWriteArrayList<ActiveQuest> activeQuests;
     private final ArrayList<ActiveQuest> questsToComplete;
     private final ArrayList<ActiveQuest> questsToRemove;
     private final ArrayList<CompletedQuest> completedQuests; //has to accept multiple entries of the same value
@@ -81,8 +82,7 @@ public class QuestPlayer {
     public QuestPlayer(NotQuests main, UUID uuid) {
         this.main = main;
         this.uuid = uuid;
-        activeQuests = new ArrayList<>();
-        activeQuestsCopy = new ArrayList<>();
+        activeQuests = new CopyOnWriteArrayList<>();
         questsToComplete = new ArrayList<>();
         questsToRemove = new ArrayList<>();
         completedQuests = new ArrayList<>();
@@ -517,8 +517,6 @@ public class QuestPlayer {
 
 
         activeQuests.add(activeQuest);
-        activeQuestsCopy.add(activeQuest);
-
 
         activeQuest.updateObjectivesUnlocked(sendUpdateObjectivesUnlocked, triggerAcceptQuestTrigger);
 
@@ -539,7 +537,7 @@ public class QuestPlayer {
         return uuid;
     }
 
-    public final ArrayList<ActiveQuest> getActiveQuests() {
+    public final CopyOnWriteArrayList<ActiveQuest> getActiveQuests() {
         return activeQuests;
     }
 
@@ -809,7 +807,6 @@ public class QuestPlayer {
 
 
         activeQuests.removeAll(questsToComplete);
-        activeQuestsCopy.removeAll(questsToComplete);
 
         questsToComplete.clear();
     }
@@ -848,10 +845,6 @@ public class QuestPlayer {
         questsToComplete.clear();
 
 
-    }
-
-    public final ArrayList<ActiveQuest> getActiveQuestsCopy() {
-        return activeQuestsCopy;
     }
 
     public final boolean hasAcceptedQuest(final Quest quest) {
