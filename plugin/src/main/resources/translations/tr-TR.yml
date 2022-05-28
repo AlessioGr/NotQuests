@@ -27,10 +27,10 @@ chat:
   quest-not-all-requirements-fulfilled: '<negative>You do not fulfill all the requirements this quest needs! Requirement still needed:'
   action-not-all-conditions-fulfilled: '<negative>You do not fulfill all the conditions this action needs! Conditions still needed:'
   missing-quest-description: <unimportant>This quest has no quest description.
-  objectives-label-after-quest-accepting: '<highlight>Objectives:'
+  objectives-label-after-quest-accepting: '<highlight>Hedefler:'
   questpoints:
-    query: <main>You currently have <highlight>%QUESTPOINTS%</highlight> quest points.
-    none: <error>Seems like you don't have any quest points!
+    query: <main>Şu anda <highlight>%QUESTPOINTS%</highlight> görev puanına sahipsin.
+    none: <error>Sanırım hiç görev puanın yok!
     notify-when-changed:
       set: '<main>Your quest points have been set to <highlight>%NEWQUESTPOINTSAMOUNT%</highlight>.'
       add: '<highlight>+%QUESTPOINTSTOADD% <success>quest points!'
@@ -68,8 +68,8 @@ chat:
       <CENTER><success>[Objective Completed]
       <CENTER><highlight><bold>%OBJECTIVENAME%</bold> <RESET><main>(%QUESTNAME%)
       <EMPTY>
-    successfully-completed-rewards-prefix: '    <highlight>Rewards:'
-    successfully-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
+    successfully-completed-rewards-prefix: '    <highlight>Ödüller:'
+    successfully-completed-rewards-rewardformat: '    <highlight><unimportant>%reward%'
     successfully-completed-rewards-suffix: <EMPTY>
     taskDescription:
       breakBlocks:
