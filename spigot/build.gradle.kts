@@ -83,6 +83,7 @@ repositories {
     maven("https://mvn.lumine.io/repository/maven-public/"){
         content {
             includeGroup("io.lumine.xikage")
+            includeGroup("io.lumine")
         }
     }
 
@@ -122,6 +123,13 @@ repositories {
         }
     }
 
+    maven("https://repo.glaremasters.me/repository/towny/"){
+        content{
+            includeGroup("com.palmergames.bukkit.towny")
+        }
+    }
+
+
     //mavenLocal()
 
 }
@@ -136,13 +144,13 @@ dependencies {
     implementation("de.themoep:inventorygui:1.5-SNAPSHOT")
     //implementation(files("libs/InventoryGui.jar"))
 
-    compileOnly("org.spigotmc:spigot-api:1.18.2-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.19-R0.1-SNAPSHOT")
     compileOnly("net.citizensnpcs:citizens-main:2.0.29-SNAPSHOT")
     compileOnly("me.clip:placeholderapi:2.11.1")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7")
 
 
-    compileOnly("io.lumine.xikage:MythicMobs:4.12.0")
+    compileOnly("io.lumine:Mythic-Dist:5.0.2-SNAPSHOT")
     compileOnly(files("libs/EliteMobs.jar"))
     compileOnly(files("libs/UClans-API.jar"))
     compileOnly(files("libs/ProjectKorra-1.9.2.jar"))
@@ -158,13 +166,13 @@ dependencies {
     compileOnly("net.luckperms:api:5.4")
 
     //compileOnly "com.github.NEZNAMY:TAB:2.9.2"
-    compileOnly("com.github.TownyAdvanced:Towny:0.97.5.0")
+    compileOnly("com.palmergames.bukkit.towny:towny:0.98.0.3")
 
     compileOnly("com.github.Zrips:Jobs:v4.17.2")
 
 
     //Shaded
-    implementation("net.kyori:adventure-text-minimessage:4.10.1") {
+    implementation("net.kyori:adventure-text-minimessage:4.11.0") {
         exclude(group = "net.kyori", module = "adventure-api")
         exclude(group = "net.kyori", module = "adventure-bom")
     }
@@ -181,10 +189,10 @@ dependencies {
 
     implementation("commons-io:commons-io:2.11.0")
     //implementation 'org.apache.commons:commons-text:1.9'
-    //implementation 'org.apache.commons:commons-lang3:3.12.0'
-    //implementation 'org.apache.commons:commons-lang:3.1'
+    implementation("org.apache.commons:commons-lang3:3.12.0")
+    //implementation("org.apache.commons:commons-lang:2.6")
 
-    implementation("io.netty:netty-all:4.1.68.Final")
+    implementation("io.netty:netty-all:4.1.74.Final")
 
     compileOnly("com.mojang:brigadier:1.0.18")
 }
@@ -208,7 +216,7 @@ tasks.withType<ShadowJar> {
 
     relocate("org.apache.commons.io", "$shadowPath.commons.io")
     //relocate("org.apache.commons.text", path.concat('.commons.text'))
-    //relocate("org.apache.commons.lang3", path.concat('.commons.lang'))
+    relocate("org.apache.commons.lang3", "$shadowPath.commons.lang")
 
     relocate("io.github.retrooper.packetevents", "$shadowPath.packetevents.bukkit")
     relocate("com.github.retrooper.packetevents", "$shadowPath.packetevents.api")

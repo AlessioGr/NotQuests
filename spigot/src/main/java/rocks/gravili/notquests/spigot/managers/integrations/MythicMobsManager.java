@@ -18,28 +18,38 @@
 
 package rocks.gravili.notquests.spigot.managers.integrations;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.api.exceptions.InvalidMobTypeException;
-import io.lumine.xikage.mythicmobs.mobs.MythicMob;
+
+import io.lumine.mythic.api.MythicPlugin;
+import io.lumine.mythic.api.MythicProvider;
+import io.lumine.mythic.api.mobs.MythicMob;
+import io.lumine.mythic.bukkit.BukkitAdapter;
 import org.bukkit.Location;
 import rocks.gravili.notquests.spigot.NotQuests;
 
+import java.util.Collection;
+import java.util.Optional;
+
 public class MythicMobsManager {
     private final NotQuests main;
-    private MythicMobs mythicMobs;
+    private final MythicPlugin mythicPlugin;
 
     public MythicMobsManager(final NotQuests main) {
         this.main = main;
-        this.mythicMobs = MythicMobs.inst();
+        this.mythicPlugin = MythicProvider.get();
+
     }
 
-    public MythicMobs getMythicMobs() {
-        return mythicMobs;
+    public final MythicPlugin getMythicPlugin() {
+        return mythicPlugin;
+    }
+
+    public final Collection<String> getMobNames() {
+        return mythicPlugin.getMobManager().getMobNames();
     }
 
     public void spawnMob(String mobToSpawnType, Location location, int amount) {
-        MythicMob foundMythicMob = mythicMobs.getMobManager().getMythicMob(mobToSpawnType);
-        if (foundMythicMob == null) {
+        final Optional<MythicMob> foundMythicMob = mythicPlugin.getMobManager().getMythicMob(mobToSpawnType);
+        if (foundMythicMob.isEmpty()) {
             main.getLogManager().warn("Tried to spawn mythic mob, but the mythic mob " + mobToSpawnType + " was not found.");
             return;
         }
@@ -53,14 +63,14 @@ public class MythicMobsManager {
         }
 
 
-        try {
-            for (int i = 0; i < amount; i++) {
-                mythicMobs.getAPIHelper().spawnMythicMob(foundMythicMob, location, 1);
-            }
-        } catch (InvalidMobTypeException e) {
-            main.getLogManager().warn("Tried to spawn mythic mob, but the mythic mob " + mobToSpawnType + " is invalid.");
+        for (int i = 0; i < amount; i++) {
+            foundMythicMob.get().spawn(BukkitAdapter.adapt(location), 1);
         }
 
 
+    }
+
+    public final boolean isMythicMob(final String mobToSpawnType) {
+        return mythicPlugin.getMobManager().getMythicMob(mobToSpawnType).isPresent();
     }
 }

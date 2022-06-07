@@ -21,7 +21,6 @@ package rocks.gravili.notquests.spigot.managers;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -1308,7 +1307,10 @@ public class DataManager {
      * @throws IllegalArgumentException Thrown if file is null
      */
     public final YamlConfiguration loadYAMLConfiguration(File file) throws IOException, InvalidConfigurationException {
-        Validate.notNull(file, "File cannot be null");
+        if(file == null){
+            main.getLogManager().severe("File cannot be null");
+            return null;
+        }
         YamlConfiguration config = new YamlConfiguration();
         config.load(file);
         return config;
@@ -1353,7 +1355,7 @@ public class DataManager {
         }
         //Add extra Mythic Mobs completions, if enabled
         if (main.getIntegrationsManager().isMythicMobsEnabled()) {
-            standardEntityTypeCompletions.addAll(main.getIntegrationsManager().getMythicMobsManager().getMythicMobs().getMobManager().getMobNames());
+            standardEntityTypeCompletions.addAll(main.getIntegrationsManager().getMythicMobsManager().getMythicPlugin().getMobManager().getMobNames());
         }
 
         //Fill up standardEliteMobNamesCompletions if the EliteMobs integration is enabled

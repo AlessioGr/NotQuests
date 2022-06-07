@@ -18,9 +18,9 @@
 
 package rocks.gravili.notquests.spigot.managers.packets.ownpacketstuff;
 
-import io.lumine.xikage.mythicmobs.utils.scoreboard.Scoreboard;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.Scoreboard;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
