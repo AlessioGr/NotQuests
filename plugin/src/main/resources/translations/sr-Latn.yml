@@ -1,8 +1,8 @@
 ---
 chat:
-  wrong-command-usage: <error>Wrong command usage!
-  missing-permission: '<error>No permission! Required permission node: <highlight>%PERMISSION%'
-  too-many-arguments: <error>Too many arguments!
+  wrong-command-usage: <error>Pogrešno korištenje komande!
+  missing-permission: '<error>Nedovoljno dozvola! Potrebna dotvola: <highlight>%PERMISSION%'
+  too-many-arguments: <error>Previše argumenata!
   quest-successfully-accepted: |2
 
     <CENTER><main>[Quest Accepted]
@@ -21,7 +21,7 @@ chat:
     <CENTER><positive>[Quest Completed]
     <CENTER><highlight><BOLD>%QUESTNAME%
     <EMPTY>
-  quest-completed-rewards-prefix: '    <highlight>Rewards:'
+  quest-completed-rewards-prefix: '    <highlight>Nagrade:'
   quest-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
   quest-completed-rewards-suffix: <EMPTY>
   quest-not-all-requirements-fulfilled: '<negative>You do not fulfill all the requirements this quest needs! Requirement still needed:'
@@ -30,10 +30,10 @@ chat:
   objectives-label-after-quest-accepting: '<highlight>Objectives:'
   questpoints:
     query: <main>You currently have <highlight>%QUESTPOINTS%</highlight> quest points.
-    none: <error>Seems like you don't have any quest points!
+    none: <error>Čini se kako nemaš niti jedan istražni poen!
     notify-when-changed:
-      set: '<main>Your quest points have been set to <highlight>%NEWQUESTPOINTSAMOUNT%</highlight>.'
-      add: '<highlight>+%QUESTPOINTSTOADD% <success>quest points!'
+      set: '<main>Tvoji istražni poeni stavljeni su na <highlight>%NEWQUESTPOINTSAMOUNT%</highlight>.'
+      add: '<highlight>+%QUESTPOINTSTOADD% <success>istražnih poena!'
       remove: '<highlight>-%QUESTPOINTSTOREMOVE% <negative>quest points!'
   no-quests-accepted: <error>Seems like you don't have any active quests!
   quest-does-not-exist: <error>Quest <highlight>%QUESTNAME%</highlight> does not exist!
@@ -56,8 +56,8 @@ chat:
     choose-answer-prefix: |-
       <EMPTY>
       <main>Choose your answer:</main>
-    choose-answer-answer-hover-text: '<highlight>Click to answer'
-    ended-previous-conversation: '<main>You have ended your previous conversation!'
+    choose-answer-answer-hover-text: '<highlight>Klikni da odgovoriš'
+    ended-previous-conversation: '<main>Završio si svoju prijašnju konverzaciju!'
   objectives:
     counter: '<highlight>%OBJECTIVEID%.</highlight> <main>%OBJECTIVENAME%:'
     hidden: <highlight>%OBJECTIVEID%.</highlight> <unimportant><BOLD>[HIDDEN]
@@ -68,7 +68,7 @@ chat:
       <CENTER><success>[Objective Completed]
       <CENTER><highlight><bold>%OBJECTIVENAME%</bold> <RESET><main>(%QUESTNAME%)
       <EMPTY>
-    successfully-completed-rewards-prefix: '    <highlight>Rewards:'
+    successfully-completed-rewards-prefix: '    <highlight>Nagrade:'
     successfully-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
     successfully-completed-rewards-suffix: <EMPTY>
     taskDescription:
@@ -84,10 +84,10 @@ chat:
         base: '    <veryUnimportant>└─ <unimportant>Craft Items: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
         base: '    <veryUnimportant>└─ <unimportant>Deliver Items: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
-        deliver-to-npc: '      <GRAY>Deliver it to <WHITE>%NPCNAME%'
+        deliver-to-npc: '      <GRAY>Dostaviti <WHITE>%NPCNAME%'
         deliver-to-npc-not-available: '      <GRAY>The delivery NPC is currently not available!'
-        deliver-to-npc-citizens-not-found: '    <RED>Error: Citizens plugin not installed. Contact an admin.'
-        deliver-to-armorstand: '    <GRAY>Deliver it to <WHITE>%ARMORSTANDNAME%'
+        deliver-to-npc-citizens-not-found: '    <RED>Pogreška: Dodatak "Citizens" nije instaliran. Kontaktirajte administratora.'
+        deliver-to-armorstand: '    <GRAY>Dostaviti <WHITE>%ARMORSTANDNAME%'
         deliver-to-armorstand-not-available: '    <GRAY>The target Armor Stand is currently not available!'
       escortNPC:
         base: '    <veryUnimportant>└─ <unimportant>Escort <main>%NPCNAME%</main> to <main>%DESTINATIONNPCNAME%'
@@ -100,21 +100,21 @@ chat:
       reachLocation:
         base: '    <veryUnimportant>└─ <unimportant>Reach Location: <main>%LOCATIONNAME%'
       talkToNPC:
-        base: '    <veryUnimportant>└─ <unimportant>Talk to <main>%NAME%'
+        base: '    <veryUnimportant>└─ <unimportant>Pričaj s <main>%NAME%'
       triggerCommand:
-        base: '    <veryUnimportant>└─ <unimportant>Goal: <main>%TRIGGERNAME%'
+        base: '    <veryUnimportant>└─ <unimportant>Cilj: <main>%TRIGGERNAME%'
       killEliteMobs:
         base: '    <veryUnimportant>└─ <unimportant>Kill Elite Mob: <main>%ELITEMOBNAME%'
         any: '    <veryUnimportant>└─ <unimportant>Kill any Elite Mob!'
       runCommand:
-        base: '    <veryUnimportant>└─ <unimportant>Run command: <main>%COMMANDTORUN%'
+        base: '    <veryUnimportant>└─ <unimportant>Pokreni komandu: <main>%COMMANDTORUN%'
       interact:
-        base: '    <veryUnimportant>└─ <unimportant>%INTERACTTYPE% Location: <main>%COORDINATES% <main>in world %WORLDNAME%'
+        base: '    <veryUnimportant>└─ <unimportant>%INTERACTTYPE% Lokacija: <main>%COORDINATES% <main>u svijetu%WORLDNAME%'
         taskDescriptionProvided: '    <veryUnimportant>└─ <unimportant>%TASKDESCRIPTION%'
       jump:
-        base: '    <veryUnimportant>└─ <unimportant>Jump <main>%AMOUNTOFJUMPS%</main> times'
+        base: '    <veryUnimportant>└─ <unimportant>Skoči<main>%AMOUNTOFJUMPS%</main> puta'
       sneak:
-        base: '    <veryUnimportant>└─ <unimportant>Sneak <main>%AMOUNTOFSNEAKS%</main> times'
+        base: '    <veryUnimportant>└─ <unimportant>Čučni<main>%AMOUNTOFSNEAKS%</main> puta'
       smelt:
         base: '    <veryUnimportant>└─ <unimportant>Smelt Items: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       openBuriedTreasure:
@@ -159,11 +159,11 @@ placeholders:
   questcooldownleftformatted:
     prefix: ''
     minute: '1 minute'
-    minutes: '%MINUTES% minutes'
-    hour: '1 hour'
-    hours: '%HOURS% hours'
-    day: '1 day'
-    days: '%DAYS% days'
+    minutes: '%MINUTES% minuta'
+    hour: '1 sat'
+    hours: '%HOURS% sati'
+    day: '1 dan'
+    days: '%DAYS% dana'
     no-cooldown: ''
 gui:
   main:
