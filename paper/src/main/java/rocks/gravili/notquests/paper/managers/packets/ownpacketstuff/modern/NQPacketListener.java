@@ -52,13 +52,14 @@ public class NQPacketListener extends ChannelDuplexHandler {
         }
         if (msg instanceof ClientboundSystemChatPacket clientboundSystemChatPacket) {
 
-            CraftPlayer craftPlayer = (CraftPlayer)player;
+            /*CraftPlayer craftPlayer = (CraftPlayer)player;
             RegistryAccess registryAccess = craftPlayer.getHandle().getLevel().registryAccess();
             Registry<ChatType> chatTypeRegistry = registryAccess.registryOrThrow(Registry.CHAT_TYPE_REGISTRY);
-            ChatType chatType = clientboundSystemChatPacket.resolveType(chatTypeRegistry);
+            ChatType chatType = clientboundSystemChatPacket.resolveType(chatTypeRegistry);*/
 
-            main.getLogManager().severe("EE" + clientboundSystemChatPacket.typeId());
+            //main.getLogManager().severe("EE" + clientboundSystemChatPacket.typeId());
 
+            //Seems like action bars arent shown here anyways??
 
             try {
 
