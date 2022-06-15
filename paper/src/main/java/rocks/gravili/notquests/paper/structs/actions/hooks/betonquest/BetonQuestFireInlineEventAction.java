@@ -183,7 +183,8 @@ public class BetonQuestFireInlineEventAction extends Action {
                 }
             }
 
-            Instruction instructionObject = new Instruction(Config.getDefaultPackage(), null, instruction);
+
+            Instruction instructionObject = new Instruction(Config.getPackages().values().stream().findFirst().get(), null, instruction); //TODO: 1.19 check
 
             try{
                 cachedEvent = questEventFactory.parseEventInstruction(instructionObject);

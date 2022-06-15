@@ -143,7 +143,7 @@ repositories {
 
 dependencies {
     //implementation project(':common')
-    paperDevBundle("1.18.2-R0.1-SNAPSHOT")
+    paperDevBundle("1.19-R0.1-SNAPSHOT")
     //compileOnly("io.papermc.paper:paper-api:1.18.1-R0.1-SNAPSHOT!!")
 
     implementation("org.bstats:bstats-bukkit:3.0.0")
@@ -179,15 +179,15 @@ dependencies {
     //Shaded
 
 
-    implementation("net.kyori:adventure-text-serializer-bungeecord:4.1.0") {
+    /*implementation("net.kyori:adventure-text-serializer-bungeecord:4.1.0")
         exclude(group = "net.kyori", module = "adventure-api")
-    }
+    }*/
 
     //CloudCommands
-    implementation("cloud.commandframework:cloud-paper:1.6.2") {
+    implementation("cloud.commandframework:cloud-paper:1.7.0-SNAPSHOT") {
         exclude(group = "net.kyori", module = "adventure-api")
     }
-    implementation("cloud.commandframework:cloud-minecraft-extras:1.6.2") {
+    implementation("cloud.commandframework:cloud-minecraft-extras:1.7.0-SNAPSHOT") {
         exclude(group = "net.kyori", module = "adventure-api")
     }
     //Else it errors:
@@ -222,8 +222,8 @@ dependencies {
     implementation("com.github.Redempt:Crunch:1.1.2")
 
 
-    implementation("com.fasterxml.jackson.core:jackson-core:2.13.2")
-    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.13.2")
+    implementation("com.fasterxml.jackson.core:jackson-core:2.13.3")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.13.3")
     implementation("org.apache.httpcomponents:httpclient:4.5.13")
 
     implementation("com.zaxxer:HikariCP:5.0.1")
@@ -259,7 +259,7 @@ tasks.withType<ShadowJar> {
     //Packet Stuff
     //relocate('net.kyori.adventure.text.serializer.bungeecord', path.concat('.kyori.bungeecord'))
     //relocate('net.kyori.adventure.platform.bukkit', path.concat('.kyori.platform-bukkit'))
-    relocate("net.kyori.adventure.text.serializer.bungeecord", "$shadowPath.kyori.bungeecord")
+    //relocate("net.kyori.adventure.text.serializer.bungeecord", "$shadowPath.kyori.bungeecord")
 
 
     relocate("org.incendo.interfaces", "$shadowPath.interfaces")
@@ -291,7 +291,7 @@ tasks.withType<ShadowJar> {
         include(dependency("org.incendo.interfaces:"))
 
         //include(dependency('net.kyori:adventure-platform-bukkit:')
-        include(dependency("net.kyori:adventure-text-serializer-bungeecord:"))
+        //include(dependency("net.kyori:adventure-text-serializer-bungeecord:"))
 
         include(dependency("com.github.Redempt:Crunch:"))
 
@@ -348,7 +348,7 @@ tasks {
         // Configure the Minecraft version for our task.
         // This is the only required configuration besides applying the plugin.
         // Your plugin's jar (or shadowJar if present) will be used automatically.
-        minecraftVersion("1.18.2")
+        minecraftVersion("1.19")
     }
 }
 

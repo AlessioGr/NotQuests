@@ -23,7 +23,6 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.entity.Player;
@@ -94,7 +93,7 @@ public class ReflectionNQPacketListener extends ChannelDuplexHandler {
             if (component == null) { //Spigot shit
 
                 if (spigotComponent != null) {
-                    component = BungeeComponentSerializer.get().deserialize(spigotComponent);
+                    component = null; //TODO: Eh whatever. 1.19 I removed the bungeecord serializer thingy
 
                 } else {//vanilla shit
                     try {//paper only
