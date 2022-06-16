@@ -121,7 +121,7 @@ public class ActiveQuest {
         notifyActiveObjectiveCompleted(activeObjective, silent, -1, armorStandUUID);
     }
     public void notifyActiveObjectiveCompleted(final ActiveObjective activeObjective, final boolean silent, final int NPCID, final UUID armorStandUUID) {
-        if (!main.getDataManager().isCurrentlyLoading()) {
+        if (!main.getDataManager().isCurrentlyLoading() && !questPlayer.isCurrentlyLoading()) {
             ObjectiveCompleteEvent objectiveCompleteEvent = new ObjectiveCompleteEvent(getQuestPlayer(), activeObjective, this);
             if (Bukkit.isPrimaryThread()) {
                 Bukkit.getScheduler().runTaskAsynchronously(main.getMain(), () -> {

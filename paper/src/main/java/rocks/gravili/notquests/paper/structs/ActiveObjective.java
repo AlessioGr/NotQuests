@@ -257,7 +257,7 @@ public class ActiveObjective {
         this.hasBeenCompleted = hasBeenCompleted;
         if(hasBeenCompleted){
             getQuestPlayer().disableTrackingObjective(this);
-            objective.onObjectiveCompleteOrLock(this, main.getDataManager().isCurrentlyLoading(), true);
+            objective.onObjectiveCompleteOrLock(this, main.getDataManager().isCurrentlyLoading() || getQuestPlayer().isCurrentlyLoading(), true);
         }
     }
 }
