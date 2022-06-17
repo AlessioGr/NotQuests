@@ -170,23 +170,23 @@ public class TagManager {
 
                 if (tagValue instanceof final Boolean booleanTagValue) {
 
-                    statement.executeUpdate("INSERT INTO Tags (PlayerUUID, TagIdentifier, TagValue, TagType) VALUES ('" + uuidString + "', '" + tagIdentifier + "', '" + booleanTagValue.toString() + "', BOOLEAN);");
+                    statement.executeUpdate("INSERT INTO Tags (PlayerUUID, TagIdentifier, TagValue, TagType) VALUES ('" + uuidString + "', '" + tagIdentifier + "', '" + booleanTagValue.toString() + "', 'BOOLEAN');");
 
                     main.getLogManager().info("Saved boolean tag!");
                 } else if (tagValue instanceof final Integer integerTagValue) {
-                    statement.executeUpdate("INSERT INTO Tags (PlayerUUID, TagIdentifier, TagValue, TagType) VALUES ('" + uuidString + "', '" + tagIdentifier + "', '" + integerTagValue + "', INTEGER);");
+                    statement.executeUpdate("INSERT INTO Tags (PlayerUUID, TagIdentifier, TagValue, TagType) VALUES ('" + uuidString + "', '" + tagIdentifier + "', '" + integerTagValue + "', 'INTEGER');");
 
                     main.getLogManager().info("Saved integer tag!");
                 } else if (tagValue instanceof final Float floatValue) {
-                    statement.executeUpdate("INSERT INTO Tags (PlayerUUID, TagIdentifier, TagValue, TagType) VALUES ('" + uuidString + "', '" + tagIdentifier + "', '" + floatValue + "', FLOAT);");
+                    statement.executeUpdate("INSERT INTO Tags (PlayerUUID, TagIdentifier, TagValue, TagType) VALUES ('" + uuidString + "', '" + tagIdentifier + "', '" + floatValue + "', 'FLOAT');");
 
                     main.getLogManager().info("Saved float tag!");
                 } else if (tagValue instanceof final Double doubleValue) {
-                    statement.executeUpdate("INSERT INTO Tags (PlayerUUID, TagIdentifier, TagValue, TagType) VALUES ('" + uuidString + "', '" + tagIdentifier + "', '" + doubleValue + "', DOUBLE);");
+                    statement.executeUpdate("INSERT INTO Tags (PlayerUUID, TagIdentifier, TagValue, TagType) VALUES ('" + uuidString + "', '" + tagIdentifier + "', '" + doubleValue + "', 'DOUBLE');");
 
                     main.getLogManager().info("Saved double tag!");
                 } else if (tagValue instanceof final String stringTagValue) {
-                    statement.executeUpdate("INSERT INTO Tags (PlayerUUID, TagIdentifier, TagValue, TagType) VALUES ('" + uuidString + "', '" + tagIdentifier + "', '" + stringTagValue + "', DOUBLE);");
+                    statement.executeUpdate("INSERT INTO Tags (PlayerUUID, TagIdentifier, TagValue, TagType) VALUES ('" + uuidString + "', '" + tagIdentifier + "', '" + stringTagValue + "', 'STRING');");
 
                     main.getLogManager().info("Saved string tag!");
                 }
