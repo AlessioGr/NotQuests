@@ -109,18 +109,19 @@ public class TagManager {
                 final String tagType = result.getString("TagType");
 
 
-                main.getLogManager().info("Loaded <highlight>" + tagIdentifier + "</highlight> " + tagType + " tag for player <highlight2>" + player.getName() + "</highlight2>.");
                 if (tagValue == null) {
                     questPlayer.setTagValue(tagIdentifier, null);
                     continue;
                 }
+                main.getLogManager().info("Loaded <highlight>" + tagIdentifier + "</highlight> " + tagType + " tag for player <highlight2>" + player.getName() + "</highlight2> with the value <highlight2>" + tagValue + "</highlight2>.");
+
 
                 switch (tagType) {
-                    case "INTEGER" -> questPlayer.setTagValue(tagIdentifier, Integer.parseInt(tagIdentifier));
-                    case "FLOAT" -> questPlayer.setTagValue(tagIdentifier, Float.parseFloat(tagIdentifier));
-                    case "BOOLEAN" -> questPlayer.setTagValue(tagIdentifier, Boolean.parseBoolean(tagIdentifier));
-                    case "STRING" -> questPlayer.setTagValue(tagIdentifier, tagIdentifier);
-                    case "DOUBLE" -> questPlayer.setTagValue(tagIdentifier, Double.parseDouble(tagIdentifier));
+                    case "INTEGER" -> questPlayer.setTagValue(tagIdentifier, Integer.parseInt(tagValue));
+                    case "FLOAT" -> questPlayer.setTagValue(tagIdentifier, Float.parseFloat(tagValue));
+                    case "BOOLEAN" -> questPlayer.setTagValue(tagIdentifier, Boolean.parseBoolean(tagValue));
+                    case "STRING" -> questPlayer.setTagValue(tagIdentifier, tagValue);
+                    case "DOUBLE" -> questPlayer.setTagValue(tagIdentifier, Double.parseDouble(tagValue));
                 }
 
             }
