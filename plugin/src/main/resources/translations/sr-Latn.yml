@@ -1,79 +1,79 @@
 ---
 chat:
-  wrong-command-usage: <error>Wrong command usage!
-  missing-permission: '<error>No permission! Required permission node: <highlight>%PERMISSION%'
-  too-many-arguments: <error>Too many arguments!
+  wrong-command-usage: <error>Pogrešna uporaba komande!
+  missing-permission: '<error>Nedovoljno dozvola! Potrebna dotvola: <highlight>%PERMISSION%'
+  too-many-arguments: <error>Previše argumenata!
   quest-successfully-accepted: |2
 
-    <CENTER><main>[Quest Accepted]
+    <CENTER><main>[Istraga prihvaćena]
     <CENTER><highlight><BOLD>%QUESTNAME%
     <EMPTY>
-  quest-description: '<main>Quest description: <unimportant>%QUESTDESCRIPTION%'
-  quest-already-accepted: <error>Quest already accepted.
+  quest-description: '<main>Opis istrage: <unimportant>%QUESTDESCRIPTION%'
+  quest-already-accepted: <error>Istraga je već prihvaćena.
   quest-failed: |2
 
-    <CENTER><negative>[Quest Failed]
+    <CENTER><negative>[Istraga neuspjela]
     <CENTER><highlight><BOLD>%QUESTNAME%
     <EMPTY>
   quest-aborted: ''
   quest-completed-and-rewards-given: |2
 
-    <CENTER><positive>[Quest Completed]
+    <CENTER><positive>[Istraga dovršena]
     <CENTER><highlight><BOLD>%QUESTNAME%
     <EMPTY>
-  quest-completed-rewards-prefix: '    <highlight>Rewards:'
+  quest-completed-rewards-prefix: '    <highlight>Nagrade:'
   quest-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
   quest-completed-rewards-suffix: <EMPTY>
-  quest-not-all-requirements-fulfilled: '<negative>You do not fulfill all the requirements this quest needs! Requirement still needed:'
-  action-not-all-conditions-fulfilled: '<negative>You do not fulfill all the conditions this action needs! Conditions still needed:'
-  missing-quest-description: <unimportant>This quest has no quest description.
-  objectives-label-after-quest-accepting: '<highlight>Objectives:'
+  quest-not-all-requirements-fulfilled: '<negative>Ne ispunjavaš uvjete za ovu istragu! Potrebne uvjeti:'
+  action-not-all-conditions-fulfilled: '<negative>Ne ispunjavaš sve uvjete koja ova radnja zahtjeva. [ADDING LATER]:'
+  missing-quest-description: <unimportant>Ova istraga nema opisa.
+  objectives-label-after-quest-accepting: '<highlight>Ciljevi:'
   questpoints:
-    query: <main>You currently have <highlight>%QUESTPOINTS%</highlight> quest points.
-    none: <error>Seems like you don't have any quest points!
+    query: <main>Trenutno imaš <highlight>%QUESTPOINTS%</highlight> istražnih poena.
+    none: <error>Čini se kako nemaš niti jedan istražni poen!
     notify-when-changed:
-      set: '<main>Your quest points have been set to <highlight>%NEWQUESTPOINTSAMOUNT%</highlight>.'
-      add: '<highlight>+%QUESTPOINTSTOADD% <success>quest points!'
-      remove: '<highlight>-%QUESTPOINTSTOREMOVE% <negative>quest points!'
-  no-quests-accepted: <error>Seems like you don't have any active quests!
-  quest-does-not-exist: <error>Quest <highlight>%QUESTNAME%</highlight> does not exist!
-  quest-not-found-or-does-not-exist: <error>Quest <highlight>%QUESTNAME%</highlight> not found or not active!
-  active-quests-label: '<highlight>Active quests:'
-  take-disabled: <error>Accepting or previewing the quest <highlight>%QUESTNAME%</highlight> is disabled.
-  quest-not-active-error: '<error>Error: <highlight>%QUESTNAME%</highlight> is not an active Quest!'
-  force-add-active-quest-accepted: '<success>Successfully accepted the quest (Forced).'
-  add-active-quest-player-object-not-found: '<warn>Error: Player object not found. Please report this to the plugin developer.'
-  reached-max-accepts-limit: '<red>You have finished this quests too many times already. You can only accept it <highlight>%MAXACCEPTS%</highlight> times, but you have already accepted it <highlight>%COMPLETEDAMOUNT%</highlight> times.'
-  reached-max-active-quests-per-player-limit: '<red>You can not accept more than <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> Quests.'
+      set: '<main>Tvoji istražni poeni stavljeni su na <highlight>%NEWQUESTPOINTSAMOUNT%</highlight>.'
+      add: '<highlight>+%QUESTPOINTSTOADD% <success>istražnih poena!'
+      remove: '<highlight>-%QUESTPOINTSTOREMOVE% <negative>istražnih poena!'
+  no-quests-accepted: <error>Čini se kako nemaš aktivnih istraga!
+  quest-does-not-exist: <error>Istraga <highlight>%QUESTNAME%</highlight> ne postoji!
+  quest-not-found-or-does-not-exist: <error>Istraga <highlight>%QUESTNAME%</highlight> nije pronađena ili nije aktivna!
+  active-quests-label: '<highlight>Aktivne istrage:'
+  take-disabled: <error>Prihvaćanje ili pregledanje istrage <highlight>%QUESTNAME%</highlight> je onemogućeno.
+  quest-not-active-error: '<error>Greška: <highlight>%QUESTNAME%</highlight> nije aktivna istraga!'
+  force-add-active-quest-accepted: '<success>Uspješno prihvaćena istraga (Natjerano).'
+  add-active-quest-player-object-not-found: '<warn>Greška: Objekt igrača nije pronađen. Molimo prijavite ovo developeru dodatka.'
+  reached-max-accepts-limit: '<red>Previše si puta završio ovu istragu. Možeš je prihvatiti <highlight>%MAXACCEPTS%</highlight> puta, a ti si je prihvatio <highlight>%COMPLETEDAMOUNT%</highlight> puta.'
+  reached-max-active-quests-per-player-limit: '<red>Ne možeš prihvatiti više od <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> istraga.'
   quest-on-cooldown:
-    minute: '<red>This quest is on a cooldown! You have to wait another <highlight>1 minute</highlight> until you can take it again.'
-    minutes: '<red>This quest is on a cooldown! You have to wait another <highlight>%MINUTES% minutes</highlight> until you can take it again.'
-    hour: '<red>This quest is on a cooldown! You have to wait another <highlight>1 hour</highlight> until you can take it again.'
-    hours: '<red>This quest is on a cooldown! You have to wait another <highlight>%HOURS% hours</highlight> until you can take it again.'
-    day: '<red>This quest is on a cooldown! You have to wait another <highlight>1 day</highlight> until you can take it again.'
-    days: '<red>This quest is on a cooldown! You have to wait another <highlight>%DAYS% days</highlight> until you can take it again.'
+    minute: '<red>Ova istraga je na hlađenju. Moraš čekati još <highlight>1 minutu</highlight> dok je ne možeš ponovno uzeti.'
+    minutes: '<red>Ova istraga je na hlađenju! Trebaš čekati još <highlight>%MINUTES% minuta</highlight> dok je ne možeš ponovno uzeti.'
+    hour: '<red>Ova istraga je na hlađenju! Trenaš čekati još <highlight>1 sat</highlight> dok ju ne možeš ponovno uzeti.'
+    hours: '<red>Ova istraga je na hlađenju! Trebaš čekati još <highlight>%HOURS% sati</highlight> dok je ne možeš ponovno uzeti.'
+    day: '<red>Ova istraga je na hlađenju. Moraš čekati još <highlight>1 dan</highlight> dok je ne možeš ponovno uzeti.'
+    days: '<red>Ova istraga je na hlađenju. Moraš čekati još <highlight>%DAYS% dana</highlight> dok je ne možeš ponovno uzeti.'
   conversations:
     choose-answer-prefix: |-
       <EMPTY>
-      <main>Choose your answer:</main>
-    choose-answer-answer-hover-text: '<highlight>Click to answer'
-    ended-previous-conversation: '<main>You have ended your previous conversation!'
+      <main>Odaberi svoj odgovor:</main>
+    choose-answer-answer-hover-text: '<highlight>Klikni da odgovoriš'
+    ended-previous-conversation: '<main>Završio si svoju prijašnju konverzaciju!'
   objectives:
     counter: '<highlight>%OBJECTIVEID%.</highlight> <main>%OBJECTIVENAME%:'
-    hidden: <highlight>%OBJECTIVEID%.</highlight> <unimportant><BOLD>[HIDDEN]
-    description: '   <highlight>Description: <main>%OBJECTIVEDESCRIPTION%'
-    progress: '   <highlight>Progress: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
+    hidden: <highlight>%OBJECTIVEID%</highlight><unimportant><BOLD>[HIDDEN]
+    description: '   <highlight>Opis: <main>%OBJECTIVEDESCRIPTION%'
+    progress: '   <highlight>Napredak: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
     successfully-completed: |2
 
-      <CENTER><success>[Objective Completed]
+      <CENTER><success>[Cilj Završen]
       <CENTER><highlight><bold>%OBJECTIVENAME%</bold> <RESET><main>(%QUESTNAME%)
       <EMPTY>
-    successfully-completed-rewards-prefix: '    <highlight>Rewards:'
+    successfully-completed-rewards-prefix: '    <highlight>Nagrade:'
     successfully-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
     successfully-completed-rewards-suffix: <EMPTY>
     taskDescription:
       breakBlocks:
-        base: '    <veryUnimportant>└─ <unimportant>Break Blocks: <main>%BLOCKTOBREAK%'
+        base: '    <veryUnimportant>└─ <unimportant>Razbij kocaka: <main>%BLOCKTOBREAK%'
       breed:
         base: '    <veryUnimportant>└─ <unimportant>Breed Mobs: <main>%ENTITYTOBREED%'
       collectItems:
@@ -84,59 +84,59 @@ chat:
         base: '    <veryUnimportant>└─ <unimportant>Craft Items: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
         base: '    <veryUnimportant>└─ <unimportant>Deliver Items: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
-        deliver-to-npc: '      <GRAY>Deliver it to <WHITE>%NPCNAME%'
+        deliver-to-npc: '      <GRAY>Dostaviti <WHITE>%NPCNAME%'
         deliver-to-npc-not-available: '      <GRAY>The delivery NPC is currently not available!'
-        deliver-to-npc-citizens-not-found: '    <RED>Error: Citizens plugin not installed. Contact an admin.'
-        deliver-to-armorstand: '    <GRAY>Deliver it to <WHITE>%ARMORSTANDNAME%'
+        deliver-to-npc-citizens-not-found: '    <RED>Pogreška: Dodatak "Citizens" nije instaliran. Kontaktirajte administratora.'
+        deliver-to-armorstand: '    <GRAY>Dostaviti <WHITE>%ARMORSTANDNAME%'
         deliver-to-armorstand-not-available: '    <GRAY>The target Armor Stand is currently not available!'
       escortNPC:
-        base: '    <veryUnimportant>└─ <unimportant>Escort <main>%NPCNAME%</main> to <main>%DESTINATIONNPCNAME%'
+        base: '    <veryUnimportant>└─ <unimportant>Isprati <main>%NPCNAME%</main> do <main>%DESTINATIONNPCNAME%'
       killMobs:
-        base: '    <veryUnimportant>└─ <unimportant>Kill mobs: <main>%MOBTOKILL%'
+        base: '    <veryUnimportant>└─ <unimportant>Ubij čudovišta: <main>%MOBTOKILL%'
       otherQuest:
-        base: '    <veryUnimportant>└─ <unimportant>Complete Quest: <main>%OTHERQUESTNAME%'
+        base: '    <veryUnimportant>└─ <unimportant>Dovrši istragu: <main>%OTHERQUESTNAME%'
       placeBlocks:
-        base: '    <veryUnimportant>└─ <unimportant>Place Blocks: <main>%BLOCKTOPLACE%'
+        base: '    <veryUnimportant>└─ <unimportant>Postavi blokova: <main>%BLOCKTOPLACE%ž'
       reachLocation:
-        base: '    <veryUnimportant>└─ <unimportant>Reach Location: <main>%LOCATIONNAME%'
+        base: '    <veryUnimportant>└─ <unimportant>Dostigni lokaciju: <main>%LOCATIONNAME%'
       talkToNPC:
-        base: '    <veryUnimportant>└─ <unimportant>Talk to <main>%NAME%'
+        base: '    <veryUnimportant>└─ <unimportant>Pričaj s <main>%NAME%'
       triggerCommand:
-        base: '    <veryUnimportant>└─ <unimportant>Goal: <main>%TRIGGERNAME%'
+        base: '    <veryUnimportant>└─ <unimportant>Cilj: <main>%TRIGGERNAME%'
       killEliteMobs:
-        base: '    <veryUnimportant>└─ <unimportant>Kill Elite Mob: <main>%ELITEMOBNAME%'
-        any: '    <veryUnimportant>└─ <unimportant>Kill any Elite Mob!'
+        base: '    <veryUnimportant>└─ <unimportant>Ubij elitno čudovište: <main>%ELITEMOBNAME%'
+        any: '    <veryUnimportant>└─ <unimportant>Ubij bilo koje elitno čudovište!'
       runCommand:
-        base: '    <veryUnimportant>└─ <unimportant>Run command: <main>%COMMANDTORUN%'
+        base: '    <veryUnimportant>└─ <unimportant>Pokreni komandu: <main>%COMMANDTORUN%'
       interact:
-        base: '    <veryUnimportant>└─ <unimportant>%INTERACTTYPE% Location: <main>%COORDINATES% <main>in world %WORLDNAME%'
+        base: '    <veryUnimportant>└─ <unimportant>%INTERACTTYPE% Lokacija: <main>%COORDINATES% <main>u svijetu%WORLDNAME%'
         taskDescriptionProvided: '    <veryUnimportant>└─ <unimportant>%TASKDESCRIPTION%'
       jump:
-        base: '    <veryUnimportant>└─ <unimportant>Jump <main>%AMOUNTOFJUMPS%</main> times'
+        base: '    <veryUnimportant>└─ <unimportant>Skoči<main>%AMOUNTOFJUMPS%</main> puta'
       sneak:
-        base: '    <veryUnimportant>└─ <unimportant>Sneak <main>%AMOUNTOFSNEAKS%</main> times'
+        base: '    <veryUnimportant>└─ <unimportant>Čučni<main>%AMOUNTOFSNEAKS%</main> puta'
       smelt:
         base: '    <veryUnimportant>└─ <unimportant>Smelt Items: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       openBuriedTreasure:
-        base: '    <veryUnimportant>└─ <unimportant>Open buried treasures'
+        base: '    <veryUnimportant>└─ <unimportant>Otvori zakopanih blaga'
       townyReachResidentCount:
         base: '    <veryUnimportant>└─ <unimportant>Reach resident amount: <main>%AMOUNT%'
       townyNationReachTownCount:
         base: '    <veryUnimportant>└─ <unimportant>Reach town amount with your nation: <main>%AMOUNT%'
       jobsRebornReachJobLevel:
-        base: '    <veryUnimportant>└─ <unimportant>Reach job level <main>%AMOUNT%</main> with job <main>%JOB%'
+        base: '    <veryUnimportant>└─ <unimportant>Dostigni poslovni nivo <main>%AMOUNT%</main> s poslom <main>%JOB%'
       SlimefunResearch:
         base: '    <veryUnimportant>└─ <unimportant>Spend on research'
       ProjectKorraUseAbility:
         base: '    <veryUnimportant>└─ <unimportant>Use Ability: <main>%ABILITY%'
       BetonQuestCompleteObjective:
-        base: '    <veryUnimportant>└─ <unimportant>Finish Objective: <main>%BETONQUESTOBJECTIVENAME%'
+        base: '    <veryUnimportant>└─ <unimportant>Dovrši cilj: <main>%BETONQUESTOBJECTIVENAME%'
       ultimateJobsReachJobLevel:
-        base: '    <veryUnimportant>└─ <unimportant>Reach job level <main>%AMOUNT%</main> with job <main>%JOBID%'
+        base: '    <veryUnimportant>└─ <unimportant>Dostigni poslovno nivo <main>%AMOUNT%</main> s poslom<main>%JOBID%'
   conditions:
     boolean:
       not-fulfilled: "<warn>Following needs to be %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."
-      variable-not-found: "<error>Error: variable <highlight>%VARIABLENAME%</highlight> not found. Report this to the Server owner."
+      variable-not-found: "<error>Error: varijabla <highlight>%VARIABLENAME%</highlight> nije pronađena. Prijavi ovo vlasniku servera."
       wrong-operator: "<error>Error: variable operator <highlight>%OPERATOR%/highlight> is invalid. Report this to the Server owner."
 objective-tracking:
   actionbar-progress-update:
@@ -147,115 +147,115 @@ objective-tracking:
     only-one-max-progress: "<positive>%QUESTNAME%</positive> <unimportant>- <main>%OBJECTIVENAME%</main> <unimportant>(<highlight>%OBJECTIVEPROGRESSPERCENTAGE%%<unimportant>)"
 titles:
   quest-accepted:
-    title: <main>Quest accepted
+    title: <main>Istraga prihvaćena
     subtitle: <highlight>%QUESTNAME%
   quest-completed:
-    title: <positive>Quest Completed
+    title: <positive>Istraga dovršena
     subtitle: <highlight>%QUESTNAME%
   quest-failed:
-    title: <negative>Quest Failed
+    title: <negative>Istraga neuspjela
     subtitle: <highlight>%QUESTNAME%
 placeholders:
   questcooldownleftformatted:
     prefix: ''
-    minute: '1 minute'
-    minutes: '%MINUTES% minutes'
-    hour: '1 hour'
-    hours: '%HOURS% hours'
-    day: '1 day'
-    days: '%DAYS% days'
+    minute: '1 minuta'
+    minutes: '%MINUTES% minuta'
+    hour: '1 sat'
+    hours: '%HOURS% sati'
+    day: '1 dan'
+    days: '%DAYS% dana'
     no-cooldown: ''
 gui:
   main:
-    title: '                <highlight2>Quests'
+    title: '                <highlight2>Istrage'
     button:
       questpoints:
-        name: "<highlight>Quest Points"
+        name: "<highlight>Istražnih poena"
         lore:
-          - "<main>Current quest points: <highlight2>%QUESTPOINTS%"
+          - "<main>Trenutnih istražnih poena: <highlight2>%QUESTPOINTS%"
         x: 8
         y: 0
       takequest:
-        name: "<positive>Take a Quest"
+        name: "<positive>Preuzmi istragu"
         lore:
-          - "<unimportant>Start a new Quest!"
+          - "<unimportant>Započni novu istragu!"
           - ""
-          - "<veryUnimportant>Some Quests cannot be"
-          - "<veryUnimportant>started like this."
+          - "<veryUnimportant>Neke istrage ne mogu"
+          - "<veryUnimportant>započeti ovako."
         x: 0
         y: 1
       abortquest:
-        name: "<negative>Abort a Quest"
+        name: "<negative>Prekini istragu"
         lore:
           - ""
-          - "<veryUnimportant>Aborting a Quest may"
-          - "<veryUnimportant>lead to punishments."
+          - "<veryUnimportant>Prekidanje istrage može"
+          - "<veryUnimportant>dovesti do kazni."
         x: 0
         y: 2
       activequests:
-        name: "<highlight>Active Quests"
+        name: "<highlight>Aktivne istrage"
         lore:
           - ""
-          - "<veryUnimportant>Shows all of your"
-          - "<veryUnimportant>active Quests."
+          - "<veryUnimportant>Prikazuje sve tvoje"
+          - "<veryUnimportant>aktivne istrage."
         x: 0
         y: 3
   activeQuests:
-    title: '             <highlight2>Active Quests'
+    title: '             <highlight2>Aktivne istrage'
     button:
       activeQuestButton:
         name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
         lore:
-          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<main>Click to see details!"
+          - "<unimportant>Napredak: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/<main>%ALLOBJECTIVESCOUNT%"
+          - "<main>Klikni da vidiš detalje!"
   reward-hidden-text: . <unimportant>[HIDDEN]
   availableQuests:
-    title: '         <highlight2>Available Quests'
+    title: '         <highlight2>Dostupne istrage'
     button:
       questPreview:
         name-if-not-accepted: "<highlight>%QUESTNAME%"
         name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTED]"
         lore:
           - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
-          - "<main>Click to open Quest!"
+          - "<main>Klikni da otvoriš istragu!"
   takeQuestChoose:
-    title: <highlight2>Which Quest do you want to take?
+    title: <highlight2>Koju istragu želiš započeti?
     button:
       questPreview:
         name-if-not-accepted: "<highlight>%QUESTNAME%"
         name-if-accepted: "<highlight>%QUESTNAME% <reset><positive>[ACCEPTED]"
         lore:
           - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
-          - "<main>Click to preview Quest!"
+          - "<main>Klikni da pregledaš istragu!"
   abortQuestChoose:
-    title: '  <highlight2>Active Quests you can abort'
+    title: '  <highlight2>Aktivne istrage koje možeš prekinuti'
     button:
       abortQuestPreview:
         name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
         lore:
-          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<negative>Click to abort Quest!"
+          - "<unimportant>Napredak: <positive>%COMPLETEDOBJECTIVESCOUNT%<unimportant>/<main>%ALLOBJECTIVESCOUNT%"
+          - "<negative>Klikni da prekineš istragu!"
   abortQuest:
-    title: '         <negative>Abort Confirmation'
+    title: '         <negative>Potvrda prekida'
     button:
       confirmAbort:
         name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
         lore:
-          - "<unimportant>Progress: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/ <main>%ALLOBJECTIVESCOUNT%"
-          - "<negative>Click to abort the quest <highlight>%QUESTNAME%</highlight>!"
+          - "<unimportant>Napredak: <positive>%COMPLETEDOBJECTIVESCOUNT% <unimportant>/<main>%ALLOBJECTIVESCOUNT%"
+          - "<negative>Klikni da prekineš istragu <highlight>%QUESTNAME%</highlight>!"
         x: 3
         y: 1
       cancelAbort:
-        name: "<positive>Click to NOT abort this quest"
+        name: "<positive>Klikni da NE prekineš ovu stragu"
         lore:
-          - "<positive>and cancel this action"
+          - "<positive>i prekineš ovu radnju"
         x: 5
         y: 1
   previewQuest:
-    title: <highlight2>Quest Preview
+    title: <highlight2>Pregled istrage
     button:
       description:
-        name: "<highlight>Description"
+        name: "<highlight>Opis"
         lore:
           - "<veryUnimportant>%WRAPPEDQUESTDESCRIPTION%"
         lore-if-empty:
@@ -263,7 +263,7 @@ gui:
         x: 2
         y: 0
       rewards:
-        name: "<positive>Rewards"
+        name: "<positive>Nagrade"
         lore:
           - "<WHITE>%QUESTREWARDS%"
         lore-if-empty:
@@ -271,7 +271,7 @@ gui:
         x: 4
         y: 0
       requirements:
-        name: "<negative>Requirements"
+        name: "<negative>Uvjeti"
         lore:
           - "<WHITE>%QUESTREQUIREMENTS%"
         lore-if-empty:
@@ -281,37 +281,37 @@ gui:
       confirmTake:
         name: "<highlight>%QUESTNAME%"
         lore:
-          - "<positive>Click to take the quest <highlight>%QUESTNAME%"
+          - "<positive>Klikni da uzmeš ovu istragu <highlight>%QUESTNAME%"
         x: 3
         y: 2
       cancelTake:
-        name: "<negative>Click to NOT take this quest"
+        name: "<negative>Klikni da NE uzmeš ovu istragu"
         lore:
-          - "<negative>and cancel this action"
+          - "<negative>i prekineš ovu radnju"
         x: 5
         y: 2
   progress:
-    title: <highlight2>Details for Quest
+    title: <highlight2>Detalji za istragu
     button:
       unlockedObjective:
         name: "<highlight2>%ACTIVEOBJECTIVEID%. <highlight>%OBJECTIVENAME%"
         lore:
-          - "<main><BOLD>ACTIVE</BOLD>"
+          - "<main><BOLD>AKTIVAN</BOLD>"
           - "<veryUnimportant>%WRAPPEDOBJECTIVEDESCRIPTION%"
           - "<unimportant>%OBJECTIVETASKDESCRIPTION%"
           - ""
-          - "<unimportant>Progress: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
+          - "<unimportant>Napredak: <positive>%ACTIVEOBJECTIVEPROGRESS%<unimportant>/<main>%OBJECTIVEPROGRESSNEEDED%"
         lore-if-description-empty:
-          - "<main><BOLD>ACTIVE</BOLD>"
-          - "<veryUnimportant>No Description"
+          - "<main><BOLD>AKTIVAN</BOLD>"
+          - "<veryUnimportant>Nema opisa"
           - "<unimportant>%OBJECTIVETASKDESCRIPTION%"
           - ""
-          - "<unimportant>Progress: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/ <main>%OBJECTIVEPROGRESSNEEDED%"
+          - "<unimportant>Napredak: <positive>%ACTIVEOBJECTIVEPROGRESS% <unimportant>/<main>%OBJECTIVEPROGRESSNEEDED%"
       lockedObjective:
         name: "<highlight2>%ACTIVEOBJECTIVEID%. <unimportant><BOLD>[HIDDEN]"
         lore:
-          - "<warn>This objective has not yet"
-          - "<warn>been unlocked!"
+          - "<warn>Ovaj cilj još"
+          - "<warn>nije otključan!"
       completedObjective:
         name: "<highlight2><strikethrough>%ACTIVEOBJECTIVEID%. <positive><strikethrough>%OBJECTIVENAME%"
         lore:
@@ -319,10 +319,10 @@ gui:
           - "<veryUnimportant><strikethrough>%WRAPPEDOBJECTIVEDESCRIPTION%"
           - "<veryUnimportant><strikethrough>%COMPLETEDOBJECTIVETASKDESCRIPTION%"
           - ""
-          - "<unimportant><strikethrough>Progress: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
+          - "<unimportant><strikethrough>Napredak: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS%<unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
         lore-if-description-empty:
           - "<positive><BOLD>COMPLETED</BOLD>"
-          - "<veryUnimportant><strikethrough>No Description"
+          - "<veryUnimportant><strikethrough>Nema opisa"
           - "<veryUnimportant><strikethrough>%COMPLETEDOBJECTIVETASKDESCRIPTION%"
           - ""
-          - "<unimportant><strikethrough>Progress: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS% <unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
+          - "<unimportant><strikethrough>Napredak: <positive><strikethrough>%ACTIVEOBJECTIVEPROGRESS%<unimportant><strikethrough>/ <positive><strikethrough>%OBJECTIVEPROGRESSNEEDED%"
