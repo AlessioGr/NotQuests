@@ -97,7 +97,7 @@ public class DeliverItemsObjective extends Objective {
                         deliverAnyItem = true;
                         itemToDeliver = null;
                     } else {
-                        itemToDeliver = main.getItemsManager().getItemStack(materialOrHand.material);
+                        itemToDeliver = main.getItemsManager().getItemStack(materialOrHand);
                     }
 
 

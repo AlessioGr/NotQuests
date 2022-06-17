@@ -81,7 +81,7 @@ public class AdminItemsCommands {
                         ));
                         return;
                     }
-                    itemStack = main.getItemsManager().getItemStack(materialOrHand.material);
+                    itemStack = main.getItemsManager().getItemStack(materialOrHand);
 
                     NQItem nqItem = new NQItem(main, itemName, itemStack);
 

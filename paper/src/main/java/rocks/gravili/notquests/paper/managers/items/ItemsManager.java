@@ -22,6 +22,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
 import rocks.gravili.notquests.paper.managers.data.Category;
 
 import java.util.ArrayList;
@@ -147,12 +148,15 @@ public class ItemsManager {
         return material;
     }
 
-    public final ItemStack getItemStack(final String name){
+    public final ItemStack getItemStack(final MaterialOrHand materialOrHand){
+        if(materialOrHand.itemStack != null){
+            return materialOrHand.itemStack;
+        }
         ItemStack itemStack;
         try{
-            itemStack = new ItemStack(Material.valueOf(name.toUpperCase(Locale.ROOT)));
+            itemStack = new ItemStack(Material.valueOf(materialOrHand.material.toUpperCase(Locale.ROOT)));
         }catch (Exception ignored){
-            itemStack = getItem(name).getItemStack();
+            itemStack = getItem(materialOrHand.material).getItemStack();
         }
         return itemStack;
     }

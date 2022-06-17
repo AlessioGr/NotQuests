@@ -164,7 +164,7 @@ public class MaterialOrHandArgument<C> extends CommandArgument<C, MaterialOrHand
 
                 if (input.equalsIgnoreCase("hand")) {
                     if (commandContext.getSender() instanceof final Player player) {
-                        materialOrHand.material = player.getInventory().getItemInMainHand().getType().name();
+                        materialOrHand.itemStack = player.getInventory().getItemInMainHand();
                         inputQueue.remove();
                         return ArgumentParseResult.success(materialOrHand);
                     } else {

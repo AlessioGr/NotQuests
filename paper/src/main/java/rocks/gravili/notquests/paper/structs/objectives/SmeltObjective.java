@@ -67,7 +67,7 @@ public class SmeltObjective extends Objective {
                         smeltAnyItem = true;
                         itemToSmelt = null;
                     } else {
-                        itemToSmelt = main.getItemsManager().getItemStack(materialOrHand.material);
+                        itemToSmelt = main.getItemsManager().getItemStack(materialOrHand);
                     }
 
                     SmeltObjective smeltObjective = new SmeltObjective(main);

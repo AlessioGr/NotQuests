@@ -18,6 +18,10 @@
 
 package rocks.gravili.notquests.paper.commands.arguments.wrappers;
 
+
+import org.bukkit.inventory.ItemStack;
+
 public class MaterialOrHand {
-    public String material;
+    public String material = "";
+    public ItemStack itemStack;
 }

@@ -67,7 +67,7 @@ public class CraftItemsObjective extends Objective {
                         craftAnyItem = true;
                         itemToCraft = null;
                     } else {
-                        itemToCraft = main.getItemsManager().getItemStack(materialOrHand.material);
+                        itemToCraft = main.getItemsManager().getItemStack(materialOrHand);
                     }
 
                     CraftItemsObjective craftItemsObjective = new CraftItemsObjective(main);

@@ -67,7 +67,7 @@ public class ConsumeItemsObjective extends Objective {
                         consumeAnyItem = true;
                         itemToConsume = null;
                     } else {
-                        itemToConsume = main.getItemsManager().getItemStack(materialOrHand.material);
+                        itemToConsume = main.getItemsManager().getItemStack(materialOrHand);
                     }
 
                     ConsumeItemsObjective consumeItemsObjective = new ConsumeItemsObjective(main);

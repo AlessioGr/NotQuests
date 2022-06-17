@@ -73,7 +73,7 @@ public class CollectItemsObjective extends Objective {
                         collectAnyItem = true;
                         itemToCollect = null;
                     } else {
-                        itemToCollect = main.getItemsManager().getItemStack(materialOrHand.material);
+                        itemToCollect = main.getItemsManager().getItemStack(materialOrHand);
                     }
 
                     CollectItemsObjective collectItemsObjective = new CollectItemsObjective(main);

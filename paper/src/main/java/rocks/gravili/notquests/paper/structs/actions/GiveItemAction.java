@@ -62,7 +62,8 @@ public class GiveItemAction extends Action {
                         ));
                         return;
                     }
-                    itemStack = main.getItemsManager().getItemStack(materialOrHand.material);
+
+                    itemStack = main.getItemsManager().getItemStack(materialOrHand);
                     itemStack.setAmount(itemRewardAmount);
 
                     GiveItemAction giveItemAction = new GiveItemAction(main);

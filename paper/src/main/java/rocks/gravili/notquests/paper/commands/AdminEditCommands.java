@@ -301,7 +301,7 @@ public class AdminEditCommands {
                     if (materialOrHand.material.equalsIgnoreCase("any")) {
                         takeItem = new ItemStack(Material.BOOK, 1);
                     } else {
-                        takeItem = main.getItemsManager().getItemStack(materialOrHand.material);
+                        takeItem = main.getItemsManager().getItemStack(materialOrHand);
                     }
                     if (glow) {
                         takeItem.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 1);
