@@ -972,8 +972,6 @@ public class QuestPlayer {
 
 
     public void onQuit(final Player player){
-        main.getTagManager().onQuit(this, player);
-
         if (getActiveQuests().size() > 0) {
             for (final ActiveQuest activeQuest : getActiveQuests()) {
 
@@ -989,15 +987,16 @@ public class QuestPlayer {
 
     public void onQuitAsync(final Player player){
         bossBar = null;
+        main.getTagManager().onQuit(this, player);
     }
 
     public void onJoin(final Player player){
         this.player = player;
-        main.getTagManager().onJoin(this, player);
     }
 
     public void onJoinAsync(final Player player){
         this.player = player;
+        main.getTagManager().onJoin(this, player);
     }
 
     public final boolean isCurrentlyLoading() {

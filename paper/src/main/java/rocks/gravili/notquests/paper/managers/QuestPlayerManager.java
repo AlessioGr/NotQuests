@@ -59,7 +59,7 @@ public class QuestPlayerManager {
              Statement statement = connection.createStatement();
         ) {
             ResultSet result = statement.executeQuery("SELECT QuestPoints FROM QuestPlayerData WHERE PlayerUUID LIKE '" + uuid.toString() + "';");
-            if (result.next()) {
+            while (result.next()) {
 
                 final long questPoints = result.getLong("QuestPoints");
                 main.getLogManager().info("Loaded player with uuid <highlight>" + uuid + "</highlight> and questPoints: " + questPoints);

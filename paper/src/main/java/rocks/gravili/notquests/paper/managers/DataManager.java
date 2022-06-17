@@ -1448,6 +1448,7 @@ public class DataManager {
              final PreparedStatement createCompletedQuestsDataTableStatement = connection.prepareStatement( "CREATE TABLE IF NOT EXISTS `CompletedQuests` (`QuestName` varchar(200), `PlayerUUID` varchar(200), `TimeCompleted` BIGINT(255))" );
              final PreparedStatement createActiveObjectivesDataTableStatement = connection.prepareStatement( "CREATE TABLE IF NOT EXISTS `ActiveObjectives` (`ObjectiveType` varchar(200), `QuestName` varchar(200), `PlayerUUID` varchar(200), `CurrentProgress` BIGINT(255), `ObjectiveID` INT(255), `HasBeenCompleted` BOOLEAN)" );
              final PreparedStatement createActiveTriggersDataTableStatement = connection.prepareStatement( "CREATE TABLE IF NOT EXISTS `ActiveTriggers` (`TriggerType` varchar(200), `QuestName` varchar(200), `PlayerUUID` varchar(200), `CurrentProgress` BIGINT(255), `TriggerID` INT(255))" );
+             final PreparedStatement createTagDataTableStatement = connection.prepareStatement( "CREATE TABLE IF NOT EXISTS `Tags` (`PlayerUUID` varchar(200), `TagIdentifier` varchar(200), `TagValue` varchar(200), `TagType` varchar(200) )" );
         ) {
             main.getLogManager().info(LogCategory.DATA, "Creating database table 'QuestPlayerData' if it doesn't exist yet...");
             createQuestPlayerDataTableStatement.executeUpdate();
@@ -1463,6 +1464,9 @@ public class DataManager {
 
             main.getLogManager().info(LogCategory.DATA, "Creating database table 'ActiveTriggers' if it doesn't exist yet...");
             createActiveTriggersDataTableStatement.executeUpdate();
+
+            main.getLogManager().info(LogCategory.DATA, "Creating database table 'Tags' if it doesn't exist yet...");
+            createTagDataTableStatement.executeUpdate();
 
         } catch (final SQLException e) {
             disablePluginAndSaving("Plugin disabled, because there was an error while trying to load MySQL database tables", e);

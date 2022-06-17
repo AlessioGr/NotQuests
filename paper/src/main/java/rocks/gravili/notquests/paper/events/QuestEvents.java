@@ -1214,6 +1214,8 @@ public class QuestEvents implements Listener {
             }else{
                 main.getQuestPlayerManager().loadSinglePlayerData(e.getPlayer());
             }
+
+            //no need to call onJoin here as it's called by loadSinglePlayerData automatically
         }else{
             final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(e.getPlayer().getUniqueId());
 
@@ -1222,7 +1224,6 @@ public class QuestEvents implements Listener {
                     questPlayer.onJoinAsync(e.getPlayer());
                 });
                 questPlayer.onJoin(e.getPlayer());
-                main.getTagManager().onJoin(questPlayer, e.getPlayer());
             }
         }
 
