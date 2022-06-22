@@ -18,6 +18,9 @@
 
 package rocks.gravili.notquests.paper.managers;
 
+import com.jeff_media.updatechecker.UpdateCheckSource;
+import com.jeff_media.updatechecker.UpdateChecker;
+import org.bukkit.command.CommandSender;
 import rocks.gravili.notquests.paper.NotQuests;
 
 public class UpdateManager {
@@ -29,7 +32,24 @@ public class UpdateManager {
     public UpdateManager(final NotQuests main) {
         this.main = main;
         latestVersion = main.getMain().getDescription().getVersion();
-        this.updateChecker =  UpdateChecker.init(main, 95872);
+
+        this.updateChecker = new UpdateChecker(main.getMain(), UpdateCheckSource.GITHUB_RELEASE_TAG, "AlessioGr/NotQuests")
+                .checkEveryXHours(24) // Check every 24 hours
+                .setDownloadLink("https://www.notquests.com/update/")
+                .onSuccess((commandSenders, latestVersion) -> {
+                    this.latestVersion = (String) latestVersion;
+                    for (final CommandSender sender : (CommandSender[])commandSenders) {
+                        sender.sendMessage(main.parse("<hover:show_text:\"<highlight>Click to update!\"><click:open_url:\"https://www.notquests.com/update\"><main>[NotQuests]</main> <warn>The version <highlight>" + main.getMain().getDescription().getVersion()
+                                + "</highlight> is not the latest version (<green>" + latestVersion + "</green>). Click this message to update!</click></hover>"));                    }
+                })
+                .onFail((commandSenders, exception) -> {
+                    for (final CommandSender sender : (CommandSender[])commandSenders) {
+                        sender.sendMessage("Failed to run update check.");
+                    }
+                })
+                .setNotifyRequesters(false)
+                .checkNow(); // And check right now
+
     }
 
     public final boolean isUpdateAvailable(){
@@ -44,7 +64,8 @@ public class UpdateManager {
     public void checkForPluginUpdates() {
         try {
 
-            updateChecker.requestUpdateCheck().whenComplete((result, e) -> {
+            updateChecker.checkNow(main.getMain().getServer().getConsoleSender());
+            /*updateChecker.requestUpdateCheck().whenComplete((result, e) -> {
                 latestVersion = result.getNewestVersion();
 
                 if (result.requiresUpdate()) {
@@ -66,7 +87,7 @@ public class UpdateManager {
                 } else {
                     main.getLogManager().warn("Could not check for a new version of NotQuests. Reason: <highlight>" + reason);
                 }
-            });
+            });*/
 
         } catch (Exception e) {
             e.printStackTrace();

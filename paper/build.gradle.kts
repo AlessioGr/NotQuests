@@ -43,6 +43,12 @@ repositories {
         }
     }
 
+    maven("https://hub.jeff-media.com/nexus/repository/jeff-media-public/"){
+        content {
+            includeGroup("com.jeff_media")
+        }
+    }
+
     maven("https://repo.citizensnpcs.co/"){
         content {
             includeGroup("net.citizensnpcs")
@@ -205,6 +211,9 @@ dependencies {
     //implementation 'com.github.retrooper.packetevents:bukkit:2.0-SNAPSHOT'
     implementation("com.github.AlessioGr.packetevents:bukkit:2.0-SNAPSHOT")
 
+    implementation("com.jeff_media:SpigotUpdateChecker:3.0.0")
+
+
     //implementation 'commons-io:commons-io:2.11.0'
     //implementation 'org.apache.commons:commons-text:1.9'
     //implementation 'org.apache.commons:commons-lang3:3.12.0'
@@ -272,6 +281,8 @@ tasks.withType<ShadowJar> {
 
     relocate("com.zaxxer.hikari", "$shadowPath.hikari")
 
+    relocate("com.jeff_media.updatechecker", "$shadowPath.updatechecker")
+
 
     dependencies {
         //include(dependency('org.apache.commons:')
@@ -301,6 +312,8 @@ tasks.withType<ShadowJar> {
         include(dependency("org.apache.httpcomponents:"))
 
         include(dependency("com.zaxxer:"))
+
+        include(dependency("com.jeff_media:SpigotUpdateChecker:"))
 
     }
 
