@@ -52,11 +52,23 @@ public class UpdateManager {
                     final int oldMinor = Integer.parseInt(oldSplit[1]);
                     final int oldPatch = Integer.parseInt(oldSplit[2]);
 
+                    if(latestMajor < oldMajor){
+                        return;
+                    } else if(latestMajor == oldMajor) {
+                        if(latestMinor < oldMinor){
+                            return;
+                        } else if(latestMinor == oldMinor) {
+                            if(latestPatch <= oldPatch){
+                                return;
+                            }
+                        }
+                    }
+
 
 
                     for (final CommandSender sender : (CommandSender[])commandSenders) {
-                        sender.sendMessage(main.parse("<hover:show_text:\"<highlight>Click to update!\"><click:open_url:\"https://www.notquests.com/update\"><main>[NotQuests]</main> <warn>The version <highlight>" + main.getMain().getDescription().getVersion()
-                                + "</highlight> is not the latest version (<green>" + latestVersion + "</green>). Click this message to update!</click></hover>"));                    }
+                        sender.sendMessage(main.parse("<hover:show_text:\"<highlight>Click to update!\"><click:open_url:\"https://www.notquests.com/update/\"><main>[NotQuests]</main> <warn>Your version <red>" + main.getMain().getDescription().getVersion()
+                                + "</red> is not the latest version (<green>" + latestVersion + "</green>). <bold>Click this message to update!</bold></click></hover>"));                    }
                 })
                 .onFail((commandSenders, exception) -> {
                     for (final CommandSender sender : (CommandSender[])commandSenders) {
@@ -64,7 +76,7 @@ public class UpdateManager {
                     }
                 })
                 .setNotifyRequesters(false)
-                //.setNotifyOpsOnJoin(true) // Notify OPs on Join when a new version is found (default)
+                .setNotifyOpsOnJoin(false) // Notify OPs on Join when a new version is found (default)
                 .checkEveryXHours(8) // Check every 30 minutes
                 .setColoredConsoleOutput(true)
                 .checkNow(); // And check right now
