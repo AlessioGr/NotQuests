@@ -26,18 +26,34 @@ import rocks.gravili.notquests.paper.NotQuests;
 public class UpdateManager {
     final UpdateChecker updateChecker;
     private final NotQuests main;
-    private boolean updateAvailable = false;
     private String latestVersion = "";
 
     public UpdateManager(final NotQuests main) {
         this.main = main;
         latestVersion = main.getMain().getDescription().getVersion();
 
-        this.updateChecker = new UpdateChecker(main.getMain(), UpdateCheckSource.GITHUB_RELEASE_TAG, "AlessioGr/NotQuests")
+        this.updateChecker = new UpdateChecker(main.getMain(), UpdateCheckSource.CUSTOM_URL, "https://www.notquests.com/latest-version.txt")
                 .checkEveryXHours(24) // Check every 24 hours
                 .setDownloadLink("https://www.notquests.com/update/")
                 .onSuccess((commandSenders, latestVersion) -> {
                     this.latestVersion = (String) latestVersion;
+
+                    final String[] split = ((String) latestVersion).split("\\.");
+
+                    final int latestMajor = Integer.parseInt(split[0]);
+                    final int latestMinor = Integer.parseInt(split[1]);
+                    final int latestPatch = Integer.parseInt(split[2]);
+
+                    final String oldVersion = main.getMain().getDescription().getVersion();
+
+                    final String[] oldSplit = oldVersion.split("\\.");
+
+                    final int oldMajor = Integer.parseInt(oldSplit[0]);
+                    final int oldMinor = Integer.parseInt(oldSplit[1]);
+                    final int oldPatch = Integer.parseInt(oldSplit[2]);
+
+
+
                     for (final CommandSender sender : (CommandSender[])commandSenders) {
                         sender.sendMessage(main.parse("<hover:show_text:\"<highlight>Click to update!\"><click:open_url:\"https://www.notquests.com/update\"><main>[NotQuests]</main> <warn>The version <highlight>" + main.getMain().getDescription().getVersion()
                                 + "</highlight> is not the latest version (<green>" + latestVersion + "</green>). Click this message to update!</click></hover>"));                    }
@@ -48,13 +64,13 @@ public class UpdateManager {
                     }
                 })
                 .setNotifyRequesters(false)
+                //.setNotifyOpsOnJoin(true) // Notify OPs on Join when a new version is found (default)
+                .checkEveryXHours(8) // Check every 30 minutes
+                .setColoredConsoleOutput(true)
                 .checkNow(); // And check right now
 
     }
 
-    public final boolean isUpdateAvailable(){
-        return updateAvailable;
-    }
 
     public final String getLatestVersion(){
         return latestVersion;

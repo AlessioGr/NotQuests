@@ -26,6 +26,7 @@ import cloud.commandframework.bukkit.parsers.location.LocationArgument;
 import cloud.commandframework.paper.PaperCommandManager;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -135,10 +136,14 @@ public class EscortNPCObjective extends Objective {
             final NPC npc = CitizensAPI.getNPCRegistry().getById(getNpcToEscortID());
             final NPC npcDestination = CitizensAPI.getNPCRegistry().getById(getNpcToEscortToID());
 
+
             if (npc != null && npcDestination != null) {
+                final String mmNpcName = main.getMiniMessage().serialize(LegacyComponentSerializer.legacyAmpersand().deserialize(npc.getName()));
+                final String mmNpcDestinationName = main.getMiniMessage().serialize(LegacyComponentSerializer.legacyAmpersand().deserialize(npcDestination.getName()));
+
                 toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.escortNPC.base", questPlayer, Map.of(
-                        "%NPCNAME%", npc.getName(),
-                        "%DESTINATIONNPCNAME%", npcDestination.getName()
+                        "%NPCNAME%", mmNpcName,
+                        "%DESTINATIONNPCNAME%", mmNpcDestinationName
                 ));
             } else {
                 toReturn = "    <GRAY>The target or destination NPC is currently not available!";

@@ -29,6 +29,7 @@ import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitInfo;
 import net.citizensnpcs.trait.FollowTrait;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -215,9 +216,11 @@ public class CitizensManager {
                     followerTrait.toggle(player, false);
                 }
             }
+            final String escortNpcName = main.getMiniMessage().serialize(LegacyComponentSerializer.legacyAmpersand().deserialize(npcToEscort.getName()));
+            final String destinationNpcName = main.getMiniMessage().serialize(LegacyComponentSerializer.legacyAmpersand().deserialize(destinationNPC.getName()));
 
             player.sendMessage(main.parse(
-                    "<GREEN>Escort quest started! Please escort <highlight>" + npcToEscort.getName() + "</highlight> to <highlight>" + destinationNPC.getName() + "</highlight>."
+                    "<GREEN>Escort quest started! Please escort <highlight>" + escortNpcName+ "</highlight> to <highlight>" + destinationNpcName+ "</highlight>."
             ));
         } else {
             main.getLogManager().warn("Error: The escort objective could not be started, because the player with the UUID <highlight>" + activeQuest.getQuestPlayer().getUniqueId() + "</highlight> was not found!");

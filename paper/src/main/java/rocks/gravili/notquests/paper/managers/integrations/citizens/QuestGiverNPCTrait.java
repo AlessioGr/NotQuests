@@ -126,7 +126,7 @@ public class QuestGiverNPCTrait extends Trait {
      */
     @Override
     public void onAttach() {
-        notQuests.getLogManager().info("NPC with the ID <highlight>" + npc.getId() + "</highlight> and name <highlight>" + npc.getName() + "</highlight> has been assigned the Quest Giver trait!");
+        notQuests.getLogManager().info("NPC with the ID <highlight>" + npc.getId() + "</highlight> and name <highlight>" + npc.getName().replaceAll("&", "") + "</highlight> has been assigned the Quest Giver trait!");
     }
 
     // Run code when the NPC is despawned. This is called before the entity actually despawns so npc.getEntity() is still valid.
@@ -150,7 +150,7 @@ public class QuestGiverNPCTrait extends Trait {
     @Override
     public void onRemove() {
         //REMOVEEEE FROM QUEST
-        notQuests.getLogManager().info("NPC with the ID <highlight>" + npc.getId() + " </highlight>and name <highlight>" + npc.getName() + " </highlight>has been removed!");
+        notQuests.getLogManager().info("NPC with the ID <highlight>" + npc.getId() + " </highlight>and name <highlight>" + npc.getName().replaceAll("&", "") + " </highlight>has been removed!");
         for (Quest quest : notQuests.getQuestManager().getAllQuestsAttachedToNPC(getNPC())) {
             quest.removeNPC(getNPC());
         }

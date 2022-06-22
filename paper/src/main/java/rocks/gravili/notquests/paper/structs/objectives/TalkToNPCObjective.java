@@ -25,6 +25,7 @@ import cloud.commandframework.paper.PaperCommandManager;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
@@ -160,8 +161,10 @@ public class TalkToNPCObjective extends Objective {
         if (main.getIntegrationsManager().isCitizensEnabled() && getNPCtoTalkID() != -1) {
             final NPC npc = CitizensAPI.getNPCRegistry().getById(getNPCtoTalkID());
             if (npc != null) {
+                final String mmNpcName = main.getMiniMessage().serialize(LegacyComponentSerializer.legacyAmpersand().deserialize(npc.getName()));
+
                 toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.talkToNPC.base", questPlayer, Map.of(
-                        "%NAME%", npc.getName()
+                        "%NAME%", mmNpcName
                 ));
             } else {
                 toReturn = "    <GRAY>The target NPC is currently not available!";
