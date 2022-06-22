@@ -227,7 +227,7 @@ bukkit {
     apiVersion = "1.18"
     authors = listOf("NoeX")
     description = "Flexible, open, GUI Quest Plugin for Minecraft 1.19"
-    website = "quests.notnot.pro"
+    website = "https://www.notquests.com"
     softDepend = listOf(
         "ProtocolLib",
         "ProtocolSupport",

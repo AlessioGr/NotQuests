@@ -19,7 +19,6 @@
 package rocks.gravili.notquests.spigot.managers.packets.ownpacketstuff.wrappers;
 
 import io.netty.channel.ChannelHandlerContext;
-import net.md_5.bungee.api.chat.BaseComponent;
 import rocks.gravili.notquests.spigot.managers.packets.ownpacketstuff.Reflection;
 
 import java.util.UUID;
@@ -33,7 +32,6 @@ public class WrappedChatPacket {
     private final String json; //Type: UUID
     private Object message; //Type: Component
     private Object adventureComponent;
-    private BaseComponent[] spigotComponent;
     private String paperJson;
 
     //private final ByteBuf byteBuf;
@@ -60,7 +58,6 @@ public class WrappedChatPacket {
 
 
         try {//spigot only
-            spigotComponent = (BaseComponent[]) Reflection.getFieldValueOfObject(packetObject, "components");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -144,9 +141,6 @@ public class WrappedChatPacket {
         return adventureComponent;
     }
 
-    public BaseComponent[] getSpigotComponent() { //Type: BaseComponent //spigot+ only
-        return spigotComponent;
-    }
 
     public WrappedChatType getType() { //Type: ChatType
         return chatType;

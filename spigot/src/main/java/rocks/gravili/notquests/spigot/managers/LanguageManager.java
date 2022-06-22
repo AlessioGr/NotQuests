@@ -19,10 +19,8 @@
 package rocks.gravili.notquests.spigot.managers;
 
 import me.clip.placeholderapi.PlaceholderAPI;
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.io.IOUtils;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -424,17 +422,6 @@ public class LanguageManager {
         return finalMessage.toString();
     }
 
-    public String applyColor(String message) {
-        Matcher matcher = hexPattern.matcher(message);
-        while (matcher.find()) {
-            final ChatColor hexColor = ChatColor.of(matcher.group().substring(1, matcher.group().length() - 1));
-            final String before = message.substring(0, matcher.start());
-            final String after = message.substring(matcher.end());
-            message = before + hexColor + after;
-            matcher = hexPattern.matcher(message);
-        }
-        return org.bukkit.ChatColor.translateAlternateColorCodes('&', LegacyComponentSerializer.builder().hexColors().build().serialize(MiniMessage.miniMessage().deserialize(message)));
-    }
 
 
     /**

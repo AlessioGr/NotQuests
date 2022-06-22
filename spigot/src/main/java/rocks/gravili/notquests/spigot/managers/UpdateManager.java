@@ -40,7 +40,7 @@ public class UpdateManager {
         try {
             if (updateChecker.checkForUpdates()) {
                 main.getLogManager().info("<GOLD>The version <Yellow>" + main.getMain().getDescription().getVersion()
-                        + " <GOLD>is not the latest version (<Green>" + updateChecker.getLatestVersion() + "<GOLD>)! Please update the plugin here: <Aqua>https://www.spigotmc.org/resources/95872/ <DARK_GRAY>(If your version is newer, the spigot API might not be updated yet).");
+                        + " <GOLD>is not the latest version (<Green>" + updateChecker.getLatestVersion() + "<GOLD>)! Please update the plugin here: <Aqua>https://www.notquests.com/update <DARK_GRAY>(If your version is newer, the spigot API might not be updated yet).");
             } else {
                 main.getLogManager().info("NotQuests seems to be up to date! :)");
             }

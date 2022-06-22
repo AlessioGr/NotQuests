@@ -39,9 +39,12 @@ repositories {
         }
     }
 
-    maven("https://hub.spigotmc.org/nexus/content/groups/public/"){
+    maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/"){
         content {
             includeGroup("org.spigotmc")
+        }
+        metadataSources {
+            artifact()
         }
     }
 
@@ -151,7 +154,7 @@ dependencies {
     implementation("de.themoep:inventorygui:1.5-SNAPSHOT")
     //implementation(files("libs/InventoryGui.jar"))
 
-    compileOnly("org.spigotmc:spigot-api:1.19-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.19-R0.1-20220619.224015-34")
     compileOnly("net.citizensnpcs:citizens-main:2.0.29-SNAPSHOT")
     compileOnly("me.clip:placeholderapi:2.11.1")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7")

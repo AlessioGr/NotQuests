@@ -51,7 +51,7 @@ public class UpdateManager {
                     main.getLogManager().info("<unimportant>---------------------------------------------------------------------------------</unimportant>");
                     main.getLogManager().info("<warn>The version <highlight>" + main.getMain().getDescription().getVersion()
                             + "</highlight> is not the latest version (<Green>" + result.getNewestVersion() + "</green>)!");
-                    main.getLogManager().info("Please update the plugin here: <highlight2>https://www.spigotmc.org/resources/95872/</highlight2>");
+                    main.getLogManager().info("Please update the plugin here: <highlight2>https://www.notquests.com/update</highlight2>");
                     main.getLogManager().info("<unimportant>---------------------------------------------------------------------------------</unimportant>");
                     updateAvailable = true;
                     return;

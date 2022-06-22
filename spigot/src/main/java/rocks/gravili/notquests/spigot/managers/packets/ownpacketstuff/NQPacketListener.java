@@ -26,7 +26,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
-import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.entity.Player;
 import rocks.gravili.notquests.spigot.NotQuests;
 import rocks.gravili.notquests.spigot.managers.packets.ownpacketstuff.wrappers.WrappedChatPacket;
@@ -79,9 +78,8 @@ public class NQPacketListener extends ChannelDuplexHandler {
         try {
             Component component = null;
             Object vanillaMessage = wrappedChatPacket.getMessage();
-            BaseComponent[] spigotComponent = wrappedChatPacket.getSpigotComponent();
             Object adventureComponent = wrappedChatPacket.getAdventureComponent();
-            if (vanillaMessage == null && spigotComponent == null && adventureComponent == null) {
+            if (vanillaMessage == null && adventureComponent == null) {
                 main.getLogManager().debug("All null :o");
                 return;
             }
@@ -93,15 +91,14 @@ public class NQPacketListener extends ChannelDuplexHandler {
 
             if (component == null) { //Spigot shit
 
-                if (spigotComponent != null) {
-                    component = BungeeComponentSerializer.get().deserialize(spigotComponent);
-
-                } else {//vanilla shit
+                if (vanillaMessage != null) {
                     if (!MinecraftComponentSerializer.isSupported()) {
                         return;
                     }
                     component = MinecraftComponentSerializer.get().deserialize(vanillaMessage);
                     main.getLogManager().debug("vanilla serializer");
+                } else {//vanilla shit
+
                     // component = GsonComponentSerializer.builder().build().deserialize(wrappedChatPacket.getChatComponentJson());
                 }
             }
