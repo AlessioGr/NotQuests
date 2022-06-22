@@ -1228,6 +1228,7 @@ public class QuestEvents implements Listener {
         }
 
         if (e.getPlayer().isOp() && main.getConfiguration().isUpdateCheckerNotifyOpsInChat()) {
+            main.getUpdateManager().checkForPluginUpdates(e.getPlayer());
             if (main.getUpdateManager().isUpdateAvailable()) {
                 e.getPlayer().sendMessage(main.parse("<hover:show_text:\"<highlight>Click to update!\"><click:open_url:\"https://www.notquests.com/update\"><main>[NotQuests]</main> <warn>The version <highlight>" + main.getMain().getDescription().getVersion()
                         + "</highlight> is not the latest version (<green>" + main.getUpdateManager().getLatestVersion() + "</green>). Click this message to update!</click></hover>"));

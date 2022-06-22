@@ -60,7 +60,9 @@ public class UpdateManager {
         return latestVersion;
     }
 
-
+    public void checkForPluginUpdates(final CommandSender commandSender) {
+        updateChecker.checkNow(commandSender);
+    }
     public void checkForPluginUpdates() {
         try {
 
