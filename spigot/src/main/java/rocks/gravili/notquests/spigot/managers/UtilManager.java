@@ -27,7 +27,6 @@ import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.title.Title;
-import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -343,7 +342,7 @@ public class UtilManager {
             }
         }*/
         //return descriptionWithLineBreaks.toString();
-        return WordUtils.wrap(unwrappedText.replace("\\n", "\n"), maxLineLength, "\n", main.getConfiguration().wrapLongWords);
+        return unwrappedText.replace("\\n", "\n"); //TODO: Fix worldutils, I just removed it lol
 
     }
 

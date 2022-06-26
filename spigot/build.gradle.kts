@@ -199,7 +199,7 @@ dependencies {
 
     implementation("commons-io:commons-io:2.11.0")
     //implementation 'org.apache.commons:commons-text:1.9'
-    implementation("org.apache.commons:commons-lang3:3.12.0")
+   // implementation("org.apache.commons:commons-lang3:3.12.0")
     //implementation("org.apache.commons:commons-lang:2.6")
 
     implementation("io.netty:netty-all:4.1.74.Final")
@@ -226,7 +226,7 @@ tasks.withType<ShadowJar> {
 
     relocate("org.apache.commons.io", "$shadowPath.commons.io")
     //relocate("org.apache.commons.text", path.concat('.commons.text'))
-    relocate("org.apache.commons.lang3", "$shadowPath.commons.lang")
+   // relocate("org.apache.commons.lang3", "$shadowPath.commons.lang")
 
     relocate("io.github.retrooper.packetevents", "$shadowPath.packetevents.bukkit")
     relocate("com.github.retrooper.packetevents", "$shadowPath.packetevents.api")
