@@ -84,7 +84,7 @@ public class ProjectKorraUseAbilityObjective extends Objective {
     @Override
     public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
         return main.getLanguageManager().getString("chat.objectives.taskDescription.ProjectKorraUseAbility.base", questPlayer, Map.of(
-                "%%ABILITY%%", getAbilityName()
+                "%ABILITY%", getAbilityName()
         ));
     }
 
