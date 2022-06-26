@@ -199,6 +199,7 @@ public class ActionManager {
 
     public void executeActionWithConditions(final Action action, final QuestPlayer questPlayer, final CommandSender sender, final boolean silent, final Object... objects) {
         main.getLogManager().debug("Executing Action " + action.getActionName() + " of type " + action.getActionType() + " with conditions!");
+        questPlayer.sendDebugMessage("Executing Action " + action.getActionName() + " of type " + action.getActionType() + " with conditions!");
 
         if (action.getConditions().size() == 0) {
             main.getLogManager().debug("   Skipping Conditions");

@@ -232,7 +232,7 @@ public class ConversationPlayer {
 
         if (conversationLine.getActions() != null && conversationLine.getActions().size() > 0) {
             for (final Action action : conversationLine.getActions()) {
-                main.getLogManager().debug("Executing action for conversation line...");
+                questPlayer.sendDebugMessage("Executing action for conversation line...");
                 main.getActionManager().executeActionWithConditions(action, questPlayer, player, true);
             }
         }
@@ -279,7 +279,7 @@ public class ConversationPlayer {
                 //Trigger its actions first:
                 if (playerOptionLine.getActions() != null && playerOptionLine.getActions().size() > 0) {
                     for (final Action action : playerOptionLine.getActions()) {
-                        main.getLogManager().debug("Executing action for conversation line...");
+                        questPlayer.sendDebugMessage("Executing action for conversation line...");
                         main.getActionManager().executeActionWithConditions(action, questPlayer, player, true);
                     }
                 }
