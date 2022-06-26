@@ -866,7 +866,7 @@ public class AdminCommands {
 
 
         manager.command(builder.literal("debug")
-                .literal("LoadDataManagerUnsafe")
+                .literal("loadDataManagerUnsafe")
                 .meta(CommandMeta.DESCRIPTION, "Calls the dataManager.reloadData() method. This starts loading all Config-, Quest-, and Player Data. Reload = Load")
                 .handler((context) -> {
                     context.getSender().sendMessage(Component.empty());
