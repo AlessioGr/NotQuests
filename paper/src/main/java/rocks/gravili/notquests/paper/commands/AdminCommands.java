@@ -864,6 +864,22 @@ public class AdminCommands {
                     ));
                 }));
 
+
+        manager.command(builder.literal("debug")
+                .literal("LoadDataManagerUnsafe")
+                .meta(CommandMeta.DESCRIPTION, "Calls the dataManager.reloadData() method. This starts loading all Config-, Quest-, and Player Data. Reload = Load")
+                .handler((context) -> {
+                    context.getSender().sendMessage(Component.empty());
+                    context.getSender().sendMessage(main.parse(
+                            "<main>Reloading DataManager..."
+                    ));
+                    main.getDataManager().reloadData();
+                    context.getSender().sendMessage(main.parse(
+                            "<success>DataManager has been reloaded!"
+
+                    ));
+                }));
+
         manager.command(builder.literal("debug")
                 .literal("disablePluginAndSaving")
                 .argument(StringArgument.of("reason"), ArgumentDescription.of("Reason for disabling the plugin"))
