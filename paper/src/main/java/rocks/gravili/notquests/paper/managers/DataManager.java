@@ -1139,7 +1139,8 @@ public class DataManager {
 
         configuration.setPacketMagicUnsafeDisregardVersion(getGeneralConfigBoolean(
                 "general.packet-magic.unsafe-disregard-version",
-                false
+                false,
+                "Usually, the version of the server is checked to see if it is compatible with the packets feature. If it's not, packet-magic is disabled no matter if you enabled it or not. Setting this to true will disable this safety mechanism."
         ));
 
 
