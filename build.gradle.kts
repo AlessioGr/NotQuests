@@ -28,7 +28,7 @@ plugins {
 
 
 group = "rocks.gravili.notquests"
-version = "4.23.1"
+version = "4.23.2"
 
 
 repositories {
