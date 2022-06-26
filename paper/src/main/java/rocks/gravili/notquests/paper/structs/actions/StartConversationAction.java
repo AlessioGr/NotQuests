@@ -82,10 +82,15 @@ public class StartConversationAction extends Action {
         Conversation foundConversation = main.getConversationManager().getConversation(getConversationToStart());
         if (foundConversation == null) {
             main.getLogManager().warn("Tried to execute StartConversation action with null quest. Cannot find the following Conversation: " + getConversationToStart());
+            questPlayer.sendDebugMessage("Tried to execute StartConversation action with null quest. Cannot find the following Conversation: " + getConversationToStart());
             return;
         }
         ConversationPlayer openConversation = main.getConversationManager().getOpenConversation(questPlayer.getUniqueId());
+
+        questPlayer.sendDebugMessage("(StartConversationAction) endPrevious: " + endPrevious);
+
         if (isEndPrevious() && openConversation != null) {
+            questPlayer.sendDebugMessage("(StartConversationAction) endPrevious is true: stopping previous conversation");
             main.getConversationManager().stopConversation(openConversation);
         }
 

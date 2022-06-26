@@ -416,12 +416,14 @@ public class ConversationManager {
     }
 
     public void stopConversation(final ConversationPlayer conversationPlayer) {
-        conversationPlayer.getQuestPlayer().sendDebugMessage("Stopping conversation...");
-        if(openConversations.containsKey(conversationPlayer.getQuestPlayer().getUniqueId()) && !openConversations.get(conversationPlayer.getQuestPlayer().getUniqueId()).equals(conversationPlayer)) {
-            conversationPlayer.getQuestPlayer().sendDebugMessage("Skipping stopping conversation, as the conversation you tried to stop is already stopped and some other conversation is running instead.");
-            return;
+        if(openConversations.containsKey(conversationPlayer.getQuestPlayer().getUniqueId())) {
+            if(!openConversations.get(conversationPlayer.getQuestPlayer().getUniqueId()).equals(conversationPlayer)){
+                conversationPlayer.getQuestPlayer().sendDebugMessage("Skipping stopping conversation, as the conversation you tried to stop is already stopped and some other conversation is running instead.");
+                return;
+            }
+            conversationPlayer.getQuestPlayer().sendDebugMessage("Stopping conversation...");
+            openConversations.remove(conversationPlayer.getQuestPlayer().getUniqueId());
         }
-        openConversations.remove(conversationPlayer.getQuestPlayer().getUniqueId());
 
         //Send back old messages
         /*ArrayList<Component> allChatHistory = main.getPacketManager().getChatHistory().get(conversationPlayer.getQuestPlayer().getUUID());
