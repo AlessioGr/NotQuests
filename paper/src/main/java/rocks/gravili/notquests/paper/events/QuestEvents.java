@@ -1138,6 +1138,7 @@ public class QuestEvents implements Listener {
         } else {
             questPlayer.sendDebugMessage("Tried to choose conversation option, but the conversationPlayer was not found! Active conversationPlayers count: <highlight>" + main.getConversationManager().getOpenConversations().size());
             questPlayer.sendDebugMessage("All active conversationPlayers: <highlight>" + main.getConversationManager().getOpenConversations().toString());
+            questPlayer.sendDebugMessage("Current QuestPlayer Object: <highlight>" + questPlayer);
             questPlayer.sendDebugMessage("Current QuestPlayer: <highlight>" + questPlayer.getPlayer().getName());
         }
     }
