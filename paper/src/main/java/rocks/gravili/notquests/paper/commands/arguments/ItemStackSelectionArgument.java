@@ -198,6 +198,8 @@ public class ItemStackSelectionArgument<C> extends CommandArgument<C, ItemStackS
                 final @NonNull CommandContext<C> context,
                 final @NonNull String input
         ) {
+            final CommandSender sender = ((CommandSender)context.getSender());
+
             final List<String> possibleMaterials = new ArrayList<>();
             for (final Material value : Material.values()) {
                 possibleMaterials.add(value.name().toLowerCase());
@@ -226,7 +228,8 @@ public class ItemStackSelectionArgument<C> extends CommandArgument<C, ItemStackS
                 final List<String> completions = new ArrayList<>();
                 final String partAfterLastCommaInInput = input.substring( (input.lastIndexOf(",") > input.length()-1) ? (input.lastIndexOf(",")) : (input.lastIndexOf(",") + 1));
                 for(final String possibleMaterial : possibleMaterials){
-                    completions.add(input.substring(0, input.length()-1-partAfterLastCommaInInput.length()) + possibleMaterial);
+                    final String string = input.substring(0, input.length()-1-partAfterLastCommaInInput.length()) + "," + possibleMaterial;
+                    completions.add(string);
                 }
                 return completions;
             }
