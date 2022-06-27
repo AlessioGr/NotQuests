@@ -169,7 +169,7 @@ public class Quest {
             objectives.add(objective);
             if (save) {
                 category.getQuestsConfig().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".objectiveType", main.getObjectiveManager().getObjectiveType(objective.getClass()));
-                category.getQuestsConfig().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".progressNeeded", objective.getProgressNeeded());
+                category.getQuestsConfig().set("quests." + questName + ".objectives." + objective.getObjectiveID() + ".progressNeededExpression", objective.getProgressNeededExpression());
 
                 objective.save(category.getQuestsConfig(), "quests." + questName + ".objectives." + objective.getObjectiveID());
                 category.saveQuestsConfig();

@@ -132,7 +132,7 @@ public class NumberExpression {
      * @return if the result of the number expression is static/final (meaning it can be cached, as it never changes).
      * This is the case if, for example, the expression is a simple "1" or any math expression without any variables.
      */
-    public final boolean isResultStatic() {
+    private boolean isResultStatic() {
         return resultStatic;
     }
 
@@ -147,7 +147,7 @@ public class NumberExpression {
      * @param expressions current state of the expression (either raw or partially processed by getExpressionAndGenerateEnv)
      * @return replaced expression string with modified variable names which will be fed into the evaluationEnvironment
      */
-    public final String getExpressionAndGenerateEnv(String expressions) {
+    private String getExpressionAndGenerateEnv(String expressions) {
         boolean foundAVariable = false;
 
         for (String variableString : main.getVariablesManager().getVariableIdentifiers()) {

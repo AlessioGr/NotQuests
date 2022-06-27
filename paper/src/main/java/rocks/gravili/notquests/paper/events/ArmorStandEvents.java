@@ -335,7 +335,7 @@ public class ArmorStandEvents implements Listener {
                         final Quest quest = main.getQuestManager().getQuest(questName);
                         if (quest != null) {
                             final NamespacedKey amountToDeliverKey = new NamespacedKey(main.getMain(), "notquests-itemstackamount");
-                            final int amountToDeliver = container.get(amountToDeliverKey, PersistentDataType.INTEGER);
+                            final String amountToDeliverExpression = container.get(amountToDeliverKey, PersistentDataType.STRING);
 
                             final NamespacedKey itemStackCacheKey = new NamespacedKey(main.getMain(), "notquests-itemstackcache");
                             final int itemStackCache = container.get(itemStackCacheKey, PersistentDataType.INTEGER);
@@ -355,7 +355,7 @@ public class ArmorStandEvents implements Listener {
                                 }else if(itemToDeliver instanceof String nqItemName){
                                     deliverItemsObjective.setNQItem(nqItemName);
                                 }
-                                deliverItemsObjective.setProgressNeeded(amountToDeliver);
+                                deliverItemsObjective.setProgressNeededExpression(amountToDeliverExpression);
                                 deliverItemsObjective.setRecipientArmorStandUUID(armorStand.getUniqueId());
                                 deliverItemsObjective.setQuest(quest);
                                 deliverItemsObjective.setObjectiveID(quest.getFreeObjectiveID());
@@ -485,7 +485,7 @@ public class ArmorStandEvents implements Listener {
                                                 if (!deliverItemsObjective.isDeliverAnyItem() && deliverItemsObjective.getItemToDeliver().getItemMeta() != null && !deliverItemsObjective.getItemToDeliver().getItemMeta().equals(itemStack.getItemMeta())) {
                                                     continue;
                                                 }
-                                                final long progressLeft = activeObjective.getProgressNeeded() - activeObjective.getCurrentProgress();
+                                                final double progressLeft = activeObjective.getProgressNeeded() - activeObjective.getCurrentProgress();
 
                                                 if (progressLeft == 0) {
                                                     continue;

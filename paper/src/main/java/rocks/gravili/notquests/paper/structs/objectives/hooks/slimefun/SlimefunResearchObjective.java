@@ -24,7 +24,9 @@ import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
@@ -42,18 +44,18 @@ public class SlimefunResearchObjective extends Objective {
         }
 
         manager.command(addObjectiveBuilder
-                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount to spend on research"))
+                .argument(NumberVariableValueArgument.newBuilder("amount", main, null), ArgumentDescription.of("Amount to spend on research"))
                 .handler((context) -> {
                     SlimefunResearchObjective slimefunResearchobjective = new SlimefunResearchObjective(main);
-                    slimefunResearchobjective.setProgressNeeded(context.get("amount"));
+                    slimefunResearchobjective.setProgressNeededExpression(context.get("amount"));
 
                     main.getObjectiveManager().addObjective(slimefunResearchobjective, context);
                 }));
     }
 
     @Override
-    public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.SlimefunResearch.base", questPlayer);
+    public String getObjectiveTaskDescription(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.SlimefunResearch.base", questPlayer, activeObjective);
     }
 
     @Override

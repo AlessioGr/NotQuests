@@ -27,8 +27,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -56,9 +58,9 @@ public class CraftItemsObjective extends Objective {
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
         manager.command(addObjectiveBuilder
                 .argument(MaterialOrHandArgument.of("material", main), ArgumentDescription.of("Material of the item which needs to be crafted."))
-                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of items which need to be crafted."))
+                .argument(NumberVariableValueArgument.newBuilder("amount", main, null), ArgumentDescription.of("Amount of items which need to be crafted"))
                 .handler((context) -> {
-                    final int amount = context.get("amount");
+                    final String amountExpression = context.get("amount");
 
                     boolean craftAnyItem = false;
                     final MaterialOrHand materialOrHand = context.get("material");
@@ -79,7 +81,7 @@ public class CraftItemsObjective extends Objective {
                     }
 
                     craftItemsObjective.setCraftAnyItem(craftAnyItem);
-                    craftItemsObjective.setProgressNeeded(amount);
+                    craftItemsObjective.setProgressNeededExpression(amountExpression);
 
                     main.getObjectiveManager().addObjective(craftItemsObjective, context);
                 }));
@@ -112,12 +114,9 @@ public class CraftItemsObjective extends Objective {
         }
     }
 
-    public final long getAmountToCraft() {
-        return super.getProgressNeeded();
-    }
 
     @Override
-    public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
+    public String getObjectiveTaskDescription(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
         final String displayName;
         if (!isCraftAnyItem()) {
             if (getItemToCraft().getItemMeta() != null) {
@@ -133,14 +132,14 @@ public class CraftItemsObjective extends Objective {
 
 
         if (!displayName.isBlank()) {
-            return main.getLanguageManager().getString("chat.objectives.taskDescription.craftItems.base", questPlayer, Map.of(
+            return main.getLanguageManager().getString("chat.objectives.taskDescription.craftItems.base", questPlayer, activeObjective, Map.of(
                     "%ITEMTOCRAFTTYPE%", itemType,
                     "%ITEMTOCRAFTNAME%", displayName,
                     "%(%", "(",
                     "%)%", "<RESET>)"
             ));
         } else {
-            return main.getLanguageManager().getString("chat.objectives.taskDescription.craftItems.base", questPlayer, Map.of(
+            return main.getLanguageManager().getString("chat.objectives.taskDescription.craftItems.base", questPlayer, activeObjective, Map.of(
                     "%ITEMTOCRAFTTYPE%", itemType,
                     "%ITEMTOCRAFTNAME%", displayName,
                     "%(%", "",

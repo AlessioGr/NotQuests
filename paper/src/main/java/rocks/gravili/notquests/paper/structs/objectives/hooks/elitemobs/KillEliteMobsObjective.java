@@ -27,7 +27,9 @@ import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
@@ -130,7 +132,7 @@ public class KillEliteMobsObjective extends Objective {
 
 
         manager.command(addObjectiveBuilder.literal("KillEliteMobs")
-                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of kills needed"))
+                .argument(NumberVariableValueArgument.newBuilder("amount", main, null), ArgumentDescription.of("Amount of kills needed"))
                 .flag(mobname)
                 .flag(minimumLevel)
                 .flag(maximumLevel)
@@ -138,7 +140,7 @@ public class KillEliteMobsObjective extends Objective {
                 .flag(minimumDamagePercentage)
 
                 .handler((context) -> {
-                    final int amount = context.get("amount");
+                    final String amountExpression = context.get("amount");
 
                     String mobNameString = context.flags().getValue(mobname, "");
                     if (mobNameString == null || mobNameString.equalsIgnoreCase("any")) {
@@ -179,7 +181,7 @@ public class KillEliteMobsObjective extends Objective {
                     killEliteMobsObjective.setEliteMobToKillContainsName(mobNameString);
                     killEliteMobsObjective.setMaximumLevel(maximumLevelInt);
                     killEliteMobsObjective.setMinimumLevel(minimumLevelInt);
-                    killEliteMobsObjective.setProgressNeeded(amount);
+                    killEliteMobsObjective.setProgressNeededExpression(amountExpression);
                     killEliteMobsObjective.setSpawnReason(spawnReasonString);
                     killEliteMobsObjective.setMinimumDamagePercentage(minimumDamagePercentageInt);
 
@@ -219,10 +221,6 @@ public class KillEliteMobsObjective extends Objective {
         return eliteMobToKillContainsName;
     }
 
-    public final long getAmountToKill() {
-        return getProgressNeeded();
-    }
-
     public final int getMinimumLevel() {
         return minimumLevel;
     }
@@ -240,14 +238,14 @@ public class KillEliteMobsObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
+    public String getObjectiveTaskDescription(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
         String toReturn;
         if (!getEliteMobToKillContainsName().isBlank()) {
-            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.killEliteMobs.base", questPlayer, Map.of(
+            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.killEliteMobs.base", questPlayer, activeObjective, Map.of(
                     "%ELITEMOBNAME%", getEliteMobToKillContainsName()
             ));
         } else {
-            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.killEliteMobs.any", questPlayer);
+            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.killEliteMobs.any", questPlayer, activeObjective);
         }
         if (getMinimumLevel() != -1) {
             if (getMaximumLevel() != -1) {
@@ -278,7 +276,6 @@ public class KillEliteMobsObjective extends Objective {
         configuration.set(initialPath + ".specifics.maximumLevel", getMaximumLevel());
         configuration.set(initialPath + ".specifics.spawnReason", getSpawnReason());
         configuration.set(initialPath + ".specifics.minimumDamagePercentage", getMinimumDamagePercentage());
-        configuration.set(initialPath + ".specifics.amountToKill", getAmountToKill());
 
     }
 

@@ -27,8 +27,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -55,9 +57,9 @@ public class SmeltObjective extends Objective {
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
         manager.command(addObjectiveBuilder
                 .argument(MaterialOrHandArgument.of("material", main), ArgumentDescription.of("Output item of the smelting."))
-                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of items which need to be smelted."))
+                .argument(NumberVariableValueArgument.newBuilder("amount", main, null), ArgumentDescription.of("Amount of items which need to be smelted"))
                 .handler((context) -> {
-                    final int amount = context.get("amount");
+                    final String amountExpression = context.get("amount");
 
                     boolean smeltAnyItem = false;
 
@@ -78,7 +80,7 @@ public class SmeltObjective extends Objective {
                         smeltObjective.setItemToSmelt(itemToSmelt);
                     }
 
-                    smeltObjective.setProgressNeeded(amount);
+                    smeltObjective.setProgressNeededExpression(amountExpression);
                     smeltObjective.setSmeltAnyItem(smeltAnyItem);
 
                     main.getObjectiveManager().addObjective(smeltObjective, context);
@@ -112,12 +114,8 @@ public class SmeltObjective extends Objective {
         }
     }
 
-    public final long getAmountToSmelt() {
-        return super.getProgressNeeded();
-    }
-
     @Override
-    public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
+    public String getObjectiveTaskDescription(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
         final String displayName;
         if (!isSmeltAnyItem()) {
             if (getItemToSmelt().getItemMeta() != null) {
@@ -134,14 +132,14 @@ public class SmeltObjective extends Objective {
 
 
         if (!displayName.isBlank()) {
-            return main.getLanguageManager().getString("chat.objectives.taskDescription.smelt.base", questPlayer, Map.of(
+            return main.getLanguageManager().getString("chat.objectives.taskDescription.smelt.base", questPlayer, activeObjective, Map.of(
                     "%ITEMTOSMELTTYPE%", itemType,
                     "%ITEMTOSMELTNAME%", displayName,
                     "%(%", "(",
                     "%)%", "<RESET>)"
             ));
         } else {
-            return main.getLanguageManager().getString("chat.objectives.taskDescription.smelt.base", questPlayer, Map.of(
+            return main.getLanguageManager().getString("chat.objectives.taskDescription.smelt.base", questPlayer, activeObjective, Map.of(
                     "%ITEMTOSMELTTYPE%", itemType,
                     "%ITEMTOSMELTNAME%", "",
                     "%(%", "",

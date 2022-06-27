@@ -24,7 +24,9 @@ import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
@@ -39,12 +41,12 @@ public class JumpObjective extends Objective {
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
         manager.command(addObjectiveBuilder
-                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of times the player needs to jump."))
+                .argument(NumberVariableValueArgument.newBuilder("amount", main, null), ArgumentDescription.of("Amount of times the player needs to jump."))
                 .handler((context) -> {
-                    final int amount = context.get("amount");
+                    final String amountExpression = context.get("amount");
 
                     JumpObjective jumpObjective = new JumpObjective(main);
-                    jumpObjective.setProgressNeeded(amount);
+                    jumpObjective.setProgressNeededExpression(amountExpression);
 
                     main.getObjectiveManager().addObjective(jumpObjective, context);
 
@@ -58,15 +60,10 @@ public class JumpObjective extends Objective {
     public void onObjectiveCompleteOrLock(final ActiveObjective activeObjective, final boolean lockedOrCompletedDuringPluginStartupQuestLoadingProcess, final boolean completed) {
     }
 
-
-    public final long getAmountToJump() {
-        return super.getProgressNeeded();
-    }
-
     @Override
-    public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.jump.base", questPlayer, Map.of(
-                "%AMOUNTOFJUMPS%", "" + getAmountToJump()
+    public String getObjectiveTaskDescription(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.jump.base", questPlayer, activeObjective, Map.of(
+                "%AMOUNTOFJUMPS%", "" + (activeObjective != null ? activeObjective.getProgressNeeded() : getProgressNeededExpression())
         ));
     }
 

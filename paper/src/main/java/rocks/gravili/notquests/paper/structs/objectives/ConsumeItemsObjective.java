@@ -27,8 +27,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -55,9 +57,9 @@ public class ConsumeItemsObjective extends Objective {
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
         manager.command(addObjectiveBuilder
                 .argument(MaterialOrHandArgument.of("material", main), ArgumentDescription.of("Material of the item which needs to be consumed."))
-                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of items which need to be consumed."))
+                .argument(NumberVariableValueArgument.newBuilder("amount", main, null), ArgumentDescription.of("Amount of items which need to be consumed"))
                 .handler((context) -> {
-                    final int amount = context.get("amount");
+                    final String amountExpression = context.get("amount");
 
                     boolean consumeAnyItem = false;
 
@@ -79,7 +81,7 @@ public class ConsumeItemsObjective extends Objective {
                     }
 
                     consumeItemsObjective.setConsumeAnyItem(consumeAnyItem);
-                    consumeItemsObjective.setProgressNeeded(amount);
+                    consumeItemsObjective.setProgressNeededExpression(amountExpression);
 
                     main.getObjectiveManager().addObjective(consumeItemsObjective, context);
 
@@ -113,12 +115,9 @@ public class ConsumeItemsObjective extends Objective {
         }
     }
 
-    public final long getAmountToConsume() {
-        return super.getProgressNeeded();
-    }
 
     @Override
-    public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
+    public String getObjectiveTaskDescription(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
         final String displayName;
         if (!isConsumeAnyItem()) {
             if (getItemToConsume().getItemMeta() != null) {
@@ -133,14 +132,14 @@ public class ConsumeItemsObjective extends Objective {
         String itemType = isConsumeAnyItem() ? "Any" : getItemToConsume().getType().name();
 
         if (!displayName.isBlank()) {
-            return main.getLanguageManager().getString("chat.objectives.taskDescription.consumeItems.base", questPlayer, Map.of(
+            return main.getLanguageManager().getString("chat.objectives.taskDescription.consumeItems.base", questPlayer, activeObjective, Map.of(
                     "%ITEMTOCONSUMETYPE%", itemType,
                     "%ITEMTOCONSUMENAME%", displayName,
                     "%(%", "(",
                     "%)%", "<RESET>)"
             ));
         } else {
-            return main.getLanguageManager().getString("chat.objectives.taskDescription.consumeItems.base", questPlayer, Map.of(
+            return main.getLanguageManager().getString("chat.objectives.taskDescription.consumeItems.base", questPlayer, activeObjective, Map.of(
                     "%ITEMTOCONSUMETYPE%", itemType,
                     "%ITEMTOCONSUMENAME%", "",
                     "%(%", "",

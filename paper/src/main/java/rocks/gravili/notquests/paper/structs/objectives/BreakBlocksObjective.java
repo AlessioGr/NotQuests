@@ -26,8 +26,10 @@ import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -57,14 +59,14 @@ public class BreakBlocksObjective extends Objective {
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
         manager.command(addObjectiveBuilder
                 .argument(MaterialOrHandArgument.of("material", main), ArgumentDescription.of("Material of the block which needs to be broken."))
-                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of blocks which need to be broken"))
+                .argument(NumberVariableValueArgument.newBuilder("amount", main, null), ArgumentDescription.of("Amount of blocks which need to be broken"))
                 .flag(
                         manager.flagBuilder("doNotDeductIfBlockIsPlaced")
                                 .withDescription(ArgumentDescription.of("Makes it so Quest progress is not removed if the block is placed"))
                 )
                 .handler((context) -> {
 
-                    final int amount = context.get("amount");
+                    final String amountExpression = context.get("amount");
                     final boolean deductIfBlockIsPlaced = !context.flags().isPresent("doNotDeductIfBlockIsPlaced");
 
                     final MaterialOrHand materialOrHand = context.get("material");
@@ -81,7 +83,7 @@ public class BreakBlocksObjective extends Objective {
                     }else{
                         breakBlocksObjective.setBlockToBreak(materialToBreak);
                     }
-                    breakBlocksObjective.setProgressNeeded(amount);
+                    breakBlocksObjective.setProgressNeededExpression(amountExpression);
                     breakBlocksObjective.setDeductIfBlockIsPlaced(deductIfBlockIsPlaced);
 
                     main.getObjectiveManager().addObjective(breakBlocksObjective, context);
@@ -90,7 +92,7 @@ public class BreakBlocksObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
+    public String getObjectiveTaskDescription(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
         String translatedMaterialName;
         try {
             translatedMaterialName = "<lang:" + Material.valueOf(getBlockToBreakMaterial().toUpperCase(Locale.ROOT)).translationKey() + ">";
@@ -101,7 +103,7 @@ public class BreakBlocksObjective extends Objective {
         //TODO: translatedMaterialName doesnt work in gradients yet. Wait until minimessage fixed that bug
 
 
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.breakBlocks.base", questPlayer, Map.of(
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.breakBlocks.base", questPlayer, activeObjective, Map.of(
                 "%BLOCKTOBREAK%", getBlockToBreakMaterial()
         ));
     }
@@ -139,10 +141,6 @@ public class BreakBlocksObjective extends Objective {
 
     public void setBlockToBreak(final String blockToBreak) {
         this.blockToBreak = blockToBreak;
-    }
-
-    public final long getAmountToBreak() {
-        return super.getProgressNeeded();
     }
 
     public final boolean isDeductIfBlockPlaced() {

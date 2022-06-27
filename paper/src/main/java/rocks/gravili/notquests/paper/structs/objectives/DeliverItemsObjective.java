@@ -37,8 +37,10 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.Quest;
@@ -72,7 +74,7 @@ public class DeliverItemsObjective extends Objective {
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
         manager.command(addObjectiveBuilder
                 .argument(MaterialOrHandArgument.of("material", main), ArgumentDescription.of("Material of the item which needs to be delivered."))
-                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of items which need to be delivered."))
+                .argument(NumberVariableValueArgument.newBuilder("amount", main, null), ArgumentDescription.of("Amount of items which need to be delivered"))
                 .argument(StringArgument.<CommandSender>newBuilder("NPC or Armorstand").withSuggestionsProvider((context, lastString) -> {
                     ArrayList<String> completions = new ArrayList<>();
                     if (main.getIntegrationsManager().isCitizensEnabled()) {
@@ -88,7 +90,7 @@ public class DeliverItemsObjective extends Objective {
                 }).build(), ArgumentDescription.of("ID of the Citizens NPC or 'armorstand' to whom the items should be delivered."))
                 .handler((context) -> {
                     final Quest quest = context.get("quest");
-                    final int amountToDeliver = context.get("amount");
+                    final String amountToDeliverExpression = context.get("amount");
 
                     boolean deliverAnyItem = false;
 
@@ -130,7 +132,7 @@ public class DeliverItemsObjective extends Objective {
                             deliverItemsObjective.setItemToDeliver(itemToDeliver);
                         }
 
-                        deliverItemsObjective.setProgressNeeded(amountToDeliver);
+                        deliverItemsObjective.setProgressNeededExpression(amountToDeliverExpression);
                         deliverItemsObjective.setRecipientNPCID(npcID);
                         deliverItemsObjective.setDeliverAnyItem(deliverAnyItem);
 
@@ -171,7 +173,7 @@ public class DeliverItemsObjective extends Objective {
 
 
                             itemMeta.getPersistentDataContainer().set(ItemStackKey, PersistentDataType.INTEGER, randomNum);
-                            itemMeta.getPersistentDataContainer().set(ItemStackAmountKey, PersistentDataType.INTEGER, amountToDeliver);
+                            itemMeta.getPersistentDataContainer().set(ItemStackAmountKey, PersistentDataType.STRING, amountToDeliverExpression);
 
                             if (deliverAnyItem) {
                                 itemMeta.getPersistentDataContainer().set(deliverAnyKey, PersistentDataType.BYTE, (byte) 1);
@@ -254,11 +256,6 @@ public class DeliverItemsObjective extends Objective {
         }
     }
 
-    //Probably never used, because we use the objective progress instead
-    public final long getAmountToDeliver() {
-        return super.getProgressNeeded();
-    }
-
     public final int getRecipientNPCID() {
         return recipientNPCID;
     }
@@ -268,7 +265,7 @@ public class DeliverItemsObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
+    public String getObjectiveTaskDescription(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
         final String displayName;
         if (!isDeliverAnyItem()) {
             if (getItemToDeliver().getItemMeta() != null) {
@@ -285,14 +282,14 @@ public class DeliverItemsObjective extends Objective {
 
         String toReturn;
         if (!displayName.isBlank()) {
-            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.base", questPlayer, Map.of(
+            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.base", questPlayer, activeObjective, Map.of(
                     "%ITEMTODELIVERTYPE%", itemType,
                     "%ITEMTODELIVERNAME%", displayName,
                     "%(%", "(",
                     "%)%", "<RESET>)"
             ));
         } else {
-            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.base", questPlayer, Map.of(
+            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.base", questPlayer, activeObjective, Map.of(
                     "%ITEMTODELIVERTYPE%", itemType,
                     "%ITEMTODELIVERNAME%", "",
                     "%(%", "",
@@ -306,24 +303,24 @@ public class DeliverItemsObjective extends Objective {
             if (npc != null) {
                 final String mmNpcName = main.getMiniMessage().serialize(LegacyComponentSerializer.legacyAmpersand().deserialize(npc.getName()));
 
-                toReturn += "\n" + main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.deliver-to-npc", questPlayer, Map.of(
+                toReturn += "\n" + main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.deliver-to-npc", questPlayer, activeObjective, Map.of(
                         "%NPCNAME%", mmNpcName
                 ));
             } else {
-                toReturn += "\n" + main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.deliver-to-npc-not-available", questPlayer);
+                toReturn += "\n" + main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.deliver-to-npc-not-available", questPlayer, activeObjective);
             }
         } else {
 
             if (getRecipientNPCID() != -1) {
-                toReturn += main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.deliver-to-npc-citizens-not-found", questPlayer);
+                toReturn += main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.deliver-to-npc-citizens-not-found", questPlayer, activeObjective);
             } else { //Armor Stands
                 final UUID armorStandUUID = getRecipientArmorStandUUID();
                 if (armorStandUUID != null) {
-                    toReturn += "\n" + main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.deliver-to-armorstand", questPlayer, Map.of(
+                    toReturn += "\n" + main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.deliver-to-armorstand", questPlayer, activeObjective, Map.of(
                             "%ARMORSTANDNAME%", main.getArmorStandManager().getArmorStandName(armorStandUUID)
                     ));
                 } else {
-                    toReturn += "\n" + main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.deliver-to-armorstand-not-available", questPlayer);
+                    toReturn += "\n" + main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.deliver-to-armorstand-not-available", questPlayer, activeObjective);
                 }
             }
 

@@ -41,6 +41,7 @@ import rocks.gravili.notquests.paper.structs.Quest;
 
 import java.io.File;
 import java.util.*;
+import java.util.function.Supplier;
 
 public class UtilManager {
     private final NotQuests main;
@@ -129,21 +130,27 @@ public class UtilManager {
      * The order in which replacements are applied depends on the order of the
      * map's entry set.
      */
-    public String replaceFromMap(String string, Map<String, String> replacements) {
-        StringBuilder sb = new StringBuilder(string);
-        for (Map.Entry<String, String> entry : replacements.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
+    public final String replaceFromMap(final String string, final Map<String, Supplier<String>> replacements) {
+        final StringBuilder sb = new StringBuilder(string);
+        for (final Map.Entry<String, Supplier<String>> entry : replacements.entrySet()) {
+            final String key = entry.getKey();
+            final Supplier<String> valueSupplier = entry.getValue();
 
             //main.getLogManager().info("Replacing key: " + key + " and value: " + value);
 
             int start = sb.indexOf(key, 0);
-            while (start > -1) {
-                int end = start + key.length();
-                int nextSearchStart = start + value.length();
-                sb.replace(start, end, value);
-                start = sb.indexOf(key, nextSearchStart);
+
+            if(start > -1){
+                final String value = valueSupplier.get();
+                while (start > -1) {
+                    int end = start + key.length();
+                    int nextSearchStart = start + value.length();
+                    sb.replace(start, end, value);
+                    start = sb.indexOf(key, nextSearchStart);
+                }
             }
+
+
 
             //main.getLogManager().info("State: " + sb.toString());
 

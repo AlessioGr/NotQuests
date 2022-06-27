@@ -24,8 +24,10 @@ import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.QuestSelector;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -43,22 +45,22 @@ public class OtherQuestObjective extends Objective {
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
         manager.command(addObjectiveBuilder
-                .argument(QuestSelector.of("other quest name", main), ArgumentDescription.of("Name of the other Quest the player has to complete."))
-                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of times the Quest needs to be completed."))
+                .argument(QuestSelector.of("other quest name", main), ArgumentDescription.of("Name of the other Quest the player has to complete"))
+                .argument(NumberVariableValueArgument.newBuilder("amount", main, null), ArgumentDescription.of("Amount of times the Quest needs to be completed"))
                 .flag(
                         manager.flagBuilder("countPreviouslyCompletedQuests")
                                 .withDescription(ArgumentDescription.of("Makes it so quests completed before this OtherQuest objective becomes active will be counted towards the progress too."))
                 )
                 .handler((context) -> {
                     final Quest otherQuest = context.get("other quest name");
-                    final int amount = context.get("amount");
+                    final String amountExpression = context.get("amount");
                     final boolean countPreviouslyCompletedQuests = context.flags().isPresent("countPreviouslyCompletedQuests");
 
                     OtherQuestObjective otherQuestObjective = new OtherQuestObjective(main);
 
                     otherQuestObjective.setOtherQuestName(otherQuest.getQuestName());
                     otherQuestObjective.setCountPreviousCompletions(countPreviouslyCompletedQuests);
-                    otherQuestObjective.setProgressNeeded(amount);
+                    otherQuestObjective.setProgressNeededExpression(amountExpression);
 
                     main.getObjectiveManager().addObjective(otherQuestObjective, context);
                 }));
@@ -69,8 +71,8 @@ public class OtherQuestObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.otherQuest.base", questPlayer, Map.of(
+    public String getObjectiveTaskDescription(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.otherQuest.base", questPlayer, activeObjective, Map.of(
                 "%OTHERQUESTNAME%", getOtherQuest().getQuestName()
         ));
     }
@@ -98,10 +100,6 @@ public class OtherQuestObjective extends Objective {
 
     public final Quest getOtherQuest() {
         return main.getQuestManager().getQuest(otherQuestName);
-    }
-
-    public final long getAmountOfCompletionsNeeded() {
-        return super.getProgressNeeded();
     }
 
     public final boolean isCountPreviousCompletions() {

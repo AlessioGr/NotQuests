@@ -30,6 +30,7 @@ import org.betonquest.betonquest.id.ObjectiveID;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -168,8 +169,8 @@ public class BetonQuestObjectiveStateChangeObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.BetonQuestCompleteObjective.base", questPlayer, Map.of(
+    public String getObjectiveTaskDescription(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.BetonQuestCompleteObjective.base", questPlayer, activeObjective, Map.of(
                 "%BETONQUESTOBJECTIVENAME%", getObjectiveName()
         ));
     }

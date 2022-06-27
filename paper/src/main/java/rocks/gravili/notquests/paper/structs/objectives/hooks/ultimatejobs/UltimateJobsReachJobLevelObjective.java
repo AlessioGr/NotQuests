@@ -28,7 +28,9 @@ import de.warsteiner.jobs.api.Job;
 import de.warsteiner.jobs.api.JobsPlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
@@ -57,25 +59,25 @@ public class UltimateJobsReachJobLevelObjective extends Objective {
                             final List<String> allArgs = context.getRawInput();
                             main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Job ID]", "");
 
-                            ArrayList<String> completions = new ArrayList<>();
+                            final ArrayList<String> completions = new ArrayList<>();
                             /*for(String jobID : UltimateJobs.getPlugin().getAPI().getJobsInListAsID()){
                                 completions.add(jobID);
                             }*///TODO: FIx
                             return completions;
                         }
                 ).single().build(), ArgumentDescription.of("ID of the job"))
-                .argument(IntegerArgument.<CommandSender>newBuilder("level").withMin(1), ArgumentDescription.of("Job Level which needs to be reached"))
+                .argument(NumberVariableValueArgument.newBuilder("level", main, null), ArgumentDescription.of("Job level which needs to be reached"))
                 .flag(
                         manager.flagBuilder("doNotCountPreviousLevels")
                                 .withDescription(ArgumentDescription.of("Makes it so only additional levels gained from the time of unlocking this Objective will count (and previous/existing counts will not count, so it starts from zero)"))
                 )
                 .handler((context) -> {
-                    int amount = context.get("level");
+                    final String amountExpression = context.get("level");
                     final boolean countPreviousLevels = !context.flags().isPresent("doNotCountPreviousLevels");
                     final String jobID = context.get("Job ID");
 
                     UltimateJobsReachJobLevelObjective ultimateJobsReachJobLevelObjective = new UltimateJobsReachJobLevelObjective(main);
-                    ultimateJobsReachJobLevelObjective.setProgressNeeded(amount);
+                    ultimateJobsReachJobLevelObjective.setProgressNeededExpression(amountExpression);
                     ultimateJobsReachJobLevelObjective.setCountPreviousLevels(countPreviousLevels);
                     ultimateJobsReachJobLevelObjective.setJobID(jobID);
 
@@ -100,14 +102,10 @@ public class UltimateJobsReachJobLevelObjective extends Objective {
         this.countPreviousLevels = countPreviousLevels;
     }
 
-    public final long getLevelToReach() {
-        return getProgressNeeded();
-    }
-
     @Override
-    public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.ultimateJobsReachJobLevel.base", questPlayer, Map.of(
-                "%AMOUNT%", "" + getLevelToReach(),
+    public String getObjectiveTaskDescription(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.ultimateJobsReachJobLevel.base", questPlayer, activeObjective, Map.of(
+                "%AMOUNT%", "" + (activeObjective != null ? activeObjective.getProgressNeeded() : getProgressNeededExpression()),
                 "%JOBID%", getJobID()
         ));
     }

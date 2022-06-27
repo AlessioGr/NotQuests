@@ -25,7 +25,9 @@ import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
@@ -45,7 +47,7 @@ public class RunCommandObjective extends Objective {
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
         manager.command(addObjectiveBuilder
-                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of times the command needs to be run."))
+                .argument(NumberVariableValueArgument.newBuilder("amount", main, null), ArgumentDescription.of("Amount of times the command needs to be run"))
                 .argument(StringArgument.<CommandSender>newBuilder("Command").withSuggestionsProvider(
                         (context, lastString) -> {
                             final List<String> allArgs = context.getRawInput();
@@ -67,7 +69,7 @@ public class RunCommandObjective extends Objective {
                 )
                 .handler((context) -> {
                     String command = context.get("Command");
-                    final int amount = context.get("amount");
+                    final String amountExpression = context.get("amount");
                     final boolean ignoreCase = context.flags().isPresent("ignoreCase");
                     final boolean cancelCommand = context.flags().isPresent("cancelCommand");
 
@@ -76,7 +78,7 @@ public class RunCommandObjective extends Objective {
                     }
 
                     RunCommandObjective runCommandObjective = new RunCommandObjective(main);
-                    runCommandObjective.setProgressNeeded(amount);
+                    runCommandObjective.setProgressNeededExpression(amountExpression);
                     runCommandObjective.setCommandToRun(command);
                     runCommandObjective.setIgnoreCase(ignoreCase);
                     runCommandObjective.setCancelCommand(cancelCommand);
@@ -98,8 +100,8 @@ public class RunCommandObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.runCommand.base", questPlayer, Map.of(
+    public String getObjectiveTaskDescription(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.runCommand.base", questPlayer, activeObjective, Map.of(
                 "%COMMANDTORUN%", getCommandToRun()
         ));
     }
@@ -128,10 +130,6 @@ public class RunCommandObjective extends Objective {
 
     public final String getCommandToRun() {
         return commandToRun;
-    }
-
-    public final long getAmountToRun() {
-        return super.getProgressNeeded();
     }
 
     public final boolean isIgnoreCase() {

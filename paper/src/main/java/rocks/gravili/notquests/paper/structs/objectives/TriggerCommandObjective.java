@@ -27,7 +27,9 @@ import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
@@ -58,13 +60,13 @@ public class TriggerCommandObjective extends Objective {
                             return completions;
                         }
                 ).single().build(), ArgumentDescription.of("Triggercommand name"))
-                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of times the trigger needs to be triggered to complete this objective."))
+                .argument(NumberVariableValueArgument.newBuilder("amount", main, null), ArgumentDescription.of("Amount of times the trigger needs to be triggered to complete this objective."))
                 .handler((context) -> {
                     final String triggerName = context.get("Trigger name");
-                    final int amount = context.get("amount");
+                    final String amountExpression = context.get("amount");
 
                     TriggerCommandObjective triggerCommandObjective = new TriggerCommandObjective(main);
-                    triggerCommandObjective.setProgressNeeded(amount);
+                    triggerCommandObjective.setProgressNeededExpression(amountExpression);
                     triggerCommandObjective.setTriggerName(triggerName);
 
                     main.getObjectiveManager().addObjective(triggerCommandObjective, context);
@@ -72,8 +74,8 @@ public class TriggerCommandObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.triggerCommand.base", questPlayer, Map.of(
+    public String getObjectiveTaskDescription(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.triggerCommand.base", questPlayer, activeObjective, Map.of(
                 "%TRIGGERNAME%", getTriggerName()
         ));
     }

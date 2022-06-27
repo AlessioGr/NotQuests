@@ -38,18 +38,16 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
-import rocks.gravili.notquests.paper.structs.Quest;
-import rocks.gravili.notquests.paper.structs.QuestPlayer;
+import rocks.gravili.notquests.paper.structs.*;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
+import rocks.gravili.notquests.paper.structs.triggers.ActiveTrigger;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.*;
 
 
@@ -1444,30 +1442,65 @@ public class DataManager {
 
         //Create Database tables if they don't exist yet
         try (final Connection connection = getConnection();
-             final PreparedStatement createQuestPlayerDataTableStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS `QuestPlayerData` (`PlayerUUID` varchar(200), `QuestPoints` BIGINT(255), PRIMARY KEY (PlayerUUID))");
-             final PreparedStatement createActiveQuestsDataTableStatement = connection.prepareStatement( "CREATE TABLE IF NOT EXISTS `ActiveQuests` (`QuestName` varchar(200), `PlayerUUID` varchar(200))" );
-             final PreparedStatement createCompletedQuestsDataTableStatement = connection.prepareStatement( "CREATE TABLE IF NOT EXISTS `CompletedQuests` (`QuestName` varchar(200), `PlayerUUID` varchar(200), `TimeCompleted` BIGINT(255))" );
-             final PreparedStatement createActiveObjectivesDataTableStatement = connection.prepareStatement( "CREATE TABLE IF NOT EXISTS `ActiveObjectives` (`ObjectiveType` varchar(200), `QuestName` varchar(200), `PlayerUUID` varchar(200), `CurrentProgress` BIGINT(255), `ObjectiveID` INT(255), `HasBeenCompleted` BOOLEAN)" );
-             final PreparedStatement createActiveTriggersDataTableStatement = connection.prepareStatement( "CREATE TABLE IF NOT EXISTS `ActiveTriggers` (`TriggerType` varchar(200), `QuestName` varchar(200), `PlayerUUID` varchar(200), `CurrentProgress` BIGINT(255), `TriggerID` INT(255))" );
-             final PreparedStatement createTagDataTableStatement = connection.prepareStatement( "CREATE TABLE IF NOT EXISTS `Tags` (`PlayerUUID` varchar(200), `TagIdentifier` varchar(200), `TagValue` varchar(200), `TagType` varchar(200) )" );
+             final Statement statement = connection.createStatement();
         ) {
             main.getLogManager().info(LogCategory.DATA, "Creating database table 'QuestPlayerData' if it doesn't exist yet...");
-            createQuestPlayerDataTableStatement.executeUpdate();
+            statement.executeUpdate("""
+                CREATE TABLE IF NOT EXISTS `QuestPlayerData` (`PlayerUUID` varchar(200), `QuestPoints` BIGINT(255), PRIMARY KEY (PlayerUUID))
+            """);
 
             main.getLogManager().info(LogCategory.DATA, "Creating database table 'ActiveQuests' if it doesn't exist yet...");
-            createActiveQuestsDataTableStatement.executeUpdate();
+            statement.executeUpdate("""
+                CREATE TABLE IF NOT EXISTS `ActiveQuests` (`QuestName` varchar(200), `PlayerUUID` varchar(200))
+            """);
 
             main.getLogManager().info(LogCategory.DATA, "Creating database table 'CompletedQuests' if it doesn't exist yet...");
-            createCompletedQuestsDataTableStatement.executeUpdate();
+            statement.executeUpdate("""
+                CREATE TABLE IF NOT EXISTS `CompletedQuests` (`QuestName` varchar(200), `PlayerUUID` varchar(200), `TimeCompleted` BIGINT(255))
+            """);
+
+
+            main.getLogManager().info(LogCategory.DATA, "Adding 'ProgressNeeded' column to 'ActiveObjectives' if it the table exists but the column doesn't exist yet...");
+            boolean seemsIAlreadyMigrated = false;
+            try{
+                statement.executeUpdate("""
+                ALTER TABLE `ActiveObjectives` ADD COLUMN `ProgressNeeded` DOUBLE
+            """);
+            }catch (Exception ignored){
+                seemsIAlreadyMigrated = true;
+            }
+
+            if(!seemsIAlreadyMigrated){
+                main.getLogManager().info(LogCategory.DATA, "Making the 'CurrentProgress' column of 'ActiveObjectives' of datatype double (from BigInt) by recreating it..");
+                statement.executeUpdate("""
+                ALTER TABLE ActiveObjectives RENAME TO ActiveObjectivesOld
+            """);
+                statement.executeUpdate("""
+                CREATE TABLE `ActiveObjectives` (`ObjectiveType` varchar(200), `QuestName` varchar(200), `PlayerUUID` varchar(200), `CurrentProgress` DOUBLE, `ObjectiveID` INT(255), `HasBeenCompleted` BOOLEAN, `ProgressNeeded` DOUBLE)
+            """);
+                statement.executeUpdate("""
+                INSERT INTO ActiveObjectives (ObjectiveType,QuestName,PlayerUUID,CurrentProgress,ObjectiveID,HasBeenCompleted,ProgressNeeded) SELECT ObjectiveType,QuestName,PlayerUUID,CurrentProgress,ObjectiveID,HasBeenCompleted,ProgressNeeded FROM ActiveObjectivesOld
+            """);
+                statement.executeUpdate("""
+                DROP TABLE ActiveObjectivesOld
+            """);
+            }
+
 
             main.getLogManager().info(LogCategory.DATA, "Creating database table 'ActiveObjectives' if it doesn't exist yet...");
-            createActiveObjectivesDataTableStatement.executeUpdate();
+            statement.executeUpdate("""
+                CREATE TABLE IF NOT EXISTS `ActiveObjectives` (`ObjectiveType` varchar(200), `QuestName` varchar(200), `PlayerUUID` varchar(200), `CurrentProgress` DOUBLE, `ObjectiveID` INT(255), `HasBeenCompleted` BOOLEAN, `ProgressNeeded` DOUBLE)
+            """);
 
             main.getLogManager().info(LogCategory.DATA, "Creating database table 'ActiveTriggers' if it doesn't exist yet...");
-            createActiveTriggersDataTableStatement.executeUpdate();
+            statement.executeUpdate("""
+                CREATE TABLE IF NOT EXISTS `ActiveTriggers` (`TriggerType` varchar(200), `QuestName` varchar(200), `PlayerUUID` varchar(200), `CurrentProgress` BIGINT(255), `TriggerID` INT(255))
+            """);
 
             main.getLogManager().info(LogCategory.DATA, "Creating database table 'Tags' if it doesn't exist yet...");
-            createTagDataTableStatement.executeUpdate();
+            statement.executeUpdate("""
+                CREATE TABLE IF NOT EXISTS `Tags` (`PlayerUUID` varchar(200), `TagIdentifier` varchar(200), `TagValue` varchar(200), `TagType` varchar(200) )
+            """);
 
         } catch (final SQLException e) {
             disablePluginAndSaving("Plugin disabled, because there was an error while trying to load MySQL database tables", e);

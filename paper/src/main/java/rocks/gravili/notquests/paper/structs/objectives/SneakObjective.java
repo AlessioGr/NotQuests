@@ -24,7 +24,9 @@ import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
@@ -39,12 +41,12 @@ public class SneakObjective extends Objective {
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
         manager.command(addObjectiveBuilder
-                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of times the player needs to sneak."))
+                .argument(NumberVariableValueArgument.newBuilder("amount", main, null), ArgumentDescription.of("Amount of times the player needs to sneak"))
                 .handler((context) -> {
-                    final int amount = context.get("amount");
+                    final String amountExpression = context.get("amount");
 
                     SneakObjective sneakObjective = new SneakObjective(main);
-                    sneakObjective.setProgressNeeded(amount);
+                    sneakObjective.setProgressNeededExpression(amountExpression);
 
                     main.getObjectiveManager().addObjective(sneakObjective, context);
 
@@ -57,15 +59,10 @@ public class SneakObjective extends Objective {
     @Override
     public void onObjectiveCompleteOrLock(final ActiveObjective activeObjective, final boolean lockedOrCompletedDuringPluginStartupQuestLoadingProcess, final boolean completed) {
     }
-
-    public final long getAmountToSneak() {
-        return super.getProgressNeeded();
-    }
-
     @Override
-    public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.sneak.base", questPlayer, Map.of(
-                "%AMOUNTOFSNEAKS%", "" + getAmountToSneak()
+    public String getObjectiveTaskDescription(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.sneak.base", questPlayer, activeObjective, Map.of(
+                "%AMOUNTOFSNEAKS%", "" + (activeObjective != null ? activeObjective.getProgressNeeded() : getProgressNeededExpression())
         ));
     }
 

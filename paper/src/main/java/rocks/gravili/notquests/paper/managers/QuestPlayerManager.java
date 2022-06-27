@@ -146,11 +146,13 @@ public class QuestPlayerManager {
 
 
                 //Active Objectives
-                ResultSet activeQuestObjectiveResults = statement.executeQuery("SELECT ObjectiveType, CurrentProgress, HasBeenCompleted, ObjectiveID FROM ActiveObjectives WHERE PlayerUUID = '" + uuid + "' AND QuestName = '" + activeQuest.getQuest().getQuestName() + "';");
+                ResultSet activeQuestObjectiveResults = statement.executeQuery("SELECT ObjectiveType, CurrentProgress, HasBeenCompleted, ObjectiveID, ProgressNeeded FROM ActiveObjectives WHERE PlayerUUID = '" + uuid + "' AND QuestName = '" + activeQuest.getQuest().getQuestName() + "';");
                 while (activeQuestObjectiveResults.next()) {
                     final String objectiveTypeString = activeQuestObjectiveResults.getString("ObjectiveType");
-                    final long currentProgress = activeQuestObjectiveResults.getLong("CurrentProgress");
+                    final double currentProgress = activeQuestObjectiveResults.getDouble("CurrentProgress");
                     final boolean hasBeenCompleted = activeQuestObjectiveResults.getBoolean("HasBeenCompleted");
+                    final double progressNeeded = activeQuestObjectiveResults.getDouble("ProgressNeeded");
+                    final boolean progressNeededNull = activeQuestObjectiveResults.wasNull();
 
                     if (objectiveTypeString != null) {
                         final int objectiveID = activeQuestObjectiveResults.getInt("ObjectiveID");
@@ -160,6 +162,9 @@ public class QuestPlayerManager {
                         for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
                             if (activeObjective.getObjective().getClass() == main.getObjectiveManager().getObjectiveClass(objectiveTypeString) && activeObjective.getObjectiveID() == objectiveID) {
                                 //System.out.println("§4§lHAS BEEN COMPLETED: §b" + hasBeenCompleted + " §c- ID: §b" + objectiveID);
+                                if(!progressNeededNull){
+                                    activeObjective.setProgressNeeded(progressNeeded);
+                                }
                                 activeObjective.setHasBeenCompleted(hasBeenCompleted);
                                 if (activeObjective.getObjective().getCompletionNPCID() == -1) { //Complete automatically
                                     if (activeObjective.getObjective().getCompletionArmorStandUUID() != null) { //Only complete if player has talked to the completion Armor Stand
@@ -257,11 +262,11 @@ public class QuestPlayerManager {
 
                 //Active Objectives
                 for (ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-                    statement.executeUpdate("INSERT INTO ActiveObjectives (ObjectiveType, QuestName, PlayerUUID, CurrentProgress, ObjectiveID, HasBeenCompleted) VALUES ('" + main.getObjectiveManager().getObjectiveType(activeObjective.getObjective().getClass()) + "', '" + activeObjective.getActiveQuest().getQuest().getQuestName() + "', '" + questPlayerUUID + "', " + activeObjective.getCurrentProgress() + ", " + activeObjective.getObjectiveID() + ", " + activeObjective.hasBeenCompleted() + ");");
+                    statement.executeUpdate("INSERT INTO ActiveObjectives (ObjectiveType, QuestName, PlayerUUID, CurrentProgress, ObjectiveID, HasBeenCompleted, ProgressNeeded) VALUES ('" + main.getObjectiveManager().getObjectiveType(activeObjective.getObjective().getClass()) + "', '" + activeObjective.getActiveQuest().getQuest().getQuestName() + "', '" + questPlayerUUID + "', " + activeObjective.getCurrentProgress() + ", " + activeObjective.getObjectiveID() + ", " + activeObjective.hasBeenCompleted() + ", " + activeObjective.getProgressNeeded() + ");");
                 }
                 //Active Objectives from completed Objective list
                 for (ActiveObjective completedObjective : activeQuest.getCompletedObjectives()) {
-                    statement.executeUpdate("INSERT INTO ActiveObjectives (ObjectiveType, QuestName, PlayerUUID, CurrentProgress, ObjectiveID, HasBeenCompleted) VALUES ('" + main.getObjectiveManager().getObjectiveType(completedObjective.getObjective().getClass()) + "', '" + completedObjective.getActiveQuest().getQuest().getQuestName() + "', '" + questPlayerUUID + "', " + completedObjective.getCurrentProgress() + ", " + completedObjective.getObjectiveID() + ", " + completedObjective.hasBeenCompleted() + ");");
+                    statement.executeUpdate("INSERT INTO ActiveObjectives (ObjectiveType, QuestName, PlayerUUID, CurrentProgress, ObjectiveID, HasBeenCompleted, ProgressNeeded) VALUES ('" + main.getObjectiveManager().getObjectiveType(completedObjective.getObjective().getClass()) + "', '" + completedObjective.getActiveQuest().getQuest().getQuestName() + "', '" + questPlayerUUID + "', " + completedObjective.getCurrentProgress() + ", " + completedObjective.getObjectiveID() + ", " + completedObjective.hasBeenCompleted() + ", " + completedObjective.getProgressNeeded() + ");");
                 }
             }
 
@@ -401,8 +406,10 @@ public class QuestPlayerManager {
                     ResultSet activeQuestObjectiveResults = statement.executeQuery("SELECT * FROM ActiveObjectives WHERE PlayerUUID = '" + questPlayer.getUniqueId() + "' AND QuestName = '" + activeQuest.getQuest().getQuestName() + "';");
                     while (activeQuestObjectiveResults.next()) {
                         final String objectiveTypeString = activeQuestObjectiveResults.getString("ObjectiveType");
-                        final long currentProgress = activeQuestObjectiveResults.getLong("CurrentProgress");
+                        final double currentProgress = activeQuestObjectiveResults.getDouble("CurrentProgress");
                         final boolean hasBeenCompleted = activeQuestObjectiveResults.getBoolean("HasBeenCompleted");
+                        final double progressNeeded = activeQuestObjectiveResults.getDouble("ProgressNeeded");
+                        final boolean progressNeededNull = activeQuestObjectiveResults.wasNull();
 
                         if (objectiveTypeString != null) {
                             final int objectiveID = activeQuestObjectiveResults.getInt("ObjectiveID");
@@ -412,6 +419,9 @@ public class QuestPlayerManager {
                             for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
                                 if (activeObjective.getObjective().getClass() == main.getObjectiveManager().getObjectiveClass(objectiveTypeString) && activeObjective.getObjectiveID() == objectiveID) {
                                     //System.out.println("§4§lHAS BEEN COMPLETED: §b" + hasBeenCompleted + " §c- ID: §b" + objectiveID);
+                                    if(!progressNeededNull){
+                                        activeObjective.setProgressNeeded(progressNeeded);
+                                    }
                                     activeObjective.setHasBeenCompleted(hasBeenCompleted);
                                     if (activeObjective.getObjective().getCompletionNPCID() == -1) { //Complete automatically
                                         if (activeObjective.getObjective().getCompletionArmorStandUUID() != null) { //Only complete if player has talked to the completion Armor Stand
@@ -501,11 +511,11 @@ public class QuestPlayerManager {
 
                     //Active Objectives
                     for (ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-                        statement.executeUpdate("INSERT INTO ActiveObjectives (ObjectiveType, QuestName, PlayerUUID, CurrentProgress, ObjectiveID, HasBeenCompleted) VALUES ('" + main.getObjectiveManager().getObjectiveType(activeObjective.getObjective().getClass()) + "', '" + activeObjective.getActiveQuest().getQuest().getQuestName() + "', '" + questPlayerUUID + "', " + activeObjective.getCurrentProgress() + ", " + activeObjective.getObjectiveID() + ", " + activeObjective.hasBeenCompleted() + ");");
+                        statement.executeUpdate("INSERT INTO ActiveObjectives (ObjectiveType, QuestName, PlayerUUID, CurrentProgress, ObjectiveID, HasBeenCompleted, ProgressNeeded) VALUES ('" + main.getObjectiveManager().getObjectiveType(activeObjective.getObjective().getClass()) + "', '" + activeObjective.getActiveQuest().getQuest().getQuestName() + "', '" + questPlayerUUID + "', " + activeObjective.getCurrentProgress() + ", " + activeObjective.getObjectiveID() + ", " + activeObjective.hasBeenCompleted() + ", " + activeObjective.getProgressNeeded() + ");");
                     }
                     //Active Objectives from completed Objective list
                     for (ActiveObjective completedObjective : activeQuest.getCompletedObjectives()) {
-                        statement.executeUpdate("INSERT INTO ActiveObjectives (ObjectiveType, QuestName, PlayerUUID, CurrentProgress, ObjectiveID, HasBeenCompleted) VALUES ('" + main.getObjectiveManager().getObjectiveType(completedObjective.getObjective().getClass()) + "', '" + completedObjective.getActiveQuest().getQuest().getQuestName() + "', '" + questPlayerUUID + "', " + completedObjective.getCurrentProgress() + ", " + completedObjective.getObjectiveID() + ", " + completedObjective.hasBeenCompleted() + ");");
+                        statement.executeUpdate("INSERT INTO ActiveObjectives (ObjectiveType, QuestName, PlayerUUID, CurrentProgress, ObjectiveID, HasBeenCompleted, ProgressNeeded) VALUES ('" + main.getObjectiveManager().getObjectiveType(completedObjective.getObjective().getClass()) + "', '" + completedObjective.getActiveQuest().getQuest().getQuestName() + "', '" + questPlayerUUID + "', " + completedObjective.getCurrentProgress() + ", " + completedObjective.getObjectiveID() + ", " + completedObjective.hasBeenCompleted() + ", " + completedObjective.getProgressNeeded() + ");");
                     }
                 }
 

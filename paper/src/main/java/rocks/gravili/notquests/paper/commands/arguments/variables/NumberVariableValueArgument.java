@@ -74,7 +74,7 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Str
      * @param <C>  Command sender type
      * @return Created builder
      */
-    public static <C> NumberVariableValueArgument.@NonNull Builder<C> newBuilder(final @NonNull String name, final NotQuests main, final Variable<?> variable) {
+    public static <C> NumberVariableValueArgument.@NonNull Builder<C> newBuilder(final @NonNull String name, final NotQuests main, @Nullable final Variable<?> variable) {
         return new NumberVariableValueArgument.Builder<>(name, main, variable);
     }
 
@@ -117,9 +117,9 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Str
     public static final class Builder<C> extends CommandArgument.Builder<C, String> {
 
         private final NotQuests main;
-        private final Variable<?> variable;
+        private final @Nullable Variable<?> variable;
 
-        private Builder(final @NonNull String name, final NotQuests main, final Variable<?> variable) {
+        private Builder(final @NonNull String name, final NotQuests main, @Nullable final Variable<?> variable) {
             super(String.class, name);
             this.main = main;
             this.variable = variable;
@@ -150,12 +150,12 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Str
 
     public static final class StringParser<C> implements ArgumentParser<C, String> {
         private final NotQuests main;
-        private final Variable<?> variable;
+        private final @Nullable Variable<?> variable;
 
         /**
          * Construct a new String parser
          */
-        public StringParser(final NotQuests main, final Variable<?> variable) {
+        public StringParser(final NotQuests main, final @Nullable Variable<?> variable) {
             this.main = main;
             this.variable = variable;
         }
@@ -208,11 +208,11 @@ public final class NumberVariableValueArgument<C> extends CommandArgument<C, Str
                 final @NonNull String input
         ) {
 
-            List<String> completions = new java.util.ArrayList<>();
+            final List<String> completions = new java.util.ArrayList<>();
             completions.add("<Enter Variable or Number>");
 
-            for(String variableString : main.getVariablesManager().getVariableIdentifiers()) {
-                Variable<?> variable = main.getVariablesManager().getVariableFromString(variableString);
+            for(final String variableString : main.getVariablesManager().getVariableIdentifiers()) {
+                final Variable<?> variable = main.getVariablesManager().getVariableFromString(variableString);
                 if (variable == null || (variable.getVariableDataType() != VariableDataType.NUMBER && variable.getVariableDataType() != VariableDataType.BOOLEAN )) {
                     continue;
                 }

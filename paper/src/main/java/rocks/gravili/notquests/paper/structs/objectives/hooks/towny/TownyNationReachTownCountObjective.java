@@ -29,7 +29,9 @@ import com.palmergames.bukkit.towny.object.Town;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
@@ -50,18 +52,18 @@ public class TownyNationReachTownCountObjective extends Objective {
         }
 
         manager.command(addObjectiveBuilder
-                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Minimum amounts of towns"))
+                .argument(NumberVariableValueArgument.newBuilder("amount", main, null), ArgumentDescription.of("Minimum amount of towns"))
                 .flag(
                         manager.flagBuilder("doNotCountPreviousTowns")
                                 .withDescription(ArgumentDescription.of("Makes it so only additional towns from the time of unlocking this Objective will count (and previous/existing counts will not count, so it starts from zero)"))
                 )
                 .handler((context) -> {
-                    int amount = context.get("amount");
+                    final String amountExpression = context.get("amount");
                     final boolean countPreviousTowns = !context.flags().isPresent("doNotCountPreviousTowns");
 
 
                     TownyNationReachTownCountObjective townyNationReachTownCountObjective = new TownyNationReachTownCountObjective(main);
-                    townyNationReachTownCountObjective.setProgressNeeded(amount);
+                    townyNationReachTownCountObjective.setProgressNeededExpression(amountExpression);
                     townyNationReachTownCountObjective.setCountPreviousTowns(countPreviousTowns);
 
                     main.getObjectiveManager().addObjective(townyNationReachTownCountObjective, context);
@@ -76,14 +78,10 @@ public class TownyNationReachTownCountObjective extends Objective {
         this.countPreviousTowns = countPreviousTowns;
     }
 
-    public final long getAmountOfTownsToReach() {
-        return getProgressNeeded();
-    }
-
     @Override
-    public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.townyNationReachTownCount.base", questPlayer, Map.of(
-                "%AMOUNT%", "" + getAmountOfTownsToReach()
+    public String getObjectiveTaskDescription(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.townyNationReachTownCount.base", questPlayer, activeObjective, Map.of(
+                "%AMOUNT%", "" + (activeObjective != null ? activeObjective.getProgressNeeded() : getProgressNeededExpression())
         ));
     }
 

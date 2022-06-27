@@ -24,7 +24,9 @@ import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
@@ -39,13 +41,13 @@ public class OpenBuriedTreasureObjective extends Objective {
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
         manager.command(addObjectiveBuilder
-                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of buried treasures to open."))
+                .argument(NumberVariableValueArgument.newBuilder("amount", main, null), ArgumentDescription.of("Amount of buried treasured to open"))
                 .handler((context) -> {
-                    final int amount = context.get("amount");
+                    final String amountExpression = context.get("amount");
 
 
                     OpenBuriedTreasureObjective openBuriedTreasureObjective = new OpenBuriedTreasureObjective(main);
-                    openBuriedTreasureObjective.setProgressNeeded(amount);
+                    openBuriedTreasureObjective.setProgressNeededExpression(amountExpression);
 
                     main.getObjectiveManager().addObjective(openBuriedTreasureObjective, context);
                 }));
@@ -53,8 +55,8 @@ public class OpenBuriedTreasureObjective extends Objective {
 
 
     @Override
-    public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.openBuriedTreasure.base", questPlayer);
+    public String getObjectiveTaskDescription(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.openBuriedTreasure.base", questPlayer, activeObjective);
     }
 
     @Override

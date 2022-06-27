@@ -44,17 +44,28 @@ public class ActiveObjective {
     private final Objective objective;
     private final ActiveQuest activeQuest;
     private final int objectiveID;
-    private long currentProgress;
+    private double currentProgress;
     private boolean unlocked = false;
     private boolean hasBeenCompleted = false;
+
+    private double progressNeeded;
 
     public ActiveObjective(final NotQuests main, final int objectiveID, final Objective objective, final ActiveQuest activeQuest) {
         this.main = main;
         this.objectiveID = objectiveID;
         this.objective = objective;
         this.activeQuest = activeQuest;
-        currentProgress = 0;
+        this.currentProgress = 0;
 
+        this.progressNeeded = objective.getProgressNeededExpression().calculateValue(activeQuest.getQuestPlayer());
+    }
+
+    public final double getProgressNeeded() {
+        return progressNeeded;
+    }
+
+    public void setProgressNeeded(final double progressNeeded){
+        this.progressNeeded = progressNeeded;
     }
 
     public final void setUnlocked(final boolean unlocked, final boolean notifyPlayer, final boolean triggerAcceptQuestTrigger) {
@@ -141,38 +152,34 @@ public class ActiveObjective {
         return objective;
     }
 
-    public final long getProgressNeeded() {
-        return objective.getProgressNeeded();
-    }
-
-    public final long getCurrentProgress() {
+    public final double getCurrentProgress() {
         return currentProgress;
     }
 
 
-    public void addProgress(long progressToAdd) {
+    public void addProgress(double progressToAdd) {
         addProgress(progressToAdd, -1, null, false);
     }
-    public void addProgress(long progressToAdd, boolean silent) {
+    public void addProgress(double progressToAdd, boolean silent) {
         addProgress(progressToAdd, -1, null, silent);
     }
     //For Citizens NPCs
-    public void addProgress(long progressToAdd, final int NPCID) {
+    public void addProgress(double progressToAdd, final int NPCID) {
         addProgress(progressToAdd, NPCID, null, false);
     }
-    public void addProgress(long progressToAdd, final int NPCID, final boolean silent) {
+    public void addProgress(double progressToAdd, final int NPCID, final boolean silent) {
         addProgress(progressToAdd, NPCID, null, silent);
 
     }
     //For Armor Stands
-    public void addProgress(long progressToAdd, final UUID armorStandUUID) {
+    public void addProgress(double progressToAdd, final UUID armorStandUUID) {
         addProgress(progressToAdd, -1, armorStandUUID, false);
     }
-    public void addProgress(long progressToAdd, final UUID armorStandUUID, final boolean silent) {
+    public void addProgress(double progressToAdd, final UUID armorStandUUID, final boolean silent) {
         addProgress(progressToAdd, -1, armorStandUUID, silent);
     }
 
-    public void addProgress(long progressToAdd, final int NPCID, final UUID armorStandUUID, boolean silent) {
+    public void addProgress(double progressToAdd, final int NPCID, final UUID armorStandUUID, boolean silent) {
         if(main.getDataManager().isDisabled()){
             return;
         }
@@ -196,7 +203,7 @@ public class ActiveObjective {
 
 
 
-    public void removeProgress(int i, boolean capAtZero) {
+    public void removeProgress(double i, boolean capAtZero) {
         if(main.getDataManager().isDisabled()){
             return;
         }
@@ -219,7 +226,7 @@ public class ActiveObjective {
     //For Citizens NPCs
     public final boolean isCompleted(final int NPCID) {
         if (getObjective().getCompletionNPCID() == -1 || getObjective().getCompletionNPCID() == NPCID) {
-            return currentProgress >= objective.getProgressNeeded();
+            return currentProgress >= getProgressNeeded();
         } else {
             return false;
         }
@@ -229,7 +236,7 @@ public class ActiveObjective {
     //For Armor Stands
     public final boolean isCompleted(final UUID armorStandUUID) {
         if (getObjective().getCompletionArmorStandUUID() == null || getObjective().getCompletionArmorStandUUID().equals(armorStandUUID)) {
-            return currentProgress >= objective.getProgressNeeded();
+            return currentProgress >= getProgressNeeded();
         } else {
             return false;
         }

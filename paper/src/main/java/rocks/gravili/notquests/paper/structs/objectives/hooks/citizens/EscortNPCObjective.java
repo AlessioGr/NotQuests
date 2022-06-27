@@ -30,6 +30,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -130,7 +131,7 @@ public class EscortNPCObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
+    public String getObjectiveTaskDescription(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
         String toReturn = "";
         if (main.getIntegrationsManager().isCitizensEnabled()) {
             final NPC npc = CitizensAPI.getNPCRegistry().getById(getNpcToEscortID());
@@ -141,7 +142,7 @@ public class EscortNPCObjective extends Objective {
                 final String mmNpcName = main.getMiniMessage().serialize(LegacyComponentSerializer.legacyAmpersand().deserialize(npc.getName()));
                 final String mmNpcDestinationName = main.getMiniMessage().serialize(LegacyComponentSerializer.legacyAmpersand().deserialize(npcDestination.getName()));
 
-                toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.escortNPC.base", questPlayer, Map.of(
+                toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.escortNPC.base", questPlayer, activeObjective, Map.of(
                         "%NPCNAME%", mmNpcName,
                         "%DESTINATIONNPCNAME%", mmNpcDestinationName
                 ));

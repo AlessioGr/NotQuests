@@ -28,7 +28,9 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.util.Vector;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
@@ -50,7 +52,7 @@ public class InteractObjective extends Objective {
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
         manager.command(addObjectiveBuilder
-                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of interactions needed."))
+                .argument(NumberVariableValueArgument.newBuilder("amount", main, null), ArgumentDescription.of("Amount of interactions needed"))
                 .argument(WorldArgument.of("world"), ArgumentDescription.of("World name"))
                 /* .argumentTriplet(
                          "coords",
@@ -80,7 +82,7 @@ public class InteractObjective extends Objective {
                 .flag(main.getCommandManager().taskDescription)
                 .flag(main.getCommandManager().maxDistance)
                 .handler((context) -> {
-                    final int amount = context.get("amount");
+                    final String amountExpression = context.get("amount");
 
                     final World world = context.get("world");
                     final Vector coordinates = new Vector(context.get("x"), context.get("y"), context.get("z"));
@@ -99,7 +101,7 @@ public class InteractObjective extends Objective {
                     interactObjective.setTaskDescription(taskDescription);
                     interactObjective.setMaxDistance(maxDistance);
                     interactObjective.setCancelInteraction(cancelInteraction);
-                    interactObjective.setProgressNeeded(amount);
+                    interactObjective.setProgressNeededExpression(amountExpression);
 
                     main.getObjectiveManager().addObjective(interactObjective, context);
                 }));
@@ -130,7 +132,7 @@ public class InteractObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
+    public String getObjectiveTaskDescription(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
         String toReturn;
         String interactType = "";
         if (isLeftClick()) {
@@ -149,13 +151,13 @@ public class InteractObjective extends Objective {
         }
 
         if (taskDescription.isBlank()) {
-            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.interact.base", questPlayer, Map.of(
+            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.interact.base", questPlayer, activeObjective, Map.of(
                     "%INTERACTTYPE%", interactType,
                     "%COORDINATES%", "X: " + getLocationToInteract().getX() + " Y: " + getLocationToInteract().getY() + " Z: " + getLocationToInteract().getZ(),
                     "%WORLDNAME%", worldName
             ));
         } else {
-            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.interact.taskDescriptionProvided", questPlayer, Map.of(
+            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.interact.taskDescriptionProvided", questPlayer, activeObjective, Map.of(
                     "%TASKDESCRIPTION%", getTaskDescription(),
                     "%INTERACTTYPE%", interactType,
                     "%COORDINATES%", "X: " + getLocationToInteract().getX() + " Y: " + getLocationToInteract().getY() + " Z: " + getLocationToInteract().getZ(),

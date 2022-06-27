@@ -20,7 +20,12 @@ package rocks.gravili.notquests.paper.structs.objectives;
 
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.units.qual.N;
+import redempt.crunch.CompiledExpression;
+import redempt.crunch.functional.EvaluationEnvironment;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -35,7 +40,9 @@ public abstract class Objective {
     private final ArrayList<Condition> conditions;
     protected final NotQuests main;
     private final ArrayList<Action> rewards;
-    private long progressNeeded = 1;
+
+    private NumberExpression progressNeededExpression;
+
     private Quest quest;
     private int objectiveID = -1;
     private String objectiveDisplayName = "";
@@ -81,8 +88,8 @@ public abstract class Objective {
         this.quest = quest;
     }
 
-    public void setProgressNeeded(final long progressNeeded) {
-        this.progressNeeded = progressNeeded;
+    public void setProgressNeededExpression(final String progressNeededExpression) {
+        this.progressNeededExpression = new NumberExpression(main, progressNeededExpression);
     }
 
     public void setObjectiveID(final int objectiveID) {
@@ -122,8 +129,8 @@ public abstract class Objective {
         return objectiveID;
     }
 
-    public final long getProgressNeeded() {
-        return progressNeeded;
+    public final NumberExpression getProgressNeededExpression() {
+        return progressNeededExpression;
     }
 
     public final ArrayList<Condition> getConditions() {
@@ -304,7 +311,7 @@ public abstract class Objective {
         return quest;
     }
 
-    public abstract String getObjectiveTaskDescription(final QuestPlayer questPlayer);
+    public abstract String getObjectiveTaskDescription(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective);
 
     public abstract void save(final FileConfiguration configuration, final String initialPath);
 

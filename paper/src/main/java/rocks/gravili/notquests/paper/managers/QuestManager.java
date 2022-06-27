@@ -35,6 +35,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.*;
@@ -191,7 +192,16 @@ public class QuestManager {
                                 return;
                             }
 
-                            final int progressNeeded = category.getQuestsConfig().getInt("quests." + questName + ".objectives." + objectiveNumber + ".progressNeeded", 1);
+                            String progressNeededExpression;
+                            //Convert old progressNeeded to progressNeededExpression
+                            if(category.getQuestsConfig().contains("quests." + questName + ".objectives." + objectiveNumber + ".progressNeeded")){
+                                progressNeededExpression = ""+category.getQuestsConfig().getInt("quests." + questName + ".objectives." + objectiveNumber + ".progressNeeded", 1);
+                                category.getQuestsConfig().set("quests." + questName + ".objectives." + objectiveNumber + ".progressNeeded", null);
+                                category.getQuestsConfig().set("quests." + questName + ".objectives." + objectiveNumber + ".progressNeededExpression", progressNeededExpression);
+                                category.saveQuestsConfig();
+                            } else {
+                                progressNeededExpression = category.getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".progressNeededExpression", "1");
+                            }
 
                             final Location location = category.getQuestsConfig().getLocation("quests." + questName + ".objectives." + objectiveNumber + ".location", null);
                             final boolean showLocation = category.getQuestsConfig().getBoolean("quests." + questName + ".objectives." + objectiveNumber + ".showLocation", false);
@@ -217,7 +227,7 @@ public class QuestManager {
                                 objective = objectiveType.getDeclaredConstructor(NotQuests.class).newInstance(main);
                                 objective.setQuest(quest);
                                 objective.setObjectiveID(objectiveID);
-                                objective.setProgressNeeded(progressNeeded);
+                                objective.setProgressNeededExpression(progressNeededExpression);
                                 objective.setLocation(location, false);
                                 objective.setShowLocation(showLocation, false);
 
@@ -1245,7 +1255,7 @@ public class QuestManager {
             ));
 
             player.sendMessage(main.parse(
-                    getObjectiveTaskDescription(activeObjective.getObjective(), true, questPlayer)
+                    getObjectiveTaskDescription(activeObjective.getObjective(), true, questPlayer, activeObjective)
             ));
             player.sendMessage(main.parse(
                     "   <strikethrough><GRAY>Progress: <WHITE>" + activeObjective.getCurrentProgress() + " / " + activeObjective.getProgressNeeded() + "</strikethrough>"
@@ -1253,11 +1263,13 @@ public class QuestManager {
         }
     }
 
-
-    public final String getObjectiveTaskDescription(final Objective objective, boolean completed, QuestPlayer questPlayer) {
+    public final String getObjectiveTaskDescription(final Objective objective, boolean completed, final QuestPlayer questPlayer) {
+        return getObjectiveTaskDescription(objective, completed, questPlayer, null);
+    }
+    public final String getObjectiveTaskDescription(final Objective objective, boolean completed, final QuestPlayer questPlayer, @Nullable final ActiveObjective activeObjective) {
         String toReturn = "";
 
-        toReturn += objective.getObjectiveTaskDescription(questPlayer);
+        toReturn += objective.getObjectiveTaskDescription(questPlayer, activeObjective);
 
         if (objective.getCompletionNPCID() != -1) {
             if (main.getIntegrationsManager().isCitizensEnabled()) {
@@ -1286,28 +1298,6 @@ public class QuestManager {
     public void sendActiveObjectivesAndProgress(final QuestPlayer questPlayer, final ActiveQuest activeQuest) {
         for (ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
             sendActiveObjective(questPlayer, activeObjective);
-        }
-    }
-
-    public void sendObjectives(final QuestPlayer questPlayer, final Quest quest) {
-        final Player player = questPlayer.getPlayer();
-        for (final Objective objective : quest.getObjectives()) {
-            final String objectiveDescription = objective.getDescription();
-            player.sendMessage(main.parse(
-                    "<GREEN>" + objective.getObjectiveID() + ". <YELLOW>" + objective.getFinalName()
-            ));
-
-
-            if (!objectiveDescription.isBlank()) {
-                player.sendMessage(main.parse(
-                        "   <BLUE>Description: <GOLD>" + objectiveDescription
-                ));
-            }
-            player.sendMessage(main.parse(
-                    getObjectiveTaskDescription(objective, false, questPlayer)
-            ));
-
-
         }
     }
 
@@ -1372,7 +1362,7 @@ public class QuestManager {
             }
 
             player.sendMessage(main.parse(
-                    getObjectiveTaskDescription(activeObjective.getObjective(), false, questPlayer)
+                    getObjectiveTaskDescription(activeObjective.getObjective(), false, questPlayer, activeObjective)
             ));
 
             player.sendMessage(main.parse(

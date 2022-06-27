@@ -124,7 +124,7 @@ public class CitizensEvents implements Listener {
                                                     continue;
                                                 }
 
-                                                final long progressLeft = activeObjective.getProgressNeeded() - activeObjective.getCurrentProgress();
+                                                final double progressLeft = activeObjective.getProgressNeeded() - activeObjective.getCurrentProgress();
 
                                                 if (progressLeft == 0) {
                                                     continue;

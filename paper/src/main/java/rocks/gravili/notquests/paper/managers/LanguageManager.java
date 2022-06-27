@@ -40,6 +40,7 @@ import rocks.gravili.notquests.paper.structs.triggers.Trigger;
 
 import java.io.*;
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -347,11 +348,11 @@ public class LanguageManager {
         }
     }
 
-    public final String getString(final String languageString, @Nullable final QuestPlayer questPlayer, Object... internalPlaceholderObjects) {
+    public final String getString(final String languageString, @Nullable final QuestPlayer questPlayer, @Nullable Object... internalPlaceholderObjects) {
         return getString(languageString, questPlayer != null ? questPlayer.getPlayer() : null, internalPlaceholderObjects);
     }
 
-    public final String getString(final String languageString, @Nullable final Player targetPlayer, Object... internalPlaceholderObjects) {
+    public final String getString(final String languageString, @Nullable final Player targetPlayer, @Nullable Object... internalPlaceholderObjects) {
         if (!getLanguageConfig().isString(languageString)) {
             return "Language string not found: " + languageString;
         } else {
@@ -391,76 +392,81 @@ public class LanguageManager {
         return toReturn;
     }
 
-    public String applyInternalPlaceholders(String initialMessage, @Nullable final Player player, Object... internalPlaceholderObjects) {
-        if (internalPlaceholderObjects.length == 0) {
+    public final String applyInternalPlaceholders(final String initialMessage, @Nullable final Player player, final @Nullable Object... internalPlaceholderObjects) {
+        if (internalPlaceholderObjects == null || internalPlaceholderObjects.length == 0) {
             return initialMessage;
         }
 
-        final Map<String, String> internalPlaceholderReplacements = new HashMap<>(); //With this method probably being used simultaneously, we cannot just have 1 HashMap and clear it. It would get cleared while another thing is processing
+        final Map<String, Supplier<String>> internalPlaceholderReplacements = new HashMap<>(); //With this method probably being used simultaneously, we cannot just have 1 HashMap and clear it. It would get cleared while another thing is processing
 
 
         //main.getLogManager().severe("Initial: " + initialMessage);
 
         //internalPlaceholderReplacements.clear();
-        internalPlaceholderReplacements.put("%QUESTPOINTS%", "0");
+        internalPlaceholderReplacements.put("%QUESTPOINTS%", () -> "0");
 
         Quest foundQuest = null;
         QuestPlayer foundQuestPlayer = null;
 
-        for (Object internalPlaceholderObject : internalPlaceholderObjects) {
+        for (final @Nullable Object internalPlaceholderObject : internalPlaceholderObjects) {
+            if(internalPlaceholderObject == null){
+                continue;
+            }
 
             //main.getLogManager().severe("Object: " + internalPlaceholderObject.toString());
-            if (internalPlaceholderObject instanceof ActiveQuest activeQuest) {
+            if (internalPlaceholderObject instanceof final ActiveQuest activeQuest) {
                 // main.getLogManager().info("Quest placeholders...");
-                internalPlaceholderReplacements.put("%QUESTNAME%", activeQuest.getQuest().getQuestFinalName());
-                internalPlaceholderReplacements.put("%QUESTDESCRIPTION%", activeQuest.getQuest().getQuestDescription());
-                internalPlaceholderReplacements.put("%COMPLETEDOBJECTIVESCOUNT%", "" + activeQuest.getCompletedObjectives().size());
-                internalPlaceholderReplacements.put("%ALLOBJECTIVESCOUNT%", "" + activeQuest.getQuest().getObjectives().size());
-            } else if (internalPlaceholderObject instanceof Quest quest) {
+                internalPlaceholderReplacements.put("%QUESTNAME%", () -> activeQuest.getQuest().getQuestFinalName());
+                internalPlaceholderReplacements.put("%QUESTDESCRIPTION%", () -> activeQuest.getQuest().getQuestDescription());
+                internalPlaceholderReplacements.put("%COMPLETEDOBJECTIVESCOUNT%", () -> "" + activeQuest.getCompletedObjectives().size());
+                internalPlaceholderReplacements.put("%ALLOBJECTIVESCOUNT%", () -> "" + activeQuest.getQuest().getObjectives().size());
+            } else if (internalPlaceholderObject instanceof final Quest quest) {
                 //main.getLogManager().info("Applying Quest placeholders...");
-                internalPlaceholderReplacements.put("%QUESTNAME%", quest.getQuestFinalName());
-                internalPlaceholderReplacements.put("%QUESTDESCRIPTION%", quest.getQuestDescription());
+                internalPlaceholderReplacements.put("%QUESTNAME%", quest::getQuestFinalName);
+                internalPlaceholderReplacements.put("%QUESTDESCRIPTION%", quest::getQuestDescription);
                 foundQuest = quest;
-            } else if (internalPlaceholderObject instanceof ActiveObjective activeObjective) {
+            } else if (internalPlaceholderObject instanceof final ActiveObjective activeObjective) {
 
                 //main.getLogManager().info("Applying ActiveObjective placeholders...");
-                internalPlaceholderReplacements.put("%OBJECTIVEID%", "" + activeObjective.getObjective().getObjectiveID());
-                internalPlaceholderReplacements.put("%ACTIVEOBJECTIVEID%", "" + activeObjective.getObjective().getObjectiveID());
-                internalPlaceholderReplacements.put("%OBJECTIVENAME%", "" + activeObjective.getObjective().getFinalName());
-                internalPlaceholderReplacements.put("%ACTIVEOBJECTIVEPROGRESS%", "" + activeObjective.getCurrentProgress());
-                internalPlaceholderReplacements.put("%OBJECTIVEPROGRESSNEEDED%", "" + activeObjective.getProgressNeeded());
-                internalPlaceholderReplacements.put("%OBJECTIVEPROGRESSPERCENTAGE%", "" + (int) ((float) ((float) activeObjective.getCurrentProgress() / (float) activeObjective.getProgressNeeded()) * 100));
-                internalPlaceholderReplacements.put("%OBJECTIVETASKDESCRIPTION%", main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), false, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId())));
-                internalPlaceholderReplacements.put("%COMPLETEDOBJECTIVETASKDESCRIPTION%", main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), true, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId())));
-                internalPlaceholderReplacements.put("%OBJECTIVEDESCRIPTION%", activeObjective.getObjective().getDescription());
-            } else if (internalPlaceholderObject instanceof Objective objective) {
+                internalPlaceholderReplacements.put("%OBJECTIVEID%", () -> "" + activeObjective.getObjective().getObjectiveID());
+                internalPlaceholderReplacements.put("%ACTIVEOBJECTIVEID%", () -> "" + activeObjective.getObjective().getObjectiveID());
+                internalPlaceholderReplacements.put("%OBJECTIVENAME%", () -> "" + activeObjective.getObjective().getFinalName());
+                internalPlaceholderReplacements.put("%ACTIVEOBJECTIVEPROGRESS%", () -> "" + activeObjective.getCurrentProgress());
+                internalPlaceholderReplacements.put("%OBJECTIVEPROGRESSNEEDED%", () -> "" + activeObjective.getProgressNeeded());
+                internalPlaceholderReplacements.put("%OBJECTIVEPROGRESSPERCENTAGE%", () -> "" + (int) ((float) ((float) activeObjective.getCurrentProgress() / (float) activeObjective.getProgressNeeded()) * 100));
+                internalPlaceholderReplacements.put("%OBJECTIVETASKDESCRIPTION%", () -> main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), false, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), activeObjective));
+                internalPlaceholderReplacements.put("%COMPLETEDOBJECTIVETASKDESCRIPTION%", () -> main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), true, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), activeObjective));
+                internalPlaceholderReplacements.put("%OBJECTIVEDESCRIPTION%", () -> activeObjective.getObjective().getDescription());
+            } else if (internalPlaceholderObject instanceof final Objective objective) {
                 //main.getLogManager().info("Applying Objective placeholders...");
-                internalPlaceholderReplacements.put("%OBJECTIVEID%", "" + objective.getObjectiveID());
-                internalPlaceholderReplacements.put("%OBJECTIVENAME%", "" + objective.getFinalName());
-            } else if (internalPlaceholderObject instanceof Trigger trigger) {
+                internalPlaceholderReplacements.put("%OBJECTIVEID%", () -> "" + objective.getObjectiveID());
+                internalPlaceholderReplacements.put("%OBJECTIVENAME%", () -> "" + objective.getFinalName());
+            } else if (internalPlaceholderObject instanceof final Trigger trigger) {
                 //main.getLogManager().log(Level.INFO, "Applying Trigger placeholders...");
-            } else if (internalPlaceholderObject instanceof QuestPlayer questPlayer) {
+            } else if (internalPlaceholderObject instanceof final QuestPlayer questPlayer) {
                 //main.getLogManager().log(Level.INFO, "Applying QuestPlayer placeholders...");
-                internalPlaceholderReplacements.put("%QUESTPOINTS%", "" + questPlayer.getQuestPoints());
+                internalPlaceholderReplacements.put("%QUESTPOINTS%", () -> "" + questPlayer.getQuestPoints());
                 foundQuestPlayer = questPlayer;
             } else if (internalPlaceholderObject instanceof final Map providedInternalPlaceholderReplacements) {
-                for (Object key : providedInternalPlaceholderReplacements.keySet()) {
-                    internalPlaceholderReplacements.put((String) key, (String) providedInternalPlaceholderReplacements.get(key));
+                for (final Object key : providedInternalPlaceholderReplacements.keySet()) {
+                    internalPlaceholderReplacements.put((String) key, () -> (String) providedInternalPlaceholderReplacements.get(key));
                 }
             }
 
         }
 
         if (foundQuest != null && foundQuestPlayer != null) {
-            internalPlaceholderReplacements.put("%QUESTCOOLDOWNLEFTFORMATTED%", foundQuestPlayer.getCooldownFormatted(foundQuest));
+            final QuestPlayer finalFoundQuestPlayer = foundQuestPlayer;
+            final Quest finalFoundQuest = foundQuest;
+            internalPlaceholderReplacements.put("%QUESTCOOLDOWNLEFTFORMATTED%", () -> finalFoundQuestPlayer.getCooldownFormatted(finalFoundQuest));
         }
 
         return main.getUtilManager().replaceFromMap(initialMessage, internalPlaceholderReplacements);
     }
 
-    public List<String> applySpecial(List<String> initialMessage) {
-        List<String> toReturn = new ArrayList<>();
-        for(String message : initialMessage){
+    public final List<String> applySpecial(final List<String> initialMessage) {
+        final List<String> toReturn = new ArrayList<>();
+        for(final String message : initialMessage){
             toReturn.add(applySpecial(message));
         }
         return toReturn;
@@ -468,7 +474,7 @@ public class LanguageManager {
 
 
 
-    public String applySpecial(String initialMessage) { //TODO: Fix center if that message is later processed for placeholders => process the placeholders here instead
+    public final String applySpecial(String initialMessage) { //TODO: Fix center if that message is later processed for placeholders => process the placeholders here instead
         initialMessage = initialMessage.replace("<EMPTY>", " ");
 
 
@@ -488,18 +494,6 @@ public class LanguageManager {
 
 
         return finalMessage.toString();
-    }
-
-    public String applyColor(String message) {
-        Matcher matcher = hexPattern.matcher(message);
-        while (matcher.find()) {
-            final ChatColor hexColor = ChatColor.of(matcher.group().substring(1, matcher.group().length() - 1));
-            final String before = message.substring(0, matcher.start());
-            final String after = message.substring(matcher.end());
-            message = before + hexColor + after;
-            matcher = hexPattern.matcher(message);
-        }
-        return org.bukkit.ChatColor.translateAlternateColorCodes('&', LegacyComponentSerializer.builder().hexColors().build().serialize(main.parse(message)));
     }
 
 

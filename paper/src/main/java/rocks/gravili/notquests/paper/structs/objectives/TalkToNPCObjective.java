@@ -35,6 +35,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.Quest;
@@ -156,14 +157,14 @@ public class TalkToNPCObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
+    public String getObjectiveTaskDescription(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
         String toReturn = "";
         if (main.getIntegrationsManager().isCitizensEnabled() && getNPCtoTalkID() != -1) {
             final NPC npc = CitizensAPI.getNPCRegistry().getById(getNPCtoTalkID());
             if (npc != null) {
                 final String mmNpcName = main.getMiniMessage().serialize(LegacyComponentSerializer.legacyAmpersand().deserialize(npc.getName()));
 
-                toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.talkToNPC.base", questPlayer, Map.of(
+                toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.talkToNPC.base", questPlayer, activeObjective, Map.of(
                         "%NAME%", mmNpcName
                 ));
             } else {
@@ -175,7 +176,7 @@ public class TalkToNPCObjective extends Objective {
             } else { //Armor Stands
                 final UUID armorStandUUID = getArmorStandUUID();
                 if (armorStandUUID != null) {
-                    toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.talkToNPC.base", questPlayer, Map.of(
+                    toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.talkToNPC.base", questPlayer, activeObjective, Map.of(
                             "%NAME%", main.getArmorStandManager().getArmorStandName(armorStandUUID)
                     ));
                 } else {

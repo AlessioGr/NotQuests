@@ -24,8 +24,10 @@ import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.EntityTypeSelector;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
@@ -46,7 +48,7 @@ public class KillMobsObjective extends Objective {
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
         addObjectiveBuilder = addObjectiveBuilder
                 .argument(EntityTypeSelector.of("entityType", main), ArgumentDescription.of("Type of Entity the player has to kill."))
-                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of kills needed"))
+                .argument(NumberVariableValueArgument.newBuilder("amount", main, null), ArgumentDescription.of("Amount of kills needed"))
                 .flag(main.getCommandManager().nametag_equals)
                 .flag(main.getCommandManager().nametag_containsany);
 
@@ -57,7 +59,7 @@ public class KillMobsObjective extends Objective {
         addObjectiveBuilder = addObjectiveBuilder.handler((context) -> {
 
             final String entityType = context.get("entityType");
-            final int amountToKill = context.get("amount");
+            final String amountToKillExpression = context.get("amount");
 
             final String[] a = context.flags().getValue(main.getCommandManager().nametag_equals, new String[]{""});
             final String[] b = context.flags().getValue(main.getCommandManager().nametag_containsany, new String[]{""});
@@ -67,7 +69,7 @@ public class KillMobsObjective extends Objective {
             KillMobsObjective killMobsObjective = new KillMobsObjective(main);
 
             killMobsObjective.setMobToKillType(entityType);
-            killMobsObjective.setProgressNeeded(amountToKill);
+            killMobsObjective.setProgressNeededExpression(amountToKillExpression);
 
             //Add flags
             killMobsObjective.setNameTagEquals(nametag_equals);
@@ -102,8 +104,8 @@ public class KillMobsObjective extends Objective {
 
 
     @Override
-    public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.killMobs.base", questPlayer, Map.of(
+    public String getObjectiveTaskDescription(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.killMobs.base", questPlayer, activeObjective, Map.of(
                 "%MOBTOKILL%", getMobToKill()
         ));
     }
@@ -147,11 +149,6 @@ public class KillMobsObjective extends Objective {
     public final String getMobToKill() {
         return mobToKillType;
     }
-
-    public final long getAmountToKill() {
-        return super.getProgressNeeded();
-    }
-
 
     //Extra args
     public final String getNameTagContainsAny() {

@@ -25,7 +25,9 @@ import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
@@ -54,7 +56,7 @@ public class ProjectKorraUseAbilityObjective extends Objective {
                             return main.getIntegrationsManager().getProjectKorraManager().getAbilityCompletions();
                         }
                 ).single().build(), ArgumentDescription.of("Name of the ability"))
-                .argument(LongArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of times to use the ability"))
+                .argument(NumberVariableValueArgument.newBuilder("amount", main, null), ArgumentDescription.of("Amount of times to use the ability"))
                 .handler((context) -> {
                     String abilityName = context.get("Ability");
 
@@ -66,7 +68,7 @@ public class ProjectKorraUseAbilityObjective extends Objective {
                     }
 
                     ProjectKorraUseAbilityObjective projectKorraUseAbilityObjective = new ProjectKorraUseAbilityObjective(main);
-                    projectKorraUseAbilityObjective.setProgressNeeded(context.get("amount"));
+                    projectKorraUseAbilityObjective.setProgressNeededExpression(context.get("amount"));
                     projectKorraUseAbilityObjective.setAbilityName(abilityName);
 
                     main.getObjectiveManager().addObjective(projectKorraUseAbilityObjective, context);
@@ -82,8 +84,8 @@ public class ProjectKorraUseAbilityObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.ProjectKorraUseAbility.base", questPlayer, Map.of(
+    public String getObjectiveTaskDescription(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.ProjectKorraUseAbility.base", questPlayer, activeObjective, Map.of(
                 "%ABILITY%", getAbilityName()
         ));
     }

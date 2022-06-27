@@ -29,7 +29,9 @@ import com.gamingmesh.jobs.container.JobProgression;
 import com.gamingmesh.jobs.container.JobsPlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
@@ -65,13 +67,13 @@ public class JobsRebornReachJobLevelObjective extends Objective {
                             return completions;
                         }
                 ).single().build(), ArgumentDescription.of("Name of the job"))
-                .argument(IntegerArgument.<CommandSender>newBuilder("level").withMin(1), ArgumentDescription.of("Job Level which needs to be reached"))
+                .argument(NumberVariableValueArgument.newBuilder("level", main, null), ArgumentDescription.of("Job level which needs to be reached"))
                 .flag(
                         manager.flagBuilder("doNotCountPreviousLevels")
                                 .withDescription(ArgumentDescription.of("Makes it so only additional levels gained from the time of unlocking this Objective will count (and previous/existing counts will not count, so it starts from zero)"))
                 )
                 .handler((context) -> {
-                    int amount = context.get("level");
+                    final String amountExpression = context.get("level");
                     final boolean countPreviousLevels = !context.flags().isPresent("doNotCountPreviousLevels");
                     final String jobName = context.get("Job Name");
 
@@ -83,7 +85,7 @@ public class JobsRebornReachJobLevelObjective extends Objective {
                     }
 
                     JobsRebornReachJobLevelObjective jobsRebornReachJobLevel = new JobsRebornReachJobLevelObjective(main);
-                    jobsRebornReachJobLevel.setProgressNeeded(amount);
+                    jobsRebornReachJobLevel.setProgressNeededExpression(amountExpression);
                     jobsRebornReachJobLevel.setCountPreviousLevels(countPreviousLevels);
                     jobsRebornReachJobLevel.setJobName(jobName);
 
@@ -107,14 +109,10 @@ public class JobsRebornReachJobLevelObjective extends Objective {
         this.countPreviousLevels = countPreviousLevels;
     }
 
-    public final long getLevelToReach() {
-        return getProgressNeeded();
-    }
-
     @Override
-    public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
+    public String getObjectiveTaskDescription(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
         return main.getLanguageManager().getString("chat.objectives.taskDescription.jobsRebornReachJobLevel.base", questPlayer, Map.of(
-                "%AMOUNT%", "" + getLevelToReach(),
+                "%AMOUNT%", "" + (activeObjective != null ? activeObjective.getProgressNeeded() : getProgressNeededExpression()),
                 "%JOB%", getJobName()
         ));
     }

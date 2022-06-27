@@ -25,8 +25,10 @@ import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.EntityTypeSelector;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
@@ -40,22 +42,22 @@ public class BreedObjective extends Objective {
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
         manager.command(addObjectiveBuilder
                 .argument(EntityTypeSelector.of("entityType", main), ArgumentDescription.of("Type of Entity the player has to breed."))
-                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of times the player needs to breed this entity."))
+                .argument(NumberVariableValueArgument.newBuilder("amount", main, null), ArgumentDescription.of("Amount of times the player needs to breed this entity."))
                 .handler((context) -> {
                     final String entityType = context.get("entityType");
-                    final int amount = context.get("amount");
+                    final String amountExpression = context.get("amount");
 
                     BreedObjective breedObjective = new BreedObjective(main);
                     breedObjective.setEntityToBreedType(entityType);
-                    breedObjective.setProgressNeeded(amount);
+                    breedObjective.setProgressNeededExpression(amountExpression);
 
                     main.getObjectiveManager().addObjective(breedObjective, context);
                 }));
     }
 
     @Override
-    public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.breed.base", questPlayer)
+    public String getObjectiveTaskDescription(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.breed.base", questPlayer, activeObjective)
                 .replace("%ENTITYTOBREED%", getEntityToBreedType());
     }
 

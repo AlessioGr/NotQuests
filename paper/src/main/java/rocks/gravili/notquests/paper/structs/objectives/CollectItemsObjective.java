@@ -26,8 +26,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -56,13 +58,13 @@ public class CollectItemsObjective extends Objective {
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
         manager.command(addObjectiveBuilder
                 .argument(MaterialOrHandArgument.of("material", main), ArgumentDescription.of("Material of the item which needs to be collected."))
-                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of items which need to be collected."))
+                .argument(NumberVariableValueArgument.newBuilder("amount", main, null), ArgumentDescription.of("Amount of items which need to be collected"))
                 .flag(
                         manager.flagBuilder("doNotDeductIfItemIsDropped")
                                 .withDescription(ArgumentDescription.of("Makes it so Quest progress is not removed if the item is dropped."))
                 )
                 .handler((context) -> {
-                    final int amount = context.get("amount");
+                    final String amountExpression = context.get("amount");
                     final boolean deductIfItemIsDropped = !context.flags().isPresent("doNotDeductIfItemIsDropped");
 
                     boolean collectAnyItem = false;
@@ -88,7 +90,7 @@ public class CollectItemsObjective extends Objective {
 
 
                     collectItemsObjective.setCollectAnyItem(collectAnyItem);
-                    collectItemsObjective.setProgressNeeded(amount);
+                    collectItemsObjective.setProgressNeededExpression(amountExpression);
                     collectItemsObjective.setDeductIfItemIsDropped(deductIfItemIsDropped);
 
                     main.getObjectiveManager().addObjective(collectItemsObjective, context);
@@ -108,7 +110,7 @@ public class CollectItemsObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
+    public String getObjectiveTaskDescription(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
         final String displayName;
         if (!isCollectAnyItem()) {
             if (getItemToCollect().getItemMeta() != null) {
@@ -123,14 +125,14 @@ public class CollectItemsObjective extends Objective {
         String itemType = isCollectAnyItem() ? "Any" : getItemToCollect().getType().name();
 
         if (!displayName.isBlank()) {
-            return main.getLanguageManager().getString("chat.objectives.taskDescription.collectItems.base", questPlayer, Map.of(
+            return main.getLanguageManager().getString("chat.objectives.taskDescription.collectItems.base", questPlayer, activeObjective, Map.of(
                     "%ITEMTOCOLLECTTYPE%", itemType,
                     "%ITEMTOCOLLECTNAME%", displayName,
                     "%(%", "(",
                     "%)%", "<RESET>)"
             ));
         } else {
-            return main.getLanguageManager().getString("chat.objectives.taskDescription.collectItems.base", questPlayer, Map.of(
+            return main.getLanguageManager().getString("chat.objectives.taskDescription.collectItems.base", questPlayer, activeObjective, Map.of(
                     "%ITEMTOCOLLECTTYPE%", itemType,
                     "%ITEMTOCOLLECTNAME%", "",
                     "%(%", "",
@@ -172,10 +174,6 @@ public class CollectItemsObjective extends Objective {
         }else{
             return itemToCollect;
         }
-    }
-
-    public final long getAmountToCollect() {
-        return super.getProgressNeeded();
     }
 
     @Override

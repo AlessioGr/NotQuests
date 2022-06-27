@@ -25,8 +25,10 @@ import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
+import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -54,13 +56,13 @@ public class PlaceBlocksObjective extends Objective {
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
         manager.command(addObjectiveBuilder
                 .argument(MaterialOrHandArgument.of("material", main), ArgumentDescription.of("Material of the block which needs to be place."))
-                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of blocks which need to be placed"))
+                .argument(NumberVariableValueArgument.newBuilder("amount", main, null), ArgumentDescription.of("Amount of blocks which need to be placed"))
                 .flag(
                         manager.flagBuilder("doNotDeductIfBlockIsBroken")
                                 .withDescription(ArgumentDescription.of("Makes it so Quest progress is not removed if the block is broken"))
                 )
                 .handler((context) -> {
-                    final int amount = context.get("amount");
+                    final String amountExpression = context.get("amount");
                     final boolean deductIfBlockIsBroken = !context.flags().isPresent("doNotDeductIfBlockIsBroken");
 
                     final MaterialOrHand materialOrHand = context.get("material");
@@ -82,15 +84,15 @@ public class PlaceBlocksObjective extends Objective {
 
 
                     placeBlocksObjective.setDeductIfBlockIsBroken(deductIfBlockIsBroken);
-                    placeBlocksObjective.setProgressNeeded(amount);
+                    placeBlocksObjective.setProgressNeededExpression(amountExpression);
 
                     main.getObjectiveManager().addObjective(placeBlocksObjective, context);
                 }));
     }
 
     @Override
-    public String getObjectiveTaskDescription(final QuestPlayer questPlayer) {
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.placeBlocks.base", questPlayer, Map.of(
+    public String getObjectiveTaskDescription(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.placeBlocks.base", questPlayer, activeObjective, Map.of(
                 "%BLOCKTOPLACE%", getBlockToPlace()
         ));
     }
@@ -139,10 +141,6 @@ public class PlaceBlocksObjective extends Objective {
 
     public void setBlockToPlace(final String blockToPlace) {
         this.blockToPlace = blockToPlace;
-    }
-
-    public final long getAmountToPlace() {
-        return super.getProgressNeeded();
     }
 
     public final boolean isDeductIfBlockBroken() {
