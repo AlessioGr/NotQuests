@@ -130,6 +130,9 @@ public abstract class Objective {
     }
 
     public final NumberExpression getProgressNeededExpression() {
+        if(progressNeededExpression == null){
+            progressNeededExpression = new NumberExpression(main, "1");
+        }
         return progressNeededExpression;
     }
 

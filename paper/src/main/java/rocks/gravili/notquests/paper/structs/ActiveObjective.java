@@ -48,7 +48,7 @@ public class ActiveObjective {
     private boolean unlocked = false;
     private boolean hasBeenCompleted = false;
 
-    private double progressNeeded;
+    private double progressNeeded = 1;
 
     public ActiveObjective(final NotQuests main, final int objectiveID, final Objective objective, final ActiveQuest activeQuest) {
         this.main = main;

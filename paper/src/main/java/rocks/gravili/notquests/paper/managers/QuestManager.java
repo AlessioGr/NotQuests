@@ -192,16 +192,19 @@ public class QuestManager {
                                 return;
                             }
 
-                            String progressNeededExpression;
+                            final String progressNeededExpression;
                             //Convert old progressNeeded to progressNeededExpression
                             if(category.getQuestsConfig().contains("quests." + questName + ".objectives." + objectiveNumber + ".progressNeeded")){
                                 progressNeededExpression = ""+category.getQuestsConfig().getInt("quests." + questName + ".objectives." + objectiveNumber + ".progressNeeded", 1);
                                 category.getQuestsConfig().set("quests." + questName + ".objectives." + objectiveNumber + ".progressNeeded", null);
                                 category.getQuestsConfig().set("quests." + questName + ".objectives." + objectiveNumber + ".progressNeededExpression", progressNeededExpression);
                                 category.saveQuestsConfig();
+                            }else {
+                                progressNeededExpression = category.getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".progressNeededExpression", "1");
                             }
-                            progressNeededExpression = category.getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".progressNeededExpression", "1");
-                            
+
+                            main.getLogManager().debug("ProgressNeededExpression: " + progressNeededExpression);
+
                             final Location location = category.getQuestsConfig().getLocation("quests." + questName + ".objectives." + objectiveNumber + ".location", null);
                             final boolean showLocation = category.getQuestsConfig().getBoolean("quests." + questName + ".objectives." + objectiveNumber + ".showLocation", false);
 
