@@ -63,6 +63,8 @@ public class ObjectiveManager {
         registerObjective("BreakBlocks", BreakBlocksObjective.class);
         registerObjective("PlaceBlocks", PlaceBlocksObjective.class);
         registerObjective("CollectItems", CollectItemsObjective.class);
+        registerObjective("FishItems", FishItemsObjective.class);
+
         registerObjective("TriggerCommand", TriggerCommandObjective.class);
         registerObjective("OtherQuest", OtherQuestObjective.class);
         registerObjective("KillMobs", KillMobsObjective.class);

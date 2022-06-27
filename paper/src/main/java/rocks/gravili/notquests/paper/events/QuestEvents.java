@@ -806,6 +806,51 @@ public class QuestEvents implements Listener {
 
     }
 
+    @EventHandler
+    private void onFishItemEvent(PlayerFishEvent e) {
+        if (e.getState() != PlayerFishEvent.State.CAUGHT_FISH) {
+            return;
+        }
+
+
+        final Player player = e.getPlayer();
+        final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+        if (questPlayer != null) {
+            if (questPlayer.getActiveQuests().size() > 0) {
+                for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+                    for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
+                        if (activeObjective.isUnlocked()) {
+                            if (activeObjective.getObjective() instanceof final FishItemsObjective fishItemsObjective) {
+
+                                final ItemStack fishedItem = ((org.bukkit.entity.Item)e.getCaught()).getItemStack();
+
+
+                                //Check if the Material of the collected item is equal to the Material needed in the CollectItemsObjective
+                                if (!fishItemsObjective.isFishAnyItem() && !(fishItemsObjective.getItemToFish().getType() == fishedItem.getType())) {
+                                    continue;
+                                }
+
+                                //If the objective-item which needs to be collected has an ItemMeta...
+                                if (!fishItemsObjective.isFishAnyItem() && fishItemsObjective.getItemToFish().getItemMeta() != null) {
+                                    //then check if the ItemMeta of the collected item is equal to the ItemMeta needed in the CollectItemsObjective
+                                    if (!fishItemsObjective.getItemToFish().getItemMeta().equals(fishedItem.getItemMeta())) {
+                                        continue;
+                                    }
+                                }
+
+                                activeObjective.addProgress(fishedItem.getAmount());
+
+                            }
+                        }
+
+                    }
+                    activeQuest.removeCompletedObjectives(true);
+                }
+                questPlayer.removeCompletedQuests();
+            }
+        }
+
+    }
 
     @EventHandler
     private void onPickupItemEvent(EntityPickupItemEvent e) {
