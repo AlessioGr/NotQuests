@@ -150,7 +150,7 @@ public class ItemStackSelectionArgument<C> extends CommandArgument<C, ItemStackS
                 final @NonNull CommandContext<C> commandContext,
                 final @NonNull Queue<@NonNull String> inputQueue
         ) {
-            String input = inputQueue.peek();
+            final String input = inputQueue.peek();
             if (input == null) {
                 return ArgumentParseResult.failure(new NoInputProvidedException(
                         ItemStackSelectionArgument.MaterialParser.class,
@@ -158,6 +158,7 @@ public class ItemStackSelectionArgument<C> extends CommandArgument<C, ItemStackS
                 ));
             }
 
+            final CommandSender sender = ((CommandSender)commandContext.getSender());
             try {
                 final ItemStackSelection itemStackSelection = new ItemStackSelection(main);
 

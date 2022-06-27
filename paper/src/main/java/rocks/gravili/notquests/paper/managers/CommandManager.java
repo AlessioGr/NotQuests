@@ -326,6 +326,8 @@ public class CommandManager {
                 }, builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
                 cloudBrigadierManager.registerMapping(new TypeToken<MultipleActionsSelector.ListActionsParser<CommandSender>>() {
                 }, builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
+                cloudBrigadierManager.registerMapping(new TypeToken<ItemStackSelectionArgument.MaterialParser<CommandSender>>() {
+                }, builder -> builder.cloudSuggestions().toConstant(StringArgumentType.greedyString()));
             } else {
                 main.getLogManager().warn("Failed to initialize Brigadier support. Brigadier manager is null.");
             }
