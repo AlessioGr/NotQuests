@@ -20,45 +20,42 @@ package rocks.gravili.notquests.paper.structs.objectives;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
-import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.paper.PaperCommandManager;
-import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
+import rocks.gravili.notquests.paper.commands.arguments.ItemStackSelectionArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
-import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
+import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelection;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
-import java.util.Locale;
 import java.util.Map;
 
 
 public class BreakBlocksObjective extends Objective {
-    private String blockToBreak;
+    private ItemStackSelection itemStackSelection;
     private boolean deductIfBlockIsPlaced = true;
 
-    private String nqItemName = "";
 
     public BreakBlocksObjective(NotQuests main) {
         super(main);
     }
 
-    public void setNQItem(final String nqItemName){
-        this.nqItemName = nqItemName;
+
+    public final ItemStackSelection getItemStackSelection(){
+        return itemStackSelection;
     }
-    public final String getNQItem(){
-        return nqItemName;
+
+    public void setItemStackSelection(final ItemStackSelection itemStackSelection){
+        this.itemStackSelection = itemStackSelection;
     }
 
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
         manager.command(addObjectiveBuilder
-                .argument(MaterialOrHandArgument.of("material", main), ArgumentDescription.of("Material of the block which needs to be broken."))
+                .argument(ItemStackSelectionArgument.of("materials", main), ArgumentDescription.of("Material of the block which needs to be broken"))
                 .argument(NumberVariableValueArgument.newBuilder("amount", main, null), ArgumentDescription.of("Amount of blocks which need to be broken"))
                 .flag(
                         manager.flagBuilder("doNotDeductIfBlockIsPlaced")
@@ -69,20 +66,11 @@ public class BreakBlocksObjective extends Objective {
                     final String amountExpression = context.get("amount");
                     final boolean deductIfBlockIsPlaced = !context.flags().isPresent("doNotDeductIfBlockIsPlaced");
 
-                    final MaterialOrHand materialOrHand = context.get("material");
-                    final String materialToBreak;
-                    if (!materialOrHand.material.equalsIgnoreCase("any")) {
-                        materialToBreak = main.getItemsManager().getMaterial(materialOrHand.material).name();
-                    }else{
-                        materialToBreak = "any";
-                    }
+                    final ItemStackSelection itemStackSelection = context.get("materials");
 
                     BreakBlocksObjective breakBlocksObjective = new BreakBlocksObjective(main);
-                    if(!materialOrHand.material.equalsIgnoreCase("any") && main.getItemsManager().getItem(materialOrHand.material) != null){
-                        breakBlocksObjective.setNQItem(main.getItemsManager().getItem(materialOrHand.material).getItemName());
-                    }else{
-                        breakBlocksObjective.setBlockToBreak(materialToBreak);
-                    }
+                    breakBlocksObjective.setItemStackSelection(itemStackSelection);
+
                     breakBlocksObjective.setProgressNeededExpression(amountExpression);
                     breakBlocksObjective.setDeductIfBlockIsPlaced(deductIfBlockIsPlaced);
 
@@ -93,41 +81,23 @@ public class BreakBlocksObjective extends Objective {
 
     @Override
     public String getObjectiveTaskDescription(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
-        String translatedMaterialName;
+        /*String translatedMaterialName;
         try {
             translatedMaterialName = "<lang:" + Material.valueOf(getBlockToBreakMaterial().toUpperCase(Locale.ROOT)).translationKey() + ">";
         } catch (Exception ignored) {
             translatedMaterialName = getBlockToBreakMaterial();
-        }
+        }*/
 
         //TODO: translatedMaterialName doesnt work in gradients yet. Wait until minimessage fixed that bug
 
 
         return main.getLanguageManager().getString("chat.objectives.taskDescription.breakBlocks.base", questPlayer, activeObjective, Map.of(
-                "%BLOCKTOBREAK%", getBlockToBreakMaterial()
+                "%BLOCKTOBREAK%", getItemStackSelection().getAllMaterialsListed()
         ));
-    }
-
-    @Override
-    public void save(FileConfiguration configuration, String initialPath) {
-        if(!getNQItem().isBlank()){
-            configuration.set(initialPath + ".specifics.nqitem", getNQItem());
-        }else {
-            configuration.set(initialPath + ".specifics.blockToBreak.material", getBlockToBreakMaterial());
-        }
-        configuration.set(initialPath + ".specifics.deductIfBlockPlaced", isDeductIfBlockPlaced());
     }
 
     public void setDeductIfBlockIsPlaced(final boolean deductIfBlockIsPlaced) {
         this.deductIfBlockIsPlaced = deductIfBlockIsPlaced;
-    }
-
-    public final String getBlockToBreakMaterial() {
-        if(!nqItemName.isBlank()){
-            return main.getItemsManager().getItem(nqItemName).getItemStack().getType().name();
-        }else {
-            return blockToBreak;
-        }
     }
 
 
@@ -139,21 +109,40 @@ public class BreakBlocksObjective extends Objective {
     public void onObjectiveCompleteOrLock(final ActiveObjective activeObjective, final boolean lockedOrCompletedDuringPluginStartupQuestLoadingProcess, final boolean completed) {
     }
 
-    public void setBlockToBreak(final String blockToBreak) {
-        this.blockToBreak = blockToBreak;
-    }
-
     public final boolean isDeductIfBlockPlaced() {
         return deductIfBlockIsPlaced;
     }
 
+
+    @Override
+    public void save(FileConfiguration configuration, String initialPath) {
+        getItemStackSelection().saveToFileConfiguration(configuration, initialPath + ".specifics.itemStackSelection");
+
+        configuration.set(initialPath + ".specifics.deductIfBlockPlaced", isDeductIfBlockPlaced());
+    }
+
     @Override
     public void load(FileConfiguration configuration, String initialPath) {
-        this.nqItemName = configuration.getString(initialPath + ".specifics.nqitem", "");
+        this.itemStackSelection = new ItemStackSelection(main);
+        itemStackSelection.loadFromFileConfiguration(configuration, initialPath + ".specifics.itemStackSelection");
 
-        if(nqItemName.isBlank()){
-            blockToBreak = configuration.getString(initialPath + ".specifics.blockToBreak.material");
+        //Convert old to new
+        if(configuration.contains(initialPath + ".specifics.nqitem") || configuration.contains(initialPath + ".specifics.blockToBreak.material")){
+            main.getLogManager().info("Converting old BreakBlocksObjective to new one...");
+            final String nqItemName = configuration.getString(initialPath + ".specifics.nqitem", "");
+
+            if(nqItemName.isBlank()){
+                itemStackSelection.addMaterialName(configuration.getString(initialPath + ".specifics.blockToBreak.material", ""));
+            }else{
+                itemStackSelection.addNqItemName(nqItemName);
+            }
+            itemStackSelection.saveToFileConfiguration(configuration, initialPath + ".specifics.itemStackSelection");
+            configuration.set(initialPath + ".specifics.nqitem", null);
+            configuration.set(initialPath + ".specifics.blockToBreak.material", null);
+            //Let's hope it saves somewhere, else conversion will happen again...
         }
+
+
 
         deductIfBlockIsPlaced = configuration.getBoolean(initialPath + ".specifics.deductIfBlockPlaced", true);
     }

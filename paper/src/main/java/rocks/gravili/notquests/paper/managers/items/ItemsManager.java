@@ -22,7 +22,6 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
 import rocks.gravili.notquests.paper.managers.data.Category;
 
 import java.util.ArrayList;
@@ -58,11 +57,11 @@ public class ItemsManager {
     }
 
     public void loadItems() {
-        ArrayList<String> categoriesStringList = new ArrayList<>();
+        final ArrayList<String> categoriesStringList = new ArrayList<>();
         for (final Category category : main.getDataManager().getCategories()) {
             categoriesStringList.add(category.getCategoryFullName());
         }
-        main.getLogManager().info("Scheduled Items Data load for following categories: <highlight>" + categoriesStringList.toString() );
+        main.getLogManager().info("Scheduled Items Data load for following categories: <highlight>" + categoriesStringList);
 
         for (final Category category : main.getDataManager().getCategories()) {
             loadItems(category);
@@ -106,11 +105,7 @@ public class ItemsManager {
                 nqItem.setDisplayName(displayName, false);
 
 
-                if (nqItem != null) {
-                    identifiersAndItems.put(itemIdentifier.toLowerCase(Locale.ROOT), nqItem);
-                } else {
-                    main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading items.yml item data.");
-                }
+                identifiersAndItems.put(itemIdentifier.toLowerCase(Locale.ROOT), nqItem);
             }
         }
 
@@ -148,16 +143,5 @@ public class ItemsManager {
         return material;
     }
 
-    public final ItemStack getItemStack(final MaterialOrHand materialOrHand){
-        if(materialOrHand.itemStack != null){
-            return materialOrHand.itemStack;
-        }
-        ItemStack itemStack;
-        try{
-            itemStack = new ItemStack(Material.valueOf(materialOrHand.material.toUpperCase(Locale.ROOT)));
-        }catch (Exception ignored){
-            itemStack = getItem(materialOrHand.material).getItemStack();
-        }
-        return itemStack;
-    }
+
 }

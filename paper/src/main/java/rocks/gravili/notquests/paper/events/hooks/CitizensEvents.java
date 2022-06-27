@@ -118,39 +118,36 @@ public class CitizensEvents implements Listener {
                                 if (deliverItemsObjective.getRecipientNPCID() == npc.getId()) {
                                     for (final ItemStack itemStack : player.getInventory().getContents()) {
                                         if (itemStack != null) {
+                                            if(!deliverItemsObjective.getItemStackSelection().checkIfIsIncluded(itemStack)){
+                                                continue;
+                                            }
 
-                                            if (deliverItemsObjective.isDeliverAnyItem() || deliverItemsObjective.getItemToDeliver().getType().equals(itemStack.getType())) {
-                                                if (!deliverItemsObjective.isDeliverAnyItem() && deliverItemsObjective.getItemToDeliver().getItemMeta() != null && !deliverItemsObjective.getItemToDeliver().getItemMeta().equals(itemStack.getItemMeta())) {
-                                                    continue;
-                                                }
+                                            final double progressLeft = activeObjective.getProgressNeeded() - activeObjective.getCurrentProgress();
 
-                                                final double progressLeft = activeObjective.getProgressNeeded() - activeObjective.getCurrentProgress();
+                                            if (progressLeft == 0) {
+                                                continue;
+                                            }
 
-                                                if (progressLeft == 0) {
-                                                    continue;
-                                                }
+                                            handledObjective = true;
 
-                                                handledObjective = true;
+                                            final String mmNpcName = main.getMiniMessage().serialize(LegacyComponentSerializer.legacyAmpersand().deserialize(npc.getName()));
 
-                                                final String mmNpcName = main.getMiniMessage().serialize(LegacyComponentSerializer.legacyAmpersand().deserialize(npc.getName()));
-
-                                                if (progressLeft < itemStack.getAmount()) { //We can finish it with this itemStack
-                                                    itemStack.setAmount((itemStack.getAmount() - (int) progressLeft));
-                                                    activeObjective.addProgress(progressLeft, npc.getId());
+                                            if (progressLeft < itemStack.getAmount()) { //We can finish it with this itemStack
+                                                itemStack.setAmount((itemStack.getAmount() - (int) progressLeft));
+                                                activeObjective.addProgress(progressLeft, npc.getId());
 
 
 
-                                                    player.sendMessage(main.parse(
-                                                            "<GREEN>You have delivered <highlight>" + progressLeft + "</highlight> items to <highlight>" + mmNpcName
-                                                    ));
-                                                    break;
-                                                } else {
-                                                    player.getInventory().removeItem(itemStack);
-                                                    activeObjective.addProgress(itemStack.getAmount(), npc.getId());
-                                                    player.sendMessage(main.parse(
-                                                            "<GREEN>You have delivered <highlight>" + itemStack.getAmount() + "</highlight> items to <highlight>" + mmNpcName
-                                                    ));
-                                                }
+                                                player.sendMessage(main.parse(
+                                                        "<GREEN>You have delivered <highlight>" + progressLeft + "</highlight> items to <highlight>" + mmNpcName
+                                                ));
+                                                break;
+                                            } else {
+                                                player.getInventory().removeItem(itemStack);
+                                                activeObjective.addProgress(itemStack.getAmount(), npc.getId());
+                                                player.sendMessage(main.parse(
+                                                        "<GREEN>You have delivered <highlight>" + itemStack.getAmount() + "</highlight> items to <highlight>" + mmNpcName
+                                                ));
                                             }
                                         }
 

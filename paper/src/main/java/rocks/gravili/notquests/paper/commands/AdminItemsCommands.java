@@ -28,13 +28,12 @@ import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
+import rocks.gravili.notquests.paper.commands.arguments.ItemStackSelectionArgument;
 import rocks.gravili.notquests.paper.commands.arguments.MiniMessageSelector;
 import rocks.gravili.notquests.paper.commands.arguments.NQItemSelector;
-import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
+import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelection;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.managers.items.NQItem;
 
@@ -51,7 +50,7 @@ public class AdminItemsCommands {
 
         manager.command(editBuilder.literal("create")
                 .argument(StringArgument.of("name"), ArgumentDescription.of("Item Name"))
-                .argument(MaterialOrHandArgument.of("material", main), ArgumentDescription.of("Material of what this item should be based on. If you use 'hand', the item you are holding in your main hand will be used."))
+                .argument(ItemStackSelectionArgument.of("material", main), ArgumentDescription.of("Material of what this item should be based on. If you use 'hand', the item you are holding in your main hand will be used."))
                 .meta(CommandMeta.DESCRIPTION, "Creates a new Item.")
                 .handler((context) -> {
                     final String itemName = context.get("name");
@@ -72,16 +71,16 @@ public class AdminItemsCommands {
                         return;
                     }
 
-                    final MaterialOrHand materialOrHand = context.get("material");
+                    final ItemStackSelection itemStackSelection = context.get("material");
 
                     final ItemStack itemStack;
-                    if (materialOrHand.material.equalsIgnoreCase("any")) {
+                    if (itemStackSelection.isAny()) {
                         context.getSender().sendMessage(main.parse(
                                 "<error>You cannot use <highlight>'any'</highlight> here!"
                         ));
                         return;
                     }
-                    itemStack = main.getItemsManager().getItemStack(materialOrHand);
+                    itemStack = itemStackSelection.toFirstItemStack();
 
                     NQItem nqItem = new NQItem(main, itemName, itemStack);
 

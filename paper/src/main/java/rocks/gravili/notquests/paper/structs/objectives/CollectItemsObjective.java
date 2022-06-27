@@ -20,17 +20,15 @@ package rocks.gravili.notquests.paper.structs.objectives;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
-import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
+import rocks.gravili.notquests.paper.commands.arguments.ItemStackSelectionArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
-import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
+import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelection;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
@@ -38,26 +36,25 @@ import java.util.Map;
 
 public class CollectItemsObjective extends Objective {
 
-    private ItemStack itemToCollect = null;
+    private ItemStackSelection itemStackSelection;
     private boolean deductIfItemIsDropped = true;
-    private boolean collectAnyItem = false;
-    private String nqItemName = "";
 
     public CollectItemsObjective(NotQuests main) {
         super(main);
     }
 
-    public void setNQItem(final String nqItemName){
-        this.nqItemName = nqItemName;
+    public final ItemStackSelection getItemStackSelection(){
+        return itemStackSelection;
     }
-    public final String getNQItem(){
-        return nqItemName;
+
+    public void setItemStackSelection(final ItemStackSelection itemStackSelection){
+        this.itemStackSelection = itemStackSelection;
     }
 
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
         manager.command(addObjectiveBuilder
-                .argument(MaterialOrHandArgument.of("material", main), ArgumentDescription.of("Material of the item which needs to be collected."))
+                .argument(ItemStackSelectionArgument.of("materials", main), ArgumentDescription.of("Material of the item which needs to be collected"))
                 .argument(NumberVariableValueArgument.newBuilder("amount", main, null), ArgumentDescription.of("Amount of items which need to be collected"))
                 .flag(
                         manager.flagBuilder("doNotDeductIfItemIsDropped")
@@ -67,29 +64,12 @@ public class CollectItemsObjective extends Objective {
                     final String amountExpression = context.get("amount");
                     final boolean deductIfItemIsDropped = !context.flags().isPresent("doNotDeductIfItemIsDropped");
 
-                    boolean collectAnyItem = false;
 
-                    final MaterialOrHand materialOrHand = context.get("material");
-                    ItemStack itemToCollect;
-                    if (materialOrHand.material.equalsIgnoreCase("any")) {
-                        collectAnyItem = true;
-                        itemToCollect = null;
-                    } else {
-                        itemToCollect = main.getItemsManager().getItemStack(materialOrHand);
-                    }
+                    final ItemStackSelection itemStackSelection = context.get("materials");
 
                     CollectItemsObjective collectItemsObjective = new CollectItemsObjective(main);
+                    collectItemsObjective.setItemStackSelection(itemStackSelection);
 
-
-                    if(main.getItemsManager().getItem(materialOrHand.material) != null){
-                        collectItemsObjective.setNQItem(main.getItemsManager().getItem(materialOrHand.material).getItemName());
-                    }else{
-                        collectItemsObjective.setItemToCollect(itemToCollect);
-                    }
-
-
-
-                    collectItemsObjective.setCollectAnyItem(collectAnyItem);
                     collectItemsObjective.setProgressNeededExpression(amountExpression);
                     collectItemsObjective.setDeductIfItemIsDropped(deductIfItemIsDropped);
 
@@ -97,48 +77,16 @@ public class CollectItemsObjective extends Objective {
                 }));
     }
 
-    public final boolean isCollectAnyItem() {
-        return collectAnyItem;
-    }
 
-    public void setCollectAnyItem(final boolean collectAnyItem) {
-        this.collectAnyItem = collectAnyItem;
-    }
-
-    public void setItemToCollect(final ItemStack itemToCollect) {
-        this.itemToCollect = itemToCollect;
-    }
 
     @Override
     public String getObjectiveTaskDescription(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
-        final String displayName;
-        if (!isCollectAnyItem()) {
-            if (getItemToCollect().getItemMeta() != null) {
-                displayName = getItemToCollect().getItemMeta().getDisplayName();
-            } else {
-                displayName = getItemToCollect().getType().name();
-            }
-        } else {
-            displayName = "Any";
-        }
-
-        String itemType = isCollectAnyItem() ? "Any" : getItemToCollect().getType().name();
-
-        if (!displayName.isBlank()) {
-            return main.getLanguageManager().getString("chat.objectives.taskDescription.collectItems.base", questPlayer, activeObjective, Map.of(
-                    "%ITEMTOCOLLECTTYPE%", itemType,
-                    "%ITEMTOCOLLECTNAME%", displayName,
-                    "%(%", "(",
-                    "%)%", "<RESET>)"
-            ));
-        } else {
-            return main.getLanguageManager().getString("chat.objectives.taskDescription.collectItems.base", questPlayer, activeObjective, Map.of(
-                    "%ITEMTOCOLLECTTYPE%", itemType,
-                    "%ITEMTOCOLLECTNAME%", "",
-                    "%(%", "",
-                    "%)%", ""
-            ));
-        }
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.collectItems.base", questPlayer, activeObjective, Map.of(
+                "%ITEMTOCOLLECTTYPE%", getItemStackSelection().getAllMaterialsListed(),
+                "%ITEMTOCOLLECTNAME%", "",
+                "%(%", "",
+                "%)%", ""
+        ));
 
     }
 
@@ -148,33 +96,35 @@ public class CollectItemsObjective extends Objective {
 
     @Override
     public void save(FileConfiguration configuration, String initialPath) {
-        if(!getNQItem().isBlank()){
-            configuration.set(initialPath + ".specifics.nqitem", getNQItem());
-        }else {
-            configuration.set(initialPath + ".specifics.itemToCollect.itemstack", getItemToCollect());
-        }
+        getItemStackSelection().saveToFileConfiguration(configuration, initialPath + ".specifics.itemStackSelection");
 
         configuration.set(initialPath + ".specifics.deductIfItemDropped", isDeductIfItemIsDropped());
-        configuration.set(initialPath + ".specifics.collectAnyItem", isCollectAnyItem());
     }
 
     @Override
     public void load(FileConfiguration configuration, String initialPath) {
-        this.nqItemName = configuration.getString(initialPath + ".specifics.nqitem", "");
-        if(nqItemName.isBlank()){
-            itemToCollect = configuration.getItemStack(initialPath + ".specifics.itemToCollect.itemstack");
+        this.itemStackSelection = new ItemStackSelection(main);
+        itemStackSelection.loadFromFileConfiguration(configuration, initialPath + ".specifics.itemStackSelection");
+
+        //Convert old to new
+        if(configuration.contains(initialPath + ".specifics.nqitem") || configuration.contains(initialPath + ".specifics.itemToCollect.itemstack")){
+            main.getLogManager().info("Converting old CollectItemsObjective to new one...");
+            final String nqItemName = configuration.getString(initialPath + ".specifics.nqitem", "");
+
+            if(nqItemName.isBlank()){
+                itemStackSelection.addItemStack(configuration.getItemStack(initialPath + ".specifics.itemToCollect.itemstack"));
+            }else{
+                itemStackSelection.addNqItemName(nqItemName);
+            }
+            itemStackSelection.saveToFileConfiguration(configuration, initialPath + ".specifics.itemStackSelection");
+            configuration.set(initialPath + ".specifics.nqitem", null);
+            configuration.set(initialPath + ".specifics.itemToCollect.itemstack", null);
+            //Let's hope it saves somewhere, else conversion will happen again...
         }
+
         deductIfItemIsDropped = configuration.getBoolean(initialPath + ".specifics.deductIfItemDropped", true);
-        collectAnyItem = configuration.getBoolean(initialPath + ".specifics.collectAnyItem", false);
     }
 
-    public final ItemStack getItemToCollect() {
-        if(!getNQItem().isBlank()){
-            return main.getItemsManager().getItem(getNQItem()).getItemStack().clone();
-        }else{
-            return itemToCollect;
-        }
-    }
 
     @Override
     public void onObjectiveUnlock(final ActiveObjective activeObjective, final boolean unlockedDuringPluginStartupQuestLoadingProcess) {

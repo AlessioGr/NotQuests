@@ -44,9 +44,9 @@ import org.bukkit.util.Vector;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.CategorySelector;
 import rocks.gravili.notquests.paper.commands.arguments.DurationArgument;
-import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
+import rocks.gravili.notquests.paper.commands.arguments.ItemStackSelectionArgument;
 import rocks.gravili.notquests.paper.commands.arguments.MiniMessageSelector;
-import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
+import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelection;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.actions.Action;
@@ -286,7 +286,7 @@ public class AdminEditCommands {
 
         manager.command(editBuilder.literal("takeItem")
 
-                .argument(MaterialOrHandArgument.of("material", main), ArgumentDescription.of("Material of item displayed in the Quest take GUI."))
+                .argument(ItemStackSelectionArgument.of("material", main), ArgumentDescription.of("Material of item displayed in the Quest take GUI."))
                 .flag(
                         manager.flagBuilder("glow")
                                 .withDescription(ArgumentDescription.of("Makes the item have the enchanted glow."))
@@ -296,13 +296,12 @@ public class AdminEditCommands {
                     final Quest quest = context.get("quest");
                     final boolean glow = context.flags().isPresent("glow");
 
-                    final MaterialOrHand materialOrHand = context.get("material");
-                    final ItemStack takeItem;
-                    if (materialOrHand.material.equalsIgnoreCase("any")) {
+                    final ItemStackSelection itemStackSelection= context.get("material");
+                    ItemStack takeItem = itemStackSelection.toFirstItemStack();
+                    if (takeItem == null) {
                         takeItem = new ItemStack(Material.BOOK, 1);
-                    } else {
-                        takeItem = main.getItemsManager().getItemStack(materialOrHand);
                     }
+
                     if (glow) {
                         takeItem.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 1);
                         ItemMeta meta = takeItem.getItemMeta();

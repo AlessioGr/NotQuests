@@ -20,14 +20,12 @@ package rocks.gravili.notquests.paper.structs.objectives;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
-import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.paper.PaperCommandManager;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
@@ -39,9 +37,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
+import rocks.gravili.notquests.paper.commands.arguments.ItemStackSelectionArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
-import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
+import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelection;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -52,10 +50,7 @@ public class DeliverItemsObjective extends Objective {
 
     private int recipientNPCID = -1;
     private UUID recipientArmorStandUUID = null;
-    private boolean deliverAnyItem = false;
-
-    private ItemStack itemToDeliver = null;
-    private String nqItemName = "";
+    private ItemStackSelection itemStackSelection;
 
 
 
@@ -64,16 +59,17 @@ public class DeliverItemsObjective extends Objective {
         super(main);
     }
 
-    public void setNQItem(final String nqItemName){
-        this.nqItemName = nqItemName;
+    public final ItemStackSelection getItemStackSelection(){
+        return itemStackSelection;
     }
-    public final String getNQItem(){
-        return nqItemName;
+
+    public void setItemStackSelection(final ItemStackSelection itemStackSelection){
+        this.itemStackSelection = itemStackSelection;
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
         manager.command(addObjectiveBuilder
-                .argument(MaterialOrHandArgument.of("material", main), ArgumentDescription.of("Material of the item which needs to be delivered."))
+                .argument(ItemStackSelectionArgument.of("materials", main), ArgumentDescription.of("Material of the item which needs to be delivered"))
                 .argument(NumberVariableValueArgument.newBuilder("amount", main, null), ArgumentDescription.of("Amount of items which need to be delivered"))
                 .argument(StringArgument.<CommandSender>newBuilder("NPC or Armorstand").withSuggestionsProvider((context, lastString) -> {
                     ArrayList<String> completions = new ArrayList<>();
@@ -92,16 +88,8 @@ public class DeliverItemsObjective extends Objective {
                     final Quest quest = context.get("quest");
                     final String amountToDeliverExpression = context.get("amount");
 
-                    boolean deliverAnyItem = false;
 
-                    final MaterialOrHand materialOrHand = context.get("material");
-                    ItemStack itemToDeliver;
-                    if (materialOrHand.material.equalsIgnoreCase("any")) {
-                        deliverAnyItem = true;
-                        itemToDeliver = null;
-                    } else {
-                        itemToDeliver = main.getItemsManager().getItemStack(materialOrHand);
-                    }
+                    final ItemStackSelection itemStackSelection = context.get("materials");
 
 
                     final String npcIDOrArmorstand = context.get("NPC or Armorstand");
@@ -126,15 +114,10 @@ public class DeliverItemsObjective extends Objective {
                             return;
                         }
                         DeliverItemsObjective deliverItemsObjective = new DeliverItemsObjective(main);
-                        if(main.getItemsManager().getItem(materialOrHand.material) != null){
-                            deliverItemsObjective.setNQItem(main.getItemsManager().getItem(materialOrHand.material).getItemName());
-                        }else{
-                            deliverItemsObjective.setItemToDeliver(itemToDeliver);
-                        }
+                        deliverItemsObjective.setItemStackSelection(itemStackSelection);
 
                         deliverItemsObjective.setProgressNeededExpression(amountToDeliverExpression);
                         deliverItemsObjective.setRecipientNPCID(npcID);
-                        deliverItemsObjective.setDeliverAnyItem(deliverAnyItem);
 
                         main.getObjectiveManager().addObjective(deliverItemsObjective, context);
                     } else {//Armorstands
@@ -144,11 +127,8 @@ public class DeliverItemsObjective extends Objective {
                             Random rand = new Random();
                             int randomNum = rand.nextInt((Integer.MAX_VALUE - 1) + 1) + 1;
 
-                            if(main.getItemsManager().getItem(materialOrHand.material) != null){
-                                main.getDataManager().getItemStackCache().put(randomNum, main.getItemsManager().getItem(materialOrHand.material).getItemName());
-                            }else{
-                                main.getDataManager().getItemStackCache().put(randomNum, itemToDeliver);
-                            }
+                            main.getDataManager().getItemStackSelectionCache().put(randomNum, itemStackSelection);
+
 
 
 
@@ -160,7 +140,6 @@ public class DeliverItemsObjective extends Objective {
 
                             NamespacedKey ItemStackKey = new NamespacedKey(main.getMain(), "notquests-itemstackcache");
                             NamespacedKey ItemStackAmountKey = new NamespacedKey(main.getMain(), "notquests-itemstackamount");
-                            NamespacedKey deliverAnyKey = new NamespacedKey(main.getMain(), "notquests-anyitemstack");
 
 
                             ItemMeta itemMeta = itemStack.getItemMeta();
@@ -174,12 +153,6 @@ public class DeliverItemsObjective extends Objective {
 
                             itemMeta.getPersistentDataContainer().set(ItemStackKey, PersistentDataType.INTEGER, randomNum);
                             itemMeta.getPersistentDataContainer().set(ItemStackAmountKey, PersistentDataType.STRING, amountToDeliverExpression);
-
-                            if (deliverAnyItem) {
-                                itemMeta.getPersistentDataContainer().set(deliverAnyKey, PersistentDataType.BYTE, (byte) 1);
-                            } else {
-                                itemMeta.getPersistentDataContainer().set(deliverAnyKey, PersistentDataType.BYTE, (byte) 0);
-                            }
 
 
                             itemMeta.displayName(main.parse(
@@ -221,17 +194,6 @@ public class DeliverItemsObjective extends Objective {
                 }));
     }
 
-    public final boolean isDeliverAnyItem() {
-        return deliverAnyItem;
-    }
-
-    public void setDeliverAnyItem(final boolean deliverAnyItem) {
-        this.deliverAnyItem = deliverAnyItem;
-    }
-
-    public void setItemToDeliver(final ItemStack itemToDeliver) {
-        this.itemToDeliver = itemToDeliver;
-    }
 
     public void setRecipientNPCID(final int recipientNPCID) {
         this.recipientNPCID = recipientNPCID;
@@ -248,13 +210,6 @@ public class DeliverItemsObjective extends Objective {
     public void onObjectiveCompleteOrLock(final ActiveObjective activeObjective, final boolean lockedOrCompletedDuringPluginStartupQuestLoadingProcess, final boolean completed) {
     }
 
-    public final ItemStack getItemToDeliver() {
-        if(!getNQItem().isBlank()){
-            return main.getItemsManager().getItem(getNQItem()).getItemStack().clone();
-        }else{
-            return itemToDeliver;
-        }
-    }
 
     public final int getRecipientNPCID() {
         return recipientNPCID;
@@ -266,36 +221,15 @@ public class DeliverItemsObjective extends Objective {
 
     @Override
     public String getObjectiveTaskDescription(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
-        final String displayName;
-        if (!isDeliverAnyItem()) {
-            if (getItemToDeliver().getItemMeta() != null) {
-                displayName = PlainTextComponentSerializer.plainText().serializeOr(getItemToDeliver().getItemMeta().displayName(), getItemToDeliver().getType().name());
-            } else {
-                displayName = getItemToDeliver().getType().name();
-            }
-        } else {
-            displayName = "Any";
-        }
-
-        String itemType = isDeliverAnyItem() ? "Any" : getItemToDeliver().getType().name().toLowerCase(Locale.ROOT);
 
 
         String toReturn;
-        if (!displayName.isBlank()) {
-            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.base", questPlayer, activeObjective, Map.of(
-                    "%ITEMTODELIVERTYPE%", itemType,
-                    "%ITEMTODELIVERNAME%", displayName,
-                    "%(%", "(",
-                    "%)%", "<RESET>)"
-            ));
-        } else {
-            toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.base", questPlayer, activeObjective, Map.of(
-                    "%ITEMTODELIVERTYPE%", itemType,
-                    "%ITEMTODELIVERNAME%", "",
-                    "%(%", "",
-                    "%)%", ""
-            ));
-        }
+        toReturn = main.getLanguageManager().getString("chat.objectives.taskDescription.deliverItems.base", questPlayer, activeObjective, Map.of(
+                "%ITEMTODELIVERTYPE%", getItemStackSelection().getAllMaterialsListed(),
+                "%ITEMTODELIVERNAME%", "",
+                "%(%", "",
+                "%)%", ""
+        ));
 
 
         if (main.getIntegrationsManager().isCitizensEnabled() && getRecipientNPCID() != -1) {
@@ -330,11 +264,7 @@ public class DeliverItemsObjective extends Objective {
 
     @Override
     public void save(FileConfiguration configuration, String initialPath) {
-        if(!getNQItem().isBlank()){
-            configuration.set(initialPath + ".specifics.nqitem", getNQItem());
-        }else {
-            configuration.set(initialPath + ".specifics.itemToCollect.itemstack", getItemToDeliver());
-        }
+        getItemStackSelection().saveToFileConfiguration(configuration, initialPath + ".specifics.itemStackSelection");
 
         configuration.set(initialPath + ".specifics.recipientNPCID", getRecipientNPCID());
         if (getRecipientArmorStandUUID() != null) {
@@ -342,14 +272,27 @@ public class DeliverItemsObjective extends Objective {
         } else {
             configuration.set(initialPath + ".specifics.recipientArmorStandID", null);
         }
-        configuration.set(initialPath + ".specifics.deliverAnyItem", isDeliverAnyItem());
     }
 
     @Override
     public void load(FileConfiguration configuration, String initialPath) {
-        this.nqItemName = configuration.getString(initialPath + ".specifics.nqitem", "");
-        if(nqItemName.isBlank()){
-            itemToDeliver = configuration.getItemStack(initialPath + ".specifics.itemToCollect.itemstack");
+        this.itemStackSelection = new ItemStackSelection(main);
+        itemStackSelection.loadFromFileConfiguration(configuration, initialPath + ".specifics.itemStackSelection");
+
+        //Convert old to new
+        if(configuration.contains(initialPath + ".specifics.nqitem") || configuration.contains(initialPath + ".specifics.itemToCollect.itemstack")){
+            main.getLogManager().info("Converting old DeliverItemsObjective to new one...");
+            final String nqItemName = configuration.getString(initialPath + ".specifics.nqitem", "");
+
+            if(nqItemName.isBlank()){
+                itemStackSelection.addItemStack(configuration.getItemStack(initialPath + ".specifics.itemToCollect.itemstack"));
+            }else{
+                itemStackSelection.addNqItemName(nqItemName);
+            }
+            itemStackSelection.saveToFileConfiguration(configuration, initialPath + ".specifics.itemStackSelection");
+            configuration.set(initialPath + ".specifics.nqitem", null);
+            configuration.set(initialPath + ".specifics.itemToCollect.itemstack", null);
+            //Let's hope it saves somewhere, else conversion will happen again...
         }
 
         recipientNPCID = configuration.getInt(initialPath + ".specifics.recipientNPCID");
@@ -364,8 +307,5 @@ public class DeliverItemsObjective extends Objective {
                 recipientArmorStandUUID = null;
             }
         }
-
-        deliverAnyItem = configuration.getBoolean(initialPath + ".specifics.deliverAnyItem", false);
-
     }
 }

@@ -5,12 +5,11 @@ import cloud.commandframework.Command;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.inventory.ItemStack;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
+import rocks.gravili.notquests.paper.commands.arguments.ItemStackSelectionArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
-import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
+import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelection;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
@@ -19,132 +18,78 @@ import java.util.Map;
 public class FishItemsObjective extends Objective{
 
 
-    private ItemStack itemToFish = null;
-
-    private boolean fishAnyItem = false;
-    private String nqItemName = "";
+    private ItemStackSelection itemStackSelection;
 
     public FishItemsObjective(NotQuests main) {
         super(main);
     }
 
-    public void setNQItem(final String nqItemName){
-        this.nqItemName = nqItemName;
+    public final ItemStackSelection getItemStackSelection(){
+        return itemStackSelection;
     }
-    public final String getNQItem(){
-        return nqItemName;
+
+    public void setItemStackSelection(final ItemStackSelection itemStackSelection){
+        this.itemStackSelection = itemStackSelection;
     }
 
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
         manager.command(addObjectiveBuilder
-                .argument(MaterialOrHandArgument.of("material", main), ArgumentDescription.of("Material of the item which needs to be fished."))
+                .argument(ItemStackSelectionArgument.of("materials", main), ArgumentDescription.of("Material of the item which needs to be fished"))
                 .argument(NumberVariableValueArgument.newBuilder("amount", main, null), ArgumentDescription.of("Amount of items which need to be fished"))
                 .handler((context) -> {
                     final String amountExpression = context.get("amount");
 
-                    boolean fishAnyItem = false;
-
-                    final MaterialOrHand materialOrHand = context.get("material");
-                    ItemStack itemToFish;
-                    if (materialOrHand.material.equalsIgnoreCase("any")) {
-                        fishAnyItem = true;
-                        itemToFish = null;
-                    } else {
-                        itemToFish = main.getItemsManager().getItemStack(materialOrHand);
-                    }
+                    final ItemStackSelection itemStackSelection = context.get("materials");
 
                     FishItemsObjective fishItemsObjective = new FishItemsObjective(main);
+                    fishItemsObjective.setItemStackSelection(itemStackSelection);
 
-
-                    if(main.getItemsManager().getItem(materialOrHand.material) != null){
-                        fishItemsObjective.setNQItem(main.getItemsManager().getItem(materialOrHand.material).getItemName());
-                    }else{
-                        fishItemsObjective.setItemToFish(itemToFish);
-                    }
-
-
-
-                    fishItemsObjective.setFishAnyItem(fishAnyItem);
                     fishItemsObjective.setProgressNeededExpression(amountExpression);
 
                     main.getObjectiveManager().addObjective(fishItemsObjective, context);
                 }));
     }
 
-    public final boolean isFishAnyItem() {
-        return fishAnyItem;
-    }
-
-    public void setFishAnyItem(final boolean fishAnyItem) {
-        this.fishAnyItem = fishAnyItem;
-    }
-
-    public void setItemToFish(final ItemStack itemToFish) {
-        this.itemToFish = itemToFish;
-    }
-
     @Override
     public String getObjectiveTaskDescription(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
-        final String displayName;
-        if (!isFishAnyItem()) {
-            if (getItemToFish().getItemMeta() != null) {
-                displayName = getItemToFish().getItemMeta().getDisplayName();
-            } else {
-                displayName = getItemToFish().getType().name();
-            }
-        } else {
-            displayName = "Any";
-        }
-
-        String itemType = isFishAnyItem() ? "Any" : getItemToFish().getType().name();
-
-        if (!displayName.isBlank()) {
-            return main.getLanguageManager().getString("chat.objectives.taskDescription.fishItems.base", questPlayer, activeObjective, Map.of(
-                    "%ITEMTOFISHTYPE%", itemType,
-                    "%ITEMTOFISHNAME%", displayName,
-                    "%(%", "(",
-                    "%)%", "<RESET>)"
-            ));
-        } else {
-            return main.getLanguageManager().getString("chat.objectives.taskDescription.fishItems.base", questPlayer, activeObjective, Map.of(
-                    "%ITEMTOFISHTYPE%", itemType,
-                    "%ITEMTOFISHNAME%", "",
-                    "%(%", "",
-                    "%)%", ""
-            ));
-        }
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.fishItems.base", questPlayer, activeObjective, Map.of(
+                "%ITEMTOFISHTYPE%", getItemStackSelection().getAllMaterialsListed(),
+                "%ITEMTOFISHNAME%", "",
+                "%(%", "",
+                "%)%", ""
+        ));
 
     }
 
 
     @Override
     public void save(FileConfiguration configuration, String initialPath) {
-        if(!getNQItem().isBlank()){
-            configuration.set(initialPath + ".specifics.nqitem", getNQItem());
-        }else {
-            configuration.set(initialPath + ".specifics.itemToFish.itemstack", getItemToFish());
-        }
-
-        configuration.set(initialPath + ".specifics.fishAnyItem", isFishAnyItem());
+        getItemStackSelection().saveToFileConfiguration(configuration, initialPath + ".specifics.itemStackSelection");
     }
 
     @Override
     public void load(FileConfiguration configuration, String initialPath) {
-        this.nqItemName = configuration.getString(initialPath + ".specifics.nqitem", "");
-        if(nqItemName.isBlank()){
-            itemToFish = configuration.getItemStack(initialPath + ".specifics.itemToFish.itemstack");
+        this.itemStackSelection = new ItemStackSelection(main);
+        itemStackSelection.loadFromFileConfiguration(configuration, initialPath + ".specifics.itemStackSelection");
+
+        //Convert old to new
+        if(configuration.contains(initialPath + ".specifics.nqitem") || configuration.contains(initialPath + ".specifics.itemToFish.itemstack")){
+            main.getLogManager().info("Converting old FishItemsObjective to new one...");
+            final String nqItemName = configuration.getString(initialPath + ".specifics.nqitem", "");
+
+            if(nqItemName.isBlank()){
+                itemStackSelection.addItemStack(configuration.getItemStack(initialPath + ".specifics.itemToFish.itemstack"));
+            }else{
+                itemStackSelection.addNqItemName(nqItemName);
+            }
+            itemStackSelection.saveToFileConfiguration(configuration, initialPath + ".specifics.itemStackSelection");
+            configuration.set(initialPath + ".specifics.nqitem", null);
+            configuration.set(initialPath + ".specifics.itemToFish.itemstack", null);
+            //Let's hope it saves somewhere, else conversion will happen again...
         }
-        fishAnyItem = configuration.getBoolean(initialPath + ".specifics.fishAnyItem", false);
     }
 
-    public final ItemStack getItemToFish() {
-        if(!getNQItem().isBlank()){
-            return main.getItemsManager().getItem(getNQItem()).getItemStack().clone();
-        }else{
-            return itemToFish;
-        }
-    }
 
     @Override
     public void onObjectiveUnlock(final ActiveObjective activeObjective, final boolean unlockedDuringPluginStartupQuestLoadingProcess) {

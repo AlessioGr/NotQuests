@@ -20,18 +20,14 @@ package rocks.gravili.notquests.paper.structs.objectives;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
-import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.paper.PaperCommandManager;
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
+import rocks.gravili.notquests.paper.commands.arguments.ItemStackSelectionArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
-import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
+import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelection;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
@@ -39,48 +35,32 @@ import java.util.Map;
 
 public class ConsumeItemsObjective extends Objective {
 
-    private ItemStack itemToConsume;
-    private boolean consumeAnyItem = false;
-    private String nqItemName = "";
+    private ItemStackSelection itemStackSelection;
 
     public ConsumeItemsObjective(NotQuests main) {
         super(main);
     }
 
-    public void setNQItem(final String nqItemName){
-        this.nqItemName = nqItemName;
+    public final ItemStackSelection getItemStackSelection(){
+        return itemStackSelection;
     }
-    public final String getNQItem(){
-        return nqItemName;
+
+    public void setItemStackSelection(final ItemStackSelection itemStackSelection){
+        this.itemStackSelection = itemStackSelection;
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
         manager.command(addObjectiveBuilder
-                .argument(MaterialOrHandArgument.of("material", main), ArgumentDescription.of("Material of the item which needs to be consumed."))
+                .argument(ItemStackSelectionArgument.of("materials", main), ArgumentDescription.of("Material of the item which needs to be consumed"))
                 .argument(NumberVariableValueArgument.newBuilder("amount", main, null), ArgumentDescription.of("Amount of items which need to be consumed"))
                 .handler((context) -> {
                     final String amountExpression = context.get("amount");
 
-                    boolean consumeAnyItem = false;
-
-                    final MaterialOrHand materialOrHand = context.get("material");
-                    ItemStack itemToConsume;
-                    if (materialOrHand.material.equalsIgnoreCase("any")) {
-                        consumeAnyItem = true;
-                        itemToConsume = null;
-                    } else {
-                        itemToConsume = main.getItemsManager().getItemStack(materialOrHand);
-                    }
+                    final ItemStackSelection itemStackSelection = context.get("materials");
 
                     ConsumeItemsObjective consumeItemsObjective = new ConsumeItemsObjective(main);
+                    consumeItemsObjective.setItemStackSelection(itemStackSelection);
 
-                    if(main.getItemsManager().getItem(materialOrHand.material) != null){
-                        consumeItemsObjective.setNQItem(main.getItemsManager().getItem(materialOrHand.material).getItemName());
-                    }else{
-                        consumeItemsObjective.setItemToConsume(itemToConsume);
-                    }
-
-                    consumeItemsObjective.setConsumeAnyItem(consumeAnyItem);
                     consumeItemsObjective.setProgressNeededExpression(amountExpression);
 
                     main.getObjectiveManager().addObjective(consumeItemsObjective, context);
@@ -88,17 +68,6 @@ public class ConsumeItemsObjective extends Objective {
                 }));
     }
 
-    public final boolean isConsumeAnyItem() {
-        return consumeAnyItem;
-    }
-
-    public void setConsumeAnyItem(final boolean consumeAnyItem) {
-        this.consumeAnyItem = consumeAnyItem;
-    }
-
-    public void setItemToConsume(final ItemStack itemToConsume) {
-        this.itemToConsume = itemToConsume;
-    }
 
     @Override
     public void onObjectiveUnlock(final ActiveObjective activeObjective, final boolean unlockedDuringPluginStartupQuestLoadingProcess) {
@@ -107,66 +76,45 @@ public class ConsumeItemsObjective extends Objective {
     public void onObjectiveCompleteOrLock(final ActiveObjective activeObjective, final boolean lockedOrCompletedDuringPluginStartupQuestLoadingProcess, final boolean completed) {
     }
 
-    public final ItemStack getItemToConsume() {
-        if(!getNQItem().isBlank()){
-            return main.getItemsManager().getItem(getNQItem()).getItemStack().clone();
-        }else{
-            return itemToConsume;
-        }
-    }
 
 
     @Override
     public String getObjectiveTaskDescription(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
-        final String displayName;
-        if (!isConsumeAnyItem()) {
-            if (getItemToConsume().getItemMeta() != null) {
-                displayName = PlainTextComponentSerializer.plainText().serializeOr(getItemToConsume().getItemMeta().displayName(), getItemToConsume().getType().name());
-            } else {
-                displayName = getItemToConsume().getType().name();
-            }
-        } else {
-            displayName = "Any";
-        }
-
-        String itemType = isConsumeAnyItem() ? "Any" : getItemToConsume().getType().name();
-
-        if (!displayName.isBlank()) {
-            return main.getLanguageManager().getString("chat.objectives.taskDescription.consumeItems.base", questPlayer, activeObjective, Map.of(
-                    "%ITEMTOCONSUMETYPE%", itemType,
-                    "%ITEMTOCONSUMENAME%", displayName,
-                    "%(%", "(",
-                    "%)%", "<RESET>)"
-            ));
-        } else {
-            return main.getLanguageManager().getString("chat.objectives.taskDescription.consumeItems.base", questPlayer, activeObjective, Map.of(
-                    "%ITEMTOCONSUMETYPE%", itemType,
-                    "%ITEMTOCONSUMENAME%", "",
-                    "%(%", "",
-                    "%)%", ""
-            ));
-        }
+        return main.getLanguageManager().getString("chat.objectives.taskDescription.consumeItems.base", questPlayer, activeObjective, Map.of(
+                "%ITEMTOCONSUMETYPE%", getItemStackSelection().getAllMaterialsListed(),
+                "%ITEMTOCONSUMENAME%", "",
+                "%(%", "",
+                "%)%", ""
+        ));
 
 
     }
 
     @Override
     public void save(FileConfiguration configuration, String initialPath) {
-        if(!getNQItem().isBlank()){
-            configuration.set(initialPath + ".specifics.nqitem", getNQItem());
-        }else {
-            configuration.set(initialPath + ".specifics.itemToConsume.itemstack", getItemToConsume());
-        }
-
-        configuration.set(initialPath + ".specifics.consumeAnyItem", isConsumeAnyItem());
+        getItemStackSelection().saveToFileConfiguration(configuration, initialPath + ".specifics.itemStackSelection");
     }
 
     @Override
     public void load(FileConfiguration configuration, String initialPath) {
-        this.nqItemName = configuration.getString(initialPath + ".specifics.nqitem", "");
-        if(nqItemName.isBlank()){
-            itemToConsume = configuration.getItemStack(initialPath + ".specifics.itemToConsume.itemstack");
+        this.itemStackSelection = new ItemStackSelection(main);
+        itemStackSelection.loadFromFileConfiguration(configuration, initialPath + ".specifics.itemStackSelection");
+
+        //Convert old to new
+        if(configuration.contains(initialPath + ".specifics.nqitem") || configuration.contains(initialPath + ".specifics.itemToConsume.itemstack")){
+            main.getLogManager().info("Converting old ConsumeItemsObjective to new one...");
+            final String nqItemName = configuration.getString(initialPath + ".specifics.nqitem", "");
+
+            if(nqItemName.isBlank()){
+                itemStackSelection.addItemStack(configuration.getItemStack(initialPath + ".specifics.itemToConsume.itemstack"));
+            }else{
+                itemStackSelection.addNqItemName(nqItemName);
+            }
+            itemStackSelection.saveToFileConfiguration(configuration, initialPath + ".specifics.itemStackSelection");
+            configuration.set(initialPath + ".specifics.nqitem", null);
+            configuration.set(initialPath + ".specifics.itemToConsume.itemstack", null);
+            //Let's hope it saves somewhere, else conversion will happen again...
         }
-        consumeAnyItem = configuration.getBoolean(initialPath + ".specifics.consumeAnyItem", false);
+
     }
 }

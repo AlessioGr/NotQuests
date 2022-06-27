@@ -37,6 +37,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelection;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.*;
 import rocks.gravili.notquests.paper.structs.actions.Action;
@@ -143,7 +144,7 @@ public class DataManager {
     /*
      * ItemStack Cache used for 'storing ItemStacks to PDBs' (used for attaching Objectives To Armor Stands)
      */
-    private final HashMap<Integer, Object> itemStackCache;
+    private final HashMap<Integer, ItemStackSelection> itemStackSelectionCache;
 
 
     private final ArrayList<Category> categories, topLevelOnlyCategories;
@@ -177,7 +178,7 @@ public class DataManager {
 
         criticalErrors = new ArrayList<>();
 
-        itemStackCache = new HashMap<>();
+        itemStackSelectionCache = new HashMap<>();
         // create an instance of the Configuration object
         configuration = new Configuration();
 
@@ -1735,8 +1736,8 @@ public class DataManager {
     }
 
 
-    public HashMap<Integer, Object> getItemStackCache() {
-        return itemStackCache;
+    public HashMap<Integer, ItemStackSelection> getItemStackSelectionCache() {
+        return itemStackSelectionCache;
     }
 
     /**
