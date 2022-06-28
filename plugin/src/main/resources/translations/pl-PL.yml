@@ -91,6 +91,8 @@ chat:
         deliver-to-armorstand-not-available: '    <GRAY> Docelowy stojak na jest obecnie niedostępny!'
       escortNPC:
         base: '    <veryUnimportant>└─ <unimportant>Eskortuj: <main>%NPCNAME%</main> to <main>%DESTINATIONNPCNAME%'
+      fishItems:
+        base: '    <veryUnimportant>└─ <unimportant>Fish Items: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
       killMobs:
         base: '    <veryUnimportant>└─ <unimportant>Zabij Moby: <main>%MOBTOKILL%'
       otherQuest:
