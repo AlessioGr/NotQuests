@@ -279,6 +279,7 @@ public class NumberVariableObjective extends Objective { // TODO: Not done yet
 
   public void updateProgress(final ActiveObjective activeObjective/*, final double newVariableValue*/){
     final QuestPlayer questPlayer = activeObjective.getQuestPlayer();
+    questPlayer.sendDebugMessage("Updating progress for number variable objective. Variable: " + getVariableName());
     if (cachedVariable == null) {
       return;
     }
@@ -299,6 +300,8 @@ public class NumberVariableObjective extends Objective { // TODO: Not done yet
 
     if(getMathOperator().equalsIgnoreCase("moreThan") || getMathOperator().equalsIgnoreCase("moreOrEqualThan")){
       //Here we can just add the default progress. That's because when moreThan is used, the progress was already adjusted to be +1 higher than wanted
+      questPlayer.sendDebugMessage("MoreOrEqualThan. value: " + value);
+
       if(value instanceof Long l){
         activeObjective.setProgress(l, false);
       }else if(value instanceof Float f){
