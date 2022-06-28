@@ -20,6 +20,10 @@ package rocks.gravili.notquests.paper.structs.variables;
 
 import cloud.commandframework.arguments.flags.CommandFlag;
 import cloud.commandframework.arguments.standard.StringArgument;
+import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -29,13 +33,13 @@ import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
-import rocks.gravili.notquests.paper.structs.conditions.*;
+import rocks.gravili.notquests.paper.structs.conditions.BooleanCondition;
+import rocks.gravili.notquests.paper.structs.conditions.Condition;
+import rocks.gravili.notquests.paper.structs.conditions.ListCondition;
+import rocks.gravili.notquests.paper.structs.conditions.NumberCondition;
+import rocks.gravili.notquests.paper.structs.conditions.StringCondition;
 import rocks.gravili.notquests.paper.structs.objectives.ConditionObjective;
-
-import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import rocks.gravili.notquests.paper.structs.objectives.NumberVariableObjective;
 
 public abstract class Variable<T> {
     protected final NotQuests main;
@@ -46,44 +50,11 @@ public abstract class Variable<T> {
 
     private final ArrayList<String> setOnlyRequiredValues = new ArrayList<>(); //TODO: Implement
     private final ArrayList<String> getOnlyRequiredValues = new ArrayList<>(); //TODO: Implement
-
+    private final VariableDataType variableDataType;
     private HashMap<String, String> additionalStringArguments;
     private HashMap<String, NumberExpression> additionalNumberArguments;
     private HashMap<String, NumberExpression> additionalBooleanArguments;
-
     private boolean canSetValue = false;
-
-    private final VariableDataType variableDataType;
-
-
-    public final ArrayList<String> getSetOnlyRequiredValues() {
-        return setOnlyRequiredValues;
-    }
-
-    public final ArrayList<String> getGetOnlyRequiredValues() {
-        return getOnlyRequiredValues;
-    }
-
-    public final HashMap<String, String> getAdditionalStringArguments() {
-        return additionalStringArguments;
-    }
-
-    public final HashMap<String, NumberExpression> getAdditionalBooleanArguments() {
-        return additionalBooleanArguments;
-    }
-
-    public void setAdditionalBooleanArguments(HashMap<String, NumberExpression> additionalBooleanArguments) {
-        this.additionalBooleanArguments = additionalBooleanArguments;
-    }
-
-
-    public void addSetOnlyRequiredValue(final String value) {
-        setOnlyRequiredValues.add(value);
-    }
-
-    public void addGetOnlyRequiredValue(final String value) {
-        getOnlyRequiredValues.add(value);
-    }
 
 
     public Variable(final NotQuests main){
@@ -118,16 +89,48 @@ public abstract class Variable<T> {
         }
     }
 
+    public final ArrayList<String> getSetOnlyRequiredValues() {
+        return setOnlyRequiredValues;
+    }
+
+    public final ArrayList<String> getGetOnlyRequiredValues() {
+        return getOnlyRequiredValues;
+    }
+
+    public final HashMap<String, String> getAdditionalStringArguments() {
+        return additionalStringArguments;
+    }
+
+    public void setAdditionalStringArguments(final HashMap<String, String> additionalStringArguments) {
+        this.additionalStringArguments = additionalStringArguments;
+    }
+
+    public final HashMap<String, NumberExpression> getAdditionalBooleanArguments() {
+        return additionalBooleanArguments;
+    }
+
+    public void setAdditionalBooleanArguments(HashMap<String, NumberExpression> additionalBooleanArguments) {
+        this.additionalBooleanArguments = additionalBooleanArguments;
+    }
+
+    public void addSetOnlyRequiredValue(final String value) {
+        setOnlyRequiredValues.add(value);
+    }
+
+    public void addGetOnlyRequiredValue(final String value) {
+        getOnlyRequiredValues.add(value);
+    }
+
     public final VariableDataType getVariableDataType(){
         return variableDataType;
     }
 
-    protected void setCanSetValue(final boolean canSetValue){
-        this.canSetValue = canSetValue;
-    }
-
     public final boolean isCanSetValue(){
         return canSetValue;
+    }
+
+    protected void setCanSetValue(final boolean canSetValue){
+        this.canSetValue = canSetValue;
     }
 
     protected void addRequiredString(final StringArgument<CommandSender> stringArgument){
@@ -174,7 +177,6 @@ public abstract class Variable<T> {
         return additionalStringArguments.getOrDefault(key, "");
     }
 
-
     public abstract T getValue(final QuestPlayer questPlayer, final Object... objects);
 
     public final boolean setValue(final T newValue, final QuestPlayer questPlayer, final Object... objects) {
@@ -183,40 +185,51 @@ public abstract class Variable<T> {
         }
         final boolean result = setValueInternally(newValue, questPlayer, objects);
 
-        if (questPlayer != null && questPlayer.isHasActiveConditionObjectives()) {
-            for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-                for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-                    if (activeObjective.getObjective() instanceof final ConditionObjective conditionObjective) {
-                        if (!activeObjective.isUnlocked()) {
-                            continue;
-                        }
-
-                        final Condition condition = conditionObjective.getCondition();
-                        if (condition == null) {
-                            continue;
-                        }
-                        String activeObjectiveVariableName = "";
-                        if (condition instanceof BooleanCondition booleanCondition) {
-                            activeObjectiveVariableName = booleanCondition.getVariableName();
-                        }else if(condition instanceof ListCondition listCondition){
-                            activeObjectiveVariableName = listCondition.getVariableName();
-                        }else if(condition instanceof NumberCondition numberCondition){
-                            activeObjectiveVariableName = numberCondition.getVariableName();
-                        }else if(condition instanceof StringCondition stringCondition){
-                            activeObjectiveVariableName = stringCondition.getVariableName();
-                        }
-                        if(activeObjectiveVariableName.equalsIgnoreCase(getVariableType())){
-                            if (!condition.check(questPlayer).isBlank()) {
+        if (questPlayer != null) {
+            if(questPlayer.isHasActiveConditionObjectives() || questPlayer.isHasActiveVariableObjectives()){
+                for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+                    for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
+                        if (activeObjective.getObjective() instanceof final ConditionObjective conditionObjective) {
+                            if (!activeObjective.isUnlocked()) {
                                 continue;
                             }
 
-                            activeObjective.addProgress(1);
+                            final Condition condition = conditionObjective.getCondition();
+                            if (condition == null) {
+                                continue;
+                            }
+                            String activeObjectiveVariableName = "";
+                            if (condition instanceof BooleanCondition booleanCondition) {
+                                activeObjectiveVariableName = booleanCondition.getVariableName();
+                            }else if(condition instanceof ListCondition listCondition){
+                                activeObjectiveVariableName = listCondition.getVariableName();
+                            }else if(condition instanceof NumberCondition numberCondition){
+                                activeObjectiveVariableName = numberCondition.getVariableName();
+                            }else if(condition instanceof StringCondition stringCondition){
+                                activeObjectiveVariableName = stringCondition.getVariableName();
+                            }
+                            if(activeObjectiveVariableName.equalsIgnoreCase(getVariableType())){
+                                if (!condition.check(questPlayer).isBlank()) {
+                                    continue;
+                                }
+
+                                activeObjective.addProgress(1);
+                            }
+                        } else if(activeObjective.getObjective() instanceof final NumberVariableObjective numberVariableObjective){
+                            if (!activeObjective.isUnlocked() || getVariableDataType() != VariableDataType.NUMBER) {
+                                continue;
+                            }
+
+                            if(numberVariableObjective.getVariableName().equalsIgnoreCase(getVariableType())){
+                                //double newValueDouble = (double) newValue;
+                                numberVariableObjective.updateProgress(activeObjective/*, newValueDouble*/);
+                            }
                         }
                     }
+                    activeQuest.removeCompletedObjectives(true);
                 }
-                activeQuest.removeCompletedObjectives(true);
+                questPlayer.removeCompletedQuests();
             }
-            questPlayer.removeCompletedQuests();
         }
 
 
@@ -225,7 +238,6 @@ public abstract class Variable<T> {
     }
 
     public abstract boolean setValueInternally(final T newValue, final QuestPlayer questPlayer, final Object... objects);
-
 
     public abstract List<String> getPossibleValues(final QuestPlayer questPlayer, final Object... objects);
 
@@ -236,10 +248,6 @@ public abstract class Variable<T> {
     public abstract String getPlural();
 
     public abstract String getSingular();
-
-    public void setAdditionalStringArguments(final HashMap<String, String> additionalStringArguments) {
-        this.additionalStringArguments = additionalStringArguments;
-    }
 
     protected final double getRequiredNumberValue(final String key, final QuestPlayer questPlayer) {
         return additionalNumberArguments.get(key).calculateValue(questPlayer);

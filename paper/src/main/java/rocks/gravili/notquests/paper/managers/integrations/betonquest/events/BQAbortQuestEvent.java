@@ -31,79 +31,70 @@ import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 public class BQAbortQuestEvent extends QuestEvent {
 
-    private final NotQuests main;
-    private Quest quest;
+  private final NotQuests main;
+  private Quest quest;
 
+  /**
+   * Creates new instance of the event. The event should parse instruction string without doing
+   * anything else. If anything goes wrong, throw {@link InstructionParseException} with error
+   * message describing the problem.
+   *
+   * @param instruction the Instruction object representing this event; you need to extract all
+   *     required data from it and throw {@link InstructionParseException} if there is anything
+   *     wrong
+   * @throws InstructionParseException when the is an error in the syntax or argument parsing
+   */
+  public BQAbortQuestEvent(Instruction instruction) throws InstructionParseException {
+    super(instruction, false);
+    this.main = NotQuests.getInstance();
 
-    /**
-     * Creates new instance of the event. The event should parse instruction
-     * string without doing anything else. If anything goes wrong, throw
-     * {@link InstructionParseException} with error message describing the
-     * problem.
-     *
-     * @param instruction the Instruction object representing this event; you need to
-     *                    extract all required data from it and throw
-     *                    {@link InstructionParseException} if there is anything wrong
-     * @throws InstructionParseException when the is an error in the syntax or argument parsing
-     */
-    public BQAbortQuestEvent(Instruction instruction) throws InstructionParseException {
-        super(instruction, false);
-        this.main = NotQuests.getInstance();
+    final String questName = instruction.getPart(1);
 
-        final String questName = instruction.getPart(1);
-
-
-        boolean foundQuest = false;
-        for (Quest quest : main.getQuestManager().getAllQuests()) {
-            if (quest.getQuestName().equalsIgnoreCase(questName)) {
-                foundQuest = true;
-                this.quest = quest;
-                break;
-            }
-        }
-
-        if (!foundQuest) {
-            throw new InstructionParseException("NotQuests Quest with the name '" + questName + "' does not exist.");
-        }
-
+    boolean foundQuest = false;
+    for (Quest quest : main.getQuestManager().getAllQuests()) {
+      if (quest.getQuestName().equalsIgnoreCase(questName)) {
+        foundQuest = true;
+        this.quest = quest;
+        break;
+      }
     }
 
-    @Override
-    protected Void execute(String playerID) throws QuestRuntimeException {
+    if (!foundQuest) {
+      throw new InstructionParseException(
+          "NotQuests Quest with the name '" + questName + "' does not exist.");
+    }
+  }
 
-        if (quest != null) {
+  @Override
+  protected Void execute(String playerID) throws QuestRuntimeException {
 
+    if (quest != null) {
 
-            final Player player = PlayerConverter.getPlayer(playerID);
+      final Player player = PlayerConverter.getPlayer(playerID);
 
+      if (player != null) {
+        final QuestPlayer questPlayer =
+            main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+        if (questPlayer != null) {
 
-            if (player != null) {
-                final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
-                if (questPlayer != null) {
-
-                    ActiveQuest activeQuestToRemove = null;
-                    for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-                        if (activeQuest.getQuest().getQuestName().equalsIgnoreCase(quest.getQuestName())) {
-                            activeQuestToRemove = activeQuest;
-                            break;
-                        }
-                    }
-
-                    if (activeQuestToRemove != null) {
-                        questPlayer.getActiveQuests().remove(activeQuestToRemove);
-
-                    }
-
-                }
-
-
+          ActiveQuest activeQuestToRemove = null;
+          for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+            if (activeQuest.getQuest().getQuestName().equalsIgnoreCase(quest.getQuestName())) {
+              activeQuestToRemove = activeQuest;
+              break;
             }
+          }
 
-        } else {
-            throw new QuestRuntimeException("NotQuests Quest of this BetonQuest event does not exist.");
+          if (activeQuestToRemove != null) {
+            questPlayer.getActiveQuests().remove(activeQuestToRemove);
+          }
         }
+      }
 
-        return null;
+    } else {
+      throw new QuestRuntimeException("NotQuests Quest of this BetonQuest event does not exist.");
     }
 
+    return null;
+  }
 }

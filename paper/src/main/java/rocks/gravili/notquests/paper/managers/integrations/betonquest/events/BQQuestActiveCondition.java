@@ -32,67 +32,62 @@ import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 public class BQQuestActiveCondition extends Condition {
 
-    private final NotQuests main;
-    private Quest quest;
+  private final NotQuests main;
+  private Quest quest;
 
-    /**
-     * Creates new instance of the condition. The condition should parse
-     * instruction string at this point and extract all the data from it. If
-     * anything goes wrong, throw {@link InstructionParseException} with an
-     * error message describing the problem.
-     *
-     * @param instruction the Instruction object; you can get one from ID instance with
-     *                    {@link ID#generateInstruction()
-     *                    ID.generateInstruction()} or create it from an instruction
-     *                    string
-     */
-    public BQQuestActiveCondition(Instruction instruction) throws InstructionParseException {
-        super(instruction, false);
-        this.main = NotQuests.getInstance();
+  /**
+   * Creates new instance of the condition. The condition should parse instruction string at this
+   * point and extract all the data from it. If anything goes wrong, throw {@link
+   * InstructionParseException} with an error message describing the problem.
+   *
+   * @param instruction the Instruction object; you can get one from ID instance with {@link
+   *     ID#generateInstruction() ID.generateInstruction()} or create it from an instruction string
+   */
+  public BQQuestActiveCondition(Instruction instruction) throws InstructionParseException {
+    super(instruction, false);
+    this.main = NotQuests.getInstance();
 
-        final String questName = instruction.getPart(1);
+    final String questName = instruction.getPart(1);
 
-        boolean foundQuest = false;
-        for (Quest quest : main.getQuestManager().getAllQuests()) {
-            if (quest.getQuestName().equalsIgnoreCase(questName)) {
-                foundQuest = true;
-                this.quest = quest;
-                break;
-            }
-        }
-
-        if (!foundQuest) {
-            throw new InstructionParseException("NotQuests Quest with the name '" + questName + "' does not exist.");
-        }
-
-
+    boolean foundQuest = false;
+    for (Quest quest : main.getQuestManager().getAllQuests()) {
+      if (quest.getQuestName().equalsIgnoreCase(questName)) {
+        foundQuest = true;
+        this.quest = quest;
+        break;
+      }
     }
 
-    @Override
-    protected Boolean execute(String playerID) throws QuestRuntimeException {
-        if (quest != null) {
-
-            final Player player = PlayerConverter.getPlayer(playerID);
-
-            if (player != null) {
-                final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
-                if (questPlayer != null) {
-
-                    for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
-                        if (activeQuest.getQuest().getQuestName().equalsIgnoreCase(quest.getQuestName())) {
-                            return true;
-                        }
-                    }
-                    return false;
-
-                }
-                return false;
-
-            }
-
-        } else {
-            throw new QuestRuntimeException("NotQuests Quest of this BetonQuest event does not exist.");
-        }
-        return null;
+    if (!foundQuest) {
+      throw new InstructionParseException(
+          "NotQuests Quest with the name '" + questName + "' does not exist.");
     }
+  }
+
+  @Override
+  protected Boolean execute(String playerID) throws QuestRuntimeException {
+    if (quest != null) {
+
+      final Player player = PlayerConverter.getPlayer(playerID);
+
+      if (player != null) {
+        final QuestPlayer questPlayer =
+            main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+        if (questPlayer != null) {
+
+          for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
+            if (activeQuest.getQuest().getQuestName().equalsIgnoreCase(quest.getQuestName())) {
+              return true;
+            }
+          }
+          return false;
+        }
+        return false;
+      }
+
+    } else {
+      throw new QuestRuntimeException("NotQuests Quest of this BetonQuest event does not exist.");
+    }
+    return null;
+  }
 }

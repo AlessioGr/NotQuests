@@ -23,6 +23,9 @@ import cloud.commandframework.Command;
 import cloud.commandframework.arguments.flags.CommandFlag;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.paper.PaperCommandManager;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -34,23 +37,16 @@ import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
 import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 public class NumberCondition extends Condition {
 
+    private static boolean alreadyLoadedOnce = false;
     private String variableName;
     private String mathOperator;
-
     private HashMap<String, String> additionalStringArguments;
     private HashMap<String, NumberExpression> additionalNumberArguments;
     private HashMap<String, NumberExpression> additionalBooleanArguments;
-
     private Variable<?> cachedVariable;
     private NumberExpression numberExpression;
-
-    private static boolean alreadyLoadedOnce = false;
 
 
     public NumberCondition(NotQuests main) {
@@ -393,7 +389,7 @@ public class NumberCondition extends Condition {
             return "<GRAY>-- " + variableName + " needed: Exactly " + expressionValue + "</GRAY>";
         }
 
-        return "<GRAY>-- " + variableName + " needed: " + numberExpression.calculateValue(questPlayer) + "</GRAY>";
+        return "<GRAY>-- " + variableName + " needed: " + expressionValue + "</GRAY>";
     }
 
     private void setAdditionalStringArguments(HashMap<String, String> additionalStringArguments) {

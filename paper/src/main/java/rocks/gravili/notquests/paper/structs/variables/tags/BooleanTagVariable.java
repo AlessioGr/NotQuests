@@ -19,15 +19,14 @@
 package rocks.gravili.notquests.paper.structs.variables.tags;
 
 import cloud.commandframework.arguments.standard.StringArgument;
+import java.util.ArrayList;
+import java.util.List;
 import org.bukkit.command.CommandSender;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.tags.Tag;
 import rocks.gravili.notquests.paper.managers.tags.TagType;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class BooleanTagVariable extends Variable<Boolean> {
 

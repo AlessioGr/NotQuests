@@ -22,6 +22,11 @@ import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.paper.PaperCommandManager;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.UUID;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.kyori.adventure.text.Component;
@@ -44,8 +49,6 @@ import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
-import java.util.*;
-
 public class DeliverItemsObjective extends Objective {
 
     private int recipientNPCID = -1;
@@ -57,14 +60,6 @@ public class DeliverItemsObjective extends Objective {
     //For Citizens NPCs
     public DeliverItemsObjective(NotQuests main) {
         super(main);
-    }
-
-    public final ItemStackSelection getItemStackSelection(){
-        return itemStackSelection;
-    }
-
-    public void setItemStackSelection(final ItemStackSelection itemStackSelection){
-        this.itemStackSelection = itemStackSelection;
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
@@ -194,29 +189,36 @@ public class DeliverItemsObjective extends Objective {
                 }));
     }
 
-
-    public void setRecipientNPCID(final int recipientNPCID) {
-        this.recipientNPCID = recipientNPCID;
+    public final ItemStackSelection getItemStackSelection(){
+        return itemStackSelection;
     }
 
-    public void setRecipientArmorStandUUID(final UUID recipientArmorStandUUID) {
-        this.recipientArmorStandUUID = recipientArmorStandUUID;
+    public void setItemStackSelection(final ItemStackSelection itemStackSelection){
+        this.itemStackSelection = itemStackSelection;
     }
 
     @Override
     public void onObjectiveUnlock(final ActiveObjective activeObjective, final boolean unlockedDuringPluginStartupQuestLoadingProcess) {
     }
+
     @Override
     public void onObjectiveCompleteOrLock(final ActiveObjective activeObjective, final boolean lockedOrCompletedDuringPluginStartupQuestLoadingProcess, final boolean completed) {
     }
-
 
     public final int getRecipientNPCID() {
         return recipientNPCID;
     }
 
+    public void setRecipientNPCID(final int recipientNPCID) {
+        this.recipientNPCID = recipientNPCID;
+    }
+
     public final UUID getRecipientArmorStandUUID() {
         return recipientArmorStandUUID;
+    }
+
+    public void setRecipientArmorStandUUID(final UUID recipientArmorStandUUID) {
+        this.recipientArmorStandUUID = recipientArmorStandUUID;
     }
 
     @Override

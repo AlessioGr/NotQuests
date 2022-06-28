@@ -27,6 +27,11 @@ import cloud.commandframework.bukkit.parsers.selector.SinglePlayerSelectorArgume
 import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.UUID;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -39,14 +44,19 @@ import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.actions.Action;
-import rocks.gravili.notquests.paper.structs.conditions.*;
+import rocks.gravili.notquests.paper.structs.conditions.BooleanCondition;
+import rocks.gravili.notquests.paper.structs.conditions.CompletedObjectiveCondition;
+import rocks.gravili.notquests.paper.structs.conditions.Condition;
+import rocks.gravili.notquests.paper.structs.conditions.ConditionFor;
+import rocks.gravili.notquests.paper.structs.conditions.DateCondition;
+import rocks.gravili.notquests.paper.structs.conditions.ItemStackListCondition;
+import rocks.gravili.notquests.paper.structs.conditions.ListCondition;
+import rocks.gravili.notquests.paper.structs.conditions.NumberCondition;
+import rocks.gravili.notquests.paper.structs.conditions.StringCondition;
+import rocks.gravili.notquests.paper.structs.conditions.WorldTimeCondition;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
 import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.*;
 
 public class ConditionsManager {
     private final NotQuests main;

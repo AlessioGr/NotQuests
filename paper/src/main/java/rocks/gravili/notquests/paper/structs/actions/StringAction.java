@@ -23,6 +23,9 @@ import cloud.commandframework.Command;
 import cloud.commandframework.arguments.flags.CommandFlag;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.paper.PaperCommandManager;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -35,50 +38,22 @@ import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
 import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 
 public class StringAction extends Action {
 
+    private static boolean alreadyLoadedOnce = false;
     private String variableName;
     private String stringOperator;
-
     private HashMap<String, String> additionalStringArguments;
     private HashMap<String, NumberExpression> additionalNumberArguments;
     private HashMap<String, NumberExpression> additionalBooleanArguments;
-
-    private static boolean alreadyLoadedOnce = false;
-
     private String newValue;
 
-    public final String getStringOperator() {
-        return stringOperator;
-    }
-
-    public void setStringOperator(final String stringOperator) {
-        this.stringOperator = stringOperator;
-    }
-
-    public final String getVariableName(){
-        return variableName;
-    }
-
-    public void setVariableName(final String variableName){
-        this.variableName = variableName;
-    }
-
-    public void setNewValue(final String newValue){
-        this.newValue = newValue;
-    }
-
-    public final String getNewValue(){
-        return newValue;
-    }
-
-    private void setAdditionalStringArguments(HashMap<String, String> additionalStringArguments) {
-        this.additionalStringArguments = additionalStringArguments;
+    public StringAction(final NotQuests main) {
+        super(main);
+        additionalStringArguments = new HashMap<>();
+        additionalNumberArguments = new HashMap<>();
+        additionalBooleanArguments = new HashMap<>();
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor rewardFor) {
@@ -155,16 +130,36 @@ public class StringAction extends Action {
         alreadyLoadedOnce = true;
     }
 
-    private void setAdditionalNumberArguments(HashMap<String, NumberExpression> additionalNumberArguments) {
-        this.additionalNumberArguments = additionalNumberArguments;
+    public final String getStringOperator() {
+        return stringOperator;
     }
 
+    public void setStringOperator(final String stringOperator) {
+        this.stringOperator = stringOperator;
+    }
 
-    public StringAction(final NotQuests main) {
-        super(main);
-        additionalStringArguments = new HashMap<>();
-        additionalNumberArguments = new HashMap<>();
-        additionalBooleanArguments = new HashMap<>();
+    public final String getVariableName(){
+        return variableName;
+    }
+
+    public void setVariableName(final String variableName){
+        this.variableName = variableName;
+    }
+
+    public final String getNewValue(){
+        return newValue;
+    }
+
+    public void setNewValue(final String newValue){
+        this.newValue = newValue;
+    }
+
+    private void setAdditionalStringArguments(HashMap<String, String> additionalStringArguments) {
+        this.additionalStringArguments = additionalStringArguments;
+    }
+
+    private void setAdditionalNumberArguments(HashMap<String, NumberExpression> additionalNumberArguments) {
+        this.additionalNumberArguments = additionalNumberArguments;
     }
 
     private void setAdditionalBooleanArguments(HashMap<String, NumberExpression> additionalBooleanArguments) {

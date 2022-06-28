@@ -28,37 +28,35 @@ import rocks.gravili.notquests.paper.structs.triggers.Trigger;
 
 public class FailTrigger extends Trigger {
 
+  public FailTrigger(final NotQuests main) {
+    super(main);
+  }
 
-    public FailTrigger(final NotQuests main) {
-        super(main);
-    }
+  public static void handleCommands(
+      NotQuests main,
+      PaperCommandManager<CommandSender> manager,
+      Command.Builder<CommandSender> addTriggerBuilder) {
+    manager.command(
+        addTriggerBuilder
+            .flag(main.getCommandManager().applyOn)
+            .flag(main.getCommandManager().triggerWorldString)
+            .meta(CommandMeta.DESCRIPTION, "Triggers when a Quest is failed.")
+            .handler(
+                (context) -> {
+                  FailTrigger failTrigger = new FailTrigger(main);
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addTriggerBuilder) {
-        manager.command(addTriggerBuilder
-                .flag(main.getCommandManager().applyOn)
-                .flag(main.getCommandManager().triggerWorldString)
-                .meta(CommandMeta.DESCRIPTION, "Triggers when a Quest is failed.")
-                .handler((context) -> {
-                    FailTrigger failTrigger = new FailTrigger(main);
-
-                    main.getTriggerManager().addTrigger(failTrigger, context);
+                  main.getTriggerManager().addTrigger(failTrigger, context);
                 }));
-    }
+  }
 
-    @Override
-    public void save(FileConfiguration configuration, String initialPath) {
+  @Override
+  public void save(FileConfiguration configuration, String initialPath) {}
 
-    }
+  @Override
+  public String getTriggerDescription() {
+    return null;
+  }
 
-    @Override
-    public String getTriggerDescription() {
-        return null;
-    }
-
-    @Override
-    public void load(FileConfiguration configuration, String initialPath) {
-
-    }
-
-
+  @Override
+  public void load(FileConfiguration configuration, String initialPath) {}
 }

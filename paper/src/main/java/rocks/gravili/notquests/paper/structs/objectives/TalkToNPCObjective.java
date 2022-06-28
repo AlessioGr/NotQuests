@@ -22,6 +22,10 @@ import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.paper.PaperCommandManager;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.kyori.adventure.text.Component;
@@ -40,11 +44,6 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 public class TalkToNPCObjective extends Objective {
 
@@ -152,10 +151,6 @@ public class TalkToNPCObjective extends Objective {
 
     }
 
-    public void setArmorStandUUID(final UUID armorStandUUID) {
-        this.armorStandUUID = armorStandUUID;
-    }
-
     @Override
     public String getObjectiveTaskDescription(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
         String toReturn = "";
@@ -216,20 +211,24 @@ public class TalkToNPCObjective extends Objective {
     @Override
     public void onObjectiveUnlock(final ActiveObjective activeObjective, final boolean unlockedDuringPluginStartupQuestLoadingProcess) {
     }
+
     @Override
     public void onObjectiveCompleteOrLock(final ActiveObjective activeObjective, final boolean lockedOrCompletedDuringPluginStartupQuestLoadingProcess, final boolean completed) {
     }
 
-
     public final int getNPCtoTalkID() {
         return npcToTalkID;
+    }
+
+    public void setNPCtoTalkID(final int npcToTalkID) {
+        this.npcToTalkID = npcToTalkID;
     }
 
     public final UUID getArmorStandUUID() {
         return armorStandUUID;
     }
 
-    public void setNPCtoTalkID(final int npcToTalkID) {
-        this.npcToTalkID = npcToTalkID;
+    public void setArmorStandUUID(final UUID armorStandUUID) {
+        this.armorStandUUID = armorStandUUID;
     }
 }

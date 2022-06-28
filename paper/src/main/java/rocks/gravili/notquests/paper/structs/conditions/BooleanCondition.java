@@ -23,6 +23,10 @@ import cloud.commandframework.Command;
 import cloud.commandframework.arguments.flags.CommandFlag;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.paper.PaperCommandManager;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -34,24 +38,16 @@ import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
 import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 public class BooleanCondition extends Condition {
 
+    private static boolean alreadyLoadedOnce = false;
     private String variableName;
     private String operator;
-
     private HashMap<String, String> additionalStringArguments;
     private HashMap<String, NumberExpression> additionalNumberArguments;
     private HashMap<String, NumberExpression> additionalBooleanArguments;
-
     private Variable<?> cachedVariable;
     private NumberExpression numberExpression;
-
-    private static boolean alreadyLoadedOnce = false;
 
 
     public BooleanCondition(NotQuests main) {

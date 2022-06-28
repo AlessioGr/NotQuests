@@ -19,6 +19,7 @@
 package rocks.gravili.notquests.paper.structs;
 
 
+import java.util.UUID;
 import org.bukkit.Bukkit;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.NotQuestColors;
@@ -26,8 +27,6 @@ import rocks.gravili.notquests.paper.events.notquests.ObjectiveUnlockEvent;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 import rocks.gravili.notquests.paper.structs.objectives.OtherQuestObjective;
-
-import java.util.UUID;
 
 /**
  * This is a special object for active objectives. Apart from the main Objective object which stores information about what defines the objective itself,
@@ -157,6 +156,16 @@ public class ActiveObjective {
     }
 
 
+    public void setProgress(double newProgress, final boolean capAtZero){
+        if(newProgress == currentProgress){
+            return;
+        }
+        if(newProgress > currentProgress){
+            addProgress(newProgress - currentProgress);
+        } else {
+            removeProgress(currentProgress - newProgress, capAtZero);
+        }
+    }
     public void addProgress(double progressToAdd) {
         addProgress(progressToAdd, -1, null, false);
     }

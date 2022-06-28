@@ -26,41 +26,40 @@ import rocks.gravili.notquests.paper.NotQuests;
 
 public class NotQuestsFullyLoadedEvent extends Event implements Cancellable {
 
-    private static final HandlerList HANDLERS = new HandlerList();
-    private final NotQuests main;
+  private static final HandlerList HANDLERS = new HandlerList();
+  private final NotQuests main;
 
-    private boolean isCancelled;
+  private boolean isCancelled;
 
-    public NotQuestsFullyLoadedEvent(final NotQuests main) {
-        super(true);
+  public NotQuestsFullyLoadedEvent(final NotQuests main) {
+    super(true);
 
-        this.main = main;
+    this.main = main;
 
-        this.isCancelled = false;
-    }
+    this.isCancelled = false;
+  }
 
-    public static HandlerList getHandlerList() {
-        return HANDLERS;
-    }
+  public static HandlerList getHandlerList() {
+    return HANDLERS;
+  }
 
-    @Override
-    public boolean isCancelled() {
-        return this.isCancelled;
-    }
+  @Override
+  public boolean isCancelled() {
+    return this.isCancelled;
+  }
 
-    @Override
-    public void setCancelled(boolean isCancelled) {
-        this.isCancelled = isCancelled;
-    }
+  @Override
+  public void setCancelled(boolean isCancelled) {
+    this.isCancelled = isCancelled;
+  }
 
-    @NotNull
-    @Override
-    public HandlerList getHandlers() {
-        return HANDLERS;
-    }
+  @NotNull
+  @Override
+  public HandlerList getHandlers() {
+    return HANDLERS;
+  }
 
-    public final NotQuests getNotQuests() {
-        return this.main;
-    }
-
+  public final NotQuests getNotQuests() {
+    return this.main;
+  }
 }

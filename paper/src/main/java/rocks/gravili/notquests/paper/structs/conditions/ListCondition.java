@@ -23,6 +23,10 @@ import cloud.commandframework.Command;
 import cloud.commandframework.arguments.flags.CommandFlag;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.paper.PaperCommandManager;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -35,23 +39,97 @@ import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
 import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-
 public class ListCondition extends Condition {
 
+    private static boolean alreadyLoadedOnce = false;
     private String variableName;
     private String operator;
     private String expression;
-
     private HashMap<String, String> additionalStringArguments;
     private HashMap<String, NumberExpression> additionalNumberArguments;
     private HashMap<String, NumberExpression> additionalBooleanArguments;
 
-    private static boolean alreadyLoadedOnce = false;
 
+    public ListCondition(NotQuests main) {
+        super(main);
+        additionalStringArguments = new HashMap<>();
+        additionalNumberArguments = new HashMap<>();
+        additionalBooleanArguments = new HashMap<>();
+    }
+
+    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
+        for (String variableString : main.getVariablesManager().getVariableIdentifiers()) {
+
+            Variable<?> variable = main.getVariablesManager().getVariableFromString(variableString);
+
+            if (variable == null || variable.getVariableDataType() != VariableDataType.LIST) {
+                continue;
+            }
+            if (main.getVariablesManager().alreadyFullRegisteredVariables.contains(variableString)) {
+                continue;
+            }
+            if (!alreadyLoadedOnce && main.getConfiguration().isVerboseStartupMessages()) {
+                main.getLogManager().info("  Registering list condition: <highlight>" + variableString);
+            }
+
+            manager.command(main.getVariablesManager().registerVariableCommands(variableString, builder)
+                    .argument(StringArgument.<CommandSender>newBuilder("operator").withSuggestionsProvider((context, lastString) -> {
+                        ArrayList<String> completions = new ArrayList<>();
+                        completions.add("equals");
+                        completions.add("equalsIgnoreCase");
+                        completions.add("contains");
+                        completions.add("containsIgnoreCase");
+
+
+                        final List<String> allArgs = context.getRawInput();
+                        main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[List Operator]", "[...]");
+
+                        return completions;
+                    }).build(), ArgumentDescription.of("List operator."))
+                    .argument(ListVariableValueArgument.newBuilder("expression", main, variable), ArgumentDescription.of("Expression"))
+                    .handler((context) -> {
+
+                        final String expression = context.get("expression");
+                        final String operator = context.get("operator");
+
+                        ListCondition listCondition = new ListCondition(main);
+
+                        listCondition.setExpression(expression);
+                        listCondition.setOperator(operator);
+                        listCondition.setVariableName(variable.getVariableType());
+
+
+                        HashMap<String, String> additionalStringArguments = new HashMap<>();
+                        for (StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()) {
+                            additionalStringArguments.put(stringArgument.getName(), context.get(stringArgument.getName()));
+                        }
+                        listCondition.setAdditionalStringArguments(additionalStringArguments);
+
+                        HashMap<String, NumberExpression> additionalNumberArguments = new HashMap<>();
+                        for (NumberVariableValueArgument<CommandSender> numberVariableValueArgument : variable.getRequiredNumbers()) {
+                            additionalNumberArguments.put(numberVariableValueArgument.getName(), new NumberExpression(main, context.get(numberVariableValueArgument.getName())));
+                        }
+                        listCondition.setAdditionalNumberArguments(additionalNumberArguments);
+
+                        HashMap<String, NumberExpression> additionalBooleanArguments = new HashMap<>();
+                        for (BooleanVariableValueArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()) {
+                            additionalBooleanArguments.put(booleanArgument.getName(), new NumberExpression(main, context.get(booleanArgument.getName())));
+                        }
+                        for (CommandFlag<?> commandFlag : variable.getRequiredBooleanFlags()) {
+                            additionalBooleanArguments.put(commandFlag.getName(), context.flags().isPresent(commandFlag.getName()) ? NumberExpression.ofStatic(main, 1) : NumberExpression.ofStatic(main, 0));
+                        }
+                        listCondition.setAdditionalBooleanArguments(additionalBooleanArguments);
+
+                        main.getConditionsManager().addCondition(listCondition, context);
+                    })
+            );
+
+
+        }
+        alreadyLoadedOnce = true;
+
+
+    }
 
     public final String getOperator() {
         return operator;
@@ -69,22 +147,13 @@ public class ListCondition extends Condition {
         this.variableName = variableName;
     }
 
-    public void setExpression(final String expression){
-        this.expression = expression;
-    }
-
     public final String getExpression(){
         return expression;
     }
 
-
-    public ListCondition(NotQuests main) {
-        super(main);
-        additionalStringArguments = new HashMap<>();
-        additionalNumberArguments = new HashMap<>();
-        additionalBooleanArguments = new HashMap<>();
+    public void setExpression(final String expression){
+        this.expression = expression;
     }
-
 
     public final String[] evaluateExpression(final QuestPlayer questPlayer){
         return getExpression().split(",");
@@ -190,80 +259,6 @@ public class ListCondition extends Condition {
         }
 
         return "";
-    }
-
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
-        for (String variableString : main.getVariablesManager().getVariableIdentifiers()) {
-
-            Variable<?> variable = main.getVariablesManager().getVariableFromString(variableString);
-
-            if (variable == null || variable.getVariableDataType() != VariableDataType.LIST) {
-                continue;
-            }
-            if (main.getVariablesManager().alreadyFullRegisteredVariables.contains(variableString)) {
-                continue;
-            }
-            if (!alreadyLoadedOnce && main.getConfiguration().isVerboseStartupMessages()) {
-                main.getLogManager().info("  Registering list condition: <highlight>" + variableString);
-            }
-
-            manager.command(main.getVariablesManager().registerVariableCommands(variableString, builder)
-                    .argument(StringArgument.<CommandSender>newBuilder("operator").withSuggestionsProvider((context, lastString) -> {
-                        ArrayList<String> completions = new ArrayList<>();
-                        completions.add("equals");
-                        completions.add("equalsIgnoreCase");
-                        completions.add("contains");
-                        completions.add("containsIgnoreCase");
-
-
-                        final List<String> allArgs = context.getRawInput();
-                        main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[List Operator]", "[...]");
-
-                        return completions;
-                    }).build(), ArgumentDescription.of("List operator."))
-                    .argument(ListVariableValueArgument.newBuilder("expression", main, variable), ArgumentDescription.of("Expression"))
-                    .handler((context) -> {
-
-                        final String expression = context.get("expression");
-                        final String operator = context.get("operator");
-
-                        ListCondition listCondition = new ListCondition(main);
-
-                        listCondition.setExpression(expression);
-                        listCondition.setOperator(operator);
-                        listCondition.setVariableName(variable.getVariableType());
-
-
-                        HashMap<String, String> additionalStringArguments = new HashMap<>();
-                        for (StringArgument<CommandSender> stringArgument : variable.getRequiredStrings()) {
-                            additionalStringArguments.put(stringArgument.getName(), context.get(stringArgument.getName()));
-                        }
-                        listCondition.setAdditionalStringArguments(additionalStringArguments);
-
-                        HashMap<String, NumberExpression> additionalNumberArguments = new HashMap<>();
-                        for (NumberVariableValueArgument<CommandSender> numberVariableValueArgument : variable.getRequiredNumbers()) {
-                            additionalNumberArguments.put(numberVariableValueArgument.getName(), new NumberExpression(main, context.get(numberVariableValueArgument.getName())));
-                        }
-                        listCondition.setAdditionalNumberArguments(additionalNumberArguments);
-
-                        HashMap<String, NumberExpression> additionalBooleanArguments = new HashMap<>();
-                        for (BooleanVariableValueArgument<CommandSender> booleanArgument : variable.getRequiredBooleans()) {
-                            additionalBooleanArguments.put(booleanArgument.getName(), new NumberExpression(main, context.get(booleanArgument.getName())));
-                        }
-                        for (CommandFlag<?> commandFlag : variable.getRequiredBooleanFlags()) {
-                            additionalBooleanArguments.put(commandFlag.getName(), context.flags().isPresent(commandFlag.getName()) ? NumberExpression.ofStatic(main, 1) : NumberExpression.ofStatic(main, 0));
-                        }
-                        listCondition.setAdditionalBooleanArguments(additionalBooleanArguments);
-
-                        main.getConditionsManager().addCondition(listCondition, context);
-                    })
-            );
-
-
-        }
-        alreadyLoadedOnce = true;
-
-
     }
 
     @Override

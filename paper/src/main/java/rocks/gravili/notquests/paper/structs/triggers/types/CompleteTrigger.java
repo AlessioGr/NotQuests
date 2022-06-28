@@ -28,37 +28,35 @@ import rocks.gravili.notquests.paper.structs.triggers.Trigger;
 
 public class CompleteTrigger extends Trigger {
 
+  public CompleteTrigger(final NotQuests main) {
+    super(main);
+  }
 
-    public CompleteTrigger(final NotQuests main) {
-        super(main);
-    }
+  public static void handleCommands(
+      NotQuests main,
+      PaperCommandManager<CommandSender> manager,
+      Command.Builder<CommandSender> addTriggerBuilder) {
+    manager.command(
+        addTriggerBuilder
+            .flag(main.getCommandManager().applyOn)
+            .flag(main.getCommandManager().triggerWorldString)
+            .meta(CommandMeta.DESCRIPTION, "Triggers when a Quest or an Objective is completed")
+            .handler(
+                (context) -> {
+                  CompleteTrigger completeTrigger = new CompleteTrigger(main);
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addTriggerBuilder) {
-        manager.command(addTriggerBuilder
-                .flag(main.getCommandManager().applyOn)
-                .flag(main.getCommandManager().triggerWorldString)
-                .meta(CommandMeta.DESCRIPTION, "Triggers when a Quest or an Objective is completed")
-                .handler((context) -> {
-                    CompleteTrigger completeTrigger = new CompleteTrigger(main);
-
-                    main.getTriggerManager().addTrigger(completeTrigger, context);
-
+                  main.getTriggerManager().addTrigger(completeTrigger, context);
                 }));
-    }
+  }
 
-    @Override
-    public void save(FileConfiguration configuration, String initialPath) {
+  @Override
+  public void save(FileConfiguration configuration, String initialPath) {}
 
-    }
+  @Override
+  public String getTriggerDescription() {
+    return null;
+  }
 
-    @Override
-    public String getTriggerDescription() {
-        return null;
-    }
-
-    @Override
-    public void load(FileConfiguration configuration, String initialPath) {
-
-    }
-
+  @Override
+  public void load(FileConfiguration configuration, String initialPath) {}
 }

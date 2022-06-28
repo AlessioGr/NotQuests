@@ -18,92 +18,89 @@
 
 package rocks.gravili.notquests.paper.conversation;
 
+import java.util.ArrayList;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 
-import java.util.ArrayList;
-
 public class ConversationLine {
-    private final Speaker speaker;
-    private final String message; //minimessage
-    private final ArrayList<ConversationLine> next;
-    private final ArrayList<Action> actions;
-    private final ArrayList<Condition> conditions;
-    private String color = "<GRAY>";
-    private boolean shout = false;
+  private final Speaker speaker;
+  private final String message; // minimessage
+  private final ArrayList<ConversationLine> next;
+  private final ArrayList<Action> actions;
+  private final ArrayList<Condition> conditions;
+  private final String identifier;
+  private final String fullIdentifier;
+  private String color = "<GRAY>";
+  private boolean shout = false;
 
+  public ConversationLine(final Speaker speaker, final String identifier, final String message) {
+    this.speaker = speaker;
+    this.identifier = identifier;
+    this.message = message;
+    next = new ArrayList<>();
+    conditions = new ArrayList<>();
+    actions = new ArrayList<>();
 
-    private final String identifier;
-    private final String fullIdentifier;
+    this.fullIdentifier = speaker.getSpeakerName() + "." + identifier;
+  }
 
-    public ConversationLine(final Speaker speaker, final String identifier, final String message) {
-        this.speaker = speaker;
-        this.identifier = identifier;
-        this.message = message;
-        next = new ArrayList<>();
-        conditions = new ArrayList<>();
-        actions = new ArrayList<>();
+  public final ArrayList<Condition> getConditions() {
+    return conditions;
+  }
 
-        this.fullIdentifier = speaker.getSpeakerName() + "." + identifier;
+  public void addCondition(final Condition condition) {
+    this.conditions.add(condition);
+  }
+
+  public final String getFullIdentifier() {
+    return fullIdentifier;
+  }
+
+  public final String getIdentifier() {
+    return identifier;
+  }
+
+  public final String getMessage() {
+    if (isShouting()) {
+      return "<bold>" + message + "</bold>";
+    } else {
+      return message;
     }
+  }
 
-    public final ArrayList<Condition> getConditions() {
-        return conditions;
-    }
+  public final Speaker getSpeaker() {
+    return speaker;
+  }
 
-    public void addCondition(final Condition condition) {
-        this.conditions.add(condition);
-    }
+  public final ArrayList<ConversationLine> getNext() {
+    return next;
+  }
 
-    public final String getFullIdentifier() {
-        return fullIdentifier;
-    }
+  public void addNext(final ConversationLine nextLine) {
+    this.next.add(nextLine);
+  }
 
-    public final String getIdentifier() {
-        return identifier;
-    }
+  public final String getColor() {
+    return color;
+  }
 
-    public final String getMessage() {
-        if (isShouting()) {
-            return "<bold>" + message + "</bold>";
-        } else {
-            return message;
-        }
-    }
+  public void setColor(final String color) {
+    this.color = color;
+  }
 
-    public final Speaker getSpeaker() {
-        return speaker;
-    }
+  public final boolean isShouting() {
+    return shout;
+  }
 
-    public final ArrayList<ConversationLine> getNext() {
-        return next;
-    }
+  public void setShouting(final boolean shouting) {
+    this.shout = shouting;
+  }
 
-    public void addNext(final ConversationLine nextLine) {
-        this.next.add(nextLine);
-    }
+  public final ArrayList<Action> getActions() {
+    return actions;
+  }
 
-    public final String getColor() {
-        return color;
-    }
-
-    public void setColor(final String color) {
-        this.color = color;
-    }
-
-    public final boolean isShouting() {
-        return shout;
-    }
-
-    public void setShouting(final boolean shouting) {
-        this.shout = shouting;
-    }
-
-    public final ArrayList<Action> getActions() {
-        return actions;
-    }
-
-    public void addAction(final Action newAction) {
-        this.actions.add(newAction);
-    }
+  public void addAction(final Action newAction) {
+    this.actions.add(newAction);
+  }
 }

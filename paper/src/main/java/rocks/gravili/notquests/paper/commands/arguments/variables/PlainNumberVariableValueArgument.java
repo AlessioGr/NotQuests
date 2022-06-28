@@ -24,15 +24,19 @@ import cloud.commandframework.arguments.parser.ArgumentParser;
 import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.exceptions.parsing.NoInputProvidedException;
 import cloud.commandframework.exceptions.parsing.NumberParseException;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.function.BiFunction;
 import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
-
-import java.util.*;
-import java.util.function.BiFunction;
 
 public final class PlainNumberVariableValueArgument<C> extends CommandArgument<C, Long> {
 
@@ -131,10 +135,9 @@ public final class PlainNumberVariableValueArgument<C> extends CommandArgument<C
 
     public static final class Builder<C> extends CommandArgument.Builder<C, Long> {
 
+        private final NotQuests main;
         private long min = PlainNumberVariableValueArgument.LongParser.DEFAULT_MINIMUM;
         private long max = PlainNumberVariableValueArgument.LongParser.DEFAULT_MAXIMUM;
-
-        private final NotQuests main;
 
         private Builder(final @NonNull String name, final NotQuests main) {
             super(Long.class, name);
@@ -185,21 +188,19 @@ public final class PlainNumberVariableValueArgument<C> extends CommandArgument<C
     }
 
     public static final class LongParser<C> implements ArgumentParser<C, Long> {
-        private final NotQuests main;
         /**
          * Constant for the default/unset minimum value.
          *
          * @since 1.5.0
          */
         public static final long DEFAULT_MINIMUM = Long.MIN_VALUE;
-
         /**
          * Constant for the default/unset maximum value.
          *
          * @since 1.5.0
          */
         public static final long DEFAULT_MAXIMUM = Long.MAX_VALUE;
-
+        private final NotQuests main;
         private final long min;
         private final long max;
 

@@ -23,6 +23,10 @@ import cloud.commandframework.Command;
 import cloud.commandframework.arguments.flags.CommandFlag;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.paper.PaperCommandManager;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -35,51 +39,22 @@ import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
 import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-
 
 public class ListAction extends Action {
 
+    private static boolean alreadyLoadedOnce = false;
     private String variableName;
     private String operator;
-
     private HashMap<String, String> additionalStringArguments;
     private HashMap<String, NumberExpression> additionalNumberArguments;
     private HashMap<String, NumberExpression> additionalBooleanArguments;
-
-    private static boolean alreadyLoadedOnce = false;
-
     private String newValueExpression;
 
-    public final String getOperator() {
-        return operator;
-    }
-
-    public void setOperator(final String mathOperator) {
-        this.operator = mathOperator;
-    }
-
-    public final String getVariableName(){
-        return variableName;
-    }
-
-    public void setVariableName(final String variableName){
-        this.variableName = variableName;
-    }
-
-    public void setNewValueExpression(final String newValueExpression){
-        this.newValueExpression = newValueExpression;
-    }
-
-    public final String getNewValueExpression(){
-        return newValueExpression;
-    }
-
-    private void setAdditionalStringArguments(HashMap<String, String> additionalStringArguments) {
-        this.additionalStringArguments = additionalStringArguments;
+    public ListAction(final NotQuests main) {
+        super(main);
+        additionalStringArguments = new HashMap<>();
+        additionalNumberArguments = new HashMap<>();
+        additionalBooleanArguments = new HashMap<>();
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor rewardFor) {
@@ -154,16 +129,36 @@ public class ListAction extends Action {
         alreadyLoadedOnce = true;
     }
 
-    private void setAdditionalNumberArguments(HashMap<String, NumberExpression> additionalNumberArguments) {
-        this.additionalNumberArguments = additionalNumberArguments;
+    public final String getOperator() {
+        return operator;
     }
 
+    public void setOperator(final String mathOperator) {
+        this.operator = mathOperator;
+    }
 
-    public ListAction(final NotQuests main) {
-        super(main);
-        additionalStringArguments = new HashMap<>();
-        additionalNumberArguments = new HashMap<>();
-        additionalBooleanArguments = new HashMap<>();
+    public final String getVariableName(){
+        return variableName;
+    }
+
+    public void setVariableName(final String variableName){
+        this.variableName = variableName;
+    }
+
+    public final String getNewValueExpression(){
+        return newValueExpression;
+    }
+
+    public void setNewValueExpression(final String newValueExpression){
+        this.newValueExpression = newValueExpression;
+    }
+
+    private void setAdditionalStringArguments(HashMap<String, String> additionalStringArguments) {
+        this.additionalStringArguments = additionalStringArguments;
+    }
+
+    private void setAdditionalNumberArguments(HashMap<String, NumberExpression> additionalNumberArguments) {
+        this.additionalNumberArguments = additionalNumberArguments;
     }
 
     private void setAdditionalBooleanArguments(HashMap<String, NumberExpression> additionalBooleanArguments) {

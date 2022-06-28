@@ -24,6 +24,9 @@ import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.bukkit.parsers.WorldArgument;
 import cloud.commandframework.paper.PaperCommandManager;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -33,156 +36,180 @@ import org.bukkit.util.Vector;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
 public class BeamAction extends Action {
 
-    private String beamName = "";
-    private boolean remove = false;
-    private Location beamLocation = null;
+  private String beamName = "";
+  private boolean remove = false;
+  private Location beamLocation = null;
 
-    public BeamAction(final NotQuests main) {
-        super(main);
-    }
+  public BeamAction(final NotQuests main) {
+    super(main);
+  }
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor rewardFor) {
-        manager.command(builder
-                .argument(StringArgument.<CommandSender>newBuilder("beamName").withSuggestionsProvider((context, lastString) -> {
-                    ArrayList<String> completions = new ArrayList<>();
+  public static void handleCommands(
+      NotQuests main,
+      PaperCommandManager<CommandSender> manager,
+      Command.Builder<CommandSender> builder,
+      ActionFor rewardFor) {
+    manager.command(
+        builder
+            .argument(
+                StringArgument.<CommandSender>newBuilder("beamName")
+                    .withSuggestionsProvider(
+                        (context, lastString) -> {
+                          ArrayList<String> completions = new ArrayList<>();
 
-                    completions.add("<Enter beam name>");
+                          completions.add("<Enter beam name>");
 
-                    final List<String> allArgs = context.getRawInput();
-                    main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Beam Name]", "[...]");
+                          final List<String> allArgs = context.getRawInput();
+                          main.getUtilManager()
+                              .sendFancyCommandCompletion(
+                                  context.getSender(),
+                                  allArgs.toArray(new String[0]),
+                                  "[Beam Name]",
+                                  "[...]");
 
-                    return completions;
-                }).build(), ArgumentDescription.of("Beam Name."))
-                .literal("remove")
-                .handler((context) -> {
-                    String beamName = context.get("beamName");
+                          return completions;
+                        })
+                    .build(),
+                ArgumentDescription.of("Beam Name."))
+            .literal("remove")
+            .handler(
+                (context) -> {
+                  String beamName = context.get("beamName");
 
-                    BeamAction beamAction = new BeamAction(main);
-                    beamAction.setBeamName(beamName);
-                    beamAction.setRemove(true);
+                  BeamAction beamAction = new BeamAction(main);
+                  beamAction.setBeamName(beamName);
+                  beamAction.setRemove(true);
 
-
-                    main.getActionManager().addAction(beamAction, context);
+                  main.getActionManager().addAction(beamAction, context);
                 }));
 
-        manager.command(builder
-                .argument(StringArgument.<CommandSender>newBuilder("beamName").withSuggestionsProvider((context, lastString) -> {
-                    ArrayList<String> completions = new ArrayList<>();
+    manager.command(
+        builder
+            .argument(
+                StringArgument.<CommandSender>newBuilder("beamName")
+                    .withSuggestionsProvider(
+                        (context, lastString) -> {
+                          ArrayList<String> completions = new ArrayList<>();
 
-                    completions.add("<Enter beam name>");
+                          completions.add("<Enter beam name>");
 
-                    final List<String> allArgs = context.getRawInput();
-                    main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Beam Name]", "[...]");
+                          final List<String> allArgs = context.getRawInput();
+                          main.getUtilManager()
+                              .sendFancyCommandCompletion(
+                                  context.getSender(),
+                                  allArgs.toArray(new String[0]),
+                                  "[Beam Name]",
+                                  "[...]");
 
-                    return completions;
-                }).build(), ArgumentDescription.of("Beam Name."))
-                .literal("spawn")
-                .argument(WorldArgument.of("world"), ArgumentDescription.of("World name"))
-                .argument(IntegerArgument.newBuilder("x"), ArgumentDescription.of("X coordinate"))
-                .argument(IntegerArgument.newBuilder("y"), ArgumentDescription.of("Y coordinate"))
-                .argument(IntegerArgument.newBuilder("z"), ArgumentDescription.of("Z coordinate"))
-                .handler((context) -> {
+                          return completions;
+                        })
+                    .build(),
+                ArgumentDescription.of("Beam Name."))
+            .literal("spawn")
+            .argument(WorldArgument.of("world"), ArgumentDescription.of("World name"))
+            .argument(IntegerArgument.newBuilder("x"), ArgumentDescription.of("X coordinate"))
+            .argument(IntegerArgument.newBuilder("y"), ArgumentDescription.of("Y coordinate"))
+            .argument(IntegerArgument.newBuilder("z"), ArgumentDescription.of("Z coordinate"))
+            .handler(
+                (context) -> {
+                  String beamName = context.get("beamName");
+                  final World world = context.get("world");
+                  final Vector coordinates =
+                      new Vector(context.get("x"), context.get("y"), context.get("z"));
+                  final Location location = coordinates.toLocation(world);
 
-                    String beamName = context.get("beamName");
-                    final World world = context.get("world");
-                    final Vector coordinates = new Vector(context.get("x"), context.get("y"), context.get("z"));
-                    final Location location = coordinates.toLocation(world);
+                  BeamAction beamAction = new BeamAction(main);
+                  beamAction.setBeamName(beamName);
+                  beamAction.setRemove(false);
+                  beamAction.setBeamLocation(location);
 
-
-                    BeamAction beamAction = new BeamAction(main);
-                    beamAction.setBeamName(beamName);
-                    beamAction.setRemove(false);
-                    beamAction.setBeamLocation(location);
-
-                    main.getActionManager().addAction(beamAction, context);
+                  main.getActionManager().addAction(beamAction, context);
                 }));
-    }
+  }
 
-    public final String getBeamName() {
-        return beamName;
-    }
+  public final String getBeamName() {
+    return beamName;
+  }
 
-    public void setBeamName(final String beamName) {
-        this.beamName = beamName;
-    }
+  public void setBeamName(final String beamName) {
+    this.beamName = beamName;
+  }
 
-    public final boolean isRemove() {
-        return remove;
-    }
+  public final boolean isRemove() {
+    return remove;
+  }
 
-    public void setRemove(final boolean remove) {
-        this.remove = remove;
-    }
+  public void setRemove(final boolean remove) {
+    this.remove = remove;
+  }
 
-    public final Location getBeamLocation(){
-        return beamLocation;
-    }
+  public final Location getBeamLocation() {
+    return beamLocation;
+  }
 
-    public void setBeamLocation(final Location beamLocation){
-        this.beamLocation = beamLocation;
-    }
+  public void setBeamLocation(final Location beamLocation) {
+    this.beamLocation = beamLocation;
+  }
 
-    @Override
-    public void executeInternally(final QuestPlayer questPlayer, Object... objects) {
-        if (isRemove()) {
-            if (questPlayer != null) {
-                if (questPlayer.getActiveLocationsAndBeacons().containsKey(getBeamName())) {
-                    questPlayer.clearBeacons();
-                }
-            }
-        } else {
-            if (getBeamLocation() == null) {
-                return;
-            }
-            questPlayer.trackBeacon(beamName, getBeamLocation());
+  @Override
+  public void executeInternally(final QuestPlayer questPlayer, Object... objects) {
+    if (isRemove()) {
+      if (questPlayer != null) {
+        if (questPlayer.getActiveLocationsAndBeacons().containsKey(getBeamName())) {
+          questPlayer.clearBeacons();
         }
-
+      }
+    } else {
+      if (getBeamLocation() == null) {
+        return;
+      }
+      questPlayer.trackBeacon(beamName, getBeamLocation());
     }
+  }
 
-    @Override
-    public void save(FileConfiguration configuration, String initialPath) {
-        configuration.set(initialPath + ".specifics.beamName", getBeamName());
-        configuration.set(initialPath + ".specifics.remove", isRemove());
-        configuration.set(initialPath + ".specifics.location", getBeamLocation());
+  @Override
+  public void save(FileConfiguration configuration, String initialPath) {
+    configuration.set(initialPath + ".specifics.beamName", getBeamName());
+    configuration.set(initialPath + ".specifics.remove", isRemove());
+    configuration.set(initialPath + ".specifics.location", getBeamLocation());
+  }
+
+  @Override
+  public void load(final FileConfiguration configuration, String initialPath) {
+    this.beamName = configuration.getString(initialPath + ".specifics.beamName");
+    this.remove = configuration.getBoolean(initialPath + ".specifics.remove");
+    this.beamLocation = configuration.getLocation(initialPath + ".specifics.location", null);
+  }
+
+  @Override
+  public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+    this.beamName = arguments.get(0);
+
+    this.remove = String.join(" ", arguments).toLowerCase(Locale.ROOT).contains("--remove");
+
+    if (!remove) {
+      final World world = Bukkit.getWorld(arguments.get(1));
+
+      if (world != null) {
+        final Vector coordinates =
+            new Vector(
+                Integer.parseInt(arguments.get(2)),
+                Integer.parseInt(arguments.get(3)),
+                Integer.parseInt(arguments.get(4)));
+
+        this.beamLocation = coordinates.toLocation(world);
+      }
     }
+  }
 
-    @Override
-    public void load(final FileConfiguration configuration, String initialPath) {
-        this.beamName = configuration.getString(initialPath + ".specifics.beamName");
-        this.remove = configuration.getBoolean(initialPath + ".specifics.remove");
-        this.beamLocation = configuration.getLocation(initialPath + ".specifics.location", null);
+  @Override
+  public String getActionDescription(final QuestPlayer questPlayer, final Object... objects) {
+    if (remove) {
+      return "Despawns beam: " + getBeamName();
+    } else {
+      return "Spawns beam: " + getBeamName();
     }
-
-    @Override
-    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
-        this.beamName = arguments.get(0);
-
-        this.remove = String.join(" ", arguments).toLowerCase(Locale.ROOT).contains("--remove");
-
-        if(!remove) {
-            final World world = Bukkit.getWorld(arguments.get(1));
-
-            if (world != null) {
-                final Vector coordinates = new Vector(Integer.parseInt(arguments.get(2)), Integer.parseInt(arguments.get(3)), Integer.parseInt(arguments.get(4)));
-
-                this.beamLocation = coordinates.toLocation(world);
-            }
-        }
-    }
-
-
-    @Override
-    public String getActionDescription(final QuestPlayer questPlayer, final Object... objects) {
-        if (remove) {
-            return "Despawns beam: " + getBeamName();
-        } else {
-            return "Spawns beam: " + getBeamName();
-        }
-    }
+  }
 }

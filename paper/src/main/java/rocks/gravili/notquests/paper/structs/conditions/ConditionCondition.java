@@ -21,88 +21,105 @@ package rocks.gravili.notquests.paper.structs.conditions;
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.paper.PaperCommandManager;
+import java.util.ArrayList;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.ConditionSelector;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
-import java.util.ArrayList;
-
-
 public class ConditionCondition extends Condition {
 
-    private Condition condition = null;
+  private Condition condition = null;
 
+  public ConditionCondition(NotQuests main) {
+    super(main);
+  }
 
-    public ConditionCondition(NotQuests main) {
-        super(main);
-    }
+  public static void handleCommands(
+      NotQuests main,
+      PaperCommandManager<CommandSender> manager,
+      Command.Builder<CommandSender> builder,
+      ConditionFor conditionFor) {
+    manager.command(
+        builder
+            .argument(
+                ConditionSelector.of("Condition", main),
+                ArgumentDescription.of("Name of the condition which will be checked"))
+            .handler(
+                (context) -> {
+                  final Condition condition = context.get("Condition");
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
-        manager.command(builder
-                .argument(ConditionSelector.of("Condition", main), ArgumentDescription.of("Name of the condition which will be checked"))
-                .handler((context) -> {
-                    final Condition condition = context.get("Condition");
+                  ConditionCondition conditionCondition = new ConditionCondition(main);
+                  conditionCondition.setCondition(condition);
 
-                    ConditionCondition conditionCondition = new ConditionCondition(main);
-                    conditionCondition.setCondition(condition);
-
-                    main.getConditionsManager().addCondition(conditionCondition, context);
+                  main.getConditionsManager().addCondition(conditionCondition, context);
                 }));
+  }
+
+  public final Condition getCondition() {
+    return condition;
+  }
+
+  public void setCondition(final Condition condition) {
+    this.condition = condition;
+  }
+
+  @Override
+  public String checkInternally(final QuestPlayer questPlayer) {
+    if (condition == null) {
+      return "<warn>Error: ConditionCondition cannot be checked because the condition was not found. Report this to the server owner.";
     }
 
-    public final Condition getCondition() {
-        return condition;
+    return condition.check(questPlayer);
+  }
+
+  @Override
+  public String getConditionDescriptionInternally(QuestPlayer questPlayer, Object... objects) {
+    if (condition != null) {
+      return "<unimportant>-- Complete Condition: <highlight>" + condition.getConditionName();
+    } else {
+      return "<unimportant>-- Complete Condition: Condition not found.";
     }
+  }
 
-    public void setCondition(final Condition condition) {
-        this.condition = condition;
+  @Override
+  public void save(FileConfiguration configuration, String initialPath) {
+    if (getCondition() != null) {
+      configuration.set(initialPath + ".specifics.condition", getCondition().getConditionName());
+    } else {
+      main.getLogManager()
+          .warn(
+              "Error: cannot save Condition for condition condition, because it's null. Configuration path: "
+                  + initialPath);
     }
+  }
 
-    @Override
-    public String checkInternally(final QuestPlayer questPlayer) {
-        if (condition == null) {
-            return "<warn>Error: ConditionCondition cannot be checked because the condition was not found. Report this to the server owner.";
-        }
-
-        return condition.check(questPlayer);
+  @Override
+  public void load(FileConfiguration configuration, String initialPath) {
+    String conditionName = configuration.getString(initialPath + ".specifics.condition");
+    this.condition = main.getConditionsYMLManager().getCondition(conditionName);
+    if (condition == null) {
+      main.getLogManager()
+          .warn(
+              "Error: ConditionCondition cannot find the condition with name "
+                  + conditionName
+                  + ". Condition Path: "
+                  + initialPath);
     }
+  }
 
-    @Override
-    public String getConditionDescriptionInternally(QuestPlayer questPlayer, Object... objects) {
-        if (condition != null) {
-            return "<unimportant>-- Complete Condition: <highlight>" + condition.getConditionName();
-        } else {
-            return "<unimportant>-- Complete Condition: Condition not found.";
-        }
-
+  @Override
+  public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+    String conditionName = arguments.get(0);
+    this.condition = main.getConditionsYMLManager().getCondition(conditionName);
+    if (condition == null) {
+      main.getLogManager()
+          .warn(
+              "Error: ConditionCondition cannot find the condition with name "
+                  + conditionName
+                  + ". Provided condition: "
+                  + arguments.get(0));
     }
-
-    @Override
-    public void save(FileConfiguration configuration, String initialPath) {
-        if (getCondition() != null) {
-            configuration.set(initialPath + ".specifics.condition", getCondition().getConditionName());
-        } else {
-            main.getLogManager().warn("Error: cannot save Condition for condition condition, because it's null. Configuration path: " + initialPath);
-        }
-    }
-
-    @Override
-    public void load(FileConfiguration configuration, String initialPath) {
-        String conditionName = configuration.getString(initialPath + ".specifics.condition");
-        this.condition = main.getConditionsYMLManager().getCondition(conditionName);
-        if (condition == null) {
-            main.getLogManager().warn("Error: ConditionCondition cannot find the condition with name " + conditionName + ". Condition Path: " + initialPath);
-        }
-    }
-
-    @Override
-    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
-        String conditionName = arguments.get(0);
-        this.condition = main.getConditionsYMLManager().getCondition(conditionName);
-        if (condition == null) {
-            main.getLogManager().warn("Error: ConditionCondition cannot find the condition with name " + conditionName + ". Provided condition: " + arguments.get(0));
-        }
-    }
+  }
 }

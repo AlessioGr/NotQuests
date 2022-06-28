@@ -18,7 +18,7 @@
 
 package rocks.gravili.notquests.paper.structs.actions;
 
-
+import java.util.ArrayList;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -28,148 +28,166 @@ import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
-import java.util.ArrayList;
-
 public abstract class Action {
 
+  protected final NotQuests main;
+  private final ArrayList<Condition> conditions;
+  private String actionName = "";
+  private Quest quest;
+  private Objective objective;
+  private Category category;
+  private int actionID = -1;
 
-    protected final NotQuests main;
-    private String actionName = "";
-    private Quest quest;
-    private Objective objective;
-    private final ArrayList<Condition> conditions;
-    private Category category;
-    private int actionID = -1;
+  public Action(NotQuests main) {
+    this.main = main;
+    conditions = new ArrayList<>();
+    category = main.getDataManager().getDefaultCategory();
+    main.allActions.add(this); // For bStats
+  }
 
+  public final int getActionID() {
+    return actionID;
+  }
 
-    public Action(NotQuests main) {
-        this.main = main;
-        conditions = new ArrayList<>();
-        category = main.getDataManager().getDefaultCategory();
-        main.allActions.add(this); //For bStats
+  public void setActionID(int actionID) {
+    this.actionID = actionID;
+  }
+
+  public final Category getCategory() {
+    return category;
+  }
+
+  public void setCategory(final Category category) {
+    this.category = category;
+  }
+
+  public final String getActionType() {
+    return main.getActionManager().getActionType(this.getClass());
+  }
+
+  public final String getActionName() {
+    return actionName;
+  }
+
+  public void setActionName(final String actionName) {
+    this.actionName = actionName;
+  }
+
+  public void removeActionName() {
+    this.actionName = "";
+  }
+
+  public final Quest getQuest() {
+    return quest;
+  }
+
+  public void setQuest(final Quest quest) {
+    this.quest = quest;
+  }
+
+  public final Objective getObjective() {
+    return objective;
+  }
+
+  public void setObjective(final Objective objective) {
+    this.objective = objective;
+  }
+
+  public abstract String getActionDescription(
+      final QuestPlayer questPlayer, final Object... objects);
+
+  public abstract void executeInternally(final QuestPlayer questPlayer, Object... objects);
+
+  public void execute(final QuestPlayer questPlayer, Object... objects) {
+    if (main.getDataManager().isDisabled()) {
+      return;
     }
-
-    public final int getActionID() {
-        return actionID;
+    if (questPlayer != null) {
+      questPlayer.sendDebugMessage("Executing action " + getActionName());
     }
+    executeInternally(questPlayer, objects);
+  }
 
-    public void setActionID(int actionID) {
-        this.actionID = actionID;
+  public abstract void save(final FileConfiguration configuration, final String initialPath);
+
+  public abstract void load(final FileConfiguration configuration, final String initialPath);
+
+  public final ArrayList<Condition> getConditions() {
+    return conditions;
+  }
+
+  public void addCondition(
+      final Condition condition,
+      final boolean save,
+      final FileConfiguration configuration,
+      final String initialPath) {
+    conditions.add(condition);
+    if (save) {
+      configuration.set(
+          initialPath + ".conditions." + conditions.size() + ".conditionType",
+          condition.getConditionType());
+      configuration.set(
+          initialPath + ".conditions." + conditions.size() + ".progressNeeded",
+          condition.getProgressNeeded());
+      configuration.set(
+          initialPath + ".conditions." + conditions.size() + ".negated", condition.isNegated());
+      configuration.set(
+          initialPath + ".conditions." + conditions.size() + ".description",
+          condition.getDescription());
+
+      condition.save(configuration, initialPath + ".conditions." + conditions.size());
     }
+  }
 
-    public final Category getCategory() {
-        return category;
+  public void removeCondition(
+      final Condition condition,
+      final boolean save,
+      final FileConfiguration configuration,
+      final String initialPath) {
+    int conditionID = conditions.indexOf(condition) + 1;
+    conditions.remove(condition);
+    if (save) {
+      configuration.set(initialPath + ".conditions." + conditionID, null);
     }
+  }
 
-    public void setCategory(final Category category) {
-        this.category = category;
-    }
+  public void clearConditions(final FileConfiguration configuration, final String initialPath) {
+    conditions.clear();
+    configuration.set(initialPath + ".conditions", null);
+  }
 
-    public final String getActionType() {
-        return main.getActionManager().getActionType(this.getClass());
-    }
+  public abstract void deserializeFromSingleLineString(final ArrayList<String> arguments);
 
-    public final String getActionName() {
-        return actionName;
-    }
+  public void switchCategory(final Category category) {
 
-    public void setActionName(final String actionName) {
-        this.actionName = actionName;
-    }
+    final ConfigurationSection actionsConfigurationSection =
+        getCategory().getActionsConfig().getConfigurationSection("actions." + getActionName());
 
-    public void removeActionName() {
-        this.actionName = "";
-    }
+    getCategory().getActionsConfig().set("actions." + getActionName(), null);
+    getCategory().saveActionsConfig();
 
-    public final Quest getQuest() {
-        return quest;
-    }
+    setCategory(category);
 
-    public void setQuest(final Quest quest) {
-        this.quest = quest;
-    }
+    category.getActionsConfig().set("actions." + getActionName(), actionsConfigurationSection);
+    category.saveActionsConfig();
+  }
 
-    public final Objective getObjective() {
-        return objective;
-    }
-
-    public void setObjective(final Objective objective) {
-        this.objective = objective;
-    }
-
-    public abstract String getActionDescription(final QuestPlayer questPlayer, final Object... objects);
-
-    public abstract void executeInternally(final QuestPlayer questPlayer, Object... objects);
-
-    public void execute(final QuestPlayer questPlayer, Object... objects) {
-        if (main.getDataManager().isDisabled()) {
-            return;
-        }
-        if (questPlayer != null) {
-            questPlayer.sendDebugMessage("Executing action " + getActionName());
-        }
-        executeInternally(questPlayer, objects);
-    }
-
-    public abstract void save(final FileConfiguration configuration, final String initialPath);
-
-    public abstract void load(final FileConfiguration configuration, final String initialPath);
-
-    public final ArrayList<Condition> getConditions() {
-        return conditions;
-    }
-
-    public void addCondition(final Condition condition, final boolean save, final FileConfiguration configuration, final String initialPath) {
-        conditions.add(condition);
-        if (save) {
-            configuration.set(initialPath + ".conditions." + conditions.size() + ".conditionType", condition.getConditionType());
-            configuration.set(initialPath + ".conditions." + conditions.size() + ".progressNeeded", condition.getProgressNeeded());
-            configuration.set(initialPath + ".conditions." + conditions.size() + ".negated", condition.isNegated());
-            configuration.set(initialPath + ".conditions." + conditions.size() + ".description", condition.getDescription());
-
-
-            condition.save(configuration, initialPath + ".conditions." + conditions.size());
-
-        }
-    }
-
-    public void removeCondition(final Condition condition, final boolean save, final FileConfiguration configuration, final String initialPath) {
-        int conditionID = conditions.indexOf(condition)+1;
-        conditions.remove(condition);
-        if (save) {
-            configuration.set(initialPath + ".conditions." + conditionID, null);
-        }
-    }
-
-    public void clearConditions(final FileConfiguration configuration, final String initialPath) {
-        conditions.clear();
-        configuration.set(initialPath + ".conditions", null);
-    }
-
-    public abstract void deserializeFromSingleLineString(final ArrayList<String> arguments);
-
-    public void switchCategory(final Category category) {
-
-        final ConfigurationSection actionsConfigurationSection = getCategory().getActionsConfig().getConfigurationSection("actions." + getActionName());
-
-        getCategory().getActionsConfig().set("actions." + getActionName(), null);
-        getCategory().saveActionsConfig();
-
-        setCategory(category);
-
-        category.getActionsConfig().set("actions." + getActionName(), actionsConfigurationSection);
-        category.saveActionsConfig();
-    }
-
-    @Override
-    public String toString() {
-        return "Action{" +
-                "actionName='" + actionName + '\'' +
-                ", quest=" + quest +
-                ", objective=" + objective +
-                ", conditions=" + conditions +
-                ", category=" + category +
-                ", actionID=" + actionID +
-                '}';
-    }
+  @Override
+  public String toString() {
+    return "Action{"
+        + "actionName='"
+        + actionName
+        + '\''
+        + ", quest="
+        + quest
+        + ", objective="
+        + objective
+        + ", conditions="
+        + conditions
+        + ", category="
+        + category
+        + ", actionID="
+        + actionID
+        + '}';
+  }
 }

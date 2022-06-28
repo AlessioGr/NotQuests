@@ -18,6 +18,8 @@
 
 package rocks.gravili.notquests.paper.managers.integrations.betonquest.conditions;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.betonquest.betonquest.Instruction;
 import org.betonquest.betonquest.exceptions.InstructionParseException;
 import org.betonquest.betonquest.exceptions.QuestRuntimeException;
@@ -27,47 +29,45 @@ import org.bukkit.entity.Player;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 
-import java.util.ArrayList;
-import java.util.List;
+public class BQConditionsCondition
+    extends org.betonquest.betonquest.api
+        .Condition { // TODO: Make it dynamic for future or API requirements
 
-public class BQConditionsCondition extends org.betonquest.betonquest.api.Condition { //TODO: Make it dynamic for future or API requirements
+  private final NotQuests main;
+  private Condition condition = null;
 
-    private final NotQuests main;
-    private Condition condition = null;
+  /**
+   * Creates new instance of the condition. The condition should parse instruction string at this
+   * point and extract all the data from it. If anything goes wrong, throw {@link
+   * InstructionParseException} with an error message describing the problem.
+   *
+   * @param instruction the Instruction object; you can get one from ID instance with {@link
+   *     ID#generateInstruction() ID.generateInstruction()} or create it from an instruction string
+   */
+  public BQConditionsCondition(Instruction instruction) throws InstructionParseException {
+    super(instruction, false);
+    this.main = NotQuests.getInstance();
 
-    /**
-     * Creates new instance of the condition. The condition should parse
-     * instruction string at this point and extract all the data from it. If
-     * anything goes wrong, throw {@link InstructionParseException} with an
-     * error message describing the problem.
-     *
-     * @param instruction the Instruction object; you can get one from ID instance with
-     *                    {@link ID#generateInstruction()
-     *                    ID.generateInstruction()} or create it from an instruction
-     *                    string
-     */
-    public BQConditionsCondition(Instruction instruction) throws InstructionParseException {
-        super(instruction, false);
-        this.main = NotQuests.getInstance();
+    final List<String> allConditionsString = new ArrayList<>();
+    allConditionsString.add(instruction.toString().replace("nq_condition ", ""));
 
-        final List<String> allConditionsString = new ArrayList<>();
-        allConditionsString.add(instruction.toString().replace("nq_condition ", ""));
-
-        try {
-            condition = main.getConversationManager().parseConditionsString(allConditionsString).get(0);
-        } catch (Exception e) {
-            throw new RuntimeException("Invalid Condition line: " + e.getLocalizedMessage());
-        }
+    try {
+      condition = main.getConversationManager().parseConditionsString(allConditionsString).get(0);
+    } catch (Exception e) {
+      throw new RuntimeException("Invalid Condition line: " + e.getLocalizedMessage());
     }
+  }
 
-    @Override
-    protected Boolean execute(String playerID) throws QuestRuntimeException {
-        if (condition != null) {
-            final Player player = PlayerConverter.getPlayer(playerID);
+  @Override
+  protected Boolean execute(String playerID) throws QuestRuntimeException {
+    if (condition != null) {
+      final Player player = PlayerConverter.getPlayer(playerID);
 
-            return condition.check(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId())).isBlank();
-        } else {
-            throw new QuestRuntimeException("Condition was not found.");
-        }
+      return condition
+          .check(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()))
+          .isBlank();
+    } else {
+      throw new QuestRuntimeException("Condition was not found.");
     }
+  }
 }

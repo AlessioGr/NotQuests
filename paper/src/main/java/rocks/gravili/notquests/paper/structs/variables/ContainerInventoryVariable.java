@@ -20,6 +20,9 @@ package rocks.gravili.notquests.paper.structs.variables;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.arguments.standard.StringArgument;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -30,10 +33,6 @@ import org.bukkit.inventory.ItemStack;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public class ContainerInventoryVariable extends Variable<ItemStack[]>{
     public ContainerInventoryVariable(NotQuests main) {

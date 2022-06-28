@@ -18,147 +18,208 @@
 
 package rocks.gravili.notquests.paper.managers;
 
+import java.io.IOException;
+import java.util.HashMap;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 
-import java.io.IOException;
-import java.util.HashMap;
-
 public class ConditionsYMLManager {
-    private final NotQuests main;
-    private final HashMap<String, Condition> conditionsAndIdentifiers;
+  private final NotQuests main;
+  private final HashMap<String, Condition> conditionsAndIdentifiers;
 
-    public ConditionsYMLManager(final NotQuests main) {
-        this.main = main;
-        conditionsAndIdentifiers = new HashMap<>();
+  public ConditionsYMLManager(final NotQuests main) {
+    this.main = main;
+    conditionsAndIdentifiers = new HashMap<>();
+  }
+
+  public void loadConditions() {
+    for (final Category category : main.getDataManager().getCategories()) {
+      loadConditions(category);
+    }
+  }
+
+  public void loadConditions(final Category category) {
+    // First load from conditions.yml:
+    if (category.getConditionsConfig() == null) {
+      main.getLogManager()
+          .severe(
+              "Error: Cannot load conditions of category <highlight>"
+                  + category.getCategoryFullName()
+                  + "</highlight>, because it doesn't have a conditions config. This category has been skipped.");
+      return;
     }
 
-    public void loadConditions() {
-        for (final Category category : main.getDataManager().getCategories()) {
-            loadConditions(category);
+    final ConfigurationSection conditionsConfigurationSection =
+        category.getConditionsConfig().getConfigurationSection("conditions");
+    if (conditionsConfigurationSection != null) {
+      for (final String conditionIdentifier : conditionsConfigurationSection.getKeys(false)) {
+        if (conditionsAndIdentifiers.get(conditionIdentifier) != null) {
+          main.getDataManager()
+              .disablePluginAndSaving(
+                  "Plugin disabled, because there was an error while loading conditions.yml conditions data: The conditions "
+                      + conditionIdentifier
+                      + " already exists.",
+                  category);
+          return;
         }
-    }
+        final String conditionTypeString =
+            conditionsConfigurationSection.getString(conditionIdentifier + ".conditionType", "");
+        final Class<? extends Condition> conditionType =
+            main.getConditionsManager().getConditionClass(conditionTypeString);
 
-    public void loadConditions(final Category category) {
-        //First load from conditions.yml:
-        if(category.getConditionsConfig() == null){
-            main.getLogManager().severe("Error: Cannot load conditions of category <highlight>" + category.getCategoryFullName() + "</highlight>, because it doesn't have a conditions config. This category has been skipped.");
-            return;
-        }
-
-        final ConfigurationSection conditionsConfigurationSection = category.getConditionsConfig().getConfigurationSection("conditions");
-        if (conditionsConfigurationSection != null) {
-            for (final String conditionIdentifier : conditionsConfigurationSection.getKeys(false)) {
-                if (conditionsAndIdentifiers.get(conditionIdentifier) != null) {
-                    main.getDataManager().disablePluginAndSaving("Plugin disabled, because there was an error while loading conditions.yml conditions data: The conditions " + conditionIdentifier + " already exists.", category);
-                    return;
-                }
-                final String conditionTypeString = conditionsConfigurationSection.getString(conditionIdentifier + ".conditionType", "");
-                final Class<? extends Condition> conditionType = main.getConditionsManager().getConditionClass(conditionTypeString);
-
-                if (conditionType == null) {
-                    main.getDataManager().disablePluginAndSaving("Error parsing conditions.yml conditions Type of condition with name <highlight" + conditionIdentifier + "</highlight>. Condition type: <highlight2>" + conditionTypeString, category);
-                    return;
-                }
-
-                if (conditionIdentifier.isBlank()) {
-                    main.getLogManager().warn("Skipping loading the condition of type <highlight>" + conditionTypeString + "</highlight> of category <highlight2>" + category.getCategoryFullName() + "</highlight2> because the condition identifier is empty.");
-                    continue;
-                }
-
-
-                final Condition condition;
-
-                final int progressNeeded = category.getConditionsConfig().getInt("conditions." + conditionIdentifier + ".progressNeeded");
-                final boolean negated = category.getConditionsConfig().getBoolean("conditions." + conditionIdentifier + ".negated", false);
-                final String description = category.getConditionsConfig().getString("conditions." + conditionIdentifier + ".description", "");
-
-                try {
-                    condition = conditionType.getDeclaredConstructor(NotQuests.class).newInstance(main);
-                    condition.setConditionName(conditionIdentifier);
-                    condition.setProgressNeeded(progressNeeded);
-                    condition.setNegated(negated);
-                    condition.setDescription(description);
-                    condition.load(category.getConditionsConfig(), "conditions." + conditionIdentifier);
-                    condition.setCategory(category);
-
-                } catch (final Exception ex) {
-                    main.getDataManager().disablePluginAndSaving("Error parsing condition Type of conditions.yml condition with name <highlight>" + conditionIdentifier + "</highlight>.", ex, category);
-                    return;
-                }
-
-                conditionsAndIdentifiers.put(conditionIdentifier, condition);
-            }
+        if (conditionType == null) {
+          main.getDataManager()
+              .disablePluginAndSaving(
+                  "Error parsing conditions.yml conditions Type of condition with name <highlight"
+                      + conditionIdentifier
+                      + "</highlight>. Condition type: <highlight2>"
+                      + conditionTypeString,
+                  category);
+          return;
         }
 
-    }
+        if (conditionIdentifier.isBlank()) {
+          main.getLogManager()
+              .warn(
+                  "Skipping loading the condition of type <highlight>"
+                      + conditionTypeString
+                      + "</highlight> of category <highlight2>"
+                      + category.getCategoryFullName()
+                      + "</highlight2> because the condition identifier is empty.");
+          continue;
+        }
 
-    public void saveConditions(final Category category) {
+        final Condition condition;
+
+        final int progressNeeded =
+            category
+                .getConditionsConfig()
+                .getInt("conditions." + conditionIdentifier + ".progressNeeded");
+        final boolean negated =
+            category
+                .getConditionsConfig()
+                .getBoolean("conditions." + conditionIdentifier + ".negated", false);
+        final String description =
+            category
+                .getConditionsConfig()
+                .getString("conditions." + conditionIdentifier + ".description", "");
+
         try {
-            category.getConditionsConfig().save(category.getConditionsFile());
-            main.getLogManager().info("Saved Data to conditions.yml");
-        } catch (IOException e) {
-            main.getLogManager().severe("Error saving condition. Condition were not saved...");
+          condition = conditionType.getDeclaredConstructor(NotQuests.class).newInstance(main);
+          condition.setConditionName(conditionIdentifier);
+          condition.setProgressNeeded(progressNeeded);
+          condition.setNegated(negated);
+          condition.setDescription(description);
+          condition.load(category.getConditionsConfig(), "conditions." + conditionIdentifier);
+          condition.setCategory(category);
 
+        } catch (final Exception ex) {
+          main.getDataManager()
+              .disablePluginAndSaving(
+                  "Error parsing condition Type of conditions.yml condition with name <highlight>"
+                      + conditionIdentifier
+                      + "</highlight>.",
+                  ex,
+                  category);
+          return;
         }
 
+        conditionsAndIdentifiers.put(conditionIdentifier, condition);
+      }
     }
+  }
 
-    /*public final FileConfiguration category.getConditionsConfig() {
-        return conditionsConfig;
-    }*/
-
-    public final HashMap<String, Condition> getConditionsAndIdentifiers() {
-        return conditionsAndIdentifiers;
+  public void saveConditions(final Category category) {
+    try {
+      category.getConditionsConfig().save(category.getConditionsFile());
+      main.getLogManager().info("Saved Data to conditions.yml");
+    } catch (IOException e) {
+      main.getLogManager().severe("Error saving condition. Condition were not saved...");
     }
+  }
 
-    public final Condition getCondition(final @NotNull String conditionIdentifier) {
-        return conditionsAndIdentifiers.get(conditionIdentifier);
+  /*public final FileConfiguration category.getConditionsConfig() {
+      return conditionsConfig;
+  }*/
+
+  public final HashMap<String, Condition> getConditionsAndIdentifiers() {
+    return conditionsAndIdentifiers;
+  }
+
+  public final Condition getCondition(final @NotNull String conditionIdentifier) {
+    return conditionsAndIdentifiers.get(conditionIdentifier);
+  }
+
+  public final String addCondition(final String conditionIdentifier, final Condition condition) {
+    final boolean nameAlreadyExists =
+        getConditionsAndIdentifiers().get(conditionIdentifier) != null;
+    condition.setConditionName(conditionIdentifier);
+
+    if (!nameAlreadyExists) {
+      conditionsAndIdentifiers.put(conditionIdentifier, condition);
+
+      condition
+          .getCategory()
+          .getConditionsConfig()
+          .set(
+              "conditions." + conditionIdentifier + ".conditionType", condition.getConditionType());
+      condition
+          .getCategory()
+          .getConditionsConfig()
+          .set(
+              "conditions." + conditionIdentifier + ".progressNeeded",
+              condition.getProgressNeeded());
+      condition
+          .getCategory()
+          .getConditionsConfig()
+          .set("conditions." + conditionIdentifier + ".negated", condition.isNegated());
+      condition
+          .getCategory()
+          .getConditionsConfig()
+          .set("conditions." + conditionIdentifier + ".description", condition.getDescription());
+
+      condition.save(
+          condition.getCategory().getConditionsConfig(), "conditions." + conditionIdentifier);
+
+      saveConditions(condition.getCategory());
+
+      return "<success>"
+          + main.getConditionsManager().getConditionType(condition.getClass())
+          + " Condition with the name <highlight>"
+          + conditionIdentifier
+          + "</highlight> has been created successfully!";
+    } else {
+      return "<error>Condition <highlight>" + conditionIdentifier + "</highlight> already exists!";
     }
+  }
 
+  public final String removeCondition(final String conditionToDeleteIdentifier) {
+    conditionsAndIdentifiers
+        .get(conditionToDeleteIdentifier)
+        .getCategory()
+        .getConditionsConfig()
+        .set("conditions." + conditionToDeleteIdentifier, null);
+    saveConditions(conditionsAndIdentifiers.get(conditionToDeleteIdentifier).getCategory());
+    conditionsAndIdentifiers.remove(conditionToDeleteIdentifier);
 
-    public final String addCondition(final String conditionIdentifier, final Condition condition) {
-        final boolean nameAlreadyExists = getConditionsAndIdentifiers().get(conditionIdentifier) != null;
-        condition.setConditionName(conditionIdentifier);
+    return "<success>Condition <highlight>"
+        + conditionToDeleteIdentifier
+        + "</highlight> successfully deleted!";
+  }
 
-        if (!nameAlreadyExists) {
-            conditionsAndIdentifiers.put(conditionIdentifier, condition);
+  public final String removeCondition(final Condition condition) {
+    condition
+        .getCategory()
+        .getConditionsConfig()
+        .set("conditions." + condition.getConditionName(), null);
+    saveConditions(condition.getCategory());
+    conditionsAndIdentifiers.remove(condition.getConditionName());
 
-            condition.getCategory().getConditionsConfig().set("conditions." + conditionIdentifier + ".conditionType", condition.getConditionType());
-            condition.getCategory().getConditionsConfig().set("conditions." + conditionIdentifier + ".progressNeeded", condition.getProgressNeeded());
-            condition.getCategory().getConditionsConfig().set("conditions." + conditionIdentifier + ".negated", condition.isNegated());
-            condition.getCategory().getConditionsConfig().set("conditions." + conditionIdentifier + ".description", condition.getDescription());
-
-
-            condition.save(condition.getCategory().getConditionsConfig(), "conditions." + conditionIdentifier);
-
-            saveConditions(condition.getCategory());
-
-
-            return "<success>" + main.getConditionsManager().getConditionType(condition.getClass()) + " Condition with the name <highlight>"
-                    + conditionIdentifier + "</highlight> has been created successfully!";
-        } else {
-            return "<error>Condition <highlight>" + conditionIdentifier + "</highlight> already exists!";
-        }
-    }
-
-
-    public final String removeCondition(final String conditionToDeleteIdentifier) {
-        conditionsAndIdentifiers.get(conditionToDeleteIdentifier).getCategory().getConditionsConfig().set("conditions." + conditionToDeleteIdentifier, null);
-        saveConditions(conditionsAndIdentifiers.get(conditionToDeleteIdentifier).getCategory());
-        conditionsAndIdentifiers.remove(conditionToDeleteIdentifier);
-
-        return "<success>Condition <highlight>" + conditionToDeleteIdentifier + "</highlight> successfully deleted!";
-    }
-
-    public final String removeCondition(final Condition condition) {
-        condition.getCategory().getConditionsConfig().set("conditions." + condition.getConditionName(), null);
-        saveConditions(condition.getCategory());
-        conditionsAndIdentifiers.remove(condition.getConditionName());
-
-        return "<success>Condition <highlight>" + condition.getConditionName() + "</highlight> successfully deleted!";
-    }
+    return "<success>Condition <highlight>"
+        + condition.getConditionName()
+        + "</highlight> successfully deleted!";
+  }
 }

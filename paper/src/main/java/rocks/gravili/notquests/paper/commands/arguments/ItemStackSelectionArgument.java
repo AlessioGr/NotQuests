@@ -27,6 +27,11 @@ import cloud.commandframework.captions.CaptionVariable;
 import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.exceptions.parsing.NoInputProvidedException;
 import cloud.commandframework.exceptions.parsing.ParserException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Queue;
+import java.util.function.BiFunction;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -35,12 +40,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelection;
 import rocks.gravili.notquests.paper.managers.items.NQItem;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Queue;
-import java.util.function.BiFunction;
 
 /**
  * cloud argument type that parses Bukkit {@link Material materials}

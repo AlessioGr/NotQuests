@@ -18,11 +18,21 @@
 
 package rocks.gravili.notquests.paper.managers;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
+import java.util.regex.Pattern;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.io.IOUtils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -38,18 +48,13 @@ import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 import rocks.gravili.notquests.paper.structs.triggers.Trigger;
 
-import java.io.*;
-import java.util.*;
-import java.util.function.Supplier;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class LanguageManager {
     private final NotQuests main;
     /**
      * Configuration objects which contains values from General.yml
      */
     private final Pattern hexPattern = Pattern.compile("<#([A-Fa-f0-9]){6}>");
+    File languageFolder = null;
     /**
      * General.yml Configuration
      */
@@ -59,9 +64,6 @@ public class LanguageManager {
      */
     private FileConfiguration languageConfig;
     private String currentLanguage = "en";
-
-    File languageFolder = null;
-
     private FileConfiguration defaultLanguageConfig = null;
 
 

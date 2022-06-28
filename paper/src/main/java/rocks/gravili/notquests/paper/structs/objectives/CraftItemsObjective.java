@@ -21,6 +21,7 @@ package rocks.gravili.notquests.paper.structs.objectives;
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.paper.PaperCommandManager;
+import java.util.Map;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -31,95 +32,104 @@ import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelect
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
-import java.util.Map;
-
 public class CraftItemsObjective extends Objective {
 
-    private ItemStackSelection itemStackSelection;
+  private ItemStackSelection itemStackSelection;
 
+  public CraftItemsObjective(NotQuests main) {
+    super(main);
+  }
 
+  public static void handleCommands(
+      NotQuests main,
+      PaperCommandManager<CommandSender> manager,
+      Command.Builder<CommandSender> addObjectiveBuilder) {
+    manager.command(
+        addObjectiveBuilder
+            .argument(
+                ItemStackSelectionArgument.of("materials", main),
+                ArgumentDescription.of("Material of the item which needs to be crafted"))
+            .argument(
+                NumberVariableValueArgument.newBuilder("amount", main, null),
+                ArgumentDescription.of("Amount of items which need to be crafted"))
+            .handler(
+                (context) -> {
+                  final String amountExpression = context.get("amount");
 
-    public CraftItemsObjective(NotQuests main) {
-        super(main);
-    }
+                  final ItemStackSelection itemStackSelection = context.get("materials");
 
-    public final ItemStackSelection getItemStackSelection(){
-        return itemStackSelection;
-    }
+                  CraftItemsObjective craftItemsObjective = new CraftItemsObjective(main);
+                  craftItemsObjective.setItemStackSelection(itemStackSelection);
 
-    public void setItemStackSelection(final ItemStackSelection itemStackSelection){
-        this.itemStackSelection = itemStackSelection;
-    }
+                  craftItemsObjective.setProgressNeededExpression(amountExpression);
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
-        manager.command(addObjectiveBuilder
-                .argument(ItemStackSelectionArgument.of("materials", main), ArgumentDescription.of("Material of the item which needs to be crafted"))
-                .argument(NumberVariableValueArgument.newBuilder("amount", main, null), ArgumentDescription.of("Amount of items which need to be crafted"))
-                .handler((context) -> {
-                    final String amountExpression = context.get("amount");
-
-                    final ItemStackSelection itemStackSelection = context.get("materials");
-
-
-                    CraftItemsObjective craftItemsObjective = new CraftItemsObjective(main);
-                    craftItemsObjective.setItemStackSelection(itemStackSelection);
-
-
-                    craftItemsObjective.setProgressNeededExpression(amountExpression);
-
-                    main.getObjectiveManager().addObjective(craftItemsObjective, context);
+                  main.getObjectiveManager().addObjective(craftItemsObjective, context);
                 }));
-    }
+  }
 
+  public final ItemStackSelection getItemStackSelection() {
+    return itemStackSelection;
+  }
 
-    @Override
-    public void onObjectiveUnlock(final ActiveObjective activeObjective, final boolean unlockedDuringPluginStartupQuestLoadingProcess) {
-    }
-    @Override
-    public void onObjectiveCompleteOrLock(final ActiveObjective activeObjective, final boolean lockedOrCompletedDuringPluginStartupQuestLoadingProcess, final boolean completed) {
-    }
+  public void setItemStackSelection(final ItemStackSelection itemStackSelection) {
+    this.itemStackSelection = itemStackSelection;
+  }
 
+  @Override
+  public void onObjectiveUnlock(
+      final ActiveObjective activeObjective,
+      final boolean unlockedDuringPluginStartupQuestLoadingProcess) {}
 
+  @Override
+  public void onObjectiveCompleteOrLock(
+      final ActiveObjective activeObjective,
+      final boolean lockedOrCompletedDuringPluginStartupQuestLoadingProcess,
+      final boolean completed) {}
 
-
-    @Override
-    public String getObjectiveTaskDescription(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.craftItems.base", questPlayer, activeObjective, Map.of(
+  @Override
+  public String getObjectiveTaskDescription(
+      final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
+    return main.getLanguageManager()
+        .getString(
+            "chat.objectives.taskDescription.craftItems.base",
+            questPlayer,
+            activeObjective,
+            Map.of(
                 "%ITEMTOCRAFTTYPE%", getItemStackSelection().getAllMaterialsListed(),
                 "%ITEMTOCRAFTNAME%", "",
                 "%(%", "",
-                "%)%", ""
-        ));
+                "%)%", ""));
+  }
 
+  @Override
+  public void save(FileConfiguration configuration, String initialPath) {
+    getItemStackSelection()
+        .saveToFileConfiguration(configuration, initialPath + ".specifics.itemStackSelection");
+  }
 
-    }
+  @Override
+  public void load(FileConfiguration configuration, String initialPath) {
+    this.itemStackSelection = new ItemStackSelection(main);
+    itemStackSelection.loadFromFileConfiguration(
+        configuration, initialPath + ".specifics.itemStackSelection");
 
-    @Override
-    public void save(FileConfiguration configuration, String initialPath) {
-        getItemStackSelection().saveToFileConfiguration(configuration, initialPath + ".specifics.itemStackSelection");
-    }
+    // Convert old to new
+    if (configuration.contains(initialPath + ".specifics.nqitem")
+        || configuration.contains(initialPath + ".specifics.itemToCraft.itemstack")) {
+      main.getLogManager().info("Converting old CraftItemsObjective to new one...");
+      final String nqItemName = configuration.getString(initialPath + ".specifics.nqitem", "");
 
-    @Override
-    public void load(FileConfiguration configuration, String initialPath) {
-        this.itemStackSelection = new ItemStackSelection(main);
-        itemStackSelection.loadFromFileConfiguration(configuration, initialPath + ".specifics.itemStackSelection");
-
-        //Convert old to new
-        if(configuration.contains(initialPath + ".specifics.nqitem") || configuration.contains(initialPath + ".specifics.itemToCraft.itemstack")){
-            main.getLogManager().info("Converting old CraftItemsObjective to new one...");
-            final String nqItemName = configuration.getString(initialPath + ".specifics.nqitem", "");
-
-            if(nqItemName.isBlank()){
-                itemStackSelection.addItemStack(configuration.getItemStack(initialPath + ".specifics.itemToCraft.itemstack"));
-            }else{
-                itemStackSelection.addNqItemName(nqItemName);
-            }
-            itemStackSelection.saveToFileConfiguration(configuration, initialPath + ".specifics.itemStackSelection");
-            configuration.set(initialPath + ".specifics.nqitem", null);
-            configuration.set(initialPath + ".specifics.itemToCraft.itemstack", null);
-            //Let's hope it saves somewhere, else conversion will happen again...
-        }
-
-
+      if (nqItemName.isBlank()) {
+        itemStackSelection.addItemStack(
+            configuration.getItemStack(initialPath + ".specifics.itemToCraft.itemstack"));
+      } else {
+        itemStackSelection.addNqItemName(nqItemName);
       }
+      itemStackSelection.saveToFileConfiguration(
+          configuration, initialPath + ".specifics.itemStackSelection");
+      configuration.set(initialPath + ".specifics.nqitem", null);
+      configuration.set(initialPath + ".specifics.itemToCraft.itemstack", null);
+      // Let's hope it saves somewhere, else conversion will happen again...
+    }
+  }
 }

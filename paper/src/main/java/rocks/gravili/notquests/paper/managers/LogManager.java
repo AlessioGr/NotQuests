@@ -18,95 +18,98 @@
 
 package rocks.gravili.notquests.paper.managers;
 
+import java.util.ArrayList;
+import java.util.logging.Level;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import rocks.gravili.notquests.paper.NotQuests;
 
-import java.util.ArrayList;
-import java.util.logging.Level;
-
 public class LogManager {
-    private final NotQuests main;
-    private ConsoleCommandSender consoleSender;
-    private final Component prefix;
-    private String prefixText;
+  private final NotQuests main;
+  private final Component prefix;
+  private final ArrayList<String> severeLogs, warnLogs;
+  private ConsoleCommandSender consoleSender;
+  private String prefixText;
 
+  public LogManager(final NotQuests main) {
+    this.main = main;
+    severeLogs = new ArrayList<>();
+    warnLogs = new ArrayList<>();
 
+    consoleSender = Bukkit.getConsoleSender();
 
-    private final ArrayList<String> severeLogs, warnLogs;
+    prefixText = "<#393e46>[<gradient:#E0EAFC:#CFDEF3>NotQuests<#393e46>]<#636c73>: ";
+    prefix = main.parse(prefixText);
+  }
 
-    public LogManager(final NotQuests main) {
-        this.main = main;
-        severeLogs = new ArrayList<>();
-        warnLogs = new ArrayList<>();
+  public void lateInit() {
+    prefixText =
+        main.getConfiguration().getColorsConsolePrefixPrefix()
+            + "NotQuests"
+            + main.getConfiguration().getColorsConsolePrefixSuffix();
+  }
 
-        consoleSender = Bukkit.getConsoleSender();
+  public final ArrayList<String> getErrorLogs() {
+    return severeLogs;
+  }
 
-        prefixText = "<#393e46>[<gradient:#E0EAFC:#CFDEF3>NotQuests<#393e46>]<#636c73>: ";
-        prefix = main.parse(prefixText);
+  public final ArrayList<String> getWarnLogs() {
+    return warnLogs;
+  }
+
+  private void log(final Level level, final String color, final String message) {
+    log(level, LogCategory.DEFAULT, color, message);
+  }
+
+  private void log(
+      final Level level, final LogCategory logCategory, final String color, final String message) {
+    consoleSender.sendMessage(main.parse(prefixText + color + message));
+  }
+
+  public void info(final LogCategory logCategory, final String message) {
+    if (logCategory == LogCategory.DEFAULT) {
+      log(Level.INFO, logCategory, main.getConfiguration().getColorsConsoleInfoDefault(), message);
+    } else if (logCategory == LogCategory.DATA) {
+      log(Level.INFO, logCategory, main.getConfiguration().getColorsConsoleInfoData(), message);
+    } else if (logCategory == LogCategory.LANGUAGE) {
+      log(Level.INFO, logCategory, main.getConfiguration().getColorsConsoleInfoLanguage(), message);
     }
+  }
 
-    public void lateInit() {
-        prefixText = main.getConfiguration().getColorsConsolePrefixPrefix() + "NotQuests" + main.getConfiguration().getColorsConsolePrefixSuffix();
-    }
+  public void info(final String message) {
+    info(LogCategory.DEFAULT, message);
+  }
 
-    public final ArrayList<String> getErrorLogs() {
-        return severeLogs;
-    }
-    public final ArrayList<String> getWarnLogs() {
-        return warnLogs;
-    }
+  public void warn(final LogCategory logCategory, final String message) {
+    log(Level.WARNING, logCategory, main.getConfiguration().getColorsConsoleWarnDefault(), message);
+    warnLogs.add(message);
+  }
 
-    private void log(final Level level, final String color, final String message) {
-        log(level, LogCategory.DEFAULT, color, message);
-    }
+  public void warn(final String message) {
+    warn(LogCategory.DEFAULT, message);
+  }
 
-    private void log(final Level level, final LogCategory logCategory, final String color, final String message) {
-        consoleSender.sendMessage(main.parse(prefixText + color + message));
-    }
+  public void severe(final LogCategory logCategory, final String message) {
+    log(
+        Level.SEVERE,
+        logCategory,
+        main.getConfiguration().getColorsConsoleSevereDefault(),
+        message);
+    severeLogs.add(message);
+  }
 
+  public void severe(final String message) {
+    severe(LogCategory.DEFAULT, message);
+  }
 
-    public void info(final LogCategory logCategory, final String message) {
-        if (logCategory == LogCategory.DEFAULT) {
-            log(Level.INFO, logCategory, main.getConfiguration().getColorsConsoleInfoDefault(), message);
-        } else if (logCategory == LogCategory.DATA) {
-            log(Level.INFO, logCategory, main.getConfiguration().getColorsConsoleInfoData(), message);
-        } else if (logCategory == LogCategory.LANGUAGE) {
-            log(Level.INFO, logCategory, main.getConfiguration().getColorsConsoleInfoLanguage(), message);
-        }
+  public void debug(final LogCategory logCategory, final String message) {
+    if (main.getConfiguration().debug) {
+      log(Level.FINE, logCategory, main.getConfiguration().getColorsConsoleDebugDefault(), message);
     }
+  }
 
-    public void info(final String message) {
-        info(LogCategory.DEFAULT, message);
-    }
-
-    public void warn(final LogCategory logCategory, final String message) {
-        log(Level.WARNING, logCategory, main.getConfiguration().getColorsConsoleWarnDefault(), message);
-        warnLogs.add(message);
-    }
-
-    public void warn(final String message) {
-        warn(LogCategory.DEFAULT, message);
-    }
-
-    public void severe(final LogCategory logCategory, final String message) {
-        log(Level.SEVERE, logCategory, main.getConfiguration().getColorsConsoleSevereDefault(), message);
-        severeLogs.add(message);
-    }
-
-    public void severe(final String message) {
-        severe(LogCategory.DEFAULT, message);
-    }
-
-    public void debug(final LogCategory logCategory, final String message) {
-        if (main.getConfiguration().debug) {
-            log(Level.FINE, logCategory, main.getConfiguration().getColorsConsoleDebugDefault(), message);
-        }
-    }
-
-    public void debug(final String message) {
-        debug(LogCategory.DEFAULT, message);
-    }
+  public void debug(final String message) {
+    debug(LogCategory.DEFAULT, message);
+  }
 }
-

@@ -20,7 +20,6 @@ package rocks.gravili.notquests.paper.structs.objectives.hooks.slimefun;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
-import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -33,45 +32,55 @@ import rocks.gravili.notquests.paper.structs.objectives.Objective;
 
 public class SlimefunResearchObjective extends Objective {
 
+  public SlimefunResearchObjective(NotQuests main) {
+    super(main);
+  }
 
-    public SlimefunResearchObjective(NotQuests main) {
-        super(main);
+  public static void handleCommands(
+      NotQuests main,
+      PaperCommandManager<CommandSender> manager,
+      Command.Builder<CommandSender> addObjectiveBuilder) {
+    if (!main.getIntegrationsManager().isSlimefunEnabled()) {
+      return;
     }
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
-        if (!main.getIntegrationsManager().isSlimefunEnabled()) {
-            return;
-        }
+    manager.command(
+        addObjectiveBuilder
+            .argument(
+                NumberVariableValueArgument.newBuilder("amount", main, null),
+                ArgumentDescription.of("Amount to spend on research"))
+            .handler(
+                (context) -> {
+                  SlimefunResearchObjective slimefunResearchobjective =
+                      new SlimefunResearchObjective(main);
+                  slimefunResearchobjective.setProgressNeededExpression(context.get("amount"));
 
-        manager.command(addObjectiveBuilder
-                .argument(NumberVariableValueArgument.newBuilder("amount", main, null), ArgumentDescription.of("Amount to spend on research"))
-                .handler((context) -> {
-                    SlimefunResearchObjective slimefunResearchobjective = new SlimefunResearchObjective(main);
-                    slimefunResearchobjective.setProgressNeededExpression(context.get("amount"));
-
-                    main.getObjectiveManager().addObjective(slimefunResearchobjective, context);
+                  main.getObjectiveManager().addObjective(slimefunResearchobjective, context);
                 }));
-    }
+  }
 
-    @Override
-    public String getObjectiveTaskDescription(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.SlimefunResearch.base", questPlayer, activeObjective);
-    }
+  @Override
+  public String getObjectiveTaskDescription(
+      final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
+    return main.getLanguageManager()
+        .getString(
+            "chat.objectives.taskDescription.SlimefunResearch.base", questPlayer, activeObjective);
+  }
 
-    @Override
-    public void save(FileConfiguration configuration, String initialPath) {
+  @Override
+  public void save(FileConfiguration configuration, String initialPath) {}
 
-    }
+  @Override
+  public void load(FileConfiguration configuration, String initialPath) {}
 
-    @Override
-    public void load(FileConfiguration configuration, String initialPath) {
+  @Override
+  public void onObjectiveUnlock(
+      final ActiveObjective activeObjective,
+      final boolean unlockedDuringPluginStartupQuestLoadingProcess) {}
 
-    }
-
-    @Override
-    public void onObjectiveUnlock(final ActiveObjective activeObjective, final boolean unlockedDuringPluginStartupQuestLoadingProcess) {
-    }
-    @Override
-    public void onObjectiveCompleteOrLock(final ActiveObjective activeObjective, final boolean lockedOrCompletedDuringPluginStartupQuestLoadingProcess, final boolean completed) {
-    }
+  @Override
+  public void onObjectiveCompleteOrLock(
+      final ActiveObjective activeObjective,
+      final boolean lockedOrCompletedDuringPluginStartupQuestLoadingProcess,
+      final boolean completed) {}
 }

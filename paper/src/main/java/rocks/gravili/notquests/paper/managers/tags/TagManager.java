@@ -18,22 +18,21 @@
 
 package rocks.gravili.notquests.paper.managers.tags;
 
-import org.bukkit.Bukkit;
-import org.bukkit.NamespacedKey;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
-import org.jetbrains.annotations.Nullable;
-import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.managers.data.Category;
-import rocks.gravili.notquests.paper.structs.*;
-import rocks.gravili.notquests.paper.structs.triggers.ActiveTrigger;
-
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.UUID;
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
+import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.managers.data.Category;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 public class TagManager {
     private final NotQuests main;

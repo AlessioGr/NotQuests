@@ -36,32 +36,32 @@ java {
 repositories {
     mavenCentral()
 
-    maven("https://papermc.io/repo/repository/maven-public/"){
+    maven("https://papermc.io/repo/repository/maven-public/") {
         content {
             includeGroup("io.papermc.paper")
             includeGroup("net.kyori")
         }
     }
 
-    maven("https://hub.jeff-media.com/nexus/repository/jeff-media-public/"){
+    maven("https://hub.jeff-media.com/nexus/repository/jeff-media-public/") {
         content {
             includeGroup("com.jeff_media")
         }
     }
 
-    maven("https://repo.citizensnpcs.co/"){
+    maven("https://repo.citizensnpcs.co/") {
         content {
             includeGroup("net.citizensnpcs")
         }
     }
 
-    maven("https://repo.extendedclip.com/content/repositories/placeholderapi/"){
+    maven("https://repo.extendedclip.com/content/repositories/placeholderapi/") {
         content {
             includeGroup("me.clip")
         }
     }
 
-    maven("https://jitpack.io"){
+    maven("https://jitpack.io") {
         content {
             includeGroup("com.github.MilkBowl")
             includeGroup("com.github.TheBusyBiscuit")
@@ -81,8 +81,8 @@ repositories {
         }
     }
 
-    maven("https://repo.glaremasters.me/repository/towny/"){
-        content{
+    maven("https://repo.glaremasters.me/repository/towny/") {
+        content {
             includeGroup("com.palmergames.bukkit.towny")
         }
     }
@@ -93,14 +93,14 @@ repositories {
         }
     }*/
 
-    maven("https://mvn.lumine.io/repository/maven-public/"){
+    maven("https://mvn.lumine.io/repository/maven-public/") {
         content {
             includeGroup("io.lumine.xikage")
             includeGroup("io.lumine")
         }
     }
 
-    maven("https://betonquest.org/nexus/repository/betonquest/"){
+    maven("https://betonquest.org/nexus/repository/betonquest/") {
         content {
             includeGroup("org.betonquest")
         }
@@ -109,7 +109,7 @@ repositories {
         }
     }
 
-    maven("https://maven.enginehub.org/repo/"){
+    maven("https://maven.enginehub.org/repo/") {
         content {
             includeGroup("com.sk89q.worldedit")
         }
@@ -118,26 +118,26 @@ repositories {
         }
     }
 
-    maven("https://oss.sonatype.org/content/repositories/snapshots"){
+    maven("https://oss.sonatype.org/content/repositories/snapshots") {
         content {
             includeGroup("org.incendo.interfaces")
             includeGroup("cloud.commandframework")
         }
     }
 
-    maven("https://repo.thbn.me/snapshots"){
+    maven("https://repo.thbn.me/snapshots") {
         content {
             includeGroup("org.incendo.interfaces")
         }
     }
 
-    maven("https://libraries.minecraft.net/"){
+    maven("https://libraries.minecraft.net/") {
         content {
             includeGroup("com.mojang")
         }
     }
 
-    maven("https://redempt.dev"){
+    maven("https://redempt.dev") {
         content {
             includeGroup("com.github.Redempt")
         }
@@ -201,8 +201,8 @@ dependencies {
     //Interfaces
     implementation("org.incendo.interfaces:interfaces-core:1.0.0-SNAPSHOT")
 
-    implementation("org.incendo.interfaces:interfaces-paper:1.0.0-SNAPSHOT"){
-        exclude(group= "com.destroystokyo.paper", module= "paper-api")
+    implementation("org.incendo.interfaces:interfaces-paper:1.0.0-SNAPSHOT") {
+        exclude(group = "com.destroystokyo.paper", module = "paper-api")
     }
 
     //compileOnly("com.mojang:brigadier:1.0.18")

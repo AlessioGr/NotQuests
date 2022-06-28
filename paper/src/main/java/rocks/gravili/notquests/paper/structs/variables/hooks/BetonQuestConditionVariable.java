@@ -19,6 +19,8 @@
 package rocks.gravili.notquests.paper.structs.variables.hooks;
 
 import cloud.commandframework.arguments.standard.StringArgument;
+import java.util.ArrayList;
+import java.util.List;
 import org.betonquest.betonquest.BetonQuest;
 import org.betonquest.betonquest.api.config.QuestPackage;
 import org.betonquest.betonquest.config.Config;
@@ -30,92 +32,107 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class BetonQuestConditionVariable extends Variable<Boolean> {
-    private ConditionID cachedConditionID = null;
+  private ConditionID cachedConditionID = null;
 
+  public BetonQuestConditionVariable(NotQuests main) {
+    super(main);
 
-    public BetonQuestConditionVariable(NotQuests main) {
-        super(main);
+    addRequiredString(
+        StringArgument.<CommandSender>newBuilder("package")
+            .withSuggestionsProvider(
+                (context, lastString) -> {
+                  final ArrayList<String> completions =
+                      new ArrayList<>(Config.getPackages().keySet());
 
-        addRequiredString(
-                StringArgument.<CommandSender>newBuilder("package").withSuggestionsProvider((context, lastString) -> {
+                  final List<String> allArgs = context.getRawInput();
+                  main.getUtilManager()
+                      .sendFancyCommandCompletion(
+                          context.getSender(),
+                          allArgs.toArray(new String[0]),
+                          "[Package Name]",
+                          "[Event Name]");
 
-                    final ArrayList<String> completions = new ArrayList<>(Config.getPackages().keySet());
+                  return completions;
+                })
+            .build());
 
-                    final List<String> allArgs = context.getRawInput();
-                    main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Package Name]", "[Event Name]");
+    addRequiredString(
+        StringArgument.<CommandSender>newBuilder("condition")
+            .withSuggestionsProvider(
+                (context, lastString) -> {
+                  String packageName = context.get("package");
+                  final QuestPackage configPack = Config.getPackages().get(packageName);
+                  ConfigurationSection conditionsFileConfiguration =
+                      configPack.getConfig().getConfigurationSection("conditions");
+                  if (conditionsFileConfiguration == null) {
+                    return new ArrayList<>();
+                  }
+                  final ArrayList<String> completions =
+                      new ArrayList<>(conditionsFileConfiguration.getKeys(false));
 
-                    return completions;
-                }).build()
-        );
+                  final List<String> allArgs = context.getRawInput();
+                  main.getUtilManager()
+                      .sendFancyCommandCompletion(
+                          context.getSender(),
+                          allArgs.toArray(new String[0]),
+                          "[Condition Name]",
+                          "[...]");
 
-        addRequiredString(
-                StringArgument.<CommandSender>newBuilder("condition").withSuggestionsProvider((context, lastString) -> {
-                    String packageName = context.get("package");
-                    final QuestPackage configPack = Config.getPackages().get(packageName);
-                    ConfigurationSection conditionsFileConfiguration = configPack.getConfig().getConfigurationSection("conditions");
-                    if(conditionsFileConfiguration == null){
-                        return new ArrayList<>();
-                    }
-                    final ArrayList<String> completions = new ArrayList<>(conditionsFileConfiguration.getKeys(false));
+                  return completions;
+                })
+            .build());
+  }
 
-                    final List<String> allArgs = context.getRawInput();
-                    main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Condition Name]", "[...]");
-
-                    return completions;
-                }).build()
-        );
-    }
-
-    public final ConditionID getConditionID(){
-        if(cachedConditionID == null){
-            final QuestPackage configPack = Config.getPackages().get(getRequiredStringValue("package"));
-            try{
-                cachedConditionID = new ConditionID(configPack, getRequiredStringValue("condition"));
-            }catch (final ObjectNotFoundException e) {
-                main.getLogManager().warn("Tried to check BetonQuestCondition Variable, but the BetonQuest condition was not found: " + e.getMessage());
-                return null;
-            }
-        }
-        return cachedConditionID;
-    }
-
-    @Override
-    public Boolean getValue(QuestPlayer questPlayer, Object... objects) {
-        return questPlayer != null && BetonQuest.condition(questPlayer.getUniqueId().toString(), getConditionID());
-    }
-
-    @Override
-    public boolean setValueInternally(Boolean newValue, QuestPlayer questPlayer, Object... objects) {
-        return false;
-    }
-
-
-    @Override
-    public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
+  public final ConditionID getConditionID() {
+    if (cachedConditionID == null) {
+      final QuestPackage configPack = Config.getPackages().get(getRequiredStringValue("package"));
+      try {
+        cachedConditionID = new ConditionID(configPack, getRequiredStringValue("condition"));
+      } catch (final ObjectNotFoundException e) {
+        main.getLogManager()
+            .warn(
+                "Tried to check BetonQuestCondition Variable, but the BetonQuest condition was not found: "
+                    + e.getMessage());
         return null;
+      }
     }
+    return cachedConditionID;
+  }
 
-    @Override
-    public String getPlural() {
-        String together = getRequiredStringValue("package") + "." + getRequiredStringValue("condition");
-        if(together.equalsIgnoreCase(".")){
-            return "BetonQuest Conditions";
-        }else{
-            return "BetonQuest " + together + " Conditions";
-        }
-    }
+  @Override
+  public Boolean getValue(QuestPlayer questPlayer, Object... objects) {
+    return questPlayer != null
+        && BetonQuest.condition(questPlayer.getUniqueId().toString(), getConditionID());
+  }
 
-    @Override
-    public String getSingular() {
-        String together = getRequiredStringValue("package") + "." + getRequiredStringValue("condition");
-        if(together.equalsIgnoreCase(".")){
-            return "BetonQuest Condition";
-        }else{
-            return "BetonQuest " + together + " Condition";
-        }
+  @Override
+  public boolean setValueInternally(Boolean newValue, QuestPlayer questPlayer, Object... objects) {
+    return false;
+  }
+
+  @Override
+  public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
+    return null;
+  }
+
+  @Override
+  public String getPlural() {
+    String together = getRequiredStringValue("package") + "." + getRequiredStringValue("condition");
+    if (together.equalsIgnoreCase(".")) {
+      return "BetonQuest Conditions";
+    } else {
+      return "BetonQuest " + together + " Conditions";
     }
+  }
+
+  @Override
+  public String getSingular() {
+    String together = getRequiredStringValue("package") + "." + getRequiredStringValue("condition");
+    if (together.equalsIgnoreCase(".")) {
+      return "BetonQuest Condition";
+    } else {
+      return "BetonQuest " + together + " Condition";
+    }
+  }
 }

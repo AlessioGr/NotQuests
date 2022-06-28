@@ -19,8 +19,12 @@
 package rocks.gravili.notquests.paper.events;
 
 
+import static rocks.gravili.notquests.paper.commands.NotQuestColors.debugHighlightGradient;
+
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
+import java.util.HashMap;
+import java.util.Locale;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -42,7 +46,16 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerFishEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.Inventory;
@@ -55,15 +68,24 @@ import rocks.gravili.notquests.paper.conversation.ConversationPlayer;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
-import rocks.gravili.notquests.paper.structs.objectives.*;
+import rocks.gravili.notquests.paper.structs.objectives.BreakBlocksObjective;
+import rocks.gravili.notquests.paper.structs.objectives.BreedObjective;
+import rocks.gravili.notquests.paper.structs.objectives.CollectItemsObjective;
+import rocks.gravili.notquests.paper.structs.objectives.ConsumeItemsObjective;
+import rocks.gravili.notquests.paper.structs.objectives.CraftItemsObjective;
+import rocks.gravili.notquests.paper.structs.objectives.FishItemsObjective;
+import rocks.gravili.notquests.paper.structs.objectives.InteractObjective;
+import rocks.gravili.notquests.paper.structs.objectives.JumpObjective;
+import rocks.gravili.notquests.paper.structs.objectives.KillMobsObjective;
+import rocks.gravili.notquests.paper.structs.objectives.OpenBuriedTreasureObjective;
+import rocks.gravili.notquests.paper.structs.objectives.PlaceBlocksObjective;
+import rocks.gravili.notquests.paper.structs.objectives.ReachLocationObjective;
+import rocks.gravili.notquests.paper.structs.objectives.RunCommandObjective;
+import rocks.gravili.notquests.paper.structs.objectives.SmeltObjective;
+import rocks.gravili.notquests.paper.structs.objectives.SneakObjective;
 import rocks.gravili.notquests.paper.structs.triggers.ActiveTrigger;
 import rocks.gravili.notquests.paper.structs.triggers.types.WorldEnterTrigger;
 import rocks.gravili.notquests.paper.structs.triggers.types.WorldLeaveTrigger;
-
-import java.util.HashMap;
-import java.util.Locale;
-
-import static rocks.gravili.notquests.paper.commands.NotQuestColors.debugHighlightGradient;
 
 
 public class QuestEvents implements Listener {

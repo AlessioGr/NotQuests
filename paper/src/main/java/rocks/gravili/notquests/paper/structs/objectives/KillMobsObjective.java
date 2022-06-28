@@ -20,8 +20,8 @@ package rocks.gravili.notquests.paper.structs.objectives;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
-import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.paper.PaperCommandManager;
+import java.util.Map;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -31,158 +31,186 @@ import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariable
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
-import java.util.Map;
-
 public class KillMobsObjective extends Objective {
 
-    private String mobToKillType;
-    private String nameTagContainsAny = "";
-    private String nameTagEquals = "";
+  private String mobToKillType;
+  private String nameTagContainsAny = "";
+  private String nameTagEquals = "";
 
-    private String projectKorraAbility = "";
+  private String projectKorraAbility = "";
 
-    public KillMobsObjective(NotQuests main) {
-        super(main);
+  public KillMobsObjective(NotQuests main) {
+    super(main);
+  }
+
+  public static void handleCommands(
+      NotQuests main,
+      PaperCommandManager<CommandSender> manager,
+      Command.Builder<CommandSender> addObjectiveBuilder) {
+    addObjectiveBuilder =
+        addObjectiveBuilder
+            .argument(
+                EntityTypeSelector.of("entityType", main),
+                ArgumentDescription.of("Type of Entity the player has to kill."))
+            .argument(
+                NumberVariableValueArgument.newBuilder("amount", main, null),
+                ArgumentDescription.of("Amount of kills needed"))
+            .flag(main.getCommandManager().nametag_equals)
+            .flag(main.getCommandManager().nametag_containsany);
+
+    if (main.getIntegrationsManager().isProjectKorraEnabled()) {
+      addObjectiveBuilder =
+          addObjectiveBuilder.flag(main.getCommandManager().withProjectKorraAbilityFlag);
     }
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
-        addObjectiveBuilder = addObjectiveBuilder
-                .argument(EntityTypeSelector.of("entityType", main), ArgumentDescription.of("Type of Entity the player has to kill."))
-                .argument(NumberVariableValueArgument.newBuilder("amount", main, null), ArgumentDescription.of("Amount of kills needed"))
-                .flag(main.getCommandManager().nametag_equals)
-                .flag(main.getCommandManager().nametag_containsany);
+    addObjectiveBuilder =
+        addObjectiveBuilder.handler(
+            (context) -> {
+              final String entityType = context.get("entityType");
+              final String amountToKillExpression = context.get("amount");
 
-        if(main.getIntegrationsManager().isProjectKorraEnabled()){
-            addObjectiveBuilder = addObjectiveBuilder.flag(main.getCommandManager().withProjectKorraAbilityFlag);
-        }
+              final String[] a =
+                  context
+                      .flags()
+                      .getValue(main.getCommandManager().nametag_equals, new String[] {""});
+              final String[] b =
+                  context
+                      .flags()
+                      .getValue(main.getCommandManager().nametag_containsany, new String[] {""});
+              final String nametag_equals = String.join(" ", a);
+              final String nametag_containsany = String.join(" ", b);
 
-        addObjectiveBuilder = addObjectiveBuilder.handler((context) -> {
+              KillMobsObjective killMobsObjective = new KillMobsObjective(main);
 
-            final String entityType = context.get("entityType");
-            final String amountToKillExpression = context.get("amount");
+              killMobsObjective.setMobToKillType(entityType);
+              killMobsObjective.setProgressNeededExpression(amountToKillExpression);
 
-            final String[] a = context.flags().getValue(main.getCommandManager().nametag_equals, new String[]{""});
-            final String[] b = context.flags().getValue(main.getCommandManager().nametag_containsany, new String[]{""});
-            final String nametag_equals = String.join(" ", a);
-            final String nametag_containsany = String.join(" ", b);
+              // Add flags
+              killMobsObjective.setNameTagEquals(nametag_equals);
+              killMobsObjective.setNameTagContainsAny(nametag_containsany);
 
-            KillMobsObjective killMobsObjective = new KillMobsObjective(main);
-
-            killMobsObjective.setMobToKillType(entityType);
-            killMobsObjective.setProgressNeededExpression(amountToKillExpression);
-
-            //Add flags
-            killMobsObjective.setNameTagEquals(nametag_equals);
-            killMobsObjective.setNameTagContainsAny(nametag_containsany);
-
-            if(main.getIntegrationsManager().isProjectKorraEnabled()){
-                final String abilityName = context.flags().getValue(main.getCommandManager().withProjectKorraAbilityFlag, "");
+              if (main.getIntegrationsManager().isProjectKorraEnabled()) {
+                final String abilityName =
+                    context
+                        .flags()
+                        .getValue(main.getCommandManager().withProjectKorraAbilityFlag, "");
                 killMobsObjective.setProjectKorraAbility(abilityName);
-            }
+              }
 
+              main.getObjectiveManager().addObjective(killMobsObjective, context);
 
-            main.getObjectiveManager().addObjective(killMobsObjective, context);
+              if (!nametag_equals.isBlank()) {
+                context
+                    .getSender()
+                    .sendMessage(
+                        main.parse(
+                            "<main>With nametag_equals flag: <highlight>"
+                                + nametag_equals
+                                + "</highlight>!"));
+              }
+              if (!nametag_containsany.isBlank()) {
+                context
+                    .getSender()
+                    .sendMessage(
+                        main.parse(
+                            "main>With nametag_containsany flag: <highlight>"
+                                + nametag_containsany
+                                + "</highlight>!"));
+              }
+            });
 
+    manager.command(addObjectiveBuilder);
+  }
 
-            if (!nametag_equals.isBlank()) {
-                context.getSender().sendMessage(main.parse(
-                        "<main>With nametag_equals flag: <highlight>"
-                                + nametag_equals + "</highlight>!"
-                ));
-            }
-            if (!nametag_containsany.isBlank()) {
-                context.getSender().sendMessage(main.parse(
-                        "main>With nametag_containsany flag: <highlight>"
-                                + nametag_containsany + "</highlight>!"
-                ));
-            }
+  @Override
+  public String getObjectiveTaskDescription(
+      final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
+    return main.getLanguageManager()
+        .getString(
+            "chat.objectives.taskDescription.killMobs.base",
+            questPlayer,
+            activeObjective,
+            Map.of("%MOBTOKILL%", getMobToKill()));
+  }
 
-        });
+  public void setMobToKillType(final String mobToKillType) {
+    this.mobToKillType = mobToKillType;
+  }
 
-        manager.command(addObjectiveBuilder);
+  @Override
+  public void save(FileConfiguration configuration, String initialPath) {
+    configuration.set(initialPath + ".specifics.mobToKill", getMobToKill());
+
+    // Extra args
+    if (!getNameTagContainsAny().isBlank()) {
+      configuration.set(initialPath + ".extras.nameTagContainsAny", getNameTagContainsAny());
+    }
+    if (!getNameTagEquals().isBlank()) {
+      configuration.set(initialPath + ".extras.nameTagEquals", getNameTagEquals());
     }
 
+    if (!projectKorraAbility.isBlank()) {
+      configuration.set(initialPath + ".extras.projectKorraAbility", getProjectKorraAbility());
+    }
+  }
 
-    @Override
-    public String getObjectiveTaskDescription(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.killMobs.base", questPlayer, activeObjective, Map.of(
-                "%MOBTOKILL%", getMobToKill()
-        ));
+  @Override
+  public void onObjectiveUnlock(
+      final ActiveObjective activeObjective,
+      final boolean unlockedDuringPluginStartupQuestLoadingProcess) {}
+
+  @Override
+  public void onObjectiveCompleteOrLock(
+      final ActiveObjective activeObjective,
+      final boolean lockedOrCompletedDuringPluginStartupQuestLoadingProcess,
+      final boolean completed) {}
+
+  public final String getProjectKorraAbility() {
+    return projectKorraAbility;
+  }
+
+  public void setProjectKorraAbility(final String projectKorraAbility) {
+    this.projectKorraAbility = projectKorraAbility;
+  }
+
+  public final String getMobToKill() {
+    return mobToKillType;
+  }
+
+  // Extra args
+  public final String getNameTagContainsAny() {
+    return nameTagContainsAny;
+  }
+
+  public void setNameTagContainsAny(final String nameTagContainsAny) {
+    this.nameTagContainsAny = nameTagContainsAny;
+  }
+
+  public final String getNameTagEquals() {
+    return nameTagEquals;
+  }
+
+  public void setNameTagEquals(final String nameTagEquals) {
+    this.nameTagEquals = nameTagEquals;
+  }
+
+  @Override
+  public void load(FileConfiguration configuration, String initialPath) {
+    mobToKillType = configuration.getString(initialPath + ".specifics.mobToKill");
+
+    // Extras
+    final String nameTagContains =
+        configuration.getString(initialPath + ".extras.nameTagContainsAny", "");
+    if (!nameTagContains.isBlank()) {
+      setNameTagContainsAny(nameTagContains);
     }
 
-    public void setMobToKillType(final String mobToKillType) {
-        this.mobToKillType = mobToKillType;
+    final String nameTagEquals = configuration.getString(initialPath + ".extras.nameTagEquals", "");
+    if (!nameTagEquals.isBlank()) {
+      setNameTagEquals(nameTagEquals);
     }
 
-    @Override
-    public void save(FileConfiguration configuration, String initialPath) {
-        configuration.set(initialPath + ".specifics.mobToKill", getMobToKill());
-
-        //Extra args
-        if (!getNameTagContainsAny().isBlank()) {
-            configuration.set(initialPath + ".extras.nameTagContainsAny", getNameTagContainsAny());
-        }
-        if (!getNameTagEquals().isBlank()) {
-            configuration.set(initialPath + ".extras.nameTagEquals", getNameTagEquals());
-        }
-
-        if(!projectKorraAbility.isBlank()){
-            configuration.set(initialPath + ".extras.projectKorraAbility", getProjectKorraAbility());
-        }
-    }
-
-    @Override
-    public void onObjectiveUnlock(final ActiveObjective activeObjective, final boolean unlockedDuringPluginStartupQuestLoadingProcess) {
-    }
-    @Override
-    public void onObjectiveCompleteOrLock(final ActiveObjective activeObjective, final boolean lockedOrCompletedDuringPluginStartupQuestLoadingProcess, final boolean completed) {
-    }
-
-    public final String getProjectKorraAbility(){
-        return projectKorraAbility;
-    }
-
-    public void setProjectKorraAbility(final String projectKorraAbility){
-        this.projectKorraAbility = projectKorraAbility;
-    }
-
-    public final String getMobToKill() {
-        return mobToKillType;
-    }
-
-    //Extra args
-    public final String getNameTagContainsAny() {
-        return nameTagContainsAny;
-    }
-
-    public void setNameTagContainsAny(final String nameTagContainsAny) {
-        this.nameTagContainsAny = nameTagContainsAny;
-    }
-
-    public final String getNameTagEquals() {
-        return nameTagEquals;
-    }
-
-    public void setNameTagEquals(final String nameTagEquals) {
-        this.nameTagEquals = nameTagEquals;
-    }
-
-    @Override
-    public void load(FileConfiguration configuration, String initialPath) {
-        mobToKillType = configuration.getString(initialPath + ".specifics.mobToKill");
-
-        //Extras
-        final String nameTagContains = configuration.getString(initialPath + ".extras.nameTagContainsAny", "");
-        if (!nameTagContains.isBlank()) {
-            setNameTagContainsAny(nameTagContains);
-        }
-
-        final String nameTagEquals = configuration.getString(initialPath + ".extras.nameTagEquals", "");
-        if (!nameTagEquals.isBlank()) {
-            setNameTagEquals(nameTagEquals);
-        }
-
-        setProjectKorraAbility(configuration.getString(initialPath + ".extras.projectKorraAbility", ""));
-
-    }
+    setProjectKorraAbility(
+        configuration.getString(initialPath + ".extras.projectKorraAbility", ""));
+  }
 }

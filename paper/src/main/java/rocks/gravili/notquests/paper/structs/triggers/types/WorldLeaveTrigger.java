@@ -24,6 +24,8 @@ import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
+import java.util.ArrayList;
+import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
@@ -31,69 +33,82 @@ import org.bukkit.configuration.file.FileConfiguration;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.triggers.Trigger;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class WorldLeaveTrigger extends Trigger {
 
-    private String worldToLeaveName;
+  private String worldToLeaveName;
 
-    public WorldLeaveTrigger(final NotQuests main) {
-        super(main);
-    }
+  public WorldLeaveTrigger(final NotQuests main) {
+    super(main);
+  }
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addTriggerBuilder) {
-        manager.command(addTriggerBuilder
-                .argument(StringArgument.<CommandSender>newBuilder("world to leave").withSuggestionsProvider(
+  public static void handleCommands(
+      NotQuests main,
+      PaperCommandManager<CommandSender> manager,
+      Command.Builder<CommandSender> addTriggerBuilder) {
+    manager.command(
+        addTriggerBuilder
+            .argument(
+                StringArgument.<CommandSender>newBuilder("world to leave")
+                    .withSuggestionsProvider(
                         (context, lastString) -> {
-                            final List<String> allArgs = context.getRawInput();
-                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[World Name / 'ALL']", "[Amount of Leaves]");
+                          final List<String> allArgs = context.getRawInput();
+                          main.getUtilManager()
+                              .sendFancyCommandCompletion(
+                                  context.getSender(),
+                                  allArgs.toArray(new String[0]),
+                                  "[World Name / 'ALL']",
+                                  "[Amount of Leaves]");
 
-                            ArrayList<String> completions = new ArrayList<>();
+                          ArrayList<String> completions = new ArrayList<>();
 
-                            completions.add("ALL");
+                          completions.add("ALL");
 
-                            for (final World world : Bukkit.getWorlds()) {
-                                completions.add(world.getName());
-                            }
+                          for (final World world : Bukkit.getWorlds()) {
+                            completions.add(world.getName());
+                          }
 
-                            return completions;
-                        }
-                ).single().build(), ArgumentDescription.of("Name of the world which needs to be left"))
-                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of times the world needs to be left."))
-                .flag(main.getCommandManager().applyOn)
-                .flag(main.getCommandManager().triggerWorldString)
-                .meta(CommandMeta.DESCRIPTION, "Triggers when the player leaves a specific world.")
-                .handler((context) -> {
-                    final String worldToLeaveName = context.get("world to leave");
+                          return completions;
+                        })
+                    .single()
+                    .build(),
+                ArgumentDescription.of("Name of the world which needs to be left"))
+            .argument(
+                IntegerArgument.<CommandSender>newBuilder("amount").withMin(1),
+                ArgumentDescription.of("Amount of times the world needs to be left."))
+            .flag(main.getCommandManager().applyOn)
+            .flag(main.getCommandManager().triggerWorldString)
+            .meta(CommandMeta.DESCRIPTION, "Triggers when the player leaves a specific world.")
+            .handler(
+                (context) -> {
+                  final String worldToLeaveName = context.get("world to leave");
 
-                    WorldLeaveTrigger worldLeaveTrigger = new WorldLeaveTrigger(main);
-                    worldLeaveTrigger.setWorldToLeaveName(worldToLeaveName);
+                  WorldLeaveTrigger worldLeaveTrigger = new WorldLeaveTrigger(main);
+                  worldLeaveTrigger.setWorldToLeaveName(worldToLeaveName);
 
-                    main.getTriggerManager().addTrigger(worldLeaveTrigger, context);
+                  main.getTriggerManager().addTrigger(worldLeaveTrigger, context);
                 }));
-    }
+  }
 
-    public final String getWorldToLeaveName() {
-        return worldToLeaveName;
-    }
+  public final String getWorldToLeaveName() {
+    return worldToLeaveName;
+  }
 
-    public void setWorldToLeaveName(final String worldToLeaveName) {
-        this.worldToLeaveName = worldToLeaveName;
-    }
+  public void setWorldToLeaveName(final String worldToLeaveName) {
+    this.worldToLeaveName = worldToLeaveName;
+  }
 
-    @Override
-    public void save(FileConfiguration configuration, String initialPath) {
-        configuration.set(initialPath + ".specifics.worldToLeave", getWorldToLeaveName());
-    }
+  @Override
+  public void save(FileConfiguration configuration, String initialPath) {
+    configuration.set(initialPath + ".specifics.worldToLeave", getWorldToLeaveName());
+  }
 
-    @Override
-    public String getTriggerDescription() {
-        return "World to leave: <WHITE>" + getWorldToLeaveName();
-    }
+  @Override
+  public String getTriggerDescription() {
+    return "World to leave: <WHITE>" + getWorldToLeaveName();
+  }
 
-    @Override
-    public void load(FileConfiguration configuration, String initialPath) {
-        this.worldToLeaveName = configuration.getString(initialPath + ".specifics.worldToLeave", "ALL");
-    }
+  @Override
+  public void load(FileConfiguration configuration, String initialPath) {
+    this.worldToLeaveName = configuration.getString(initialPath + ".specifics.worldToLeave", "ALL");
+  }
 }

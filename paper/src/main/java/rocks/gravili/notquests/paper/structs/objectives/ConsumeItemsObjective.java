@@ -21,6 +21,7 @@ package rocks.gravili.notquests.paper.structs.objectives;
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.paper.PaperCommandManager;
+import java.util.Map;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -31,90 +32,104 @@ import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelect
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
-import java.util.Map;
-
 public class ConsumeItemsObjective extends Objective {
 
-    private ItemStackSelection itemStackSelection;
+  private ItemStackSelection itemStackSelection;
 
-    public ConsumeItemsObjective(NotQuests main) {
-        super(main);
-    }
+  public ConsumeItemsObjective(NotQuests main) {
+    super(main);
+  }
 
-    public final ItemStackSelection getItemStackSelection(){
-        return itemStackSelection;
-    }
+  public static void handleCommands(
+      NotQuests main,
+      PaperCommandManager<CommandSender> manager,
+      Command.Builder<CommandSender> addObjectiveBuilder) {
+    manager.command(
+        addObjectiveBuilder
+            .argument(
+                ItemStackSelectionArgument.of("materials", main),
+                ArgumentDescription.of("Material of the item which needs to be consumed"))
+            .argument(
+                NumberVariableValueArgument.newBuilder("amount", main, null),
+                ArgumentDescription.of("Amount of items which need to be consumed"))
+            .handler(
+                (context) -> {
+                  final String amountExpression = context.get("amount");
 
-    public void setItemStackSelection(final ItemStackSelection itemStackSelection){
-        this.itemStackSelection = itemStackSelection;
-    }
+                  final ItemStackSelection itemStackSelection = context.get("materials");
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
-        manager.command(addObjectiveBuilder
-                .argument(ItemStackSelectionArgument.of("materials", main), ArgumentDescription.of("Material of the item which needs to be consumed"))
-                .argument(NumberVariableValueArgument.newBuilder("amount", main, null), ArgumentDescription.of("Amount of items which need to be consumed"))
-                .handler((context) -> {
-                    final String amountExpression = context.get("amount");
+                  ConsumeItemsObjective consumeItemsObjective = new ConsumeItemsObjective(main);
+                  consumeItemsObjective.setItemStackSelection(itemStackSelection);
 
-                    final ItemStackSelection itemStackSelection = context.get("materials");
+                  consumeItemsObjective.setProgressNeededExpression(amountExpression);
 
-                    ConsumeItemsObjective consumeItemsObjective = new ConsumeItemsObjective(main);
-                    consumeItemsObjective.setItemStackSelection(itemStackSelection);
-
-                    consumeItemsObjective.setProgressNeededExpression(amountExpression);
-
-                    main.getObjectiveManager().addObjective(consumeItemsObjective, context);
-
+                  main.getObjectiveManager().addObjective(consumeItemsObjective, context);
                 }));
-    }
+  }
 
+  public final ItemStackSelection getItemStackSelection() {
+    return itemStackSelection;
+  }
 
-    @Override
-    public void onObjectiveUnlock(final ActiveObjective activeObjective, final boolean unlockedDuringPluginStartupQuestLoadingProcess) {
-    }
-    @Override
-    public void onObjectiveCompleteOrLock(final ActiveObjective activeObjective, final boolean lockedOrCompletedDuringPluginStartupQuestLoadingProcess, final boolean completed) {
-    }
+  public void setItemStackSelection(final ItemStackSelection itemStackSelection) {
+    this.itemStackSelection = itemStackSelection;
+  }
 
+  @Override
+  public void onObjectiveUnlock(
+      final ActiveObjective activeObjective,
+      final boolean unlockedDuringPluginStartupQuestLoadingProcess) {}
 
+  @Override
+  public void onObjectiveCompleteOrLock(
+      final ActiveObjective activeObjective,
+      final boolean lockedOrCompletedDuringPluginStartupQuestLoadingProcess,
+      final boolean completed) {}
 
-    @Override
-    public String getObjectiveTaskDescription(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
-        return main.getLanguageManager().getString("chat.objectives.taskDescription.consumeItems.base", questPlayer, activeObjective, Map.of(
+  @Override
+  public String getObjectiveTaskDescription(
+      final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
+    return main.getLanguageManager()
+        .getString(
+            "chat.objectives.taskDescription.consumeItems.base",
+            questPlayer,
+            activeObjective,
+            Map.of(
                 "%ITEMTOCONSUMETYPE%", getItemStackSelection().getAllMaterialsListed(),
                 "%ITEMTOCONSUMENAME%", "",
                 "%(%", "",
-                "%)%", ""
-        ));
+                "%)%", ""));
+  }
 
+  @Override
+  public void save(FileConfiguration configuration, String initialPath) {
+    getItemStackSelection()
+        .saveToFileConfiguration(configuration, initialPath + ".specifics.itemStackSelection");
+  }
 
+  @Override
+  public void load(FileConfiguration configuration, String initialPath) {
+    this.itemStackSelection = new ItemStackSelection(main);
+    itemStackSelection.loadFromFileConfiguration(
+        configuration, initialPath + ".specifics.itemStackSelection");
+
+    // Convert old to new
+    if (configuration.contains(initialPath + ".specifics.nqitem")
+        || configuration.contains(initialPath + ".specifics.itemToConsume.itemstack")) {
+      main.getLogManager().info("Converting old ConsumeItemsObjective to new one...");
+      final String nqItemName = configuration.getString(initialPath + ".specifics.nqitem", "");
+
+      if (nqItemName.isBlank()) {
+        itemStackSelection.addItemStack(
+            configuration.getItemStack(initialPath + ".specifics.itemToConsume.itemstack"));
+      } else {
+        itemStackSelection.addNqItemName(nqItemName);
+      }
+      itemStackSelection.saveToFileConfiguration(
+          configuration, initialPath + ".specifics.itemStackSelection");
+      configuration.set(initialPath + ".specifics.nqitem", null);
+      configuration.set(initialPath + ".specifics.itemToConsume.itemstack", null);
+      // Let's hope it saves somewhere, else conversion will happen again...
     }
-
-    @Override
-    public void save(FileConfiguration configuration, String initialPath) {
-        getItemStackSelection().saveToFileConfiguration(configuration, initialPath + ".specifics.itemStackSelection");
-    }
-
-    @Override
-    public void load(FileConfiguration configuration, String initialPath) {
-        this.itemStackSelection = new ItemStackSelection(main);
-        itemStackSelection.loadFromFileConfiguration(configuration, initialPath + ".specifics.itemStackSelection");
-
-        //Convert old to new
-        if(configuration.contains(initialPath + ".specifics.nqitem") || configuration.contains(initialPath + ".specifics.itemToConsume.itemstack")){
-            main.getLogManager().info("Converting old ConsumeItemsObjective to new one...");
-            final String nqItemName = configuration.getString(initialPath + ".specifics.nqitem", "");
-
-            if(nqItemName.isBlank()){
-                itemStackSelection.addItemStack(configuration.getItemStack(initialPath + ".specifics.itemToConsume.itemstack"));
-            }else{
-                itemStackSelection.addNqItemName(nqItemName);
-            }
-            itemStackSelection.saveToFileConfiguration(configuration, initialPath + ".specifics.itemStackSelection");
-            configuration.set(initialPath + ".specifics.nqitem", null);
-            configuration.set(initialPath + ".specifics.itemToConsume.itemstack", null);
-            //Let's hope it saves somewhere, else conversion will happen again...
-        }
-
-    }
+  }
 }

@@ -30,38 +30,38 @@ import rocks.gravili.notquests.paper.structs.triggers.Trigger;
 
 public class DeathTrigger extends Trigger {
 
+  public DeathTrigger(final NotQuests main) {
+    super(main);
+  }
 
-    public DeathTrigger(final NotQuests main) {
-        super(main);
-    }
+  public static void handleCommands(
+      NotQuests main,
+      PaperCommandManager<CommandSender> manager,
+      Command.Builder<CommandSender> addTriggerBuilder) {
+    manager.command(
+        addTriggerBuilder
+            .argument(
+                IntegerArgument.<CommandSender>newBuilder("amount").withMin(1),
+                ArgumentDescription.of("Amount of deaths needed for the Trigger to trigger."))
+            .flag(main.getCommandManager().applyOn)
+            .flag(main.getCommandManager().triggerWorldString)
+            .meta(CommandMeta.DESCRIPTION, "Triggers when a the Player dies.")
+            .handler(
+                (context) -> {
+                  DeathTrigger deathTrigger = new DeathTrigger(main);
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addTriggerBuilder) {
-        manager.command(addTriggerBuilder
-                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of deaths needed for the Trigger to trigger."))
-                .flag(main.getCommandManager().applyOn)
-                .flag(main.getCommandManager().triggerWorldString)
-                .meta(CommandMeta.DESCRIPTION, "Triggers when a the Player dies.")
-                .handler((context) -> {
-                    DeathTrigger deathTrigger = new DeathTrigger(main);
-
-                    main.getTriggerManager().addTrigger(deathTrigger, context);
+                  main.getTriggerManager().addTrigger(deathTrigger, context);
                 }));
-    }
+  }
 
-    @Override
-    public void save(FileConfiguration configuration, String initialPath) {
+  @Override
+  public void save(FileConfiguration configuration, String initialPath) {}
 
-    }
+  @Override
+  public String getTriggerDescription() {
+    return null;
+  }
 
-    @Override
-    public String getTriggerDescription() {
-        return null;
-    }
-
-    @Override
-    public void load(FileConfiguration configuration, String initialPath) {
-
-    }
-
-
+  @Override
+  public void load(FileConfiguration configuration, String initialPath) {}
 }
