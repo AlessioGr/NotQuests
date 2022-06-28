@@ -201,6 +201,7 @@ public class NumberVariableObjective extends Objective { // TODO: Not done yet
       final ActiveObjective activeObjective,
       final boolean unlockedDuringPluginStartupQuestLoadingProcess) {
     activeObjective.getQuestPlayer().setHasActiveVariableObjectives(true);
+    updateProgress(activeObjective);
   }
 
   @Override
@@ -281,7 +282,8 @@ public class NumberVariableObjective extends Objective { // TODO: Not done yet
     final QuestPlayer questPlayer = activeObjective.getQuestPlayer();
     questPlayer.sendDebugMessage("Updating progress for number variable objective. Variable: " + getVariableName());
     if (cachedVariable == null) {
-      return;
+      questPlayer.sendDebugMessage("Cached variable is null. Caching...");
+      initializeExpressionAndCachedVariable(getVariableName());
     }
 
     if (additionalStringArguments != null && !additionalStringArguments.isEmpty()) {
@@ -297,6 +299,8 @@ public class NumberVariableObjective extends Objective { // TODO: Not done yet
     Object value = cachedVariable.getValue(questPlayer);
 
     final double numberRequirement = activeObjective.getProgressNeeded();
+
+    questPlayer.sendDebugMessage("Math operator: " + getMathOperator());
 
     if(getMathOperator().equalsIgnoreCase("moreThan") || getMathOperator().equalsIgnoreCase("moreOrEqualThan")){
       //Here we can just add the default progress. That's because when moreThan is used, the progress was already adjusted to be +1 higher than wanted
