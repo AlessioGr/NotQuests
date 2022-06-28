@@ -208,21 +208,25 @@ public class CitizensEvents implements Listener {
                 }
                 questPlayer.removeCompletedQuests();
             }
+
+
+            //Return if another action already happened
+            if (handledObjective) {
+                return;
+            }
+
+            //Quest Preview
+            main.getQuestManager().sendQuestsPreviewOfQuestShownNPCs(npc, questPlayer);
+
+            //Conversations
+            final Conversation foundConversation = main.getConversationManager().getConversationForNPCID(npc.getId());
+            if (foundConversation != null) {
+                main.getConversationManager().playConversation(questPlayer, foundConversation);
+            }
+
         }
 
-        //Return if another action already happened
-        if (handledObjective) {
-            return;
-        }
 
-        //Quest Preview
-        main.getQuestManager().sendQuestsPreviewOfQuestShownNPCs(npc, questPlayer);
-
-        //Conversations
-        final Conversation foundConversation = main.getConversationManager().getConversationForNPCID(npc.getId());
-        if (foundConversation != null) {
-            main.getConversationManager().playConversation(questPlayer, foundConversation);
-        }
 
 
     }
