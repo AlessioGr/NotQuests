@@ -84,6 +84,8 @@ chat:
         deliver-to-armorstand-not-available: '    <GRAY>The target Armor Stand is currently not available!'
       escortNPC:
         base: '    <veryUnimportant>└─ <unimportant>Escort <main>%NPCNAME% <unimportant>to <main>%DESTINATIONNPCNAME%'
+      fishItems:
+        base: '    <veryUnimportant>└─ <unimportant>Fish Items: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
       killMobs:
         base: '    <veryUnimportant>└─ <unimportant>Mobs to kill: <main>%MOBTOKILL%'
       otherQuest:
