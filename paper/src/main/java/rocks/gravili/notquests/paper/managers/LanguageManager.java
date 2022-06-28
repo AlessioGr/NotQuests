@@ -433,8 +433,8 @@ public class LanguageManager {
                 internalPlaceholderReplacements.put("%OBJECTIVEID%", () -> "" + activeObjective.getObjective().getObjectiveID());
                 internalPlaceholderReplacements.put("%ACTIVEOBJECTIVEID%", () -> "" + activeObjective.getObjective().getObjectiveID());
                 internalPlaceholderReplacements.put("%OBJECTIVENAME%", () -> "" + activeObjective.getObjective().getFinalName());
-                internalPlaceholderReplacements.put("%ACTIVEOBJECTIVEPROGRESS%", () -> "" + activeObjective.getCurrentProgress());
-                internalPlaceholderReplacements.put("%OBJECTIVEPROGRESSNEEDED%", () -> "" + activeObjective.getProgressNeeded());
+                internalPlaceholderReplacements.put("%ACTIVEOBJECTIVEPROGRESS%", () -> String.format("%.2f", activeObjective.getCurrentProgress()));
+                internalPlaceholderReplacements.put("%OBJECTIVEPROGRESSNEEDED%", () -> String.format("%.2f", activeObjective.getProgressNeeded()));
                 internalPlaceholderReplacements.put("%OBJECTIVEPROGRESSPERCENTAGE%", () -> "" + (int) ((float) ((float) activeObjective.getCurrentProgress() / (float) activeObjective.getProgressNeeded()) * 100));
                 internalPlaceholderReplacements.put("%OBJECTIVETASKDESCRIPTION%", () -> main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), false, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), activeObjective));
                 internalPlaceholderReplacements.put("%COMPLETEDOBJECTIVETASKDESCRIPTION%", () -> main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), true, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), activeObjective));
