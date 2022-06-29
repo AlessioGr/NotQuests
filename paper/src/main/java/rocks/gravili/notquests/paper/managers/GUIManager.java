@@ -22,11 +22,13 @@ import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -985,21 +987,24 @@ public class GUIManager {
             .build();
   }
 
-  public ChestInterface constructMainInterface(Component title) {
-    ItemStack separatorItemStack1 = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
-    ItemMeta separatorItemStack1Meta = separatorItemStack1.getItemMeta();
+  public final ChestInterface constructMainInterface(final Component title) {
+    final ItemStack separatorItemStack1 = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+    final ItemMeta separatorItemStack1Meta = separatorItemStack1.getItemMeta();
     separatorItemStack1Meta.displayName(Component.text(" "));
     separatorItemStack1.setItemMeta(separatorItemStack1Meta);
 
-    ItemStack separatorItemStack2 = new ItemStack(Material.WHITE_STAINED_GLASS_PANE);
-    ItemMeta separatorItemStack2Meta = separatorItemStack2.getItemMeta();
+    final ItemStack separatorItemStack2 = new ItemStack(Material.WHITE_STAINED_GLASS_PANE);
+    final ItemMeta separatorItemStack2Meta = separatorItemStack2.getItemMeta();
     separatorItemStack2Meta.displayName(Component.text(" "));
     separatorItemStack2.setItemMeta(separatorItemStack2Meta);
 
-    ItemStack separatorItemStack3 = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
-    ItemMeta separatorItemStack3Meta = separatorItemStack3.getItemMeta();
+    final ItemStack separatorItemStack3 = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
+    final ItemMeta separatorItemStack3Meta = separatorItemStack3.getItemMeta();
     separatorItemStack3Meta.displayName(Component.text(" "));
     separatorItemStack3.setItemMeta(separatorItemStack3Meta);
+
+    final ConfigurationSection mainBackgroundConfigurationSection = main.getLanguageManager().getLanguageConfig().getConfigurationSection("gui.main.background");
+    final Set<String> keys = mainBackgroundConfigurationSection != null ? mainBackgroundConfigurationSection.getKeys(false) : null;
 
     return ChestInterface.builder()
         // This interface will have one row.
@@ -1013,6 +1018,27 @@ public class GUIManager {
         .addTransform(
             (pane, view) -> {
               ChestPane result = pane;
+              if(mainBackgroundConfigurationSection != null){
+                int counter = 0;
+                for (final String backgroundID : keys) { //TODO: Improve performance
+                  counter++; //TODO: make this clean and let them actually customize the block
+                  final int xStart = mainBackgroundConfigurationSection.getInt(backgroundID + ".xStart", -1);
+                  final int xEnd = mainBackgroundConfigurationSection.getInt(backgroundID + ".xEnd", -1);
+                  final int yStart = mainBackgroundConfigurationSection.getInt(backgroundID + ".yStart", -1);
+                  final int yEnd = mainBackgroundConfigurationSection.getInt(backgroundID + ".yEnd", -1);
+                  for (int x = xStart; x <= xEnd; x++) {
+                    for (int y = yStart; y <= yEnd; y++) {
+                      if(counter == 3){
+                        result = result.element(ItemStackElement.of(separatorItemStack2), x, y);
+                      }else {
+                        result = result.element(ItemStackElement.of(separatorItemStack1), x, y);
+                      }
+
+                    }
+                  }
+                }
+              }
+
               for (int x = 0; x <= 8; x++) {
                 result = result.element(ItemStackElement.of(separatorItemStack1), x, 0);
               }

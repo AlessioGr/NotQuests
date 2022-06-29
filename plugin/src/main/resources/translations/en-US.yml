@@ -170,6 +170,27 @@ placeholders:
 gui:
   main:
     title: '                <highlight2>Quests'
+    background:
+        1:
+          xStart: 0
+          xEnd: 8
+          yStart: 0
+          yEnd: 0
+        2:
+          xStart: 0
+          xEnd: 0
+          yStart: 0
+          yEnd: 5
+        3:
+          xStart: 1
+          xEnd: 1
+          yStart: 0
+          yEnd: 5
+        4:
+          xStart: 2
+          xEnd: 2
+          yStart: 0
+          yEnd: 5
     button:
       questpoints:
         name: "<highlight>Quest Points"
