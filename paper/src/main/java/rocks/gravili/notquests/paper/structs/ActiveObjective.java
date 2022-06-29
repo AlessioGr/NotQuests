@@ -135,10 +135,13 @@ public class ActiveObjective {
         setUnlocked(true, notifyPlayer, triggerAcceptQuestTrigger);
     }
 
-    public final boolean canProgress() {
+    public final boolean canProgress(final boolean checkForProgressDecrease) {
         getQuestPlayer().sendDebugMessage("Checking if objective can progress...");
 
         for (final Condition condition : objective.getProgressConditions()){
+            if(checkForProgressDecrease && condition.isObjectiveConditionSpecific_allowProgressDecreaseIfNotFulfilled()) {
+                continue;
+            }
             String check = condition.check(getQuestPlayer());
             getQuestPlayer().sendDebugMessage("Condition status for " + objective.getFinalName() + ": " + check);
 
@@ -212,7 +215,7 @@ public class ActiveObjective {
     }
 
     public void addProgress(double progressToAdd, final int npcID, final UUID armorStandUUID, boolean silent) {
-        if(main.getDataManager().isDisabled() || !canProgress()){
+        if(main.getDataManager().isDisabled() || !canProgress(false)){
             return;
         }
         currentProgress += progressToAdd;
@@ -241,6 +244,11 @@ public class ActiveObjective {
         }
         if(i < 0) {
             main.getLogManager().severe("Tried to remove negative progress (=> add progress) from objective " + getObjective().getFinalName() + " of quest " + getActiveQuest().getQuest().getQuestFinalName() + "!");
+            return;
+        }
+
+        //Setting the first argument to true only checks for progress decrease. If the "--allowProgressDecreaseIfNotFulfilled" flag is set for that condition, it would be skipped
+        if(canProgress(true)) {
             return;
         }
 

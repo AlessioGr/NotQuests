@@ -598,6 +598,19 @@ public abstract class Objective {
                     + ".description",
                 condition.getDescription());
 
+        quest
+            .getCategory()
+            .getQuestsConfig()
+            .set(
+                "quests."
+                    + quest.getQuestName()
+                    + ".objectives."
+                    + getObjectiveID()
+                    + ".conditionsProgress."
+                    + condition.getConditionID()
+                    + ".allowProgressDecreaseIfNotFulfilled",
+                condition.isObjectiveConditionSpecific_allowProgressDecreaseIfNotFulfilled());
+
         condition.save(
             quest.getCategory().getQuestsConfig(),
             "quests."

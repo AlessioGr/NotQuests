@@ -39,7 +39,9 @@ public class ItemStackSelection {
   }
 
   public void addNqItemName(final String nqItemName) {
-    this.nqItems.add(main.getItemsManager().getItem(nqItemName));
+    if(nqItemName != null) {
+      addNqItem(main.getItemsManager().getItem(nqItemName));
+    }
   }
 
   public void addItemStack(@Nullable final ItemStack itemStack) {
@@ -49,12 +51,16 @@ public class ItemStackSelection {
   }
 
   public void addMaterial(final Material material) {
-    this.materials.add(material);
+    if(material != null) {
+      this.materials.add(material);
+    }
   }
 
   public void addMaterialName(final String materialName) {
     // Check if nqItem here too
-    this.materials.add(Material.getMaterial(materialName.toLowerCase(Locale.ROOT)));
+    if(materialName != null){
+      addMaterial(Material.getMaterial(materialName.toLowerCase(Locale.ROOT)));
+    }
   }
 
   public void saveToFileConfiguration(FileConfiguration configuration, String initialPath) {

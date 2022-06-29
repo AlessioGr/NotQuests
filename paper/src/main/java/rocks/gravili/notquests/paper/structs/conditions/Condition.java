@@ -41,11 +41,15 @@ public abstract class Condition {
 
   private int conditionID = -1;
 
+  private boolean objectiveConditionSpecific_allowProgressDecreaseIfNotFulfilled = false;
+
   public Condition(NotQuests main) {
     this.main = main;
     category = main.getDataManager().getDefaultCategory();
     main.allConditions.add(this); // For bStats
   }
+
+
 
   public final int getConditionID() {
     return conditionID;
@@ -212,5 +216,14 @@ public abstract class Condition {
         + ", conditionID="
         + conditionID
         + '}';
+  }
+
+  public final boolean isObjectiveConditionSpecific_allowProgressDecreaseIfNotFulfilled() {
+    return objectiveConditionSpecific_allowProgressDecreaseIfNotFulfilled;
+  }
+
+  public void setObjectiveConditionSpecific_allowProgressDecreaseIfNotFulfilled(
+      final boolean objectiveConditionSpecific_allowProgressDecreaseIfNotFulfilled) {
+    this.objectiveConditionSpecific_allowProgressDecreaseIfNotFulfilled = objectiveConditionSpecific_allowProgressDecreaseIfNotFulfilled;
   }
 }

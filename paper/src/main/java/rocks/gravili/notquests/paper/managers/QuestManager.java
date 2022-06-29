@@ -537,6 +537,7 @@ public class QuestManager {
                                 final int progressNeeded = category.getQuestsConfig().getInt("quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditionsProgress." + objectiveConditionNumber + ".progressNeeded");
                                 final boolean negated = category.getQuestsConfig().getBoolean("quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditionsProgress." + objectiveConditionNumber + ".negated", false);
                                 final String description = category.getQuestsConfig().getString("quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditionsProgress." + objectiveConditionNumber + ".description", "");
+                                final boolean allowProgressDecreaseIfNotFulfilled = category.getQuestsConfig().getBoolean("quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditionsProgress." + objectiveConditionNumber + ".allowProgressDecreaseIfNotFulfilled", false);
 
                                 final Condition condition;
 
@@ -549,6 +550,8 @@ public class QuestManager {
                                     condition.setDescription(description);
                                     condition.setCategory(category);
                                     condition.setConditionID(conditionID);
+
+                                    condition.setObjectiveConditionSpecific_allowProgressDecreaseIfNotFulfilled(allowProgressDecreaseIfNotFulfilled);
 
                                     condition.load(category.getQuestsConfig(), "quests." + questName + ".objectives." + (objective.getObjectiveID()) + ".conditionsProgress." + objectiveConditionNumber);
                                 } catch (Exception ex) {

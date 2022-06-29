@@ -238,9 +238,14 @@ public class ConditionsManager {
                                 .withDescription(ArgumentDescription.of("Negates this condition"))
                         )
                         .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " unlock condition"), ConditionFor.OBJECTIVEUNLOCK);
-                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddProgressConditionCommandBuilder().flag(
+                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddProgressConditionCommandBuilder()
+                    .flag(
                         main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
                             .withDescription(ArgumentDescription.of("Negates this condition"))
+                    )
+                    .flag(
+                        main.getCommandManager().getPaperCommandManager().flagBuilder("allowProgressDecreaseIfNotFulfilled")
+                            .withDescription(ArgumentDescription.of("By default, if this condition is not fulfilled, the objective progress also wont be allowed to decrease. Setting this flag would allow it to decrease in any case, while only not allowing progress to be increased if the condition is not fulfilled"))
                     )
                     .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " progress condition"), ConditionFor.OBJECTIVEPROGRESS);
                 commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddCompleteConditionCommandBuilder().flag(
@@ -280,6 +285,10 @@ public class ConditionsManager {
                 commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddProgressConditionCommandBuilder().literal(identifier).flag(
                         main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
                             .withDescription(ArgumentDescription.of("Negates this condition"))
+                    )
+                    .flag(
+                        main.getCommandManager().getPaperCommandManager().flagBuilder("allowProgressDecreaseIfNotFulfilled")
+                            .withDescription(ArgumentDescription.of("By default, if this condition is not fulfilled, the objective progress also wont be allowed to decrease. Setting this flag would allow it to decrease in any case, while only not allowing progress to be increased if the condition is not fulfilled"))
                     )
                     .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " progress condition"), ConditionFor.OBJECTIVEPROGRESS);
                 commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddCompleteConditionCommandBuilder().literal(identifier).flag(
@@ -359,7 +368,9 @@ public class ConditionsManager {
                 condition.setObjective(objectiveOfQuest);
 
                 if(conditionFor == ConditionFor.OBJECTIVEPROGRESS){
+                    final boolean allowProgressDecreaseIfNotFulfilled = context.flags().isPresent("allowProgressDecreaseIfNotFulfilled");
                     condition.setConditionID(objectiveOfQuest.getFreeProgressConditionID());
+                    condition.setObjectiveConditionSpecific_allowProgressDecreaseIfNotFulfilled(allowProgressDecreaseIfNotFulfilled);
 
                     objectiveOfQuest.addProgressCondition(condition, true);
 
@@ -461,6 +472,10 @@ public class ConditionsManager {
                     commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddProgressConditionCommandBuilder().flag(
                             main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
                                 .withDescription(ArgumentDescription.of("Negates this condition"))
+                        )
+                        .flag(
+                            main.getCommandManager().getPaperCommandManager().flagBuilder("allowProgressDecreaseIfNotFulfilled")
+                                .withDescription(ArgumentDescription.of("By default, if this condition is not fulfilled, the objective progress also wont be allowed to decrease. Setting this flag would allow it to decrease in any case, while only not allowing progress to be increased if the condition is not fulfilled"))
                         )
                         .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " progress condition"), ConditionFor.OBJECTIVEPROGRESS);
                     commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddCompleteConditionCommandBuilder().flag(
