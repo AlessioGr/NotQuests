@@ -44,6 +44,7 @@ import rocks.gravili.notquests.paper.structs.variables.ContainerInventoryVariabl
 import rocks.gravili.notquests.paper.structs.variables.DayOfWeekVariable;
 import rocks.gravili.notquests.paper.structs.variables.FalseVariable;
 import rocks.gravili.notquests.paper.structs.variables.InventoryVariable;
+import rocks.gravili.notquests.paper.structs.variables.ItemInInventoryEnchantmentsVariable;
 import rocks.gravili.notquests.paper.structs.variables.MoneyVariable;
 import rocks.gravili.notquests.paper.structs.variables.PermissionVariable;
 import rocks.gravili.notquests.paper.structs.variables.PlayerCurrentBiomeVariable;
@@ -152,6 +153,9 @@ public class VariablesManager {
     registerVariable("QuestOnCooldown", QuestOnCooldownVariable.class);
     registerVariable("QuestAbleToAcceptVariable", QuestAbleToAcceptVariable.class);
     registerVariable("QuestReachedMaxAcceptsVariable", QuestReachedMaxAcceptsVariable.class);
+
+    registerVariable("ItemInInventoryEnchantments", ItemInInventoryEnchantmentsVariable.class);
+
 
     if (main.getIntegrationsManager().isPlaceholderAPIEnabled()) {
       registerVariable("PlaceholderAPINumber", PlaceholderAPINumberVariable.class);
