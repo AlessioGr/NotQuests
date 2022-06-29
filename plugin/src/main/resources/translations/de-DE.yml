@@ -91,6 +91,8 @@ chat:
         deliver-to-armorstand-not-available: '    <GRAY>Der Empfänger-NPC ist derzeit nicht verfügbar!'
       escortNPC:
         base: '    <veryUnimportant>└─ <unimportant>Eskortiere <main>%NPCNAME% <unimportant>zu <main>%DESTINATIONNPCNAME%'
+      fishItems:
+        base: '    <veryUnimportant>└─ <unimportant>Fish Items: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
       killMobs:
         base: '    <veryUnimportant>└─ <unimportant>Mobs töten: <main>%MOBTOKILL%'
       otherQuest:

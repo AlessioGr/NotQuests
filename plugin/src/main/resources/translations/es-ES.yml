@@ -91,6 +91,8 @@ chat:
         deliver-to-armorstand-not-available: '    <GRAY>El Soporte de Armadura no está disponible actualmente!'
       escortNPC:
         base: '    <veryUnimportant>└─ <unimportant>Escoltar <main>%NPCNAME%</main> a <main>%DESTINATIONNPCNAME%'
+      fishItems:
+        base: '    <veryUnimportant>└─ <unimportant>Fish Items: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
       killMobs:
         base: '    <veryUnimportant>└─ <unimportant>Matar mobs: <main>%MOBTOKILL%'
       otherQuest:

@@ -1,83 +1,83 @@
 ---
 chat:
-  wrong-command-usage: <error>Wrong command usage!
-  missing-permission: '<error>No permission! Required permission node: <highlight>%PERMISSION%'
-  too-many-arguments: <error>Too many arguments!
+  wrong-command-usage: <error>指令使用方法錯誤!
+  missing-permission: '<error>沒有權限! 需要權限: <highlight>%PERMISSION%'
+  too-many-arguments: <error>參數過多!
   quest-successfully-accepted: |2
 
-    <CENTER><main>[Quest Accepted]
+    <CENTER><main>[已接受任務]
     <CENTER><highlight><BOLD>%QUESTNAME%
     <EMPTY>
-  quest-description: '<main>Quest description: <unimportant>%QUESTDESCRIPTION%'
-  quest-already-accepted: <error>Quest already accepted.
+  quest-description: '<main>任務描述: <unimportant>%QUESTDESCRIPTION%'
+  quest-already-accepted: <error>已經接受該任務
   quest-failed: |2
 
-    <CENTER><negative>[Quest Failed]
+    <CENTER><negative>[任務失敗]
     <CENTER><highlight><BOLD>%QUESTNAME%
     <EMPTY>
   quest-aborted: ''
   quest-completed-and-rewards-given: |2
 
-    <CENTER><positive>[Quest Completed]
+    <CENTER><positive>[任務完成]
     <CENTER><highlight><BOLD>%QUESTNAME%
     <EMPTY>
-  quest-completed-rewards-prefix: '    <highlight>Rewards:'
+  quest-completed-rewards-prefix: '    <highlight>獎勵:'
   quest-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
   quest-completed-rewards-suffix: <EMPTY>
-  quest-not-all-requirements-fulfilled: '<negative>You do not fulfill all the requirements this quest needs! Requirement still needed:'
-  action-not-all-conditions-fulfilled: '<negative>You do not fulfill all the conditions this action needs! Conditions still needed:'
-  missing-quest-description: <unimportant>This quest has no quest description.
-  objectives-label-after-quest-accepting: '<highlight>Objectives:'
+  quest-not-all-requirements-fulfilled: '<negative>您未滿足接受該任務的要求! 缺少要求:'
+  action-not-all-conditions-fulfilled: '<negative>您未滿足接受該任務的條件! 缺少條件: '
+  missing-quest-description: <unimportant>此任務沒有描述
+  objectives-label-after-quest-accepting: '<highlight>目標：'
   questpoints:
-    query: <main>You currently have <highlight>%QUESTPOINTS%</highlight> quest points.
-    none: <error>Seems like you don't have any quest points!
+    query: <main>你現在擁有 <highlight>%QUESTPOINTS%</highlight> 任務點數
+    none: <error>您似乎沒有任何任務點數！
     notify-when-changed:
-      set: '<main>Your quest points have been set to <highlight>%NEWQUESTPOINTSAMOUNT%</highlight>.'
-      add: '<highlight>+%QUESTPOINTSTOADD% <success>quest points!'
+      set: '<main>您的任務點數已被設置為 <highlight>%NEWQUESTPOINTSAMOUNT%</highlight>.'
+      add: '<highlight>+%QUESTPOINTSTOADD%<success>任務點數！'
       remove: '<highlight>-%QUESTPOINTSTOREMOVE% <negative>quest points!'
   no-quests-accepted: <error>Seems like you don't have any active quests!
-  quest-does-not-exist: <error>Quest <highlight>%QUESTNAME%</highlight> does not exist!
-  quest-not-found-or-does-not-exist: <error>Quest <highlight>%QUESTNAME%</highlight> not found or not active!
-  active-quests-label: '<highlight>Active quests:'
-  take-disabled: <error>Accepting or previewing the quest <highlight>%QUESTNAME%</highlight> is disabled.
-  quest-not-active-error: '<error>Error: <highlight>%QUESTNAME%</highlight> is not an active Quest!'
-  force-add-active-quest-accepted: '<success>Successfully accepted the quest (Forced).'
-  add-active-quest-player-object-not-found: '<warn>Error: Player object not found. Please report this to the plugin developer.'
-  reached-max-accepts-limit: '<red>You have finished this quests too many times already. You can only accept it <highlight>%MAXACCEPTS%</highlight> times, but you have already accepted it <highlight>%COMPLETEDAMOUNT%</highlight> times.'
-  reached-max-active-quests-per-player-limit: '<red>You can not accept more than <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> Quests.'
+  quest-does-not-exist: <error>任務 <highlight>%QUESTNAME%</highlight> 不存在！
+  quest-not-found-or-does-not-exist: <error>任務 <highlight>%QUESTNAME%</highlight> 不存在或者未激活！
+  active-quests-label: '<highlight>進行中的任務：'
+  take-disabled: <error>你不能接受或者預覽任務 <highlight>%QUESTNAME%</highlight>
+  quest-not-active-error: '<error>錯誤: <highlight>%QUESTNAME%</highlight> 不是一個進行中的任務!'
+  force-add-active-quest-accepted: '<success>已接受任務 (強制).'
+  add-active-quest-player-object-not-found: '<warn>錯誤: 未搜尋到玩家. 請向插件開發人員回報.'
+  reached-max-accepts-limit: '<red>你已經到達該任務的完成次數上限. 你知能接受該任務 <highlight>%MAXACCEPTS%</highlight> 次, 但你已經接受該任務 <highlight>%COMPLETEDAMOUNT%</highlight> 次.'
+  reached-max-active-quests-per-player-limit: '<red>您最多只能同時接受 <highlight>%MAXACTIVEQUESTSPERPLAYER%</highlight> 個任務.'
   quest-on-cooldown:
-    minute: '<red>This quest is on a cooldown! You have to wait another <highlight>1 minute</highlight> until you can take it again.'
-    minutes: '<red>This quest is on a cooldown! You have to wait another <highlight>%MINUTES% minutes</highlight> until you can take it again.'
-    hour: '<red>This quest is on a cooldown! You have to wait another <highlight>1 hour</highlight> until you can take it again.'
-    hours: '<red>This quest is on a cooldown! You have to wait another <highlight>%HOURS% hours</highlight> until you can take it again.'
-    day: '<red>This quest is on a cooldown! You have to wait another <highlight>1 day</highlight> until you can take it again.'
-    days: '<red>This quest is on a cooldown! You have to wait another <highlight>%DAYS% days</highlight> until you can take it again.'
+    minute: '<red>任務還在冷卻中! 你需要再等待 <highlight>1 分鐘</highlight> 才能再次接受該任務.'
+    minutes: '<red>任務還在冷卻中! 你需要再等待 <highlight>%MINUTES% 分鐘</highlight> 才能再次接受該任務.'
+    hour: '<red>任務還在冷卻中! 你需要再等待 <highlight>1 小時</highlight> 才能再次接受該任務.'
+    hours: '<red>任務還在冷卻中! 你需要再等待 <highlight>%HOURS% 小時</highlight> 才能再次接受該任務.'
+    day: '<red>任務還在冷卻中! 你需要再等待 <highlight>1 天</highlight> 才能再次接受該任務.'
+    days: '<red>任務還在冷卻中! 你需要再等待 <highlight>%DAYS% 天</highlight> 才能再次接受該任務.'
   conversations:
     choose-answer-prefix: |-
       <EMPTY>
-      <main>Choose your answer:</main>
-    choose-answer-answer-hover-text: '<highlight>Click to answer'
-    ended-previous-conversation: '<main>You have ended your previous conversation!'
+      <main>選擇你的答案:</main>
+    choose-answer-answer-hover-text: '<highlight>點擊回答'
+    ended-previous-conversation: '<main>你已經結束了之前的對話!'
   objectives:
     counter: '<highlight>%OBJECTIVEID%.</highlight> <main>%OBJECTIVENAME%:'
-    hidden: <highlight>%OBJECTIVEID%.</highlight> <unimportant><BOLD>[HIDDEN]
-    description: '   <highlight>Description: <main>%OBJECTIVEDESCRIPTION%'
-    progress: '   <highlight>Progress: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
+    hidden: <highlight>%OBJECTIVEID%.</highlight> <unimportant><BOLD>[以隱藏]
+    description: '   <highlight>描述: <main>%OBJECTIVEDESCRIPTION%'
+    progress: '   <highlight>進度: <main>%ACTIVEOBJECTIVEPROGRESS% / %OBJECTIVEPROGRESSNEEDED%'
     successfully-completed: |2
 
-      <CENTER><success>[Objective Completed]
+      <CENTER><success>[目標已完成]
       <CENTER><highlight><bold>%OBJECTIVENAME%</bold> <RESET><main>(%QUESTNAME%)
       <EMPTY>
-    successfully-completed-rewards-prefix: '    <highlight>Rewards:'
+    successfully-completed-rewards-prefix: '    <highlight>獎勵:'
     successfully-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
     successfully-completed-rewards-suffix: <EMPTY>
     taskDescription:
       breakBlocks:
-        base: '    <veryUnimportant>└─ <unimportant>Break Blocks: <main>%BLOCKTOBREAK%'
+        base: '    <veryUnimportant>└─ <unimportant>破壞方塊: <main>%BLOCKTOBREAK%'
       breed:
-        base: '    <veryUnimportant>└─ <unimportant>Breed Mobs: <main>%ENTITYTOBREED%'
+        base: '    <veryUnimportant>└─ <unimportant>繁殖動物: <main>%ENTITYTOBREED%'
       collectItems:
-        base: '    <veryUnimportant>└─ <unimportant>Collect Items: <main>%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
+        base: '    <veryUnimportant>└─ <unimportant>收集物品: <main>%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
       consumeItems:
         base: '    <veryUnimportant>└─ <unimportant>Consume Items: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
@@ -91,6 +91,8 @@ chat:
         deliver-to-armorstand-not-available: '    <GRAY>The target Armor Stand is currently not available!'
       escortNPC:
         base: '    <veryUnimportant>└─ <unimportant>Escort <main>%NPCNAME%</main> to <main>%DESTINATIONNPCNAME%'
+      fishItems:
+        base: '    <veryUnimportant>└─ <unimportant>Fish Items: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
       killMobs:
         base: '    <veryUnimportant>└─ <unimportant>Kill mobs: <main>%MOBTOKILL%'
       otherQuest:
@@ -161,47 +163,47 @@ placeholders:
     minute: '1 minute'
     minutes: '%MINUTES% minutes'
     hour: '1 hour'
-    hours: '%HOURS% hours'
-    day: '1 day'
-    days: '%DAYS% days'
+    hours: '%HOURS% 小時'
+    day: '1 天'
+    days: '%DAYS% 天'
     no-cooldown: ''
 gui:
   main:
-    title: '                <highlight2>Quests'
+    title: '                <highlight2>任務'
     button:
       questpoints:
-        name: "<highlight>Quest Points"
+        name: "<highlight>任務點數"
         lore:
-          - "<main>Current quest points: <highlight2>%QUESTPOINTS%"
+          - "<main>當前的任務點數: <highlight2>%QUESTPOINTS%"
         x: 8
         y: 0
       takequest:
-        name: "<positive>Take a Quest"
+        name: "<positive>接受任務"
         lore:
-          - "<unimportant>Start a new Quest!"
+          - "<unimportant>開始一個新的任務!"
           - ""
-          - "<veryUnimportant>Some Quests cannot be"
-          - "<veryUnimportant>started like this."
+          - "<veryUnimportant>有些任務不能是"
+          - "<veryUnimportant>像這樣開始."
         x: 0
         y: 1
       abortquest:
-        name: "<negative>Abort a Quest"
+        name: "<negative>中止任務"
         lore:
           - ""
-          - "<veryUnimportant>Aborting a Quest may"
-          - "<veryUnimportant>lead to punishments."
+          - "<veryUnimportant>中止任務可能的對話"
+          - "<veryUnimportant>會受到懲罰."
         x: 0
         y: 2
       activequests:
-        name: "<highlight>Active Quests"
+        name: "<highlight>進行中的任務"
         lore:
           - ""
-          - "<veryUnimportant>Shows all of your"
-          - "<veryUnimportant>active Quests."
+          - "<veryUnimportant>顯示你所有的"
+          - "<veryUnimportant>進行中的任務."
         x: 0
         y: 3
   activeQuests:
-    title: '             <highlight2>Active Quests'
+    title: '             <highlight2>進行中的任務'
     button:
       activeQuestButton:
         name: "<highlight>%QUESTNAME% <positive>[ACTIVE]"
