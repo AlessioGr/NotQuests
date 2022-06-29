@@ -269,6 +269,7 @@ public class LanguageManager {
 
     public boolean setupDefaultStrings() {
         //Set default values
+        main.getLogManager().debug("setupDefaultStrings()");
 
         if (defaultLanguageConfig == null) {
             main.getDataManager().disablePluginAndSaving("There was an error reading the default.yml language configuration.");
@@ -278,18 +279,21 @@ public class LanguageManager {
         boolean valueChanged = false;
         final ConfigurationSection defaultConfigurationSection = defaultLanguageConfig.getConfigurationSection("");
         if (defaultConfigurationSection != null) {
+            main.getLogManager().debug("All default config keys: " + defaultConfigurationSection.getKeys(true).toString());
             for (final String defaultString : defaultConfigurationSection.getKeys(true)) {
 
-                if (!defaultConfigurationSection.isString(defaultString)) {
-                    //main.getLogManager().log(Level.INFO, "Skipping: <highlight>" + defaultString + "</highlight>");
+                if (defaultConfigurationSection.isConfigurationSection(defaultString)) {
+                    main.getLogManager().debug("Skipping: <highlight>" + defaultString + "</highlight>");
                     continue;
                 }
 
-                if (!getLanguageConfig().isString(defaultString)) {
+                if (!getLanguageConfig().contains(defaultString)) {
                     main.getLogManager().info(LogCategory.LANGUAGE, "Updating string: <highlight>" + defaultString + "</highlight>");
 
-                    getLanguageConfig().set(defaultString, defaultConfigurationSection.getString(defaultString));
+                    getLanguageConfig().set(defaultString, defaultConfigurationSection.get(defaultString));
                     valueChanged = true;
+                }else{
+                    main.getLogManager().debug("Already is string: " + defaultString);
                 }
             }
         }
