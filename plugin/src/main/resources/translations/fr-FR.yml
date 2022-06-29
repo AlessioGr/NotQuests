@@ -91,6 +91,8 @@ chat:
         deliver-to-armorstand-not-available: '    <GRAY>Le porte-armure de destination n''est actuellement pas disponible !'
       escortNPC:
         base: '    <veryUnimportant>└─<unimportant>Escorter <main>%NPCNAME%</main> à <main>%DESTINATIONNPCNAME%'
+      fishItems:
+        base: '    <veryUnimportant>└─ <unimportant>Fish Items: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
       killMobs:
         base: '    <veryUnimportant>└─<unimportant>Tuer les monstres : <main>%MOBTOKILL%'
       otherQuest:

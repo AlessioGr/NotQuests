@@ -91,6 +91,8 @@ chat:
         deliver-to-armorstand-not-available: '    <GRAY>负责收取物品的盔甲架不存在!'
       escortNPC:
         base: '    <veryUnimportant>└─ <unimportant>护送 <main>%NPCNAME%</main> 前往 <main>%DESTINATIONNPCNAME%'
+      fishItems:
+        base: '    <veryUnimportant>└─ <unimportant>Fish Items: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
       killMobs:
         base: '    <veryUnimportant>└─ <unimportant>需要击杀的怪物: <main>%MOBTOKILL%'
       otherQuest:

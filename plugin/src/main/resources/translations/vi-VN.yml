@@ -85,6 +85,8 @@ chat:
         deliver-to-armorstand-not-available: '    <GRAY>Bệ Giáp hiện không có sẵn!'
       escortNPC:
         base: '    <unimportant>Đi Theo <main>%NPCNAME% <unimportant> Đến <main>%DESTINATIONNPCNAME%'
+      fishItems:
+        base: '    <veryUnimportant>└─ <unimportant>Fish Items: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
       killMobs:
         base: '    <unimportant>Tiêu Diệt Quái: <main>%MOBTOKILL%'
       otherQuest:
