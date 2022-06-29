@@ -49,13 +49,18 @@ public class ItemInInventoryEnchantmentsVariable extends Variable<String[]> {
     if (questPlayer == null) {
       return null;
     }
+    questPlayer.sendDebugMessage("ItemInInventoryEnchantmentsVariable.getValue() stage 1");
+
     final Player player = questPlayer.getPlayer();
     if (player == null) {
       return null;
     }
 
-    final String itemSlot = getRequiredStringValue("Permission");
+    final String itemSlot = getRequiredStringValue("ItemSlot");
     ItemStack itemStackToCheck;
+
+    questPlayer.sendDebugMessage("ItemInInventoryEnchantmentsVariable.getValue() stage 2. ItemSlot: " + itemSlot);
+
 
     try {
       final EquipmentSlot equipmentSlot = EquipmentSlot.valueOf(itemSlot);
@@ -70,11 +75,15 @@ public class ItemInInventoryEnchantmentsVariable extends Variable<String[]> {
     if (itemStackToCheck == null) {
       return new String[] {};
     }
+    questPlayer.sendDebugMessage("ItemInInventoryEnchantmentsVariable.getValue() stage 3");
 
     final List<String> enchantmentsList = new ArrayList<>();
     for (final Enchantment enchantment : itemStackToCheck.getEnchantments().keySet()) {
       enchantmentsList.add(enchantment.getKey().asString());
     }
+    questPlayer.sendDebugMessage("ItemStackToCheck: " + itemStackToCheck.toString());
+
+    questPlayer.sendDebugMessage("Enchantments: " + enchantmentsList);
 
     return enchantmentsList.toArray(new String[0]);
   }

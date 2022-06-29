@@ -954,9 +954,9 @@ public class QuestPlayer {
     }
 
     public void updateConditionObjectives(final Player player) {
-        sendDebugMessage("updateConditionObjectives was called...");
+        //sendDebugMessage("updateConditionObjectives was called...");
         if (!isHasActiveConditionObjectives() && !isHasActiveVariableObjectives()) {
-            sendDebugMessage("   No active objectives to update.");
+            //sendDebugMessage("   No active objectives to update.");
             return;
         }
         for (final ActiveQuest activeQuest : getActiveQuests()) {
@@ -977,7 +977,7 @@ public class QuestPlayer {
                     activeObjective.addProgress(1);
 
                 } else if(activeObjective.getObjective() instanceof final NumberVariableObjective numberVariableObjective) {
-                    sendDebugMessage("Found numbervariableobjective to update!");
+                    //sendDebugMessage("Found numbervariableobjective to update!");
                     if (numberVariableObjective.isCheckOnlyWhenCorrespondingVariableValueChanged() || !activeObjective.isUnlocked()) {
                         continue;
                     }

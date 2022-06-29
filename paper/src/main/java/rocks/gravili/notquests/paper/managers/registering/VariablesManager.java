@@ -149,7 +149,6 @@ public class VariablesManager {
     registerVariable("TagFloat", FloatTagVariable.class);
     registerVariable("TagDouble", DoubleTagVariable.class);
     registerVariable("TagString", StringTagVariable.class);
-
     registerVariable("QuestOnCooldown", QuestOnCooldownVariable.class);
     registerVariable("QuestAbleToAcceptVariable", QuestAbleToAcceptVariable.class);
     registerVariable("QuestReachedMaxAcceptsVariable", QuestReachedMaxAcceptsVariable.class);

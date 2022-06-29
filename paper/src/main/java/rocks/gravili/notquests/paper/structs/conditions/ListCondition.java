@@ -182,6 +182,8 @@ public class ListCondition extends Condition {
 
         Object value = variable.getValue(questPlayer);
 
+        questPlayer.sendDebugMessage("Checking ListCondition internally. Value: " + value);
+
         if(value == null){
             return "<YELLOW>You don't have any " + variable.getPlural() + "!";
         }

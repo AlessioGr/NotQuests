@@ -143,7 +143,7 @@ public class ActiveObjective {
                 continue;
             }
             String check = condition.check(getQuestPlayer());
-            getQuestPlayer().sendDebugMessage("Condition status for " + objective.getFinalName() + ": " + check);
+            getQuestPlayer().sendDebugMessage("Condition status for " + objective.getFinalName() + " and condition " + condition.getConditionType() + ": " + check);
 
             if(!check.isBlank()) {
                 getQuestPlayer().sendDebugMessage("Following objective progress condition is still unfinished (there may be more than what's listed here): " + condition.getConditionDescription(getQuestPlayer()));
