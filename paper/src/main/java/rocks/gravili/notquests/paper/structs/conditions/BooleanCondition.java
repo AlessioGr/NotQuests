@@ -120,7 +120,7 @@ public class BooleanCondition extends Condition {
                         booleanCondition.setAdditionalBooleanArguments(additionalBooleanArguments);
 
 
-                        main.getConditionsManager().addCondition(booleanCondition, context);
+                        main.getConditionsManager().addCondition(booleanCondition, context, conditionFor);
                     })
             );
 

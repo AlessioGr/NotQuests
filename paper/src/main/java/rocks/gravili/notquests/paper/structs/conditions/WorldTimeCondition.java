@@ -58,7 +58,7 @@ public class WorldTimeCondition extends Condition {
                   worldTimeCondition.setMinTime(minTime);
                   worldTimeCondition.setMaxTime(maxTime);
 
-                  main.getConditionsManager().addCondition(worldTimeCondition, context);
+                  main.getConditionsManager().addCondition(worldTimeCondition, context, conditionFor);
                 }));
   }
 

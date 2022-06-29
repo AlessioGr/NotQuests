@@ -177,7 +177,7 @@ public class DateCondition extends Condition {
 
                   dateCondition.setOperation(operation.toLowerCase(Locale.ROOT));
 
-                  main.getConditionsManager().addCondition(dateCondition, context);
+                  main.getConditionsManager().addCondition(dateCondition, context, conditionFor);
                 }));
   }
 

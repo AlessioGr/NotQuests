@@ -124,7 +124,7 @@ public class StringCondition extends Condition {
                         }
                         stringCondition.setAdditionalBooleanArguments(additionalBooleanArguments);
 
-                        main.getConditionsManager().addCondition(stringCondition, context);
+                        main.getConditionsManager().addCondition(stringCondition, context, conditionFor);
                     })
             );
 

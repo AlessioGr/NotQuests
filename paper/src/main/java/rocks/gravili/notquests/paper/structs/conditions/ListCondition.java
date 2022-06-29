@@ -120,7 +120,7 @@ public class ListCondition extends Condition {
                         }
                         listCondition.setAdditionalBooleanArguments(additionalBooleanArguments);
 
-                        main.getConditionsManager().addCondition(listCondition, context);
+                        main.getConditionsManager().addCondition(listCondition, context, conditionFor);
                     })
             );
 

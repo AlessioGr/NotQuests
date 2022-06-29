@@ -53,7 +53,7 @@ public class ConditionCondition extends Condition {
                   ConditionCondition conditionCondition = new ConditionCondition(main);
                   conditionCondition.setCondition(condition);
 
-                  main.getConditionsManager().addCondition(conditionCondition, context);
+                  main.getConditionsManager().addCondition(conditionCondition, context, conditionFor);
                 }));
   }
 

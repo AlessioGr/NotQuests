@@ -127,7 +127,7 @@ public class NumberCondition extends Condition {
 
                         numberCondition.initializeExpressionAndCachedVariable(amountExpression, variableString);
 
-                        main.getConditionsManager().addCondition(numberCondition, context);
+                        main.getConditionsManager().addCondition(numberCondition, context, conditionFor);
                     })
             );
 

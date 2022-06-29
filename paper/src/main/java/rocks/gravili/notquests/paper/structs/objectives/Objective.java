@@ -34,7 +34,10 @@ import rocks.gravili.notquests.paper.structs.conditions.Condition;
 
 public abstract class Objective {
   protected final NotQuests main;
-  private final ArrayList<Condition> conditions;
+  private final ArrayList<Condition> unlockConditions;
+  private final ArrayList<Condition> progressConditions;
+  private final ArrayList<Condition> completeConditions;
+
   private final ArrayList<Action> rewards;
 
   private NumberExpression progressNeededExpression;
@@ -51,7 +54,9 @@ public abstract class Objective {
 
   public Objective(NotQuests main) {
     this.main = main;
-    conditions = new ArrayList<>();
+    unlockConditions = new ArrayList<>();
+    progressConditions = new ArrayList<>();
+    completeConditions = new ArrayList<>();
     rewards = new ArrayList<>();
   }
 
@@ -168,19 +173,6 @@ public abstract class Objective {
     this.progressNeededExpression = new NumberExpression(main, progressNeededExpression);
   }
 
-  public final ArrayList<Condition> getConditions() {
-    return conditions;
-  }
-
-  public final Condition getConditionFromID(int id) {
-    for (Condition condition : getConditions()) {
-      if (condition.getConditionID() == id) {
-        return condition;
-      }
-    }
-    return null;
-  }
-
   public final Action getRewardFromID(int id) {
     for (Action action : getRewards()) {
       if (action.getActionID() == id) {
@@ -192,87 +184,6 @@ public abstract class Objective {
 
   public final ArrayList<Action> getRewards() {
     return rewards;
-  }
-
-  public void addCondition(final Condition condition, final boolean save) {
-    boolean dupeID = false;
-    for (Condition condition1 : conditions) {
-      if (condition.getConditionID() == condition1.getConditionID()) {
-        dupeID = true;
-        break;
-      }
-    }
-    if (!dupeID) {
-      conditions.add(condition);
-      if (save) {
-        quest
-            .getCategory()
-            .getQuestsConfig()
-            .set(
-                "quests."
-                    + quest.getQuestName()
-                    + ".objectives."
-                    + getObjectiveID()
-                    + ".conditions."
-                    + condition.getConditionID()
-                    + ".conditionType",
-                condition.getConditionType());
-        quest
-            .getCategory()
-            .getQuestsConfig()
-            .set(
-                "quests."
-                    + quest.getQuestName()
-                    + ".objectives."
-                    + getObjectiveID()
-                    + ".conditions."
-                    + condition.getConditionID()
-                    + ".progressNeeded",
-                condition.getProgressNeeded());
-        quest
-            .getCategory()
-            .getQuestsConfig()
-            .set(
-                "quests."
-                    + quest.getQuestName()
-                    + ".objectives."
-                    + getObjectiveID()
-                    + ".conditions."
-                    + condition.getConditionID()
-                    + ".negated",
-                condition.isNegated());
-        quest
-            .getCategory()
-            .getQuestsConfig()
-            .set(
-                "quests."
-                    + quest.getQuestName()
-                    + ".objectives."
-                    + getObjectiveID()
-                    + ".conditions."
-                    + condition.getConditionID()
-                    + ".description",
-                condition.getDescription());
-
-        condition.save(
-            quest.getCategory().getQuestsConfig(),
-            "quests."
-                + quest.getQuestName()
-                + ".objectives."
-                + getObjectiveID()
-                + ".conditions."
-                + condition.getConditionID());
-        quest.getCategory().saveQuestsConfig();
-      }
-    } else {
-      main.getLogManager()
-          .warn(
-              "ERROR: Tried to add condition to objective with the ID <highlight>"
-                  + getObjectiveID()
-                  + "</highlight> with the ID <highlight>"
-                  + condition.getConditionID()
-                  + "</highlight> but the ID was a DUPLICATE!");
-    }
   }
 
   public void addReward(final Action action, final boolean save) {
@@ -333,25 +244,6 @@ public abstract class Objective {
     }
   }
 
-  public void removeCondition(final Condition condition, final boolean save) {
-    int conditionID = condition.getConditionID();
-    conditions.remove(condition);
-    if (save) {
-      quest
-          .getCategory()
-          .getQuestsConfig()
-          .set(
-              "quests."
-                  + quest.getQuestName()
-                  + ".objectives."
-                  + getObjectiveID()
-                  + ".conditions."
-                  + conditionID,
-              null);
-      quest.getCategory().saveQuestsConfig();
-    }
-  }
-
   public void removeReward(final Action action, final boolean save) {
     int rewardID = action.getActionID();
     rewards.remove(action);
@@ -378,17 +270,6 @@ public abstract class Objective {
         .getQuestsConfig()
         .set(
             "quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".rewards",
-            null);
-    quest.getCategory().saveQuestsConfig();
-  }
-
-  public void clearConditions() {
-    conditions.clear();
-    quest
-        .getCategory()
-        .getQuestsConfig()
-        .set(
-            "quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions",
             null);
     quest.getCategory().saveQuestsConfig();
   }
@@ -513,12 +394,413 @@ public abstract class Objective {
     return getRewards().size() + 1;
   }
 
-  public final int getFreeConditionID() {
+  /*
+   * Unlock Conditions
+   */
+  public final ArrayList<Condition> getUnlockConditions() {
+    return unlockConditions;
+  }
+
+  public void addUnlockCondition(final Condition condition, final boolean save) {
+    boolean dupeID = false;
+    for (final Condition condition1 : unlockConditions) {
+      if (condition.getConditionID() == condition1.getConditionID()) {
+        dupeID = true;
+        break;
+      }
+    }
+    if (!dupeID) {
+      unlockConditions.add(condition);
+      if (save) {
+        quest
+            .getCategory()
+            .getQuestsConfig()
+            .set(
+                "quests."
+                    + quest.getQuestName()
+                    + ".objectives."
+                    + getObjectiveID()
+                    + ".conditions."
+                    + condition.getConditionID()
+                    + ".conditionType",
+                condition.getConditionType());
+        quest
+            .getCategory()
+            .getQuestsConfig()
+            .set(
+                "quests."
+                    + quest.getQuestName()
+                    + ".objectives."
+                    + getObjectiveID()
+                    + ".conditions."
+                    + condition.getConditionID()
+                    + ".progressNeeded",
+                condition.getProgressNeeded());
+        quest
+            .getCategory()
+            .getQuestsConfig()
+            .set(
+                "quests."
+                    + quest.getQuestName()
+                    + ".objectives."
+                    + getObjectiveID()
+                    + ".conditions."
+                    + condition.getConditionID()
+                    + ".negated",
+                condition.isNegated());
+        quest
+            .getCategory()
+            .getQuestsConfig()
+            .set(
+                "quests."
+                    + quest.getQuestName()
+                    + ".objectives."
+                    + getObjectiveID()
+                    + ".conditions."
+                    + condition.getConditionID()
+                    + ".description",
+                condition.getDescription());
+
+        condition.save(
+            quest.getCategory().getQuestsConfig(),
+            "quests."
+                + quest.getQuestName()
+                + ".objectives."
+                + getObjectiveID()
+                + ".conditions."
+                + condition.getConditionID());
+        quest.getCategory().saveQuestsConfig();
+      }
+    } else {
+      main.getLogManager()
+          .warn(
+              "ERROR: Tried to add condition to objective with the ID <highlight>"
+                  + getObjectiveID()
+                  + "</highlight> with the ID <highlight>"
+                  + condition.getConditionID()
+                  + "</highlight> but the ID was a DUPLICATE!");
+    }
+  }
+
+  public void removeUnlockCondition(final Condition condition, final boolean save) {
+    int conditionID = condition.getConditionID();
+    unlockConditions.remove(condition);
+    if (save) {
+      quest
+          .getCategory()
+          .getQuestsConfig()
+          .set(
+              "quests."
+                  + quest.getQuestName()
+                  + ".objectives."
+                  + getObjectiveID()
+                  + ".conditions."
+                  + conditionID,
+              null);
+      quest.getCategory().saveQuestsConfig();
+    }
+  }
+
+  public void clearUnlockConditions() {
+    unlockConditions.clear();
+    quest
+        .getCategory()
+        .getQuestsConfig()
+        .set(
+            "quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions",
+            null);
+    quest.getCategory().saveQuestsConfig();
+  }
+
+  public final Condition getUnlockConditionFromID(int id) {
+    for (final Condition condition : getUnlockConditions()) {
+      if (condition.getConditionID() == id) {
+        return condition;
+      }
+    }
+    return null;
+  }
+
+  public final int getFreeUnlockConditionID() {
     for (int i = 1; i < Integer.MAX_VALUE; i++) {
-      if (getConditionFromID(i) == null) {
+      if (getUnlockConditionFromID(i) == null) {
         return i;
       }
     }
-    return getConditions().size() + 1;
+    return getUnlockConditions().size() + 1;
+  }
+
+  /*
+   * Progress Conditions
+   */
+
+  public final ArrayList<Condition> getProgressConditions() {
+    return progressConditions;
+  }
+
+  public void addProgressCondition(final Condition condition, final boolean save) {
+    boolean dupeID = false;
+    for (final Condition condition1 : progressConditions) {
+      if (condition.getConditionID() == condition1.getConditionID()) {
+        dupeID = true;
+        break;
+      }
+    }
+    if (!dupeID) {
+      progressConditions.add(condition);
+      if (save) {
+        quest
+            .getCategory()
+            .getQuestsConfig()
+            .set(
+                "quests."
+                    + quest.getQuestName()
+                    + ".objectives."
+                    + getObjectiveID()
+                    + ".conditionsProgress."
+                    + condition.getConditionID()
+                    + ".conditionType",
+                condition.getConditionType());
+        quest
+            .getCategory()
+            .getQuestsConfig()
+            .set(
+                "quests."
+                    + quest.getQuestName()
+                    + ".objectives."
+                    + getObjectiveID()
+                    + ".conditionsProgress."
+                    + condition.getConditionID()
+                    + ".progressNeeded",
+                condition.getProgressNeeded());
+        quest
+            .getCategory()
+            .getQuestsConfig()
+            .set(
+                "quests."
+                    + quest.getQuestName()
+                    + ".objectives."
+                    + getObjectiveID()
+                    + ".conditionsProgress."
+                    + condition.getConditionID()
+                    + ".negated",
+                condition.isNegated());
+        quest
+            .getCategory()
+            .getQuestsConfig()
+            .set(
+                "quests."
+                    + quest.getQuestName()
+                    + ".objectives."
+                    + getObjectiveID()
+                    + ".conditionsProgress."
+                    + condition.getConditionID()
+                    + ".description",
+                condition.getDescription());
+
+        condition.save(
+            quest.getCategory().getQuestsConfig(),
+            "quests."
+                + quest.getQuestName()
+                + ".objectives."
+                + getObjectiveID()
+                + ".conditionsProgress."
+                + condition.getConditionID());
+        quest.getCategory().saveQuestsConfig();
+      }
+    } else {
+      main.getLogManager()
+          .warn(
+              "ERROR: Tried to add progress condition to objective with the ID <highlight>"
+                  + getObjectiveID()
+                  + "</highlight> with the ID <highlight>"
+                  + condition.getConditionID()
+                  + "</highlight> but the ID was a DUPLICATE!");
+    }
+  }
+
+  public void removeProgressCondition(final Condition condition, final boolean save) {
+    int conditionID = condition.getConditionID();
+    progressConditions.remove(condition);
+    if (save) {
+      quest
+          .getCategory()
+          .getQuestsConfig()
+          .set(
+              "quests."
+                  + quest.getQuestName()
+                  + ".objectives."
+                  + getObjectiveID()
+                  + ".conditionsProgress."
+                  + conditionID,
+              null);
+      quest.getCategory().saveQuestsConfig();
+    }
+  }
+
+  public void clearProgressConditions() {
+    progressConditions.clear();
+    quest
+        .getCategory()
+        .getQuestsConfig()
+        .set(
+            "quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditionsProgress",
+            null);
+    quest.getCategory().saveQuestsConfig();
+  }
+
+  public final Condition getProgressConditionFromID(int id) {
+    for (final Condition condition : getProgressConditions()) {
+      if (condition.getConditionID() == id) {
+        return condition;
+      }
+    }
+    return null;
+  }
+
+  public final int getFreeProgressConditionID() {
+    for (int i = 1; i < Integer.MAX_VALUE; i++) {
+      if (getProgressConditionFromID(i) == null) {
+        return i;
+      }
+    }
+    return getProgressConditions().size() + 1;
+  }
+
+  /*
+   * Complete Conditions
+   */
+
+  public final ArrayList<Condition> getCompleteConditions() {
+    return completeConditions;
+  }
+
+  public void addCompleteCondition(final Condition condition, final boolean save) {
+    boolean dupeID = false;
+    for (final Condition condition1 : completeConditions) {
+      if (condition.getConditionID() == condition1.getConditionID()) {
+        dupeID = true;
+        break;
+      }
+    }
+    if (!dupeID) {
+      completeConditions.add(condition);
+      if (save) {
+        quest
+            .getCategory()
+            .getQuestsConfig()
+            .set(
+                "quests."
+                    + quest.getQuestName()
+                    + ".objectives."
+                    + getObjectiveID()
+                    + ".conditionsComplete."
+                    + condition.getConditionID()
+                    + ".conditionType",
+                condition.getConditionType());
+        quest
+            .getCategory()
+            .getQuestsConfig()
+            .set(
+                "quests."
+                    + quest.getQuestName()
+                    + ".objectives."
+                    + getObjectiveID()
+                    + ".conditionsComplete."
+                    + condition.getConditionID()
+                    + ".progressNeeded",
+                condition.getProgressNeeded());
+        quest
+            .getCategory()
+            .getQuestsConfig()
+            .set(
+                "quests."
+                    + quest.getQuestName()
+                    + ".objectives."
+                    + getObjectiveID()
+                    + ".conditionsComplete."
+                    + condition.getConditionID()
+                    + ".negated",
+                condition.isNegated());
+        quest
+            .getCategory()
+            .getQuestsConfig()
+            .set(
+                "quests."
+                    + quest.getQuestName()
+                    + ".objectives."
+                    + getObjectiveID()
+                    + ".conditionsComplete."
+                    + condition.getConditionID()
+                    + ".description",
+                condition.getDescription());
+
+        condition.save(
+            quest.getCategory().getQuestsConfig(),
+            "quests."
+                + quest.getQuestName()
+                + ".objectives."
+                + getObjectiveID()
+                + ".conditionsComplete."
+                + condition.getConditionID());
+        quest.getCategory().saveQuestsConfig();
+      }
+    } else {
+      main.getLogManager()
+          .warn(
+              "ERROR: Tried to add complete condition to objective with the ID <highlight>"
+                  + getObjectiveID()
+                  + "</highlight> with the ID <highlight>"
+                  + condition.getConditionID()
+                  + "</highlight> but the ID was a DUPLICATE!");
+    }
+  }
+
+  public void removeCompleteCondition(final Condition condition, final boolean save) {
+    int conditionID = condition.getConditionID();
+    completeConditions.remove(condition);
+    if (save) {
+      quest
+          .getCategory()
+          .getQuestsConfig()
+          .set(
+              "quests."
+                  + quest.getQuestName()
+                  + ".objectives."
+                  + getObjectiveID()
+                  + ".conditionsComplete."
+                  + conditionID,
+              null);
+      quest.getCategory().saveQuestsConfig();
+    }
+  }
+
+  public void clearCompleteConditions() {
+    completeConditions.clear();
+    quest
+        .getCategory()
+        .getQuestsConfig()
+        .set(
+            "quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditionsComplete",
+            null);
+    quest.getCategory().saveQuestsConfig();
+  }
+
+  public final Condition getCompleteConditionFromID(int id) {
+    for (final Condition condition : getCompleteConditions()) {
+      if (condition.getConditionID() == id) {
+        return condition;
+      }
+    }
+    return null;
+  }
+
+  public final int getFreeCompleteConditionID() {
+    for (int i = 1; i < Integer.MAX_VALUE; i++) {
+      if (getCompleteConditionFromID(i) == null) {
+        return i;
+      }
+    }
+    return getCompleteConditions().size() + 1;
   }
 }

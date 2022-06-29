@@ -95,7 +95,10 @@ public class CommandManager {
   private Command.Builder<CommandSender> adminEditAddRequirementCommandBuilder;
   private Command.Builder<CommandSender> adminEditAddRewardCommandBuilder;
   private Command.Builder<CommandSender> adminEditAddTriggerCommandBuilder;
-  private Command.Builder<CommandSender> adminEditObjectiveAddConditionCommandBuilder;
+  private Command.Builder<CommandSender> adminEditObjectiveAddUnlockConditionCommandBuilder;
+  private Command.Builder<CommandSender> adminEditObjectiveAddProgressConditionCommandBuilder;
+  private Command.Builder<CommandSender> adminEditObjectiveAddCompleteConditionCommandBuilder;
+
   private Command.Builder<CommandSender> adminEditObjectiveAddRewardCommandBuilder;
   private Command.Builder<CommandSender> adminAddActionCommandBuilder;
   private Command.Builder<CommandSender> adminActionsCommandBuilder;
@@ -523,8 +526,14 @@ public class CommandManager {
                         }),
                 ArgumentDescription.of("Objective ID"));
 
-    adminEditObjectiveAddConditionCommandBuilder =
-        adminEditObjectivesBuilder.literal("conditions").literal("add");
+    adminEditObjectiveAddUnlockConditionCommandBuilder =
+        adminEditObjectivesBuilder.literal("conditions").literal("unlock").literal("add");
+
+    adminEditObjectiveAddProgressConditionCommandBuilder =
+        adminEditObjectivesBuilder.literal("conditions").literal("progress").literal("add");
+
+    adminEditObjectiveAddCompleteConditionCommandBuilder =
+        adminEditObjectivesBuilder.literal("conditions").literal("complete").literal("add");
 
     adminActionsCommandBuilder = adminCommandBuilder.literal("actions");
 
@@ -722,8 +731,14 @@ public class CommandManager {
     return adminEditAddRequirementCommandBuilder;
   }
 
-  public final Command.Builder<CommandSender> getAdminEditObjectiveAddConditionCommandBuilder() {
-    return adminEditObjectiveAddConditionCommandBuilder;
+  public final Command.Builder<CommandSender> getAdminEditObjectiveAddUnlockConditionCommandBuilder() {
+    return adminEditObjectiveAddUnlockConditionCommandBuilder;
+  }
+  public final Command.Builder<CommandSender> getAdminEditObjectiveAddProgressConditionCommandBuilder() {
+    return adminEditObjectiveAddProgressConditionCommandBuilder;
+  }
+  public final Command.Builder<CommandSender> getAdminEditObjectiveAddCompleteConditionCommandBuilder() {
+    return adminEditObjectiveAddCompleteConditionCommandBuilder;
   }
 
   public final Command.Builder<CommandSender> getAdminActionsAddConditionCommandBuilder() {

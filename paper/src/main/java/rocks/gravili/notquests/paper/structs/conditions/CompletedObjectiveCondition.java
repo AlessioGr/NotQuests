@@ -46,7 +46,7 @@ public class CompletedObjectiveCondition extends Condition {
       PaperCommandManager<CommandSender> manager,
       Command.Builder<CommandSender> builder,
       ConditionFor conditionFor) {
-    if (conditionFor == ConditionFor.OBJECTIVE) {
+    if (conditionFor == ConditionFor.OBJECTIVEUNLOCK || conditionFor == ConditionFor.OBJECTIVEPROGRESS || conditionFor == ConditionFor.OBJECTIVECOMPLETE) {
       manager.command(
           builder
               .argument(
@@ -116,7 +116,7 @@ public class CompletedObjectiveCondition extends Condition {
                       completedObjectiveCondition.setObjectiveID(dependingObjectiveID);
 
                       main.getConditionsManager()
-                          .addCondition(completedObjectiveCondition, context);
+                          .addCondition(completedObjectiveCondition, context, conditionFor);
                     } else {
                       context
                           .getSender()
