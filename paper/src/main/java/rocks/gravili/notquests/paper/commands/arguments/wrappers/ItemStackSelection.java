@@ -58,8 +58,9 @@ public class ItemStackSelection {
 
   public void addMaterialName(final String materialName) {
     // Check if nqItem here too
+    main.getLogManager().debug("Trying to add material name: " + materialName);
     if(materialName != null){
-      addMaterial(Material.getMaterial(materialName.toLowerCase(Locale.ROOT)));
+      addMaterial(Material.getMaterial(materialName.toUpperCase(Locale.ROOT)));
     }
   }
 

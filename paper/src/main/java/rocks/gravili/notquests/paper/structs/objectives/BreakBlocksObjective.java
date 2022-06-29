@@ -141,7 +141,6 @@ public class BreakBlocksObjective extends Objective {
     // Convert old to new
     if (configuration.contains(initialPath + ".specifics.nqitem")
         || configuration.contains(initialPath + ".specifics.blockToBreak.material")) {
-      main.getLogManager().info("Converting old BreakBlocksObjective to new one...");
       final String nqItemName = configuration.getString(initialPath + ".specifics.nqitem", "");
 
       if (nqItemName.isBlank()) {
@@ -154,6 +153,8 @@ public class BreakBlocksObjective extends Objective {
           configuration, initialPath + ".specifics.itemStackSelection");
       configuration.set(initialPath + ".specifics.nqitem", null);
       configuration.set(initialPath + ".specifics.blockToBreak.material", null);
+
+      main.getLogManager().info("Converting old BreakBlocksObjective to new one... New itemStackSelection: " + itemStackSelection.getAllMaterialsListed());
       // Let's hope it saves somewhere, else conversion will happen again...
     }
 
