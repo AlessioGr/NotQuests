@@ -1039,18 +1039,6 @@ public class GUIManager {
                 }
               }
 
-              for (int x = 0; x <= 8; x++) {
-                result = result.element(ItemStackElement.of(separatorItemStack1), x, 0);
-              }
-              for (int y = 0; y <= 5; y++) {
-                result = result.element(ItemStackElement.of(separatorItemStack1), 0, y);
-              }
-              for (int y = 0; y <= 5; y++) {
-                result = result.element(ItemStackElement.of(separatorItemStack2), 1, y);
-              }
-              for (int y = 0; y <= 5; y++) {
-                result = result.element(ItemStackElement.of(separatorItemStack1), 2, y);
-              }
               return result;
             })
         .addTransform(
