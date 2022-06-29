@@ -38,7 +38,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.ActiveQuestSelector;
+import rocks.gravili.notquests.paper.commands.arguments.CategorySelector;
 import rocks.gravili.notquests.paper.commands.arguments.QuestSelector;
+import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
@@ -414,6 +416,25 @@ public class UserCommands {
                                 main.getLanguageManager()
                                     .getString("chat.no-quests-accepted", player)));
                   }
+                }));
+    manager.command(
+        builder
+            .literal("category")
+            .senderType(Player.class)
+            .argument(
+                CategorySelector.<CommandSender>newBuilder("Category", main)
+                    .takeEnabledOnly()
+                    .build(),
+                ArgumentDescription.of("Category Name"))
+            .meta(CommandMeta.DESCRIPTION, "Opens the category view")
+            .handler(
+                (context) -> {
+                  final Player player = (Player) context.getSender();
+                  final QuestPlayer questPlayer =
+                      main.getQuestPlayerManager().getOrCreateQuestPlayer((player.getUniqueId()));
+                  final Category category = context.get("Category");
+
+                  main.getGuiManager().showTakeQuestsGUIOfCategory(questPlayer, category);
                 }));
   }
 

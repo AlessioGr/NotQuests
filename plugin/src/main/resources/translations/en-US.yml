@@ -172,25 +172,25 @@ gui:
     title: '                <highlight2>Quests'
     background:
       '1':
-        xStart: 0
-        xEnd: 8
-        yStart: 0
-        yEnd: 0
+        minX: 0
+        maxX: 8
+        minY: 0
+        maxY: 0
       '2':
-        xStart: 0
-        xEnd: 0
-        yStart: 0
-        yEnd: 5
+        minX: 0
+        maxX: 0
+        minY: 0
+        maxY: 5
       '3':
-        xStart: 1
-        xEnd: 1
-        yStart: 0
-        yEnd: 5
+        minX: 1
+        maxX: 1
+        minY: 0
+        maxY: 5
       '4':
-        xStart: 2
-        xEnd: 2
-        yStart: 0
-        yEnd: 5
+        minX: 2
+        maxX: 2
+        minY: 0
+        maxY: 5
     button:
       questpoints:
         name: "<highlight>Quest Points"
@@ -243,6 +243,11 @@ gui:
           - "<main>Click to open Quest!"
   takeQuestChoose:
     title: <highlight2>Which Quest do you want to take?
+    size:
+      minX: 3
+      minY: 1
+      maxX: 8
+      maxY: 5
     button:
       questPreview:
         name-if-not-accepted: "<highlight>%QUESTNAME%"

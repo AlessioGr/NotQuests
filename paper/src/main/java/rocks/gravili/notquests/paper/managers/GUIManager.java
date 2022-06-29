@@ -250,6 +250,23 @@ public class GUIManager {
         .open(PlayerViewer.of(questPlayer.getPlayer()), arguments);
   }
 
+  public void showTakeQuestsGUIOfCategory(final QuestPlayer questPlayer, final Category category) {
+    if (main.getDataManager().isDisabled()) {
+      main.getDataManager().sendPluginDisabledMessage(questPlayer.getPlayer());
+      return;
+    }
+    final HashMapInterfaceArguments arguments =
+        HashMapInterfaceArguments.with(
+                ArgumentKey.of("player", Player.class), questPlayer.getPlayer())
+            .with(ArgumentKey.of("questPlayer", QuestPlayer.class), questPlayer)
+            .with(ArgumentKey.of("paneType", String.class), "takequest")
+            .with(ArgumentKey.of("category", Category.class), category)
+            .build();
+    constructMainInterface(
+        main.getLanguageManager().getComponent("gui.takeQuestChoose.title", null))
+        .open(PlayerViewer.of(questPlayer.getPlayer()), arguments);
+  }
+
   public void showActiveQuestsGUI(QuestPlayer questPlayer) {
     if (main.getDataManager().isDisabled()) {
       main.getDataManager().sendPluginDisabledMessage(questPlayer.getPlayer());
@@ -1003,8 +1020,14 @@ public class GUIManager {
     separatorItemStack3Meta.displayName(Component.text(" "));
     separatorItemStack3.setItemMeta(separatorItemStack3Meta);
 
-    final ConfigurationSection mainBackgroundConfigurationSection = main.getLanguageManager().getLanguageConfig().getConfigurationSection("gui.main.background");
-    final Set<String> keys = mainBackgroundConfigurationSection != null ? mainBackgroundConfigurationSection.getKeys(false) : null;
+    final ConfigurationSection mainBackgroundConfigurationSection =
+        main.getLanguageManager()
+            .getLanguageConfig()
+            .getConfigurationSection("gui.main.background");
+    final Set<String> keys =
+        mainBackgroundConfigurationSection != null
+            ? mainBackgroundConfigurationSection.getKeys(false)
+            : null;
 
     return ChestInterface.builder()
         // This interface will have one row.
@@ -1018,22 +1041,25 @@ public class GUIManager {
         .addTransform(
             (pane, view) -> {
               ChestPane result = pane;
-              if(mainBackgroundConfigurationSection != null){
+              if (mainBackgroundConfigurationSection != null) {
                 int counter = 0;
-                for (final String backgroundID : keys) { //TODO: Improve performance
-                  counter++; //TODO: make this clean and let them actually customize the block
-                  final int xStart = mainBackgroundConfigurationSection.getInt(backgroundID + ".xStart", -1);
-                  final int xEnd = mainBackgroundConfigurationSection.getInt(backgroundID + ".xEnd", -1);
-                  final int yStart = mainBackgroundConfigurationSection.getInt(backgroundID + ".yStart", -1);
-                  final int yEnd = mainBackgroundConfigurationSection.getInt(backgroundID + ".yEnd", -1);
+                for (final String backgroundID : keys) { // TODO: Improve performance
+                  counter++; // TODO: make this clean and let them actually customize the block
+                  final int xStart =
+                      mainBackgroundConfigurationSection.getInt(backgroundID + ".minX", -1);
+                  final int xEnd =
+                      mainBackgroundConfigurationSection.getInt(backgroundID + ".maxX", -1);
+                  final int yStart =
+                      mainBackgroundConfigurationSection.getInt(backgroundID + ".minY", -1);
+                  final int yEnd =
+                      mainBackgroundConfigurationSection.getInt(backgroundID + ".maxY", -1);
                   for (int x = xStart; x <= xEnd; x++) {
                     for (int y = yStart; y <= yEnd; y++) {
-                      if(counter == 3){
+                      if (counter == 3) {
                         result = result.element(ItemStackElement.of(separatorItemStack2), x, y);
-                      }else {
+                      } else {
                         result = result.element(ItemStackElement.of(separatorItemStack1), x, y);
                       }
-
                     }
                   }
                 }
@@ -1282,7 +1308,14 @@ public class GUIManager {
             }
           };
       PaginatedTransform<ItemStackElement<ChestPane>, ChestPane, PlayerViewer> paginatedTransform =
-          new PaginatedTransform<>(Vector2.at(3, 1), Vector2.at(8, 5), list);
+          new PaginatedTransform<>(
+              Vector2.at(
+                  main.getLanguageManager().getInt("gui.takeQuestChoose.size.minX"),
+                  main.getLanguageManager().getInt("gui.takeQuestChoose.size.minY")),
+              Vector2.at(
+                  main.getLanguageManager().getInt("gui.takeQuestChoose.size.maxX"),
+                  main.getLanguageManager().getInt("gui.takeQuestChoose.size.maxY")),
+              list);
       return paginatedTransform.apply(pane, view);
     }
     return pane;
@@ -1384,7 +1417,14 @@ public class GUIManager {
             }
           };
       PaginatedTransform<ItemStackElement<ChestPane>, ChestPane, PlayerViewer> paginatedTransform =
-          new PaginatedTransform<>(Vector2.at(3, 1), Vector2.at(8, 5), list);
+          new PaginatedTransform<>(
+              Vector2.at(
+                  main.getLanguageManager().getInt("gui.takeQuestChoose.size.minX"),
+                  main.getLanguageManager().getInt("gui.takeQuestChoose.size.minY")),
+              Vector2.at(
+                  main.getLanguageManager().getInt("gui.takeQuestChoose.size.maxX"),
+                  main.getLanguageManager().getInt("gui.takeQuestChoose.size.maxY")),
+              list);
       return paginatedTransform.apply(pane, view);
     }
     return pane;
