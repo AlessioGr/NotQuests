@@ -109,6 +109,6 @@ public class ConsoleCommandAction extends Action {
 
   @Override
   public String getActionDescription(final QuestPlayer questPlayer, final Object... objects) {
-    return "Reward Command: " + getConsoleCommand();
+    return "Console Command: " + getConsoleCommand();
   }
 }

@@ -46,6 +46,7 @@ import rocks.gravili.notquests.paper.structs.actions.GiveQuestAction;
 import rocks.gravili.notquests.paper.structs.actions.ItemStackListAction;
 import rocks.gravili.notquests.paper.structs.actions.ListAction;
 import rocks.gravili.notquests.paper.structs.actions.NumberAction;
+import rocks.gravili.notquests.paper.structs.actions.PlayerCommandAction;
 import rocks.gravili.notquests.paper.structs.actions.SendMessageAction;
 import rocks.gravili.notquests.paper.structs.actions.SpawnMobAction;
 import rocks.gravili.notquests.paper.structs.actions.StartConversationAction;
@@ -78,6 +79,7 @@ public class ActionManager {
     registerAction("StartConversation", StartConversationAction.class);
 
     registerAction("ConsoleCommand", ConsoleCommandAction.class);
+    registerAction("PlayerCommand", PlayerCommandAction.class);
     // registerAction("GiveQuestPoints", GiveQuestPointsAction.class);
     registerAction("GiveItem", GiveItemAction.class);
     // registerAction("GiveMoney", GiveMoneyAction.class);
