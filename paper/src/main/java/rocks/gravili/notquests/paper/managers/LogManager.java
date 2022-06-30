@@ -64,7 +64,11 @@ public class LogManager {
 
   private void log(
       final Level level, final LogCategory logCategory, final String color, final String message) {
-    consoleSender.sendMessage(main.parse(prefixText + color + message));
+    if(main.getConfiguration().isConsoleColorsEnabled()){
+      consoleSender.sendMessage(main.parse(prefixText + color + message));
+    } else {
+      consoleSender.sendMessage(main.parse(main.getMiniMessage().stripTags(prefixText + message, main.getMessageManager().getTagResolver())));
+    }
   }
 
   public void info(final LogCategory logCategory, final String message) {

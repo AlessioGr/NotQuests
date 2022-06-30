@@ -25,6 +25,7 @@ import rocks.gravili.notquests.paper.NotQuests;
 public class MessageManager {
   private final NotQuests main;
   private final MiniMessage miniMessage;
+  private final TagResolver tagResolver;
 
   public MessageManager(final NotQuests main) {
     this.main = main;
@@ -59,10 +60,15 @@ public class MessageManager {
                 positive)
             .build();
 
+    this.tagResolver = tagResolver;
     miniMessage = MiniMessage.builder().tags(tagResolver).build();
   }
 
   public final MiniMessage getMiniMessage() {
     return miniMessage;
+  }
+
+  public final TagResolver getTagResolver() {
+    return tagResolver;
   }
 }

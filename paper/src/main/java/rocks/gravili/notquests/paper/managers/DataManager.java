@@ -710,6 +710,11 @@ public class DataManager {
         //Visual Colors
 
         //Console colors
+        configuration.setConsoleColorsEnabled(getGeneralConfigBoolean(
+            "visual.colors.console.enabled",
+            true,
+            "This controls if colors should be enabled in the console"
+        ));
         configuration.setColorsConsolePrefixPrefix(getGeneralConfigString(
                 "visual.colors.console.prefix.prefix",
                 "<#393e46>[<gradient:#E0EAFC:#CFDEF3>"

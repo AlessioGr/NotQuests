@@ -124,6 +124,8 @@ public class Configuration {
   private boolean guiQuestPreviewDescription_enabled = true;
   private boolean guiQuestPreviewRewards_enabled = true;
   private boolean guiQuestPreviewRequirements_enabled = true;
+
+  private boolean consoleColorsEnabled = true;
   private String colorsConsolePrefixPrefix = "<#393e46>[<gradient:#E0EAFC:#CFDEF3>";
   private String colorsConsolePrefixSuffix = "<#393e46>]<#636c73>: ";
   private String colorsConsoleInfoDefault = "<main>";
@@ -1020,5 +1022,13 @@ public class Configuration {
 
   public void setColorsConsolePrefixSuffix(String colorsConsolePrefixSuffix) {
     this.colorsConsolePrefixSuffix = colorsConsolePrefixSuffix;
+  }
+
+  public boolean isConsoleColorsEnabled() {
+    return consoleColorsEnabled;
+  }
+
+  public void setConsoleColorsEnabled(boolean consoleColorsEnabled) {
+    this.consoleColorsEnabled = consoleColorsEnabled;
   }
 }

@@ -317,7 +317,7 @@ public class UtilManager {
 
         //☕ = bold
         //☗ = reset
-        final String[] lines = main.getMiniMessage().stripTags(message.toLowerCase(Locale.ROOT).replace("<bold>", "☕").replace("<reset>", "☗").replace("</bold>", "☗")).split("\n", 40);
+        final String[] lines = main.getMiniMessage().stripTags(message.toLowerCase(Locale.ROOT).replace("<bold>", "☕").replace("<reset>", "☗").replace("</bold>", "☗"), main.getMessageManager().getTagResolver()).split("\n", 40);
         final String[] miniMessageLines = message.split("\n", 40);
 
         int lineCounter = 0;
