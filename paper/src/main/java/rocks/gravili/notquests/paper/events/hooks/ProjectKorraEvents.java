@@ -20,6 +20,7 @@ package rocks.gravili.notquests.paper.events.hooks;
 
 import com.projectkorra.projectkorra.event.AbilityStartEvent;
 import com.projectkorra.projectkorra.event.EntityBendingDeathEvent;
+import java.util.Locale;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -29,8 +30,6 @@ import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.objectives.KillMobsObjective;
 import rocks.gravili.notquests.paper.structs.objectives.hooks.projectkorra.ProjectKorraUseAbilityObjective;
-
-import java.util.Locale;
 
 public class ProjectKorraEvents implements Listener {
     private final NotQuests main;

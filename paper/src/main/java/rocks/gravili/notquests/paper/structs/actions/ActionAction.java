@@ -23,6 +23,11 @@ import cloud.commandframework.Command;
 import cloud.commandframework.arguments.flags.CommandFlag;
 import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.paper.PaperCommandManager;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.Random;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -31,271 +36,312 @@ import rocks.gravili.notquests.paper.commands.arguments.MultipleActionsSelector;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 
-import java.util.*;
-
 public class ActionAction extends Action {
 
-    private ArrayList<Action> actions = null;
-    private int amount = 1;
-    private boolean ignoreConditions = false;
+  private ArrayList<Action> actions = null;
+  private int amount = 1;
+  private boolean ignoreConditions = false;
 
-    private int minRandom = -1;
-    private int maxRandom = -1;
-    private boolean onlyCountForRandomIfConditionsFulfilled = false;
+  private int minRandom = -1;
+  private int maxRandom = -1;
+  private boolean onlyCountForRandomIfConditionsFulfilled = false;
 
+  public ActionAction(final NotQuests main) {
+    super(main);
+  }
 
-    public ActionAction(final NotQuests main) {
-        super(main);
-    }
+  public static void handleCommands(
+      NotQuests main,
+      PaperCommandManager<CommandSender> manager,
+      Command.Builder<CommandSender> builder,
+      ActionFor rewardFor) {
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor rewardFor) {
+    CommandFlag<Integer> minRandomFlag =
+        CommandFlag.newBuilder("minRandom")
+            .withArgument(
+                IntegerArgument.<CommandSender>newBuilder("minRandom")
+                    .asOptionalWithDefault(1)
+                    .withMin(0))
+            .withDescription(
+                ArgumentDescription.of(
+                    "If this is set, it will only execute a random amount of quests with this minimum"))
+            .build();
 
-        CommandFlag<Integer> minRandomFlag = CommandFlag
-                .newBuilder("minRandom")
-                .withArgument(IntegerArgument.<CommandSender>newBuilder("minRandom").asOptionalWithDefault(1).withMin(0))
-                .withDescription(ArgumentDescription.of("If this is set, it will only execute a random amount of quests with this minimum"))
-                .build();
+    CommandFlag<Integer> maxRandomFlag =
+        CommandFlag.newBuilder("maxRandom")
+            .withArgument(
+                IntegerArgument.<CommandSender>newBuilder("maxRandom")
+                    .asOptionalWithDefault(1)
+                    .withMin(1))
+            .withDescription(
+                ArgumentDescription.of(
+                    "If this is set, it will only execute a random amount of quests with this maximum"))
+            .build();
 
-        CommandFlag<Integer> maxRandomFlag = CommandFlag
-                .newBuilder("maxRandom")
-                .withArgument(IntegerArgument.<CommandSender>newBuilder("maxRandom").asOptionalWithDefault(1).withMin(1))
-                .withDescription(ArgumentDescription.of("If this is set, it will only execute a random amount of quests with this maximum"))
-                .build();
+    manager.command(
+        builder
+            .argument(
+                MultipleActionsSelector.of("Actions", main),
+                ArgumentDescription.of("Name of the actions which will be executed"))
+            .argument(
+                IntegerArgument.<CommandSender>newBuilder("amount")
+                    .asOptionalWithDefault(1)
+                    .withMin(1),
+                ArgumentDescription.of("Amount of times the action will be executed."))
+            .flag(
+                manager
+                    .flagBuilder("ignoreConditions")
+                    .withDescription(ArgumentDescription.of("Ignores action conditions")))
+            .flag(minRandomFlag)
+            .flag(maxRandomFlag)
+            .flag(
+                manager
+                    .flagBuilder("onlyCountForRandomIfConditionsFulfilled")
+                    .withDescription(
+                        ArgumentDescription.of(
+                            "Does not count an action to the min or max random counter if its conditions are not fulfilled, if this flag is set")))
+            .handler(
+                (context) -> {
+                  ArrayList<Action> foundActions = context.get("Actions");
+                  int amount = context.get("amount");
+                  final boolean ignoreConditions = context.flags().isPresent("ignoreConditions");
 
-        manager.command(builder
-                .argument(MultipleActionsSelector.of("Actions", main), ArgumentDescription.of("Name of the actions which will be executed"))
-                .argument(IntegerArgument.<CommandSender>newBuilder("amount").asOptionalWithDefault(1).withMin(1), ArgumentDescription.of("Amount of times the action will be executed."))
-                .flag(
-                        manager.flagBuilder("ignoreConditions")
-                                .withDescription(ArgumentDescription.of("Ignores action conditions"))
-                )
-                .flag(minRandomFlag)
-                .flag(maxRandomFlag)
-                .flag(
-                        manager.flagBuilder("onlyCountForRandomIfConditionsFulfilled")
-                                .withDescription(ArgumentDescription.of("Does not count an action to the min or max random counter if its conditions are not fulfilled, if this flag is set"))
-                )
-                .handler((context) -> {
-                    ArrayList<Action> foundActions = context.get("Actions");
-                    int amount = context.get("amount");
-                    final boolean ignoreConditions = context.flags().isPresent("ignoreConditions");
+                  final int minRandom = context.flags().getValue(minRandomFlag, -1);
+                  final int maxRandom = context.flags().getValue(maxRandomFlag, -1);
+                  final boolean onlyCountForRandomIfConditionsFulfilled =
+                      context.flags().isPresent("onlyCountForRandomIfConditionsFulfilled");
 
-                    final int minRandom = context.flags().getValue(minRandomFlag, -1);
-                    final int maxRandom = context.flags().getValue(maxRandomFlag, -1);
-                    final boolean onlyCountForRandomIfConditionsFulfilled = context.flags().isPresent("onlyCountForRandomIfConditionsFulfilled");
+                  ActionAction actionAction = new ActionAction(main);
+                  actionAction.setActions(foundActions);
+                  actionAction.setAmount(amount);
 
+                  actionAction.setMinRandom(minRandom);
+                  actionAction.setMaxRandom(maxRandom);
+                  actionAction.setOnlyCountForRandomIfConditionsFulfilled(
+                      onlyCountForRandomIfConditionsFulfilled);
 
-                    ActionAction actionAction = new ActionAction(main);
-                    actionAction.setActions(foundActions);
-                    actionAction.setAmount(amount);
+                  actionAction.setIgnoreConditions(ignoreConditions);
 
-                    actionAction.setMinRandom(minRandom);
-                    actionAction.setMaxRandom(maxRandom);
-                    actionAction.setOnlyCountForRandomIfConditionsFulfilled(onlyCountForRandomIfConditionsFulfilled);
-
-                    actionAction.setIgnoreConditions(ignoreConditions);
-
-                    main.getActionManager().addAction(actionAction, context);
+                  main.getActionManager().addAction(actionAction, context);
                 }));
+  }
+
+  public int getMaxRandom() {
+    return maxRandom;
+  }
+
+  public void setMaxRandom(int maxRandom) {
+    this.maxRandom = maxRandom;
+  }
+
+  public int getMinRandom() {
+    return minRandom;
+  }
+
+  public void setMinRandom(int minRandom) {
+    this.minRandom = minRandom;
+  }
+
+  public boolean isOnlyCountForRandomIfConditionsFulfilled() {
+    return onlyCountForRandomIfConditionsFulfilled;
+  }
+
+  public void setOnlyCountForRandomIfConditionsFulfilled(
+      boolean onlyCountForRandomIfConditionsFulfilled) {
+    this.onlyCountForRandomIfConditionsFulfilled = onlyCountForRandomIfConditionsFulfilled;
+  }
+
+  public final ArrayList<Action> getActions() {
+    return actions;
+  }
+
+  public void setActions(final ArrayList<Action> actions) {
+    this.actions = actions;
+  }
+
+  public final int getAmount() {
+    return amount;
+  }
+
+  public void setAmount(final int amount) {
+    this.amount = amount;
+  }
+
+  public final boolean isIgnoreConditions() {
+    return ignoreConditions;
+  }
+
+  public void setIgnoreConditions(final boolean ignoreConditions) {
+    this.ignoreConditions = ignoreConditions;
+  }
+
+  @Override
+  public void executeInternally(final QuestPlayer questPlayer, Object... objects) {
+    if (actions == null || actions.isEmpty()) {
+      main.getLogManager().warn("Tried to execute Action Action action with no valid actions.");
+      return;
     }
 
-    public int getMaxRandom() {
-        return maxRandom;
-    }
+    main.getLogManager()
+        .debug("Executing Action action. IsIgnoreConditions: " + isIgnoreConditions());
 
-    public void setMaxRandom(int maxRandom) {
-        this.maxRandom = maxRandom;
-    }
+    final Player player = questPlayer.getPlayer();
 
-    public int getMinRandom() {
-        return minRandom;
-    }
-
-    public void setMinRandom(int minRandom) {
-        this.minRandom = minRandom;
-    }
-
-    public boolean isOnlyCountForRandomIfConditionsFulfilled() {
-        return onlyCountForRandomIfConditionsFulfilled;
-    }
-
-    public void setOnlyCountForRandomIfConditionsFulfilled(boolean onlyCountForRandomIfConditionsFulfilled) {
-        this.onlyCountForRandomIfConditionsFulfilled = onlyCountForRandomIfConditionsFulfilled;
-    }
-
-    public final ArrayList<Action> getActions() {
-        return actions;
-    }
-
-    public void setActions(final ArrayList<Action> actions) {
-        this.actions = actions;
-    }
-
-    public final int getAmount() {
-        return amount;
-    }
-
-    public void setAmount(final int amount) {
-        this.amount = amount;
-    }
-
-    public final boolean isIgnoreConditions() {
-        return ignoreConditions;
-    }
-
-    public void setIgnoreConditions(final boolean ignoreConditions) {
-        this.ignoreConditions = ignoreConditions;
-    }
-
-    @Override
-    public void executeInternally(final QuestPlayer questPlayer, Object... objects) {
-        if (actions == null || actions.isEmpty()) {
-            main.getLogManager().warn("Tried to execute Action Action action with no valid actions.");
-            return;
-        }
-
-        main.getLogManager().debug("Executing Action action. IsIgnoreConditions: " + isIgnoreConditions());
-
-        final Player player = questPlayer.getPlayer();
-
-        if (minRandom == -1 && maxRandom == -1) {
-            for (final Action action : getActions()) {
-                if (!isIgnoreConditions()) {
-                    if (amount == 1) {
-                        main.getActionManager().executeActionWithConditions(action, questPlayer, null, true, objects);
-                    } else {
-                        for (int i = 0; i < amount; i++) {
-                            main.getActionManager().executeActionWithConditions(action, questPlayer, null, true, objects);
-                        }
-                    }
-                } else {
-                    if (amount == 1) {
-                        action.execute(questPlayer, objects);
-                    } else {
-                        for (int i = 0; i < amount; i++) {
-                            action.execute(questPlayer, objects);
-                        }
-                    }
-                }
+    if (minRandom == -1 && maxRandom == -1) {
+      for (final Action action : getActions()) {
+        if (!isIgnoreConditions()) {
+          if (amount == 1) {
+            main.getActionManager()
+                .executeActionWithConditions(action, questPlayer, null, true, objects);
+          } else {
+            for (int i = 0; i < amount; i++) {
+              main.getActionManager()
+                  .executeActionWithConditions(action, questPlayer, null, true, objects);
             }
-        }else{
-            Collections.shuffle(getActions());
-            final Random r = new Random();
-            final int low = getMinRandom();
-            final int high = getMaxRandom();
-            int amountOfActionsToExecute = (low==high) ? low : r.nextInt(high+1-low) + low;
-
-            for (int a = 0; a < amount; a++) {
-                for(int i=0; i<=amountOfActionsToExecute-1; i++){
-                    if(i >= getActions().size()){
-                        break;
-                    }
-                    final Action actionToExecute = getActions().get(i);
-
-                    if(!isIgnoreConditions() && isOnlyCountForRandomIfConditionsFulfilled()){
-                        for(Condition condition : actionToExecute.getConditions()){
-                            if (!condition.check(questPlayer).isBlank()) {
-                                amountOfActionsToExecute++;
-                                continue;
-                            }
-                        }
-                        actionToExecute.execute(questPlayer, objects);
-                    }else if (!isIgnoreConditions()) {
-                        main.getActionManager().executeActionWithConditions(actionToExecute, questPlayer, null, true, objects);
-                    } else {
-                        actionToExecute.execute(questPlayer, objects);
-                    }
-                }
-            }
-
-        }
-
-
-
-    }
-
-    @Override
-    public void save(FileConfiguration configuration, String initialPath) {
-        if (getActions() != null && !getActions().isEmpty()) {
-            ArrayList<String> actionsStringList = new ArrayList<>();
-            for(final Action action : getActions()){
-                actionsStringList.add(action.getActionName());
-            }
-            configuration.set(initialPath + ".specifics.actions", actionsStringList);
+          }
         } else {
-            main.getLogManager().warn("Error: cannot save Action for action action, because it's null. Configuration path: " + initialPath);
-        }
-        configuration.set(initialPath + ".specifics.amount", getAmount());
-        configuration.set(initialPath + ".specifics.ignoreConditions", isIgnoreConditions());
-
-        configuration.set(initialPath + ".specifics.minRandom", getMinRandom());
-        configuration.set(initialPath + ".specifics.maxRandom", getMaxRandom());
-        configuration.set(initialPath + ".specifics.onlyCountForRandomIfConditionsFulfilled", isOnlyCountForRandomIfConditionsFulfilled());
-
-    }
-
-    @Override
-    public void load(final FileConfiguration configuration, String initialPath) {
-        this.actions = new ArrayList<>();
-
-        if(configuration.contains(initialPath + ".specifics.actions")){
-            List<String> actionNames = configuration.getStringList(initialPath + ".specifics.actions");
-            for(String actionName : actionNames){
-                final Action action = main.getActionsYMLManager().getAction(actionName);
-                if (action == null) {
-                    main.getLogManager().warn("Error: ActionAction cannot find the action with name " + actionName + ". Action Path: " + initialPath);
-                }else{
-                    actions.add(action);
-                }
+          if (amount == 1) {
+            action.execute(questPlayer, objects);
+          } else {
+            for (int i = 0; i < amount; i++) {
+              action.execute(questPlayer, objects);
             }
-        }else{
-            String actionName = configuration.getString(initialPath + ".specifics.action");
-            final Action action = main.getActionsYMLManager().getAction(actionName);
-            if (action == null) {
-                main.getLogManager().warn("Error: ActionAction cannot find the action with name " + actionName + ". Action Path: " + initialPath);
-            }else{
-                actions.add(action);
+          }
+        }
+      }
+    } else {
+      Collections.shuffle(getActions());
+      final Random r = new Random();
+      final int low = getMinRandom();
+      final int high = getMaxRandom();
+      int amountOfActionsToExecute = (low == high) ? low : r.nextInt(high + 1 - low) + low;
+
+      for (int a = 0; a < amount; a++) {
+        for (int i = 0; i <= amountOfActionsToExecute - 1; i++) {
+          if (i >= getActions().size()) {
+            break;
+          }
+          final Action actionToExecute = getActions().get(i);
+
+          if (!isIgnoreConditions() && isOnlyCountForRandomIfConditionsFulfilled()) {
+            for (Condition condition : actionToExecute.getConditions()) {
+              if (!condition.check(questPlayer).isBlank()) {
+                amountOfActionsToExecute++;
+                continue;
+              }
             }
+            actionToExecute.execute(questPlayer, objects);
+          } else if (!isIgnoreConditions()) {
+            main.getActionManager()
+                .executeActionWithConditions(actionToExecute, questPlayer, null, true, objects);
+          } else {
+            actionToExecute.execute(questPlayer, objects);
+          }
         }
+      }
+    }
+  }
 
+  @Override
+  public void save(FileConfiguration configuration, String initialPath) {
+    if (getActions() != null && !getActions().isEmpty()) {
+      ArrayList<String> actionsStringList = new ArrayList<>();
+      for (final Action action : getActions()) {
+        actionsStringList.add(action.getActionName());
+      }
+      configuration.set(initialPath + ".specifics.actions", actionsStringList);
+    } else {
+      main.getLogManager()
+          .warn(
+              "Error: cannot save Action for action action, because it's null. Configuration path: "
+                  + initialPath);
+    }
+    configuration.set(initialPath + ".specifics.amount", getAmount());
+    configuration.set(initialPath + ".specifics.ignoreConditions", isIgnoreConditions());
 
-        this.amount = configuration.getInt(initialPath + ".specifics.amount", 1);
-        this.ignoreConditions = configuration.getBoolean(initialPath + ".specifics.ignoreConditions", false);
+    configuration.set(initialPath + ".specifics.minRandom", getMinRandom());
+    configuration.set(initialPath + ".specifics.maxRandom", getMaxRandom());
+    configuration.set(
+        initialPath + ".specifics.onlyCountForRandomIfConditionsFulfilled",
+        isOnlyCountForRandomIfConditionsFulfilled());
+  }
 
-        this.minRandom = configuration.getInt(initialPath + ".specifics.minRandom", -1);
-        this.maxRandom = configuration.getInt(initialPath + ".specifics.maxRandom", -1);
-        this.onlyCountForRandomIfConditionsFulfilled = configuration.getBoolean(initialPath + ".specifics.onlyCountForRandomIfConditionsFulfilled", false);
+  @Override
+  public void load(final FileConfiguration configuration, String initialPath) {
+    this.actions = new ArrayList<>();
 
+    if (configuration.contains(initialPath + ".specifics.actions")) {
+      List<String> actionNames = configuration.getStringList(initialPath + ".specifics.actions");
+      for (String actionName : actionNames) {
+        final Action action = main.getActionsYMLManager().getAction(actionName);
+        if (action == null) {
+          main.getLogManager()
+              .warn(
+                  "Error: ActionAction cannot find the action with name "
+                      + actionName
+                      + ". Action Path: "
+                      + initialPath);
+        } else {
+          actions.add(action);
+        }
+      }
+    } else {
+      String actionName = configuration.getString(initialPath + ".specifics.action");
+      final Action action = main.getActionsYMLManager().getAction(actionName);
+      if (action == null) {
+        main.getLogManager()
+            .warn(
+                "Error: ActionAction cannot find the action with name "
+                    + actionName
+                    + ". Action Path: "
+                    + initialPath);
+      } else {
+        actions.add(action);
+      }
     }
 
-    @Override
-    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
-        String actionNames = arguments.get(0);
-        this.actions = new ArrayList<>();
+    this.amount = configuration.getInt(initialPath + ".specifics.amount", 1);
+    this.ignoreConditions =
+        configuration.getBoolean(initialPath + ".specifics.ignoreConditions", false);
 
-        for(String actionName : actionNames.split(",")){
-            final Action action = main.getActionsYMLManager().getAction(actionName);
-            if (action == null) {
-                main.getLogManager().warn("Error: ActionAction cannot find the action with name " + actionName + ". Actions string: " + arguments.get(0));
-            }else{
-                actions.add(action);
-            }
-        }
+    this.minRandom = configuration.getInt(initialPath + ".specifics.minRandom", -1);
+    this.maxRandom = configuration.getInt(initialPath + ".specifics.maxRandom", -1);
+    this.onlyCountForRandomIfConditionsFulfilled =
+        configuration.getBoolean(
+            initialPath + ".specifics.onlyCountForRandomIfConditionsFulfilled", false);
+  }
 
+  @Override
+  public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+    String actionNames = arguments.get(0);
+    this.actions = new ArrayList<>();
 
-        if(arguments.size() >= 2){
-            this.amount = Integer.parseInt(arguments.get(1));
-        }else{
-            this.amount = 1;
-        }
-
-        this.ignoreConditions = String.join(" ", arguments).toLowerCase(Locale.ROOT).contains("--ignoreconditions");
-
+    for (String actionName : actionNames.split(",")) {
+      final Action action = main.getActionsYMLManager().getAction(actionName);
+      if (action == null) {
+        main.getLogManager()
+            .warn(
+                "Error: ActionAction cannot find the action with name "
+                    + actionName
+                    + ". Actions string: "
+                    + arguments.get(0));
+      } else {
+        actions.add(action);
+      }
     }
 
-
-    @Override
-    public String getActionDescription(final QuestPlayer questPlayer, final Object... objects) {
-        return "Executes Actions: " + getActions().toString();
+    if (arguments.size() >= 2) {
+      this.amount = Integer.parseInt(arguments.get(1));
+    } else {
+      this.amount = 1;
     }
+
+    this.ignoreConditions =
+        String.join(" ", arguments).toLowerCase(Locale.ROOT).contains("--ignoreconditions");
+  }
+
+  @Override
+  public String getActionDescription(final QuestPlayer questPlayer, final Object... objects) {
+    return "Executes Actions: " + getActions().toString();
+  }
 }

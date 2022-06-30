@@ -31,82 +31,110 @@ import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 
 public class ConditionObjective extends Objective {
-    private Condition condition = null;
-    private boolean checkOnlyWhenCorrespondingVariableValueChanged = false;
+  private Condition condition = null;
+  private boolean checkOnlyWhenCorrespondingVariableValueChanged = false;
 
+  public ConditionObjective(NotQuests main) {
+    super(main);
+  }
 
-    public ConditionObjective(NotQuests main) {
-        super(main);
-    }
+  public static void handleCommands(
+      NotQuests main,
+      PaperCommandManager<CommandSender> manager,
+      Command.Builder<CommandSender> addObjectiveBuilder) {
+    manager.command(
+        addObjectiveBuilder
+            .argument(
+                ConditionSelector.of("condition", main), ArgumentDescription.of("Condition Name"))
+            .flag(
+                manager
+                    .flagBuilder("checkOnlyWhenCorrespondingVariableValueChanged")
+                    .withDescription(
+                        ArgumentDescription.of(
+                            "This checks this condition only, when the corresponding variable value is changed via an action, instead of checking every x seconds.")))
+            .handler(
+                (context) -> {
+                  final Condition condition = context.get("condition");
+                  final boolean checkOnlyWhenCorrespondingVariableValueChanged =
+                      context.flags().isPresent("checkOnlyWhenCorrespondingVariableValueChanged");
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
-        manager.command(addObjectiveBuilder
-                .argument(ConditionSelector.of("condition", main), ArgumentDescription.of("Condition Name"))
-                .flag(
-                        manager.flagBuilder("checkOnlyWhenCorrespondingVariableValueChanged")
-                                .withDescription(ArgumentDescription.of("This checks this condition only, when the corresponding variable value is changed via an action, instead of checking every x seconds."))
-                )
-                .handler((context) -> {
-                    final Condition condition = context.get("condition");
-                    final boolean checkOnlyWhenCorrespondingVariableValueChanged = context.flags().isPresent("checkOnlyWhenCorrespondingVariableValueChanged");
+                  ConditionObjective conditionObjective = new ConditionObjective(main);
+                  conditionObjective.setCondition(condition);
+                  conditionObjective.setCheckOnlyWhenCorrespondingVariableValueChanged(
+                      checkOnlyWhenCorrespondingVariableValueChanged);
 
-                    ConditionObjective conditionObjective = new ConditionObjective(main);
-                    conditionObjective.setCondition(condition);
-                    conditionObjective.setCheckOnlyWhenCorrespondingVariableValueChanged(checkOnlyWhenCorrespondingVariableValueChanged);
-
-                    main.getObjectiveManager().addObjective(conditionObjective, context);
+                  main.getObjectiveManager().addObjective(conditionObjective, context);
                 }));
-    }
+  }
 
-    @Override
-    public String getObjectiveTaskDescription(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
-        if (condition != null) {
-            return condition.getConditionDescription(questPlayer, getQuest());
-        } else {
-            return "<YELLOW>Error: Condition not found.";
-        }
+  @Override
+  public String getObjectiveTaskDescription(
+      final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
+    if (condition != null) {
+      return condition.getConditionDescription(questPlayer, getQuest());
+    } else {
+      return "<YELLOW>Error: Condition not found.";
     }
+  }
 
-    public void setCondition(final Condition condition) {
-        this.condition = condition;
-    }
+  public final Condition getCondition() {
+    return condition;
+  }
 
-    public final Condition getCondition(){
-        return condition;
-    }
+  public void setCondition(final Condition condition) {
+    this.condition = condition;
+  }
 
-    public void setCheckOnlyWhenCorrespondingVariableValueChanged(final boolean checkOnlyWhenCorrespondingVariableValueChanged) {
-        this.checkOnlyWhenCorrespondingVariableValueChanged = checkOnlyWhenCorrespondingVariableValueChanged;
-    }
-    public final boolean isCheckOnlyWhenCorrespondingVariableValueChanged(){
-        return checkOnlyWhenCorrespondingVariableValueChanged;
-    }
+  public final boolean isCheckOnlyWhenCorrespondingVariableValueChanged() {
+    return checkOnlyWhenCorrespondingVariableValueChanged;
+  }
 
-    @Override
-    public void save(FileConfiguration configuration, String initialPath) {
-        if(condition != null){
-            configuration.set(initialPath + ".specifics.condition", getCondition().getConditionName());
-        }
-        configuration.set(initialPath + ".specifics.checkOnlyWhenCorrespondingVariableValueChanged", isCheckOnlyWhenCorrespondingVariableValueChanged());
-    }
+  public void setCheckOnlyWhenCorrespondingVariableValueChanged(
+      final boolean checkOnlyWhenCorrespondingVariableValueChanged) {
+    this.checkOnlyWhenCorrespondingVariableValueChanged =
+        checkOnlyWhenCorrespondingVariableValueChanged;
+  }
 
-    @Override
-    public void onObjectiveUnlock(final ActiveObjective activeObjective, final boolean unlockedDuringPluginStartupQuestLoadingProcess) {
-        activeObjective.getQuestPlayer().setHasActiveConditionObjectives(true);
+  @Override
+  public void save(FileConfiguration configuration, String initialPath) {
+    if (condition != null) {
+      configuration.set(initialPath + ".specifics.condition", getCondition().getConditionName());
     }
-    @Override
-    public void onObjectiveCompleteOrLock(final ActiveObjective activeObjective, final boolean lockedOrCompletedDuringPluginStartupQuestLoadingProcess, final boolean completed) {
-        activeObjective.getQuestPlayer().setHasActiveConditionObjectives(false);
-    }
+    configuration.set(
+        initialPath + ".specifics.checkOnlyWhenCorrespondingVariableValueChanged",
+        isCheckOnlyWhenCorrespondingVariableValueChanged());
+  }
 
+  @Override
+  public void onObjectiveUnlock(
+      final ActiveObjective activeObjective,
+      final boolean unlockedDuringPluginStartupQuestLoadingProcess) {
+    activeObjective.getQuestPlayer().setHasActiveConditionObjectives(true);
+  }
 
-    @Override
-    public void load(FileConfiguration configuration, String initialPath) {
-        String conditionName = configuration.getString(initialPath + ".specifics.condition", "");
-        condition = main.getConditionsYMLManager().getCondition(conditionName);
-        if(condition == null){
-            main.getLogManager().warn("Error: Cannot load Condition <highlight>" + conditionName + "</highlight> of Condition Objective for Quest <highlight2>" + getQuest().getQuestName() + "</highlight>, because the condition does not exist.");
-        }
-        checkOnlyWhenCorrespondingVariableValueChanged = configuration.getBoolean(".specifics.checkOnlyWhenCorrespondingVariableValueChanged", false);
+  @Override
+  public void onObjectiveCompleteOrLock(
+      final ActiveObjective activeObjective,
+      final boolean lockedOrCompletedDuringPluginStartupQuestLoadingProcess,
+      final boolean completed) {
+    activeObjective.getQuestPlayer().setHasActiveConditionObjectives(false);
+  }
+
+  @Override
+  public void load(FileConfiguration configuration, String initialPath) {
+    String conditionName = configuration.getString(initialPath + ".specifics.condition", "");
+    condition = main.getConditionsYMLManager().getCondition(conditionName);
+    if (condition == null) {
+      main.getLogManager()
+          .warn(
+              "Error: Cannot load Condition <highlight>"
+                  + conditionName
+                  + "</highlight> of Condition Objective for Quest <highlight2>"
+                  + getQuest().getQuestName()
+                  + "</highlight>, because the condition does not exist.");
     }
+    checkOnlyWhenCorrespondingVariableValueChanged =
+        configuration.getBoolean(
+            ".specifics.checkOnlyWhenCorrespondingVariableValueChanged", false);
+  }
 }

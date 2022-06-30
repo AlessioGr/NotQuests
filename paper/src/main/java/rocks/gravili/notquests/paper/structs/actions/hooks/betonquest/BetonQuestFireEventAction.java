@@ -22,6 +22,8 @@ import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.paper.PaperCommandManager;
+import java.util.ArrayList;
+import java.util.List;
 import org.betonquest.betonquest.BetonQuest;
 import org.betonquest.betonquest.api.config.QuestPackage;
 import org.betonquest.betonquest.config.Config;
@@ -35,123 +37,144 @@ import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.actions.ActionFor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class BetonQuestFireEventAction extends Action {
 
-    private String packageName = "";
-    private String eventName = "";
-    private EventID cachedEventID = null;
+  private String packageName = "";
+  private String eventName = "";
+  private EventID cachedEventID = null;
 
-    public BetonQuestFireEventAction(final NotQuests main) {
-        super(main);
-    }
+  public BetonQuestFireEventAction(final NotQuests main) {
+    super(main);
+  }
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor rewardFor) {
-        manager.command(builder
-                .argument(StringArgument.<CommandSender>newBuilder("package").withSuggestionsProvider((context, lastString) -> {
+  public static void handleCommands(
+      NotQuests main,
+      PaperCommandManager<CommandSender> manager,
+      Command.Builder<CommandSender> builder,
+      ActionFor rewardFor) {
+    manager.command(
+        builder
+            .argument(
+                StringArgument.<CommandSender>newBuilder("package")
+                    .withSuggestionsProvider(
+                        (context, lastString) -> {
+                          final ArrayList<String> completions =
+                              new ArrayList<>(Config.getPackages().keySet());
 
-                    final ArrayList<String> completions = new ArrayList<>(Config.getPackages().keySet());
+                          final List<String> allArgs = context.getRawInput();
+                          main.getUtilManager()
+                              .sendFancyCommandCompletion(
+                                  context.getSender(),
+                                  allArgs.toArray(new String[0]),
+                                  "[Package Name]",
+                                  "[Event Name]");
 
-                    final List<String> allArgs = context.getRawInput();
-                    main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Package Name]", "[Event Name]");
+                          return completions;
+                        })
+                    .build(),
+                ArgumentDescription.of("BetonQuest Event Package Name"))
+            .argument(
+                StringArgument.<CommandSender>newBuilder("event")
+                    .withSuggestionsProvider(
+                        (context, lastString) -> {
+                          String packageName = context.get("package");
 
-                    return completions;
-                }).build(), ArgumentDescription.of("BetonQuest Event Package Name"))
-                .argument(StringArgument.<CommandSender>newBuilder("event").withSuggestionsProvider((context, lastString) -> {
+                          final QuestPackage configPack = Config.getPackages().get(packageName);
+                          ConfigurationSection eventsFileConfiguration =
+                              configPack.getConfig().getConfigurationSection("events");
+                          if (eventsFileConfiguration == null) {
+                            return new ArrayList<>();
+                          }
+                          final ArrayList<String> completions =
+                              new ArrayList<>(eventsFileConfiguration.getKeys(false));
 
+                          final List<String> allArgs = context.getRawInput();
+                          main.getUtilManager()
+                              .sendFancyCommandCompletion(
+                                  context.getSender(),
+                                  allArgs.toArray(new String[0]),
+                                  "[Event Name]",
+                                  "[...]");
 
-                    String packageName = context.get("package");
+                          return completions;
+                        })
+                    .build(),
+                ArgumentDescription.of("BetonQuest Event Name"))
+            .handler(
+                (context) -> {
+                  String packageName = context.get("package");
+                  String eventName = context.get("event");
 
-                    final QuestPackage configPack = Config.getPackages().get(packageName);
-                    ConfigurationSection eventsFileConfiguration = configPack.getConfig().getConfigurationSection("events");
-                    if(eventsFileConfiguration == null){
-                        return new ArrayList<>();
-                    }
-                    final ArrayList<String> completions = new ArrayList<>(eventsFileConfiguration.getKeys(false));
+                  // QuestEvent questEvent;
 
-                    final List<String> allArgs = context.getRawInput();
-                    main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Event Name]", "[...]");
+                  BetonQuestFireEventAction betonQuestFireEventAction =
+                      new BetonQuestFireEventAction(main);
+                  betonQuestFireEventAction.setPackageName(packageName);
+                  betonQuestFireEventAction.setEventName(eventName);
 
-                    return completions;
-                }).build(), ArgumentDescription.of("BetonQuest Event Name"))
-                .handler((context) -> {
-
-                    String packageName = context.get("package");
-                    String eventName = context.get("event");
-
-                    //QuestEvent questEvent;
-
-                    BetonQuestFireEventAction betonQuestFireEventAction = new BetonQuestFireEventAction(main);
-                    betonQuestFireEventAction.setPackageName(packageName);
-                    betonQuestFireEventAction.setEventName(eventName);
-
-
-                    main.getActionManager().addAction(betonQuestFireEventAction, context);
+                  main.getActionManager().addAction(betonQuestFireEventAction, context);
                 }));
+  }
+
+  public final String getPackageName() {
+    return packageName;
+  }
+
+  public void setPackageName(final String packageName) {
+    this.packageName = packageName;
+  }
+
+  public final String getEventName() {
+    return eventName;
+  }
+
+  public void setEventName(final String eventName) {
+    this.eventName = eventName;
+  }
+
+  public final EventID getEventID() {
+    if (cachedEventID == null) {
+      final QuestPackage configPack = Config.getPackages().get(getPackageName());
+      try {
+        cachedEventID = new EventID(configPack, getEventName());
+      } catch (final ObjectNotFoundException e) {
+        main.getLogManager()
+            .warn(
+                "Tried to execute BetonQuestFireEvent Action, but the BetonQuest event was not found: "
+                    + e.getMessage());
+        return null;
+      }
     }
+    return cachedEventID;
+  }
 
-    public final String getPackageName() {
-        return packageName;
+  @Override
+  public void executeInternally(final QuestPlayer questPlayer, Object... objects) {
+    if (getEventID() != null) {
+      BetonQuest.event(questPlayer.getPlayer().getUniqueId().toString(), getEventID());
     }
+  }
 
-    public void setPackageName(final String packageName) {
-        this.packageName = packageName;
-    }
+  @Override
+  public void save(FileConfiguration configuration, String initialPath) {
+    configuration.set(initialPath + ".specifics.packageName", getPackageName());
+    configuration.set(initialPath + ".specifics.eventName", getEventName());
+  }
 
-    public final String getEventName() {
-        return eventName;
-    }
+  @Override
+  public void load(final FileConfiguration configuration, String initialPath) {
+    this.packageName = configuration.getString(initialPath + ".specifics.packageName");
+    this.eventName = configuration.getString(initialPath + ".specifics.eventName");
+  }
 
-    public void setEventName(final String eventName) {
-        this.eventName = eventName;
-    }
+  @Override
+  public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+    this.packageName = arguments.get(0);
+    this.eventName = arguments.get(1);
+  }
 
-    public final EventID getEventID(){
-        if(cachedEventID == null){
-            final QuestPackage configPack = Config.getPackages().get(getPackageName());
-            try{
-                cachedEventID = new EventID(configPack, getEventName());
-            }catch (final ObjectNotFoundException e) {
-                main.getLogManager().warn("Tried to execute BetonQuestFireEvent Action, but the BetonQuest event was not found: " + e.getMessage());
-                return null;
-            }
-        }
-        return cachedEventID;
-    }
-
-
-    @Override
-    public void executeInternally(final QuestPlayer questPlayer, Object... objects) {
-        if (getEventID() != null) {
-            BetonQuest.event(questPlayer.getPlayer().getUniqueId().toString(), getEventID());
-        }
-
-    }
-
-    @Override
-    public void save(FileConfiguration configuration, String initialPath) {
-        configuration.set(initialPath + ".specifics.packageName", getPackageName());
-        configuration.set(initialPath + ".specifics.eventName", getEventName());
-    }
-
-    @Override
-    public void load(final FileConfiguration configuration, String initialPath) {
-        this.packageName = configuration.getString(initialPath + ".specifics.packageName");
-        this.eventName = configuration.getString(initialPath + ".specifics.eventName");
-    }
-
-    @Override
-    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
-        this.packageName = arguments.get(0);
-        this.eventName = arguments.get(1);
-    }
-
-
-    @Override
-    public String getActionDescription(final QuestPlayer questPlayer, final Object... objects) {
-        return "Executes Event: " + getEventName() + " of package " + getPackageName();
-
-    }
+  @Override
+  public String getActionDescription(final QuestPlayer questPlayer, final Object... objects) {
+    return "Executes Event: " + getEventName() + " of package " + getPackageName();
+  }
 }

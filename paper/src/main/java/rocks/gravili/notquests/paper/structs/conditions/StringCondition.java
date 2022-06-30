@@ -23,6 +23,9 @@ import cloud.commandframework.Command;
 import cloud.commandframework.arguments.flags.CommandFlag;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.paper.PaperCommandManager;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -35,38 +38,15 @@ import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
 import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 public class StringCondition extends Condition {
 
+    private static boolean alreadyLoadedOnce = false;
     private String string;
     private String variableName;
     private String stringOperator;
-
     private HashMap<String, String> additionalStringArguments;
     private HashMap<String, NumberExpression> additionalNumberArguments;
     private HashMap<String, NumberExpression> additionalBooleanArguments;
-
-    private static boolean alreadyLoadedOnce = false;
-
-
-    public final String getStringOperator() {
-        return stringOperator;
-    }
-
-    public void setStringOperator(final String stringOperator) {
-        this.stringOperator = stringOperator;
-    }
-
-    public final String getVariableName() {
-        return variableName;
-    }
-
-    public void setVariableName(final String variableName){
-        this.variableName = variableName;
-    }
 
 
     public StringCondition(NotQuests main) {
@@ -74,64 +54,6 @@ public class StringCondition extends Condition {
         additionalStringArguments = new HashMap<>();
         additionalNumberArguments = new HashMap<>();
         additionalBooleanArguments = new HashMap<>();
-    }
-
-
-    @Override
-    public String checkInternally(final QuestPlayer questPlayer) {
-        final String stringRequirement = getString();
-
-        Variable<?> variable = main.getVariablesManager().getVariableFromString(variableName);
-
-        if(variable == null){
-            return "<ERROR>Error: variable <highlight>" + variableName + "</highlight> not found. Report this to the Server owner.";
-        }
-
-        if(additionalStringArguments != null && !additionalStringArguments.isEmpty()){
-            variable.setAdditionalStringArguments(additionalStringArguments);
-        }
-        if(additionalNumberArguments != null && !additionalNumberArguments.isEmpty()){
-            variable.setAdditionalNumberArguments(additionalNumberArguments);
-        }
-        if(additionalBooleanArguments != null && !additionalBooleanArguments.isEmpty()){
-            variable.setAdditionalBooleanArguments(additionalBooleanArguments);
-        }
-
-        Object value = variable.getValue(questPlayer, questPlayer);
-
-        if(value instanceof final String stringValue){
-            if(getStringOperator().equalsIgnoreCase("equals")){
-                if(!stringValue.equals(stringRequirement)){
-                    return "<YELLOW><highlight>" + variable.getSingular() + "</highlight> needs to equal " + stringRequirement + ".";
-                }
-            }else if(getStringOperator().equalsIgnoreCase("equalsIgnoreCase")){
-                if(!stringValue.equalsIgnoreCase(stringRequirement)){
-                    return "<YELLOW><highlight>" + variable.getSingular() + "</highlight> needs to equal (case-insensitive) " + stringRequirement + ".";
-                }
-            }else if(getStringOperator().equalsIgnoreCase("contains")){
-                if(!stringValue.contains(stringRequirement)){
-                    return "<YELLOW><highlight>" + variable.getSingular() + "</highlight> needs to contain " + stringRequirement + ".";
-                }
-            }else if(getStringOperator().equalsIgnoreCase("startsWith")){
-                if(!stringValue.startsWith(stringRequirement)){
-                    return "<YELLOW><highlight>" + variable.getSingular() + "</highlight> needs to start with " + stringRequirement + ".";
-                }
-            }else if(getStringOperator().equalsIgnoreCase("endsWith")){
-                if(!stringValue.endsWith(stringRequirement)){
-                    return "<YELLOW><highlight>" + variable.getSingular() + "</highlight> needs to end with " + stringRequirement + ".";
-                }
-            }else if(getStringOperator().equalsIgnoreCase("isEmpty")){
-                if(!stringValue.isBlank()){
-                    return "<YELLOW><highlight>" + variable.getSingular() + "</highlight> needs to be empty.";
-                }
-            } else {
-                return "<ERROR>Error: variable operator <highlight>" + getStringOperator() + "</highlight> is invalid. Report this to the Server owner.";
-            }
-        } else {
-            return "<ERROR>Error: variable <highlight>" + variableName + "</highlight> is not a String.";
-        }
-
-        return "";
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
@@ -202,7 +124,7 @@ public class StringCondition extends Condition {
                         }
                         stringCondition.setAdditionalBooleanArguments(additionalBooleanArguments);
 
-                        main.getConditionsManager().addCondition(stringCondition, context);
+                        main.getConditionsManager().addCondition(stringCondition, context, conditionFor);
                     })
             );
 
@@ -211,6 +133,79 @@ public class StringCondition extends Condition {
         alreadyLoadedOnce = true;
 
 
+    }
+
+    public final String getStringOperator() {
+        return stringOperator;
+    }
+
+    public void setStringOperator(final String stringOperator) {
+        this.stringOperator = stringOperator;
+    }
+
+    public final String getVariableName() {
+        return variableName;
+    }
+
+    public void setVariableName(final String variableName){
+        this.variableName = variableName;
+    }
+
+    @Override
+    public String checkInternally(final QuestPlayer questPlayer) {
+        final String stringRequirement = getString();
+
+        Variable<?> variable = main.getVariablesManager().getVariableFromString(variableName);
+
+        if(variable == null){
+            return "<ERROR>Error: variable <highlight>" + variableName + "</highlight> not found. Report this to the Server owner.";
+        }
+
+        if(additionalStringArguments != null && !additionalStringArguments.isEmpty()){
+            variable.setAdditionalStringArguments(additionalStringArguments);
+        }
+        if(additionalNumberArguments != null && !additionalNumberArguments.isEmpty()){
+            variable.setAdditionalNumberArguments(additionalNumberArguments);
+        }
+        if(additionalBooleanArguments != null && !additionalBooleanArguments.isEmpty()){
+            variable.setAdditionalBooleanArguments(additionalBooleanArguments);
+        }
+
+        Object value = variable.getValue(questPlayer, questPlayer);
+
+        if(value instanceof final String stringValue){
+            if(getStringOperator().equalsIgnoreCase("equals")){
+                if(!stringValue.equals(stringRequirement)){
+                    return "<YELLOW><highlight>" + variable.getSingular() + "</highlight> needs to equal " + stringRequirement + ".";
+                }
+            }else if(getStringOperator().equalsIgnoreCase("equalsIgnoreCase")){
+                if(!stringValue.equalsIgnoreCase(stringRequirement)){
+                    return "<YELLOW><highlight>" + variable.getSingular() + "</highlight> needs to equal (case-insensitive) " + stringRequirement + ".";
+                }
+            }else if(getStringOperator().equalsIgnoreCase("contains")){
+                if(!stringValue.contains(stringRequirement)){
+                    return "<YELLOW><highlight>" + variable.getSingular() + "</highlight> needs to contain " + stringRequirement + ".";
+                }
+            }else if(getStringOperator().equalsIgnoreCase("startsWith")){
+                if(!stringValue.startsWith(stringRequirement)){
+                    return "<YELLOW><highlight>" + variable.getSingular() + "</highlight> needs to start with " + stringRequirement + ".";
+                }
+            }else if(getStringOperator().equalsIgnoreCase("endsWith")){
+                if(!stringValue.endsWith(stringRequirement)){
+                    return "<YELLOW><highlight>" + variable.getSingular() + "</highlight> needs to end with " + stringRequirement + ".";
+                }
+            }else if(getStringOperator().equalsIgnoreCase("isEmpty")){
+                if(!stringValue.isBlank()){
+                    return "<YELLOW><highlight>" + variable.getSingular() + "</highlight> needs to be empty.";
+                }
+            } else {
+                return "<ERROR>Error: variable operator <highlight>" + getStringOperator() + "</highlight> is invalid. Report this to the Server owner.";
+            }
+        } else {
+            return "<ERROR>Error: variable <highlight>" + variableName + "</highlight> is not a String.";
+        }
+
+        return "";
     }
 
     @Override
@@ -321,14 +316,13 @@ public class StringCondition extends Condition {
         }
     }
 
-    private void setString(final String string) {
-        this.string = string;
-    }
-
     public final String getString() {
         return string;
     }
 
+    private void setString(final String string) {
+        this.string = string;
+    }
 
     private void setAdditionalStringArguments(HashMap<String, String> additionalStringArguments) {
         this.additionalStringArguments = additionalStringArguments;

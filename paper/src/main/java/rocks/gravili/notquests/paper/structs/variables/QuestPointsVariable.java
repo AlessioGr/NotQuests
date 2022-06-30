@@ -19,50 +19,54 @@
 package rocks.gravili.notquests.paper.structs.variables;
 
 import cloud.commandframework.ArgumentDescription;
+import java.util.List;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
-import java.util.List;
-
 public class QuestPointsVariable extends Variable<Long> {
-    public QuestPointsVariable(NotQuests main) {
-        super(main);
-        setCanSetValue(true);
-        addRequiredBooleanFlag(
-                main.getCommandManager().getPaperCommandManager().flagBuilder("notifyPlayer")
-                        .withDescription(ArgumentDescription.of("Notifies the player for when their QuestPoints are changed or set")).build() //TODO: setOnlyRequiredValues once implemented
+  public QuestPointsVariable(NotQuests main) {
+    super(main);
+    setCanSetValue(true);
+    addRequiredBooleanFlag(
+        main.getCommandManager()
+            .getPaperCommandManager()
+            .flagBuilder("notifyPlayer")
+            .withDescription(
+                ArgumentDescription.of(
+                    "Notifies the player for when their QuestPoints are changed or set"))
+            .build() // TODO: setOnlyRequiredValues once implemented
         );
-    }
+  }
 
-    @Override
-    public Long getValue(QuestPlayer questPlayer, Object... objects) {
-        if (questPlayer == null) {
-            return 0L;
-        }
-        return questPlayer.getQuestPoints();
+  @Override
+  public Long getValue(QuestPlayer questPlayer, Object... objects) {
+    if (questPlayer == null) {
+      return 0L;
     }
+    return questPlayer.getQuestPoints();
+  }
 
-    @Override
-    public boolean setValueInternally(Long newValue, QuestPlayer questPlayer, Object... objects) {
-        if (questPlayer == null) {
-            return false;
-        }
-        questPlayer.setQuestPoints(newValue, getRequiredBooleanValue("notifyPlayer", questPlayer));
-        return true;
+  @Override
+  public boolean setValueInternally(Long newValue, QuestPlayer questPlayer, Object... objects) {
+    if (questPlayer == null) {
+      return false;
     }
+    questPlayer.setQuestPoints(newValue, getRequiredBooleanValue("notifyPlayer", questPlayer));
+    return true;
+  }
 
-    @Override
-    public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
-        return null;
-    }
+  @Override
+  public List<String> getPossibleValues(QuestPlayer questPlayer, Object... objects) {
+    return null;
+  }
 
-    @Override
-    public String getPlural() {
-        return "Quest Points";
-    }
+  @Override
+  public String getPlural() {
+    return "Quest Points";
+  }
 
-    @Override
-    public String getSingular() {
-        return "Quest Point";
-    }
+  @Override
+  public String getSingular() {
+    return "Quest Point";
+  }
 }

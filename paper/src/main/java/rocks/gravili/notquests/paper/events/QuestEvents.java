@@ -19,8 +19,12 @@
 package rocks.gravili.notquests.paper.events;
 
 
+import static rocks.gravili.notquests.paper.commands.NotQuestColors.debugHighlightGradient;
+
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
+import java.util.HashMap;
+import java.util.Locale;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -42,7 +46,16 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerFishEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.Inventory;
@@ -50,19 +63,29 @@ import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.loot.LootTables;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelection;
 import rocks.gravili.notquests.paper.conversation.ConversationPlayer;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
-import rocks.gravili.notquests.paper.structs.objectives.*;
+import rocks.gravili.notquests.paper.structs.objectives.BreakBlocksObjective;
+import rocks.gravili.notquests.paper.structs.objectives.BreedObjective;
+import rocks.gravili.notquests.paper.structs.objectives.CollectItemsObjective;
+import rocks.gravili.notquests.paper.structs.objectives.ConsumeItemsObjective;
+import rocks.gravili.notquests.paper.structs.objectives.CraftItemsObjective;
+import rocks.gravili.notquests.paper.structs.objectives.FishItemsObjective;
+import rocks.gravili.notquests.paper.structs.objectives.InteractObjective;
+import rocks.gravili.notquests.paper.structs.objectives.JumpObjective;
+import rocks.gravili.notquests.paper.structs.objectives.KillMobsObjective;
+import rocks.gravili.notquests.paper.structs.objectives.OpenBuriedTreasureObjective;
+import rocks.gravili.notquests.paper.structs.objectives.PlaceBlocksObjective;
+import rocks.gravili.notquests.paper.structs.objectives.ReachLocationObjective;
+import rocks.gravili.notquests.paper.structs.objectives.RunCommandObjective;
+import rocks.gravili.notquests.paper.structs.objectives.SmeltObjective;
+import rocks.gravili.notquests.paper.structs.objectives.SneakObjective;
 import rocks.gravili.notquests.paper.structs.triggers.ActiveTrigger;
 import rocks.gravili.notquests.paper.structs.triggers.types.WorldEnterTrigger;
 import rocks.gravili.notquests.paper.structs.triggers.types.WorldLeaveTrigger;
-
-import java.util.HashMap;
-import java.util.Locale;
-
-import static rocks.gravili.notquests.paper.commands.NotQuestColors.debugHighlightGradient;
 
 
 public class QuestEvents implements Listener {
@@ -261,7 +284,8 @@ public class QuestEvents implements Listener {
                                         continue;
                                     }
 
-                                    if (!smeltObjective.isSmeltAnyItem() && !currentItem.isSimilar(smeltObjective.getItemToSmelt())) {
+                                    final ItemStackSelection itemStackSelection = smeltObjective.getItemStackSelection();
+                                    if(!itemStackSelection.checkIfIsIncluded(currentItem)){
                                         //questPlayer.sendDebugMessage("Invalid item for smelt objective (2). CurrentItem: " + currentItem.getType().name() + " ItemToSmelt: " + smeltObjective.getItemToSmelt().getType().name());
                                         continue;
                                     }
@@ -397,18 +421,13 @@ public class QuestEvents implements Listener {
                                     final ItemStack result = e.getRecipe().getResult();
                                     final ItemStack cursor = e.getCursor();
 
+                                    final ItemStackSelection itemStackSelection = craftItemsObjective.getItemStackSelection();
+
                                     //Check if the Material of the crafted item is equal to the Material needed in the CraftItemsObjective
-                                    if (!craftItemsObjective.isCraftAnyItem() && !(craftItemsObjective.getItemToCraft().getType() == result.getType())) {
+                                    if (!itemStackSelection.checkIfIsIncluded(result)) {
                                         continue;
                                     }
 
-                                    //If the objectiv-item which needs to be crafted has an ItemMeta...
-                                    if (!craftItemsObjective.isCraftAnyItem() && craftItemsObjective.getItemToCraft().getItemMeta() != null) {
-                                        //then check if the ItemMeta of the crafted item is equal to the ItemMeta needed in the CraftItemsObjective
-                                        if (!craftItemsObjective.getItemToCraft().getItemMeta().equals(result.getItemMeta())) {
-                                            continue;
-                                        }
-                                    }
 
                                     questPlayer.sendDebugMessage("Inventory craft event. Click type: " + debugHighlightGradient + e.getClick().name() + "</gradient>");
 
@@ -751,11 +770,16 @@ public class QuestEvents implements Listener {
                         for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
                             if (activeObjective.isUnlocked()) {
                                 if (activeObjective.getObjective() instanceof BreakBlocksObjective breakBlocksObjective) {
-                                    if (breakBlocksObjective.getBlockToBreakMaterial().equalsIgnoreCase("any") || breakBlocksObjective.getBlockToBreakMaterial().equalsIgnoreCase(e.getBlock().getType().name())) {
+                                    final ItemStackSelection itemStackSelection = breakBlocksObjective.getItemStackSelection();
+
+                                    if(itemStackSelection.checkIfIsIncluded(e.getBlock().getType())){
                                         activeObjective.addProgress(1);
                                     }
+
                                 } else if (activeObjective.getObjective() instanceof PlaceBlocksObjective placeBlocksObjective) { //Deduct if Block is Broken for PlaceBlocksObjective
-                                    if (placeBlocksObjective.getBlockToPlace().equalsIgnoreCase("any") || placeBlocksObjective.getBlockToPlace().equalsIgnoreCase(e.getBlock().getType().name())) {
+                                    final ItemStackSelection itemStackSelection = placeBlocksObjective.getItemStackSelection();
+
+                                    if(itemStackSelection.checkIfIsIncluded(e.getBlock().getType())){
                                         if (placeBlocksObjective.isDeductIfBlockBroken()) {
                                             activeObjective.removeProgress(1, false);
                                         }
@@ -784,14 +808,18 @@ public class QuestEvents implements Listener {
                         for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
                             if (activeObjective.isUnlocked()) {
                                 //This is for the BreakBlocksObjective. It should deduct the progress if the player placed the same block again (if willDeductIfBlockPlaced() is set to true)
-                                if (activeObjective.getObjective() instanceof BreakBlocksObjective breakBlocksObjective) {
-                                    if (breakBlocksObjective.getBlockToBreakMaterial().equalsIgnoreCase("any") || breakBlocksObjective.getBlockToBreakMaterial().equalsIgnoreCase(e.getBlock().getType().name())) {
+                                if (activeObjective.getObjective() instanceof final BreakBlocksObjective breakBlocksObjective) {
+                                    final ItemStackSelection itemStackSelection = breakBlocksObjective.getItemStackSelection();
+
+                                    if (itemStackSelection.checkIfIsIncluded(e.getBlock().getType())) {
                                         if (breakBlocksObjective.isDeductIfBlockPlaced()) {
                                             activeObjective.removeProgress(1, false);
                                         }
                                     }
-                                } else if (activeObjective.getObjective() instanceof PlaceBlocksObjective placeBlocksObjective) {
-                                    if (placeBlocksObjective.getBlockToPlace().equalsIgnoreCase("any") || placeBlocksObjective.getBlockToPlace().equalsIgnoreCase(e.getBlock().getType().name())) {
+                                } else if (activeObjective.getObjective() instanceof final PlaceBlocksObjective placeBlocksObjective) {
+                                    final ItemStackSelection itemStackSelection = placeBlocksObjective.getItemStackSelection();
+
+                                    if (itemStackSelection.checkIfIsIncluded(e.getBlock().getType())) {
                                         activeObjective.addProgress(1);
                                     }
                                 }
@@ -824,18 +852,11 @@ public class QuestEvents implements Listener {
 
                                 final ItemStack fishedItem = ((org.bukkit.entity.Item)e.getCaught()).getItemStack();
 
+                                final ItemStackSelection itemStackSelection = fishItemsObjective.getItemStackSelection();
 
                                 //Check if the Material of the collected item is equal to the Material needed in the CollectItemsObjective
-                                if (!fishItemsObjective.isFishAnyItem() && !(fishItemsObjective.getItemToFish().getType() == fishedItem.getType())) {
+                                if (!itemStackSelection.checkIfIsIncluded(fishedItem)) {
                                     continue;
-                                }
-
-                                //If the objective-item which needs to be collected has an ItemMeta...
-                                if (!fishItemsObjective.isFishAnyItem() && fishItemsObjective.getItemToFish().getItemMeta() != null) {
-                                    //then check if the ItemMeta of the collected item is equal to the ItemMeta needed in the CollectItemsObjective
-                                    if (!fishItemsObjective.getItemToFish().getItemMeta().equals(fishedItem.getItemMeta())) {
-                                        continue;
-                                    }
                                 }
 
                                 activeObjective.addProgress(fishedItem.getAmount());
@@ -864,18 +885,11 @@ public class QuestEvents implements Listener {
                             if (activeObjective.isUnlocked()) {
                                 if (activeObjective.getObjective() instanceof final CollectItemsObjective collectItemsObjective) {
 
+                                    final ItemStackSelection itemStackSelection = collectItemsObjective.getItemStackSelection();
 
                                     //Check if the Material of the collected item is equal to the Material needed in the CollectItemsObjective
-                                    if (!collectItemsObjective.isCollectAnyItem() && !(collectItemsObjective.getItemToCollect().getType() == e.getItem().getItemStack().getType())) {
+                                    if (!itemStackSelection.checkIfIsIncluded(e.getItem().getItemStack())) {
                                         continue;
-                                    }
-
-                                    //If the objective-item which needs to be collected has an ItemMeta...
-                                    if (!collectItemsObjective.isCollectAnyItem() && collectItemsObjective.getItemToCollect().getItemMeta() != null) {
-                                        //then check if the ItemMeta of the collected item is equal to the ItemMeta needed in the CollectItemsObjective
-                                        if (!collectItemsObjective.getItemToCollect().getItemMeta().equals(e.getItem().getItemStack().getItemMeta())) {
-                                            continue;
-                                        }
                                     }
 
                                     activeObjective.addProgress(e.getItem().getItemStack().getAmount());
@@ -909,17 +923,10 @@ public class QuestEvents implements Listener {
                                     continue;
                                 }
 
-                                //Check if the Material of the collected item is equal to the Material needed in the CollectItemsObjective
-                                if (!collectItemsObjective.isCollectAnyItem() && !(collectItemsObjective.getItemToCollect().getType() == e.getItemDrop().getItemStack().getType())) {
-                                    continue;
-                                }
+                                final ItemStackSelection itemStackSelection = collectItemsObjective.getItemStackSelection();
 
-                                //If the objective-item which needs to be collected has an ItemMeta...
-                                if (!collectItemsObjective.isCollectAnyItem() && collectItemsObjective.getItemToCollect().getItemMeta() != null) {
-                                    //then check if the ItemMeta of the collected item is equal to the ItemMeta needed in the CollectItemsObjective
-                                    if (!collectItemsObjective.getItemToCollect().getItemMeta().equals(e.getItemDrop().getItemStack().getItemMeta())) {
-                                        continue;
-                                    }
+                                if(!itemStackSelection.checkIfIsIncluded(e.getItemDrop().getItemStack())){
+                                    continue;
                                 }
 
                                 activeObjective.removeProgress(e.getItemDrop().getItemStack().getAmount(), false);
@@ -1029,20 +1036,13 @@ public class QuestEvents implements Listener {
             if (questPlayer.getActiveQuests().size() > 0) {
                 for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                     for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
-                        if (activeObjective.getObjective() instanceof ConsumeItemsObjective consumeItemsObjective) {
+                        if (activeObjective.getObjective() instanceof final ConsumeItemsObjective consumeItemsObjective) {
                             if (activeObjective.isUnlocked()) {
 
-                                //Check if the Material of the consumed item is equal to the Material needed in the ConsumeItemsObjective
-                                if (!consumeItemsObjective.isConsumeAnyItem() && !(consumeItemsObjective.getItemToConsume().getType() == e.getItem().getType())) {
-                                    continue;
-                                }
+                                final ItemStackSelection itemStackSelection = consumeItemsObjective.getItemStackSelection();
 
-                                //If the objective-item which needs to be crafted has an ItemMeta...
-                                if (!consumeItemsObjective.isConsumeAnyItem() && consumeItemsObjective.getItemToConsume().getItemMeta() != null) {
-                                    //then check if the ItemMeta of the consumed item is equal to the ItemMeta needed in the ConsumeItemsObjective
-                                    if (!consumeItemsObjective.getItemToConsume().getItemMeta().equals(e.getItem().getItemMeta())) {
-                                        continue;
-                                    }
+                                if(!itemStackSelection.checkIfIsIncluded(e.getItem())){
+                                    continue;
                                 }
 
                                 activeObjective.addProgress(1);

@@ -18,6 +18,7 @@
 
 package rocks.gravili.notquests.paper.events.hooks;
 
+import java.util.Locale;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.event.CitizensEnableEvent;
 import net.citizensnpcs.api.event.CitizensReloadEvent;
@@ -42,8 +43,6 @@ import rocks.gravili.notquests.paper.structs.objectives.TalkToNPCObjective;
 import rocks.gravili.notquests.paper.structs.objectives.hooks.citizens.EscortNPCObjective;
 import rocks.gravili.notquests.paper.structs.triggers.ActiveTrigger;
 import rocks.gravili.notquests.paper.structs.triggers.types.NPCDeathTrigger;
-
-import java.util.Locale;
 
 public class CitizensEvents implements Listener {
     private final NotQuests main;
@@ -118,39 +117,36 @@ public class CitizensEvents implements Listener {
                                 if (deliverItemsObjective.getRecipientNPCID() == npc.getId()) {
                                     for (final ItemStack itemStack : player.getInventory().getContents()) {
                                         if (itemStack != null) {
+                                            if(!deliverItemsObjective.getItemStackSelection().checkIfIsIncluded(itemStack)){
+                                                continue;
+                                            }
 
-                                            if (deliverItemsObjective.isDeliverAnyItem() || deliverItemsObjective.getItemToDeliver().getType().equals(itemStack.getType())) {
-                                                if (!deliverItemsObjective.isDeliverAnyItem() && deliverItemsObjective.getItemToDeliver().getItemMeta() != null && !deliverItemsObjective.getItemToDeliver().getItemMeta().equals(itemStack.getItemMeta())) {
-                                                    continue;
-                                                }
+                                            final double progressLeft = activeObjective.getProgressNeeded() - activeObjective.getCurrentProgress();
 
-                                                final double progressLeft = activeObjective.getProgressNeeded() - activeObjective.getCurrentProgress();
+                                            if (progressLeft == 0) {
+                                                continue;
+                                            }
 
-                                                if (progressLeft == 0) {
-                                                    continue;
-                                                }
+                                            handledObjective = true;
 
-                                                handledObjective = true;
+                                            final String mmNpcName = main.getMiniMessage().serialize(LegacyComponentSerializer.legacyAmpersand().deserialize(npc.getName()));
 
-                                                final String mmNpcName = main.getMiniMessage().serialize(LegacyComponentSerializer.legacyAmpersand().deserialize(npc.getName()));
-
-                                                if (progressLeft < itemStack.getAmount()) { //We can finish it with this itemStack
-                                                    itemStack.setAmount((itemStack.getAmount() - (int) progressLeft));
-                                                    activeObjective.addProgress(progressLeft, npc.getId());
+                                            if (progressLeft < itemStack.getAmount()) { //We can finish it with this itemStack
+                                                itemStack.setAmount((itemStack.getAmount() - (int) progressLeft));
+                                                activeObjective.addProgress(progressLeft, npc.getId());
 
 
 
-                                                    player.sendMessage(main.parse(
-                                                            "<GREEN>You have delivered <highlight>" + progressLeft + "</highlight> items to <highlight>" + mmNpcName
-                                                    ));
-                                                    break;
-                                                } else {
-                                                    player.getInventory().removeItem(itemStack);
-                                                    activeObjective.addProgress(itemStack.getAmount(), npc.getId());
-                                                    player.sendMessage(main.parse(
-                                                            "<GREEN>You have delivered <highlight>" + itemStack.getAmount() + "</highlight> items to <highlight>" + mmNpcName
-                                                    ));
-                                                }
+                                                player.sendMessage(main.parse(
+                                                        "<GREEN>You have delivered <highlight>" + progressLeft + "</highlight> items to <highlight>" + mmNpcName
+                                                ));
+                                                break;
+                                            } else {
+                                                player.getInventory().removeItem(itemStack);
+                                                activeObjective.addProgress(itemStack.getAmount(), npc.getId());
+                                                player.sendMessage(main.parse(
+                                                        "<GREEN>You have delivered <highlight>" + itemStack.getAmount() + "</highlight> items to <highlight>" + mmNpcName
+                                                ));
                                             }
                                         }
 
@@ -211,21 +207,25 @@ public class CitizensEvents implements Listener {
                 }
                 questPlayer.removeCompletedQuests();
             }
+
+
+            //Return if another action already happened
+            if (handledObjective) {
+                return;
+            }
+
+            //Quest Preview
+            main.getQuestManager().sendQuestsPreviewOfQuestShownNPCs(npc, questPlayer);
+
+            //Conversations
+            final Conversation foundConversation = main.getConversationManager().getConversationForNPCID(npc.getId());
+            if (foundConversation != null) {
+                main.getConversationManager().playConversation(questPlayer, foundConversation);
+            }
+
         }
 
-        //Return if another action already happened
-        if (handledObjective) {
-            return;
-        }
 
-        //Quest Preview
-        main.getQuestManager().sendQuestsPreviewOfQuestShownNPCs(npc, questPlayer);
-
-        //Conversations
-        final Conversation foundConversation = main.getConversationManager().getConversationForNPCID(npc.getId());
-        if (foundConversation != null) {
-            main.getConversationManager().playConversation(questPlayer, foundConversation);
-        }
 
 
     }

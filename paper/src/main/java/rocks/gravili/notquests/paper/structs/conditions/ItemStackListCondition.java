@@ -24,6 +24,10 @@ import cloud.commandframework.arguments.flags.CommandFlag;
 import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.paper.PaperCommandManager;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
@@ -39,47 +43,15 @@ import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
 import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-
 public class ItemStackListCondition extends Condition {
 
+    private static boolean alreadyLoadedOnce = false;
     private String variableName;
     private String operator;
     private ItemStack itemStack;
-
     private HashMap<String, String> additionalStringArguments;
     private HashMap<String, NumberExpression> additionalNumberArguments;
     private HashMap<String, NumberExpression> additionalBooleanArguments;
-
-    private static boolean alreadyLoadedOnce = false;
-
-
-    public final String getOperator() {
-        return operator;
-    }
-
-    public void setOperator(final String operator) {
-        this.operator = operator;
-    }
-
-    public final String getVariableName() {
-        return variableName;
-    }
-
-    public void setVariableName(final String variableName){
-        this.variableName = variableName;
-    }
-
-    public void setItemStack(final ItemStack itemStack){
-        this.itemStack = itemStack;
-    }
-
-    public final ItemStack getItemStack(){
-        return itemStack;
-    }
 
 
     public ItemStackListCondition(NotQuests main) {
@@ -87,96 +59,6 @@ public class ItemStackListCondition extends Condition {
         additionalStringArguments = new HashMap<>();
         additionalNumberArguments = new HashMap<>();
         additionalBooleanArguments = new HashMap<>();
-    }
-
-
-    /*public final String[] evaluateExpression(final QuestPlayer questPlayer){
-        return getExpression().split(",");
-    }*/
-
-    @Override
-    public String checkInternally(final QuestPlayer questPlayer) {
-        ItemStack[] listRequirement = new ItemStack[1];
-        listRequirement[0] = getItemStack();
-
-        Variable<?> variable = main.getVariablesManager().getVariableFromString(variableName);
-
-        if(variable == null){
-            return "<ERROR>Error: variable <highlight>" + variableName + "</highlight> not found. Report this to the Server owner.";
-        }
-
-        if(additionalStringArguments != null && !additionalStringArguments.isEmpty()){
-            variable.setAdditionalStringArguments(additionalStringArguments);
-        }
-        if(additionalNumberArguments != null && !additionalNumberArguments.isEmpty()){
-            variable.setAdditionalNumberArguments(additionalNumberArguments);
-        }
-        if(additionalBooleanArguments != null && !additionalBooleanArguments.isEmpty()){
-            variable.setAdditionalBooleanArguments(additionalBooleanArguments);
-        }
-
-        Object value = variable.getValue(questPlayer);
-
-        if(value == null){
-            return "<YELLOW>You don't have any " + variable.getPlural() + "!";
-        }
-
-        ItemStack[] itemStackArray;
-        if(value instanceof ItemStack[] itemStackArray1){
-            itemStackArray = itemStackArray1;
-        }else if(value instanceof ArrayList<?> arrayList){
-            itemStackArray = arrayList.toArray(new ItemStack[0]);
-        }else{
-            itemStackArray = (ItemStack[])value;
-        }
-
-        ArrayList<ItemStack> currentValueArrayList = new ArrayList<>();
-
-        for (ItemStack o : itemStackArray){
-            if (o != null) {
-                currentValueArrayList.add(o);
-            }
-        }
-
-        if(getOperator().equalsIgnoreCase("equals")){
-
-            boolean fulfilled = true;
-            int amountNeeded = getItemStack().getAmount();
-            for(ItemStack itemStack : currentValueArrayList){
-                if(!itemStack.isSimilar(getItemStack())){
-                    fulfilled = false;
-                    break;
-                }else{
-                    amountNeeded -= itemStack.getAmount();
-                }
-            }
-            if(amountNeeded != 0){
-                fulfilled = false;
-            }
-
-
-            if(!fulfilled){
-                return "<YELLOW>The " + variable.getPlural() + " need to contain ONLY: <highlight>" + main.getMiniMessage().serialize(getItemStack().displayName()) + " x " + getItemStack().getAmount() + "</highlight>.";
-            }
-        }else if(getOperator().equalsIgnoreCase("contains")) {
-            boolean fulfilled = false;
-            int amountNeeded = getItemStack().getAmount();
-            for(ItemStack itemStack : currentValueArrayList){
-                if(itemStack.isSimilar(getItemStack())){
-                    amountNeeded -= itemStack.getAmount();
-                }
-            }
-            if(amountNeeded <= 0){
-                fulfilled = true;
-            }
-            if(!fulfilled){
-                return "<YELLOW>The " + variable.getPlural() + " need to contain: <highlight>" + main.getMiniMessage().serialize(getItemStack().displayName()) + " x " + getItemStack().getAmount() + "</highlight>.";
-            }
-        }else{
-            return "<ERROR>Error: variable operator <highlight>" + getOperator() + "</highlight> is invalid. Report this to the Server owner.";
-        }
-
-        return "";
     }
 
     public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ConditionFor conditionFor) {
@@ -264,7 +146,7 @@ public class ItemStackListCondition extends Condition {
                         }
                         listCondition.setAdditionalBooleanArguments(additionalBooleanArguments);
 
-                        main.getConditionsManager().addCondition(listCondition, context);
+                        main.getConditionsManager().addCondition(listCondition, context, conditionFor);
                     })
             );
 
@@ -273,6 +155,120 @@ public class ItemStackListCondition extends Condition {
 
         alreadyLoadedOnce = true;
 
+    }
+
+    public final String getOperator() {
+        return operator;
+    }
+
+    public void setOperator(final String operator) {
+        this.operator = operator;
+    }
+
+    public final String getVariableName() {
+        return variableName;
+    }
+
+    public void setVariableName(final String variableName){
+        this.variableName = variableName;
+    }
+
+    public final ItemStack getItemStack(){
+        return itemStack;
+    }
+
+
+    /*public final String[] evaluateExpression(final QuestPlayer questPlayer){
+        return getExpression().split(",");
+    }*/
+
+    public void setItemStack(final ItemStack itemStack){
+        this.itemStack = itemStack;
+    }
+
+    @Override
+    public String checkInternally(final QuestPlayer questPlayer) {
+        ItemStack[] listRequirement = new ItemStack[1];
+        listRequirement[0] = getItemStack();
+
+        Variable<?> variable = main.getVariablesManager().getVariableFromString(variableName);
+
+        if(variable == null){
+            return "<ERROR>Error: variable <highlight>" + variableName + "</highlight> not found. Report this to the Server owner.";
+        }
+
+        if(additionalStringArguments != null && !additionalStringArguments.isEmpty()){
+            variable.setAdditionalStringArguments(additionalStringArguments);
+        }
+        if(additionalNumberArguments != null && !additionalNumberArguments.isEmpty()){
+            variable.setAdditionalNumberArguments(additionalNumberArguments);
+        }
+        if(additionalBooleanArguments != null && !additionalBooleanArguments.isEmpty()){
+            variable.setAdditionalBooleanArguments(additionalBooleanArguments);
+        }
+
+        Object value = variable.getValue(questPlayer);
+
+        if(value == null){
+            return "<YELLOW>You don't have any " + variable.getPlural() + "!";
+        }
+
+        ItemStack[] itemStackArray;
+        if(value instanceof ItemStack[] itemStackArray1){
+            itemStackArray = itemStackArray1;
+        }else if(value instanceof ArrayList<?> arrayList){
+            itemStackArray = arrayList.toArray(new ItemStack[0]);
+        }else{
+            itemStackArray = (ItemStack[])value;
+        }
+
+        ArrayList<ItemStack> currentValueArrayList = new ArrayList<>();
+
+        for (ItemStack o : itemStackArray){
+            if (o != null) {
+                currentValueArrayList.add(o);
+            }
+        }
+
+        if(getOperator().equalsIgnoreCase("equals")){
+
+            boolean fulfilled = true;
+            int amountNeeded = getItemStack().getAmount();
+            for(ItemStack itemStack : currentValueArrayList){
+                if(!itemStack.isSimilar(getItemStack())){
+                    fulfilled = false;
+                    break;
+                }else{
+                    amountNeeded -= itemStack.getAmount();
+                }
+            }
+            if(amountNeeded != 0){
+                fulfilled = false;
+            }
+
+
+            if(!fulfilled){
+                return "<YELLOW>The " + variable.getPlural() + " need to contain ONLY: <highlight>" + main.getMiniMessage().serialize(getItemStack().displayName()) + " x " + getItemStack().getAmount() + "</highlight>.";
+            }
+        }else if(getOperator().equalsIgnoreCase("contains")) {
+            boolean fulfilled = false;
+            int amountNeeded = getItemStack().getAmount();
+            for(ItemStack itemStack : currentValueArrayList){
+                if(itemStack.isSimilar(getItemStack())){
+                    amountNeeded -= itemStack.getAmount();
+                }
+            }
+            if(amountNeeded <= 0){
+                fulfilled = true;
+            }
+            if(!fulfilled){
+                return "<YELLOW>The " + variable.getPlural() + " need to contain: <highlight>" + main.getMiniMessage().serialize(getItemStack().displayName()) + " x " + getItemStack().getAmount() + "</highlight>.";
+            }
+        }else{
+            return "<ERROR>Error: variable operator <highlight>" + getOperator() + "</highlight> is invalid. Report this to the Server owner.";
+        }
+
+        return "";
     }
 
     @Override

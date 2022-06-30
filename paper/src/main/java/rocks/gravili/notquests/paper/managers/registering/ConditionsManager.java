@@ -27,6 +27,11 @@ import cloud.commandframework.bukkit.parsers.selector.SinglePlayerSelectorArgume
 import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.UUID;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -39,14 +44,19 @@ import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.actions.Action;
-import rocks.gravili.notquests.paper.structs.conditions.*;
+import rocks.gravili.notquests.paper.structs.conditions.BooleanCondition;
+import rocks.gravili.notquests.paper.structs.conditions.CompletedObjectiveCondition;
+import rocks.gravili.notquests.paper.structs.conditions.Condition;
+import rocks.gravili.notquests.paper.structs.conditions.ConditionFor;
+import rocks.gravili.notquests.paper.structs.conditions.DateCondition;
+import rocks.gravili.notquests.paper.structs.conditions.ItemStackListCondition;
+import rocks.gravili.notquests.paper.structs.conditions.ListCondition;
+import rocks.gravili.notquests.paper.structs.conditions.NumberCondition;
+import rocks.gravili.notquests.paper.structs.conditions.StringCondition;
+import rocks.gravili.notquests.paper.structs.conditions.WorldTimeCondition;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 import rocks.gravili.notquests.paper.structs.variables.Variable;
 import rocks.gravili.notquests.paper.structs.variables.VariableDataType;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.*;
 
 public class ConditionsManager {
     private final NotQuests main;
@@ -220,11 +230,32 @@ public class ConditionsManager {
                                         .withDescription(ArgumentDescription.of("Negates this condition"))
                         )
                         .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition"), ConditionFor.QUEST);
-                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddConditionCommandBuilder().flag(
+
+
+
+                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddUnlockConditionCommandBuilder().flag(
                         main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
                                 .withDescription(ArgumentDescription.of("Negates this condition"))
                         )
-                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition"), ConditionFor.OBJECTIVE);
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " unlock condition"), ConditionFor.OBJECTIVEUNLOCK);
+                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddProgressConditionCommandBuilder()
+                    .flag(
+                        main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
+                            .withDescription(ArgumentDescription.of("Negates this condition"))
+                    )
+                    .flag(
+                        main.getCommandManager().getPaperCommandManager().flagBuilder("allowProgressDecreaseIfNotFulfilled")
+                            .withDescription(ArgumentDescription.of("By default, if this condition is not fulfilled, the objective progress also wont be allowed to decrease. Setting this flag would allow it to decrease in any case, while only not allowing progress to be increased if the condition is not fulfilled"))
+                    )
+                    .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " progress condition"), ConditionFor.OBJECTIVEPROGRESS);
+                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddCompleteConditionCommandBuilder().flag(
+                        main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
+                            .withDescription(ArgumentDescription.of("Negates this condition"))
+                    )
+                    .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " complete condition"), ConditionFor.OBJECTIVECOMPLETE);
+
+
+
                 commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminAddConditionCommandBuilder().flag(
                         main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
                                 .withDescription(ArgumentDescription.of("Negates this condition"))
@@ -243,11 +274,31 @@ public class ConditionsManager {
                                 .withDescription(ArgumentDescription.of("Negates this condition"))
                 )
                         .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition"), ConditionFor.QUEST);
-                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddConditionCommandBuilder().literal(identifier).flag(
+
+
+
+                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddUnlockConditionCommandBuilder().literal(identifier).flag(
                         main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
                                 .withDescription(ArgumentDescription.of("Negates this condition"))
                 )
-                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition"), ConditionFor.OBJECTIVE);
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " unlock condition"), ConditionFor.OBJECTIVEUNLOCK);
+                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddProgressConditionCommandBuilder().literal(identifier).flag(
+                        main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
+                            .withDescription(ArgumentDescription.of("Negates this condition"))
+                    )
+                    .flag(
+                        main.getCommandManager().getPaperCommandManager().flagBuilder("allowProgressDecreaseIfNotFulfilled")
+                            .withDescription(ArgumentDescription.of("By default, if this condition is not fulfilled, the objective progress also wont be allowed to decrease. Setting this flag would allow it to decrease in any case, while only not allowing progress to be increased if the condition is not fulfilled"))
+                    )
+                    .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " progress condition"), ConditionFor.OBJECTIVEPROGRESS);
+                commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddCompleteConditionCommandBuilder().literal(identifier).flag(
+                        main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
+                            .withDescription(ArgumentDescription.of("Negates this condition"))
+                    )
+                    .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " complete condition"), ConditionFor.OBJECTIVECOMPLETE);
+
+
+
                 commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminAddConditionCommandBuilder().literal(identifier).flag(
                         main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
                                 .withDescription(ArgumentDescription.of("Negates this condition"))
@@ -292,7 +343,7 @@ public class ConditionsManager {
         return conditions.keySet();
     }
 
-    public void addCondition(final Condition condition, final CommandContext<CommandSender> context) {
+    public void addCondition(final Condition condition, final CommandContext<CommandSender> context, final ConditionFor conditionFor) {
         condition.setNegated(context.flags().isPresent("negate"));
 
 
@@ -315,14 +366,36 @@ public class ConditionsManager {
             condition.setCategory(quest.getCategory());
             if (objectiveOfQuest != null) {//Objective Condition
                 condition.setObjective(objectiveOfQuest);
-                condition.setConditionID(objectiveOfQuest.getFreeConditionID());
 
-                objectiveOfQuest.addCondition(condition, true);
+                if(conditionFor == ConditionFor.OBJECTIVEPROGRESS){
+                    final boolean allowProgressDecreaseIfNotFulfilled = context.flags().isPresent("allowProgressDecreaseIfNotFulfilled");
+                    condition.setConditionID(objectiveOfQuest.getFreeProgressConditionID());
+                    condition.setObjectiveConditionSpecific_allowProgressDecreaseIfNotFulfilled(allowProgressDecreaseIfNotFulfilled);
 
+                    objectiveOfQuest.addProgressCondition(condition, true);
 
-                context.getSender().sendMessage(main.parse(
+                    context.getSender().sendMessage(main.parse(
                         "<success>" + getConditionType(condition.getClass()) + " Condition successfully added to Objective <highlight>"
-                                + objectiveOfQuest.getFinalName() + "</highlight>!"));
+                            + objectiveOfQuest.getFinalName() + "</highlight>!"));
+
+                } else if(conditionFor == ConditionFor.OBJECTIVECOMPLETE){
+                    condition.setConditionID(objectiveOfQuest.getFreeCompleteConditionID());
+
+                    objectiveOfQuest.addCompleteCondition(condition, true);
+
+                    context.getSender().sendMessage(main.parse(
+                        "<success>" + getConditionType(condition.getClass()) + " Complete Condition successfully added to Objective <highlight>"
+                            + objectiveOfQuest.getFinalName() + "</highlight>!"));
+
+                } else {
+                    condition.setConditionID(objectiveOfQuest.getFreeUnlockConditionID());
+
+                    objectiveOfQuest.addUnlockCondition(condition, true);
+
+                    context.getSender().sendMessage(main.parse(
+                        "<success>" + getConditionType(condition.getClass()) + " Unlock Condition successfully added to Objective <highlight>"
+                            + objectiveOfQuest.getFinalName() + "</highlight>!"));
+                }
             } else { //Quest Requirement
                 condition.setConditionID(quest.getFreeRequirementID());
                 quest.addRequirement(condition, true);
@@ -388,11 +461,31 @@ public class ConditionsManager {
                                             .withDescription(ArgumentDescription.of("Negates this condition"))
                             )
                             .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition"), ConditionFor.QUEST);
-                    commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddConditionCommandBuilder().flag(
+
+
+
+                    commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddUnlockConditionCommandBuilder().flag(
                                     main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
                                             .withDescription(ArgumentDescription.of("Negates this condition"))
                             )
-                            .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " condition"), ConditionFor.OBJECTIVE);
+                            .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " unlock condition"), ConditionFor.OBJECTIVEUNLOCK);
+                    commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddProgressConditionCommandBuilder().flag(
+                            main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
+                                .withDescription(ArgumentDescription.of("Negates this condition"))
+                        )
+                        .flag(
+                            main.getCommandManager().getPaperCommandManager().flagBuilder("allowProgressDecreaseIfNotFulfilled")
+                                .withDescription(ArgumentDescription.of("By default, if this condition is not fulfilled, the objective progress also wont be allowed to decrease. Setting this flag would allow it to decrease in any case, while only not allowing progress to be increased if the condition is not fulfilled"))
+                        )
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " progress condition"), ConditionFor.OBJECTIVEPROGRESS);
+                    commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminEditObjectiveAddCompleteConditionCommandBuilder().flag(
+                            main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
+                                .withDescription(ArgumentDescription.of("Negates this condition"))
+                        )
+                        .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " complete condition"), ConditionFor.OBJECTIVECOMPLETE);
+
+
+
                     commandHandler.invoke(condition, main, main.getCommandManager().getPaperCommandManager(), main.getCommandManager().getAdminAddConditionCommandBuilder().flag(
                                     main.getCommandManager().getPaperCommandManager().flagBuilder("negate")
                                             .withDescription(ArgumentDescription.of("Negates this condition"))

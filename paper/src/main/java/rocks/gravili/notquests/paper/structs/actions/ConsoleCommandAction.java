@@ -21,6 +21,7 @@ package rocks.gravili.notquests.paper.structs.actions;
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.paper.PaperCommandManager;
+import java.util.ArrayList;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -29,78 +30,85 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.CommandSelector;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
-import java.util.ArrayList;
-
 public class ConsoleCommandAction extends Action {
 
-    private String consoleCommand = "";
+  private String consoleCommand = "";
 
+  public ConsoleCommandAction(final NotQuests main) {
+    super(main);
+  }
 
-    public ConsoleCommandAction(final NotQuests main) {
-        super(main);
-    }
+  public static void handleCommands(
+      NotQuests main,
+      PaperCommandManager<CommandSender> manager,
+      Command.Builder<CommandSender> builder,
+      ActionFor rewardFor) {
+    manager.command(
+        builder
+            .argument(
+                CommandSelector.<CommandSender>newBuilder("Console Command", main).build(),
+                ArgumentDescription.of(
+                    "Command which will be executed from the console as a reward. A '/' at the beginning is not required."))
+            .handler(
+                (context) -> {
+                  final String consoleCommand =
+                      String.join(" ", (String[]) context.get("Console Command"));
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor rewardFor) {
-        manager.command(builder
-                .argument(CommandSelector.<CommandSender>newBuilder("Console Command", main).build(), ArgumentDescription.of("Command which will be executed from the console as a reward. A '/' at the beginning is not required."))
-                .handler((context) -> {
-                    final String consoleCommand = String.join(" ", (String[]) context.get("Console Command"));
+                  ConsoleCommandAction consoleCommandAction = new ConsoleCommandAction(main);
+                  consoleCommandAction.setConsoleCommand(consoleCommand);
 
-                    ConsoleCommandAction consoleCommandAction = new ConsoleCommandAction(main);
-                    consoleCommandAction.setConsoleCommand(consoleCommand);
-
-                    main.getActionManager().addAction(consoleCommandAction, context);
-
+                  main.getActionManager().addAction(consoleCommandAction, context);
                 }));
+  }
+
+  @Override
+  public void executeInternally(final QuestPlayer questPlayer, Object... objects) {
+    if (consoleCommand.isBlank()) {
+      main.getLogManager()
+          .warn("Tried to execute ConsoleCommand action with invalid console command.");
+      return;
     }
 
-    public void setConsoleCommand(final String consoleCommand) {
-        this.consoleCommand = consoleCommand;
+    final String rewardConsoleCommand =
+        main.getUtilManager()
+            .applyPlaceholders(
+                consoleCommand, questPlayer.getPlayer(), questPlayer, getQuest(), objects);
+
+    final ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
+
+    if (Bukkit.isPrimaryThread()) {
+      Bukkit.dispatchCommand(console, rewardConsoleCommand);
+    } else {
+      Bukkit.getScheduler()
+          .runTask(main.getMain(), () -> Bukkit.dispatchCommand(console, rewardConsoleCommand));
     }
+  }
 
-    @Override
-    public void executeInternally(final QuestPlayer questPlayer, Object... objects) {
-        if (consoleCommand.isBlank()) {
-            main.getLogManager().warn("Tried to execute ConsoleCommand action with invalid console command.");
-            return;
-        }
+  @Override
+  public void save(FileConfiguration configuration, String initialPath) {
+    configuration.set(initialPath + ".specifics.consoleCommand", getConsoleCommand());
+  }
 
-        final String rewardConsoleCommand = main.getUtilManager().applyPlaceholders(consoleCommand, questPlayer.getPlayer(), questPlayer, getQuest(), objects);
+  @Override
+  public void load(final FileConfiguration configuration, String initialPath) {
+    this.consoleCommand = configuration.getString(initialPath + ".specifics.consoleCommand");
+  }
 
-        final ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
+  @Override
+  public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+    this.consoleCommand = String.join(" ", arguments);
+  }
 
-        if (Bukkit.isPrimaryThread()) {
-            Bukkit.dispatchCommand(console, rewardConsoleCommand);
-        } else {
-            Bukkit.getScheduler().runTask(main.getMain(), () -> Bukkit.dispatchCommand(console, rewardConsoleCommand));
-        }
+  public final String getConsoleCommand() {
+    return consoleCommand;
+  }
 
+  public void setConsoleCommand(final String consoleCommand) {
+    this.consoleCommand = consoleCommand;
+  }
 
-    }
-
-    @Override
-    public void save(FileConfiguration configuration, String initialPath) {
-        configuration.set(initialPath + ".specifics.consoleCommand", getConsoleCommand());
-    }
-
-    @Override
-    public void load(final FileConfiguration configuration, String initialPath) {
-        this.consoleCommand = configuration.getString(initialPath + ".specifics.consoleCommand");
-
-    }
-
-    @Override
-    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
-        this.consoleCommand = String.join(" ", arguments);
-    }
-
-
-    public final String getConsoleCommand() {
-        return consoleCommand;
-    }
-
-    @Override
-    public String getActionDescription(final QuestPlayer questPlayer, final Object... objects) {
-        return "Reward Command: " + getConsoleCommand();
-    }
+  @Override
+  public String getActionDescription(final QuestPlayer questPlayer, final Object... objects) {
+    return "Reward Command: " + getConsoleCommand();
+  }
 }

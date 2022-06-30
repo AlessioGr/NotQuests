@@ -20,6 +20,18 @@ package rocks.gravili.notquests.paper.managers;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.kyori.adventure.text.Component;
@@ -37,18 +49,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelection;
 import rocks.gravili.notquests.paper.managers.data.Category;
-import rocks.gravili.notquests.paper.structs.*;
+import rocks.gravili.notquests.paper.structs.Quest;
+import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
-import rocks.gravili.notquests.paper.structs.triggers.ActiveTrigger;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.sql.*;
-import java.util.*;
 
 
 /**
@@ -61,17 +67,11 @@ import java.util.*;
 public class DataManager {
 
     /**
-     * Instance of NotQuests is copied over
-     */
-    private final NotQuests main;
-    /**
      * ArrayList for Command Tab Completions. They will be re-used where possible. This is sort of like a buffer for completions.
      * It does not return the real completions, but it's for example used in ObjectivesAdminCommand handleCompletions() which is
      * called by the real Tab Completer CommandNotQuestsAdmin to split it up a little.
      */
     public final List<String> completions = new ArrayList<>();
-
-
     /**
      * ArrayList for Command Tab Completions for entity types. They will be initialized on startup be re-used where possible.
      */
@@ -84,11 +84,14 @@ public class DataManager {
      * ArrayList for Command Tab Completions for numbers from 1 to 12. They will be initialized on startup be re-used where possible.
      */
     public final List<String> numberPositiveCompletions = new ArrayList<>();
-
     /**
      * ArrayList for Command Tab Completions for elitemob entity types. They will be initialized on startup if the elitemobs integration is enabled and will be re-used where possible.
      */
     public final List<String> standardEliteMobNamesCompletions = new ArrayList<>();
+    /**
+     * Instance of NotQuests is copied over
+     */
+    private final NotQuests main;
 
 
 
@@ -100,28 +103,33 @@ public class DataManager {
      * Quests.yml Configuration
 
     private FileConfiguration questsConfig;*/
-
+    /**
+     * Configuration objects which contains values from General.yml
+     */
+    private final Configuration configuration;
+    /*
+     * ItemStack Cache used for 'storing ItemStacks to PDBs' (used for attaching Objectives To Armor Stands)
+     */
+    private final HashMap<Integer, ItemStackSelection> itemStackSelectionCache;
+    private final ArrayList<Category> categories, topLevelOnlyCategories;
+    private final ArrayList<String> criticalErrors;
     /**
      * savingEnabled is true by default. It will be set to false if any error happens when data is loaded from the Database.
      * When this is set to false, no quest or player data will be saved when the plugin is disabled.
      */
     private boolean savingEnabled = true;
-
     /**
      * loadingEnabled is true by default. It will be set to false if any error happens when data is loaded from the Database.
      * When this is set to false, no data will be loaded. This is to prevent trying to load data while the plugin is shutting down.
      */
     private boolean loadingEnabled = true;
-
     /**
      * If this is set to false, the plugin will try to load NPCs once Citizens is re-loaded or enabled
      */
     private boolean alreadyLoadedNPCs = false;
-
     private boolean alreadyLoadedGeneral = false;
     private boolean alreadyLoadedQuests = false;
     private boolean currentlyLoading = true;
-
     /**
      * General.yml Configuration
      */
@@ -130,38 +138,12 @@ public class DataManager {
      * General.yml Configuration File
      */
     private FileConfiguration generalConfig;
-
-
-    /**
-     * Configuration objects which contains values from General.yml
-     */
-    private final Configuration configuration;
-
     private boolean disabled = false;
-
-
-    /*
-     * ItemStack Cache used for 'storing ItemStacks to PDBs' (used for attaching Objectives To Armor Stands)
-     */
-    private final HashMap<Integer, Object> itemStackCache;
-
-
-    private final ArrayList<Category> categories, topLevelOnlyCategories;
     private Category defaultCategory;
-
     private boolean valueChanged = false;
-
-    private final ArrayList<String> criticalErrors;
-
-
     //HikariCP
     private HikariConfig hikariConfig;
     private HikariDataSource hikariDataSource;
-
-
-    public final boolean isDisabled(){
-        return disabled;
-    }
 
 
     /**
@@ -177,12 +159,16 @@ public class DataManager {
 
         criticalErrors = new ArrayList<>();
 
-        itemStackCache = new HashMap<>();
+        itemStackSelectionCache = new HashMap<>();
         // create an instance of the Configuration object
         configuration = new Configuration();
 
         categories = new ArrayList<>();
         topLevelOnlyCategories = new ArrayList<>();
+    }
+
+    public final boolean isDisabled(){
+        return disabled;
     }
 
     public void prepareDataFolder() {
@@ -1671,8 +1657,19 @@ public class DataManager {
         return alreadyLoadedNPCs;
     }
 
+    /**
+     * @param alreadyLoadedNPCs sets if Citizen NPCs have been already successfully loaded by the plugin
+     */
+    public void setAlreadyLoadedNPCs(boolean alreadyLoadedNPCs) {
+        this.alreadyLoadedNPCs = alreadyLoadedNPCs;
+    }
+
     public boolean isAlreadyLoadedGeneral() {
         return alreadyLoadedGeneral && generalConfig != null && generalConfigFile != null;
+    }
+
+    public void setAlreadyLoadedGeneral(boolean alreadyLoadedGeneral) {
+        this.alreadyLoadedGeneral = alreadyLoadedGeneral;
     }
 
     public boolean isAlreadyLoadedQuests() {
@@ -1686,17 +1683,6 @@ public class DataManager {
             }
         }
         return true;
-    }
-
-    /**
-     * @param alreadyLoadedNPCs sets if Citizen NPCs have been already successfully loaded by the plugin
-     */
-    public void setAlreadyLoadedNPCs(boolean alreadyLoadedNPCs) {
-        this.alreadyLoadedNPCs = alreadyLoadedNPCs;
-    }
-
-    public void setAlreadyLoadedGeneral(boolean alreadyLoadedGeneral) {
-        this.alreadyLoadedGeneral = alreadyLoadedGeneral;
     }
 
     public void setAlreadyLoadedQuests(boolean alreadyLoadedQuests) {
@@ -1735,8 +1721,8 @@ public class DataManager {
     }
 
 
-    public HashMap<Integer, Object> getItemStackCache() {
-        return itemStackCache;
+    public HashMap<Integer, ItemStackSelection> getItemStackSelectionCache() {
+        return itemStackSelectionCache;
     }
 
     /**

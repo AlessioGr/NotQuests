@@ -18,6 +18,8 @@
 
 package rocks.gravili.notquests.paper.events;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.ArmorStand;
@@ -35,6 +37,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelection;
 import rocks.gravili.notquests.paper.conversation.Conversation;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.ActiveQuest;
@@ -43,9 +46,6 @@ import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.objectives.DeliverItemsObjective;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 import rocks.gravili.notquests.paper.structs.objectives.TalkToNPCObjective;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class ArmorStandEvents implements Listener {
     private final NotQuests main;
@@ -340,26 +340,17 @@ public class ArmorStandEvents implements Listener {
                             final NamespacedKey itemStackCacheKey = new NamespacedKey(main.getMain(), "notquests-itemstackcache");
                             final int itemStackCache = container.get(itemStackCacheKey, PersistentDataType.INTEGER);
 
-                            final NamespacedKey deliverAnyKey = new NamespacedKey(main.getMain(), "notquests-anyitemstack");
-                            boolean deliverAny = false;
-                            if (container.has(deliverAnyKey, PersistentDataType.BYTE) && container.get(deliverAnyKey, PersistentDataType.BYTE) == 1) {
-                                deliverAny = true;
-                            }
 
-                            final Object itemToDeliver = main.getDataManager().getItemStackCache().get(itemStackCache);
+                            final ItemStackSelection itemToDeliverSelection = main.getDataManager().getItemStackSelectionCache().get(itemStackCache);
 
-                            if (itemToDeliver != null) {
+                            if (itemToDeliverSelection != null) {
                                 DeliverItemsObjective deliverItemsObjective = new DeliverItemsObjective(main);
-                                if(itemToDeliver instanceof ItemStack itemToDeliverItemStack){
-                                    deliverItemsObjective.setItemToDeliver(itemToDeliverItemStack);
-                                }else if(itemToDeliver instanceof String nqItemName){
-                                    deliverItemsObjective.setNQItem(nqItemName);
-                                }
+                                deliverItemsObjective.setItemStackSelection(itemToDeliverSelection);
+
                                 deliverItemsObjective.setProgressNeededExpression(amountToDeliverExpression);
                                 deliverItemsObjective.setRecipientArmorStandUUID(armorStand.getUniqueId());
                                 deliverItemsObjective.setQuest(quest);
                                 deliverItemsObjective.setObjectiveID(quest.getFreeObjectiveID());
-                                deliverItemsObjective.setDeliverAnyItem(deliverAny);
 
                                 quest.addObjective(deliverItemsObjective, true);
 
@@ -481,31 +472,29 @@ public class ArmorStandEvents implements Listener {
                                 if (deliverItemsObjective.getRecipientNPCID() == -1 && deliverItemsObjective.getRecipientArmorStandUUID().equals(armorStand.getUniqueId())) {
                                     for (final ItemStack itemStack : player.getInventory().getContents()) {
                                         if (itemStack != null) {
-                                            if (deliverItemsObjective.isDeliverAnyItem() || deliverItemsObjective.getItemToDeliver().getType().equals(itemStack.getType())) {
-                                                if (!deliverItemsObjective.isDeliverAnyItem() && deliverItemsObjective.getItemToDeliver().getItemMeta() != null && !deliverItemsObjective.getItemToDeliver().getItemMeta().equals(itemStack.getItemMeta())) {
-                                                    continue;
-                                                }
-                                                final double progressLeft = activeObjective.getProgressNeeded() - activeObjective.getCurrentProgress();
+                                            if(!deliverItemsObjective.getItemStackSelection().checkIfIsIncluded(itemStack)) {
+                                                continue;
+                                            }
+                                            final double progressLeft = activeObjective.getProgressNeeded() - activeObjective.getCurrentProgress();
 
-                                                if (progressLeft == 0) {
-                                                    continue;
-                                                }
-                                                handledObjective = true;
+                                            if (progressLeft == 0) {
+                                                continue;
+                                            }
+                                            handledObjective = true;
 
-                                                if (progressLeft < itemStack.getAmount()) { //We can finish it with this itemStack
-                                                    itemStack.setAmount((itemStack.getAmount() - (int) progressLeft));
-                                                    activeObjective.addProgress(progressLeft, armorStand.getUniqueId());
-                                                    player.sendMessage(main.parse(
-                                                            "<GREEN>You have delivered <highlight>" + progressLeft + "</highlight> items to <highlight>" + main.getArmorStandManager().getArmorStandName(armorStand)
-                                                    ));
-                                                    break;
-                                                } else {
-                                                    player.getInventory().removeItem(itemStack);
-                                                    activeObjective.addProgress(itemStack.getAmount(), armorStand.getUniqueId());
-                                                    player.sendMessage(main.parse(
-                                                            "<GREEN>You have delivered <highlight>" + itemStack.getAmount() + "</highlight> items to <highlight>" + main.getArmorStandManager().getArmorStandName(armorStand)
-                                                    ));
-                                                }
+                                            if (progressLeft < itemStack.getAmount()) { //We can finish it with this itemStack
+                                                itemStack.setAmount((itemStack.getAmount() - (int) progressLeft));
+                                                activeObjective.addProgress(progressLeft, armorStand.getUniqueId());
+                                                player.sendMessage(main.parse(
+                                                        "<GREEN>You have delivered <highlight>" + progressLeft + "</highlight> items to <highlight>" + main.getArmorStandManager().getArmorStandName(armorStand)
+                                                ));
+                                                break;
+                                            } else {
+                                                player.getInventory().removeItem(itemStack);
+                                                activeObjective.addProgress(itemStack.getAmount(), armorStand.getUniqueId());
+                                                player.sendMessage(main.parse(
+                                                        "<GREEN>You have delivered <highlight>" + itemStack.getAmount() + "</highlight> items to <highlight>" + main.getArmorStandManager().getArmorStandName(armorStand)
+                                                ));
                                             }
                                         }
 

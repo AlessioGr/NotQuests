@@ -20,170 +20,139 @@ package rocks.gravili.notquests.paper.structs.objectives;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
-import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.paper.PaperCommandManager;
+import java.util.Map;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
+import rocks.gravili.notquests.paper.commands.arguments.ItemStackSelectionArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
-import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
+import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelection;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
-import java.util.Map;
-
 public class CollectItemsObjective extends Objective {
 
-    private ItemStack itemToCollect = null;
-    private boolean deductIfItemIsDropped = true;
-    private boolean collectAnyItem = false;
-    private String nqItemName = "";
+  private ItemStackSelection itemStackSelection;
+  private boolean deductIfItemIsDropped = true;
 
-    public CollectItemsObjective(NotQuests main) {
-        super(main);
-    }
+  public CollectItemsObjective(NotQuests main) {
+    super(main);
+  }
 
-    public void setNQItem(final String nqItemName){
-        this.nqItemName = nqItemName;
-    }
-    public final String getNQItem(){
-        return nqItemName;
-    }
+  public static void handleCommands(
+      NotQuests main,
+      PaperCommandManager<CommandSender> manager,
+      Command.Builder<CommandSender> addObjectiveBuilder) {
+    manager.command(
+        addObjectiveBuilder
+            .argument(
+                ItemStackSelectionArgument.of("materials", main),
+                ArgumentDescription.of("Material of the item which needs to be collected"))
+            .argument(
+                NumberVariableValueArgument.newBuilder("amount", main, null),
+                ArgumentDescription.of("Amount of items which need to be collected"))
+            .flag(
+                manager
+                    .flagBuilder("doNotDeductIfItemIsDropped")
+                    .withDescription(
+                        ArgumentDescription.of(
+                            "Makes it so Quest progress is not removed if the item is dropped.")))
+            .handler(
+                (context) -> {
+                  final String amountExpression = context.get("amount");
+                  final boolean deductIfItemIsDropped =
+                      !context.flags().isPresent("doNotDeductIfItemIsDropped");
 
+                  final ItemStackSelection itemStackSelection = context.get("materials");
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
-        manager.command(addObjectiveBuilder
-                .argument(MaterialOrHandArgument.of("material", main), ArgumentDescription.of("Material of the item which needs to be collected."))
-                .argument(NumberVariableValueArgument.newBuilder("amount", main, null), ArgumentDescription.of("Amount of items which need to be collected"))
-                .flag(
-                        manager.flagBuilder("doNotDeductIfItemIsDropped")
-                                .withDescription(ArgumentDescription.of("Makes it so Quest progress is not removed if the item is dropped."))
-                )
-                .handler((context) -> {
-                    final String amountExpression = context.get("amount");
-                    final boolean deductIfItemIsDropped = !context.flags().isPresent("doNotDeductIfItemIsDropped");
+                  CollectItemsObjective collectItemsObjective = new CollectItemsObjective(main);
+                  collectItemsObjective.setItemStackSelection(itemStackSelection);
 
-                    boolean collectAnyItem = false;
+                  collectItemsObjective.setProgressNeededExpression(amountExpression);
+                  collectItemsObjective.setDeductIfItemIsDropped(deductIfItemIsDropped);
 
-                    final MaterialOrHand materialOrHand = context.get("material");
-                    ItemStack itemToCollect;
-                    if (materialOrHand.material.equalsIgnoreCase("any")) {
-                        collectAnyItem = true;
-                        itemToCollect = null;
-                    } else {
-                        itemToCollect = main.getItemsManager().getItemStack(materialOrHand);
-                    }
-
-                    CollectItemsObjective collectItemsObjective = new CollectItemsObjective(main);
-
-
-                    if(main.getItemsManager().getItem(materialOrHand.material) != null){
-                        collectItemsObjective.setNQItem(main.getItemsManager().getItem(materialOrHand.material).getItemName());
-                    }else{
-                        collectItemsObjective.setItemToCollect(itemToCollect);
-                    }
-
-
-
-                    collectItemsObjective.setCollectAnyItem(collectAnyItem);
-                    collectItemsObjective.setProgressNeededExpression(amountExpression);
-                    collectItemsObjective.setDeductIfItemIsDropped(deductIfItemIsDropped);
-
-                    main.getObjectiveManager().addObjective(collectItemsObjective, context);
+                  main.getObjectiveManager().addObjective(collectItemsObjective, context);
                 }));
+  }
+
+  public final ItemStackSelection getItemStackSelection() {
+    return itemStackSelection;
+  }
+
+  public void setItemStackSelection(final ItemStackSelection itemStackSelection) {
+    this.itemStackSelection = itemStackSelection;
+  }
+
+  @Override
+  public String getObjectiveTaskDescription(
+      final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
+    return main.getLanguageManager()
+        .getString(
+            "chat.objectives.taskDescription.collectItems.base",
+            questPlayer,
+            activeObjective,
+            Map.of(
+                "%ITEMTOCOLLECTTYPE%", getItemStackSelection().getAllMaterialsListed(),
+                "%ITEMTOCOLLECTNAME%", "",
+                "%(%", "",
+                "%)%", ""));
+  }
+
+  @Override
+  public void save(FileConfiguration configuration, String initialPath) {
+    getItemStackSelection()
+        .saveToFileConfiguration(configuration, initialPath + ".specifics.itemStackSelection");
+
+    configuration.set(initialPath + ".specifics.deductIfItemDropped", isDeductIfItemIsDropped());
+  }
+
+  @Override
+  public void load(FileConfiguration configuration, String initialPath) {
+    this.itemStackSelection = new ItemStackSelection(main);
+    itemStackSelection.loadFromFileConfiguration(
+        configuration, initialPath + ".specifics.itemStackSelection");
+
+    // Convert old to new
+    if (configuration.contains(initialPath + ".specifics.nqitem")
+        || configuration.contains(initialPath + ".specifics.itemToCollect.itemstack")) {
+      main.getLogManager().info("Converting old CollectItemsObjective to new one...");
+      final String nqItemName = configuration.getString(initialPath + ".specifics.nqitem", "");
+
+      if (nqItemName.isBlank()) {
+        itemStackSelection.addItemStack(
+            configuration.getItemStack(initialPath + ".specifics.itemToCollect.itemstack"));
+      } else {
+        itemStackSelection.addNqItemName(nqItemName);
+      }
+      itemStackSelection.saveToFileConfiguration(
+          configuration, initialPath + ".specifics.itemStackSelection");
+      configuration.set(initialPath + ".specifics.nqitem", null);
+      configuration.set(initialPath + ".specifics.itemToCollect.itemstack", null);
+      // Let's hope it saves somewhere, else conversion will happen again...
     }
 
-    public final boolean isCollectAnyItem() {
-        return collectAnyItem;
-    }
+    deductIfItemIsDropped =
+        configuration.getBoolean(initialPath + ".specifics.deductIfItemDropped", true);
+  }
 
-    public void setCollectAnyItem(final boolean collectAnyItem) {
-        this.collectAnyItem = collectAnyItem;
-    }
+  @Override
+  public void onObjectiveUnlock(
+      final ActiveObjective activeObjective,
+      final boolean unlockedDuringPluginStartupQuestLoadingProcess) {}
 
-    public void setItemToCollect(final ItemStack itemToCollect) {
-        this.itemToCollect = itemToCollect;
-    }
+  @Override
+  public void onObjectiveCompleteOrLock(
+      final ActiveObjective activeObjective,
+      final boolean lockedOrCompletedDuringPluginStartupQuestLoadingProcess,
+      final boolean completed) {}
 
-    @Override
-    public String getObjectiveTaskDescription(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
-        final String displayName;
-        if (!isCollectAnyItem()) {
-            if (getItemToCollect().getItemMeta() != null) {
-                displayName = getItemToCollect().getItemMeta().getDisplayName();
-            } else {
-                displayName = getItemToCollect().getType().name();
-            }
-        } else {
-            displayName = "Any";
-        }
+  public final boolean isDeductIfItemIsDropped() {
+    return deductIfItemIsDropped;
+  }
 
-        String itemType = isCollectAnyItem() ? "Any" : getItemToCollect().getType().name();
-
-        if (!displayName.isBlank()) {
-            return main.getLanguageManager().getString("chat.objectives.taskDescription.collectItems.base", questPlayer, activeObjective, Map.of(
-                    "%ITEMTOCOLLECTTYPE%", itemType,
-                    "%ITEMTOCOLLECTNAME%", displayName,
-                    "%(%", "(",
-                    "%)%", "<RESET>)"
-            ));
-        } else {
-            return main.getLanguageManager().getString("chat.objectives.taskDescription.collectItems.base", questPlayer, activeObjective, Map.of(
-                    "%ITEMTOCOLLECTTYPE%", itemType,
-                    "%ITEMTOCOLLECTNAME%", "",
-                    "%(%", "",
-                    "%)%", ""
-            ));
-        }
-
-    }
-
-    public void setDeductIfItemIsDropped(final boolean deductIfItemIsDropped) {
-        this.deductIfItemIsDropped = deductIfItemIsDropped;
-    }
-
-    @Override
-    public void save(FileConfiguration configuration, String initialPath) {
-        if(!getNQItem().isBlank()){
-            configuration.set(initialPath + ".specifics.nqitem", getNQItem());
-        }else {
-            configuration.set(initialPath + ".specifics.itemToCollect.itemstack", getItemToCollect());
-        }
-
-        configuration.set(initialPath + ".specifics.deductIfItemDropped", isDeductIfItemIsDropped());
-        configuration.set(initialPath + ".specifics.collectAnyItem", isCollectAnyItem());
-    }
-
-    @Override
-    public void load(FileConfiguration configuration, String initialPath) {
-        this.nqItemName = configuration.getString(initialPath + ".specifics.nqitem", "");
-        if(nqItemName.isBlank()){
-            itemToCollect = configuration.getItemStack(initialPath + ".specifics.itemToCollect.itemstack");
-        }
-        deductIfItemIsDropped = configuration.getBoolean(initialPath + ".specifics.deductIfItemDropped", true);
-        collectAnyItem = configuration.getBoolean(initialPath + ".specifics.collectAnyItem", false);
-    }
-
-    public final ItemStack getItemToCollect() {
-        if(!getNQItem().isBlank()){
-            return main.getItemsManager().getItem(getNQItem()).getItemStack().clone();
-        }else{
-            return itemToCollect;
-        }
-    }
-
-    @Override
-    public void onObjectiveUnlock(final ActiveObjective activeObjective, final boolean unlockedDuringPluginStartupQuestLoadingProcess) {
-    }
-    @Override
-    public void onObjectiveCompleteOrLock(final ActiveObjective activeObjective, final boolean lockedOrCompletedDuringPluginStartupQuestLoadingProcess, final boolean completed) {
-    }
-
-    public final boolean isDeductIfItemIsDropped() {
-        return deductIfItemIsDropped;
-    }
+  public void setDeductIfItemIsDropped(final boolean deductIfItemIsDropped) {
+    this.deductIfItemIsDropped = deductIfItemIsDropped;
+  }
 }

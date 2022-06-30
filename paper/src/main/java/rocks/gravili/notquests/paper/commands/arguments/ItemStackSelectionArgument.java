@@ -27,30 +27,29 @@ import cloud.commandframework.captions.CaptionVariable;
 import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.exceptions.parsing.NoInputProvidedException;
 import cloud.commandframework.exceptions.parsing.ParserException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Queue;
+import java.util.function.BiFunction;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
+import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelection;
 import rocks.gravili.notquests.paper.managers.items.NQItem;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Queue;
-import java.util.function.BiFunction;
 
 /**
  * cloud argument type that parses Bukkit {@link Material materials}
  *
  * @param <C> Command sender type
  */
-public class MaterialOrHandArgument<C> extends CommandArgument<C, MaterialOrHand> {
+public class ItemStackSelectionArgument<C> extends CommandArgument<C, ItemStackSelection> {
 
 
-    protected MaterialOrHandArgument(
+    protected ItemStackSelectionArgument(
             final boolean required,
             final @NonNull String name,
             final @NonNull String defaultValue,
@@ -59,7 +58,7 @@ public class MaterialOrHandArgument<C> extends CommandArgument<C, MaterialOrHand
             final @NonNull ArgumentDescription defaultDescription,
             NotQuests main
     ) {
-        super(required, name, new MaterialOrHandArgument.MaterialParser<>(main), defaultValue, MaterialOrHand.class, suggestionsProvider);
+        super(required, name, new ItemStackSelectionArgument.MaterialParser<>(main), defaultValue, ItemStackSelection.class, suggestionsProvider);
     }
 
     /**
@@ -69,8 +68,8 @@ public class MaterialOrHandArgument<C> extends CommandArgument<C, MaterialOrHand
      * @param <C>  Command sender type
      * @return Created builder
      */
-    public static <C> MaterialOrHandArgument.@NonNull Builder<C> newBuilder(final @NonNull String name, final NotQuests main) {
-        return new MaterialOrHandArgument.Builder<>(name, main);
+    public static <C> ItemStackSelectionArgument.@NonNull Builder<C> newBuilder(final @NonNull String name, final NotQuests main) {
+        return new ItemStackSelectionArgument.Builder<>(name, main);
     }
 
     /**
@@ -80,8 +79,8 @@ public class MaterialOrHandArgument<C> extends CommandArgument<C, MaterialOrHand
      * @param <C>  Command sender type
      * @return Created argument
      */
-    public static <C> @NonNull CommandArgument<C, MaterialOrHand> of(final @NonNull String name, final NotQuests main) {
-        return MaterialOrHandArgument.<C>newBuilder(name, main).asRequired().build();
+    public static <C> @NonNull CommandArgument<C, ItemStackSelection> of(final @NonNull String name, final NotQuests main) {
+        return ItemStackSelectionArgument.<C>newBuilder(name, main).asRequired().build();
     }
 
     /**
@@ -91,37 +90,36 @@ public class MaterialOrHandArgument<C> extends CommandArgument<C, MaterialOrHand
      * @param <C>  Command sender type
      * @return Created argument
      */
-    public static <C> @NonNull CommandArgument<C, MaterialOrHand> optional(final @NonNull String name, final NotQuests main) {
-        return MaterialOrHandArgument.<C>newBuilder(name, main).asOptional().build();
+    public static <C> @NonNull CommandArgument<C, ItemStackSelection> optional(final @NonNull String name, final NotQuests main) {
+        return ItemStackSelectionArgument.<C>newBuilder(name, main).asOptional().build();
     }
 
     /**
      * Create a new optional argument with a default value
      *
      * @param name     Argument name
-     * @param material Default value
      * @param <C>      Command sender type
      * @return Created argument
      */
-    public static <C> @NonNull CommandArgument<C, MaterialOrHand> optional(
+    public static <C> @NonNull CommandArgument<C, ItemStackSelection> optional(
             final @NonNull String name,
-            final @NonNull MaterialOrHand material,
+            final @NonNull ItemStackSelection itemStackSelection,
             final NotQuests main
     ) {
-        return MaterialOrHandArgument.<C>newBuilder(name, main).asOptionalWithDefault(material.material.toLowerCase()).build();
+        return ItemStackSelectionArgument.<C>newBuilder(name, main).asOptionalWithDefault(itemStackSelection.toFirstItemStack().getType().name().toLowerCase()).build();
     }
 
-    public static final class Builder<C> extends CommandArgument.Builder<C, MaterialOrHand> {
+    public static final class Builder<C> extends CommandArgument.Builder<C, ItemStackSelection> {
         private final NotQuests main;
 
         private Builder(final @NonNull String name, NotQuests main) {
-            super(MaterialOrHand.class, name);
+            super(ItemStackSelection.class, name);
             this.main = main;
         }
 
         @Override
-        public @NonNull CommandArgument<C, MaterialOrHand> build() {
-            return new MaterialOrHandArgument<>(
+        public @NonNull CommandArgument<C, ItemStackSelection> build() {
+            return new ItemStackSelectionArgument<>(
                     this.isRequired(),
                     this.getName(),
                     this.getDefaultValue(),
@@ -133,7 +131,7 @@ public class MaterialOrHandArgument<C> extends CommandArgument<C, MaterialOrHand
 
     }
 
-    public static final class MaterialParser<C> implements ArgumentParser<C, MaterialOrHand> {
+    public static final class MaterialParser<C> implements ArgumentParser<C, ItemStackSelection> {
 
         private final NotQuests main;
 
@@ -147,49 +145,50 @@ public class MaterialOrHandArgument<C> extends CommandArgument<C, MaterialOrHand
         }
 
         @Override
-        public @NonNull ArgumentParseResult<MaterialOrHand> parse(
+        public @NonNull ArgumentParseResult<ItemStackSelection> parse(
                 final @NonNull CommandContext<C> commandContext,
                 final @NonNull Queue<@NonNull String> inputQueue
         ) {
-            String input = inputQueue.peek();
+            final String input = inputQueue.peek();
             if (input == null) {
                 return ArgumentParseResult.failure(new NoInputProvidedException(
-                        MaterialOrHandArgument.MaterialParser.class,
+                        ItemStackSelectionArgument.MaterialParser.class,
                         commandContext
                 ));
             }
 
+            final CommandSender sender = ((CommandSender)commandContext.getSender());
             try {
-                final MaterialOrHand materialOrHand = new MaterialOrHand();
+                final ItemStackSelection itemStackSelection = new ItemStackSelection(main);
 
-                if (input.equalsIgnoreCase("hand")) {
-                    if (commandContext.getSender() instanceof final Player player) {
-                        materialOrHand.itemStack = player.getInventory().getItemInMainHand();
-                        inputQueue.remove();
-                        return ArgumentParseResult.success(materialOrHand);
+                for(final String inputPart : input.split(",")){
+                    if (inputPart.equalsIgnoreCase("hand")) {
+                        if (commandContext.getSender() instanceof final Player player) {
+                            itemStackSelection.addItemStack(player.getInventory().getItemInMainHand());
+                        } else {
+                            return ArgumentParseResult.failure(new ItemStackSelectionArgument.MaterialParseException(inputPart, commandContext));
+                        }
+                    } else if (inputPart.equalsIgnoreCase("any")) {
+                        itemStackSelection.setAny(true);
                     } else {
-                        return ArgumentParseResult.failure(new MaterialOrHandArgument.MaterialParseException(input, commandContext));
-                    }
-
-                } else if (input.equalsIgnoreCase("any")) {
-                    materialOrHand.material = "any";
-                    inputQueue.remove();
-                    return ArgumentParseResult.success(materialOrHand);
-                } else {
-                    try{
-                        materialOrHand.material = Material.valueOf(input.toUpperCase(Locale.ROOT)).name();
-                    }catch (Exception ignored){
-                        if(main.getItemsManager().getItem(input) != null){
-                            materialOrHand.material = input;
-                        }else{
-                            return ArgumentParseResult.failure(new MaterialOrHandArgument.MaterialParseException(input, commandContext));
+                        try{
+                            itemStackSelection.addMaterial(Material.valueOf(inputPart.toUpperCase(Locale.ROOT)));
+                        }catch (Exception ignored){
+                            final NQItem nqItem = main.getItemsManager().getItem(inputPart);
+                            if(nqItem != null){
+                                itemStackSelection.addNqItem(nqItem);
+                            }else{
+                                return ArgumentParseResult.failure(new ItemStackSelectionArgument.MaterialParseException(inputPart, commandContext));
+                            }
                         }
                     }
-                    inputQueue.remove();
-                    return ArgumentParseResult.success(materialOrHand);
                 }
+
+                inputQueue.remove();
+                return ArgumentParseResult.success(itemStackSelection);
+
             } catch (final IllegalArgumentException exception) {
-                return ArgumentParseResult.failure(new MaterialOrHandArgument.MaterialParseException(input, commandContext));
+                return ArgumentParseResult.failure(new ItemStackSelectionArgument.MaterialParseException(input, commandContext));
             }
         }
 
@@ -198,24 +197,41 @@ public class MaterialOrHandArgument<C> extends CommandArgument<C, MaterialOrHand
                 final @NonNull CommandContext<C> context,
                 final @NonNull String input
         ) {
-            final List<String> completions = new ArrayList<>();
-            for (Material value : Material.values()) {
-                completions.add(value.name().toLowerCase());
+            final CommandSender sender = ((CommandSender)context.getSender());
+
+            final List<String> possibleMaterials = new ArrayList<>();
+            for (final Material value : Material.values()) {
+                possibleMaterials.add(value.name().toLowerCase());
+                possibleMaterials.add(value.name().toLowerCase() + ",");
             }
 
-            for(NQItem nqItem : main.getItemsManager().getItems()){
-                completions.add(nqItem.getItemName());
+            for(final NQItem nqItem : main.getItemsManager().getItems()){
+                possibleMaterials.add(nqItem.getItemName());
+                possibleMaterials.add(nqItem.getItemName() + ",");
             }
 
-            completions.add("hand");
-            completions.add("any");
+            possibleMaterials.add("hand");
+            possibleMaterials.add("hand,");
+            possibleMaterials.add("any");
+            possibleMaterials.add("any,");
 
 
             final List<String> allArgs = context.getRawInput();
 
-            main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.getSender(), allArgs.toArray(new String[0]), "[Item Name / 'hand' / 'any']", "[...]");
+            main.getUtilManager().sendFancyCommandCompletion((CommandSender) context.getSender(), allArgs.toArray(new String[0]), "[Item Name / 'hand' / 'any']. Can be separated by comma", "[...]");
 
-            return completions;
+
+            if(!input.contains(",")){
+                return possibleMaterials;
+            } else {
+                final List<String> completions = new ArrayList<>();
+                final String partAfterLastCommaInInput = input.substring( (input.lastIndexOf(",") > input.length()-1) ? (input.lastIndexOf(",")) : (input.lastIndexOf(",") + 1));
+                for(final String possibleMaterial : possibleMaterials){
+                    final String string = input.substring(0, input.length()-1-partAfterLastCommaInInput.length()) + "," + possibleMaterial;
+                    completions.add(string);
+                }
+                return completions;
+            }
         }
 
     }
@@ -237,7 +253,7 @@ public class MaterialOrHandArgument<C> extends CommandArgument<C, MaterialOrHand
                 final @NonNull CommandContext<?> context
         ) {
             super(
-                    MaterialOrHandArgument.MaterialParser.class,
+                    ItemStackSelectionArgument.MaterialParser.class,
                     context,
                     BukkitCaptionKeys.ARGUMENT_PARSE_FAILURE_MATERIAL,
                     CaptionVariable.of("input", input)

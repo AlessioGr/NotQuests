@@ -21,76 +21,86 @@ package rocks.gravili.notquests.paper.structs.actions;
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.paper.PaperCommandManager;
+import java.util.ArrayList;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.MiniMessageSelector;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
-import java.util.ArrayList;
-
-
 public class SendMessageAction extends Action {
 
-    private String messageToSend = "";
+  private String messageToSend = "";
 
+  public SendMessageAction(final NotQuests main) {
+    super(main);
+  }
 
-    public SendMessageAction(final NotQuests main) {
-        super(main);
-    }
+  public static void handleCommands(
+      NotQuests main,
+      PaperCommandManager<CommandSender> manager,
+      Command.Builder<CommandSender> builder,
+      ActionFor actionFor) {
+    manager.command(
+        builder
+            .argument(
+                MiniMessageSelector.<CommandSender>newBuilder("Sending Message", main)
+                    .withPlaceholders()
+                    .build(),
+                ArgumentDescription.of("Message to broadcast"))
+            .handler(
+                (context) -> {
+                  final String messageToSend =
+                      String.join(" ", (String[]) context.get("Sending Message"));
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor actionFor) {
-        manager.command(builder
-                .argument(MiniMessageSelector.<CommandSender>newBuilder("Sending Message", main).withPlaceholders().build(), ArgumentDescription.of("Message to broadcast"))
-                .handler((context) -> {
-                    final String messageToSend = String.join(" ", (String[]) context.get("Sending Message"));
+                  SendMessageAction sendMessageAction = new SendMessageAction(main);
+                  sendMessageAction.setMessageToSend(messageToSend);
 
-                    SendMessageAction sendMessageAction = new SendMessageAction(main);
-                    sendMessageAction.setMessageToSend(messageToSend);
-
-                    main.getActionManager().addAction(sendMessageAction, context);
+                  main.getActionManager().addAction(sendMessageAction, context);
                 }));
+  }
+
+  public final String getMessageToSend() {
+    return messageToSend;
+  }
+
+  public void setMessageToSend(final String messageToSend) {
+    this.messageToSend = messageToSend;
+  }
+
+  @Override
+  public void executeInternally(final QuestPlayer questPlayer, Object... objects) {
+    if (getMessageToSend().isBlank()) {
+      main.getLogManager().warn("Tried to execute SendMessage action with empty message.");
+      return;
     }
 
-    public final String getMessageToSend() {
-        return messageToSend;
-    }
+    questPlayer
+        .getPlayer()
+        .sendMessage(
+            main.parse(
+                main.getUtilManager()
+                    .applyPlaceholders(
+                        getMessageToSend(), questPlayer.getPlayer(), getQuest(), objects)));
+  }
 
-    public void setMessageToSend(final String messageToSend) {
-        this.messageToSend = messageToSend;
-    }
+  @Override
+  public void save(FileConfiguration configuration, String initialPath) {
+    configuration.set(initialPath + ".specifics.message", getMessageToSend());
+  }
 
+  @Override
+  public void load(final FileConfiguration configuration, String initialPath) {
+    this.messageToSend = configuration.getString(initialPath + ".specifics.message", "");
+  }
 
-    @Override
-    public void executeInternally(final QuestPlayer questPlayer, Object... objects) {
-        if (getMessageToSend().isBlank()) {
-            main.getLogManager().warn("Tried to execute SendMessage action with empty message.");
-            return;
-        }
+  @Override
+  public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+    this.messageToSend = String.join(" ", arguments);
+  }
 
-        questPlayer.getPlayer().sendMessage(main.parse(
-                main.getUtilManager().applyPlaceholders(getMessageToSend(), questPlayer.getPlayer(), getQuest(), objects)
-        ));
-    }
-
-    @Override
-    public void save(FileConfiguration configuration, String initialPath) {
-        configuration.set(initialPath + ".specifics.message", getMessageToSend());
-    }
-
-    @Override
-    public void load(final FileConfiguration configuration, String initialPath) {
-        this.messageToSend = configuration.getString(initialPath + ".specifics.message", "");
-    }
-
-    @Override
-    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
-        this.messageToSend = String.join(" ", arguments);
-    }
-
-
-    @Override
-    public String getActionDescription(final QuestPlayer questPlayerr, final Object... objects) {
-        return "Sends Message: " + getMessageToSend();
-    }
+  @Override
+  public String getActionDescription(final QuestPlayer questPlayerr, final Object... objects) {
+    return "Sends Message: " + getMessageToSend();
+  }
 }

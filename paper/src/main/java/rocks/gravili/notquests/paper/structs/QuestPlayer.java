@@ -19,9 +19,21 @@
 package rocks.gravili.notquests.paper.structs;
 
 
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.TimeUnit;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.title.Title;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.EnderCrystal;
 import org.bukkit.entity.Player;
@@ -33,13 +45,9 @@ import rocks.gravili.notquests.paper.events.notquests.QuestPointsChangeEvent;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 import rocks.gravili.notquests.paper.structs.objectives.ConditionObjective;
+import rocks.gravili.notquests.paper.structs.objectives.NumberVariableObjective;
 import rocks.gravili.notquests.paper.structs.objectives.OtherQuestObjective;
 import rocks.gravili.notquests.paper.structs.triggers.ActiveTrigger;
-
-import java.time.Duration;
-import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.TimeUnit;
 
 /**
  * The QuestPlayer Object is initialized for every player, once they join the server - loading its data from the database.
@@ -59,19 +67,15 @@ public class QuestPlayer {
     private final ArrayList<ActiveQuest> questsToComplete;
     private final ArrayList<ActiveQuest> questsToRemove;
     private final ArrayList<CompletedQuest> completedQuests; //has to accept multiple entries of the same value
-    private long questPoints;
-
     private final HashMap<String, Location> locationsAndBeacons, activeLocationAndBeams;
-
-    private ActiveObjective trackingObjective;
-
-    private BossBar bossBar;
-    private int lastBossBarActiveTimeInSeconds = 0;
-
     //Tags
     private final HashMap<String, Object> tags;
-
+    private long questPoints;
+    private ActiveObjective trackingObjective;
+    private BossBar bossBar;
+    private int lastBossBarActiveTimeInSeconds = 0;
     private boolean hasActiveConditionObjectives = false;
+    private boolean hasActiveVariableObjectives = false;
 
     private Player player;
 
@@ -93,14 +97,21 @@ public class QuestPlayer {
         tags = new HashMap<>();
     }
 
-
-    public void setHasActiveConditionObjectives(final boolean hasActiveConditionObjectives){
-        this.hasActiveConditionObjectives = hasActiveConditionObjectives;
-    }
     public boolean isHasActiveConditionObjectives(){
         return hasActiveConditionObjectives;
     }
 
+    public boolean isHasActiveVariableObjectives(){
+        return hasActiveVariableObjectives;
+    }
+
+    public void setHasActiveConditionObjectives(final boolean hasActiveConditionObjectives){
+        this.hasActiveConditionObjectives = hasActiveConditionObjectives;
+    }
+
+    public void setHasActiveVariableObjectives(final boolean hasActiveVariableObjectives){
+        this.hasActiveVariableObjectives = hasActiveVariableObjectives;
+    }
 
     public final Object getTagValue(final String tagIdentifier) {
         return tags.get(tagIdentifier.toLowerCase(Locale.ROOT));
@@ -118,18 +129,18 @@ public class QuestPlayer {
         return trackingObjective;
     }
 
-    public void trackBeacon(final String name, final Location location) {
-        clearBeacons();
-        getLocationsAndBeacons().put(name, location);
-        updateBeaconLocations(getPlayer());
-    }
-
     public void setTrackingObjective(ActiveObjective trackingObjective) {
         this.trackingObjective = trackingObjective;
         sendObjectiveProgress(trackingObjective);
         if(trackingObjective.getObjective().isShowLocation() && trackingObjective.getObjective().getLocation() != null){
             trackBeacon(trackingObjective.getObjectiveID() + "", trackingObjective.getObjective().getLocation());
         }
+    }
+
+    public void trackBeacon(final String name, final Location location) {
+        clearBeacons();
+        getLocationsAndBeacons().put(name, location);
+        updateBeaconLocations(getPlayer());
     }
 
     public void disableTrackingObjective(ActiveObjective activeObjective) {
@@ -943,7 +954,9 @@ public class QuestPlayer {
     }
 
     public void updateConditionObjectives(final Player player) {
-        if (!isHasActiveConditionObjectives()) {
+        //sendDebugMessage("updateConditionObjectives was called...");
+        if (!isHasActiveConditionObjectives() && !isHasActiveVariableObjectives()) {
+            //sendDebugMessage("   No active objectives to update.");
             return;
         }
         for (final ActiveQuest activeQuest : getActiveQuests()) {
@@ -963,6 +976,12 @@ public class QuestPlayer {
 
                     activeObjective.addProgress(1);
 
+                } else if(activeObjective.getObjective() instanceof final NumberVariableObjective numberVariableObjective) {
+                    //sendDebugMessage("Found numbervariableobjective to update!");
+                    if (numberVariableObjective.isCheckOnlyWhenCorrespondingVariableValueChanged() || !activeObjective.isUnlocked()) {
+                        continue;
+                    }
+                    numberVariableObjective.updateProgress(activeObjective);
                 }
             }
             activeQuest.removeCompletedObjectives(true);

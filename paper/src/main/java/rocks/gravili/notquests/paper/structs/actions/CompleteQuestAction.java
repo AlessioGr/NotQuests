@@ -21,6 +21,7 @@ package rocks.gravili.notquests.paper.structs.actions;
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.paper.PaperCommandManager;
+import java.util.ArrayList;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -29,79 +30,85 @@ import rocks.gravili.notquests.paper.structs.ActiveQuest;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
-import java.util.ArrayList;
-
 public class CompleteQuestAction extends Action {
 
-    private String questToCompleteName = "";
+  private String questToCompleteName = "";
 
+  public CompleteQuestAction(final NotQuests main) {
+    super(main);
+  }
 
-    public CompleteQuestAction(final NotQuests main) {
-        super(main);
-    }
+  public static void handleCommands(
+      NotQuests main,
+      PaperCommandManager<CommandSender> manager,
+      Command.Builder<CommandSender> builder,
+      ActionFor rewardFor) {
+    manager.command(
+        builder
+            .argument(
+                QuestSelector.of("quest to complete", main),
+                ArgumentDescription.of(
+                    "Name of the Quest which should be completed for the player."))
+            .handler(
+                (context) -> {
+                  final Quest foundQuest = context.get("quest to complete");
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor rewardFor) {
-        manager.command(builder
-                .argument(QuestSelector.of("quest to complete", main), ArgumentDescription.of("Name of the Quest which should be completed for the player."))
-                .handler((context) -> {
-                    final Quest foundQuest = context.get("quest to complete");
+                  CompleteQuestAction completeQuestAction = new CompleteQuestAction(main);
+                  completeQuestAction.setQuestToCompleteName(foundQuest.getQuestName());
 
-
-                    CompleteQuestAction completeQuestAction = new CompleteQuestAction(main);
-                    completeQuestAction.setQuestToCompleteName(foundQuest.getQuestName());
-
-                    main.getActionManager().addAction(completeQuestAction, context);
+                  main.getActionManager().addAction(completeQuestAction, context);
                 }));
+  }
+
+  public final String getQuestToCompleteName() {
+    return questToCompleteName;
+  }
+
+  public void setQuestToCompleteName(final String questName) {
+    this.questToCompleteName = questName;
+  }
+
+  @Override
+  public void executeInternally(final QuestPlayer questPlayer, Object... objects) {
+    Quest foundQuest = main.getQuestManager().getQuest(getQuestToCompleteName());
+    if (foundQuest == null) {
+      main.getLogManager()
+          .warn(
+              "Tried to execute CompleteQuest action with null quest. Cannot find the following Quest: "
+                  + getQuestToCompleteName());
+      return;
     }
 
-    public final String getQuestToCompleteName() {
-        return questToCompleteName;
+    if (questPlayer == null) {
+      return;
     }
 
-    public void setQuestToCompleteName(final String questName) {
-        this.questToCompleteName = questName;
+    ActiveQuest foundActiveQuest = questPlayer.getActiveQuest(foundQuest);
+
+    if (foundActiveQuest == null || foundActiveQuest.isCompleted()) {
+      return;
     }
 
+    questPlayer.forceActiveQuestCompleted(foundActiveQuest);
+  }
 
-    @Override
-    public void executeInternally(final QuestPlayer questPlayer, Object... objects) {
-        Quest foundQuest = main.getQuestManager().getQuest(getQuestToCompleteName());
-        if (foundQuest == null) {
-            main.getLogManager().warn("Tried to execute CompleteQuest action with null quest. Cannot find the following Quest: " + getQuestToCompleteName());
-            return;
-        }
+  @Override
+  public void save(FileConfiguration configuration, String initialPath) {
+    configuration.set(initialPath + ".specifics.quest", getQuestToCompleteName());
+  }
 
-        if (questPlayer == null) {
-            return;
-        }
+  @Override
+  public void load(final FileConfiguration configuration, String initialPath) {
+    this.questToCompleteName = configuration.getString(initialPath + ".specifics.quest");
+  }
 
-        ActiveQuest foundActiveQuest = questPlayer.getActiveQuest(foundQuest);
+  @Override
+  public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+    this.questToCompleteName = arguments.get(0);
+  }
 
-        if (foundActiveQuest == null || foundActiveQuest.isCompleted()) {
-            return;
-        }
-
-        questPlayer.forceActiveQuestCompleted(foundActiveQuest);
-    }
-
-    @Override
-    public void save(FileConfiguration configuration, String initialPath) {
-        configuration.set(initialPath + ".specifics.quest", getQuestToCompleteName());
-    }
-
-    @Override
-    public void load(final FileConfiguration configuration, String initialPath) {
-        this.questToCompleteName = configuration.getString(initialPath + ".specifics.quest");
-    }
-
-    @Override
-    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
-        this.questToCompleteName = arguments.get(0);
-    }
-
-
-    @Override
-    public String getActionDescription(final QuestPlayer questPlayer, final Object... objects) {
-        return "Completes Quest: " + getQuestToCompleteName();
-    }
+  @Override
+  public String getActionDescription(final QuestPlayer questPlayer, final Object... objects) {
+    return "Completes Quest: " + getQuestToCompleteName();
+  }
 }

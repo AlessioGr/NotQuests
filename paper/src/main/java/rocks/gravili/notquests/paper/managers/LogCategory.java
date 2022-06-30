@@ -19,5 +19,7 @@
 package rocks.gravili.notquests.paper.managers;
 
 public enum LogCategory {
-    DEFAULT, DATA, LANGUAGE
+  DEFAULT,
+  DATA,
+  LANGUAGE
 }

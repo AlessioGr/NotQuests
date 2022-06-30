@@ -18,7 +18,10 @@
 
 package rocks.gravili.notquests.paper.conversation;
 
-
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
@@ -28,213 +31,222 @@ import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.managers.integrations.citizens.QuestGiverNPCTrait;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.concurrent.CopyOnWriteArrayList;
-
 public class Conversation {
-    private final NotQuests main;
-    private final YamlConfiguration config;
-    private final File configFile;
+  final ArrayList<Speaker> speakers;
+  private final NotQuests main;
+  private final YamlConfiguration config;
+  private final File configFile;
+  private final String identifier;
+  private final ArrayList<ConversationLine> start;
+  private CopyOnWriteArrayList<Integer> npcIDs; // -1: no NPC
+  private Category category;
 
-    private final String identifier;
-    private CopyOnWriteArrayList<Integer> npcIDs; //-1: no NPC
-    private final ArrayList<ConversationLine> start;
+  public Conversation(
+      final NotQuests main,
+      final File configFile,
+      final YamlConfiguration config,
+      final String identifier,
+      @Nullable final ArrayList<Integer> npcIDsToAdd,
+      final Category category) {
+    this.main = main;
+    this.configFile = configFile;
+    this.config = config;
+    this.identifier = identifier;
+    npcIDs = new CopyOnWriteArrayList<>();
+    if (npcIDsToAdd != null) {
+      for (int npcID : npcIDsToAdd) {
+        addNPC(npcID);
+      }
+    }
+    start = new ArrayList<>();
+    speakers = new ArrayList<>();
+    this.category = category;
+  }
 
-    final ArrayList<Speaker> speakers;
+  public final Category getCategory() {
+    return category;
+  }
 
-    private Category category;
+  public void setCategory(final Category category) {
+    this.category = category;
+  }
 
+  public final ArrayList<Speaker> getSpeakers() {
+    return speakers;
+  }
 
+  public final boolean hasSpeaker(final Speaker speaker) {
+    if (speakers.contains(speaker)) {
+      return true;
+    }
+    for (final Speaker speakerToCheck : speakers) {
+      if (speakerToCheck.getSpeakerName().equalsIgnoreCase(speaker.getSpeakerName())) {
+        return true;
+      }
+    }
+    return false;
+  }
 
-    public Conversation(final NotQuests main, final File configFile, final YamlConfiguration config, final String identifier, @Nullable final ArrayList<Integer> npcIDsToAdd, final Category category) {
-        this.main = main;
-        this.configFile = configFile;
-        this.config = config;
-        this.identifier = identifier;
-        npcIDs = new CopyOnWriteArrayList<>();
-        if(npcIDsToAdd != null){
-            for(int npcID : npcIDsToAdd){
-                addNPC(npcID);
-            }
-        }
-        start = new ArrayList<>();
-        speakers = new ArrayList<>();
-        this.category = category;
+  public final boolean removeSpeaker(final Speaker speaker, final boolean save) {
+    if (!hasSpeaker(speaker)) {
+      return false;
     }
 
-    public final Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(final Category category) {
-        this.category = category;
-    }
-
-    public final ArrayList<Speaker> getSpeakers() {
-        return speakers;
-    }
-
-    public final boolean hasSpeaker(final Speaker speaker) {
-        if (speakers.contains(speaker)) {
-            return true;
-        }
-        for (final Speaker speakerToCheck : speakers) {
-            if (speakerToCheck.getSpeakerName().equalsIgnoreCase(speaker.getSpeakerName())) {
-                return true;
-            }
-        }
+    speakers.remove(speaker);
+    if (save) {
+      if (configFile == null || config == null) {
         return false;
+      }
+      if (config.get(speaker.getSpeakerName()) != null) {
+        return false;
+      }
+      config.set("Lines." + speaker.getSpeakerName(), null);
+      try {
+        config.save(configFile);
+        return true;
+      } catch (IOException e) {
+        e.printStackTrace();
+        main.getLogManager()
+            .severe(
+                "There was an error saving the configuration of Conversation <highlight>"
+                    + identifier
+                    + "</highlight>.");
+        return false;
+      }
+    } else {
+      return true;
+    }
+  }
+
+  public boolean addSpeaker(final Speaker speaker, final boolean save) {
+    if (hasSpeaker(speaker)) {
+      return false;
     }
 
-    public final boolean removeSpeaker(final Speaker speaker, final boolean save) {
-        if (!hasSpeaker(speaker)) {
-            return false;
+    speakers.add(speaker);
+    if (save) {
+      if (configFile == null || config == null) {
+        return false;
+      }
+      if (config.get(speaker.getSpeakerName()) != null) {
+        return false;
+      }
+      config.set("Lines." + speaker.getSpeakerName() + ".color", speaker.getColor());
+      try {
+        config.save(configFile);
+        return true;
+      } catch (IOException e) {
+        e.printStackTrace();
+        main.getLogManager()
+            .severe(
+                "There was an error saving the configuration of Conversation <highlight>"
+                    + identifier
+                    + "</highlight>.");
+        return false;
+      }
+    } else {
+      return true;
+    }
+  }
+
+  public final YamlConfiguration getConfig() {
+    return config;
+  }
+
+  public void bindToAllCitizensNPCs() {
+    for (int npcID : npcIDs) {
+      bindToCitizensNPC(npcID);
+    }
+  }
+
+  public void bindToCitizensNPC(int npcID) {
+    if (npcID < 0) {
+      return;
+    }
+    if (!main.getIntegrationsManager().isCitizensEnabled()) {
+      main.getLogManager()
+          .warn(
+              "The binding to NPC in Conversation <highlight>"
+                  + identifier
+                  + "</highlight> has been cancelled, because the Citizens plugin is not installed on this server. You will need the Citizens plugin to do NPC stuff.");
+      return;
+    }
+
+    final NPC npc = CitizensAPI.getNPCRegistry().getById(npcID);
+    if (npc != null) {
+      boolean hasTrait = false;
+      for (Trait trait : npc.getTraits()) {
+        if (trait.getName().contains("questgiver")) {
+          hasTrait = true;
+          break;
         }
+      }
+      if (!npc.hasTrait(QuestGiverNPCTrait.class) && !hasTrait) {
+        main.getLogManager()
+            .info(
+                "Trying to add Conversation <highlight>"
+                    + identifier
+                    + "</highlight> to NPC with ID <highlight>"
+                    + npc.getId()
+                    + "</highlight>...");
 
-        speakers.remove(speaker);
-        if (save) {
-            if (configFile == null || config == null) {
-                return false;
-            }
-            if (config.get(speaker.getSpeakerName()) != null) {
-                return false;
-            }
-            config.set("Lines." + speaker.getSpeakerName(), null);
-            try {
-                config.save(configFile);
-                return true;
-            } catch (IOException e) {
-                e.printStackTrace();
-                main.getLogManager().severe("There was an error saving the configuration of Conversation <highlight>" + identifier + "</highlight>.");
-                return false;
-            }
-        } else {
-            return true;
-        }
+        npc.addTrait(QuestGiverNPCTrait.class);
+      }
     }
+  }
 
+  public final String getIdentifier() {
+    return identifier;
+  }
 
-    public boolean addSpeaker(final Speaker speaker, final boolean save) {
-        if (hasSpeaker(speaker)) {
-            return false;
-        }
+  public final CopyOnWriteArrayList<Integer> getNPCIDs() {
+    return npcIDs;
+  }
 
-        speakers.add(speaker);
-        if (save) {
-            if (configFile == null || config == null) {
-                return false;
-            }
-            if (config.get(speaker.getSpeakerName()) != null) {
-                return false;
-            }
-            config.set("Lines." + speaker.getSpeakerName() + ".color", speaker.getColor());
-            try {
-                config.save(configFile);
-                return true;
-            } catch (IOException e) {
-                e.printStackTrace();
-                main.getLogManager().severe("There was an error saving the configuration of Conversation <highlight>" + identifier + "</highlight>.");
-                return false;
-            }
-        } else {
-            return true;
-        }
+  public final boolean hasCitizensNPC() {
+    return npcIDs.size() > 0 && npcIDs.get(0) != -1;
+  }
 
+  public void addStarterConversationLine(final ConversationLine conversationLine) {
+    start.add(conversationLine);
+  }
+
+  public final ArrayList<ConversationLine> getStartingLines() {
+    return start;
+  }
+
+  public void addNPC(int npcID) {
+    this.npcIDs.add(npcID);
+    bindToCitizensNPC(npcID);
+
+    if (configFile == null || config == null) {
+      return;
     }
-
-    public final YamlConfiguration getConfig() {
-        return config;
+    config.set("npcIDs", npcIDs);
+    try {
+      config.save(configFile);
+    } catch (IOException e) {
+      e.printStackTrace();
+      main.getLogManager()
+          .severe(
+              "There was an error saving the configuration of Conversation <highlight>"
+                  + identifier
+                  + "</highlight>.");
     }
+  }
 
-    public void bindToAllCitizensNPCs(){
-        for(int npcID : npcIDs){
-            bindToCitizensNPC(npcID);
-        }
+  public void switchCategory(final Category category) {
+
+    getCategory().getConversationsConfigs().remove(config);
+    setCategory(category);
+    category.getConversationsConfigs().add(config);
+
+    if (!configFile.renameTo(new File(category.getConversationsFolder(), configFile.getName()))) {
+      main.getLogManager()
+          .severe(
+              "There was an error changing the category of conversation <highlight>"
+                  + getIdentifier()
+                  + "</highlight>. The conversation file could not be moved.");
     }
-    public void bindToCitizensNPC(int npcID) {
-        if (npcID < 0) {
-            return;
-        }
-        if (!main.getIntegrationsManager().isCitizensEnabled()) {
-            main.getLogManager().warn("The binding to NPC in Conversation <highlight>" + identifier + "</highlight> has been cancelled, because the Citizens plugin is not installed on this server. You will need the Citizens plugin to do NPC stuff.");
-            return;
-        }
-
-
-        final NPC npc = CitizensAPI.getNPCRegistry().getById(npcID);
-        if (npc != null) {
-            boolean hasTrait = false;
-            for (Trait trait : npc.getTraits()) {
-                if (trait.getName().contains("questgiver")) {
-                    hasTrait = true;
-                    break;
-                }
-            }
-            if (!npc.hasTrait(QuestGiverNPCTrait.class) && !hasTrait) {
-                main.getLogManager().info("Trying to add Conversation <highlight>" + identifier + "</highlight> to NPC with ID <highlight>" + npc.getId() + "</highlight>...");
-
-                npc.addTrait(QuestGiverNPCTrait.class);
-            }
-        }
-
-
-    }
-
-    public final String getIdentifier() {
-        return identifier;
-    }
-
-    public final CopyOnWriteArrayList<Integer> getNPCIDs() {
-        return npcIDs;
-    }
-
-    public final boolean hasCitizensNPC() {
-        return npcIDs.size() > 0 && npcIDs.get(0) != -1;
-    }
-
-    public void addStarterConversationLine(final ConversationLine conversationLine) {
-        start.add(conversationLine);
-    }
-
-
-    public final ArrayList<ConversationLine> getStartingLines() {
-        return start;
-    }
-
-
-    public void addNPC(int npcID) {
-        this.npcIDs.add(npcID);
-        bindToCitizensNPC(npcID);
-
-        if (configFile == null || config == null) {
-            return;
-        }
-        config.set("npcIDs", npcIDs);
-        try {
-            config.save(configFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-            main.getLogManager().severe("There was an error saving the configuration of Conversation <highlight>" + identifier + "</highlight>.");
-        }
-
-    }
-
-
-    public void switchCategory(final Category category) {
-
-
-        getCategory().getConversationsConfigs().remove(config);
-        setCategory(category);
-        category.getConversationsConfigs().add(config);
-
-        if(!configFile.renameTo(new File(category.getConversationsFolder(), configFile.getName()))){
-            main.getLogManager().severe("There was an error changing the category of conversation <highlight>" + getIdentifier() + "</highlight>. The conversation file could not be moved.");
-        }
-
-
-    }
-
-
+  }
 }

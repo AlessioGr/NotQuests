@@ -18,17 +18,30 @@
 
 package rocks.gravili.notquests.paper.managers;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.function.Supplier;
+import java.util.regex.Pattern;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.io.IOUtils;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
@@ -38,18 +51,13 @@ import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 import rocks.gravili.notquests.paper.structs.triggers.Trigger;
 
-import java.io.*;
-import java.util.*;
-import java.util.function.Supplier;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class LanguageManager {
     private final NotQuests main;
     /**
      * Configuration objects which contains values from General.yml
      */
     private final Pattern hexPattern = Pattern.compile("<#([A-Fa-f0-9]){6}>");
+    File languageFolder = null;
     /**
      * General.yml Configuration
      */
@@ -59,9 +67,6 @@ public class LanguageManager {
      */
     private FileConfiguration languageConfig;
     private String currentLanguage = "en";
-
-    File languageFolder = null;
-
     private FileConfiguration defaultLanguageConfig = null;
 
 
@@ -267,6 +272,7 @@ public class LanguageManager {
 
     public boolean setupDefaultStrings() {
         //Set default values
+        main.getLogManager().debug("setupDefaultStrings()");
 
         if (defaultLanguageConfig == null) {
             main.getDataManager().disablePluginAndSaving("There was an error reading the default.yml language configuration.");
@@ -276,18 +282,21 @@ public class LanguageManager {
         boolean valueChanged = false;
         final ConfigurationSection defaultConfigurationSection = defaultLanguageConfig.getConfigurationSection("");
         if (defaultConfigurationSection != null) {
+            main.getLogManager().debug("All default config keys: " + defaultConfigurationSection.getKeys(true).toString());
             for (final String defaultString : defaultConfigurationSection.getKeys(true)) {
 
-                if (!defaultConfigurationSection.isString(defaultString)) {
-                    //main.getLogManager().log(Level.INFO, "Skipping: <highlight>" + defaultString + "</highlight>");
+                if (defaultConfigurationSection.isConfigurationSection(defaultString)) {
+                    main.getLogManager().debug("Skipping: <highlight>" + defaultString + "</highlight>");
                     continue;
                 }
 
-                if (!getLanguageConfig().isString(defaultString)) {
+                if (!getLanguageConfig().contains(defaultString)) {
                     main.getLogManager().info(LogCategory.LANGUAGE, "Updating string: <highlight>" + defaultString + "</highlight>");
 
-                    getLanguageConfig().set(defaultString, defaultConfigurationSection.getString(defaultString));
+                    getLanguageConfig().set(defaultString, defaultConfigurationSection.get(defaultString));
                     valueChanged = true;
+                }else{
+                    main.getLogManager().debug("Already is string: " + defaultString);
                 }
             }
         }
@@ -340,6 +349,16 @@ public class LanguageManager {
         return components;
     }
 
+    public final @NonNull Material getMaterialOrAir(final String languageString) {
+        if (!getLanguageConfig().isString(languageString)) {
+            return Material.AIR;
+        } else {
+            final Material foundMaterial = Material.getMaterial(getLanguageConfig().getString(languageString, "").toUpperCase(
+                Locale.ROOT));
+
+            return foundMaterial != null ? foundMaterial : Material.AIR;
+        }
+    }
     public final int getInt(final String languageString) {
         if (!getLanguageConfig().isInt(languageString)) {
             return 0;
@@ -431,8 +450,8 @@ public class LanguageManager {
                 internalPlaceholderReplacements.put("%OBJECTIVEID%", () -> "" + activeObjective.getObjective().getObjectiveID());
                 internalPlaceholderReplacements.put("%ACTIVEOBJECTIVEID%", () -> "" + activeObjective.getObjective().getObjectiveID());
                 internalPlaceholderReplacements.put("%OBJECTIVENAME%", () -> "" + activeObjective.getObjective().getFinalName());
-                internalPlaceholderReplacements.put("%ACTIVEOBJECTIVEPROGRESS%", () -> "" + activeObjective.getCurrentProgress());
-                internalPlaceholderReplacements.put("%OBJECTIVEPROGRESSNEEDED%", () -> "" + activeObjective.getProgressNeeded());
+                internalPlaceholderReplacements.put("%ACTIVEOBJECTIVEPROGRESS%", () -> String.format("%.2f", activeObjective.getCurrentProgress()));
+                internalPlaceholderReplacements.put("%OBJECTIVEPROGRESSNEEDED%", () -> String.format("%.2f", activeObjective.getProgressNeeded()));
                 internalPlaceholderReplacements.put("%OBJECTIVEPROGRESSPERCENTAGE%", () -> "" + (int) ((float) ((float) activeObjective.getCurrentProgress() / (float) activeObjective.getProgressNeeded()) * 100));
                 internalPlaceholderReplacements.put("%OBJECTIVETASKDESCRIPTION%", () -> main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), false, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), activeObjective));
                 internalPlaceholderReplacements.put("%COMPLETEDOBJECTIVETASKDESCRIPTION%", () -> main.getQuestManager().getObjectiveTaskDescription(activeObjective.getObjective(), true, main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()), activeObjective));

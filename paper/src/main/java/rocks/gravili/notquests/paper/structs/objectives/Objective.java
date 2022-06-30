@@ -18,12 +18,12 @@
 
 package rocks.gravili.notquests.paper.structs.objectives;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.checkerframework.checker.units.qual.N;
-import redempt.crunch.CompiledExpression;
-import redempt.crunch.functional.EvaluationEnvironment;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
@@ -32,314 +32,788 @@ import rocks.gravili.notquests.paper.structs.QuestPlayer;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
 public abstract class Objective {
-    private final ArrayList<Condition> conditions;
-    protected final NotQuests main;
-    private final ArrayList<Action> rewards;
+  protected final NotQuests main;
+  private final ArrayList<Condition> unlockConditions;
+  private final ArrayList<Condition> progressConditions;
+  private final ArrayList<Condition> completeConditions;
 
-    private NumberExpression progressNeededExpression;
+  private final ArrayList<Action> rewards;
 
-    private Quest quest;
-    private int objectiveID = -1;
-    private String objectiveDisplayName = "";
-    private String objectiveDescription = "";
-    private int completionNPCID = -1;
-    private UUID completionArmorStandUUID = null;
+  private NumberExpression progressNeededExpression;
 
-    private boolean showLocation = false;
-    private Location location = null;
+  private Quest quest;
+  private int objectiveID = -1;
+  private String objectiveDisplayName = "";
+  private String objectiveDescription = "";
+  private int completionNPCID = -1;
+  private UUID completionArmorStandUUID = null;
 
-    public Objective(NotQuests main) {
-        this.main = main;
-        conditions = new ArrayList<>();
-        rewards = new ArrayList<>();
+  private boolean showLocation = false;
+  private Location location = null;
+
+  public Objective(NotQuests main) {
+    this.main = main;
+    unlockConditions = new ArrayList<>();
+    progressConditions = new ArrayList<>();
+    completeConditions = new ArrayList<>();
+    rewards = new ArrayList<>();
+  }
+
+  public boolean isShowLocation() {
+    return showLocation;
+  }
+
+  public Location getLocation() {
+    return location;
+  }
+
+  public void setLocation(Location location, boolean save) {
+    this.location = location;
+    if (save) {
+      quest
+          .getCategory()
+          .getQuestsConfig()
+          .set(
+              "quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".location",
+              location);
+      quest.getCategory().saveQuestsConfig();
     }
+  }
 
-    public boolean isShowLocation() {
-        return showLocation;
+  public void setShowLocation(boolean showLocation, boolean save) {
+    this.showLocation = showLocation;
+    if (save) {
+      quest
+          .getCategory()
+          .getQuestsConfig()
+          .set(
+              "quests."
+                  + quest.getQuestName()
+                  + ".objectives."
+                  + getObjectiveID()
+                  + ".showLocation",
+              showLocation);
+      quest.getCategory().saveQuestsConfig();
     }
+  }
 
-    public Location getLocation() {
-        return location;
+  public final int getCompletionNPCID() {
+    return completionNPCID;
+  }
+
+  public final UUID getCompletionArmorStandUUID() {
+    return completionArmorStandUUID;
+  }
+
+  public final void setCompletionNPCID(final int completionNPCID, final boolean save) {
+    this.completionNPCID = completionNPCID;
+    if (save) {
+      quest
+          .getCategory()
+          .getQuestsConfig()
+          .set(
+              "quests."
+                  + quest.getQuestName()
+                  + ".objectives."
+                  + getObjectiveID()
+                  + ".completionNPCID",
+              completionNPCID);
+      quest.getCategory().saveQuestsConfig();
     }
+  }
 
-    public void setLocation(Location location, boolean save) {
-        this.location = location;
-        if (save) {
-            quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".location", location);
-            quest.getCategory().saveQuestsConfig();
+  public final void setCompletionArmorStandUUID(
+      final UUID completionArmorStandUUID, final boolean save) {
+    this.completionArmorStandUUID = completionArmorStandUUID;
+    if (save) {
+      if (completionArmorStandUUID != null) {
+        quest
+            .getCategory()
+            .getQuestsConfig()
+            .set(
+                "quests."
+                    + quest.getQuestName()
+                    + ".objectives."
+                    + getObjectiveID()
+                    + ".completionArmorStandUUID",
+                completionArmorStandUUID.toString());
+      } else {
+        quest
+            .getCategory()
+            .getQuestsConfig()
+            .set(
+                "quests."
+                    + quest.getQuestName()
+                    + ".objectives."
+                    + getObjectiveID()
+                    + ".completionArmorStandUUID",
+                null);
+      }
+      quest.getCategory().saveQuestsConfig();
+    }
+  }
+
+  public final int getObjectiveID() {
+    return objectiveID;
+  }
+
+  public void setObjectiveID(final int objectiveID) {
+    this.objectiveID = objectiveID;
+  }
+
+  public final NumberExpression getProgressNeededExpression() {
+    if (progressNeededExpression == null) {
+      progressNeededExpression = new NumberExpression(main, "1");
+    }
+    return progressNeededExpression;
+  }
+
+  public void setProgressNeededExpression(final String progressNeededExpression) {
+    this.progressNeededExpression = new NumberExpression(main, progressNeededExpression);
+  }
+
+  public final Action getRewardFromID(int id) {
+    for (Action action : getRewards()) {
+      if (action.getActionID() == id) {
+        return action;
+      }
+    }
+    return null;
+  }
+
+  public final ArrayList<Action> getRewards() {
+    return rewards;
+  }
+
+  public void addReward(final Action action, final boolean save) {
+    boolean dupeID = false;
+    for (Action action1 : rewards) {
+      if (action.getActionID() == action1.getActionID()) {
+        dupeID = true;
+        break;
+      }
+    }
+    if (!dupeID) {
+      rewards.add(action);
+      if (save) {
+        quest
+            .getCategory()
+            .getQuestsConfig()
+            .set(
+                "quests."
+                    + quest.getQuestName()
+                    + ".objectives."
+                    + getObjectiveID()
+                    + ".rewards."
+                    + action.getActionID()
+                    + ".actionType",
+                action.getActionType());
+        if (!action.getActionName().isBlank()) {
+          quest
+              .getCategory()
+              .getQuestsConfig()
+              .set(
+                  "quests."
+                      + quest.getQuestName()
+                      + ".objectives."
+                      + getObjectiveID()
+                      + ".rewards."
+                      + action.getActionID()
+                      + ".displayName",
+                  action.getActionName());
         }
-
-    }
-
-    public void setShowLocation(boolean showLocation, boolean save) {
-        this.showLocation = showLocation;
-        if (save) {
-            quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".showLocation", showLocation);
-            quest.getCategory().saveQuestsConfig();
-        }
-    }
-
-    public void setQuest(final Quest quest) {
-        this.quest = quest;
-    }
-
-    public void setProgressNeededExpression(final String progressNeededExpression) {
-        this.progressNeededExpression = new NumberExpression(main, progressNeededExpression);
-    }
-
-    public void setObjectiveID(final int objectiveID) {
-        this.objectiveID = objectiveID;
-    }
-
-
-    public final int getCompletionNPCID() {
-        return completionNPCID;
-    }
-
-    public final UUID getCompletionArmorStandUUID() {
-        return completionArmorStandUUID;
-    }
-
-    public final void setCompletionNPCID(final int completionNPCID, final boolean save) {
-        this.completionNPCID = completionNPCID;
-        if (save) {
-            quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".completionNPCID", completionNPCID);
-            quest.getCategory().saveQuestsConfig();
-        }
-    }
-
-    public final void setCompletionArmorStandUUID(final UUID completionArmorStandUUID, final boolean save) {
-        this.completionArmorStandUUID = completionArmorStandUUID;
-        if (save) {
-            if (completionArmorStandUUID != null) {
-                quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".completionArmorStandUUID", completionArmorStandUUID.toString());
-            } else {
-                quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".completionArmorStandUUID", null);
-            }
-            quest.getCategory().saveQuestsConfig();
-        }
-    }
-
-    public final int getObjectiveID() {
-        return objectiveID;
-    }
-
-    public final NumberExpression getProgressNeededExpression() {
-        if(progressNeededExpression == null){
-            progressNeededExpression = new NumberExpression(main, "1");
-        }
-        return progressNeededExpression;
-    }
-
-    public final ArrayList<Condition> getConditions() {
-        return conditions;
-    }
-
-    public final Condition getConditionFromID(int id){
-        for(Condition condition : getConditions()){
-            if(condition.getConditionID() == id){
-                return condition;
-            }
-        }
-        return null;
-    }
-
-    public final Action getRewardFromID(int id){
-        for(Action action : getRewards()){
-            if(action.getActionID() == id){
-                return action;
-            }
-        }
-        return null;
-    }
-
-    public final ArrayList<Action> getRewards() {
-        return rewards;
-    }
-
-
-
-
-    public void addCondition(final Condition condition, final boolean save) {
-        boolean dupeID = false;
-        for (Condition condition1 : conditions) {
-            if (condition.getConditionID() == condition1.getConditionID()) {
-                dupeID = true;
-                break;
-            }
-        }
-        if (!dupeID) {
-            conditions.add(condition);
-            if (save) {
-                quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions." + condition.getConditionID() + ".conditionType", condition.getConditionType());
-                quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions." + condition.getConditionID() + ".progressNeeded", condition.getProgressNeeded());
-                quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions." + condition.getConditionID() + ".negated", condition.isNegated());
-                quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions." + condition.getConditionID() + ".description", condition.getDescription());
-
-                condition.save(quest.getCategory().getQuestsConfig(), "quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions." + condition.getConditionID());
-                quest.getCategory().saveQuestsConfig();
-            }
-        } else {
-            main.getLogManager().warn("ERROR: Tried to add condition to objective with the ID <highlight>" + getObjectiveID() + "</highlight> with the ID <highlight>" + condition.getConditionID() + "</highlight> but the ID was a DUPLICATE!");
-        }
-    }
-
-    public void addReward(final Action action, final boolean save) {
-        boolean dupeID = false;
-        for (Action action1 : rewards) {
-            if (action.getActionID() == action1.getActionID()) {
-                dupeID = true;
-                break;
-            }
-        }
-        if (!dupeID) {
-            rewards.add(action);
-            if (save) {
-                quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".rewards." + action.getActionID() + ".actionType", action.getActionType());
-                if (!action.getActionName().isBlank()) {
-                    quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".rewards." + action.getActionID() + ".displayName", action.getActionName());
-                }
-                action.save(quest.getCategory().getQuestsConfig(), "quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".rewards." + action.getActionID());
-                quest.getCategory().saveQuestsConfig();
-            }
-        } else {
-            main.getLogManager().warn("ERROR: Tried to add reward to objective with the ID <highlight>" + getObjectiveID() + "</highlight> with the ID <highlight>" + action.getActionID() + "</highlight> but the ID was a DUPLICATE!");
-        }
-    }
-
-    public void removeCondition(final Condition condition, final boolean save) {
-        int conditionID = condition.getConditionID();
-        conditions.remove(condition);
-        if (save) {
-            quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions." + conditionID, null);
-            quest.getCategory().saveQuestsConfig();
-        }
-    }
-
-    public void removeReward(final Action action, final boolean save) {
-        int rewardID = action.getActionID();
-        rewards.remove(action);
-        if (save) {
-            quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".rewards." + rewardID, null);
-            quest.getCategory().saveQuestsConfig();
-        }
-    }
-
-    public void clearRewards() {
-        rewards.clear();
-        quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".rewards", null);
+        action.save(
+            quest.getCategory().getQuestsConfig(),
+            "quests."
+                + quest.getQuestName()
+                + ".objectives."
+                + getObjectiveID()
+                + ".rewards."
+                + action.getActionID());
         quest.getCategory().saveQuestsConfig();
+      }
+    } else {
+      main.getLogManager()
+          .warn(
+              "ERROR: Tried to add reward to objective with the ID <highlight>"
+                  + getObjectiveID()
+                  + "</highlight> with the ID <highlight>"
+                  + action.getActionID()
+                  + "</highlight> but the ID was a DUPLICATE!");
     }
+  }
 
-    public void clearConditions() {
-        conditions.clear();
-        quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions", null);
+  public void removeReward(final Action action, final boolean save) {
+    int rewardID = action.getActionID();
+    rewards.remove(action);
+    if (save) {
+      quest
+          .getCategory()
+          .getQuestsConfig()
+          .set(
+              "quests."
+                  + quest.getQuestName()
+                  + ".objectives."
+                  + getObjectiveID()
+                  + ".rewards."
+                  + rewardID,
+              null);
+      quest.getCategory().saveQuestsConfig();
+    }
+  }
+
+  public void clearRewards() {
+    rewards.clear();
+    quest
+        .getCategory()
+        .getQuestsConfig()
+        .set(
+            "quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".rewards",
+            null);
+    quest.getCategory().saveQuestsConfig();
+  }
+
+  public final String getDisplayName() {
+    return objectiveDisplayName;
+  }
+
+  public final String getFinalName() {
+    if (!objectiveDisplayName.isBlank()) {
+      return getDisplayName();
+    } else {
+      return main.getObjectiveManager().getObjectiveType(this.getClass());
+    }
+  }
+
+  public void setDisplayName(String newObjectiveDisplayName, boolean save) {
+    newObjectiveDisplayName =
+        main.getUtilManager().replaceLegacyWithMiniMessage(newObjectiveDisplayName);
+    this.objectiveDisplayName = newObjectiveDisplayName;
+    if (save) {
+      quest
+          .getCategory()
+          .getQuestsConfig()
+          .set(
+              "quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".displayName",
+              newObjectiveDisplayName);
+      quest.getCategory().saveQuestsConfig();
+    }
+  }
+
+  public void removeDisplayName(boolean save) {
+    this.objectiveDisplayName = "";
+    if (save) {
+      quest
+          .getCategory()
+          .getQuestsConfig()
+          .set(
+              "quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".displayName",
+              null);
+      quest.getCategory().saveQuestsConfig();
+    }
+  }
+
+  public final String getDescription() { // MiniMessage
+    return objectiveDescription;
+  }
+
+  /**
+   * Gets the objective description, but also adds line-breaks so the description is not bigger than
+   * the screen (useful for the GUI)
+   *
+   * @param maxLengthPerLine how long the description can be per-line
+   * @return the description of the objective with proper line-breaks
+   */
+  public final String getDescription(final int maxLengthPerLine) {
+    return main.getUtilManager().wrapText(getDescription(), maxLengthPerLine);
+  }
+
+  public final List<String> getDescriptionLines(final int maxLengthPerLine) {
+    return main.getUtilManager().wrapTextToList(getDescription(), maxLengthPerLine);
+  }
+
+  public void setDescription(String newObjectiveDescription, boolean save) {
+    newObjectiveDescription =
+        main.getUtilManager().replaceLegacyWithMiniMessage(newObjectiveDescription);
+    this.objectiveDescription = newObjectiveDescription;
+    if (save) {
+      quest
+          .getCategory()
+          .getQuestsConfig()
+          .set(
+              "quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".description",
+              newObjectiveDescription);
+      quest.getCategory().saveQuestsConfig();
+    }
+  }
+
+  public void removeDescription(boolean save) {
+    this.objectiveDescription = "";
+    if (save) {
+      quest
+          .getCategory()
+          .getQuestsConfig()
+          .set(
+              "quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".description",
+              null);
+      quest.getCategory().saveQuestsConfig();
+    }
+  }
+
+  public final Quest getQuest() {
+    return quest;
+  }
+
+  public void setQuest(final Quest quest) {
+    this.quest = quest;
+  }
+
+  public abstract String getObjectiveTaskDescription(
+      final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective);
+
+  public abstract void save(final FileConfiguration configuration, final String initialPath);
+
+  public abstract void load(final FileConfiguration configuration, final String initialPath);
+
+  public abstract void onObjectiveUnlock(
+      final ActiveObjective activeObjective,
+      final boolean unlockedDuringPluginStartupQuestLoadingProcess);
+
+  public abstract void onObjectiveCompleteOrLock(
+      final ActiveObjective activeObjective,
+      final boolean lockedOrCompletedDuringPluginStartupQuestLoadingProcess,
+      final boolean completed);
+
+  public final int getFreeRewardID() {
+    for (int i = 1; i < Integer.MAX_VALUE; i++) {
+      if (getRewardFromID(i) == null) {
+        return i;
+      }
+    }
+    return getRewards().size() + 1;
+  }
+
+  /*
+   * Unlock Conditions
+   */
+  public final ArrayList<Condition> getUnlockConditions() {
+    return unlockConditions;
+  }
+
+  public void addUnlockCondition(final Condition condition, final boolean save) {
+    boolean dupeID = false;
+    for (final Condition condition1 : unlockConditions) {
+      if (condition.getConditionID() == condition1.getConditionID()) {
+        dupeID = true;
+        break;
+      }
+    }
+    if (!dupeID) {
+      unlockConditions.add(condition);
+      if (save) {
+        quest
+            .getCategory()
+            .getQuestsConfig()
+            .set(
+                "quests."
+                    + quest.getQuestName()
+                    + ".objectives."
+                    + getObjectiveID()
+                    + ".conditions."
+                    + condition.getConditionID()
+                    + ".conditionType",
+                condition.getConditionType());
+        quest
+            .getCategory()
+            .getQuestsConfig()
+            .set(
+                "quests."
+                    + quest.getQuestName()
+                    + ".objectives."
+                    + getObjectiveID()
+                    + ".conditions."
+                    + condition.getConditionID()
+                    + ".progressNeeded",
+                condition.getProgressNeeded());
+        quest
+            .getCategory()
+            .getQuestsConfig()
+            .set(
+                "quests."
+                    + quest.getQuestName()
+                    + ".objectives."
+                    + getObjectiveID()
+                    + ".conditions."
+                    + condition.getConditionID()
+                    + ".negated",
+                condition.isNegated());
+        quest
+            .getCategory()
+            .getQuestsConfig()
+            .set(
+                "quests."
+                    + quest.getQuestName()
+                    + ".objectives."
+                    + getObjectiveID()
+                    + ".conditions."
+                    + condition.getConditionID()
+                    + ".description",
+                condition.getDescription());
+
+        condition.save(
+            quest.getCategory().getQuestsConfig(),
+            "quests."
+                + quest.getQuestName()
+                + ".objectives."
+                + getObjectiveID()
+                + ".conditions."
+                + condition.getConditionID());
         quest.getCategory().saveQuestsConfig();
+      }
+    } else {
+      main.getLogManager()
+          .warn(
+              "ERROR: Tried to add condition to objective with the ID <highlight>"
+                  + getObjectiveID()
+                  + "</highlight> with the ID <highlight>"
+                  + condition.getConditionID()
+                  + "</highlight> but the ID was a DUPLICATE!");
     }
+  }
 
-    public final String getDisplayName() {
-        return objectiveDisplayName;
+  public void removeUnlockCondition(final Condition condition, final boolean save) {
+    int conditionID = condition.getConditionID();
+    unlockConditions.remove(condition);
+    if (save) {
+      quest
+          .getCategory()
+          .getQuestsConfig()
+          .set(
+              "quests."
+                  + quest.getQuestName()
+                  + ".objectives."
+                  + getObjectiveID()
+                  + ".conditions."
+                  + conditionID,
+              null);
+      quest.getCategory().saveQuestsConfig();
     }
+  }
 
-    public final String getFinalName() {
-        if (!objectiveDisplayName.isBlank()) {
-            return getDisplayName();
-        } else {
-            return main.getObjectiveManager().getObjectiveType(this.getClass());
-        }
+  public void clearUnlockConditions() {
+    unlockConditions.clear();
+    quest
+        .getCategory()
+        .getQuestsConfig()
+        .set(
+            "quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditions",
+            null);
+    quest.getCategory().saveQuestsConfig();
+  }
+
+  public final Condition getUnlockConditionFromID(int id) {
+    for (final Condition condition : getUnlockConditions()) {
+      if (condition.getConditionID() == id) {
+        return condition;
+      }
     }
+    return null;
+  }
 
-    public void setDisplayName(String newObjectiveDisplayName, boolean save) {
-        newObjectiveDisplayName = main.getUtilManager().replaceLegacyWithMiniMessage(newObjectiveDisplayName);
-        this.objectiveDisplayName = newObjectiveDisplayName;
-        if (save) {
-            quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".displayName", newObjectiveDisplayName);
-            quest.getCategory().saveQuestsConfig();
-        }
+  public final int getFreeUnlockConditionID() {
+    for (int i = 1; i < Integer.MAX_VALUE; i++) {
+      if (getUnlockConditionFromID(i) == null) {
+        return i;
+      }
     }
+    return getUnlockConditions().size() + 1;
+  }
 
-    public void removeDisplayName(boolean save) {
-        this.objectiveDisplayName = "";
-        if (save) {
-            quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".displayName", null);
-            quest.getCategory().saveQuestsConfig();
-        }
+  /*
+   * Progress Conditions
+   */
+
+  public final ArrayList<Condition> getProgressConditions() {
+    return progressConditions;
+  }
+
+  public void addProgressCondition(final Condition condition, final boolean save) {
+    boolean dupeID = false;
+    for (final Condition condition1 : progressConditions) {
+      if (condition.getConditionID() == condition1.getConditionID()) {
+        dupeID = true;
+        break;
+      }
     }
+    if (!dupeID) {
+      progressConditions.add(condition);
+      if (save) {
+        quest
+            .getCategory()
+            .getQuestsConfig()
+            .set(
+                "quests."
+                    + quest.getQuestName()
+                    + ".objectives."
+                    + getObjectiveID()
+                    + ".conditionsProgress."
+                    + condition.getConditionID()
+                    + ".conditionType",
+                condition.getConditionType());
+        quest
+            .getCategory()
+            .getQuestsConfig()
+            .set(
+                "quests."
+                    + quest.getQuestName()
+                    + ".objectives."
+                    + getObjectiveID()
+                    + ".conditionsProgress."
+                    + condition.getConditionID()
+                    + ".progressNeeded",
+                condition.getProgressNeeded());
+        quest
+            .getCategory()
+            .getQuestsConfig()
+            .set(
+                "quests."
+                    + quest.getQuestName()
+                    + ".objectives."
+                    + getObjectiveID()
+                    + ".conditionsProgress."
+                    + condition.getConditionID()
+                    + ".negated",
+                condition.isNegated());
+        quest
+            .getCategory()
+            .getQuestsConfig()
+            .set(
+                "quests."
+                    + quest.getQuestName()
+                    + ".objectives."
+                    + getObjectiveID()
+                    + ".conditionsProgress."
+                    + condition.getConditionID()
+                    + ".description",
+                condition.getDescription());
 
+        quest
+            .getCategory()
+            .getQuestsConfig()
+            .set(
+                "quests."
+                    + quest.getQuestName()
+                    + ".objectives."
+                    + getObjectiveID()
+                    + ".conditionsProgress."
+                    + condition.getConditionID()
+                    + ".allowProgressDecreaseIfNotFulfilled",
+                condition.isObjectiveConditionSpecific_allowProgressDecreaseIfNotFulfilled());
 
-    public final String getDescription() { //MiniMessage
-        return objectiveDescription;
+        condition.save(
+            quest.getCategory().getQuestsConfig(),
+            "quests."
+                + quest.getQuestName()
+                + ".objectives."
+                + getObjectiveID()
+                + ".conditionsProgress."
+                + condition.getConditionID());
+        quest.getCategory().saveQuestsConfig();
+      }
+    } else {
+      main.getLogManager()
+          .warn(
+              "ERROR: Tried to add progress condition to objective with the ID <highlight>"
+                  + getObjectiveID()
+                  + "</highlight> with the ID <highlight>"
+                  + condition.getConditionID()
+                  + "</highlight> but the ID was a DUPLICATE!");
     }
+  }
 
-
-    /**
-     * Gets the objective description, but also adds line-breaks so the description is not bigger than the screen
-     * (useful for the GUI)
-     *
-     * @param maxLengthPerLine how long the description can be per-line
-     * @return the description of the objective with proper line-breaks
-     */
-    public final String getDescription(final int maxLengthPerLine) {
-        return main.getUtilManager().wrapText(getDescription(), maxLengthPerLine);
+  public void removeProgressCondition(final Condition condition, final boolean save) {
+    int conditionID = condition.getConditionID();
+    progressConditions.remove(condition);
+    if (save) {
+      quest
+          .getCategory()
+          .getQuestsConfig()
+          .set(
+              "quests."
+                  + quest.getQuestName()
+                  + ".objectives."
+                  + getObjectiveID()
+                  + ".conditionsProgress."
+                  + conditionID,
+              null);
+      quest.getCategory().saveQuestsConfig();
     }
+  }
 
-    public final List<String> getDescriptionLines(final int maxLengthPerLine) {
-        return main.getUtilManager().wrapTextToList(getDescription(), maxLengthPerLine);
+  public void clearProgressConditions() {
+    progressConditions.clear();
+    quest
+        .getCategory()
+        .getQuestsConfig()
+        .set(
+            "quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditionsProgress",
+            null);
+    quest.getCategory().saveQuestsConfig();
+  }
+
+  public final Condition getProgressConditionFromID(int id) {
+    for (final Condition condition : getProgressConditions()) {
+      if (condition.getConditionID() == id) {
+        return condition;
+      }
     }
+    return null;
+  }
 
-
-    public void setDescription(String newObjectiveDescription, boolean save) {
-        newObjectiveDescription = main.getUtilManager().replaceLegacyWithMiniMessage(newObjectiveDescription);
-        this.objectiveDescription = newObjectiveDescription;
-        if (save) {
-            quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".description", newObjectiveDescription);
-            quest.getCategory().saveQuestsConfig();
-        }
+  public final int getFreeProgressConditionID() {
+    for (int i = 1; i < Integer.MAX_VALUE; i++) {
+      if (getProgressConditionFromID(i) == null) {
+        return i;
+      }
     }
+    return getProgressConditions().size() + 1;
+  }
 
-    public void removeDescription(boolean save) {
-        this.objectiveDescription = "";
-        if (save) {
-            quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".description", null);
-            quest.getCategory().saveQuestsConfig();
-        }
+  /*
+   * Complete Conditions
+   */
+
+  public final ArrayList<Condition> getCompleteConditions() {
+    return completeConditions;
+  }
+
+  public void addCompleteCondition(final Condition condition, final boolean save) {
+    boolean dupeID = false;
+    for (final Condition condition1 : completeConditions) {
+      if (condition.getConditionID() == condition1.getConditionID()) {
+        dupeID = true;
+        break;
+      }
     }
+    if (!dupeID) {
+      completeConditions.add(condition);
+      if (save) {
+        quest
+            .getCategory()
+            .getQuestsConfig()
+            .set(
+                "quests."
+                    + quest.getQuestName()
+                    + ".objectives."
+                    + getObjectiveID()
+                    + ".conditionsComplete."
+                    + condition.getConditionID()
+                    + ".conditionType",
+                condition.getConditionType());
+        quest
+            .getCategory()
+            .getQuestsConfig()
+            .set(
+                "quests."
+                    + quest.getQuestName()
+                    + ".objectives."
+                    + getObjectiveID()
+                    + ".conditionsComplete."
+                    + condition.getConditionID()
+                    + ".progressNeeded",
+                condition.getProgressNeeded());
+        quest
+            .getCategory()
+            .getQuestsConfig()
+            .set(
+                "quests."
+                    + quest.getQuestName()
+                    + ".objectives."
+                    + getObjectiveID()
+                    + ".conditionsComplete."
+                    + condition.getConditionID()
+                    + ".negated",
+                condition.isNegated());
+        quest
+            .getCategory()
+            .getQuestsConfig()
+            .set(
+                "quests."
+                    + quest.getQuestName()
+                    + ".objectives."
+                    + getObjectiveID()
+                    + ".conditionsComplete."
+                    + condition.getConditionID()
+                    + ".description",
+                condition.getDescription());
 
-    public final Quest getQuest() {
-        return quest;
+        condition.save(
+            quest.getCategory().getQuestsConfig(),
+            "quests."
+                + quest.getQuestName()
+                + ".objectives."
+                + getObjectiveID()
+                + ".conditionsComplete."
+                + condition.getConditionID());
+        quest.getCategory().saveQuestsConfig();
+      }
+    } else {
+      main.getLogManager()
+          .warn(
+              "ERROR: Tried to add complete condition to objective with the ID <highlight>"
+                  + getObjectiveID()
+                  + "</highlight> with the ID <highlight>"
+                  + condition.getConditionID()
+                  + "</highlight> but the ID was a DUPLICATE!");
     }
+  }
 
-    public abstract String getObjectiveTaskDescription(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective);
-
-    public abstract void save(final FileConfiguration configuration, final String initialPath);
-
-    public abstract void load(final FileConfiguration configuration, final String initialPath);
-
-    public abstract void onObjectiveUnlock(final ActiveObjective activeObjective, final boolean unlockedDuringPluginStartupQuestLoadingProcess);
-
-    public abstract void onObjectiveCompleteOrLock(final ActiveObjective activeObjective, final boolean lockedOrCompletedDuringPluginStartupQuestLoadingProcess, final boolean completed);
-
-
-    public final int getFreeRewardID(){
-        for(int i = 1; i< Integer.MAX_VALUE; i++){
-            if(getRewardFromID(i) == null){
-                return i;
-            }
-        }
-        return getRewards().size()+1;
+  public void removeCompleteCondition(final Condition condition, final boolean save) {
+    int conditionID = condition.getConditionID();
+    completeConditions.remove(condition);
+    if (save) {
+      quest
+          .getCategory()
+          .getQuestsConfig()
+          .set(
+              "quests."
+                  + quest.getQuestName()
+                  + ".objectives."
+                  + getObjectiveID()
+                  + ".conditionsComplete."
+                  + conditionID,
+              null);
+      quest.getCategory().saveQuestsConfig();
     }
-    public final int getFreeConditionID(){
-        for(int i = 1; i< Integer.MAX_VALUE; i++){
-            if(getConditionFromID(i) == null){
-                return i;
-            }
-        }
-        return getConditions().size()+1;
-    }
+  }
 
+  public void clearCompleteConditions() {
+    completeConditions.clear();
+    quest
+        .getCategory()
+        .getQuestsConfig()
+        .set(
+            "quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".conditionsComplete",
+            null);
+    quest.getCategory().saveQuestsConfig();
+  }
+
+  public final Condition getCompleteConditionFromID(int id) {
+    for (final Condition condition : getCompleteConditions()) {
+      if (condition.getConditionID() == id) {
+        return condition;
+      }
+    }
+    return null;
+  }
+
+  public final int getFreeCompleteConditionID() {
+    for (int i = 1; i < Integer.MAX_VALUE; i++) {
+      if (getCompleteConditionFromID(i) == null) {
+        return i;
+      }
+    }
+    return getCompleteConditions().size() + 1;
+  }
 }

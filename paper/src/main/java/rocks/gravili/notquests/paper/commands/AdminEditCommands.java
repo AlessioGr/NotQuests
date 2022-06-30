@@ -28,11 +28,18 @@ import cloud.commandframework.arguments.standard.StringArrayArgument;
 import cloud.commandframework.bukkit.parsers.WorldArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.kyori.adventure.text.Component;
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -44,19 +51,15 @@ import org.bukkit.util.Vector;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.commands.arguments.CategorySelector;
 import rocks.gravili.notquests.paper.commands.arguments.DurationArgument;
-import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
+import rocks.gravili.notquests.paper.commands.arguments.ItemStackSelectionArgument;
 import rocks.gravili.notquests.paper.commands.arguments.MiniMessageSelector;
-import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
+import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelection;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.actions.Action;
 import rocks.gravili.notquests.paper.structs.conditions.Condition;
 import rocks.gravili.notquests.paper.structs.objectives.Objective;
 import rocks.gravili.notquests.paper.structs.triggers.Trigger;
-
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class AdminEditCommands {
@@ -286,7 +289,7 @@ public class AdminEditCommands {
 
         manager.command(editBuilder.literal("takeItem")
 
-                .argument(MaterialOrHandArgument.of("material", main), ArgumentDescription.of("Material of item displayed in the Quest take GUI."))
+                .argument(ItemStackSelectionArgument.of("material", main), ArgumentDescription.of("Material of item displayed in the Quest take GUI."))
                 .flag(
                         manager.flagBuilder("glow")
                                 .withDescription(ArgumentDescription.of("Makes the item have the enchanted glow."))
@@ -296,13 +299,12 @@ public class AdminEditCommands {
                     final Quest quest = context.get("quest");
                     final boolean glow = context.flags().isPresent("glow");
 
-                    final MaterialOrHand materialOrHand = context.get("material");
-                    final ItemStack takeItem;
-                    if (materialOrHand.material.equalsIgnoreCase("any")) {
+                    final ItemStackSelection itemStackSelection= context.get("material");
+                    ItemStack takeItem = itemStackSelection.toFirstItemStack();
+                    if (takeItem == null) {
                         takeItem = new ItemStack(Material.BOOK, 1);
-                    } else {
-                        takeItem = main.getItemsManager().getItemStack(materialOrHand);
                     }
+
                     if (glow) {
                         takeItem.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 1);
                         ItemMeta meta = takeItem.getItemMeta();
@@ -763,196 +765,24 @@ public class AdminEditCommands {
                 }));
 
 
-        manager.command(builder.literal("conditions")
-                .literal("clear")
-                .meta(CommandMeta.DESCRIPTION, "Removes all conditions from this objective.")
-                .handler((context) -> {
-                    final Quest quest = context.get("quest");
-                    final int objectiveID = context.get("Objective ID");
-                    final Objective objective = quest.getObjectiveFromID(objectiveID);
-                    assert objective != null; //Shouldn't be null
+      final Command.Builder<CommandSender> editObjectiveConditionsUnlockBuilder = builder
+          .literal("conditions")
+          .literal("unlock");
 
-                    objective.clearConditions();
-                    context.getSender().sendMessage(main.parse(
-                            "<success>All conditions of objective with ID <highlight>" + objectiveID
-                                    + "</highlight> have been removed!"
-                    ));
-
-                }));
-
-        manager.command(builder.literal("conditions")
-                .literal("list", "show")
-                .meta(CommandMeta.DESCRIPTION, "Lists all conditions of this objective.")
-                .handler((context) -> {
-                    final Quest quest = context.get("quest");
-                    final int objectiveID = context.get("Objective ID");
-                    final Objective objective = quest.getObjectiveFromID(objectiveID);
-                    assert objective != null; //Shouldn't be null
+      handleEditObjectivesUnlockConditions(editObjectiveConditionsUnlockBuilder);
 
 
-                    context.getSender().sendMessage(main.parse(
-                            "<highlight>Conditions of objective with ID <highlight2>" + objectiveID
-                                    + "</highlight2>:"
-                    ));
-                    for (Condition condition : objective.getConditions()) {
-                        context.getSender().sendMessage(main.parse("<highlight>" + condition.getConditionID() + ".</highlight> <main>" + condition.getConditionType() + "</main>"));
-                        if(context.getSender() instanceof Player player){
-                            context.getSender().sendMessage(main.parse("<main>" + condition.getConditionDescription(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()))));
-                        }else{
-                            context.getSender().sendMessage(main.parse("<main>" + condition.getConditionDescription(null)));
-                        }
-                    }
+      final Command.Builder<CommandSender> editObjectiveConditionsProgressBuilder = builder
+          .literal("conditions")
+          .literal("progress");
 
-                    if (objective.getConditions().size() == 0) {
-                        context.getSender().sendMessage(main.parse("<warn>This objective has no conditions!"));
-                    }
-                }));
+      handleEditObjectivesProgressConditions(editObjectiveConditionsProgressBuilder);
 
+      final Command.Builder<CommandSender> editObjectiveConditionsCompleteBuilder = builder
+          .literal("conditions")
+          .literal("complete");
 
-        final Command.Builder<CommandSender> editObjectiveConditionsBuilder = builder
-                .literal("conditions")
-                .literal("edit")
-                .argument(IntegerArgument.<CommandSender>newBuilder("Condition ID").withMin(1).withSuggestionsProvider(
-                        (context, lastString) -> {
-                            final List<String> allArgs = context.getRawInput();
-                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Condition ID]", "[...]");
-
-                            ArrayList<String> completions = new ArrayList<>();
-
-                            final Quest quest = context.get("quest");
-                            final int objectiveID = context.get("Objective ID");
-                            final Objective objective = quest.getObjectiveFromID(objectiveID);
-                            assert objective != null; //Shouldn't be null
-
-                             for (final Condition condition : objective.getConditions()) {
-                                completions.add("" + condition.getConditionID());
-                            }
-
-                            return completions;
-                        }
-                ));
-
-        manager.command(editObjectiveConditionsBuilder.literal("delete", "remove")
-                .meta(CommandMeta.DESCRIPTION, "Removes a condition from this Objective.")
-                .handler((context) -> {
-                    final Quest quest = context.get("quest");
-                    final int objectiveID = context.get("Objective ID");
-                    final Objective objective = quest.getObjectiveFromID(objectiveID);
-                    assert objective != null; //Shouldn't be null
-
-                    int conditionID = context.get("Condition ID");
-                    Condition condition = objective.getConditionFromID(conditionID);
-
-                    if(condition == null){
-                        context.getSender().sendMessage(main.parse(
-                                "<error>Condition with the ID <highlight>" + conditionID + "</highlight> was not found!"
-                        ));
-                        return;
-                    }
-
-                    objective.removeCondition(condition, true);
-                    context.getSender().sendMessage(main.parse("<main>The condition with the ID <highlight>" + conditionID + "</highlight> of Objective with ID <highlight2>" + objectiveID + "</highlight2> has been removed!"));
-                }));
-
-
-        manager.command(editObjectiveConditionsBuilder.literal("description")
-                .literal("set")
-                .argument(MiniMessageSelector.<CommandSender>newBuilder("description", main).withPlaceholders().build(), ArgumentDescription.of("Objective condition description"))
-                .meta(CommandMeta.DESCRIPTION, "Sets the new description of the Objective condition.")
-                .handler((context) -> {
-                    final Quest quest = context.get("quest");
-                    final int objectiveID = context.get("Objective ID");
-                    final Objective objective = quest.getObjectiveFromID(objectiveID);
-                    assert objective != null; //Shouldn't be null
-
-                    int conditionID = context.get("Condition ID");
-                    Condition condition = objective.getConditionFromID(conditionID);
-
-                    if(condition == null){
-                        context.getSender().sendMessage(main.parse(
-                                "<error>Condition with the ID <highlight>" + conditionID + "</highlight> was not found!"
-                        ));
-                        return;
-                    }
-
-                    final String description = String.join(" ", (String[]) context.get("description"));
-
-                    condition.setDescription(description);
-
-                    quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + objectiveID + ".conditions." + conditionID + ".description", description);
-                    quest.getCategory().saveQuestsConfig();
-
-                    context.getSender().sendMessage(main.parse("<success>Description successfully added to condition with ID <highlight>" + conditionID + "</highlight> of objective with ID <highlight2>"
-                            + objectiveID + "</highlight2>! New description: <highlight2>"
-                            + condition.getDescription()
-                    ));
-                }));
-
-        manager.command(editObjectiveConditionsBuilder.literal("description")
-                .literal("remove", "delete")
-                .meta(CommandMeta.DESCRIPTION, "Removes the description of the Quest requirement.")
-                .handler((context) -> {
-                    final Quest quest = context.get("quest");
-                    final int objectiveID = context.get("Objective ID");
-                    final Objective objective = quest.getObjectiveFromID(objectiveID);
-                    assert objective != null; //Shouldn't be null
-
-                    int conditionID = context.get("Condition ID");
-                    Condition condition = objective.getConditionFromID(conditionID);
-
-                    if(condition == null){
-                        context.getSender().sendMessage(main.parse(
-                                "<error>Condition with the ID <highlight>" + conditionID + "</highlight> was not found!"
-                        ));
-                        return;
-                    }
-
-
-                    condition.removeDescription();
-
-                    quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + objectiveID + ".conditions." + conditionID + ".description", "");
-                    quest.getCategory().saveQuestsConfig();
-
-                    context.getSender().sendMessage(main.parse("<success>Description successfully removed from condition with ID <highlight>" + conditionID + "</highlight> of objective with ID <highlight2>"
-                            + objectiveID + "</highlight2>! New description: <highlight2>"
-                            + condition.getDescription()
-                    ));
-                }));
-
-        manager.command(editObjectiveConditionsBuilder.literal("description")
-                .literal("show", "check")
-                .meta(CommandMeta.DESCRIPTION, "Shows the description of the Quest requirement.")
-                .handler((context) -> {
-                    final Quest quest = context.get("quest");
-                    final int objectiveID = context.get("Objective ID");
-                    final Objective objective = quest.getObjectiveFromID(objectiveID);
-                    assert objective != null; //Shouldn't be null
-
-                    int conditionID = context.get("Condition ID");
-                    Condition condition = objective.getConditionFromID(conditionID);
-
-                    if(condition == null){
-                        context.getSender().sendMessage(main.parse(
-                                "<error>Condition with the ID <highlight>" + conditionID + "</highlight> was not found!"
-                        ));
-                        return;
-                    }
-
-
-                    context.getSender().sendMessage(main.parse("<main>Description of condition with ID <highlight>" + conditionID + "</highlight> of objective with ID <highlight2>"
-                            + objectiveID + "</highlight2>:\n"
-                            + condition.getDescription()
-                    ));
-                }));
-
-
-
-
-
-
-
-
-
+      handleEditObjectivesCompleteConditions(editObjectiveConditionsCompleteBuilder);
 
 
 
@@ -1138,23 +968,66 @@ public class AdminEditCommands {
                             "<highlight>Objective Description: <main>" + objective.getDescription()
                     ));
 
-                    context.getSender().sendMessage(main.parse(
-                            "<highlight>Objective Conditions:"
-                    ));
-                    int counter = 1;
-                    for (final Condition condition : objective.getConditions()) {
+                    {
+                      context.getSender().sendMessage(main.parse(
+                          "<highlight>Objective unlock conditions:"
+                      ));
+                      int counter = 1;
+                      for (final Condition condition : objective.getUnlockConditions()) {
                         if(context.getSender() instanceof Player player){
-                            context.getSender().sendMessage(main.parse(
-                                    "    <highlight>" + counter + ". Description: " + condition.getConditionDescription(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()))
-                            ));
+                          context.getSender().sendMessage(main.parse(
+                              "    <highlight>" + counter + ". Description: " + condition.getConditionDescription(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()))
+                          ));
                         }else {
-                            context.getSender().sendMessage(main.parse(
-                                    "    <highlight>" + counter + ". Description: " + condition.getConditionDescription(null)
-                            ));
+                          context.getSender().sendMessage(main.parse(
+                              "    <highlight>" + counter + ". Description: " + condition.getConditionDescription(null)
+                          ));
                         }
 
                         counter++;
+                      }
                     }
+
+                  {
+                    context.getSender().sendMessage(main.parse(
+                        "<highlight>Objective progress conditions:"
+                    ));
+                    int counter = 1;
+                    for (final Condition condition : objective.getProgressConditions()) {
+                      if(context.getSender() instanceof Player player){
+                        context.getSender().sendMessage(main.parse(
+                            "    <highlight>" + counter + ". Description: " + condition.getConditionDescription(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()))
+                        ));
+                      }else {
+                        context.getSender().sendMessage(main.parse(
+                            "    <highlight>" + counter + ". Description: " + condition.getConditionDescription(null)
+                        ));
+                      }
+
+                      counter++;
+                    }
+                  }
+
+                  {
+                    context.getSender().sendMessage(main.parse(
+                        "<highlight>Objective complete conditions:"
+                    ));
+                    int counter = 1;
+                    for (final Condition condition : objective.getCompleteConditions()) {
+                      if(context.getSender() instanceof Player player){
+                        context.getSender().sendMessage(main.parse(
+                            "    <highlight>" + counter + ". Description: " + condition.getConditionDescription(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()))
+                        ));
+                      }else {
+                        context.getSender().sendMessage(main.parse(
+                            "    <highlight>" + counter + ". Description: " + condition.getConditionDescription(null)
+                        ));
+                      }
+
+                      counter++;
+                    }
+                  }
+
                 }));
 
         manager.command(builder.literal("remove", "delete")
@@ -1266,9 +1139,6 @@ public class AdminEditCommands {
                     quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".requirements." + conditionID + ".description", description);
                     quest.getCategory().saveQuestsConfig();
 
-                   // foundReward.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".rewards." + (ID + 1) + ".displayName", foundReward.getActionName());
-                    //foundReward.getCategory().saveQuestsConfig();
-
                     context.getSender().sendMessage(main.parse("<success>Description successfully added to condition with ID <highlight>" + conditionID + "</highlight> of quest <highlight2>"
                             + quest.getQuestName() + "</highlight2>! New description: <highlight2>"
                             + condition.getDescription()
@@ -1321,8 +1191,560 @@ public class AdminEditCommands {
                     ));
                 }));
 
-
     }
+
+  public void handleEditObjectivesUnlockConditions(final Command.Builder<CommandSender> builder) {
+
+    manager.command(builder
+        .literal("clear")
+        .meta(CommandMeta.DESCRIPTION, "Removes all unlock conditions from this objective.")
+        .handler((context) -> {
+          final Quest quest = context.get("quest");
+          final int objectiveID = context.get("Objective ID");
+          final Objective objective = quest.getObjectiveFromID(objectiveID);
+          assert objective != null; //Shouldn't be null
+
+          objective.clearUnlockConditions();
+          context.getSender().sendMessage(main.parse(
+              "<success>All unlock conditions of objective with ID <highlight>" + objectiveID
+                  + "</highlight> have been removed!"
+          ));
+
+        }));
+
+    manager.command(builder
+        .literal("list", "show")
+        .meta(CommandMeta.DESCRIPTION, "Lists all unlock conditions of this objective.")
+        .handler((context) -> {
+          final Quest quest = context.get("quest");
+          final int objectiveID = context.get("Objective ID");
+          final Objective objective = quest.getObjectiveFromID(objectiveID);
+          assert objective != null; //Shouldn't be null
+
+
+          context.getSender().sendMessage(main.parse(
+              "<highlight>Unlock conditions of objective with ID <highlight2>" + objectiveID
+                  + "</highlight2>:"
+          ));
+          for (Condition condition : objective.getUnlockConditions()) {
+            context.getSender().sendMessage(main.parse("<highlight>" + condition.getConditionID() + ".</highlight> <main>" + condition.getConditionType() + "</main>"));
+            if(context.getSender() instanceof Player player){
+              context.getSender().sendMessage(main.parse("<main>" + condition.getConditionDescription(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()))));
+            }else{
+              context.getSender().sendMessage(main.parse("<main>" + condition.getConditionDescription(null)));
+            }
+          }
+
+          if (objective.getUnlockConditions().size() == 0) {
+            context.getSender().sendMessage(main.parse("<warn>This objective has no unlock conditions!"));
+          }
+        }));
+
+
+    final Command.Builder<CommandSender> editObjectiveConditionsBuilder = builder
+        .literal("edit")
+        .argument(IntegerArgument.<CommandSender>newBuilder("Condition ID").withMin(1).withSuggestionsProvider(
+            (context, lastString) -> {
+              final List<String> allArgs = context.getRawInput();
+              main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Condition ID]", "[...]");
+
+              ArrayList<String> completions = new ArrayList<>();
+
+              final Quest quest = context.get("quest");
+              final int objectiveID = context.get("Objective ID");
+              final Objective objective = quest.getObjectiveFromID(objectiveID);
+              assert objective != null; //Shouldn't be null
+
+              for (final Condition condition : objective.getUnlockConditions()) {
+                completions.add("" + condition.getConditionID());
+              }
+
+              return completions;
+            }
+        ));
+
+    manager.command(editObjectiveConditionsBuilder
+        .literal("delete", "remove")
+        .meta(CommandMeta.DESCRIPTION, "Removes an unlock condition from this Objective.")
+        .handler((context) -> {
+          final Quest quest = context.get("quest");
+          final int objectiveID = context.get("Objective ID");
+          final Objective objective = quest.getObjectiveFromID(objectiveID);
+          assert objective != null; //Shouldn't be null
+
+          int conditionID = context.get("Condition ID");
+          Condition condition = objective.getUnlockConditionFromID(conditionID);
+
+          if(condition == null){
+            context.getSender().sendMessage(main.parse(
+                "<error>Unlock condition with the ID <highlight>" + conditionID + "</highlight> was not found!"
+            ));
+            return;
+          }
+
+          objective.removeUnlockCondition(condition, true);
+          context.getSender().sendMessage(main.parse("<main>The unlock condition with the ID <highlight>" + conditionID + "</highlight> of Objective with ID <highlight2>" + objectiveID + "</highlight2> has been removed!"));
+        }));
+
+
+    manager.command(editObjectiveConditionsBuilder.literal("description")
+        .literal("set")
+        .argument(MiniMessageSelector.<CommandSender>newBuilder("description", main).withPlaceholders().build(), ArgumentDescription.of("Objective condition description"))
+        .meta(CommandMeta.DESCRIPTION, "Sets the new description of the Objective unlock condition.")
+        .handler((context) -> {
+          final Quest quest = context.get("quest");
+          final int objectiveID = context.get("Objective ID");
+          final Objective objective = quest.getObjectiveFromID(objectiveID);
+          assert objective != null; //Shouldn't be null
+
+          int conditionID = context.get("Condition ID");
+          Condition condition = objective.getUnlockConditionFromID(conditionID);
+
+          if(condition == null){
+            context.getSender().sendMessage(main.parse(
+                "<error>Condition with the ID <highlight>" + conditionID + "</highlight> was not found!"
+            ));
+            return;
+          }
+
+          final String description = String.join(" ", (String[]) context.get("description"));
+
+          condition.setDescription(description);
+
+          quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + objectiveID + ".conditions." + conditionID + ".description", description);
+          quest.getCategory().saveQuestsConfig();
+
+          context.getSender().sendMessage(main.parse("<success>Description successfully added to condition with ID <highlight>" + conditionID + "</highlight> of objective with ID <highlight2>"
+              + objectiveID + "</highlight2>! New description: <highlight2>"
+              + condition.getDescription()
+          ));
+        }));
+
+    manager.command(editObjectiveConditionsBuilder.literal("description")
+        .literal("remove", "delete")
+        .meta(CommandMeta.DESCRIPTION, "Removes the description of the objective unlock condition.")
+        .handler((context) -> {
+          final Quest quest = context.get("quest");
+          final int objectiveID = context.get("Objective ID");
+          final Objective objective = quest.getObjectiveFromID(objectiveID);
+          assert objective != null; //Shouldn't be null
+
+          int conditionID = context.get("Condition ID");
+          Condition condition = objective.getUnlockConditionFromID(conditionID);
+
+          if(condition == null){
+            context.getSender().sendMessage(main.parse(
+                "<error>Unlock condition with the ID <highlight>" + conditionID + "</highlight> was not found!"
+            ));
+            return;
+          }
+
+
+          condition.removeDescription();
+
+          quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + objectiveID + ".conditions." + conditionID + ".description", "");
+          quest.getCategory().saveQuestsConfig();
+
+          context.getSender().sendMessage(main.parse("<success>Description successfully removed from unlock condition with ID <highlight>" + conditionID + "</highlight> of objective with ID <highlight2>"
+              + objectiveID + "</highlight2>! New description: <highlight2>"
+              + condition.getDescription()
+          ));
+        }));
+
+    manager.command(editObjectiveConditionsBuilder.literal("description")
+        .literal("show", "check")
+        .meta(CommandMeta.DESCRIPTION, "Shows the description of the objective unlock condition.")
+        .handler((context) -> {
+          final Quest quest = context.get("quest");
+          final int objectiveID = context.get("Objective ID");
+          final Objective objective = quest.getObjectiveFromID(objectiveID);
+          assert objective != null; //Shouldn't be null
+
+          int conditionID = context.get("Condition ID");
+          Condition condition = objective.getUnlockConditionFromID(conditionID);
+
+          if(condition == null){
+            context.getSender().sendMessage(main.parse(
+                "<error>Unlock condition with the ID <highlight>" + conditionID + "</highlight> was not found!"
+            ));
+            return;
+          }
+
+
+          context.getSender().sendMessage(main.parse("<main>Description of unlock condition with ID <highlight>" + conditionID + "</highlight> of objective with ID <highlight2>"
+              + objectiveID + "</highlight2>:\n"
+              + condition.getDescription()
+          ));
+        }));
+  }
+
+  public void handleEditObjectivesProgressConditions(final Command.Builder<CommandSender> builder) {
+    manager.command(builder
+        .literal("clear")
+        .meta(CommandMeta.DESCRIPTION, "Removes all progress conditions from this objective.")
+        .handler((context) -> {
+          final Quest quest = context.get("quest");
+          final int objectiveID = context.get("Objective ID");
+          final Objective objective = quest.getObjectiveFromID(objectiveID);
+          assert objective != null; //Shouldn't be null
+
+          objective.clearProgressConditions();
+          context.getSender().sendMessage(main.parse(
+              "<success>All progress conditions of objective with ID <highlight>" + objectiveID
+                  + "</highlight> have been removed!"
+          ));
+
+        }));
+
+    manager.command(builder
+        .literal("list", "show")
+        .meta(CommandMeta.DESCRIPTION, "Lists all progress conditions of this objective.")
+        .handler((context) -> {
+          final Quest quest = context.get("quest");
+          final int objectiveID = context.get("Objective ID");
+          final Objective objective = quest.getObjectiveFromID(objectiveID);
+          assert objective != null; //Shouldn't be null
+
+
+          context.getSender().sendMessage(main.parse(
+              "<highlight>Progress conditions of objective with ID <highlight2>" + objectiveID
+                  + "</highlight2>:"
+          ));
+          for (Condition condition : objective.getProgressConditions()) {
+            context.getSender().sendMessage(main.parse("<highlight>" + condition.getConditionID() + ".</highlight> <main>" + condition.getConditionType() + "</main>"));
+            if(context.getSender() instanceof Player player){
+              context.getSender().sendMessage(main.parse("<main>" + condition.getConditionDescription(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()))));
+            }else{
+              context.getSender().sendMessage(main.parse("<main>" + condition.getConditionDescription(null)));
+            }
+          }
+
+          if (objective.getProgressConditions().size() == 0) {
+            context.getSender().sendMessage(main.parse("<warn>This objective has no progress conditions!"));
+          }
+        }));
+
+
+    final Command.Builder<CommandSender> editObjectiveConditionsBuilder = builder
+        .literal("edit")
+        .argument(IntegerArgument.<CommandSender>newBuilder("Condition ID").withMin(1).withSuggestionsProvider(
+            (context, lastString) -> {
+              final List<String> allArgs = context.getRawInput();
+              main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Condition ID]", "[...]");
+
+              ArrayList<String> completions = new ArrayList<>();
+
+              final Quest quest = context.get("quest");
+              final int objectiveID = context.get("Objective ID");
+              final Objective objective = quest.getObjectiveFromID(objectiveID);
+              assert objective != null; //Shouldn't be null
+
+              for (final Condition condition : objective.getProgressConditions()) {
+                completions.add("" + condition.getConditionID());
+              }
+
+              return completions;
+            }
+        ));
+
+    manager.command(editObjectiveConditionsBuilder
+        .literal("delete", "remove")
+        .meta(CommandMeta.DESCRIPTION, "Removes an progress condition from this Objective.")
+        .handler((context) -> {
+          final Quest quest = context.get("quest");
+          final int objectiveID = context.get("Objective ID");
+          final Objective objective = quest.getObjectiveFromID(objectiveID);
+          assert objective != null; //Shouldn't be null
+
+          int conditionID = context.get("Condition ID");
+          Condition condition = objective.getProgressConditionFromID(conditionID);
+
+          if(condition == null){
+            context.getSender().sendMessage(main.parse(
+                "<error>Progress condition with the ID <highlight>" + conditionID + "</highlight> was not found!"
+            ));
+            return;
+          }
+
+          objective.removeProgressCondition(condition, true);
+          context.getSender().sendMessage(main.parse("<main>The progress condition with the ID <highlight>" + conditionID + "</highlight> of Objective with ID <highlight2>" + objectiveID + "</highlight2> has been removed!"));
+        }));
+
+
+    manager.command(editObjectiveConditionsBuilder.literal("description")
+        .literal("set")
+        .argument(MiniMessageSelector.<CommandSender>newBuilder("description", main).withPlaceholders().build(), ArgumentDescription.of("Objective condition description"))
+        .meta(CommandMeta.DESCRIPTION, "Sets the new description of the Objective progress condition.")
+        .handler((context) -> {
+          final Quest quest = context.get("quest");
+          final int objectiveID = context.get("Objective ID");
+          final Objective objective = quest.getObjectiveFromID(objectiveID);
+          assert objective != null; //Shouldn't be null
+
+          int conditionID = context.get("Condition ID");
+          Condition condition = objective.getProgressConditionFromID(conditionID);
+
+          if(condition == null){
+            context.getSender().sendMessage(main.parse(
+                "<error>Condition with the ID <highlight>" + conditionID + "</highlight> was not found!"
+            ));
+            return;
+          }
+
+          final String description = String.join(" ", (String[]) context.get("description"));
+
+          condition.setDescription(description);
+
+          quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + objectiveID + ".conditions." + conditionID + ".description", description);
+          quest.getCategory().saveQuestsConfig();
+
+          context.getSender().sendMessage(main.parse("<success>Description successfully added to condition with ID <highlight>" + conditionID + "</highlight> of objective with ID <highlight2>"
+              + objectiveID + "</highlight2>! New description: <highlight2>"
+              + condition.getDescription()
+          ));
+        }));
+
+    manager.command(editObjectiveConditionsBuilder.literal("description")
+        .literal("remove", "delete")
+        .meta(CommandMeta.DESCRIPTION, "Removes the description of the objective progress condition.")
+        .handler((context) -> {
+          final Quest quest = context.get("quest");
+          final int objectiveID = context.get("Objective ID");
+          final Objective objective = quest.getObjectiveFromID(objectiveID);
+          assert objective != null; //Shouldn't be null
+
+          int conditionID = context.get("Condition ID");
+          Condition condition = objective.getProgressConditionFromID(conditionID);
+
+          if(condition == null){
+            context.getSender().sendMessage(main.parse(
+                "<error>Progress condition with the ID <highlight>" + conditionID + "</highlight> was not found!"
+            ));
+            return;
+          }
+
+
+          condition.removeDescription();
+
+          quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + objectiveID + ".conditions." + conditionID + ".description", "");
+          quest.getCategory().saveQuestsConfig();
+
+          context.getSender().sendMessage(main.parse("<success>Description successfully removed from progress condition with ID <highlight>" + conditionID + "</highlight> of objective with ID <highlight2>"
+              + objectiveID + "</highlight2>! New description: <highlight2>"
+              + condition.getDescription()
+          ));
+        }));
+
+    manager.command(editObjectiveConditionsBuilder.literal("description")
+        .literal("show", "check")
+        .meta(CommandMeta.DESCRIPTION, "Shows the description of the objective progress condition.")
+        .handler((context) -> {
+          final Quest quest = context.get("quest");
+          final int objectiveID = context.get("Objective ID");
+          final Objective objective = quest.getObjectiveFromID(objectiveID);
+          assert objective != null; //Shouldn't be null
+
+          int conditionID = context.get("Condition ID");
+          Condition condition = objective.getProgressConditionFromID(conditionID);
+
+          if(condition == null){
+            context.getSender().sendMessage(main.parse(
+                "<error>Progress condition with the ID <highlight>" + conditionID + "</highlight> was not found!"
+            ));
+            return;
+          }
+
+
+          context.getSender().sendMessage(main.parse("<main>Description of progress condition with ID <highlight>" + conditionID + "</highlight> of objective with ID <highlight2>"
+              + objectiveID + "</highlight2>:\n"
+              + condition.getDescription()
+          ));
+        }));
+  }
+
+  public void handleEditObjectivesCompleteConditions(final Command.Builder<CommandSender> builder) {
+    manager.command(builder
+        .literal("clear")
+        .meta(CommandMeta.DESCRIPTION, "Removes all complete conditions from this objective.")
+        .handler((context) -> {
+          final Quest quest = context.get("quest");
+          final int objectiveID = context.get("Objective ID");
+          final Objective objective = quest.getObjectiveFromID(objectiveID);
+          assert objective != null; //Shouldn't be null
+
+          objective.clearCompleteConditions();
+          context.getSender().sendMessage(main.parse(
+              "<success>All complete conditions of objective with ID <highlight>" + objectiveID
+                  + "</highlight> have been removed!"
+          ));
+
+        }));
+
+    manager.command(builder
+        .literal("list", "show")
+        .meta(CommandMeta.DESCRIPTION, "Lists all complete conditions of this objective.")
+        .handler((context) -> {
+          final Quest quest = context.get("quest");
+          final int objectiveID = context.get("Objective ID");
+          final Objective objective = quest.getObjectiveFromID(objectiveID);
+          assert objective != null; //Shouldn't be null
+
+
+          context.getSender().sendMessage(main.parse(
+              "<highlight>Complete conditions of objective with ID <highlight2>" + objectiveID
+                  + "</highlight2>:"
+          ));
+          for (Condition condition : objective.getCompleteConditions()) {
+            context.getSender().sendMessage(main.parse("<highlight>" + condition.getConditionID() + ".</highlight> <main>" + condition.getConditionType() + "</main>"));
+            if(context.getSender() instanceof Player player){
+              context.getSender().sendMessage(main.parse("<main>" + condition.getConditionDescription(main.getQuestPlayerManager().getOrCreateQuestPlayer(player.getUniqueId()))));
+            }else{
+              context.getSender().sendMessage(main.parse("<main>" + condition.getConditionDescription(null)));
+            }
+          }
+
+          if (objective.getCompleteConditions().size() == 0) {
+            context.getSender().sendMessage(main.parse("<warn>This objective has no complete conditions!"));
+          }
+        }));
+
+
+    final Command.Builder<CommandSender> editObjectiveConditionsBuilder = builder
+        .literal("edit")
+        .argument(IntegerArgument.<CommandSender>newBuilder("Condition ID").withMin(1).withSuggestionsProvider(
+            (context, lastString) -> {
+              final List<String> allArgs = context.getRawInput();
+              main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Condition ID]", "[...]");
+
+              ArrayList<String> completions = new ArrayList<>();
+
+              final Quest quest = context.get("quest");
+              final int objectiveID = context.get("Objective ID");
+              final Objective objective = quest.getObjectiveFromID(objectiveID);
+              assert objective != null; //Shouldn't be null
+
+              for (final Condition condition : objective.getCompleteConditions()) {
+                completions.add("" + condition.getConditionID());
+              }
+
+              return completions;
+            }
+        ));
+
+    manager.command(editObjectiveConditionsBuilder
+        .literal("delete", "remove")
+        .meta(CommandMeta.DESCRIPTION, "Removes an complete condition from this Objective.")
+        .handler((context) -> {
+          final Quest quest = context.get("quest");
+          final int objectiveID = context.get("Objective ID");
+          final Objective objective = quest.getObjectiveFromID(objectiveID);
+          assert objective != null; //Shouldn't be null
+
+          int conditionID = context.get("Condition ID");
+          Condition condition = objective.getCompleteConditionFromID(conditionID);
+
+          if(condition == null){
+            context.getSender().sendMessage(main.parse(
+                "<error>Complete condition with the ID <highlight>" + conditionID + "</highlight> was not found!"
+            ));
+            return;
+          }
+
+          objective.removeCompleteCondition(condition, true);
+          context.getSender().sendMessage(main.parse("<main>The complete condition with the ID <highlight>" + conditionID + "</highlight> of Objective with ID <highlight2>" + objectiveID + "</highlight2> has been removed!"));
+        }));
+
+
+    manager.command(editObjectiveConditionsBuilder.literal("description")
+        .literal("set")
+        .argument(MiniMessageSelector.<CommandSender>newBuilder("description", main).withPlaceholders().build(), ArgumentDescription.of("Objective condition description"))
+        .meta(CommandMeta.DESCRIPTION, "Sets the new description of the Objective complete condition.")
+        .handler((context) -> {
+          final Quest quest = context.get("quest");
+          final int objectiveID = context.get("Objective ID");
+          final Objective objective = quest.getObjectiveFromID(objectiveID);
+          assert objective != null; //Shouldn't be null
+
+          int conditionID = context.get("Condition ID");
+          Condition condition = objective.getCompleteConditionFromID(conditionID);
+
+          if(condition == null){
+            context.getSender().sendMessage(main.parse(
+                "<error>Condition with the ID <highlight>" + conditionID + "</highlight> was not found!"
+            ));
+            return;
+          }
+
+          final String description = String.join(" ", (String[]) context.get("description"));
+
+          condition.setDescription(description);
+
+          quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + objectiveID + ".conditions." + conditionID + ".description", description);
+          quest.getCategory().saveQuestsConfig();
+
+          context.getSender().sendMessage(main.parse("<success>Description successfully added to condition with ID <highlight>" + conditionID + "</highlight> of objective with ID <highlight2>"
+              + objectiveID + "</highlight2>! New description: <highlight2>"
+              + condition.getDescription()
+          ));
+        }));
+
+    manager.command(editObjectiveConditionsBuilder.literal("description")
+        .literal("remove", "delete")
+        .meta(CommandMeta.DESCRIPTION, "Removes the description of the objective complete condition.")
+        .handler((context) -> {
+          final Quest quest = context.get("quest");
+          final int objectiveID = context.get("Objective ID");
+          final Objective objective = quest.getObjectiveFromID(objectiveID);
+          assert objective != null; //Shouldn't be null
+
+          int conditionID = context.get("Condition ID");
+          Condition condition = objective.getCompleteConditionFromID(conditionID);
+
+          if(condition == null){
+            context.getSender().sendMessage(main.parse(
+                "<error>Complete condition with the ID <highlight>" + conditionID + "</highlight> was not found!"
+            ));
+            return;
+          }
+
+
+          condition.removeDescription();
+
+          quest.getCategory().getQuestsConfig().set("quests." + quest.getQuestName() + ".objectives." + objectiveID + ".conditions." + conditionID + ".description", "");
+          quest.getCategory().saveQuestsConfig();
+
+          context.getSender().sendMessage(main.parse("<success>Description successfully removed from complete condition with ID <highlight>" + conditionID + "</highlight> of objective with ID <highlight2>"
+              + objectiveID + "</highlight2>! New description: <highlight2>"
+              + condition.getDescription()
+          ));
+        }));
+
+    manager.command(editObjectiveConditionsBuilder.literal("description")
+        .literal("show", "check")
+        .meta(CommandMeta.DESCRIPTION, "Shows the description of the objective complete condition.")
+        .handler((context) -> {
+          final Quest quest = context.get("quest");
+          final int objectiveID = context.get("Objective ID");
+          final Objective objective = quest.getObjectiveFromID(objectiveID);
+          assert objective != null; //Shouldn't be null
+
+          int conditionID = context.get("Condition ID");
+          Condition condition = objective.getCompleteConditionFromID(conditionID);
+
+          if(condition == null){
+            context.getSender().sendMessage(main.parse(
+                "<error>Complete condition with the ID <highlight>" + conditionID + "</highlight> was not found!"
+            ));
+            return;
+          }
+
+
+          context.getSender().sendMessage(main.parse("<main>Description of complete condition with ID <highlight>" + conditionID + "</highlight> of objective with ID <highlight2>"
+              + objectiveID + "</highlight2>:\n"
+              + condition.getDescription()
+          ));
+        }));
+  }
 
     public void handleRewards(final Command.Builder<CommandSender> builder) {
         //Add is handled individually by each reward

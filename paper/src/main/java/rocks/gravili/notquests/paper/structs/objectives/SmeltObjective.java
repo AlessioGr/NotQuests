@@ -20,154 +20,120 @@ package rocks.gravili.notquests.paper.structs.objectives;
 
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
-import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.paper.PaperCommandManager;
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import java.util.Map;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
-import rocks.gravili.notquests.paper.commands.arguments.MaterialOrHandArgument;
+import rocks.gravili.notquests.paper.commands.arguments.ItemStackSelectionArgument;
 import rocks.gravili.notquests.paper.commands.arguments.variables.NumberVariableValueArgument;
-import rocks.gravili.notquests.paper.commands.arguments.wrappers.MaterialOrHand;
+import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelection;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
-import java.util.Map;
-
 public class SmeltObjective extends Objective {
 
-    private ItemStack itemToSmelt;
-    private boolean smeltAnyItem = false;
-    private String nqItemName = "";
+  private ItemStackSelection itemStackSelection;
 
-    public SmeltObjective(NotQuests main) {
-        super(main);
-    }
+  public SmeltObjective(NotQuests main) {
+    super(main);
+  }
 
-    public void setNQItem(final String nqItemName){
-        this.nqItemName = nqItemName;
-    }
-    public final String getNQItem(){
-        return nqItemName;
-    }
+  public static void handleCommands(
+      NotQuests main,
+      PaperCommandManager<CommandSender> manager,
+      Command.Builder<CommandSender> addObjectiveBuilder) {
+    manager.command(
+        addObjectiveBuilder
+            .argument(
+                ItemStackSelectionArgument.of("materials", main),
+                ArgumentDescription.of("Material of the item which needs to be smelted"))
+            .argument(
+                NumberVariableValueArgument.newBuilder("amount", main, null),
+                ArgumentDescription.of("Amount of items which need to be smelted"))
+            .handler(
+                (context) -> {
+                  final String amountExpression = context.get("amount");
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addObjectiveBuilder) {
-        manager.command(addObjectiveBuilder
-                .argument(MaterialOrHandArgument.of("material", main), ArgumentDescription.of("Output item of the smelting."))
-                .argument(NumberVariableValueArgument.newBuilder("amount", main, null), ArgumentDescription.of("Amount of items which need to be smelted"))
-                .handler((context) -> {
-                    final String amountExpression = context.get("amount");
+                  boolean smeltAnyItem = false;
 
-                    boolean smeltAnyItem = false;
+                  final ItemStackSelection itemStackSelection = context.get("materials");
 
-                    final MaterialOrHand materialOrHand = context.get("material");
-                    ItemStack itemToSmelt;
-                    if (materialOrHand.material.equalsIgnoreCase("any")) {
-                        smeltAnyItem = true;
-                        itemToSmelt = null;
-                    } else {
-                        itemToSmelt = main.getItemsManager().getItemStack(materialOrHand);
-                    }
+                  SmeltObjective smeltObjective = new SmeltObjective(main);
+                  smeltObjective.setItemStackSelection(itemStackSelection);
 
-                    SmeltObjective smeltObjective = new SmeltObjective(main);
+                  smeltObjective.setProgressNeededExpression(amountExpression);
 
-                    if(main.getItemsManager().getItem(materialOrHand.material) != null){
-                        smeltObjective.setNQItem(main.getItemsManager().getItem(materialOrHand.material).getItemName());
-                    }else{
-                        smeltObjective.setItemToSmelt(itemToSmelt);
-                    }
-
-                    smeltObjective.setProgressNeededExpression(amountExpression);
-                    smeltObjective.setSmeltAnyItem(smeltAnyItem);
-
-                    main.getObjectiveManager().addObjective(smeltObjective, context);
+                  main.getObjectiveManager().addObjective(smeltObjective, context);
                 }));
+  }
+
+  public final ItemStackSelection getItemStackSelection() {
+    return itemStackSelection;
+  }
+
+  public void setItemStackSelection(final ItemStackSelection itemStackSelection) {
+    this.itemStackSelection = itemStackSelection;
+  }
+
+  @Override
+  public void onObjectiveUnlock(
+      final ActiveObjective activeObjective,
+      final boolean unlockedDuringPluginStartupQuestLoadingProcess) {}
+
+  @Override
+  public void onObjectiveCompleteOrLock(
+      final ActiveObjective activeObjective,
+      final boolean lockedOrCompletedDuringPluginStartupQuestLoadingProcess,
+      final boolean completed) {}
+
+  @Override
+  public String getObjectiveTaskDescription(
+      final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
+    final String displayName;
+
+    return main.getLanguageManager()
+        .getString(
+            "chat.objectives.taskDescription.smelt.base",
+            questPlayer,
+            activeObjective,
+            Map.of(
+                "%ITEMTOSMELTTYPE%", getItemStackSelection().getAllMaterialsListed(),
+                "%ITEMTOSMELTNAME%", "",
+                "%(%", "",
+                "%)%", ""));
+  }
+
+  @Override
+  public void save(FileConfiguration configuration, String initialPath) {
+    getItemStackSelection()
+        .saveToFileConfiguration(configuration, initialPath + ".specifics.itemStackSelection");
+  }
+
+  @Override
+  public void load(FileConfiguration configuration, String initialPath) {
+    this.itemStackSelection = new ItemStackSelection(main);
+    itemStackSelection.loadFromFileConfiguration(
+        configuration, initialPath + ".specifics.itemStackSelection");
+
+    // Convert old to new
+    if (configuration.contains(initialPath + ".specifics.nqitem")
+        || configuration.contains(initialPath + ".specifics.itemToSmelt.itemstack")) {
+      main.getLogManager().info("Converting old SmeltObjective to new one...");
+      final String nqItemName = configuration.getString(initialPath + ".specifics.nqitem", "");
+
+      if (nqItemName.isBlank()) {
+        itemStackSelection.addItemStack(
+            configuration.getItemStack(initialPath + ".specifics.itemToSmelt.itemstack"));
+      } else {
+        itemStackSelection.addNqItemName(nqItemName);
+      }
+      itemStackSelection.saveToFileConfiguration(
+          configuration, initialPath + ".specifics.itemStackSelection");
+      configuration.set(initialPath + ".specifics.nqitem", null);
+      configuration.set(initialPath + ".specifics.itemToSmelt.itemstack", null);
+      // Let's hope it saves somewhere, else conversion will happen again...
     }
-
-    public final boolean isSmeltAnyItem() {
-        return smeltAnyItem;
-    }
-
-    public void setSmeltAnyItem(final boolean smeltAnyItem) {
-        this.smeltAnyItem = smeltAnyItem;
-    }
-
-    public void setItemToSmelt(final ItemStack itemToSmelt) {
-        this.itemToSmelt = itemToSmelt;
-    }
-
-    @Override
-    public void onObjectiveUnlock(final ActiveObjective activeObjective, final boolean unlockedDuringPluginStartupQuestLoadingProcess) {
-    }
-    @Override
-    public void onObjectiveCompleteOrLock(final ActiveObjective activeObjective, final boolean lockedOrCompletedDuringPluginStartupQuestLoadingProcess, final boolean completed) {
-    }
-
-    public final ItemStack getItemToSmelt() {
-        if(!getNQItem().isBlank()){
-            return main.getItemsManager().getItem(getNQItem()).getItemStack().clone();
-        }else{
-            return itemToSmelt;
-        }
-    }
-
-    @Override
-    public String getObjectiveTaskDescription(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
-        final String displayName;
-        if (!isSmeltAnyItem()) {
-            if (getItemToSmelt().getItemMeta() != null) {
-                displayName = PlainTextComponentSerializer.plainText().serializeOr(getItemToSmelt().getItemMeta().displayName(), getItemToSmelt().getType().name());
-            } else {
-                displayName = getItemToSmelt().getType().name();
-            }
-        } else {
-            displayName = "Any";
-        }
-
-
-        String itemType = isSmeltAnyItem() ? "Any" : getItemToSmelt().getType().name();
-
-
-        if (!displayName.isBlank()) {
-            return main.getLanguageManager().getString("chat.objectives.taskDescription.smelt.base", questPlayer, activeObjective, Map.of(
-                    "%ITEMTOSMELTTYPE%", itemType,
-                    "%ITEMTOSMELTNAME%", displayName,
-                    "%(%", "(",
-                    "%)%", "<RESET>)"
-            ));
-        } else {
-            return main.getLanguageManager().getString("chat.objectives.taskDescription.smelt.base", questPlayer, activeObjective, Map.of(
-                    "%ITEMTOSMELTTYPE%", itemType,
-                    "%ITEMTOSMELTNAME%", "",
-                    "%(%", "",
-                    "%)%", ""
-            ));
-        }
-
-
-    }
-
-    @Override
-    public void save(FileConfiguration configuration, String initialPath) {
-        if(!getNQItem().isBlank()){
-            configuration.set(initialPath + ".specifics.nqitem", getNQItem());
-        }else {
-            configuration.set(initialPath + ".specifics.itemToSmelt.itemstack", getItemToSmelt());
-        }
-
-        configuration.set(initialPath + ".specifics.smeltAnyItem", isSmeltAnyItem());
-    }
-
-    @Override
-    public void load(FileConfiguration configuration, String initialPath) {
-        this.nqItemName = configuration.getString(initialPath + ".specifics.nqitem", "");
-        if(nqItemName.isBlank()){
-            itemToSmelt = configuration.getItemStack(initialPath + ".specifics.itemToSmelt.itemstack");
-        }
-
-        smeltAnyItem = configuration.getBoolean(initialPath + ".specifics.smeltAnyItem");
-    }
+  }
 }

@@ -23,207 +23,314 @@ import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
+import java.util.ArrayList;
+import java.util.List;
 import org.bukkit.command.CommandSender;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.managers.tags.Tag;
 import rocks.gravili.notquests.paper.managers.tags.TagType;
 
-import java.util.ArrayList;
-import java.util.List;
-
-
 public class AdminTagCommands {
-    private final NotQuests main;
-    private final PaperCommandManager<CommandSender> manager;
-    private final Command.Builder<CommandSender> editBuilder;
+  private final NotQuests main;
+  private final PaperCommandManager<CommandSender> manager;
+  private final Command.Builder<CommandSender> editBuilder;
 
+  public AdminTagCommands(
+      final NotQuests main,
+      PaperCommandManager<CommandSender> manager,
+      Command.Builder<CommandSender> editBuilder) {
+    this.main = main;
+    this.manager = manager;
+    this.editBuilder = editBuilder;
 
-    public AdminTagCommands(final NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> editBuilder) {
-        this.main = main;
-        this.manager = manager;
-        this.editBuilder = editBuilder;
+    manager.command(
+        editBuilder
+            .literal("create")
+            .literal("Boolean")
+            .argument(StringArgument.of("name"), ArgumentDescription.of("Tag Name"))
+            .flag(main.getCommandManager().categoryFlag)
+            .meta(CommandMeta.DESCRIPTION, "Creates a new Boolean tag.")
+            .handler(
+                (context) -> {
+                  final String tagName = context.get("name");
 
-        manager.command(editBuilder.literal("create")
-                .literal("Boolean")
-                .argument(StringArgument.of("name"), ArgumentDescription.of("Tag Name"))
-                .flag(main.getCommandManager().categoryFlag)
-                .meta(CommandMeta.DESCRIPTION, "Creates a new Boolean tag.")
-                .handler((context) -> {
-                    final String tagName = context.get("name");
+                  if (main.getTagManager().getTag(tagName) != null) {
+                    context
+                        .getSender()
+                        .sendMessage(
+                            main.parse(
+                                "<error>Error: The tag <highlight>"
+                                    + tagName
+                                    + "</highlight> already exists!"));
+                    return;
+                  }
+                  final Tag tag = new Tag(main, tagName, TagType.BOOLEAN);
+                  if (context.flags().contains(main.getCommandManager().categoryFlag)) {
+                    final Category category =
+                        context
+                            .flags()
+                            .getValue(
+                                main.getCommandManager().categoryFlag,
+                                main.getDataManager().getDefaultCategory());
+                    tag.setCategory(category);
+                  }
+                  main.getTagManager().addTag(tag);
 
-
-                    if(main.getTagManager().getTag(tagName) != null){
-                        context.getSender().sendMessage(main.parse(
-                                "<error>Error: The tag <highlight>" + tagName + "</highlight> already exists!"
-                        ));
-                        return;
-                    }
-                    final Tag tag = new Tag(main, tagName, TagType.BOOLEAN);
-                    if (context.flags().contains(main.getCommandManager().categoryFlag)) {
-                        final Category category = context.flags().getValue(main.getCommandManager().categoryFlag, main.getDataManager().getDefaultCategory());
-                        tag.setCategory(category);
-                    }
-                    main.getTagManager().addTag(tag);
-
-                    context.getSender().sendMessage(main.parse(
-                            "<success>The boolean tag <highlight>" + tagName + "</highlight> has been added successfully!"
-                    ));
+                  context
+                      .getSender()
+                      .sendMessage(
+                          main.parse(
+                              "<success>The boolean tag <highlight>"
+                                  + tagName
+                                  + "</highlight> has been added successfully!"));
                 }));
 
-        manager.command(editBuilder.literal("create")
-                .literal("Integer")
-                .argument(StringArgument.of("name"), ArgumentDescription.of("Tag Name"))
-                .flag(main.getCommandManager().categoryFlag)
-                .meta(CommandMeta.DESCRIPTION, "Creates a new Integer tag.")
-                .handler((context) -> {
-                    final String tagName = context.get("name");
+    manager.command(
+        editBuilder
+            .literal("create")
+            .literal("Integer")
+            .argument(StringArgument.of("name"), ArgumentDescription.of("Tag Name"))
+            .flag(main.getCommandManager().categoryFlag)
+            .meta(CommandMeta.DESCRIPTION, "Creates a new Integer tag.")
+            .handler(
+                (context) -> {
+                  final String tagName = context.get("name");
 
-                    if(main.getTagManager().getTag(tagName) != null){
-                        context.getSender().sendMessage(main.parse(
-                                "<error>Error: The tag <highlight>" + tagName + "</highlight> already exists!"
-                        ));
-                        return;
-                    }
+                  if (main.getTagManager().getTag(tagName) != null) {
+                    context
+                        .getSender()
+                        .sendMessage(
+                            main.parse(
+                                "<error>Error: The tag <highlight>"
+                                    + tagName
+                                    + "</highlight> already exists!"));
+                    return;
+                  }
 
-                    final Tag tag = new Tag(main, tagName, TagType.INTEGER);
-                    if (context.flags().contains(main.getCommandManager().categoryFlag)) {
-                        final Category category = context.flags().getValue(main.getCommandManager().categoryFlag, main.getDataManager().getDefaultCategory());
-                        tag.setCategory(category);
-                    }
-                    main.getTagManager().addTag(tag);
+                  final Tag tag = new Tag(main, tagName, TagType.INTEGER);
+                  if (context.flags().contains(main.getCommandManager().categoryFlag)) {
+                    final Category category =
+                        context
+                            .flags()
+                            .getValue(
+                                main.getCommandManager().categoryFlag,
+                                main.getDataManager().getDefaultCategory());
+                    tag.setCategory(category);
+                  }
+                  main.getTagManager().addTag(tag);
 
-                    context.getSender().sendMessage(main.parse(
-                            "<success>The integer tag <highlight>" + tagName + "</highlight> has been added successfully!"
-                    ));
+                  context
+                      .getSender()
+                      .sendMessage(
+                          main.parse(
+                              "<success>The integer tag <highlight>"
+                                  + tagName
+                                  + "</highlight> has been added successfully!"));
                 }));
 
-        manager.command(editBuilder.literal("create")
-                .literal("Float")
-                .argument(StringArgument.of("name"), ArgumentDescription.of("Tag Name"))
-                .flag(main.getCommandManager().categoryFlag)
-                .meta(CommandMeta.DESCRIPTION, "Creates a new Float tag.")
-                .handler((context) -> {
-                    final String tagName = context.get("name");
+    manager.command(
+        editBuilder
+            .literal("create")
+            .literal("Float")
+            .argument(StringArgument.of("name"), ArgumentDescription.of("Tag Name"))
+            .flag(main.getCommandManager().categoryFlag)
+            .meta(CommandMeta.DESCRIPTION, "Creates a new Float tag.")
+            .handler(
+                (context) -> {
+                  final String tagName = context.get("name");
 
-                    if(main.getTagManager().getTag(tagName) != null){
-                        context.getSender().sendMessage(main.parse(
-                                "<error>Error: The tag <highlight>" + tagName + "</highlight> already exists!"
-                        ));
-                        return;
-                    }
+                  if (main.getTagManager().getTag(tagName) != null) {
+                    context
+                        .getSender()
+                        .sendMessage(
+                            main.parse(
+                                "<error>Error: The tag <highlight>"
+                                    + tagName
+                                    + "</highlight> already exists!"));
+                    return;
+                  }
 
-                    final Tag tag = new Tag(main, tagName, TagType.FLOAT);
-                    if (context.flags().contains(main.getCommandManager().categoryFlag)) {
-                        final Category category = context.flags().getValue(main.getCommandManager().categoryFlag, main.getDataManager().getDefaultCategory());
-                        tag.setCategory(category);
-                    }
-                    main.getTagManager().addTag(tag);
+                  final Tag tag = new Tag(main, tagName, TagType.FLOAT);
+                  if (context.flags().contains(main.getCommandManager().categoryFlag)) {
+                    final Category category =
+                        context
+                            .flags()
+                            .getValue(
+                                main.getCommandManager().categoryFlag,
+                                main.getDataManager().getDefaultCategory());
+                    tag.setCategory(category);
+                  }
+                  main.getTagManager().addTag(tag);
 
-                    context.getSender().sendMessage(main.parse(
-                            "<success>The float tag <highlight>" + tagName + "</highlight> has been added successfully!"
-                    ));
+                  context
+                      .getSender()
+                      .sendMessage(
+                          main.parse(
+                              "<success>The float tag <highlight>"
+                                  + tagName
+                                  + "</highlight> has been added successfully!"));
                 }));
 
-        manager.command(editBuilder.literal("create")
-                .literal("Double")
-                .argument(StringArgument.of("name"), ArgumentDescription.of("Tag Name"))
-                .flag(main.getCommandManager().categoryFlag)
-                .meta(CommandMeta.DESCRIPTION, "Creates a new Double tag.")
-                .handler((context) -> {
-                    final String tagName = context.get("name");
+    manager.command(
+        editBuilder
+            .literal("create")
+            .literal("Double")
+            .argument(StringArgument.of("name"), ArgumentDescription.of("Tag Name"))
+            .flag(main.getCommandManager().categoryFlag)
+            .meta(CommandMeta.DESCRIPTION, "Creates a new Double tag.")
+            .handler(
+                (context) -> {
+                  final String tagName = context.get("name");
 
-                    if(main.getTagManager().getTag(tagName) != null){
-                        context.getSender().sendMessage(main.parse(
-                                "<error>Error: The tag <highlight>" + tagName + "</highlight> already exists!"
-                        ));
-                        return;
-                    }
+                  if (main.getTagManager().getTag(tagName) != null) {
+                    context
+                        .getSender()
+                        .sendMessage(
+                            main.parse(
+                                "<error>Error: The tag <highlight>"
+                                    + tagName
+                                    + "</highlight> already exists!"));
+                    return;
+                  }
 
-                    final Tag tag = new Tag(main, tagName, TagType.DOUBLE);
-                    if (context.flags().contains(main.getCommandManager().categoryFlag)) {
-                        final Category category = context.flags().getValue(main.getCommandManager().categoryFlag, main.getDataManager().getDefaultCategory());
-                        tag.setCategory(category);
-                    }
-                    main.getTagManager().addTag(tag);
+                  final Tag tag = new Tag(main, tagName, TagType.DOUBLE);
+                  if (context.flags().contains(main.getCommandManager().categoryFlag)) {
+                    final Category category =
+                        context
+                            .flags()
+                            .getValue(
+                                main.getCommandManager().categoryFlag,
+                                main.getDataManager().getDefaultCategory());
+                    tag.setCategory(category);
+                  }
+                  main.getTagManager().addTag(tag);
 
-                    context.getSender().sendMessage(main.parse(
-                            "<success>The double tag <highlight>" + tagName + "</highlight> has been added successfully!"
-                    ));
+                  context
+                      .getSender()
+                      .sendMessage(
+                          main.parse(
+                              "<success>The double tag <highlight>"
+                                  + tagName
+                                  + "</highlight> has been added successfully!"));
                 }));
 
-        manager.command(editBuilder.literal("create")
-                .literal("String")
-                .argument(StringArgument.of("name"), ArgumentDescription.of("Tag Name"))
-                .flag(main.getCommandManager().categoryFlag)
-                .meta(CommandMeta.DESCRIPTION, "Creates a new String tag.")
-                .handler((context) -> {
-                    final String tagName = context.get("name");
+    manager.command(
+        editBuilder
+            .literal("create")
+            .literal("String")
+            .argument(StringArgument.of("name"), ArgumentDescription.of("Tag Name"))
+            .flag(main.getCommandManager().categoryFlag)
+            .meta(CommandMeta.DESCRIPTION, "Creates a new String tag.")
+            .handler(
+                (context) -> {
+                  final String tagName = context.get("name");
 
-                    if(main.getTagManager().getTag(tagName) != null){
-                        context.getSender().sendMessage(main.parse(
-                                "<error>Error: The tag <highlight>" + tagName + "</highlight> already exists!"
-                        ));
-                        return;
-                    }
+                  if (main.getTagManager().getTag(tagName) != null) {
+                    context
+                        .getSender()
+                        .sendMessage(
+                            main.parse(
+                                "<error>Error: The tag <highlight>"
+                                    + tagName
+                                    + "</highlight> already exists!"));
+                    return;
+                  }
 
-                    final Tag tag = new Tag(main, tagName, TagType.STRING);
-                    if (context.flags().contains(main.getCommandManager().categoryFlag)) {
-                        final Category category = context.flags().getValue(main.getCommandManager().categoryFlag, main.getDataManager().getDefaultCategory());
-                        tag.setCategory(category);
-                    }
-                    main.getTagManager().addTag(tag);
+                  final Tag tag = new Tag(main, tagName, TagType.STRING);
+                  if (context.flags().contains(main.getCommandManager().categoryFlag)) {
+                    final Category category =
+                        context
+                            .flags()
+                            .getValue(
+                                main.getCommandManager().categoryFlag,
+                                main.getDataManager().getDefaultCategory());
+                    tag.setCategory(category);
+                  }
+                  main.getTagManager().addTag(tag);
 
-                    context.getSender().sendMessage(main.parse(
-                            "<success>The string tag <highlight>" + tagName + "</highlight> has been added successfully!"
-                    ));
+                  context
+                      .getSender()
+                      .sendMessage(
+                          main.parse(
+                              "<success>The string tag <highlight>"
+                                  + tagName
+                                  + "</highlight> has been added successfully!"));
                 }));
 
+    manager.command(
+        editBuilder
+            .literal("list")
+            .meta(CommandMeta.DESCRIPTION, "Lists all tags")
+            .handler(
+                (context) -> {
+                  context.getSender().sendMessage(main.parse("<highlight>All tags:"));
+                  int counter = 1;
 
-        manager.command(editBuilder.literal("list")
-                .meta(CommandMeta.DESCRIPTION, "Lists all tags")
-                .handler((context) -> {
-                    context.getSender().sendMessage(main.parse("<highlight>All tags:"));
-                    int counter = 1;
-
-                    for (final Tag tag : main.getTagManager().getTags()) {
-                        context.getSender().sendMessage(main.parse("<highlight>" + counter + ".</highlight> <main>" + tag.getTagName() + "</main> <highlight2>Type: <main>" + tag.getTagType().name()));
-                        counter++;
-                    }
+                  for (final Tag tag : main.getTagManager().getTags()) {
+                    context
+                        .getSender()
+                        .sendMessage(
+                            main.parse(
+                                "<highlight>"
+                                    + counter
+                                    + ".</highlight> <main>"
+                                    + tag.getTagName()
+                                    + "</main> <highlight2>Type: <main>"
+                                    + tag.getTagType().name()));
+                    counter++;
+                  }
                 }));
 
-        manager.command(editBuilder.literal("delete", "remove")
-                .argument(StringArgument.<CommandSender>newBuilder("Tag Name").withSuggestionsProvider(
+    manager.command(
+        editBuilder
+            .literal("delete", "remove")
+            .argument(
+                StringArgument.<CommandSender>newBuilder("Tag Name")
+                    .withSuggestionsProvider(
                         (context, lastString) -> {
-                            final List<String> allArgs = context.getRawInput();
-                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[Tag Name]", "");
+                          final List<String> allArgs = context.getRawInput();
+                          main.getUtilManager()
+                              .sendFancyCommandCompletion(
+                                  context.getSender(),
+                                  allArgs.toArray(new String[0]),
+                                  "[Tag Name]",
+                                  "");
 
-                            final ArrayList<String> suggestions = new ArrayList<>();
-                            for (final Tag tag : main.getTagManager().getTags()) {
-                                suggestions.add("" + tag.getTagName());
+                          final ArrayList<String> suggestions = new ArrayList<>();
+                          for (final Tag tag : main.getTagManager().getTags()) {
+                            suggestions.add("" + tag.getTagName());
+                          }
+                          return suggestions;
+                        })
+                    .single()
+                    .build())
+            .meta(CommandMeta.DESCRIPTION, "Deletes an existing tag.")
+            .handler(
+                (context) -> {
+                  final String tagName = context.get("Tag Name");
 
-                            }
-                            return suggestions;
+                  final Tag foundTag = main.getTagManager().getTag(tagName);
+                  if (foundTag == null) {
+                    context
+                        .getSender()
+                        .sendMessage(
+                            main.parse(
+                                "<error>Error: The tag <highlight>"
+                                    + tagName
+                                    + "</highlight> doesn't exists!"));
+                    return;
+                  }
 
-                        }
-                ).single().build())
-                .meta(CommandMeta.DESCRIPTION, "Deletes an existing tag.")
-                .handler((context) -> {
-                    final String tagName = context.get("Tag Name");
+                  main.getTagManager().deleteTag(foundTag);
 
-                    final Tag foundTag = main.getTagManager().getTag(tagName);
-                    if(foundTag == null){
-                        context.getSender().sendMessage(main.parse(
-                                "<error>Error: The tag <highlight>" + tagName + "</highlight> doesn't exists!"
-                        ));
-                        return;
-                    }
-
-                    main.getTagManager().deleteTag(foundTag);
-
-                    context.getSender().sendMessage(main.parse(
-                            "<success>The tag <highlight>" + tagName + "</highlight> has been deleted successfully!"
-                    ));
+                  context
+                      .getSender()
+                      .sendMessage(
+                          main.parse(
+                              "<success>The tag <highlight>"
+                                  + tagName
+                                  + "</highlight> has been deleted successfully!"));
                 }));
-    }
+  }
 }

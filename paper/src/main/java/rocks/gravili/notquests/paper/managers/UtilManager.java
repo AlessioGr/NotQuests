@@ -18,6 +18,14 @@
 
 package rocks.gravili.notquests.paper.managers;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.UUID;
+import java.util.function.Supplier;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
@@ -39,16 +47,11 @@ import rocks.gravili.notquests.paper.commands.NotQuestColors;
 import rocks.gravili.notquests.paper.managers.expressions.NumberExpression;
 import rocks.gravili.notquests.paper.structs.Quest;
 
-import java.io.File;
-import java.util.*;
-import java.util.function.Supplier;
-
 public class UtilManager {
+    private final static int CENTER_PX = 154;
     private final NotQuests main;
     private final HashMap<Player, BossBar> playersAndBossBars;
     private final ArrayList<String> miniMessageTokens;
-
-    private final static int CENTER_PX = 154;
     
     public UtilManager(NotQuests main) {
         this.main = main;

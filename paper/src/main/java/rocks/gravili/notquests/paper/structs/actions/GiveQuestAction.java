@@ -21,6 +21,8 @@ package rocks.gravili.notquests.paper.structs.actions;
 import cloud.commandframework.ArgumentDescription;
 import cloud.commandframework.Command;
 import cloud.commandframework.paper.PaperCommandManager;
+import java.util.ArrayList;
+import java.util.Locale;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -28,91 +30,98 @@ import rocks.gravili.notquests.paper.commands.arguments.QuestSelector;
 import rocks.gravili.notquests.paper.structs.Quest;
 import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
-import java.util.ArrayList;
-import java.util.Locale;
-
 public class GiveQuestAction extends Action {
 
-    private String questToGiveName = "";
-    private boolean forceGive = false;
+  private String questToGiveName = "";
+  private boolean forceGive = false;
 
+  public GiveQuestAction(final NotQuests main) {
+    super(main);
+  }
 
-    public GiveQuestAction(final NotQuests main) {
-        super(main);
-    }
+  public static void handleCommands(
+      NotQuests main,
+      PaperCommandManager<CommandSender> manager,
+      Command.Builder<CommandSender> builder,
+      ActionFor rewardFor) {
+    manager.command(
+        builder
+            .argument(
+                QuestSelector.of("quest to give", main),
+                ArgumentDescription.of("Name of the Quest which should be given to the player."))
+            .flag(
+                manager
+                    .flagBuilder("forceGive")
+                    .withDescription(
+                        ArgumentDescription.of(
+                            "Force-gives the Quest to the player, disregarding most Quest requirements/cooldowns/...")))
+            .handler(
+                (context) -> {
+                  final Quest foundQuest = context.get("quest to give");
+                  final boolean forceGive = context.flags().isPresent("forceGive");
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> builder, ActionFor rewardFor) {
-        manager.command(builder
-                .argument(QuestSelector.of("quest to give", main), ArgumentDescription.of("Name of the Quest which should be given to the player."))
-                .flag(
-                        manager.flagBuilder("forceGive")
-                                .withDescription(ArgumentDescription.of("Force-gives the Quest to the player, disregarding most Quest requirements/cooldowns/..."))
-                )
-                .handler((context) -> {
-                    final Quest foundQuest = context.get("quest to give");
-                    final boolean forceGive = context.flags().isPresent("forceGive");
+                  GiveQuestAction giveQuestAction = new GiveQuestAction(main);
+                  giveQuestAction.setQuestToGiveName(foundQuest.getQuestName());
+                  giveQuestAction.setForceGive(forceGive);
 
-
-                    GiveQuestAction giveQuestAction = new GiveQuestAction(main);
-                    giveQuestAction.setQuestToGiveName(foundQuest.getQuestName());
-                    giveQuestAction.setForceGive(forceGive);
-
-                    main.getActionManager().addAction(giveQuestAction, context);
+                  main.getActionManager().addAction(giveQuestAction, context);
                 }));
+  }
+
+  public final String getQuestToGiveName() {
+    return questToGiveName;
+  }
+
+  public void setQuestToGiveName(final String questName) {
+    this.questToGiveName = questName;
+  }
+
+  public final boolean isForceGive() {
+    return forceGive;
+  }
+
+  public void setForceGive(final boolean forceGive) {
+    this.forceGive = forceGive;
+  }
+
+  @Override
+  public void executeInternally(final QuestPlayer questPlayer, Object... objects) {
+    Quest foundQuest = main.getQuestManager().getQuest(getQuestToGiveName());
+    if (foundQuest == null) {
+      main.getLogManager()
+          .warn(
+              "Tried to execute GiveQuest action with null quest. Cannot find the following Quest: "
+                  + getQuestToGiveName());
+      return;
     }
-
-    public final String getQuestToGiveName() {
-        return questToGiveName;
+    if (!isForceGive()) {
+      main.getQuestPlayerManager().acceptQuest(questPlayer, foundQuest, true, true);
+    } else {
+      main.getQuestPlayerManager().forceAcceptQuest(questPlayer.getUniqueId(), foundQuest);
     }
+  }
 
-    public void setQuestToGiveName(final String questName) {
-        this.questToGiveName = questName;
-    }
+  @Override
+  public void save(FileConfiguration configuration, String initialPath) {
+    configuration.set(initialPath + ".specifics.quest", getQuestToGiveName());
+    configuration.set(initialPath + ".specifics.forceGive", isForceGive());
+  }
 
-    public final boolean isForceGive() {
-        return forceGive;
-    }
+  @Override
+  public void load(final FileConfiguration configuration, String initialPath) {
+    this.questToGiveName = configuration.getString(initialPath + ".specifics.quest");
+    this.forceGive = configuration.getBoolean(initialPath + ".specifics.forceGive");
+  }
 
-    public void setForceGive(final boolean forceGive) {
-        this.forceGive = forceGive;
-    }
+  @Override
+  public void deserializeFromSingleLineString(ArrayList<String> arguments) {
+    this.questToGiveName = arguments.get(0);
 
-    @Override
-    public void executeInternally(final QuestPlayer questPlayer, Object... objects) {
-        Quest foundQuest = main.getQuestManager().getQuest(getQuestToGiveName());
-        if (foundQuest == null) {
-            main.getLogManager().warn("Tried to execute GiveQuest action with null quest. Cannot find the following Quest: " + getQuestToGiveName());
-            return;
-        }
-        if (!isForceGive()) {
-            main.getQuestPlayerManager().acceptQuest(questPlayer, foundQuest, true, true);
-        } else {
-            main.getQuestPlayerManager().forceAcceptQuest(questPlayer.getUniqueId(), foundQuest);
-        }
-    }
+    this.forceGive = String.join(" ", arguments).toLowerCase(Locale.ROOT).contains("--forcegive");
+  }
 
-    @Override
-    public void save(FileConfiguration configuration, String initialPath) {
-        configuration.set(initialPath + ".specifics.quest", getQuestToGiveName());
-        configuration.set(initialPath + ".specifics.forceGive", isForceGive());
-    }
-
-    @Override
-    public void load(final FileConfiguration configuration, String initialPath) {
-        this.questToGiveName = configuration.getString(initialPath + ".specifics.quest");
-        this.forceGive = configuration.getBoolean(initialPath + ".specifics.forceGive");
-    }
-
-    @Override
-    public void deserializeFromSingleLineString(ArrayList<String> arguments) {
-        this.questToGiveName = arguments.get(0);
-
-        this.forceGive = String.join(" ", arguments).toLowerCase(Locale.ROOT).contains("--forcegive");
-    }
-
-
-    @Override
-    public String getActionDescription(final QuestPlayer questPlayer, final Object... objects) {
-        return "Gives Quest: " + getQuestToGiveName();
-    }
+  @Override
+  public String getActionDescription(final QuestPlayer questPlayer, final Object... objects) {
+    return "Gives Quest: " + getQuestToGiveName();
+  }
 }

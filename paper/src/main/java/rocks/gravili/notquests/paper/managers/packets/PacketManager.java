@@ -38,142 +38,132 @@ import rocks.gravili.notquests.paper.managers.packets.ownpacketstuff.reflection.
 import rocks.gravili.notquests.paper.managers.packets.packetevents.PacketEventsPacketListener;
 
 public class PacketManager implements Listener {
-    private final NotQuests main;
+  private final NotQuests main;
 
-    private final boolean usePacketEvents;
-    private ReflectionPacketInjector injector;
-    private PacketInjector modernInjector;
+  private final boolean usePacketEvents;
+  private ReflectionPacketInjector injector;
+  private PacketInjector modernInjector;
 
-    private boolean modern = false;
+  private boolean modern = false;
 
-    public PacketManager(final NotQuests main) {
-        this.main = main;
-        usePacketEvents = main.getConfiguration().usePacketEvents;
-        modern = Bukkit.getVersion().contains("1.19");
-    }
+  public PacketManager(final NotQuests main) {
+    this.main = main;
+    usePacketEvents = main.getConfiguration().usePacketEvents;
+    modern = Bukkit.getVersion().contains("1.19");
+  }
 
-    public final ReflectionPacketInjector getPacketInjector() {
-        return injector;
-    }
+  public final ReflectionPacketInjector getPacketInjector() {
+    return injector;
+  }
 
-    public final PacketInjector getModernPacketInjector() {
-        return modernInjector;
-    }
-    public final boolean isModern(){
-        return modern;
-    }
+  public final PacketInjector getModernPacketInjector() {
+    return modernInjector;
+  }
 
-    public void initialize() {
-        if (main.getConfiguration().packetMagic) {
-            if (usePacketEvents) {
-                WrapperPlayServerChatMessage.HANDLE_JSON = false;
-                PacketEvents.getAPI().getEventManager().registerListener(new PacketEventsPacketListener(main), PacketListenerPriority.LOW);
+  public final boolean isModern() {
+    return modern;
+  }
 
-                PacketEventsSettings settings = PacketEvents.getAPI().getSettings();
-                settings.bStats(false).checkForUpdates(false).debug(false);
+  public void initialize() {
+    if (main.getConfiguration().packetMagic) {
+      if (usePacketEvents) {
+        WrapperPlayServerChatMessage.HANDLE_JSON = false;
+        PacketEvents.getAPI()
+            .getEventManager()
+            .registerListener(new PacketEventsPacketListener(main), PacketListenerPriority.LOW);
 
-                PacketEvents.getAPI().init();
-            } else {
-                if(modern){
-                    main.getLogManager().info("Initializing modern packet injector...");
-                    this.modernInjector = new PacketInjector(main);
-                    Bukkit.getServer().getPluginManager().registerEvents(this, main.getMain());
+        PacketEventsSettings settings = PacketEvents.getAPI().getSettings();
+        settings.bStats(false).checkForUpdates(false).debug(false);
 
-                    //For Serverutils reload
-                    for (final Player player : Bukkit.getOnlinePlayers()) {
-                        main.getLogManager().debug("Added SU player for modern packet injector. Name: " + player.getName());
-                        modernInjector.addPlayer(player);
-                    }
-                }else{
-                    main.getLogManager().info("Initializing reflection packet injector...");
+        PacketEvents.getAPI().init();
+      } else {
+        if (modern) {
+          main.getLogManager().info("Initializing modern packet injector...");
+          this.modernInjector = new PacketInjector(main);
+          Bukkit.getServer().getPluginManager().registerEvents(this, main.getMain());
 
-                    this.injector = new ReflectionPacketInjector(main);
-                    Bukkit.getServer().getPluginManager().registerEvents(this, main.getMain());
+          // For Serverutils reload
+          for (final Player player : Bukkit.getOnlinePlayers()) {
+            main.getLogManager()
+                .debug("Added SU player for modern packet injector. Name: " + player.getName());
+            modernInjector.addPlayer(player);
+          }
+        } else {
+          main.getLogManager().info("Initializing reflection packet injector...");
 
-                    //For Serverutils reload
-                    for (final Player player : Bukkit.getOnlinePlayers()) {
-                        main.getLogManager().debug("Added SU player for packet injector. Name: " + player.getName());
-                        injector.addPlayer(player);
-                    }
-                }
+          this.injector = new ReflectionPacketInjector(main);
+          Bukkit.getServer().getPluginManager().registerEvents(this, main.getMain());
 
-            }
-
+          // For Serverutils reload
+          for (final Player player : Bukkit.getOnlinePlayers()) {
+            main.getLogManager()
+                .debug("Added SU player for packet injector. Name: " + player.getName());
+            injector.addPlayer(player);
+          }
         }
+      }
     }
+  }
 
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onJoin(PlayerJoinEvent e) {
-        if (!usePacketEvents && main.getConfiguration().packetMagic) {
-            Player player = e.getPlayer();
-            main.getLogManager().debug("Added player for packet injector. Name: " + player.getName());
+  @EventHandler(priority = EventPriority.HIGH)
+  public void onJoin(PlayerJoinEvent e) {
+    if (!usePacketEvents && main.getConfiguration().packetMagic) {
+      Player player = e.getPlayer();
+      main.getLogManager().debug("Added player for packet injector. Name: " + player.getName());
 
-            if(modern){
-                modernInjector.addPlayer(player);
+      if (modern) {
+        modernInjector.addPlayer(player);
 
-            }else {
-                injector.addPlayer(player);
+      } else {
+        injector.addPlayer(player);
+      }
+    }
+  }
 
-            }
+  @EventHandler(priority = EventPriority.HIGH)
+  public void onQuit(PlayerQuitEvent e) {
+    if (!usePacketEvents && main.getConfiguration().packetMagic) {
+      Player player = e.getPlayer();
+      main.getLogManager().debug("Removed player for packet injector. Name: " + player.getName());
 
+      if (modern) {
+        modernInjector.removePlayer(player);
+
+      } else {
+        injector.removePlayer(player);
+      }
+    }
+  }
+
+  public void onLoad() {
+    if (usePacketEvents && main.getConfiguration().packetMagic) {
+      PacketEvents.setAPI(BukkitPacketEventsBuilder.build(main.getMain()));
+      PacketEvents.getAPI().load();
+    }
+  }
+
+  public void terminate() {
+    if (usePacketEvents && main.getConfiguration().packetMagic) {
+      PacketEvents.getAPI().terminate();
+    } else {
+      for (final Player player : Bukkit.getOnlinePlayers()) {
+        main.getLogManager().debug("Removed player for packet injector. Name: " + player.getName());
+        if (modern) {
+          if (modernInjector != null) {
+            modernInjector.removePlayer(player);
+            modernInjector.setPacketStuffEnabled(false);
+          }
+        } else {
+          if (injector != null) {
+            injector.removePlayer(player);
+            injector.setPacketStuffEnabled(false);
+          }
         }
+      }
     }
+  }
 
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onQuit(PlayerQuitEvent e) {
-        if (!usePacketEvents && main.getConfiguration().packetMagic) {
-            Player player = e.getPlayer();
-            main.getLogManager().debug("Removed player for packet injector. Name: " + player.getName());
-
-            if(modern){
-                modernInjector.removePlayer(player);
-
-            }else {
-                injector.removePlayer(player);
-
-            }
-        }
-
-    }
-
-
-
-
-    public void onLoad() {
-        if (usePacketEvents && main.getConfiguration().packetMagic) {
-            PacketEvents.setAPI(BukkitPacketEventsBuilder.build(main.getMain()));
-            PacketEvents.getAPI().load();
-        }
-    }
-
-
-
-
-
-    public void terminate() {
-        if (usePacketEvents && main.getConfiguration().packetMagic) {
-            PacketEvents.getAPI().terminate();
-        }else{
-            for(final Player player : Bukkit.getOnlinePlayers()){
-                main.getLogManager().debug("Removed player for packet injector. Name: " + player.getName());
-                if(modern){
-                    if(modernInjector != null){
-                        modernInjector.removePlayer(player);
-                        modernInjector.setPacketStuffEnabled(false);
-                    }
-                }else{
-                    if(injector != null){
-                        injector.removePlayer(player);
-                        injector.setPacketStuffEnabled(false);
-                    }
-                }
-            }
-        }
-    }
-
-
-    public void sendBeaconUpdatePacket(Player player, Location location, BlockState blockState){
-        getModernPacketInjector().sendBeaconUpdatePacket(player, location, blockState);
-    }
-
+  public void sendBeaconUpdatePacket(Player player, Location location, BlockState blockState) {
+    getModernPacketInjector().sendBeaconUpdatePacket(player, location, blockState);
+  }
 }

@@ -23,6 +23,8 @@ import cloud.commandframework.Command;
 import cloud.commandframework.arguments.standard.IntegerArgument;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
+import java.util.ArrayList;
+import java.util.List;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.command.CommandSender;
@@ -30,66 +32,77 @@ import org.bukkit.configuration.file.FileConfiguration;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.triggers.Trigger;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class NPCDeathTrigger extends Trigger {
 
-    private int npcToDieID = -1;
+  private int npcToDieID = -1;
 
+  public NPCDeathTrigger(final NotQuests main) {
+    super(main);
+  }
 
-    public NPCDeathTrigger(final NotQuests main) {
-        super(main);
-    }
+  public static void handleCommands(
+      NotQuests main,
+      PaperCommandManager<CommandSender> manager,
+      Command.Builder<CommandSender> addTriggerBuilder) {
+    manager.command(
+        addTriggerBuilder
+            .argument(
+                IntegerArgument.<CommandSender>newBuilder("NPC")
+                    .withSuggestionsProvider(
+                        (context, lastString) -> {
+                          ArrayList<String> completions = new ArrayList<>();
+                          for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
+                            completions.add("" + npc.getId());
+                          }
+                          final List<String> allArgs = context.getRawInput();
+                          main.getUtilManager()
+                              .sendFancyCommandCompletion(
+                                  context.getSender(),
+                                  allArgs.toArray(new String[0]),
+                                  "[NPC ID]",
+                                  "[Amount of Deaths]");
 
-    public static void handleCommands(NotQuests main, PaperCommandManager<CommandSender> manager, Command.Builder<CommandSender> addTriggerBuilder) {
-        manager.command(addTriggerBuilder
-                .argument(IntegerArgument.<CommandSender>newBuilder("NPC").withSuggestionsProvider((context, lastString) -> {
-                    ArrayList<String> completions = new ArrayList<>();
-                    for (final NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
-                        completions.add("" + npc.getId());
-                    }
-                    final List<String> allArgs = context.getRawInput();
-                    main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "[NPC ID]", "[Amount of Deaths]");
+                          return completions;
+                        })
+                    .build(),
+                ArgumentDescription.of("ID of the Citizens NPC the player has to escort."))
+            .argument(
+                IntegerArgument.<CommandSender>newBuilder("amount").withMin(1),
+                ArgumentDescription.of("Amount of times the NPC needs to die."))
+            .flag(main.getCommandManager().applyOn)
+            .flag(main.getCommandManager().triggerWorldString)
+            .meta(CommandMeta.DESCRIPTION, "Triggers when specified Citizens NPC dies.")
+            .handler(
+                (context) -> {
+                  final int npcToDieID = context.get("NPC");
 
-                    return completions;
-                }).build(), ArgumentDescription.of("ID of the Citizens NPC the player has to escort."))
-                .argument(IntegerArgument.<CommandSender>newBuilder("amount").withMin(1), ArgumentDescription.of("Amount of times the NPC needs to die."))
-                .flag(main.getCommandManager().applyOn)
-                .flag(main.getCommandManager().triggerWorldString)
-                .meta(CommandMeta.DESCRIPTION, "Triggers when specified Citizens NPC dies.")
-                .handler((context) -> {
-                    final int npcToDieID = context.get("NPC");
+                  NPCDeathTrigger npcDeathTrigger = new NPCDeathTrigger(main);
+                  npcDeathTrigger.setNpcToDieID(npcToDieID);
 
-                    NPCDeathTrigger npcDeathTrigger = new NPCDeathTrigger(main);
-                    npcDeathTrigger.setNpcToDieID(npcToDieID);
-
-                    main.getTriggerManager().addTrigger(npcDeathTrigger, context);
+                  main.getTriggerManager().addTrigger(npcDeathTrigger, context);
                 }));
-    }
+  }
 
-    public final int getNpcToDieID() {
-        return npcToDieID;
-    }
+  public final int getNpcToDieID() {
+    return npcToDieID;
+  }
 
-    public void setNpcToDieID(final int npcToDieID) {
-        this.npcToDieID = npcToDieID;
-    }
+  public void setNpcToDieID(final int npcToDieID) {
+    this.npcToDieID = npcToDieID;
+  }
 
-    @Override
-    public void save(FileConfiguration configuration, String initialPath) {
-        configuration.set(initialPath + ".specifics.npcToDie", getNpcToDieID());
-    }
+  @Override
+  public void save(FileConfiguration configuration, String initialPath) {
+    configuration.set(initialPath + ".specifics.npcToDie", getNpcToDieID());
+  }
 
-    @Override
-    public String getTriggerDescription() {
-        return "NPC to die ID: <WHITE>" + getNpcToDieID();
-    }
+  @Override
+  public String getTriggerDescription() {
+    return "NPC to die ID: <WHITE>" + getNpcToDieID();
+  }
 
-    @Override
-    public void load(FileConfiguration configuration, String initialPath) {
-        this.npcToDieID = configuration.getInt(initialPath + ".specifics.npcToDie");
-    }
-
-
+  @Override
+  public void load(FileConfiguration configuration, String initialPath) {
+    this.npcToDieID = configuration.getInt(initialPath + ".specifics.npcToDie");
+  }
 }

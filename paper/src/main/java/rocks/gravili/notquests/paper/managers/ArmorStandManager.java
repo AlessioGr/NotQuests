@@ -18,6 +18,8 @@
 
 package rocks.gravili.notquests.paper.managers;
 
+import java.util.ArrayList;
+import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
@@ -28,15 +30,11 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import rocks.gravili.notquests.paper.NotQuests;
 
-import java.util.ArrayList;
-import java.util.UUID;
-
 public class ArmorStandManager {
+    final NamespacedKey attachedConversationKey;
     private final NotQuests main;
     private final NamespacedKey attachedQuestsShowingKey;
     private final NamespacedKey attachedQuestsNonShowingKey;
-    final NamespacedKey attachedConversationKey;
-
     private final ArrayList<ArmorStand> armorStandsWithQuestsOrConversationAttachedToThem;
 
     public ArmorStandManager(NotQuests main) {

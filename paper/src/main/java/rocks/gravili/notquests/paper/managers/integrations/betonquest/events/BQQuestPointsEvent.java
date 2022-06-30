@@ -29,75 +29,68 @@ import rocks.gravili.notquests.paper.structs.QuestPlayer;
 
 public class BQQuestPointsEvent extends QuestEvent {
 
-    private final NotQuests main;
-    boolean silent = false;
-    private String action = "";
-    private final long amount;
+  private final NotQuests main;
+  private final long amount;
+  boolean silent = false;
+  private String action = "";
 
+  /**
+   * Creates new instance of the event. The event should parse instruction string without doing
+   * anything else. If anything goes wrong, throw {@link InstructionParseException} with error
+   * message describing the problem.
+   *
+   * @param instruction the Instruction object representing this event; you need to extract all
+   *     required data from it and throw {@link InstructionParseException} if there is anything
+   *     wrong
+   * @throws InstructionParseException when the is an error in the syntax or argument parsing
+   */
+  public BQQuestPointsEvent(Instruction instruction) throws InstructionParseException {
+    super(instruction, false);
+    this.main = NotQuests.getInstance();
 
-    /**
-     * Creates new instance of the event. The event should parse instruction
-     * string without doing anything else. If anything goes wrong, throw
-     * {@link InstructionParseException} with error message describing the
-     * problem.
-     *
-     * @param instruction the Instruction object representing this event; you need to
-     *                    extract all required data from it and throw
-     *                    {@link InstructionParseException} if there is anything wrong
-     * @throws InstructionParseException when the is an error in the syntax or argument parsing
-     */
-    public BQQuestPointsEvent(Instruction instruction) throws InstructionParseException {
-        super(instruction, false);
-        this.main = NotQuests.getInstance();
-
-        action = instruction.getPart(1);
-        try {
-            amount = Long.parseLong(instruction.getPart(2));
-        } catch (NumberFormatException e) {
-            throw new InstructionParseException("Invalid QuestPoints amount. It has to be a number.");
-
-        }
-
-
-        if (instruction.getInstruction().contains("-silent")) {
-            silent = true;
-        }
-
-
-        if (!action.equalsIgnoreCase("add") && !action.equalsIgnoreCase("remove") && !action.equalsIgnoreCase("set")) {
-            throw new InstructionParseException("Wrong questpoints action ('" + action + "'). Valid actions are: 'add', 'remove', 'set'.");
-        }
-
+    action = instruction.getPart(1);
+    try {
+      amount = Long.parseLong(instruction.getPart(2));
+    } catch (NumberFormatException e) {
+      throw new InstructionParseException("Invalid QuestPoints amount. It has to be a number.");
     }
 
-    @Override
-    protected Void execute(String playerID) throws QuestRuntimeException {
-
-
-        final Player player = PlayerConverter.getPlayer(playerID);
-
-
-        if (player != null) {
-            final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
-            if (questPlayer != null) {
-
-                if (action.equalsIgnoreCase("set")) {
-                    questPlayer.setQuestPoints(amount, !silent);
-                } else if (action.equalsIgnoreCase("add")) {
-                    questPlayer.addQuestPoints(amount, !silent);
-                } else if (action.equalsIgnoreCase("remove")) {
-                    questPlayer.removeQuestPoints(amount, !silent);
-                } else {
-                    throw new QuestRuntimeException("Invalid QuestPoints action.");
-                }
-
-            }
-
-
-        }
-
-
-        return null;
+    if (instruction.getInstruction().contains("-silent")) {
+      silent = true;
     }
 
+    if (!action.equalsIgnoreCase("add")
+        && !action.equalsIgnoreCase("remove")
+        && !action.equalsIgnoreCase("set")) {
+      throw new InstructionParseException(
+          "Wrong questpoints action ('"
+              + action
+              + "'). Valid actions are: 'add', 'remove', 'set'.");
+    }
+  }
+
+  @Override
+  protected Void execute(String playerID) throws QuestRuntimeException {
+
+    final Player player = PlayerConverter.getPlayer(playerID);
+
+    if (player != null) {
+      final QuestPlayer questPlayer =
+          main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+      if (questPlayer != null) {
+
+        if (action.equalsIgnoreCase("set")) {
+          questPlayer.setQuestPoints(amount, !silent);
+        } else if (action.equalsIgnoreCase("add")) {
+          questPlayer.addQuestPoints(amount, !silent);
+        } else if (action.equalsIgnoreCase("remove")) {
+          questPlayer.removeQuestPoints(amount, !silent);
+        } else {
+          throw new QuestRuntimeException("Invalid QuestPoints action.");
+        }
+      }
+    }
+
+    return null;
+  }
 }
