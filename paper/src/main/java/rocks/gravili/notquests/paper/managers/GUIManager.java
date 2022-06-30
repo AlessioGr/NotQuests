@@ -1020,6 +1020,13 @@ public class GUIManager {
     separatorItemStack3Meta.displayName(Component.text(" "));
     separatorItemStack3.setItemMeta(separatorItemStack3Meta);
 
+
+
+    final ItemStack backgroundItemStack = new ItemStack(main.getLanguageManager().getMaterialOrAir("gui.main.backgroundFill.material"));
+    final ItemMeta backgroundItemStackMeta = backgroundItemStack.getItemMeta();
+    backgroundItemStackMeta.displayName(Component.text(" "));
+    backgroundItemStack.setItemMeta(backgroundItemStackMeta);
+
     final ConfigurationSection mainBackgroundConfigurationSection =
         main.getLanguageManager()
             .getLanguageConfig()
@@ -1037,7 +1044,7 @@ public class GUIManager {
         // Cancel all inventory click events
         .clickHandler(ClickHandler.cancel())
         // Fill the background with black stained glass panes
-        .addTransform(PaperTransform.chestFill(ItemStackElement.of(separatorItemStack3)))
+        .addTransform(PaperTransform.chestFill(ItemStackElement.of(backgroundItemStack)))
         .addTransform(
             (pane, view) -> {
               ChestPane result = pane;

@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
@@ -34,11 +35,13 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.apache.commons.io.IOUtils;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.Nullable;
 import rocks.gravili.notquests.paper.NotQuests;
 import rocks.gravili.notquests.paper.structs.ActiveObjective;
@@ -346,6 +349,16 @@ public class LanguageManager {
         return components;
     }
 
+    public final @NonNull Material getMaterialOrAir(final String languageString) {
+        if (!getLanguageConfig().isString(languageString)) {
+            return Material.AIR;
+        } else {
+            final Material foundMaterial = Material.getMaterial(getLanguageConfig().getString(languageString, "").toUpperCase(
+                Locale.ROOT));
+
+            return foundMaterial != null ? foundMaterial : Material.AIR;
+        }
+    }
     public final int getInt(final String languageString) {
         if (!getLanguageConfig().isInt(languageString)) {
             return 0;

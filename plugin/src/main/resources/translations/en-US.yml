@@ -170,6 +170,8 @@ placeholders:
 gui:
   main:
     title: '                <highlight2>Quests'
+    backgroundFill:
+      material: 'BLACK_STAINED_GLASS_PANE'
     background:
       '1':
         minX: 0
