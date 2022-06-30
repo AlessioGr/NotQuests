@@ -1024,8 +1024,11 @@ public class GUIManager {
 
     final ItemStack backgroundItemStack = new ItemStack(main.getLanguageManager().getMaterialOrAir("gui.main.backgroundFill.material"));
     final ItemMeta backgroundItemStackMeta = backgroundItemStack.getItemMeta();
-    backgroundItemStackMeta.displayName(Component.text(" "));
-    backgroundItemStack.setItemMeta(backgroundItemStackMeta);
+    if(backgroundItemStackMeta != null) {
+      backgroundItemStackMeta.displayName(Component.text(" "));
+      backgroundItemStack.setItemMeta(backgroundItemStackMeta);
+    }
+
 
     final ConfigurationSection mainBackgroundConfigurationSection =
         main.getLanguageManager()
