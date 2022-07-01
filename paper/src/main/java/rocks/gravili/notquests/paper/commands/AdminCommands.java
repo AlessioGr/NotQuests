@@ -660,7 +660,7 @@ public class AdminCommands {
                             "\n<main>Server version: <highlight>" + Bukkit.getVersion() +
                             "\n<main>Server Brand: <highlight>" + Bukkit.getServer().getName() +
                             "\n<main>Java version: <highlight>" + (System.getProperty("java.version") != null ? System.getProperty("java.version") : "null") +
-                            "\n<main>Enabled integrations: <highlight>" + String.join(", ", main.getIntegrationsManager().getEnabledIntegrations())
+                            "\n<main>Enabled integrations: <highlight>" + main.getIntegrationsManager().getEnabledIntegrationString()
                     ));
                 }));
 

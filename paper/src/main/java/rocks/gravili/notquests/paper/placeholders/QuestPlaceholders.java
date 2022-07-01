@@ -42,7 +42,7 @@ public class QuestPlaceholders extends PlaceholderExpansion {
      *
      * @param main The instance of our plugin.
      */
-    public QuestPlaceholders(NotQuests main) {
+    public QuestPlaceholders(final NotQuests main) {
         this.main = main;
     }
 
