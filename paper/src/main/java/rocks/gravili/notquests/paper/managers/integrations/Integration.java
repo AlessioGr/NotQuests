@@ -98,13 +98,7 @@ public class Integration {
       }
       return null;
     }
-    final EnabledIntegration enabledIntegration = enable(plugin);
-    if(enabledIntegration != null){
-      if(runWhenEnabledLate != null) {
-        runWhenEnabledLate.run();
-      }
-    }
-    return enabledIntegration;
+    return enable(plugin, true);
   }
   public final @Nullable EnabledIntegration enable() {
     final Plugin plugin = Bukkit.getPluginManager().getPlugin(getExactName());
@@ -114,10 +108,10 @@ public class Integration {
       }
       return null;
     }
-    return enable(plugin);
+    return enable(plugin, false);
   }
 
-  public final @Nullable EnabledIntegration enable(@NonNull final Plugin plugin) {
+  public final @Nullable EnabledIntegration enable(@NonNull final Plugin plugin, final boolean late) {
     if(!plugin.isEnabled()) {
       if(runWhenEnablingFailed != null) {
         runWhenEnablingFailed.run();
@@ -130,7 +124,15 @@ public class Integration {
           return null;
         }
       }
-      main.getLogManager().info( getExactName() + " found! Enabling " + getExactName() + " support...");
+      if(late) {
+        if(runWhenEnabledLate != null) {
+          runWhenEnabledLate.run();
+        }
+        main.getLogManager().info( getExactName() + " found. Enabled " + getExactName() + " support (late)!");
+      } else {
+        main.getLogManager().info( getExactName() + " found. Enabled " + getExactName() + " support!");
+      }
+
       return new EnabledIntegration(main, exactName, plugin);
     } else {
       if (runWhenEnableConditionFalse != null) {
