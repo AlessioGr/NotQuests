@@ -920,7 +920,7 @@ public class AdminCommands {
                     final boolean printToConsole = context.flags().contains("printToConsole");
 
                     context.getSender().sendMessage(Component.empty());
-                    context.getSender().sendMessage("<highlight>Critical errors which would cause NotQuests to disable itself:");
+                    context.getSender().sendMessage(main.parse("<highlight>Critical errors which would cause NotQuests to disable itself:"));
 
                     if (!printToConsole) {
                         main.getDataManager().sendErrorsAndWarnings(context.getSender());

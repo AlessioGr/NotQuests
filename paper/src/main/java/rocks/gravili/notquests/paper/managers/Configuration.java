@@ -126,6 +126,8 @@ public class Configuration {
   private boolean guiQuestPreviewRequirements_enabled = true;
 
   private boolean consoleColorsEnabled = true;
+  private boolean consoleColorsDownsampleColors = false;
+
   private String colorsConsolePrefixPrefix = "<#393e46>[<gradient:#E0EAFC:#CFDEF3>";
   private String colorsConsolePrefixSuffix = "<#393e46>]<#636c73>: ";
   private String colorsConsoleInfoDefault = "<main>";
@@ -1030,5 +1032,13 @@ public class Configuration {
 
   public void setConsoleColorsEnabled(boolean consoleColorsEnabled) {
     this.consoleColorsEnabled = consoleColorsEnabled;
+  }
+
+  public boolean isConsoleColorsDownsampleColors() {
+    return consoleColorsDownsampleColors;
+  }
+
+  public void setConsoleColorsDownsampleColors(boolean consoleColorsDownsampleColors) {
+    this.consoleColorsDownsampleColors = consoleColorsDownsampleColors;
   }
 }

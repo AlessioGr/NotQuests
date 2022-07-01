@@ -21,6 +21,7 @@ package rocks.gravili.notquests.paper.managers;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import rocks.gravili.notquests.paper.NotQuests;
@@ -64,10 +65,25 @@ public class LogManager {
 
   private void log(
       final Level level, final LogCategory logCategory, final String color, final String message) {
-    if(main.getConfiguration().isConsoleColorsEnabled()){
-      consoleSender.sendMessage(main.parse(prefixText + color + message));
+    if (main.getConfiguration().isConsoleColorsEnabled()) {
+      if (!main.getConfiguration().isConsoleColorsDownsampleColors()) {
+        consoleSender.sendMessage(main.parse(prefixText + color + message));
+      } else {
+        final Component component = main.parse(prefixText + color + message);
+        consoleSender.sendMessage(
+            GsonComponentSerializer.gson()
+                .deserializeFromTree( // Convert back to component
+                    GsonComponentSerializer.builder()
+                        .downsampleColors()
+                        .build()
+                        .serializeToTree( // Convert to text
+                            component)));
+      }
     } else {
-      consoleSender.sendMessage(main.parse(main.getMiniMessage().stripTags(prefixText + message, main.getMessageManager().getTagResolver())));
+      consoleSender.sendMessage(
+          main.parse(
+              main.getMiniMessage()
+                  .stripTags(prefixText + message, main.getMessageManager().getTagResolver())));
     }
   }
 

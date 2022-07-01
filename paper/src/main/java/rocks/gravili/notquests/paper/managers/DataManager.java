@@ -715,6 +715,11 @@ public class DataManager {
             true,
             "This controls if colors should be enabled in the console"
         ));
+        configuration.setConsoleColorsDownsampleColors(getGeneralConfigBoolean(
+            "visual.colors.console.downsampleColors",
+            false,
+            "If your console cannot support our colorful RGB colors, you can enable this to convert them to the 'default' Minecraft colors which most consoles should support. This is only relevant if colors support is enabled."
+        ));
         configuration.setColorsConsolePrefixPrefix(getGeneralConfigString(
                 "visual.colors.console.prefix.prefix",
                 "<#393e46>[<gradient:#E0EAFC:#CFDEF3>"
