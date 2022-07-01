@@ -177,6 +177,16 @@ public class ItemStackSelection {
     return false;
   }
 
+  @Override
+  public String toString() {
+    return "ItemStackSelection{" +
+        "nqItems=" + nqItems +
+        ", itemStacks=" + itemStacks +
+        ", materials=" + materials +
+        ", any=" + any +
+        '}';
+  }
+
   public final boolean checkIfIsIncluded(final ItemStack itemStackToCheck) {
     if (any) {
       return true;
