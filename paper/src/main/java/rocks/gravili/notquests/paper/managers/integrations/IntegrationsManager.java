@@ -78,7 +78,7 @@ public class IntegrationsManager {
 
     integrations.add(
         new Integration(main, "UltimateJobs")
-            .setEnableCondition(main.getConfiguration()::isIntegrationUltimateJobsEnabled)
+            .setEnableCondition(() -> main.getConfiguration().isIntegrationUltimateJobsEnabled())
             .setRunWhenEnabled(
                 () -> {
                   ultimateJobsEnabled = true;
@@ -94,7 +94,7 @@ public class IntegrationsManager {
 
     integrations.add(
         new Integration(main, "EcoBosses")
-            .setEnableCondition(main.getConfiguration()::isIntegrationEcoBossesEnabled)
+            .setEnableCondition(() -> main.getConfiguration().isIntegrationEcoBossesEnabled())
             .setRunWhenEnabled(
                 () -> {
                   ecoBossesEnabled = true;
@@ -121,7 +121,7 @@ public class IntegrationsManager {
 
     integrations.add(
         new Integration(main, "PlaceholderAPI")
-            .setEnableCondition(main.getConfiguration()::isIntegrationPlaceholderAPIEnabled)
+            .setEnableCondition(() -> main.getConfiguration().isIntegrationPlaceholderAPIEnabled())
             .setRunWhenEnabled(
                 () -> {
                   placeholderAPIEnabled = true;
@@ -131,7 +131,7 @@ public class IntegrationsManager {
 
     integrations.add(
         new Integration(main, "Vault")
-            .setEnableCondition(main.getConfiguration()::isIntegrationVaultEnabled)
+            .setEnableCondition(() -> main.getConfiguration().isIntegrationVaultEnabled())
             .setRunWhenEnabled(
                 () -> {
                   vaultManager = new VaultManager(main);
@@ -150,7 +150,7 @@ public class IntegrationsManager {
 
     integrations.add(
         new Integration(main, "MythicMobs")
-            .setEnableCondition(main.getConfiguration()::isIntegrationMythicMobsEnabled)
+            .setEnableCondition(() -> main.getConfiguration().isIntegrationMythicMobsEnabled())
             .setRunWhenEnabled(
                 () -> {
                   mythicMobsEnabled = true;
@@ -176,7 +176,7 @@ public class IntegrationsManager {
 
     integrations.add(
         new Integration(main, "EliteMobs")
-            .setEnableCondition(main.getConfiguration()::isIntegrationEliteMobsEnabled)
+            .setEnableCondition(() -> main.getConfiguration().isIntegrationEliteMobsEnabled())
             .setRunWhenEnabled(
                 () -> {
                   eliteMobsEnabled = true;
@@ -192,7 +192,7 @@ public class IntegrationsManager {
 
     integrations.add(
         new Integration(main, "BetonQuest")
-            .setEnableCondition(main.getConfiguration()::isIntegrationBetonQuestEnabled)
+            .setEnableCondition(() -> main.getConfiguration().isIntegrationBetonQuestEnabled())
             .setRunWhenEnabled(
                 () -> {
                   betonQuestEnabled = true;
@@ -206,7 +206,7 @@ public class IntegrationsManager {
 
     integrations.add(
         new Integration(main, "WorldEdit")
-            .setEnableCondition(main.getConfiguration()::isIntegrationWorldEditEnabled)
+            .setEnableCondition(() -> main.getConfiguration().isIntegrationWorldEditEnabled())
             .setRunWhenEnabled(
                 () -> {
                   worldEditManager = new WorldEditManager(main);
@@ -218,7 +218,7 @@ public class IntegrationsManager {
     // which can mostly be replaced by armor stands
     integrations.add(
         new Integration(main, "Citizens")
-            .setEnableCondition(main.getConfiguration()::isIntegrationCitizensEnabled)
+            .setEnableCondition(() -> main.getConfiguration().isIntegrationCitizensEnabled())
             .setRunWhenEnablingFailed(
                 () ->
                     main.getLogManager()
@@ -253,7 +253,7 @@ public class IntegrationsManager {
 
     integrations.add(
         new Integration(main, "Slimefun")
-            .setEnableCondition(main.getConfiguration()::isIntegrationSlimeFunEnabled)
+            .setEnableCondition(() -> main.getConfiguration().isIntegrationSlimeFunEnabled())
             .setRunWhenEnabled(
                 () -> {
                   slimefunEnabled = true;
@@ -270,7 +270,7 @@ public class IntegrationsManager {
 
     integrations.add(
         new Integration(main, "LuckPerms")
-            .setEnableCondition(main.getConfiguration()::isIntegrationLuckPermsEnabled)
+            .setEnableCondition(() -> main.getConfiguration().isIntegrationLuckPermsEnabled())
             .setRunWhenEnabled(
                 () -> {
                   luckpermsManager = new LuckpermsManager(main);
@@ -280,7 +280,7 @@ public class IntegrationsManager {
 
     integrations.add(
         new Integration(main, "UltimateClans")
-            .setEnableCondition(main.getConfiguration()::isIntegrationUltimateClansEnabled)
+            .setEnableCondition(() -> main.getConfiguration().isIntegrationUltimateClansEnabled())
             .setRunWhenEnabled(
                 () -> {
                   ultimateClansEnabled = true;
@@ -290,7 +290,7 @@ public class IntegrationsManager {
 
     integrations.add(
         new Integration(main, "Towny")
-            .setEnableCondition(main.getConfiguration()::isIntegrationTownyEnabled)
+            .setEnableCondition(() -> main.getConfiguration().isIntegrationTownyEnabled())
             .setRunWhenEnabled(
                 () -> {
                   townyEnabled = true;
@@ -306,7 +306,7 @@ public class IntegrationsManager {
 
     integrations.add(
         new Integration(main, "Jobs")
-            .setEnableCondition(main.getConfiguration()::isIntegrationJobsRebornEnabled)
+            .setEnableCondition(() -> main.getConfiguration().isIntegrationJobsRebornEnabled())
             .setRunWhenEnabled(
                 () -> {
                   jobsRebornEnabled = true;
@@ -322,7 +322,7 @@ public class IntegrationsManager {
 
     integrations.add(
         new Integration(main, "ProjectKorra")
-            .setEnableCondition(main.getConfiguration()::isIntegrationProjectKorraEnabled)
+            .setEnableCondition(() -> main.getConfiguration().isIntegrationProjectKorraEnabled())
             .setRunWhenEnabled(
                 () -> {
                   projectKorraManager = new ProjectKorraManager(main);
