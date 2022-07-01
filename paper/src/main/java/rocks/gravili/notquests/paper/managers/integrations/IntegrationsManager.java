@@ -358,13 +358,13 @@ public class IntegrationsManager {
     for (final EnabledIntegration enabledIntegration : getEnabledIntegrations()) {
       counter++;
       if (counter > 1) {
-        enabledIntegrationsString.append(", ");
+        enabledIntegrationsString.append("<veryUnimportant>,</veryUnimportant> ");
       }
       enabledIntegrationsString
           .append(enabledIntegration.getExactName())
-          .append(" (")
+          .append(" <unimportant>(")
           .append(enabledIntegration.getVersionString())
-          .append(")");
+          .append(")</unimportant>");
     }
 
     return enabledIntegrationsString.toString();
