@@ -49,17 +49,17 @@ import rocks.gravili.notquests.paper.structs.objectives.hooks.citizens.EscortNPC
 public class CitizensManager {
   private final NotQuests main;
 
-  private Consumer<NPC> traitRun; // Runs in the run() method for NPCs with the QuestGiverNPC trait
+  private Consumer<Trait> traitRun; // Runs in the run() method for NPCs with the QuestGiverNPC trait
 
   public CitizensManager(final NotQuests main) {
     this.main = main;
   }
 
-  public void setTraitRun(final Consumer<NPC> traitRun) {
+  public void setTraitRun(final Consumer<Trait> traitRun) {
     this.traitRun = traitRun;
   }
 
-  public final Consumer<NPC> getTraitRun() {
+  public final Consumer<Trait> getTraitRun() {
     return traitRun;
   }
 

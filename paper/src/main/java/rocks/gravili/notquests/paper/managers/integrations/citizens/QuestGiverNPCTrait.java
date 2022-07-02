@@ -101,7 +101,7 @@ public class QuestGiverNPCTrait extends Trait {
   public void run() {
 
     if(notQuests.getIntegrationsManager().getCitizensManager().getTraitRun() != null) {
-      notQuests.getIntegrationsManager().getCitizensManager().getTraitRun().accept(npc);
+      notQuests.getIntegrationsManager().getCitizensManager().getTraitRun().accept(this);
     }
 
     // Disable if Server TPS is too low
