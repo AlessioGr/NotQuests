@@ -75,7 +75,7 @@ chat:
       consumeItems:
         base: '    <DARK_GRAY>└─ <GRAY>Itemy ke snězení: <WHITE>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
-        base: '    <veryUnimportant>└─ <unimportant>Craft Items: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
+        base: 'Craft Items: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
         base: '    <DARK_GRAY>└─ <GRAY>Itemy k doručení: <WHITE>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
         deliver-to-npc: '      <GRAY>Deliver it to <WHITE>%NPCNAME%'
@@ -86,7 +86,7 @@ chat:
       escortNPC:
         base: '    <DARK_GRAY>└─ <GRAY>Převézt <WHITE>%NPCNAME%</WHITE> to <WHITE>%DESTINATIONNPCNAME%'
       fishItems:
-        base: '    <veryUnimportant>└─ <unimportant>Fish Items: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
+        base: 'Fish Items: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
       killMobs:
         base: '    <DARK_GRAY>└─ <GRAY>Moby k zabití: <WHITE>%MOBTOKILL%'
       otherQuest:
@@ -110,11 +110,11 @@ chat:
       jump:
         base: '    <DARK_GRAY>└─ <GRAY>Vyskočit <WHITE>%AMOUNTOFJUMPS%</WHITE> krát'
       sneak:
-        base: '    <veryUnimportant>└─ <unimportant>Sneak <main>%AMOUNTOFSNEAKS%</main> times'
+        base: 'Sneak <main>%AMOUNTOFSNEAKS%</main> times'
       smelt:
         base: '    <DARK_GRAY>└─ <GRAY>Itemy k roztavení : <WHITE>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       openBuriedTreasure:
-        base: '    <veryUnimportant>└─ <unimportant>Open buried treasures'
+        base: 'Open buried treasures'
       townyReachResidentCount:
         base: '    <DARK_GRAY>└─ <GRAY>Dosáhnout residentního počtu: <WHITE>%AMOUNT%'
       townyNationReachTownCount:
@@ -126,9 +126,9 @@ chat:
       ProjectKorraUseAbility:
         base: '    <DARK_GRAY>└─ <GRAY>Použít schopnost: <WHITE>%ABILITY%'
       BetonQuestCompleteObjective:
-        base: '    <veryUnimportant>└─ <unimportant>Finish Objective: <main>%BETONQUESTOBJECTIVENAME%'
+        base: 'Finish Objective: <main>%BETONQUESTOBJECTIVENAME%'
       ultimateJobsReachJobLevel:
-        base: '    <veryUnimportant>└─ <unimportant>Reach job level <main>%AMOUNT%</main> with job <main>%JOBID%'
+        base: 'Reach job level <main>%AMOUNT%</main> with job <main>%JOBID%'
   conditions:
     boolean:
       not-fulfilled: "<warn>Following needs to be %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."

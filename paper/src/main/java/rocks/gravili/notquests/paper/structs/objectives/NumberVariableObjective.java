@@ -142,7 +142,7 @@ public class NumberVariableObjective extends Objective { // TODO: Not done yet
   }
 
   @Override
-  public String getObjectiveTaskDescription(
+  public String getTaskDescriptionInternal(
       final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
     if (variableName != null) {
       final double expressionValue = activeObjective != null ? activeObjective.getProgressNeeded() : getProgressNeededExpression().calculateValue(questPlayer);

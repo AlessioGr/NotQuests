@@ -73,68 +73,68 @@ chat:
     successfully-completed-rewards-suffix: <EMPTY>
     taskDescription:
       breakBlocks:
-        base: '    <veryUnimportant>└─ <unimportant>破壞方塊: <main>%BLOCKTOBREAK%'
+        base: '破壞方塊: <main>%BLOCKTOBREAK%'
       breed:
-        base: '    <veryUnimportant>└─ <unimportant>繁殖動物: <main>%ENTITYTOBREED%'
+        base: '繁殖動物: <main>%ENTITYTOBREED%'
       collectItems:
-        base: '    <veryUnimportant>└─ <unimportant>收集物品: <main>%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
+        base: '收集物品: <main>%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
       consumeItems:
-        base: '    <veryUnimportant>└─ <unimportant>收集物品: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
+        base: '收集物品: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
-        base: '    <veryUnimportant>└─ <unimportant>合成物品: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
+        base: '合成物品: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: '    <veryUnimportant>└─ <unimportant>給予物品: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
+        base: '給予物品: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
         deliver-to-npc: '      <GRAY>將物品給予給 <WHITE>%NPCNAME%'
         deliver-to-npc-not-available: '      <GRAY>負責收取物品的NPC目前不在!'
         deliver-to-npc-citizens-not-found: '    <RED>錯誤: 服務器未安裝 Citizens. 請告知OP'
         deliver-to-armorstand: '    <GRAY>将物品給予 <WHITE>%ARMORSTANDNAME%'
         deliver-to-armorstand-not-available: '    <GRAY>負責收取物品的盔甲架目前不在!'
       escortNPC:
-        base: '    <veryUnimportant>└─ <unimportant>護送 <main>%NPCNAME%</main> 前往 <main>%DESTINATIONNPCNAME%'
+        base: '護送 <main>%NPCNAME%</main> 前往 <main>%DESTINATIONNPCNAME%'
       fishItems:
-        base: '    <veryUnimportant>└─ <unimportant>釣魚物品: <main>%ITEMTOFISHTYPE% (%%ITEMTOFISHNAME%%)%'
+        base: '釣魚物品: <main>%ITEMTOFISHTYPE% (%%ITEMTOFISHNAME%%)%'
       killMobs:
-        base: '    <veryUnimportant>└─ <unimportant>擊殺怪物: <main>%MOBTOKILL%'
+        base: '擊殺怪物: <main>%MOBTOKILL%'
       otherQuest:
-        base: '    <veryUnimportant>└─ <unimportant>任務完成: <main>%OTHERQUESTNAME%'
+        base: '任務完成: <main>%OTHERQUESTNAME%'
       placeBlocks:
-        base: '    <veryUnimportant>└─ <unimportant>放置方塊: <main>%BLOCKTOPLACE%'
+        base: '放置方塊: <main>%BLOCKTOPLACE%'
       reachLocation:
-        base: '    <veryUnimportant>└─ <unimportant>前往目的地: <main>%LOCATIONNAME%'
+        base: '前往目的地: <main>%LOCATIONNAME%'
       talkToNPC:
-        base: '    <veryUnimportant>└─ <unimportant>與 <main>%NAME%</main> 交談'
+        base: '與 <main>%NAME%</main> 交談'
       triggerCommand:
-        base: '    <veryUnimportant>└─ <unimportant>目標: <main>%TRIGGERNAME%'
+        base: '目標: <main>%TRIGGERNAME%'
       killEliteMobs:
-        base: '    <veryUnimportant>└─ <unimportant>擊殺精英怪物: <main>%ELITEMOBNAME%'
-        any: '    <veryUnimportant>└─ <unimportant>擊殺任意精英怪物!'
+        base: '擊殺精英怪物: <main>%ELITEMOBNAME%'
+        any: '擊殺任意精英怪物!'
       runCommand:
-        base: '    <veryUnimportant>└─ <unimportant>輸入指令: <main>%COMMANDTORUN%'
+        base: '輸入指令: <main>%COMMANDTORUN%'
       interact:
-        base: '    <veryUnimportant>└─ <unimportant>%INTERACTTYPE% 位置: <main>%COORDINATES% <main>在世界 %WORLDNAME%'
-        taskDescriptionProvided: '    <veryUnimportant>└─ <unimportant>%TASKDESCRIPTION%'
+        base: '%INTERACTTYPE% 位置: <main>%COORDINATES% <main>在世界 %WORLDNAME%'
+        taskDescriptionProvided: '%TASKDESCRIPTION%'
       jump:
-        base: '    <veryUnimportant>└─ <unimportant>跳躍 <main>%AMOUNTOFJUMPS%</main> 次'
+        base: '跳躍 <main>%AMOUNTOFJUMPS%</main> 次'
       sneak:
-        base: '    <veryUnimportant>└─ <unimportant>潛行 <main>%AMOUNTOFSNEAKS%</main> 次'
+        base: '潛行 <main>%AMOUNTOFSNEAKS%</main> 次'
       smelt:
-        base: '    <veryUnimportant>└─ <unimportant>熔煉物品: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+        base: '熔煉物品: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       openBuriedTreasure:
-        base: '    <veryUnimportant>└─ <unimportant>打開埋藏的寶藏'
+        base: '打開埋藏的寶藏'
       townyReachResidentCount:
-        base: '    <veryUnimportant>└─ <unimportant>居民數量達到: <main>%AMOUNT%'
+        base: '居民數量達到: <main>%AMOUNT%'
       townyNationReachTownCount:
-        base: '    <veryUnimportant>└─ <unimportant>加入國家的城鎮數量達到: <main>%AMOUNT%'
+        base: '加入國家的城鎮數量達到: <main>%AMOUNT%'
       jobsRebornReachJobLevel:
-        base: '    <veryUnimportant>└─ <unimportant>讓工作 <main>%JOB%</main> 的等级達到 <main>%AMOUNT%</main>'
+        base: '讓工作 <main>%JOB%</main> 的等级達到 <main>%AMOUNT%</main>'
       SlimefunResearch:
-        base: '    <veryUnimportant>└─ <unimportant>研究的花費'
+        base: '研究的花費'
       ProjectKorraUseAbility:
-        base: '    <veryUnimportant>└─ <unimportant>使用能力: <main>%ABILITY%'
+        base: '使用能力: <main>%ABILITY%'
       BetonQuestCompleteObjective:
-        base: '    <veryUnimportant>└─ <unimportant>完成目標: <main>%BETONQUESTOBJECTIVENAME%'
+        base: '完成目標: <main>%BETONQUESTOBJECTIVENAME%'
       ultimateJobsReachJobLevel:
-        base: '    <veryUnimportant>└─ <unimportant>讓工作 <main>%JOBID%</main> 的等级達到 <main>%AMOUNT%</main>'
+        base: '讓工作 <main>%JOBID%</main> 的等级達到 <main>%AMOUNT%</main>'
   conditions:
     boolean:
       not-fulfilled: "<warn>以下需要 %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."

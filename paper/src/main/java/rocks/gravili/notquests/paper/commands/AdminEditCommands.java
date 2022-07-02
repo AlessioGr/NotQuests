@@ -53,6 +53,7 @@ import rocks.gravili.notquests.paper.commands.arguments.CategorySelector;
 import rocks.gravili.notquests.paper.commands.arguments.DurationArgument;
 import rocks.gravili.notquests.paper.commands.arguments.ItemStackSelectionArgument;
 import rocks.gravili.notquests.paper.commands.arguments.MiniMessageSelector;
+import rocks.gravili.notquests.paper.commands.arguments.MiniMessageStringSelector;
 import rocks.gravili.notquests.paper.commands.arguments.wrappers.ItemStackSelection;
 import rocks.gravili.notquests.paper.managers.data.Category;
 import rocks.gravili.notquests.paper.structs.Quest;
@@ -817,36 +818,41 @@ public class AdminEditCommands {
                     ));
                 }));
 
+      manager.command(builder.literal("taskDescription")
+          .literal("show")
+          .meta(CommandMeta.DESCRIPTION, "Shows current objective task description.")
+          .handler((context) -> {
+            final Quest quest = context.get("quest");
+            final int objectiveID = context.get("Objective ID");
+            final Objective objective = quest.getObjectiveFromID(objectiveID);
+            assert objective != null; //Shouldn't be null
+
+            context.getSender().sendMessage(main.parse(
+                "<main>Current task description of objective with ID <highlight>" + objectiveID + "</highlight>: <highlight2>"
+                    + objective.getTaskDescriptionProvided()
+            ));
+          }));
+      manager.command(builder.literal("taskDescription")
+          .literal("remove")
+          .meta(CommandMeta.DESCRIPTION, "Removes current objective task description.")
+          .handler((context) -> {
+            final Quest quest = context.get("quest");
+            final int objectiveID = context.get("Objective ID");
+            final Objective objective = quest.getObjectiveFromID(objectiveID);
+            assert objective != null; //Shouldn't be null
+
+            objective.removeTaskDescription(true);
+            context.getSender().sendMessage(main.parse(
+                "<main>Task description successfully removed from objective with ID <highlight>" + objectiveID + "</highlight>! New description: <highlight2>"
+                    + objective.getTaskDescriptionProvided()
+            ));
+          }));
+
         manager.command(builder.literal("description")
                 .literal("set")
-                .argument(StringArrayArgument.of("Objective Description",
-                        (context, lastString) -> {
-                            final List<String> allArgs = context.getRawInput();
-                            main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "<Enter new Objective description>", "");
-                            ArrayList<String> completions = new ArrayList<>();
-
-                            String rawInput = context.getRawInputJoined();
-                            if (lastString.startsWith("{")) {
-                                completions.addAll(main.getCommandManager().getAdminCommands().placeholders);
-                            } else {
-                                if(lastString.startsWith("<")){
-                                    for(String color : main.getUtilManager().getMiniMessageTokens()){
-                                        completions.add("<"+ color +">");
-                                        //Now the closings. First we search IF it contains an opening and IF it doesnt contain more closings than the opening
-                                        if(rawInput.contains("<"+color+">")){
-                                            if(StringUtils.countMatches(rawInput, "<"+color+">") > StringUtils.countMatches(rawInput, "</"+color+">")){
-                                                completions.add("</"+ color +">");
-                                            }
-                                        }
-                                    }
-                                }else{
-                                    completions.add("<Enter new Objective description>");
-                                }
-                            }
-
-                            return completions;
-                        }
-                ), ArgumentDescription.of("Objective description"))
+                .argument(MiniMessageSelector.<CommandSender>newBuilder("Objective Description", main)
+                    .withPlaceholders()
+                    .build(), ArgumentDescription.of("Objective description"))
                 .meta(CommandMeta.DESCRIPTION, "Sets current objective description.")
                 .handler((context) -> {
                     final Quest quest = context.get("quest");
@@ -861,6 +867,26 @@ public class AdminEditCommands {
                                     + objective.getDescription()
                     ));
                 }));
+
+      manager.command(builder.literal("taskDescription")
+          .literal("set")
+          .argument(MiniMessageSelector.<CommandSender>newBuilder("Task Description", main)
+              .withPlaceholders()
+              .build(), ArgumentDescription.of("Objective task description"))
+          .meta(CommandMeta.DESCRIPTION, "Sets current objective task description.")
+          .handler((context) -> {
+            final Quest quest = context.get("quest");
+            final int objectiveID = context.get("Objective ID");
+            final Objective objective = quest.getObjectiveFromID(objectiveID);
+            assert objective != null; //Shouldn't be null
+
+            final String taskDescription = String.join(" ", (String[]) context.get("Task Description"));
+            objective.setTaskDescription(taskDescription, true);
+            context.getSender().sendMessage(main.parse(
+                "<main>Task Description successfully added to objective with ID <highlight>" + objectiveID + "</highlight>! New description: <highlight2>"
+                    + objective.getTaskDescriptionProvided()
+            ));
+          }));
 
 
         manager.command(builder.literal("displayname")

@@ -256,6 +256,7 @@ public class QuestManager {
 
                             final String objectiveDisplayName = category.getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".displayName", "");
                             final String objectiveDescription = category.getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".description", "");
+                            final String objectiveTaskDescription = category.getQuestsConfig().getString("quests." + questName + ".objectives." + objectiveNumber + ".taskDescription", "");
                             final int completionNPCID = category.getQuestsConfig().getInt("quests." + quest.getQuestName() + ".objectives." + objectiveNumber + ".completionNPCID", -1);
                             final String completionArmorStandUUIDString = category.getQuestsConfig().getString("quests." + quest.getQuestName() + ".objectives." + objectiveNumber + ".completionArmorStandUUID", null);
                             if (completionArmorStandUUIDString != null) {
@@ -264,7 +265,7 @@ public class QuestManager {
                             }
 
                             objective.setDescription(objectiveDescription.replace("\\n", "\n"), false);
-
+                            objective.setTaskDescription(objectiveTaskDescription.replace("\\n", "\n"), false);
                             objective.setDisplayName(objectiveDisplayName.replace("\\n", "\n"), false);
 
 
@@ -1389,7 +1390,7 @@ public class QuestManager {
     public final String getObjectiveTaskDescription(final Objective objective, boolean completed, final QuestPlayer questPlayer, @Nullable final ActiveObjective activeObjective) {
         String toReturn = "";
 
-        toReturn += objective.getObjectiveTaskDescription(questPlayer, activeObjective);
+        toReturn += objective.getTaskDescription(questPlayer, activeObjective);
 
         if (objective.getCompletionNPCID() != -1) {
             if (main.getIntegrationsManager().isCitizensEnabled()) {

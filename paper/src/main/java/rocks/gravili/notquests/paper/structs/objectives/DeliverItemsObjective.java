@@ -222,7 +222,7 @@ public class DeliverItemsObjective extends Objective {
     }
 
     @Override
-    public String getObjectiveTaskDescription(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
+    public String getTaskDescriptionInternal(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
 
 
         String toReturn;

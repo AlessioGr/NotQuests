@@ -46,6 +46,8 @@ public abstract class Objective {
   private int objectiveID = -1;
   private String objectiveDisplayName = "";
   private String objectiveDescription = "";
+
+  private String taskDescription = "";
   private int completionNPCID = -1;
   private UUID completionArmorStandUUID = null;
 
@@ -318,6 +320,11 @@ public abstract class Objective {
     return objectiveDescription;
   }
 
+  public final String getTaskDescriptionProvided() { // MiniMessage
+    return taskDescription;
+  }
+
+
   /**
    * Gets the objective description, but also adds line-breaks so the description is not bigger than
    * the screen (useful for the GUI)
@@ -348,6 +355,21 @@ public abstract class Objective {
     }
   }
 
+  public void setTaskDescription(String newObjectiveTaskDescription, boolean save) {
+    newObjectiveTaskDescription =
+        main.getUtilManager().replaceLegacyWithMiniMessage(newObjectiveTaskDescription);
+    this.taskDescription = newObjectiveTaskDescription;
+    if (save) {
+      quest
+          .getCategory()
+          .getQuestsConfig()
+          .set(
+              "quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".taskDescription",
+              newObjectiveTaskDescription);
+      quest.getCategory().saveQuestsConfig();
+    }
+  }
+
   public void removeDescription(boolean save) {
     this.objectiveDescription = "";
     if (save) {
@@ -361,6 +383,19 @@ public abstract class Objective {
     }
   }
 
+  public void removeTaskDescription(boolean save) {
+    this.taskDescription = "";
+    if (save) {
+      quest
+          .getCategory()
+          .getQuestsConfig()
+          .set(
+              "quests." + quest.getQuestName() + ".objectives." + getObjectiveID() + ".taskDescription",
+              null);
+      quest.getCategory().saveQuestsConfig();
+    }
+  }
+
   public final Quest getQuest() {
     return quest;
   }
@@ -369,7 +404,17 @@ public abstract class Objective {
     this.quest = quest;
   }
 
-  public abstract String getObjectiveTaskDescription(
+  public final String getTaskDescription(final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective){
+    final String taskDescriptionToReturn = (getTaskDescriptionProvided() == null || getTaskDescriptionProvided().isBlank())
+        ? getTaskDescriptionInternal(questPlayer, activeObjective)
+        : getTaskDescriptionProvided();
+
+    return main.getLanguageManager().getString("chat.objectives.taskDescription.global.prefix", questPlayer, activeObjective)
+        + taskDescriptionToReturn.replace("    <veryUnimportant>└─ <unimportant>", "") //Convert old to new
+        + main.getLanguageManager().getString("chat.objectives.taskDescription.global.suffix", questPlayer, activeObjective);
+  }
+
+  protected abstract String getTaskDescriptionInternal(
       final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective);
 
   public abstract void save(final FileConfiguration configuration, final String initialPath);

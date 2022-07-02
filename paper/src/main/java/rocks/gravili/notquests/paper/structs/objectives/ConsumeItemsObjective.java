@@ -87,7 +87,7 @@ public class ConsumeItemsObjective extends Objective {
       final boolean completed) {}
 
   @Override
-  public String getObjectiveTaskDescription(
+  public String getTaskDescriptionInternal(
       final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
     return main.getLanguageManager()
         .getString(

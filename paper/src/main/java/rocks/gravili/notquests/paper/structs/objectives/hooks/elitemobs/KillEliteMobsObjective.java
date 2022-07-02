@@ -290,7 +290,7 @@ public class KillEliteMobsObjective extends Objective {
   }
 
   @Override
-  public String getObjectiveTaskDescription(
+  public String getTaskDescriptionInternal(
       final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
     String toReturn;
     if (!getEliteMobToKillContainsName().isBlank()) {

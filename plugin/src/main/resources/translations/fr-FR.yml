@@ -92,11 +92,11 @@ chat:
       escortNPC:
         base: '    <veryUnimportant>└─<unimportant>Escorter <main>%NPCNAME%</main> à <main>%DESTINATIONNPCNAME%'
       fishItems:
-        base: '    <veryUnimportant>└─ <unimportant>Fish Items: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
+        base: 'Fish Items: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
       killMobs:
         base: '    <veryUnimportant>└─<unimportant>Tuer les monstres : <main>%MOBTOKILL%'
       otherQuest:
-        base: '    <veryUnimportant>└─ <unimportant>Terminez la Quête : <main>%OTHERQUESTNAME%'
+        base: 'Terminez la Quête : <main>%OTHERQUESTNAME%'
       placeBlocks:
         base: '    <veryUnimportant>└─<unimportant>Placer des blocs : <main>%BLOCKTOPLACE%'
       reachLocation:
@@ -107,34 +107,34 @@ chat:
         base: '    <veryUnimportant>└─<unimportant>Objectif : <main>%TRIGGERNAME%'
       killEliteMobs:
         base: '    <veryUnimportant>└─<unimportant>Tuer le monstre d''élite : <main>%ELITEMOBNAME%'
-        any: '    <veryUnimportant>└─ <unimportant>Tuer n''importe quel Mobs d''élite!'
+        any: 'Tuer n''importe quel Mobs d''élite!'
       runCommand:
         base: '    <veryUnimportant>└─<unimportant>Exécute la commande: <main>%COMMANDTORUN%'
       interact:
-        base: '    <veryUnimportant>└─ <unimportant>%INTERACTTYPE% Emplacement: <main>%COORDINATES% <main>dans le monde %WORLDNAME%'
-        taskDescriptionProvided: '    <veryUnimportant>└─ <unimportant>%TASKDESCRIPTION%'
+        base: '%INTERACTTYPE% Emplacement: <main>%COORDINATES% <main>dans le monde %WORLDNAME%'
+        taskDescriptionProvided: '%TASKDESCRIPTION%'
       jump:
-        base: '    <veryUnimportant>└─ <unimportant>Sauter <main>%AMOUNTOFJUMPS%</main> fois'
+        base: 'Sauter <main>%AMOUNTOFJUMPS%</main> fois'
       sneak:
-        base: '    <veryUnimportant>└─ <unimportant>S''accroupir <main>%AMOUNTOFSNEAKS%</main> fois'
+        base: 'S''accroupir <main>%AMOUNTOFSNEAKS%</main> fois'
       smelt:
         base: '    <veryUnimportant>└─<unimportant>Faire fondre des objets : <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       openBuriedTreasure:
-        base: '    <veryUnimportant>└─ <unimportant>Ouvrir trésors enterrés'
+        base: 'Ouvrir trésors enterrés'
       townyReachResidentCount:
         base: '    <veryUnimportant>└─<unimportant>Atteindre le nombre de résidents de: <main>%AMOUNT%'
       townyNationReachTownCount:
         base: '    <veryUnimportant>└─<unimportant>Atteindre un nombre de villes avec votre nation de : <main>%AMOUNT%'
       jobsRebornReachJobLevel:
-        base: '    <veryUnimportant>└─ <unimportant>Atteindre le niveau <main>%AMOUNT%</main> avec le métier <main>%JOB%'
+        base: 'Atteindre le niveau <main>%AMOUNT%</main> avec le métier <main>%JOB%'
       SlimefunResearch:
-        base: '    <veryUnimportant>└─ <unimportant>Dépenser en recherche'
+        base: 'Dépenser en recherche'
       ProjectKorraUseAbility:
-        base: '    <veryUnimportant>└─ <unimportant>Utiliser la capacité : <main>%ABILITY%'
+        base: 'Utiliser la capacité : <main>%ABILITY%'
       BetonQuestCompleteObjective:
-        base: '    <veryUnimportant>└─ <unimportant>Terminer l''Objectif: <main>%BETONQUESTOBJECTIVENAME%'
+        base: 'Terminer l''Objectif: <main>%BETONQUESTOBJECTIVENAME%'
       ultimateJobsReachJobLevel:
-        base: '    <veryUnimportant>└─ <unimportant>Atteindre le niveau d''emploi <main>%AMOUNT%</main> avec l''emploi <main>%JOBID%'
+        base: 'Atteindre le niveau d''emploi <main>%AMOUNT%</main> avec l''emploi <main>%JOBID%'
   conditions:
     boolean:
       not-fulfilled: "<warn>Ce qui suit doit être %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."

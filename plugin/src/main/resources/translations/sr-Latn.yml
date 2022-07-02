@@ -73,68 +73,68 @@ chat:
     successfully-completed-rewards-suffix: <EMPTY>
     taskDescription:
       breakBlocks:
-        base: '    <veryUnimportant>└─ <unimportant>Razbij kocaka: <main>%BLOCKTOBREAK%'
+        base: 'Razbij kocaka: <main>%BLOCKTOBREAK%'
       breed:
-        base: '    <veryUnimportant>└─ <unimportant>Breed Mobs: <main>%ENTITYTOBREED%'
+        base: 'Breed Mobs: <main>%ENTITYTOBREED%'
       collectItems:
-        base: '    <veryUnimportant>└─ <unimportant>Collect Items: <main>%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
+        base: 'Collect Items: <main>%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
       consumeItems:
-        base: '    <veryUnimportant>└─ <unimportant>Consume Items: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
+        base: 'Consume Items: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
-        base: '    <veryUnimportant>└─ <unimportant>Craft Items: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
+        base: 'Craft Items: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: '    <veryUnimportant>└─ <unimportant>Deliver Items: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
+        base: 'Deliver Items: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
         deliver-to-npc: '      <GRAY>Dostaviti <WHITE>%NPCNAME%'
         deliver-to-npc-not-available: '      <GRAY>The delivery NPC is currently not available!'
         deliver-to-npc-citizens-not-found: '    <RED>Pogreška: Dodatak "Citizens" nije instaliran. Kontaktirajte administratora.'
         deliver-to-armorstand: '    <GRAY>Dostaviti <WHITE>%ARMORSTANDNAME%'
         deliver-to-armorstand-not-available: '    <GRAY>The target Armor Stand is currently not available!'
       escortNPC:
-        base: '    <veryUnimportant>└─ <unimportant>Isprati <main>%NPCNAME%</main> do <main>%DESTINATIONNPCNAME%'
+        base: 'Isprati <main>%NPCNAME%</main> do <main>%DESTINATIONNPCNAME%'
       fishItems:
-        base: '    <veryUnimportant>└─ <unimportant>Fish Items: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
+        base: 'Fish Items: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
       killMobs:
-        base: '    <veryUnimportant>└─ <unimportant>Ubij čudovišta: <main>%MOBTOKILL%'
+        base: 'Ubij čudovišta: <main>%MOBTOKILL%'
       otherQuest:
-        base: '    <veryUnimportant>└─ <unimportant>Dovrši istragu: <main>%OTHERQUESTNAME%'
+        base: 'Dovrši istragu: <main>%OTHERQUESTNAME%'
       placeBlocks:
-        base: '    <veryUnimportant>└─ <unimportant>Postavi blokova: <main>%BLOCKTOPLACE%ž'
+        base: 'Postavi blokova: <main>%BLOCKTOPLACE%ž'
       reachLocation:
-        base: '    <veryUnimportant>└─ <unimportant>Dostigni lokaciju: <main>%LOCATIONNAME%'
+        base: 'Dostigni lokaciju: <main>%LOCATIONNAME%'
       talkToNPC:
-        base: '    <veryUnimportant>└─ <unimportant>Pričaj s <main>%NAME%'
+        base: 'Pričaj s <main>%NAME%'
       triggerCommand:
-        base: '    <veryUnimportant>└─ <unimportant>Cilj: <main>%TRIGGERNAME%'
+        base: 'Cilj: <main>%TRIGGERNAME%'
       killEliteMobs:
-        base: '    <veryUnimportant>└─ <unimportant>Ubij elitno čudovište: <main>%ELITEMOBNAME%'
-        any: '    <veryUnimportant>└─ <unimportant>Ubij bilo koje elitno čudovište!'
+        base: 'Ubij elitno čudovište: <main>%ELITEMOBNAME%'
+        any: 'Ubij bilo koje elitno čudovište!'
       runCommand:
-        base: '    <veryUnimportant>└─ <unimportant>Pokreni komandu: <main>%COMMANDTORUN%'
+        base: 'Pokreni komandu: <main>%COMMANDTORUN%'
       interact:
-        base: '    <veryUnimportant>└─ <unimportant>%INTERACTTYPE% Lokacija: <main>%COORDINATES% <main>u svijetu%WORLDNAME%'
-        taskDescriptionProvided: '    <veryUnimportant>└─ <unimportant>%TASKDESCRIPTION%'
+        base: '%INTERACTTYPE% Lokacija: <main>%COORDINATES% <main>u svijetu%WORLDNAME%'
+        taskDescriptionProvided: '%TASKDESCRIPTION%'
       jump:
-        base: '    <veryUnimportant>└─ <unimportant>Skoči<main>%AMOUNTOFJUMPS%</main> puta'
+        base: 'Skoči<main>%AMOUNTOFJUMPS%</main> puta'
       sneak:
-        base: '    <veryUnimportant>└─ <unimportant>Čučni<main>%AMOUNTOFSNEAKS%</main> puta'
+        base: 'Čučni<main>%AMOUNTOFSNEAKS%</main> puta'
       smelt:
-        base: '    <veryUnimportant>└─ <unimportant>Smelt Items: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+        base: 'Smelt Items: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       openBuriedTreasure:
-        base: '    <veryUnimportant>└─ <unimportant>Otvori zakopanih blaga'
+        base: 'Otvori zakopanih blaga'
       townyReachResidentCount:
-        base: '    <veryUnimportant>└─ <unimportant>Reach resident amount: <main>%AMOUNT%'
+        base: 'Reach resident amount: <main>%AMOUNT%'
       townyNationReachTownCount:
-        base: '    <veryUnimportant>└─ <unimportant>Reach town amount with your nation: <main>%AMOUNT%'
+        base: 'Reach town amount with your nation: <main>%AMOUNT%'
       jobsRebornReachJobLevel:
-        base: '    <veryUnimportant>└─ <unimportant>Dostigni poslovni nivo <main>%AMOUNT%</main> s poslom <main>%JOB%'
+        base: 'Dostigni poslovni nivo <main>%AMOUNT%</main> s poslom <main>%JOB%'
       SlimefunResearch:
-        base: '    <veryUnimportant>└─ <unimportant>Spend on research'
+        base: 'Spend on research'
       ProjectKorraUseAbility:
-        base: '    <veryUnimportant>└─ <unimportant>Use Ability: <main>%ABILITY%'
+        base: 'Use Ability: <main>%ABILITY%'
       BetonQuestCompleteObjective:
-        base: '    <veryUnimportant>└─ <unimportant>Dovrši cilj: <main>%BETONQUESTOBJECTIVENAME%'
+        base: 'Dovrši cilj: <main>%BETONQUESTOBJECTIVENAME%'
       ultimateJobsReachJobLevel:
-        base: '    <veryUnimportant>└─ <unimportant>Dostigni poslovno nivo <main>%AMOUNT%</main> s poslom<main>%JOBID%'
+        base: 'Dostigni poslovno nivo <main>%AMOUNT%</main> s poslom<main>%JOBID%'
   conditions:
     boolean:
       not-fulfilled: "<warn>Following needs to be %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."

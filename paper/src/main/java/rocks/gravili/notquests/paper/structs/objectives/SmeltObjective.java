@@ -89,7 +89,7 @@ public class SmeltObjective extends Objective {
       final boolean completed) {}
 
   @Override
-  public String getObjectiveTaskDescription(
+  public String getTaskDescriptionInternal(
       final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
     final String displayName;
 
