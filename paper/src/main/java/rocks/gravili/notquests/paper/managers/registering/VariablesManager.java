@@ -91,6 +91,11 @@ import rocks.gravili.notquests.paper.structs.variables.hooks.TownyNationTownCoun
 import rocks.gravili.notquests.paper.structs.variables.hooks.TownyTownPlotCountVariable;
 import rocks.gravili.notquests.paper.structs.variables.hooks.TownyTownResidentCountVariable;
 import rocks.gravili.notquests.paper.structs.variables.hooks.UltimateClansClanLevelVariable;
+import rocks.gravili.notquests.paper.structs.variables.reflectionVariables.ReflectionStaticBooleanVariable;
+import rocks.gravili.notquests.paper.structs.variables.reflectionVariables.ReflectionStaticDoubleVariable;
+import rocks.gravili.notquests.paper.structs.variables.reflectionVariables.ReflectionStaticFloatVariable;
+import rocks.gravili.notquests.paper.structs.variables.reflectionVariables.ReflectionStaticIntegerVariable;
+import rocks.gravili.notquests.paper.structs.variables.reflectionVariables.ReflectionStaticStringVariable;
 import rocks.gravili.notquests.paper.structs.variables.tags.BooleanTagVariable;
 import rocks.gravili.notquests.paper.structs.variables.tags.DoubleTagVariable;
 import rocks.gravili.notquests.paper.structs.variables.tags.FloatTagVariable;
@@ -178,6 +183,12 @@ public class VariablesManager {
     registerVariable("QuestReachedMaxAcceptsVariable", QuestReachedMaxAcceptsVariable.class);
 
     registerVariable("ItemInInventoryEnchantments", ItemInInventoryEnchantmentsVariable.class);
+
+    registerVariable("ReflectionStaticDouble", ReflectionStaticDoubleVariable.class);
+    registerVariable("ReflectionStaticFloat", ReflectionStaticFloatVariable.class);
+    registerVariable("ReflectionStaticInteger", ReflectionStaticIntegerVariable.class);
+    registerVariable("ReflectionStaticBoolean", ReflectionStaticBooleanVariable.class);
+    registerVariable("ReflectionStaticString", ReflectionStaticStringVariable.class);
 
 
     if (main.getIntegrationsManager().isPlaceholderAPIEnabled()) {
