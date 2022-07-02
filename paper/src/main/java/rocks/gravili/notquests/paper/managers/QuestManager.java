@@ -912,6 +912,8 @@ public class QuestManager {
 
 
     public void sendQuestsPreviewOfQuestShownNPCs(NPC npc, QuestPlayer questPlayer) {
+        questPlayer.sendDebugMessage("Sending quests preview...");
+
         final ArrayList<Quest> questsAttachedToNPC = getQuestsAttachedToNPCWithShowing(npc);
 
         //No quests attached or all quests are set to not showing (more likely). THen nothing should show. That should make it work with Interactions plugin and takeEnabled = false.
