@@ -62,7 +62,9 @@ import rocks.gravili.notquests.paper.structs.variables.PlayerNameVariable;
 import rocks.gravili.notquests.paper.structs.variables.PlayerPlaytimeHoursVariable;
 import rocks.gravili.notquests.paper.structs.variables.PlayerPlaytimeMinutesVariable;
 import rocks.gravili.notquests.paper.structs.variables.PlayerPlaytimeTicksVariable;
+import rocks.gravili.notquests.paper.structs.variables.PlayerSleepingVariable;
 import rocks.gravili.notquests.paper.structs.variables.PlayerSneakingVariable;
+import rocks.gravili.notquests.paper.structs.variables.PlayerSprintingVariable;
 import rocks.gravili.notquests.paper.structs.variables.QuestAbleToAcceptVariable;
 import rocks.gravili.notquests.paper.structs.variables.QuestOnCooldownVariable;
 import rocks.gravili.notquests.paper.structs.variables.QuestPointsVariable;
@@ -130,7 +132,9 @@ public class VariablesManager {
     registerVariable("PlaytimeMinutes", PlayerPlaytimeMinutesVariable.class);
     registerVariable("PlaytimeHours", PlayerPlaytimeHoursVariable.class);
 
+    registerVariable("Sleeping", PlayerSleepingVariable.class);
     registerVariable("Sneaking", PlayerSneakingVariable.class);
+    registerVariable("Sprinting", PlayerSprintingVariable.class);
     registerVariable("Health", PlayerHealthVariable.class);
     registerVariable("MaxHealth", PlayerMaxHealthVariable.class);
     registerVariable("GameMode", PlayerGameModeVariable.class);
