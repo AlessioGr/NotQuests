@@ -729,30 +729,53 @@ public class DataManager {
                 "<#393e46>]<#636c73>: "
         ));
         configuration.setColorsConsoleInfoDefault(getGeneralConfigString(
-                "visual.colors.console.info.default",
+                "visual.colors.console.info.default.normal",
                 "<main>"
         ));
+        configuration.setColorsConsoleInfoDefaultDownsampled(getGeneralConfigString(
+            "visual.colors.console.info.default.downsampled",
+            "<gray>"
+        ));
         configuration.setColorsConsoleInfoData(getGeneralConfigString(
-                "visual.colors.console.info.data",
+                "visual.colors.console.info.data.normal",
                 "<gradient:#1FA2FF:#12D8FA:#A6FFCB>"
         ));
+        configuration.setColorsConsoleInfoDataDownsampled(getGeneralConfigString(
+            "visual.colors.console.info.data.downsampled",
+            "<blue>"
+        ));
         configuration.setColorsConsoleInfoLanguage(getGeneralConfigString(
-                "visual.colors.console.info.language",
+                "visual.colors.console.info.language.normal",
                 "<gradient:#AA076B:#61045F>"
         ));
+        configuration.setColorsConsoleInfoLanguageDownsampled(getGeneralConfigString(
+            "visual.colors.console.info.language.downsampled",
+            "<dark_purple>"
+        ));
         configuration.setColorsConsoleWarnDefault(getGeneralConfigString(
-                "visual.colors.console.warn.default",
+                "visual.colors.console.warn.default.normal",
                 "<warn>"
         ));
+        configuration.setColorsConsoleWarnDefaultDownsampled(getGeneralConfigString(
+            "visual.colors.console.warn.default.downsampled",
+            "<yellow>"
+        ));
         configuration.setColorsConsoleSevereDefault(getGeneralConfigString(
-                "visual.colors.console.severe.default",
+                "visual.colors.console.severe.default.normal",
                 "<error>"
         ));
+        configuration.setColorsConsoleSevereDefaultDownsampled(getGeneralConfigString(
+            "visual.colors.console.severe.default.downsampled",
+            "<red>"
+        ));
         configuration.setColorsConsoleDebugDefault(getGeneralConfigString(
-                "visual.colors.console.debug.default",
+                "visual.colors.console.debug.default.normal",
                 "<unimportant>"
         ));
-
+        configuration.setColorsConsoleDebugDownsampled(getGeneralConfigString(
+            "visual.colors.console.debug.default.downsampled",
+            "<dark_gray>"
+        ));
         //CustomTags
         configuration.setColorsMain(getGeneralConfigStringList(
                 "visual.colors.tags.main",

@@ -29,10 +29,10 @@ import rocks.gravili.notquests.paper.NotQuests;
 
 public class LogManager {
   private final NotQuests main;
-  private final Component prefix;
+  private Component prefix;
+  private final Component prefixDownsampled, prefixNoColor;
   private final ArrayList<String> severeLogs, warnLogs;
-  private ConsoleCommandSender consoleSender;
-  private String prefixText;
+  private final ConsoleCommandSender consoleSender;
 
   public LogManager(final NotQuests main) {
     this.main = main;
@@ -41,15 +41,18 @@ public class LogManager {
 
     consoleSender = Bukkit.getConsoleSender();
 
-    prefixText = "<#393e46>[<gradient:#E0EAFC:#CFDEF3>NotQuests<#393e46>]<#636c73>: ";
-    prefix = main.parse(prefixText);
+    prefix = main.parse("<#393e46>[<gradient:#E0EAFC:#CFDEF3>NotQuests<#393e46>]<#636c73>: ");
+    prefixDownsampled = main.parse("<gray>[<aqua>NotQuests</aqua>]</gray><dark_gray>: ");
+    prefixNoColor = Component.text("[NotQuests]: ");
   }
 
   public void lateInit() {
-    prefixText =
+    prefix =
+        main.parse(
         main.getConfiguration().getColorsConsolePrefixPrefix()
             + "NotQuests"
-            + main.getConfiguration().getColorsConsolePrefixSuffix();
+            + main.getConfiguration().getColorsConsolePrefixSuffix()
+        );
   }
 
   public final ArrayList<String> getErrorLogs() {
@@ -68,33 +71,35 @@ public class LogManager {
       final Level level, final LogCategory logCategory, final String color, final String message) {
     if (main.getConfiguration().isConsoleColorsEnabled()) {
       if (!main.getConfiguration().isConsoleColorsDownsampleColors()) {
-        consoleSender.sendMessage(main.parse(prefixText + color + message));
+        consoleSender.sendMessage( prefix.append(main.parse(color + message)));
       } else {
-        final Component component = main.parse(prefixText + color + message);
+        final Component component = main.parse(message);
         consoleSender.sendMessage(
+            prefixDownsampled.append(main.parse(color)).append(
             GsonComponentSerializer.gson()
                 .deserializeFromTree( // Convert back to component
                     GsonComponentSerializer.builder()
                         .downsampleColors()
                         .build()
                         .serializeToTree( // Convert to text
-                            component)));
+                            component))));
       }
     } else {
       consoleSender.sendMessage(
+          prefixNoColor.append(
           main.parse(
               main.getMiniMessage()
-                  .stripTags(prefixText + message, main.getMessageManager().getTagResolver())));
+                  .stripTags(message, main.getMessageManager().getTagResolver()))));
     }
   }
 
   public void info(final LogCategory logCategory, final String message) {
     if (logCategory == LogCategory.DEFAULT) {
-      log(Level.INFO, logCategory, main.getConfiguration().getColorsConsoleInfoDefault(), message);
+      log(Level.INFO, logCategory, main.getConfiguration().isConsoleColorsDownsampleColors() ? main.getConfiguration().getColorsConsoleInfoDefaultDownsampled() : main.getConfiguration().getColorsConsoleInfoDefault(), message);
     } else if (logCategory == LogCategory.DATA) {
-      log(Level.INFO, logCategory, main.getConfiguration().getColorsConsoleInfoData(), message);
+      log(Level.INFO, logCategory, main.getConfiguration().isConsoleColorsDownsampleColors() ? main.getConfiguration().getColorsConsoleInfoDataDownsampled() : main.getConfiguration().getColorsConsoleInfoData(), message);
     } else if (logCategory == LogCategory.LANGUAGE) {
-      log(Level.INFO, logCategory, main.getConfiguration().getColorsConsoleInfoLanguage(), message);
+      log(Level.INFO, logCategory, main.getConfiguration().isConsoleColorsDownsampleColors() ? main.getConfiguration().getColorsConsoleInfoLanguageDownsampled() : main.getConfiguration().getColorsConsoleInfoLanguage(), message);
     }
   }
 
@@ -103,7 +108,7 @@ public class LogManager {
   }
 
   public void warn(final LogCategory logCategory, final String message) {
-    log(Level.WARNING, logCategory, main.getConfiguration().getColorsConsoleWarnDefault(), message);
+    log(Level.WARNING, logCategory, main.getConfiguration().isConsoleColorsDownsampleColors() ? main.getConfiguration().getColorsConsoleWarnDefaultDownsampled() : main.getConfiguration().getColorsConsoleWarnDefault(), message);
     warnLogs.add(message);
   }
 
@@ -115,7 +120,7 @@ public class LogManager {
     log(
         Level.SEVERE,
         logCategory,
-        main.getConfiguration().getColorsConsoleSevereDefault(),
+        main.getConfiguration().isConsoleColorsDownsampleColors() ? main.getConfiguration().getColorsConsoleSevereDefaultDownsampled() : main.getConfiguration().getColorsConsoleSevereDefault(),
         message);
     severeLogs.add(message);
   }
@@ -126,7 +131,7 @@ public class LogManager {
 
   public void debug(final LogCategory logCategory, final String message) {
     if (main.getConfiguration().debug) {
-      log(Level.FINE, logCategory, main.getConfiguration().getColorsConsoleDebugDefault(), message);
+      log(Level.FINE, logCategory, main.getConfiguration().isConsoleColorsDownsampleColors() ? main.getConfiguration().getColorsConsoleDebugDownsampled() : main.getConfiguration().getColorsConsoleDebugDefault(), message);
     }
   }
 

@@ -131,11 +131,21 @@ public class Configuration {
   private String colorsConsolePrefixPrefix = "<#393e46>[<gradient:#E0EAFC:#CFDEF3>";
   private String colorsConsolePrefixSuffix = "<#393e46>]<#636c73>: ";
   private String colorsConsoleInfoDefault = "<main>";
+  private String colorsConsoleInfoDefaultDownsampled = "<gray>";
   private String colorsConsoleInfoData = "<gradient:#1FA2FF:#12D8FA:#A6FFCB>";
+  private String colorsConsoleInfoDataDownsampled = "<blue>";
+
   private String colorsConsoleInfoLanguage = "<gradient:#AA076B:#61045F>";
+  private String colorsConsoleInfoLanguageDownsampled = "<dark_purple>";
+
   private String colorsConsoleWarnDefault = "<warn>";
+  private String colorsConsoleWarnDefaultDownsampled = "<yellow>";
+
   private String colorsConsoleSevereDefault = "<error>";
+  private String colorsConsoleSevereDefaultDownsampled = "<red>";
+
   private String colorsConsoleDebugDefault = "<unimportant>";
+  private String colorsConsoleDebugDownsampled = "<dark_gray>";
 
   private List<String> colorsMain;
   private List<String> colorsHighlight;
@@ -1040,5 +1050,55 @@ public class Configuration {
 
   public void setConsoleColorsDownsampleColors(boolean consoleColorsDownsampleColors) {
     this.consoleColorsDownsampleColors = consoleColorsDownsampleColors;
+  }
+
+  public String getColorsConsoleInfoDefaultDownsampled() {
+    return colorsConsoleInfoDefaultDownsampled;
+  }
+
+  public void setColorsConsoleInfoDefaultDownsampled(String colorsConsoleInfoDefaultDownsampled) {
+    this.colorsConsoleInfoDefaultDownsampled = colorsConsoleInfoDefaultDownsampled;
+  }
+
+  public String getColorsConsoleInfoDataDownsampled() {
+    return colorsConsoleInfoDataDownsampled;
+  }
+
+  public void setColorsConsoleInfoDataDownsampled(String colorsConsoleInfoDataDownsampled) {
+    this.colorsConsoleInfoDataDownsampled = colorsConsoleInfoDataDownsampled;
+  }
+
+  public String getColorsConsoleInfoLanguageDownsampled() {
+    return colorsConsoleInfoLanguageDownsampled;
+  }
+
+  public void setColorsConsoleInfoLanguageDownsampled(
+      String colorsConsoleInfoLanguageDownsampled) {
+    this.colorsConsoleInfoLanguageDownsampled = colorsConsoleInfoLanguageDownsampled;
+  }
+
+  public String getColorsConsoleWarnDefaultDownsampled() {
+    return colorsConsoleWarnDefaultDownsampled;
+  }
+
+  public void setColorsConsoleWarnDefaultDownsampled(String colorsConsoleWarnDefaultDownsampled) {
+    this.colorsConsoleWarnDefaultDownsampled = colorsConsoleWarnDefaultDownsampled;
+  }
+
+  public String getColorsConsoleSevereDefaultDownsampled() {
+    return colorsConsoleSevereDefaultDownsampled;
+  }
+
+  public void setColorsConsoleSevereDefaultDownsampled(
+      String colorsConsoleSevereDefaultDownsampled) {
+    this.colorsConsoleSevereDefaultDownsampled = colorsConsoleSevereDefaultDownsampled;
+  }
+
+  public String getColorsConsoleDebugDownsampled() {
+    return colorsConsoleDebugDownsampled;
+  }
+
+  public void setColorsConsoleDebugDownsampled(String colorsConsoleDebugDownsampled) {
+    this.colorsConsoleDebugDownsampled = colorsConsoleDebugDownsampled;
   }
 }
