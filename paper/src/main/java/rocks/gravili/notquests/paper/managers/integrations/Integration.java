@@ -9,7 +9,7 @@ import rocks.gravili.notquests.paper.NotQuests;
 
 public class Integration {
 
-  private final NotQuests main;
+  protected final NotQuests main;
   private final String exactName;
 
   private Supplier<Boolean> runWhenEnabled; //Return false -> cancel the enabling
@@ -27,6 +27,18 @@ public class Integration {
   public Integration(final NotQuests main, final String exactName) {
     this.main = main;
     this.exactName = exactName;
+  }
+
+  public Integration(NotQuests main, String exactName, final Integration integration) {
+    this.main = main;
+    this.exactName = exactName;
+    this.runWhenEnabled = integration.runWhenEnabled;
+    this.runWhenEnabledLate = integration.runWhenEnabledLate;
+    this.runAfterDataLoad = integration.runAfterDataLoad;
+    this.runWhenRegisteringEventsOnTime = integration.runWhenRegisteringEventsOnTime;
+    this.enableCondition = integration.enableCondition;
+    this.runWhenEnableConditionFalse = integration.runWhenEnableConditionFalse;
+    this.runWhenEnablingFailed = integration.runWhenEnablingFailed;
   }
 
   public final String getExactName() {
@@ -133,7 +145,7 @@ public class Integration {
         main.getLogManager().info( getExactName() + " found. Enabled " + getExactName() + " support!");
       }
 
-      return new EnabledIntegration(main, exactName, plugin);
+      return new EnabledIntegration(main, exactName, plugin, this);
     } else {
       if (runWhenEnableConditionFalse != null) {
         runWhenEnableConditionFalse.run();

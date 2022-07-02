@@ -21,7 +21,6 @@ package rocks.gravili.notquests.paper.managers;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
@@ -49,9 +48,9 @@ public class LogManager {
   public void lateInit() {
     prefix =
         main.parse(
-        main.getConfiguration().getColorsConsolePrefixPrefix()
+            (main.getConfiguration() != null ? main.getConfiguration().getColorsConsolePrefixPrefix() : "")
             + "NotQuests"
-            + main.getConfiguration().getColorsConsolePrefixSuffix()
+            + (main.getConfiguration() != null ? main.getConfiguration().getColorsConsolePrefixSuffix() : "")
         );
   }
 
@@ -69,8 +68,8 @@ public class LogManager {
 
   private void log(
       final Level level, final LogCategory logCategory, final String color, final String message) {
-    if (main.getConfiguration().isConsoleColorsEnabled()) {
-      if (!main.getConfiguration().isConsoleColorsDownsampleColors()) {
+    if (main.getConfiguration() == null || main.getConfiguration().isConsoleColorsEnabled()) {
+      if (main.getConfiguration() != null && !main.getConfiguration().isConsoleColorsDownsampleColors()) {
         consoleSender.sendMessage( prefix.append(main.parse(color + message)));
       } else {
         final Component component = main.parse(message);
@@ -120,7 +119,7 @@ public class LogManager {
     log(
         Level.SEVERE,
         logCategory,
-        main.getConfiguration().isConsoleColorsDownsampleColors() ? main.getConfiguration().getColorsConsoleSevereDefaultDownsampled() : main.getConfiguration().getColorsConsoleSevereDefault(),
+        main.getConfiguration() != null ? (main.getConfiguration().isConsoleColorsDownsampleColors() ? main.getConfiguration().getColorsConsoleSevereDefaultDownsampled() : main.getConfiguration().getColorsConsoleSevereDefault()) : "",
         message);
     severeLogs.add(message);
   }

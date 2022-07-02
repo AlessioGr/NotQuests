@@ -279,6 +279,8 @@ public class CitizensManager {
 
   public void registerAnyCitizensCommands() {
 
+    main.getLogManager().info("Registering Citizens commands...");
+
     final PaperCommandManager<CommandSender> manager =
         main.getCommandManager().getPaperCommandManager();
 
