@@ -162,7 +162,7 @@ public class QuestGiverNPCTrait extends Trait {
             "NPC with the ID <highlight>"
                 + npc.getId()
                 + "</highlight> and name <highlight>"
-                + npc.getName().replaceAll("&", "")
+                + npc.getName().replaceAll("&", "").replaceAll("§", "")
                 + "</highlight> has been assigned the Quest Giver trait!");
   }
 
@@ -194,7 +194,7 @@ public class QuestGiverNPCTrait extends Trait {
             "NPC with the ID <highlight>"
                 + npc.getId()
                 + " </highlight>and name <highlight>"
-                + npc.getName().replaceAll("&", "")
+                + npc.getName().replaceAll("&", "").replaceAll("§", "")
                 + " </highlight>has been removed!");
     for (Quest quest : notQuests.getQuestManager().getAllQuestsAttachedToNPC(getNPC())) {
       quest.removeNPC(getNPC());
