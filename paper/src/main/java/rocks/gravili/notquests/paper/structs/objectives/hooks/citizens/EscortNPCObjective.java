@@ -162,7 +162,7 @@ public class EscortNPCObjective extends Objective {
       if (npc != null && npcDestination != null) {
         final String mmNpcName =
             main.getMiniMessage()
-                .serialize(LegacyComponentSerializer.legacyAmpersand().deserialize(npc.getName()));
+                .serialize(LegacyComponentSerializer.legacyAmpersand().deserialize(npc.getName().replace("§","&")));
         final String mmNpcDestinationName =
             main.getMiniMessage()
                 .serialize(

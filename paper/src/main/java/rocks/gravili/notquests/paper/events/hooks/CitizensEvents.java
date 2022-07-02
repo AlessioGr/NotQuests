@@ -129,7 +129,7 @@ public class CitizensEvents implements Listener {
 
                                             handledObjective = true;
 
-                                            final String mmNpcName = main.getMiniMessage().serialize(LegacyComponentSerializer.legacyAmpersand().deserialize(npc.getName()));
+                                            final String mmNpcName = main.getMiniMessage().serialize(LegacyComponentSerializer.legacyAmpersand().deserialize(npc.getName().replace("§","&")));
 
                                             if (progressLeft < itemStack.getAmount()) { //We can finish it with this itemStack
                                                 itemStack.setAmount((itemStack.getAmount() - (int) progressLeft));
@@ -156,7 +156,7 @@ public class CitizensEvents implements Listener {
                             } else if (activeObjective.getObjective() instanceof final TalkToNPCObjective talkToNPCObjective) {
                                 if (talkToNPCObjective.getNPCtoTalkID() != -1 && talkToNPCObjective.getNPCtoTalkID() == npc.getId()) {
                                     activeObjective.addProgress(1, npc.getId());
-                                    final String mmNpcName = main.getMiniMessage().serialize(LegacyComponentSerializer.legacyAmpersand().deserialize(npc.getName()));
+                                    final String mmNpcName = main.getMiniMessage().serialize(LegacyComponentSerializer.legacyAmpersand().deserialize(npc.getName().replace("§","&")));
 
                                     player.sendMessage(main.parse(
                                             "<GREEN>You talked to <highlight>" +mmNpcName
