@@ -60,6 +60,7 @@ import rocks.gravili.notquests.paper.commands.arguments.CategorySelector;
 import rocks.gravili.notquests.paper.commands.arguments.CommandSelector;
 import rocks.gravili.notquests.paper.commands.arguments.ItemStackSelectionArgument;
 import rocks.gravili.notquests.paper.commands.arguments.MiniMessageSelector;
+import rocks.gravili.notquests.paper.commands.arguments.MiniMessageStringSelector;
 import rocks.gravili.notquests.paper.commands.arguments.MultipleActionsSelector;
 import rocks.gravili.notquests.paper.commands.arguments.QuestSelector;
 import rocks.gravili.notquests.paper.commands.arguments.variables.BooleanVariableValueArgument;
@@ -182,24 +183,16 @@ public class CommandManager {
     taskDescription =
         CommandFlag.newBuilder("taskDescription")
             .withArgument(
-                StringArgument.<CommandSender>newBuilder("Task Description")
+                MiniMessageStringSelector.<CommandSender>newBuilder("Task Description", main)
+                    .withPlaceholders()
                     .withSuggestionsProvider(
                         (context, lastString) -> {
-                          final List<String> allArgs = context.getRawInput();
-                          main.getUtilManager()
-                              .sendFancyCommandCompletion(
-                                  (CommandSender) context.getSender(),
-                                  allArgs.toArray(new String[0]),
-                                  "[Enter task description (put between \" \" if you want to use spaces)]",
-                                  "");
-
-                          ArrayList<String> completions = new ArrayList<>();
-
+                          final ArrayList<String> completions = new ArrayList<>();
                           completions.add(
                               "<Enter task description (put between \" \" if you want to use spaces)>");
                           return completions;
                         })
-                    .quoted())
+                    .quoted().build())
             .withDescription(ArgumentDescription.of("Custom description of the task"))
             .build();
 

@@ -47,6 +47,7 @@ import rocks.gravili.notquests.paper.structs.variables.InventoryVariable;
 import rocks.gravili.notquests.paper.structs.variables.ItemInInventoryEnchantmentsVariable;
 import rocks.gravili.notquests.paper.structs.variables.MoneyVariable;
 import rocks.gravili.notquests.paper.structs.variables.PermissionVariable;
+import rocks.gravili.notquests.paper.structs.variables.PlayerClimbingVariable;
 import rocks.gravili.notquests.paper.structs.variables.PlayerCurrentBiomeVariable;
 import rocks.gravili.notquests.paper.structs.variables.PlayerCurrentPositionXVariable;
 import rocks.gravili.notquests.paper.structs.variables.PlayerCurrentPositionYVariable;
@@ -54,15 +55,25 @@ import rocks.gravili.notquests.paper.structs.variables.PlayerCurrentPositionZVar
 import rocks.gravili.notquests.paper.structs.variables.PlayerCurrentWorldVariable;
 import rocks.gravili.notquests.paper.structs.variables.PlayerExperienceLevelVariable;
 import rocks.gravili.notquests.paper.structs.variables.PlayerExperienceVariable;
+import rocks.gravili.notquests.paper.structs.variables.PlayerFlySpeedVariable;
 import rocks.gravili.notquests.paper.structs.variables.PlayerFlyingVariable;
 import rocks.gravili.notquests.paper.structs.variables.PlayerGameModeVariable;
+import rocks.gravili.notquests.paper.structs.variables.PlayerGlowingVariable;
 import rocks.gravili.notquests.paper.structs.variables.PlayerHealthVariable;
+import rocks.gravili.notquests.paper.structs.variables.PlayerInLavaVariable;
+import rocks.gravili.notquests.paper.structs.variables.PlayerInWaterVariable;
 import rocks.gravili.notquests.paper.structs.variables.PlayerMaxHealthVariable;
 import rocks.gravili.notquests.paper.structs.variables.PlayerNameVariable;
+import rocks.gravili.notquests.paper.structs.variables.PlayerOpVariable;
+import rocks.gravili.notquests.paper.structs.variables.PlayerPingVariable;
 import rocks.gravili.notquests.paper.structs.variables.PlayerPlaytimeHoursVariable;
 import rocks.gravili.notquests.paper.structs.variables.PlayerPlaytimeMinutesVariable;
 import rocks.gravili.notquests.paper.structs.variables.PlayerPlaytimeTicksVariable;
+import rocks.gravili.notquests.paper.structs.variables.PlayerSleepingVariable;
 import rocks.gravili.notquests.paper.structs.variables.PlayerSneakingVariable;
+import rocks.gravili.notquests.paper.structs.variables.PlayerSprintingVariable;
+import rocks.gravili.notquests.paper.structs.variables.PlayerSwimmingVariable;
+import rocks.gravili.notquests.paper.structs.variables.PlayerWalkSpeedVariable;
 import rocks.gravili.notquests.paper.structs.variables.QuestAbleToAcceptVariable;
 import rocks.gravili.notquests.paper.structs.variables.QuestOnCooldownVariable;
 import rocks.gravili.notquests.paper.structs.variables.QuestPointsVariable;
@@ -80,6 +91,11 @@ import rocks.gravili.notquests.paper.structs.variables.hooks.TownyNationTownCoun
 import rocks.gravili.notquests.paper.structs.variables.hooks.TownyTownPlotCountVariable;
 import rocks.gravili.notquests.paper.structs.variables.hooks.TownyTownResidentCountVariable;
 import rocks.gravili.notquests.paper.structs.variables.hooks.UltimateClansClanLevelVariable;
+import rocks.gravili.notquests.paper.structs.variables.reflectionVariables.ReflectionStaticBooleanVariable;
+import rocks.gravili.notquests.paper.structs.variables.reflectionVariables.ReflectionStaticDoubleVariable;
+import rocks.gravili.notquests.paper.structs.variables.reflectionVariables.ReflectionStaticFloatVariable;
+import rocks.gravili.notquests.paper.structs.variables.reflectionVariables.ReflectionStaticIntegerVariable;
+import rocks.gravili.notquests.paper.structs.variables.reflectionVariables.ReflectionStaticStringVariable;
 import rocks.gravili.notquests.paper.structs.variables.tags.BooleanTagVariable;
 import rocks.gravili.notquests.paper.structs.variables.tags.DoubleTagVariable;
 import rocks.gravili.notquests.paper.structs.variables.tags.FloatTagVariable;
@@ -130,7 +146,20 @@ public class VariablesManager {
     registerVariable("PlaytimeMinutes", PlayerPlaytimeMinutesVariable.class);
     registerVariable("PlaytimeHours", PlayerPlaytimeHoursVariable.class);
 
+    registerVariable("Glowing", PlayerGlowingVariable.class);
+    registerVariable("Op", PlayerOpVariable.class);
+    registerVariable("Climbing", PlayerClimbingVariable.class);
+    registerVariable("InLava", PlayerInLavaVariable.class);
+    registerVariable("InWater", PlayerInWaterVariable.class);
+    registerVariable("Ping", PlayerPingVariable.class);
+    registerVariable("WalkSpeed", PlayerWalkSpeedVariable.class);
+    registerVariable("FlySpeed", PlayerFlySpeedVariable.class);
+
+
+    registerVariable("Sleeping", PlayerSleepingVariable.class);
     registerVariable("Sneaking", PlayerSneakingVariable.class);
+    registerVariable("Sprinting", PlayerSprintingVariable.class);
+    registerVariable("Swimming", PlayerSwimmingVariable.class);
     registerVariable("Health", PlayerHealthVariable.class);
     registerVariable("MaxHealth", PlayerMaxHealthVariable.class);
     registerVariable("GameMode", PlayerGameModeVariable.class);
@@ -154,6 +183,12 @@ public class VariablesManager {
     registerVariable("QuestReachedMaxAcceptsVariable", QuestReachedMaxAcceptsVariable.class);
 
     registerVariable("ItemInInventoryEnchantments", ItemInInventoryEnchantmentsVariable.class);
+
+    registerVariable("ReflectionStaticDouble", ReflectionStaticDoubleVariable.class);
+    registerVariable("ReflectionStaticFloat", ReflectionStaticFloatVariable.class);
+    registerVariable("ReflectionStaticInteger", ReflectionStaticIntegerVariable.class);
+    registerVariable("ReflectionStaticBoolean", ReflectionStaticBooleanVariable.class);
+    registerVariable("ReflectionStaticString", ReflectionStaticStringVariable.class);
 
 
     if (main.getIntegrationsManager().isPlaceholderAPIEnabled()) {

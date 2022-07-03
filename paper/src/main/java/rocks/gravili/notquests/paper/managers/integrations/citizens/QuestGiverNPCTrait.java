@@ -100,6 +100,10 @@ public class QuestGiverNPCTrait extends Trait {
   @Override
   public void run() {
 
+    if(notQuests.getIntegrationsManager().getCitizensManager().getTraitRun() != null) {
+      notQuests.getIntegrationsManager().getCitizensManager().getTraitRun().accept(this);
+    }
+
     // Disable if Server TPS is too low
     final double minimumTPS =
         notQuests
@@ -162,7 +166,7 @@ public class QuestGiverNPCTrait extends Trait {
             "NPC with the ID <highlight>"
                 + npc.getId()
                 + "</highlight> and name <highlight>"
-                + npc.getName().replaceAll("&", "")
+                + npc.getName().replace("&", "").replace("§", "")
                 + "</highlight> has been assigned the Quest Giver trait!");
   }
 
@@ -194,7 +198,7 @@ public class QuestGiverNPCTrait extends Trait {
             "NPC with the ID <highlight>"
                 + npc.getId()
                 + " </highlight>and name <highlight>"
-                + npc.getName().replaceAll("&", "")
+                + npc.getName().replace("&", "").replace("§", "")
                 + " </highlight>has been removed!");
     for (Quest quest : notQuests.getQuestManager().getAllQuestsAttachedToNPC(getNPC())) {
       quest.removeNPC(getNPC());

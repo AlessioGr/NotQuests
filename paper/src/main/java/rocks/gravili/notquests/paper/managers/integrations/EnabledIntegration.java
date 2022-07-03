@@ -12,6 +12,11 @@ public class EnabledIntegration extends Integration {
     this.versionString = plugin.getDescription().getVersion();
   }
 
+  public EnabledIntegration(final NotQuests main, final String exactName, final Plugin plugin, final Integration integration) {
+    super(main, exactName, integration);
+    this.versionString = plugin.getDescription().getVersion();
+  }
+
   public final String getVersionString() {
     return versionString;
   }

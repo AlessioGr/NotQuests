@@ -40,7 +40,6 @@ public class InteractObjective extends Objective {
   private Location locationToInteract;
   private boolean leftClick = false;
   private boolean rightClick = false;
-  private String taskDescription = "";
   private int maxDistance = 1;
   private boolean cancelInteraction = false;
 
@@ -86,7 +85,6 @@ public class InteractObjective extends Objective {
                     .withDescription(
                         ArgumentDescription.of(
                             "Makes it so the interaction will be cancelled while this objective is active")))
-            .flag(main.getCommandManager().taskDescription)
             .flag(main.getCommandManager().maxDistance)
             .handler(
                 (context) -> {
@@ -99,8 +97,6 @@ public class InteractObjective extends Objective {
 
                   final boolean leftClick = context.flags().isPresent("leftClick");
                   final boolean rightClick = context.flags().isPresent("rightClick");
-                  final String taskDescription =
-                      context.flags().getValue(main.getCommandManager().taskDescription, "");
                   final int maxDistance =
                       context.flags().getValue(main.getCommandManager().maxDistance, 1);
                   final boolean cancelInteraction = context.flags().isPresent("cancelInteraction");
@@ -109,7 +105,6 @@ public class InteractObjective extends Objective {
                   interactObjective.setLocationToInteract(location);
                   interactObjective.setLeftClick(leftClick);
                   interactObjective.setRightClick(rightClick);
-                  interactObjective.setTaskDescription(taskDescription);
                   interactObjective.setMaxDistance(maxDistance);
                   interactObjective.setCancelInteraction(cancelInteraction);
                   interactObjective.setProgressNeededExpression(amountExpression);
@@ -119,9 +114,8 @@ public class InteractObjective extends Objective {
   }
 
   @Override
-  public String getObjectiveTaskDescription(
+  public String getTaskDescriptionInternal(
       final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
-    String toReturn;
     String interactType = "";
     if (isLeftClick()) {
       interactType = "Left-Click";
@@ -138,47 +132,21 @@ public class InteractObjective extends Objective {
       worldName = getLocationToInteract().getWorld().getName();
     }
 
-    if (taskDescription.isBlank()) {
-      toReturn =
-          main.getLanguageManager()
-              .getString(
-                  "chat.objectives.taskDescription.interact.base",
-                  questPlayer,
-                  activeObjective,
-                  Map.of(
-                      "%INTERACTTYPE%", interactType,
-                      "%COORDINATES%",
-                          "X: "
-                              + getLocationToInteract().getX()
-                              + " Y: "
-                              + getLocationToInteract().getY()
-                              + " Z: "
-                              + getLocationToInteract().getZ(),
-                      "%WORLDNAME%", worldName));
-    } else {
-      toReturn =
-          main.getLanguageManager()
-              .getString(
-                  "chat.objectives.taskDescription.interact.taskDescriptionProvided",
-                  questPlayer,
-                  activeObjective,
-                  Map.of(
-                      "%TASKDESCRIPTION%",
-                      getTaskDescription(),
-                      "%INTERACTTYPE%",
-                      interactType,
-                      "%COORDINATES%",
-                      "X: "
-                          + getLocationToInteract().getX()
-                          + " Y: "
-                          + getLocationToInteract().getY()
-                          + " Z: "
-                          + getLocationToInteract().getZ(),
-                      "%WORLDNAME%",
-                      worldName));
-    }
-
-    return toReturn;
+    return main.getLanguageManager()
+        .getString(
+            "chat.objectives.taskDescription.interact.base",
+            questPlayer,
+            activeObjective,
+            Map.of(
+                "%INTERACTTYPE%", interactType,
+                "%COORDINATES%",
+                "X: "
+                    + getLocationToInteract().getX()
+                    + " Y: "
+                    + getLocationToInteract().getY()
+                    + " Z: "
+                    + getLocationToInteract().getZ(),
+                "%WORLDNAME%", worldName));
   }
 
   @Override
@@ -186,9 +154,7 @@ public class InteractObjective extends Objective {
     configuration.set(initialPath + ".specifics.locationToInteract", getLocationToInteract());
     configuration.set(initialPath + ".specifics.leftClick", isLeftClick());
     configuration.set(initialPath + ".specifics.rightClick", isRightClick());
-    if (!getTaskDescription().isBlank()) {
-      configuration.set(initialPath + ".specifics.taskDescription", getTaskDescription());
-    }
+
     if (getMaxDistance() > 1) {
       configuration.set(initialPath + ".specifics.maxDistance", getMaxDistance());
     }
@@ -200,7 +166,6 @@ public class InteractObjective extends Objective {
     locationToInteract = configuration.getLocation(initialPath + ".specifics.locationToInteract");
     leftClick = configuration.getBoolean(initialPath + ".specifics.leftClick", false);
     rightClick = configuration.getBoolean(initialPath + ".specifics.rightClick", false);
-    taskDescription = configuration.getString(initialPath + ".specifics.taskDescription", "");
     maxDistance = configuration.getInt(initialPath + ".specifics.maxDistance", 1);
     cancelInteraction =
         configuration.getBoolean(initialPath + ".specifics.cancelInteraction", false);
@@ -239,14 +204,6 @@ public class InteractObjective extends Objective {
 
   public void setRightClick(final boolean rightClick) {
     this.rightClick = rightClick;
-  }
-
-  public final String getTaskDescription() {
-    return taskDescription;
-  }
-
-  public void setTaskDescription(final String taskDescription) {
-    this.taskDescription = taskDescription;
   }
 
   public final int getMaxDistance() {

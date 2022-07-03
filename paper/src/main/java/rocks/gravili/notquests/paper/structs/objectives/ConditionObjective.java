@@ -68,7 +68,7 @@ public class ConditionObjective extends Objective {
   }
 
   @Override
-  public String getObjectiveTaskDescription(
+  public String getTaskDescriptionInternal(
       final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
     if (condition != null) {
       return condition.getConditionDescription(questPlayer, getQuest());

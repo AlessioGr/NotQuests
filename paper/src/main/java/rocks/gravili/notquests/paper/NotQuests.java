@@ -133,8 +133,8 @@ public class NotQuests {
         return instance;
     }
 
-    public Configuration getConfiguration() {
-        return dataManager.getConfiguration();
+    public final Configuration getConfiguration() {
+        return dataManager != null ? dataManager.getConfiguration() : null;
     }
 
     /**

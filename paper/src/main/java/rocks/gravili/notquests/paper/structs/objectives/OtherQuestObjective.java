@@ -76,7 +76,7 @@ public class OtherQuestObjective extends Objective {
   }
 
   @Override
-  public String getObjectiveTaskDescription(
+  public String getTaskDescriptionInternal(
       final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
     return main.getLanguageManager()
         .getString(

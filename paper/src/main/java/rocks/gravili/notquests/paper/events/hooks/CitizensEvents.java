@@ -107,8 +107,10 @@ public class CitizensEvents implements Listener {
         final NPC npc = event.getNPC();
         final Player player = event.getClicker();
         final QuestPlayer questPlayer = main.getQuestPlayerManager().getQuestPlayer(player.getUniqueId());
+
         boolean handledObjective = false;
         if (questPlayer != null) {
+            questPlayer.sendDebugMessage("NPC click event");
             if (questPlayer.getActiveQuests().size() > 0) {
                 for (final ActiveQuest activeQuest : questPlayer.getActiveQuests()) {
                     for (final ActiveObjective activeObjective : activeQuest.getActiveObjectives()) {
@@ -211,6 +213,7 @@ public class CitizensEvents implements Listener {
 
             //Return if another action already happened
             if (handledObjective) {
+                questPlayer.sendDebugMessage("Returning because of handled objective");
                 return;
             }
 

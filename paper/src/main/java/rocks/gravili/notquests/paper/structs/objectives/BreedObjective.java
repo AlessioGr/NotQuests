@@ -63,7 +63,7 @@ public class BreedObjective extends Objective {
   }
 
   @Override
-  public String getObjectiveTaskDescription(
+  public String getTaskDescriptionInternal(
       final QuestPlayer questPlayer, final @Nullable ActiveObjective activeObjective) {
     return main.getLanguageManager()
         .getString("chat.objectives.taskDescription.breed.base", questPlayer, activeObjective)

@@ -149,7 +149,8 @@ public class ObjectiveManager {
           main.getCommandManager()
               .getAdminEditAddObjectiveCommandBuilder()
               .literal(identifier)
-              .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " objective"));
+              .meta(CommandMeta.DESCRIPTION, "Creates a new " + identifier + " objective")
+              .flag(main.getCommandManager().taskDescription));
     } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
       e.printStackTrace();
     }
@@ -182,11 +183,18 @@ public class ObjectiveManager {
 
   public void addObjective(Objective objective, CommandContext<CommandSender> context) {
 
-    Quest quest = context.getOrDefault("quest", null);
+    final Quest quest = context.getOrDefault("quest", null);
+
+    final String taskDescription =
+        context.flags().getValue(main.getCommandManager().taskDescription, "");
 
     if (quest != null) {
       objective.setQuest(quest);
       objective.setObjectiveID(quest.getFreeObjectiveID());
+      if(taskDescription != null && !taskDescription.isBlank()) {
+        objective.setTaskDescription(taskDescription, true);
+      }
+
       context
           .getSender()
           .sendMessage(

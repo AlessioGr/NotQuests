@@ -26,6 +26,7 @@ import cloud.commandframework.paper.PaperCommandManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.Consumer;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
@@ -48,8 +49,18 @@ import rocks.gravili.notquests.paper.structs.objectives.hooks.citizens.EscortNPC
 public class CitizensManager {
   private final NotQuests main;
 
+  private Consumer<Trait> traitRun; // Runs in the run() method for NPCs with the QuestGiverNPC trait
+
   public CitizensManager(final NotQuests main) {
     this.main = main;
+  }
+
+  public void setTraitRun(final Consumer<Trait> traitRun) {
+    this.traitRun = traitRun;
+  }
+
+  public final Consumer<Trait> getTraitRun() {
+    return traitRun;
   }
 
   public void registerQuestGiverTrait() {
@@ -278,6 +289,8 @@ public class CitizensManager {
   }
 
   public void registerAnyCitizensCommands() {
+
+    main.getLogManager().info("Registering Citizens commands...");
 
     final PaperCommandManager<CommandSender> manager =
         main.getCommandManager().getPaperCommandManager();
