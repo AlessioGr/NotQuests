@@ -555,7 +555,7 @@ public class AdminEditCommands {
 
     public void handleObjectives(final Command.Builder<CommandSender> builder) {
         //Add is handled individually by each objective
-      final Command.Builder<CommandSender> predefinedProgressOrderBuilder = editBuilder.literal("predefinedProgressOrder");
+      final Command.Builder<CommandSender> predefinedProgressOrderBuilder = builder.literal("predefinedProgressOrder");
 
       manager.command(predefinedProgressOrderBuilder.literal("show")
           .meta(CommandMeta.DESCRIPTION, "Shows the current predefined order in which the objectives need to be progressed for your quest.")
