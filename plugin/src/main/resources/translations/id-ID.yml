@@ -72,65 +72,67 @@ chat:
     successfully-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
     successfully-completed-rewards-suffix: <EMPTY>
     taskDescription:
+      global:
+        prefix: '    <veryUnimportant>└─ <unimportant>'
+        suffix: ''
       breakBlocks:
-        base: 'Hancurkan Block: <main>%BLOCKTOBREAK%'
+        base: 'Break Blocks: <main>%BLOCKTOBREAK%'
       breed:
         base: 'Breed Mobs: <main>%ENTITYTOBREED%'
       collectItems:
-        base: 'Kumpulkan Item: <main>%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
+        base: 'Collect Items: <main>%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
       consumeItems:
-        base: 'Konsumsi Item: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
+        base: 'Consume Items: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
         base: 'Craft Items: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: 'Antarkan Item: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
+        base: 'Deliver Items: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
         deliver-to-npc: '      <GRAY>Deliver it to <WHITE>%NPCNAME%'
         deliver-to-npc-not-available: '      <GRAY>The delivery NPC is currently not available!'
         deliver-to-npc-citizens-not-found: '    <RED>Error: Citizens plugin not installed. Contact an admin.'
         deliver-to-armorstand: '    <GRAY>Deliver it to <WHITE>%ARMORSTANDNAME%'
         deliver-to-armorstand-not-available: '    <GRAY>The target Armor Stand is currently not available!'
       escortNPC:
-        base: 'Antarkan <main>%NPCNAME%</main> to <main>%DESTINATIONNPCNAME%'
+        base: 'Escort <main>%NPCNAME%</main> to <main>%DESTINATIONNPCNAME%'
       fishItems:
         base: 'Fish Items: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
       killMobs:
-        base: 'Membunuh mob: <main>%MOBTOKILL%'
+        base: 'Kill mobs: <main>%MOBTOKILL%'
       otherQuest:
-        base: 'Quest Selesai: <main>%OTHERQUESTNAME%'
+        base: 'Complete Quest: <main>%OTHERQUESTNAME%'
       placeBlocks:
-        base: 'Letakan Block: <main>%BLOCKTOPLACE%'
+        base: 'Place Blocks: <main>%BLOCKTOPLACE%'
       reachLocation:
-        base: 'Capai Lokasi: <main>%LOCATIONNAME%'
+        base: 'Reach Location: <main>%LOCATIONNAME%'
       talkToNPC:
-        base: 'Berbicara ke <main>%NAME%'
+        base: 'Talk to <main>%NAME%'
       triggerCommand:
-        base: 'Tujuan: <main>%TRIGGERNAME%'
+        base: 'Goal: <main>%TRIGGERNAME%'
       killEliteMobs:
-        base: 'Bunuh Elite Mob: <main>%ELITEMOBNAME%'
-        any: 'Bunuh Elite Mob apa saja!'
+        base: 'Kill Elite Mob: <main>%ELITEMOBNAME%'
+        any: 'Kill any Elite Mob!'
       runCommand:
-        base: 'Jalankan command: <main>%COMMANDTORUN%'
+        base: 'Run command: <main>%COMMANDTORUN%'
       interact:
-        base: '%INTERACTTYPE% Lokasi: <main>%COORDINATES% <main>in world %WORLDNAME%'
-        taskDescriptionProvided: '%TASKDESCRIPTION%'
+        base: '%INTERACTTYPE% Location: <main>%COORDINATES% <main>in world %WORLDNAME%'
       jump:
-        base: 'Lompat <main>%AMOUNTOFJUMPS%</main> kali'
+        base: 'Jump <main>%AMOUNTOFJUMPS%</main> times'
       sneak:
-        base: 'Jongkok <main>%AMOUNTOFSNEAKS%</main> kali'
+        base: 'Sneak <main>%AMOUNTOFSNEAKS%</main> times'
       smelt:
-        base: 'Bakar Item: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+        base: 'Smelt Items: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       openBuriedTreasure:
         base: 'Open buried treasures'
       townyReachResidentCount:
-        base: 'Resident yang dicapai: <main>%AMOUNT%'
+        base: 'Reach resident amount: <main>%AMOUNT%'
       townyNationReachTownCount:
-        base: 'Jumlah kota yang terdapat di nation mu: <main>%AMOUNT%'
+        base: 'Reach town amount with your nation: <main>%AMOUNT%'
       jobsRebornReachJobLevel:
-        base: 'Job level yang dicapai<main>%AMOUNT%</main> dengan job <main>%JOB%'
+        base: 'Reach job level <main>%AMOUNT%</main> with job <main>%JOB%'
       SlimefunResearch:
-        base: 'Jumlah research'
+        base: 'Spend on research'
       ProjectKorraUseAbility:
-        base: 'Menggunakan Ability: <main>%ABILITY%'
+        base: 'Use Ability: <main>%ABILITY%'
       BetonQuestCompleteObjective:
         base: 'Finish Objective: <main>%BETONQUESTOBJECTIVENAME%'
       ultimateJobsReachJobLevel:

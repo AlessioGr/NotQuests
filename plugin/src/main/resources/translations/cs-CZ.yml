@@ -66,65 +66,67 @@ chat:
     successfully-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
     successfully-completed-rewards-suffix: <EMPTY>
     taskDescription:
+      global:
+        prefix: '    <veryUnimportant>└─ <unimportant>'
+        suffix: ''
       breakBlocks:
-        base: '    <DARK_GRAY>└─ <GRAY>Blok ke zničení : <WHITE>%BLOCKTOBREAK%'
+        base: 'Break Blocks: <main>%BLOCKTOBREAK%'
       breed:
-        base: '    <DARK_GRAY>└─ <GRAY>Zvíře k rozmnožení: <WHITE>%ENTITYTOBREED%'
+        base: 'Breed Mobs: <main>%ENTITYTOBREED%'
       collectItems:
-        base: '    <DARK_GRAY>└─ <GRAY>Itemy ke sbírání: <WHITE>%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
+        base: 'Collect Items: <main>%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
       consumeItems:
-        base: '    <DARK_GRAY>└─ <GRAY>Itemy ke snězení: <WHITE>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
+        base: 'Consume Items: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
         base: 'Craft Items: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: '    <DARK_GRAY>└─ <GRAY>Itemy k doručení: <WHITE>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
+        base: 'Deliver Items: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
         deliver-to-npc: '      <GRAY>Deliver it to <WHITE>%NPCNAME%'
         deliver-to-npc-not-available: '      <GRAY>The delivery NPC is currently not available!'
         deliver-to-npc-citizens-not-found: '    <RED>Error: Citizens plugin not installed. Contact an admin.'
         deliver-to-armorstand: '    <GRAY>Deliver it to <WHITE>%ARMORSTANDNAME%'
         deliver-to-armorstand-not-available: '    <GRAY>The target Armor Stand is currently not available!'
       escortNPC:
-        base: '    <DARK_GRAY>└─ <GRAY>Převézt <WHITE>%NPCNAME%</WHITE> to <WHITE>%DESTINATIONNPCNAME%'
+        base: 'Escort <main>%NPCNAME%</main> to <main>%DESTINATIONNPCNAME%'
       fishItems:
         base: 'Fish Items: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
       killMobs:
-        base: '    <DARK_GRAY>└─ <GRAY>Moby k zabití: <WHITE>%MOBTOKILL%'
+        base: 'Kill mobs: <main>%MOBTOKILL%'
       otherQuest:
-        base: '    <DARK_GRAY>└─ <GRAY>Dokončení questu: <WHITE>%OTHERQUESTNAME%'
+        base: 'Complete Quest: <main>%OTHERQUESTNAME%'
       placeBlocks:
-        base: '    <DARK_GRAY>└─ <GRAY>Blok k položení: <WHITE>%BLOCKTOPLACE%'
+        base: 'Place Blocks: <main>%BLOCKTOPLACE%'
       reachLocation:
-        base: '    <DARK_GRAY>└─ <GRAY>Dosáhnout lokace: <WHITE>%LOCATIONNAME%'
+        base: 'Reach Location: <main>%LOCATIONNAME%'
       talkToNPC:
-        base: '    <DARK_GRAY>└─ <GRAY>Mluvit s <WHITE>%NAME%'
+        base: 'Talk to <main>%NAME%'
       triggerCommand:
-        base: '    <DARK_GRAY>└─ <GRAY>Cíl: <WHITE>%TRIGGERNAME%'
+        base: 'Goal: <main>%TRIGGERNAME%'
       killEliteMobs:
-        base: '    <DARK_GRAY>└─ <GRAY>Zabít elitního moba: <WHITE>%ELITEMOBNAME%'
-        any: '    <DARK_GRAY>└─ <GRAY>Zabít jakéhokoliv elitního moba!'
+        base: 'Kill Elite Mob: <main>%ELITEMOBNAME%'
+        any: 'Kill any Elite Mob!'
       runCommand:
-        base: '    <DARK_GRAY>└─ <GRAY>Spustit příkaz: <WHITE>%COMMANDTORUN%'
+        base: 'Run command: <main>%COMMANDTORUN%'
       interact:
-        base: '    <DARK_GRAY>└─ <GRAY>%INTERACTTYPE% Lokace: <WHITE>%COORDINATES% <WHITE>ve světě %WORLDNAME%'
-        taskDescriptionProvided: '    <DARK_GRAY>└─ <GRAY>%TASKDESCRIPTION%'
+        base: '%INTERACTTYPE% Location: <main>%COORDINATES% <main>in world %WORLDNAME%'
       jump:
-        base: '    <DARK_GRAY>└─ <GRAY>Vyskočit <WHITE>%AMOUNTOFJUMPS%</WHITE> krát'
+        base: 'Jump <main>%AMOUNTOFJUMPS%</main> times'
       sneak:
         base: 'Sneak <main>%AMOUNTOFSNEAKS%</main> times'
       smelt:
-        base: '    <DARK_GRAY>└─ <GRAY>Itemy k roztavení : <WHITE>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+        base: 'Smelt Items: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       openBuriedTreasure:
         base: 'Open buried treasures'
       townyReachResidentCount:
-        base: '    <DARK_GRAY>└─ <GRAY>Dosáhnout residentního počtu: <WHITE>%AMOUNT%'
+        base: 'Reach resident amount: <main>%AMOUNT%'
       townyNationReachTownCount:
-        base: '    <DARK_GRAY>└─ <GRAY>Dostat se do města s tvojí vlastí: <WHITE>%AMOUNT%'
+        base: 'Reach town amount with your nation: <main>%AMOUNT%'
       jobsRebornReachJobLevel:
-        base: '    <DARK_GRAY>└─ <GRAY>Dosáhnout levelu práce <WHITE>%AMOUNT%</WHITE> s prací <WHITE>%JOB%'
+        base: 'Reach job level <main>%AMOUNT%</main> with job <main>%JOB%'
       SlimefunResearch:
-        base: '    <DARK_GRAY>└─ <GRAY>Strávit na výzkumu'
+        base: 'Spend on research'
       ProjectKorraUseAbility:
-        base: '    <DARK_GRAY>└─ <GRAY>Použít schopnost: <WHITE>%ABILITY%'
+        base: 'Use Ability: <main>%ABILITY%'
       BetonQuestCompleteObjective:
         base: 'Finish Objective: <main>%BETONQUESTOBJECTIVENAME%'
       ultimateJobsReachJobLevel:

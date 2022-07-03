@@ -67,29 +67,32 @@ chat:
     successfully-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
     successfully-completed-rewards-suffix: <EMPTY>
     taskDescription:
+      global:
+        prefix: '    <veryUnimportant>└─ <unimportant>'
+        suffix: ''
       breakBlocks:
-        base: "    <veryUnimportant> └─\n<unimportant>Уништи Блокове:<main>%BLOCKTOBREAK%"
+        base: 'Break Blocks: <main>%BLOCKTOBREAK%'
       breed:
-        base: "    <veryUnimportant> └─\n<unimportant>Пари Створења:\n<main>%ENTITYTOBREED%"
+        base: 'Breed Mobs: <main>%ENTITYTOBREED%'
       collectItems:
-        base: "    <veryUnimportant> └─\n<unimportant>Скупи Ствари:\n<main>%ITEMTOCOLLECTTYPE% % (%%ITEMTOCOLLECTNAME%%) %"
+        base: 'Collect Items: <main>%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
       consumeItems:
-        base: "    <veryUnimportant> └─\n<unimportant>Конзумирај Predmete:\n<main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%"
+        base: 'Consume Items: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
         base: 'Craft Items: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: "    <veryUnimportant> └─\n<unimportant>Испоручи Предмете:<main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)"
+        base: 'Deliver Items: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
         deliver-to-npc: '      <GRAY>Deliver it to <WHITE>%NPCNAME%'
         deliver-to-npc-not-available: '      <GRAY>The delivery NPC is currently not available!'
         deliver-to-npc-citizens-not-found: '    <RED>Error: Citizens plugin not installed. Contact an admin.'
         deliver-to-armorstand: '    <GRAY>Deliver it to <WHITE>%ARMORSTANDNAME%'
         deliver-to-armorstand-not-available: '    <GRAY>The target Armor Stand is currently not available!'
       escortNPC:
-        base: "    <veryUnimportant> └─\n<unimportant>Испрати<main>%NPCNAME%</main>до\n<main>%DESTINATIONNPCNAME%"
+        base: 'Escort <main>%NPCNAME%</main> to <main>%DESTINATIONNPCNAME%'
       fishItems:
         base: 'Fish Items: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
       killMobs:
-        base: "    <veryUnimportant> └─\n<unimportant>Убиј Створења:\n<main>%MOBTOKILL%"
+        base: 'Kill mobs: <main>%MOBTOKILL%'
       otherQuest:
         base: 'Complete Quest: <main>%OTHERQUESTNAME%'
       placeBlocks:
@@ -107,7 +110,6 @@ chat:
         base: 'Run command: <main>%COMMANDTORUN%'
       interact:
         base: '%INTERACTTYPE% Location: <main>%COORDINATES% <main>in world %WORLDNAME%'
-        taskDescriptionProvided: '%TASKDESCRIPTION%'
       jump:
         base: 'Jump <main>%AMOUNTOFJUMPS%</main> times'
       sneak:

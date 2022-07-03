@@ -72,6 +72,9 @@ chat:
     successfully-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
     successfully-completed-rewards-suffix: <EMPTY>
     taskDescription:
+      global:
+        prefix: '    <veryUnimportant>└─ <unimportant>'
+        suffix: ''
       breakBlocks:
         base: 'Break Blocks: <main>%BLOCKTOBREAK%'
       breed:
@@ -112,7 +115,6 @@ chat:
         base: 'Run command: <main>%COMMANDTORUN%'
       interact:
         base: '%INTERACTTYPE% Location: <main>%COORDINATES% <main>in world %WORLDNAME%'
-        taskDescriptionProvided: '%TASKDESCRIPTION%'
       jump:
         base: 'Jump <main>%AMOUNTOFJUMPS%</main> times'
       sneak:

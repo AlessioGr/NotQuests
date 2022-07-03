@@ -72,18 +72,21 @@ chat:
     successfully-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
     successfully-completed-rewards-suffix: <EMPTY>
     taskDescription:
+      global:
+        prefix: '    <veryUnimportant>└─ <unimportant>'
+        suffix: ''
       breakBlocks:
         base: 'Break Blocks: <main>%BLOCKTOBREAK%'
       breed:
         base: 'Breed Mobs: <main>%ENTITYTOBREED%'
       collectItems:
-        base: '    <veryUnimportant>- <unimportant>Собрать предметы: <main>%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
+        base: 'Collect Items: <main>%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
       consumeItems:
-        base: '    <veryUnimportant>: <unimportant>Предметы расходуют <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
+        base: 'Consume Items: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
-        base: '    <veryUnimportant>- <unimportant>Собрать предметы: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
+        base: 'Craft Items: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: '    <veryUnimportant>- <unimportant>Доставить предметы: <main>%ITEMTODELIVERTYPE% %(%ITEMTODELIVERNAME%)'
+        base: 'Deliver Items: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
         deliver-to-npc: '      <GRAY>Deliver it to <WHITE>%NPCNAME%'
         deliver-to-npc-not-available: '      <GRAY>The delivery NPC is currently not available!'
         deliver-to-npc-citizens-not-found: '    <RED>Error: Citizens plugin not installed. Contact an admin.'
@@ -112,7 +115,6 @@ chat:
         base: 'Run command: <main>%COMMANDTORUN%'
       interact:
         base: '%INTERACTTYPE% Location: <main>%COORDINATES% <main>in world %WORLDNAME%'
-        taskDescriptionProvided: '%TASKDESCRIPTION%'
       jump:
         base: 'Jump <main>%AMOUNTOFJUMPS%</main> times'
       sneak:

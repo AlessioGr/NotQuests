@@ -72,69 +72,71 @@ chat:
     successfully-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
     successfully-completed-rewards-suffix: <EMPTY>
     taskDescription:
+      global:
+        prefix: '    <veryUnimportant>└─ <unimportant>'
+        suffix: ''
       breakBlocks:
-        base: '    <veryUnimportant>vaiven <unimportant>Bloques de Salto: <main>%BLOCKTOBREAK%'
+        base: 'Break Blocks: <main>%BLOCKTOBREAK%'
       breed:
-        base: 'Aparear Mobs: <main>%ENTITYTOBREED%'
+        base: 'Breed Mobs: <main>%ENTITYTOBREED%'
       collectItems:
-        base: 'Conseguir Items: <main>%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
+        base: 'Collect Items: <main>%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
       consumeItems:
-        base: 'Consumir Items: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
+        base: 'Consume Items: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
-        base: 'Craftear Items: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
+        base: 'Craft Items: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: 'Entregar Items: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
+        base: 'Deliver Items: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
         deliver-to-npc: '      <GRAY>Entregarlo a <WHITE>%NPCNAME%'
         deliver-to-npc-not-available: '      <GRAY>The delivery NPC is currently not available!'
         deliver-to-npc-citizens-not-found: '    <RED>Error: Citizens plugin not installed. Contact an admin.'
         deliver-to-armorstand: '    <GRAY>Entregarlo a <WHITE>%ARMORSTANDNAME%'
         deliver-to-armorstand-not-available: '    <GRAY>El Soporte de Armadura no está disponible actualmente!'
       escortNPC:
-        base: 'Escoltar <main>%NPCNAME%</main> a <main>%DESTINATIONNPCNAME%'
+        base: 'Escort <main>%NPCNAME%</main> to <main>%DESTINATIONNPCNAME%'
       fishItems:
         base: 'Fish Items: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
       killMobs:
-        base: 'Matar mobs: <main>%MOBTOKILL%'
+        base: 'Kill mobs: <main>%MOBTOKILL%'
       otherQuest:
-        base: 'Completar la Misión: <main>%OTHERQUESTNAME%'
+        base: 'Complete Quest: <main>%OTHERQUESTNAME%'
       placeBlocks:
-        base: 'Colocar Bloques: <main>%BLOCKTOPLACE%'
+        base: 'Place Blocks: <main>%BLOCKTOPLACE%'
       reachLocation:
-        base: 'Ir a localización: <main>%LOCATIONNAME%'
+        base: 'Reach Location: <main>%LOCATIONNAME%'
       talkToNPC:
-        base: 'Hablar con <main>%NAME%'
+        base: 'Talk to <main>%NAME%'
       triggerCommand:
-        base: 'Objetivo: <main>%TRIGGERNAME%'
+        base: 'Goal: <main>%TRIGGERNAME%'
       killEliteMobs:
-        base: 'Matar Mob de Elite: <main>%ELITEMOBNAME%'
-        any: '¡Matar cualquier Mob de Elite!'
+        base: 'Kill Elite Mob: <main>%ELITEMOBNAME%'
+        any: 'Kill any Elite Mob!'
       runCommand:
-        base: 'Ejecutar el comando: <main>%COMMANDTORUN%'
+        base: 'Run command: <main>%COMMANDTORUN%'
       interact:
-        base: '%INTERACTTYPE% Localización: <main>%COORDINATES% <main>en el mundo %WORLDNAME%'
-        taskDescriptionProvided: '%TASKDESCRIPTION%'
+        base: '%INTERACTTYPE% Location: <main>%COORDINATES% <main>in world %WORLDNAME%'
       jump:
-        base: 'Salta <main>%AMOUNTOFJUMPS%</main> veces'
+        base: 'Jump <main>%AMOUNTOFJUMPS%</main> times'
       sneak:
-        base: 'Agachate <main>%AMOUNTOFSNEAKS%</main> veces'
+        base: 'Sneak <main>%AMOUNTOFSNEAKS%</main> times'
       smelt:
-        base: 'Funde Items: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+        base: 'Smelt Items: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       openBuriedTreasure:
         base: 'Open buried treasures'
       townyReachResidentCount:
-        base: 'Alcanza el numero de residentes: <main>%AMOUNT%'
+        base: 'Reach resident amount: <main>%AMOUNT%'
       townyNationReachTownCount:
-        base: 'Alcanzar el numero de pueblos con tu nación: <main>%AMOUNT%'
+        base: 'Reach town amount with your nation: <main>%AMOUNT%'
       jobsRebornReachJobLevel:
-        base: 'Alcanza el nivel de trabajo <main>%AMOUNT%</main> con el trabajo <main>%JOB%'
+        base: 'Reach job level <main>%AMOUNT%</main> with job <main>%JOB%'
       SlimefunResearch:
-        base: 'Gastado en investigación'
+        base: 'Spend on research'
       ProjectKorraUseAbility:
-        base: 'Usar habilidad: <main>%ABILITY%'
+        base: 'Use Ability: <main>%ABILITY%'
       BetonQuestCompleteObjective:
-        base: '    <veryUnimportant>: <unimportant>Objetivo de finalización: <main>%BETONQUESTOBJECTIVENAME%'
+        base: 'Finish Objective: <main>%BETONQUESTOBJECTIVENAME%'
       ultimateJobsReachJobLevel:
-        base: 'Alcanza el nivel de trabajo <main>%AMOUNT%</main> con el trabajo <main>%JOBID%'
+        base: 'Reach job level <main>%AMOUNT%</main> with job <main>%JOBID%'
   conditions:
     boolean:
       not-fulfilled: "<warn>Lo siguiente debe ser %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."
