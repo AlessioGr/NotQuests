@@ -72,69 +72,71 @@ chat:
     successfully-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
     successfully-completed-rewards-suffix: <EMPTY>
     taskDescription:
+      global:
+        prefix: '    <veryUnimportant>└─ <unimportant>'
+        suffix: ''
       breakBlocks:
-        base: '    <veryUnimportant>└─ <unimportant>Quebrar blocos: <main>%BLOCKTOBREAK%'
+        base: 'Break Blocks: <main>%BLOCKTOBREAK%'
       breed:
-        base: '    <veryUnimportant>└─ <unimportant>Matar Mobs: <main>%ENTITYTOBREED%'
+        base: 'Breed Mobs: <main>%ENTITYTOBREED%'
       collectItems:
-        base: '    <veryUnimportant>└─ <unimportant>Coletar itens: <main>%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
+        base: 'Collect Items: <main>%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
       consumeItems:
-        base: '    <veryUnimportant>└─ <unimportant>Consumir itens: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
+        base: 'Consume Items: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
-        base: '    <veryUnimportant>└─ <unimportant>Craftar Itens: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
+        base: 'Craft Items: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: '    <veryUnimportant>└─ <unimportant>Entregar itens: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
+        base: 'Deliver Items: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
         deliver-to-npc: '      <GRAY>Entregue para <WHITE>%NPCNAME%'
         deliver-to-npc-not-available: '      <GRAY>O NPC de entrega não está disponível no momento!'
         deliver-to-npc-citizens-not-found: '    <RED>Error: O Plugin citizens não esta instalado. entre em contato com o administrador.'
         deliver-to-armorstand: '    <GRAY>Entregue para <WHITE>%ARMORSTANDNAME%'
         deliver-to-armorstand-not-available: '    <GRAY>O Armor Stand alvo não está disponível no momento!'
       escortNPC:
-        base: '    <veryUnimportant>└─ <unimportant>Escolta <main>%NPCNAME%</main> para <main>%DESTINATIONNPCNAME%'
+        base: 'Escort <main>%NPCNAME%</main> to <main>%DESTINATIONNPCNAME%'
       fishItems:
-        base: '    <veryUnimportant>└─ <unimportant>Fish Items: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
+        base: 'Fish Items: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
       killMobs:
-        base: '    <veryUnimportant>└─ <unimportant>Matar mobs: <main>%MOBTOKILL%'
+        base: 'Kill mobs: <main>%MOBTOKILL%'
       otherQuest:
-        base: '    <veryUnimportant>└─ <unimportant>Completar Missão: <main>%OTHERQUESTNAME%'
+        base: 'Complete Quest: <main>%OTHERQUESTNAME%'
       placeBlocks:
-        base: '    <veryUnimportant>└─ <unimportant>Colocar blocos: <main>%BLOCKTOPLACE%'
+        base: 'Place Blocks: <main>%BLOCKTOPLACE%'
       reachLocation:
-        base: '    <veryUnimportant>└─ <unimportant>Procurar local: <main>%LOCATIONNAME%'
+        base: 'Reach Location: <main>%LOCATIONNAME%'
       talkToNPC:
-        base: '    <veryUnimportant>└─ <unimportant>Falar com<main>%NAME%'
+        base: 'Talk to <main>%NAME%'
       triggerCommand:
-        base: '    <veryUnimportant>└─ <unimportant>Metal: <main>%TRIGGERNAME%'
+        base: 'Goal: <main>%TRIGGERNAME%'
       killEliteMobs:
-        base: '    <veryUnimportant>└─ <unimportant>Matar o mobs de elite: <main>%ELITEMOBNAME%'
-        any: '    <veryUnimportant>└─ <unimportant>Mate qualquer mob de Elite!'
+        base: 'Kill Elite Mob: <main>%ELITEMOBNAME%'
+        any: 'Kill any Elite Mob!'
       runCommand:
-        base: '    <veryUnimportant>└─ <unimportant>Comando de execução: <main>%COMMANDTORUN%'
+        base: 'Run command: <main>%COMMANDTORUN%'
       interact:
-        base: '    <veryUnimportant>└─ <unimportant>%INTERACTTYPE% local: <main>%COORDINATES% <main>no mundo %WORLDNAME%'
-        taskDescriptionProvided: '    <veryUnimportant>└─ <unimportant>%TASKDESCRIPTION%'
+        base: '%INTERACTTYPE% Location: <main>%COORDINATES% <main>in world %WORLDNAME%'
       jump:
-        base: '    <veryUnimportant>└─ <unimportant>Pular <main>%AMOUNTOFJUMPS%</main> vezes'
+        base: 'Jump <main>%AMOUNTOFJUMPS%</main> times'
       sneak:
-        base: '    <veryUnimportant>└─ <unimportant>Esgueirar-se <main>%AMOUNTOFSNEAKS%</main> vezes'
+        base: 'Sneak <main>%AMOUNTOFSNEAKS%</main> times'
       smelt:
-        base: '    <veryUnimportant>└─ <unimportant>Itens de fundição: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+        base: 'Smelt Items: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       openBuriedTreasure:
-        base: '    <veryUnimportant>└─ <unimportant>Abrir tesouros enterrados'
+        base: 'Open buried treasures'
       townyReachResidentCount:
-        base: '    <veryUnimportant>└─ <unimportant>cosiga este valor de moradores: <main>%AMOUNT%'
+        base: 'Reach resident amount: <main>%AMOUNT%'
       townyNationReachTownCount:
-        base: '    <veryUnimportant>└─ <unimportant>cosiga este valor de moradores na sua cidade: <main>%AMOUNT%'
+        base: 'Reach town amount with your nation: <main>%AMOUNT%'
       jobsRebornReachJobLevel:
-        base: '    <veryUnimportant>└─ <unimportant>Alcance o nível de trabalho <main>%AMOUNT%</main> na categoria <main>%JOB%'
+        base: 'Reach job level <main>%AMOUNT%</main> with job <main>%JOB%'
       SlimefunResearch:
-        base: '    <veryUnimportant>└─ <unimportant>Gaste em pesquisas'
+        base: 'Spend on research'
       ProjectKorraUseAbility:
-        base: '    <veryUnimportant>└─ <unimportant>Use a habilidade: <main>%ABILITY%'
+        base: 'Use Ability: <main>%ABILITY%'
       BetonQuestCompleteObjective:
-        base: '    <veryUnimportant>└─ <unimportant>Finalizar Objetivo: <main>%BETONQUESTOBJECTIVENAME%'
+        base: 'Finish Objective: <main>%BETONQUESTOBJECTIVENAME%'
       ultimateJobsReachJobLevel:
-        base: '    <veryUnimportant>└─ <unimportant>Alcance o nível de trabalho <main>%AMOUNT%</main> na categoria <main>%JOBID%'
+        base: 'Reach job level <main>%AMOUNT%</main> with job <main>%JOBID%'
   conditions:
     boolean:
       not-fulfilled: "<warn>A seguir precisa ser %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."
