@@ -563,16 +563,17 @@ public class AdminEditCommands {
             final Quest quest = context.get("quest");
             context.getSender().sendMessage(Component.empty());
 
-            final String predefinedProgressOrderString = quest.getPredefinedProgressOrder().isFirstToLast()
+            final String predefinedProgressOrderString = quest.getPredefinedProgressOrder() != null ? (quest.getPredefinedProgressOrder().isFirstToLast()
                 ? "First to last"
                 : (
                     quest.getPredefinedProgressOrder().isLastToFirst()
                         ? "Last to first" : (
                           (quest.getPredefinedProgressOrder().getCustomOrder() != null && !quest.getPredefinedProgressOrder().getCustomOrder().isEmpty())
                             ? "Custom: " + quest.getPredefinedProgressOrder().getCustomOrder().toString()
-                            : "None"
+                            : "None (weird)"
                         )
-                    )
+                    ))
+                : "None"
                 ;
 
             context.getSender().sendMessage(main.parse(
