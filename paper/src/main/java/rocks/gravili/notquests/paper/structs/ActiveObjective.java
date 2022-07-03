@@ -117,8 +117,46 @@ public class ActiveObjective {
         return unlocked;
     }
 
-    public void updateUnlocked(final boolean notifyPlayer, final boolean triggerAcceptQuestTrigger) {
+    public void updateUnlocked(final boolean notifyPlayer, final boolean triggerAcceptQuestTrigger) { //TODO: This is currently only done when: plugin startup, quest accept, another objective of that quest is completed. This should also be checked elsewhere like in a regular interval to check conditions like idk, Money conditions, more regularly. Or maybe via othr events or sth. If regularly, the check delay (and thus performance) should be configurable in the general.yml
         getQuestPlayer().sendDebugMessage("Updating if objective is unlocked...");
+
+        //First check the quests PredefinedProgressOrder
+        final PredefinedProgressOrder predefinedProgressOrder = activeQuest.getQuest().getPredefinedProgressOrder();
+        if(predefinedProgressOrder != null){
+            if(predefinedProgressOrder.isFirstToLast()){
+                for(final Objective objective1 : activeQuest.getQuest().getObjectives()){
+                    if(objective1.getObjectiveID() < objectiveID){
+                        if(activeQuest.getActiveObjectiveFromID(objective1.getObjectiveID()) != null){
+                            getQuestPlayer().sendDebugMessage("Active objective locked due to firstToLast PredefinedProgressOrder: BecauseActive objective with ID " + objective1.getObjectiveID() + " is still active.");
+                            setUnlocked(false, notifyPlayer, triggerAcceptQuestTrigger);
+                            return;
+                        }
+                    }
+                }
+            }else if(predefinedProgressOrder.isLastToFirst()){
+                for(final Objective objective1 : activeQuest.getQuest().getObjectives()){
+                    if(objective1.getObjectiveID() > objectiveID){
+                        if(activeQuest.getActiveObjectiveFromID(objective1.getObjectiveID()) != null){
+                            getQuestPlayer().sendDebugMessage("Active objective locked due to lastToFirst PredefinedProgressOrder: BecauseActive objective with ID " + objective1.getObjectiveID() + " is still active.");
+                            setUnlocked(false, notifyPlayer, triggerAcceptQuestTrigger);
+                            return;
+                        }
+                    }
+                }
+            }else if(predefinedProgressOrder.getCustomOrder() != null && !predefinedProgressOrder.getCustomOrder().isEmpty()){
+
+                for(final int objectiveIDToCheck : predefinedProgressOrder.getCustomOrder()){
+                    if(objectiveIDToCheck == objectiveID){
+                        break;
+                    }
+                    if(activeQuest.getActiveObjectiveFromID(objectiveIDToCheck) != null){
+                        getQuestPlayer().sendDebugMessage("Active objective locked due to custom PredefinedProgressOrder: BecauseActive objective with ID " + objectiveIDToCheck + " is still active.");
+                        setUnlocked(false, notifyPlayer, triggerAcceptQuestTrigger);
+                        return;
+                    }
+                }
+            }
+        }
 
         for (final Condition condition : objective.getUnlockConditions()){
             String check = condition.check(getQuestPlayer());
@@ -130,6 +168,8 @@ public class ActiveObjective {
                 return;
             }
         }
+
+
         //If it didn't return; and reaches this, it means all conditions are met!
         getQuestPlayer().sendDebugMessage("Active objective " + objective.getFinalName() + " has been set to unlocked!");
         setUnlocked(true, notifyPlayer, triggerAcceptQuestTrigger);
