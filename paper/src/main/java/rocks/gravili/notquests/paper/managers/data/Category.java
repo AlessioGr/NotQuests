@@ -23,12 +23,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import org.bukkit.configuration.file.FileConfiguration;
 import rocks.gravili.notquests.paper.NotQuests;
+import rocks.gravili.notquests.paper.structs.PredefinedProgressOrder;
 
 public class Category {
   private final NotQuests main;
   private final String categoryName;
   private final File categoryFolder;
   private final ArrayList<FileConfiguration> conversationsConfigs;
+
+  private PredefinedProgressOrder predefinedProgressOrder;
+
   private File categoryFile,
       questsFile,
       actionsFile,

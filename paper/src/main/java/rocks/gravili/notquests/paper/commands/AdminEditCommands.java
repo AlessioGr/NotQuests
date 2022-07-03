@@ -628,10 +628,18 @@ public class AdminEditCommands {
                 final List<String> allArgs = context.getRawInput();
                 main.getUtilManager().sendFancyCommandCompletion(context.getSender(), allArgs.toArray(new String[0]), "<Enter custom order (numbers of objective IDs separated by space)>", "");
                 ArrayList<String> completions = new ArrayList<>();
-                String rawInput = context.getRawInputJoined();
-                for(int i=1; i<=9; i++) {
-                  completions.add(""+i);
+                final Quest quest = context.get("quest");
+
+                if(quest == null){
+                  for(int i=1; i<=9; i++) {
+                    completions.add(""+i);
+                  }
+                } else {
+                  for(final Objective objective : quest.getObjectives()){
+                    completions.add(objective.getObjectiveID()+"");
+                  }
                 }
+
                 return completions;
               }
           ), ArgumentDescription.of("Custom order. Example: 2 1 3 4 5 6 7 9 8"))
