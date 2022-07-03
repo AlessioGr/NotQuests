@@ -630,14 +630,8 @@ public class AdminEditCommands {
                 ArrayList<String> completions = new ArrayList<>();
                 final Quest quest = context.get("quest");
 
-                if(quest == null){
-                  for(int i=1; i<=9; i++) {
-                    completions.add(""+i);
-                  }
-                } else {
-                  for(final Objective objective : quest.getObjectives()){
-                    completions.add(objective.getObjectiveID()+"");
-                  }
+                for(final Objective objective : quest.getObjectives()){
+                  completions.add(objective.getObjectiveID()+"");
                 }
 
                 return completions;
