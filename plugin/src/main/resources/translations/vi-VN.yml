@@ -66,69 +66,71 @@ chat:
     successfully-completed-rewards-rewardformat: '    <highlight> - <unimportant>%reward%'
     successfully-completed-rewards-suffix: <EMPTY>
     taskDescription:
+      global:
+        prefix: '    <veryUnimportant>└─ <unimportant>'
+        suffix: ''
       breakBlocks:
-        base: '    <unimportant>Phá Vỡ Khối: <main>%BLOCKTOBREAK%'
+        base: 'Break Blocks: <main>%BLOCKTOBREAK%'
       breed:
-        base: '    <unimportant>Làm Mob Sinh Sản: <main>%ENTITYTOBREED%'
+        base: 'Breed Mobs: <main>%ENTITYTOBREED%'
       collectItems:
-        base: '    <unimportant>Thư Nhập Vật Phẩm: <main>%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
+        base: 'Collect Items: <main>%ITEMTOCOLLECTTYPE% %(%%ITEMTOCOLLECTNAME%%)%'
       consumeItems:
-        base: '    <unimportant>Dùng Vật Phẩm: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
+        base: 'Consume Items: <main>%ITEMTOCONSUMETYPE% %(%%ITEMTOCONSUMENAME%%)%'
       craftItems:
-        base: '    <veryUnimportant>└─ <unimportant>Chế Tạo Vật Phẩm: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
+        base: 'Craft Items: <main>%ITEMTOCRAFTTYPE% %(%%ITEMTOCRAFTNAME%%)%'
       deliverItems:
-        base: '    <unimportant>Giao Vật Phẩm: <main>%ITEMTODELIVERTYPE% %(%%ITEMTODELIVERNAME%%)%'
+        base: 'Deliver Items: <main>%ITEMTODELIVERTYPE% (%ITEMTODELIVERNAME%)'
         deliver-to-npc: '      <GRAY>Giao nó cho<WHITE>%NPCNAME%'
         deliver-to-npc-not-available: '      <GRAY>NPC giao hàng hiện không có sẵn!'
         deliver-to-npc-citizens-not-found: '    <RED>Lỗi plugin: Citizens chưa tải. Hãy nói với ban quản trị.'
         deliver-to-armorstand: '    <GRAY>Deliver it to <WHITE>%ARMORSTANDNAME%'
         deliver-to-armorstand-not-available: '    <GRAY>Bệ Giáp hiện không có sẵn!'
       escortNPC:
-        base: '    <unimportant>Đi Theo <main>%NPCNAME% <unimportant> Đến <main>%DESTINATIONNPCNAME%'
+        base: 'Escort <main>%NPCNAME%</main> to <main>%DESTINATIONNPCNAME%'
       fishItems:
-        base: '    <veryUnimportant>└─ <unimportant>Fish Items: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
+        base: 'Fish Items: <main>%ITEMTOFISHTYPE% %(%%ITEMTOFISHNAME%%)%'
       killMobs:
-        base: '    <unimportant>Tiêu Diệt Quái: <main>%MOBTOKILL%'
+        base: 'Kill mobs: <main>%MOBTOKILL%'
       otherQuest:
-        base: '    <unimportant>Hoàn Thành Nhiệm Vụ: <main>%OTHERQUESTNAME%'
+        base: 'Complete Quest: <main>%OTHERQUESTNAME%'
       placeBlocks:
-        base: '    <veryUnimportant>└─ <unimportant>Block to place: <main>%BLOCKTOPLACE%'
+        base: 'Place Blocks: <main>%BLOCKTOPLACE%'
       reachLocation:
-        base: '    <unimportant>Đi Đến Địa Điểm: <main>%LOCATIONNAME%'
+        base: 'Reach Location: <main>%LOCATIONNAME%'
       talkToNPC:
-        base: '    <unimportant>Nói Chuyện Với <main>%NAME%'
+        base: 'Talk to <main>%NAME%'
       triggerCommand:
-        base: '    <unimportant>Dùng Lệnh: <main>%TRIGGERNAME%'
+        base: 'Goal: <main>%TRIGGERNAME%'
       killEliteMobs:
-        base: '    <unimportant>Tiêu Diệt Elite Mobs: <main>%ELITEMOBNAME%'
-        any: '    <unimportant>Tiêu Diệt Bất Kì EliteMobs Nào!'
+        base: 'Kill Elite Mob: <main>%ELITEMOBNAME%'
+        any: 'Kill any Elite Mob!'
       runCommand:
-        base: '    <veryUnimportant>└─ <unimportant>Dùng Lệnh: <main>%COMMANDTORUN%'
+        base: 'Run command: <main>%COMMANDTORUN%'
       interact:
-        base: '    <veryUnimportant>└─ <unimportant>%INTERACTTYPE% Vị Trí: <main>%COORDINATES% <main> Ở Thế Giới %WORLDNAME%'
-        taskDescriptionProvided: '    <veryUnimportant>└─ <unimportant>%TASKDESCRIPTION%'
+        base: '%INTERACTTYPE% Location: <main>%COORDINATES% <main>in world %WORLDNAME%'
       jump:
-        base: '    <veryUnimportant>└─ <unimportant>Nhảy <main>%AMOUNTOFJUMPS% <unimportant>times'
+        base: 'Jump <main>%AMOUNTOFJUMPS%</main> times'
       sneak:
-        base: '    <veryUnimportant>└─<unimportant>Rón rén<main>%AMOUNTOFSNEAKS%</main>lần'
+        base: 'Sneak <main>%AMOUNTOFSNEAKS%</main> times'
       smelt:
-        base: '    <veryUnimportant>└─ <unimportant>Nung Vật Phẩm: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
+        base: 'Smelt Items: <main>%ITEMTOSMELTTYPE% %(%%ITEMTOSMELTNAME%%)%'
       openBuriedTreasure:
-        base: '    <veryUnimportant>└─ <unimportant>Mở kho báu bị chôn vùi'
+        base: 'Open buried treasures'
       townyReachResidentCount:
-        base: '    <veryUnimportant>└─ <unimportant>Số Lượng Thành Viên Thị Trấn Đạt Đến: <main>%AMOUNT%'
+        base: 'Reach resident amount: <main>%AMOUNT%'
       townyNationReachTownCount:
-        base: '    <veryUnimportant>└─<unimportant>Đạt số tiền thị trấn với quốc gia của bạn: <main>%AMOUNT%'
+        base: 'Reach town amount with your nation: <main>%AMOUNT%'
       jobsRebornReachJobLevel:
-        base: '    <veryUnimportant>└─<unimportant>Cấp độ nghề đạt đến<main>%AMOUNT%</main>với nghề<main>%JOB%'
+        base: 'Reach job level <main>%AMOUNT%</main> with job <main>%JOB%'
       SlimefunResearch:
-        base: '    <veryUnimportant>└─<unimportant>Tốc độ tìm lại'
+        base: 'Spend on research'
       ProjectKorraUseAbility:
-        base: '    <veryUnimportant>└─<unimportant>Dùng Ability:<main>%ABILITY%'
+        base: 'Use Ability: <main>%ABILITY%'
       BetonQuestCompleteObjective:
-        base: '    <veryUnimportant>└─ <unimportant>Hoàn thành Mục tiêu:<main>%BETONQUESTOBJECTIVENAME%'
+        base: 'Finish Objective: <main>%BETONQUESTOBJECTIVENAME%'
       ultimateJobsReachJobLevel:
-        base: '    <veryUnimportant>└─ <unimportant>Đạt cấp độ nghề đến<main>%AMOUNT%</main>với nghề <main>%JOBID%'
+        base: 'Reach job level <main>%AMOUNT%</main> with job <main>%JOBID%'
   conditions:
     boolean:
       not-fulfilled: "<warn>Cần phải được %BOOLEANREQUIREMENT%: <highlight>%VARIABLESINGULAR%</highlight>."
